@@ -68,7 +68,7 @@ public class AttachmentMgtDAOBasicOperationsTest extends TestCase {
         AttachmentManagerService service = new AttachmentManagerService();
         try {
             attachmentID = service.add(createAttachment());
-            log.info("Response Output : " + attachmentID);
+            log.info("Attachment added with id : " + attachmentID);
             assertNotNull(attachmentID);
         } catch (AttachmentMgtException ex) {
             log.error(ex.getLocalizedMessage(), ex);
@@ -126,17 +126,10 @@ public class AttachmentMgtDAOBasicOperationsTest extends TestCase {
         AttachmentManagerService service = new AttachmentManagerService();
         try {
             if (service.remove(attachmentID)) {
-                try {
-                    //Check whether, the attachment is actually removed from the system.
-                    TAttachment attachment = service.getAttachmentInfo(attachmentID);
-                    Assert.fail("Attachment information can't be retrieved for a removed attachment");
-                } catch (AttachmentMgtException e) {
-                    // Let pass the test case as all the requirements are satisfied for
-                    // attachment removal.
-                    log.info("Attachment successfully has been removed from data-source.");
-                    assertTrue("Attachment successfully has been removed from data-source.", true);
-                }
-
+                log.info("Attachment with id: " + attachmentID + " was successfully removed from data-source.");
+                assertTrue("Attachment successfully has been removed from data-source.", true);
+            } else {
+                 Assert.fail("Attachment with id: " + attachmentID + " couldn't be removed.");
             }
         } catch (AttachmentMgtException e) {
             log.error(e.getLocalizedMessage(), e);

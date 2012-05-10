@@ -23,17 +23,17 @@ import org.wso2.carbon.attachment.mgt.core.dao.AttachmentDAO;
 import org.wso2.carbon.attachment.mgt.core.dao.AttachmentMgtDAOFactory;
 import org.wso2.carbon.attachment.mgt.core.dao.impl.jpa.openjpa.entity.AttachmentDAOImpl;
 import org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException;
+import org.wso2.carbon.attachment.mgt.core.scheduler.Scheduler;
 import org.wso2.carbon.attachment.mgt.util.URLGeneratorUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * OpenJPA specific implementation on {@link AttachmentMgtDAOFactory}
  */
-//TODO: Please fix this class methods by moving .begin, .commit methods out from the real
-// business logic
 public class AttachmentMgtDAOFactoryImpl implements AttachmentMgtDAOFactory {
     /**
      * Class Logger
@@ -42,131 +42,177 @@ public class AttachmentMgtDAOFactoryImpl implements AttachmentMgtDAOFactory {
 
     private EntityManager entityManager;
 
+    /**
+     * Job executor to manage transactional level implementation
+     */
+    JobExecutor jobExecutor;
+
     public AttachmentMgtDAOFactoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
+        jobExecutor = new JobExecutor();
     }
 
     @Override
-    public AttachmentDAO addAttachment(Attachment attachment) throws AttachmentMgtException {
-        AttachmentDAO attachmentDAO = new AttachmentDAOImpl();
-        attachmentDAO.setName(attachment.getName());
-        attachmentDAO.setCreatedBy(attachment.getCreatedBy());
-        attachmentDAO.setContentType(attachment.getContentType());
-        attachmentDAO.setUrl(URLGeneratorUtil.generateURL());
-        attachmentDAO.setContent(attachment.getContent());
-
-        /*try {
-            AttachmentServerHolder.getInstance().getAttachmentServer().getTransactionManager()
-                    .setTransactionTimeout(0);
-            AttachmentServerHolder.getInstance().getAttachmentServer().getTransactionManager().begin();
-            entityManager.persist(attachmentDAO);
-            AttachmentServerHolder.getInstance().getAttachmentServer().getTransactionManager().commit();
-        } catch (NotSupportedException e) {
-            e.printStackTrace();
-        } catch (SystemException e) {
-            e.printStackTrace();
-        } catch (HeuristicRollbackException e) {
-            e.printStackTrace();
-        } catch (RollbackException e) {
-            e.printStackTrace();
-        } catch (HeuristicMixedException e) {
-            e.printStackTrace();
-        }*/
-
-
-        log.warn("Please properly fix this code.");
-
-        /*boolean existingTransaction;
+    public AttachmentDAO addAttachment(final Attachment attachment) throws AttachmentMgtException {
         try {
-            existingTransaction = entityManager.getTransaction() != null;
-        } catch (Exception ex) {
-            String errMsg = "Internal Error, could not get current transaction.";
-            throw new AttachmentMgtException(errMsg, ex);
-        }
-        // already in transaction, execute and return directly
-        if (existingTransaction) {
-            entityManager.persist(attachmentDAO);
-            return attachmentDAO;
-        }*/
+            AttachmentDAO resultantDAO = jobExecutor.execTransaction(new Callable<AttachmentDAO>() {
+                @Override
+                public AttachmentDAO call() throws Exception {
+                    AttachmentDAO attachmentDAO = new AttachmentDAOImpl();
+                    attachmentDAO.setName(attachment.getName());
+                    attachmentDAO.setCreatedBy(attachment.getCreatedBy());
+                    attachmentDAO.setContentType(attachment.getContentType());
+                    attachmentDAO.setUrl(URLGeneratorUtil.generateURL());
+                    attachmentDAO.setContent(attachment.getContent());
 
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Beginning a new transaction");
-            }
-            entityManager.getTransaction().begin();
+                    entityManager.persist(attachmentDAO);
+                    if (entityManager.contains(attachmentDAO)) {
+                        return attachmentDAO;
+                    } else {
+                        String errorMsg = "Attachment couldn't persist in the Data Store";
+                        throw new AttachmentMgtException(errorMsg);
+                    }
+
+                }
+            });
+            return resultantDAO;
         } catch (Exception e) {
-            String errMsg = "Internal Error, could not begin transaction.";
-            throw new AttachmentMgtException(errMsg, e);
+            String errorMsg = "org.wso2.carbon.attachment.mgt.core.dao.impl.jpa.openjpa.AttachmentMgtDAOFactoryImpl.addAttachment operation failed. " +
+                              "Reason: " + e.getLocalizedMessage();
+            log.error(errorMsg, e);
+            throw new AttachmentMgtException(errorMsg, e);
         }
+    }
 
+    @Override
+    public AttachmentDAO getAttachmentInfo(final String id) throws AttachmentMgtException {
         try {
-            entityManager.persist(attachmentDAO);
-            entityManager.getTransaction().commit();
-        } catch (RuntimeException rtEx) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            AttachmentDAO resultantDAO = jobExecutor.execTransaction(new Callable<AttachmentDAO>() {
+                @Override
+                public AttachmentDAO call() throws Exception {
+                    AttachmentDAO attachmentDAO = null;
+                    attachmentDAO = entityManager.find(AttachmentDAOImpl.class, id);
+                    return attachmentDAO;
+                }
+            });
+
+            if (resultantDAO != null) {
+                return resultantDAO;
+            } else {
+                throw new AttachmentMgtException("Attachment not found for id : " + id);
             }
-            log.error(rtEx.getLocalizedMessage(), rtEx);
-            throw new AttachmentMgtException(rtEx.getLocalizedMessage(), rtEx);
-        }
-
-        return attachmentDAO;
-    }
-
-    @Override
-    public AttachmentDAO getAttachmentInfo(String id) throws AttachmentMgtException {
-        AttachmentDAO attachmentDAO = null;
-        entityManager.getTransaction().begin();
-        attachmentDAO = entityManager.find(AttachmentDAOImpl.class, id);
-        entityManager.getTransaction().commit();
-
-        if (attachmentDAO != null) {
-            return attachmentDAO;
-        } else {
-            throw new AttachmentMgtException("Attachment not found for id : " + id);
+        } catch (Exception e) {
+            String errorMsg = "org.wso2.carbon.attachment.mgt.core.dao.impl.jpa.openjpa.AttachmentMgtDAOFactoryImpl.getAttachmentInfo operation failed. " +
+                              "Reason: " + e.getLocalizedMessage();
+            log.error(errorMsg, e);
+            throw new AttachmentMgtException(errorMsg, e);
         }
     }
 
     @Override
-    public boolean removeAttachment(String id) throws AttachmentMgtException {
-        boolean existingTransaction;
+    public boolean removeAttachment(final String id) throws AttachmentMgtException {
         try {
-            existingTransaction = entityManager.getTransaction() != null;
-        } catch (Exception ex) {
-            String errMsg = "Internal Error, could not get current transaction.";
-            throw new AttachmentMgtException(errMsg, ex);
+            boolean isRemoved = false;
+            isRemoved = jobExecutor.execTransaction(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    Query query = entityManager.createQuery("DELETE FROM org.wso2.carbon.attachment.mgt.core.dao.impl" +
+                                                            ".jpa.openjpa.entity.AttachmentDAOImpl x WHERE x.id = " +
+                                                            ":attachmentID");
+                    query.setParameter("attachmentID", Long.parseLong(id));
+                    int noOfRowsUpdated = query.executeUpdate();
+                    //entityManager.remove(getAttachmentInfo(id));
+                    if (noOfRowsUpdated == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            });
+            return isRemoved;
+        } catch (Exception e) {
+            String errorMsg = "org.wso2.carbon.attachment.mgt.core.dao.impl.jpa.openjpa.AttachmentMgtDAOFactoryImpl.removeAttachment operation failed. " +
+                              "Reason: " + e.getLocalizedMessage();
+            log.error(errorMsg, e);
+            throw new AttachmentMgtException(errorMsg, e);
         }
-
-        // already in transaction, execute and return directly
-        if (existingTransaction) {
-            entityManager.remove(getAttachmentInfo(id));
-        } else {
-            entityManager.getTransaction().begin();
-            entityManager.remove(getAttachmentInfo(id));
-            entityManager.getTransaction().commit();
-        }
-
-        return true;
     }
 
     @Override
-    public AttachmentDAO getAttachmentInfoFromURL(String attachmentURI) throws AttachmentMgtException {
-        Query query = entityManager.createQuery("SELECT x FROM org.wso2.carbon.attachment.mgt.core.dao.impl.jpa.openjpa.entity.AttachmentDAOImpl AS x WHERE x.url = :attachmentURI");
-        query.setParameter("attachmentURI", attachmentURI);
+    public AttachmentDAO getAttachmentInfoFromURL(final String attachmentURI) throws AttachmentMgtException {
+        try {
+            AttachmentDAO resultantDAO = jobExecutor.execTransaction(new Callable<AttachmentDAO>() {
+                @Override
+                public AttachmentDAO call() throws Exception {
+                    Query query = entityManager.createQuery("SELECT x FROM org.wso2.carbon.attachment.mgt.core.dao.impl.jpa.openjpa.entity.AttachmentDAOImpl AS x WHERE x.url = :attachmentURI");
+                    query.setParameter("attachmentURI", attachmentURI);
 
-        List<AttachmentDAO> daoList = query.getResultList();
+                    List<AttachmentDAO> daoList = query.getResultList();
 
-        if (daoList.isEmpty()) {
-            throw new AttachmentMgtException("Attachment not found for the uri:" + attachmentURI);
-        } else if (daoList.size() != 1) {
-            String errorMsg = "There exist more than one attachment for the attachment URI:" + attachmentURI + ". org" +
-                              ".wso2.carbon.attachment.mgt.util.URLGeneratorUtil.generateURL method has generated " +
-                              "similar uris for different attachments. This has caused a major inconsistency for " +
-                              "attachment management.";
-            log.fatal(errorMsg);
-            throw new AttachmentMgtException(errorMsg);
-        } else {
-            return daoList.get(0);
+                    if (daoList.isEmpty()) {
+                        throw new AttachmentMgtException("Attachment not found for the uri:" + attachmentURI);
+                    } else if (daoList.size() != 1) {
+                        String errorMsg = "There exist more than one attachment for the attachment URI:" + attachmentURI + ". org" +
+                                          ".wso2.carbon.attachment.mgt.util.URLGeneratorUtil.generateURL method has generated " +
+                                          "similar uris for different attachments. This has caused a major inconsistency for " +
+                                          "attachment management.";
+                        log.fatal(errorMsg);
+                        throw new AttachmentMgtException(errorMsg);
+                    } else {
+                        return daoList.get(0);
+                    }
+                }
+            });
+            return resultantDAO;
+        } catch (Exception e) {
+            String errorMsg = "org.wso2.carbon.attachment.mgt.core.dao.impl.jpa.openjpa.AttachmentMgtDAOFactoryImpl.getAttachmentInfoFromURL operation failed. " +
+                              "Reason: " + e.getLocalizedMessage();
+            log.error(errorMsg, e);
+            throw new AttachmentMgtException(errorMsg, e);
+        }
+    }
+
+    class JobExecutor implements Scheduler {
+        @Override
+        public <T> T execTransaction(Callable<T> transaction) throws Exception {
+            // run in new transaction
+            Exception ex = null;
+
+            try {
+                if (log.isDebugEnabled()) {
+                    log.debug("Beginning a new transaction");
+                }
+                entityManager.getTransaction().begin();
+            } catch (Exception e) {
+                String errMsg = "Internal Error, could not begin transaction.";
+                throw new AttachmentMgtException(errMsg, e);
+            }
+
+            try {
+                ex = null;
+                return transaction.call();
+            } catch (Exception e) {
+                ex = e;
+            } finally {
+                if (ex == null) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Committing on " + entityManager.getTransaction() + "...");
+                    }
+                    try {
+                        entityManager.getTransaction().commit();
+                    } catch (Exception e2) {
+                        ex = e2;
+                    }
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Rollbacking on " + entityManager.getTransaction() + "...");
+                    }
+                    entityManager.getTransaction().rollback();
+                }
+
+            }
+
+            throw ex;
         }
     }
 }

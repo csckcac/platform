@@ -24,9 +24,12 @@ import org.wso2.carbon.attachment.mgt.core.dao.AttachmentDAO;
 import org.wso2.carbon.attachment.mgt.core.dao.AttachmentMgtDAOConnectionFactory;
 import org.wso2.carbon.attachment.mgt.core.dao.AttachmentMgtDAOTransformerFactory;
 import org.wso2.carbon.attachment.mgt.server.internal.AttachmentServerHolder;
+import org.wso2.carbon.attachment.mgt.server.internal.AttachmentServiceComponent;
 import org.wso2.carbon.attachment.mgt.skeleton.AttachmentMgtException;
 import org.wso2.carbon.attachment.mgt.skeleton.AttachmentMgtServiceSkeletonInterface;
 import org.wso2.carbon.attachment.mgt.skeleton.types.TAttachment;
+
+import java.util.concurrent.Callable;
 
 /**
  * Service skeleton implementation {@link AttachmentMgtServiceSkeletonInterface}
@@ -41,25 +44,25 @@ public class AttachmentManagerService implements AttachmentMgtServiceSkeletonInt
      * {@inheritDoc}
      */
     @Override
-    public String add(TAttachment attachment) throws AttachmentMgtException {
-        Attachment att = null;
+    public String add(final TAttachment attachment) throws AttachmentMgtException {
+
         try {
-            att = TransformerUtil.convertAttachment(attachment);
+            Attachment att = TransformerUtil.convertAttachment(attachment);
 
             // 1. get Att-Mgt DAO Conn factory
             // 2. get Att-Mgt DAO Connection
             // 3. addAttachment
             //getDaoConnectionFactory().getDAOConnection().addAttachment(att);
-            AttachmentDAO daoImpl = getDaoConnectionFactory().getDAOConnection()
-                    .getAttachmentMgtDAOFactory()
+            AttachmentDAO daoImpl = getDaoConnectionFactory().getDAOConnection().getAttachmentMgtDAOFactory()
                     .addAttachment(att);
 
             return daoImpl.getID().toString();
-        } catch (org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException e) {
-            String errorMsg = "org.wso2.carbon.attachment.mgt.core.service.AttachmentManagerService.add " +
-                              "operation failed. Reason:" + e.getMessage();
-            log.error(errorMsg, e);
-            throw new AttachmentMgtException(errorMsg, e);
+
+        } catch (org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException ex) {
+            String errMsg = "org.wso2.carbon.attachment.mgt.core.service.AttachmentManagerService.add " +
+                            "operation failed. Reason:" + ex.getLocalizedMessage();
+            log.error(errMsg, ex);
+            throw new AttachmentMgtException(errMsg, ex);
         }
     }
 
@@ -67,7 +70,7 @@ public class AttachmentManagerService implements AttachmentMgtServiceSkeletonInt
      * {@inheritDoc}
      */
     @Override
-    public TAttachment getAttachmentInfo(String id) throws AttachmentMgtException {
+    public TAttachment getAttachmentInfo(final String id) throws AttachmentMgtException {
         try {
             AttachmentDAO attachmentDAO = getDaoConnectionFactory().getDAOConnection()
                     .getAttachmentMgtDAOFactory()
@@ -89,18 +92,21 @@ public class AttachmentManagerService implements AttachmentMgtServiceSkeletonInt
      * {@inheritDoc}
      */
     @Override
-    public TAttachment getAttachmentInfoFromURL(String attachmentURL) throws AttachmentMgtException {
+    public TAttachment getAttachmentInfoFromURL(final String attachmentURL) throws AttachmentMgtException {
         try {
             //Extracting the attachment uri
             String attachmentUniqueID = attachmentURL.substring(attachmentURL.lastIndexOf("/") + 1);
-            AttachmentDAO attachmentDAO = getDaoConnectionFactory().getDAOConnection().getAttachmentMgtDAOFactory().getAttachmentInfoFromURL(attachmentUniqueID);
+            AttachmentDAO attachmentDAO = getDaoConnectionFactory().getDAOConnection().getAttachmentMgtDAOFactory()
+                    .getAttachmentInfoFromURL(attachmentUniqueID);
 
             Attachment attachment = getDaoTransformFactory().convertAttachment(attachmentDAO);
 
             return TransformerUtil.convertAttachment(attachment);
         } catch (org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException e) {
-            log.error(e.getLocalizedMessage(), e);
-            throw new AttachmentMgtException(e.getLocalizedMessage(), e);
+            String errorMsg = "org.wso2.carbon.attachment.mgt.core.service.AttachmentManagerService.getAttachmentInfoFromURL operation failed. " +
+                              "Reason:" + e.getLocalizedMessage();
+            log.error(errorMsg, e);
+            throw new AttachmentMgtException(errorMsg, e);
         }
     }
 
@@ -108,10 +114,9 @@ public class AttachmentManagerService implements AttachmentMgtServiceSkeletonInt
      * {@inheritDoc}
      */
     @Override
-    public boolean remove(String id) throws AttachmentMgtException {
+    public boolean remove(final String id) throws AttachmentMgtException {
         try {
-            return getDaoConnectionFactory().getDAOConnection().getAttachmentMgtDAOFactory()
-                    .removeAttachment(id);
+            return getDaoConnectionFactory().getDAOConnection().getAttachmentMgtDAOFactory().removeAttachment(id);
         } catch (org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException e) {
             String errorMsg = "org.wso2.carbon.attachment.mgt.core.service" +
                               ".AttachmentManagerService.remove operation failed. Reason:" + e

@@ -20,13 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException;
-import org.wso2.carbon.base.CarbonBaseUtils;
-import org.wso2.carbon.base.CarbonContextHolderBase;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.NetworkUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
@@ -120,6 +115,15 @@ public class URLGeneratorUtil {
 
         log.warn("Port is hardcoded.");
         int port = 9443;
+        /*try {
+
+            port = CarbonUtils.getTransportProxyPort(myConfigContext, scheme);
+            if (port == -1) {
+                port = CarbonUtils.getTransportPort(myConfigContext, scheme);
+            }
+        } catch (AxisFault axisFault) {
+            log.error(axisFault.getLocalizedMessage(), axisFault);
+        }*/
 
         String webContext = ServerConfiguration.getInstance().getFirstProperty("WebContextRoot");
         if (webContext == null || webContext.equals("/")) {
@@ -136,7 +140,7 @@ public class URLGeneratorUtil {
         String url = null;
         try {
             String link = scheme + "://" + host + ":" + port + webContext + ((tenantDomain != null) ? "/" +
-                          MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain : "") +
+                                              MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain : "") +
                           "/attachment-mgt/download" + "/" + uniqueID.toString();
             return new URL(link);
         } catch (MalformedURLException e) {

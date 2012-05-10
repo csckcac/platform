@@ -20,7 +20,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.attachment.mgt.core.dao.DAOManager;
 import org.wso2.carbon.attachment.mgt.core.datasource.AbstractDataSourceManager;
-import org.wso2.carbon.attachment.mgt.core.datasource.DataSourceManager;
 
 public abstract class AbstractAttachmentServer implements Server {
     /**
@@ -43,7 +42,7 @@ public abstract class AbstractAttachmentServer implements Server {
      *
      * @return the dao-manager reference used by the Attachment-Mgt component
      */
-    public DAOManager getDaoManager(){
+    public DAOManager getDaoManager() {
         if (daoManager != null) {
             return daoManager;
         } else {
@@ -57,11 +56,12 @@ public abstract class AbstractAttachmentServer implements Server {
      *
      * @return the dataSource used by the Attachment-Mgt component
      */
-    public AbstractDataSourceManager getDataSourceManager(){
+    public AbstractDataSourceManager getDataSourceManager() {
         if (dataSourceManager != null) {
             return dataSourceManager;
         } else {
-            throw new NullPointerException("dataSourceManager is null");
+            log.error("dataSourceManager is not initialized yet.");
+            throw new NullPointerException("dataSourceManager is not initialized yet.");
         }
     }
 }

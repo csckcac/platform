@@ -943,10 +943,6 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                         public List<AttachmentDAO> call() throws Exception {
                             HumanTaskEngine engine = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine();
                             HumanTaskDAOConnection daoConn = engine.getDaoConnectionFactory().getConnection();
-                            log.warn("Here we can re-use the loadTask method in the same class. But then we have to " +
-                                     "depend on the DTO defined by WSDL, not the back end DAOs. So if we can refactor" +
-                                     " the loadTask method, we can reuse it and avoid the db transaction take in this" +
-                                     " method. Else this method cost two DB transactions.");
                             return daoConn.getTask(taskId).getAttachments();
                         }
                     });

@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.attachment.mgt.server;
+package org.wso2.carbon.attachment.mgt.core.scheduler;
 
-import org.wso2.carbon.attachment.mgt.core.dao.DAOManager;
-import org.wso2.carbon.attachment.mgt.core.datasource.AbstractDataSourceManager;
-import org.wso2.carbon.attachment.mgt.core.datasource.impl.BasicDataSourceManager;
-import org.wso2.carbon.attachment.mgt.core.scheduler.Scheduler;
+import java.util.concurrent.Callable;
 
-import javax.transaction.TransactionManager;
-
-public interface Server {
-    public void init();
-    public void start();
-    public void shutdown();
-    public DAOManager getDaoManager();
-    public AbstractDataSourceManager getDataSourceManager();
+public interface Scheduler {
+    /**
+     * Execute a {@link java.util.concurrent.Callable} in a transactional context. If the callable
+     * throws an exception, then the transaction will be rolled back, otherwise
+     * the transaction will commit.
+     *
+     * @param <T>         return type
+     * @param transaction transaction to execute
+     * @return result
+     * @throws Exception
+     */
+    <T> T execTransaction(Callable<T> transaction) throws Exception;
 }

@@ -596,28 +596,28 @@ public final class TransformerUtils {
                      " as attachment-mgt data structure is not compatible with the human-task data structure for " +
                      "attachments.");
 
-            try {
-                attachmentInfo.setIdentifier(new URI(attachmentDAO.getValue()));
-            } catch (URI.MalformedURIException e) {
-                log.error(e.getLocalizedMessage(), e);
-            }
-
             attachmentInfo.setAccessType("dummyAccessType");
-            attachmentInfo.setContentType(attachmentDAO.getContentType());
-
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(attachmentDAO.getAttachedAt());
-            attachmentInfo.setAttachedTime(cal);
-
             try {
                 attachmentInfo.setContentCategory(new URI("DummyContentCategory"));
             } catch (URI.MalformedURIException e) {
                 log.error(e.getLocalizedMessage(), e);
             }
 
+            try {
+                attachmentInfo.setIdentifier(new URI(attachmentDAO.getValue()));
+            } catch (URI.MalformedURIException e) {
+                log.error(e.getLocalizedMessage(), e);
+            }
+
+            attachmentInfo.setContentType(attachmentDAO.getContentType());
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(attachmentDAO.getAttachedAt());
+            attachmentInfo.setAttachedTime(cal);
+
             TUser user = new TUser();
-            user.setTUser("DummyUser");
-            attachmentInfo.setAttachedBy(user); //TODO: Have to set the original user.
+            user.setTUser(attachmentDAO.getAttachedBy().getName());
+            attachmentInfo.setAttachedBy(user);
 
             attachmentInfo.setName(attachmentDAO.getName());
 

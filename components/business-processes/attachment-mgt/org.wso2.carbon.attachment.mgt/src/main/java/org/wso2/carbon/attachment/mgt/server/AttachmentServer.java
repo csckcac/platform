@@ -20,14 +20,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.attachment.mgt.configuration.*;
 import org.wso2.carbon.attachment.mgt.configuration.AttachmentMgtConfigurationConstants;
-import org.wso2.carbon.attachment.mgt.core.dao.DAOManager;
 import org.wso2.carbon.attachment.mgt.core.dao.DAOManagerImpl;
 import org.wso2.carbon.attachment.mgt.core.datasource.impl.BasicDataSourceManager;
 import org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException;
-import org.wso2.carbon.attachment.mgt.util.ConfigurationUtil;
 import org.wso2.carbon.utils.CarbonUtils;
-
-import javax.transaction.TransactionManager;
 import java.io.File;
 
 /**
@@ -115,6 +111,7 @@ public class AttachmentServer extends AbstractAttachmentServer {
 
     /**
      * Determine whether the server configuration file is available or not
+     *
      * @return true if the server configuration file exists
      */
     private boolean isAttachmentMgtConfigurationFileAvailable() {

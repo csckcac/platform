@@ -272,7 +272,8 @@ public class APIProviderHostObject extends ScriptableObject {
 
             String tier = (String) apiData.get("tier", apiData);
             String status = ((String) apiData.get("status", apiData)).toUpperCase();
-            String context = (String) apiData.get("context", apiData);
+            String contextVal = (String) apiData.get("context", apiData);
+            String context = contextVal.startsWith("/") ? contextVal : ("/" + contextVal);
 
             APIIdentifier apiId = new APIIdentifier(provider, name, version);
             API api = new API(apiId);

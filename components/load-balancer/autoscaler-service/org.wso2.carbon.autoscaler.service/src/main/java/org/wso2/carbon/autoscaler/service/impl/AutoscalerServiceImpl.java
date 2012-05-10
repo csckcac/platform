@@ -356,7 +356,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
         int count = 0;
 
         for (Iterator iterator = instanceIdToAdapterMap.values().iterator(); iterator.hasNext();) {
-            Adapter val = (Adapter) iterator.next();       
+            Adapter val = findAdapter((String)iterator.next());
            
             if(anAdapter.equals(val.getName())){
                 count++;

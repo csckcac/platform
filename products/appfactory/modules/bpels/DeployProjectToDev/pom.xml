@@ -18,11 +18,11 @@
 	<build>
 	  <plugins>
 		<plugin>
-		  <groupId>org.wso2.maven</groupId>
-		  <artifactId>maven-bpel-plugin</artifactId>
-		  <version>1.0.3</version>
-		  <extensions>true</extensions>
-		  <configuration />
+			<groupId>org.wso2.maven</groupId>
+			<artifactId>maven-bpel-plugin</artifactId>
+			<version>1.0.1</version>
+			<extensions>true</extensions>
+			<configuration/>
 		</plugin>
 	  </plugins>
 	</build>

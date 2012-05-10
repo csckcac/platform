@@ -1,6 +1,7 @@
 package org.wso2.carbon.lb.common.persistence;
 
 import org.wso2.carbon.lb.common.dao.ContainerDAO;
+import org.wso2.carbon.lb.common.dao.Ec2DAO;
 import org.wso2.carbon.lb.common.dao.HostMachineDAO;
 import org.wso2.carbon.lb.common.dao.InstanceDAO;
 import org.wso2.carbon.lb.common.dao.ZoneDAO;
@@ -124,6 +125,18 @@ public class    AgentPersistenceManager {
             throws SQLException {
         InstanceDAO instanceDAO = new InstanceDAO();
         return instanceDAO.add(instanceId, adapter, domain);
+    }
+
+
+    public HashMap<String, String> retrieveUuidToEc2IdMap() throws SQLException {
+        Ec2DAO ec2DAO = new Ec2DAO();
+        return ec2DAO.getUuidToEc2IdMap();
+    }
+
+    public boolean addEc2Instance(String uuid, String ec2Id)
+            throws SQLException {
+        Ec2DAO ec2DAO = new Ec2DAO();
+        return ec2DAO.add(uuid, ec2Id);
     }
 
 

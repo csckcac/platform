@@ -164,7 +164,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                                        String rowName, String startKey, String lastKey,
                                        int limit, boolean isReversed)
             throws CassandraServerManagementException {
-        long startTime = System.currentTimeMillis();
         DataAccessService dataAccessService =
                 CassandraAdminComponentManager.getInstance().getDataAccessService();
         ClusterAuthenticationUtil clusterAuthenticationUtil =
@@ -193,8 +192,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
             columnsList.add(column);
         }
         Column[] columnArray = new Column[columnsList.size()];
-        long endTime = System.currentTimeMillis();
-        System.out.println("Total elapsed time in execution  "+ (endTime-startTime));
         return columnsList.toArray(columnArray);
     }
 
@@ -358,7 +355,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                 new ClusterAuthenticationUtil(super.getHttpSession(),
                         super.getTenantDomain());
         Cluster cluster = clusterAuthenticationUtil.getCluster(null);
-        System.out.println(cluster.describeClusterName());
         Keyspace keyspace = dataAccessService.getKeySpace(cluster, keyspaceName);
 
         SliceQuery<String, String, String> sliceQuery =
@@ -484,7 +480,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
 
         QueryResult<ColumnSlice<String, String>> result;
         if (startingNo != 0) {
-            sliceQuery.setRange("", "", false, startingNo);
+            sliceQuery.setRange("", "", false, startingNo+1);
             result = sliceQuery.execute();
             List<HColumn<String, String>>  tmpHColumnsList = result.get().getColumns();
 

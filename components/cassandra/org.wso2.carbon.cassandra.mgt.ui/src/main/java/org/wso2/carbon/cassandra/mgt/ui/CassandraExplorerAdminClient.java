@@ -105,14 +105,9 @@ public class CassandraExplorerAdminClient {
                                          String startColumn,
                                          String lastCoulmn, int limit, boolean isReversed)
             throws RemoteException, CassandraExplorerAdminCassandraServerManagementException {
-        long startTime = System.currentTimeMillis();
-        Column[] columns = explorerAdminStub.getColumnsForRow(keyspaceName, columnFamily,
+        return explorerAdminStub.getColumnsForRow(keyspaceName, columnFamily,
                 rowName, startColumn,
                 lastCoulmn, limit, isReversed);
-        long endTime = System.currentTimeMillis();
-        System.out.println("Total elapsed time in execution for webservice  " +
-                (endTime - startTime));
-        return columns;
     }
 
     /**

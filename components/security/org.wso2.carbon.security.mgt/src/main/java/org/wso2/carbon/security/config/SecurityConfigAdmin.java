@@ -808,7 +808,7 @@ public class SecurityConfigAdmin {
                     OMElement element = (OMElement) sfpm.get(serviceGroupId, serviceXPath);
                     element.addAttribute(
                             Resources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS, Boolean.FALSE.toString(), null);
-                    sfpm.setMetaFileModification(serviceGroupId);
+//                    sfpm.setMetaFileModification(serviceGroupId);
                     element.addAttribute(
                             Resources.ServiceProperties.IS_UT_ENABLED, Boolean.TRUE.toString(), null);
                     List exposedTransports = sfpm.getAssociations(serviceGroupId, serviceXPath,
@@ -1648,7 +1648,7 @@ public class SecurityConfigAdmin {
             OMElement serviceElement = (OMElement) sfpm.get(serviceGroupId, serviceXPath);
 
             serviceElement.addAttribute(SecurityConstants.PROP_RAHAS_SCT_ISSUER, Boolean.TRUE.toString(), null);
-            sfpm.setMetaFileModification(serviceGroupId);
+//            sfpm.setMetaFileModification(serviceGroupId);
         } catch (Exception e) {
             throw new AxisFault("Could not configure Rahas parameters", e);
         }

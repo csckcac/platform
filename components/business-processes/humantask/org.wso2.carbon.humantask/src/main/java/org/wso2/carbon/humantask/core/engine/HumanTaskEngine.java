@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * The human task engine.
+ * The human task engine. The responsibility of this class is to invoke task creation logic.
  */
 public class HumanTaskEngine {
     /**

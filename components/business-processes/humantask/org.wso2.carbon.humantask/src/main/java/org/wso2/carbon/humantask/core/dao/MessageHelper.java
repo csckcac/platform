@@ -25,29 +25,45 @@ import java.util.Map;
 
 /**
  * This class implements the message interface for the humantask input and output messages.
- *
+ * <p/>
  * allows to add new message parts and header parts
  */
 public class MessageHelper {
 
     private MessageDAO messageDao;
 
+    /**
+     * @param messageDao : The message dao object to be constructed.
+     */
     public MessageHelper(MessageDAO messageDao) {
         this.messageDao = messageDao;
     }
 
-public MessageDAO createMessage(TaskCreationContext taskCreationContext) {
-    for (Map.Entry<String, Element> part : taskCreationContext.getMessageBodyParts().entrySet()) {
-        setPart(part.getKey(), part.getValue());
+    /**
+     * Create the task message with the provided task creation context.
+     *
+     * @param taskCreationContext : The task creation context.
+     *
+     * @return : The created MessageDAO object.
+     */
+    public MessageDAO createMessage(TaskCreationContext taskCreationContext) {
+        for (Map.Entry<String, Element> part : taskCreationContext.getMessageBodyParts().entrySet()) {
+            setPart(part.getKey(), part.getValue());
+        }
+
+        for (Map.Entry<String, Element> part : taskCreationContext.getMessageHeaderParts().entrySet()) {
+            setHeaderPart(part.getKey(), part.getValue());
+        }
+
+        return messageDao;
     }
 
-    for (Map.Entry<String, Element> part : taskCreationContext.getMessageHeaderParts().entrySet()) {
-        setHeaderPart(part.getKey(), part.getValue());
-    }
-
-    return messageDao;
-}
-
+    /**
+     * Return the part with the given name.
+     *
+     * @param partName : The part name
+     * @return : The matching name.
+     */
     public Element getPart(String partName) {
         Element message = messageDao.getBodyData();
         NodeList eltList = message.getElementsByTagName(partName);
@@ -58,6 +74,12 @@ public MessageDAO createMessage(TaskCreationContext taskCreationContext) {
         }
     }
 
+    /**
+     * Sets the provided element to the task message.
+     *
+     * @param partName : The part name.
+     * @param content  : The message content.
+     */
     public void setPart(String partName, Element content) {
         Element message = messageDao.getBodyData();
         if (message == null) {
@@ -67,11 +89,17 @@ public MessageDAO createMessage(TaskCreationContext taskCreationContext) {
         }
 
         Element partElement = message.getOwnerDocument().createElement(partName);
-        partElement.appendChild(partElement.getOwnerDocument().importNode(content,true));
+        partElement.appendChild(partElement.getOwnerDocument().importNode(content, true));
         message.appendChild(partElement);
         messageDao.setData(message);
     }
 
+    /**
+     * Return the header part of the message with the provided part name.
+     *
+     * @param partName : The part name.
+     * @return : The matching header element.
+     */
     public Element getHeaderPart(String partName) {
         Element header = messageDao.getHeader();
         if (header == null) {
@@ -86,8 +114,14 @@ public MessageDAO createMessage(TaskCreationContext taskCreationContext) {
         }
     }
 
+    /**
+     * Sets the header part of the message dao.
+     *
+     * @param name    : parent element
+     * @param content : The content.
+     */
     public void setHeaderPart(String name, Element content) {
-        Element header =  messageDao.getHeader();
+        Element header = messageDao.getHeader();
         if (header == null) {
             Document doc = DOMUtils.newDocument();
             header = doc.createElement("header");
@@ -99,6 +133,9 @@ public MessageDAO createMessage(TaskCreationContext taskCreationContext) {
         messageDao.setHeader(header);
     }
 
+    /**
+     * @return : The message DAO.
+     */
     public MessageDAO getMessageDao() {
         return messageDao;
     }

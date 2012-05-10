@@ -367,6 +367,10 @@ public class CarbonEventingMessageReceiver extends AbstractMessageReceiver {
 
     protected void handleEvent(MessageContext mc) throws AxisFault, WSEventException {
         String topic = EventBrokerUtils.extractTopicFromMessage(mc);
+        if (topic == null) {
+            // No topic, just drop the message.
+            return;
+        }
         try {
             Message message = new Message();
             message.setMessage(mc.getEnvelope().getBody().getFirstElement());

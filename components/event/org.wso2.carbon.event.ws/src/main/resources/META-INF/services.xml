@@ -71,6 +71,8 @@
 			<messageReceiver
 				class="org.wso2.carbon.event.ws.internal.receivers.CarbonEventingMessageReceiver" />
 		</operation>
+        
+        <parameter name="adminService" locked="true">true</parameter>
      </service>
      
      <service name="EventPublishService" scope="transportsession">
@@ -86,7 +88,6 @@
 		</operation>
 	</service>
 	
-    <parameter name="adminService" locked="true">true</parameter>
     <parameter name="hiddenService" locked="true">true</parameter>
     <!-- 
     <parameter name="AuthorizationAction" locked="true">manage-configuration</parameter>

@@ -27,7 +27,7 @@ public class BamMediatorService extends AbstractMediatorService {
     }
 
     public String getDisplayName() {
-        return "Bam";
+        return "BAM";
     }
 
     public String getLogicalName() {
@@ -35,7 +35,7 @@ public class BamMediatorService extends AbstractMediatorService {
     }
 
     public String getGroupName() {
-        return "Advanced";
+        return "Agent";
     }
 
     public Mediator getMediator() {

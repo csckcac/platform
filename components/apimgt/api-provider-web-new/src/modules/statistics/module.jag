@@ -7,10 +7,12 @@ jagg.module("statistics", {
         return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIVersionUserUsage.apply(this, arguments);
     },getProviderAPIUsage:function () {
         return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIUsage.apply(this, arguments);
+    },getProviderAPIUserUsage:function () {
+        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIUserUsage.apply(this, arguments);
     },getProviderAPIVersionUserLastAccess:function () {
         return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIVersionUserLastAccess.apply(this, arguments);
-    },getProviderAPIVersionUserLastAccess:function () {
-        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIVersionUserLastAccess.apply(this, arguments);
+    },getProviderAPIServiceTime:function () {
+        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIServiceTime.apply(this, arguments);
     }
 
 });

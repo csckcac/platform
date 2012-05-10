@@ -4,16 +4,20 @@
     <hr/>
     <ol>
         <%
-        var i, api, path, apis = outputs.apis, length = apis.length;
+        var i, api, path, thumbURL, apis = outputs.apis, length = apis.length;
         for(i = 0; i < length; i++) {
             api = apis[i];
+            thumbURL = api.thumbURL;
+            if(thumbURL && thumbURL.indexOf("images/") == 0) {
+                thumbURL = site.context + "/site/themes/fancy/" + thumbURL;
+            }
             path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
         %>
         <li>
             <a class="tooltip-right medium orange pill" data-content="#tooltipcontentID<%=String(i)%>"><%=api.name%></a>
             <div class="tooltip-content" id="tooltipcontentID<%=String(i)%>">
                 <h5><a href="<%=path%>"><%=api.name%></a></h5>
-                <img src="<%=api.thumbURL%>"/>
+                <img src="<%=thumbURL%>"/>
                 <p><%=api.description%></p>
             </div>
         </li>

@@ -3,6 +3,7 @@ var login = function (username, password) {
     var xml, cookie, status, ns, payload, result,
             log = new Log(),
             mod = jagg.module("greg"),
+            store = jagg.module("greg").getAPIStoreObj(),
             remoteAddress = mod.getServer();
 
     payload =
@@ -33,13 +34,11 @@ var login = function (username, password) {
             cookie:null
         };
     }
-    /*var subscriber = apiStore.getSubscriber(username);
-     if(!subscriber) {
-     apiStore.addSubscriber(username);
-     subscriber = apiStore.getSubscriber(username);
-     }
-     log(username);
-     log(xml);*/
+    var subscriber = store.getSubscriber(username);
+    if(!subscriber) {
+        store.addSubscriber(username);
+        subscriber = store.getSubscriber(username);
+    }
     cookie = result.client.getResponseHeader("Set-Cookie");
     cookie = cookie.split(';')[0];
     /*session.put("username", username);

@@ -1,12 +1,17 @@
 <% jagg.template("api/api-info", function(inputs, outputs, jagg) { %>
 <% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
-<% var i, length, app, api = outputs.api, apps = outputs.applications, user = outputs.user; %>
+<% var i, length, app, thumbURL, api = outputs.api, apps = outputs.applications, user = outputs.user;
+   thumbURL = api.thumbURL;
+   if(thumbURL && thumbURL.indexOf("images/") == 0) {
+        thumbURL = site.context + "/site/themes/fancy/" + thumbURL;
+   }
+%>
 <div class="api-info">
     <h5><%=api.provider%></h5>
 
     <div class="col_12 no-padding">
         <div class="col_3">
-            <img src="<%=api.thumbURL%>">
+            <img src="<%=thumbURL%>">
         </div>
         <div class="col_9">
             <table cellspacing="0" cellpadding="0" class="info-table">

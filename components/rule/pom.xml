@@ -221,14 +221,14 @@
     </repositories>
 
             <modules>
-               <!-- <module>org.wso2.carbon.rule.core</module>
+                <module>org.wso2.carbon.rule.core</module>
                 <module>org.wso2.carbon.rule.engine.drools</module>
                 <module>org.wso2.carbon.rule.engine.jsr94</module>
 		<module>org.wso2.carbon.rule.samples</module>
                 <module>org.wso2.carbon.rule.server</module>
                 <module>org.wso2.carbon.rule.mediator</module>
                 <module>org.wso2.carbon.rule.service</module>
-                <module>org.wso2.carbon.rule.service.ui</module> -->
+                <module>org.wso2.carbon.rule.service.ui</module> 
 
 
                 <module>org.wso2.carbon.rule.common</module>

@@ -70,6 +70,17 @@
 				<include>**/coordination-client-config.xml</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>
+				../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/dbscripts/identity/
+			</directory>
+			<outputDirectory>
+				wso2appfactory-${pom.version}/dbscripts/identity/
+			</outputDirectory>
+			<includes>
+				<include>**/*.sql</include>
+			</includes>
+		</fileSet>
         <!--copying registry dbscripts-->
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.version}/dbscripts</directory>

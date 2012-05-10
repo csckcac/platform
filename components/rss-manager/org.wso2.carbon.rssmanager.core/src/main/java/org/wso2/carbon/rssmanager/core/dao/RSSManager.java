@@ -56,6 +56,15 @@ public class RSSManager {
         RSSDAO dao = RSSDAOFactory.getRSSDAO();
         String fullyQualifiedDbName = RSSManagerUtil.getFullyQualifiedDatabaseName(db.getName());
 
+        try {
+            if (RSSManagerUtil.databaseExists(fullyQualifiedDbName)) {
+                throw new RSSDAOException("Database " + fullyQualifiedDbName + " already exists");
+            }
+        } catch (SQLException e) {
+            throw new RSSDAOException("Unable to check for the existence of the database " + 
+                    fullyQualifiedDbName);
+        }
+
         /* creates the database with its fully qualified name in the database server*/
         createDatabaseEntryInSystemTables(db.getRssInstanceId(), fullyQualifiedDbName);
         db.setName(fullyQualifiedDbName);

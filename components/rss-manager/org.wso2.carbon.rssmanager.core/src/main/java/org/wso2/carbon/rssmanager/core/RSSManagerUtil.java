@@ -487,6 +487,41 @@ public class RSSManagerUtil {
         }
     }
 
+    /**
+     * Checks whether a particular database already exists for a particular tenant.
+     *
+     * @param dbName           Name of the database
+     * @return                 Boolean representing the existence of database with the given name
+     * @throws RSSDAOException Is thrown when encountered issues in creating RSSConfig
+     * @throws SQLException    Is thrown when encountered issues in closing/acquiring
+     *         database connections/prepared statements/result sets
+     */
+    public static boolean databaseExists(String dbName) throws RSSDAOException, SQLException {
+        Connection conn = null;
+        int tid = CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId();
+        try {
+            conn = RSSManagerUtil.getRSSConfig().getRSSDBConnection();
+            String sql = "SELECT 1 FROM DATABASE_INSTANCE WHERE name = ? AND tenant_id = ?";
+            PreparedStatement stmt = conn.prepareCall(sql);
+            stmt.setString(1, dbName);
+            stmt.setInt(2, tid);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int existCode = rs.getInt(1);
+                if (existCode == 1) {
+                    rs.close();
+                    stmt.close();
+                    return true;
+                }
+            }
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return false;
+    }
+
 
 }
 

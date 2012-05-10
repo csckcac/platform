@@ -1077,10 +1077,10 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
     public void configureMTOM(String flag, String serviceName) throws AxisFault {
 
         AxisService service = getAxisConfig().getServiceForActivation(serviceName);
-        String serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
         if (service == null) {
             throw new AxisFault("AxisService " + serviceName + " cannot be found.");
         }
+        String serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
 
         if (log.isDebugEnabled()) {
             log.debug("Setting the MTOM status to " + flag + " for service " + serviceName);
@@ -1242,10 +1242,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 // registry.addAssociation(transportResource.getPath(),
                 // serviceResource.getPath(),
                 // Resources.Associations.EXPOSED_TRANSPORTS);
-                if (spm.getService(axisService) == null) {
-                    sfpm.put(serviceGroupId, serviceElement,
-                             PersistenceUtils.getResourcePath(axisService));
-                }
+                sfpm.put(serviceGroupId, serviceElement,
+                         PersistenceUtils.getResourcePath(axisService));
                 registry.put(transportResource.getPath(), transportResource);
                 if (!regTransactionStarted) {
                     getConfigSystemRegistry().commitTransaction();
@@ -1391,10 +1389,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
             serviceElement.addAttribute(Resources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS,
                                         String.valueOf(false), null);
-            if (spm.getService(axisService) == null) {
-                sfpm.put(serviceGroupId, serviceElement,
-                         PersistenceUtils.getResourcePath(axisService));
-            }
+            sfpm.put(serviceGroupId, serviceElement,
+                     PersistenceUtils.getResourcePath(axisService));
 
             if (!regTransactionStarted) {
                 getConfigSystemRegistry().commitTransaction();

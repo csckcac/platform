@@ -6,7 +6,9 @@ jagg.block("listing", {
 
     getInputs:function () {
         return {
-            "apis":null
+            "apis":null,
+            "currentPage":null,
+            "numberOfPages":null,
         };
     },
 

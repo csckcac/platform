@@ -1,0 +1,43 @@
+<% jagg.template("paginator", function(inputs, outputs, jagg) { %>
+<% var noOfPages = outputs.numberOfPages,currentPage=outputs.currentPage; %>
+ <% if(noOfPages>1){%>
+<div class="pagination">
+    <ul>
+        <li><a href="?page=<%=(currentPage-1)%>">Prev</a></li>
+        <% for(var i=1;i<=noOfPages;i++){%>
+
+        <%if(String(i)==currentPage){%><li class="active"><a href="?page=<%=String(i)%>"><%=String(i)%></a></li> <%}else{%>
+        <li><a href="?page=<%=String(i)%>"><%=String(i)%></a></li>
+         <%}}%>
+        <li><a href="?page=<%=(currentPage-1)%>">Next</a></li>
+    </ul>
+</div>
+ <% }%>
+
+<script>
+var prev= $('<li><a>Prev</a></li>');
+var next= $('<li><a>Next</a></li>');
+$(prev).click(
+        function () {
+            if (currentPage == 1) {
+                return;
+            }
+            currentPage--;
+            $('#pagination ul li').removeClass('active');
+            $('#pagination ul li:nth-child(' + (currentPage + 1) + ')').addClass('active');
+        }
+    );
+$(next).click(
+        function () {
+            if (currentPage == noOfPages) {
+                return;
+            }
+            currentPage++;
+            $('#pagination ul li').removeClass('active');
+            $('#pagination ul li:nth-child(' + (currentPage + 1) + ')').addClass('active');
+        }
+    );
+
+
+</script>
+<%});%>

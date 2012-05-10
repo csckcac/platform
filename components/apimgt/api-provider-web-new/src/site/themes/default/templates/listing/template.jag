@@ -5,7 +5,13 @@
     <ul class="thumbnails">
         <span class="loading"></span>
         <%
-        var i, api,path, apis = outputs.apis;
+        var i, api,path,itemsPerPage=10,apis = outputs.apis,currentPage=outputs.currentPage,numberOfPages=outputs.numberOfPages;
+        var from = currentPage * itemsPerPage - itemsPerPage;
+        var to = currentPage * itemsPerPage;
+
+         if (to > apis.length) {
+         to = apis.length;
+         }
         if(apis==null ){
         if(request.getParameter("query")!=null){
         return;
@@ -16,7 +22,7 @@
         }
         else{
         var length = apis.length;
-        for(i = 0; i < length; i++) {
+        for(i = from; i < to; i++) {
             api = apis[i];
             path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version;
         %>
@@ -46,6 +52,6 @@
         </li>
         <% }} %>
     </ul>
-    <div class="pagination" id="pagination"></div>
+     <% jagg.includeBlock("paginator", {currentPage:currentPage,numberOfPages:numberOfPages}); %>
 </div>
 <% }); %>

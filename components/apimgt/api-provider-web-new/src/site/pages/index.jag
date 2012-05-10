@@ -10,7 +10,10 @@ var site = require("/site/conf/site.json");
         return;
     }
     query = request.getParameter("query");
-    page = request.getParameter("page");
+    var page = request.getParameter("page");
+    if(page==null){page=1;}
+    var itemsPerPage = 10;
+    var currentPage = page;
 
     if(query) {
         mod = jagg.module("search");
@@ -21,7 +24,14 @@ var site = require("/site/conf/site.json");
         result = mod.getAPIsByProvider(user.username);
         apis = result.apis;
     }
-
+    var itemCount=apis.length;
+    var numberOfPages = itemCount / itemsPerPage;
+    if (itemCount % itemsPerPage != 0) {
+     numberOfPages++;
+    }
+    if (numberOfPages < currentPage || currentPage <= 0) {
+            currentPage = 1;
+    }
 
 
     jagg.render({
@@ -38,7 +48,9 @@ var site = require("/site/conf/site.json");
                         "middle":{
                             "name":"listing",
                             "inputs":{
-                                "apis":apis
+                                "apis":apis,
+                                "currentPage":currentPage,
+                                "numberOfPages":numberOfPages
                             }
                         }
                     }

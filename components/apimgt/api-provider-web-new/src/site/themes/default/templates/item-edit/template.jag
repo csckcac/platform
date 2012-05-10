@@ -181,8 +181,10 @@ $('input#updateButton').click( function() {
                       $("#editAPIForm")[0].reset();
                   }
                  }
+        });
+    return false;
     });
-});  });
+ });
 
  </script>
 

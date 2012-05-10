@@ -1,8 +1,7 @@
 <%
-jagg.initializer("menu/left", {
+jagg.initializer("paginator", {
 
     preInitialize:function (){
     }
 });
 %>
-

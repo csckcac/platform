@@ -23,21 +23,18 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.wso2.carbon.deployment.synchronizer.stub.types.DeploymentSynchronizerAdminStub;
-import org.wso2.carbon.deployment.synchronizer.stub.types.util.*;
+import org.wso2.carbon.deployment.synchronizer.stub.types.util.DeploymentSynchronizerConfiguration;
+import org.wso2.carbon.deployment.synchronizer.stub.types.util.RepositoryConfigParameter;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class DeploymentSyncAdminClient {
 
-    private static final String BUNDLE = "org.wso2.carbon.deployment.synchronizer.ui.i18n.Resources";
-    private ResourceBundle bundle;
-    public DeploymentSynchronizerAdminStub stub;
+    private DeploymentSynchronizerAdminStub stub;
 
     public DeploymentSyncAdminClient(ConfigurationContext configCtx, String backendServerURL,
                                    String cookie, Locale locale) throws AxisFault {
 
-        bundle = ResourceBundle.getBundle(BUNDLE, locale);
         String serviceURL = backendServerURL + "DeploymentSynchronizerAdmin";
         stub = new DeploymentSynchronizerAdminStub(configCtx, serviceURL);
         ServiceClient client = stub._getServiceClient();
@@ -76,6 +73,14 @@ public class DeploymentSyncAdminClient {
 
     public void checkout() throws Exception {
         stub.checkout();
+    }
+    
+    public RepositoryConfigParameter[] getParamsByRepositoryType(String repositoryType) throws Exception{
+    	return stub.getParamsByRepositoryType(repositoryType);
+    }
+    
+    public String[] getRepositoryTypes() throws Exception{
+    	return stub.getRepositoryTypes();
     }
 
 }

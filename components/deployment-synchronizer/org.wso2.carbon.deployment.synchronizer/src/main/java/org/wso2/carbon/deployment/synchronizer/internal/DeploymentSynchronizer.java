@@ -62,7 +62,7 @@ public class DeploymentSynchronizer {
      * This flag indicates whether the synchronizer should perform checkouts based on
      * an external event notification
      */
-    protected boolean useEventing;
+    private boolean useEventing;
 
     /**
      * If checkouts are performed based on events, this variable keeps track of when
@@ -243,13 +243,13 @@ public class DeploymentSynchronizer {
         } catch (DeploymentSynchronizerException e) {
             log.error("Synchronization error encountered in the repository " +
                       "at: " + filePath, e);
-        } catch (Throwable t) {
+        } catch (Exception t) {
             log.error("Unexpected runtime error encountered while synchronizing the " +
                       "repository: " + filePath, t);
         }
     }
 
-    private class AutoSyncTask implements Runnable {
+    private final class AutoSyncTask implements Runnable {
 
         private AutoSyncTask() {
             if (log.isDebugEnabled()) {

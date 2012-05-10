@@ -25,15 +25,18 @@ import org.wso2.carbon.deployment.synchronizer.*;
 import org.wso2.carbon.deployment.synchronizer.internal.DeploymentSynchronizationManager;
 import org.wso2.carbon.deployment.synchronizer.internal.DeploymentSynchronizer;
 import org.wso2.carbon.deployment.synchronizer.internal.DeploymentSynchronizerConstants;
-import org.wso2.carbon.deployment.synchronizer.registry.RegistryBasedArtifactRepository;
+import org.wso2.carbon.deployment.synchronizer.internal.util.RepositoryConfigParameter;
+import org.wso2.carbon.deployment.synchronizer.internal.util.RepositoryReferenceHolder;
 import org.wso2.carbon.deployment.synchronizer.internal.util.DeploymentSynchronizerConfiguration;
 import org.wso2.carbon.deployment.synchronizer.internal.util.ServiceReferenceHolder;
-import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Utility methods for creating and managing DeploymentSynchronizer instances for Carbon
@@ -61,7 +64,7 @@ public class CarbonRepositoryUtils {
         if (config.isEnabled()) {
             String filePath = MultitenantUtils.getAxis2RepositoryPath(tenantId);
 
-            ArtifactRepository artifactRepository = createArtifactRepository(tenantId,
+            ArtifactRepository artifactRepository = createArtifactRepository(
                     config.getRepositoryType());
             artifactRepository.init(tenantId);
             DeploymentSynchronizer synchronizer = DeploymentSynchronizationManager.getInstance().
@@ -90,10 +93,23 @@ public class CarbonRepositoryUtils {
             int tenantId) throws DeploymentSynchronizerException {
 
         try {
-            DeploymentSynchronizerConfiguration config =
-                    getDeploymentSyncConfigurationFromRegistry(tenantId);
+            //Firrst attempt to get the configuration from carbon.xml
+            DeploymentSynchronizerConfiguration config = getDeploymentSyncConfiguration();
+
+            //If configuration has not been specified in carbon.xml
             if (config == null) {
-                config = getDeploymentSyncConfiguration();
+                //Attempt to get configuration from local registry.
+                config =  getDeploymentSyncConfigurationFromRegistry(tenantId);
+
+                //If configuration does not exist in the local registry as well.
+                if (config == null) {
+                    //Get default Deployment Synchronizer Configuration
+                    config = getDefaultDeploymentSyncConfiguration();
+                }
+            }
+            else{
+                //If config is obtained from carbon.xml, set attribute to disable UI
+                config.setServerBasedConfiguration(true);
             }
             return config;
         } catch (RegistryException e) {
@@ -108,11 +124,17 @@ public class CarbonRepositoryUtils {
      *
      * @return a DeploymentSynchronizerConfiguration instance
      */
-    public static DeploymentSynchronizerConfiguration getDeploymentSyncConfiguration() {
+    public static DeploymentSynchronizerConfiguration getDeploymentSyncConfiguration() throws DeploymentSynchronizerException{
+
         DeploymentSynchronizerConfiguration config = new DeploymentSynchronizerConfiguration();
         ServerConfiguration serverConfig = ServerConfiguration.getInstance();
+
         String value = serverConfig.getFirstProperty(DeploymentSynchronizerConstants.ENABLED);
-        config.setEnabled(value != null && JavaUtils.isTrueExplicitly(value));
+        //If Deployment Synchronizer Configuration is not found in carbon.xml
+        if(value == null){
+            return null;
+        }
+        config.setEnabled(JavaUtils.isTrueExplicitly(value));
 
         value = serverConfig.getFirstProperty(DeploymentSynchronizerConstants.AUTO_CHECKOUT_MODE);
         config.setAutoCheckout(value != null && JavaUtils.isTrueExplicitly(value));
@@ -136,6 +158,55 @@ public class CarbonRepositoryUtils {
         } else {
             config.setRepositoryType(DeploymentSynchronizerConstants.DEFAULT_REPOSITORY_TYPE);
         }
+
+        ArtifactRepository repository =
+                RepositoryReferenceHolder.getInstance().getRepositoryByType(config.getRepositoryType());
+        if(repository == null){
+            throw new DeploymentSynchronizerException("No Repository found for type " + config.getRepositoryType());
+        }
+
+        List<RepositoryConfigParameter> parameters = repository.getParameters();
+
+        //If repository specific configuration parameters are found.
+        if(parameters != null){
+            //Find the 'value' of each parameter from the server config by parameter 'name' and attach to parameter
+            for(RepositoryConfigParameter parameter : parameters){
+                parameter.setValue(serverConfig.getFirstProperty(parameter.getName()));
+            }
+
+            //Attach parameter list to config object.
+            config.setRepositoryConfigParameters(
+                    parameters.toArray(new RepositoryConfigParameter[parameters.size()]));
+        }
+
+        return config;
+    }
+
+    public static DeploymentSynchronizerConfiguration getDefaultDeploymentSyncConfiguration() throws DeploymentSynchronizerException {
+
+        DeploymentSynchronizerConfiguration config = new DeploymentSynchronizerConfiguration();
+        config.setEnabled(false);
+        config.setAutoCheckout(false);
+        config.setAutoCommit(false);
+        config.setUseEventing(false);
+        config.setPeriod(DeploymentSynchronizerConstants.DEFAULT_AUTO_SYNC_PERIOD);
+        config.setRepositoryType(DeploymentSynchronizerConstants.DEFAULT_REPOSITORY_TYPE);
+
+        ArtifactRepository repository =
+                RepositoryReferenceHolder.getInstance().getRepositoryByType(config.getRepositoryType());
+        if(repository == null){
+            throw new DeploymentSynchronizerException("No Repository found for type " + config.getRepositoryType());
+        }
+
+        List<RepositoryConfigParameter> parameters = repository.getParameters();
+
+        //If repository specific configuration parameters are found.
+        if(parameters != null && !parameters.isEmpty()){
+            //Attach parameter list to config.
+            config.setRepositoryConfigParameters(
+                    parameters.toArray(new RepositoryConfigParameter[parameters.size()]));
+        }
+
         return config;
     }
 
@@ -198,6 +269,26 @@ public class CarbonRepositoryUtils {
                 DeploymentSynchronizerConstants.USE_EVENTING)));
         config.setRepositoryType(resource.getProperty(
                 DeploymentSynchronizerConstants.REPOSITORY_TYPE));
+
+        ArtifactRepository repository = 
+                RepositoryReferenceHolder.getInstance().getRepositoryByType(config.getRepositoryType());
+        if(repository == null){
+            throw new RegistryException("No Repository found for type " + config.getRepositoryType());
+        }
+        
+        List<RepositoryConfigParameter> parameters = repository.getParameters();
+
+        //If repository specific configuration parameters are found.
+        if(parameters != null){
+            //Find the 'value' of each parameter from the registry by parameter 'name' and attach to parameter
+            for(RepositoryConfigParameter parameter : parameters){
+                parameter.setValue(resource.getProperty(parameter.getName()));
+            }
+
+            //Attach parameter list to config object.
+            config.setRepositoryConfigParameters(parameters.toArray(new RepositoryConfigParameter[parameters.size()]));
+        }
+
         resource.discard();
         return config;
     }
@@ -235,52 +326,30 @@ public class CarbonRepositoryUtils {
                 config.getRepositoryType());
         resource.setContent(config.isEnabled() ? "enabled" : "disabled");
 
+        //Get Repository specific configuration parameters from config object.
+        RepositoryConfigParameter[] parameters = config.getRepositoryConfigParameters();
+
+        if(parameters != null && parameters.length != 0){
+            //Save each Repository specific configuration parameter in registry.
+            for(int i=0; i<parameters.length; i++){
+                resource.setProperty(parameters[i].getName(), parameters[i].getValue());
+            }
+        }
+
         localRepository.put(DeploymentSynchronizerConstants.CARBON_REPOSITORY, resource);
         resource.discard();
-    }
-
-    private static String getRegistryPath(int tenantId) {
-        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
-            return DeploymentSynchronizerConstants.SUPER_TENANT_REGISTRY_PATH;
-        } else {
-            return DeploymentSynchronizerConstants.TENANT_REGISTRY_PATH;
-        }
     }
 
     private static UserRegistry getLocalRepository(int tenantId) throws RegistryException {
         return ServiceReferenceHolder.getRegistryService().getLocalRepository(tenantId);
     }
 
-    private static UserRegistry getConfigurationRegistry(int tenantId) throws RegistryException {
-        return ServiceReferenceHolder.getRegistryService().getConfigSystemRegistry(tenantId);
-    }
-
     private static ArtifactRepository createArtifactRepository(
-            int tenantId, String repositoryType) throws DeploymentSynchronizerException {
+            String repositoryType) throws DeploymentSynchronizerException {
 
-        ArtifactRepository artifactRepository;
-        if (DeploymentSynchronizerConstants.REPOSITORY_TYPE_REGISTRY.equals(repositoryType)) {
-            try {
-                UserRegistry registry = getConfigurationRegistry(tenantId);
-                String registryPath = getRegistryPath(tenantId);
-                artifactRepository = new RegistryBasedArtifactRepository(registry, registryPath,
-                        RegistryConstants.CONFIG_REGISTRY_BASE_PATH);
-            } catch (RegistryException e) {
-                throw new DeploymentSynchronizerException("Error while accessing registry for " +
-                        "tenant: " + tenantId, e);
-            }
-        } else {
-            if (DeploymentSynchronizerConstants.REPOSITORY_TYPE_SVN.equals(repositoryType)) {
-                repositoryType = "org.wso2.carbon.deployment.synchronizer.subversion.SVNBasedArtifactRepository";
-            }
-
-            try {
-                Class clazz = CarbonRepositoryUtils.class.getClassLoader().loadClass(repositoryType);
-                artifactRepository = (ArtifactRepository) clazz.newInstance();
-            } catch (Exception e) {
-                throw new DeploymentSynchronizerException("Error while initializing an object " +
-                        "of type: " + repositoryType, e);
-            }
+        ArtifactRepository artifactRepository = RepositoryReferenceHolder.getInstance().getRepositoryByType(repositoryType);
+        if(artifactRepository == null){
+            throw new DeploymentSynchronizerException("No Repository found for type " + repositoryType);
         }
 
         return artifactRepository;

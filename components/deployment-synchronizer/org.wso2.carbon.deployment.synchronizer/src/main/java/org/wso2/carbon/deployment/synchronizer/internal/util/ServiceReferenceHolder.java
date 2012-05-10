@@ -22,7 +22,7 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.eventing.services.EventingService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
-public class ServiceReferenceHolder {
+public final class ServiceReferenceHolder {
 
     private static ConfigurationContextService configurationContextService;
     private static RegistryService registryService;

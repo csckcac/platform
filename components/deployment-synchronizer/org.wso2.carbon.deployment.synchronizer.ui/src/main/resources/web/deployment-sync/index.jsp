@@ -16,6 +16,8 @@
  ~ under the License.
  -->
 
+<%@page import="org.apache.axis2.util.JavaUtils"%>
+<%@page import="org.wso2.carbon.deployment.synchronizer.stub.types.util.RepositoryConfigParameter"%>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
@@ -125,42 +127,133 @@
             form.submit();
             return true;
         }
+        
+        function changeRepoType(repoTypeElem){
+        	var newValue = repoTypeElem.value;
+        	var oldvalue = document.getElementById('currentRepo').value;
+        	
+        	var newTableId = newValue + ".ConfigTable";
+        	var oldTableId = oldvalue + ".ConfigTable";
+        	
+        	var newTable = document.getElementById(newTableId);
+        	var oldTable = document.getElementById(oldTableId);
+        	
+        	//if a table exists for the new repository 
+        	if(newTable != null){
+        		//Show the new table 
+        		newTable.style.display = "";
+        	}
+        	//if a table exists for the old repository 
+        	if(oldTable != null){
+        		//Hide the old table 
+        		oldTable.style.display = "none";
+        	}
+        	
+        	document.getElementById('currentRepo').value = newValue;
+        }
     </script>
 
     <%
         DeploymentSynchronizerConfiguration synchronizerConfiguration = null;
         boolean syncPerformed = false;
+        String repoType = null;
+        String[] repositoryTypes = null;
+        boolean disableFields = false;
+        DeploymentSyncAdminClient client = null;
+        
         try {
             String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
             ConfigurationContext configContext =
                     (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
             String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
-            DeploymentSyncAdminClient client = new DeploymentSyncAdminClient(
+            client = new DeploymentSyncAdminClient(
                     configContext, backendServerURL, cookie, request.getLocale());
 
             boolean submitted = Boolean.parseBoolean(request.getParameter("submitted"));
+            boolean valid = true;
+
             if (submitted) {
                 String action = request.getParameter("action");
+                
                 if ("disable".equals(action)) {
                     client.disableSynchronizer();
                 } else if ("enable".equals(action)) {
+                	
                     DeploymentSynchronizerConfiguration newConfig = new DeploymentSynchronizerConfiguration();
                     newConfig.setEnabled(true);
                     newConfig.setAutoCommit(request.getParameter("autoCommit") != null);
                     newConfig.setAutoCheckout(request.getParameter("autoCheckout") != null);
                     newConfig.setPeriod(Long.parseLong(request.getParameter("syncPeriod")));
                     newConfig.setUseEventing(request.getParameter("useEventing") != null);
-                    newConfig.setRepositoryType("registry"); // TODO: Get this via user input
-                    client.enableSynchronizer(newConfig);
+                    newConfig.setRepositoryType(request.getParameter("repo.type"));
+                    
+                    RepositoryConfigParameter[] parameters = client.getParamsByRepositoryType(newConfig.getRepositoryType());
+                    if(parameters != null){
+                    	for(int i=0; i<parameters.length; i++){
+                    		String requestParam = request.getParameter(parameters[i].getName());
+                    		
+                    		//If a required parameter has not been specified.
+                    		if(parameters[i].getRequired() && (requestParam == null || "".equals(requestParam))){
+                    			valid = false;
+                    			%>
+                                <script type="text/javascript">
+                                	CARBON.showInfoDialog("Please enter value for " + "<fmt:message key="<%=parameters[i].getName()%>"/>");
+            			        </script>
+                                <%
+                                break;
+                    		}
+                    		parameters[i].setValue(requestParam);
+                    	}
+                    	newConfig.setRepositoryConfigParameters(parameters);
+                    }
+                    
+                    if(valid){
+                    	client.enableSynchronizer(newConfig);
+                    }
+                    else{
+                    	synchronizerConfiguration = newConfig;
+                    }
                 } else if ("update".equals(action)) {
+                	
                     DeploymentSynchronizerConfiguration newConfig = new DeploymentSynchronizerConfiguration();
                     newConfig.setEnabled(true);
                     newConfig.setAutoCommit(request.getParameter("autoCommit") != null);
                     newConfig.setAutoCheckout(request.getParameter("autoCheckout") != null);
                     newConfig.setPeriod(Long.parseLong(request.getParameter("syncPeriod")));
                     newConfig.setUseEventing(request.getParameter("useEventing") != null);
-		    newConfig.setRepositoryType("registry"); // TODO: Get this via user input
-                    client.updateSynchronizer(newConfig);
+		    		newConfig.setRepositoryType(request.getParameter("repo.type"));
+		    		
+		    		RepositoryConfigParameter[] parameters = client.getParamsByRepositoryType(newConfig.getRepositoryType());
+                    if(parameters != null && parameters.length != 0){
+                    	for(int i=0; i<parameters.length; i++){
+                    		String requestParam = request.getParameter(parameters[i].getName());
+                    		
+                    		//If a required parameter has not been specified.
+                    		if(parameters[i].getRequired() && (requestParam == null || "".equals(requestParam))){
+                    			valid = false;
+                    			%>
+                                <script type="text/javascript">
+                                	CARBON.showInfoDialog("Please enter value for " + "<fmt:message key="<%=parameters[i].getName()%>"/>");
+            			        </script>
+                                <%
+                                break;
+                    		}
+                    		parameters[i].setValue(requestParam);
+                    	}
+                    	newConfig.setRepositoryConfigParameters(parameters);
+                    }
+		    		
+                    if(valid){
+                    	client.updateSynchronizer(newConfig);
+                        %>
+                        <script type="text/javascript">
+                        	CARBON.showInfoDialog("<fmt:message key="deployment.sync.configupdate.success"/>");
+    			        </script>
+                        <%
+                    }
+                    else{
+                    	synchronizerConfiguration = newConfig;
+                    }
                 } else if ("commit".equals(action)) {
                     if (client.getConfiguration().getEnabled()) {
                         client.commit();
@@ -174,7 +267,15 @@
                 }
             }
 
-            synchronizerConfiguration = client.getConfiguration();
+            if(valid){
+            	synchronizerConfiguration = client.getConfiguration();        	
+	        }
+            repoType = synchronizerConfiguration.getRepositoryType();
+            repositoryTypes = client.getRepositoryTypes();
+            
+            //If configuration has been specified in the carbon.xml, disable input fields.
+            disableFields = synchronizerConfiguration.getServerBasedConfiguration();
+            
         } catch (Exception e) {
             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
     %>
@@ -189,6 +290,12 @@
     <div id="middle">
         <h2><fmt:message key="deployment.sync.menu.text"/></h2>
         <div id="workArea">
+        	<%if(disableFields){ %>
+	            <p>
+	            	<font color="blue"><fmt:message key="deployment.sync.config.disabled"/></font>	
+	            </p>
+	            </br>
+            <%} %>
             <p>
                 <%
                     if (synchronizerConfiguration.getEnabled()) {
@@ -212,10 +319,36 @@
                         </tr>
                     </thead>
                     <tbody>
+                    	<tr>
+                        	<td><fmt:message key="deployment.sync.repo.type"/></td>
+                        	<td>
+                        		<select id="repo.type" name="repo.type" onchange="changeRepoType(this)" 
+                        			<%if(disableFields){%>disabled="disabled"<%}%>>
+									<option value="registry" <%if (repoType == null || repoType.equalsIgnoreCase("registry")) {%>
+											selected="selected"<%}%>>
+										<fmt:message key="deployment.sync.repo.type.registry"/>
+									</option>
+									<%if(repositoryTypes != null){ 
+										for(String repositoryType : repositoryTypes){
+											if(repositoryType.equalsIgnoreCase("registry")){
+												//Ignore registry type since it is the default repository type
+												continue;	
+											}%>
+											<option value="<%=repositoryType%>" <%if (repoType.equalsIgnoreCase(repositoryType)) {%>
+												selected="selected"<%}%>>
+												<fmt:message key="<%="deployment.sync.repo.type." + repositoryType%>"/>
+											</option>
+										<%}
+									} %>
+								</select>
+                        	</td>
+                        </tr>
+                        
                         <tr>
                             <td width="30%"><fmt:message key="deployment.sync.auto.commit"/></td>
                             <td>
-                                <input id="auto.commit.chkbox" type="checkbox" name="autoCommit"/>
+                                <input id="auto.commit.chkbox" type="checkbox" name="autoCommit"
+                                <%if(disableFields){%>disabled="disabled"<%}%>/>
                                 <%
                                     if (synchronizerConfiguration.getAutoCommit()) {
                                 %>
@@ -230,7 +363,8 @@
                         <tr>
                             <td><fmt:message key="deployment.sync.auto.checkout"/></td>
                             <td>
-                                <input id="auto.checkout.chkbox" type="checkbox" name="autoCheckout" onclick="enableEventingCheckbox();"/>
+                                <input id="auto.checkout.chkbox" type="checkbox" name="autoCheckout" onclick="enableEventingCheckbox();"
+                                <%if(disableFields){%>disabled="disabled"<%}%>/>
                                 <%
                                     if (synchronizerConfiguration.getAutoCheckout()) {
                                 %>
@@ -245,7 +379,8 @@
                         <tr>
                             <td><fmt:message key="deployment.sync.use.eventing"/></td>
                             <td>
-                                <input id="use.eventing.chkbox" type="checkbox" name="useEventing"/>
+                                <input id="use.eventing.chkbox" type="checkbox" name="useEventing"
+                                <%if(disableFields){%>disabled="disabled"<%}%>/>
                                 <%
                                     if (synchronizerConfiguration.getUseEventing()) {
                                 %>
@@ -267,32 +402,92 @@
                         </tr>
                         <tr>
                             <td><fmt:message key="deployment.sync.period"/></td>
-                            <td><input type="text" value="<%=synchronizerConfiguration.getPeriod()%>" name="syncPeriod" id="syncPeriod"/> s</td>
-                        </tr>
-                        <%
-                            if (!"svn".equals(synchronizerConfiguration.getRepositoryType())) {
-                        %>
-                        <tr>
-                            <td class="buttonRow" colspan="2">
-                                <%
-                                    if (synchronizerConfiguration.getEnabled()) {
-                                %>
-                                <button class="button" onclick="update()"><fmt:message key="deployment.sync.update"/></button>
-                                <button class="button" onclick="disable(); return false;"><fmt:message key="deployment.sync.disable"/></button>
-                                <%
-                                } else {
-                                %>
-                                <button class="button" onclick="enable(); return false;"><fmt:message key="deployment.sync.enable"/></button>
-                                <%
-                                    }
-                                %>
+                            <td><input type="text" value="<%=synchronizerConfiguration.getPeriod()%>" name="syncPeriod" id="syncPeriod"
+                            	<%if(disableFields){%>disabled="disabled"<%}%>/>
                             </td>
                         </tr>
-                        <%
-                            }
-                        %>
                     </tbody>
                 </table>
+                
+                <%for(String repositoryType : repositoryTypes){ 
+                	
+                	RepositoryConfigParameter[] configParams = client.getParamsByRepositoryType(repositoryType);
+                	if(configParams != null){%>
+	                <table id="<%=repositoryType%>.ConfigTable" class="styledLeft" style="margin-top: 20px; display: <%=(repoType.equals(repositoryType)?"":"none")%>"> 
+	                    <thead>
+	                        <tr>
+	                            <th colspan="2"><fmt:message key="<%="deployment.sync." + repositoryType + ".config"%>"/></th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                    	<%for(int i=0; i<configParams.length; i++){ %>
+	                    		<tr id="<%=repositoryType + ".row."+i%>">
+	                    			<td width="30%"><fmt:message key="<%=configParams[i].getName()%>"/></td>
+	                    			<td>
+		                    			<!-- If type of parameter is string. Display text/password field. If not, display check-box -->
+		                        		<input id="<%=configParams[i].getName()%>" name="<%=configParams[i].getName()%>"
+		                        			<% if(disableFields){%>
+		                        				disabled="disabled"
+		                        			<% }%>
+		                        			<%if(configParams[i].getType().equalsIgnoreCase("string")){ %>
+		                        				value="<%=configParams[i].getValue() == null ? "" : 
+		                        						configParams[i].getValue()%>"
+		                       					size=<%=configParams[i].getMaxlength()%>
+		                     					<%if(configParams[i].getMasked()){ %>
+		                     						type="password"
+		                     					<%}
+		                        				  else{%>
+		                        				  	type="text"
+		                        				<%} %>
+		                        			<%}
+		                        			else{%>
+		                        				type="checkbox" 
+		                        			<%} %> 
+		                        		/>
+		                        		<%if (configParams[i].getValue() != null && configParams[i].getValue().length() != 0) {%>
+			                                <script type="text/javascript">
+			                                    document.getElementById("<%=configParams[i].getName()%>").setAttribute('checked', 'true');
+			                                </script>
+		                                <%}%>
+	                        		</td>
+	                    		</tr>
+	                    	<%} %>
+	                    </tbody>
+	                </table>
+	                
+	                <script type="text/javascript">
+				        alternateTableRows('<%=repositoryType%>.ConfigTable', 'tableEvenRow', 'tableOddRow');
+				    </script>
+                	<%}
+                } %>
+                
+                <input type="hidden" id="currentRepo" name="currentRepo"/>
+                
+                 <table id="buttonTable" class="styledLeft" style="margin-top: 10px;">
+               		<tr>
+                          <td class="buttonRow">
+                              <%
+                                  if (synchronizerConfiguration.getEnabled()) {
+                              %>
+                              <input type="button" class="button" onclick="update()" 
+                              		<%if(disableFields){%>disabled="disabled" <%}%> 
+                              		value="<fmt:message key="deployment.sync.update"/>"/>
+                              <input type="button" class="button" onclick="disable(); return false;" 
+                              		<%if(disableFields){%>disabled="disabled"<%}%>
+                              		value="<fmt:message key="deployment.sync.disable"/>"/>
+                              <%
+                              } else {
+                              %>
+                              <input type="button" class="button" onclick="enable(); return false;" 
+                              		<%if(disableFields){%>disabled="disabled"<%}%> 
+                              		value="<fmt:message key="deployment.sync.enable"/>"/>
+                              <%
+                                  }
+                              %>
+                          </td>
+                      </tr>
+                 </table>
+                
                 <p>&nbsp;</p>
                 <%
                     if (synchronizerConfiguration.getEnabled()) {
@@ -375,6 +570,11 @@
 
     <script type="text/javascript">
         alternateTableRows('syncTable', 'tableEvenRow', 'tableOddRow');
+    </script>
+    
+    <script>
+    	var selectedValue = document.getElementById('repo.type').value;
+    	document.getElementById('currentRepo').value = selectedValue;
     </script>
 
     <%

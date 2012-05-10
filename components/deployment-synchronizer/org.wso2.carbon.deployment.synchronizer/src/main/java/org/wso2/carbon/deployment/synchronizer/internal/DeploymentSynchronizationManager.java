@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * and keeping track of them for management purposes. It also provides a base framework for
  * scheduling automatic repository synchronization tasks.
  */
-public class DeploymentSynchronizationManager {
+public final class DeploymentSynchronizationManager {
 
     private static final Log log = LogFactory.getLog(DeploymentSynchronizationManager.class);
 

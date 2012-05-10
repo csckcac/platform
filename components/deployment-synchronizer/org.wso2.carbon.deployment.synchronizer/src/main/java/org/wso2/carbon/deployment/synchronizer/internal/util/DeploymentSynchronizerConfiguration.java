@@ -29,6 +29,10 @@ public class DeploymentSynchronizerConfiguration {
 
     private long period;
 
+    private boolean serverBasedConfiguration;
+
+    private RepositoryConfigParameter[] repositoryConfigParameters;
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -76,4 +80,25 @@ public class DeploymentSynchronizerConfiguration {
     public void setRepositoryType(String repositoryType) {
         this.repositoryType = repositoryType;
     }
+
+    public RepositoryConfigParameter[] getRepositoryConfigParameters() {
+        return repositoryConfigParameters;
+    }
+
+    public void setRepositoryConfigParameters(RepositoryConfigParameter[] repositoryConfigParameters) {
+        this.repositoryConfigParameters = repositoryConfigParameters;
+    }
+
+    /**
+     * Indicates whether the configuration is retrieved from the server config file (carbon.xml)
+     * @return  True if configuration is retrieved from carbon.xml. False otherwise.
+     */
+    public boolean isServerBasedConfiguration() {
+        return serverBasedConfiguration;
+    }
+
+    public void setServerBasedConfiguration(boolean serverBasedConfiguration) {
+        this.serverBasedConfiguration = serverBasedConfiguration;
+    }
+
 }

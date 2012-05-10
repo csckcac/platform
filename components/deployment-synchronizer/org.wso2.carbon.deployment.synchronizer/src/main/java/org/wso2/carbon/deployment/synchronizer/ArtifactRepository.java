@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.deployment.synchronizer;
 
+import org.wso2.carbon.deployment.synchronizer.internal.util.RepositoryConfigParameter;
+
+import java.util.List;
+
 /**
  * Represents a remote repository instance. The DeploymentSynchronizer interacts with the
  * remote repository through this interface.
@@ -63,4 +67,16 @@ public interface ArtifactRepository {
      * Clean up any actions taken during initializing auto checkout
      */
     public void cleanupAutoCheckout();
+
+    /**
+     *   Get the Repository Type of the Synchronizer
+     * @return   The Repository Type
+     */
+    public String getRepositoryType();
+
+    /**
+     *  Get the list of configuration parameters specific for each Repository.
+     * @return  List of RepositoryConfigParameters
+     */
+    public List<RepositoryConfigParameter> getParameters();
 }

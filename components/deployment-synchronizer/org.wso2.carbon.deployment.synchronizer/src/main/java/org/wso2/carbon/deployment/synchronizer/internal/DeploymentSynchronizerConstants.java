@@ -30,6 +30,12 @@ public class DeploymentSynchronizerConstants {
     public static final String AUTO_SYNC_PERIOD = DEPLOYMENT_SYNCHRONIZER + ".AutoSyncPeriod";
     public static final String USE_EVENTING = DEPLOYMENT_SYNCHRONIZER + ".UseEventing";
     public static final String REPOSITORY_TYPE = DEPLOYMENT_SYNCHRONIZER + ".RepositoryType";
+    public static final String SVN_URL = DEPLOYMENT_SYNCHRONIZER + ".SVNURL";
+    public static final String SVN_USERNAME = DEPLOYMENT_SYNCHRONIZER + ".SVNUsername";
+    public static final String SVN_PASSWORD = DEPLOYMENT_SYNCHRONIZER + ".SVNPassword";
+    public static final String SVN_FORCE_UPDATE = DEPLOYMENT_SYNCHRONIZER + ".SVNForceUpdate";
+    public static final String SVN_IGNORE_EXTERNALS = DEPLOYMENT_SYNCHRONIZER + ".SVNIgnoreExternals";
+    public static final String SVN_APP_TENANT_TO_URL = DEPLOYMENT_SYNCHRONIZER + ".SVNAppendTenantToUrl";
 
     // Registry constants
     public static final String SUPER_TENANT_REGISTRY_PATH = "/repository/deployment/server";

@@ -20,6 +20,7 @@ package org.wso2.carbon.deployment.synchronizer.internal;
 
 import org.wso2.carbon.deployment.synchronizer.DeploymentSynchronizerException;
 import org.wso2.carbon.deployment.synchronizer.internal.repository.CarbonRepositoryUtils;
+import org.wso2.carbon.deployment.synchronizer.internal.util.DeploymentSynchronizerConfiguration;
 import org.wso2.carbon.deployment.synchronizer.services.DeploymentSynchronizerService;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
@@ -54,6 +55,13 @@ public class DeploymentSynchronizerServiceImpl implements DeploymentSynchronizer
 
     public boolean update(int tenantId) {
         try {
+            DeploymentSynchronizerConfiguration configuration =
+                    CarbonRepositoryUtils.getActiveSynchronizerConfiguration(tenantId);
+
+            //If autoCheckout is false, return false
+            if(!configuration.isAutoCheckout()){
+                return false;
+            }
             DeploymentSynchronizer synchronizer =
                     syncManager.getSynchronizer(MultitenantUtils.getAxis2RepositoryPath(tenantId));
             if (synchronizer == null) {
@@ -68,7 +76,15 @@ public class DeploymentSynchronizerServiceImpl implements DeploymentSynchronizer
     }
 
     public boolean commit(int tenantId) {
+
         try {
+            DeploymentSynchronizerConfiguration configuration =
+                    CarbonRepositoryUtils.getActiveSynchronizerConfiguration(tenantId);
+
+            //If autoCommit is false, return false
+            if(!configuration.isAutoCommit()){
+                return false;
+            }
             DeploymentSynchronizer synchronizer =
                     getSynchronizer(MultitenantUtils.getAxis2RepositoryPath(tenantId));
             if (synchronizer == null) {

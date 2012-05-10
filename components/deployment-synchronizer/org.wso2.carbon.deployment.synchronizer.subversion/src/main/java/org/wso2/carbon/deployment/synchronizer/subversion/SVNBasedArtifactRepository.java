@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.deployment.synchronizer.subversion;
 
-import org.apache.axis2.util.JavaUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,7 +26,11 @@ import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapter;
 import org.tigris.subversion.svnclientadapter.utils.Depth;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.deployment.synchronizer.ArtifactRepository;
+import org.wso2.carbon.deployment.synchronizer.internal.DeploymentSynchronizerConstants;
 import org.wso2.carbon.deployment.synchronizer.DeploymentSynchronizerException;
+import org.wso2.carbon.deployment.synchronizer.internal.repository.CarbonRepositoryUtils;
+import org.wso2.carbon.deployment.synchronizer.internal.util.DeploymentSynchronizerConfiguration;
+import org.wso2.carbon.deployment.synchronizer.internal.util.RepositoryConfigParameter;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -60,16 +63,57 @@ public class SVNBasedArtifactRepository implements ArtifactRepository {
     private boolean ignoreExternals = true;
     private boolean forceUpdate = true;
 
+    private  List<RepositoryConfigParameter> parameters;
+
+    public SVNBasedArtifactRepository(){
+        populateParameters();
+    }
+
     public void init(int tenantId) throws DeploymentSynchronizerException {
+
         ServerConfiguration serverConfig = ServerConfiguration.getInstance();
-        String url = serverConfig.getFirstProperty(SVNConstants.SVN_URL);
+
+        DeploymentSynchronizerConfiguration conf =
+                CarbonRepositoryUtils.getActiveSynchronizerConfiguration(tenantId);
+
+        String url = null;
+        boolean appendTenantId = false;
+        String user = null;
+        String password = null;
+        
+        RepositoryConfigParameter[] configParameters = conf.getRepositoryConfigParameters();
+
+        if(configParameters == null || configParameters.length == 0){
+            handleException("SVN configuration parameters must be specified for the SVN based deployment synchronizer");
+        }
+
+        for(int i=0; i<configParameters.length; i++){
+            RepositoryConfigParameter parameter = configParameters[i];
+            if(SVNConstants.SVN_URL.equals(parameter.getName())){
+                url = parameter.getValue();
+            }
+            else if(SVNConstants.SVN_USER.equals(parameter.getName())){
+                user = parameter.getValue();
+            }
+            else if(SVNConstants.SVN_PASSWORD.equals(parameter.getName())){
+                password = parameter.getValue();
+            }
+            else if(SVNConstants.SVN_URL_APPEND_TENANT_ID.equals(parameter.getName())){
+                appendTenantId = Boolean.valueOf(parameter.getValue());
+            }
+            else if(SVNConstants.SVN_IGNORE_EXTERNALS.equals(parameter.getName())){
+                ignoreExternals = Boolean.valueOf(parameter.getValue());
+            }
+            else if(SVNConstants.SVN_FORCE_UPDATE.equals(parameter.getName())){
+                forceUpdate = Boolean.valueOf(parameter.getValue());
+            }
+        }
+
         if (url == null) {
             handleException("SVN URL must be specified for the SVN based deployment synchronizer");
             return;
         }
 
-        boolean appendTenantId = Boolean.parseBoolean(serverConfig.getFirstProperty(
-                SVNConstants.SVN_URL_APPEND_TENANT_ID));
         if (appendTenantId) {
             if (!url.endsWith("/")) {
                 url += "/";
@@ -93,10 +137,8 @@ public class SVNBasedArtifactRepository implements ArtifactRepository {
         }
 
         svnClient = SVNClientAdapterFactory.createSVNClient(clientType);
-        String user = serverConfig.getFirstProperty(SVNConstants.SVN_USER);
         if (user != null) {
             svnClient.setUsername(user);
-            String password = serverConfig.getFirstProperty(SVNConstants.SVN_PASSWORD);
             svnClient.setPassword(password);
         }
 
@@ -105,17 +147,48 @@ public class SVNBasedArtifactRepository implements ArtifactRepository {
         svnClient.setProgressListener(notifyListener);
         svnClient.addConflictResolutionCallback(new DefaultSVNConflictResolver());
 
-        String value = serverConfig.getFirstProperty(SVNConstants.SVN_IGNORE_EXTERNALS);
-        if (value != null && JavaUtils.isFalseExplicitly(value)) {
-            ignoreExternals = false;
-        }
-
-        value = serverConfig.getFirstProperty(SVNConstants.SVN_FORCE_UPDATE);
-        if (value != null && JavaUtils.isFalseExplicitly(value)) {
-            forceUpdate = false;
-        }
-
         checkRemoteDirectory();
+    }
+
+    private void populateParameters(){
+        parameters = new ArrayList<RepositoryConfigParameter>();
+
+        RepositoryConfigParameter parameter;
+
+        parameter = new RepositoryConfigParameter();
+        parameter.setName(SVNConstants.SVN_URL);
+        parameter.setType("string");
+        parameter.setRequired(true);
+        parameter.setMaxlength(50);
+        parameters.add(parameter);
+
+        parameter = new RepositoryConfigParameter();
+        parameter.setName(SVNConstants.SVN_USER);
+        parameter.setType("string");
+        parameter.setRequired(true);
+        parameters.add(parameter);
+
+        parameter = new RepositoryConfigParameter();
+        parameter.setName(SVNConstants.SVN_PASSWORD);
+        parameter.setType("string");
+        parameter.setRequired(true);
+        parameter.setMasked(true);
+        parameters.add(parameter);
+
+        parameter = new RepositoryConfigParameter();
+        parameter.setName(SVNConstants.SVN_IGNORE_EXTERNALS);
+        parameter.setType("boolean");
+        parameters.add(parameter);
+
+        parameter = new RepositoryConfigParameter();
+        parameter.setName(SVNConstants.SVN_FORCE_UPDATE);
+        parameter.setType("boolean");
+        parameters.add(parameter);
+
+        parameter = new RepositoryConfigParameter();
+        parameter.setName(SVNConstants.SVN_URL_APPEND_TENANT_ID);
+        parameter.setType("boolean");
+        parameters.add(parameter);
     }
 
     /**
@@ -306,6 +379,39 @@ public class SVNBasedArtifactRepository implements ArtifactRepository {
 
     public void cleanupAutoCheckout() {
         // Nothing to impl
+    }
+
+    @Override
+    public String getRepositoryType() {
+        return DeploymentSynchronizerConstants.REPOSITORY_TYPE_SVN;
+    }
+
+    @Override
+    public List<RepositoryConfigParameter> getParameters() {
+        return parameters;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SVNBasedArtifactRepository that = (SVNBasedArtifactRepository) o;
+
+        if (!getRepositoryType().equals(that.getRepositoryType())){
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return getRepositoryType().hashCode();
     }
 
     private void handleException(String msg) throws DeploymentSynchronizerException {

@@ -24,6 +24,10 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.deployment.synchronizer.ArtifactRepository;
+import org.wso2.carbon.deployment.synchronizer.internal.util.RepositoryConfigParameter;
+import org.wso2.carbon.deployment.synchronizer.internal.util.RepositoryReferenceHolder;
+import org.wso2.carbon.deployment.synchronizer.registry.RegistryBasedArtifactRepository;
 import org.wso2.carbon.deployment.synchronizer.DeploymentSynchronizerException;
 import org.wso2.carbon.deployment.synchronizer.internal.repository.CarbonRepositoryUtils;
 import org.wso2.carbon.deployment.synchronizer.services.DeploymentSynchronizerService;
@@ -32,6 +36,9 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @scr.component name="org.wso2.carbon.deployment.synchronizer.XXX" immediate="true"
@@ -49,37 +56,37 @@ public class DeploymentSynchronizerComponent {
     private ServiceRegistration observerRegistration;
 
     protected void activate(ComponentContext context) {
-        String enableDepSync =
-                ServerConfiguration.getInstance().getFirstProperty("DeploymentSynchronizer.Enabled");
-        if(enableDepSync == null || "false".equals(enableDepSync)){
-            return;
-        }
+
+        // Initialize the repository manager so that it can be later used to
+        // start a synchronizer (eg: via the UI)
+        ServerConfiguration serverConfig = ServerConfiguration.getInstance();
+        DeploymentSynchronizationManager.getInstance().init(serverConfig);
+
+        //Register the Registry Based Artifact Repository
+        RepositoryReferenceHolder repositoryReferenceHolder = RepositoryReferenceHolder.getInstance();
+        ArtifactRepository artifactRepository =  new RegistryBasedArtifactRepository();
+        //Passing null for the parameter list since a RegistryBasedArtifactRepository does not have any specific parameters.
+        repositoryReferenceHolder.addRepository(artifactRepository, null);
+
         try {
-            // Initialize the repository manager so that it can be later used to
-            // start a synchronizer (eg: via the UI)
-            ServerConfiguration serverConfig = ServerConfiguration.getInstance();
-            DeploymentSynchronizationManager.getInstance().init(serverConfig);
-
-            try {
-                initDeploymentSynchronizerForSuperTenant();
-            } catch (DeploymentSynchronizerException e) {
-                log.error("Error while initializing a deployment synchronizer for the super tenant " +
-                          "Carbon repository", e);
-            }
-
-            // Register an observer so we can track tenant ConfigurationContext creation and
-            // do the synchronization operations as necessary
-            BundleContext bundleContext = context.getBundleContext();
-            observerRegistration = bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
-                                                                 new DeploymentSyncAxis2ConfigurationContextObserver(), null);
-
-            // register the OSGi service
-            bundleContext.registerService(new String[]{DeploymentSynchronizerService.class.getName(),
-                                                      org.wso2.carbon.core.deployment.DeploymentSynchronizer.class.getName()},
-                                          new DeploymentSynchronizerServiceImpl(), null);
-        } catch (Throwable e) {
-            log.error("Could not start DeploymentSynchronizerActivator", e);
+            initDeploymentSynchronizerForSuperTenant();
+        } catch (DeploymentSynchronizerException e) {
+            log.error("Error while initializing a deployment synchronizer for the super tenant " +
+                      "Carbon repository", e);
         }
+
+        // Register an observer so we can track tenant ConfigurationContext creation and
+        // do the synchronization operations as necessary
+        BundleContext bundleContext = context.getBundleContext();
+        observerRegistration = bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
+                                                             new DeploymentSyncAxis2ConfigurationContextObserver(), null);
+
+        // register the OSGi service
+        bundleContext.registerService(new String[]{DeploymentSynchronizerService.class.getName(),
+                                                  org.wso2.carbon.core.deployment.DeploymentSynchronizer.class.getName()},
+                                      new DeploymentSynchronizerServiceImpl(), null);
+
+
 
         log.debug("Deployment synchronizer component activated");
     }

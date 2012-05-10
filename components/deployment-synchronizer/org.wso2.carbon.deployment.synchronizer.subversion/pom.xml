@@ -67,6 +67,7 @@
         <dependency>
             <groupId>org.tigris</groupId>
             <artifactId>svn-client-adapter</artifactId>
+	    <version>1.6.18.wso2v1</version>
         </dependency>
     </dependencies>
 

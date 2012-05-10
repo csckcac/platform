@@ -21,13 +21,19 @@ package org.wso2.carbon.deployment.synchronizer.registry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.deployment.synchronizer.ArtifactRepository;
+import org.wso2.carbon.deployment.synchronizer.internal.DeploymentSynchronizerConstants;
 import org.wso2.carbon.deployment.synchronizer.DeploymentSynchronizerException;
+import org.wso2.carbon.deployment.synchronizer.internal.util.RepositoryConfigParameter;
 import org.wso2.carbon.deployment.synchronizer.internal.util.ServiceReferenceHolder;
 import org.wso2.carbon.registry.core.Collection;
+import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.synchronization.RegistrySynchronizer;
 import org.wso2.carbon.registry.synchronization.SynchronizationException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import java.util.List;
 
 /**
  * Use this class in conjunction with the DeploymentSynchronizer to synchronize a file system
@@ -36,12 +42,14 @@ import org.wso2.carbon.registry.synchronization.SynchronizationException;
 public class RegistryBasedArtifactRepository implements ArtifactRepository {
 
     private static final Log log = LogFactory.getLog(RegistryBasedArtifactRepository.class);
-
+    
     private UserRegistry registry;
     private String registryPath;
     private String basePath;
 
     private String subscriptionId;
+
+    public RegistryBasedArtifactRepository(){}
 
     public RegistryBasedArtifactRepository(UserRegistry registry,
                                            String registryPath, String basePath) {
@@ -51,17 +59,48 @@ public class RegistryBasedArtifactRepository implements ArtifactRepository {
     }
 
     public void init(int tenantId) throws DeploymentSynchronizerException {
+
         try {
-            if (!registry.resourceExists(registryPath)) {
-                Collection collection = registry.newCollection();
-                registry.put(registryPath, collection);
+            UserRegistry configRegistry = getConfigurationRegistry(tenantId);
+            String tenantRegistryPath = getRegistryPath(tenantId);
+
+            this.registry = configRegistry;
+            this.registryPath = tenantRegistryPath;
+            this.basePath = RegistryConstants.CONFIG_REGISTRY_BASE_PATH;
+
+            if (!configRegistry.resourceExists(tenantRegistryPath)) {
+                Collection collection = configRegistry.newCollection();
+                configRegistry.put(tenantRegistryPath, collection);
                 collection.discard();
             }
+
         } catch (RegistryException e) {
-            handleException("Error while creating the registry collection at: " + registryPath, e);
+            throw new DeploymentSynchronizerException("Error while accessing registry for " +
+                    "tenant: " + tenantId, e);
         }
+
+//        try {
+//            if (!registry.resourceExists(registryPath)) {
+//                Collection collection = registry.newCollection();
+//                registry.put(registryPath, collection);
+//                collection.discard();
+//            }
+//        } catch (RegistryException e) {
+//            handleException("Error while creating the registry collection at: " + registryPath, e);
+//        }
     }
 
+    private static UserRegistry getConfigurationRegistry(int tenantId) throws RegistryException {
+        return ServiceReferenceHolder.getRegistryService().getConfigSystemRegistry(tenantId);
+    }
+
+    private static String getRegistryPath(int tenantId) {
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+            return DeploymentSynchronizerConstants.SUPER_TENANT_REGISTRY_PATH;
+        } else {
+            return DeploymentSynchronizerConstants.TENANT_REGISTRY_PATH;
+        }
+    }
     public boolean commit(String filePath) throws DeploymentSynchronizerException {
         if (log.isDebugEnabled()) {
             log.debug("Committing artifacts at " + filePath + " to the collection at " +
@@ -126,6 +165,41 @@ public class RegistryBasedArtifactRepository implements ArtifactRepository {
             log.debug("Unsubscribed from registry events with the ID: " + subscriptionId);
         }
         subscriptionId = null;
+    }
+
+    @Override
+    public String getRepositoryType() {
+        return DeploymentSynchronizerConstants.REPOSITORY_TYPE_REGISTRY;
+    }
+
+    @Override
+    public List<RepositoryConfigParameter> getParameters(){
+        //Returning null since the Registry Based Artifact Repository does not have any specific
+        //configuration parameters.
+        return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RegistryBasedArtifactRepository that = (RegistryBasedArtifactRepository) o;
+
+        if (!getRepositoryType().equals(that.getRepositoryType())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return getRepositoryType().hashCode();
     }
 
     private void handleException(String msg, Exception e) throws DeploymentSynchronizerException {

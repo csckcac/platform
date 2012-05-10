@@ -21,13 +21,19 @@ package org.wso2.carbon.deployment.synchronizer.services;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.deployment.synchronizer.ArtifactRepository;
 import org.wso2.carbon.deployment.synchronizer.internal.DeploymentSynchronizationManager;
 import org.wso2.carbon.deployment.synchronizer.internal.DeploymentSynchronizer;
 import org.wso2.carbon.deployment.synchronizer.DeploymentSynchronizerException;
 import org.wso2.carbon.deployment.synchronizer.internal.repository.CarbonRepositoryUtils;
 import org.wso2.carbon.deployment.synchronizer.internal.util.DeploymentSynchronizerConfiguration;
+import org.wso2.carbon.deployment.synchronizer.internal.util.RepositoryConfigParameter;
+import org.wso2.carbon.deployment.synchronizer.internal.util.RepositoryReferenceHolder;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Admin service for managing the deployment synchronizer component and synchronizers engaged
@@ -132,6 +138,46 @@ public class DeploymentSynchronizerAdmin extends AbstractAdmin {
 
         int tenantId = MultitenantUtils.getTenantId(getConfigContext());
         return CarbonRepositoryUtils.getActiveSynchronizerConfiguration(tenantId);
+    }
+    
+    public RepositoryConfigParameter[] getParamsByRepositoryType(String repositoryType){
+
+        Set<ArtifactRepository> repositories = RepositoryReferenceHolder.getInstance().getRepositories().keySet();
+
+        if(repositories != null && !repositories.isEmpty()){
+            for(ArtifactRepository repository : repositories){
+                if(repository.getRepositoryType().equals(repositoryType)){
+                    List<RepositoryConfigParameter> parameters =
+                            RepositoryReferenceHolder.getInstance().getRepositories().get(repository);
+                    if(parameters != null && !parameters.isEmpty()){
+                        return parameters.toArray(new RepositoryConfigParameter[parameters.size()]);
+                    }
+                }
+            }
+        }
+
+        return new RepositoryConfigParameter[0];
+    }
+
+    /**
+     * Get all available ArtifactRepositories
+     * @return Available ArtifactRepositories
+     */
+    public String[] getRepositoryTypes(){
+
+        Set<ArtifactRepository> repositories =
+                RepositoryReferenceHolder.getInstance().getRepositories().keySet();
+        if(repositories != null){
+            String[] repositoryTypes = new String[repositories.size()];
+            int index = 0;
+            
+            for(ArtifactRepository repository : repositories){
+                repositoryTypes[index] = repository.getRepositoryType();
+                index++;
+            }
+            return repositoryTypes;
+        }
+        return null;
     }
 
     private void handleException(String msg, Exception e) throws DeploymentSynchronizerException {

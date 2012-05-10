@@ -1,4 +1,4 @@
-<config>
+<APIManager>
     <Database>
         <URL>jdbc:h2:target/repository/database/WSO2AM_DB</URL>
         <Username>wso2carbon</Username>
@@ -8,12 +8,11 @@
         <maxWait>60000</maxWait>
         <minIdle>5</minIdle>
     </Database>
-    <apiMGTDataAgentConfig>
-        <bamServerThriftPort>7612</bamServerThriftPort>
-        <bamServerURL>https://localhost:9444/</bamServerURL>
-        <bamServerUser>admin</bamServerUser>
-        <bamServerPassword>admin</bamServerPassword>
-        <bamAgentTrustStore>repository/resources/security/client-truststore.jks</bamAgentTrustStore>
-        <bamAgentTrustStorePassword>wso2carbon</bamAgentTrustStorePassword>
-    </apiMGTDataAgentConfig>
-</config>
+    <APIUsageTracking>
+        <Enabled>false</Enabled>
+        <ThriftPort>7612</ThriftPort>
+        <BAMServerURL>https://localhost:9444/</BAMServerURL>
+        <BAMUser>admin</BAMUser>
+        <BAMPassword>admin</BAMPassword>
+    </APIUsageTracking>
+</APIManager>

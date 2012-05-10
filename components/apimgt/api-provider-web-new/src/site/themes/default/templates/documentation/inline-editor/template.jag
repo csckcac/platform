@@ -1,0 +1,60 @@
+<% jagg.template("documentation/inline-editor", function(inputs, outputs, jagg) { %>
+<script type="text/javascript">
+var apiName = '<%=request.getParameter("apiName")%>';
+var apiVersion = '<%=request.getParameter("version")%>';
+var docName = '<%=request.getParameter("docName")%>';
+</script>
+
+
+<div class="container-fluid content-section">
+      <div class="row-fluid">
+        <div class="span10" style="margin:20px 0px 0px 40px;">
+			<div id="apiDeatils">
+				<h2>InLine Editor</h2>
+			</div>
+		</div>
+        <div class="span8">
+            <textarea id="inlineEditor" style="width:100%;height:500px;"></textarea>
+        </div>
+        <div class="span3">
+            <table class="table table-bordered table-striped">
+
+        <thead>
+          <tr>
+            <th>Version</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <code>1.2.3</code>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+        </div>
+        <div class="span11">
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" id="inline-save-button">Save</button>
+				<p class="help-block">click save button to save the Doc</p>
+
+            </div>
+        </div>
+      </div>
+</div>
+
+    <script type="text/javascript">
+    $("#inline-save-button").click(function() {
+            var contentDoc = tinyMCE.get('inlineEditor').getContent();
+            jagg.post("/site/blocks/documentation/ajax/docs.jag", { action=saveDocContent,apiName:apiName,version:version,docName:docName,content:contentDoc},
+    function (result) {
+            if (result.error) {
+              jagg.message(result.message);
+            }
+    }, "json");
+
+    });
+    </script>
+
+<%});%>

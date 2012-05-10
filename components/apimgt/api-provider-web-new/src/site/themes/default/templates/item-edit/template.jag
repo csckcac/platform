@@ -1,5 +1,5 @@
 <% jagg.template("item-edit", function(inputs, outputs, jagg) { %>
-<% var api = outputs.api;%>
+<% var j,resCount,rowNums = [],api = outputs.api;%>
 <div class="row-fluid">
     <div class="span12">
         <form class="form-horizontal well" id="editAPIForm"  enctype="multipart/form-data">
@@ -85,6 +85,7 @@
                         <option value="RETIRED"<%=(api.status == "RETIRED" ? ' selected="selected"' : '')%>>RETIRED</option>
                         <option value="BLOCKED"<%=(api.status == "BLOCKED" ? ' selected="selected"' : '')%>>BLOCKED</option>
                     </select>
+
                     <div class="resourceTableDiv" id="resourceTableDiv">
                         <table class="table table-bordered table-striped" id="resource-table">
                             <thead>
@@ -118,7 +119,8 @@
 
                              <%if (api.templates!=null && api.templates.length > 0) {
                             for (var i = 0; i < api.templates.length; i++) {
-                            var j=1;%>
+                            j=1;
+                            %>
                             <tr id="item-<%=j%>">
                                 <td>
                                     <input type="text" class="input" id="uriTemplate" disabled="disabled" name="resourceTemplate" value="<%=api.templates[i][0]%>"/>
@@ -136,7 +138,12 @@
                                     <a class="btn btn-danger" id="resourceDelBtn" onClick="deleteResource('<%=j%>')"><i class="icon-trash icon-white"></i> Delete</a>
                                 </td>
                             </tr>
-        <%j++;}}%>
+                            <input type="hidden" name="resourceMethod-<%=parseInt(i)%>" value="<%=api.templates[i][1]%>">
+                            <input type="hidden" name="uriTemplate-<%=parseInt(i)%>" value="<%=api.templates[i][0]%>">
+        <% rowNums.push(j);
+        j++;
+
+        }}%>
                             </tbody>
                         </table>
 
@@ -149,6 +156,7 @@
 
                 <div id="stateActions" class="controls"></div>
             </div>
+             <input type="hidden" name="resourceCount" id="resourceCount" value="<%=rowNums%>">
 
             <div class="form-actions">
                 <input type="submit" id="updateButton" class="btn btn-primary" value="Save"/>
@@ -160,7 +168,7 @@
 </div>
 
  <script type="text/javascript">
-$(document).ready(function() {
+  $(document).ready(function() {
 $('input#updateButton').click( function() {
     $.ajax({
         url: '<%=site.context%>/site/blocks/item-add/ajax/add.jag',
@@ -169,13 +177,13 @@ $('input#updateButton').click( function() {
         data: $('form#editAPIForm').serialize(),
         success: function(data) {
                   if(!data.error){
-                      location.href = "site/pages/index.jag";
+                      location.href = "site/pages/item-info.jag?name=<%=api.name%>&version=<%=api.version%>";
                       $("#editAPIForm")[0].reset();
                   }
                  }
     });
-});
-});
+});  });
+
  </script>
 
 

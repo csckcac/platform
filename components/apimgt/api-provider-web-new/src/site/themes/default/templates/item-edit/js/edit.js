@@ -1,8 +1,9 @@
-var resourcesCount = 1;
+
 var rowNums = new Array();
 
 
 var updateResourcesToApi = function () {
+    var resourceCount=$('#resource-table tr').length-2;
     $('#resourceTableError').hide('fast');
     $('#resourceRow').clone(true).attr('id', 'item-' + resourcesCount).insertAfter($('#resourceRow'));
     $('#item-' + resourcesCount + ' #resourceMethod').val($('#resourceMethod').val());

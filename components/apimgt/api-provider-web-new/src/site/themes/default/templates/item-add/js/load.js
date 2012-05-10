@@ -7,7 +7,7 @@ $(function() {
     }, function (result) {
         if (!result.error) {
             var tags = new Array();
-            var jsonTagCloud = result.data.tags;
+            var jsonTagCloud = result.tags;
             for (var i = 0; i < jsonTagCloud.length; i++) {
                 tags.push(jsonTagCloud[i].name);
             }

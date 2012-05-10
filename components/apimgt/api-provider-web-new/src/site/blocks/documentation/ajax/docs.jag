@@ -32,6 +32,50 @@ include("/jagg/jagg.jag");
             }
         }
         print(obj);
+} else if (action === "addInlineContent") {
+        mod = jagg.module("documentation");
+        var api= {};
+        var doc= {};
+        api.provider = jagg.getUser().username;
+        api.name = request.getParameter("apiName");
+        api.version = request.getParameter("version");
+        doc.name = request.getParameter("docName");
+        doc.content = request.getParameter("content");
+
+        result = mod.addInlineContent(api,doc);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+        print(obj);
+}else if (action === "getInlineContent") {
+        mod = jagg.module("documentation");
+        var api= {};
+        var doc= {};
+        api.provider = jagg.getUser().username;
+        api.name = request.getParameter("apiName");
+        api.version = request.getParameter("version");
+        doc.name = request.getParameter("docName");
+
+        result = mod.getInlineContent(api,doc);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                tags:result.tags,
+                error:false
+            }
+        }
+        print(obj);
 
     }else if (action === "removeDocumentation") {
         mod = jagg.module("documentation");

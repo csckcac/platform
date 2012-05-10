@@ -17,18 +17,12 @@ package org.wso2.carbon.analytics.hive.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.analytics.hive.HiveConstants;
 import org.wso2.carbon.analytics.hive.dto.QueryResult;
 import org.wso2.carbon.analytics.hive.dto.QueryResultRow;
 import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,24 +30,28 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
     private static final Log log = LogFactory.getLog(HiveExecutorServiceImpl.class);
 
-    public HiveExecutorServiceImpl() {
-        initialize();
-    }
-
-    public void initialize() {
+    public void initialize(String driverName) {
         try {
-            Class.forName(HiveConstants.HIVE_DRIVER);
+            Class.forName(driverName);
         } catch (ClassNotFoundException e) {
             log.error("Error during initialization of Hive driver", e);
         }
     }
 
-    public QueryResult[] execute(String script) throws HiveExecutionException {
+    /**
+     *
+     * @param script
+     * @param credentials it has the drivername,url, username, password as elements in array to connect to hive
+     * @return The Resultset of all executed queries in the script
+     * @throws HiveExecutionException
+     */
+    public QueryResult[] execute(String script, String[] credentials) throws HiveExecutionException {
         if (script != null) {
-
+            Connection con = null;
+            initialize(credentials[0]);
             try {
-                Connection con = DriverManager.getConnection("jdbc:hive://localhost:10000/default",
-                                                             "", "");
+               con = DriverManager.getConnection(credentials[1],
+                                                            credentials[2], credentials[3]);
                 Statement stmt = con.createStatement();
 
                 String[] cmdLines = script.split(";\\r?\\n|;\\r"); // Tokenize with ;[new-line]
@@ -62,17 +60,17 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                 for (String cmdLine : cmdLines) {
 
                     String trimmedCmdLine = cmdLine.trim();
-
+                     trimmedCmdLine = trimmedCmdLine.replaceAll(";","");
                     if (!"".equals(trimmedCmdLine)) {
                         QueryResult queryResult = new QueryResult();
-                        queryResult.setQuery(cmdLine);
+                        queryResult.setQuery(trimmedCmdLine);
 
-                        ResultSet rs = stmt.executeQuery(cmdLine);
+                        ResultSet rs = stmt.executeQuery(trimmedCmdLine);
                         ResultSetMetaData metaData = rs.getMetaData();
 
                         int columnCount = metaData.getColumnCount();
                         List<String> columnsList = new ArrayList<String>();
-                        for (int i = 0; i < columnCount; i++) {
+                        for (int i = 1; i <= columnCount; i++) {
                             columnsList.add(metaData.getColumnName(i));
                         }
 
@@ -83,7 +81,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                             QueryResultRow resultRow = new QueryResultRow();
 
                             List<String> columnValues = new ArrayList<String>();
-                            for (int i = 0; i < columnCount; i++) {
+                            for (int i = 1; i <= columnCount; i++) {
                                 columnValues.add(rs.getObject(i).toString());
                             }
 
@@ -100,8 +98,14 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
                 return queryResults.toArray(new QueryResult[]{});
 
+
             } catch (SQLException e) {
                 throw new HiveExecutionException("Error while executing Hive script..", e);
+            }finally {
+               if(null != con) try {
+                   con.close();
+               } catch (SQLException e) {
+               }
             }
 
         }
@@ -110,4 +114,27 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
     }
 
+    @Override
+    public boolean authenticateHive(String driverName, String url, String username, String password) {
+        Connection con = null;
+        try {
+            Class.forName(driverName);
+            con = DriverManager.getConnection(url, username,password);
+        } catch (ClassNotFoundException e) {
+            log.error("Error during initialization of Hive driver", e);
+        } catch (SQLException e) {
+            log.error("URL | Username | password in incorrect. Unable to connect to hive");
+        }finally {
+            if(null != con){
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    }
 }

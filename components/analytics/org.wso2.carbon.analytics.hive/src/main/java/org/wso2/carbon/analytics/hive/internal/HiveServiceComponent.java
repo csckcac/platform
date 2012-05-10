@@ -17,9 +17,6 @@ package org.wso2.carbon.analytics.hive.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.ComponentContext;
-import org.apache.hadoop.hive.common.LogUtils;
 import org.apache.hadoop.hive.common.ServerUtils;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.service.HiveServer;
@@ -29,9 +26,13 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportFactory;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.impl.HiveExecutorServiceImpl;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.util.Map;
@@ -41,6 +42,8 @@ import java.util.concurrent.Executors;
 
 /**
  * @scr.component name="bam.hive.component" immediate="true"
+ * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
+ * cardinality="1..1" policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
  */
 
 public class HiveServiceComponent {
@@ -85,6 +88,14 @@ public class HiveServiceComponent {
         }
         ctxt.getBundleContext().ungetService(hiveServiceRegistration.getReference());
 
+    }
+
+    protected void setRegistryService(RegistryService registryService) throws RegistryException {
+       ServiceHolder.setRegistryService(registryService);
+    }
+
+    protected void unsetRegistryService(RegistryService registryService){
+       ServiceHolder.setRegistryService(null);
     }
 
     public class HiveRunnable implements Runnable {

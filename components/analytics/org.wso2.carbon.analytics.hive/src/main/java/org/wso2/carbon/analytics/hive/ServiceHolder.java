@@ -16,10 +16,12 @@
 package org.wso2.carbon.analytics.hive;
 
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
+import org.wso2.carbon.registry.core.service.RegistryService;
 
 public class ServiceHolder {
 
     private static HiveExecutorService hiveExecutorService;
+    private static RegistryService registryService;
 
     public static void setHiveExecutorService(HiveExecutorService service) {
         hiveExecutorService = service;
@@ -27,6 +29,14 @@ public class ServiceHolder {
 
     public static HiveExecutorService getHiveExecutorService() {
         return hiveExecutorService;
+    }
+
+    public static void setRegistryService(RegistryService service){
+         registryService = service;
+    }
+
+    public static RegistryService getRegistryService(){
+        return  registryService;
     }
 
 }

@@ -34,6 +34,8 @@
     <modules>
         <module>org.wso2.carbon.analytics.server.feature</module>
         <module>org.wso2.carbon.analytics.hive.server.feature</module>
+	<module>org.wso2.carbon.analytics.ui.feature</module>
+	<module>org.wso2.carbon.hive.explorer.ui.feature</module>
     </modules>
 
     <dependencyManagement>
@@ -41,6 +43,11 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.analytics.hive</artifactId>
+                <version>${wso2carbon.version.analytics}</version>
+            </dependency>
+	 <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hive.explorer.ui</artifactId>
                 <version>${wso2carbon.version.analytics}</version>
             </dependency>
         </dependencies>

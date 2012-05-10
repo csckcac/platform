@@ -26,17 +26,16 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.analytics.server.feature</artifactId>
+    <artifactId>org.wso2.carbon.analytics.ui.feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Analytics Feature</name>
+    <name>WSO2 Carbon - Analytics UI Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the bundles required for analytics BE</description>
+    <description>This feature contains the bundles required for analytics FE</description>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.analytics.hive</artifactId>
-	    <version>${wso2carbon.version.analytics}</version>
+            <artifactId>org.wso2.carbon.hive.explorer.ui</artifactId>
         </dependency>
     </dependencies>
 
@@ -54,7 +53,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.analytics.server</id>
+                            <id>org.wso2.carbon.analytics.ui</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -65,11 +64,11 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.analytics.hive</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hive.explorer.ui</bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version.analytics}</importFeatureDef>
-				                <importFeatureDef>org.wso2.carbon.analytics.hive.server:${wso2carbon.version.analytics}</importFeatureDef>
+                             <importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>
+			            	 <importFeatureDef>org.wso2.carbon.hive.explorer.ui:${wso2carbon.version.analytics}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- ~ Copyright (c) 2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ Licensed under the Apache License, Version 2.0 (the "License");
  ~ you may not use this file except in compliance with the License.
@@ -26,22 +26,27 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.analytics.server.feature</artifactId>
+    <artifactId>org.wso2.carbon.hive.explorer.ui.feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Analytics Feature</name>
+    <name>WSO2 Carbon - Hive Explorer UI Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the bundles required for analytics BE</description>
+    <description>This feature contains the bundles required for Hive Explorer front end functionality</description>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.analytics.hive</artifactId>
-	    <version>${wso2carbon.version.analytics}</version>
+            <artifactId>org.wso2.carbon.hive.explorer.ui</artifactId>
+        </dependency>
+
+       <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.analytics.hive.stub</artifactId>
+            <version>${wso2carbon.version.analytics}</version>
         </dependency>
     </dependencies>
 
     <build>
-	<plugins>
+        <plugins>
             <plugin>
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
@@ -54,22 +59,24 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.analytics.server</id>
+                            <id>org.wso2.carbon.hive.explorer.ui</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
-                                    <propertyDef>org.wso2.carbon.p2.category.type:server
-                                    </propertyDef>
-                                    <propertyDef>org.eclipse.equinox.p2.type.group:true
-                                    </propertyDef>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:console</propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.analytics.hive</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hive.explorer.ui:${wso2carbon.version}
+                                </bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.analytics.hive.stub:${wso2carbon.version}
+                                </bundleDef>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.tools:${wso2carbon.version}
+                                </bundleDef>
                             </bundles>
                             <importFeatures>
-                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version.analytics}</importFeatureDef>
-				                <importFeatureDef>org.wso2.carbon.analytics.hive.server:${wso2carbon.version.analytics}</importFeatureDef>
+                                <importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

@@ -28,46 +28,87 @@ import java.util.Map;
  */
 public class WSDLAwareMessage {
 
+    /** The header parts */
     private Map<String, OMElement> headerParts = new HashMap<String, OMElement>();
+
+    /** The body parts */
     private Map<String, OMElement> bodyParts = new HashMap<String, OMElement>();
 
+    /** The wsdl operation name */
     private String operationName;
+
+    /** The port type */
     private QName portTypeName;
 
+    /** The tenant id */
     private int tenantId;
 
+    /**
+     * Adds the provided element to the body parts.
+     *
+     * @param partName : The part name.
+     * @param partElement : The element to be added
+     */
     public void addBodyPart(String partName, OMElement partElement) {
         bodyParts.put(partName, partElement);
     }
 
+    /**
+     * Adds the provided element to the hear parts.
+     *
+     * @param partName : The part name.
+     * @param partElement : The element to be added
+     */
     public void addHeaderPart(String partName, OMElement partElement) {
         headerParts.put(partName, partElement);
     }
 
+    /**
+     * @return : The operation name.
+     */
     public String getOperationName() {
         return operationName;
     }
 
+    /**
+     * @param operationName : The operation name to set.
+     */
     public void setOperationName(String operationName) {
         this.operationName = operationName;
     }
 
+    /**
+     * @return : The port name.
+     */
     public QName getPortTypeName() {
         return portTypeName;
     }
 
+    /**
+     * @param portTypeName  : The port name to set.
+     */
     public void setPortTypeName(QName portTypeName) {
         this.portTypeName = portTypeName;
     }
 
+    /**
+     * @return : The tenant id
+     */
     public int getTenantId() {
         return tenantId;
     }
 
+    /**
+     * @param tenantId : The tenant id to set.
+     */
     public void setTenantId(int tenantId) {
         this.tenantId = tenantId;
     }
 
+    /**
+     * Gets the body part elements of the message.
+     * @return : The body part elements map.
+     */
     public Map<String, Element> getBodyPartElements() {
         Map<String, Element> messageBodyParts = new HashMap<String, Element>();
 
@@ -78,6 +119,10 @@ public class WSDLAwareMessage {
         return messageBodyParts;
     }
 
+    /**
+     * Gets the header part elements of the message.
+     * @return : The header part elements map.
+     */
     public Map<String, Element> getHeaderPartElements() {
         Map<String, Element> messageHeaderParts = new HashMap<String, Element>();
 

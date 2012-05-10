@@ -24,18 +24,15 @@ include("/jagg/jagg.jag");
         if (request.getParameter("resourceCount") != null) {
             resCount = request.getParameter("resourceCount").split(',');
         }
-        var uriTemplateArr = [];
-        var uriMethodArr = [];
+        var uriTemplateArr = new Array();
+        var uriMethodArr = new Array();
 
         for (var i = 0; i < resCount.length; i++) {
-            if(i=0){
-            uriTemplateArr.push(request.getParameter("uriTemplate-0.0"));
-            uriMethodArr.push(request.getParameter("resourceMethod-0.0"))
-            }
-            uriTemplateArr.push(request.getParameter("uriTemplate-" + resCount[i]));
-            uriMethodArr.push(request.getParameter("resourceMethod-" + resCount[i]))
+        uriTemplateArr.push(request.getParameter("uriTemplate-" + resCount[i]));
+        uriMethodArr.push(request.getParameter("resourceMethod-" + resCount[i]))
         }
         apiData.uriTemplateArr = uriTemplateArr;
+
         apiData.uriMethodArr = uriMethodArr;
         if(action === "addAPI"){
         result = mod.addAPI(apiData);

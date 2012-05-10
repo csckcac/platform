@@ -202,6 +202,7 @@ $('input#addNewAPIButton').click( function() {
                   }
                  }
     });
+         return false;
 });
          });
 

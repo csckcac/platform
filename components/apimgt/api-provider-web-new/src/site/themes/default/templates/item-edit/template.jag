@@ -138,8 +138,8 @@
                                     <a class="btn btn-danger" id="resourceDelBtn" onClick="deleteResource('<%=j%>')"><i class="icon-trash icon-white"></i> Delete</a>
                                 </td>
                             </tr>
-                            <input type="hidden" name="resourceMethod-<%=parseInt(i)%>" value="<%=api.templates[i][1]%>">
-                            <input type="hidden" name="uriTemplate-<%=parseInt(i)%>" value="<%=api.templates[i][0]%>">
+                            <input type="hidden" name="resourceMethod-<%=String(i)%>" value="<%=api.templates[i][1]%>">
+                            <input type="hidden" name="uriTemplate-<%=String(i)%>" value="<%=api.templates[i][0]%>">
         <% rowNums.push(j);
         j++;
 

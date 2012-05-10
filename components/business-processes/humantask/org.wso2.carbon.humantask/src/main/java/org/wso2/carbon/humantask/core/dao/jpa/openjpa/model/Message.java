@@ -72,6 +72,7 @@ public class Message implements MessageDAO, Serializable {
         }
     }
 
+    @Override
     public Element getBodyData() {
         try {
             return data == null ? null : DOMUtils.stringToDOM(data);
@@ -80,6 +81,7 @@ public class Message implements MessageDAO, Serializable {
         }
     }
 
+    @Override
     public void setData(Element data) {
         if (data == null) {
             return;
@@ -87,6 +89,7 @@ public class Message implements MessageDAO, Serializable {
         this.data = DOMUtils.domToString(data);
     }
 
+    @Override
     public Element getHeader() {
         try {
             return header == null ? null : DOMUtils.stringToDOM(header);
@@ -95,6 +98,7 @@ public class Message implements MessageDAO, Serializable {
         }
     }
 
+    @Override
     public void setHeader(Element header) {
         if (header == null) {
             return;
@@ -115,6 +119,7 @@ public class Message implements MessageDAO, Serializable {
         this.task = (Task) task;
     }
 
+    @Override
     public QName getName() {
         if (name != null) {
             return QName.valueOf(name);
@@ -123,22 +128,27 @@ public class Message implements MessageDAO, Serializable {
         return null;
     }
 
+    @Override
     public void setName(QName name) {
         this.name = name.toString();
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
 
+    @Override
     public MessageType getMessageType() {
         return messageType;
     }
 
+    @Override
     public void setMessageType(MessageType messageType) {
         this.messageType = messageType;
     }
@@ -158,6 +168,7 @@ public class Message implements MessageDAO, Serializable {
         setData(message);
     }
 
+    @Override
     public Element getBodyPart(String partName) {
         Element message = getBodyData();
         NodeList eltList = message.getElementsByTagName(partName);
@@ -168,6 +179,7 @@ public class Message implements MessageDAO, Serializable {
         }
     }
 
+    @Override
     public Map<String, Element> getBodyParts() {
         Map<String, Element> bodyParts = new HashMap<String, Element>();
 
@@ -181,6 +193,7 @@ public class Message implements MessageDAO, Serializable {
         return bodyParts;
     }
 
+    @Override
     public void addHeaderPart(String partName, Element part) {
         Element message = getBodyData();
         if (message == null) {
@@ -195,6 +208,7 @@ public class Message implements MessageDAO, Serializable {
         setData(message);
     }
 
+    @Override
     public Element getHeaderPart(String partName) {
         Element message = getBodyData();
         NodeList eltList = message.getElementsByTagName(partName);
@@ -205,6 +219,7 @@ public class Message implements MessageDAO, Serializable {
         }
     }
 
+    @Override
     public Map<String, Element> getHeaderParts() {
         Map<String, Element> bodyParts = new HashMap<String, Element>();
 

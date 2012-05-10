@@ -9,12 +9,18 @@
         <Enabled>false</Enabled>
         <ThriftPort>7612</ThriftPort>
         <BAMServerURL>https://localhost:9444/</BAMServerURL>
-        <BAMUser>admin</BAMUser>
+        <BAMUsername>admin</BAMUsername>
         <BAMPassword>admin</BAMPassword>
     </APIUsageTracking>
     <APIConsumerAuthentication>
-        <AuthUsername>admin</AuthUsername>
-        <AuthPassword>admin</AuthPassword>
+        <AdminUsername>admin</AdminUsername>
+        <AdminPassword>admin</AdminPassword>
     </APIConsumerAuthentication>
+    <APIGatewayAdmin>
+        <ServerURL>https://localhost:9443/services/</ServerURL>
+        <AdminUsername>admin</AdminUsername>
+        <AdminPassword>admin</AdminPassword>
+        <AdminHost>localhost</AdminHost>
+    </APIGatewayAdmin>
 </APIManager>
 

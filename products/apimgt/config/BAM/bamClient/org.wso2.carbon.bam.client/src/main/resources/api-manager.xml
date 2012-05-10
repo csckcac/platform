@@ -19,4 +19,10 @@
         <AdminUsername>admin</AdminUsername>
         <AdminPassword>admin</AdminPassword>
     </APIConsumerAuthentication>
+    <APIGatewayAdmin>
+        <ServerURL>https://localhost:9443/services/</ServerURL>
+        <AdminUsername>admin</AdminUsername>
+        <AdminPassword>admin</AdminPassword>
+        <AdminHost>localhost</AdminHost>
+    </APIGatewayAdmin>
 </APIManager>

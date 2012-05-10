@@ -15,36 +15,27 @@
  */
 package org.wso2.carbon.bam.analyzer;
 
-import org.apache.axiom.om.OMAttribute;
-import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bam.analyzer.analyzers.AnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.AggregateAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.AlertBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.ClassAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.CorrelateAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.DetectFaultAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.DropAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.ExtractAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.GetAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.GroupByAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.IndexingAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.JMXAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.LogAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.LookupAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.OrderByAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.analyzers.builders.PutAnalyzerBuilder;
-import org.wso2.carbon.bam.analyzer.engine.Analyzer;
-import org.wso2.carbon.bam.analyzer.engine.AnalyzerConfigConstants;
-import org.wso2.carbon.bam.analyzer.engine.AnalyzerEngine;
-import org.wso2.carbon.bam.analyzer.engine.AnalyzerException;
-import org.wso2.carbon.bam.analyzer.engine.AnalyzerSequence;
+import org.wso2.carbon.bam.analyzer.analyzers.builders.*;
+import org.wso2.carbon.bam.analyzer.engine.*;
+import org.wso2.carbon.bam.analyzer.task.BAMTaskInfo;
+import org.wso2.carbon.bam.core.configurations.DataSourceType;
+import org.wso2.carbon.bam.core.configurations.Granularity;
+import org.wso2.carbon.bam.core.configurations.IndexConfiguration;
+import org.wso2.carbon.bam.core.configurations.IndexType;
+import org.wso2.carbon.bam.core.persistence.cassandra.CassandraIndexConfiguration;
 import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
+import org.wso2.carbon.ntask.core.TaskInfo;
+import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
+import javax.xml.namespace.QName;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -57,6 +48,10 @@ public class Utils {
     private static RegistryService registryService;
     private static AnalyzerEngine engine;
     private static TenantRegistryLoader tenantRegistryLoader;
+    private static TaskService taskService;
+    private static OMFactory factory = OMAbstractFactory.getOMFactory();
+    private static String NULL_NAMESPACE = "";
+    private static OMNamespace NULL_OMNS = factory.createOMNamespace(NULL_NAMESPACE, "");
 
     public static AnalyzerEngine getEngine() {
         return engine;
@@ -68,6 +63,10 @@ public class Utils {
 
     public static DataAccessService getDataAccessService() {
         return dataAccessService;
+    }
+
+    public static TaskService getTaskService() {
+        return Utils.taskService;
     }
 
     public static void setDataAccessService(DataAccessService dataAccessService) {
@@ -322,7 +321,7 @@ public class Utils {
     public static Analyzer getAnalyzerObject(OMElement analyzerEl) throws AnalyzerException {
         String name = analyzerEl.getLocalName();
 
-        Analyzer analyzer = null;
+        Analyzer analyzer;
 
         if (getAnalyzerBuilderMap().containsKey(name)) {
             analyzer = getAnalyzerBuilderMap().get(name).buildAnalyzer(analyzerEl);
@@ -345,12 +344,152 @@ public class Utils {
         Utils.configurationContextService = configurationContextService;
     }
 
+    public static void setTaskService(TaskService taskService) {
+        Utils.taskService = taskService;
+    }
+
     public static TenantRegistryLoader getTenantRegistryLoader() {
         return tenantRegistryLoader;
     }
 
     public static void setTenantRegistryLoader(TenantRegistryLoader tenantRegistryLoader) {
         Utils.tenantRegistryLoader = tenantRegistryLoader;
+    }
+
+/**
+     * Serializes the index analyser configuration to be passed into task runtime.
+     *
+     * @param indexConfig Index Configuration
+     * @return OMElement containing the index configuration
+     */
+    public static OMElement serializeIndexAnalyser(IndexConfiguration indexConfig) {
+        OMElement rootEl = factory.createOMElement(new QName("index"));
+        rootEl.addAttribute("name", indexConfig.getIndexName(), NULL_OMNS);
+        rootEl.addAttribute("isAutoGenerated", Boolean.toString(indexConfig.isAutoGenerated()),
+                NULL_OMNS);
+        rootEl.addAttribute("isManuallyIndexed", Boolean.toString(indexConfig.isManuallyIndexed()),
+                NULL_OMNS);
+
+        if (indexConfig.getDataSourceType() != null) {
+            OMElement dsTypeEl = factory.createOMElement(new QName("dataSourceType"));
+            DataSourceType dsType = indexConfig.getDataSourceType();
+            if (dsType.getName() != null) {
+                dsTypeEl.addAttribute("name", dsType.getName(), NULL_OMNS);
+                dsTypeEl.addAttribute("manuallyIndexed",
+                        Boolean.toString(dsType.isManuallyIndexed()), NULL_OMNS);
+            }
+            rootEl.addChild(dsTypeEl);
+        }
+
+        if (indexConfig.getIndexedTable() != null) {
+            OMElement idxTableEl = factory.createOMElement(new QName("indexTable"));
+            idxTableEl.setText(indexConfig.getIndexedTable());
+            rootEl.addChild(idxTableEl);
+        }
+
+        if (indexConfig.getIndexedColumns() != null) {
+            OMElement idxColumnsEl = factory.createOMElement(new QName("indexColumns"));
+            for (String idxColumn : indexConfig.getIndexedColumns()) {
+                if (idxColumn != null) {
+                    OMElement idxColumnEl = factory.createOMElement(new QName("indexColumn"));
+                    idxColumnEl.setText(idxColumn);
+                    idxColumnsEl.addChild(idxColumnEl);
+                }
+            }
+            rootEl.addChild(idxColumnsEl);
+        }
+
+        if (indexConfig.getIndexType() != null) {
+            IndexType idxType = indexConfig.getIndexType();
+            OMElement idxTypeEl = factory.createOMElement(new QName("indexType"));
+            if (idxType.getName() != null) {
+                idxTypeEl.addAttribute("name", idxType.getName(), NULL_OMNS);
+            }
+            rootEl.addChild(idxTypeEl);
+        }
+
+        if (indexConfig.getGranularity() != null) {
+            Granularity granularity = indexConfig.getGranularity();
+            OMElement granularityEl = factory.createOMElement(new QName("granularity"));
+            if (granularity.getName() != null) {
+                granularityEl.addAttribute("name", granularity.getName(), NULL_OMNS);
+            }
+            rootEl.addChild(granularityEl);
+        }
+
+        if (indexConfig instanceof CassandraIndexConfiguration) {
+            CassandraIndexConfiguration cassandraIdxConfig =
+                    (CassandraIndexConfiguration) indexConfig;
+
+            OMElement indexingCfEl = factory.createOMElement(new QName("indexingColumnFamily"));
+            if (cassandraIdxConfig.getIndexingColumnFamily() != null) {
+                indexingCfEl.setText(cassandraIdxConfig.getIndexingColumnFamily());
+            }
+            rootEl.addChild(indexingCfEl);
+
+            OMElement cronEl = factory.createOMElement(new QName("cron"));
+            if (cassandraIdxConfig.getCron() != null) {
+                cronEl.setText(cassandraIdxConfig.getCron());
+            }
+            rootEl.addChild(cronEl);
+        }
+
+        return rootEl;
+    }
+
+
+     /**
+     * Populates a TaskInfo object with the details provided.
+     *
+     * @param taskInfo BAM task configuration data
+     * @return taskInfo
+     * @throws java.io.IOException IOException
+     * @throws AnalyzerException AnalyzerException
+     */
+    public static TaskInfo getTaskInfo(BAMTaskInfo taskInfo) throws
+             IOException, AnalyzerException {
+
+        AnalyzerSequence sequence = taskInfo.getAnalyzerSequence();
+
+        TaskInfo.TriggerInfo triggerInfo = new TaskInfo.TriggerInfo();
+        triggerInfo.setRepeatCount(sequence.getCount());
+        triggerInfo.setIntervalMillis(sequence.getInterval());
+        triggerInfo.setCronExpression(sequence.getCron());
+
+        TaskInfo info = new TaskInfo();
+        info.setName(sequence.getName());
+        info.setTriggerInfo(triggerInfo);
+        info.setTaskClass(AnalyzerConfigConstants.BAM_DEFAULT_TASK_CLASS);
+        info.setProperties(Utils.getProperties(taskInfo));
+
+        return info;
+    }
+
+    /**
+     * Populates the additional properties to be passed into the task configuration.
+     *
+     * @param taskInfo BAM task configuration data
+     * @return properties object populated with the additional information to be passed into the
+     *                    task configuration
+     * @throws IOException IOException
+     * @throws AnalyzerException AnalyzerException
+     */
+    public static Map<String, String> getProperties(BAMTaskInfo taskInfo) throws IOException,
+            AnalyzerException {
+        AnalyzerSequence sequence = taskInfo.getAnalyzerSequence();
+        OMElement analyzerSeqXML = taskInfo.getAnalyzerSeqXML();
+        Map<String, String> credentials = taskInfo.getCredentials();
+
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put(AnalyzerConfigConstants.ANALYZER_SEQUENCE_NAME, sequence.getName());
+        properties.put(AnalyzerConfigConstants.ANALYZER_SEQUENCE, analyzerSeqXML.toString());
+        properties.put(AnalyzerConfigConstants.USERNAME,
+                credentials.get(AnalyzerConfigConstants.USERNAME));
+        properties.put(AnalyzerConfigConstants.PASSWORD,
+                credentials.get(AnalyzerConfigConstants.PASSWORD));
+        properties.put(AnalyzerConfigConstants.TENANT_ID, String.valueOf(sequence.getTenantId()));
+
+        return properties;
     }
 
 }

@@ -15,15 +15,14 @@
  */
 package org.wso2.carbon.bam.analyzer.engine;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.task.TaskDescription;
-import org.apache.synapse.task.service.TaskManagementService;
 import org.wso2.carbon.bam.analyzer.Utils;
 import org.wso2.carbon.bam.analyzer.analyzers.IndexingAnalyzer;
 import org.wso2.carbon.bam.analyzer.analyzers.configs.IndexingConfig;
-import org.wso2.carbon.bam.analyzer.task.BAMAnalyzerTaskMgmtService;
+import org.wso2.carbon.bam.analyzer.task.BAMTaskInfo;
 import org.wso2.carbon.bam.core.configurations.IndexConfiguration;
 import org.wso2.carbon.bam.core.configurations.IndexingTaskConfiguration;
 import org.wso2.carbon.bam.core.persistence.IndexManager;
@@ -33,6 +32,9 @@ import org.wso2.carbon.bam.core.persistence.PersistencyConstants;
 import org.wso2.carbon.bam.core.persistence.exceptions.ConfigurationException;
 import org.wso2.carbon.bam.core.persistence.exceptions.IndexingException;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.ntask.common.TaskException;
+import org.wso2.carbon.ntask.core.TaskInfo;
+import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -51,15 +53,21 @@ public class AnalyzerEngine implements IndexingTaskProvider {
 
     private static final Log log = LogFactory.getLog(AnalyzerEngine.class);
 
-    private TaskManagementService taskMgtService;
+    private TaskManager taskManager;
 
     private ExecutorService loaderThreadPool = Executors.newSingleThreadExecutor();
 
-    public AnalyzerEngine(TaskManagementService taskMgtService)
+    public static String CREDENTIALS = "credentials";
+
+    public static String ANALYSER_SEQUENCE_NAME = "name";
+
+    public static String TENANT_ID = "tenantId";
+
+    public static String ANALYSER_SEQUENCE = "analyserSequence";
+
+    public AnalyzerEngine(TaskManager taskManager)
             throws AnalyzerException {
-
-        this.taskMgtService = taskMgtService;
-
+        this.taskManager = taskManager;
         // Running this in a separate thread without blocking the server start-up since this operation
         // can become bulky
         ConfigurationLoader loader = new ConfigurationLoader();
@@ -68,7 +76,6 @@ public class AnalyzerEngine implements IndexingTaskProvider {
     }
 
     private class ConfigurationLoader implements Callable<Boolean> {
-
         public Boolean call() throws Exception {
 //            loadIndexConfigurations();
             try {
@@ -82,8 +89,8 @@ public class AnalyzerEngine implements IndexingTaskProvider {
     }
 
     private boolean loadAnaylzers() throws AnalyzerException {
-        Map<Integer, List<AnalyzerSequence>> tenantsWithActiveTasks = getTenantsWithActiveTasks();
-        for (Map.Entry<Integer, List<AnalyzerSequence>> tenantWithActiveTask :
+        Map<Integer, List<OMElement>> tenantsWithActiveTasks = getTenantsWithActiveTasks();
+        for (Map.Entry<Integer, List<OMElement>> tenantWithActiveTask :
                 tenantsWithActiveTasks.entrySet()) {
 
             Integer tenantId = tenantWithActiveTask.getKey();
@@ -112,10 +119,17 @@ public class AnalyzerEngine implements IndexingTaskProvider {
 //            tenantWithActiveTask.getValue().add(indexingSequence);
 
             // Start the analyzer sequences of the tenant
-            for (AnalyzerSequence analyzerSequence : tenantWithActiveTask.getValue()) {
+            for (OMElement analyzerSeqXML : tenantWithActiveTask.getValue()) {
                 try {
-                    startAnalyzerSequence(new HashMap<String, Object>(), analyzerSequence,
-                                          credentials);
+                    AnalyzerSequence sequence =
+                            Utils.getAnalyzerSequence(tenantId, analyzerSeqXML);
+
+                    BAMTaskInfo taskInfo = new BAMTaskInfo();
+                    taskInfo.setAnlyzerSequence(sequence);
+                    taskInfo.setCredentials(credentials);
+                    taskInfo.setAnalyzerSeqXML(analyzerSeqXML);
+
+                    startAnalyzerSequence(taskInfo);
                 } catch (Exception ignored) {
                     // Ignore and continue scheduling other tasks
                 }
@@ -128,7 +142,6 @@ public class AnalyzerEngine implements IndexingTaskProvider {
     }
 
     private void loadIndexingTasks() {
-
         MetaDataManager metaDataManager = MetaDataManager.getInstance();
         int[] tenantIds = null;
 
@@ -139,17 +152,15 @@ public class AnalyzerEngine implements IndexingTaskProvider {
         }
 
         if (tenantIds != null) {
-
             for (int tenantId : tenantIds) {
                 try {
-
                     Map<String, String> credentials = null;
                     try {
                         credentials = getConnectionParametersForTenant(tenantId);
                     } catch (AnalyzerException e) {
                         log.error("Unable to fetch connection parameters for tenant " +
-                                  tenantId + " . Not initializing indexing tasks for this " +
-                                  "tenant..");
+                                tenantId + " . Not initializing indexing tasks for this " +
+                                "tenant..");
                         continue;
                     }
 
@@ -157,7 +168,6 @@ public class AnalyzerEngine implements IndexingTaskProvider {
                             getAllIndexMetaData(credentials);
 
                     for (IndexConfiguration configuration : configurations) {
-
                         if (!configuration.isAutoGenerated() && configuration.isManuallyIndexed()) {
 
                             IndexingTaskConfiguration taskConfiguration =
@@ -165,40 +175,34 @@ public class AnalyzerEngine implements IndexingTaskProvider {
                             taskConfiguration.setCredentials(credentials);
                             taskConfiguration.setTenantId(tenantId);
                             taskConfiguration.setTaskName(configuration.getIndexName() + "_Index_" +
-                                                          configuration.getIndexedTable());
+                                    configuration.getIndexedTable());
                             taskConfiguration.setInterval(PersistencyConstants.
-                                                                  DEFAULT_INDEXING_INTERVAL);
-
+                                    DEFAULT_INDEXING_INTERVAL);
                             try {
                                 IndexManager.getInstance().scheduleIndexingTask(configuration,
-                                                                                taskConfiguration);
+                                        taskConfiguration);
                             } catch (IndexingException e) {
                                 log.error("Error while schedule indexing task for index " +
-                                          configuration.getIndexName() + " for tenant " +
-                                          tenantId + "..");
+                                        configuration.getIndexName() + " for tenant " +
+                                        tenantId + "..");
                             }
-
                         }
-
                     }
                 } catch (ConfigurationException e) {
                     log.error("Error while fetching index meta data for tenant " + tenantId +
-                              ". Not" + " loading indexing tasks for this tenant..");
+                            ". Not" + " loading indexing tasks for this tenant..");
                 }
             }
-
         }
 
         if (log.isDebugEnabled()) {
             log.debug("Loaded indexing tasks for all tenants..");
         }
-
     }
 
     public Map<String, String> getConnectionParametersForTenant(int tenantId)
             throws AnalyzerException {
-        
-        Map<String, String> credentials = null;
+        Map<String, String> credentials;
         try {
             credentials = org.wso2.carbon.bam.core.utils.Utils.
                     getConnectionParameters(tenantId);
@@ -209,10 +213,9 @@ public class AnalyzerEngine implements IndexingTaskProvider {
         }
 
         return credentials;
-        
     }
 
-    private Map<Integer, List<AnalyzerSequence>> getTenantsWithActiveTasks()
+    private Map<Integer, List<OMElement>> getTenantsWithActiveTasks()
             throws AnalyzerException {
         try {
             UserRegistry superTenantRegistry = Utils.getRegistryService().getConfigSystemRegistry(
@@ -221,10 +224,11 @@ public class AnalyzerEngine implements IndexingTaskProvider {
                             .getTenantId());
 
             Resource tenantTrackerResource;
-            Map<Integer, List<AnalyzerSequence>> tenantAnalyzersMap = new HashMap<Integer, List<AnalyzerSequence>>();
+            Map<Integer, List<OMElement>> tenantAnalyzersMap =
+                    new HashMap<Integer, List<OMElement>>();
 
             String analyzerTrackerPath = AnalyzerConfigConstants.TENANT_TRACKER_PATH + "/" +
-                                         AnalyzerConfigConstants.ANALYZER_TRACKER;
+                    AnalyzerConfigConstants.ANALYZER_TRACKER;
             if (superTenantRegistry.resourceExists(analyzerTrackerPath)) {
                 tenantTrackerResource = superTenantRegistry.get(analyzerTrackerPath);
                 List<String> propertyValues = tenantTrackerResource.getPropertyValues(
@@ -236,7 +240,7 @@ public class AnalyzerEngine implements IndexingTaskProvider {
                     Integer tenantId = Integer.parseInt(propertyValue);
 
                     //ConfigurationHolder.getInstance().setCurrentConfigProcessingTenant(tenantId); TODO : Look in to this to see if this is still valid. See IndexingAnalyzerBuilder
-                    List<AnalyzerSequence> analyzerSequenceList = getAnalyzerSeqs(tenantId);
+                    List<OMElement> analyzerSequenceList = getAnalyzerSeqs(tenantId);
                     tenantAnalyzersMap.put(tenantId, analyzerSequenceList);
                 }
             }
@@ -325,7 +329,7 @@ public class AnalyzerEngine implements IndexingTaskProvider {
         return indexConfigurations;
     }*/
 
-    public List<AnalyzerSequence> getAnalyzerSeqs(Integer tenantId) throws AnalyzerException {
+    public List<OMElement> getAnalyzerSeqs(Integer tenantId) throws AnalyzerException {
         try {
             // Load tenant registry to ensure the mounts are created before getting the tenant registry
             Utils.getTenantRegistryLoader().loadTenantRegistry(tenantId);
@@ -333,22 +337,20 @@ public class AnalyzerEngine implements IndexingTaskProvider {
             // Get the config registry of the tenant
             UserRegistry tenantConfigSystemRegistry = Utils.getRegistryService().
                     getConfigSystemRegistry(tenantId);
-            List<AnalyzerSequence> analyzerSequenceList = new ArrayList<AnalyzerSequence>();
+            List<OMElement> analyzerSequenceList = new ArrayList<OMElement>();
             if (tenantConfigSystemRegistry.resourceExists(
                     AnalyzerConfigConstants.analyzerParentRegistryPath +
-                    AnalyzerConfigConstants.analyzers)) {
+                            AnalyzerConfigConstants.analyzers)) {
 
                 Collection collection = (Collection) tenantConfigSystemRegistry.get(
                         AnalyzerConfigConstants.analyzerParentRegistryPath +
-                        AnalyzerConfigConstants.analyzers);
+                                AnalyzerConfigConstants.analyzers);
                 String[] analyzerSeqRegistryPaths = collection.getChildren();
                 for (String analyzerSeqRegistryPath : analyzerSeqRegistryPaths) {
                     Resource analyzerSeqResource = tenantConfigSystemRegistry.get(analyzerSeqRegistryPath);
                     String analyzerXMLString = new String((byte[]) analyzerSeqResource.getContent());
 
-                    AnalyzerSequence analyzerSequence = Utils.
-                            getAnalyzerSequence(tenantId, AXIOMUtil.stringToOM(analyzerXMLString));
-                    analyzerSequenceList.add(analyzerSequence);
+                    analyzerSequenceList.add(AXIOMUtil.stringToOM(analyzerXMLString));
                 }
             }
             return analyzerSequenceList;
@@ -373,11 +375,11 @@ public class AnalyzerEngine implements IndexingTaskProvider {
             List<String> analyzerSequenceXMLList = new ArrayList<String>();
             if (tenantConfigSystemRegistry.resourceExists(
                     AnalyzerConfigConstants.analyzerParentRegistryPath +
-                    AnalyzerConfigConstants.analyzers)) {
+                            AnalyzerConfigConstants.analyzers)) {
 
                 Collection collection = (Collection) tenantConfigSystemRegistry.get(
                         AnalyzerConfigConstants.analyzerParentRegistryPath +
-                        AnalyzerConfigConstants.analyzers);
+                                AnalyzerConfigConstants.analyzers);
                 String[] analyzerSeqRegistryPaths = collection.getChildren();
                 for (String analyzerSeqRegistryPath : analyzerSeqRegistryPaths) {
                     Resource analyzerSeqResource = tenantConfigSystemRegistry.get(analyzerSeqRegistryPath);
@@ -400,17 +402,17 @@ public class AnalyzerEngine implements IndexingTaskProvider {
             if (analyzerSeqName == null) {
                 throw new AnalyzerException("Analyzer sequence name cannot be null");
             }
-            UserRegistry tenantConfigSystemRegistry = Utils.getRegistryService().getConfigSystemRegistry(tenantId);
+            UserRegistry tenantConfigSystemRegistry =
+                    Utils.getRegistryService().getConfigSystemRegistry(tenantId);
             String analyzerSeqRegistryPath = AnalyzerConfigConstants.analyzerParentRegistryPath +
-                                             AnalyzerConfigConstants.analyzers + analyzerSeqName;
+                    AnalyzerConfigConstants.analyzers + analyzerSeqName;
 
             if (tenantConfigSystemRegistry.resourceExists(analyzerSeqRegistryPath)) {
                 Resource analyzerSeqResource = tenantConfigSystemRegistry.get(analyzerSeqRegistryPath);
-                String analyzerXMLString = new String((byte[]) analyzerSeqResource.getContent());
-                return analyzerXMLString;
+                return new String((byte[]) analyzerSeqResource.getContent());
             } else {
                 String message = "Analyzer sequence " + analyzerSeqName + "does not exist for tenant : "
-                                 + tenantId;
+                        + tenantId;
                 AnalyzerException analyzerException = new AnalyzerException(message);
                 log.error(message, analyzerException);
                 throw analyzerException;
@@ -427,15 +429,11 @@ public class AnalyzerEngine implements IndexingTaskProvider {
             IndexConfiguration configuration, IndexingTaskConfiguration taskConfiguration)
             throws IndexingException {
 
-        DataContext dataContext = new DataContext(taskConfiguration.getTenantId());
-        dataContext.setCredentials(taskConfiguration.getCredentials());
+        Analyzer idxAnalyzer = new IndexingAnalyzer(new IndexingConfig(configuration));
+        idxAnalyzer.setAnalyzerSeqeunceName(taskConfiguration.getTaskName());
 
         List<Analyzer> analyzers = new ArrayList<Analyzer>();
-
-        Analyzer indexingAnalyzer = new IndexingAnalyzer(new IndexingConfig(configuration));
-        indexingAnalyzer.setAnalyzerSeqeunceName(taskConfiguration.getTaskName());
-
-        analyzers.add(indexingAnalyzer);
+        analyzers.add(idxAnalyzer);
 
         AnalyzerSequence sequence = new AnalyzerSequence();
         sequence.setAnalyzers(analyzers);
@@ -445,14 +443,16 @@ public class AnalyzerEngine implements IndexingTaskProvider {
         sequence.setName(taskConfiguration.getTaskName());
         sequence.setTenantId(taskConfiguration.getTenantId());
 
-        Map<String, Object> resources = new HashMap<String, Object>();
-
         try {
-            startAnalyzerSequence(resources, sequence, taskConfiguration.getCredentials());
+            BAMTaskInfo taskInfo = new BAMTaskInfo();
+            taskInfo.setAnalyzerSeqXML(Utils.serializeIndexAnalyser(configuration));
+            taskInfo.setCredentials(taskConfiguration.getCredentials());
+            taskInfo.setAnlyzerSequence(sequence);
+
+            startAnalyzerSequence(taskInfo);
         } catch (Exception e) {
             throw new IndexingException("Unable to schedule task..", e);
         }
-
     }
 
     public void unscheduleIndexingTask(IndexingTaskConfiguration taskConfiguration) {
@@ -460,58 +460,37 @@ public class AnalyzerEngine implements IndexingTaskProvider {
         sequence.setName(taskConfiguration.getTaskName());
         sequence.setTenantId(taskConfiguration.getTenantId());
 
-        deleteAnalyzerSequence(sequence, taskConfiguration.getTenantId());
-
-    }
-
-    public void startAnalyzerSequence(Map<String, Object> resources, AnalyzerSequence sequence,
-                                      Map<String, String> credentials) throws Exception {
-        int tenantId = sequence.getTenantId();
-        DataContext dataContext = new DataContext(tenantId);
-        dataContext.setCredentials(credentials);
-        sequence.setCredentials(credentials);
-
-        TaskDescription taskDescription = new TaskDescription();
-        taskDescription.setCount(sequence.getCount());
-        taskDescription.setInterval(sequence.getInterval());
-        taskDescription.setCron(sequence.getCron());
-        taskDescription.setName(sequence.getName());
-
-        taskDescription.setGroup(String.valueOf(tenantId));
-        resources.put(taskDescription.getName(), sequence);
-        resources.put(AnalyzerConfigConstants.DATA_CONTEXT, dataContext);
-        dataContext.setSequenceProperties(sequence.getName(), new HashMap());// Providing a property map for each sequence
-//            taskDescription.setTaskClass(sequence);
-        ((BAMAnalyzerTaskMgmtService) taskMgtService).addTaskDescription(taskDescription, resources);
-
-        if (log.isDebugEnabled()) {
-            log.debug("Scheduled task : " + sequence.getName() + " for tenant : " + tenantId);
+        try {
+            deleteAnalyzerSequence(sequence, taskConfiguration.getTenantId());
+        } catch (TaskException e) {
+            log.error("Error in deleting analyser sequence", e);
         }
     }
 
-    public void deleteAnalyzerSequence(AnalyzerSequence sequence, int tenantId) {
-        TaskDescription taskDescription = new TaskDescription();
-        taskDescription.setCount(sequence.getCount());
-        taskDescription.setInterval(sequence.getInterval());
-        taskDescription.setCron(sequence.getCron());
-        taskDescription.setName(sequence.getName());
+    public void startAnalyzerSequence(BAMTaskInfo bamTaskInfo) throws Exception {
+        TaskInfo taskInfo = Utils.getTaskInfo(bamTaskInfo);
+        getTaskManager().registerTask(taskInfo);
 
-        taskDescription.setGroup(String.valueOf(tenantId));
-        ((BAMAnalyzerTaskMgmtService) taskMgtService).deleteTaskDescription(taskDescription);
+        if (log.isDebugEnabled()) {
+            log.debug("Registered task : " + bamTaskInfo.getAnalyzerSequence().getName() +
+                    " for tenant : " + bamTaskInfo.getAnalyzerSequence().getTenantId());
+        }
+    }
 
+    public void deleteAnalyzerSequence(AnalyzerSequence sequence, int tenantId) throws TaskException {
+        this.getTaskManager().deleteTask(sequence.getName());
         // Finally do the clean up to clear any cursors created by this analyzer sequence
         sequence.cleanup();
 
     }
 
 
-    public void stopAnalyzerSequence(AnalyzerSequence sequence) {
-        taskMgtService.deleteTaskDescription(sequence.getName());
+    public void stopAnalyzerSequence(AnalyzerSequence sequence) throws TaskException {
+        this.getTaskManager().deleteTask(sequence.getName());
     }
 
-    public void shutdown() {
-        ((BAMAnalyzerTaskMgmtService) taskMgtService).shutdown();
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
-
 
 }

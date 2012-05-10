@@ -165,4 +165,10 @@ public class AnalyzerConfigConstants {
 
 
     public static final QName MAIL_TRANSPORT = new QName("transport");
+
+    public static String ANALYZER_SEQUENCE_NAME = "analyzerSequenceName";
+    public static String TENANT_ID = "tenantId";
+    public static String BAM_DEFAULT_TASK_CLASS =
+            "org.wso2.carbon.bam.analyzer.task.BAMDefaultAnalyzerTask";
+
 }

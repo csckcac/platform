@@ -15,12 +15,25 @@
  */
 package org.wso2.carbon.bam.analyzer.task;
 
-import org.apache.synapse.task.Task;
+import org.wso2.carbon.ntask.core.Task;
+
+import java.util.Map;
 
 public class AbstractAnalyzerTask implements Task {
 
     @Override
-    public void execute() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void setProperties(Map<String, String> stringStringMap) {
+
     }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void execute() {
+
+    }
+
 }

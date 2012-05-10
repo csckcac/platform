@@ -11,22 +11,17 @@ import org.wso2.carbon.bam.analyzer.engine.Analyzer;
 import org.wso2.carbon.bam.analyzer.engine.AnalyzerConfigConstants;
 import org.wso2.carbon.bam.analyzer.engine.AnalyzerException;
 import org.wso2.carbon.bam.analyzer.engine.AnalyzerSequence;
+import org.wso2.carbon.bam.analyzer.task.BAMTaskInfo;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-import org.wso2.carbon.core.util.CryptoException;
-import org.wso2.carbon.core.util.CryptoUtil;
+import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 
 import javax.xml.stream.XMLStreamException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -99,17 +94,15 @@ public class AnalyzerMgtService extends AbstractAdmin {
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
         try {
             UserRegistry configSystemRegistry = Utils.getRegistryService().getConfigSystemRegistry(tenantId);
-            OMElement omElement = AXIOMUtil.stringToOM(analyzerXML);
-            AnalyzerSequence analyzerSequence = Utils.getAnalyzerSequence(tenantId, omElement);
+            OMElement analyzerEl = AXIOMUtil.stringToOM(analyzerXML);
+            AnalyzerSequence analyzerSequence = Utils.getAnalyzerSequence(tenantId, analyzerEl);
             Resource analyzerSeqResource = configSystemRegistry.newResource();
             analyzerSeqResource.setContent(analyzerXML);
             analyzerSeqResource.setMediaType("text/xml");
             configSystemRegistry.put(AnalyzerConfigConstants.analyzerParentRegistryPath +
                                      AnalyzerConfigConstants.analyzers +
                                      analyzerSequence.getName(), analyzerSeqResource);
-
-            Map<String, Object> resource = new HashMap<String, Object>();
-
+            
             updateTenantTracker(AnalyzerConfigConstants.ANALYZER_TRACKER);
 
 /*            UserRegistry superTenantRegistry = Utils.getRegistryService().
@@ -136,8 +129,16 @@ public class AnalyzerMgtService extends AbstractAdmin {
                                     AnalyzerConfigConstants.INDEX_TRACKER, tenantTrackerResource);*/
             Map<String, String> credentials = org.wso2.carbon.bam.core.utils.Utils.
                     getConnectionParameters();
-            Utils.getEngine().startAnalyzerSequence(resource, analyzerSequence, credentials);
-            log.info("Added analyzer sequence : " + analyzerSequence.getName() + " by tenant : " + tenantId);
+            /* Populating BAM task configuration data  */
+            BAMTaskInfo taskInfo = new BAMTaskInfo();
+            taskInfo.setAnlyzerSequence(analyzerSequence);
+            taskInfo.setCredentials(credentials);
+            taskInfo.setAnalyzerSeqXML(analyzerEl);
+
+            Utils.getEngine().startAnalyzerSequence(taskInfo);
+
+            log.info("Added analyzer sequence : " + analyzerSequence.getName() + " by tenant : " +
+                    tenantId);
         } catch (RegistryException e) {
             String message = "Error adding analyzer config to registry for tenant : "
                              + tenantId;
@@ -213,6 +214,10 @@ public class AnalyzerMgtService extends AbstractAdmin {
             log.error(message, e);
             throw new AnalyzerException(message);
 
+        } catch (TaskException e) {
+            String message = "Unable to delete analyser sequence";
+            log.error(message, e);
+            throw new AnalyzerException(message);
         }
         return true;
     }

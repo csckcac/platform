@@ -19,15 +19,11 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.task.TaskDescriptionRepository;
-import org.apache.synapse.task.TaskScheduler;
-import org.apache.synapse.task.service.TaskManagementService;
 import org.wso2.carbon.bam.analyzer.Utils;
 import org.wso2.carbon.bam.analyzer.engine.AnalyzerConfigConstants;
 import org.wso2.carbon.bam.analyzer.engine.AnalyzerEngine;
-import org.wso2.carbon.bam.analyzer.task.BAMAnalyzerTaskMgmtService;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-import org.wso2.carbon.task.TaskManager;
+import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
 
 import java.io.File;
@@ -43,73 +39,13 @@ public class TenantAnalyzerInitializer extends AbstractAxis2ConfigurationContext
     private static final String MONITOR_CONFIG = "monitor-config";
 
     public void createdConfigurationContext(ConfigurationContext configurationContext) {
-
         String tenantDomain =
                 SuperTenantCarbonContext.getCurrentContext(configurationContext).getTenantDomain();
 
         log.info("Intializing the analyzer Configuration for the tenant domain : " + tenantDomain);
 
         try {
-            configurationContext.setProperty(
-                    TaskManager.CARBON_TASK_JOB_METADATA_SERVICE, BAMAnalyzerServiceComponent.
-                            getJobMetaDataProviderServiceHandler());
-            configurationContext.setProperty(
-                    TaskManager.CARBON_TASK_MANAGEMENT_SERVICE, BAMAnalyzerServiceComponent.
-                            getTaskManagementServiceHandler());
-
-            // initialize the task manager
-            TaskManager taskManager = new TaskManager();
-            taskManager.setTaskDescriptionRepository(
-                    BAMAnalyzerServiceComponent.getTaskDescriptionRepositoryService().
-                            getTaskDescriptionRepository());
-
-            taskManager.init(BAMAnalyzerServiceComponent.getJobMetaDataProviderServiceHandler(),
-                             BAMAnalyzerServiceComponent.getTaskManagementServiceHandler());
-
-            configurationContext.setProperty(TaskManager.CARBON_TASK_MANAGER, taskManager);
-            configurationContext.setProperty(TaskManager.CARBON_TASK_REPOSITORY,
-                                             BAMAnalyzerServiceComponent.getTaskDescriptionRepositoryService().
-                                                     getTaskDescriptionRepository());
-
-            configurationContext.setProperty(TaskManager.CARBON_TASK_JOB_METADATA_SERVICE,
-                                             BAMAnalyzerServiceComponent.getJobMetaDataProviderServiceHandler());
-
-            configurationContext.setProperty(TaskManager.CARBON_TASK_MANAGEMENT_SERVICE,
-                                             BAMAnalyzerServiceComponent.getTaskManagementServiceHandler());
-
-
-            /*
-            * In this particular context, the TaskDescriptionRepository class of the
-            * Carbon Scheduled Tasks Component is used.
-            * Since the Scheduled Tasks Component itself does not initialize a
-            * TaskDescriptionRepository instance,this code snippet is used to initialize a
-            * the required instance manually.
-            */
-            TaskDescriptionRepository taskDescriptionRepository = (TaskDescriptionRepository)
-                    configurationContext.getProperty(TaskManager.CARBON_TASK_REPOSITORY);
-            if (taskDescriptionRepository == null) {
-                taskDescriptionRepository = new TaskDescriptionRepository();
-                configurationContext.setProperty(TaskManager.CARBON_TASK_REPOSITORY,
-                                                 taskDescriptionRepository);
-            }
-
-            /*
-            * In this particular context, the TaskScheduler class of the
-            * Carbon Scheduled Tasks Component is used.
-            * Since the Scheduled Tasks Component itself does not initialize a
-            * TaskScheduler instance,this code snippet is used to initialize a
-            * the required instance manually.
-            */
-            TaskScheduler taskScheduler = (TaskScheduler) configurationContext.getProperty(
-                    TaskManager.CARBON_TASK_SCHEDULER);
-            if (taskScheduler == null) {
-                taskScheduler = new TaskScheduler(TaskManager.CARBON_TASK_SCHEDULER);
-                taskScheduler.init(null);
-                configurationContext.setProperty(TaskManager.CARBON_TASK_SCHEDULER, taskScheduler);
-            } else if (taskScheduler.isInitialized()) {
-                taskScheduler.init(null);
-            }
-
+            
             File tenantAxis2Repo = new File(
                     configurationContext.getAxisConfiguration().getRepository().getFile());
             File analyzerConfigDir = new File(tenantAxis2Repo, MONITOR_CONFIG);
@@ -130,8 +66,10 @@ public class TenantAnalyzerInitializer extends AbstractAxis2ConfigurationContext
                                       File.separator + AnalyzerConfigConstants.ANALYZER_FILE_NAME;
             InputStream analyzerStream = new FileInputStream(analyzerFilePath);
 
-            TaskManagementService taskMgtService = new BAMAnalyzerTaskMgmtService(configurationContext);
-            Utils.setEngine(new AnalyzerEngine(taskMgtService));
+            TaskManager taskManager =
+                    Utils.getTaskService().getTaskManager(
+                            BAMAnalyzerServiceComponent.BAM_ANALYSER_TASK);
+            Utils.setEngine(new AnalyzerEngine(taskManager));
             if (log.isDebugEnabled()) {
                 log.debug("BAM analyzer bundle is activated");
             }

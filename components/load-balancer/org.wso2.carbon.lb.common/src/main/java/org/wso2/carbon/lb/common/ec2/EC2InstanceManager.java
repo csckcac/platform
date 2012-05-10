@@ -141,7 +141,7 @@ public class EC2InstanceManager {
     }
 
     public void enableApiTermination(String instanceId) {
-        setInstanceAttribute(instanceId, "disable_api_termination", "false");
+        setInstanceAttribute(instanceId, "disableApiTermination", "false");
     }
 
     private void handleException(AmazonClientException e) throws AmazonClientException {

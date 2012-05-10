@@ -55,6 +55,7 @@ public class GenericHumanRole implements GenericHumanRoleDAO {
     @JoinTable(name = "HUMANROLE_ORGENTITY", joinColumns = {@JoinColumn(name = "HUMANROLE_ID", referencedColumnName = "GHR_ID")}, inverseJoinColumns = {@JoinColumn(name = "ORGENTITY_ID", referencedColumnName = "ORG_ENTITY_ID")})
     private List<OrganizationalEntityDAO> orgEntities = new ArrayList<OrganizationalEntityDAO>();
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -63,10 +64,12 @@ public class GenericHumanRole implements GenericHumanRoleDAO {
         this.id = id;
     }
 
+    @Override
     public GenericHumanRoleType getType() {
         return type;
     }
 
+    @Override
     public void setType(GenericHumanRoleType type) {
         this.type = type;
     }
@@ -75,18 +78,22 @@ public class GenericHumanRole implements GenericHumanRoleDAO {
         return task;
     }
 
+    @Override
     public void setTask(TaskDAO task) {
         this.task = (Task) task;
     }
 
+    @Override
     public List<OrganizationalEntityDAO> getOrgEntities() {
         return orgEntities;
     }
 
+    @Override
     public void setOrgEntities(List<OrganizationalEntityDAO> orgEntities) {
         this.orgEntities = orgEntities;
     }
 
+    @Override
     public void addOrgEntity(OrganizationalEntityDAO orgEntity) {
         this.orgEntities.add(orgEntity);
     }

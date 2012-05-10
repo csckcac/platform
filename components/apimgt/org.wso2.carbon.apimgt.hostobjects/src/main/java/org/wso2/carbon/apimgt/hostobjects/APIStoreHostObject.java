@@ -255,22 +255,26 @@ public class APIStoreHostObject extends ScriptableObject {
 
 			Iterator it = apiSet.iterator();
 			int i = 0;
-			while (it.hasNext()) {
-				NativeObject currentApi = new NativeObject();
-				Object apiObject = it.next();
-				API api = (API) apiObject;
-				APIIdentifier apiIdentifier = api.getId();
-				currentApi.put("name", currentApi, apiIdentifier.getApiName());
-				currentApi.put("provider", currentApi,
-						apiIdentifier.getProviderName());
-				currentApi.put("version", currentApi,
-						apiIdentifier.getVersion());
-				currentApi.put("description", currentApi, api.getDescription());
-				currentApi.put("rates", currentApi, api.getRating());
-				currentApi.put("thumbnailurl", currentApi, api.getThumbnailUrl());
-				apiArray.put(i, apiArray, currentApi);
-				i++;
-			}
+            while (it.hasNext()) {
+                NativeObject currentApi = new NativeObject();
+                Object apiObject = it.next();
+                API api = (API) apiObject;
+                APIIdentifier apiIdentifier = api.getId();
+                currentApi.put("name", currentApi, apiIdentifier.getApiName());
+                currentApi.put("provider", currentApi,
+                        apiIdentifier.getProviderName());
+                currentApi.put("version", currentApi,
+                        apiIdentifier.getVersion());
+                currentApi.put("description", currentApi, api.getDescription());
+                currentApi.put("rates", currentApi, api.getRating());
+                if (api.getThumbnailUrl() == null) {
+                    currentApi.put("thumbnailurl", currentApi, "images/api-default.png");
+                } else {
+                    currentApi.put("thumbnailurl", currentApi, api.getThumbnailUrl());
+                }
+                apiArray.put(i, apiArray, currentApi);
+                i++;
+            }
 
 		}// end of the if
 		return apiArray;

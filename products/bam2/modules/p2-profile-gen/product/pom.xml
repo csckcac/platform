@@ -205,12 +205,7 @@
                                 </featureArtifactDef>
 
                                 <!-- tasks depenancy features -->
-                                <featureArtifactDef>org.wso2.carbon:org.apache.synapse.wso2.feature:${synapse.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.mediation.initializer.server.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.task.feature:${carbon.version}
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}
                                 </featureArtifactDef>
 
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}</featureArtifactDef>-->
@@ -366,15 +361,7 @@
 
                                 <!-- tasks features -->
                                 <feature>
-                                    <id>org.apache.synapse.wso2.feature.group</id>
-                                    <version>${synapse.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.mediation.initializer.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.task.server.feature.group</id>
+                                    <id>org.wso2.carbon.ntask.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
 				<!-- ntask features -->

@@ -53,6 +53,13 @@
             <artifactId>org.wso2.carbon.bam2.core.ui</artifactId>
 	    <version>${wso2carbon.version.bam2}</version>
         </dependency>
+	<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ntask.feature</artifactId>
+            <type>zip</type>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -91,8 +98,7 @@
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version.bam2}</importFeatureDef>
 				<importFeatureDef>org.wso2.carbon.cassandra.dataaccess:${wso2carbon.version.bam2}</importFeatureDef>
 				<importFeatureDef>org.wso2.carbon.cassandra.server:${wso2carbon.version.bam2}</importFeatureDef>
-				<importFeatureDef>org.wso2.carbon.task.server:${wso2carbon.version.bam2}</importFeatureDef>
-				<importFeatureDef>org.apache.synapse.wso2:${synapse.version}</importFeatureDef>
+				<importFeatureDef>org.wso2.carbon.ntask.core:${carbon.platform.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

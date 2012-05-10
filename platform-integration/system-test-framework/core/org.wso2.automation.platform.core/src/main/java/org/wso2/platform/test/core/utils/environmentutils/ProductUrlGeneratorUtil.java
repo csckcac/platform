@@ -48,7 +48,7 @@ public class ProductUrlGeneratorUtil {
         }
     }
 
-    private String getHttpServiceURLOfProduct(String httpPort, String hostName,
+    public String getHttpServiceURLOfProduct(String httpPort, String hostName,
                                               FrameworkProperties frameworkProperties) {
         String serviceURL = null;
         boolean webContextEnabled = frameworkProperties.getEnvironmentSettings().isEnableCarbonWebContext();
@@ -76,9 +76,9 @@ public class ProductUrlGeneratorUtil {
 
     }
 
-    private String getHttpServiceURLOfStratos(String httpPort, String hostName,
-                                              FrameworkProperties frameworkProperties,
-                                              UserInfo info) {
+    public String getHttpServiceURLOfStratos(String httpPort, String hostName,
+                                             FrameworkProperties frameworkProperties,
+                                             UserInfo info) {
         String serviceURL = null;
         boolean webContextEnabled = frameworkProperties.getEnvironmentSettings().isEnableCarbonWebContext();
         boolean portEnabled = frameworkProperties.getEnvironmentSettings().isEnablePort();

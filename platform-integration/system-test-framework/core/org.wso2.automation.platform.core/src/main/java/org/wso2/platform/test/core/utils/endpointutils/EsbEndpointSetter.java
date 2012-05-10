@@ -24,6 +24,9 @@ import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.impl.llom.OMElementImpl;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.UserInfo;
+import org.wso2.platform.test.core.utils.UserListCsvReader;
+import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
@@ -38,6 +41,9 @@ import java.net.URL;
 import java.util.Iterator;
 
 public class EsbEndpointSetter {
+    public String userId;
+    boolean containsHttps = false;
+
     public OMElement setEndpointURL(DataHandler dh) throws IOException, XMLStreamException {
         DataHandler dataHandler = null;
 
@@ -101,6 +107,49 @@ public class EsbEndpointSetter {
                     }
                 }
 
+                if (((OMElementImpl) node).getLocalName().equals("proxy")) {
+                    Iterator nodIterator = ((OMElementImpl) node).getChildElements();
+                    while (nodIterator.hasNext()) {
+                        OMNode targetNode = (OMNode) nodIterator.next();
+                        if (((OMElementImpl) targetNode).getLocalName().equals("endpoint")) {
+                            Iterator endpointnode = ((OMElementImpl) targetNode).getChildElements();
+
+                            OMNode endpoint = (OMNode) endpointnode.next();
+                            String uri = ((OMElementImpl) endpoint).getAttribute(new QName("uri")).getAttributeValue();
+                            attribute = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+                            ((OMElementImpl) endpoint).getAttribute(new QName("uri")).setAttributeValue(getUrl(uri));
+                            attribute2 = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+                            System.out.println("Proxy Endpoint");
+                            break;
+
+                        }
+                        nodIterator = ((OMElementImpl) targetNode).getChildElements();
+
+                    }
+                }
+
+                if (((OMElementImpl) node).getLocalName().equals("sequence")) {
+                    Iterator nodIterator = ((OMElementImpl) node).getChildElements();
+                    while (nodIterator.hasNext()) {
+                        OMNode targetNode = (OMNode) nodIterator.next();
+                        if (((OMElementImpl) targetNode).getLocalName().equals("endpoint")) {
+                            Iterator endpointnode = ((OMElementImpl) targetNode).getChildElements();
+
+                            OMNode endpoint = (OMNode) endpointnode.next();
+                            String uri = ((OMElementImpl) endpoint).getAttribute(new QName("uri")).getAttributeValue();
+                            attribute = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+                            ((OMElementImpl) endpoint).getAttribute(new QName("uri")).setAttributeValue(getUrl(uri));
+                            attribute2 = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+                            System.out.println("Proxy Endpoint");
+                            break;
+
+                        }
+                        nodIterator = ((OMElementImpl) targetNode).getChildElements();
+
+                    }
+                }
+
+
                 if (((OMElementImpl) node).getLocalName().equals("wsdl")) {
                     String urlValue = ((OMElementImpl) node).getAttribute(new QName("uri")).getAttributeValue();
 
@@ -146,14 +195,18 @@ public class EsbEndpointSetter {
             while (urlList.hasNext()) {
                 OMNode urlNode = (OMNode) urlList.next();
                 String endpointType = ((OMElementImpl) urlNode).getAttribute(new QName("type")).getAttributeValue();
+                userId = ((OMElementImpl) urlNode).getAttribute(new QName("user")).getAttributeValue();
                 String codedEndpoint = ((OMElementImpl) urlNode).getText();
+                if (codedEndpoint.toLowerCase().contains("https")) {
+                    containsHttps = true;
+                }
                 String product = ((OMElementImpl) productNode).getLocalName();
                 if (endpointType.equals("")) {
 
                 }
                 if (codedEndpoint.contains(endpoint)) {
-                    String service = endpoint.substring(endpoint.indexOf("services/"));
-                    newEndPoint = "http://" + productLookup(product) + service;
+
+                    newEndPoint = productLookup(product, endpoint);
                     endpointFound = true;
                     break;
                 }
@@ -166,7 +219,7 @@ public class EsbEndpointSetter {
         return newEndPoint;
     }
 
-    public String productLookup(String product) {
+    public String productLookup(String product, String oldUrl) {
         String url = null;
         FrameworkProperties properties = null;
         if (product.equals("as")) {
@@ -190,7 +243,30 @@ public class EsbEndpointSetter {
         } else {
 
         }
-        url = properties.getProductVariables().getHostName() + ":" + properties.getProductVariables().getHttpPort() + File.separator;
+        UserInfo info = UserListCsvReader.getUserInfo(Integer.parseInt(userId));
+        ProductUrlGeneratorUtil productUrlGeneratorUtil = new ProductUrlGeneratorUtil();
+        if (!containsHttps) {
+            if (properties.getEnvironmentSettings().is_runningOnStratos()) {
+                url = productUrlGeneratorUtil.getHttpServiceURLOfStratos(properties.getProductVariables().getHttpPort(), properties.getProductVariables().getHostName(), properties, info);
+                String service = oldUrl.substring(oldUrl.indexOf("services/")+9);
+                url = url + File.separator + service;
+
+            } else {
+                url = productUrlGeneratorUtil.getHttpServiceURLOfProduct(properties.getProductVariables().getHttpPort(), properties.getProductVariables().getHostName(), properties);
+                String service = oldUrl.substring(oldUrl.indexOf("services/"));
+                url = url + File.separator + service;
+            }
+        } else if (containsHttps) {
+            if (properties.getEnvironmentSettings().is_runningOnStratos()) {
+                url = properties.getProductVariables().getBackendUrl();
+                String service = oldUrl.substring(oldUrl.indexOf("services/")+9);
+                url = url + File.separator + service;
+            } else {
+                url = properties.getProductVariables().getBackendUrl();
+                String service = oldUrl.substring(oldUrl.indexOf("services/"));
+                url = url + File.separator + service;
+            }
+        }
         return url;
     }
 }

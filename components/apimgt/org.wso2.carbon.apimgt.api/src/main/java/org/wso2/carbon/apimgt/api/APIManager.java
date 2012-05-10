@@ -166,7 +166,8 @@ public interface APIManager {
     public InputStream getIcon(APIIdentifier identifier) throws APIManagementException;
 
     /**
-     * Cleans up any resources acquired by this APIManager instance
+     * Cleans up any resources acquired by this APIManager instance. It is recommended
+     * to call this method once the APIManager instance is no longer required.
      *
      * @throws APIManagementException if an error occurs while cleaning up
      */

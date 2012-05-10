@@ -27,6 +27,7 @@ import org.wso2.carbon.attachment.mgt.skeleton.types.*;
 import org.wso2.carbon.humantask.client.api.types.*;
 import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.*;
+import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.OrganizationalEntity;
 import org.wso2.carbon.humantask.core.engine.HumanTaskEngine;
 import org.wso2.carbon.humantask.core.engine.HumanTaskException;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
@@ -616,7 +617,10 @@ public final class TransformerUtils {
             attachmentInfo.setAttachedTime(cal);
 
             TUser user = new TUser();
-            user.setTUser(attachmentDAO.getAttachedBy().getName());
+            log.warn("Here we have to get the user info from correct entities. But still organization entitiy is not " +
+                     "initialized at org.wso2.carbon.humantask.core.api.client.TransformerUtils" +
+                     ".generateAttachmentDAOFromID. So still we have to set a dummyUser value here.");
+            user.setTUser("DummyUser");
             attachmentInfo.setAttachedBy(user);
 
             attachmentInfo.setName(attachmentDAO.getName());

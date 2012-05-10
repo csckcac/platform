@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DSSStratosTestSuite extends MasterTestSuite{
+public class DSSStratosTestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
@@ -34,8 +34,8 @@ public class DSSStratosTestSuite extends MasterTestSuite{
         if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             suiteVariablesList.add(new SuiteVariables("DSSPriviledgeGroupCreatorSeleniumTest",
                                                       DSSPriviledgeGroupCreatorSeleniumTest.class));
-            suiteVariablesList.add(new SuiteVariables("DataBaseCreator",
-                                                      DSSDatabaseCreatorSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("CreateDataServiceUITest",
+                                                      DSSCreateDataServiceSeleniumTest.class));
             superSuite("StratosDSSSeleniumTestSuite", suiteVariablesList).run();
         }
     }

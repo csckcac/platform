@@ -18,22 +18,25 @@
 package org.wso2.carbon.automation.selenium.cloud.dss;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.admin.service.AdminServiceService;
 import org.wso2.platform.test.core.BrowserManager;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
+import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
+import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
+import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.io.BufferedReader;
@@ -42,12 +45,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.testng.Assert.assertTrue;
 
 
-public class DSSDatabaseCreatorSeleniumTest {
-    private static final Log log = LogFactory.getLog(DSSDatabaseCreatorSeleniumTest.class);
+public class DSSCreateDataServiceSeleniumTest {
+    private static final Log log = LogFactory.getLog(DSSCreateDataServiceSeleniumTest.class);
     private static Selenium selenium;
     private static WebDriver driver;
     String productName = "dss";
@@ -56,6 +61,12 @@ public class DSSDatabaseCreatorSeleniumTest {
     String domain;
     long sleeptime = 4000;
     long sleeptime1 = 6000;
+
+    private String dataServiceName = "companyDataService";
+    private String privilegeGroupName = "testautomation";
+    private String dataBaseName = "company";
+    private String dbUserName = "dbuser";
+    private String dbUserPassword = "test";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, InterruptedException {
@@ -69,85 +80,181 @@ public class DSSDatabaseCreatorSeleniumTest {
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
         driver.get(baseUrl);
+        new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+        setPreConditions();
     }
 
 
-    @Test(groups = {"wso2.manager"}, description = "add a new privilege group", priority = 1)
-    public void testAddPrivilegeGroup() throws Exception {
+    @Test(priority = 0)
+    public void addPrivilegeGroup() throws InterruptedException {
+        addPrivilegeGroup(privilegeGroupName);
+    }
+
+    @Test(priority = 1, dependsOnMethods = {"addPrivilegeGroup"})
+    public void createDataBase() throws InterruptedException {
+        createDatabase(dataBaseName);
+    }
+
+    @Test(priority = 2, dependsOnMethods = {"createDataBase"})
+    public void addDatabaseUser() throws InterruptedException {
+        createDataBaseUser(privilegeGroupName, dbUserName, dbUserPassword);
+    }
+
+    @Test(priority = 3, dependsOnMethods = {"addDatabaseUser"})
+    public void exploreDatabase() throws IOException, InterruptedException {
         String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION;
         String dbScriptFilePath = resourcePath + File.separator + "artifacts" + File.separator +
-                                  "DSS"+File.separator+"sql"+File.separator+"MySql"+File.separator+
+                                  "DSS" + File.separator + "sql" + File.separator + "MySql" + File.separator +
                                   "selenium_Company.sql";
         String sqlScript = getDatafromFile(dbScriptFilePath);
-        String privilegeGroupName = "testautomation";
-        String dataBaseName = "company";
-        String dbUserName = "dbuser";
-        String dbUserPassword = "test";
-        String baseUrlData = "https://data.stratoslive.wso2.com";
+        exploreDatabase(sqlScript, dbUserPassword);
+    }
+
+    @Test(priority = 4, dependsOnMethods = {"exploreDatabase"})
+    public void createCarbonDataSourceTest() throws InterruptedException {
+        createCarbonDataSource();
+    }
+
+    @Test(priority = 5, dependsOnMethods = {"createCarbonDataSourceTest"})
+    public void addDataSource() throws InterruptedException {
+        FrameworkProperties dssConfig = FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME);
+        String baseUrlData = "https://" + dssConfig.getProductVariables().getHostName();
+        if (dssConfig.getEnvironmentSettings().isEnablePort()) {
+            baseUrlData = baseUrlData + ":" + dssConfig.getProductVariables().getHttpsPort();
+        }
+        if (dssConfig.getEnvironmentSettings().isEnableCarbonWebContext()) {
+            baseUrlData = baseUrlData + "/" + dssConfig.getProductVariables().getWebContextRoot();
+        }
         String dataSourceUrl = baseUrlData + "/t/" + domain + "/carbon/datasource/index.jsp?region=" +
                                "region1&item=datasource_menu";
-
         String serviceCreateUrl = baseUrlData + "/t/" + domain + "/carbon/ds/serviceDetails.jsp" +
                                   "?region=region1&item=ds_create_menu";
-        try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
-            log.info("Stratos Data Login Success");
-            addPrivilegeGroup(privilegeGroupName);
-            createDatabase(dataBaseName);
-            createDataBaseUser(privilegeGroupName, dbUserName, dbUserPassword);
-            exploreDatabase(sqlScript, dbUserPassword);
-            createCarbonDataSource();
-            String dataSourceID = getCarbonDataSourceID(dataSourceUrl);
-            addDataSource(serviceCreateUrl, dataSourceID);
-            addNewQuery();
-            addNewOperation();
-            log.info("Service was Created Successfully Refreshing page .....");
-            refreshPage("//td[2]/nobr/a");
-            waitTimeforElement("//td[2]/nobr/a");  // till list dashboard appears...
-            assertTrue(driver.getPageSource().contains("company"), "Failed to Create Data Service :");
-            deleteDataService();
-            deleteDatabase();
-            deletePrivilegeGroup();
-            userLogout();
-            log.info("**************Stratos DSS - Create Data Service Test - Passed  ************");
-        } catch (AssertionFailedError e) {
-            log.info("Create Data Service Test Failed :" + e.getMessage());
-            userLogout();
-            throw new AssertionFailedError("Create Data Service Test Failed :" + e.getMessage());
-        } catch (WebDriverException e) {
-            log.info("Create Data Service Test Failed :" + e.getMessage());
-            userLogout();
-            throw new WebDriverException("Create Data Service Test Failed:" + e.getMessage());
-        } catch (Exception e) {
-            log.info("Create Data Service Test Failed :" + e.getMessage());
-            userLogout();
-            throw new Exception("Create Data Service Test Failed :" + e.getMessage());
-        }
+        String dataSourceID = getCarbonDataSourceID(dataSourceUrl);
+        addDataSource(serviceCreateUrl, dataSourceID);
     }
 
+    @Test(priority = 6, dependsOnMethods = {"addDataSource"})
+    public void addQuery() throws InterruptedException {
+        addNewQuery();
+    }
+
+    @Test(priority = 7, dependsOnMethods = {"addQuery"})
+    public void addOperation() throws InterruptedException {
+        addNewOperation();
+    }
+
+    @Test(priority = 7, dependsOnMethods = {"addOperation"})
+    public void serviceDeployment() throws InterruptedException {
+        for (int i = 0; i < 5; i++) {
+            driver.findElement(By.linkText("List")).click();
+            if (driver.findElement(By.id("sgTable")).getText().contains(dataServiceName)) {
+                break;
+            }
+            Thread.sleep(3000);
+
+        }
+        assertTrue(driver.findElement(By.id("sgTable")).getText().contains(dataServiceName), "Service Name not fount in service list");
+    }
 
     @AfterClass(alwaysRun = true)
-    public void cleanup() {
-        driver.quit();
+    public void cleanup() throws InterruptedException {
+        try {
+            userLogout();
+        } finally {
+            driver.quit();
+        }
+
     }
 
+    private void setPreConditions() throws InterruptedException {
+        driver.findElement(By.xpath("/html/body/table/tbody/tr[2]/td[2]/table/tbody/tr/td/div/ul/li[5]/ul/li[2]/ul/li/a")).click();
+        if (driver.findElements(By.id("sgTable")).size() > 0) {
+            if (driver.findElement(By.id("sgTable")).getText().contains(dataServiceName)) {
+                deleteDataService();
+            }
+        }
 
-    private void deletePrivilegeGroup() throws InterruptedException {
+        driver.findElement(By.linkText("Databases")).click();
+        if (driver.findElement(By.id("database_table")).getText().contains(dataBaseName)) {
+            deleteDatabaseIfExist();
+        }
+
+        deletePrivilegeGroupIfExists();
+
+    }
+
+    private void deleteDatabaseIfExist() throws InterruptedException {
+        List<WebElement> databaseList;
+        driver.findElement(By.linkText("Databases")).click();
+        databaseList = driver.findElement(By.id("database_table")).findElements(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr"));
+        for (int j = 0; j < databaseList.size(); j++) {
+
+            if (driver.findElement(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr[" + (j + 1) + "]/td[1]")).getText().contains(dataBaseName + "_" + domain.replace('.', '_'))) {
+                driver.findElement(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr[" + (j + 1) + "]")).findElement(By.linkText("Manage")).click();
+                if (driver.findElements(By.id("dbUserTable")).size() > 0) {
+                    List<WebElement> userList = driver.findElements(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr"));
+
+                    for (int i = 0; i < userList.size(); i++) {
+                        if (driver.findElement(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr")).
+                                getText().contains("Drop")) {
+                            driver.findElement(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr")).findElement(By.linkText("Drop")).click();
+                            assertTrue(selenium.isTextPresent("exact:Do you want to drop the user?"),
+                                       "Failed to Delete DB User :");
+                            selenium.click("//button");
+                        }
+
+
+                    }
+                }
+                driver.findElement(By.linkText("Databases")).click();
+
+                driver.findElement(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr[" + (j + 1) + "]")).findElement(By.linkText("Drop")).click();
+                assertTrue(selenium.isTextPresent("exact:Do you want to drop the database?"),
+                           "Failed to remove DB");
+                selenium.click("//button");
+                Thread.sleep(sleeptime);
+                log.info("Deleted Database");
+                break;
+            }
+
+        }
+
+
+    }
+
+    private void deletePrivilegeGroupIfExists() throws InterruptedException {
         driver.findElement(By.linkText("Privilege Groups")).click();
-        waitTimeforElement("//form/table/tbody/tr/td");
-        driver.findElement(By.linkText("Delete")).click();
+        if (driver.findElement(By.id("privilegeGroupTable")).getText().contains(privilegeGroupName)) {
+            driver.findElement(By.id("privilegeGroupTable")).findElement(By.id("tr_" + privilegeGroupName)).findElement(By.linkText("Delete")).click();
+            assertTrue(selenium.isTextPresent("Do you want to remove privilege group?"),
+                       "Privilege Group delete Pop-up Failed :");
+            selenium.click("//button");
+            Thread.sleep(sleeptime);
+            assertTrue(selenium.isTextPresent("Privilege group has been successfully removed"),
+                       "Privilege Group delete Verification Pop-up Failed :");
+            selenium.click("//button");
+            Thread.sleep(sleeptime);
+        }
+
+
+    }
+
+    /* private void deletePrivilegeGroup() throws InterruptedException {
+        driver.findElement(By.linkText("Privilege Groups")).click();
+        driver.findElement(By.id("privilegeGroupTable")).findElement(By.id("tr_" + privilegeGroupName)).findElement(By.linkText("Delete")).click();
         waitTimeforElement("//div[3]/div/div");
-        assertTrue(selenium.isTextPresent("exact:Do you want to remove privilege group?"),
-                   "Failed to Display Warning message going to delete Privilege group  :");
-        selenium.click("//button");
-        waitTimeforElement("//div[3]/div/div");
-        assertTrue(selenium.isTextPresent("Privilege group has been successfully removed"),
-                   "Failed to Delete Priviledge group :");
+        assertTrue(selenium.isTextPresent("Do you want to remove privilege group?"),
+                   "Privilege Group delete Pop-up Failed :");
         selenium.click("//button");
         Thread.sleep(sleeptime);
-    }
+        assertTrue(selenium.isTextPresent("Privilege group has been successfully removed"),
+                   "Privilege Group delete Verification Pop-up Failed :");
+        selenium.click("//button");
+        Thread.sleep(sleeptime);
 
-    private void deleteDatabase() throws InterruptedException {
+    }*/
+
+    /* private void deleteDatabase() throws InterruptedException {
         // delete database & user
         driver.findElement(By.linkText("Databases")).click();
         waitTimeforElement("//td[5]/a");
@@ -170,20 +277,31 @@ public class DSSDatabaseCreatorSeleniumTest {
         selenium.click("//button");
         Thread.sleep(sleeptime);
         log.info("Deleted Database");
-    }
+    }*/
 
     private void deleteDataService() throws InterruptedException {
-        waitTimeforElement("//td/input");
-        driver.findElement(By.name("serviceGroups")).click();
-        driver.findElement(By.id("delete1")).click();
-        waitTimeforElement("//div[3]/div/div");
-        selenium.click("//button");
-        waitTimeforElement("//div[3]/div/div");
-        assertTrue(selenium.isTextPresent("Successfully deleted selected service groups"),
-                   "Failed to upload Data Service File :");
-        selenium.click("//button");
-        Thread.sleep(sleeptime);
-        log.info("Deleted Data Service");
+        driver.findElement(By.xpath("/html/body/table/tbody/tr[2]/td[2]/table/tbody/tr/td/div/ul/li[5]/ul/li[2]/ul/li/a")).click();
+        List<WebElement> tr;
+        tr = driver.findElement(By.id("sgTable")).findElements(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form[2]/table/tbody/tr"));
+        Iterator<WebElement> it = tr.iterator();
+        while (it.hasNext()) {
+            WebElement service = it.next();
+            if (service.getText().contains(dataServiceName)) {
+                service.findElement(By.name("serviceGroups")).click();
+                driver.findElement(By.id("delete1")).click();
+                waitTimeforElement("//div[3]/div/div");
+                selenium.click("//button");
+                waitTimeforElement("//div[3]/div/div");
+                assertTrue(selenium.isTextPresent("Successfully deleted selected service groups"),
+                           "Failed to upload Data Service File :");
+                selenium.click("//button");
+                Thread.sleep(sleeptime);
+                break;
+            }
+
+
+        }
+
     }
 
     private void addNewOperation() throws InterruptedException {
@@ -234,7 +352,7 @@ public class DSSDatabaseCreatorSeleniumTest {
             throws InterruptedException {
         driver.get(serviceCreateUrl);
         waitTimeforElement("//input");
-        driver.findElement(By.id("serviceName")).sendKeys("company");
+        driver.findElement(By.id("serviceName")).sendKeys(dataServiceName);
         driver.findElement(By.xpath("//tr[5]/td/input")).click();
         waitTimeforElement("//form/table/tbody/tr/td/a");
         driver.findElement(By.linkText("Add New Data Source")).click();
@@ -251,29 +369,36 @@ public class DSSDatabaseCreatorSeleniumTest {
 
     private String getCarbonDataSourceID(String dataSourceUrl) throws InterruptedException {
         driver.get(dataSourceUrl);
-        waitTimeforElement("//div/div/table/tbody/tr/td");
         String dataSourceID = selenium.getText("//div/div/table/tbody/tr/td");
         log.info("Carbon Data Source ID is : " + dataSourceID);
         return dataSourceID;
     }
 
     private void createCarbonDataSource() throws InterruptedException {
+        List<WebElement> databaseList;
         driver.findElement(By.linkText("Databases")).click();
-        waitTimeforElement("//form/table/tbody/tr/td");
-        driver.findElement(By.linkText("Manage")).click();
-        waitTimeforElement("//form/table/tbody/tr/td");
-        driver.findElement(By.linkText("Create Datasource")).click();
-        waitTimeforElement("//div[3]/div/div");
-        assertTrue(selenium.isTextPresent("Carbon datasource has been successfully created. " +
-                                          "Please update the password field before using the " +
-                                          "Carbon datasource."), "Failed Carbon Source Creation :");
-        selenium.click("//button");
         Thread.sleep(sleeptime);
+        databaseList = driver.findElement(By.id("database_table")).findElements(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr"));
+        for (int j = 0; j < databaseList.size(); j++) {
+
+            if (driver.findElement(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr[" + (j + 1) + "]/td[1]")).getText().contains(dataBaseName + "_" + domain.replace('.', '_'))) {
+                driver.findElement(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr[" + (j + 1) + "]")).findElement(By.linkText("Manage")).click();
+                driver.findElement(By.linkText("Create Datasource")).click();
+                Thread.sleep(sleeptime);
+                assertTrue(selenium.isTextPresent("Carbon datasource has been successfully created. " +
+                                                  "Please update the password field before using the " +
+                                                  "Carbon datasource."), "Failed Carbon Source Creation :");
+                selenium.click("//button");
+                Thread.sleep(sleeptime);
+                break;
+            }
+        }
+
     }
 
     private void exploreDatabase(String sqlScript, String dbUserPassword)
             throws InterruptedException {
-        driver.findElement(By.linkText("Explore Database")).click();
+        driver.findElement(By.id("dbUserTable")).findElement(By.linkText("Explore Database")).click();
         Thread.sleep(sleeptime);
         selenium.selectFrame("inlineframe");
         driver.findElement(By.name("password")).sendKeys(dbUserPassword);
@@ -290,23 +415,31 @@ public class DSSDatabaseCreatorSeleniumTest {
 
     private void createDataBaseUser(String privilegeGroupName, String dbUserName,
                                     String dbUserPassword) throws InterruptedException {
-        driver.findElement(By.linkText("Manage")).click();
-        //wait for add new user page
-        waitTimeforElement("//form/table/tbody/tr/td/a");
-        driver.findElement(By.linkText("Add New User")).click();
-        driver.findElement(By.id("username")).sendKeys(dbUserName);
-        driver.findElement(By.id("password")).sendKeys(dbUserPassword);
-        driver.findElement(By.id("repeatPassword")).sendKeys(dbUserPassword);
-        Select selectgroup = new Select(driver.findElement(By.id("privGroupList")));
-        selectgroup.selectByVisibleText(privilegeGroupName);
-        driver.findElement(By.xpath("//tr[5]/td/input")).click();
-        waitTimeforElement("//div[3]/div/div");
-        assertTrue(selenium.isTextPresent("User has been successfully created"),
-                   "Database User creation pop-up message Failed:");
-        selenium.click("//button");
-        waitTimeforElement("//form/table/tbody/tr/td");
-        String dbuserName = selenium.getText("//form/table/tbody/tr/td");
-        log.info("Database User Name is : " + dbuserName);
+        List<WebElement> databaseList;
+        driver.findElement(By.linkText("Databases")).click();
+        databaseList = driver.findElement(By.id("database_table")).findElements(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr"));
+        for (int j = 0; j < databaseList.size(); j++) {
+
+            if (driver.findElement(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr[" + (j + 1) + "]/td[1]")).getText().contains(dataBaseName + "_" + domain.replace('.', '_'))) {
+                driver.findElement(By.xpath("//tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr[" + (j + 1) + "]")).findElement(By.linkText("Manage")).click();
+
+
+                driver.findElement(By.linkText("Add New User")).click();
+                driver.findElement(By.id("username")).sendKeys(dbUserName);
+                driver.findElement(By.id("password")).sendKeys(dbUserPassword);
+                driver.findElement(By.id("repeatPassword")).sendKeys(dbUserPassword);
+                Select selectgroup = new Select(driver.findElement(By.id("privGroupList")));
+                selectgroup.selectByVisibleText(privilegeGroupName);
+                driver.findElement(By.xpath("//tr[5]/td/input")).click();
+                waitTimeforElement("//div[3]/div/div");
+                assertTrue(selenium.isTextPresent("User has been successfully created"),
+                           "Database User creation pop-up message Failed:");
+                selenium.click("//button");
+                String dbuserName = selenium.getText("//form/table/tbody/tr/td");
+                log.info("Database User Name is : " + dbuserName);
+                break;
+            }
+        }
     }
 
     private void createDatabase(String dataBaseName) throws InterruptedException {
@@ -335,7 +468,6 @@ public class DSSDatabaseCreatorSeleniumTest {
     }
 
     private void addPrivilegeGroup(String groupName) throws InterruptedException {
-        waitTimeforElement("//li[4]/ul/li/a");
         driver.findElement(By.linkText("Privilege Groups")).click();
         Thread.sleep(sleeptime);
         driver.findElement(By.linkText("Add new privilege group")).click();
@@ -344,13 +476,14 @@ public class DSSDatabaseCreatorSeleniumTest {
         driver.findElement(By.id("selectAll")).click();
         driver.findElement(By.xpath("//td[3]/table/tbody/tr[3]/td/input")).click();
         waitTimeforElement("//div[4]/div/div");
+
         assertTrue(selenium.isTextPresent("Privilege group has been successfully created"),
-                   "Privilege Group Pop-up Failed :");
+                   "Privilege Group Pop-up message mismatched:");
         selenium.click("//button");
         waitTimeforElement("//li[4]/ul/li/a");
     }
 
-    private void refreshPage(String elementName) throws InterruptedException {
+    /*private void refreshPage(String elementName) throws InterruptedException {
         Calendar startTime = Calendar.getInstance();
         long time;
         boolean element = false;
@@ -366,7 +499,7 @@ public class DSSDatabaseCreatorSeleniumTest {
         }
         assertTrue(element, "Element Not Found within 2 minutes :");
 
-    }
+    }*/
 
     private void waitTimeforElement(String elementName) throws InterruptedException {
         Calendar startTime = Calendar.getInstance();

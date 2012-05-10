@@ -63,13 +63,15 @@ public class DSSPriviledgeGroupCreatorSeleniumTest {
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
         driver.get(baseUrl);
+        new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+        deletePrivilegeGroupIfExists();
     }
 
 
     @Test(groups = {"wso2.manager"}, description = "add a new privilege group", priority = 1)
     public void testAddPrivilegeGroup() throws Exception {
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+
             log.info("Stratos Data Login Success");
             addPrivilegeGroup();
             deletePrivilegeGroup();
@@ -117,6 +119,25 @@ public class DSSPriviledgeGroupCreatorSeleniumTest {
                    "Privilege Group delete Verification Pop-up Failed :");
         selenium.click("//button");
         Thread.sleep(sleeptime);
+    }
+
+    private void deletePrivilegeGroupIfExists() throws InterruptedException {
+        waitTimeforElement("//li[4]/ul/li/a");
+        driver.findElement(By.linkText("Privilege Groups")).click();
+        if (driver.findElement(By.id("privilegeGroupTable")).getText().contains("qatest")) {
+            driver.findElement(By.id("privilegeGroupTable")).findElement(By.id("tr_qatest")).findElement(By.linkText("Delete")).click();
+            waitTimeforElement("//div[3]/div/div");
+            assertTrue(selenium.isTextPresent("Do you want to remove privilege group?"),
+                       "Privilege Group delete Pop-up Failed :");
+            selenium.click("//button");
+            Thread.sleep(sleeptime);
+            assertTrue(selenium.isTextPresent("Privilege group has been successfully removed"),
+                       "Privilege Group delete Verification Pop-up Failed :");
+            selenium.click("//button");
+            Thread.sleep(sleeptime);
+        }
+
+
     }
 
     @AfterClass(alwaysRun = true)

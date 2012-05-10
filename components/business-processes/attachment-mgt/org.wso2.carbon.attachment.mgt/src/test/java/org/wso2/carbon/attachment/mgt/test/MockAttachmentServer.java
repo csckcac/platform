@@ -19,16 +19,12 @@ package org.wso2.carbon.attachment.mgt.test;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.attachment.mgt.configuration.AttachmentServerConfiguration;
-import org.wso2.carbon.attachment.mgt.core.dao.DAOManager;
 import org.wso2.carbon.attachment.mgt.core.dao.DAOManagerImpl;
-import org.wso2.carbon.attachment.mgt.core.datasource.AbstractDataSourceManager;
 import org.wso2.carbon.attachment.mgt.core.datasource.impl.JDBCManager;
 import org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException;
 import org.wso2.carbon.attachment.mgt.server.AbstractAttachmentServer;
-import org.wso2.carbon.attachment.mgt.server.Server;
-import org.wso2.carbon.attachment.mgt.util.ConfigurationUtil;
+import org.wso2.carbon.utils.ServerConstants;
 
-import javax.transaction.TransactionManager;
 import java.io.File;
 
 /**
@@ -51,7 +47,11 @@ public class MockAttachmentServer extends AbstractAttachmentServer {
     private static final String DATABASE_CONFIG_FILE_PATH = "src" + File.separator + "test" + File
             .separator + "resources" + File.separator + "dbConfig.xml";
 
+    private static final String CARBON_CONFIG_DIR_PATH = "src" + File.separator + "test" + File
+            .separator + "resources";
+
     public void init() {
+        System.setProperty(ServerConstants.CARBON_CONFIG_DIR_PATH, CARBON_CONFIG_DIR_PATH);
         loadAttachmentServerConfig();
         initDataSource();
         initDAO();

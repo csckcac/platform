@@ -33,4 +33,5 @@ public class AttachmentMgtConfigurationConstants {
                                                                     ".GenerateDdl";
     public static final String DAO_PERSISTENCE_CONFIG_SHOW_SQL = "dao.PersistenceConfig.ShowSql";
 
+    public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
 }

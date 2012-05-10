@@ -24,10 +24,7 @@ import org.wso2.carbon.attachment.mgt.core.dao.AttachmentDAO;
 import org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException;
 
 import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.activation.UnsupportedDataTypeException;
 import javax.persistence.*;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 

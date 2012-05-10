@@ -27,7 +27,6 @@ import org.wso2.carbon.attachment.mgt.util.URLGeneratorUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.io.InputStream;
 import java.util.List;
 
 /**

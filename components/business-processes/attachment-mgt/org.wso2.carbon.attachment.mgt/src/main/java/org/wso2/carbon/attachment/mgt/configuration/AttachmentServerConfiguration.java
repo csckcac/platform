@@ -19,6 +19,7 @@ package org.wso2.carbon.attachment.mgt.configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.attachment.mgt.util.ConfigurationUtil;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,9 +59,9 @@ public class AttachmentServerConfiguration {
     public AttachmentServerConfiguration() {
         this.dataSourceName = "attachmentds";
         this.dataSourceJNDIRepoInitialContextFactory = "com.sun.jndi.rmi.registry.RegistryContextFactory";
-        this.dataSourceJNDIRepoProviderURL = "rmi://localhost:2199";
+        this.dataSourceJNDIRepoProviderURL = applyPortOffset("rmi://localhost:2199");
         this.daoConnectionFactoryClass = "org.wso2.carbon.attachment.mgt.core.dao.impl.jpa" +
-                                         ".openjpa.AttachmentMgtDAOConnectionFactoryImpl";
+                ".openjpa.AttachmentMgtDAOConnectionFactoryImpl";
         this.daoTransformerFactoryClass = "org.wso2.carbon.attachment.mgt.core.dao.impl.jpa.openjpa.AttachmentMgtDAOTransformerFactoryImpl";
         this.transactionFactoryClass = null;
         this.generateDdl = true;
@@ -71,16 +72,21 @@ public class AttachmentServerConfiguration {
         try {
             Properties serverConfigProperties = ConfigurationUtil.getPropertyMap(attMgtConfigFile);
 
-            this.dataSourceName = serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants
-                                                       .DATASOURCE_NAME);
-            this.dataSourceJNDIRepoInitialContextFactory = serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants
-                                                       .DATASOURCE_JNDI_CONTEXT_FACTORY);
-            this.dataSourceJNDIRepoProviderURL = serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants
-                                                       .DATASOURCE_JNDI_PROVIDER_URL);
-            this.daoConnectionFactoryClass = serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants
-                                                       .DAO_CONNECTION_FACTORY_IMPL_CLASS);
-            this.daoTransformerFactoryClass = serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants
-                                                       .DAO_TRANSFORMER_FACTORY_IMPL_CLASS);
+            this.dataSourceName =
+                    serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants.
+                            DATASOURCE_NAME);
+            this.dataSourceJNDIRepoInitialContextFactory =
+                    serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants.
+                            DATASOURCE_JNDI_CONTEXT_FACTORY);
+            this.dataSourceJNDIRepoProviderURL =
+                    applyPortOffset(serverConfigProperties.getProperty(
+                            AttachmentMgtConfigurationConstants.DATASOURCE_JNDI_PROVIDER_URL));
+            this.daoConnectionFactoryClass =
+                    serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants.
+                            DAO_CONNECTION_FACTORY_IMPL_CLASS);
+            this.daoTransformerFactoryClass =
+                    serverConfigProperties.getProperty(AttachmentMgtConfigurationConstants.
+                            DAO_TRANSFORMER_FACTORY_IMPL_CLASS);
             this.transactionFactoryClass = serverConfigProperties.getProperty
                     (AttachmentMgtConfigurationConstants.TRANSACTION_FACTORY_CLASS);
             this.generateDdl = Boolean.parseBoolean(serverConfigProperties.getProperty
@@ -123,5 +129,39 @@ public class AttachmentServerConfiguration {
 
     public boolean isShowSql() {
         return showSql;
+    }
+
+    private String applyPortOffset(String url) {
+        int portOffset = getCarbonPortOffset();
+
+        // We need to adjust the port value according to the offset defined in the carbon configuration.
+        String portValueString = url.substring(
+                url.lastIndexOf(':') + 1,
+                url.length());
+
+        String urlWithoutPort = url
+                .substring(0, url.lastIndexOf(':') + 1);
+
+
+        int actualPortValue = Integer.parseInt(portValueString);
+        int correctedPortValue = actualPortValue + portOffset;
+
+        return urlWithoutPort.concat(Integer.toString(correctedPortValue));
+    }
+
+    private int getCarbonPortOffset() {
+
+        String offset = CarbonUtils.getServerConfiguration().getFirstProperty(
+                AttachmentMgtConfigurationConstants.CARBON_CONFIG_PORT_OFFSET_NODE);
+
+        try {
+            return ((offset != null) ? Integer.parseInt(offset.trim()) :
+                    0);
+        } catch (NumberFormatException e) {
+            log.warn("Error occurred while reading port offset. Invalid port offset: " +
+                    offset + " Setting the port offset to 0",
+                    e);
+            return 0;
+        }
     }
 }

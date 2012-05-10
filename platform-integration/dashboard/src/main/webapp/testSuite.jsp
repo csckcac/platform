@@ -73,7 +73,7 @@
             ];
             var plot1 = jQuery.jqplot('pieChart', [data],
                                       {
-                                          seriesColors:["#088708", "#db0e0e", "#facb1f"],
+                                          seriesColors:[ "#4ea12e", "#d9261b", "#FACB1F"],
                                           title:{
                                               text:'Build #<%=build.getString("build")%>', // title for the plot,
                                               show:true
@@ -130,7 +130,7 @@
                     <tr valign="top">
                         <td>
 
-                            <table id="table-1">
+                            <table class="table">
                                 <tr>
                                     <th><b>Test Suite</b></th>
                                     <th><b>Total</b></th>

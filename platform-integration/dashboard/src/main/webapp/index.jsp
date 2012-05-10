@@ -84,7 +84,7 @@
 
             var plot1 = $.jqplot('chart1', [pass, fail, skip], {
 
-                seriesColors:[ "#088708", "#db0e0e", "#facb1f"],
+                seriesColors:[ "#4ea12e", "#d9261b", "#FACB1F"],
                 title:{
                     text:'Build Chart', // title for the plot,
                     show:true
@@ -146,7 +146,7 @@
             ];
             var plot2 = jQuery.jqplot('pieChart', [data1],
                                       {
-                                          seriesColors:["#088708", "#db0e0e", "#facb1f"],
+                                          seriesColors:[ "#4ea12e", "#d9261b", "#FACB1F"],
                                           title:{
                                               text:'Last Build #<%=lastBuild.get("build")%>', // title for the plot
                                               show:true
@@ -222,7 +222,7 @@
 
                 <%-- <p>Test result content goes here</p>--%>
 
-                <table id="table-1">
+                <table class="table">
                     <tr>
                         <th><b>Build</b></th>
                         <th><b>Time</b></th>

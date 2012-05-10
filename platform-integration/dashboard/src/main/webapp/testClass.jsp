@@ -83,14 +83,14 @@
 
                 <%-- <p>Test result content goes here</p>--%>
 
-                <table id="table-1">
+                <table class="table">
                 <tr>
                     <th><b>Build</b></th>
                     <th><b>Test Class</b></th>
                     <th><b>Test Case</b></th>
                     <th><b>Status</b></th>
                     <th><b>Reason</b></th>
-                    <th><b>Duration(mils)</b></th>
+                    <th><b>Duration (mils)</b></th>
                 </tr>
                 <%
 

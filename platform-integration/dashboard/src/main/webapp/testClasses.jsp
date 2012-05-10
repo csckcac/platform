@@ -84,7 +84,7 @@
 
                 <%-- <p>Test result content goes here</p>--%>
 
-                <table id="table-1">
+                <table class="table">
                     <tr>
                         <th><b>Test Class</b></th>
                         <th><b>Passed</b></th>

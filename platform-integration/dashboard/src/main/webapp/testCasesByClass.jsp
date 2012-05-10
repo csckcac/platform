@@ -75,12 +75,12 @@
                 <%--end of the content--%>
 
             </div>
-            <div class="hero-unit">
+            <div class="hero-unit" style="overflow-x: auto">
                 <h2>Test Results</h2>
 
                 <%-- <p>Test result content goes here</p>--%>
 
-                <table id="table-1">
+                <table class="table">
                 <tr>
                     <th><b>Build</b></th>
                     <th><b>Test Class</b></th>
@@ -91,11 +91,11 @@
                     %>
                     <th><b>Error Type</b></th>
                     <th><b>Message</b></th>
-                    <th><b>Full Stack Trace</b></th>
+                    <th><b>Stack Trace</b></th>
                     <%
                         }
                     %>
-                    <th><b>Duration(mills)</b></th>
+                    <th><b>Duration (mills)</b></th>
                 </tr>
                 <%
 

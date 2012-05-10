@@ -40,7 +40,7 @@ public class RegistryManager {
      *         The webapp to be deployed in the virtual host
      * @throws Exception
      */
-    public void addHostToRegistry(String hostName, String webApp) throws Exception {
+    public void addHostToRegistry(String hostName, String webApp,String tenantDomain) throws Exception {
 
         try {
             registryService.beginTransaction();
@@ -49,6 +49,8 @@ public class RegistryManager {
                     UrlMapperConstants.HostProperties.HOST_NAME, hostName);
             hostResource.addProperty(
                     UrlMapperConstants.HostProperties.WEB_APP, webApp);
+            hostResource.addProperty(
+                    UrlMapperConstants.HostProperties.TENANT_DOMAIN, tenantDomain);
             registryService.put(UrlMapperConstants.HostProperties.HOSTINFO + hostName,
                                 hostResource);
             registryService.commitTransaction();
@@ -68,7 +70,7 @@ public class RegistryManager {
      *         The webapp to be deployed in the virtual host
      * @throws Exception
      */
-    public void addEprToRegistry(String hostName, String webApp) throws Exception {
+    public void addEprToRegistry(String hostName, String webApp, String tenantDomain) throws Exception {
 
         try {
             registryService.beginTransaction();
@@ -77,6 +79,8 @@ public class RegistryManager {
                     UrlMapperConstants.HostProperties.HOST_NAME, hostName);
             hostResource.addProperty(
                     UrlMapperConstants.HostProperties.SERVICE_EPR, webApp);
+            hostResource.addProperty(
+                    UrlMapperConstants.HostProperties.TENANT_DOMAIN, tenantDomain);
             registryService.put(UrlMapperConstants.HostProperties.HOSTINFO + hostName,
                                 hostResource);
             registryService.commitTransaction();

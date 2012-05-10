@@ -20,7 +20,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 
 public final class UrlMapperConstants {
 
-	public final static String SERVICE_URL_PATTERN =  ":\\d{4}\\/services";
+	public final static String SERVICE_URL_PATTERN =  "\\/services";
     public static final class HostProperties {
         public static final String HOST_NAME = "host.name";
         public static final String HOSTINFO = "hostinfo/";
@@ -29,6 +29,7 @@ public final class UrlMapperConstants {
         public static final String WAR = ".war";
         public static final String FILE_SERPERATOR = "/";
         public static final String WEB_APP = "web.app";
+        public static final String TENANT_DOMAIN = "tenant.domain";
         public static final String SERVICE_EPR="service.epr";
         public final static String DOMAIN_NAME_PREFIX = ".wso2.com";
         public static final String WEB_APPS = "webapps";

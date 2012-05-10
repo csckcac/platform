@@ -206,7 +206,7 @@ public class HostUtil {
      */
     public static void addWebAppToHost(String hostName, String uri) throws UrlMapperException {
         int tenantId;
-        String tenantDomain;
+        String tenantDomain = null;
         String webAppFile;
         String webAppPath;
         // if the request if from tenant
@@ -241,7 +241,7 @@ public class HostUtil {
             /* TODO add listeners once integrate with webapp-mgt */
             DataHolder.getInstance().getCarbonTomcatService().addWebApp(host, "/", webAppPath);
             // add entry to registry with the tenant domain if exist in the uri if adding virtual host is successful.
-            registryManager.addHostToRegistry(hostName, uri);
+            registryManager.addHostToRegistry(hostName, uri,tenantDomain);
 
         } catch (Exception e) {
             log.error("error in adding the virtual host to tomcat engine", e);
@@ -360,12 +360,20 @@ public class HostUtil {
      * @throws UrlMapperException
      */
     public static void addDomainToServiceEpr(String hostName, String url) throws UrlMapperException {
-        if (isServiceURLPattern(url)) {
+        
+    	// if the request if from tenant
+		String tenantDomain = "";
+		int tenantId;
+		if (MultitenantConstants.TENANT_AWARE_URL_PREFIX.contains(url)) {
+			tenantDomain = MultitenantUtils.getTenantDomainFromRequestURL(url);
+		}
+
+    	if (isServiceURLPattern(url)) {
             url = getServiceEndpoint(url);
         }
         try {
             // add entry to registry with the tenant domain if exist in the uri
-            registryManager.addEprToRegistry(hostName, url);
+            registryManager.addEprToRegistry(hostName, url,tenantDomain);
         } catch (Exception e) {
             log.error("error in adding the domain to the resitry", e);
             throw new UrlMapperException("error in adding the domain to the resitry");

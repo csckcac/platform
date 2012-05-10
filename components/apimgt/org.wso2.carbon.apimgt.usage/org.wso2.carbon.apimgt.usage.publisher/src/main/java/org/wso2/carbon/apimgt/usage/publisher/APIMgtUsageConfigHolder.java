@@ -30,10 +30,6 @@ public class APIMgtUsageConfigHolder {
 
     public EventReceiver createEventReceiver(APIMGTConfigReaderService apimgtConfigReaderService) {
         EventReceiver eventReceiver = new EventReceiver();
-        System.setProperty("javax.net.ssl.trustStore",
-                apimgtConfigReaderService.getBamAgentTrustStore());
-        System.setProperty("javax.net.ssl.trustStorePassword",
-                apimgtConfigReaderService.getBamAgentTrustStorePassword());
         eventReceiver.setUrl(apimgtConfigReaderService.getBamServerURL());
         eventReceiver.setUserName(apimgtConfigReaderService.getBamServerUser());
         eventReceiver.setPassword(apimgtConfigReaderService.getBamServerPassword());

@@ -27,8 +27,6 @@ public class APIMGTConfigReaderService {
     private String bamServerURL;
     private String bamServerUser;
     private String bamServerPassword;
-    private String bamAgentTrustStore;
-    private String bamAgentTrustStorePassword;
     private boolean enabled;
 
     public APIMGTConfigReaderService(APIManagerConfiguration config) {
@@ -38,16 +36,10 @@ public class APIMGTConfigReaderService {
         bamServerURL = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_URL);
         bamServerUser = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_USER);
         bamServerPassword = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_PASSWORD);
-        bamAgentTrustStore = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_TRUSTSTORE);
-        bamAgentTrustStorePassword = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_TRUSTSTORE_PASSWORD);
     }
 
     public String getBamServerThriftPort() {
         return bamServerThriftPort;
-    }
-
-    public String getBamAgentTrustStore() {
-        return bamAgentTrustStore;
     }
 
     public String getBamServerPassword() {
@@ -60,10 +52,6 @@ public class APIMGTConfigReaderService {
 
     public String getBamServerURL() {
         return bamServerURL;
-    }
-    
-    public String getBamAgentTrustStorePassword() {
-        return bamAgentTrustStorePassword;
     }
 
     public boolean isEnabled() {

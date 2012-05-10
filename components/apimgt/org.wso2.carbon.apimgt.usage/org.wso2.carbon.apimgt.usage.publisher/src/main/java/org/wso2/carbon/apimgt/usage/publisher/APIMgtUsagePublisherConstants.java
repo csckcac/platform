@@ -31,8 +31,6 @@ public final class APIMgtUsagePublisherConstants {
     public static final String API_USAGE_BAM_SERVER_URL = API_USAGE_TRACKING + "BAMServerURL";
     public static final String API_USAGE_BAM_SERVER_USER = API_USAGE_TRACKING + "BAMUser";
     public static final String API_USAGE_BAM_SERVER_PASSWORD = API_USAGE_TRACKING + "BAMPassword";
-    public static final String API_USAGE_BAM_TRUSTSTORE = API_USAGE_TRACKING + "BAMTrustStore";
-    public static final String API_USAGE_BAM_TRUSTSTORE_PASSWORD = API_USAGE_TRACKING + "BAMTrustStorePassword";
     public static final String  CONSUMER_KEY = "consumerKey";
     public static final String  CONTEXT = "context";
     public static final String  API_VERSION = "api_version";

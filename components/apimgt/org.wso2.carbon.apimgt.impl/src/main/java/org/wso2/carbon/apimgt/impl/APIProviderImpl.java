@@ -1,11 +1,15 @@
 package org.wso2.carbon.apimgt.impl;
 
+import org.apache.axis2.AxisFault;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.*;
+import org.wso2.carbon.apimgt.impl.template.APITemplateBuilder;
+import org.wso2.carbon.apimgt.impl.template.BasicTemplateBuilder;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
+import org.wso2.carbon.apimgt.impl.utils.RESTAPIAdminClient;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
@@ -271,7 +275,72 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
      *          if failed to update API
      */
     public void updateAPI(API api) throws APIManagementException {
+        API oldApi = getAPI(api.getId());
         createAPI(api);
+        if (oldApi.getStatus().equals(APIStatus.CREATED) && 
+                api.getStatus().equals(APIStatus.PUBLISHED)) {
+            publishToGateway(api);
+        } else if (api.getStatus().equals(APIStatus.PUBLISHED)) {
+            updateGatewayConfiguration(api);
+        }
+    }
+
+    private void publishToGateway(API api) throws APIManagementException {
+        try {
+            RESTAPIAdminClient client = new RESTAPIAdminClient(getTemplateBuilder(api));
+            client.addApi();
+        } catch (AxisFault axisFault) {
+            handleException("Error while creating new API in gateway", axisFault);
+        }
+    }
+
+    private void updateGatewayConfiguration(API api) throws APIManagementException {        
+        try {
+            RESTAPIAdminClient client = new RESTAPIAdminClient(getTemplateBuilder(api));
+            client.updateApi();
+        } catch (AxisFault axisFault) {
+            handleException("Error while updating API in the API gateway", axisFault);
+        }
+    }
+    
+    private APITemplateBuilder getTemplateBuilder(API api) {
+        Map<String, String> testAPIMappings = new HashMap<String, String>();
+
+        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, api.getId().getApiName());
+        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, api.getContext());
+        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, api.getId().getVersion());
+
+        Iterator it = api.getUriTemplates().iterator();
+        List<Map<String, String>> resourceMappings = new ArrayList<Map<String, String>>();
+        while (it.hasNext()) {
+            Map<String,String> uriTemplateMap = new HashMap<String,String>();
+            URITemplate temp = (URITemplate) it.next();
+            uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI_TEMPLATE, temp.getUriTemplate());
+            uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_METHODS, temp.getMethod());
+            uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI, temp.getResourceURI());
+            resourceMappings.add(uriTemplateMap);
+        }
+
+        Map<String, String> testHandlerMappings_1 = new HashMap<String, String>();
+        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER,
+                "org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler");
+
+        Map<String, String> testHandlerMappings_2 = new HashMap<String, String>();
+        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER,
+                "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
+
+        Map<String, String> testHandlerMappings_3 = new HashMap<String, String>();
+        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER,
+                "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
+        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY,
+                "conf:/basic-throttle-policy.xml");
+
+        List<Map<String, String>> handlerMappings = new ArrayList<Map<String, String>>();
+        handlerMappings.add(testHandlerMappings_1);
+        handlerMappings.add(testHandlerMappings_2);
+        handlerMappings.add(testHandlerMappings_3);
+
+        return new BasicTemplateBuilder(testAPIMappings, resourceMappings, handlerMappings);
     }
 
     /**

@@ -55,10 +55,6 @@ import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserLastAccessD
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.hostobjects.web.RequestHostObject;
-import org.wso2.carbon.rest.api.ui.client.AuthAdminServiceClient;
-import org.wso2.carbon.rest.api.ui.client.RestAPITemplateClient;
-import org.wso2.carbon.rest.api.ui.client.template.APITemplateBuilder;
-import org.wso2.carbon.rest.api.ui.client.template.impl.BasicTemplateBuilder;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,11 +65,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -293,13 +287,6 @@ public class APIProviderHostObject extends ScriptableObject {
                     templates.setResourceURI(endpoint);
                     uriTemplates.add(templates);
                 }
-
-                if (oldApi.getStatus().equals(APIStatus.CREATED)) {
-                    createSynapseDef(uriTemplates, context, name, version, status);
-                } else {
-                    updateSynapseDef(uriTemplates, context, name, version, status);
-                }
-
                 api.setUriTemplates(uriTemplates);
             }
 
@@ -334,22 +321,6 @@ public class APIProviderHostObject extends ScriptableObject {
             log.error(e.getMessage(), e);
         }
         return success;
-    }
-
-    private static void createSynapseDef(Set<URITemplate> uriTemplates, String context, String name,
-                                         String version, String status) throws Exception {
-        if (status.equals("PUBLISHED")) {
-            List<URITemplate> resourceData = new ArrayList<URITemplate>(uriTemplates);
-            addRestClient(name, version, context, resourceData);
-        }
-    }
-
-    private static void updateSynapseDef(Set<URITemplate> uriTemplates, String context, String name,
-                                         String version, String status) throws Exception {
-        if (status.equals("PUBLISHED")) {
-            List<URITemplate> resourceData = new ArrayList<URITemplate>(uriTemplates);
-            updateRestClient(name, version, context, resourceData);
-        }
     }
 
     /**
@@ -1030,95 +1001,6 @@ public class APIProviderHostObject extends ScriptableObject {
             }
         }
         return myn;
-    }
-
-    public static void addRestClient(String apiName, String version, String context,
-                                     List<URITemplate> resourceData) throws Exception {
-
-        new AuthAdminServiceClient();
-        String adminCookie = AuthAdminServiceClient.login(AuthAdminServiceClient.HOST_NAME,
-                                                          AuthAdminServiceClient.USER_NAME,
-                                                          AuthAdminServiceClient.PASSWORD);
-
-        Map<String, String> testAPIMappings = new HashMap<String, String>();
-
-        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, apiName);
-        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, context);
-        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, version);
-
-        Iterator it = resourceData.iterator();
-        List<Map<String, String>> resourceMappings = new ArrayList<Map<String, String>>();
-        while (it.hasNext()) {
-            Map<String,String> uriTemplateMap = new HashMap<String,String>();
-            URITemplate temp = (URITemplate) it.next();
-            uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI_TEMPLATE, temp.getUriTemplate());
-            uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_METHODS, temp.getMethod());
-            uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI, temp.getResourceURI());
-            resourceMappings.add(uriTemplateMap);
-        }
-
-        Map<String, String> testHandlerMappings_1 = new HashMap<String, String>();
-        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler");
-
-        Map<String, String> testHandlerMappings_2 = new HashMap<String, String>();
-        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
-
-        Map<String, String> testHandlerMappings_3 = new HashMap<String, String>();
-        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
-        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
-
-        List<Map<String, String>> handlerMappings = new ArrayList<Map<String, String>>();
-        handlerMappings.add(testHandlerMappings_1);
-        handlerMappings.add(testHandlerMappings_2);
-        handlerMappings.add(testHandlerMappings_3);
-        RestAPITemplateClient client = new RestAPITemplateClient(new BasicTemplateBuilder(
-                testAPIMappings, resourceMappings, handlerMappings), adminCookie);
-        client.addApi();
-    }
-
-
-    public static void updateRestClient(String apiName, String version, String context,
-                                        List<URITemplate> resourceData) throws Exception {
-
-        new AuthAdminServiceClient();
-        String adminCookie = AuthAdminServiceClient.login(AuthAdminServiceClient.HOST_NAME,
-                                                          AuthAdminServiceClient.USER_NAME,
-                                                          AuthAdminServiceClient.PASSWORD);
-
-        Map<String, String> testAPIMappings = new HashMap<String, String>();
-
-        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, apiName);
-        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, context);
-        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, version);
-
-        Iterator it = resourceData.iterator();
-        List<Map<String, String>> resourceMappings = new ArrayList<Map<String, String>>();
-        while (it.hasNext()) {
-            Map<String,String> uriTemplateMap = new HashMap<String,String>();
-            URITemplate temp = (URITemplate) it.next();
-            uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI_TEMPLATE, temp.getUriTemplate());
-            uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_METHODS, temp.getMethod());
-            uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI, temp.getResourceURI());
-            resourceMappings.add(uriTemplateMap);
-        }
-
-        Map<String, String> testHandlerMappings_1 = new HashMap<String, String>();
-        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler");
-
-        Map<String, String> testHandlerMappings_2 = new HashMap<String, String>();
-        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
-
-        Map<String, String> testHandlerMappings_3 = new HashMap<String, String>();
-        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
-        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
-
-        List<Map<String, String>> handlerMappings = new ArrayList<Map<String, String>>();
-        handlerMappings.add(testHandlerMappings_1);
-        handlerMappings.add(testHandlerMappings_2);
-        handlerMappings.add(testHandlerMappings_3);
-        RestAPITemplateClient client = new RestAPITemplateClient(new BasicTemplateBuilder(
-                testAPIMappings, resourceMappings, handlerMappings), adminCookie);
-        client.updateApi();
     }
 
     public static String jsFunction_getThumb(Context cx, Scriptable thisObj,

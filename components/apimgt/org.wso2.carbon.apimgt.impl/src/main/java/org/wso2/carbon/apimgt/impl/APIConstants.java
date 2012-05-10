@@ -123,5 +123,11 @@ public final class APIConstants {
         public static final String API_PUBLISH = "/permission/admin/manage/api/publish";
         public static final String API_SUBSCRIBE = "/permission/admin/manage/api/subscribe";
     }
+    
+    public static final String API_GATEWAY_ADMIN = "APIGatewayAdmin.";
+    public static final String API_GATEWAY_ADMIN_SERVER_URL = API_GATEWAY_ADMIN + "ServerURL";
+    public static final String API_GATEWAY_ADMIN_USERNAME = API_GATEWAY_ADMIN + "AdminUsername";
+    public static final String API_GATEWAY_ADMIN_PASSWORD = API_GATEWAY_ADMIN + "AdminPassword";
+    public static final String API_GATEWAY_ADMIN_HOST = API_GATEWAY_ADMIN + "AdminHost";
 
 }

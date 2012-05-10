@@ -108,6 +108,7 @@
                                     { "sTitle":"Column Value" },
                                     { "sTitle":"Time Stamp" }
                                 ],
+                                "sPaginationType":"full_numbers",
                                 "bProcessing": true,
                                 "bServerSide": true,
                                 "fnServerParams":function (aoData) {

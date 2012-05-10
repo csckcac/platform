@@ -481,19 +481,21 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                         stringSerializer);
         sliceQuery.setColumnFamily(columnFamily);
         sliceQuery.setKey(rowName);
+
+        QueryResult<ColumnSlice<String, String>> result;
         if (startingNo != 0) {
             sliceQuery.setRange("", "", false, startingNo);
+            result = sliceQuery.execute();
+            List<HColumn<String, String>>  tmpHColumnsList = result.get().getColumns();
+
+            //TODO handle if results are empty
+            HColumn startingColumn = tmpHColumnsList.get(tmpHColumnsList.size() - 1);
+            String startingColumnName = (String) startingColumn.getName();
+
+            sliceQuery.setRange(startingColumnName, "", false, limit);
         } else {
             sliceQuery.setRange("", "", false, limit);
         }
-        QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
-        List<HColumn<String, String>>  tmpHColumnsList = result.get().getColumns();
-
-        //TODO handle if results are empty
-        HColumn startingColumn = tmpHColumnsList.get(tmpHColumnsList.size() - 1);
-        String startingColumnName = (String) startingColumn.getName();
-
-        sliceQuery.setRange(startingColumnName, "", false, limit);
         result = sliceQuery.execute();
 
         List<HColumn<String, String>> hColumnsList;

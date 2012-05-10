@@ -18,26 +18,57 @@ package org.wso2.carbon.humantask.core.dao;
 
 import java.util.List;
 
+/**
+ * The organizational entity DAO representation.
+ */
 public interface OrganizationalEntityDAO {
 
+    /**
+     * The organizational entity types.
+     */
     public static enum OrganizationalEntityType {
         USER,
         GROUP
     }
 
+    /**
+     * @return : The org entity id.
+     */
     Long getId();
 
+    /**
+     * @param name : The org entity name to set.
+     */
     void setName(String name);
 
+    /**
+     * @return : the org entity name.
+     */
     String getName();
 
+    /**
+     * @param orgEntityType : The org entity type to set.
+     */
     void setOrgEntityType(OrganizationalEntityType orgEntityType);
 
+    /**
+     * Adds the provided human role to the org entity.
+     * @param genericHumanRole : The generic human role to add.
+     */
     void addGenericHumanRole(GenericHumanRoleDAO genericHumanRole);
 
+    /**
+     * @return : The list of generic human roles of the org entity.
+     */
     List<GenericHumanRoleDAO> getGenericHumanRoles();
 
+    /**
+     * @param genericHumanRoleDAOs : The general human roles to set.
+     */
     void setGenericHumanRoles(List<GenericHumanRoleDAO> genericHumanRoleDAOs);
 
+    /**
+     * @return : The org entity type.
+     */
     OrganizationalEntityType getOrgEntityType();
 }

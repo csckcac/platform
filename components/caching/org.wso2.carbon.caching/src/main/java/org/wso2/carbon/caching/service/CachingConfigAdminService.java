@@ -356,6 +356,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
                 if (!Boolean.parseBoolean(element
                         .getAttributeValue(new QName(GLOBALLY_ENGAGED_CUSTOM)))) {
                     element.addAttribute(GLOBALLY_ENGAGED_CUSTOM, Boolean.TRUE.toString(), null);
+                    ModuleFilePM.setMetaFileModification(cachingModule.getName());
                 }
             } else {
                 OMFactory omFactory = OMAbstractFactory.getOMFactory();
@@ -540,6 +541,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
                 if (!Boolean.parseBoolean(element
                         .getAttributeValue(new QName(GLOBALLY_ENGAGED_CUSTOM)))) {
                     element.addAttribute(GLOBALLY_ENGAGED_CUSTOM, Boolean.FALSE.toString(), null);
+                    ModuleFilePM.setMetaFileModification(module.getName());
                 }
             }
 

@@ -251,7 +251,7 @@
             <fileMode>744</fileMode>
         </file>
         <file>
-			<source>target/wso2carbon-core-${carbon.version}/repository/conf/identity.xml</source>
+			<source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/identity.xml</source>
 			<outputDirectory>wso2appfactory-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>744</fileMode>

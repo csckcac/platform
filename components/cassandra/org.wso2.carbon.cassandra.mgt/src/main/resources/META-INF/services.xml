@@ -80,6 +80,6 @@
         <!--   <parameter name="AuthorizationAction" locked="true">/permission/admin/configure/cassandra</parameter>  -->
     </service>
 
-    <parameter name="adminService" locked="ture">false</parameter>
-    <parameter name="hiddenService" locked="true">false</parameter>
+    <parameter name="adminService" locked="ture">true</parameter>
+    <parameter name="hiddenService" locked="true">true</parameter>
 </serviceGroup>

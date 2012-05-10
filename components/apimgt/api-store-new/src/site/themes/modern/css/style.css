@@ -24,6 +24,7 @@ body {
     margin-left: 20px;
     padding: 7px 16px 6px;
     text-transform: uppercase;
+    cursor:pointer;
 }
 
 .navbar-header .nav > li > a {

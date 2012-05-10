@@ -3,6 +3,7 @@ var login = login || {};
     var loginbox = login.loginbox || (login.loginbox = {});
 
     loginbox.login = function (username, password, url) {
+        debugger;
         jagg.post("/site/blocks/user/login/ajax/login.jag", { action:"login", username:username, password:password },
                 function (result) {
                     if (result.error == false) {
@@ -12,6 +13,7 @@ var login = login || {};
                             window.location.reload();
                         }
                     } else {
+                        $('#login-form').modal('hide');
                         jagg.message(result.message);
                     }
                 }, "json");
@@ -34,7 +36,17 @@ $(document).ready(function () {
     });
 
     $(".need-login").click(function() {
-        $("#login-form").dialog("open").data("url", $(this).attr("href"));
+        $('#login-form').modal('show');
+
+
+
+        //$("#login-form").dialog("open").data("url", $(this).attr("href"));
         return false;
     });
+
+    $('#loginBtn').click(
+                function(){
+                    login.loginbox.login($("#username").val(), $("#password").val(), this.href);
+                }
+                );
 });

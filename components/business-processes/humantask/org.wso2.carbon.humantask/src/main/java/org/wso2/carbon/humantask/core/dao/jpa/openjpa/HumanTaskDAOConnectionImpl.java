@@ -23,8 +23,12 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
 
     private static final Log log = LogFactory.getLog(HumanTaskDAOConnectionImpl.class);
 
+    /** The entity manager handling object persistence  */
     private EntityManager entityManager;
 
+    /**
+     * @param entityManager : The entity manager handling object persistence.
+     */
     public HumanTaskDAOConnectionImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -133,6 +137,7 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
         return taskQuery.getResultList();
     }
 
+    @Override
     public List<TaskDAO> searchTasks(SimpleQueryCriteria queryCriteria) {
         HumanTaskJPQLQueryBuilder queryBuilder = new HumanTaskJPQLQueryBuilder(queryCriteria, entityManager);
         Query taskQuery =queryBuilder.build();

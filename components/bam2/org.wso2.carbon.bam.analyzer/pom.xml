@@ -41,31 +41,6 @@
             <version>0.20.2</version>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.task</artifactId>
-            <version>${wso2carbon.version.bam2}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.task.services</artifactId>
-            <version>${wso2carbon.version.bam2}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.task.ui</artifactId>
-            <version>${wso2carbon.version.bam2}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.synapse</groupId>
-            <artifactId>synapse-tasks</artifactId>
-            <version>${version.synapse}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.synapse</groupId>
-            <artifactId>synapse-commons</artifactId>
-            <version>${version.synapse}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
             <version>${axis2.osgi.version}</version>
@@ -112,6 +87,16 @@
             <artifactId>org.wso2.carbon.bam2.core</artifactId>
             <version>${wso2carbon.version.bam2}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ntask.core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ntask.solutions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -143,8 +128,7 @@
                         <Import-Package>
                             !org.wso2.carbon.bam.analyzer.*,
                             org.wso2.carbon.bam.receiver.*,
-                            org.apache.synapse.*,
-                            org.wso2.carbon.task.*,
+                            org.wso2.carbon.ntask.*,
                             org.apache.axis2.*,
                             org.apache.axiom.*,
                             org.apache.commons.logging.*,

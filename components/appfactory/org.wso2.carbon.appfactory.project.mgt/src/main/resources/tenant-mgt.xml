@@ -1,0 +1,7 @@
+<TenantManager class="org.wso2.carbon.appfactory.project.mgt.core.AppFactoryLDAPTenantManager">
+    <Property name="RootPartition">dc=idtme,dc=wso2,dc=com</Property>
+    <Property name="OrganizationalObjectClass">organizationalUnit</Property>
+    <Property name="OrganizationalAttribute">ou</Property>
+    <Property name="OrganizationalSubContextObjectClass">organizationalUnit</Property>
+    <Property name="OrganizationalSubContextAttribute">ou</Property>
+</TenantManager>

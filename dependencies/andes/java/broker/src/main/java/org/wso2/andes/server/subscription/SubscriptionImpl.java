@@ -35,6 +35,7 @@ import org.wso2.andes.server.configuration.ConfiguredObject;
 import org.wso2.andes.server.configuration.SessionConfig;
 import org.wso2.andes.server.configuration.SubscriptionConfig;
 import org.wso2.andes.server.configuration.SubscriptionConfigType;
+import org.wso2.andes.server.connection.ConnectionRegistry;
 import org.wso2.andes.server.filter.FilterManager;
 import org.wso2.andes.server.filter.FilterManagerFactory;
 import org.wso2.andes.server.flow.FlowCreditManager;
@@ -273,10 +274,13 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
                 }
 
                 if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(),
-                        entry.getQueue().getResourceName())) {
+                        entry.getQueue().getResourceName()+"_" + ClusterResourceHolder.getInstance().
+                                getClusterManager().getNodeId())) {
 
                     sendToClient(entry, deliveryTag);
 
+                } else {
+                    System.out.println("false");
                 }
 
             } catch (Exception e) {

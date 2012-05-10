@@ -78,30 +78,25 @@ public class GlobalQueueWorker implements Runnable{
                 Random jRandom = new Random();
                 if (subscriptions != null && subscriptions.size() > 0) {
                      List<Long> addedMsgs = new ArrayList<Long>();
-                    try {
-
-                        for (int i = 0; i < size; i++) {
 
 
-                            CassandraQueueMessage msg = cassandraMessages.peek();
+                    for (int i = 0; i < size; i++) {
 
-                            int random = jRandom.nextInt(subscriptions.size());
-                            msg.setQueue(subscriptions.get(random));
-                            addedMsgs.add(msg.getMessageId());
+                        CassandraQueueMessage msg = cassandraMessages.poll();
 
+                        int random = jRandom.nextInt(subscriptions.size());
+                        msg.setQueue(subscriptions.get(random));
 
-                        }
-                        cassandraMessageStore.addMessageBatchToUserQueues(cassandraMessages.
-                                toArray(new CassandraQueueMessage[cassandraMessages.size()]));
-                    } finally {
+                        addedMsgs.add(msg.getMessageId());
+                        cassandraMessages.add(msg);
 
-                        for (Long mid : addedMsgs) {
-                            cassandraMessageStore.removeMessageFromGlobalQueue(globalQueueName,
-                                    mid);
-                        }
                     }
 
-                    if (size == 0) {
+                    cassandraMessageStore.transferMessageBatchFromGlobalQueueToUserQueue(cassandraMessages.
+                            toArray(new CassandraQueueMessage[cassandraMessages.size()]),globalQueueName);
+
+
+                      if (size == 0) {
                         try {
                             Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().getQueueWorkerInterval());
                         } catch (InterruptedException e) {

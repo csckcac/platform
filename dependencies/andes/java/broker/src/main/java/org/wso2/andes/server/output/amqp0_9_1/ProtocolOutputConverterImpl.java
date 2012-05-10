@@ -134,13 +134,21 @@ public class ProtocolOutputConverterImpl implements ProtocolOutputConverter
                     compositeBlock = new CompositeAMQBodyBlock(channelId, deliverBody, contentHeaderBody, firstContentBody);
             writeFrame(compositeBlock);
 
+
             while(writtenSize < bodySize)
             {
-                buf = java.nio.ByteBuffer.allocate(capacity);
 
+                buf = java.nio.ByteBuffer.allocate(capacity);
+                int oldWrittenSize = writtenSize;
                 writtenSize += message.getContent(buf, writtenSize);
+
+                if( writtenSize <= oldWrittenSize && writtenSize < bodySize) {
+                    throw new AMQException("Unexpected Error while getting message content : " +
+                            "This might leads to an infinite loop so exiting the loop forcefully");
+                }
                 buf.flip();
                 writeFrame(new AMQFrame(channelId, PROTOCOL_CONVERTER.convertToBody(buf)));
+
             }
         }
     }

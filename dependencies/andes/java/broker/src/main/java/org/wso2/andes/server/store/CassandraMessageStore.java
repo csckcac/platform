@@ -119,7 +119,8 @@ public class CassandraMessageStore implements MessageStore {
 
     private final AtomicLong _messageId = new AtomicLong(0);
 
-    private Queue<Long> contentDeletionTasks;
+    private SortedMap<Long,Long> contentDeletionTasks = new TreeMap<Long,Long>();
+
     private ConcurrentHashMap<Long,Long> pubSubMessageContentDeletionTasks;
 
     private ContentRemoverTask messageContentRemovalTask = null;
@@ -243,7 +244,6 @@ public class CassandraMessageStore implements MessageStore {
         } catch (Exception e) {
             throw new AMQStoreException("Error while accessing user queue" + key,e);
         }
-
 
         return messages;
     }
@@ -416,6 +416,47 @@ public class CassandraMessageStore implements MessageStore {
             log.error("Error while removing messages from global queue " + queueName ,e);
         }
     }
+
+    public void removeMessageFromGlobalQueue(String queueName, long messageId , Mutator<String> mutator) {
+
+        try {
+            CassandraDataAccessHelper.deleteLongColumnFromRaw(GLOBAL_QUEUES_COLUMN_FAMILY,
+                    queueName, messageId, mutator,false);
+        } catch (CassandraDataAccessException e) {
+            log.error("Error while removing messages from global queue " + queueName ,e);
+        }
+    }
+
+    public void transferMessageBatchFromGlobalQueueToUserQueue(CassandraQueueMessage[] list ,
+
+                                                               String globalQueueName) {
+        Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+        try {
+            for(CassandraQueueMessage msg : list) {
+                addMessageToUserQueue(msg.getQueue(),msg.getMessageId(),msg.getMessage(),mutator);
+                removeMessageFromGlobalQueue(globalQueueName,msg.getMessageId(),mutator);
+            }
+        } catch (CassandraDataAccessException e) {
+            e.printStackTrace();
+            log.error("Error while transferring messages from Global Queue to User Queues");
+        } finally {
+            mutator.execute();
+        }
+    }
+
+    public void removeMessageBatchFromGlobalQueue(List<CassandraQueueMessage> list , String globalQUeueName) {
+        Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+        try {
+            for(CassandraQueueMessage msg : list) {
+                removeMessageFromGlobalQueue(globalQUeueName,msg.getMessageId(),mutator);
+            }
+        } finally {
+            mutator.execute();
+        }
+
+    }
+
+
 
 
     public void recover(ConfigurationRecoveryHandler recoveryHandler) throws AMQException {
@@ -658,8 +699,10 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                     if (count > dst.remaining()) {
                         count = dst.remaining();
                     }
-                    dst.put(content, posInArray, count);
-                    written += count;
+                    dst.put(content, 0, count);
+                    return count;
+                } else {
+                    throw new RuntimeException("Unexpected Error , content already deleted");
                 }
             } else {
                 ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
@@ -672,24 +715,29 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
                 QueryResult<ColumnSlice<Integer, ByteBuffer>> result = query.execute();
                 ColumnSlice<Integer, ByteBuffer> columnSlice = result.get();
+                boolean added = false;
                 for (HColumn<Integer, ByteBuffer> column : columnSlice.getColumns()) {
+                    added =  true;
                     byteOutputStream.write(bytesArraySerializer.fromByteBuffer(column.getValue()));
                 }
                 byte[] content = byteOutputStream.toByteArray();
                 final int size = (int) content.length;
-                int posInArray = offsetValue + written - (k * chunkSize);
+                int posInArray = offsetValue  - (k * chunkSize);
                 int count = size - posInArray;
                 if (count > dst.remaining()) {
                     count = dst.remaining();
                 }
+
                 dst.put(content, posInArray, count);
+
                 written += count;
+                return written;
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("Error in reading content",e);
         }
-
         return written;
     }
 
@@ -1350,7 +1398,6 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         cluster = CassandraDataAccessHelper.createCluster(userName, password, clusterName, connectionString);
         keyspace = createKeySpace();
 
-        contentDeletionTasks = new LinkedList<Long>();
         messageContentRemovalTask = new ContentRemoverTask(ClusterResourceHolder.getInstance().getClusterConfiguration().
                 getContentRemovalTaskInterval());
         messageContentRemovalTask.setRunning(true);
@@ -1598,8 +1645,8 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
         @Override
         public int getContent(int offsetInMessage, ByteBuffer dst) {
-
-            return CassandraMessageStore.this.getContent(_messageId + "", offsetInMessage, dst);
+            int c= CassandraMessageStore.this.getContent(_messageId + "", offsetInMessage, dst);
+            return c;
         }
 
         @Override
@@ -1610,28 +1657,28 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         @Override
         public void remove() {
 
-            if(ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()){
-                return;
-            }
-            ColumnQuery<String, String, String> columnQuery =
-                    HFactory.createColumnQuery(keyspace, stringSerializer, stringSerializer ,
-                            stringSerializer);
-            columnQuery.setColumnFamily(MESSAGE_QUEUE_MAPPING_COLUMN_FAMILY).
-                    setKey(MESSAGE_QUEUE_MAPPING_ROW).setName("" + _messageId);
-            QueryResult<HColumn<String, String>> result = columnQuery.execute();
-
-            HColumn<String, String> rc = result.get();
-            if (rc != null) {
-                String qname = result.get().getValue();
-                try {
-                    CassandraMessageStore.this.removeMessageFromUserQueue(qname,_messageId);
-                } catch (AMQStoreException e) {
-                    log.error("Error remove message",e);
-                }
-                contentDeletionTasks.add(_messageId);
-            } else {
-                throw new RuntimeException("Can't remove message : message does not exist");
-            }
+//            if(ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()){
+//                return;
+//            }
+//            ColumnQuery<String, String, String> columnQuery =
+//                    HFactory.createColumnQuery(keyspace, stringSerializer, stringSerializer ,
+//                            stringSerializer);
+//            columnQuery.setColumnFamily(MESSAGE_QUEUE_MAPPING_COLUMN_FAMILY).
+//                    setKey(MESSAGE_QUEUE_MAPPING_ROW).setName("" + _messageId);
+//            QueryResult<HColumn<String, String>> result = columnQuery.execute();
+//
+//            HColumn<String, String> rc = result.get();
+//            if (rc != null) {
+//                String qname = result.get().getValue();
+//                try {
+//                    CassandraMessageStore.this.removeMessageFromUserQueue(qname,_messageId);
+//                } catch (AMQStoreException e) {
+//                    log.error("Error remove message",e);
+//                }
+//                contentDeletionTasks.add(_messageId);
+//            } else {
+//                throw new RuntimeException("Can't remove message : message does not exist");
+//            }
 
 
         }
@@ -1695,7 +1742,9 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
     private class ContentRemoverTask implements Runnable {
 
 
-        private int waitInterval = 1000;
+        private int waitInterval = 5000;
+
+        private long timeOutPerMessage = 60000; //10s
         private boolean running = true;
 
         public ContentRemoverTask(int waitInterval) {
@@ -1703,12 +1752,23 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         }
 
         public void run() {
+
             while (running) {
                 try {
-                    while (!contentDeletionTasks.isEmpty()) {
-                        long messageID = contentDeletionTasks.poll();
 
-                        CassandraMessageStore.this.removeMessageContent("" + messageID);
+                    if (!contentDeletionTasks.isEmpty()) {
+                        long currentTime = System.currentTimeMillis();
+
+                        SortedMap<Long, Long> timedOutList = contentDeletionTasks.headMap(currentTime - timeOutPerMessage);
+
+
+                        for (Long key : timedOutList.keySet()) {
+                            CassandraMessageStore.this.removeMessageContent("" + timedOutList.get(key));
+                        }
+
+                        for(Long key : timedOutList.keySet()) {
+                            contentDeletionTasks.remove(key);
+                        }
                     }
 
                     try {
@@ -1743,6 +1803,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
 
         private int waitInterval = 5000;
+
         private boolean running = true;
 
         public PubSubMessageContentRemoverTask(int waitInterval) {
@@ -1784,6 +1845,9 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         }
     }
 
+    public void addContentDeletionTask(long messageId) {
+        contentDeletionTasks.put(System.currentTimeMillis(),messageId);
+    }
 
 }
 

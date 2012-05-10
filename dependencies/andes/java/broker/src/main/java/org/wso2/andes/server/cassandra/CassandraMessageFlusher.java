@@ -47,7 +47,7 @@ public class CassandraMessageFlusher extends Thread{
 
     private int resetCounter;
 
-    private int resetCount = 20;
+    private int resetCount = 50;
 
     public CassandraMessageFlusher(AMQQueue queue ,Map<String,CassandraSubscription> cassandraSubscriptions) {
 
@@ -120,7 +120,9 @@ public class CassandraMessageFlusher extends Thread{
                             deliverAsynchronously(subscription, message);
 
                             if (i == messages.size() -1) {
+                                //long old = lastProcessedId;
                                 lastProcessedId = message.getMessage().getMessageNumber();
+
                             }
                         } catch (Exception e) {
                             log.error("Unexpected Error in Message Flusher Task " +
@@ -130,6 +132,13 @@ public class CassandraMessageFlusher extends Thread{
                     }
 
                 } else {
+
+                    if(messages.size() ==0 ) {
+
+                        resetOffset();
+                    }
+
+
                     try {
                         Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().
                                 getQueueWorkerInterval());
@@ -190,6 +199,7 @@ public class CassandraMessageFlusher extends Thread{
     private  boolean resetOffset() {
 
         if(resetCounter++ > resetCount ) {
+            resetCounter=0;
             return true;
         }
 

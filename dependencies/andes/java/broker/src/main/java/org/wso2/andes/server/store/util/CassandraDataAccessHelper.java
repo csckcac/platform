@@ -685,6 +685,31 @@ public class CassandraDataAccessHelper {
         }
     }
 
+     public static void deleteLongColumnFromRaw(String columnFamily, String row, long key,
+                                               Mutator<String> mutator, boolean execute) throws CassandraDataAccessException {
+
+
+        if (mutator == null) {
+            throw new CassandraDataAccessException("Can't delete Data , no mutator provided ");
+        }
+
+        if (columnFamily == null || row == null) {
+            throw new CassandraDataAccessException("Can't delete data in columnFamily = " + columnFamily +
+                    " and rowName=" + row + " key = " + key);
+        }
+
+        try {
+            mutator.addDeletion(row, columnFamily, key, longSerializer);
+
+            if (execute) {
+                mutator.execute();
+            }
+
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while deleting " + key + " from " + columnFamily);
+        }
+
+    }
 
 
 
@@ -721,31 +746,7 @@ public class CassandraDataAccessHelper {
         }
     }
 
-    public static void deleteLongColumnFromRaw(String columnFamily, String row, long key,
-                                               Mutator<String> mutator, boolean execute) throws CassandraDataAccessException {
 
-
-        if (mutator == null) {
-            throw new CassandraDataAccessException("Can't delete Data , no mutator provided ");
-        }
-
-        if (columnFamily == null || row == null) {
-            throw new CassandraDataAccessException("Can't delete data in columnFamily = " + columnFamily +
-                    " and rowName=" + row + " key = " + key);
-        }
-
-        try {
-            mutator.addDeletion(row, columnFamily, key, longSerializer);
-
-            if (execute) {
-                mutator.execute();
-            }
-
-        } catch (Exception e) {
-            throw new CassandraDataAccessException("Error while deleting " + key + " from " + columnFamily);
-        }
-
-    }
 
 
     public static void deleteIntegerColumnFromRow(String columnFamily, String row, int key,

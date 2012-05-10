@@ -49,6 +49,26 @@
             <artifactId>org.wso2.carbon.hostobjects.svnclient</artifactId>
             <version>${hostobjects.version}</version>
         </dependency>
+		<dependency>
+			<groupId>org.wso2.carbon</groupId>
+			<artifactId>org.wso2.carbon.appfactory.project.mgt</artifactId>
+			<version>${appfactory.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon</groupId>
+			<artifactId>org.wso2.carbon.appfactory.user.registration</artifactId>
+			<version>${appfactory.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.email.sender</artifactId>
+			<version>${email.sender.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.email.verification</artifactId>
+			<version>${carbon.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -79,6 +99,10 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sysprop</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sso</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.svnclient</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.project.mgt</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.user.registration</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.email.sender</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification</bundleDef>
                             </bundles>
                             <importBundles>
                             </importBundles>
@@ -93,5 +117,8 @@
 
 	<properties>
 		<hostobjects.version>1.0.0-SNAPSHOT</hostobjects.version>
+		<appfactory.version>1.0.0-SNAPSHOT</appfactory.version>
+		<carbon.version>4.0.0-SNAPSHOT</carbon.version>
+		<email.sender.version>1.1.0-SNAPSHOT</email.sender.version>
     </properties>
 </project>

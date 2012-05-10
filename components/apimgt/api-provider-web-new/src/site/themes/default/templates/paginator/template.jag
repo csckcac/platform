@@ -1,6 +1,7 @@
 <% jagg.template("paginator", function(inputs, outputs, jagg) { %>
 <% var noOfPages = outputs.numberOfPages,currentPage=outputs.currentPage; %>
- <% if(noOfPages>1){%>
+ <% if(noOfPages>2){
+ %>
 <div class="pagination">
     <ul>
         <li><a href="?page=<%=(currentPage-1)%>">Prev</a></li>

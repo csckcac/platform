@@ -23,8 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public class Utils {
 
-    private static final Log log = LogFactory.getLog(Utils.class);
-
     public static Object getParameter(HttpServletRequest request, String paramName) {
         return request.getParameter(paramName);
     }

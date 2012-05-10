@@ -23,16 +23,14 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.client.Stub;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.databinding.types.URI;
 import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.governance.notifications.worklist.stub.WorkListServiceStub;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalArgumentFault;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalStateFault;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.TaskOperationsStub;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryCategory;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryInput;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultRow;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultSet;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.*;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.*;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.user.mgt.stub.GetAllRolesNamesUserAdminExceptionException;
 import org.wso2.carbon.user.mgt.stub.GetUserStoreInfoUserAdminExceptionException;
@@ -48,6 +46,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class HumanTaskClient {
+
+    private static final Log log = LogFactory.getLog(HumanTaskClient.class);
 
     private TaskOperationsStub htStub;
     private UserAdminStub umStub;
@@ -88,17 +88,24 @@ public class HumanTaskClient {
         options.setManageSession(true);
     }
 
-    public TTaskSimpleQueryResultRow[] getWorkItems()
-            throws IllegalArgumentFault, IllegalStateFault, RemoteException {
+    public WorkItem[] getWorkItems()
+            throws IllegalArgumentFault, IllegalStateFault, IllegalAccessFault, RemoteException {
         TSimpleQueryInput queryInput = new TSimpleQueryInput();
         queryInput.setPageNumber(0);
         queryInput.setSimpleQueryCategory(TSimpleQueryCategory.ASSIGNED_TO_ME);
 
         TTaskSimpleQueryResultSet resultSet = htStub.simpleQuery(queryInput);
         if (resultSet == null || resultSet.getRow() == null || resultSet.getRow().length == 0) {
-            return new TTaskSimpleQueryResultRow[0];
+            return new WorkItem[0];
         }
-        return resultSet.getRow();
+        List<WorkItem> workItems = new LinkedList<WorkItem>();
+        for (TTaskSimpleQueryResultRow row : resultSet.getRow()) {
+            URI id = row.getId();
+            workItems.add(new WorkItem(id, row.getPresentationSubject(),
+                    row.getPresentationName(), row.getPriority(), row.getStatus(),
+                    row.getCreatedTime(), htStub.loadTask(id).getActualOwner().getTUser()));
+        }
+        return workItems.toArray(new WorkItem[workItems.size()]);
     }
 
     public String[] getRoles() throws RemoteException, GetAllRolesNamesUserAdminExceptionException,
@@ -120,6 +127,16 @@ public class HumanTaskClient {
     public void createTask(String role, String description, String priority)
             throws RemoteException {
         wlStub.addTask(role, description, Integer.parseInt(priority));
+    }
+
+    public void completeTask(String id)
+            throws RemoteException, IllegalArgumentFault, IllegalOperationFault, IllegalAccessFault,
+            IllegalStateFault {
+        try {
+            htStub.complete(new URI(id), "<WorkResponse>true</WorkResponse>");
+        } catch (URI.MalformedURIException e) {
+            log.error("Invalid task identifier", e);
+        }
     }
 
 }

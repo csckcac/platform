@@ -17,12 +17,12 @@ under the License.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ page import="org.wso2.carbon.governance.notifications.ui.worklist.HumanTaskClient" %>
-<%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultRow" %>
+<%@ page import="org.wso2.carbon.governance.notifications.ui.worklist.WorkItem" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="carbon" uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" %>
 <%
     String[] roles;
-    TTaskSimpleQueryResultRow[] workItems;
+    WorkItem[] workItems;
     try {
         HumanTaskClient client = new HumanTaskClient(config, session);
         roles = client.getRoles();
@@ -40,7 +40,6 @@ under the License.
         request="<%=request%>" namespace="org.wso2.carbon.governance.notifications.ui"/>
 <script type="text/javascript">
     function createTask() {
-        var addSuccess = false;
         var role = jQuery('#workListRoleInput').val();
         var description = jQuery('#workListDescriptionInput').val();
         var priority = jQuery('#workListPriorityInput').val();
@@ -49,14 +48,27 @@ under the License.
                 method: 'post',
                 parameters: {role: role, description: description, priority: priority},
                 onSuccess: function(transport) {
-                    addSuccess = true;
                 },
                 onFailure: function(transport) {
                     showRegistryError(transport.responseText);
                 }
             });
         }, org_wso2_carbon_governance_notifications_ui_jsi18n["session.timed.out"]);
-        return addSuccess;
+    }
+
+    function completeTask(id) {
+        sessionAwareFunction(function() {
+            new Ajax.Request('../worklist/complete-task-ajaxprocessor.jsp', {
+                method: 'post',
+                parameters: {id: id},
+                onSuccess: function(transport) {
+                },
+                onFailure: function(transport) {
+                    showRegistryError(transport.responseText);
+                }
+            });
+        }, org_wso2_carbon_governance_notifications_ui_jsi18n["session.timed.out"]);
+        jQuery('#notificationPopupView').toggle('slow');
     }
 </script>
 
@@ -69,12 +81,12 @@ under the License.
             <div class="title"><strong><fmt:message key="work.list.notifications"/></strong></div>
             <div class="notificationElementWrapper">
                 <%
-                    for (TTaskSimpleQueryResultRow workItem : workItems) {
+                    for (WorkItem workItem : workItems) {
                 %>
                 <div class="notificationElement odd">
                     <ul>
                         <li class="notificationCell1">#<%=workItem.getId()%></li>
-                        <li class="notificationCell2"><fmt:message key="work.list.role"/>: FIXME</li>
+                        <li class="notificationCell2"><fmt:message key="work.list.role"/>: <%=workItem.getRole()%></li>
                         <li class="notificationCell3"><%=workItem.getCreatedTime().getTime()%></li>
                     </ul>
                     <div style="clear:both"></div>
@@ -89,7 +101,7 @@ under the License.
                         <li class="notificationCell1"><fmt:message key="work.list.priority"/>: <%=workItem.getPriority()%></li>
                         <li class="notificationCell2"><fmt:message key="work.list.status"/>: <%=workItem.getStatus()%></li>
                         <li class="notificationCell3">
-                            <input type="button" class="button notificationButton" value="<fmt:message key="work.list.hide"/>" />
+                            <input type="button" onclick="completeTask(<%=workItem.getId()%>)" class="button notificationButton" value="<fmt:message key="work.list.hide"/>" />
                         </li>
                     </ul>
                     <div style="clear:both"></div>
@@ -98,8 +110,6 @@ under the License.
                     }
                 %>
             </div>
-
-            <div class="title"><a><fmt:message key="work.list.view.all.notifications"/></a></div>
         </div>
     </div>
 </li>
@@ -137,7 +147,7 @@ under the License.
                     <td>
                         <select id="workListPriorityInput">
                             <%
-                                for (int i = 0; i < 11; i++) {
+                                for (int i = 1; i < 11; i++) {
                             %>
                             <option <% if (i == 5) { %>selected="selected"<% } %> ><%=i%></option>
                             <%
@@ -177,9 +187,8 @@ under the License.
         jQuery('#notificationPopupAdd').toggle('slow');
     });
     jQuery('#addNotificationCreateButton').click(function(){
-        if (createTask()) {
-            jQuery('#notificationPopupAdd').toggle('slow');
-        }
+        createTask();
+        jQuery('#notificationPopupAdd').toggle('slow');
     });
 </script>
     <style>

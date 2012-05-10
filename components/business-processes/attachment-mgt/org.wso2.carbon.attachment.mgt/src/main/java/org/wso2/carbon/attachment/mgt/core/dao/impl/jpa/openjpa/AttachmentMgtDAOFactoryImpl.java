@@ -184,7 +184,7 @@ public class AttachmentMgtDAOFactoryImpl implements AttachmentMgtDAOFactory {
                 }
                 entityManager.getTransaction().begin();
             } catch (Exception e) {
-                String errMsg = "Internal Error, could not begin transaction.";
+                String errMsg = "Internal Error, could not begin transaction. Reason : " + e.getLocalizedMessage();
                 throw new AttachmentMgtException(errMsg, e);
             }
 
@@ -205,7 +205,7 @@ public class AttachmentMgtDAOFactoryImpl implements AttachmentMgtDAOFactory {
                     }
                 } else {
                     if (log.isDebugEnabled()) {
-                        log.debug("Rollbacking on " + entityManager.getTransaction() + "...");
+                        log.debug("Rollback on " + entityManager.getTransaction() + "...");
                     }
                     entityManager.getTransaction().rollback();
                 }

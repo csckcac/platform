@@ -50,11 +50,19 @@ public class MockAttachmentServer extends AbstractAttachmentServer {
     private static final String CARBON_CONFIG_DIR_PATH = "src" + File.separator + "test" + File
             .separator + "resources";
 
+    @Override
     public void init() {
         System.setProperty(ServerConstants.CARBON_CONFIG_DIR_PATH, CARBON_CONFIG_DIR_PATH);
         loadAttachmentServerConfig();
-        initDataSource();
-        initDAO();
+        initDataSourceManager();
+        initDAOManager();
+    }
+
+    @Override
+    public void shutdown() {
+        //shutdownDAOManager();
+        shutdownDataSourceManager();
+        unloadAttachmentServerConfig();
     }
 
     private void loadAttachmentServerConfig() {
@@ -62,29 +70,29 @@ public class MockAttachmentServer extends AbstractAttachmentServer {
         serverConfig = new AttachmentServerConfiguration(attMgtConfigFile);
     }
 
-    @Override
-    public void start() {
-        log.warn("org.wso2.carbon.attachment.mgt.test.MockAttachmentServer.start still not " +
-                 "implemented.");
+    /**
+     * De-referencing the server configuration
+     */
+    private void unloadAttachmentServerConfig() {
+        serverConfig = null;
+        if (log.isDebugEnabled()) {
+            log.debug("Unloaded Attachment Mgt Server Configuration.");
+        }
     }
 
-    private void initDAO() {
+    public void initDAOManager() {
         this.daoManager = new DAOManagerImpl();
         daoManager.init(serverConfig);
     }
 
-    private void initDataSource() {
+    public void initDataSourceManager() {
         dataSourceManager = new JDBCManager();
         try {
-            ((JDBCManager)dataSourceManager).initFromFileConfig(DATABASE_CONFIG_FILE_PATH);
+            ((JDBCManager) dataSourceManager).initFromFileConfig(DATABASE_CONFIG_FILE_PATH);
             //This class cast can be probably avoided if the init() method is correctly
             // implemented.
         } catch (AttachmentMgtException e) {
             log.error(e.getLocalizedMessage(), e);
         }
-    }
-
-    public void shutdown() {
-        log.warn("Still not implemented : org.wso2.carbon.attachment.mgt.test.MockAttachmentServer.shutdown");
     }
 }

@@ -24,6 +24,7 @@ import org.wso2.carbon.attachment.mgt.core.dao.DAOManagerImpl;
 import org.wso2.carbon.attachment.mgt.core.datasource.impl.BasicDataSourceManager;
 import org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException;
 import org.wso2.carbon.utils.CarbonUtils;
+
 import java.io.File;
 
 /**
@@ -47,36 +48,29 @@ public class AttachmentServer extends AbstractAttachmentServer {
      */
     public void init() {
         loadAttachmentServerConfig();
-        initDataSource();
-        initDAO();
-    }
-
-    @Override
-    public void start() {
-        log.warn("org.wso2.carbon.attachment.mgt.server.AttachmentServer.start is still not " +
-                 "implemented.");
+        initDataSourceManager();
+        initDAOManager();
     }
 
     @Override
     public void shutdown() {
-        log.warn("org.wso2.carbon.attachment.mgt.server.AttachmentServer.shutdown is still not " +
-                 "implemented.");
+        shutdownDataSourceManager();
+        shutdownDAOManager();
+        unloadAttachmentServerConfig();
     }
 
     /**
      * Initialize the Data-Access(Persistent API) Specific configurations
      */
-    private void initDAO() {
-        log.warn("initDAo() is still not implemented.");
+    public void initDAOManager() {
         this.daoManager = new DAOManagerImpl();
-
         this.daoManager.init(serverConfig);
     }
 
     /**
      * Starting and initialization of Data source
      */
-    private void initDataSource() {
+    public void initDataSourceManager() {
         if (serverConfig == null) {
             log.error("Attachment Server configurations are not loaded properly.");
         }
@@ -90,6 +84,8 @@ public class AttachmentServer extends AbstractAttachmentServer {
             log.error("Data-Source initialization failed. Reason:" + e.getLocalizedMessage(), e);
         }
     }
+
+
 
     /**
      * Initializes the configurations related to Attachment-Mgt component
@@ -106,6 +102,16 @@ public class AttachmentServer extends AbstractAttachmentServer {
             log.info("Humantask configuration file: " + AttachmentMgtConfigurationConstants
                     .ATTACHMENT_MGT_CONFIG_FILE + " not found. Loading default configurations.");
             serverConfig = new AttachmentServerConfiguration();
+        }
+    }
+
+    /**
+     * De-referencing the server configuration
+     */
+    private void unloadAttachmentServerConfig() {
+        serverConfig = null;
+        if (log.isDebugEnabled()) {
+            log.debug("Unloaded Attachment Mgt Server Configuration.");
         }
     }
 

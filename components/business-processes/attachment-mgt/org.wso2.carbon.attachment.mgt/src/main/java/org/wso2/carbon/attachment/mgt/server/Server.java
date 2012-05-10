@@ -25,8 +25,11 @@ import javax.transaction.TransactionManager;
 
 public interface Server {
     public void init();
-    public void start();
     public void shutdown();
     public DAOManager getDaoManager();
+    void initDataSourceManager();
+    void shutdownDataSourceManager();
     public AbstractDataSourceManager getDataSourceManager();
+    void initDAOManager();
+    void shutdownDAOManager();
 }

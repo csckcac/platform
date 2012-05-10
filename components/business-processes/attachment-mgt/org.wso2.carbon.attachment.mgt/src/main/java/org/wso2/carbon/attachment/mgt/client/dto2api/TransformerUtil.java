@@ -65,8 +65,6 @@ public class TransformerUtil {
      * @return
      */
     public static TAttachment convertAttachment(Attachment attachment) throws AttachmentMgtException {
-        log.warn("org.wso2.carbon.attachment.mgt.client.dto2api.TransformerUtil" +
-                 ".convertAttachment still not fully implemented.");
         TAttachment attachmentDTO = new TAttachment();
         attachmentDTO.setId(attachment.getId());
         attachmentDTO.setName(attachment.getName());
@@ -80,10 +78,9 @@ public class TransformerUtil {
             attachmentDTO.setUrl(attachmentURI);
         } catch (URI.MalformedURIException e) {
             log.error(e.getLocalizedMessage(), e);
-            throw new AttachmentMgtException("Conversion of Attachment to TAttachment (DTO) failed due to reason :" +
+            throw new AttachmentMgtException("Conversion of Attachment to TAttachment (DTO) failed due to reason : " +
                                              e.getLocalizedMessage(), e);
         }
-        //attachmentDTO.setContent(new DataHandler(attachment.getContent()));      //TODO:
 
         return attachmentDTO;
     }

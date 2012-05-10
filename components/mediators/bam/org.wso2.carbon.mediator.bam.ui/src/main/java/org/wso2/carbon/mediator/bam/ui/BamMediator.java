@@ -89,12 +89,12 @@ public class BamMediator extends AbstractMediator {
         OMElement bamEle = fac.createOMElement("bam", synNS);
         saveTracingState(bamEle, this);
 
-        if (configKey != null) {
+        /*if (configKey != null) {
             bamEle.addAttribute(fac.createOMAttribute(
                     "config-key", nullNS, configKey));
         } else {
             throw new MediatorException("config-key not specified");
-        }
+        }*/
 
         bamEle.addChild(serializeCredential());
         bamEle.addChild(serializeTransport());

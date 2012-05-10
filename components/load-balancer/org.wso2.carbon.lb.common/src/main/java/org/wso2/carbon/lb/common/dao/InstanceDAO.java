@@ -145,4 +145,37 @@ public class InstanceDAO extends AbstractDAO{
         return successfullyAdded;
     }
 
+
+    /**
+     * This will not remove the entry from database but change the 'deleted' flag true
+     * @param instanceId
+     * @return
+     * @throws SQLException
+     */
+    public boolean delete(String instanceId) throws SQLException {
+        boolean successfullyDeleted = false;
+        try{
+            Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
+            statement = con.createStatement();
+            String sql = "UPDATE instance SET deleted=" + true + "WHERE instance_id='" + instanceId
+                         + "'";
+            statement.executeUpdate(sql);
+            successfullyDeleted = true;  //Deleting instance details is succeeded
+        } catch (SQLException s){
+            String msg = "Error while deleting instance data";
+            log.error(msg + s.getMessage());
+            throw new SQLException(s + msg);
+        }catch (ClassNotFoundException s){
+            String msg = "DB connection not successful !";
+            log.error(msg);
+            throw new SQLException(msg);
+        }
+        finally {
+            try { if (statement != null) statement.close(); } catch(SQLException e) {}
+            try { if (con != null) con.close(); } catch(Exception e) {}
+        }
+        return successfullyDeleted;
+    }
+
 }

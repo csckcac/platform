@@ -59,31 +59,70 @@ public class EC2DAO extends AbstractDAO{
             return uuidToEc2IdMap;
         }
 
-        public boolean add(String uuid, String ec2Id) throws SQLException {
-            boolean successfullyAdded = false;
-            ResultSet resultSet = null;
-            try{
-                Class.forName(driver);
-                con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
-                statement = con.createStatement();
-                String sql = "INSERT INTO ec2_instance VALUES('" + uuid +  "', '" + ec2Id + "')";
-                statement.executeUpdate(sql);
-                successfullyAdded = true;  //Adding ec instance details is succeeded
-            }catch (SQLException s){
-                String msg = "Error while inserting ec2 instance data";
-                log.error(msg + s.getMessage());
-                throw new SQLException(s + msg);
-            }catch (ClassNotFoundException s){
-                String msg = "DB connection not successful !";
-                log.error(msg);
-                throw new SQLException(msg);
-            }
-            finally {
-                try { if (resultSet != null) resultSet.close(); } catch(Exception e) {}
-                try { if (statement != null) statement.close(); } catch(SQLException e) {}
-                try { if (con != null) con.close(); } catch(Exception e) {}
-            }
-            return successfullyAdded;
+    /**
+     * Adding EC2 instance details to database. These data will be added to the in memory map at the EC2 adapter level
+     * while adding to the database.
+     * @param uuid
+     * @param ec2Id
+     * @return
+     * @throws SQLException
+     */
+    public boolean add(String uuid, String ec2Id) throws SQLException {
+        boolean successfullyAdded = false;
+        ResultSet resultSet = null;
+        try{
+            Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
+            statement = con.createStatement();
+            String sql = "INSERT INTO ec2_instance VALUES('" + uuid +  "', '" + ec2Id + "'," + false
+                         +")";
+            statement.executeUpdate(sql);
+            successfullyAdded = true;  //Adding EC instance details is succeeded
+        }catch (SQLException s){
+            String msg = "Error while inserting EC2 instance data";
+            log.error(msg + s.getMessage());
+            throw new SQLException(s + msg);
+        }catch (ClassNotFoundException s){
+            String msg = "DB connection not successful !";
+            log.error(msg);
+            throw new SQLException(msg);
         }
+        finally {
+            try { if (resultSet != null) resultSet.close(); } catch(Exception e) {}
+            try { if (statement != null) statement.close(); } catch(SQLException e) {}
+            try { if (con != null) con.close(); } catch(Exception e) {}
+        }
+        return successfullyAdded;
+    }
 
+    /**
+     * This will not remove the entry from database but change the 'deleted' flag true
+     * @param uuid
+     * @return
+     * @throws SQLException
+     */
+    public boolean delete(String uuid) throws SQLException {
+        boolean successfullyDeleted = false;
+        try{
+            Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
+            statement = con.createStatement();
+            String sql = "UPDATE ec2_instance SET deleted=" + true + "WHERE uuid='" + uuid + "'";
+            statement.executeUpdate(sql);
+            successfullyDeleted = true;  //Deleting EC2 instance details is succeeded
+        } catch (SQLException s){
+            String msg = "Error while deleting EC2 instance data";
+            log.error(msg + s.getMessage());
+            throw new SQLException(s + msg);
+        }catch (ClassNotFoundException s){
+            String msg = "DB connection not successful !";
+            log.error(msg);
+            throw new SQLException(msg);
+        }
+        finally {
+            try { if (statement != null) statement.close(); } catch(SQLException e) {}
+            try { if (con != null) con.close(); } catch(Exception e) {}
+        }
+        return successfullyDeleted;
+    }
 }

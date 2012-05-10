@@ -126,6 +126,11 @@ public class    AgentPersistenceManager {
         InstanceDAO instanceDAO = new InstanceDAO();
         return instanceDAO.add(instanceId, adapter, domain);
     }
+    public boolean deleteInstance(String instanceId)
+            throws SQLException {
+        InstanceDAO instanceDAO = new InstanceDAO();
+        return instanceDAO.delete(instanceId);
+    }
 
 
     public HashMap<String, String> retrieveUuidToEC2IdMap() throws SQLException {
@@ -137,6 +142,12 @@ public class    AgentPersistenceManager {
             throws SQLException {
         EC2DAO ec2DAO = new EC2DAO();
         return ec2DAO.add(uuid, ec2Id);
+    }
+
+    public boolean deleteEC2Instance(String uuid)
+            throws SQLException {
+        EC2DAO ec2DAO = new EC2DAO();
+        return ec2DAO.delete(uuid);
     }
 
 

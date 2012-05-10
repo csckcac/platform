@@ -39,8 +39,10 @@ import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
  * Message receiver for the humantasks exposed as services.
  */
 public class AxisHumanTaskMessageReceiver extends AbstractMessageReceiver {
+
     private static Log log = LogFactory.getLog(AxisHumanTaskMessageReceiver.class);
 
+    /** The human task engine */
     private HumanTaskEngine humanTaskEngine;
 
     @Override
@@ -99,10 +101,14 @@ public class AxisHumanTaskMessageReceiver extends AbstractMessageReceiver {
         }
     }
 
+    /**
+     * @param humanTaskEngine : The human task engine reference.
+     */
     public void setHumanTaskEngine(HumanTaskEngine humanTaskEngine) {
         this.humanTaskEngine = humanTaskEngine;
     }
 
+    // checks whether the provided AxisOperation has a response.
     private boolean hasResponse(AxisOperation op) {
         switch (op.getAxisSpecificMEPConstant()) {
             case WSDLConstants.MEP_CONSTANT_IN_OUT:
@@ -118,6 +124,7 @@ public class AxisHumanTaskMessageReceiver extends AbstractMessageReceiver {
         }
     }
 
+    // constructs the feed back payload with the created task id.
     private OMElement getFeedbackPayLoad(String taskID) {
         OMFactory fbOMFactory = OMAbstractFactory.getOMFactory();
         OMElement payLoadEle = fbOMFactory.createOMElement("part", null);

@@ -74,7 +74,7 @@
 	<synapse.version>2.1.0-wso2v6</synapse.version>
         <carbon.version>4.0.0-SNAPSHOT</carbon.version>
         <quartz.wso2.version>1.6.0.wso2v2</quartz.wso2.version>
-	<carbon.p2.plugin.version>1.4-SNAPSHOT</carbon.p2.plugin.version>
+	<carbon.p2.plugin.version>1.5-SNAPSHOT</carbon.p2.plugin.version>
     </properties>
 <dependencyManagement>
         <dependencies>

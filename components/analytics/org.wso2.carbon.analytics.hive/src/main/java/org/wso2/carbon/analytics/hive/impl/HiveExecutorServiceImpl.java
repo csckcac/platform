@@ -82,7 +82,9 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
                             List<String> columnValues = new ArrayList<String>();
                             for (int i = 1; i <= columnCount; i++) {
-                                columnValues.add(rs.getObject(i).toString());
+                                Object resObj = rs.getObject(i);
+                                if(null != resObj)columnValues.add(rs.getObject(i).toString());
+                                else columnValues.add("");
                             }
 
                             resultRow.setColumnValues(columnValues.toArray(new String[]{}));

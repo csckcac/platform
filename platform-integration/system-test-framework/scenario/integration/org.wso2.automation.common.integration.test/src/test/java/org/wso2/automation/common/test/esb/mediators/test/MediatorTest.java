@@ -26,8 +26,10 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.esb.util.ConfigUploader;
+import org.wso2.carbon.admin.service.AdminServiceLogViewer;
 import org.wso2.carbon.admin.service.AdminServiceService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.logging.view.stub.types.carbon.LogMessage;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
@@ -35,7 +37,6 @@ import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 import javax.servlet.ServletException;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 
 public class MediatorTest {
@@ -83,28 +84,28 @@ public class MediatorTest {
         return method;
     }
 
-/*    @Test(alwaysRun = true)
-    public void testMediatorInOut() throws RemoteException, XMLStreamException, ServletException {
+   @Test(groups = {"wso2.esb"}, description = "Testing Mediator IN and OUT")
+    public void testMediatorInOut() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorInOut.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
-        log.info("Response : " + omElement.toString());
+       log.info("Response : " + omElement.toString());
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
-    }*/
+   }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing Mediator Aggregate")
     public void testMediatorAggregate()
-            throws IOException, XMLStreamException, ServletException, MalformedURLException {
+               throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorAggregate.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
         log.info("Response : " + omElement.toString());
     }
-/*
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing cache mediator with cache ID")
     public void testMediatorCache_WithCacheID()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
+
         new ConfigUploader(environmentObj, "MediatorCache-WithCacheID.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -112,9 +113,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing cache mediator without cache ID")
     public void testMediatorCache_WithoutCacheID()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorCache-WithoutCacheID.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -122,17 +123,17 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
-    public void testMediatorCallOut() throws RemoteException, XMLStreamException, ServletException {
+ /*   @Test(alwaysRun = true)
+    public void testMediatorCallOut() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorCallout.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
         log.info("Response : " + omElement.toString());
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
-    }
+    }*/
 
-    @Test(alwaysRun = true)
-    public void testMediatorClone() throws RemoteException, XMLStreamException, ServletException {
+    @Test(groups = {"wso2.esb"}, description = "Testing clone mediator")
+    public void testMediatorClone() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorClone.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -140,9 +141,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing drop mediator within InSequence")
     public void testMediatorDrop_InSeq()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorDrop-InSeq.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -150,9 +151,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing drop mediator with in OutSequence")
     public void testMediatorDrop_OutSeq()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorDrop-OutSeq.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -160,8 +161,8 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
-    public void testMediatorEnrich() throws RemoteException, XMLStreamException, ServletException {
+    @Test(groups = {"wso2.esb"}, description = "Testing enrich mediator")
+    public void testMediatorEnrich() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorEnrich.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -170,7 +171,7 @@ public class MediatorTest {
     }
 
 // ToDo Issue need to be fix
-    */
+
 /* @Test(alwaysRun = true)
     public void testMediatorFilter_RegX()throws RemoteException, XMLStreamException, ServletException {
             new ConfigUploader(environmentObj, "MediatorFilter-regx.xml");
@@ -178,11 +179,11 @@ public class MediatorTest {
             OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
             log.info("Response : " + omElement.toString());
             Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
-    }*//*
+    }*/
 
 
-    @Test(alwaysRun = true)
-    public void testMediatorHeader() throws RemoteException, XMLStreamException, ServletException {
+    @Test(groups = {"wso2.esb"}, description = "Testing header mediator")
+    public void testMediatorHeader() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorHeader.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -190,8 +191,8 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
-    public void testMediatorIterate() throws RemoteException, XMLStreamException, ServletException {
+    @Test(groups = {"wso2.esb"}, description = "Testing Iterate mediator")
+    public void testMediatorIterate() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorIterate.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -199,9 +200,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing Router mediator")
     public void testMediatorRouter_anon_seq_and_epr()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-anon-seq-and-epr.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -209,9 +210,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing router mediator")
     public void testMediatorRouter_Break_rout()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-break-router.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -219,9 +220,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing router mediator")
     public void testMediatorRouter_Continue_After()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-continue-after.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -229,9 +230,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing router mediator")
     public void testMediatorRouter_Expression()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-expression.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -239,9 +240,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing router mediator")
     public void testMediatorRouter_Match()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-match.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -249,9 +250,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing router mediator")
     public void testMediatorRouter_Ref_Target()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-ref-target.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -259,9 +260,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(enabled = false,groups = {"wso2.esb"}, description = "Testing rule mediator")
     public void testMediatorRule_Simple_Msg_Trans()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRule-simple-msg-trans.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -269,9 +270,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(enabled = false,groups = {"wso2.esb"}, description = "Testing rule mediator")
     public void testMediatorRule_Drools()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRule_drools.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -279,9 +280,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(enabled = false,groups = {"wso2.esb"}, description = "Testing rule mediator")
     public void testMediatorRule_Simple()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRule_simple.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -289,9 +290,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(enabled = false,groups = {"wso2.esb"}, description = "Testing rule mediator")
     public void testMediatorRule_Simple_Reg()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRule_simple_reg.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -299,9 +300,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(enabled = false,groups = {"wso2.esb"}, description = "Testing rule mediator")
     public void testMediatorRule_Switch()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRule_switch.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -309,8 +310,8 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
-    public void testMediatorSend() throws RemoteException, XMLStreamException, ServletException {
+    @Test(groups = {"wso2.esb"}, description = "Testing send mediator")
+    public void testMediatorSend() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorSend.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -318,9 +319,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing send mediator")
     public void testMediatorSend_EPR_From_Registry()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorSend_EPR_From_Registry.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -328,9 +329,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing send mediator")
     public void testMediatorSend_Non_EPR()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorSend_NonEpr.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -338,9 +339,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing send mediator")
     public void testMediatorSend_Proxy()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorSend_Proxy.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -348,9 +349,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing send mediator")
     public void testMediatorSend_Sequence()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorSequence.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -359,9 +360,9 @@ public class MediatorTest {
 
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing validate mediator")
     public void testMediatorValidate()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorValidate.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -369,8 +370,8 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
-    public void testMediatorSwitch() throws RemoteException, XMLStreamException, ServletException {
+    @Test(groups = {"wso2.esb"}, description = "Testing switch mediator")
+    public void testMediatorSwitch() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorSwitch.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -378,8 +379,8 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(alwaysRun = true)
-    public void testMediatorScript() throws RemoteException, XMLStreamException, ServletException {
+    @Test(groups = {"wso2.esb"}, description = "Testing script mediator")
+    public void testMediatorScript() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorScript.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -387,9 +388,9 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("MSFT"));
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing log mediator")
     public void testMediatorLog_Simple()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorLog-simple.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("WSO2"), NHTTP_PORT, "getQuote");
@@ -423,9 +424,9 @@ public class MediatorTest {
         Assert.assertTrue("Log mediator error in message response", responseLogOk);
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing log mediator")
     public void testMediatorLog_Header()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorLog-header.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("WSO2"), NHTTP_PORT, "getQuote", "TestHeader", "http://test.wso2.org", "TestHeaderValue");
@@ -456,9 +457,9 @@ public class MediatorTest {
         Assert.assertTrue("Log mediator error in message response", responseLogOk);
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing log mediator")
     public void testMediatorLog_Full()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorLog-full.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("WSO2"), NHTTP_PORT, "getQuote");
@@ -488,9 +489,9 @@ public class MediatorTest {
         Assert.assertTrue("Log mediator error in message response", responseLogOk);
     }
 
-    @Test(alwaysRun = true)
+    @Test(groups = {"wso2.esb"}, description = "Testing log mediator")
     public void testMediatorLog_Custom()
-            throws RemoteException, XMLStreamException, ServletException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorLog-custom.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("WSO2"), NHTTP_PORT, "getQuote");
@@ -521,7 +522,7 @@ public class MediatorTest {
         Assert.assertTrue("Log mediator error in message request", requestLogOk);
         Assert.assertTrue("Log mediator error in message response", responseLogOk);
     }
-*/
 
 
-}
+
+    }

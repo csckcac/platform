@@ -18,9 +18,11 @@
 package org.wso2.carbon.apimgt.api.model;
 
 public class URITemplate {
+
     private String uriTemplate;
     private String method;
     private String resourceURI;
+    private String resourceSandboxURI;
 
     public String getResourceURI() {
         return resourceURI;
@@ -28,6 +30,14 @@ public class URITemplate {
 
     public void setResourceURI(String resourceURI) {
         this.resourceURI = resourceURI;
+    }
+
+    public String getResourceSandboxURI() {
+        return resourceSandboxURI;
+    }
+
+    public void setResourceSandboxURI(String resourceSandboxURI) {
+        this.resourceSandboxURI = resourceSandboxURI;
     }
 
     public String getUriTemplate() {

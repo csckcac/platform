@@ -107,13 +107,27 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
     private List<String> constructResourceConfig() throws APITemplateException {
         Iterator<Map<String,String>> resourceMaps = resourceMappings.iterator();
         List<String> resourceListString = new ArrayList<String>();
-        String resourceTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_RESOURCE);
+
         int i = 0;
         while (resourceMaps.hasNext()) {
             Map<String,String> singleResMap = resourceMaps.next();
             if (singleResMap != null && singleResMap.get(KEY_FOR_RESOURCE_METHODS) != null &&
                     singleResMap.get(KEY_FOR_RESOURCE_URI_TEMPLATE) != null &&
+                    singleResMap.get(KEY_FOR_RESOURCE_URI) != null &&
+                    singleResMap.get(KEY_FOR_RESOURCE_SANDBOX_URI) != null) {
+                String resourceTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_COMPLEX_RESOURCE);
+                String replacedStr = resourceTemplate.
+                        replaceAll("\\[1\\]", singleResMap.get(KEY_FOR_RESOURCE_URI_TEMPLATE)).
+                        replaceAll("\\[2\\]", singleResMap.get(KEY_FOR_RESOURCE_METHODS)).
+                        replaceAll("\\[3\\]", singleResMap.get(KEY_FOR_RESOURCE_URI)).
+                        replaceAll("\\[4\\]", apiMappings.get(KEY_FOR_API_NAME)).
+                        replaceAll("\\[5\\]", String.valueOf(i)).
+                        replaceAll("\\[6\\]", singleResMap.get(KEY_FOR_RESOURCE_SANDBOX_URI));
+                resourceListString.add(replacedStr);
+            } else if (singleResMap != null && singleResMap.get(KEY_FOR_RESOURCE_METHODS) != null &&
+                    singleResMap.get(KEY_FOR_RESOURCE_URI_TEMPLATE) != null &&
                     singleResMap.get(KEY_FOR_RESOURCE_URI) != null) {
+                String resourceTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_RESOURCE);
                 String replacedStr = resourceTemplate.
                         replaceAll("\\[1\\]", singleResMap.get(KEY_FOR_RESOURCE_URI_TEMPLATE)).
                         replaceAll("\\[2\\]", singleResMap.get(KEY_FOR_RESOURCE_METHODS)).

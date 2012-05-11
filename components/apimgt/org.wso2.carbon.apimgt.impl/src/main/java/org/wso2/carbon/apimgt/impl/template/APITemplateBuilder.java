@@ -27,6 +27,7 @@ public interface APITemplateBuilder {
     public static final String KEY_FOR_RESOURCE_URI_TEMPLATE = "key_for_resource_uri_template";
     public static final String KEY_FOR_RESOURCE_METHODS = "key_for_resource_methods";
     public static final String KEY_FOR_RESOURCE_URI = "key_for_resource_uri";
+    public static final String KEY_FOR_RESOURCE_SANDBOX_URI = "key_for_resource_sandbox_uri";
 
     public static final String KEY_FOR_HANDLER = "key_for_handler_class";
     public static final String KEY_FOR_HANDLER_POLICY_KEY = "key_for_handler_policy";

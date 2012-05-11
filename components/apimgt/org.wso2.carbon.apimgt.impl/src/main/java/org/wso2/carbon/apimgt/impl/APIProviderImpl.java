@@ -318,6 +318,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI_TEMPLATE, temp.getUriTemplate());
             uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_METHODS, temp.getMethod());
             uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI, temp.getResourceURI());
+            uriTemplateMap.put(APITemplateBuilder.KEY_FOR_RESOURCE_SANDBOX_URI, temp.getResourceSandboxURI());
             resourceMappings.add(uriTemplateMap);
         }
 

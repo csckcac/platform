@@ -37,6 +37,7 @@ public class TemplateLoader {
 
     public static final String TEMPLATE_TYPE_API = "api";
     public static final String TEMPLATE_TYPE_RESOURCE = "resource";
+    public static final String TEMPLATE_TYPE_COMPLEX_RESOURCE = "complex_resource";
     public static final String TEMPLATE_TYPE_HANDLERS = "handlers";
     public static final String TEMPLATE_TYPE_COMPLEX_HANDLER = "complex_handler";
     public static final String TEMPLATE_TYPE_SIMPLE_HANDLER = "simple_handler";

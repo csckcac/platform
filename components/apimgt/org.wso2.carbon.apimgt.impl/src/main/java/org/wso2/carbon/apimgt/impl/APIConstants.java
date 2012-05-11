@@ -78,12 +78,12 @@ public final class APIConstants {
     public static final String PROVIDER_OVERVIEW_EMAIL = "overview_email";
     public static final String PROVIDER_OVERVIEW_DESCRIPTION = "overview_description";
 
-    //database coloums for Subscriber
+    //database columns for Subscriber
     public static final String SUBSCRIBER_FIELD_EMAIL_ADDRESS = "EMAIL_ADDRESS";
     public static final String SUBSCRIBER_FIELD_USER_ID = "USER_ID";
     public static final String SUBSCRIBER_FIELD_DATE_SUBSCRIBED = "DATE_SUBSCRIBED";
 
-    //tables coloums for subscription
+    //tables columns for subscription
     public static final String SUBSCRIPTION_FIELD_TIER_ID = "TIER_ID";
     public static final String SUBSCRIPTION_FIELD_API_ID = "API_ID";
     public static final String SUBSCRIPTION_FIELD_ACCESS_TOKEN = "ACCESS_TOKEN";

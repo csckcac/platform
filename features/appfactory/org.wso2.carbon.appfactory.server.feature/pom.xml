@@ -69,6 +69,11 @@
             <artifactId>org.wso2.carbon.email.verification</artifactId>
 			<version>${carbon.version}</version>
         </dependency>
+		<dependency>
+            <groupId>org.tigris</groupId>
+            <artifactId>svn-client-adapter</artifactId>
+			<version>${svnclient.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -103,6 +108,7 @@
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.user.registration</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.email.sender</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification</bundleDef>
+								<bundleDef>org.tigris:svn-client-adapter</bundleDef>
                             </bundles>
                             <importBundles>
                             </importBundles>
@@ -120,5 +126,6 @@
 		<appfactory.version>1.0.0-SNAPSHOT</appfactory.version>
 		<carbon.version>4.0.0-SNAPSHOT</carbon.version>
 		<email.sender.version>1.1.0-SNAPSHOT</email.sender.version>
+		<svnclient.version>1.6.18.wso2v1</svnclient.version>
     </properties>
 </project>

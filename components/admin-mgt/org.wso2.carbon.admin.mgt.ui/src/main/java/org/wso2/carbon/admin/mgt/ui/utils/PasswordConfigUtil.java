@@ -105,6 +105,7 @@ public class PasswordConfigUtil {
         String domain = request.getParameter("domain");
         String adminName = request.getParameter("admin");
         String password = request.getParameter("admin-password");
+        String confirmationKey = request.getParameter("confirmationKey");
         AdminMgtInfoBean adminInfoBean = new AdminMgtInfoBean();
 
         adminInfoBean.setTenantDomain(domain);
@@ -120,7 +121,7 @@ public class PasswordConfigUtil {
             AdminManagementClient adminManagementClient =
                     new AdminManagementClient(config, session);
             return adminManagementClient.updateAdminPasswordWithUserInput(
-                    adminInfoBean, captchaInfoBean);
+                    adminInfoBean, captchaInfoBean, confirmationKey);
         } catch (Exception e) {
             AxisFault fault = new AxisFault(e.getMessage());
             String msg = fault.getReason() + " Failed to update password. tenant-domain: " + domain;

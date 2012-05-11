@@ -47,6 +47,7 @@
         String domain;
         String adminName;
         String userName;
+        String confirmationKey;
         try {
             domain = (String) request.getAttribute("tenantDomain");
             adminName = (String) request.getAttribute("admin");
@@ -55,7 +56,7 @@
             } else {
                userName = adminName+"@"+domain;
             }
-            String confirmationKey = (String) request.getAttribute("confirmationKey");
+            confirmationKey = (String) request.getAttribute("confirmationKey");
 
             client = new AdminManagementClient(config, session);
             success = client.proceedUpdateCredentials(domain, confirmationKey);
@@ -190,6 +191,8 @@
                                value="<%=adminName%>"/>
                         <input type="hidden" name="domain" id="domain"
                                value="<%=domain%>"/>
+                        <input type="hidden" name="confirmationKey"
+                               value="<%=confirmationKey%>"/>
                         <input class="button" type="button"
                                value="Update" onclick="updateCredentials()"/>
                     </td>

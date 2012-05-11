@@ -96,12 +96,15 @@ public class AdminManagementClient {
      *
      * @param adminInfoBean   AdminMgtInfoBean
      * @param captchaInfoBean CaptchaInfoBean
+     * @param confirmationKey  key to confirm the password reset request.
      * @return true/false
      * @throws Exception, if update password failed
      */
     public boolean updateAdminPasswordWithUserInput(
-            AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean) throws Exception {
-        return stub.updateAdminPasswordWithUserInput(adminInfoBean, captchaInfoBean);
+            AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean,
+            String confirmationKey) throws Exception {
+        return stub.updateAdminPasswordWithUserInput(adminInfoBean, captchaInfoBean,
+                confirmationKey);
     }
 
     /**

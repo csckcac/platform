@@ -26,8 +26,10 @@ import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
 import org.wso2.carbon.admin.mgt.internal.AdminManagementServiceComponent;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -124,7 +126,8 @@ public class AdminMgtUtil {
         try {
             registry.beginTransaction();
 
-            String secretKeyPath = AdminMgtConstants.ADMIN_MANAGEMENT_COLLECTION + "/" + secretKey;
+            String secretKeyPath = AdminMgtConstants.ADMIN_MANAGEMENT_COLLECTION + 
+                    RegistryConstants.PATH_SEPARATOR + secretKey;
             if (!registry.resourceExists(secretKeyPath)) {
                 String msg = "Failed Admin account management attempt.";
                 log.error(msg);
@@ -216,7 +219,8 @@ public class AdminMgtUtil {
             }
 
             ((ResourceImpl) resource).setVersionableChange(false);
-            String secretKeyPath = AdminMgtConstants.ADMIN_MANAGEMENT_COLLECTION + "/" + secretKey;
+            String secretKeyPath = AdminMgtConstants.ADMIN_MANAGEMENT_COLLECTION +
+                    RegistryConstants.PATH_SEPARATOR + secretKey;
             registry.put(secretKeyPath, resource);
             // sending the mail
             EmailSender sender = new EmailSender(serviceConfig, emailAddress, secretKey,
@@ -262,12 +266,11 @@ public class AdminMgtUtil {
     /**
      * Gets the tenant id from the tenant domain
      * @param domain - tenant domain
-     * @param tenantManager - TenantManager
      * @return - tenantId
      * @throws org.wso2.carbon.user.api.UserStoreException, catches this if the tenant doesn't exist
      */
-    public static int getTenantIdFromDomain(String domain,
-                                            TenantManager tenantManager) throws Exception {
+    public static int getTenantIdFromDomain(String domain) throws Exception {
+        TenantManager tenantManager = AdminManagementServiceComponent.getTenantManager();
         int tenantId;
         if (domain.trim().equals("")) {
             tenantId = MultitenantConstants.SUPER_TENANT_ID;
@@ -293,13 +296,38 @@ public class AdminMgtUtil {
     }
 
     /**
+     *  Gets the admin management path of the tenant
+     * @param domain, the tenant domain.
+     * @return  admin management path
+     * @throws Exception, if getting the admin management path failed.
+     */
+    public static String getAdminManagementPath(String domain) throws Exception {
+        int tenantId;
+        try {
+            tenantId = getTenantIdFromDomain(domain);
+        } catch (UserStoreException e) {
+            String msg = "Error in getting tenant, tenant domain: " + domain + ".";
+            log.error(msg);
+            throw new RegistryException(msg, e);
+        }
+        return AdminMgtConstants.ADMIN_MANAGEMENT_FLAG_PATH +
+                RegistryConstants.PATH_SEPARATOR + tenantId;
+    }
+
+    /**
      * Cleanup the used resources
-     * @param superTenantSystemRegistry, SuperTenantSystemRegistry
-     * @param resource, the resource
+     * @param domain, The tenant domain
      * @throws Exception, if the cleanup failed.
      */
-    public static void cleanupResources(UserRegistry superTenantSystemRegistry,
-                                        Resource resource) throws Exception {
+    public static void cleanupResources(String domain) throws Exception {
+        String adminManagementPath = getAdminManagementPath(domain);
+
+        UserRegistry superTenantSystemRegistry = AdminManagementServiceComponent.
+                getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
+        Resource resource = null;
+        if (superTenantSystemRegistry.resourceExists(adminManagementPath)) {
+            resource = superTenantSystemRegistry.get(adminManagementPath);
+        }
         if (resource == null) {
             String msg = "Resource doesn't exist";
             log.error(msg);
@@ -313,5 +341,20 @@ public class AdminMgtUtil {
                 throw new Exception(msg, e);
             }
         }
+    }
+
+    /**
+     *  Gets the userName from the tenantLess userName and Domain
+     * @param adminName, userName without domain
+     * @param domain, domainName
+     * @return  complete userName
+     */
+    public static String getUserNameWithDomain(String adminName, String domain) {
+        String userName = adminName;
+        if (!domain.trim().equals("")) {
+            // get the userName with tenant domain.
+            userName = adminName + "@" + domain;
+        }
+        return userName;
     }
 }

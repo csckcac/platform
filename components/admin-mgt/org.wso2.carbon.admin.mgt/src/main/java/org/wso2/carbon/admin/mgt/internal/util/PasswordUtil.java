@@ -55,12 +55,12 @@ public class PasswordUtil {
         AdminManagementSubscriber adminMgtSubscriber = new AdminManagementSubscriber();
         String adminName = adminInfoBean.getAdmin();
         String domainName = adminInfoBean.getTenantDomain();
-        String email = "";
+        String email;
         String userName;
         String errorMsg = "No email address associated with the given user account";
 
         TenantManager tenantManager = AdminManagementServiceComponent.getTenantManager();
-        int tenantId = AdminMgtUtil.getTenantIdFromDomain(domainName, tenantManager);
+        int tenantId = AdminMgtUtil.getTenantIdFromDomain(domainName);
 
         if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
             userName = adminName;
@@ -198,11 +198,12 @@ public class PasswordUtil {
      */
     public static boolean updatePassword(AdminMgtInfoBean adminInfoBean,
                                          UserStoreManager userStoreManager) throws Exception {
-        String adminName, tenantDomain, password;
+        String adminName, tenantDomain, password, userName;
         try {
             adminName = adminInfoBean.getAdmin();
             tenantDomain = adminInfoBean.getTenantDomain();
             password = adminInfoBean.getAdminPassword();
+            userName = AdminMgtUtil.getUserNameWithDomain(adminName, tenantDomain);
         } catch (Exception e) {
             String msg = "Unable to find the required information for the password reset, " +
                     "from the adminInfoBean object";
@@ -211,15 +212,11 @@ public class PasswordUtil {
         }
         try {
             userStoreManager.updateCredentialByAdmin(adminName, password);
-            String msg = "Password reset by the admin for user: " + adminName;
-            if (!tenantDomain.trim().equals("")) {
-                msg = msg + "@" + tenantDomain;
-            }
+            String msg = "Password reset for the user: " + userName;
             log.info(msg);
             return true;
         } catch (UserStoreException e) {
-            String msg = "Error in changing the password, user name: " + adminName + "; domain: " +
-                    tenantDomain + ".";
+            String msg = "Error in changing the password for user: " + userName;
             log.error(msg, e);
             throw new Exception(msg, e);
         }
@@ -234,10 +231,8 @@ public class PasswordUtil {
      * @throws Exception if failed due to userStore or registry exceptions.
      */
     public static boolean updateTenantPassword(AdminMgtInfoBean adminInfoBean) throws Exception {
-
-        TenantManager tenantManager = AdminManagementServiceComponent.getTenantManager();
         String tenantDomain = adminInfoBean.getTenantDomain();
-        int tenantId = AdminMgtUtil.getTenantIdFromDomain(tenantDomain, tenantManager);
+        int tenantId = AdminMgtUtil.getTenantIdFromDomain(tenantDomain);
         UserStoreManager userStoreManager;
 
         // filling the non-set admin and admin password first

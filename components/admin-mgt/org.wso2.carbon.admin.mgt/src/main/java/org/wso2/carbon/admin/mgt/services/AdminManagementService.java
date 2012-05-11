@@ -83,17 +83,33 @@ public class AdminManagementService {
      *
      * @param adminInfoBean   tenantInfo
      * @param captchaInfoBean captcha
-     * @return tenanttrue if password is changed successfully. Final call in password reset.
-     * @throws Exception, if captcha validation failed.
+     * @param confirmationKey  key that confirms the password reset
+     * @return true, if password is changed successfully. Final call in password reset.
+     * @throws Exception, if password reset failed, due to captcha validation or the wrong attempt of password reset.
      */
     public boolean updateAdminPasswordWithUserInput(
-            AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean) throws Exception {
-
-        //processes the captchaInfoBean
-        CaptchaUtil.processCaptchaInfoBean(captchaInfoBean);
-
-        // change the password with the user input password
-        return PasswordUtil.updateTenantPassword(adminInfoBean);
+            AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean,
+            String confirmationKey) throws Exception {
+        
+        String domain = adminInfoBean.getTenantDomain();                  
+        String adminName = adminInfoBean.getAdmin();
+        String userName = AdminMgtUtil.getUserNameWithDomain(adminName, domain);
+        
+        boolean isValidRequest = proceedUpdateCredentials(domain, confirmationKey);
+        boolean isPasswordUpdated = false;
+        
+        if (isValidRequest) {
+            //processes the captchaInfoBean
+            CaptchaUtil.processCaptchaInfoBean(captchaInfoBean);
+            // change the password with the user input password
+            if (log.isDebugEnabled()) {
+                log.debug("Initializing TenantMgtAdminService for the admin account configuration.");
+            }
+            isPasswordUpdated = PasswordUtil.updateTenantPassword(adminInfoBean);
+        }
+        log.info("Password reset status of user " + userName + " is: " + isPasswordUpdated);
+        AdminMgtUtil.cleanupResources(domain);
+        return isPasswordUpdated;
     }
 
     /**
@@ -106,14 +122,11 @@ public class AdminManagementService {
      */
     public boolean proceedUpdateCredentials(String domain, String confirmationKey) throws Exception {
 
-        TenantManager tenantManager = AdminManagementServiceComponent.getTenantManager();
-        int tenantId = AdminMgtUtil.getTenantIdFromDomain(domain, tenantManager);
+        String adminManagementPath = AdminMgtUtil.getAdminManagementPath(domain);
 
         UserRegistry superTenantSystemRegistry = AdminManagementServiceComponent.
                 getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
-        String adminManagementPath = AdminMgtConstants.ADMIN_MANAGEMENT_FLAG_PATH +
-                RegistryConstants.PATH_SEPARATOR + tenantId;
-        Resource resource = null;
+        Resource resource;
         if (superTenantSystemRegistry.resourceExists(adminManagementPath)) {
             resource = superTenantSystemRegistry.get(adminManagementPath);
             String actualConfirmationKey = null;
@@ -126,7 +139,7 @@ public class AdminManagementService {
 
             if ((actualConfirmationKey != null) && (actualConfirmationKey.equals(confirmationKey))) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Password resetting by the tenant admin for the domain: " + domain);
+                    log.debug("Password resetting for the user of the domain: " + domain);
                 }
                 return true;
             } else if (actualConfirmationKey == null ||
@@ -138,8 +151,6 @@ public class AdminManagementService {
         } else {
             log.warn("The confirmationKey doesn't exist in service.");
         }
-
-        AdminMgtUtil.cleanupResources(superTenantSystemRegistry, resource);
         return false;
     }
 

@@ -47,6 +47,7 @@
                     <xs:sequence>
                         <xs:element minOccurs="0" name="adminInfoBean" nillable="true" type="ax2379:AdminMgtInfoBean" />
                         <xs:element minOccurs="0" name="captchaInfoBean" nillable="true" type="ax2380:CaptchaInfoBean" />
+                        <xs:element minOccurs="0" name="confirmationKey" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

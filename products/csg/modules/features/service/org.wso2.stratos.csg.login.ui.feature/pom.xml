@@ -58,7 +58,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.stratos.esb.login.ui</id>
+                            <id>org.wso2.stratos.csg.login.ui</id>
                             <propertiesFile>../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -67,7 +67,7 @@
                             </adviceFile>                            
                             <bundles>
                                 <bundleDef>org.wso2.csg:org.wso2.stratos.csg.login.ui</bundleDef>
-				                <bundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.stratos</bundleDef>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.stratos</bundleDef>
                             </bundles>
                         </configuration>
                     </execution>

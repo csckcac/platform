@@ -15,14 +15,14 @@
         <BAMUsername>admin</BAMUsername>
         <BAMPassword>admin</BAMPassword>
     </APIUsageTracking>
-    <APIConsumerAuthentication>
-        <AdminUsername>admin</AdminUsername>
-        <AdminPassword>admin</AdminPassword>
-    </APIConsumerAuthentication>
-    <APIGatewayAdmin>
+    <APIKeyManager>
         <ServerURL>https://localhost:9443/services/</ServerURL>
-        <AdminUsername>admin</AdminUsername>
-        <AdminPassword>admin</AdminPassword>
-        <AdminHost>localhost</AdminHost>
-    </APIGatewayAdmin>
+        <Username>admin</Username>
+        <Password>admin</Password>
+    </APIKeyManager>
+    <APIGateway>
+        <ServerURL>https://localhost:9443/services/</ServerURL>
+        <Username>admin</Username>
+        <Password>admin</Password>
+    </APIGateway>
 </APIManager>

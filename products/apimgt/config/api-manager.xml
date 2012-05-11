@@ -1,7 +1,7 @@
 <APIManager>
     <!--
-        Database configuration used by API provider and API store web applications.
-        When these two applications are deployed separately, they should have
+        Database configuration used by API provider, API store and API key manager.
+        When these components are deployed separately, each of them should have
         separate database configurations pointing to the same physical database.
     -->
     <Database>
@@ -31,7 +31,7 @@
         is mainly used by the API provider to connect to the API gateway and
         create/update published API configurations.
     -->
-    <APIGatewayAdmin>
+    <APIGateway>
         <!--
             Server URL of the API gateway.
         -->
@@ -40,18 +40,13 @@
         <!--
             Admin username for the API gateway.
         -->
-        <AdminUsername>admin</AdminUsername>
+        <Username>admin</Username>
 
         <!--
             Admin password for the API gateway.
         -->
-        <AdminPassword>admin</AdminPassword>
-
-        <!--
-            Hostname of the API gateway.
-        -->
-        <AdminHost>localhost</AdminHost>
-    </APIGatewayAdmin>
+        <Password>admin</Password>
+    </APIGateway>
 
     <!--
         API usage tracker configuration used by the BAM data publisher in API
@@ -86,21 +81,25 @@
     </APIUsageTracking>
 
     <!--
-        Configuration used by the API gateway to authenticate API consumers (subscribers).
-        The provided credentials are used to connect to the authentication admin services
-        of the API gateway and authenticate subscribers based on the API key values
-        they provide.
+        API key manager configuration used by API store and API gateway. This is used
+        by API store to generate and manage API keys. API gateway uses it to validate
+        and authenticate users against the provided API keys.
     -->
-    <APIConsumerAuthentication>
+    <APIKeyManager>
+        <!--
+            Server URL of the API key manager
+        -->
+        <ServerURL>https://localhost:9443/services/</ServerURL>
+
         <!--
             Admin username for API gateway.
         -->
-        <AdminUsername>admin</AdminUsername>
+        <Username>admin</Username>
 
         <!--
             Admin password for API gateway.
         -->
-        <AdminPassword>admin</AdminPassword>
-    </APIConsumerAuthentication>
+        <Password>admin</Password>
+    </APIKeyManager>
 </APIManager>
 

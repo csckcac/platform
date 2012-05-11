@@ -47,7 +47,14 @@
         RuleMediatorClientHelper.populateSource(request, ruleMediatorConfig);
         RuleMediatorClientHelper.populateTarget(request, ruleMediatorConfig);
 
-        Rule rule = ruleMediatorConfig.getRuleSet().getRules().get(0);
+
+        Rule rule;
+        if (ruleMediatorConfig.getRuleSet().getRules().isEmpty()){
+            rule = new Rule();
+            ruleMediatorConfig.getRuleSet().getRules().add(rule);
+        } else {
+            rule = ruleMediatorConfig.getRuleSet().getRules().get(0);
+        }
 
         boolean isKey = "key".equals(request.getParameter("ruleScriptType"));
         boolean isURL = "url".equals(request.getParameter("ruleScriptType"));

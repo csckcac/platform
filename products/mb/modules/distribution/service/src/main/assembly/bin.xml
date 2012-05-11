@@ -170,12 +170,6 @@
 	     <outputDirectory>wso2stratos-mb-${pom.version}/repository/conf/</outputDirectory>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.version}/bin/daemon.sh</source>
-            <outputDirectory>wso2stratos-mb-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>755</fileMode>
-        </file>
-        <file>
             <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks</source>
             <outputDirectory>wso2stratos-mb-${pom.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>

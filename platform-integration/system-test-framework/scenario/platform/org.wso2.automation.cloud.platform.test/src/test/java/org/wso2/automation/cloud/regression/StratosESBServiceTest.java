@@ -56,34 +56,33 @@ public class StratosESBServiceTest {
     @Test(invocationCount = 5)
     public void proxyServiceTest() throws AxisFault {
         demoProxyTestClient();
-
     }
 
     private static OMElement createPayLoad() {
         OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMNamespace omNs = fac.createOMNamespace("http://service.carbon.wso2.org", "ns1");
+        OMNamespace omNs = fac.createOMNamespace("http://service.carbon.wso2.org", "p");
+        OMNamespace omNs2 = fac.createOMNamespace("http://service.carbon.wso2.org", "xs");
         OMElement method = fac.createOMElement("echoString", omNs);
-        OMElement value = fac.createOMElement("s", omNs);
+        OMElement value = fac.createOMElement("s", omNs2);
         value.addChild(fac.createOMText(value, "Hello World"));
         method.addChild(value);
         return method;
     }
 
     private void demoProxyTestClient() throws AxisFault {
-
+        long soTimeout = 2 * 60 * 1000; // Two minutes
         OMElement payload = createPayLoad();
+        System.out.println(payload);
         OMElement result;
         ServiceClient serviceclient = new ServiceClient();
         Options opts = new Options();
+        opts.setTimeOutInMilliSeconds(soTimeout);
         opts.setProperty(org.apache.axis2.transport.http.HTTPConstants.CHUNKED, Boolean.FALSE);
         opts.setTo(new EndpointReference(httpEsbStratosEpr + "/DemoProxy"));
         opts.setAction("urn:echoString");
         serviceclient.setOptions(opts);
         log.info(opts.getTo());
-
         result = serviceclient.sendReceive(payload);
-
-        log.info(result);
         Assert.assertNotNull(result, "Response Message is null");
         Assert.assertTrue(result.toString().contains("Hello World"), "Demo proxy service invocation failed");
     }

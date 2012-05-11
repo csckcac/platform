@@ -36,7 +36,7 @@ public class GadgetTestUtils {
     private static final Log log = LogFactory.getLog(GadgetTestUtils.class);
 
     public static String getGadgetResourcePath(String resourcePath) {
-        return resourcePath + File.separator + "HelloWorldGadget.xml";
+        return resourcePath + File.separator + "artifacts/GS/gadget/HelloWorldGadget.xml";
     }
 
     public static GadgetRepoServiceStub getGadgetRepoServiceStub(String sessionCookie) {

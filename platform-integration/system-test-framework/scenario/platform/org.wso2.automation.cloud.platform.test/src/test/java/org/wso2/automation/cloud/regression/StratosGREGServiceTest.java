@@ -16,6 +16,7 @@
 
 package org.wso2.automation.cloud.regression;
 
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
@@ -25,19 +26,20 @@ import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.registry.app.RemoteRegistry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
+import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.rmi.RemoteException;
 
 public class StratosGREGServiceTest {
     private static final Log log = LogFactory.getLog(StratosGREGServiceTest.class);
-    private RemoteRegistry registry = null;
-    private String httpGovernanceUrl;
+    private WSRegistryServiceClient registry = null;
     private UserInfo userInfo;
 
     @BeforeClass
@@ -45,24 +47,19 @@ public class StratosGREGServiceTest {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(4);
         EnvironmentVariables gregServer = builder.build().getGreg();
         userInfo = UserListCsvReader.getUserInfo(4);
-        httpGovernanceUrl = "http://" + gregServer.getProductVariables().getHostName()
-                              + "/t/" + userInfo.getDomain();
-    }
-    @Test()
-    public void runSuccessCase() throws MalformedURLException, RegistryException {
-        remoteRegistryClientTest();
+        String httpGovernanceUrl = "http://" + gregServer.getProductVariables().getHostName()
+                                   + "/t/" + userInfo.getDomain();
     }
 
-
-    private void remoteRegistryClientTest() throws MalformedURLException, RegistryException {
+    @Test
+    private void testWSRegistryClientTest()
+            throws MalformedURLException, RegistryException, AxisFault {
 
         String path = "/_system/local/registry.txt";
         boolean getValue = false;
         boolean putValue = false;
         boolean deleteValue = false;
-        registry = new RemoteRegistry(new URL(httpGovernanceUrl + "/registry"),
-                                      userInfo.getUserName(), userInfo.getPassword());
-
+        registry = new RegistryProvider().getRegistry(4, ProductConstant.GREG_SERVER_NAME);
         /*put resource */
 
         Resource r1 = registry.newResource();

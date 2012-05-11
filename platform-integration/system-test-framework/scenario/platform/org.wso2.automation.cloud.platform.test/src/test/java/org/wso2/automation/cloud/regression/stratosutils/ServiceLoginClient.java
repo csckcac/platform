@@ -24,6 +24,7 @@ import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
 
@@ -36,8 +37,10 @@ public class ServiceLoginClient {
 
     public static String loginChecker(String hostName) {
         FrameworkProperties properties = new FrameworkProperties();
-        System.setProperty("javax.net.ssl.trustStore", properties.getEnvironmentVariables().getKeystorePath());
-        System.setProperty("javax.net.ssl.trustStorePassword", properties.getEnvironmentVariables().getKeyStrorePassword());
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
+
+        System.setProperty("javax.net.ssl.trustStore", environmentBuilder.getFrameworkSettings().getEnvironmentVariables().getKeystorePath());
+        System.setProperty("javax.net.ssl.trustStorePassword", environmentBuilder.getFrameworkSettings().getEnvironmentVariables().getKeyStrorePassword());
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
 
         String authenticationServiceURL = "https://" + hostName + "/services/AuthenticationAdmin";

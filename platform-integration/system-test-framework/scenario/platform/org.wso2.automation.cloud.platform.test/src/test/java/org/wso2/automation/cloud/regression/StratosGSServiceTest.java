@@ -23,47 +23,48 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceGadgetDashbordService;
 import org.wso2.carbon.admin.service.AdminServiceGadgetRepositoryService;
+import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.stub.GadgetRepoServiceStub;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.stub.types.carbon.Comment;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.stub.types.carbon.Gadget;
 import org.wso2.carbon.dashboard.stub.DashboardServiceStub;
-import org.wso2.carbon.registry.app.RemoteRegistry;
-import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
+import org.wso2.carbon.registry.resource.stub.common.xsd.ResourceData;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 import org.wso2.automation.cloud.regression.stratosutils.ServiceLoginClient;
 import org.wso2.automation.cloud.regression.stratosutils.gadgetutils.GadgetTestUtils;
-
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.rmi.RemoteException;
+
+import static org.testng.Assert.assertTrue;
 
 public class StratosGSServiceTest {
 
     private static final Log log = LogFactory.getLog(StratosGSServiceTest.class);
-    private String httpGadgetServerUrl;
     private UserInfo userInfo;
     private String gsHostName;
-
+    private EnvironmentVariables gsServer;
 
     @BeforeClass
     public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().gs(4);
-        EnvironmentVariables gsServer = builder.build().getGs();
+        gsServer = builder.build().getGs();
         userInfo = UserListCsvReader.getUserInfo(4);
         gsHostName = gsServer.getProductVariables().getHostName();
-        httpGadgetServerUrl = "http://" + gsServer.getProductVariables().getHostName()
-                                 + "/t/" + userInfo.getDomain();
     }
 
     @Test()
-    public void gadgetTest() throws MalformedURLException, RegistryException {
+    public void gadgetTest() throws MalformedURLException, RegistryException, RemoteException,
+                                    ResourceAdminServiceExceptionException {
         String gsServerHostName = gsHostName;
         String sessionCookie = ServiceLoginClient.loginChecker(gsServerHostName);
         gadgetXMLTestClient();
@@ -73,9 +74,10 @@ public class StratosGSServiceTest {
         DashboardServiceStub dashboardServiceStub =
                 GadgetTestUtils.getDashboardServiceStub(sessionCookie);
 
-        String gadgetFile = GadgetTestUtils.getGadgetResourcePath(System.getProperty("stratos.key.resource.location"));
+        String gadgetFile = ProductConstant.getResourceLocations(ProductConstant.GS_SERVER_NAME) +
+                            File.separator + "gadget" + File.separator + "HelloWorldGadget.xml";
         FileDataSource gadgetFileDataSource = new FileDataSource(gadgetFile);
-        System.out.println(gadgetFile);
+        log.info(gadgetFile);
         DataHandler dataHandler = new DataHandler(gadgetFileDataSource);
         AdminServiceGadgetDashbordService dashbordService = new AdminServiceGadgetDashbordService();
         AdminServiceGadgetRepositoryService repositoryService = new AdminServiceGadgetRepositoryService();
@@ -95,8 +97,6 @@ public class StratosGSServiceTest {
         Comment comment = new Comment();
         comment.setCommentText("TestCommentOnGadget");
         comment.setAuthorUserName(userID);
-        int commentStart = 0;
-        int commentSetSize = 1;
 
         int rating = 3;
         Gadget addedGadget;
@@ -112,9 +112,9 @@ public class StratosGSServiceTest {
         } else {
             gadgetPath = addedGadget.getGadgetPath();
             gadgetUrl = addedGadget.getGadgetUrl();
-            System.out.println("Get gadget using gadget path test");
+            log.info("Get gadget using gadget path test");
             repositoryService.getGadgetFromPath(gadgetRepoServiceStub, gadgetPath);
-            System.out.println("Add gadget to user's portal test");
+            log.info("Add gadget to user's portal test");
 
             String newtabTitle = "newTab";
             int addtabID = dashbordService.addNewTab(dashboardServiceStub, userID, newtabTitle, dashboardName);
@@ -131,50 +131,37 @@ public class StratosGSServiceTest {
                 // Add gadget to user test
                 repositoryService.addGadgetToPortal(gadgetRepoServiceStub, userID, addedTab, gadgetUrl, dashboardName, gadgetGroup,
                                                     gadgetPath);
-                System.out.println("User has added gadget test");
+                log.info("User has added gadget test");
                 repositoryService.userHasGadget(gadgetRepoServiceStub, gadgetPath);
-                System.out.println("Add comment on gadget test");
+                log.info("Add comment on gadget test");
                 repositoryService.addCommentForGadget(gadgetRepoServiceStub, gadgetPath, comment);
-                System.out.println("Get comment count on a gadget test");
+                log.info("Get comment count on a gadget test");
                 repositoryService.getCommentCountForGadget(gadgetRepoServiceStub, gadgetPath);
-                System.out.println(" Get comment set on a gadget test ");
-                String path = repositoryService.getCommentSetForGadget(gadgetRepoServiceStub, gadgetPath, commentStart, commentSetSize);
+                log.info(" Get comment set on a gadget test ");
 
                 dashbordService.addGadgetToUser(dashboardServiceStub, userID, tabIdValue, gadgetUrl, dashboardName, gadgetGroup);
                 // Remove added tab test
                 dashbordService.removeTab(dashboardServiceStub, userID, tabIdValue, dashboardName);
             }
-            System.out.println("Add rating on gadget test ");
-            String ff = String.valueOf(addtabID);
+            log.info("Add rating on gadget test");
             repositoryService.addRatingForGadget(gadgetRepoServiceStub, gadgetPath, rating, String.valueOf(addtabID), gadgetGroup);
-            System.out.println("Get rating on gadget test");
+            log.info("Get rating on gadget test");
             // getRatingOnGadget(gadgetRepoServiceStub, gadgetPath, userID);
-            System.out.println(" Delete the added gadget from repository test ");
+            log.info(" Delete the added gadget from repository test ");
             repositoryService.deleteGadgetFromRepo(gadgetRepoServiceStub, gadgetPath);
-            System.out.println("Remove the added Tab");
+            log.info("Remove the added Tab");
             dashbordService.removeTab(dashboardServiceStub, userID, newtabTitle, dashboardName);
         }
 
     }
 
-    public void gadgetXMLTestClient() throws MalformedURLException, RegistryException {
-        RemoteRegistry registry = null;
+    public void gadgetXMLTestClient()
+            throws MalformedURLException, RegistryException, RemoteException,
+                   ResourceAdminServiceExceptionException {
         String path = "/_system/config/repository/gadget-server/gadgets/AmazonSearchGadget/amazon-search.xml";
-        boolean getValue = false;
-        registry = new RemoteRegistry(new URL(httpGadgetServerUrl + "/registry"),
-                                      userInfo.getUserName(), userInfo.getPassword());
-
-
-        /*get resource */
-
-        Resource r2 = registry.get(path);
-        System.out.println(r2.getMediaType());
-
-        if (r2.getMediaType().equalsIgnoreCase("application/vnd.wso2-gadget+xml")) {
-            getValue = true;
-        }
-        Assert.assertTrue("Failed to read gadget xml from registry", getValue);
-
+        AdminServiceResourceAdmin resourceAdmin = new AdminServiceResourceAdmin(gsServer.getBackEndUrl());
+        ResourceData[] resourceData =  resourceAdmin.getResource(gsServer.getSessionCookie(), path);
+        assertTrue(resourceData[0].getName().equals("amazon-search.xml"));
     }
 
 }

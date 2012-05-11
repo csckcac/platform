@@ -57,32 +57,32 @@ public class StratosDSSServiceTest {
                                 + "/services/t/" + userInfo.getDomain();
     }
 
-    @Test(invocationCount = 5)
+    @Test(invocationCount = 5, priority = 1)
     public void googleSpreadSheerDataServiceTest() throws AxisFault {
         googleSpreadsheetService();
     }
 
-    @Test(invocationCount = 5)
+    @Test(invocationCount = 5, priority = 2)
     public void csvDataServiceTest() throws AxisFault, XMLStreamException {
         csvDataService();
     }
 
-    @Test(invocationCount = 5)
+    @Test(invocationCount = 53, priority = 3)
     public void excelDataServiceTest() throws AxisFault, XMLStreamException {
         excelDataService();
     }
 
-    @Test(invocationCount = 5)
+    @Test(invocationCount = 5, priority = 4)
     public void sqlDataServiceTest() throws AxisFault {
         rssDataService();
     }
 
-    @Test(invocationCount = 5)
+    @Test(invocationCount = 5, priority = 5)
     public void restFullDataServiceTest() throws AxisFault {
         restDataService();
     }
 
-    @Test()
+    @Test(priority = 6)
     public void hectorTest() throws AxisFault, InterruptedException {
         Assert.assertTrue(HectorExample.executeKeySpaceSample(userInfo), "Cassandra test fail");
     }

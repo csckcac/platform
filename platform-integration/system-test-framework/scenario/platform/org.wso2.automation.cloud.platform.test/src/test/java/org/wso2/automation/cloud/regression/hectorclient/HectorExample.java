@@ -46,7 +46,7 @@ public class HectorExample {
     public static void main(String arg[]) throws InterruptedException {
         //Read User Inputs
         log.info("Tenant Id: ");
-        String tenantId = "admin123@krishantha.hhh";
+        String tenantId = "admin123@wso2manualQA0006.org";
         log.info("Tenant Password: ");
         String tenantPasswd = "admin123";
         log.info("Keyspace Name: ");

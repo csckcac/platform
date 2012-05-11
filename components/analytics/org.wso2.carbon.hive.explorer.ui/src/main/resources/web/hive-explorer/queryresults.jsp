@@ -43,7 +43,7 @@
         QueryResult[] results = client.executeScript(hiveScript, credentials);
 %>
 <div id="returnedResults">
-    <table class="normal-nopadding">
+    <table class="allResult">
         <tbody>
 
         <%
@@ -51,11 +51,11 @@
         %>
         <tr>
             <td>
-                <hr/>
+                <hr color="#E66C2C"/>
             </td>
         </tr>
         <tr>
-            <td>Query: <%=result.getQuery()%>
+            <td><b><font color="#8a2be2">Query: <%=result.getQuery()%></font></b>
             </td>
         </tr>
         <%
@@ -65,7 +65,7 @@
         %>
         <tr>
             <td>
-                Results:
+               <b><font color="#006400"> Results:  </font></b>
             </td>
         </tr>
         <tr>
@@ -115,7 +115,7 @@
         <% } else {
         %>
         <tr>
-            <td>Nothing to Display</td>
+            <td><b><font color="#006400">Nothing to Display</font></b></td>
         </tr>
         <tr>
             <td>OK</td>

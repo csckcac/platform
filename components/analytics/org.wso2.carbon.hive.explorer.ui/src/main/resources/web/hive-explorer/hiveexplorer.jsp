@@ -128,17 +128,19 @@
     }
 
     table.result {
-        border-width: 1px;
-        border-style: solid;
-        border-color: black;
-        background-color: white;
-    }
+            border-width: 2px;
+            border-style: solid;
+            border-color: maroon;
+            background-color: white;
+        }
 
-        /*td.resultCol {*/
-        /*border-width: 1px;*/
-        /*border-style: solid;*/
-        /*border-color: black;*/
-        /*}*/
+        table.allResult {
+            border-width: 1px;
+            border-style: solid;
+            border-color: black;
+            background-color: white;
+            width: 100%;
+        }
 
 </style>
 

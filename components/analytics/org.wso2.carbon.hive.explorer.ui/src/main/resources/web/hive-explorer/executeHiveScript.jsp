@@ -130,17 +130,19 @@
     }
 
     table.result {
+        border-width: 2px;
+        border-style: solid;
+        border-color: maroon;
+        background-color: white;
+    }
+
+    table.allResult {
         border-width: 1px;
         border-style: solid;
         border-color: black;
         background-color: white;
+        width: 100%;
     }
-
-        /*td.resultCol {*/
-        /*border-width: 1px;*/
-        /*border-style: solid;*/
-        /*border-color: black;*/
-        /*}*/
 
 </style>
 

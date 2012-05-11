@@ -269,9 +269,9 @@ public class RMAdminService extends AbstractAdmin {
             policyWrapperEle.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
                     String.valueOf(PolicyInclude.AXIS_SERVICE_POLICY), null);
 
-            OMElement idEle = omFactory.createOMElement(Resources.ServiceProperties.POLICY_UUID, null);
-            idEle.setText(sandeshaPolicy.getId());
-            policyWrapperEle.addChild(idEle);
+            OMElement idElement = omFactory.createOMElement(Resources.ServiceProperties.POLICY_UUID, null);
+            idElement.setText(sandeshaPolicy.getId());
+            policyWrapperEle.addChild(idElement);
 
             OMElement policyEleToPersist = PersistenceUtils.createPolicyElement(sandeshaPolicy);
             policyWrapperEle.addChild(policyEleToPersist);
@@ -300,6 +300,12 @@ public class RMAdminService extends AbstractAdmin {
 
             //put the policy
             serviceGroupFilePM.put(serviceGroupId, policyWrapperEle, serviceXPath + "/" + Resources.POLICIES);
+
+            if (!serviceGroupFilePM.elementExists(serviceGroupId, serviceXPath +
+                    PersistenceUtils.getXPathTextPredicate(
+                            Resources.ServiceProperties.POLICY_UUID, sandeshaPolicy.getId()))) {
+                serviceGroupFilePM.put(serviceGroupId, idElement.cloneOMElement(), serviceXPath);
+            }
 
             if (!transactionStarted) {
                 serviceGroupFilePM.commitTransaction(serviceGroupId);
@@ -359,7 +365,6 @@ public class RMAdminService extends AbstractAdmin {
             throw new AxisFault("Problem when setting parameter values");
         }*/
     }
-
 
     public RMParameterBean getParameters(String serviceName) throws AxisFault {
         AxisConfiguration axisConfiguration = getAxisConfig();
@@ -437,6 +442,4 @@ public class RMAdminService extends AbstractAdmin {
 
 
     }
-
-
 }

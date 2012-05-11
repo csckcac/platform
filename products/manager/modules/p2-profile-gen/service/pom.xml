@@ -79,7 +79,6 @@
                             <publishArtifactRepository>true</publishArtifactRepository>
                             <featureArtifacts>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.coordination.core.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bam.feature:${carbon.version}</featureArtifactDef>
                                  <!-- registry related features-->
@@ -204,10 +203,7 @@
                                     <id>org.wso2.carbon.webapp.mgt.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.coordination.core.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
+                           
                                 <feature>
                                     <id>org.wso2.carbon.ntask.feature.group</id>
                                     <version>${carbon.version}</version>

@@ -186,7 +186,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
 
     public void send(MessageContext synCtx) {
         /*   setCookieHeader(synCtx);     */
-        int tenantId=getTenantId(synCtx.toString());
+        int tenantId=getTenantId(synCtx.getTo().toString());
         Member currentMember = null;
         SessionInformation sessionInformation = null;
        // if (isSessionAffinityBasedLB()) {

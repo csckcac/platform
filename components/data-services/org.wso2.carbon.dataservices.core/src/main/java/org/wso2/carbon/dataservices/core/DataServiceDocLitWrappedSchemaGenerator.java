@@ -164,11 +164,12 @@ public class DataServiceDocLitWrappedSchemaGenerator {
                 cparams.getRequestInputElementMap().put(request.getRequestName(),
                         inMessage.getElementQName());
 
-            } else if (defCallQuery.getWithParams().size() == 0) {
-                 /* Adding the operation name as the payload for OUT_ONLY requests */
-                    inMessage.setName(requestName + Java2WSDLConstants.MESSAGE_SUFFIX);
-                    inMessage.setElementQName(new QName(query.getNamespace(), requestName));
             }
+//            else if (defCallQuery.getWithParams().size() == 0) {
+//                 /* Adding the operation name as the payload for OUT_ONLY requests */
+//                    inMessage.setName(requestName + Java2WSDLConstants.MESSAGE_SUFFIX);
+//                    inMessage.setElementQName(new QName(query.getNamespace(), requestName));
+//            }
         }
 	}
 	

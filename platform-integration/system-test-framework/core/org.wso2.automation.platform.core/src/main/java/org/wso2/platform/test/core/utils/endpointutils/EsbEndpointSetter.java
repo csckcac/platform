@@ -182,7 +182,6 @@ public class EsbEndpointSetter {
         attribute = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
         ((OMElementImpl) endpoint).getAttribute(new QName("uri")).setAttributeValue(getUrl(uri));
         attribute2 = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
-        System.out.println("Proxy Endpoint");
     }
 
 

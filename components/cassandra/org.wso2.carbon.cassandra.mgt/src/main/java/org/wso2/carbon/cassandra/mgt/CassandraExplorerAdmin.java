@@ -517,7 +517,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                 new ClusterAuthenticationUtil(super.getHttpSession(),
                         super.getTenantDomain());
         Cluster cluster = clusterAuthenticationUtil.getCluster(null);
-        System.out.println(cluster.describeClusterName());
         Keyspace keyspace = dataAccessService.getKeySpace(cluster, keyspaceName);
 
         SliceQuery<String, String, String> sliceQuery =

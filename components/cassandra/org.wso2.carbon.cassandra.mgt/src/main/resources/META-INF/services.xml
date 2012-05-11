@@ -68,7 +68,7 @@
             This service will help to access Cassandra's Column Families for browsing Data Stored.
         </description>
         <parameter name="ServiceClass">org.wso2.carbon.cassandra.mgt.CassandraExplorerAdmin</parameter>
-        <parameter name="enableMTOM" locked="false">true</parameter>
+        <parameter name="enableMTOM" locked="false">false</parameter>
         <messageReceivers>
             <messageReceiver mep="http://www.w3.org/ns/wsdl/robust-in-only"
                              class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>

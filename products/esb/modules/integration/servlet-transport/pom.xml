@@ -26,7 +26,7 @@
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>${basedir}/../../distribution/product/target/wso2esb-${project.version}.zip</carbon.zip>
-                        <sec.verifier.dir>${basedir}/../../../../integration/security-verifier/</sec.verifier.dir>
+                        <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <emma.home>${basedir}/target/emma</emma.home>
                         <emma.output>${basedir}/target/emma</emma.output>
                     </systemProperties>
@@ -45,6 +45,19 @@
                             <outputDirectory>${project.build.directory}/emma</outputDirectory>
                             <includeTypes>jar</includeTypes>
                             <includeArtifactIds>emma,org.wso2.carbon.integration.framework</includeArtifactIds>
+                        </configuration>
+                    </execution>
+		    <execution>
+                    	<id>copy-secVerifier</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
+                            <includeTypes>aar</includeTypes>
+                            <includeArtifactIds>SecVerifier</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
                 </executions>

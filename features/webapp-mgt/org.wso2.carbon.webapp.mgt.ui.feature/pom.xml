@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.webapp.mgt.ui.feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Service Management UI Feature</name>
+    <name>WSO2 Carbon - Webapp Management UI Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the bundles required for Front-end Webapp Management functionality</description>
 

@@ -21,11 +21,11 @@
                     <!-- argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</argLine -->
                     <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m</argLine>
 
-                    <!--<excludes>-->
+                    <excludes>
                         <exclude>**/*BackwardAssociationHandlerTestCase.java</exclude>
                         <!--<exclude>**/*WSDLTestCase.java</exclude>-->
                         <!--<exclude>**/*SchemaTestCase.java</exclude>-->
-                    <!--</excludes>-->
+                    </excludes>
 
                     <includes>
                         <include>**/*TestServerManager.java</include>

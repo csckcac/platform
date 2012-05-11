@@ -168,6 +168,22 @@ function clearAll(){
     collapseCustomUI();
 }
 
+function validateTagsInput(fld,fldName){
+    var error = "";
+    var illegalChars = /(^,+$)/; // match any starting tag
+
+    if (illegalChars.test(fld.value)) {
+         error = org_wso2_carbon_registry_search_ui_jsi18n["the"] + " "+fldName+" " + org_wso2_carbon_registry_search_ui_jsi18n["contains.invalid.tag.search"] + "<br />";
+    } else{
+        fld.style.background = 'White';
+    }
+    if (error != "") {
+       return error;
+    }
+
+    return  validateForInput(fld,fldName);
+}
+
 function isNumberKey(evt){	
    var charCode = (evt.which) ? evt.which : event.keyCode;
    if (charCode > 31 && (charCode < 48 || charCode > 57))
@@ -212,7 +228,7 @@ function submitAdvSearchForm(pageNumber) {
             if ((rows[i].id == "#_resourceName") && trim(rows[i].value) != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["resource.name"]);
             if ((rows[i].id == "#_author") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["created.by"]);
             if ((rows[i].id == "#_updater") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["updated.by"]);
-            if ((rows[i].id == "#_tags") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["tags"]);
+            if ((rows[i].id == "#_tags") && rows[i].value != "") reason += validateTagsInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["tags"]);
             if ((rows[i].id == "#_comments") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["comments"]);
             if ((rows[i].id == "#_associationType") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["associationType"]);
             if ((rows[i].id == "#_associationDest") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["associationDest"]);
@@ -401,7 +417,7 @@ function submitSaveSearchForm() {
             if ((rows[i].id == "#_resourceName") && trim(rows[i].value) != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["resource.name"]);
             if ((rows[i].id == "#_author") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["created.by"]);
             if ((rows[i].id == "#_updater") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["updated.by"]);
-            if ((rows[i].id == "#_tags") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["tags"]);
+            if ((rows[i].id == "#_tags") && rows[i].value != "") reason += validateTagsInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["tags"]);
             if ((rows[i].id == "#_comments") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["comments"]);
             if ((rows[i].id == "#_associationType") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["associationType"]);
             if ((rows[i].id == "#_associationDest") && rows[i].value != "") reason += validateForInput(rows[i], org_wso2_carbon_registry_search_ui_jsi18n["associationDest"]);

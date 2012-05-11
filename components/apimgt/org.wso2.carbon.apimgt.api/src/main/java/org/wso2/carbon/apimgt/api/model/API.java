@@ -32,6 +32,7 @@ public class API {
 
     private String description;
     private String url;
+    private String sandboxUrl;
     private String wsdlUrl;
     private String context;
     private String thumbnailUrl;
@@ -52,7 +53,7 @@ public class API {
 
     private boolean isLatest;
 
-    //TODO: missing - total user count, uptime statistics,tier
+    //TODO: missing - total user count, up time statistics,tier
 
 
     public API(APIIdentifier id) {
@@ -77,6 +78,14 @@ public class API {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getSandboxUrl() {
+        return sandboxUrl;
+    }
+
+    public void setSandboxUrl(String sandboxUrl) {
+        this.sandboxUrl = sandboxUrl;
     }
 
     public String getWsdlUrl() {

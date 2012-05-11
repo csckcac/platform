@@ -81,7 +81,7 @@
                         <Import-Package>
                             org.wso2.carbon.apimgt.api.*,
                             org.wso2.carbon.apimgt.impl.*,
-							org.wso2.carbon.apimgt.keymgt.client.*,
+		  	    org.wso2.carbon.apimgt.keymgt.client.*,
                             *;resolution:=optional
                         </Import-Package>
                         <Embed-Dependency>

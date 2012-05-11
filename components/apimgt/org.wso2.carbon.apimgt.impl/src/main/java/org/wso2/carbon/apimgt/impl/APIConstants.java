@@ -63,6 +63,7 @@ public final class APIConstants {
     public static final String API_OVERVIEW_CONTEXT = "overview_context";
     public static final String API_OVERVIEW_DESCRIPTION = "overview_description";
     public static final String API_OVERVIEW_ENDPOINT_URL = "overview_endpointURL";
+    public static final String API_OVERVIEW_SANDBOX_URL = "overview_sandboxURL";
     public static final String API_OVERVIEW_WSDL = "overview_WSDL";
     public static final String API_OVERVIEW_PROVIDER = "overview_provider";
     public static final String API_OVERVIEW_THUMBNAIL_URL="overview_thumbnail";

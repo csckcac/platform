@@ -3,7 +3,6 @@ var login = login || {};
     var loginbox = login.loginbox || (login.loginbox = {});
 
     loginbox.login = function (username, password, url) {
-        debugger;
         jagg.post("/site/blocks/user/login/ajax/login.jag", { action:"login", username:username, password:password },
                 function (result) {
                     if (result.error == false) {
@@ -37,7 +36,7 @@ $(document).ready(function () {
 
     $(".need-login").click(function() {
         $('#login-form').modal('show');
-
+        $('#loginBtn').data("goto_url",this.href);
 
 
         //$("#login-form").dialog("open").data("url", $(this).attr("href"));
@@ -45,8 +44,8 @@ $(document).ready(function () {
     });
 
     $('#loginBtn').click(
-                function(){
-                    login.loginbox.login($("#username").val(), $("#password").val(), this.href);
-                }
-                );
+            function(){
+                login.loginbox.login($("#username").val(), $("#password").val(), $('#loginBtn').data("goto_url"));
+            }
+    );
 });

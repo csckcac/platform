@@ -15,6 +15,20 @@
         <% jagg.includeBlocks(outputs.left); %>
    </div>
    <div class="span6">
+       <div class="main-heading">
+           <% if(outputs.title == "Applications") { %>
+
+           <% } else if(outputs.title == "My Subscriptions") { %>
+
+           <% } else { %>
+           <h1>APIs</h1>
+           <p>The practice of publishing APIs has allowed web communities to create an open architecture for sharing
+               content
+               and data between communities and applications.</p>
+           <% } %>
+
+       </div>
+
        <% if(outputs.title) { %><h2><%=outputs.title%></h2><% } %>
         <% jagg.includeBlocks(outputs.middle); %>
    </div>

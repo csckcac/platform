@@ -25,7 +25,9 @@
         </tbody>
     </table>
     <% } else { %>
-    <p>No applications yet</p>
+    <div class="alert alert-info">
+          No applications yet
+    </div>
     <% } %>
 </div>
 <% }); %>

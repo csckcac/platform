@@ -19,7 +19,7 @@
 package org.wso2.carbon.appfactory.user.registration.services;
 
 /**
- * Exception of  UserRegistration service
+ * Exception for UserRegistration service
  */
 public class UserRegistrationException extends Exception {
     public UserRegistrationException() {

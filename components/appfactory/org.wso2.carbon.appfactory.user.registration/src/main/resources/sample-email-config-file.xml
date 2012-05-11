@@ -17,27 +17,19 @@
  -->
 
 <!--
-   The mail to be sent for the tenant registration validation.
-   This mail has the registration validation link to validate the email too.
+   refer following example to access parameters to put in the mail.
   -->
 
 <configuration>
-    <targetEpr>https://localhost:9443/carbon/email-verification/validator_ajaxprocessor.jsp
-    </targetEpr>
-    <subject>WSO2 AppFactory Registration - Email validation instructions</subject>
+    <subject>This is the subject</subject>
     <body>
         Hi {firstName},
 
-        Thank you for registering an account in WSO2 App Factory.
+        This is your user name :{userName}
+        This is your first name :{firstName}
+        This is your project name :{projectName}
+        This is your projectkey: {projectKey}
 
-        Your User Name: {userName}.
-
-        Please click the following link to verify your email address.
+        thanks
     </body>
-    <footer>
-        Best Regards,
-        WSO2 App Factory Team.
-
-    </footer>
-    <redirectPath>../user-reg/user-registeration-activation.jsp</redirectPath>
 </configuration>

@@ -23,7 +23,7 @@ package org.wso2.carbon.appfactory.user.registration.beans;
  */
 public class UserRegistrationInfoBean {
 
-    private String userName; //admin's user name
+    private String userName;
     private String adminPassword;
     private String firstName;
     private String lastName;

@@ -19,7 +19,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<parent>
+    <parent>
         <groupId>org.wso2.carbon</groupId>
         <artifactId>appfactory</artifactId>
         <version>1.0.0-SNAPSHOT</version>
@@ -28,8 +28,8 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.appfactory.user.registration</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 AppFactory - User Registration BE</name>
-    <description>User Registration BE component for WSO2 Carbon</description>
+    <name>WSO2 Appfactory - User Registration BE</name>
+    <description>User Registration BE component for WSO2 Appfactory</description>
     <url>http://www.wso2.com</url>
 
     <dependencies>
@@ -65,16 +65,6 @@
                 <artifactId>maven-scr-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.apache.axis2</groupId>
-                <artifactId>axis2-aar-maven-plugin</artifactId>
-                <version>1.4</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <servicesXmlFile>${basedir}/src/main/resources/META-INF/services.xml
-                    </servicesXmlFile>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
 
@@ -85,9 +75,16 @@
                             ${project.artifactId}
                         </Bundle-SymbolicName>
                         <Export-Package>
-                            org.wso2.carbon.appfactory.user.registration.*,
+                            org.wso2.carbon.appfactory.user.registration.services.*,
+                            org.wso2.carbon.appfactory.user.registration.beans.*,
                         </Export-Package>
-
+                        <Import-Package>
+                            org.wso2.carbon.email.sender.api.*,
+                            org.wso2.carbon.registry.core.*,
+                            org.wso2.carbon.email.verification.util.*,
+                            org.wso2.carbon.user.core.*,
+                            org.wso2.carbon.user.api.*,
+                        </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>

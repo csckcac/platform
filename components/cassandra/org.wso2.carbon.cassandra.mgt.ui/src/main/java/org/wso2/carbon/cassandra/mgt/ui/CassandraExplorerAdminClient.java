@@ -19,7 +19,6 @@
 package org.wso2.carbon.cassandra.mgt.ui;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
@@ -61,7 +60,7 @@ public class CassandraExplorerAdminClient {
         Options options = client.getOptions();
         options.setManageSession(true);
         options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
-        options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+        //options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
         options.setTimeOutInMilliSeconds(10000);
     }
 

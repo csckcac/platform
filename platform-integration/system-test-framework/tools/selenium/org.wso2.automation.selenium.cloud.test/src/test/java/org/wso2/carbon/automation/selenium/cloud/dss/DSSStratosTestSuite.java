@@ -36,6 +36,8 @@ public class DSSStratosTestSuite extends MasterTestSuite {
                                                       DSSPriviledgeGroupCreatorSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("CreateDataServiceUITest",
                                                       DSSCreateDataServiceSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("UploadDataServiceUITest",
+                                                      DSSUploadDataServiceSeleniumTest.class));
             superSuite("StratosDSSSeleniumTestSuite", suiteVariablesList).run();
         }
     }

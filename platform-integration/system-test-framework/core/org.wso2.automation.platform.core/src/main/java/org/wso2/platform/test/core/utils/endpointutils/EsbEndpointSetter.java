@@ -41,8 +41,8 @@ import java.net.URL;
 import java.util.Iterator;
 
 public class EsbEndpointSetter {
-    public String userId;
-    boolean containsHttps = false;
+    private String userId;
+    private boolean containsHttps = false;
 
     public OMElement setEndpointURL(DataHandler dh) throws IOException, XMLStreamException {
         DataHandler dataHandler = null;
@@ -57,7 +57,11 @@ public class EsbEndpointSetter {
         boolean changed = false;
         while (children.hasNext() == true) {
             node = (OMNode) children.next();
-            if (((OMElementImpl) node).getLocalName().equals("loadbalance")) {
+            if (((OMElementImpl) node).getLocalName().equals("endpoint")) {
+
+                this.replaceelement(node, attribute, attribute2);
+            }
+           else if (((OMElementImpl) node).getLocalName().equals("loadbalance")) {
                 Iterator loadbalanceIterator = ((OMElementImpl) node).getChildElements();
                 while (loadbalanceIterator.hasNext()) {
                     OMNode loadbalanceNode = (OMNode) loadbalanceIterator.next();
@@ -103,7 +107,7 @@ public class EsbEndpointSetter {
                     }
                 }
 
-                if (((OMElementImpl) node).getLocalName().equals("proxy")) {
+               else if (((OMElementImpl) node).getLocalName().equals("proxy")) {
                     Iterator nodIterator = ((OMElementImpl) node).getChildElements();
                     while (nodIterator.hasNext()) {
                         OMNode targetNode = (OMNode) nodIterator.next();
@@ -116,7 +120,7 @@ public class EsbEndpointSetter {
                     }
                 }
 
-                if (((OMElementImpl) node).getLocalName().equals("sequence")) {
+               else if (((OMElementImpl) node).getLocalName().equals("sequence")) {
                     Iterator nodIterator = ((OMElementImpl) node).getChildElements();
                     while (nodIterator.hasNext()) {
                         OMNode targetNode = (OMNode) nodIterator.next();
@@ -127,6 +131,19 @@ public class EsbEndpointSetter {
                             travarsrchild(targetNode, attribute, attribute2);
                         }
                     }
+                }
+                else{
+                    Iterator nodIterator = ((OMElementImpl) node).getChildElements();
+                    while (nodIterator.hasNext()) {
+                        OMNode targetNode = (OMNode) nodIterator.next();
+                        if (((OMElementImpl) targetNode).getLocalName().equals("endpoint")) {
+                            this.replaceelement(targetNode, attribute, attribute2);
+                            break;
+                        } else {
+                            travarsrchild(targetNode, attribute, attribute2);
+                        }
+                    }
+
                 }
 
                 if (((OMElementImpl) node).getLocalName().equals("wsdl")) {
@@ -159,7 +176,7 @@ public class EsbEndpointSetter {
     }
 
 
-    public void travarsrchild(OMNode node, OMAttribute attribute, OMAttribute attribute2)
+    private void travarsrchild(OMNode node, OMAttribute attribute, OMAttribute attribute2)
             throws XMLStreamException, IOException {
         Iterator nodIterator = ((OMElementImpl) node).getChildElements();
         while (nodIterator.hasNext()) {
@@ -174,7 +191,7 @@ public class EsbEndpointSetter {
     }
 
 
-    public void replaceelement(OMNode targetNode, OMAttribute attribute, OMAttribute attribute2)
+    private void replaceelement(OMNode targetNode, OMAttribute attribute, OMAttribute attribute2)
             throws XMLStreamException, IOException {
         Iterator endpointnode = ((OMElementImpl) targetNode).getChildElements();
         OMNode endpoint = (OMNode) endpointnode.next();
@@ -185,7 +202,7 @@ public class EsbEndpointSetter {
     }
 
 
-    public String getUrl(String endpoint) throws IOException, XMLStreamException {
+    private String getUrl(String endpoint) throws IOException, XMLStreamException {
         String newEndPoint = endpoint;
 
         DataHandler dh = new DataHandler(new URL("file://" + ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator +
@@ -225,7 +242,7 @@ public class EsbEndpointSetter {
         return newEndPoint;
     }
 
-    public String productLookup(String product, String oldUrl) {
+    private String productLookup(String product, String oldUrl) {
         String url = null;
         FrameworkProperties properties = null;
         if (product.equals("as")) {

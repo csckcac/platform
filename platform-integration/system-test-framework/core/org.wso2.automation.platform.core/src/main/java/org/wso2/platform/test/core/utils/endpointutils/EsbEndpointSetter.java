@@ -60,8 +60,7 @@ public class EsbEndpointSetter {
             if (((OMElementImpl) node).getLocalName().equals("endpoint")) {
 
                 this.replaceelement(node, attribute, attribute2);
-            }
-           else if (((OMElementImpl) node).getLocalName().equals("loadbalance")) {
+            } else if (((OMElementImpl) node).getLocalName().equals("loadbalance")) {
                 Iterator loadbalanceIterator = ((OMElementImpl) node).getChildElements();
                 while (loadbalanceIterator.hasNext()) {
                     OMNode loadbalanceNode = (OMNode) loadbalanceIterator.next();
@@ -105,9 +104,7 @@ public class EsbEndpointSetter {
                             travarsrchild(targetNode, attribute, attribute2);
                         }
                     }
-                }
-
-               else if (((OMElementImpl) node).getLocalName().equals("proxy")) {
+                } else if (((OMElementImpl) node).getLocalName().equals("proxy")) {
                     Iterator nodIterator = ((OMElementImpl) node).getChildElements();
                     while (nodIterator.hasNext()) {
                         OMNode targetNode = (OMNode) nodIterator.next();
@@ -118,9 +115,7 @@ public class EsbEndpointSetter {
                             travarsrchild(targetNode, attribute, attribute2);
                         }
                     }
-                }
-
-               else if (((OMElementImpl) node).getLocalName().equals("sequence")) {
+                } else if (((OMElementImpl) node).getLocalName().equals("sequence")) {
                     Iterator nodIterator = ((OMElementImpl) node).getChildElements();
                     while (nodIterator.hasNext()) {
                         OMNode targetNode = (OMNode) nodIterator.next();
@@ -131,8 +126,7 @@ public class EsbEndpointSetter {
                             travarsrchild(targetNode, attribute, attribute2);
                         }
                     }
-                }
-                else{
+                } else {
                     Iterator nodIterator = ((OMElementImpl) node).getChildElements();
                     while (nodIterator.hasNext()) {
                         OMNode targetNode = (OMNode) nodIterator.next();
@@ -195,10 +189,12 @@ public class EsbEndpointSetter {
             throws XMLStreamException, IOException {
         Iterator endpointnode = ((OMElementImpl) targetNode).getChildElements();
         OMNode endpoint = (OMNode) endpointnode.next();
-        String uri = ((OMElementImpl) endpoint).getAttribute(new QName("uri")).getAttributeValue();
-        attribute = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
-        ((OMElementImpl) endpoint).getAttribute(new QName("uri")).setAttributeValue(getUrl(uri));
-        attribute2 = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+        if (((OMElementImpl) endpoint) != null) {
+            String uri = ((OMElementImpl) endpoint).getAttribute(new QName("uri")).getAttributeValue();
+            attribute = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+            ((OMElementImpl) endpoint).getAttribute(new QName("uri")).setAttributeValue(getUrl(uri));
+            attribute2 = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+        }
     }
 
 

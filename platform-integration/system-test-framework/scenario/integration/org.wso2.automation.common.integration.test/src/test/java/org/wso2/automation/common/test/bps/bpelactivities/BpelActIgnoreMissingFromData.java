@@ -54,6 +54,7 @@ public class BpelActIgnoreMissingFromData{
         EnvironmentBuilder builder = new EnvironmentBuilder().bps(3);
         ManageEnvironment environment = builder.build();
         backEndUrl = environment.getBps().getBackEndUrl();
+        serviceUrl=environment.getBps().getServiceUrl();
         sessionCookie = environment.getBps().getSessionCookie();
         bpelUploader = new AdminServiceBpelUploader(backEndUrl, ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
         bpelManager = new AdminServiceBpelPackageManager(backEndUrl, sessionCookie);
@@ -114,7 +115,7 @@ public class BpelActIgnoreMissingFromData{
         String serviceName = "TestCombineUrlService";
         List<String> expectedOutput = new ArrayList<String>();
         expectedOutput.add("http://www.google.lk/search");
-        requestSender.sendRequest(backEndUrl + serviceName, operation, payload,
+        requestSender.sendRequest(serviceUrl+"/" + serviceName, operation, payload,
                 1, expectedOutput, true);
     }
 }

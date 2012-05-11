@@ -22,10 +22,9 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.wso2.carbon.apimgt.handlers.internal.ServiceReferenceHolder;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
-import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.utils.CarbonUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,9 +40,8 @@ public class AuthAdminServiceClient {
     private String hostname;
 
     public AuthAdminServiceClient() throws AxisFault {
-        setSystemProperties();
-        String serviceURL = CarbonUtils.getServerURL(ServerConfiguration.getInstance(),
-                ServiceReferenceHolder.getInstance().getServerConfigurationContext());
+        APIManagerConfiguration config = ServiceReferenceHolder.getInstance().getAPIManagerConfiguration();
+        String serviceURL = config.getFirstProperty(APIConstants.API_KEY_MANAGER_URL);;
         serviceURL += "AuthenticationAdmin";
         try {
             URL url = new URL(serviceURL);
@@ -52,9 +50,8 @@ public class AuthAdminServiceClient {
             throw new AxisFault("Malformed admin service URL: " + serviceURL, e);
         }
 
-        APIManagerConfiguration config = ServiceReferenceHolder.getInstance().getAPIManagerConfiguration();
-        username = config.getFirstProperty(APISecurityConstants.API_SECURITY_AUTH_USERNAME);
-        password = config.getFirstProperty(APISecurityConstants.API_SECURITY_AUTH_PASSWORD);
+        username = config.getFirstProperty(APIConstants.API_KEY_MANAGER_USERNAME);
+        password = config.getFirstProperty(APIConstants.API_KEY_MANAGER_PASSWORD);
         if (username == null || password == null) {
             throw new AxisFault("Credentials for AuthenticationAdmin not provided");
         }
@@ -71,19 +68,5 @@ public class AuthAdminServiceClient {
                 _getServiceClient().getLastOperationContext().getServiceContext();
         String sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
         return sessionCookie;
-    }
-
-    private void setSystemProperties() throws AxisFault {
-        ServerConfiguration config = ServerConfiguration.getInstance();
-        String keyStorePath = config.getFirstProperty("Security.TrustStore.Location");
-        String keyStorePassword = config.getFirstProperty("Security.TrustStore.Password");
-        String keyStoreType = config.getFirstProperty("Security.TrustStore.Type");
-        if (keyStorePath == null || keyStorePassword == null || keyStoreType == null) {
-            throw new AxisFault("Required truststore parameters missing for authentication" +
-                    " admin stub");
-        }
-        System.setProperty("javax.net.ssl.trustStore", keyStorePath);
-        System.setProperty("javax.net.ssl.trustStorePassword", keyStorePassword);
-        System.setProperty("javax.net.ssl.trustStoreType", keyStoreType);
     }
 }

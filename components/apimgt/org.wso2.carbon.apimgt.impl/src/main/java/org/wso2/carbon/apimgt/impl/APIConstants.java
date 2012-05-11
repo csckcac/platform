@@ -124,10 +124,14 @@ public final class APIConstants {
         public static final String API_SUBSCRIBE = "/permission/admin/manage/api/subscribe";
     }
     
-    public static final String API_GATEWAY_ADMIN = "APIGatewayAdmin.";
-    public static final String API_GATEWAY_ADMIN_SERVER_URL = API_GATEWAY_ADMIN + "ServerURL";
-    public static final String API_GATEWAY_ADMIN_USERNAME = API_GATEWAY_ADMIN + "AdminUsername";
-    public static final String API_GATEWAY_ADMIN_PASSWORD = API_GATEWAY_ADMIN + "AdminPassword";
-    public static final String API_GATEWAY_ADMIN_HOST = API_GATEWAY_ADMIN + "AdminHost";
+    public static final String API_GATEWAY = "APIGateway.";
+    public static final String API_GATEWAY_SERVER_URL = API_GATEWAY + "ServerURL";
+    public static final String API_GATEWAY_USERNAME = API_GATEWAY + "Username";
+    public static final String API_GATEWAY_PASSWORD = API_GATEWAY + "Password";
+    
+    public static final String API_KEY_MANAGER = "APIKeyManager.";
+    public static final String API_KEY_MANAGER_URL = API_KEY_MANAGER + "ServerURL";
+    public static final String API_KEY_MANAGER_USERNAME = API_KEY_MANAGER + "Username";
+    public static final String API_KEY_MANAGER_PASSWORD = API_KEY_MANAGER + "Password";
 
 }

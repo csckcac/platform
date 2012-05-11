@@ -25,10 +25,6 @@ public class APISecurityConstants {
     public static final int API_AUTH_MISSING_CREDENTIALS = 900902;
     
     public static final String API_SECURITY_CONFIGURATION = "APIConsumerAuthentication.";
-    public static final String API_SECURITY_AUTH_USERNAME =
-            API_SECURITY_CONFIGURATION + "AdminUsername";
-    public static final String API_SECURITY_AUTH_PASSWORD =
-            API_SECURITY_CONFIGURATION + "AdminPassword";
     public static final String API_SECURITY_AUTHENTICATOR =
             API_SECURITY_CONFIGURATION + "Authenticator";
     public static final String API_SECURITY_OAUTH_HEADER =

@@ -29,6 +29,8 @@ import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.rest.api.stub.RestApiAdminStub;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.RemoteException;
 
 public class RESTAPIAdminClient {
@@ -40,7 +42,7 @@ public class RESTAPIAdminClient {
         this.builder = builder;
         APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
                 getAPIManagerConfigurationService().getAPIManagerConfiguration();
-        String url = config.getFirstProperty(APIConstants.API_GATEWAY_ADMIN_SERVER_URL);
+        String url = config.getFirstProperty(APIConstants.API_GATEWAY_SERVER_URL);
         String cookie = login(config, url);
         restApiAdminStub = new RestApiAdminStub(null, url + "RestApiAdmin");
         ServiceClient client = restApiAdminStub._getServiceClient();
@@ -79,12 +81,20 @@ public class RESTAPIAdminClient {
     }
     
     private String login(APIManagerConfiguration config, String url) throws AxisFault {
-        String user = config.getFirstProperty(APIConstants.API_GATEWAY_ADMIN_USERNAME);
-        String password = config.getFirstProperty(APIConstants.API_GATEWAY_ADMIN_PASSWORD);
-        String host = config.getFirstProperty(APIConstants.API_GATEWAY_ADMIN_HOST);
+        String user = config.getFirstProperty(APIConstants.API_GATEWAY_USERNAME);
+        String password = config.getFirstProperty(APIConstants.API_GATEWAY_PASSWORD);
+
         if (url == null || user == null || password == null) {
             throw new AxisFault("Required API gateway admin configuration unspecified");
         }
+
+        String host;
+        try {
+            host = new URL(url).getHost();
+        } catch (MalformedURLException e) {
+            throw new AxisFault("API gateway URL is malformed", e);
+        }
+
         AuthenticationAdminStub authAdminStub = new AuthenticationAdminStub(null, url + "AuthenticationAdmin");
         ServiceClient client = authAdminStub._getServiceClient();
         Options options = client.getOptions();

@@ -24,8 +24,11 @@ import org.mozilla.javascript.*;
 import org.wso2.carbon.apimgt.api.APIConsumer;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
+import org.wso2.carbon.apimgt.impl.APIConstants;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIInfoDTO;
+import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.keymgt.client.SubscriberKeyMgtClient;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
@@ -146,13 +149,28 @@ public class APIStoreHostObject extends ScriptableObject {
 	}
 
     public static boolean login() throws APIManagementException {
-        return login("admin", "admin");
+        APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
+                getAPIManagerConfigurationService().getAPIManagerConfiguration();
+        String username = config.getFirstProperty(APIConstants.API_KEY_MANAGER_USERNAME);
+        String password = config.getFirstProperty(APIConstants.API_KEY_MANAGER_PASSWORD);
+        if (username == null || password == null) {
+            throw new APIManagementException("Authentication credentials for API key manager " +
+                    "unspecified");
+        }
+        return login(username, password);
     }
 
 	public static boolean login(String userName, String password) throws APIManagementException {
         if (!logStatus) {
+            APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
+                    getAPIManagerConfigurationService().getAPIManagerConfiguration();
+            String url = config.getFirstProperty(APIConstants.API_KEY_MANAGER_URL);
+            if (url == null) {
+                throw new APIManagementException("API key manager URL unspecified");
+            }
+
             try {
-                keyMgtClient = new SubscriberKeyMgtClient(getBackendUrl(), userName, password);
+                keyMgtClient = new SubscriberKeyMgtClient(url, userName, password);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 throw new APIManagementException(e);
@@ -1337,8 +1355,4 @@ public class APIStoreHostObject extends ScriptableObject {
 		return true;
 
 	}
-
-    private static String getBackendUrl() {
-        return "https://localhost:9443/services/";
-    }
 }

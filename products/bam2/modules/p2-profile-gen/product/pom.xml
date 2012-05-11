@@ -87,6 +87,15 @@
                             <publishArtifacts>true</publishArtifacts>
                             <publishArtifactRepository>true</publishArtifactRepository>
                             <featureArtifacts>
+                                <!-- Jaggery Features -->
+
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.jaggery.server.feature:${jaggery.feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.jaggery.ui.feature:${jaggery.feature.version}
+                                </featureArtifactDef>
+
                                 <!--Dashboard Features-->
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.dashboard.dashboardpopulator.server.feature:${carbon.version}
@@ -237,6 +246,17 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
+                                <!-- Jaggery -->
+
+                                <feature>
+                                    <id>org.wso2.carbon.jaggery.server.feature.group</id>
+                                    <version>${jaggery.feature.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.jaggery.ui.feature.group</id>
+                                    <version>${jaggery.feature.version}</version>
+                                </feature>
+
                                 <!--Dashboard-->
                                 <feature>
                                     <id>org.wso2.carbon.dashboard.dashboardpopulator.server.feature.group</id>
@@ -437,4 +457,7 @@
         </plugins>
     </build>
 
+    <properties>
+        <jaggery.feature.version>1.0.0-SNAPSHOT</jaggery.feature.version>
+    </properties>
 </project>

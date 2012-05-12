@@ -77,10 +77,15 @@ public class BPELMessageReceiver extends AbstractInMessageReceiver {
     }
 
     private TAttachment createAttachmentDTO(DataHandler attachmentHandler) {
-        log.warn("DummyUser name added when attachment creation");
         TAttachment attachment = new TAttachment();
-        attachment.setName(attachmentHandler.getName());
-        attachment.setCreatedBy("dummyBPELUser");   //User can be who?
+
+        String attachmentName = attachmentHandler.getName();
+        attachment.setName(attachmentName);
+
+        log.warn("Couldn't determine the name of BPEL client. So the owner of the attachment:" + attachmentName + " " +
+                 "will be the default bpel client" + org.wso2.carbon.bpel.core.BPELConstants.DAFAULT_BPEL_CLIENT);
+        attachment.setCreatedBy(org.wso2.carbon.bpel.core.BPELConstants.DAFAULT_BPEL_CLIENT);
+
         attachment.setContentType(attachmentHandler.getContentType());
         //As well there are some other parameters to be set.
         attachment.setContent(attachmentHandler);

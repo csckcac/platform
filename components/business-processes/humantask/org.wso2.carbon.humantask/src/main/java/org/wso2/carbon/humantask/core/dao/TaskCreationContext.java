@@ -29,6 +29,7 @@ import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.wso2.carbon.businessprocesses.common.Constants;
 
 /**
  * The context data required to create a task object.
@@ -143,18 +144,16 @@ public class TaskCreationContext {
      */
     public List<String> getAttachmentIDs() {
         List<String> attachmentIDs = new ArrayList<String>();
-        log.warn("Please position this constants properly. Also as this attachment serializing/de-serializing " +
-                 "implementations are dependent each other, we need a way to maintain this two methods (org.wso2.carbon.bpel.b4p.utils.SOAPHelper#addAttachmentIDHeader) in a common" +
-                 " place.");
-        final String NAMESPACE = "http://wso2.org/bps/attachments";
-        final String NAMESPACE_PREFIX = "attch";
-        final String PARENT_ELEMENT_NAME = "attachmentIDs";
-        final String CHILD_ELEMENT_NAME = "attachmentID";
+
+        final String NAMESPACE = Constants.ATTACHMENT_ID_NAMESPACE;
+        final String NAMESPACE_PREFIX = Constants.ATTACHMENT_ID_NAMESPACE_PREFIX;
+        final String PARENT_ELEMENT_NAME = Constants.ATTACHMENT_ID_PARENT_ELEMENT_NAME;
+        final String CHILD_ELEMENT_NAME = Constants.ATTACHMENT_ID_CHILD_ELEMENT_NAME;
 
         Element attachmentElement = this.messageHeaderParts.get(PARENT_ELEMENT_NAME);
 
-        if (attachmentElement != null) {
-            NodeList childElementList = attachmentElement.getElementsByTagName(CHILD_ELEMENT_NAME);
+        if (attachmentElement != null && NAMESPACE.equals(attachmentElement.getNamespaceURI())) {
+            NodeList childElementList = attachmentElement.getElementsByTagNameNS(NAMESPACE, CHILD_ELEMENT_NAME);
             int size = childElementList.getLength();
             for (int i = 0; i < size; i++) {
                 Element child = (Element) childElementList.item(i);

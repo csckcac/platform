@@ -29,6 +29,7 @@ import org.wso2.carbon.utils.FileUtil;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Manages a JDBC connection
@@ -60,8 +61,12 @@ public class JDBCManager extends AbstractDataSourceManager {
 
     @Override
     public void shutdown() throws AttachmentMgtException {
-        log.warn("Nothing happens at org.wso2.carbon.attachment.mgt.core.datasource.impl" +
-                 ".JDBCManager.shutdown");
+        try {
+            dataSource.close();
+            dataSource = null;
+        } catch (SQLException e) {
+            throw new AttachmentMgtException(e.getLocalizedMessage(), e);
+        }
     }
 
     public void initFromFileConfig(String dbConfigurationPath) throws AttachmentMgtException {

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.wso2.carbon.businessprocesses.common.Constants;
 
 /**
  * TODO: Analyze the implementation copied from ODE source.
@@ -107,11 +108,10 @@ public class SOAPHelper {
      * @param attachmentIDList attachment ids
      */
     private void addAttachmentIDHeader(SOAPHeader header, List<Long> attachmentIDList) {
-        log.warn("Please position this constants properly. These are reused in org.wso2.carbon.humantask.core.dao.TaskCreationContext#getAttachmentIDs");
-        final String NAMESPACE = "http://wso2.org/bps/attachments";
-        final String NAMESPACE_PREFIX = "attch";
-        final String PARENT_ELEMENT_NAME = "attachmentIDs";
-        final String CHILD_ELEMENT_NAME = "attachmentID";
+        final String NAMESPACE = Constants.ATTACHMENT_ID_NAMESPACE;
+        final String NAMESPACE_PREFIX = Constants.ATTACHMENT_ID_NAMESPACE_PREFIX;
+        final String PARENT_ELEMENT_NAME = Constants.ATTACHMENT_ID_PARENT_ELEMENT_NAME;
+        final String CHILD_ELEMENT_NAME = Constants.ATTACHMENT_ID_CHILD_ELEMENT_NAME;
 
         OMNamespace omNs = soapFactory.createOMNamespace(NAMESPACE, NAMESPACE_PREFIX);
         OMElement headerElement = soapFactory.createOMElement(PARENT_ELEMENT_NAME, omNs);

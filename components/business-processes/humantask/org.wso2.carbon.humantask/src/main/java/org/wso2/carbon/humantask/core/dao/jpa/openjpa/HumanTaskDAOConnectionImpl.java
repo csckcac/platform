@@ -374,4 +374,9 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
         eventDAO.setOldState(task.getStatus());
         return eventDAO;
     }
+
+    @Override
+    public AttachmentDAO createAttachment() {
+        return new Attachment();
+    }
 }

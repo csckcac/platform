@@ -105,12 +105,10 @@ public class Attachment implements AttachmentDAO {
     }
 
     public String getAccessType() {
-        log.warn("What's this access type means?. Please add the documentation for the interface once issue is resolved.");
         return accessType;
     }
 
     public void setAccessType(String accessType) {
-        log.warn("What's this access type means?. Please add the documentation for the interface once issue is resolved.");
         this.accessType = accessType;
     }
 

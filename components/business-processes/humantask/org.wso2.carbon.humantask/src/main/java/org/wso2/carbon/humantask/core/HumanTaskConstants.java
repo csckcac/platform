@@ -71,4 +71,9 @@ public final class HumanTaskConstants {
     /** The specification defines the default task priority to be set as 5 */
     public static final Integer DEFAULT_TASK_PRIORITY = 5;
 
+    /** The default access type value for an attachment*/
+    public static final String DEFAULT_ATTACHMENT_ACCESS_TYPE = "AnonymousAccessType";
+
+    /** The default content category value for an attachment*/
+    public static final String DEFAULT_ATTACHMENT_CONTENT_CATEGORY = "AnonymousContentCategory";
 }

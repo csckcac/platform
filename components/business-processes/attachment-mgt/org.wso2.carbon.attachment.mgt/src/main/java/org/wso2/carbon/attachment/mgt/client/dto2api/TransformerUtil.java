@@ -31,6 +31,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Calendar;
 
 /**
  * This class manages conversions between org.wso2.carbon.attachment.mgt.skeleton.types and org
@@ -69,6 +70,11 @@ public class TransformerUtil {
         attachmentDTO.setId(attachment.getId());
         attachmentDTO.setName(attachment.getName());
         attachmentDTO.setCreatedBy(attachment.getCreatedBy());
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(attachment.getCreatedTime());
+        attachmentDTO.setCreatedTime(cal);
+
         attachmentDTO.setContentType(attachment.getContentType());
 
         attachmentDTO.setContent(attachment.getContent());

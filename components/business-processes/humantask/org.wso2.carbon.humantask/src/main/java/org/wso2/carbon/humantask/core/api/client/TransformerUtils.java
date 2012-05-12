@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.attachment.mgt.skeleton.AttachmentMgtException;
 import org.wso2.carbon.attachment.mgt.skeleton.types.*;
 import org.wso2.carbon.humantask.client.api.types.*;
+import org.wso2.carbon.humantask.core.HumanTaskConstants;
 import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.*;
 import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.OrganizationalEntity;
@@ -593,20 +594,21 @@ public final class TransformerUtils {
         for (AttachmentDAO attachmentDAO : attachmentList) {
             TAttachmentInfo attachmentInfo = new TAttachmentInfo();
 
-            log.warn("DTO initialization is not complete. Please fix this method implementation. Having some troubles" +
-                     " as attachment-mgt data structure is not compatible with the human-task data structure for " +
-                     "attachments.");
-
-            attachmentInfo.setAccessType("dummyAccessType");
+            attachmentInfo.setAccessType(attachmentDAO.getAccessType());
             try {
-                attachmentInfo.setContentCategory(new URI("DummyContentCategory"));
+                log.warn("TAttachmentInfo(DTO) has the contentCategory, but the AttachmentDAO(DAO) doesn't support " +
+                         "that attribute. So using a dummy value: " + HumanTaskConstants.DEFAULT_ATTACHMENT_CONTENT_CATEGORY);
+                attachmentInfo.setContentCategory(new URI(HumanTaskConstants.DEFAULT_ATTACHMENT_CONTENT_CATEGORY));
             } catch (URI.MalformedURIException e) {
                 log.error(e.getLocalizedMessage(), e);
             }
 
             try {
-                attachmentInfo.setIdentifier(new URI(attachmentDAO.getValue()));
-            } catch (URI.MalformedURIException e) {
+                String attachmentURI = attachmentDAO.getValue();
+                URI attachmentURL = HumanTaskServerHolder.getInstance().getAttachmentService().getAttachmentService()
+                        .getAttachmentInfoFromURL(attachmentURI).getUrl();
+                attachmentInfo.setIdentifier(attachmentURL);
+            } catch (AttachmentMgtException e) {
                 log.error(e.getLocalizedMessage(), e);
             }
 
@@ -617,10 +619,7 @@ public final class TransformerUtils {
             attachmentInfo.setAttachedTime(cal);
 
             TUser user = new TUser();
-            log.warn("Here we have to get the user info from correct entities. But still organization entitiy is not " +
-                     "initialized at org.wso2.carbon.humantask.core.api.client.TransformerUtils" +
-                     ".generateAttachmentDAOFromID. So still we have to set a dummyUser value here.");
-            user.setTUser("DummyUser");
+            user.setTUser(attachmentDAO.getAttachedBy().getName());
             attachmentInfo.setAttachedBy(user);
 
             attachmentInfo.setName(attachmentDAO.getName());
@@ -647,20 +646,28 @@ public final class TransformerUtils {
                     .getAttachmentService()
                     .getAttachmentInfo(attachmentID);
 
-            AttachmentDAO dao = new org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Attachment();  //TODO: Check for a way to retrieve implementation neutral DAO object
+            AttachmentDAO dao = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine()
+                    .getDaoConnectionFactory().getConnection().createAttachment();
 
             //Constructing the attachment DAO from the DTO
-            //dao.setId(Long.valueOf(attachment.getId())); //TODO: We should be able to set an unique id (generated in the attachment-mgt database) from a client
             dao.setName(attachment.getName());
             dao.setContentType(attachment.getContentType());
             dao.setTask((Task) task);
-            dao.setValue(attachment.getUrl().toString());
 
-            //TODO: These stuff should be supported from the attachment-mgt service
-            log.warn("Please fix the following inputs required creating an attachmentDAO.");
-            dao.setAttachedAt(new Date(System.currentTimeMillis()));
-            dao.setAccessType(null);
-            dao.setAttachedBy(null);
+            String attachmentURL = attachment.getUrl().toString();
+            //Extracting the attachment uri
+            String attachmentUniqueID = attachmentURL.substring(attachmentURL.lastIndexOf("/") + 1);
+            dao.setValue(attachmentUniqueID);
+
+            dao.setAttachedAt(attachment.getCreatedTime().getTime());
+
+            OrganizationalEntityDAO orgEntityDAO = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine()
+                    .getDaoConnectionFactory().getConnection().createNewOrgEntityObject(attachment.getCreatedBy(),
+                    OrganizationalEntityDAO.OrganizationalEntityType.USER);
+            dao.setAttachedBy((OrganizationalEntity) orgEntityDAO);
+
+            log.warn("AccessType is not supported by Attachment-Mgt DTOs. So using a dummy value: " + HumanTaskConstants.DEFAULT_ATTACHMENT_ACCESS_TYPE);
+            dao.setAccessType(HumanTaskConstants.DEFAULT_ATTACHMENT_ACCESS_TYPE);
 
             return dao;
         } catch (AttachmentMgtException e) {

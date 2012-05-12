@@ -16,15 +16,21 @@
 
 package org.wso2.carbon.attachment.mgt.util;
 
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.attachment.mgt.core.exceptions.AttachmentMgtException;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.NetworkUtils;
+import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.SocketException;
@@ -116,7 +122,10 @@ public class URLGeneratorUtil {
         log.warn("Port is hardcoded.");
         int port = 9443;
         /*try {
-
+            ConfigurationContext myConfigContext =
+                    ConfigurationContextFactory.createConfigurationContextFromFileSystem(null,
+                                                                 System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH)
+                                                                 + File.separator + "axis2" + File.separator + "axis2.xml");
             port = CarbonUtils.getTransportProxyPort(myConfigContext, scheme);
             if (port == -1) {
                 port = CarbonUtils.getTransportPort(myConfigContext, scheme);

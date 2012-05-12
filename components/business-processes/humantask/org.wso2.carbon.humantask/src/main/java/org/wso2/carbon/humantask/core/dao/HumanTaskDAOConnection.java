@@ -234,4 +234,11 @@ public interface HumanTaskDAOConnection {
      * @return EventDAO
      */
     EventDAO createNewEventObject(TaskDAO task);
+
+    /**
+     * Create an Attachment
+     *
+     * @return AttachmentDAO
+     */
+    AttachmentDAO createAttachment();
 }

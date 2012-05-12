@@ -276,4 +276,6 @@ public final class BPELConstants {
     public static final String BPEL_PROCESS_SCOPE_EVENT = "bpel.process.scope.event:";
 
     public static final String PORTS_OFFSET = "Ports.Offset";
+
+    public static final String DAFAULT_BPEL_CLIENT = "AnonymousBPELClient";
 }

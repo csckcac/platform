@@ -32,13 +32,13 @@ public class LoginLogoutTestCase {
 
     @BeforeClass(groups = {"wso2.gs"})
     public void login() throws Exception {
-        ClientConnectionUtil.waitForPort(8080);
+        ClientConnectionUtil.waitForPort(9763);
         util.login();
     }
 
     @AfterClass(groups = {"wso2.gs"})
     public void logout() throws Exception {
-        ClientConnectionUtil.waitForPort(8080);
+        ClientConnectionUtil.waitForPort(9763);
         util.logout();
     }
 }

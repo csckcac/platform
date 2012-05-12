@@ -359,13 +359,13 @@
       <mapper type="glob" from="*.template" to="*"/>
     </copy>
 
-    <exec executable="sh">
+    <!--exec executable="sh">
        <arg line="src/saveVersion.sh ${version} ${build.dir}"/>
     </exec>
 	
    <exec executable="sh">
        <arg line="src/fixFontsPath.sh ${src.docs.cn}"/>
-   </exec>
+   </exec-->
   </target>
 
   <import file="${test.src.dir}/aop/build/aop.xml"/>

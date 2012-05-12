@@ -26,9 +26,9 @@
                 <exclude name="**/VERSION"/>
             </fileset>
         </copy>
-        <exec executable="echo" output="${build.dir}/bin/VERSION">
+        <!--exec executable="echo" output="${build.dir}/bin/VERSION">
             <arg line="${version}" />
-        </exec>
+        </exec-->
     </target>
     <target name="package" depends="compile">
         <mkdir dir="${dist.dir}/contrib/${name}"/>

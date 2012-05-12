@@ -41,11 +41,11 @@
                         </property>
                         <property>
                             <name>https.port</name>
-                            <value>8443</value>
+                            <value>9443</value>
                         </property>
                         <property>
                             <name>http.port</name>
-                            <value>8080</value>
+                            <value>9763</value>
                         </property>
                         <property>
                             <name>samples.dir</name>

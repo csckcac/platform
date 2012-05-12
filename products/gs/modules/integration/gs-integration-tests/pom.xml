@@ -7,7 +7,7 @@
         <artifactId>wso2gs-parent</artifactId>
         <groupId>org.wso2.gs</groupId>
         <version>1.3.1-SNAPSHOT</version>
-         <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,10 +26,10 @@
                         <include>**/*TestCase.java</include>
                     </includes>
                     <systemProperties>
-						<maven.test.haltafterfailure>false</maven.test.haltafterfailure>
-					    <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
-						<emma.home>${basedir}/target/emma</emma.home>
-						<emma.output>${basedir}/target/emma</emma.output>
+                        <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
+                        <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
+                        <emma.home>${basedir}/target/emma</emma.home>
+                        <emma.output>${basedir}/target/emma</emma.output>
                         <property>
                             <name>maven.test.haltafterfailure</name>
                             <value>false</value>
@@ -59,36 +59,37 @@
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
             </plugin>
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-emma-dependencies</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/emma</outputDirectory>
-							<includeTypes>jar</includeTypes>
-							<includeArtifactIds>emma,org.wso2.carbon.integration.framework</includeArtifactIds>
-						</configuration>
-					</execution>
-				</executions>
-                    		<execution>
-                    				<id>copy-secVerifier</id>
-                        			<phase>compile</phase>
-                        			<goals>
-                            				<goal>copy-dependencies</goal>
-                        			</goals>
-                        			<configuration>
-							<outputDirectory>${basedir}/target/security-verifier</outputDirectory>
-							<includeTypes>aar</includeTypes>
-							<includeArtifactIds>SecVerifier</includeArtifactIds>
-							<stripVersion>true</stripVersion>
-                        			</configuration>
-                    		</execution>
-			</plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-emma-dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/emma</outputDirectory>
+                            <includeTypes>jar</includeTypes>
+                            <includeArtifactIds>emma,org.wso2.carbon.integration.framework</includeArtifactIds>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-secVerifier</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
+                            <includeTypes>aar</includeTypes>
+                            <includeArtifactIds>SecVerifier</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -148,7 +149,7 @@
             <artifactId>org.wso2.carbon.ui</artifactId>
             <version>4.0.0-SNAPSHOT</version>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>emma</groupId>
             <artifactId>emma</artifactId>
             <version>${emma.version}</version>

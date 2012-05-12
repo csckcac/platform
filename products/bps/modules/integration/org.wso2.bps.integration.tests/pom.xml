@@ -119,7 +119,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/target/security-verifier/target</outputDirectory>
+                            <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
                             <includeTypes>aar</includeTypes>
                             <includeArtifactIds>SecVerifier</includeArtifactIds>
                             <stripVersion>true</stripVersion>

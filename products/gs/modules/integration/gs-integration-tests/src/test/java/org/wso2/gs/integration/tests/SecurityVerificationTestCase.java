@@ -27,7 +27,7 @@ import org.wso2.carbon.integration.framework.SecurityVerificationTest;
 
 public class SecurityVerificationTestCase extends SecurityVerificationTest {
     public SecurityVerificationTestCase() {
-        super(8080);
+        super(9763);
 
     }
 }

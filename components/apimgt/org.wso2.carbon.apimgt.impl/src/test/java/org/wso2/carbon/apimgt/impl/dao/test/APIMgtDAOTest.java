@@ -60,7 +60,7 @@ public class APIMgtDAOTest extends TestCase {
         apiInfoDTO.setApiName("API1");
         apiInfoDTO.setProviderId("SUMEDHA");
         apiInfoDTO.setVersion("V1.0.0");
-        String accessKey = apiMgtDAO.getAccessKeyForAPI("SUMEDHA", "APPLICATION1", apiInfoDTO);
+        String accessKey = apiMgtDAO.getAccessKeyForAPI("SUMEDHA", "APPLICATION1", apiInfoDTO, "PRODUCTION");
         assertNotNull(accessKey);
         assertTrue(accessKey.length() > 0);
     }
@@ -73,8 +73,17 @@ public class APIMgtDAOTest extends TestCase {
     }
 
     public void testValidateKey() throws Exception{
-        APIKeyValidationInfoDTO apiKeyValidationInfoDTO = apiMgtDAO.validateKey("deli", "1.0.0", "a1b2c3d4");
+        APIKeyValidationInfoDTO apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "1.0.0", "a1b2c3d4");
         assertNotNull(apiKeyValidationInfoDTO);
+        assertTrue(apiKeyValidationInfoDTO.isAuthorized());
+
+        apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "1.0.0", "p1q2r3s4");
+        assertNotNull(apiKeyValidationInfoDTO);
+        assertTrue(apiKeyValidationInfoDTO.isAuthorized());
+
+        apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "1.0.0", "w1x2y3z4");
+        assertNotNull(apiKeyValidationInfoDTO);
+        assertFalse(apiKeyValidationInfoDTO.isAuthorized());
     }
 
     public void testGetSubscribedUsersForAPI() throws Exception{
@@ -119,11 +128,20 @@ public class APIMgtDAOTest extends TestCase {
 
     public void testRegisterAccessToken()throws  Exception{
         APIInfoDTO apiInfoDTO = new APIInfoDTO();
-        apiInfoDTO.setApiName("API1");
-        apiInfoDTO.setProviderId("ADMIN");
-        apiInfoDTO.setVersion("1.0.0");
-        apiMgtDAO.registerAccessToken("CON1","APPLICATION1","ADMIN",0,apiInfoDTO);
-        //TODO : Add assertions
+        apiInfoDTO.setApiName("API2");
+        apiInfoDTO.setProviderId("PRABATH");
+        apiInfoDTO.setVersion("V1.0.0");
+        apiInfoDTO.setContext("/api2context");
+
+        apiMgtDAO.registerAccessToken("CON1","APPLICATION3","PRABATH",0,apiInfoDTO,"SANDBOX");
+        String key1 = apiMgtDAO.getAccessKeyForAPI("PRABATH", "APPLICATION3", apiInfoDTO, "SANDBOX");
+        assertNotNull(key1);
+
+        apiMgtDAO.registerAccessToken("CON1","APPLICATION3","PRABATH",0,apiInfoDTO,"PRODUCTION");
+        String key2 = apiMgtDAO.getAccessKeyForAPI("PRABATH", "APPLICATION3", apiInfoDTO, "PRODUCTION");
+        assertNotNull(key2);
+        
+        assertTrue(!key1.equals(key2));
     }
 
     public void testGetSubscribedAPIs() throws Exception{
@@ -131,7 +149,6 @@ public class APIMgtDAOTest extends TestCase {
         subscriber.setDescription("Subscriber description");
         Set<SubscribedAPI>  subscribedAPIs = apiMgtDAO.getSubscribedAPIs(subscriber);
         assertNotNull(subscribedAPIs);
-
     }
     
     public void testAddApplication() throws Exception{

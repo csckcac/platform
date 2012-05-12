@@ -65,13 +65,13 @@ public class ApiMgtDAO {
      * @param userId     id of the user
      * @param applicationName name of the Application
      * @param identifier APIIdentifier
+     * @param keyType Type of the key required                  
      * @return Access token
      * @throws APIManagementException if failed to get Access token
-     * @throws org.wso2.carbon.identity.base.IdentityException
-     *                                if failed to get tenant id
+     * @throws org.wso2.carbon.identity.base.IdentityException if failed to get tenant id
      */
-    public String getAccessKeyForAPI(String userId, String applicationName, APIInfoDTO identifier)
-            throws APIManagementException, IdentityException {
+    public String getAccessKeyForAPI(String userId, String applicationName, APIInfoDTO identifier, 
+                                     String keyType) throws APIManagementException, IdentityException {
 
         String accessKey = null;
 
@@ -81,8 +81,10 @@ public class ApiMgtDAO {
         String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(userId);
         int tenantId = IdentityUtil.getTenantIdOFUser(userId);
 
-        log.info("Searching for : " + apiId + " User : " + tenantAwareUserId + " ApplicationName : "+applicationName
-                + " Tenant ID : " + tenantId);
+        if (log.isDebugEnabled()) {
+            log.debug("Searching for: " + apiId + ", User: " + tenantAwareUserId + 
+                    ", ApplicationName: " + applicationName + ", Tenant ID: " + tenantId);
+        }
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -94,15 +96,18 @@ public class ApiMgtDAO {
                         "   AM_SUBSCRIPTION SP," +
                         "   AM_SUBSCRIBER SB," +
                         "   AM_APPLICATION APP, " +
-                        "   AM_KEY_CONTEXT_MAPPING KCM " +
+                        "   AM_KEY_CONTEXT_MAPPING KCM," +
+                        "   AM_SUBSCRIPTION_KEY_MAPPING SKM " +
                         "WHERE " +
                         "   SB.USER_ID=? " +
                         "   AND SB.TENANT_ID=? " +
                         "   AND SP.API_ID=? " +
-                        "   AND APP.NAME=?"   +
+                        "   AND APP.NAME=? " +
+                        "   AND SKM.KEY_TYPE=? "   +
                         "   AND SB.SUBSCRIBER_ID = APP.SUBSCRIBER_ID " +
                         "   AND APP.APPLICATION_ID = SP.APPLICATION_ID " +
-                        "   AND KCM.KEY_CONTEXT_MAPPING_ID = SP.KEY_CONTEXT_MAPPING_ID";
+                        "   AND KCM.KEY_CONTEXT_MAPPING_ID = SKM.KEY_CONTEXT_MAPPING_ID " +
+                        "   AND SP.SUBSCRIPTION_ID = SKM.SUBSCRIPTION_ID ";
 
         try {
             conn = APIMgtDBUtil.getConnection();
@@ -110,7 +115,8 @@ public class ApiMgtDAO {
             ps.setString(1, tenantAwareUserId);
             ps.setInt(2, tenantId);
             ps.setString(3, apiId);
-            ps.setString(4,applicationName);
+            ps.setString(4, applicationName);
+            ps.setString(5, keyType);
 
             rs = ps.executeQuery();
 
@@ -329,17 +335,20 @@ public class ApiMgtDAO {
                 "   IAT.VALIDITY_PERIOD, " +
                 "   IAT.TIME_CREATED ," +
                 "   IAT.TOKEN_STATE," +
-                "   SUB.TIER_ID" +
+                "   SUB.TIER_ID," +
+                "   SKM.KEY_TYPE" +
                 " FROM " +
                 "   IDENTITY_OAUTH2_ACCESS_TOKEN IAT," +
                 "   AM_SUBSCRIPTION SUB," +
-                "   AM_KEY_CONTEXT_MAPPING KCM" +
+                "   AM_KEY_CONTEXT_MAPPING KCM," +
+                "   AM_SUBSCRIPTION_KEY_MAPPING SKM" +
                 " WHERE " +
                 "   KCM.ACCESS_TOKEN = ? " +
                 "   AND KCM.CONTEXT = ? " +
                 "   AND KCM.VERSION = ? " +
                 "   AND IAT.ACCESS_TOKEN=KCM.ACCESS_TOKEN " +
-                "   AND KCM.KEY_CONTEXT_MAPPING_ID = SUB.KEY_CONTEXT_MAPPING_ID";
+                "   AND KCM.KEY_CONTEXT_MAPPING_ID = SKM.KEY_CONTEXT_MAPPING_ID" +
+                "   AND SUB.SUBSCRIPTION_ID = SKM.SUBSCRIPTION_ID";
         try {
             conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
@@ -493,8 +502,8 @@ public class ApiMgtDAO {
             conn = APIMgtDBUtil.getConnection();
             //This query to update the AM_SUBSCRIPTION table
             String sqlQuery = "INSERT " +
-                    "INTO AM_SUBSCRIPTION (TIER_ID,API_ID,APPLICATION_ID,KEY_CONTEXT_MAPPING_ID)" +
-                    " VALUES (?,?,?,?)";
+                    "INTO AM_SUBSCRIPTION (TIER_ID,API_ID,APPLICATION_ID)" +
+                    " VALUES (?,?,?)";
 
             //Adding data to the AM_SUBSCRIPTION table
             String apiId = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
@@ -503,7 +512,6 @@ public class ApiMgtDAO {
             ps.setString(1, identifier.getTier());
             ps.setString(2, apiId);
             ps.setInt(3, applicationId);
-            ps.setNull(4, Types.INTEGER);
 
             ps.executeUpdate();
             ps.close();
@@ -616,10 +624,11 @@ public class ApiMgtDAO {
                     "FROM " +
                     "   AM_SUBSCRIBER SUB," +
                     "   AM_APPLICATION APP, " +
-                    "   AM_SUBSCRIPTION SUBS  " +
+                    "   AM_SUBSCRIPTION SUBS, " +
+                    "   AM_SUBSCRIPTION_KEY_MAPPING SKM " +
                     "LEFT OUTER JOIN " +
                     "   AM_KEY_CONTEXT_MAPPING KCM " +
-                    "ON SUBS.KEY_CONTEXT_MAPPING_ID = KCM.KEY_CONTEXT_MAPPING_ID  " +
+                    "ON SKM.KEY_CONTEXT_MAPPING_ID = KCM.KEY_CONTEXT_MAPPING_ID  " +
                     "WHERE " +
                     "   SUB.USER_ID = ? " +
                     "   AND SUB.TENANT_ID = ? " +
@@ -830,40 +839,38 @@ public class ApiMgtDAO {
      * @param userId  User Id
      * @param tenantId Tenant Id of the user
      * @param apiInfoDTO Application Info DTO
+     * @param keyType Type (scope) of the key
      * @return accessToken
      * @throws IdentityException if failed to register accessToken
      */
-    public String registerAccessToken(String consumerKey, String applicationName, String userId, int tenantId
-            , APIInfoDTO apiInfoDTO) throws IdentityException {
+    public String registerAccessToken(String consumerKey, String applicationName, String userId, 
+                                      int tenantId, APIInfoDTO apiInfoDTO, String keyType) throws IdentityException {
         // Add Access Token
         String sqlAddAccessToken = "INSERT" +
-                " INTO IDENTITY_OAUTH2_ACCESS_TOKEN (ACCESS_TOKEN, CONSUMER_KEY, TOKEN_STATE) " +
-                " VALUES (?,?,?)";
+                " INTO IDENTITY_OAUTH2_ACCESS_TOKEN (ACCESS_TOKEN, CONSUMER_KEY, TOKEN_STATE, TOKEN_SCOPE) " +
+                " VALUES (?,?,?,?)";
+        
         // Add access token against context mapping 
         String sqlAddContextMapping = "INSERT " +
                 "INTO AM_KEY_CONTEXT_MAPPING (CONTEXT, VERSION, ACCESS_TOKEN)" +
                 " VALUES (?,?,?)";
-
-
-        String sqlUpdateSubscription = "UPDATE " +
-                "AM_SUBSCRIPTION SUBS1 " +
-                "SET " +
-                "   SUBS1.KEY_CONTEXT_MAPPING_ID = ? " +
+        
+        String getSubscriptionId = "SELECT SUBS.SUBSCRIPTION_ID " +
+                "FROM " +
+                "  AM_SUBSCRIPTION SUBS, " +
+                "  AM_APPLICATION APP, " +
+                "  AM_SUBSCRIBER SUB " +
                 "WHERE " +
-                "   SUBS1.SUBSCRIPTION_ID = (" +
-                "       SELECT SUBS.SUBSCRIPTION_ID " +
-                "       FROM " +
-                "           AM_SUBSCRIPTION SUBS " +
-                "           ,AM_APPLICATION APP " +
-                "           ,AM_SUBSCRIBER SUB " +
-                "       WHERE " +
-                "           SUB.USER_ID = ? " +
-                "           AND SUB.TENANT_ID = ? " +
-                "           AND APP.SUBSCRIBER_ID = SUB.SUBSCRIBER_ID " +
-                "           AND APP.NAME = ? " +
-                "           AND SUBS.API_ID = ? " +
-                "           AND APP.APPLICATION_ID = SUBS.APPLICATION_ID" +
-                "       )";
+                "  SUB.USER_ID = ?" +
+                "  AND SUB.TENANT_ID = ?" +
+                "  AND APP.SUBSCRIBER_ID = SUB.SUBSCRIBER_ID" +
+                "  AND APP.NAME = ?" +
+                "  AND SUBS.API_ID = ?" +
+                "  AND APP.APPLICATION_ID = SUBS.APPLICATION_ID";
+
+        String addSubscriptionKeyMapping = "INSERT " +
+                "INTO AM_SUBSCRIPTION_KEY_MAPPING (SUBSCRIPTION_ID, KEY_CONTEXT_MAPPING_ID, KEY_TYPE) " +
+                "VALUES (?,?,?)";
 
         //String apiId = apiInfoDTO.getProviderId()+"_"+apiInfoDTO.getApiName()+"_"+apiInfoDTO.getVersion();
         String accessToken = OAuthUtil.getRandomNumber();
@@ -877,6 +884,7 @@ public class ApiMgtDAO {
             prepStmt.setString(1, accessToken);
             prepStmt.setString(2, consumerKey);
             prepStmt.setString(3, APIConstants.TokenStatus.ACTIVE);
+            prepStmt.setString(4, keyType);
             prepStmt.execute();
             prepStmt.close();
 
@@ -887,9 +895,7 @@ public class ApiMgtDAO {
             prepStmt.setString(3, accessToken);
             prepStmt.execute();
 
-
             int keyContextMappingId = -1;
-
             ResultSet rs = prepStmt.getGeneratedKeys();
             while (rs.next()) {
                 keyContextMappingId = rs.getInt(1);
@@ -897,13 +903,23 @@ public class ApiMgtDAO {
             prepStmt.close();
 
             //Update subscription with new key context mapping
-            prepStmt = connection.prepareStatement(sqlUpdateSubscription);
-            prepStmt.setInt(1, keyContextMappingId);
-            prepStmt.setString(2, userId);
-            prepStmt.setInt(3, tenantId);
-            prepStmt.setString(4, applicationName);
-            prepStmt.setString(5, apiInfoDTO.getAPIIdentifier());
-            prepStmt.executeUpdate();
+            int subscriptionId = -1;
+            prepStmt = connection.prepareStatement(getSubscriptionId);
+            prepStmt.setString(1, userId);
+            prepStmt.setInt(2, tenantId);
+            prepStmt.setString(3, applicationName);
+            prepStmt.setString(4, apiInfoDTO.getAPIIdentifier());
+            ResultSet getSubscriptionIdResult = prepStmt.executeQuery();
+            while (getSubscriptionIdResult.next()) {
+                subscriptionId = getSubscriptionIdResult.getInt(1);
+            }
+            prepStmt.close();
+
+            prepStmt = connection.prepareStatement(addSubscriptionKeyMapping);
+            prepStmt.setInt(1, subscriptionId);
+            prepStmt.setInt(2, keyContextMappingId);
+            prepStmt.setString(3, keyType);
+            prepStmt.execute();
             prepStmt.close();
 
             connection.commit();
@@ -943,8 +959,7 @@ public class ApiMgtDAO {
                 "   SUBS.TIER_ID ," +
                 "   SUBS. API_ID ," +
                 "   SUBS.LAST_ACCESSED ," +
-                "   SUBS.APPLICATION_ID ," +
-                "   SUBS.KEY_CONTEXT_MAPPING_ID " +
+                "   SUBS.APPLICATION_ID " +
                 "FROM " +
                 "   AM_SUBSCRIPTION SUBS ," +
                 "   AM_SUBSCRIBER SUB , " +
@@ -1003,7 +1018,6 @@ public class ApiMgtDAO {
                     "   SUBS.TIER_ID AS TIER_ID, " +
                     "   SUBS.API_ID AS API_ID, " +
                     "   SUBS.LAST_ACCESSED AS LAST_ACCESSED, " +
-                    "   SUBS.KEY_CONTEXT_MAPPING_ID AS KEY_CONTEXT_MAPPING_ID, " +
                     "   SUB.USER_ID AS USER_ID, " +
                     "   APP.NAME AS APPNAME " +
                     "FROM " +

@@ -21,12 +21,12 @@ import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
 
 public class HiveExecutionService {
 
-    public QueryResult[] executeHiveScript(String script, String[] credentials) throws HiveExecutionException {
-        return ServiceHolder.getHiveExecutorService().execute(script, credentials);
+    public QueryResult[] executeHiveScript(String script) throws HiveExecutionException {
+        return ServiceHolder.getHiveExecutorService().execute(script);
     }
 
-    public boolean connect(String driver, String url, String username, String password) throws HiveExecutionException {
-        return ServiceHolder.getHiveExecutorService().authenticateHive(driver, url, username, password);
+    public boolean setConnectionParameters(String driver, String url, String username, String password) throws HiveExecutionException {
+        return ServiceHolder.getHiveExecutorService().setConnectionParameters(driver, url, username, password);
     }
 
 }

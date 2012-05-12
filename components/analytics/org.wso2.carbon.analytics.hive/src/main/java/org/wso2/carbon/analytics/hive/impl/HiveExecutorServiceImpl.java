@@ -17,6 +17,8 @@ package org.wso2.carbon.analytics.hive.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.analytics.hive.HiveConstants;
+import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.dto.QueryResult;
 import org.wso2.carbon.analytics.hive.dto.QueryResultRow;
 import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
@@ -39,19 +41,19 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
     }
 
     /**
-     *
      * @param script
-     * @param credentials it has the drivername,url, username, password as elements in array to connect to hive
      * @return The Resultset of all executed queries in the script
      * @throws HiveExecutionException
      */
-    public QueryResult[] execute(String script, String[] credentials) throws HiveExecutionException {
+    public QueryResult[] execute(String script) throws HiveExecutionException {
         if (script != null) {
             Connection con = null;
-            initialize(credentials[0]);
+            HiveConnectionManager confManager = HiveConnectionManager.getInstance();
+            initialize(confManager.getConfValue(HiveConstants.HIVE_DRIVER_KEY));
             try {
-               con = DriverManager.getConnection(credentials[1],
-                                                            credentials[2], credentials[3]);
+                con = DriverManager.getConnection(confManager.getConfValue(HiveConstants.HIVE_URL_KEY),
+                        confManager.getConfValue(HiveConstants.HIVE_USERNAME_KEY),
+                        confManager.getConfValue(HiveConstants.HIVE_PASSWORD_KEY));
                 Statement stmt = con.createStatement();
 
                 String[] cmdLines = script.split(";\\r?\\n|;\\r"); // Tokenize with ;[new-line]
@@ -60,7 +62,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                 for (String cmdLine : cmdLines) {
 
                     String trimmedCmdLine = cmdLine.trim();
-                     trimmedCmdLine = trimmedCmdLine.replaceAll(";","");
+                    trimmedCmdLine = trimmedCmdLine.replaceAll(";", "");
                     if (!"".equals(trimmedCmdLine)) {
                         QueryResult queryResult = new QueryResult();
                         queryResult.setQuery(trimmedCmdLine);
@@ -83,7 +85,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                             List<String> columnValues = new ArrayList<String>();
                             for (int i = 1; i <= columnCount; i++) {
                                 Object resObj = rs.getObject(i);
-                                if(null != resObj)columnValues.add(rs.getObject(i).toString());
+                                if (null != resObj) columnValues.add(rs.getObject(i).toString());
                                 else columnValues.add("");
                             }
 
@@ -103,11 +105,11 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
             } catch (SQLException e) {
                 throw new HiveExecutionException("Error while executing Hive script..", e);
-            }finally {
-               if(null != con) try {
-                   con.close();
-               } catch (SQLException e) {
-               }
+            } finally {
+                if (null != con) try {
+                    con.close();
+                } catch (SQLException e) {
+                }
             }
 
         }
@@ -117,17 +119,19 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
     }
 
     @Override
-    public boolean authenticateHive(String driverName, String url, String username, String password) {
+    public boolean setConnectionParameters(String driverName, String url, String username, String password) {
         Connection con = null;
         try {
             Class.forName(driverName);
-            con = DriverManager.getConnection(url, username,password);
+            con = DriverManager.getConnection(url, username, password);
+            HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
+            connectionManager.saveConfiguration(driverName, url, username,password);
         } catch (ClassNotFoundException e) {
             log.error("Error during initialization of Hive driver", e);
         } catch (SQLException e) {
             log.error("URL | Username | password in incorrect. Unable to connect to hive");
-        }finally {
-            if(null != con){
+        } finally {
+            if (null != con) {
                 try {
                     con.close();
                 } catch (SQLException e) {

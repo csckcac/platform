@@ -29,6 +29,7 @@ import org.apache.thrift.transport.TTransportFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.analytics.hive.ServiceHolder;
+import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.impl.HiveExecutorServiceImpl;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -78,7 +79,8 @@ public class HiveServiceComponent {
                 HiveExecutorService.class.getName(),
                 ServiceHolder.getHiveExecutorService(),
                 null);
-
+        HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
+        connectionManager.loadHiveConnectionConfiguration(ctx.getBundleContext());
     }
 
     protected void deactivate(ComponentContext ctxt) {
@@ -91,11 +93,11 @@ public class HiveServiceComponent {
     }
 
     protected void setRegistryService(RegistryService registryService) throws RegistryException {
-       ServiceHolder.setRegistryService(registryService);
+        ServiceHolder.setRegistryService(registryService);
     }
 
-    protected void unsetRegistryService(RegistryService registryService){
-       ServiceHolder.setRegistryService(null);
+    protected void unsetRegistryService(RegistryService registryService) {
+        ServiceHolder.setRegistryService(null);
     }
 
     public class HiveRunnable implements Runnable {
@@ -143,8 +145,8 @@ public class HiveServiceComponent {
                 TServer server = new TThreadPoolServer(sargs);
 
                 String msg = "Starting hive server on port " + cli.port
-                             + " with " + cli.minWorkerThreads + " min worker threads and "
-                             + cli.maxWorkerThreads + " max worker threads";
+                        + " with " + cli.minWorkerThreads + " min worker threads and "
+                        + cli.maxWorkerThreads + " max worker threads";
 
                 HiveServer.HiveServerHandler.LOG.info(msg);
 

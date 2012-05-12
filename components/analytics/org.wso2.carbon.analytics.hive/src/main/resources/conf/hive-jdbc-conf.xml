@@ -1,0 +1,6 @@
+<configuration>
+    <driver>org.apache.hadoop.hive.jdbc.HiveDriver</driver>
+    <url>jdbc:hive://localhost:10000/default</url>
+    <username></username>
+    <passord></passord>
+</configuration>

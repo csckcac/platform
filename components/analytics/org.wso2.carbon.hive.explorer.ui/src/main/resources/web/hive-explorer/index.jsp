@@ -20,6 +20,7 @@
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
 <fmt:bundle basename="org.wso2.carbon.hive.explorer.ui.i18n.Resources">
+<script type="text/javascript" src="../ajax/js/prototype.js"></script>
     <%
         String directTo = "";
         String scriptName = request.getParameter("scriptName");
@@ -33,13 +34,14 @@
     <script type="text/javascript">
 
         function connectHive() {
-            document.credentials.action = "<%=directTo%>";
+            document.credentials.action = "../hive-explorer/SaveHiveConfiguration";
 
             var driverName = document.getElementById("driverName").value;
             if ('' == driverName) {
                 jQuery(document).init(function () {
                     CARBON.showErrorDialog('Driver Name is empty. Please enter the driver to connect with Hive');
                 });
+                return;
             }
 
             var url = document.getElementById("jdbcURL").value;
@@ -47,9 +49,23 @@
                 jQuery(document).init(function () {
                     CARBON.showErrorDialog('JDBC URL is empty. Please enter the JDBC URL to connect with Hive');
                 });
+                return;
             }
 
-            document.credentials.submit();
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+             new Ajax.Request('../hive-explorer/SaveHiveConfiguration', {
+                        method: 'post',
+                        parameters: {driver:driverName, url:url},
+                        onSuccess: function(transport) {
+                            var message = transport.responseText;
+                            alert(message);
+                        },
+                        onFailure: function(transport) {
+                           alert(transport.responseText);
+                        }
+                    });
             return true;
         }
 

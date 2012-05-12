@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.analytics.hive.service;
 
-import org.wso2.carbon.analytics.hive.dto.QueryResult;
-import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
+package org.wso2.carbon.analytics.hive.exception;
 
-public interface HiveExecutorService {
+public class HiveConnectionException extends Exception {
 
-    public QueryResult[] execute(String script) throws HiveExecutionException;
+    public HiveConnectionException(String message) {
+        super(message);
+    }
 
-    public boolean setConnectionParameters(String driverName, String url, String username, String password);
+    public HiveConnectionException(String message, Throwable t) {
+        super(message, t);
+    }
 
 }

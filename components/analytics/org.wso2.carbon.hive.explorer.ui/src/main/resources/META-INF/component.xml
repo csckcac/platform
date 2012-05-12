@@ -24,6 +24,13 @@
             <servlet-class>org.wso2.carbon.hive.explorer.ui.servlet.SaveScriptProcessor
             </servlet-class>
         </servlet>
+         <servlet id="SaveHiveConfiguration">
+            <servlet-name>SaveHiveConfiguration</servlet-name>
+            <url-pattern>/carbon/hive-explorer/SaveHiveConfiguration</url-pattern>
+            <display-name>SaveHiveConfiguration</display-name>
+            <servlet-class>org.wso2.carbon.hive.explorer.ui.servlet.SaveHiveConfiguration
+            </servlet-class>
+        </servlet>
     </servlets>
     <menus>
         <menu>
@@ -49,6 +56,17 @@
             <icon>../hive-explorer/images/list.gif</icon>
             <require-permission>/permission/protected/manage</require-permission>
         </menu>
+          <menu>
+            <id>hive_explorer_configure</id>
+            <i18n-key>hive_explorer_configure.menu</i18n-key>
+            <i18n-bundle>org.wso2.carbon.hive.explorer.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>configure_menu</parent-menu>
+            <link>../hive-explorer/index.jsp</link>
+            <region>region1</region>
+            <order>20</order>
+            <style-class>manage</style-class>
+            <require-permission>/permission/protected/manage</require-permission>
+        </menu>
         <menu>
             <id>script_add_main</id>
             <i18n-key>script.add.main</i18n-key>
@@ -56,7 +74,7 @@
             <parent-menu>hive_explorer_menu</parent-menu>
             <link>#</link>
             <region>region5</region>
-            <order>65</order>
+            <order>67</order>
             <style-class>tools</style-class>
             <icon>../hive-explorer/images/add.gif</icon>
             <require-permission>/permission/protected/manage</require-permission>
@@ -66,9 +84,9 @@
               <i18n-key>script.add</i18n-key>
               <i18n-bundle>org.wso2.carbon.hive.explorer.ui.i18n.Resources</i18n-bundle>
               <parent-menu>script_add_main</parent-menu>
-              <link>../hive-explorer/index.jsp</link>
+              <link>../hive-explorer/hiveexplorer.jsp</link>
               <region>region5</region>
-              <order>67</order>
+              <order>69</order>
               <style-class>tools</style-class>
               <require-permission>/permission/protected/manage</require-permission>
             </menu>

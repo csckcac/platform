@@ -20,6 +20,13 @@ public class HiveConstants {
     public static final String HIVE_DRIVER = "org.apache.hadoop.hive.jdbc.HiveDriver";
     public static final String HIVE_SCRIPT_BASE_PATH= "/repository/hive/scripts/";
     public static final String HIVE_SCRIPT_EXT = ".hiveql";
+    public static final String HIVE_CONNECTION_CONF_PATH="/repository/hive/conf/";
+    public static final String HIVE_CONF_LOCAL_PATH = "conf/";
+    public static final String HIVE_CONNECTION_FILE_NAME = "hive-jdbc-conf.xml";
+    public static final String HIVE_DRIVER_KEY = "driver";
+    public static final String HIVE_URL_KEY = "url";
+    public static final String HIVE_USERNAME_KEY = "username";
+    public static final String HIVE_PASSWORD_KEY = "password";
     
 
 }

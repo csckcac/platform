@@ -47,9 +47,9 @@ public class HiveExecutionClient {
     }
 
 
-    public boolean getConnection(String driver, String url, String username, String password) throws RemoteException, HiveExecutionServiceHiveExecutionException {
+    public boolean saveConfiguration(String driver, String url, String username, String password) throws RemoteException, HiveExecutionServiceHiveExecutionException {
         try {
-            return stub.connect(driver,url, username, password);
+            return stub.setConnectionParameters(driver,url, username, password);
         } catch (RemoteException e) {
           log.error(e);
           throw e;
@@ -59,10 +59,9 @@ public class HiveExecutionClient {
         }
     }
 
-
-    public QueryResult[] executeScript(String script, String[] credentials) {
+    public QueryResult[] executeScript(String script) {
         try {
-            QueryResult[] res = stub.executeHiveScript(script, credentials);
+            QueryResult[] res = stub.executeHiveScript(script);
             return res;
            // return generateDisplayString(res);
         } catch (RemoteException e) {

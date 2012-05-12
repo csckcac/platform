@@ -1,10 +1,9 @@
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
-<%@ page import="org.wso2.carbon.hive.explorer.ui.client.HiveExecutionClient" %>
+<%@ page import="org.wso2.carbon.hive.explorer.ui.client.HiveScriptStoreClient" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
-<%@ page import="java.sql.Connection" %>
 <!--
 ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
@@ -112,8 +111,8 @@
         }
     }
 
-    function cancelScript(){
-        location.href="../hive-explorer/listscripts.jsp";
+    function cancelScript() {
+        location.href = "../hive-explorer/listscripts.jsp";
     }
 </script>
 
@@ -128,67 +127,55 @@
     }
 
     table.result {
-            border-width: 2px;
-            border-style: solid;
-            border-color: maroon;
-            background-color: white;
-        }
+        border-width: 2px;
+        border-style: solid;
+        border-color: maroon;
+        background-color: white;
+    }
 
-        table.allResult {
-            border-width: 1px;
-            border-style: solid;
-            border-color: black;
-            background-color: white;
-            width: 100%;
-        }
+    table.allResult {
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        background-color: white;
+        width: 100%;
+    }
 
 </style>
 
-
-<% String driver = request.getParameter("driverName");
-    String url = request.getParameter("jdbcURL");
-    String username = request.getParameter("username");
-    String password = request.getParameter("password");
+<%
     String scriptName = "";
-
+    String scriptContent = "";
+    boolean scriptNameExists = false;
+    if (request.getParameter("scriptName") != null && !request.getParameter("scriptName").equals("")) {
+        scriptName = request.getParameter("scriptName");
+        scriptNameExists = true;
+    }
+    if(scriptNameExists){
     try {
         String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
         ConfigurationContext configContext =
                 (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
         String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
-        HiveExecutionClient client = new HiveExecutionClient(cookie, serverURL, configContext);
-        boolean authorized = client.getConnection(driver, url, username, password);
-        if (!authorized) {
-            session.setAttribute("authorized", "false");
+        HiveScriptStoreClient client = new HiveScriptStoreClient(cookie, serverURL, configContext);
+        scriptContent = client.getScript(scriptName);
+    } catch (Exception e) {
+        String errorString = e.getMessage();
+        CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
 %>
 <script type="text/javascript">
     location.href = "../admin/error.jsp";
-    alert("Couldn't connect to hive. Check your credentials you provided");
-</script>
-<%
-    } else {
-        session.setAttribute("authorized", "true");
-        session.setAttribute("driver", driver);
-        session.setAttribute("url", url);
-        session.setAttribute("username", username);
-        session.setAttribute("password", password);
-    }
-
-} catch (Exception e) {
-    String errorString = e.getMessage();
-    CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
-%>
-<script type="text/javascript">
-    location.href = "../admin/error.jsp";
-    alert(<%=errorString%>);
+    alert('<%=errorString%>');
 </script>
 <%
         return;
     }
+    }
 %>
 
 <div id="middle">
-    <h2>Hive Explorer</h2>
+    <h2>Hive Explorer<%=" - "+scriptName%>
+    </h2>
 
     <div id="workArea">
 
@@ -202,6 +189,9 @@
                 </tr>
                 </thead>
                 <tbody>
+                <%
+                    if (!scriptNameExists) {
+                %>
                 <tr>
                     <td>
                         <table class="normal-nopadding">
@@ -211,21 +201,23 @@
                                     <fmt:message key="hive.script.name"/>
                                 </td>
                                 <td>
-                                    <input id="scriptName" name="scriptName" size="60" value="<%=scriptName%>"/>
+                                    <input id="scriptName" name="scriptName" size="60"/>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                     </td>
                 </tr>
-
+                <%
+                    }
+                %>
                 <tr>
                     <td>
                         <table class="normal-nopadding">
                             <tbody>
                             <tr>
                                 <td>
-                                    <textarea id="allcommands" name="allcommands" cols="150" rows="15"></textarea>
+                                    <textarea id="allcommands" name="allcommands" cols="150" rows="15"><%=scriptContent%></textarea>
                                 </td>
                             </tr>
 
@@ -233,8 +225,8 @@
                                 <td>
                                     <input class="button" type="button" onclick="executeQuery()" value="Run>"/>
                                     <input class="button" type="button" onclick="saveScript()" value="Save"/>
-                                    <input type="button"  value="Cancel" onclick="cancelScript()"
-                                           class="button" />
+                                    <input type="button" value="Cancel" onclick="cancelScript()"
+                                           class="button"/>
                                 </td>
                             </tr>
 
@@ -269,16 +261,7 @@
                 <tr>
                     <td>
                         <div id="hiveResult" class="scrollable">
-                                <%--<table class="sample">--%>
-                                <%--<tbody>--%>
-                                <%--<tr>--%>
-                                <%--<td></td>--%>
-                                <%--<td>--%>
-                                <%--</td>--%>
-
-                                <%--</tr>--%>
-                                <%--</tbody>--%>
-                                <%--</table>--%>
+                                <%--the results goes here...--%>
                         </div>
                     </td>
                 </tr>

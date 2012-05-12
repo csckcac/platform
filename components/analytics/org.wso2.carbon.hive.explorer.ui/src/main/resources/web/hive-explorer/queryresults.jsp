@@ -33,14 +33,7 @@
 
     String hiveScript = request.getParameter("queries");
     HiveExecutionClient client = new HiveExecutionClient(cookie, serverURL, configContext);
-    String authorized = session.getAttribute("authorized").toString();
-    if (authorized.equalsIgnoreCase("true")) {
-        String[] credentials = new String[4];
-        credentials[0] = session.getAttribute("driver").toString();
-        credentials[1] = session.getAttribute("url").toString();
-        credentials[2] = session.getAttribute("username").toString();
-        credentials[3] = session.getAttribute("password").toString();
-        QueryResult[] results = client.executeScript(hiveScript, credentials);
+    QueryResult[] results = client.executeScript(hiveScript);
 %>
 <div id="returnedResults">
     <table class="allResult">
@@ -128,6 +121,3 @@
         </tbody>
     </table>
 </div>
-<%
-    }
-%>

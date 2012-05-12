@@ -57,10 +57,13 @@ public class RegistryTestServerManager extends TestServerManager {
 
     @Override
     protected void copyArtifacts(String carbonHome) throws IOException {
-//        backward associationHandler sample
+        // copy the scripts required to start the server in debug mode.
+        copyDebugScripts(carbonHome);
+
+        // backward associationHandler sample
         copyBackwardAssociationHandler(carbonHome);
 
-        //edit registry xml and add new handle
+        // edit registry xml and add new handle
         editRegistryXML(carbonHome);
         increaseSearchIndexStartTimeDelay(carbonHome);
     }
@@ -125,6 +128,26 @@ public class RegistryTestServerManager extends TestServerManager {
                 "backwardAssociationHandler.jar");
         log.info("Copying " + srcFile.getAbsolutePath() + " => " + dstFile.getAbsolutePath());
         FileManipulator.copyFile(srcFile, dstFile);
+    }
+
+    private void copyDebugScripts(String carbonHome) throws IOException {
+        if (!"true".equals(System.getProperty("debug.mode"))) {
+            return;
+        }
+        String frameworkPath = FrameworkSettings.getFrameworkPath();
+        assert carbonHome != null : "carbonHome cannot be null";
+
+        for (String fileName : new String[]{"wso2server.sh", "wso2server.bat"}) {
+            File srcFile = new File(frameworkPath + File.separator + ".." + File.separator + "src"
+                    + File.separator + "test" + File.separator + "java" + File.separator
+                    + "resources" + File.separator + "debugMode" + File.separator + fileName);
+            assert srcFile.exists() : srcFile.getAbsolutePath() + " does not exist";
+
+            File depFile = new File(carbonHome + File.separator + "bin");
+            File dstFile = new File(depFile.getAbsolutePath() + File.separator + fileName);
+            log.info("Copying " + srcFile.getAbsolutePath() + " => " + dstFile.getAbsolutePath());
+            FileManipulator.copyFile(srcFile, dstFile);
+        }
     }
 
     public static String getTestSamplesDir(String frameworkPath) {

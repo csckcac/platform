@@ -26,6 +26,7 @@ import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.config.RegistryContext;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.ws.api.utils.CommonUtil;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -40,7 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "deprecation"})
 public class WSRegistry extends RegistryAbstractAdmin implements Registry {
 
 	private Log log = LogFactory.getLog(WSRegistry.class);
@@ -477,12 +478,16 @@ public class WSRegistry extends RegistryAbstractAdmin implements Registry {
 	}
 
     /**
-     * This is the web service friendly version of getAssociations(resourcePath, associationType)
-     * method
-     * @param resourcePath
-     * @param associationType
-     * @return WSAssociation
-     * @throws RegistryException
+     * Get all associations of the given resource for a give association type.
+     * This is a chain of association starting from the
+     * given resource both upwards (source to destination) and downwards (destination to source). T
+     * his is useful to analyse how changes to other resources would affect the
+     * given resource.
+     *
+     * @param resourcePath    Path of the resource to analyse associations.
+     * @param associationType : Type of the association , that could be dependecy , or some other type
+     * @return List of Association
+     * @throws RegistryException : If something went wrong
      */
     public WSAssociation[] WSgetAssociations(String resourcePath, String associationType)
             throws RegistryException {
@@ -538,10 +543,11 @@ public class WSRegistry extends RegistryAbstractAdmin implements Registry {
 	}
 
     /**
-     * This is the web service friendly version of getTags(String resourcePath) method
-     * @param resourcePath
-     * @return  WSTag
-     * @throws RegistryException
+     * Returns all tags used for tagging the given resource.
+     *
+     * @param resourcePath Path of the resource
+     * @return Tags tag names
+     * @throws RegistryException is thrown if a resource does not exist in the given path.
      */
     public WSTag[] WSgetTags(String resourcePath) throws RegistryException {
         Tag[] tags = getRegistryForTenant().getTags(resourcePath);
@@ -739,15 +745,24 @@ public class WSRegistry extends RegistryAbstractAdmin implements Registry {
 	}
 
     /**
-     * This is the web service compatible version of getLogs() method
-     * @param resourcePath
-     * @param action
-     * @param userName
-     * @param from
-     * @param to
-     * @param recentFirst
-     * @return WSLogEntry
-     * @throws RegistryException
+     * Returns the logs of the activities occurred in the Registry.
+     *
+     * @see LogEntry Accepted values for action parameter
+     *
+     * @param resourcePath If given, only the logs related to the resource path will be returned. If
+     *                     null, logs for all resources will be returned.
+     * @param action       Only the logs pertaining to this action will be returned.  For
+     *                     acceptable values, see LogEntry.
+     * @param userName     If given, only the logs for activities done by the given user will be
+     *                     returned. If null, logs for all users will be returned.
+     * @param from         If given, logs for activities occurred after the given date will be
+     *                     returned. If null, there will not be a bound for the starting date.
+     * @param to           If given, logs for activities occurred before the given date will be
+     *                     returned. If null, there will not be a bound for the ending date.
+     * @param recentFirst  If true, returned activities will be most-recent first. If false,
+     *                     returned activities will be oldest first.
+     * @return Array of LogEntry objects representing the logs
+     * @throws RegistryException if there is a problem
      */
     public WSLogEntry[] WSgetLogs(String resourcePath,
 	                          int action,
@@ -767,7 +782,7 @@ public class WSRegistry extends RegistryAbstractAdmin implements Registry {
 	/**
 	 * This method is not supported in WS-API
 	 */
-	public LogEntryCollection getLogCollection(String resourcePath,
+    public LogEntryCollection getLogCollection(String resourcePath,
 	                                           int action,
 	                                           String userName,
 	                                           Date from,
@@ -1111,6 +1126,22 @@ public class WSRegistry extends RegistryAbstractAdmin implements Registry {
         }
         return count;
     }
+
+    public WSResourceData getAll(String path) throws RegistryException {
+        WSResourceData resourceData = new WSResourceData();
+        resourceData.setResource(WSget(path));
+        UserRegistry configUserRegistry = (UserRegistry)getConfigUserRegistry();
+        if (configUserRegistry != null) {
+            resourceData.setRating(getRating(path, configUserRegistry.getUserName()));
+        } else {
+            resourceData.setRating(-1);
+        }
+        resourceData.setAverageRating(getAverageRating(path));
+        resourceData.setTags(WSgetTags(path));
+        resourceData.setComments(WSgetComments(path));
+        resourceData.setAssociations(WSgetAllAssociations(path));
+        return resourceData;
+    }
     
     /*
      * TODO Just a dummy until implemented
@@ -1118,7 +1149,6 @@ public class WSRegistry extends RegistryAbstractAdmin implements Registry {
      * @see org.wso2.carbon.registry.core.Registry#removeVersionHistory(java.lang.String, java.lang.String)
      */
     
-    @Override
     public boolean removeVersionHistory(String path, long snapshotId)
     		throws RegistryException {
     

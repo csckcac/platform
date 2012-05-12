@@ -879,13 +879,20 @@ public class WSRegistryServiceClient implements Registry {
 	public String[] getCollectionContent(String path) throws Exception {
 		return stub.getCollectionContent(path);
 	}
-    public void setCookie(String cookie){
-	this.cookie = cookie;	
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
     }
-    public void setStub(WSRegistryServiceStub stub){
-	this.stub = stub;
+
+    public void setStub(WSRegistryServiceStub stub) {
+        this.stub = stub;
     }
-    public void setEpr(String epr){
-	this.epr = epr;
+
+    public WSRegistryServiceStub getStub() {
+        return stub;
+    }
+
+    public void setEpr(String epr) {
+        this.epr = epr;
     }
 }

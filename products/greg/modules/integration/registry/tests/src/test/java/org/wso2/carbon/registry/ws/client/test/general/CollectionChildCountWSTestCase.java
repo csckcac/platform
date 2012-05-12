@@ -39,7 +39,7 @@ public class CollectionChildCountWSTestCase extends TestSetup {
         Resource resource2 = registry.newResource();
         resource2.setContent("my text2");
         registry.put("/myorg/mytext1.txt", resource1);
-        registry.put("/myorg/mytext2.txt", resource1);
+        registry.put("/myorg/mytext2.txt", resource2);
     }
 
     @Test(groups = {"wso2.greg"})

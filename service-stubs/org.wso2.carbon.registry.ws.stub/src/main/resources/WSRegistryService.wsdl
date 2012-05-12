@@ -1,7 +1,35 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2427="http://api.ws.registry.carbon.wso2.org/xsd" xmlns:ns="http://api.ws.registry.carbon.wso2.org" xmlns:ax2423="http://exceptions.core.registry.carbon.wso2.org/xsd" xmlns:ax2424="http://api.registry.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2429="http://io.java/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://api.ws.registry.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://api.ws.registry.carbon.wso2.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax2463="http://api.ws.registry.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2460="http://api.registry.carbon.wso2.org/xsd" xmlns:ax2459="http://exceptions.core.registry.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2465="http://io.java/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://api.ws.registry.carbon.wso2.org">
     <wsdl:documentation>WSRegistryService</wsdl:documentation>
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.ws.registry.carbon.wso2.org/xsd">
+            <xs:complexType name="WSResourceData">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="associations" nillable="true" type="ax2463:WSAssociation" />
+                    <xs:element minOccurs="0" name="averageRating" type="xs:float" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="comments" nillable="true" type="ax2463:WSComment" />
+                    <xs:element minOccurs="0" name="rating" type="xs:int" />
+                    <xs:element minOccurs="0" name="resource" nillable="true" type="ax2463:WSResource" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="tags" nillable="true" type="ax2463:WSTag" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="WSAssociation">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="associationType" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="destinationPath" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="sourcePath" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="WSComment">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="commentID" type="xs:long" />
+                    <xs:element minOccurs="0" name="commentPath" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="path" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="resourcePath" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="text" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="time" type="xs:long" />
+                    <xs:element minOccurs="0" name="user" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
             <xs:complexType name="WSResource">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="authorUserName" nillable="true" type="xs:string" />
@@ -21,7 +49,7 @@
                     <xs:element minOccurs="0" name="path" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="pathID" type="xs:int" />
                     <xs:element minOccurs="0" name="permanentPath" nillable="true" type="xs:string" />
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax2427:WSProperty" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax2463:WSProperty" />
                     <xs:element minOccurs="0" name="propertiesModified" type="xs:boolean" />
                     <xs:element minOccurs="0" name="snapshotID" type="xs:long" />
                     <xs:element minOccurs="0" name="state" type="xs:int" />
@@ -37,16 +65,6 @@
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="values" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="WSCollection">
-                <xs:complexContent>
-                    <xs:extension base="ax2427:WSResource">
-                        <xs:sequence>
-                            <xs:element minOccurs="0" name="childCount" type="xs:int" />
-                            <xs:element maxOccurs="unbounded" minOccurs="0" name="children" nillable="true" type="xs:string" />
-                        </xs:sequence>
-                    </xs:extension>
-                </xs:complexContent>
-            </xs:complexType>
             <xs:complexType name="WSTag">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="category" type="xs:int" />
@@ -54,22 +72,21 @@
                     <xs:element minOccurs="0" name="tagName" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="WSComment">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="commentID" type="xs:long" />
-                    <xs:element minOccurs="0" name="commentPath" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="path" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="resourcePath" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="text" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="time" type="xs:long" />
-                    <xs:element minOccurs="0" name="user" nillable="true" type="xs:string" />
-                </xs:sequence>
+            <xs:complexType name="WSCollection">
+                <xs:complexContent>
+                    <xs:extension base="ax2463:WSResource">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="childCount" type="xs:int" />
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="children" nillable="true" type="xs:string" />
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
             </xs:complexType>
             <xs:complexType name="WSTaggedResourcePath">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="resourcePath" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="tagCount" type="xs:long" />
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="tagCounts" nillable="true" type="ax2427:WSMap" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="tagCounts" nillable="true" type="ax2463:WSMap" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="WSMap">
@@ -87,19 +104,12 @@
                     <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="WSAssociation">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="associationType" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="destinationPath" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="sourcePath" nillable="true" type="xs:string" />
-                </xs:sequence>
-            </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax2425="http://api.registry.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exceptions.core.registry.carbon.wso2.org/xsd">
+        <xs:schema xmlns:ax2461="http://api.registry.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exceptions.core.registry.carbon.wso2.org/xsd">
             <xs:import namespace="http://api.registry.carbon.wso2.org/xsd" />
             <xs:complexType name="RegistryException">
                 <xs:complexContent>
-                    <xs:extension base="ax2425:RegistryException">
+                    <xs:extension base="ax2461:RegistryException">
                         <xs:sequence />
                     </xs:extension>
                 </xs:complexContent>
@@ -110,14 +120,14 @@
                 <xs:sequence />
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax2428="http://api.ws.registry.carbon.wso2.org/xsd" xmlns:ax2426="http://exceptions.core.registry.carbon.wso2.org/xsd" xmlns:ax2430="http://io.java/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.ws.registry.carbon.wso2.org">
+        <xs:schema xmlns:ax2462="http://exceptions.core.registry.carbon.wso2.org/xsd" xmlns:ax2464="http://api.ws.registry.carbon.wso2.org/xsd" xmlns:ax2466="http://io.java/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.ws.registry.carbon.wso2.org">
             <xs:import namespace="http://exceptions.core.registry.carbon.wso2.org/xsd" />
             <xs:import namespace="http://api.ws.registry.carbon.wso2.org/xsd" />
             <xs:import namespace="http://io.java/xsd" />
             <xs:element name="WSRegistryServiceRegistryException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="RegistryException" nillable="true" type="ax2426:RegistryException" />
+                        <xs:element minOccurs="0" name="RegistryException" nillable="true" type="ax2462:RegistryException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -191,6 +201,21 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeVersionHistory">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="path" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="snapshotId" type="xs:long" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeVersionHistoryResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -408,6 +433,20 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="getAll">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="path" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2464:WSResourceData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="editComment">
                 <xs:complexType>
                     <xs:sequence>
@@ -489,14 +528,14 @@
             <xs:element name="WSsearchContentResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2427:WSCollection" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2464:WSCollection" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="WSRegistryServiceIOException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="IOException" nillable="true" type="ax2429:IOException" />
+                        <xs:element minOccurs="0" name="IOException" nillable="true" type="ax2466:IOException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -504,7 +543,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="suggestedPath" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="wsResource" nillable="true" type="ax2427:WSResource" />
+                        <xs:element minOccurs="0" name="wsResource" nillable="true" type="ax2464:WSResource" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -523,7 +562,7 @@
             <xs:element name="WSnewResourceResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2427:WSResource" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2464:WSResource" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -535,7 +574,7 @@
             <xs:element name="WSnewCollectionResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2427:WSCollection" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2464:WSCollection" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -544,7 +583,7 @@
                     <xs:sequence>
                         <xs:element minOccurs="0" name="suggestedPath" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="sourceURL" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="metadata" nillable="true" type="ax2427:WSResource" />
+                        <xs:element minOccurs="0" name="metadata" nillable="true" type="ax2464:WSResource" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -567,7 +606,7 @@
             <xs:element name="WSgetWithPageSizeResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2427:WSCollection" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2464:WSCollection" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -581,7 +620,7 @@
             <xs:element name="WSgetTagsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2427:WSTag" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2464:WSTag" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -595,7 +634,7 @@
             <xs:element name="WSgetSingleCommentResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2427:WSComment" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2464:WSComment" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -609,7 +648,7 @@
             <xs:element name="WSgetResourcePathsWithTagResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2427:WSTaggedResourcePath" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2464:WSTaggedResourcePath" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -623,7 +662,7 @@
             <xs:element name="WSgetMetaDataResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2427:WSResource" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2464:WSResource" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -642,7 +681,7 @@
             <xs:element name="WSgetLogsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2427:WSLogEntry" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2464:WSLogEntry" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -656,7 +695,7 @@
             <xs:element name="WSgetCommentsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2427:WSComment" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2464:WSComment" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -672,7 +711,7 @@
             <xs:element name="WSgetChildCollectionResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2427:WSCollection" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2464:WSCollection" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -687,7 +726,7 @@
             <xs:element name="WSgetAssociationsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2427:WSAssociation" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2464:WSAssociation" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -701,7 +740,7 @@
             <xs:element name="WSgetAllAssociationsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2427:WSAssociation" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2464:WSAssociation" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -715,7 +754,7 @@
             <xs:element name="WSgetResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2427:WSResource" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2464:WSResource" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -731,7 +770,7 @@
             <xs:element name="WSexecuteQueryResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2427:WSCollection" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2464:WSCollection" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -739,7 +778,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="resourcePath" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="comment" nillable="true" type="ax2427:WSComment" />
+                        <xs:element minOccurs="0" name="comment" nillable="true" type="ax2464:WSComment" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -919,6 +958,12 @@
     <wsdl:message name="createVersionRequest">
         <wsdl:part name="parameters" element="ns:createVersion" />
     </wsdl:message>
+    <wsdl:message name="removeVersionHistoryRequest">
+        <wsdl:part name="parameters" element="ns:removeVersionHistory" />
+    </wsdl:message>
+    <wsdl:message name="removeVersionHistoryResponse">
+        <wsdl:part name="parameters" element="ns:removeVersionHistoryResponse" />
+    </wsdl:message>
     <wsdl:message name="WSputRequest">
         <wsdl:part name="parameters" element="ns:WSput" />
     </wsdl:message>
@@ -927,6 +972,12 @@
     </wsdl:message>
     <wsdl:message name="WSRegistryServiceIOException">
         <wsdl:part name="parameters" element="ns:WSRegistryServiceIOException" />
+    </wsdl:message>
+    <wsdl:message name="getAllRequest">
+        <wsdl:part name="parameters" element="ns:getAll" />
+    </wsdl:message>
+    <wsdl:message name="getAllResponse">
+        <wsdl:part name="parameters" element="ns:getAllResponse" />
     </wsdl:message>
     <wsdl:message name="associateAspectRequest">
         <wsdl:part name="parameters" element="ns:associateAspect" />
@@ -1164,11 +1215,21 @@
             <wsdl:input message="ns:createVersionRequest" wsaw:Action="urn:createVersion" />
             <wsdl:fault message="ns:WSRegistryServiceRegistryException" name="WSRegistryServiceRegistryException" wsaw:Action="urn:createVersionWSRegistryServiceRegistryException" />
         </wsdl:operation>
+        <wsdl:operation name="removeVersionHistory">
+            <wsdl:input message="ns:removeVersionHistoryRequest" wsaw:Action="urn:removeVersionHistory" />
+            <wsdl:output message="ns:removeVersionHistoryResponse" wsaw:Action="urn:removeVersionHistoryResponse" />
+            <wsdl:fault message="ns:WSRegistryServiceRegistryException" name="WSRegistryServiceRegistryException" wsaw:Action="urn:removeVersionHistoryWSRegistryServiceRegistryException" />
+        </wsdl:operation>
         <wsdl:operation name="WSput">
             <wsdl:input message="ns:WSputRequest" wsaw:Action="urn:WSput" />
             <wsdl:output message="ns:WSputResponse" wsaw:Action="urn:WSputResponse" />
             <wsdl:fault message="ns:WSRegistryServiceRegistryException" name="WSRegistryServiceRegistryException" wsaw:Action="urn:WSputWSRegistryServiceRegistryException" />
             <wsdl:fault message="ns:WSRegistryServiceIOException" name="WSRegistryServiceIOException" wsaw:Action="urn:WSputWSRegistryServiceIOException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAll">
+            <wsdl:input message="ns:getAllRequest" wsaw:Action="urn:getAll" />
+            <wsdl:output message="ns:getAllResponse" wsaw:Action="urn:getAllResponse" />
+            <wsdl:fault message="ns:WSRegistryServiceRegistryException" name="WSRegistryServiceRegistryException" wsaw:Action="urn:getAllWSRegistryServiceRegistryException" />
         </wsdl:operation>
         <wsdl:operation name="associateAspect">
             <wsdl:input message="ns:associateAspectRequest" wsaw:Action="urn:associateAspect" />
@@ -1586,6 +1647,36 @@
                 <soap:fault use="literal" name="WSRegistryServiceRegistryException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="applyTag">
+            <soap:operation soapAction="urn:applyTag" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="WSRegistryServiceRegistryException">
+                <soap:fault use="literal" name="WSRegistryServiceRegistryException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createVersion">
+            <soap:operation soapAction="urn:createVersion" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="WSRegistryServiceRegistryException">
+                <soap:fault use="literal" name="WSRegistryServiceRegistryException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeVersionHistory">
+            <soap:operation soapAction="urn:removeVersionHistory" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="WSRegistryServiceRegistryException">
+                <soap:fault use="literal" name="WSRegistryServiceRegistryException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="WSput">
             <soap:operation soapAction="urn:WSput" style="document" />
             <wsdl:input>
@@ -1601,20 +1692,14 @@
                 <soap:fault use="literal" name="WSRegistryServiceIOException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="applyTag">
-            <soap:operation soapAction="urn:applyTag" style="document" />
+        <wsdl:operation name="getAll">
+            <soap:operation soapAction="urn:getAll" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="WSRegistryServiceRegistryException">
-                <soap:fault use="literal" name="WSRegistryServiceRegistryException" />
-            </wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="createVersion">
-            <soap:operation soapAction="urn:createVersion" style="document" />
-            <wsdl:input>
+            <wsdl:output>
                 <soap:body use="literal" />
-            </wsdl:input>
+            </wsdl:output>
             <wsdl:fault name="WSRegistryServiceRegistryException">
                 <soap:fault use="literal" name="WSRegistryServiceRegistryException" />
             </wsdl:fault>
@@ -2147,6 +2232,36 @@
                 <soap12:fault use="literal" name="WSRegistryServiceRegistryException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="applyTag">
+            <soap12:operation soapAction="urn:applyTag" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="WSRegistryServiceRegistryException">
+                <soap12:fault use="literal" name="WSRegistryServiceRegistryException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createVersion">
+            <soap12:operation soapAction="urn:createVersion" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="WSRegistryServiceRegistryException">
+                <soap12:fault use="literal" name="WSRegistryServiceRegistryException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeVersionHistory">
+            <soap12:operation soapAction="urn:removeVersionHistory" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="WSRegistryServiceRegistryException">
+                <soap12:fault use="literal" name="WSRegistryServiceRegistryException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="WSput">
             <soap12:operation soapAction="urn:WSput" style="document" />
             <wsdl:input>
@@ -2162,20 +2277,14 @@
                 <soap12:fault use="literal" name="WSRegistryServiceIOException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="applyTag">
-            <soap12:operation soapAction="urn:applyTag" style="document" />
+        <wsdl:operation name="getAll">
+            <soap12:operation soapAction="urn:getAll" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="WSRegistryServiceRegistryException">
-                <soap12:fault use="literal" name="WSRegistryServiceRegistryException" />
-            </wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="createVersion">
-            <soap12:operation soapAction="urn:createVersion" style="document" />
-            <wsdl:input>
+            <wsdl:output>
                 <soap12:body use="literal" />
-            </wsdl:input>
+            </wsdl:output>
             <wsdl:fault name="WSRegistryServiceRegistryException">
                 <soap12:fault use="literal" name="WSRegistryServiceRegistryException" />
             </wsdl:fault>
@@ -2621,15 +2730,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="WSput">
-            <http:operation location="WSput" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
         <wsdl:operation name="applyTag">
             <http:operation location="applyTag" />
             <wsdl:input>
@@ -2641,6 +2741,33 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="removeVersionHistory">
+            <http:operation location="removeVersionHistory" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="WSput">
+            <http:operation location="WSput" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAll">
+            <http:operation location="getAll" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="removeTag">
             <http:operation location="removeTag" />
@@ -2786,22 +2913,22 @@
     </wsdl:binding>
     <wsdl:service name="WSRegistryService">
         <wsdl:port name="WSRegistryServiceHttpsSoap11Endpoint" binding="ns:WSRegistryServiceSoap11Binding">
-            <soap:address location="https://10.0.0.11:9443/services/WSRegistryService.WSRegistryServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://10.0.0.14:9443/services/WSRegistryService.WSRegistryServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="WSRegistryServiceHttpSoap11Endpoint" binding="ns:WSRegistryServiceSoap11Binding">
-            <soap:address location="http://10.0.0.11:9763/services/WSRegistryService.WSRegistryServiceHttpSoap11Endpoint/" />
+            <soap:address location="http://10.0.0.14:9763/services/WSRegistryService.WSRegistryServiceHttpSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="WSRegistryServiceHttpsSoap12Endpoint" binding="ns:WSRegistryServiceSoap12Binding">
-            <soap12:address location="https://10.0.0.11:9443/services/WSRegistryService.WSRegistryServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://10.0.0.14:9443/services/WSRegistryService.WSRegistryServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="WSRegistryServiceHttpSoap12Endpoint" binding="ns:WSRegistryServiceSoap12Binding">
-            <soap12:address location="http://10.0.0.11:9763/services/WSRegistryService.WSRegistryServiceHttpSoap12Endpoint/" />
+            <soap12:address location="http://10.0.0.14:9763/services/WSRegistryService.WSRegistryServiceHttpSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="WSRegistryServiceHttpEndpoint" binding="ns:WSRegistryServiceHttpBinding">
-            <http:address location="http://10.0.0.11:9763/services/WSRegistryService.WSRegistryServiceHttpEndpoint/" />
+            <http:address location="http://10.0.0.14:9763/services/WSRegistryService.WSRegistryServiceHttpEndpoint/" />
         </wsdl:port>
         <wsdl:port name="WSRegistryServiceHttpsEndpoint" binding="ns:WSRegistryServiceHttpBinding">
-            <http:address location="https://10.0.0.11:9443/services/WSRegistryService.WSRegistryServiceHttpsEndpoint/" />
+            <http:address location="https://10.0.0.14:9443/services/WSRegistryService.WSRegistryServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

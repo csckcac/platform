@@ -36,6 +36,10 @@
                     </includes>
 
                     <systemProperties>
+                        <!--<property>
+                            <name>debug.mode</name>
+                            <value>true</value>
+                        </property>-->
                         <property>
                             <name>maven.test.haltafterfailure</name>
                             <value>false</value>

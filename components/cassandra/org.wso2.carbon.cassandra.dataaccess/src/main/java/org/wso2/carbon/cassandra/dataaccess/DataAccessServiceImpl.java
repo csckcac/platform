@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -144,7 +145,15 @@ public class DataAccessServiceImpl implements DataAccessService {
      * @return
      */
     public Keyspace getKeySpace(Cluster cluster, String keyspaceName) {
-        cluster = HFactory.getOrCreateCluster(cluster.getName(), "localhost");
+        List<String> nodes = dataAccessComponentManager
+                .getClusterConfiguration().getNodes();
+        String hostIp = LOCAL_HOST_NAME;
+        for (String node : nodes) {
+            cluster = HFactory.getOrCreateCluster(cluster.getName(), node);
+            if (cluster != null) {
+                break;
+            }
+        }
         Keyspace keyspace = HFactory.createKeyspace(keyspaceName, cluster);
         return keyspace;
     }

@@ -38,17 +38,13 @@
 
             var driverName = document.getElementById("driverName").value;
             if ('' == driverName) {
-                jQuery(document).init(function () {
                     CARBON.showErrorDialog('Driver Name is empty. Please enter the driver to connect with Hive');
-                });
                 return;
             }
 
             var url = document.getElementById("jdbcURL").value;
             if ('' == url) {
-                jQuery(document).init(function () {
                     CARBON.showErrorDialog('JDBC URL is empty. Please enter the JDBC URL to connect with Hive');
-                });
                 return;
             }
 
@@ -57,13 +53,14 @@
 
              new Ajax.Request('../hive-explorer/SaveHiveConfiguration', {
                         method: 'post',
-                        parameters: {driver:driverName, url:url},
+                        parameters: {driver:driverName, url:url,
+                            hiveusername:username, hivepassword:password},
                         onSuccess: function(transport) {
                             var message = transport.responseText;
-                            alert(message);
+                            CARBON.showInfoDialog(message);
                         },
                         onFailure: function(transport) {
-                           alert(transport.responseText);
+                            CARBON.showErrorDialog(transport.responseText);
                         }
                     });
             return true;
@@ -128,7 +125,7 @@
                                     <td class="leftCol-small"><fmt:message key="hive.password"/>
                                     </td>
                                     <td><input name="password"
-                                               id="password" value="" size="60"/>
+                                               id="password" type="password" value="" size="60"/>
                                     </td>
                                 </tr>
                                 <input type="hidden" id="scriptName" name="scriptName"

@@ -38,8 +38,8 @@
         } catch (Exception e) {
     %>
     <script type="text/javascript">
-        location.href = "../admin/error.jsp";
-        alert("Error while deleting the list of scripts");
+        location.href = "../hive-explorer/listscripts.jsp";
+        CARBON.showErrorDialog('Error while deleting the list of scripts');
     </script>
     <%
         }

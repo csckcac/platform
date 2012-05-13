@@ -69,7 +69,6 @@ public class HiveConnectionManager {
                 if (input != null) {
                     RegistryService registryService = ServiceHolder.getRegistryService();
                     Registry registry = registryService.getConfigSystemRegistry();
-                    registry.beginTransaction();
                     try {
                         registry.get(HiveConstants.HIVE_CONNECTION_CONF_PATH + HiveConstants.HIVE_CONNECTION_FILE_NAME);
                     } catch (RegistryException e) {
@@ -79,7 +78,6 @@ public class HiveConnectionManager {
                         registry.put(location, reportFilesResource);
                     }
                     input.close();
-                    registry.commitTransaction();
                     retrieveConfiguration();
                 }
             } catch (RegistryException e) {

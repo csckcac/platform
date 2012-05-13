@@ -65,7 +65,7 @@
 
         } else {
             var message = "Empty query can not be executed";
-            CARBON.showWarningDialog(message);
+            CARBON.showErrorDialog(message);
         }
     }
 
@@ -81,33 +81,23 @@
                                 var result = transport.responseText;
                                 alert(result);
                                 if (result.contains('Success')) {
-                                    jQuery(document).init(function () {
                                         CARBON.showInfoDialog(result);
-                                    });
                                 } else {
-                                    jQuery(document).init(function () {
                                         CARBON.showErrorDialog(result);
-                                    });
                                 }
                             },
                             onFailure: function(transport) {
-                                jQuery(document).init(function () {
                                     CARBON.showErrorDialog(result);
-                                });
                             }
                         });
             } else {
                 var message = "Please enter script name to save";
-                jQuery(document).init(function () {
                     CARBON.showErrorDialog(message);
-                });
             }
 
         } else {
             var message = "Empty query can not be executed";
-            jQuery(document).init(function () {
-                CARBON.showErrorDialog(message);
-            });
+            CARBON.showErrorDialog(message);
         }
     }
 
@@ -136,7 +126,7 @@
     table.allResult {
         border-width: 1px;
         border-style: solid;
-        border-color: black;
+        border-color: white;
         background-color: white;
         width: 100%;
     }

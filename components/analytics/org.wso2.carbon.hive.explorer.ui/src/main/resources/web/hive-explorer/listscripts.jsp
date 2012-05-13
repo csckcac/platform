@@ -46,8 +46,7 @@
         } catch (Exception e) {
     %>
     <script type="text/javascript">
-        location.href = "../admin/error.jsp";
-        alert("Error while getting the list of scripts");
+        CARBON.showErrorDialog("Error while getting the list of scripts");
     </script>
     <%
         }

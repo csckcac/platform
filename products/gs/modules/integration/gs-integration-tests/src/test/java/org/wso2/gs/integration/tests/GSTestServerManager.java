@@ -37,7 +37,7 @@ public class GSTestServerManager extends TestServerManager {
     private static final Log log = LogFactory.getLog(GSTestServerManager.class);
 
     @Override
-    @BeforeSuite(timeOut = 80000)
+    @BeforeSuite(timeOut = 800000)
     public String startServer() throws IOException {
         String carbonHome = super.startServer();
         System.setProperty("carbon.home", carbonHome);
@@ -45,7 +45,7 @@ public class GSTestServerManager extends TestServerManager {
     }
 
     @Override
-    @AfterSuite (timeOut = 80000)
+    @AfterSuite (timeOut = 800000)
     public void stopServer() throws Exception {
         super.stopServer();
     }

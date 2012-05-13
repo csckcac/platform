@@ -21,10 +21,14 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>false</inherited>
                 <configuration>
+                    <excludes>
+                        <exclude>**/*SecurityVerificationTestCase.java</exclude>
+                    </excludes>
                     <includes>
                         <include>**/*TestServerManager.java</include>
                         <include>**/*TestCase.java</include>
                     </includes>
+
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
@@ -61,19 +65,8 @@
             </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
+
                 <executions>
-                    <execution>
-                        <id>copy-emma-dependencies</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/emma</outputDirectory>
-                            <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>emma,org.wso2.carbon.integration.framework</includeArtifactIds>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>copy-secVerifier</id>
                         <phase>compile</phase>
@@ -87,6 +80,19 @@
                             <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-emma-dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/emma</outputDirectory>
+                            <includeTypes>jar</includeTypes>
+                            <includeArtifactIds>emma,org.wso2.carbon.integration.framework</includeArtifactIds>
+                        </configuration>
+                    </execution>
+
                 </executions>
 
             </plugin>

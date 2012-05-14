@@ -20,15 +20,11 @@ package org.wso2.carbon.lb.common.conf;
 import org.apache.synapse.commons.util.PropertyHelper;
 import org.wso2.carbon.lb.common.conf.structure.Node;
 import org.wso2.carbon.lb.common.conf.structure.NodeBuilder;
-import org.wso2.carbon.lb.common.conf.util.LoadBalancerConfigUtil;
 import org.wso2.carbon.lb.common.conf.util.Constants;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
+import org.wso2.carbon.lb.common.conf.util.LoadBalancerConfigUtil;
+import org.wso2.carbon.lb.common.conf.util.TenantDomainRangeContext;
+
+import java.io.*;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -351,6 +347,41 @@ public class LoadBalancerConfiguration implements Serializable{
         }
         
     }
+
+
+    public Map<String, TenantDomainRangeContext> loadHostDomainMap() {
+
+        Map<String, TenantDomainRangeContext> map = new HashMap<String, TenantDomainRangeContext>();
+
+        // get domains elements for each service
+        for (Map.Entry<String, Node> entry : this.getServiceToDomainsMap().entrySet()) {
+            //String serviceName = entry.getKey();
+            Node domains = entry.getValue();
+            TenantDomainRangeContext domainRangeContext = new TenantDomainRangeContext();
+
+            // get domain to tenant range map for each domains element and iterate over it
+            for (Map.Entry<String, String> entry2 : this.getdomainToTenantRangeMap(domains).entrySet()) {
+
+                String domainName = entry2.getKey();
+                String tenantRange = entry2.getValue();
+                domainRangeContext.addTenantDomain(domainName, tenantRange);
+            }
+
+            // get host to domains node map and iterate over it
+            for (Map.Entry<String, Node> entry3 : this.getHostDomainMap().entrySet()) {
+                String host = entry3.getKey();
+                Node domainsNode = entry3.getValue();
+
+                if (domainsNode.equals(domains)) {
+                    map.put(host, domainRangeContext);
+                }
+            }
+
+        }
+
+        return map;
+    }
+
 
     protected void createConfiguration(Configuration config, Node node) {
         

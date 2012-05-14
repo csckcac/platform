@@ -16,18 +16,24 @@
 * under the License.
 */
 
-package org.wso2.carbon.agent.server.internal.service.authenticator;
+package org.wso2.carbon.agent.server.internal.service.sequre;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
+import org.wso2.carbon.agent.server.internal.EventDispatcher;
 import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
+import org.wso2.carbon.agent.server.internal.service.general.EventReceiverService;
 
 /**
- * The client implementation for AuthenticatorService
+ * The client implementation for SecureEventReceiverService
  */
-public class AuthenticatorService {
+public class SecureEventReceiverService extends EventReceiverService{
     private static final Log log = LogFactory.getLog(Authenticator.class);
+
+    public SecureEventReceiverService(EventDispatcher eventDispatcher) {
+        super(eventDispatcher);
+    }
 
     public static String connect(String username, String password) throws AuthenticationException {
         log.info(username + " connected");

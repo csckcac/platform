@@ -18,17 +18,30 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.agent.internal.publisher.authenticator;
+package org.wso2.carbon.agent.exception;
 
-import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+public class AgentSecurityException extends Exception {
 
-/**
- * Authenticates all data publishers
- */
-public class AgentAuthenticatorFactory {
+    private String errorMessage;
 
-    public static AgentAuthenticator getAgentAuthenticator(
-            GenericKeyedObjectPool secureTransportPool) {
-        return new ThriftAgentAuthenticator(secureTransportPool);
+    public AgentSecurityException() {
+    }
+
+    public AgentSecurityException(String message) {
+        super(message);
+        errorMessage = message;
+    }
+
+    public AgentSecurityException(String message, Throwable cause) {
+        super(message, cause);
+        errorMessage = message;
+    }
+
+    public AgentSecurityException(Throwable cause) {
+        super(cause);
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.agent.server.internal.service.receiver;
+package org.wso2.carbon.agent.server.internal.service.general;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

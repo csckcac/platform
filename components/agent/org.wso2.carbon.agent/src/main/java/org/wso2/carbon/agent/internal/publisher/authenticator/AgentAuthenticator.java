@@ -22,57 +22,45 @@ package org.wso2.carbon.agent.internal.publisher.authenticator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
-import org.wso2.carbon.agent.conf.ReceiverConfiguration;
+import org.wso2.carbon.agent.conf.DataPublisherConfiguration;
 import org.wso2.carbon.agent.exception.AgentAuthenticatorException;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
-import org.wso2.carbon.agent.internal.pool.authenticator.AuthenticatorClientPool;
-import org.wso2.carbon.agent.internal.utils.AgentConstants;
 
 /**
  * Authenticates all data publishers
  */
 public abstract class AgentAuthenticator {
 
-    private GenericKeyedObjectPool threadPool;
-
-    public AgentAuthenticator(KeyedPoolableObjectFactory factory,
-                              int maxActive,
-                              int maxIdle,
-                              boolean testOnBorrow,
-                              long timeBetweenEvictionRunsMillis,
-                              long minEvictableIdleTimeMillis) {
-        threadPool = new AuthenticatorClientPool().
-                getClientPool(factory, maxActive, maxIdle, testOnBorrow,
-                              timeBetweenEvictionRunsMillis, minEvictableIdleTimeMillis);
-    }
+    private GenericKeyedObjectPool secureTransportPool;
 
     private static Log log = LogFactory.getLog(AgentAuthenticator.class);
 
-    public String connect(ReceiverConfiguration receiverConfiguration)
+    public AgentAuthenticator(GenericKeyedObjectPool secureTransportPool) {
+        this.secureTransportPool = secureTransportPool;
+    }
+
+    public String connect(DataPublisherConfiguration dataPublisherConfiguration)
             throws AuthenticationException, TransportException, AgentException {
         Object client = null;
-        String key = receiverConfiguration.getAuthenticatorIp() +
-                     AgentConstants.HOSTNAME_AND_PORT_SEPARATOR +
-                     receiverConfiguration.getAuthenticatorPort();
+
         try {
-            client = threadPool.borrowObject(key);
-            return connect(client, receiverConfiguration.getUserName(),
-                           receiverConfiguration.getPassword());
+            client = secureTransportPool.borrowObject(dataPublisherConfiguration.getPublisherKey());
+            return connect(client, dataPublisherConfiguration.getReceiverConfiguration().getUserName(),
+                           dataPublisherConfiguration.getReceiverConfiguration().getPassword());
         } catch (AgentAuthenticatorException e) {
             throw new AuthenticationException("Access denied for user " +
-                                              receiverConfiguration.getUserName() + " to login " +
-                                              key, e);
+                                              dataPublisherConfiguration.getReceiverConfiguration().getUserName() + " to login " +
+                                              dataPublisherConfiguration.getPublisherKey(), e);
         } catch (Exception e) {
-            throw new AgentException("Cannot borrow client for " + key, e);
+            throw new AgentException("Cannot borrow client for " + dataPublisherConfiguration.getPublisherKey(), e);
         } finally {
             try {
-                threadPool.returnObject(key, client);
+                secureTransportPool.returnObject(dataPublisherConfiguration.getPublisherKey(), client);
             } catch (Exception e) {
-                threadPool.clear(key);
+                secureTransportPool.clear(dataPublisherConfiguration.getPublisherKey());
             }
         }
 
@@ -83,24 +71,26 @@ public abstract class AgentAuthenticator {
             throws AuthenticationException, AgentAuthenticatorException;
 
 
-    public void disconnect(String sessionId, ReceiverConfiguration receiverConfiguration) {
+    public void disconnect(DataPublisherConfiguration dataPublisherConfiguration) {
         Object client = null;
-        String key = receiverConfiguration.getAuthenticatorIp() +
-                     AgentConstants.HOSTNAME_AND_PORT_SEPARATOR +
-                     receiverConfiguration.getAuthenticatorPort();
+
         try {
-            client = threadPool.borrowObject(key);
-            disconnect(client, sessionId);
+            client = secureTransportPool.borrowObject(dataPublisherConfiguration.getPublisherKey());
+            disconnect(client,dataPublisherConfiguration.getSessionId());
         } catch (Exception e) {
-            log.error("Cannot connect to the server at " + key + "Authenticator", e);
+            log.error("Cannot connect to the server at " + dataPublisherConfiguration.getPublisherKey() + "Authenticator", e);
         } finally {
             try {
-                threadPool.returnObject(key, client);
+                secureTransportPool.returnObject(dataPublisherConfiguration.getPublisherKey(), client);
             } catch (Exception e) {
-                threadPool.clear(key);
+                secureTransportPool.clear(dataPublisherConfiguration.getPublisherKey());
             }
         }
 
+    }
+
+    public GenericKeyedObjectPool getSecureTransportPool() {
+        return secureTransportPool;
     }
 
     protected abstract void disconnect(Object client, String sessionId)

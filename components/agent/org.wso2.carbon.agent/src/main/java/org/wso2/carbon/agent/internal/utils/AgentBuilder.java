@@ -42,9 +42,10 @@ public final class AgentBuilder {
 
     private static final Log log = LogFactory.getLog(AgentBuilder.class);
 
-    private AgentBuilder(){
+    private AgentBuilder() {
 
     }
+
     /**
      * Helper method to load the agent config
      *
@@ -120,7 +121,6 @@ public final class AgentBuilder {
         AgentConfiguration agentConfiguration = new AgentConfiguration();
 
         buildReceiverConfiguration(agentServerConfig, agentConfiguration);
-        buildAuthenticatorConfiguration(agentServerConfig, agentConfiguration);
         buildKeyStoreConfiguration(agentServerConfig, agentConfiguration);
 
         return agentConfiguration;
@@ -176,6 +176,30 @@ public final class AgentBuilder {
         if (evictionTimePeriod != null) {
             agentConfiguration.setEvictionTimePeriod(Integer.parseInt(evictionTimePeriod.getText()));
         }
+        OMElement secureEvictionTimePeriod = agentServerConfig.getFirstChildWithName(
+                new QName(AgentConstants.AGENT_CONF_NAMESPACE,
+                          AgentConstants.SECURE_EVICTION_TIME_PERIOD));
+        if (secureEvictionTimePeriod != null) {
+            agentConfiguration.setSecureEvictionTimePeriod(Integer.parseInt(secureEvictionTimePeriod.getText()));
+        }
+        OMElement secureMaxIdleConnections = agentServerConfig.getFirstChildWithName(
+                new QName(AgentConstants.AGENT_CONF_NAMESPACE,
+                          AgentConstants.SECURE_MAX_IDLE_CONNECTIONS));
+        if (secureMaxIdleConnections != null) {
+            agentConfiguration.setEvictionTimePeriod(Integer.parseInt(secureMaxIdleConnections.getText()));
+        }
+        OMElement secureMaxTransportPoolSize = agentServerConfig.getFirstChildWithName(
+                new QName(AgentConstants.AGENT_CONF_NAMESPACE,
+                          AgentConstants.SECURE_MAX_TRANSPORT_POOL_SIZE));
+        if (secureMaxTransportPoolSize != null) {
+            agentConfiguration.setEvictionTimePeriod(Integer.parseInt(secureMaxTransportPoolSize.getText()));
+        }
+        OMElement secureMinIdleTimeInPool = agentServerConfig.getFirstChildWithName(
+                new QName(AgentConstants.AGENT_CONF_NAMESPACE,
+                          AgentConstants.SECURE_MIN_IDLE_TIME_IN_POOL));
+        if (secureMinIdleTimeInPool != null) {
+            agentConfiguration.setEvictionTimePeriod(Integer.parseInt(secureMinIdleTimeInPool.getText()));
+        }
     }
 
     private static void buildKeyStoreConfiguration(OMElement agentServerConfig,
@@ -191,25 +215,6 @@ public final class AgentBuilder {
                           AgentConstants.THRUST_STORE_PASSWORD));
         if (trustStorePassword != null) {
             agentConfiguration.setTrustStorePassword(trustStorePassword.getText());
-        }
-    }
-
-    private static void buildAuthenticatorConfiguration(OMElement agentServerConfig,
-                                                        AgentConfiguration agentConfiguration) {
-        OMElement authenticatorMaxIdleConnections = agentServerConfig.getFirstChildWithName(
-                new QName(AgentConstants.AGENT_CONF_NAMESPACE,
-                          AgentConstants.AUTHENTICATION_MAX_IDLE_CONNECTIONS));
-        if (authenticatorMaxIdleConnections != null) {
-            agentConfiguration.setAuthenticatorMaxIdleConnections(
-                    Integer.parseInt(authenticatorMaxIdleConnections.getText()));
-        }
-
-        OMElement authenticatorMaxPoolSize = agentServerConfig.getFirstChildWithName(
-                new QName(AgentConstants.AGENT_CONF_NAMESPACE,
-                          AgentConstants.AUTHENTICATION_MAX_POOL_SIZE));
-        if (authenticatorMaxPoolSize != null) {
-            agentConfiguration.setAuthenticatorMaxPoolSize(
-                    Integer.parseInt(authenticatorMaxPoolSize.getText()));
         }
     }
 

@@ -22,6 +22,7 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.agent.Agent;
 import org.wso2.carbon.agent.exception.AgentConfigurationException;
+import org.wso2.carbon.agent.exception.AgentSecurityException;
 import org.wso2.carbon.agent.internal.utils.AgentBuilder;
 
 /**

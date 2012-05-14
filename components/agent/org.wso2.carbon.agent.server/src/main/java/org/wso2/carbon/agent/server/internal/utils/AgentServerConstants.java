@@ -33,7 +33,7 @@ public final class AgentServerConstants {
     public static final String AGENT_SERVER_CONF_NAMESPACE = "http://wso2.org/carbon/agent";
     public static final String AGENT_SERVER_CONF_ELE_ROOT = "agentServerConfiguration";
 
-    public static final String AUTHENTICATOR_PORT = "authenticatorPort";
+    public static final String SECURE_EVENT_RECEIVER_PORT = "secureEventReceiverPort";
     public static final String EVENT_RECEIVER_PORT = "eventReceiverPort";
     public static final String EVENT_STREAM_DEFINITIONS = "eventStreamDefinitions";
     public static final String DOMAIN_NAME = "domainName";

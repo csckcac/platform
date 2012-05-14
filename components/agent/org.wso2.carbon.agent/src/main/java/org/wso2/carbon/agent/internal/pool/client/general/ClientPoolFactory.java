@@ -19,7 +19,7 @@
  */
 
 
-package org.wso2.carbon.agent.internal.pool.client;
+package org.wso2.carbon.agent.internal.pool.client.general;
 
 
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
@@ -28,19 +28,19 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
-import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
+import org.wso2.carbon.agent.commons.thrift.service.general.ThriftEventTransmissionService;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
 
 public class ClientPoolFactory extends BaseKeyedPoolableObjectFactory {
 
     @Override
-    public ThriftEventReceiverService.Client makeObject(Object key) throws TTransportException {
-        String[] hostNameAndPort = key.toString().split(AgentConstants.HOSTNAME_AND_PORT_SEPARATOR);
+    public ThriftEventTransmissionService.Client makeObject(Object key) throws TTransportException {
+        String[] hostNameAndPort = key.toString().split(AgentConstants.ENDPOINT_SEPARATOR)[0].split(AgentConstants.HOSTNAME_AND_PORT_SEPARATOR);
 
         TTransport receiverTransport = new TSocket(hostNameAndPort[0],
                                                    Integer.parseInt(hostNameAndPort[1]));
         TProtocol protocol = new TBinaryProtocol(receiverTransport);
-        ThriftEventReceiverService.Client client = new ThriftEventReceiverService.Client(protocol);
+        ThriftEventTransmissionService.Client client = new ThriftEventTransmissionService.Client(protocol);
         receiverTransport.open();
 
         return client;
@@ -48,7 +48,7 @@ public class ClientPoolFactory extends BaseKeyedPoolableObjectFactory {
 
     @Override
     public boolean validateObject(Object key, Object obj) {
-        ThriftEventReceiverService.Client client= (ThriftEventReceiverService.Client)obj;
+        ThriftEventTransmissionService.Client client = (ThriftEventTransmissionService.Client) obj;
         return client.getOutputProtocol().getTransport().isOpen();
     }
 

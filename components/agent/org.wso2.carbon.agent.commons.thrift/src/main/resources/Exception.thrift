@@ -22,3 +22,7 @@ exception ThriftUndefinedEventTypeException {
 exception ThriftSessionExpiredException {
     1: required string message
 }
+
+exception ThriftAuthenticationException {
+    1: required string message
+}

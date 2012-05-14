@@ -26,15 +26,15 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
-import org.wso2.carbon.agent.commons.thrift.authentication.service.ThriftAuthenticatorService;
-import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
+import org.wso2.carbon.agent.commons.thrift.service.general.ThriftEventTransmissionService;
+import org.wso2.carbon.agent.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
 import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
-import org.wso2.carbon.agent.server.internal.service.authenticator.ThriftAuthenticatorServiceImpl;
-import org.wso2.carbon.agent.server.internal.service.receiver.ThriftEventReceiverServiceImpl;
+import org.wso2.carbon.agent.server.internal.service.general.ThriftEventTransmissionServiceImpl;
+import org.wso2.carbon.agent.server.internal.service.sequre.ThriftSecureEventTransmissionServiceImpl;
 import org.wso2.carbon.agent.server.internal.utils.AgentServerConstants;
 
 import java.net.InetAddress;
@@ -48,10 +48,10 @@ public class ThriftAgentServer extends AbstractAgentServer {
     private TServer authenticationServer;
     private TServer eventReceiverServer;
 
-    public ThriftAgentServer(int authenticatorPort, int receiverPort,
+    public ThriftAgentServer(int secureReceiverPort, int receiverPort,
                              AuthenticationHandler authenticationHandler,
                              StreamDefinitionStore streamDefinitionStore) {
-        super(authenticatorPort, receiverPort, authenticationHandler, streamDefinitionStore);
+        super(secureReceiverPort, receiverPort, authenticationHandler, streamDefinitionStore);
     }
 
     public ThriftAgentServer(int receiverPort, AuthenticationHandler authenticationHandler,
@@ -66,7 +66,8 @@ public class ThriftAgentServer extends AbstractAgentServer {
     }
 
     @Override
-    protected void startAgentAuthenticator(int port, String keyStore, String keyStorePassword)
+    protected void startSecureEventTransmission(int port, String keyStore, String keyStorePassword,
+                                                EventDispatcher eventDispatcher)
             throws TransportException, UnknownHostException {
         TSSLTransportFactory.TSSLTransportParameters params =
                 new TSSLTransportFactory.TSSLTransportParameters();
@@ -80,26 +81,27 @@ public class ThriftAgentServer extends AbstractAgentServer {
             throw new TransportException("Thrift transport exception occurred ", e);
         }
 
-        ThriftAuthenticatorService.Processor<ThriftAuthenticatorServiceImpl> processor =
-                new ThriftAuthenticatorService.Processor<ThriftAuthenticatorServiceImpl>(new ThriftAuthenticatorServiceImpl());
+        ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl> processor =
+                new ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl>(
+                        new ThriftSecureEventTransmissionServiceImpl(eventDispatcher));
         authenticationServer = new TThreadPoolServer(
                 new TThreadPoolServer.Args(serverTransport).processor(processor));
         Thread thread = new Thread(new ServerThread(authenticationServer));
-        log.info("Thrift Authenticator port : " + port);
+        log.info("Thrift SSL port : " + port);
         thread.start();
     }
 
-    protected void startEventReceiver(int port, EventDispatcher eventDispatcher)
+    protected void startEventTransmission(int port, EventDispatcher eventDispatcher)
             throws AgentServerException {
         try {
             TServerSocket serverTransport = new TServerSocket(port);
-            ThriftEventReceiverService.Processor<ThriftEventReceiverServiceImpl> processor =
-                    new ThriftEventReceiverService.Processor<ThriftEventReceiverServiceImpl>(
-                            new ThriftEventReceiverServiceImpl(eventDispatcher));
+            ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl> processor =
+                    new ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl>(
+                            new ThriftEventTransmissionServiceImpl(eventDispatcher));
             eventReceiverServer = new TThreadPoolServer(
                     new TThreadPoolServer.Args(serverTransport).processor(processor));
             Thread thread = new Thread(new ServerThread(eventReceiverServer));
-            log.info("Thrift Server port : " + port);
+            log.info("Thrift port : " + port);
             thread.start();
         } catch (TTransportException e) {
             throw new AgentServerException("Cannot start Thrift server on port " + port, e);

@@ -22,12 +22,13 @@
 
     <maxTransportPoolSize>250</maxTransportPoolSize>
     <maxIdleConnections>250</maxIdleConnections>
-
-    <authenticatorMaxPoolSize>20</authenticatorMaxPoolSize>
-    <authenticatorMaxIdleConnections>20</authenticatorMaxIdleConnections>
-
     <evictionTimePeriod>5500</evictionTimePeriod>
     <minIdleTimeInPool>5000</minIdleTimeInPool>
+
+    <secureMaxTransportPoolSize>250</secureMaxTransportPoolSize>
+    <secureMaxIdleConnections>250</secureMaxIdleConnections>
+    <secureEvictionTimePeriod>5500</secureEvictionTimePeriod>
+    <secureMinIdleTimeInPool>5000</secureMinIdleTimeInPool>
 
     <maxMessageBundleSize>100</maxMessageBundleSize>
 

@@ -109,11 +109,11 @@ public final class AgentServerBuilder {
     private static void populatePorts(OMElement agentServerConfig, ServerConfigurationService serverConfiguration,
                                       AgentServerConfiguration agentServerConfiguration) {
         int portOffSet = readPortOffset(serverConfiguration);
-        OMElement authenticatorPort = agentServerConfig.getFirstChildWithName(
+        OMElement secureEventReceiverPort = agentServerConfig.getFirstChildWithName(
                 new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE,
-                          AgentServerConstants.AUTHENTICATOR_PORT));
-        if (authenticatorPort != null) {
-            agentServerConfiguration.setAuthenticatorPort(Integer.parseInt(authenticatorPort.getText()) + portOffSet);
+                          AgentServerConstants.SECURE_EVENT_RECEIVER_PORT));
+        if (secureEventReceiverPort != null) {
+            agentServerConfiguration.setSecureEventReceiverPort(Integer.parseInt(secureEventReceiverPort.getText()) + portOffSet);
         }
         OMElement receiverPort = agentServerConfig.getFirstChildWithName(
                 new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE,

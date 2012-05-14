@@ -30,18 +30,18 @@ public class ReceiverConfiguration {
     private String password;
     private String eventReceiverIp;
     private int eventReceiverPort;
-    private String authenticatorIp;
-    private int authenticatorPort;
+    private String secureEventReceiverIp;
+    private int secureEventReceiverPort;
 
     public ReceiverConfiguration(String userName, String password, String eventReceiverIp,
-                                 int eventReceiverPort, String authenticatorIp,
-                                 int authenticatorPort) {
+                                 int eventReceiverPort, String secureEventReceiverIp,
+                                 int secureEventReceiverPort) {
         this.userName = userName;
         this.password = password;
         this.eventReceiverIp = eventReceiverIp;
         this.eventReceiverPort = eventReceiverPort;
-        this.authenticatorIp = authenticatorIp;
-        this.authenticatorPort = authenticatorPort;
+        this.secureEventReceiverIp = secureEventReceiverIp;
+        this.secureEventReceiverPort = secureEventReceiverPort;
     }
 
     public String getEventReceiverIp() {
@@ -60,20 +60,20 @@ public class ReceiverConfiguration {
         this.eventReceiverPort = eventReceiverPort;
     }
 
-    public String getAuthenticatorIp() {
-        return authenticatorIp;
+    public String getSecureEventReceiverIp() {
+        return secureEventReceiverIp;
     }
 
-    public void setAuthenticatorIp(String authenticatorIp) {
-        this.authenticatorIp = authenticatorIp;
+    public void setSecureEventReceiverIp(String secureEventReceiverIp) {
+        this.secureEventReceiverIp = secureEventReceiverIp;
     }
 
-    public int getAuthenticatorPort() {
-        return authenticatorPort;
+    public int getSecureEventReceiverPort() {
+        return secureEventReceiverPort;
     }
 
-    public void setAuthenticatorPort(int authenticatorPort) {
-        this.authenticatorPort = authenticatorPort;
+    public void setSecureEventReceiverPort(int secureEventReceiverPort) {
+        this.secureEventReceiverPort = secureEventReceiverPort;
     }
 
     public String getUserName() {

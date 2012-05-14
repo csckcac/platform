@@ -16,32 +16,50 @@
 * under the License.
 */
 
-package org.wso2.carbon.agent.server.internal.service.receiver;
+package org.wso2.carbon.agent.server.internal.service.sequre;
 
 import org.apache.thrift.TException;
+import org.wso2.carbon.agent.commons.exception.AuthenticationException;
 import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
 import org.wso2.carbon.agent.commons.exception.SessionTimeoutException;
 import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
 import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
+import org.wso2.carbon.agent.commons.thrift.exception.ThriftAuthenticationException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftUndefinedEventTypeException;
-import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
+import org.wso2.carbon.agent.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
 import org.wso2.carbon.agent.server.internal.EventDispatcher;
 
 /**
- * The client implementation for ThriftEventReceiverService
+ * The client implementation for ThriftSecureEventTransmissionService
  */
-public class ThriftEventReceiverServiceImpl implements ThriftEventReceiverService.Iface {
+public class ThriftSecureEventTransmissionServiceImpl
+        implements ThriftSecureEventTransmissionService.Iface {
 
-    private EventReceiverService eventReceiverService;
+    private SecureEventReceiverService secureEventReceiverService;
 
-    public ThriftEventReceiverServiceImpl(EventDispatcher eventDispatcher) {
-        this.eventReceiverService = new EventReceiverService(eventDispatcher);
+    public ThriftSecureEventTransmissionServiceImpl(EventDispatcher eventDispatcher) {
+        this.secureEventReceiverService = new SecureEventReceiverService(eventDispatcher);
+    }
+    public String connect(String username, String password) throws ThriftAuthenticationException {
+        try {
+            return SecureEventReceiverService.connect(username, password);
+        } catch (AuthenticationException e) {
+            throw new ThriftAuthenticationException(e.getErrorMessage());
+        }
+    }
+
+    public void disconnect(String sessionId) throws TException {
+        try {
+            SecureEventReceiverService.disconnect(sessionId);
+        } catch (Exception e) {
+            throw new TException(e.getMessage());
+        }
     }
 
     @Override
@@ -50,7 +68,7 @@ public class ThriftEventReceiverServiceImpl implements ThriftEventReceiverServic
                    ThriftDifferentStreamDefinitionAlreadyDefinedException,
                    ThriftMalformedStreamDefinitionException {
         try {
-            return eventReceiverService.defineEventStream(sessionId, streamDefinition);
+            return secureEventReceiverService.defineEventStream(sessionId, streamDefinition);
         } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
             throw new ThriftDifferentStreamDefinitionAlreadyDefinedException(e.getErrorMessage());
         } catch (MalformedStreamDefinitionException e) {
@@ -65,7 +83,7 @@ public class ThriftEventReceiverServiceImpl implements ThriftEventReceiverServic
             throws ThriftNoStreamDefinitionExistException, ThriftSessionExpiredException,
                    TException {
         try {
-            return eventReceiverService.findEventStreamId(sessionId, streamName, streamVersion);
+            return secureEventReceiverService.findEventStreamId(sessionId, streamName, streamVersion);
         } catch (NoStreamDefinitionExistException e) {
             throw new ThriftNoStreamDefinitionExistException(e.getErrorMessage());
         } catch (SessionTimeoutException e) {
@@ -77,7 +95,7 @@ public class ThriftEventReceiverServiceImpl implements ThriftEventReceiverServic
     public void publish(ThriftEventBundle eventBundle)
             throws ThriftUndefinedEventTypeException, ThriftSessionExpiredException, TException {
         try {
-            eventReceiverService.publish(eventBundle, eventBundle.getSessionId());
+            secureEventReceiverService.publish(eventBundle, eventBundle.getSessionId());
         } catch (UndefinedEventTypeException e) {
             throw new ThriftUndefinedEventTypeException(e.getErrorMessage());
         } catch (SessionTimeoutException e) {

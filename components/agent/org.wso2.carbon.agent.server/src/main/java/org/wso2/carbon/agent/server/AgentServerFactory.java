@@ -31,9 +31,9 @@ public class AgentServerFactory {
         return new ThriftAgentServer(agentServerConfiguration, authenticationHandler,streamDefinitionStore);
     }
 
-    public ThriftAgentServer createAgentServer(int authenticatorPort, int receiverPort,
+    public ThriftAgentServer createAgentServer(int secureReceiverPort, int receiverPort,
                                                AuthenticationHandler authenticationHandler,StreamDefinitionStore streamDefinitionStore) {
-        return new ThriftAgentServer(authenticatorPort, receiverPort, authenticationHandler,streamDefinitionStore);
+        return new ThriftAgentServer(secureReceiverPort, receiverPort, authenticationHandler,streamDefinitionStore);
     }
 
 

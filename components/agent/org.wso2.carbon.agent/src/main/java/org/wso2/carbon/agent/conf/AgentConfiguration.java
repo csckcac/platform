@@ -30,20 +30,38 @@ public class AgentConfiguration {
 
     private int bufferedEventsSize = AgentConstants.DEFAULT_BUFFERED_EVENTS_SIZE;
     private int poolSize = AgentConstants.DEFAULT_POOL_SIZE;
+
     private int maxTransportPoolSize = AgentConstants.DEFAULT_MAX_TRANSPORT_POOL_SIZE;
+    private int maxIdleConnections = AgentConstants.DEFAULT_MAX_IDLE_CONNECTIONS;
+    private long evictionTimePeriod = AgentConstants.DEFAULT_EVICTION_IDLE_TIME_IN_POOL;
+    private long minIdleTimeInPool = AgentConstants.DEFAULT_MIN_IDLE_TIME_IN_POOL;
 
-    private int maxIdleConnections = AgentConstants.DEFAULT_MAX_IDLE_CONNECTIONS ;
-    private long evictionTimePeriod = AgentConstants.DEFAULT_EVICTION_IDLE_TIME_IN_POOL ;
-    private long minIdleTimeInPool = AgentConstants.DEFAULT_MIN_IDLE_TIME_IN_POOL ;
+    private int maxMessageBundleSize = AgentConstants.DEFAULT_MAX_MESSAGE_BUNDLE_SIZE;
 
-    private int maxMessageBundleSize = AgentConstants.DEFAULT_MAX_MESSAGE_BUNDLE_SIZE ;
+    private int secureMaxTransportPoolSize = AgentConstants.DEFAULT_SECURE_MAX_TRANSPORT_POOL_SIZE;
+    private int secureMaxIdleConnections = AgentConstants.DEFAULT_SECURE_MAX_IDLE_CONNECTIONS;
+    private long secureEvictionTimePeriod = AgentConstants.DEFAULT_SECURE_EVICTION_IDLE_TIME_IN_POOL;
+    private long secureMinIdleTimeInPool = AgentConstants.DEFAULT_SECURE_MIN_IDLE_TIME_IN_POOL;
 
-    private int authenticatorMaxPoolSize = AgentConstants.DEFAULT_AUTHENTICATOR_MAX_POOL_SIZE ;
-    private int authenticatorMaxIdleConnections = AgentConstants.DEFAULT_AUTHENTICATOR_MAX_IDLE_CONNECTIONS;
 
-    private String trustStore=null;
-    private String trustStorePassword=null;
+    private String trustStore = null;
+    private String trustStorePassword = null;
 
+    public void setSecureMaxTransportPoolSize(int secureMaxTransportPoolSize) {
+        this.secureMaxTransportPoolSize = secureMaxTransportPoolSize;
+    }
+
+    public void setSecureMaxIdleConnections(int secureMaxIdleConnections) {
+        this.secureMaxIdleConnections = secureMaxIdleConnections;
+    }
+
+    public void setSecureEvictionTimePeriod(long secureEvictionTimePeriod) {
+        this.secureEvictionTimePeriod = secureEvictionTimePeriod;
+    }
+
+    public void setSecureMinIdleTimeInPool(long secureMinIdleTimeInPool) {
+        this.secureMinIdleTimeInPool = secureMinIdleTimeInPool;
+    }
 
     public int getMaxMessageBundleSize() {
         return maxMessageBundleSize;
@@ -101,22 +119,6 @@ public class AgentConfiguration {
         this.poolSize = poolSize;
     }
 
-    public int getAuthenticatorMaxPoolSize() {
-        return authenticatorMaxPoolSize;
-    }
-
-    public void setAuthenticatorMaxPoolSize(int authenticatorMaxPoolSize) {
-        this.authenticatorMaxPoolSize = authenticatorMaxPoolSize;
-    }
-
-    public int getAuthenticatorMaxIdleConnections() {
-        return authenticatorMaxIdleConnections;
-    }
-
-    public void setAuthenticatorMaxIdleConnections(int authenticatorMaxIdleConnections) {
-        this.authenticatorMaxIdleConnections = authenticatorMaxIdleConnections;
-    }
-
     public String getTrustStore() {
         return trustStore;
     }
@@ -131,5 +133,21 @@ public class AgentConfiguration {
 
     public void setTrustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
+    }
+
+    public int getSecureMaxTransportPoolSize() {
+        return secureMaxTransportPoolSize;
+    }
+
+    public int getSecureMaxIdleConnections() {
+        return secureMaxIdleConnections;
+    }
+
+    public long getSecureEvictionTimePeriod() {
+        return secureEvictionTimePeriod;
+    }
+
+    public long getSecureMinIdleTimeInPool() {
+        return secureMinIdleTimeInPool;
     }
 }

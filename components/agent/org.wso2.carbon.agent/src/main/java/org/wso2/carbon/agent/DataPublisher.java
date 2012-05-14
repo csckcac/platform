@@ -49,7 +49,9 @@ public class DataPublisher {
     private Agent agent;
     private DataPublisherConfiguration dataPublisherConfiguration;
     private EventPublisher eventPublisher;
+    private EventPublisher secureEventPublisher;
     private EventQueue<Event> eventQueue;
+    private EventQueue<Event> secureEventQueue;
 
     private ThreadPoolExecutor threadPool;
 
@@ -76,7 +78,7 @@ public class DataPublisher {
      * To create the Data Publisher
      * Here the new agent will be created for publishing events
      *
-     * @param authenticatorUrl the authenticator url E.g tcp://localhost:6745
+     * @param secureReceiverUrl the secure url E.g tcp://localhost:6745
      * @param receiverUrl      the event receiver url E.g tcp://localhost:7775
      * @param userName         user name
      * @param password         password
@@ -85,11 +87,11 @@ public class DataPublisher {
      * @throws AuthenticationException
      * @throws TransportException
      */
-    public DataPublisher(String authenticatorUrl, String receiverUrl, String userName,
+    public DataPublisher(String secureReceiverUrl, String receiverUrl, String userName,
                          String password)
             throws MalformedURLException, AgentException, AuthenticationException,
                    TransportException {
-        this(authenticatorUrl, receiverUrl, userName, password, new Agent());
+        this(secureReceiverUrl, receiverUrl, userName, password, new Agent());
     }
 
     /**
@@ -112,7 +114,7 @@ public class DataPublisher {
         AgentServerURL receiverURL = new AgentServerURL(receiverUrl);
         this.start(new ReceiverConfiguration(userName, password,
                                              receiverURL.getHost(), receiverURL.getPort(),
-                                             receiverURL.getHost(), receiverURL.getPort() + AgentConstants.AUTHENTICATOR_PORT_OFFSET),
+                                             receiverURL.getHost(), receiverURL.getPort() + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET),
                    agent);
 
     }
@@ -120,7 +122,7 @@ public class DataPublisher {
     /**
      * To create the Data Publisher
      *
-     * @param authenticatorUrl the authenticator url E.g tcp://localhost:6745
+     * @param secureReceiverUrl the secure url E.g tcp://localhost:6745
      * @param receiverUrl      the event receiver url E.g tcp://localhost:7775
      * @param userName         user name
      * @param password         password
@@ -130,16 +132,16 @@ public class DataPublisher {
      * @throws AuthenticationException
      * @throws TransportException
      */
-    public DataPublisher(String authenticatorUrl, String receiverUrl, String userName,
+    public DataPublisher(String secureReceiverUrl, String receiverUrl, String userName,
                          String password, Agent agent)
             throws MalformedURLException, AgentException, AuthenticationException,
                    TransportException {
-        AgentServerURL authenticatorURL = new AgentServerURL(authenticatorUrl);
+        AgentServerURL secureReceiverURL = new AgentServerURL(secureReceiverUrl);
         AgentServerURL receiverURL = new AgentServerURL(receiverUrl);
 
         this.start(new ReceiverConfiguration(userName, password,
                                              receiverURL.getHost(), receiverURL.getPort(),
-                                             authenticatorURL.getHost(), authenticatorURL.getPort()),
+                                             secureReceiverURL.getHost(), secureReceiverURL.getPort()),
                    agent);
 
     }
@@ -174,11 +176,13 @@ public class DataPublisher {
         this.agent = agent;
         this.dataPublisherConfiguration = new DataPublisherConfiguration(receiverConfiguration);
         this.eventQueue = new EventQueue<Event>();
+        this.secureEventQueue = new EventQueue<Event>();
         this.threadPool = agent.getThreadPool();
-        this.eventPublisher = EventPublisherFactory.getEventPublisher(dataPublisherConfiguration, eventQueue, agent);
+        this.eventPublisher = EventPublisherFactory.getEventPublisher(dataPublisherConfiguration, eventQueue, agent, agent.getTransportPool());
+        this.secureEventPublisher = EventPublisherFactory.getEventPublisher(dataPublisherConfiguration, secureEventQueue, agent, agent.getSecureTransportPool());
         //Connect to the server
         dataPublisherConfiguration.setSessionId(agent.getAgentAuthenticator().connect(
-                dataPublisherConfiguration.getReceiverConfiguration()));
+                dataPublisherConfiguration));
     }
 
     /**
@@ -273,11 +277,101 @@ public class DataPublisher {
     }
 
     /**
+     * Defining stream on which events will be published by this DataPublisher in a secure manner via TLS
+     *
+     * @param eventStreamDefinition on json format
+     * @return the stream id
+     * @throws AgentException
+     * @throws DifferentStreamDefinitionAlreadyDefinedException
+     *
+     * @throws WrongEventTypeException
+     * @throws MalformedStreamDefinitionException
+     *
+     * @throws StreamDefinitionException
+     */
+    public String secureDefineEventStream(String eventStreamDefinition)
+            throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
+                   WrongEventTypeException, DifferentStreamDefinitionAlreadyDefinedException {
+        String sessionId = dataPublisherConfiguration.getSessionId();
+        return secureEventPublisher.defineEventStream(sessionId, eventStreamDefinition);
+    }
+
+    /**
+     * Finding already existing stream's Id to publish data in a secure manner via TLS
+     *
+     * @param name    the stream name
+     * @param version the version of the stream
+     * @return stream id
+     * @throws org.wso2.carbon.agent.exception.AgentException
+     *          if client cannot publish the type definition
+     */
+    public String secureFindEventStream(String name, String version)
+            throws AgentException, StreamDefinitionException, NoStreamDefinitionExistException {
+        String sessionId = dataPublisherConfiguration.getSessionId();
+        return secureEventPublisher.findEventStreamId(sessionId, name, version);
+    }
+
+
+    /**
+     * Publishing the events to the server in a secure manner via TLS
+     *
+     * @param event the event to be published
+     * @throws org.wso2.carbon.agent.exception.AgentException
+     *          if client cannot publish the event
+     */
+    public void securePublish(Event event) throws AgentException {
+        try {
+            agent.getQueueSemaphore().acquire();//control the total number of buffered events
+
+            //Adds event to the queue and checks whether its scheduled for event dispatching
+            if (!secureEventQueue.put(event)) {
+                try {
+                    //if not schedule for event dispatching
+                    threadPool.submit(secureEventPublisher);
+                } catch (RejectedExecutionException ignored) {
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new AgentException("Cannot add " + event + " to event queue", e);
+        }
+    }
+
+    /**
+     * Publishing events to the server in a secure manner via TLS
+     *
+     * @param streamId             of the stream on which the events are published
+     * @param metaDataArray        metadata array of the event
+     * @param correlationDataArray correlation data array of the event
+     * @param payloadDataArray     payload data array of the event
+     * @throws AgentException
+     */
+    public void securePublish(String streamId, Object[] metaDataArray, Object[] correlationDataArray,
+                        Object[] payloadDataArray)
+            throws AgentException {
+        securePublish(new Event(streamId, System.currentTimeMillis(), metaDataArray, correlationDataArray, payloadDataArray));
+    }
+
+    /**
+     * Publishing events to the server in a secure manner via TLS
+     *
+     * @param streamId             of the stream on which the events are published
+     * @param timeStamp            time stamp of the event
+     * @param metaDataArray        metadata array of the event
+     * @param correlationDataArray correlation data array of the event
+     * @param payloadDataArray     payload data array of the event
+     * @throws AgentException
+     */
+    public void securePublish(String streamId, long timeStamp, Object[] metaDataArray,
+                        Object[] correlationDataArray, Object[] payloadDataArray)
+            throws AgentException {
+        securePublish(new Event(streamId, timeStamp, metaDataArray, correlationDataArray, payloadDataArray));
+    }
+
+    /**
      * Disconnecting from the server
      */
     public void stop() {
-        agent.getAgentAuthenticator().disconnect(dataPublisherConfiguration.getSessionId(),
-                                                 dataPublisherConfiguration.getReceiverConfiguration());
+        agent.getAgentAuthenticator().disconnect(dataPublisherConfiguration);
         agent.shutdown(this);
     }
 

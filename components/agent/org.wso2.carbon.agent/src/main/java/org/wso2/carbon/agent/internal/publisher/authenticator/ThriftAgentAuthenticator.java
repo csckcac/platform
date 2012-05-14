@@ -22,11 +22,11 @@ package org.wso2.carbon.agent.internal.publisher.authenticator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pool.KeyedPoolableObjectFactory;
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.thrift.TException;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
-import org.wso2.carbon.agent.commons.thrift.authentication.exception.ThriftAuthenticationException;
-import org.wso2.carbon.agent.commons.thrift.authentication.service.ThriftAuthenticatorService;
+import org.wso2.carbon.agent.commons.thrift.exception.ThriftAuthenticationException;
+import org.wso2.carbon.agent.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
 import org.wso2.carbon.agent.exception.AgentAuthenticatorException;
 
 /**
@@ -36,17 +36,15 @@ public class ThriftAgentAuthenticator extends AgentAuthenticator {
 
     private static Log log = LogFactory.getLog(ThriftAgentAuthenticator.class);
 
-    public ThriftAgentAuthenticator(KeyedPoolableObjectFactory factory, int maxActive, int maxIdle,
-                                    boolean testOnBorrow, long timeBetweenEvictionRunsMillis,
-                                    long minEvictableIdleTimeMillis) {
-        super(factory, maxActive, maxIdle, testOnBorrow, timeBetweenEvictionRunsMillis, minEvictableIdleTimeMillis);
+    public ThriftAgentAuthenticator(GenericKeyedObjectPool secureTransportPool) {
+        super(secureTransportPool);
     }
 
     @Override
     protected String connect(Object client, String userName, String password)
             throws AuthenticationException, AgentAuthenticatorException {
         try {
-            return ((ThriftAuthenticatorService.Client) client).connect(userName, password);
+            return ((ThriftSecureEventTransmissionService.Client) client).connect(userName, password);
         } catch (ThriftAuthenticationException e) {
             throw new AuthenticationException("Thrift Authentication Exception", e);
         } catch (TException e) {
@@ -57,10 +55,9 @@ public class ThriftAgentAuthenticator extends AgentAuthenticator {
     @Override
     protected void disconnect(Object client, String sessionId) throws AgentAuthenticatorException {
         try {
-            ((ThriftAuthenticatorService.Client)client).disconnect(sessionId);
+            ((ThriftSecureEventTransmissionService.Client) client).disconnect(sessionId);
         } catch (TException e) {
-            throw new
-                    AgentAuthenticatorException("Thrift Exception",e);
+            throw new AgentAuthenticatorException("Thrift Exception", e);
         }
     }
 }

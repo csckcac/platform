@@ -24,8 +24,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.wso2.carbon.agent.conf.AgentConfiguration;
-import org.wso2.carbon.agent.internal.pool.client.ClientPool;
-import org.wso2.carbon.agent.internal.pool.client.ClientPoolFactory;
+import org.wso2.carbon.agent.internal.pool.client.general.ClientPool;
+import org.wso2.carbon.agent.internal.pool.client.general.ClientPoolFactory;
+import org.wso2.carbon.agent.internal.pool.client.secure.SecureClientPool;
+import org.wso2.carbon.agent.internal.pool.client.secure.SecureClientPoolFactory;
 import org.wso2.carbon.agent.internal.publisher.authenticator.AgentAuthenticator;
 import org.wso2.carbon.agent.internal.publisher.authenticator.AgentAuthenticatorFactory;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
@@ -51,6 +53,7 @@ public class Agent {
     private AgentAuthenticator agentAuthenticator;
     private List<DataPublisher> dataPublisherList;
     private ThreadPoolExecutor threadPool;
+    private GenericKeyedObjectPool secureTransportPool;
 
     public Agent() {
         this(new AgentConfiguration());
@@ -62,7 +65,11 @@ public class Agent {
                 new ClientPoolFactory(), agentConfiguration.getMaxTransportPoolSize(),
                 agentConfiguration.getMaxIdleConnections(), true, agentConfiguration.getEvictionTimePeriod(),
                 agentConfiguration.getMinIdleTimeInPool());
-        this.agentAuthenticator = AgentAuthenticatorFactory.getAgentAuthenticator(agentConfiguration);
+        this.secureTransportPool = new SecureClientPool().getClientPool(
+                new SecureClientPoolFactory(agentConfiguration.getTrustStore(), agentConfiguration.getTrustStorePassword()), agentConfiguration.getSecureMaxTransportPoolSize(),
+                agentConfiguration.getSecureMaxIdleConnections(), true, agentConfiguration.getSecureEvictionTimePeriod(),
+                agentConfiguration.getSecureMinIdleTimeInPool());
+        this.agentAuthenticator = AgentAuthenticatorFactory.getAgentAuthenticator(secureTransportPool);
         this.dataPublisherList = new LinkedList<DataPublisher>();
         this.queueSemaphore = new Semaphore(agentConfiguration.getBufferedEventsSize());
         //for the unbounded queue implementation the maximum pool size irrelevant and
@@ -126,5 +133,9 @@ public class Agent {
 
     public ThreadPoolExecutor getThreadPool() {
         return threadPool;
+    }
+
+    public GenericKeyedObjectPool getSecureTransportPool() {
+        return secureTransportPool;
     }
 }

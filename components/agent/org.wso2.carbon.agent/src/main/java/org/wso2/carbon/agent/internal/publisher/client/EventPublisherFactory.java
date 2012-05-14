@@ -17,6 +17,7 @@
 */
 package org.wso2.carbon.agent.internal.publisher.client;
 
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.wso2.carbon.agent.Agent;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.conf.DataPublisherConfiguration;
@@ -25,8 +26,9 @@ import org.wso2.carbon.agent.internal.EventQueue;
 public class EventPublisherFactory {
     public static EventPublisher getEventPublisher(
             DataPublisherConfiguration dataPublisherConfiguration,
-            EventQueue<Event> eventQueue, Agent agent) {
-        return new ThriftEventPublisher(eventQueue, agent.getTransportPool(), agent.getQueueSemaphore(),
+            EventQueue<Event> eventQueue, Agent agent, GenericKeyedObjectPool transportPool) {
+        return new ThriftEventPublisher(eventQueue, transportPool,
+                                        agent.getQueueSemaphore(),
                                         agent.getAgentConfiguration().getMaxMessageBundleSize(),
                                         dataPublisherConfiguration, agent.getAgentAuthenticator(),
                                         agent.getThreadPool());

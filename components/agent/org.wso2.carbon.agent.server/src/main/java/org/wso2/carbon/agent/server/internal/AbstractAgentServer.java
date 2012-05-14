@@ -49,18 +49,18 @@ public abstract class AbstractAgentServer implements AgentServer {
     /**
      * Initialize Carbon Agent Server
      *
-     * @param authenticatorPort
+     * @param secureReceiverPort
      * @param receiverPort
      * @param authenticationHandler
      * @param streamDefinitionStore
      */
-    public AbstractAgentServer(int authenticatorPort, int receiverPort,
+    public AbstractAgentServer(int secureReceiverPort, int receiverPort,
                                AuthenticationHandler authenticationHandler,
                                StreamDefinitionStore streamDefinitionStore) {
         this.streamDefinitionStore = streamDefinitionStore;
         Authenticator.getInstance().init(authenticationHandler);
         this.eventDispatcher = new EventDispatcher(streamDefinitionStore);
-        this.agentServerConfiguration = new AgentServerConfiguration(authenticatorPort, receiverPort);
+        this.agentServerConfiguration = new AgentServerConfiguration(secureReceiverPort, receiverPort);
     }
 
     /**
@@ -76,7 +76,7 @@ public abstract class AbstractAgentServer implements AgentServer {
         this.streamDefinitionStore = streamDefinitionStore;
         Authenticator.getInstance().init(authenticationHandler);
         this.eventDispatcher = new EventDispatcher(streamDefinitionStore);
-        this.agentServerConfiguration = new AgentServerConfiguration(receiverPort + AgentConstants.AUTHENTICATOR_PORT_OFFSET, receiverPort);
+        this.agentServerConfiguration = new AgentServerConfiguration(receiverPort + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverPort);
     }
 
     /**
@@ -133,18 +133,20 @@ public abstract class AbstractAgentServer implements AgentServer {
     /**
      * To start the Agent server
      *
-     * @throws org.wso2.carbon.agent.server.exception.AgentServerException if the agent server cannot be started
+     * @throws org.wso2.carbon.agent.server.exception.AgentServerException
+     *          if the agent server cannot be started
      */
     public void start()
             throws AgentServerException {
-        startAgentAuthenticator(agentServerConfiguration.getAuthenticatorPort());
-        startEventReceiver(agentServerConfiguration.getEventReceiverPort(),eventDispatcher);
+        startSecureEventTransmission(agentServerConfiguration.getSecureEventReceiverPort(),eventDispatcher);
+        startEventTransmission(agentServerConfiguration.getEventReceiverPort(), eventDispatcher);
     }
 
-    protected abstract void startEventReceiver(int eventReceiverPort,
-                                               EventDispatcher eventDispatcher) throws AgentServerException;
+    protected abstract void startEventTransmission(int eventReceiverPort,
+                                                   EventDispatcher eventDispatcher)
+            throws AgentServerException;
 
-    private void startAgentAuthenticator(int port) throws AgentServerException {
+    private void startSecureEventTransmission(int port,EventDispatcher eventDispatcher) throws AgentServerException {
         try {
 
             ServerConfiguration serverConfig = ServerConfiguration.getInstance();
@@ -163,7 +165,7 @@ public abstract class AbstractAgentServer implements AgentServer {
                 }
             }
 
-            startAgentAuthenticator(port, keyStore, keyStorePassword);
+            startSecureEventTransmission(port, keyStore, keyStorePassword,eventDispatcher);
         } catch (TransportException e) {
             throw new AgentServerException("Cannot start agent server on port " + port, e);
         } catch (UnknownHostException e) {
@@ -171,10 +173,10 @@ public abstract class AbstractAgentServer implements AgentServer {
         }
     }
 
-    protected abstract void startAgentAuthenticator(int port, String keyStore,
-                                                    String keyStorePassword)
-            throws TransportException, UnknownHostException;
-
+    protected abstract void startSecureEventTransmission(int port, String keyStore,
+                                                         String keyStorePassword,
+                                                         EventDispatcher eventDispatcher)
+            throws AgentServerException, TransportException, UnknownHostException;
 
 
     public List<AgentCallback> getSubscribers() {

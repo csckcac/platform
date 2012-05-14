@@ -18,23 +18,22 @@
  * limitations under the License.
  */
 
-
-package org.wso2.carbon.agent.internal.pool.client;
-
+package org.wso2.carbon.agent.internal.pool.client.secure;
 
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
+import org.wso2.carbon.agent.internal.pool.client.general.ClientPool;
 
-public class ClientPool {
+public class SecureClientPool {
 
-    private volatile GenericKeyedObjectPool socketPool = null;
+    private static volatile GenericKeyedObjectPool socketPool = null;
 
     public GenericKeyedObjectPool getClientPool(KeyedPoolableObjectFactory factory,
-                                                       int maxActive,
-                                                       int maxIdle,
-                                                       boolean testOnBorrow,
-                                                       long timeBetweenEvictionRunsMillis,
-                                                       long minEvictableIdleTimeMillis) {
+                                                int maxActive,
+                                                int maxIdle,
+                                                boolean testOnBorrow,
+                                                long timeBetweenEvictionRunsMillis,
+                                                long minEvictableIdleTimeMillis) {
         if (socketPool == null) {
             synchronized (ClientPool.class) {
                 if (socketPool == null) {
@@ -45,7 +44,7 @@ public class ClientPool {
                     socketPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
                     socketPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
                     socketPool.setMaxIdle(maxIdle);
-                    socketPool.setWhenExhaustedAction(GenericKeyedObjectPool.WHEN_EXHAUSTED_GROW);
+                    socketPool.setWhenExhaustedAction(GenericKeyedObjectPool.WHEN_EXHAUSTED_BLOCK);
                 }
             }
         }

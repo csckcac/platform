@@ -61,7 +61,7 @@ public class AgentServerServiceDS {
     protected void activate(ComponentContext context) {
 
         try {
-            AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(AgentConstants.DEFAULT_RECEIVER_PORT + AgentConstants.AUTHENTICATOR_PORT_OFFSET, AgentConstants.DEFAULT_RECEIVER_PORT);
+            AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(AgentConstants.DEFAULT_RECEIVER_PORT + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, AgentConstants.DEFAULT_RECEIVER_PORT);
             List<String[]> eventStreamDefinitions = new ArrayList<String[]>();
             AgentServerBuilder.populateConfigurations(serverConfiguration, agentServerConfiguration, eventStreamDefinitions);
 

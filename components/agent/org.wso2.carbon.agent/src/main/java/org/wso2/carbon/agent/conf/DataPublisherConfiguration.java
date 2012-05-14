@@ -35,7 +35,11 @@ public class DataPublisherConfiguration {
         this.receiverConfiguration = receiverConfiguration;
         publisherKey = receiverConfiguration.getEventReceiverIp() +
                        AgentConstants.HOSTNAME_AND_PORT_SEPARATOR +
-                       receiverConfiguration.getEventReceiverPort();
+                       receiverConfiguration.getEventReceiverPort() +
+                       AgentConstants.ENDPOINT_SEPARATOR +
+                       receiverConfiguration.getSecureEventReceiverIp() +
+                       AgentConstants.HOSTNAME_AND_PORT_SEPARATOR +
+                       receiverConfiguration.getSecureEventReceiverPort();
     }
 
     public String getSessionId() {

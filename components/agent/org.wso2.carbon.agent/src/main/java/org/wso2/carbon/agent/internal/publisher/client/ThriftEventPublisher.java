@@ -37,7 +37,8 @@ import org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionEx
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftUndefinedEventTypeException;
-import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
+import org.wso2.carbon.agent.commons.thrift.service.general.ThriftEventTransmissionService;
+import org.wso2.carbon.agent.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
 import org.wso2.carbon.agent.conf.DataPublisherConfiguration;
 import org.wso2.carbon.agent.exception.EventPublisherException;
 import org.wso2.carbon.agent.internal.EventQueue;
@@ -89,7 +90,11 @@ public class ThriftEventPublisher extends EventPublisher {
     void publish(Object client, Object eventBundle)
             throws UndefinedEventTypeException, SessionTimeoutException, EventPublisherException {
         try {
-            ((ThriftEventReceiverService.Client) client).publish((ThriftEventBundle) eventBundle);
+            if (client instanceof ThriftSecureEventTransmissionService.Client) {
+                ((ThriftSecureEventTransmissionService.Client) client).publish((ThriftEventBundle) eventBundle);
+            } else {
+                ((ThriftEventTransmissionService.Client) client).publish((ThriftEventBundle) eventBundle);
+            }
         } catch (ThriftUndefinedEventTypeException e) {
             throw new UndefinedEventTypeException("Thrift Undefined Event Type Exception ", e);
         } catch (ThriftSessionExpiredException e) {
@@ -108,7 +113,11 @@ public class ThriftEventPublisher extends EventPublisher {
                    MalformedStreamDefinitionException, EventPublisherException,
                    SessionTimeoutException, StreamDefinitionException {
         try {
-            return ((ThriftEventReceiverService.Client) client).defineEventStream(sessionId, eventStreamDefinition);
+            if (client instanceof ThriftSecureEventTransmissionService.Client) {
+                return ((ThriftSecureEventTransmissionService.Client) client).defineEventStream(sessionId, eventStreamDefinition);
+            } else {
+                return ((ThriftEventTransmissionService.Client) client).defineEventStream(sessionId, eventStreamDefinition);
+            }
         } catch (ThriftDifferentStreamDefinitionAlreadyDefinedException e) {
             throw new DifferentStreamDefinitionAlreadyDefinedException("Thrift Different Stream Definition Already Defined ", e);
         } catch (ThriftMalformedStreamDefinitionException e) {
@@ -128,7 +137,11 @@ public class ThriftEventPublisher extends EventPublisher {
             throws NoStreamDefinitionExistException, SessionTimeoutException,
                    EventPublisherException {
         try {
-            return ((ThriftEventReceiverService.Client) client).findEventStreamId(currentSessionId, name, version);
+            if (client instanceof ThriftSecureEventTransmissionService.Client) {
+                return ((ThriftSecureEventTransmissionService.Client) client).findEventStreamId(currentSessionId, name, version);
+            } else {
+                return ((ThriftEventTransmissionService.Client) client).findEventStreamId(currentSessionId, name, version);
+            }
         } catch (ThriftNoStreamDefinitionExistException e) {
             throw new NoStreamDefinitionExistException("Thrift No Stream Definition Exist", e);
         } catch (ThriftSessionExpiredException e) {

@@ -25,11 +25,11 @@ import org.wso2.carbon.agent.internal.utils.AgentConstants;
  * configuration details related to AgentServer
  */
 public class AgentServerConfiguration {
-    private int authenticatorPort = AgentConstants.DEFAULT_RECEIVER_PORT + AgentConstants.AUTHENTICATOR_PORT_OFFSET;
+    private int secureEventReceiverPort = AgentConstants.DEFAULT_RECEIVER_PORT + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET;
     private int eventReceiverPort = AgentConstants.DEFAULT_RECEIVER_PORT;
 
     public AgentServerConfiguration(int defaultSslPort, int defaultPort) {
-        authenticatorPort = defaultSslPort;
+        secureEventReceiverPort = defaultSslPort;
         eventReceiverPort = defaultPort;
     }
 
@@ -41,11 +41,11 @@ public class AgentServerConfiguration {
         this.eventReceiverPort = eventReceiverPort;
     }
 
-    public int getAuthenticatorPort() {
-        return authenticatorPort;
+    public int getSecureEventReceiverPort() {
+        return secureEventReceiverPort;
     }
 
-    public void setAuthenticatorPort(int authenticatorPort) {
-        this.authenticatorPort = authenticatorPort;
+    public void setSecureEventReceiverPort(int secureEventReceiverPort) {
+        this.secureEventReceiverPort = secureEventReceiverPort;
     }
 }

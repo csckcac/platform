@@ -279,8 +279,7 @@ public abstract class EventPublisher implements Runnable {
         if (reconnectionTime > 0) {
             try {
                 dataPublisherConfiguration.setSessionId(
-                        agentAuthenticator.connect(
-                                dataPublisherConfiguration.getReceiverConfiguration()));
+                        agentAuthenticator.connect(dataPublisherConfiguration));
             } catch (AuthenticationException e) {
                 log.error(dataPublisherConfiguration.getReceiverConfiguration().getUserName() +
                           " not authorised to access server at " +
@@ -297,7 +296,6 @@ public abstract class EventPublisher implements Runnable {
         try {
             return transportPool.borrowObject(publisherKey);
         } catch (Exception e) {
-
             throw new AgentException("Cannot borrow client for " + publisherKey, e);
         }
     }

@@ -3,30 +3,29 @@ Installing Jaggery ${carbon.product.version}
 Standalone Mode
 ---------------
 1. The directory containing this INSTALL file will the root and it will be
-   treated as Carbon home directory and let it be CARBON_HOME.
+   treated as Jaggery home directory and let it be JAGGERY_HOME.
 
-2. All the shell scripts and .bat files are available in CARBON_HOME/bin directory.
+2. All the shell scripts and .bat files are available in JAGGERY_HOME/bin directory.
 
-3. To start Carbon, one can use either wso2server.sh or daemon.sh in all *nix
-   system & wso2server.bat file on Windows operating systems.
+3. To start Jaggery, one can use either server.sh in all *nix
+   systems & server.bat file on Windows operating systems.
 
-4. Either of the following commands can be used to start Carbon
-      i)  ./wso2server.sh {console|start|stop|restart|status|dump|version}
-     ii)  ./daemon.sh {console|start|stop|restart|status|dump}
-    iii)  wso2server.bat {start|stop|version}
+4. Either of the following commands can be used to start Jaggery
+      i)  ./server.sh {console|start|stop|restart|status|dump|version}
+     ii)  server.bat {start|stop|version}
 
-            Usage: wso2server.sh [command] [system-properties]
+            Usage: server.sh [command] [system-properties]
 
             command:
                 --debug <port> 	Start the server in remote debugging mode.
                         port: The remote debugging port.
                 --run		Run the server
-                --start		Start Carbon as a Unix daemon in the background
-                --console	Start Carbon as a Unix daemon in the foreground
-                --stop		Stop the Carbon Unix daemon
-                --status	Get the status of the Carbon Unix daemon
-                --dump		Print a thread dump of the Carbon Unix daemon
-                --restart	Restart the Carbon Unix daemon
+                --start		Start Jaggery as a Unix daemon in the background
+                --console	Start Jaggery as a Unix daemon in the foreground
+                --stop		Stop the Jaggery Unix daemon
+                --status	Get the status of the Jaggery Unix daemon
+                --dump		Print a thread dump of the Jaggery Unix daemon
+                --restart	Restart the Jaggery Unix daemon
                 --startHttpTransports	Immediately starts all Tomcat HTTP connectors.
                 --cleanRegistry	Clean registry space
                 --reset		Clean the cache & component repository and the
@@ -41,24 +40,13 @@ Standalone Mode
                                 transports.xml file
                 -DhttpsPort		Overrides the HTTPS port defined in the
                                 transports.xml file
-                -DosgiConsole=[port]	Start Carbon with Equinox OSGi console.
+                -DosgiConsole=[port]	Start Jaggery with Equinox OSGi console.
                             If the optional 'port' parameter is provided, a
                             telnet port will be opened
                 -DosgiDebugOptions=[options-file]
-                            Start Carbon with OSGi debugging enabled.
+                            Start Jaggery with OSGi debugging enabled.
                             If the optional 'options-file is provided, the OSGi
                             debug options will be loaded from it.
-                -Dsetup			Clean the Registry & other configuration,
-                                recreate DB, re-populate the configuration,
-                                and start Carbon
-                -Dcarbon.registry.root	The root of the Registry used by
-                                        this Carbon instance
-                -Dwso2.transports.xml=<transportXmlPath>	Location of the transports.xml file.
-                -DserverRoles=<roles>		A comma separated list of roles. Used in deploying cApps
-                -Dcarbon.use.registry.repo	Use registry based repository.
-                -Dweb.location		The directory into which UI artifacts
-                                    included in an Axis2 AAR file are extracted to
-
 
 
 Hardware Requirements
@@ -69,8 +57,7 @@ Hardware Requirements
 Software Requirements
 -------------------
 1. Java SE Development Kit - 1.6 (1.6.0_21 onwards)
-2. Apache Ant - An Apache Ant version is required. Ant 1.7.0 version is recommended.
-3. The Management Console requires full Javascript enablement of the Web browser
+2. The Management Console requires full Javascript enablement of the Web browser
    NOTE:
      On Windows Server 2003, it is not allowed to go below the medium security
      level in Internet Explorer 6.x.

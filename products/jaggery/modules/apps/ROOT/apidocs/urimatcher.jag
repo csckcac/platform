@@ -64,8 +64,10 @@ include('/includes/topnavi.jag');
 &lt%
 var uriMatcher = new URIMatcher(request.getRequestURI());
 
+//Provide a pattern to be matched against the URL
 if(uriMatcher.match('/{dir}/{page}')) {
-	print(uriMatcher.elements().dir)
+    //If pattern matches, elements can be accessed from their keys
+	print("Directory element is : " + uriMatcher.elements().dir)
 }
 %&gt
 </pre>
@@ -74,7 +76,7 @@ if(uriMatcher.match('/{dir}/{page}')) {
                 var xhrCode = '&lt%'
                 + '\n var uriMatcher = new URIMatcher(request.getRequestURI());\n'
                 + '\n if(uriMatcher.match("/{dir}/{page}")) {'
-                + '\n       print(uriMatcher.elements().dir);'
+                + '\n       print("Directory element is : " + uriMatcher.elements().dir);'
                 + '\n }'
                 + '\n %&gt';
 

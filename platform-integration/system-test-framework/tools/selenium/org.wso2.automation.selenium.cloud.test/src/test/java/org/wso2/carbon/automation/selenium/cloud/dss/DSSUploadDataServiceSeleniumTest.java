@@ -43,7 +43,7 @@ import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
 import org.wso2.platform.test.core.utils.fileutils.FileManager;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
-import org.wso2.platform.test.core.utils.frameworkutils.dssProperties;
+import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import javax.xml.namespace.QName;
@@ -72,7 +72,7 @@ public class DSSUploadDataServiceSeleniumTest {
 
     private String dataServiceName = "MySqlRSSDataServiceTest";
     private String privilegeGroupName = "testAT";
-    private dssProperties dssProperties = FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME);
+    private FrameworkProperties dssProperties = FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME);
     private String dataBaseName = dssProperties.getDataSource().getDbName();
     private String dbUserName = dssProperties.getDataSource().getRssDbUser();
     private String dbUserPassword = dssProperties.getDataSource().getRssDbPassword();

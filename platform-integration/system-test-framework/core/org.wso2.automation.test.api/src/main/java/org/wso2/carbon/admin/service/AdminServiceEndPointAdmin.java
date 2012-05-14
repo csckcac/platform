@@ -66,8 +66,8 @@ public class AdminServiceEndPointAdmin {
         endpointAdminStub.deleteEndpoint(endPointName);
     }
 
-    public String getEndPoint(String sessionCookie, String endPointName) throws EndpointAdminEndpointAdminException, RemoteException {
+    /*public String getEndPoint(String sessionCookie, String endPointName) throws EndpointAdminEndpointAdminException, RemoteException {
         AuthenticateStub.authenticateStub(sessionCookie, endpointAdminStub);
         return endpointAdminStub.getEndpoint(endPointName);
-    }
+    }*/
 }

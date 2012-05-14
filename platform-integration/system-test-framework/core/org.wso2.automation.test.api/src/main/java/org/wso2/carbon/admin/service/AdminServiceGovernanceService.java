@@ -24,7 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.governance.services.stub.AddServicesServiceStub;
-import org.wso2.carbon.governance.services.stub.RegistryExceptionException;
+//import org.wso2.carbon.governance.services.stub.RegistryExceptionException;
 
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLInputFactory;
@@ -44,7 +44,7 @@ public class AdminServiceGovernanceService {
         addServicesServiceStub = new AddServicesServiceStub(endPoint);
     }
 
-    public void addService(String sessionCookie, DataHandler dh) throws RegistryExceptionException, IOException, XMLStreamException {
+  /*  public void addService(String sessionCookie, DataHandler dh) throws RegistryExceptionException, IOException, XMLStreamException {
         AuthenticateStub.authenticateStub(sessionCookie, addServicesServiceStub);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
@@ -53,7 +53,7 @@ public class AdminServiceGovernanceService {
         addServicesServiceStub.addService(serviceElem.toString());
         log.info("Service Added");
 
-    }
+    }*/
 
 
 }

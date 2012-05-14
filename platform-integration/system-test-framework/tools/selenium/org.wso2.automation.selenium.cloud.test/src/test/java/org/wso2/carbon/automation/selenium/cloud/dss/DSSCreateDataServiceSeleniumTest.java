@@ -41,7 +41,7 @@ import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
-import org.wso2.platform.test.core.utils.frameworkutils.dssProperties;
+import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.io.BufferedReader;
@@ -69,7 +69,7 @@ public class DSSCreateDataServiceSeleniumTest {
 
     private String dataServiceName = "companyDataService";
     private String privilegeGroupName = "testautomation";
-    private dssProperties dssProperties = FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME);
+    private FrameworkProperties dssProperties = FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME);
     private String dataBaseName = dssProperties.getDataSource().getDbName();
     private String dbUserName = dssProperties.getDataSource().getRssDbUser();
     private String dbUserPassword = dssProperties.getDataSource().getRssDbPassword();
@@ -123,13 +123,12 @@ public class DSSCreateDataServiceSeleniumTest {
 
     @Test(priority = 5, dependsOnMethods = {"createCarbonDataSourceTest"})
     public void addDataSource() throws Exception {
-        dssProperties dssConfig = FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME);
-        String baseUrlData = "https://" + dssConfig.getProductVariables().getHostName();
-        if (dssConfig.getEnvironmentSettings().isEnablePort()) {
-            baseUrlData = baseUrlData + ":" + dssConfig.getProductVariables().getHttpsPort();
+        String baseUrlData = "https://" + dssProperties.getProductVariables().getHostName();
+        if (dssProperties.getEnvironmentSettings().isEnablePort()) {
+            baseUrlData = baseUrlData + ":" + dssProperties.getProductVariables().getHttpsPort();
         }
-        if (dssConfig.getEnvironmentSettings().isEnableCarbonWebContext()) {
-            baseUrlData = baseUrlData + "/" + dssConfig.getProductVariables().getWebContextRoot();
+        if (dssProperties.getEnvironmentSettings().isEnableCarbonWebContext()) {
+            baseUrlData = baseUrlData + "/" + dssProperties.getProductVariables().getWebContextRoot();
         }
         String dataSourceUrl = baseUrlData + "/t/" + domain + "/carbon/datasource/index.jsp?region=" +
                                "region1&item=datasource_menu";

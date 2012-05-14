@@ -23,7 +23,6 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
-import org.wso2.carbon.lb.endpoint.TenantLoadBalanceMembershipHandler;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.AppDomainContext;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.AutoscaleConstants;
@@ -63,7 +62,7 @@ public class AutoscaleInMediator extends AbstractMediator implements ManagedLife
                 AutoscaleUtil.getAppDomainContexts(configCtx, lbConfig);
         String targetHost = AutoscaleUtil.getTargetHost(synCtx);
         int tenantId = AutoscaleUtil.getTenantId(synCtx.toString());
-        String lbDomain = TenantLoadBalanceMembershipHandler.getDomainFormHostTenant(targetHost, tenantId);
+        String lbDomain = lbConfig.getHostDomainMap().get(targetHost).getClusterDomainFormTenantId(tenantId);
         synCtx.setProperty(AutoscaleConstants.TARGET_DOMAIN, lbDomain);
         AppDomainContext appDomainContext = appDomainContexts.get(lbDomain);
         if (appDomainContext != null) {

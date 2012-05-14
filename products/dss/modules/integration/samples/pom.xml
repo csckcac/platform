@@ -26,9 +26,6 @@
                         <include>**/*TestServerManager.java</include>
                         <include>**/*TestCase.java</include>
                     </includes>
-                    <excludes>
-                        <exclude>**/*DTPSampleTestCase.java</exclude>
-                    </excludes>
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>

@@ -62,8 +62,12 @@ public class SourceConfiguration extends BaseConfiguration {
     private String serviceEPRPrefix;
     /** The EPR prefix for services with custom URI available over this transport */
     private String customEPRPrefix;
+    
+    /** SSLContext if this listener is a SSL listener */
+    private boolean ssl = false;
 
-    public SourceConfiguration(ConfigurationContext configurationContext,
+  
+	public SourceConfiguration(ConfigurationContext configurationContext,
                                TransportInDescription description,
                                WorkerPool pool) {
         super(configurationContext, description, pool);
@@ -139,6 +143,14 @@ public class SourceConfiguration extends BaseConfiguration {
         return customEPRPrefix;
     }
 
+    public boolean isSsl() {
+    	return ssl;
+    }
+
+	public void setSsl(boolean ssl) {
+    	this.ssl = ssl;
+    }
+	
     /**
      * Return the EPR prefix for services made available over this transport
      * @param cfgCtx configuration context to retrieve the service context path

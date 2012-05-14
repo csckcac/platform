@@ -87,4 +87,10 @@ public class PassThroughConstants {
 
     // This is a workaround  for  axis2 RestUtils behaviour
     public static final String REST_REQUEST_CONTENT_TYPE = "synapse.internal.rest.contentType";
+    
+    public static final String REQ_ARRIVAL_TIME = "REQ_ARRIVAL_TIME";
+	public static final String REQ_DEPARTURE_TIME = "REQ_DEPARTURE_TIME";
+	public static final String RES_ARRIVAL_TIME = "RES_ARRIVAL_TIME";
+	public static final String RES_HEADER_ARRIVAL_TIME = "RES_HEADER_ARRIVAL_TIME";
+	public static final String RES_DEPARTURE_TIME = "RES_DEPARTURE_TIME";
 }

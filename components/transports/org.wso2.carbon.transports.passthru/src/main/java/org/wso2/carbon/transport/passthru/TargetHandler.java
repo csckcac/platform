@@ -16,17 +16,24 @@
 
 package org.wso2.carbon.transport.passthru;
 
+import java.io.IOException;
+
 import org.apache.axis2.context.MessageContext;
-import org.apache.http.impl.nio.DefaultNHttpClientConnection;
-import org.apache.http.nio.*;
-import org.apache.http.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.ConnectionClosedException;
+import org.apache.http.HttpException;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.impl.nio.DefaultNHttpClientConnection;
+import org.apache.http.nio.ContentDecoder;
+import org.apache.http.nio.ContentEncoder;
+import org.apache.http.nio.NHttpClientConnection;
+import org.apache.http.nio.NHttpClientHandler;
+import org.apache.http.nio.NHttpServerConnection;
 import org.wso2.carbon.transport.passthru.config.TargetConfiguration;
 import org.wso2.carbon.transport.passthru.connections.HostConnections;
 import org.wso2.carbon.transport.passthru.jmx.PassThroughTransportMetricsCollector;
-
-import java.io.IOException;
 
 /**
  * This class is handling events from the transport -- > client.
@@ -69,6 +76,10 @@ public class TargetHandler implements NHttpClientHandler {
         deliveryAgent.connected(pool.getHost(), pool.getPort());
 
         metrics.connected();
+        
+        //when desitination connected will collect the time
+        
+        conn.getContext().setAttribute(PassThroughConstants.REQ_DEPARTURE_TIME, System.currentTimeMillis());
     }
 
     public void requestReady(NHttpClientConnection conn) {
@@ -117,6 +128,7 @@ public class TargetHandler implements NHttpClientHandler {
                         connState);
             }
         }
+        conn.getContext().setAttribute(PassThroughConstants.REQ_DEPARTURE_TIME, System.currentTimeMillis());
     }
 
     public void outputReady(NHttpClientConnection conn, ContentEncoder encoder) {
@@ -167,6 +179,10 @@ public class TargetHandler implements NHttpClientHandler {
     }
 
     public void responseReceived(NHttpClientConnection conn) {
+   
+    	//Collect response  header receive time to the 
+    	conn.getContext().setAttribute(PassThroughConstants.RES_HEADER_ARRIVAL_TIME, System.currentTimeMillis());
+    	
         ProtocolState connState;
         try {
             connState = TargetContext.getState(conn);
@@ -200,6 +216,15 @@ public class TargetHandler implements NHttpClientHandler {
                             requestMsgContext, targetResponse));
 
             targetConfiguration.getMetrics().incrementMessagesReceived();
+            
+            NHttpServerConnection sourceConn = (NHttpServerConnection) requestMsgContext.getProperty(
+                           PassThroughConstants.PASS_THROUGH_SOURCE_CONNECTION);
+            if(sourceConn != null){
+            	sourceConn.getContext().setAttribute(PassThroughConstants.RES_HEADER_ARRIVAL_TIME, conn.getContext().getAttribute(PassThroughConstants.RES_HEADER_ARRIVAL_TIME));
+            	sourceConn.getContext().setAttribute(PassThroughConstants.REQ_DEPARTURE_TIME,conn.getContext().getAttribute(PassThroughConstants.REQ_DEPARTURE_TIME));
+ 
+            }
+            
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
 

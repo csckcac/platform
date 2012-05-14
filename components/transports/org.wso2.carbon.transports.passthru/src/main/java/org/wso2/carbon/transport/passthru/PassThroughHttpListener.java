@@ -102,7 +102,9 @@ public class PassThroughHttpListener implements TransportListener {
 
         namePrefix = (sslContext == null) ? "HTTP" : "HTTPS";
 
+        
         sourceConfiguration = new SourceConfiguration(cfgCtx, transportInDescription, workerPool);
+        sourceConfiguration.setSsl((sslContext == null) ? false :true);
         sourceConfiguration.build();
 
         // register to receive updates on services for lifetime management

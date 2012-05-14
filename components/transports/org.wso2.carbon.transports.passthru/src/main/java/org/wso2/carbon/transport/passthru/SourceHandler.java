@@ -16,17 +16,28 @@
 
 package org.wso2.carbon.transport.passthru;
 
-import org.apache.http.nio.*;
-import org.apache.http.*;
-import org.apache.http.protocol.*;
-import org.apache.http.params.DefaultedHttpParams;
-import org.apache.http.message.BasicHttpResponse;
+import java.io.IOException;
+
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.ConnectionClosedException;
+import org.apache.http.HttpException;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.HttpVersion;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.nio.ContentDecoder;
+import org.apache.http.nio.ContentEncoder;
+import org.apache.http.nio.NHttpServerConnection;
+import org.apache.http.nio.NHttpServiceHandler;
+import org.apache.http.params.DefaultedHttpParams;
+import org.apache.http.protocol.ExecutionContext;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.wso2.carbon.transport.passthru.config.SourceConfiguration;
+import org.wso2.carbon.transport.passthru.jmx.LatencyView;
 import org.wso2.carbon.transport.passthru.jmx.PassThroughTransportMetricsCollector;
-
-import java.io.IOException;
 
 /**
  * This is the class where transport interacts with the client. This class
@@ -39,11 +50,26 @@ public class SourceHandler implements NHttpServiceHandler {
     private final SourceConfiguration sourceConfiguration;
 
     private PassThroughTransportMetricsCollector metrics = null;
+    
+    private LatencyView latencyView = null;
+    
+    private LatencyView s2sLatencyView = null;
+    
 
-    public SourceHandler(SourceConfiguration sourceConfiguration) {
-        this.sourceConfiguration = sourceConfiguration;
-        this.metrics = sourceConfiguration.getMetrics();
-    }
+	public SourceHandler(SourceConfiguration sourceConfiguration) {
+		this.sourceConfiguration = sourceConfiguration;
+		this.metrics = sourceConfiguration.getMetrics();
+		try {
+			if (!sourceConfiguration.isSsl()) {
+				this.latencyView = new LatencyView("PasstroughtHTTPLatencyView", sourceConfiguration.isSsl());
+			} else {
+				this.s2sLatencyView = new LatencyView("PasstroughtHTTPSLatencyView", sourceConfiguration.isSsl());
+			}
+		} catch (AxisFault e) {
+			log.error(e.getMessage(), e);
+		}
+
+	}
 
     public void connected(NHttpServerConnection conn) {
         // we have to have these two operations in order
@@ -55,6 +81,9 @@ public class SourceHandler implements NHttpServiceHandler {
 
     public void requestReceived(NHttpServerConnection conn) {
         try {
+        	HttpContext context = conn.getContext();
+            context.setAttribute(PassThroughConstants.REQ_ARRIVAL_TIME, System.currentTimeMillis());
+            
             if (!SourceContext.assertState(conn, ProtocolState.REQUEST_READY)) {
                 handleInvalidState(conn, "Request received");
             }
@@ -161,7 +190,8 @@ public class SourceHandler implements NHttpServiceHandler {
 
     public void outputReady(NHttpServerConnection conn,
                             ContentEncoder encoder) {
-        try {
+        HttpContext context = conn.getContext();
+    	try {
             ProtocolState protocolState = SourceContext.getState(conn);
             if (protocolState != ProtocolState.RESPONSE_HEAD
                     && protocolState != ProtocolState.RESPONSE_BODY) {
@@ -178,6 +208,34 @@ public class SourceHandler implements NHttpServiceHandler {
 
             int bytesSent = response.write(conn, encoder);
             metrics.incrementBytesSent(bytesSent);
+            
+            if (encoder.isCompleted()) {
+
+                if (context.getAttribute(PassThroughConstants.REQ_ARRIVAL_TIME) != null &&
+                    context.getAttribute(PassThroughConstants.REQ_DEPARTURE_TIME) != null &&
+                    context.getAttribute(PassThroughConstants.RES_HEADER_ARRIVAL_TIME) != null) {
+                	
+                	if(latencyView != null){
+                    latencyView.notifyTimes(
+                        (Long) context.getAttribute(PassThroughConstants.REQ_ARRIVAL_TIME),
+                        (Long) context.getAttribute(PassThroughConstants.REQ_DEPARTURE_TIME),
+                        (Long) context.getAttribute(PassThroughConstants.RES_HEADER_ARRIVAL_TIME),
+                        System.currentTimeMillis());
+                	}else if(s2sLatencyView != null){
+                		s2sLatencyView.notifyTimes(
+                		(Long) context.getAttribute(PassThroughConstants.REQ_ARRIVAL_TIME),
+                        (Long) context.getAttribute(PassThroughConstants.REQ_DEPARTURE_TIME),
+                        (Long) context.getAttribute(PassThroughConstants.RES_HEADER_ARRIVAL_TIME),
+                        System.currentTimeMillis());
+                	}
+                }
+
+                context.removeAttribute(PassThroughConstants.REQ_ARRIVAL_TIME);
+                context.removeAttribute(PassThroughConstants.REQ_DEPARTURE_TIME);
+                context.removeAttribute(PassThroughConstants.RES_HEADER_ARRIVAL_TIME);
+             }
+            
+            
         } catch (IOException e) {
             logIOException(e);
 

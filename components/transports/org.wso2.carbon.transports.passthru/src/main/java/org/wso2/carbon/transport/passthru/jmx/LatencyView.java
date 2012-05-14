@@ -57,8 +57,6 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class LatencyView implements LatencyViewMBean {
 
-    private static final String NHTTP_LATENCY_VIEW = "NhttpTransportLatency";
-
     private static final int SMALL_DATA_COLLECTION_PERIOD = 5;
     private static final int LARGE_DATA_COLLECTION_PERIOD = 5 * 60;
     private static final int SAMPLES_PER_MINUTE = 60/ SMALL_DATA_COLLECTION_PERIOD;
@@ -93,20 +91,21 @@ public class LatencyView implements LatencyViewMBean {
     private Date resetTime = Calendar.getInstance().getTime();
 
     private String name;
-
-    public LatencyView(boolean isHttps) throws AxisFault {
+    private String latencyMode;
+    
+    public LatencyView(final String latencyMode,boolean isHttps) throws AxisFault {
         name = "nio-http" + (isHttps ? "s" : "");
         scheduler.scheduleAtFixedRate(new ShortTermDataCollector(), SMALL_DATA_COLLECTION_PERIOD,
                 SMALL_DATA_COLLECTION_PERIOD, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(new LongTermDataCollector(), LARGE_DATA_COLLECTION_PERIOD,
                 LARGE_DATA_COLLECTION_PERIOD, TimeUnit.SECONDS);
 
-        MBeanRegistrar.getInstance().registerMBean(this, NHTTP_LATENCY_VIEW, name);
+        MBeanRegistrar.getInstance().registerMBean(this, latencyMode, name);
 
     }
 
     public void destroy() {
-        MBeanRegistrar.getInstance().unRegisterMBean(NHTTP_LATENCY_VIEW, name);
+        MBeanRegistrar.getInstance().unRegisterMBean(latencyMode, name);
         scheduler.shutdownNow();
     }
 

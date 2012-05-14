@@ -17,23 +17,24 @@
 */
 package org.wso2.carbon.apimgt.api.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Subscriber's view of the API
  */
 @SuppressWarnings("unused")
 public class SubscribedAPI {
+
     private Tier tier;
     private Subscriber subscriber;
     private APIIdentifier apiId;
-    private String key;
     private Date lastAccessed;
     private Application application;
+    private List<APIKey> keys = new ArrayList<APIKey>();
 
-    private boolean isBlocked;   //TODO: what is the difference & usage of revoking & blocking users?
-//    private boolean isRevoked;
-
+    private boolean isBlocked;   //TODO: what is the difference & usage of revoking & blocking users
 
     public SubscribedAPI(Subscriber subscriber, APIIdentifier apiId) {
         this.subscriber = subscriber;
@@ -64,12 +65,12 @@ public class SubscribedAPI {
         this.tier = tier;
     }
 
-    public String getKey() {
-        return key;
+    public List<APIKey> getKeys() {
+        return keys;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void addKey(APIKey key) {
+        keys.add(key);
     }
 
     public Date getLastAccessed() {

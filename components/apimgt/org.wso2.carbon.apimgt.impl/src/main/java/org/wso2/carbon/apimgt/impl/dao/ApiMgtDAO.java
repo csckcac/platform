@@ -633,16 +633,6 @@ public class ApiMgtDAO {
                     "   AND SUB.SUBSCRIBER_ID=APP.SUBSCRIBER_ID " +
                     "   AND APP.APPLICATION_ID=SUBS.APPLICATION_ID";
             
-            String getKeysSql = "SELECT " +
-                    " KCM.ACCESS_TOKEN AS ACCESS_TOKEN," +
-                    " SKM.KEY_TYPE AS TOKEN_TYPE " +
-                    "FROM" +
-                    " AM_SUBSCRIPTION_KEY_MAPPING SKM," +
-                    " AM_KEY_CONTEXT_MAPPING KCM " +
-                    "WHERE" +
-                    " SKM.SUBSCRIPTION_ID = ?" +
-                    " AND SKM.KEY_CONTEXT_MAPPING_ID = KCM.KEY_CONTEXT_MAPPING_ID";
-
             ps = connection.prepareStatement(sqlQuery);
             ps.setString(1, subscriber.getName());
             int tenantId = IdentityUtil.getTenantIdOFUser(subscriber.getName());
@@ -672,15 +662,9 @@ public class ApiMgtDAO {
                 subscribedAPI.setApplication(application);
                 
                 int subscriptionId = result.getInt(APIConstants.SUBSCRIPTION_FIELD_SUBSCRIPTION_ID);
-                PreparedStatement nestedPS = connection.prepareStatement(getKeysSql);
-                nestedPS.setInt(1, subscriptionId);
-                ResultSet nestedRS = nestedPS.executeQuery();
-                while (nestedRS.next()) {
-                    String key = nestedRS.getString("ACCESS_TOKEN");
-                    String type = nestedRS.getString("TOKEN_TYPE");
-                    if (APIConstants.API_KEY_TYPE_PRODUCTION.equals(type)) {
-                        subscribedAPI.setKey(key);
-                    }
+                Set<APIKey> apiKeys = getAPIKeysBySubscription(subscriptionId);
+                for (APIKey key : apiKeys) {
+                    subscribedAPI.addKey(key);
                 }
 
                 subscribedAPIs.add(subscribedAPI);
@@ -696,6 +680,42 @@ public class ApiMgtDAO {
             APIMgtDBUtil.closeAllConnections(ps, connection, result);
         }
         return subscribedAPIs;
+    }
+    
+    private Set<APIKey> getAPIKeysBySubscription(int subscriptionId) throws APIManagementException {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet result = null;
+
+        String getKeysSql = "SELECT " +
+                " KCM.ACCESS_TOKEN AS ACCESS_TOKEN," +
+                " SKM.KEY_TYPE AS TOKEN_TYPE " +
+                "FROM" +
+                " AM_SUBSCRIPTION_KEY_MAPPING SKM," +
+                " AM_KEY_CONTEXT_MAPPING KCM " +
+                "WHERE" +
+                " SKM.SUBSCRIPTION_ID = ?" +
+                " AND SKM.KEY_CONTEXT_MAPPING_ID = KCM.KEY_CONTEXT_MAPPING_ID";
+
+        Set<APIKey> apiKeys = new HashSet<APIKey>();
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            PreparedStatement nestedPS = connection.prepareStatement(getKeysSql);
+            nestedPS.setInt(1, subscriptionId);
+            ResultSet nestedRS = nestedPS.executeQuery();
+            while (nestedRS.next()) {
+                APIKey apiKey = new APIKey();
+                apiKey.setKey(nestedRS.getString("ACCESS_TOKEN"));
+                apiKey.setType(nestedRS.getString("TOKEN_TYPE"));
+                apiKeys.add(apiKey);
+            }
+        } catch (SQLException e) {
+            String msg = "Failed to get API keys for subscription: " + subscriptionId;
+            throw new APIManagementException(msg, e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(ps, connection, result);
+        }
+        return apiKeys;
     }
 
     /**

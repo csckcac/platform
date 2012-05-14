@@ -1126,11 +1126,22 @@ public class APIStoreHostObject extends ScriptableObject {
                 NativeObject row = new NativeObject();
                 row.put("application", row, api.getApplication().getName());
                 row.put("applicationId", row, api.getApplication().getId());
-                row.put("key", row, api.getKey());
+                row.put("key", row, getProductionKey(api));
                 myn.put(i++, myn, row);
             }
         }
         return myn;
+    }
+
+    private static String getProductionKey(SubscribedAPI api) {
+        // TODO: Remove this when the UI is improved to handle sand boxing (Hiranya)
+        List<APIKey> apiKeys = api.getKeys();
+        for (APIKey key : apiKeys) {
+            if (APIConstants.API_KEY_TYPE_PRODUCTION.equals(key.getType())) {
+                return key.getKey();
+            }
+        }
+        return null;
     }
 
     public static NativeArray jsFunction_getAllSubscriptions(Context cx,
@@ -1177,7 +1188,7 @@ public class APIStoreHostObject extends ScriptableObject {
             apiObj.put("version", apiObj, subscribedAPI.getApiId().getVersion());
             apiObj.put("thumburl", apiObj, api.getThumbnailUrl());
             apiObj.put("context", apiObj, api.getContext());
-            apiObj.put("key", apiObj, subscribedAPI.getKey());
+            apiObj.put("key", apiObj, getProductionKey(subscribedAPI));
             apisArray.put(apisArray.getIds().length, apisArray, apiObj);
         } catch (APIManagementException e) {
             throw new ScriptException(e);

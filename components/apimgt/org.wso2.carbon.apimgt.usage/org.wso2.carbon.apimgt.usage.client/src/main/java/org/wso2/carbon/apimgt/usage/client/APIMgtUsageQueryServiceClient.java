@@ -23,10 +23,8 @@ import org.apache.axis2.AxisFault;
 import org.wso2.carbon.apimgt.api.APIConsumer;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
-import org.wso2.carbon.apimgt.api.model.API;
-import org.wso2.carbon.apimgt.api.model.APIIdentifier;
-import org.wso2.carbon.apimgt.api.model.SubscribedAPI;
-import org.wso2.carbon.apimgt.api.model.Subscriber;
+import org.wso2.carbon.apimgt.api.model.*;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
@@ -132,13 +130,24 @@ public class APIMgtUsageQueryServiceClient {
             Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
             while(rowIterator.hasNext()){
                 OMElement row = (OMElement)rowIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(subscribedAPI.getApiId().getVersion()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(subscribedAPI.getKey())){
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(subscribedAPI.getApiId().getVersion()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(getProductionKey(subscribedAPI))){
                     result.add(new ProviderAPIVersionUserUsageDTO(subscribedAPI.getApiId().getVersion(), subscribedAPI.getSubscriber().getName(),String.valueOf((Float.valueOf(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText())).intValue())));
                     break;
                 }
             }
         }
         return result;
+    }
+
+    private String getProductionKey(SubscribedAPI api) {
+        // TODO: Remove this when the UI is improved to handle sand boxing (Hiranya)
+        List<APIKey> apiKeys = api.getKeys();
+        for (APIKey key : apiKeys) {
+            if (APIConstants.API_KEY_TYPE_PRODUCTION.equals(key.getType())) {
+                return key.getKey();
+            }
+        }
+        return null;
     }
 
     /**
@@ -164,7 +173,7 @@ public class APIMgtUsageQueryServiceClient {
             Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
             while(rowIterator.hasNext()){
                 OMElement row = (OMElement)rowIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(subscribedAPI.getKey())){
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(getProductionKey(subscribedAPI))){
                     String userId = subscribedAPI.getSubscriber().getName();
                     if(userUsageMap.containsKey(userId)){
                         userUsageMap.put(userId,userUsageMap.get(userId)+Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
@@ -246,7 +255,7 @@ public class APIMgtUsageQueryServiceClient {
             Iterator oMElementIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
             while(oMElementIterator.hasNext()){
                 OMElement row = (OMElement)oMElementIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText().equals(subscribedAPI.getApiId().getApiName()+":v"+subscribedAPI.getApiId().getVersion()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(subscribedAPI.getKey())){
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText().equals(subscribedAPI.getApiId().getApiName()+":v"+subscribedAPI.getApiId().getVersion()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(getProductionKey(subscribedAPI))){
                     result.add(new ProviderAPIVersionUserLastAccessDTO(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText(), subscribedAPI.getSubscriber().getName(),(new SimpleDateFormat()).format(Double.parseDouble(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST_TIME)).getText()))));
                     break;
                 }

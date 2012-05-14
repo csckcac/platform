@@ -45,7 +45,15 @@ public class LoadBalancerConfiguration implements Serializable{
     protected Map<String, ServiceConfiguration> serviceConfigMap =
             new HashMap<String, ServiceConfiguration>();
 
+    public Map<String, TenantDomainRangeContext> getHostDomainMap() {
+        return hostDomainMap;
+    }
 
+    public void setHostDomainMap(Map<String, TenantDomainRangeContext> hostDomainMap) {
+        this.hostDomainMap = hostDomainMap;
+    }
+
+    private Map<String, TenantDomainRangeContext> hostDomainMap;
     /**
      * Key: service name eg: appserver
      * Value: domains Node

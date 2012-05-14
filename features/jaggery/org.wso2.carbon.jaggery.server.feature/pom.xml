@@ -357,7 +357,7 @@
                         </goals>
                         <configuration>
                             <id>org.wso2.carbon.jaggery.server</id>
-                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
+                            <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.jaggery.deployer</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.jaggery.core</bundleDef>

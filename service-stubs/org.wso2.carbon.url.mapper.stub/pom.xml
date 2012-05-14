@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.url.mapper.stub</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Stratos - Application Bade Url Mapper Module</name>
+    <name> Url Mapper Module</name>
     <url>http://wso2.org</url>
 
     <build>
@@ -51,15 +51,16 @@
                                     <pathelement location="${settings.localRepository}/org/apache/axis2/wso2/axis2-client/${orbit.version.axis2}/axis2-client-${orbit.version.axis2}.jar"/>
                                     <pathelement location="${settings.localRepository}/org/apache/axis2/wso2/axis2/${orbit.version.axis2}/axis2-${orbit.version.axis2}.jar"/>
                                 </path>
-				             
+
 
                                  <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
-                                     <arg line="-uri src/main/resources/UrlMapperAdminService.wsdl -u -uw -o target/generated-code
-                                                    -p org.wso2.carbon.url.mapper.stub
-                                                    -ns2p  http://mapper.url.carbon.wso2.org/xsd=wso2.carbon.url.mapper.stub,http://mapper.url.carbon.wso2.org=org.wso2.carbon.url.mapper.stub"/>
-                                     <classpath refid="maven.dependency.classpath"/>
-                                     <classpath refid="maven.compile.classpath"/>
-                                     <classpath refid="maven.runtime.classpath"/>
+                                      <arg line="-uri src/main/resources/UrlMapperAdminService.wsdl -u -uw -o target/generated-code
+                                    -p org.wso2.carbon.url.mapper.stub
+                                    -ns2p   http://data.mapper.url.carbon.wso2.org/xsd=org.wso2.carbon.url.mapper.stub.types.carbon, http://mapper.url.carbon.wso2.org=org.wso2.carbon.url.mapper.stub"/>
+  				     <classpath refid="wsdl2java.classpath"/>
+				     <classpath refid="maven.dependency.classpath"/>
+				    <classpath refid="maven.compile.classpath"/>
+				    <classpath refid="maven.runtime.classpath"/>
                                  </java>
 
                               
@@ -72,7 +73,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>1.4.0</version>
+               
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>

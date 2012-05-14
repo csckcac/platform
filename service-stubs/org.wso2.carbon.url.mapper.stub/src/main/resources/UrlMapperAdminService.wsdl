@@ -1,17 +1,28 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://mapper.url.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2340="http://exception.internal.mapper.url.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mapper.url.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2461="http://data.mapper.url.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://mapper.url.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2459="http://exception.internal.mapper.url.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mapper.url.carbon.wso2.org">
     <wsdl:documentation>UrlMapperAdminService</wsdl:documentation>
     <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://data.mapper.url.carbon.wso2.org/xsd">
+            <xs:complexType name="MappingData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="mappingName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceMapping" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.internal.mapper.url.carbon.wso2.org/xsd">
             <xs:complexType name="UrlMapperException">
                 <xs:sequence />
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax2341="http://exception.internal.mapper.url.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mapper.url.carbon.wso2.org">
+        <xs:schema xmlns:ax2462="http://data.mapper.url.carbon.wso2.org/xsd" xmlns:ax2460="http://exception.internal.mapper.url.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mapper.url.carbon.wso2.org">
             <xs:import namespace="http://exception.internal.mapper.url.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://data.mapper.url.carbon.wso2.org/xsd" />
             <xs:element name="UrlMapperAdminServiceUrlMapperException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="UrlMapperException" nillable="true" type="ax2341:UrlMapperException" />
+                        <xs:element minOccurs="0" name="UrlMapperException" nillable="true" type="ax2460:UrlMapperException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -57,6 +68,18 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="getAllMappings">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllMappingsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2462:MappingData" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="editServiceDomain">
                 <xs:complexType>
                     <xs:sequence>
@@ -69,8 +92,8 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="webappName" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="oldhost" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="newHost" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="oldhost" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -137,6 +160,12 @@
     <wsdl:message name="getHostForWebAppResponse">
         <wsdl:part name="parameters" element="ns:getHostForWebAppResponse" />
     </wsdl:message>
+    <wsdl:message name="getAllMappingsRequest">
+        <wsdl:part name="parameters" element="ns:getAllMappings" />
+    </wsdl:message>
+    <wsdl:message name="getAllMappingsResponse">
+        <wsdl:part name="parameters" element="ns:getAllMappingsResponse" />
+    </wsdl:message>
     <wsdl:message name="deleteHostRequest">
         <wsdl:part name="parameters" element="ns:deleteHost" />
     </wsdl:message>
@@ -177,6 +206,11 @@
             <wsdl:input message="ns:getHostForWebAppRequest" wsaw:Action="urn:getHostForWebApp" />
             <wsdl:output message="ns:getHostForWebAppResponse" wsaw:Action="urn:getHostForWebAppResponse" />
             <wsdl:fault message="ns:UrlMapperAdminServiceUrlMapperException" name="UrlMapperAdminServiceUrlMapperException" wsaw:Action="urn:getHostForWebAppUrlMapperAdminServiceUrlMapperException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllMappings">
+            <wsdl:input message="ns:getAllMappingsRequest" wsaw:Action="urn:getAllMappings" />
+            <wsdl:output message="ns:getAllMappingsResponse" wsaw:Action="urn:getAllMappingsResponse" />
+            <wsdl:fault message="ns:UrlMapperAdminServiceUrlMapperException" name="UrlMapperAdminServiceUrlMapperException" wsaw:Action="urn:getAllMappingsUrlMapperAdminServiceUrlMapperException" />
         </wsdl:operation>
         <wsdl:operation name="deleteHost">
             <wsdl:input message="ns:deleteHostRequest" wsaw:Action="urn:deleteHost" />
@@ -234,6 +268,18 @@
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
+            <wsdl:fault name="UrlMapperAdminServiceUrlMapperException">
+                <soap:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMappings">
+            <soap:operation soapAction="urn:getAllMappings" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
             <wsdl:fault name="UrlMapperAdminServiceUrlMapperException">
                 <soap:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
             </wsdl:fault>
@@ -334,6 +380,18 @@
                 <soap12:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="getAllMappings">
+            <soap12:operation soapAction="urn:getAllMappings" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="UrlMapperAdminServiceUrlMapperException">
+                <soap12:fault use="literal" name="UrlMapperAdminServiceUrlMapperException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="getHostForWebApp">
             <soap12:operation soapAction="urn:getHostForWebApp" style="document" />
             <wsdl:input>
@@ -418,6 +476,15 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
         </wsdl:operation>
+        <wsdl:operation name="getAllMappings">
+            <http:operation location="getAllMappings" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="getHostForWebApp">
             <http:operation location="getHostForWebApp" />
             <wsdl:input>
@@ -460,22 +527,22 @@
     </wsdl:binding>
     <wsdl:service name="UrlMapperAdminService">
         <wsdl:port name="UrlMapperAdminServiceHttpsSoap11Endpoint" binding="ns:UrlMapperAdminServiceSoap11Binding">
-            <soap:address location="https://10.100.3.52:9563/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://appserver.cloud-test.wso2.com:9446/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="UrlMapperAdminServiceHttpSoap11Endpoint" binding="ns:UrlMapperAdminServiceSoap11Binding">
-            <soap:address location="http://10.100.3.52:9763/services/UrlMapperAdminService.UrlMapperAdminServiceHttpSoap11Endpoint/" />
+            <soap:address location="http://appserver.cloud-test.wso2.com:9766/services/UrlMapperAdminService.UrlMapperAdminServiceHttpSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="UrlMapperAdminServiceHttpSoap12Endpoint" binding="ns:UrlMapperAdminServiceSoap12Binding">
-            <soap12:address location="http://10.100.3.52:9763/services/UrlMapperAdminService.UrlMapperAdminServiceHttpSoap12Endpoint/" />
+            <soap12:address location="http://appserver.cloud-test.wso2.com:9766/services/UrlMapperAdminService.UrlMapperAdminServiceHttpSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="UrlMapperAdminServiceHttpsSoap12Endpoint" binding="ns:UrlMapperAdminServiceSoap12Binding">
-            <soap12:address location="https://10.100.3.52:9563/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://appserver.cloud-test.wso2.com:9446/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="UrlMapperAdminServiceHttpEndpoint" binding="ns:UrlMapperAdminServiceHttpBinding">
-            <http:address location="http://10.100.3.52:9763/services/UrlMapperAdminService.UrlMapperAdminServiceHttpEndpoint/" />
+            <http:address location="http://appserver.cloud-test.wso2.com:9766/services/UrlMapperAdminService.UrlMapperAdminServiceHttpEndpoint/" />
         </wsdl:port>
         <wsdl:port name="UrlMapperAdminServiceHttpsEndpoint" binding="ns:UrlMapperAdminServiceHttpBinding">
-            <http:address location="https://10.100.3.52:9563/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsEndpoint/" />
+            <http:address location="https://appserver.cloud-test.wso2.com:9446/services/UrlMapperAdminService.UrlMapperAdminServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

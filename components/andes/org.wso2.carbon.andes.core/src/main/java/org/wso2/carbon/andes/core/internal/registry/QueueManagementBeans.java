@@ -1,0 +1,111 @@
+/*
+*  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+*  WSO2 Inc. licenses this file to you under the Apache License,
+*  Version 2.0 (the "License"); you may not use this file except
+*  in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied.  See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*/
+package org.wso2.carbon.andes.core.internal.registry;
+
+import org.wso2.carbon.andes.core.QueueManagerException;
+import org.wso2.carbon.andes.core.types.Queue;
+import org.wso2.carbon.andes.core.internal.util.QueueManagementConstants;
+
+import javax.management.*;
+import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+
+public  class QueueManagementBeans {
+
+    public static QueueManagementBeans self;
+
+    public static QueueManagementBeans getInstance(){
+        if(self == null){
+            self = new QueueManagementBeans();
+        }
+        return self;
+    }
+
+    public ArrayList<Queue> getAllQueues() throws QueueManagerException {
+        ArrayList<Queue> queueDetailsList = new ArrayList<Queue>();
+        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        try {
+            ObjectName objectName =
+                    new ObjectName("org.wso2.andes:type=QueueManagementInformation,name=QueueManagementInformation");
+             Object result = mBeanServer.getAttribute(objectName, QueueManagementConstants.QUEUES_MBEAN_ATTRIBUTE);
+
+            if(result!=null)
+            {
+                String[] queueNamesList = (String[])result;
+
+                for(String queueName : queueNamesList)
+                {
+                    Queue queue = new Queue();
+                    queue.setQueueName(queueName);
+                    queue.setMessageCount(getMessageCount(queueName));
+                    queueDetailsList.add(queue);
+                }
+
+            }
+            return queueDetailsList;
+
+        } catch (MalformedObjectNameException e) {
+            throw new QueueManagerException("Cannot access topic subscriber information",e);
+        } catch (ReflectionException e) {
+            throw new QueueManagerException("Cannot access topic subscriber information",e);
+        } catch (MBeanException e) {
+            throw new QueueManagerException("Cannot access topic subscriber information",e);
+        } catch (InstanceNotFoundException e) {
+            throw new QueueManagerException("Cannot access topic subscriber information for node",e);
+        } catch (AttributeNotFoundException e) {
+             throw new QueueManagerException("Attribute not found",e);
+        }
+    }
+    public int getMessageCount(String queueName) throws QueueManagerException
+    {
+        int messageCount =0;
+        ArrayList<Queue> queueDetailsList = new ArrayList<Queue>();
+        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        try
+        {
+         ObjectName objectName =
+                     new ObjectName("org.wso2.andes:type=ClusterManagementInformation,name=ClusterManagementInformation");
+         String operationName = "getMessageCount";
+         Object [] parameters = new Object[]{queueName};
+         String [] signature = new String[]{String.class.getName()};
+         Object result = mBeanServer.invoke(
+                                         objectName,
+                                         operationName,
+                                         parameters,
+                                         signature);
+         if(result!=null)
+         {
+            messageCount = (Integer) result;
+         }
+
+         return messageCount;
+
+        } catch (MalformedObjectNameException e){
+           throw new QueueManagerException("Cannot access topic subscriber information");
+        } catch (ReflectionException e) {
+           throw new QueueManagerException("Cannot access topic subscriber information");
+        } catch (MBeanException e) {
+            throw new QueueManagerException("Cannot access topic subscriber information");
+        } catch (InstanceNotFoundException e) {
+            throw new QueueManagerException("Cannot access topic subscriber information for node");
+        }
+    }
+
+
+
+}

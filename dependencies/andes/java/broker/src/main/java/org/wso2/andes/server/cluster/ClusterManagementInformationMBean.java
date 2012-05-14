@@ -48,7 +48,7 @@ public class ClusterManagementInformationMBean extends AMQManagedObject implemen
     }
 
     public String getObjectInstanceName() {
-        return clusterManager.getZkServerAddress();
+        return ClusterManagementInformation.TYPE;
     }
 
     public String[] getQueues(int nodeId) {

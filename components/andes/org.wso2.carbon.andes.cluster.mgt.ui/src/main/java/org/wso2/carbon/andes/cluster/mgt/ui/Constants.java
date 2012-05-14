@@ -28,6 +28,6 @@ public interface Constants {
     public static final String MB_QUEUE_CREATED_FROM_AMQP = "amqp";
 
     public static final String SUCCESS = "success";
-    public static final String FAILURE = "success";
+    public static final String FAILURE = "failure";
 
 }

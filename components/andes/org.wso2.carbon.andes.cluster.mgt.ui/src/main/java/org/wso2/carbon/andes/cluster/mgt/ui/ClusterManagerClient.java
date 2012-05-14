@@ -1,6 +1,5 @@
 package org.wso2.carbon.andes.cluster.mgt.ui;
 
-import java.rmi.RemoteException;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
@@ -10,7 +9,7 @@ import org.wso2.carbon.andes.mgt.stub.types.carbon.NodeDetail;
 import org.wso2.carbon.andes.mgt.stub.types.carbon.Queue;
 import org.wso2.carbon.andes.mgt.stub.types.carbon.Topic;
 
-import java.lang.Exception;
+import java.rmi.RemoteException;
 
 /**
  * This class is used to call MB Cluster Manager service from client side
@@ -70,7 +69,8 @@ public class ClusterManagerClient {
     public Queue[] getQueuesOfNode(String hostName,int startingIndex, int maxTopicCount)
             throws RemoteException, AndesManagerServiceClusterMgtAdminExceptionException {
 
-       return stub.getAllQueuesForNode(hostName,startingIndex,maxTopicCount);
+       Queue[] result =  stub.getAllQueuesForNode(hostName,startingIndex,maxTopicCount);
+       return result;
     }
 
     /**
@@ -90,14 +90,6 @@ public class ClusterManagerClient {
     }
 
     /**
-     * initialises the nodes
-     * @throws RemoteException
-     */
-    public void initialize() throws RemoteException {
-        stub.initialize();
-    }
-
-    /**
      * Update memory usage of the node to current
      * @param hostName
      * @return long
@@ -114,6 +106,10 @@ public class ClusterManagerClient {
      */
     public long updateTopicCount() throws RemoteException, AndesManagerServiceClusterMgtAdminExceptionException {
         return stub.getNumberOfTopics();
+    }
+
+    public long updateNumOfMessagesForQueue(String queueName) throws AndesManagerServiceClusterMgtAdminExceptionException, RemoteException {
+        return stub.getNumberOfMessagesForQueue(queueName);
     }
 
     /**
@@ -154,7 +150,7 @@ public class ClusterManagerClient {
      * @return
      * @throws RemoteException
      */
-    public String getCassandraConnection() throws RemoteException {
+    public String getCassandraConnection() throws RemoteException, AndesManagerServiceClusterMgtAdminExceptionException {
         return stub.getCassandraConnection();
     }
 
@@ -165,15 +161,6 @@ public class ClusterManagerClient {
      */
     public String getZookeeperConnection() throws RemoteException, AndesManagerServiceClusterMgtAdminExceptionException {
         return stub.getZookeeperConnection();
-    }
-
-    /**
-     * Refresh all the nodes in cluster
-     * @throws AndesManagerServiceClusterMgtAdminExceptionException
-     * @throws RemoteException
-     */
-    public void refreshAllNodes() throws RemoteException, AndesManagerServiceClusterMgtAdminExceptionException {
-        stub.refreshMemUsageThroughputAndMessageCount();
     }
 
     /**

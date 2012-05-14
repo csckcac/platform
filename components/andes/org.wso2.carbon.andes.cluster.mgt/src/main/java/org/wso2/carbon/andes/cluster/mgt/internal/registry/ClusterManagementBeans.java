@@ -37,7 +37,7 @@ public class ClusterManagementBeans {
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         try {
             ObjectName objectName =
-                    new ObjectName("org.apache.qpid:type=ClusterManagementInformation,name=127.0.0.1");
+                    new ObjectName("org.wso2.andes:type=ClusterManagementInformation,name=127.0.0.1");
             Object MBeanResultForPort = mBeanServer.getAttribute(objectName, ClusterMgtConstants.ZOOKEEPER_PORT_MBEAN_ATTRIB);
             Object MBeanResultForAddress = mBeanServer.getAttribute(objectName, ClusterMgtConstants.ZOOKEEPER_ADDRESS_MBEAN_ATTRIB);
             if(MBeanResultForPort!=null && MBeanResultForAddress!=null)
@@ -73,16 +73,19 @@ public class ClusterManagementBeans {
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         try {
             ObjectName objectName =
-                     new ObjectName("org.apache.qpid:type=ClusterManagementInformation,name=127.0.0.1");
+                     new ObjectName("org.wso2.andes:type=ClusterManagementInformation,name=ClusterManagementInformation");
             Object result =  mBeanServer.getAttribute(objectName, ClusterMgtConstants.ZOOKEEPER_NODES_MBEAN_ATTRIB);
             if(result!=null)
             {
-                List<String> ZkIDList = (List<String>)result;
-                for(String zKID : ZkIDList)
+                List<Integer> ZkIDList = (List<Integer>)result;
+                for(Integer zKID : ZkIDList)
                 {
+                    String zKIDString = Integer.toString(zKID);
                     NodeDetail aNodeDetail = new NodeDetail();
-                    aNodeDetail.setZookeeperID(zKID);
-                    aNodeDetail.setHostName(zKID);
+                    aNodeDetail.setZookeeperID(zKIDString);
+                    aNodeDetail.setHostName(zKIDString);
+                    aNodeDetail.setNumOfQueues(getQueuesRunningInNode(zKIDString).size());
+                    aNodeDetail.setNumOfTopics(getTopicList().size());
                     nodeDetailsList.add(aNodeDetail);
                 }
             }
@@ -108,7 +111,7 @@ public class ClusterManagementBeans {
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         try {
             ObjectName objectName =
-                     new ObjectName("org.apache.qpid:type=ClusterManagementInformation,name=127.0.0.1");
+                     new ObjectName("org.wso2.andes:type=ClusterManagementInformation,name=ClusterManagementInformation");
             Object result = mBeanServer.getAttribute(objectName, ClusterMgtConstants.TOPICS_MBEAN_ATTRIB);
 
             if(result!=null)
@@ -139,17 +142,18 @@ public class ClusterManagementBeans {
         }
     }
 
-    public Queue[] getQueuesRunningInNode(String NodeName) throws ClusterMgtException
+    public ArrayList<Queue> getQueuesRunningInNode(String nodeName) throws ClusterMgtException
     {
+        int nodeId = Integer.parseInt(nodeName);
         ArrayList<Queue> queueDetailsList = new ArrayList<Queue>();
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         try
         {
          ObjectName objectName =
-                     new ObjectName("org.apache.qpid:type=ClusterManagementInformation,name=127.0.0.1");
+                     new ObjectName("org.wso2.andes:type=ClusterManagementInformation,name=ClusterManagementInformation");
          String operationName = "getQueues";
-         Object [] parameters = new Object[]{NodeName};
-         String [] signature = new String[]{String.class.getName()};
+         Object [] parameters = new Object[]{nodeId};
+         String [] signature = new String[]{int.class.getName()};
          Object result = mBeanServer.invoke(
                                          objectName,
                                          operationName,
@@ -157,16 +161,17 @@ public class ClusterManagementBeans {
                                          signature);
          if(result!=null)
          {
-            List<String> queueNamesArray = (List<String>) result;
+            String[] queueNamesArray = (String[]) result;
             for(String queueName : queueNamesArray)
              {
                  Queue aQueue = new Queue();
                  aQueue.setQueueName(queueName);
+                 aQueue.setMessageCount(getNumberOfAllMessagesForQueue(queueName));
                  queueDetailsList.add(aQueue);
              }
          }
 
-         return queueDetailsList.toArray(new Queue[queueDetailsList.size()]);
+         return queueDetailsList;
 
         } catch (MalformedObjectNameException e){
            throw new ClusterMgtException("Cannot access topic subscriber information");
@@ -185,7 +190,7 @@ public class ClusterManagementBeans {
         try
         {
          ObjectName objectName =
-                    new ObjectName("org.apache.qpid:type=ClusterManagementInformation,name=127.0.0.1");
+                    new ObjectName("org.wso2.andes:type=ClusterManagementInformation,name=ClusterManagementInformation");
          String operationName = "getSubscriberCount";
          Object [] parameters = new Object[]{topicName};
          String [] signature = new String[]{String.class.getName()};
@@ -214,7 +219,7 @@ public class ClusterManagementBeans {
         try
         {
          ObjectName objectName =
-                    new ObjectName("org.apache.qpid:type=ClusterManagementInformation,name=127.0.0.1");
+                    new ObjectName("org.wso2.andes:type=ClusterManagementInformation,name=ClusterManagementInformation");
          String operationName = "getMessageCount";
          Object [] parameters = new Object[]{queueName};
          String [] signature = new String[]{String.class.getName()};

@@ -35,6 +35,7 @@ import org.wso2.andes.server.configuration.ClusterConfiguration;
 import org.wso2.andes.server.configuration.ServerConfiguration;
 import org.wso2.andes.server.configuration.ServerNetworkTransportConfiguration;
 import org.wso2.andes.server.configuration.management.ConfigurationManagementMBean;
+import org.wso2.andes.server.information.management.QueueManagementInformationMBean;
 import org.wso2.andes.server.information.management.ServerInformationMBean;
 import org.wso2.andes.server.logging.SystemOutMessageLogger;
 import org.wso2.andes.server.logging.actors.BrokerActor;
@@ -72,6 +73,7 @@ public class Broker
             org.apache.commons.logging.LogFactory.getLog(Broker.class);
 
     private ClusterManagementInformationMBean clusterManagementMBean;
+    private QueueManagementInformationMBean queueManagementMBean;
 
     protected static class InitException extends RuntimeException
     {
@@ -303,6 +305,9 @@ public class Broker
 
             clusterManagementMBean = new ClusterManagementInformationMBean(clusterManager);
             clusterManagementMBean.register();
+            queueManagementMBean = new QueueManagementInformationMBean();
+            queueManagementMBean.register();
+
 
             if (ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()) {
                 ClusteringEnabledSubscriptionManager subscriptionManager =

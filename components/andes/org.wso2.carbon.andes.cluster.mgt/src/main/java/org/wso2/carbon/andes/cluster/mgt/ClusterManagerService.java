@@ -21,9 +21,9 @@ package org.wso2.carbon.andes.cluster.mgt;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.andes.cluster.mgt.internal.registry.ClusterManagementBeans;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Admin service class for cluster management
@@ -31,115 +31,15 @@ import java.util.Calendar;
 public class ClusterManagerService {
 
 
-    private ArrayList<NodeDetail> nodeDetailList = new ArrayList<NodeDetail>();
-    private ArrayList<Queue> queueList = new ArrayList<Queue>();
-    private ArrayList<Topic> topicList = new ArrayList<Topic>();
-
     private static final Log log = LogFactory.getLog(ClusterManagerService.class);
-
-    /**
-     * constructor for admin service. It initializes the node list
-     */
-    public ClusterManagerService() {
-        initialize();
-    }
-
-    /**
-     * initializes nodes
-     */
-    public void initialize() {
-        initNodes();
-        initQueues();
-        initTopics();
-    }
-
-    //will be replaced by nodes get method in the original
-    private void initNodes() {
-        nodeDetailList.clear();
-        NodeDetail node1 = new NodeDetail();
-        node1.setNodeId("N1");
-        node1.setHostName("node1");
-        node1.setIpAddress("255.255.255.255");
-        node1.setZookeeperID("ZID1");
-        NodeDetail node2 = new NodeDetail();
-        node2.setNodeId("N2");
-        node2.setHostName("node2");
-        node2.setIpAddress("128.123.12.2");
-        node2.setZookeeperID("ZID2");
-
-        nodeDetailList.add(node1);
-        nodeDetailList.add(node2);
-    }
-
-    //to be removed
-    private void initQueues() {
-        queueList.clear();
-        Queue queue1 = new Queue();
-        queue1.setCreatedFrom("sqsClient");
-        Calendar cal = Calendar.getInstance();
-        queue1.setCreatedTime(cal);
-        queue1.setMessageCount(19);
-        queue1.setQueueDepth(35454556);
-        queue1.setQueueName("queue1");
-        queue1.setUpdatedTime(cal);
-
-        Queue queue2 = new Queue();
-        queue2.setCreatedFrom("amqp");
-        queue2.setCreatedTime(cal);
-        queue2.setMessageCount(29);
-        queue2.setQueueDepth(75764565);
-        queue2.setQueueName("queue2");
-        queue2.setUpdatedTime(cal);
-
-        Queue queue3 = new Queue();
-        queue3.setCreatedFrom("amqp");
-        queue3.setCreatedTime(cal);
-        queue3.setMessageCount(123);
-        queue3.setQueueDepth(500000);
-        queue3.setQueueName("queue3");
-        queue3.setUpdatedTime(cal);
-
-
-        queueList.add(queue1);
-        queueList.add(queue2);
-        queueList.add(queue3);
-    }
-
-    //to be removed
-    private void initTopics() {
-        try
-        {
-        topicList.clear();
-        Topic topic1 = new Topic();
-        topic1.setName("topic1");
-
-        Topic topic2 = new Topic();
-        topic2.setName("topic2");
-
-        Topic topic3 = new Topic();
-        topic3.setName("topic3");
-
-        topicList.add(topic1);
-        topicList.add(topic2);
-        topicList.add(topic3);
-
-        refreshNumOfSubscribersForTopics();
-        refreshMemUsageThroughputAndMessageCount();
-        }
-        catch (Exception e)
-        {
-
-        }
-
-    }
 
     /**
      * @return number of available nodes in the cluster
      */
     public int getNumOfNodes() throws ClusterMgtAdminException {
         try {
-            //ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
-            //ArrayList<NodeDetail> nodeDetailList = clusterManagementBeans.getNodesWithZookeeperID();
+            ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+            ArrayList<NodeDetail> nodeDetailList = clusterManagementBeans.getNodesWithZookeeperID();
             return nodeDetailList.size();
         } catch (Exception e) {
             throw new ClusterMgtAdminException("cannot access MBean information for node detail");
@@ -161,41 +61,11 @@ public class ClusterManagerService {
         try {
             Queue[] queueDetailsArray;
             int resultSetSize = maxQueueCount;
-            ArrayList<Queue> resultList = new ArrayList<Queue>();
+            ArrayList<Queue> resultList;
 
-            if(hostName.equals("node1"))
-            {
-                resultList.add(queueList.get(0));
-                resultList.add(queueList.get(1));
-            }
-
-            if(hostName.equals("node2"))
-            {
-                resultList.add(queueList.get(2));
-            }
-
-
-            //get all the queues populated into this node
-            //QueueManager queueManager = new RegistryQueueManager();
-            //List<Queue> completeQueueList = queueManager.getAllQueues();
-
-            //get names of queues  whose queue manager runs on the given node
-            //ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
-            //Queue[] queueNamesList = clusterManagementBeans.getQueuesRunningInNode(hostName);
-
-            //filter queues related to given host name and put them to resultList
-//            for (Queue aQueue : completeQueueList) {
-//
-//                String currentQueueName = aQueue.getQueueName();
-//
-//                for (Queue matchingQueue : queueNamesList) {
-//                    String matchingQueueName = matchingQueue.getQueueName();
-//                    if (currentQueueName.equals(matchingQueueName)) {
-//                        resultList.add(aQueue);
-//                        break;
-//                    }
-//                }
-//            }
+            //get queues  whose queue manager runs on the given node
+            ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+            resultList = clusterManagementBeans.getQueuesRunningInNode(hostName);
 
             if ((resultList.size() - startingIndex) < maxQueueCount) {
                 resultSetSize = (resultList.size() - startingIndex);
@@ -208,14 +78,11 @@ public class ClusterManagerService {
                     queueDetailsArray[queueDetailsIndex] = new Queue();
 
                     queueDetailsArray[queueDetailsIndex].setQueueName(queueDetail.getQueueName());
-
                     queueDetailsArray[queueDetailsIndex].setMessageCount(queueDetail.getMessageCount());
 
-                    queueDetailsArray[queueDetailsIndex].setQueueDepth(queueDetail.getQueueDepth());
-                    queueDetailsArray[queueDetailsIndex].setCreatedFrom(queueDetail.getCreatedFrom());
-                    queueDetailsArray[queueDetailsIndex].setUpdatedTime(queueDetail.getUpdatedTime());
-                    queueDetailsArray[queueDetailsIndex].setCreatedTime(queueDetail.getCreatedTime());
-
+                    //queueDetailsArray[queueDetailsIndex].setQueueDepth(queueDetail.getQueueDepth());
+                    //queueDetailsArray[queueDetailsIndex].setUpdatedTime(queueDetail.getUpdatedTime());
+                    //queueDetailsArray[queueDetailsIndex].setCreatedTime(queueDetail.getCreatedTime());
 
                     queueDetailsIndex++;
                     if (queueDetailsIndex == maxQueueCount) {
@@ -244,8 +111,8 @@ public class ClusterManagerService {
     public Topic[] getAllTopicsForNode(int startingIndex, int maxTopicCount) throws ClusterMgtAdminException {
         try {
             Topic[] topicDetailsArray;
-            //ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
-            ArrayList<Topic> temp = topicList;
+            ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+            ArrayList<Topic> temp = clusterManagementBeans.getTopicList();
 
             int resultSetSize = maxTopicCount;
 
@@ -288,8 +155,8 @@ public class ClusterManagerService {
 
         try {
             NodeDetail[] nodeDetailArray;
-            //ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
-            ArrayList<NodeDetail> nodeDetailList = this.nodeDetailList;
+            ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+            ArrayList<NodeDetail> nodeDetailList = clusterManagementBeans.getNodesWithZookeeperID();
             int resultSetSize = maxNodesCount;
             if ((nodeDetailList.size() - startingIndex) < maxNodesCount) {
                 resultSetSize = (nodeDetailList.size() - startingIndex);
@@ -332,23 +199,6 @@ public class ClusterManagerService {
         }
     }
 
-    //not used
-    /*public int getMessageCount(String requestedPeriod, String hostName) throws ClusterMgtAdminException {
-        int result = 0;
-        for (NodeDetail aNodeDetail : nodeDetailList) {
-            if (aNodeDetail.getHostName() == hostName) {
-                if (requestedPeriod == Constants.MESSAGE_COUNT_FOR_LAST_THIRTY_SEC) {
-                    result = aNodeDetail.getMessagesReceivedLastHalfMin();
-                } else if (requestedPeriod == Constants.MESSAGE_COUNT_FOR_LAST_FIVE_MIN) {
-                    result = aNodeDetail.getMessagesReceivedLastFiveMin();
-                } else if (requestedPeriod == Constants.MESSAGE_COUNT_FOR_LAST_HOUR) {
-                    result = aNodeDetail.getMessagesReceivedLastHour();
-                }
-            }
-        }
-        return result;
-    }*/
-
     /**
      * get throughput for the requested node
      *
@@ -356,14 +206,8 @@ public class ClusterManagerService {
      * @return long
      */
     public long getThroughputForNode(String hostname) throws ClusterMgtAdminException{
-        refreshMemUsageThroughputAndMessageCount();
-        long result = 0;
-        for (NodeDetail aNodeDetail : nodeDetailList) {
-            if (aNodeDetail.getHostName().equals(hostname)) {
-                result = aNodeDetail.getThroughput();
-            }
-        }
-        return result;
+
+        return 0;
     }
 
     /**
@@ -373,14 +217,8 @@ public class ClusterManagerService {
      * @return long
      */
     public long getMemoryUsage(String hostname) throws ClusterMgtAdminException{
-        long result = 0;
-        refreshMemUsageThroughputAndMessageCount();
-        for (NodeDetail aNodeDetail : nodeDetailList) {
-            if (aNodeDetail.getHostName().equals(hostname)) {
-                result = aNodeDetail.getMemoryUsage();
-            }
-        }
-        return result;
+
+        return 0;
     }
 
     /**
@@ -391,8 +229,8 @@ public class ClusterManagerService {
     public long getNumberOfTopics() throws ClusterMgtAdminException {
         try {
             long result = 0;
-            //ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
-            ArrayList<Topic> topicList = this.topicList;
+            ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+            ArrayList<Topic> topicList = clusterManagementBeans.getTopicList();
             result = topicList.size();
             return result;
         } catch (Exception e) {
@@ -410,9 +248,8 @@ public class ClusterManagerService {
     public long getNumberOfQueues(String hostName) throws ClusterMgtAdminException {
         try {
             long result = 0;
-            //ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
-            Queue[] temp = this.queueList.toArray(new Queue[queueList.size()]);
-            result = temp.length;
+            ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+            result = clusterManagementBeans.getQueuesRunningInNode(hostName).size();
             return result;
         } catch (Exception e) {
             throw new ClusterMgtAdminException("Cannot get the queue manager ", e);
@@ -422,60 +259,64 @@ public class ClusterManagerService {
 
     /**
      * Returns number of subscriptions for the topic
-     *
      * @param topicName
      * @return long
      */
     public long getNumberofSubscriptionsForTopic(String topicName) throws ClusterMgtAdminException {
 
         try {
-            long result = 0;
-            //ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
-            //int numOfSubscribers = clusterManagementBeans.getNumOfSubscribersForTopic(topicName);
-            refreshNumOfSubscribersForTopics();
-            for(Topic topicDetail : topicList)
-            {
-                if(topicName.equals(topicDetail.getName()))
-                {
-                    result = topicDetail.getNumberOfSubscribers();
-                }
-            }
-            return result;
+            long numOfSubscribers = 0;
+            ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+            numOfSubscribers = clusterManagementBeans.getNumOfSubscribersForTopic(topicName);
+            return numOfSubscribers;
         } catch (Exception e) {
             throw new ClusterMgtAdminException("Cannot access MBean information for topics", e);
         }
     }
 
-    //TO REMOVE
-    private void refreshNumOfSubscribersForTopics() {
-        //reconsider all the topics and filter out topics that has one or more subscribers with updated details.
-        int minimum = 0;
-        int maximum = 20000;
-        for (Topic aTopic : topicList) {
-            aTopic.setNumberOfSubscribers(minimum + (int) (Math.random() * maximum));
+    /**
+     *
+     * @param queueName
+     * @return long number of messages
+     * @throws ClusterMgtAdminException
+     */
+    public long getNumberOfMessagesForQueue(String queueName) throws ClusterMgtAdminException
+    {
+        try {
+            long numOfMessages = 0;
+            ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+            numOfMessages = clusterManagementBeans.getNumberOfAllMessagesForQueue(queueName);
+            return numOfMessages;
+        } catch (Exception e) {
+            throw new ClusterMgtAdminException("Cannot access MBean information for queues", e);
         }
     }
 
     /**
      * get common cassandra connection
-     *
-     * @return
+     * @return String cassandra connection
      */
-    public String getCassandraConnection() {
-        String connection = "127.0.0.1:5000";
+    public String getCassandraConnection() throws ClusterMgtAdminException {
+        String connection = null;
+        ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+        try {
+            connection = clusterManagementBeans.getCassandraAddressAndPort();
+        } catch (Exception e) {
+            throw new ClusterMgtAdminException(e.getMessage());
+        }
         return connection;
     }
 
     /**
      * get common zookeeper connection
      *
-     * @return
+     * @return String zookeeper connection
      */
     public String getZookeeperConnection() throws ClusterMgtAdminException {
-        //ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
+        ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
         String connection =null;
         try {
-            connection =  "127.0.0.1:3234";
+            connection = clusterManagementBeans.getZookeeperAddressAndPort();
         } catch (Exception e) {
             throw new ClusterMgtAdminException(e.getMessage());
         }
@@ -493,30 +334,4 @@ public class ClusterManagerService {
         return true;
     }
 
-    //TO REMOVE
-
-    /**
-     * Refreshes all node details, number of queues whose worker resides,
-     * number of topics who has one or more subscribers,
-     * memory usage for each node,
-     * throughput for each node,
-     * number of messages received for different periods.
-     * This should be invoked for a full refresh of nodeDetails.
-     *
-     * @throws ClusterMgtAdminException
-     */
-    public void refreshMemUsageThroughputAndMessageCount() throws ClusterMgtAdminException {
-        int minimum = 0;
-        int maximum = 500000;
-        for (NodeDetail aNodeDetail : nodeDetailList) {
-            aNodeDetail.setNumOfQueues(getNumberOfQueues(aNodeDetail.getHostName()));
-            aNodeDetail.setNumOfTopics(minimum + (int) (Math.random() * maximum));
-            aNodeDetail.setMemoryUsage(minimum + (int) (Math.random() * maximum));
-            aNodeDetail.setThroughput(minimum + (int) (Math.random() * maximum));
-            aNodeDetail.setMessagesReceivedLastFiveMin(minimum + (int) (Math.random() * maximum));
-            aNodeDetail.setMessagesReceivedLastHour(minimum + (int) (Math.random() * maximum));
-            aNodeDetail.setMessagesReceivedLastHalfMin(minimum + (int) (Math.random() * maximum));
-        }
-
-    }
 }

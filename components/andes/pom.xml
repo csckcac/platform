@@ -39,8 +39,11 @@
                 <module>org.wso2.carbon.andes.commons</module>
                 <module>org.wso2.carbon.andes.authentication</module>
                 <module>org.wso2.carbon.andes.authorization</module>
-		<module>org.wso2.carbon.andes.cluster.mgt</module>
-		<module>org.wso2.carbon.andes.cluster.mgt.ui</module>
+		        <module>org.wso2.carbon.andes.cluster.mgt</module>
+		        <module>org.wso2.carbon.andes.cluster.mgt.ui</module>
+                <module>org.wso2.carbon.andes.core</module>
+                <module>org.wso2.carbon.andes.admin</module>
+                <module>org.wso2.carbon.andes.ui</module>
             </modules>
 
     <dependencyManagement>
@@ -58,6 +61,11 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.andes.commons</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+             <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.andes.core</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>
             <dependency>
@@ -89,6 +97,16 @@
                 <groupId>commons-dbcp.wso2</groupId>
                 <artifactId>commons-dbcp</artifactId>
                 <version>${orbit.version.commons.dbcp}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs.wso2</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>${orbit.version.geronimo-jms_1.1_spec}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.andes.stub</artifactId>
+                <version>${carbon.platform.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

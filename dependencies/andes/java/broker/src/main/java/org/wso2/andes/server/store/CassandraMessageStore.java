@@ -285,6 +285,27 @@ public class CassandraMessageStore implements MessageStore {
         return  messages;
     }
 
+    public int getMessageCountOfUserQueues(String queueName) {
+        int messageCount = 0;
+        try {
+
+            List<String> userQueues = getUserQueues(queueName);
+            for(String userQueue : userQueues){
+
+                ColumnSlice<Long, byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(userQueue.trim(),
+                        USER_QUEUES_COLUMN_FAMILY, keyspace, Integer.MAX_VALUE);
+
+                messageCount =+ columnSlice.getColumns().size();
+
+            }
+        } catch (NumberFormatException e) {
+            log.error("Number format error in getting messages from global queue : " + queueName, e);
+        } catch (Exception e) {
+            log.error("Error in getting messages from global queue: " + queueName, e);
+        }
+        return messageCount;
+    }
+
 
     public int getMessageCountOfGlobalQueue(String queueName) {
         int messageCount =0;

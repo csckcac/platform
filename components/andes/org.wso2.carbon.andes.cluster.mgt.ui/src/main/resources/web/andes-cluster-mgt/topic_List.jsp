@@ -20,9 +20,14 @@
     <link rel="stylesheet" href="../qpid/css/dsxmleditor.css" />
     <script type="text/javascript" >
 
-        function updateNumOfSubscribers(topicName)
+        function updateNumOfSubscribers(topicName, index)
         {
-
+            jQuery.ajax({
+                url:'topicUpdateQueries.jsp?topicName=' + topicName,
+                success:function(data) {
+                    jQuery('#subscriberCountCell' + index).html($('#subscriberCount', data));
+                }
+            });
         }
 
     </script>
@@ -39,7 +44,7 @@
         String IPAddressOfHost = request.getParameter("IPAddress");
 
         long totalQueueCount;
-        int queueCountPerPage = 20;
+        int topicCountPerPage = 20;
         int pageNumber = 0;
         String pageNumberAsStr = request.getParameter("pageNumber");
         if (pageNumberAsStr != null) {
@@ -50,10 +55,9 @@
 
         try {
             client = new ClusterManagerClient(configContext, serverURL, cookie);
-            client.initialize();
             totalQueueCount = client.updateQueueCountForNode(requestedHostName);
-            numberOfPages =  (int) Math.ceil(((float) totalQueueCount) / queueCountPerPage);
-            topicList  = client.getAllTopics(pageNumber * queueCountPerPage, queueCountPerPage);
+            numberOfPages =  (int) Math.ceil(((float) totalQueueCount) / topicCountPerPage);
+            topicList  = client.getAllTopics(pageNumber * topicCountPerPage, topicCountPerPage);
         } catch (Exception e) {
             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
     %>
@@ -82,7 +86,7 @@
         <%
                 if (topicList == null) {
             %>
-            No queues are created.
+            <fmt:message key='no.topics.created'/>
             <%
             } else {
 
@@ -103,6 +107,7 @@
                 <tbody>
                 <%
                     if (topicList != null) {
+                        int index = 0;
                         for (Topic topic : topicList) {
                               String topicName = topic.getName();
                 %>
@@ -110,14 +115,15 @@
                     <td>
                     <%=topicName%>
                     </td>
-                    <td><%=topic.getNumberOfSubscribers()%>
+                    <td id abbr="subscriberCountCell<%=index%>"><%=topic.getNumberOfSubscribers()%>
                     </td>
                     <td>
                         <a style="background-image: url(images/refresh.gif);"
-                           class="icon-link" onclick="updateNumOfSubscribers('<%=topicName%>')"></a>
+                           class="icon-link" onclick="updateNumOfSubscribers('<%=topicName%>','<%=index%>')"></a>
                     </td>
                 </tr>
                 <%
+                            index++;
                         }
                     }
                 %>

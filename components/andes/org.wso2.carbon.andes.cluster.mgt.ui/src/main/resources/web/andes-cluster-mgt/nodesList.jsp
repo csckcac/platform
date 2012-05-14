@@ -34,8 +34,6 @@
 
     try {
         client = new ClusterManagerClient(configContext, serverURL, cookie);
-        //client.initialize();
-        //client.refreshAllNodes();
         cassandraConnection = client.getCassandraConnection();
         zookeeperConnection = client.getZookeeperConnection();
     } catch (Exception e) {
@@ -94,33 +92,7 @@
 
 <div id="middle">
     <h2>Cluster Management- WSO2 Message Broker</h2>
-
     <div id="workArea">
-        <%
-            NodeDetail[] nodeDetailArray;
-            int totalNodeCount = client.getNumOfNodes();
-            int nodeCountPerPage = 20;
-            int pageNumber = 0;
-            String pageNumberAsStr = request.getParameter("pageNumber");
-            if (pageNumberAsStr != null) {
-                pageNumber = Integer.parseInt(pageNumberAsStr);
-            }
-            int numberOfPages = (int) Math.ceil(((float) totalNodeCount) / nodeCountPerPage);
-            try {
-                nodeDetailArray = client.getAllNodeDetail(pageNumber * nodeCountPerPage, nodeCountPerPage);
-                if (nodeDetailArray == null || nodeDetailArray.length == 0) {
-        %>
-        <fmt:message key='no.nodes.available'/>
-        <%
-        } else {
-        %>
-        <input type="hidden" name="pageNumber" value="<%=pageNumber%>"/>
-        <carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
-                          page="nodesList.jsp" pageNumberParameterName="pageNumber"
-                          resourceBundle="org.wso2.carbon.andes.cluster.mgt.ui.i18n.Resources"
-                          prevKey="prev" nextKey="next"
-                          parameters="<%="test"%>"/>
-
         <table style="width:60%" class="styledLeft">
             <thead>
             <tr>
@@ -144,6 +116,32 @@
         <br>
         <br>
         <br>
+
+        <%
+
+            NodeDetail[] nodeDetailArray;
+            int totalNodeCount = client.getNumOfNodes();
+            int nodeCountPerPage = 20;
+            int pageNumber = 0;
+            String pageNumberAsStr = request.getParameter("pageNumber");
+            if (pageNumberAsStr != null) {
+                pageNumber = Integer.parseInt(pageNumberAsStr);
+            }
+            int numberOfPages = (int) Math.ceil(((float) totalNodeCount) / nodeCountPerPage);
+            try {
+                nodeDetailArray = client.getAllNodeDetail(pageNumber * nodeCountPerPage, nodeCountPerPage);
+                if (nodeDetailArray == null || nodeDetailArray.length == 0) {
+        %>
+        <fmt:message key='no.nodes.available'/>
+        <%
+        } else {
+        %>
+        <input type="hidden" name="pageNumber" value="<%=pageNumber%>"/>
+        <carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                          page="nodesList.jsp" pageNumberParameterName="pageNumber"
+                          resourceBundle="org.wso2.carbon.andes.cluster.mgt.ui.i18n.Resources"
+                          prevKey="prev" nextKey="next"
+                          parameters="<%="test"%>"/>
         <table class="styledLeft">
             <thead>
             <tr>
@@ -151,9 +149,6 @@
                 <th rowspan="2"><fmt:message key='node.ip'/></th>
                 <th rowspan="2"><fmt:message key='node.zookeeperID'/></th>
                 <th colspan="3" align="middle"><fmt:message key='node.messaging'/></th>
-                <th rowspan="2" colspan="2"><fmt:message key='node.throughput'/></th>
-                <th rowspan="2" colspan="2"><fmt:message key='node.memoryUsage'/></th>
-                <th rowspan="2" style="width:150px;"><fmt:message key='operations'/></th>
             </tr>
             <tr>
                 <th><fmt:message key='node.queues'/></th>
@@ -199,24 +194,6 @@
                 <td>
                     <a style="background-image: url(images/refresh.gif);"
                        class="icon-link" onclick="updateNumOfTopicsAndQueues('<%=hostName%>','<%=index%>')"></a>
-                </td>
-                <td align="right" id="throughPutCell<%=index%>">
-                    <%=aNodeDetail.getThroughput() %>
-                </td>
-                <td>
-                    <a style="background-image: url(images/refresh.gif);"
-                       class="icon-link" onclick="updateThroughput('<%=hostName%>','<%=index%>')"></a>
-                </td>
-                <td align="right" id="memoryUsageCell">
-                    <%=aNodeDetail.getMemoryUsage() %>
-                </td>
-                <td>
-                    <a style="background-image: url(images/refresh.gif);"
-                       class="icon-link" onclick="updateMemoryUsage('<%=hostName%>','<%=index%>')"></a>
-                </td>
-                <td>
-                    <a style="background-image: url(images/restart.png);"
-                       class="icon-link" onclick="doRestart('<%=nodeId%>')">Restart</a>
                 </td>
             </tr>
             <%

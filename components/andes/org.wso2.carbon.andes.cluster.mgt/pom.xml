@@ -71,7 +71,6 @@
                         </Export-Package>
 
                         <Import-Package>org.osgi.framework, *;resolution:=optional</Import-Package>
-                        <Bundle-Activator>org.wso2.carbon.andes.cluster.mgt.Activator</Bundle-Activator>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>

@@ -45,6 +45,7 @@ public class LoadBalancerConfiguration implements Serializable{
     protected Map<String, ServiceConfiguration> serviceConfigMap =
             new HashMap<String, ServiceConfiguration>();
 
+
     /**
      * Key: service name eg: appserver
      * Value: domains Node
@@ -58,9 +59,9 @@ public class LoadBalancerConfiguration implements Serializable{
     /**
      * Key - host, Value - Node with service clustering domains of this host
      */
-    protected Map<String, Node> hostDomainMap = new HashMap<String, Node>();
-    public Map<String, Node> getHostDomainMap() {
-        return hostDomainMap;
+    protected Map<String, Node> hostDomainNodeMap = new HashMap<String, Node>();
+    public Map<String, Node> getHostDomainNodeMap() {
+        return hostDomainNodeMap;
     }
 
     protected ServiceConfiguration defaultServiceConfig;
@@ -175,8 +176,8 @@ public class LoadBalancerConfiguration implements Serializable{
      */
     public String getDomain(String host, int tenantId) {
         
-        if (hostDomainMap.containsKey(host)) {
-            for (Node aNode : hostDomainMap.get(host).getChildNodes()) {
+        if (hostDomainNodeMap.containsKey(host)) {
+            for (Node aNode : hostDomainNodeMap.get(host).getChildNodes()) {
 
                 String tenantRange = aNode.getProperty(Constants.TENANT_RANGE_ELEMENT);
                 
@@ -325,12 +326,12 @@ public class LoadBalancerConfiguration implements Serializable{
                     if (aHost.isEmpty()) {
                         throw new RuntimeException("host cannot be empty");
                     }
-                    if (hostDomainMap.containsKey(aHost)) {
+                    if (hostDomainNodeMap.containsKey(aHost)) {
                         throw new RuntimeException("host " + aHost + " has been duplicated in the configuration");
                     }
-                    
+
                     // adds the domains node to map
-                    hostDomainMap.put(aHost, domainsNode);
+                    hostDomainNodeMap.put(aHost, domainsNode);
                     
                 }
                 
@@ -368,7 +369,7 @@ public class LoadBalancerConfiguration implements Serializable{
             }
 
             // get host to domains node map and iterate over it
-            for (Map.Entry<String, Node> entry3 : this.getHostDomainMap().entrySet()) {
+            for (Map.Entry<String, Node> entry3 : this.getHostDomainNodeMap().entrySet()) {
                 String host = entry3.getKey();
                 Node domainsNode = entry3.getValue();
 

@@ -76,9 +76,9 @@ public class SVG {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("<object ");
-		sb.append("width=\"" + this.dimension.getWidth() + "\" ");
+		sb.append("width=\"" + this.dimension.getWidth()*1.1 + "\" ");
 		sb.append("height=\"" + this.dimension.getHeight() + "\" ");
-		sb.append("type=\"image/svg+xml\" style=\"margin:auto;\" ");
+		sb.append("type=\"image/svg+xml\" style=\"margin-left:auto; margin-right:auto;\" ");
 		sb.append("data=\"./svg?id={0}\">\n");
 		sb.append("<param name=\"src\" value=\"./svg\" />\n");
 		sb.append("</object>\n");

@@ -80,13 +80,10 @@ public class ISNewEntitlementUploaderSeleniumTest {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             uploadPolicyfromFile(policyfilePath);
-            waitTimeforElement("//td[3]/a");
             assertTrue(selenium.isTextPresent("exact:urn:oasis:names:tc:xacml:2.0:conformance-test:" +
                                               "IIA1:policy"), "Failed to upload policy IIA001Policy.xml");
             driver.findElement(By.linkText("Enable")).click();
-            waitTimeforElement("//td[3]/a");
             gotoTryITpage(requestXML);
-            waitTimeforElement("//div[3]/div/div");
             assertTrue(selenium.isTextPresent("Permit"), "Policy IIA001 Response Failed :");
             selenium.click("//button");
             Thread.sleep(sleeptime);
@@ -122,14 +119,11 @@ public class ISNewEntitlementUploaderSeleniumTest {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             uploadPolicyfromFile(filePath);
-            waitTimeforElement("//td[3]/a");
             assertTrue(selenium.isTextPresent("exact:urn:oasis:names:tc:xacml:2.0:conformance-test" +
                                               ":IIA003:policy"),
                        "Failed to upload policy IIA001Policy.xml");
             driver.findElement(By.linkText("Enable")).click();
-            waitTimeforElement("//td[3]/a");
             gotoTryITpage(requestXML);
-            waitTimeforElement("//div[3]/div/div");
             assertTrue(selenium.isTextPresent("NotApplicable"), "Policy IIA003 Response Failed :");
             selenium.click("//button");
             Thread.sleep(sleeptime);
@@ -161,27 +155,21 @@ public class ISNewEntitlementUploaderSeleniumTest {
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
     }
 
     private void deletePolicy() throws InterruptedException {
         driver.findElement(By.linkText("Administration")).click();
-        waitTimeforElement("//td[3]/div/a");
         driver.findElement(By.name("policies")).click();
         driver.findElement(By.id("delete1")).click();
-        waitTimeforElement("//div[3]/div/div");
         assertTrue(selenium.isTextPresent("exact:Do you want to delete the selected polices?"),
                    "Failed to Delete policy :");
         selenium.click("//button");
-        waitTimeforElement("//li[3]/a");
     }
 
     private void gotoTryITpage(String requestXML) throws InterruptedException {
         driver.findElement(By.linkText("TryIt")).click();
-        waitTimeforElement("//tr[7]/td/input");
         //click on  Create Request Using Editor
         driver.findElement(By.linkText("Create Request Using Editor")).click();
-        waitTimeforElement("//textarea");
         selenium.selectFrame("frame_txtPolicyTemp");
         driver.findElement(By.id("textarea")).clear();
         Thread.sleep(sleeptime);
@@ -193,33 +181,13 @@ public class ISNewEntitlementUploaderSeleniumTest {
 
     private void uploadPolicyfromFile(String filePath) throws InterruptedException {
         driver.findElement(By.linkText("Administration")).click();
-        waitTimeforElement("//td[3]/div/a");
         driver.findElement(By.linkText("Import New Entitlement Policy")).click();
-        waitTimeforElement("//select");
         driver.findElement(By.id("policyFromFileSystem")).sendKeys(filePath);
         driver.findElement(By.xpath("//tr[4]/td/input")).click();
-        waitTimeforElement("//div[3]/div/div");
         assertEquals("Entitlement policy imported successfully", selenium.getText("//p"),
                      "Entitlement Policy Import Message Failed:");
         selenium.click("//button");
         log.info("xacml Policy uploaded successgully");
-    }
-
-
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
-            }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
     }
 
     private String getDatafromFile(String requestFilePath) throws IOException {

@@ -118,14 +118,6 @@ public class StratosManagerUserCreatorSeleniumTest {
         driver.findElement(By.linkText("Users")).click();
     }
 
-    private void deleteUser() throws InterruptedException {
-        driver.findElement(By.linkText("Delete")).click();
-        assertTrue(selenium.isTextPresent("exact:Do you want to delete the user 'manager123'?"),
-                   "Failed to delete user :");
-        selenium.click("//button");
-        selenium.click("//button");
-    }
-
     private void findUser(String newUserName) {
         driver.findElement(By.xpath("//input")).clear();
         driver.findElement(By.xpath("//input")).sendKeys(newUserName);

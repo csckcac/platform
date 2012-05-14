@@ -51,7 +51,7 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
     String productName = "is";
     String userName;
     String password;
-    long sleeptime = 5000;
+    long sleeptime = 5 * 1000; // 5 seconds
     
 
     @BeforeClass(alwaysRun = true)
@@ -68,7 +68,7 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "create new policy from UI", priority = 1)
-    public void testCreatePolicyfromUI() throws Exception {
+    public void testCreatePolicyFromUI() throws Exception {
         String policyName = "stratostestpolicy1";
         String policyDescription = "test stratos policy";
         String resourceName = "foo";
@@ -110,47 +110,37 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
 
     private void deleteEntitlement() throws InterruptedException {
         driver.findElement(By.linkText("Administration")).click();
-        waitTimeforElement("//td[3]/div/a");
         driver.findElement(By.name("policies")).click();
         driver.findElement(By.id("delete1")).click();
-        waitTimeforElement("//div[3]/div/div");
         assertTrue(selenium.isTextPresent("exact:Do you want to delete the selected polices?"),
                    "Failed to Delete Policy :");
         selenium.click("//button");
-        waitTimeforElement("//td[4]/a");
     }
 
     private void gotoTryLinkPage(String resourceName) throws InterruptedException {
         driver.findElement(By.linkText("TryIt")).click();
-        waitTimeforElement("//input");
         driver.findElement(By.id("resourceNames")).sendKeys(resourceName);
         driver.findElement(By.id("subjectNames")).sendKeys("admin");
         driver.findElement(By.xpath("//tr[7]/td/input")).click();
-        waitTimeforElement("//div/div/span");
         assertTrue(selenium.isTextPresent("Permit"), "admin Policy has not been applied :");
         selenium.click("//button");
 
-        waitTimeforElement("//input");
         driver.findElement(By.id("subjectNames")).clear();
         driver.findElement(By.id("subjectNames")).sendKeys("admin123");
         driver.findElement(By.id("actionNames")).sendKeys("read");
         driver.findElement(By.xpath("//tr[7]/td/input")).click();
-        waitTimeforElement("//div/div/span");
         assertTrue(selenium.isTextPresent("Deny"), "admin Policy has not been applied :");
         selenium.click("//button");
     }
 
     private void saveEntitlement() throws InterruptedException {
         driver.findElement(By.xpath("//tr[7]/td/input")).click();
-        waitTimeforElement("//div[3]/div/div");
         assertEquals("Entitlement policy added successfully. Policy is disabled by default.",
                      selenium.getText("//p"), "Failed to pop up message when policy is created");
-        waitTimeforElement("//form[2]/table/tbody/tr/td[3]/a");
     }
 
     private void defineRule2() throws InterruptedException {
         driver.findElement(By.xpath("//tr[5]/td/h2")).click();
-        waitTimeforElement("//tr[5]/td/div/table/tbody/tr/td/table/tbody/tr/td[2]/input");
         driver.findElement(By.id("ruleId")).sendKeys("rule2");
         Select selectrule2 = new Select(driver.findElement(By.id("ruleEffect")));
         selectrule2.selectByVisibleText("Deny");
@@ -162,20 +152,17 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
 
     private void defineRule1() throws InterruptedException {
         driver.findElement(By.xpath("//tr[5]/td/h2")).click();
-        waitTimeforElement("//tr[5]/td/div/table/tbody/tr/td/table/tbody/tr/td[2]/input");
         driver.findElement(By.id("ruleId")).sendKeys("rule1");
         Select select1 = new Select(driver.findElement(By.id("ruleEffect")));
         select1.selectByVisibleText("Permit");
         driver.findElement(By.id("subjectNames")).sendKeys("admin");
         driver.findElement(By.xpath("//tr[2]/td/input")).click();
         Thread.sleep(sleeptime);
-//        waitTimeforElement("//form/table/tbody/tr[5]/td/table/tbody/tr/td[2]");
     }
 
     private void createEntitlement(String policyName, String policyDescription, String resourceName)
             throws InterruptedException {
         driver.findElement(By.linkText("Add New Entitlement Policy")).click();
-        waitTimeforElement("//input");
         //enter policy details
         driver.findElement(By.id("policyName")).sendKeys(policyName);
         Select select = new Select(driver.findElement(By.id("algorithmName")));
@@ -183,36 +170,15 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
         driver.findElement(By.id("policyDescription")).sendKeys(policyDescription);
         //enter policy applies to details
         driver.findElement(By.xpath("//td/h2")).click();
-        waitTimeforElement("//td[2]/table/tbody/tr/td[2]/input");
         driver.findElement(By.id("resourceNamesTarget")).sendKeys(resourceName);
     }
 
     private void gotoAdministrationPage() throws InterruptedException {
         driver.findElement(By.linkText("Administration")).click();
-        waitTimeforElement("//td[3]/div/a");
     }
 
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
     }
-
-
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
-            }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
-    }
-
 }

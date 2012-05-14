@@ -38,7 +38,6 @@ public class UserManagementSeleniumUtils {
             WebElement row = i.next();
             List<WebElement> columns = row.findElements(By.tagName("td"));
             for (WebElement column : columns) {
-                System.out.print(column.getText());
 
                 if (column.getText().equals(userName)) {
                     status = true;
@@ -71,7 +70,6 @@ public class UserManagementSeleniumUtils {
             WebElement row = i.next();
             List<WebElement> columns = row.findElements(By.tagName("td"));
             for (WebElement column : columns) {
-                System.out.print(column.getText());
 
                 if (column.getText().equals(roleName)) {
                     status = true;

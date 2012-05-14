@@ -100,10 +100,8 @@ public class ISOpenIDSeleniumTest {
         driver.get(liveJournelURL);
         driver.findElement(By.id("openid_url")).sendKeys(openID);
         driver.findElement(By.xpath("//button")).click();
-        waitTimeforElement("//td/input");
         driver.findElement(By.id("password")).sendKeys(password);
         driver.findElement(By.xpath("//td[2]/input")).click();
-        waitTimeforElement("//input");
         driver.findElement(By.id("approve")).click();
         assertTrue(driver.getPageSource().contains("Welcome back to LiveJournal!"),
                    "Failed to Login to Live Journel");
@@ -111,7 +109,6 @@ public class ISOpenIDSeleniumTest {
 
     private String getOpenID() throws InterruptedException {
         driver.findElement(By.linkText("InfoCard/OpenID")).click();
-        waitTimeforElement("//div/div/table/tbody/tr/td/a");
         WebElement openIDValue = driver.findElement(By.xpath("//div/div/table/tbody/tr/td/a"));
         String openID = openIDValue.getText();
         log.info("value is :" + openID);
@@ -121,24 +118,5 @@ public class ISOpenIDSeleniumTest {
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
     }
-
-
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
-            }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
-    }
-
 }

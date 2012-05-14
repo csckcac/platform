@@ -104,21 +104,16 @@ public class ISClaimManagementSeleniumTest {
 
     private void verifyUserProfile(String userProfileURL) throws InterruptedException {
         driver.get(userProfileURL);
-        waitTimeforElement("//div/div/div/a");
         driver.findElement(By.linkText("Add New Profile")).click();
-        waitTimeforElement("//td[2]/input");
         assertTrue(selenium.isTextPresent("Other Phone"),
                    "Failed to Update newly added Claim to user profile :");
     }
 
     private void addClaim(String claimManagmentURL) throws InterruptedException {
         driver.get(claimManagmentURL);
-        waitTimeforElement("//tr[4]/td/a");
         driver.findElement(By.linkText("http://wso2.org/claims")).click();
         log.info("Claim was selected successfully ");
-        waitTimeforElement("//div/div/div/a");
         driver.findElement(By.linkText("Edit")).click();
-        waitTimeforElement("//tr[7]/td[2]/input");
         driver.findElement(By.id("supported")).click();
         driver.findElement(By.xpath("//form/table/tbody/tr[2]/td/input")).click();
     }
@@ -126,25 +121,5 @@ public class ISClaimManagementSeleniumTest {
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
     }
-
-
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
-            }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
-    }
-
-
 }

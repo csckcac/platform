@@ -100,24 +100,19 @@ public class ISRelyingPartiesSeleniumTest {
 
     private void deleteRelyingCERT() throws InterruptedException {
         driver.findElement(By.linkText("Delete")).click();
-        waitTimeforElement("//div[3]/div/div");
         assertTrue(selenium.isTextPresent("exact:You are about to remove localhost. " +
                                           "Do you want to proceed?"),
                    "Delete pop-up message Failed: ");
         selenium.click("//button");
-        waitTimeforElement("//li[3]/a");
     }
 
     private void importRelyingCERT(String filePath) throws InterruptedException {
         driver.findElement(By.linkText("Trusted Relying Parties")).click();
-        waitTimeforElement("//input");
         driver.findElement(By.id("rpcert")).sendKeys(filePath);
         driver.findElement(By.name("upload")).click();
-        waitTimeforElement("//div[3]/div/div");
         assertTrue(selenium.isTextPresent("Trusted relying party added successfully"),
                    "Failed to add trusted relying party :");
         selenium.click("//button");
-        waitTimeforElement("//form[2]/table/tbody/tr/td");
         assertEquals("localhost", selenium.getText("//form[2]/table/tbody/tr/td"),
                      "Relying certificate has not been uploaded :");
     }
@@ -125,23 +120,5 @@ public class ISRelyingPartiesSeleniumTest {
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
-    }
-
-
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
-            }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
     }
 }

@@ -99,7 +99,6 @@ public class StratosManagerAccountValidatorSeleniumTest {
 
     private void gotoAccountManagerPage(String accountManagerUrl) throws InterruptedException {
         driver.get(accountManagerUrl);
-        waitTimeforElement("//input");
         assertTrue(driver.getPageSource().contains("Contact Information"),
                    "Faile to display Contact Information :");
         assertTrue(driver.getPageSource().contains("Administrator Profile"),
@@ -113,24 +112,6 @@ public class StratosManagerAccountValidatorSeleniumTest {
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
     }
-
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
-            }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
-    }
-
 
 }

@@ -35,7 +35,6 @@ import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUti
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.net.MalformedURLException;
-import java.util.Calendar;
 
 import static org.testng.Assert.*;
 
@@ -67,13 +66,11 @@ public class StratosManagerInvoiceSeleniumTest {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos Manager Login Success");
             driver.findElement(By.linkText("Invoices")).click();
-            waitTimeforElement("//input");
             assertTrue(driver.getPageSource().contains("View Invoice"),
                        "Faile to view invoices page :");
             Select select = new Select(driver.findElement(By.id("yearMonth")));
             select.selectByIndex(1);
             driver.findElement(By.xpath("//input")).click();
-            waitTimeforElement("//div/table/tbody/tr/td/img"); // waiting till wso2 logo appears in invoice
             assertTrue(driver.getPageSource().contains("Value (USD)"),
                        "Faile to display invoce value :");
             assertTrue(driver.getPageSource().contains("Charges for Subscriptions"),
@@ -103,23 +100,5 @@ public class StratosManagerInvoiceSeleniumTest {
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
     }
-
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
-            }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
-    }
-
 }

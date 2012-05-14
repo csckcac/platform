@@ -38,8 +38,7 @@ public class ESBTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("CustomProxyTest", CustomProxyTest.class));
         suiteVariablesList.add(new SuiteVariables("MediatorTest", MediatorTest.class));
 
-        if (!environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_enableSelenium
-                                                                                        ()) {
+        if (!environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             suiteVariablesList.add(new SuiteVariables("ServiceChainingTest", ServiceChainingTest.class));
             suiteVariablesList.add(new SuiteVariables("CustomXpathTest", CustomXpathTest.class));
         }

@@ -18,13 +18,18 @@
 package org.wso2.automation.common.test.dss.service;
 
 import org.apache.axiom.attachments.ByteArrayDataSource;
-import org.apache.axiom.om.*;
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMAttribute;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.automation.common.test.dss.utils.DataServiceTest;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceProxyServiceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceService;
@@ -42,7 +47,6 @@ import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
 import org.wso2.platform.test.core.utils.fileutils.FileManager;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
-import org.wso2.automation.common.test.dss.utils.DataServiceTest;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
@@ -283,7 +287,7 @@ public class EventingServiceTest extends DataServiceTest {
                 OMElement endpoint = (OMElement) i.next();
                 OMElement address = endpoint.getFirstElement();
                 OMAttribute uri = address.getAttribute(new QName("uri"));
-                uri.setAttributeValue(urlGenerator.getHttpServiceURL(dssServer.getProductVariables().getHttpPort(),
+                uri.setAttributeValue(urlGenerator.getHttpServiceURL(dssServer.getProductVariables().getHttpPort(), dssServer.getProductVariables().getNhttpPort(),
                                                                      dssServer.getProductVariables().getHostName(),
                                                                      FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME),
                                                                      userInfo) + "/EventingTest/updateProductQuantity");

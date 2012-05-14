@@ -84,6 +84,7 @@ public final class APIConstants {
     public static final String SUBSCRIBER_FIELD_DATE_SUBSCRIBED = "DATE_SUBSCRIBED";
 
     //tables columns for subscription
+    public static final String SUBSCRIPTION_FIELD_SUBSCRIPTION_ID = "SUBSCRIPTION_ID";
     public static final String SUBSCRIPTION_FIELD_TIER_ID = "TIER_ID";
     public static final String SUBSCRIPTION_FIELD_API_ID = "API_ID";
     public static final String SUBSCRIPTION_FIELD_ACCESS_TOKEN = "ACCESS_TOKEN";
@@ -138,5 +139,7 @@ public final class APIConstants {
     public static final String API_KEY_MANAGER_PASSWORD = API_KEY_MANAGER + "Password";
     
     public static final String API_KEY_TYPE = "AM_KEY_TYPE";
+    public static final String API_KEY_TYPE_PRODUCTION = "PRODUCTION";
+    public static final String API_KEY_TYPE_SANDBOX = "SANDBOX";
 
 }

@@ -617,26 +617,31 @@ public class ApiMgtDAO {
             connection = APIMgtDBUtil.getConnection();
 
             String sqlQuery = "SELECT " +
-                    "   SUBS.API_ID AS API_ID " +
+                    "   SUBS.SUBSCRIPTION_ID" +
+                    "   ,SUBS.API_ID AS API_ID " +
                     "   ,SUBS.TIER_ID AS TIER_ID" +
                     "   ,APP.APPLICATION_ID AS APP_ID" +
                     "   ,SUBS.LAST_ACCESSED AS LAST_ACCESSED" +
-                    "   ,KCM.ACCESS_TOKEN AS ACCESS_TOKEN " +
                     "   ,APP.NAME AS APP_NAME  " +
                     "FROM " +
                     "   AM_SUBSCRIBER SUB," +
                     "   AM_APPLICATION APP, " +
-                    "   AM_SUBSCRIPTION SUBS, " +
-                    "   AM_SUBSCRIPTION_KEY_MAPPING SKM " +
-                    "LEFT OUTER JOIN " +
-                    "   AM_KEY_CONTEXT_MAPPING KCM " +
-                    "ON SKM.KEY_CONTEXT_MAPPING_ID = KCM.KEY_CONTEXT_MAPPING_ID  " +
+                    "   AM_SUBSCRIPTION SUBS " +
                     "WHERE " +
                     "   SUB.USER_ID = ? " +
                     "   AND SUB.TENANT_ID = ? " +
                     "   AND SUB.SUBSCRIBER_ID=APP.SUBSCRIBER_ID " +
                     "   AND APP.APPLICATION_ID=SUBS.APPLICATION_ID";
-
+            
+            String getKeysSql = "SELECT " +
+                    " KCM.ACCESS_TOKEN AS ACCESS_TOKEN," +
+                    " SKM.KEY_TYPE AS TOKEN_TYPE " +
+                    "FROM" +
+                    " AM_SUBSCRIPTION_KEY_MAPPING SKM," +
+                    " AM_KEY_CONTEXT_MAPPING KCM " +
+                    "WHERE" +
+                    " SKM.SUBSCRIPTION_ID = ?" +
+                    " AND SKM.KEY_CONTEXT_MAPPING_ID = KCM.KEY_CONTEXT_MAPPING_ID";
 
             ps = connection.prepareStatement(sqlQuery);
             ps.setString(1, subscriber.getName());
@@ -655,8 +660,7 @@ public class ApiMgtDAO {
                 APIIdentifier apiIdentifier = new APIIdentifier(apiIdAttributes[0], apiIdAttributes[1],
                         apiIdAttributes[2]);
 
-                SubscribedAPI subscribedAPI = new SubscribedAPI(subscriber, apiIdentifier);
-                subscribedAPI.setKey(result.getString(APIConstants.SUBSCRIPTION_FIELD_ACCESS_TOKEN));
+                SubscribedAPI subscribedAPI = new SubscribedAPI(subscriber, apiIdentifier);                
                 subscribedAPI.setTier(new Tier(
                         result.getString(APIConstants.SUBSCRIPTION_FIELD_TIER_ID)));
                 subscribedAPI.setLastAccessed(result.getDate(
@@ -666,6 +670,19 @@ public class ApiMgtDAO {
                 Application application = new Application(result.getString("APP_NAME"), subscriber);
                 application.setId(result.getInt("APP_ID"));
                 subscribedAPI.setApplication(application);
+                
+                int subscriptionId = result.getInt(APIConstants.SUBSCRIPTION_FIELD_SUBSCRIPTION_ID);
+                PreparedStatement nestedPS = connection.prepareStatement(getKeysSql);
+                nestedPS.setInt(1, subscriptionId);
+                ResultSet nestedRS = nestedPS.executeQuery();
+                while (nestedRS.next()) {
+                    String key = nestedRS.getString("ACCESS_TOKEN");
+                    String type = nestedRS.getString("TOKEN_TYPE");
+                    if (APIConstants.API_KEY_TYPE_PRODUCTION.equals(type)) {
+                        subscribedAPI.setKey(key);
+                    }
+                }
+
                 subscribedAPIs.add(subscribedAPI);
             }
 

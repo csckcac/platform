@@ -43,23 +43,19 @@ public class UserRegistrationService extends AbstractAdmin {
     private static final Log log = LogFactory.getLog(UserRegistrationService.class);
     public static final String USER_VALIDATION_KEY_PATH = "org.wso2.carbon.appfactory.user" +
                                                           ".registration-validation-key";
-    private UserStoreManager userStoreManager;
 
     public String registerUser(UserRegistrationInfoBean user) throws UserRegistrationException {
         if (!doesUserExist(user.getUserName())) {
             return addUser(user);
-        } else {
-            return null;
         }
+        return null;
     }
 
     private String addUser(UserRegistrationInfoBean user) throws UserRegistrationException {
-
-        userStoreManager = getUserStoreManager();
+        UserStoreManager userStoreManager = getUserStoreManager();
         UserRealm realm = getUserRealm();
         String[] roles = new String[1];
         Map<String, String> claims = new HashMap<String, String>();
-
 
         claims.put("http://wso2.org/claims/emailaddress", user.getEmail());
         claims.put("http://wso2.org/claims/givenname", user.getFirstName());
@@ -84,14 +80,8 @@ public class UserRegistrationService extends AbstractAdmin {
         Resource resource = null;
         try {
             resource = superTenantRegistry.get(userValidationKeyPath);
-
         } catch (ResourceNotFoundException e) {
-            if (log.isDebugEnabled()) {
-                String msg = "Confirmation key is not found for " + userName;
-                log.debug(msg);
-            }
-            return false;
-
+            handleException("Confirmation key is not found for " + userName, e);
         } catch (RegistryException e) {
             handleException("Error in accessing registry collection " + userValidationKeyPath, e);
         }
@@ -112,13 +102,12 @@ public class UserRegistrationService extends AbstractAdmin {
             try {
                 superTenantRegistry.delete(userValidationKeyPath);
             } catch (RegistryException e) {
-                handleException("Could not delete confirmation key for " + userName);
+                handleException("Could not delete confirmation key for " + userName, e);
             }
             updateUserRole(userName);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     private void updateUserRole(String userName) throws UserRegistrationException {
@@ -133,8 +122,6 @@ public class UserRegistrationService extends AbstractAdmin {
             adminRoleName = realm.getRealmConfiguration().getAdminRoleName();
             newUserRoles[0] = adminRoleName;
             userStoreManager.updateRoleListOfUser(userName, userRolesToDelete, newUserRoles);
-
-
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
             handleException("Failed to get realm configuration", e);
         } catch (UserStoreException e) {
@@ -144,7 +131,7 @@ public class UserRegistrationService extends AbstractAdmin {
 
 
     public boolean doesUserExist(String userName) throws UserRegistrationException {
-        userStoreManager = getUserStoreManager();
+        UserStoreManager userStoreManager = getUserStoreManager();
         try {
             return userStoreManager.isExistingUser(userName);
         } catch (UserStoreException e) {
@@ -170,10 +157,6 @@ public class UserRegistrationService extends AbstractAdmin {
         throw new UserRegistrationException(msg, e);
     }
 
-    private void handleException(String msg) throws UserRegistrationException {
-        log.error(msg);
-    }
-
     private UserStoreManager getUserStoreManager() throws UserRegistrationException {
         UserStoreManager manager = null;
 
@@ -188,20 +171,9 @@ public class UserRegistrationService extends AbstractAdmin {
 
     private String generateKey(String userName, String email) throws UserRegistrationException {
         Registry superTenantRegistry = getSuperTenantRegistry();
-
-
         String userValidationKeyPath = UserRegistrationService.USER_VALIDATION_KEY_PATH +
                                        RegistryConstants.PATH_SEPARATOR + userName;
         String confirmationKey = UUIDGenerator.generateUUID();
-        try {
-            if (superTenantRegistry.resourceExists(userValidationKeyPath)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Overwriting existing confirmation key for " + userName);
-                }
-            }
-        } catch (RegistryException e) {
-            handleException("Error in accessing registry collection " + userValidationKeyPath, e);
-        }
         Resource resource;
         try {
             resource = superTenantRegistry.newResource();

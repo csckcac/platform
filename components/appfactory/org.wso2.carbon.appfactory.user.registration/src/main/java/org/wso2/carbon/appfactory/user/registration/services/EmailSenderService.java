@@ -21,6 +21,7 @@ package org.wso2.carbon.appfactory.user.registration.services;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.appfactory.user.registration.util.Util;
+import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.email.sender.api.EmailSender;
 import org.wso2.carbon.email.sender.api.EmailSenderConfiguration;
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
@@ -34,7 +35,7 @@ import java.util.Map;
 /**
  * Email sending service for both sending generic emails and activation email
  */
-public class EmailSenderService {
+public class EmailSenderService extends AbstractAdmin {
     private static final Log log = LogFactory.getLog(EmailSenderService.class);
     public static final String CONFIRMATION_EMAIL_CONFIG = "confirmation-email-config.xml";
 

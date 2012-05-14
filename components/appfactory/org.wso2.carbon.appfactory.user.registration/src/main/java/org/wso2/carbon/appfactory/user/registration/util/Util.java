@@ -24,19 +24,14 @@ import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
  * A static class for holding EmailVerificationSubscriber
  */
 public class Util {
-
     private static EmailVerifcationSubscriber emailVerificationService = null;
-
 
     public static synchronized void setEmailVerificationService(
             EmailVerifcationSubscriber emailService) {
         Util.emailVerificationService = emailService;
     }
 
-
     public static EmailVerifcationSubscriber getEmailVerificationService() {
         return emailVerificationService;
     }
-
-
 }

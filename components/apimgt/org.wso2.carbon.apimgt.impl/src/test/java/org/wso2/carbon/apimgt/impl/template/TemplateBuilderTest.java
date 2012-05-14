@@ -109,7 +109,7 @@ public class TemplateBuilderTest extends TestCase {
         String output = builder.getConfigStringForTemplate();
         String expected = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"TestAPI\" context=\"/test\" " +
                 "version=\"1.0.0\" version-type=\"url\"><resource url-mapping=\"/*\" methods=\"GET\"><inSequence>" +
-                "<filter xpath=\"$ctx:AM_PRODUCTION_KEY\"><then><send><endpoint name=\"TestAPI_APIEndpoint_0\">" +
+                "<filter source=\"$ctx:AM_KEY_TYPE\" regex=\"PRODUCTION\"><then><send><endpoint name=\"TestAPI_APIEndpoint_0\">" +
                 "<address uri=\"http://wso2.org\"/></endpoint></send></then><else><send><endpoint " +
                 "name=\"TestAPI_APISandboxEndpoint_0\"><address uri=\"http://staging.wso2.org\"/></endpoint>" +
                 "</send></else></filter></inSequence><outSequence><send/></outSequence></resource><handlers>" +

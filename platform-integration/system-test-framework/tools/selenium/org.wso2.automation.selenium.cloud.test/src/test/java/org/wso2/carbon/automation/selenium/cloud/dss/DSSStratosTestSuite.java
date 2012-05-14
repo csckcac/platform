@@ -34,6 +34,8 @@ public class DSSStratosTestSuite extends MasterTestSuite {
         if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             suiteVariablesList.add(new SuiteVariables("DSSPriviledgeGroupCreatorSeleniumTest",
                                                       DSSPriviledgeGroupCreatorSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("DSSExploreDatabaseSeleniumTest",
+                                                      DSSExploreDatabaseSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("CreateDataServiceUITest",
                                                       DSSCreateDataServiceSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("UploadDataServiceUITest",

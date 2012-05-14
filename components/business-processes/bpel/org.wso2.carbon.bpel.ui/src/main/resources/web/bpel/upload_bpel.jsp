@@ -147,7 +147,7 @@
                             </td>
                             <td class="formRow">
                                 <input type="file" name="bpelFileName" size="50"/>&nbsp;
-                                <input type="button" width='20px' class="button" onclick="addRow();" value=" + "/>
+                                <input type="button" width='20px' class="button" onclick="BPEL.deployment.addRow();" value=" + "/>
                             </td>
                         </tr>
                     </table>

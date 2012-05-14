@@ -386,7 +386,7 @@ BPEL.instance.onTerminate = function(){
 
 var rows = 1;
 //add a new row to the table
-function addRow() {
+BPEL.deployment.addRow = function() {
     rows++;
 
     //add a row to the rows collection and get a reference to the newly added row
@@ -398,14 +398,14 @@ function addRow() {
     oCell.className = "formRow";
 
     oCell = newRow.insertCell(-1);
-    oCell.innerHTML = "<input type='file' name='bpelFileName' size='50'/>&nbsp;&nbsp;<input type='button' width='20px' class='button' value='  -  ' onclick=\"deleteRow('file" + rows + "');\" />";
+    oCell.innerHTML = "<input type='file' name='bpelFileName' size='50'/>&nbsp;&nbsp;<input type='button' width='20px' class='button' value='  -  ' onclick=\"BPEL.deployment.deleteRow('file" + rows + "');\" />";
     oCell.className = "formRow";
 
     alternateTableRows('bpelTbl', 'tableEvenRow', 'tableOddRow');
 }
 
-function deleteRow(rowId) {
     var tableRow = document.getElementById(rowId);
+BPEL.deployment.deleteRow = function(rowId) {
     tableRow.parentNode.deleteRow(tableRow.rowIndex);
     alternateTableRows('bpelTbl', 'tableEvenRow', 'tableOddRow');
 }

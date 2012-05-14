@@ -79,7 +79,7 @@ import java.util.List;
  *                unbind="unsetTenantMgtListenerService"
  * @scr.reference name="default.tenant.billing.service"
  *                interface="org.wso2.carbon.stratos.common.TenantBillingService"
- *                cardinality="1..1" policy="dynamic"
+ *                cardinality="0..1" policy="dynamic"
  *                bind="setTenantBillingService"
  *                unbind="unsetTenantBillingService"
  * @scr.reference name="default.tenant.persistor"

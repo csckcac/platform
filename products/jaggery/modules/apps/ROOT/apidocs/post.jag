@@ -62,14 +62,14 @@
 
 <pre class="prettyprint linenums">
 &lt%
-var version = post("http://localhost:9763/services/Version");
+var version = post("http://stratoslive.wso2.com/services/Version");
 print(version);
 %&gt
 </pre>
 <%
 
 var emailCode = '&lt%'
-+ '\n var version = post("http://localhost:9763/services/Version");'
++ '\n var version = post("http://stratoslive.wso2.com/services/Version");'
 + '\n print(version);'
 + '\n %&gt';
 

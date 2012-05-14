@@ -143,7 +143,7 @@ include('/includes/topnavi.jag');
 	            Jaggery Server is powered by WSO2 carbon OSGi Runtime
 	
 	            <br/> <br/>
-	            Management console can be accessed by <code>{https://localhost:9443/carbon}</code>
+	            Management console can be accessed by <code>{https://localhost:9443/admin}</code>
 	        </p>
 			<span id="commandline"></span>
 	

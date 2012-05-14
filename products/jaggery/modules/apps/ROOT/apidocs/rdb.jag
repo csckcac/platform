@@ -118,7 +118,7 @@ and manipulation through the below members / functions.</p>
                         </tr>
                         <tr>
 
-                        <td><code>Database(connectionUrl, username, password[, config])</code></td>
+                        <td><code>Database(connectionUrl,<br/> username, password[, config])</code></td>
                         <td>Database</td>
                         <td><pre class="prettyprint">var db = new Database("jdbc:h2:demo", "admin", "admin");</pre>
                             Returns Database object for database communication

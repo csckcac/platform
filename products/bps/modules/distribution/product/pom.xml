@@ -160,6 +160,8 @@
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/SecurePartnerBPEL"/>
                                 <zip destfile="target/samples/TestAlarm.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestAlarm"/>
+				<zip destfile="target/samples/TestAssignActivity1.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestAssignActivity1"/>
                                 <zip destfile="target/samples/TestAssignDate.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestAssignDate"/>
                                 <zip destfile="target/samples/TestCombineUrl.zip"

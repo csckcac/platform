@@ -39,17 +39,17 @@ public class ProductUrlGeneratorUtil {
         return prop;
     }
 
-    public String getHttpServiceURL(String httpPort, String hostName,
+    public String getHttpServiceURL(String httpPort, String nhttpPort, String hostName,
                                     FrameworkProperties frameworkProperties, UserInfo userInfo) {
         if (frameworkProperties.getEnvironmentSettings().is_runningOnStratos()) {
-            return getHttpServiceURLOfStratos(httpPort, hostName, frameworkProperties, userInfo);
+            return getHttpServiceURLOfStratos(httpPort, nhttpPort, hostName, frameworkProperties, userInfo);
         } else {
-            return getHttpServiceURLOfProduct(httpPort, hostName, frameworkProperties);
+            return getHttpServiceURLOfProduct(httpPort, nhttpPort, hostName, frameworkProperties);
         }
     }
 
-    public String getHttpServiceURLOfProduct(String httpPort, String hostName,
-                                              FrameworkProperties frameworkProperties) {
+    public String getHttpServiceURLOfProduct(String httpPort, String nhttpPort, String hostName,
+                                             FrameworkProperties frameworkProperties) {
         String serviceURL = null;
         boolean webContextEnabled = frameworkProperties.getEnvironmentSettings().isEnableCarbonWebContext();
         boolean portEnabled = frameworkProperties.getEnvironmentSettings().isEnablePort();
@@ -76,7 +76,8 @@ public class ProductUrlGeneratorUtil {
 
     }
 
-    public String getHttpServiceURLOfStratos(String httpPort, String hostName,
+
+    public String getHttpServiceURLOfStratos(String httpPort, String nhttpPort, String hostName,
                                              FrameworkProperties frameworkProperties,
                                              UserInfo info) {
         String serviceURL = null;
@@ -91,23 +92,43 @@ public class ProductUrlGeneratorUtil {
         } else {
             tenantDomain = info.getUserName().split("@")[1];
         }
-
-        if (portEnabled && webContextEnabled) {
-            if (webContextRoot != null && httpPort != null) {
-                serviceURL = "http://" + hostName + ":" + httpPort + "/" + webContextRoot + "/" + "services/t/" + tenantDomain;
-            } else if (webContextRoot == null && httpPort != null) {
-                serviceURL = "http://" + hostName + ":" + httpPort + "/" + "services/t/" + tenantDomain;
-            } else if (webContextRoot == null) {
-                serviceURL = "http://" + hostName + "/" + "/services/t/" + tenantDomain;
-            } else {
+        if (nhttpPort == null) {
+            if (portEnabled && webContextEnabled) {
+                if (webContextRoot != null && httpPort != null) {
+                    serviceURL = "http://" + hostName + ":" + httpPort + "/" + webContextRoot + "/" + "services/t/" + tenantDomain;
+                } else if (webContextRoot == null && httpPort != null) {
+                    serviceURL = "http://" + hostName + ":" + httpPort + "/" + "services/t/" + tenantDomain;
+                } else if (webContextRoot == null) {
+                    serviceURL = "http://" + hostName + "/" + "/services/t/" + tenantDomain;
+                } else {
+                    serviceURL = "http://" + hostName + "/" + webContextRoot + "/" + "services/t/" + tenantDomain;
+                }
+            } else if (!portEnabled && webContextEnabled) {
                 serviceURL = "http://" + hostName + "/" + webContextRoot + "/" + "services/t/" + tenantDomain;
+            } else if (portEnabled && !webContextEnabled) {
+                serviceURL = "http://" + hostName + ":" + httpPort + "/" + "services/t/" + tenantDomain;
+            } else {
+                serviceURL = "http://" + hostName + "/" + "services/t/" + tenantDomain;
             }
-        } else if (!portEnabled && webContextEnabled) {
-            serviceURL = "http://" + hostName + "/" + webContextRoot + "/" + "services/t/" + tenantDomain;
-        } else if (portEnabled && !webContextEnabled) {
-            serviceURL = "http://" + hostName + ":" + httpPort + "/" + "services/t/" + tenantDomain;
-        } else {
-            serviceURL = "http://" + hostName + "/" + "services/t/" + tenantDomain;
+        }
+        else{
+            if (portEnabled && webContextEnabled) {
+                if (webContextRoot != null && httpPort != null) {
+                    serviceURL = "http://" + hostName + ":" + nhttpPort + "/" + webContextRoot + "/" + "services/t/" + tenantDomain;
+                } else if (webContextRoot == null && httpPort != null) {
+                    serviceURL = "http://" + hostName + ":" + nhttpPort + "/" + "services/t/" + tenantDomain;
+                } else if (webContextRoot == null) {
+                    serviceURL = "http://" + hostName + "/" + "/services/t/" + tenantDomain;
+                } else {
+                    serviceURL = "http://" + hostName + "/" + webContextRoot + "/" + "services/t/" + tenantDomain;
+                }
+            } else if (!portEnabled && webContextEnabled) {
+                serviceURL = "http://" + hostName + "/" + webContextRoot + "/" + "services/t/" + tenantDomain;
+            } else if (portEnabled && !webContextEnabled) {
+                serviceURL = "http://" + hostName + ":" + nhttpPort + "/" + "services/t/" + tenantDomain;
+            } else {
+                serviceURL = "http://" + hostName + ":" + nhttpPort + "/" + "services/t/" + tenantDomain;
+            }
         }
         return serviceURL;
     }
@@ -160,7 +181,7 @@ public class ProductUrlGeneratorUtil {
     }
 
 
-    public String  getServiceHomeURL(String productName) {
+    public String getServiceHomeURL(String productName) {
         String indexURL;
         FrameworkProperties properties = FrameworkFactory.getFrameworkProperties(productName);
         boolean webContextEnabled = Boolean.parseBoolean(prop.getProperty("carbon.web.context.enable"));

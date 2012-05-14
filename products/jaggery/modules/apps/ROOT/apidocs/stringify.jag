@@ -61,13 +61,13 @@
 <h3>stringify()</h3>
 
     <pre class="prettyprint linenums">
-    &lt%
-        var myJson = {};
-        myJson.name = "nuwan";
-        myJson.company = "wso2";
+&lt%
+    var myJson = {};
+    myJson.name = "nuwan";
+    myJson.company = "wso2";
 
-        print(stringify(myJson));
-    %&gt
+    print(stringify(myJson));
+%&gt
 </pre>
 <%
 
@@ -104,7 +104,6 @@ var urlString = '../tryitframe.jag?code='+codeSnip;
 </button>
 </p>
 
- <% hasMembers = false; %>
 <div id="pageLinks">
 <a class="navilink" href="#overview">Overview</a>
     <%if(hasMembers) {%>
@@ -120,28 +119,46 @@ var urlString = '../tryitframe.jag?code='+codeSnip;
 <h4>Overview</h4>
 <p class="description"><code>stringify()</code> takes a JSON object and converts it to a string</p>
 
-</section>
+        <pre class="prettyprint">var jsonString = stringify(jsonObj)</pre>
 
-    <section id="operations">
+    </section>
 
-        <h4>Operations</h4>
+    <section id="parameters">
+
+        <h4>Parameters</h4>
         <table class="clsStd operations-table">
             <tbody>
             <tr>
-                <th>Operation</th>
-                <th>Returns</th>
+                <th>Parameter</th>
+                <th>Type</th>
                 <th>Description</th>
             </tr>
             <tr>
-		<td><code>stringify(jsonObj)</code></td>
-        <td>Object</td>
-		<td>
-        <code>stringify()</code> takes a JSON object and converts it to a string
-        </td>
-	</tr>
+                <td><code>jsonObj</code></td>
+                <td>Object</td>
+                <td>
+                    A JSON Object
+                </td>
+            </tr>
+
             </tbody>
         </table>
+    </section>
 
+    <section id="returnVals">
+        <h4>Return values</h4>
+        <table class="clsStd operations-table">
+            <tbody>
+            <tr>
+                <th>Value</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><code>jsonString</code></td><td>String</td><td>Stringified JSON object</td>
+            </tr>
+            </tbody>
+        </table>
     </section>
 
 </div>
@@ -152,7 +169,7 @@ var urlString = '../tryitframe.jag?code='+codeSnip;
 
 </div>
     <%
-    include('/includes/footer.jag');
+    include('/includes/footerfunc.jag');
     %>
 
 </div>

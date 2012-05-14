@@ -79,72 +79,86 @@ var urlString = '../tryitframe.jag?code='+codeSnip;
 include('/includes/tryit_but.jag');
 %>
 
- <div id="pageLinks">
-<a class="navilink" href="#overview">Overview</a>
-<a class="navilink" href="#members">Members</a>
-<a class="navilink" href="#operations">Operations</a>
-</div>
+    <div id="pageLinks">
+        <a class="navilink" href="#overview">Overview</a>
+        <%if(hasParams) {%>
+        <a class="navilink" href="#parameters">Parameters</a>
+        <%}%>
+        <%if(hasRets) {%>
+        <a class="navilink" href="#returnVals">Return values</a>
+        <%}%>
+    </div>
 
 <section id="overview">
 
 <h4>Overview</h4>
 <p class="description"><code>post()</code> is a wrapper for XMLHTTPRequest's POST method.
 using <code>post()</code> you can avoid the use of XHR and shorten the serverside POST requests</p>
+    <pre class="prettyprint">post(url[, data][, type][, headers][, success(data, xhr)])</pre>
+    <pre class="prettyprint">var res = post(url[, data][, type][, headers])</pre>
 </section>
 
-<section id="members">
-<h4>Members</h4>
-<table class="clsStd member-table">
+    <section id="parameters">
+        <h4>Parameters</h4>
+        <table class="clsStd operations-table">
 
-    <tbody>
+            <tbody>
 
-    <tr>
-		<th>Member</th>
-		<th>Type</th>
-		<th>Description</th>
-	</tr>
-	<tr>
-		<td><code>data</code></td><td>Object</td><td>Contains the return data of the HTTP POST request</td>
-	</tr><tr>
-		<td><code>xhr</code></td><td>Object</td><td>Contains an instance of XMLHTTPRequest</td>
-	</tr>
-	</tbody>
-</table><!-- /members table -->
+            <tr>
 
-</section>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Description</th>
 
-<section id="operations">
-<h4>Operations</h4>
-<table class="clsStd operations-table">
+            </tr>
 
-    <tbody>
-
-    <tr>
-
-        <th>Member</th>
-        <th>Returns</th>
-        <th>Description</th>
-
-    </tr>
-
-    <tr>
-
-        <td><code>post(url[, data][, type][, headers][, success(data, xhr)])</code></td>
-        <td>Object</td>
-        <td>
-            <pre class="prettyprint">
-post(url, { param1 : "value1", param2 : "value2" }, "text", { header1 : "value1", header2 : "value2" }, function(data, xhr) {
-	log("Response received");
-});</pre>
-            <br/>
+            <tr>
+                <td><code>url</code></td>
+                <td>String</td>
+                <td>The URL which HTTP POST is performed </td>
+            </tr>
+            <tr>
+                <td><code>data</code></td>
+                <td>Object</td>
+                <td>Request parameters</td>
+            </tr>
+            <tr>
+                <td><code>type</code></td>
+                <td>String</td>
+                <td>The type, which the response is expected</td>
+            </tr>
+            <tr>
+                <td><code>headers</code></td>
+                <td>String</td>
+                <td>Optional HTTP headers</td>
+            </tr>
+            <tr>
+                <td><code>success(data:Object,<br/> xhr:Object)</code></td>
+                <td>function</td>
+                <td>On success callback</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
 
 
-        </td>
-
-    </tr>
-    </tbody>
-</table>
-</section>
+    <section id="returnVals">
+        <h4>Return values</h4>
+        <table class="clsStd operations-table">
+            <tbody>
+            <tr>
+                <th>Value</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><code>data</code></td><td>Object</td><td>Contains the return data of the HTTP POST request</td>
+            </tr><tr>
+                <td><code>xhr</code></td><td>Object</td><td>Contains an instance of XMLHTTPRequest</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
 </div>
 <!-- /post div -->
 <br>
@@ -153,7 +167,7 @@ post(url, { param1 : "value1", param2 : "value2" }, "text", { header1 : "value1"
 
 </div>
 <%
-include('/includes/footer.jag');
+include('/includes/footerfunc.jag');
 %>
 
 

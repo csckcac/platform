@@ -61,10 +61,10 @@ include('/includes/topnavi.jag');
 <h3>parse()</h3>
     
     <pre class="prettyprint linenums">
-    &lt%
-        var jsonString = '{"name":"nuwan"}';
-        print(parse(jsonString));
-    %&gt
+&lt%
+   var jsonString = '{"name":"nuwan"}';
+   print(parse(jsonString));
+%&gt
 </pre>
 <%
 
@@ -99,48 +99,60 @@ var urlString = '../tryitframe.jag?code='+codeSnip;
 </button>
 </p>
 
- <% hasMembers = false; %>
-<div id="pageLinks">
-<a class="navilink" href="#overview">Overview</a>
-    <%if(hasMembers) {%>
-<a class="navilink" href="#members">Members</a>
+    <div id="pageLinks">
+        <a class="navilink" href="#overview">Overview</a>
+        <%if(hasParams) {%>
+        <a class="navilink" href="#parameters">Parameters</a>
         <%}%>
-        <%if(hasOps) {%>
-<a class="navilink" href="#operations">Operations</a>
-            <%}%>
-</div>
+        <%if(hasRets) {%>
+        <a class="navilink" href="#returnVals">Return values</a>
+        <%}%>
+    </div>
 
     <section id="overview">
 
 <h4>Overview</h4>
 <p class="description"><code>parse()</code> takes a well-formed JSON string and returns the resulting JavaScript object.</p>
+<pre class="prettyprint">var obj = parse(jsonString)</pre>
 
 </section>
 
-    <section id="operations">
+    <section id="parameters">
 
-        <h4>Operations</h4>
+        <h4>Parameters</h4>
         <table class="clsStd operations-table">
             <tbody>
             <tr>
-                <th>Operation</th>
-                <th>Returns</th>
+                <th>Parameter</th>
+                <th>Type</th>
                 <th>Description</th>
             </tr>
             <tr>
-		<td><code>parse(jsonString)</code></td>
-        <td>Object</td>
-		<td>
-        <pre class="prettyprint">
-var jsonString = '{"name":"jhon"}';
-print(parse(jsonString));
-        </pre>
-        <code>parse()</code> takes a well-formed json string and returns a json object
-        </td>
-	</tr>
+                <td><code>jsonString</code></td>
+                <td>String</td>
+                <td>
+                    Stringified JSON object
+                </td>
+            </tr>
+
             </tbody>
         </table>
+    </section>
 
+    <section id="returnVals">
+        <h4>Return values</h4>
+        <table class="clsStd operations-table">
+            <tbody>
+            <tr>
+                <th>Value</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><code>obj</code></td><td>Object</td><td>JSON object</td>
+            </tr>
+            </tbody>
+        </table>
     </section>
 
 </div>
@@ -151,7 +163,7 @@ print(parse(jsonString));
 
 </div>
     <%
-    include('/includes/footer.jag');
+    include('/includes/footerfunc.jag');
     %>
 
 </div>

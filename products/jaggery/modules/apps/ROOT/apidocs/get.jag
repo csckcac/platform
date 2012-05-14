@@ -136,7 +136,7 @@ using <code>get()</code> you can avoid the use of XHR and shorten the server-sid
             <tr>
                 <td><code>success(data:Object,<br/> xhr:Object)</code></td>
                 <td>function</td>
-                <td>On Success callback</td>
+                <td>On success callback</td>
             </tr>
             </tbody>
         </table>

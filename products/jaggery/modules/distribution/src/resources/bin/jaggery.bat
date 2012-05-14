@@ -1,7 +1,7 @@
 @echo off
 
 REM ---------------------------------------------------------------------------
-REM        Copyright 2005-2009 WSO2, Inc. http://www.wso2.org
+REM        Copyright 2005-2012 WSO2, Inc. http://www.wso2.org
 REM
 REM  Licensed under the Apache License, Version 2.0 (the "License");
 REM  you may not use this file except in compliance with the License.
@@ -36,6 +36,6 @@ echo "You must set the JAVA_HOME variable before running Jaggery command line cl
 goto end
 
 :runcommandlinetool
-java -cp "%~dp0../repository/components/plugins/org.wso2.carbon.jaggery.tools-1.0-SNAPSHOT.jar;%~dp0../repository/components/plugins/*" org.wso2.carbon.jaggery.tools.CommandLineClient %1
+java -cp "%~dp0../carbon/repository/components/plugins/org.wso2.carbon.jaggery.tools-1.0-SNAPSHOT.jar;%~dp0../carbon/repository/components/plugins/*" org.wso2.carbon.jaggery.tools.CommandLineClient %1
 
 :END

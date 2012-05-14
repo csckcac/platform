@@ -1,6 +1,5 @@
 package org.wso2.platform.test.core.utils.environmentutils;
 
-import org.apache.axis2.AxisFault;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.ProductConstant;
@@ -315,10 +314,10 @@ public class EnvironmentBuilder {
         String generatedServiceURL = null;
         if (productSetter.getNhttpPort() != null) { //if port is nhttp port
             generatedServiceURL = new ProductUrlGeneratorUtil().
-                    getHttpServiceURL(productSetter.getNhttpPort(), serverHostName, frameworkProperties, userInfo);
+                    getHttpServiceURL(productSetter.getHttpPort(),productSetter.getNhttpPort(), serverHostName, frameworkProperties, userInfo);
         } else {
             generatedServiceURL = new ProductUrlGeneratorUtil().
-                    getHttpServiceURL(httpPort, serverHostName, frameworkProperties, userInfo);
+                    getHttpServiceURL(httpPort,productSetter.getNhttpPort(), serverHostName, frameworkProperties, userInfo);
         }
         return generatedServiceURL;
     }

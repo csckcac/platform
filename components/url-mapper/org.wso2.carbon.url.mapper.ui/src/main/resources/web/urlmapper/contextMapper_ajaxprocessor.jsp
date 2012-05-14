@@ -50,7 +50,7 @@
 			if (carbonEndpoint.contains("services")) {
 				hostAdmin.editServiceDomain(usergivenEndpoint,oldHost);
 			} else {
-				hostAdmin.editHost(carbonEndpoint, oldHost, usergivenEndpoint);
+				hostAdmin.editHost(carbonEndpoint,usergivenEndpoint, oldHost);
 			}
 			%>URL Mapping successfully edited.<%
 	} catch (Exception e) {

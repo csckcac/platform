@@ -108,7 +108,7 @@
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
-                            org.wso2.carbon.url.mapper,
+                            org.wso2.carbon.url.mapper.*,
                            
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

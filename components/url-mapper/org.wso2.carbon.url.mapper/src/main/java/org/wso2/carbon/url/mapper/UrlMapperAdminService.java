@@ -17,6 +17,7 @@ package org.wso2.carbon.url.mapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.util.HostUtil;
 import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
@@ -40,6 +41,10 @@ public class UrlMapperAdminService {
         }
     }
 
+    public static  MappingData[]  getAllMappings() throws UrlMapperException{
+    	return HostUtil.getAllMappingsFromRegistry();
+    }
+    
     public void addServiceDomain(String hostName, String url) throws UrlMapperException {
 		hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
 		HostUtil.addDomainToServiceEpr(hostName, url);
@@ -64,7 +69,7 @@ public class UrlMapperAdminService {
         return domains.toArray(new String[domains.size()]);
     }
 
-    public boolean editHost(String webappName, String newHost, String oldhost) throws UrlMapperException {
+    public boolean editHost(String webappName, String newHost, String oldhost ) throws UrlMapperException {
     	newHost = newHost  + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
         HostUtil.editHostInEngine(webappName, newHost, oldhost);
         return true;

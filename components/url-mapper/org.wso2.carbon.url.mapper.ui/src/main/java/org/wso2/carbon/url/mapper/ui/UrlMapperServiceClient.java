@@ -24,6 +24,10 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.url.mapper.stub.UrlMapperAdminServiceStub;
+import org.wso2.carbon.url.mapper.stub.types.carbon.MappingData;
+
+
+
 
 /**
  * This is the client to communicate with backend when the tenant tries to
@@ -42,6 +46,16 @@ public class UrlMapperServiceClient {
         option.setManageSession(true);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
         option.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+    }
+    
+    public MappingData[] getAllMappings() throws Exception {
+    	try {
+            return stub.getAllMappings();
+        } catch (Exception e) {
+            String msg = "Error getting URL Mappings. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
     }
 
     public boolean editHost(String webappName, String oldhost, String newHost) throws Exception {

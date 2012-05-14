@@ -147,10 +147,10 @@
             </includes>
         </fileSet>
 
-        <!-- Coping endpoint reference files for BPEL artifacts -->
+        <!-- Coping BPEL artifacts related endpoint reference files -->
         <fileSet>
-            <directory>repository/conf/appfactory/endpoints</directory>
-            <outputDirectory>wso2appfactory-${pom.version}/repository/conf/endpoints</outputDirectory>
+            <directory>resources/appfactory</directory>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/conf/appfactory</outputDirectory>
         </fileSet>
 	
     </fileSets>

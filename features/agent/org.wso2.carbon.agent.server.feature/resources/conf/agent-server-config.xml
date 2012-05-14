@@ -16,7 +16,7 @@
 
 <agentServerConfiguration xmlns="http://wso2.org/carbon/agent">
 
-    <authenticatorPort>7711</authenticatorPort>
+    <secureEventReceiverPort>7711</secureEventReceiverPort>
     <eventReceiverPort>7611</eventReceiverPort>
 
     <!--<eventStreamDefinitions>

@@ -13,7 +13,6 @@ import org.apache.http.protocol.HTTP;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.SynapseException;
-import org.apache.synapse.commons.util.PropertyHelper;
 import org.apache.synapse.config.xml.endpoints.utils.LoadbalanceAlgorithmFactory;
 import org.apache.synapse.core.LoadBalanceMembershipHandler;
 import org.apache.synapse.core.SynapseEnvironment;
@@ -27,17 +26,17 @@ import org.apache.synapse.endpoints.dispatch.SALSessions;
 import org.apache.synapse.endpoints.dispatch.SessionInformation;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
-import org.wso2.carbon.lb.common.conf.structure.Node;
+import org.wso2.carbon.lb.common.conf.util.TenantDomainRangeContext;
 import org.wso2.carbon.lb.endpoint.TenantLoadBalanceMembershipHandler;
 import org.wso2.carbon.lb.endpoint.util.ConfigHolder;
-import org.wso2.carbon.lb.endpoint.util.TenantDomainRangeContext;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+//import org.wso2.carbon.lb.endpoint.util.TenantDomainRangeContext;
 
 public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints.DynamicLoadbalanceEndpoint implements Serializable {
 
@@ -68,8 +67,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             String configURL = System.getProperty("loadbalancer.conf");
             lbConfig = new LoadBalancerConfiguration();
             lbConfig.init(configURL);
-
-            hostDomainMap = loadHostDomainMap();
+            hostDomainMap = lbConfig.loadHostDomainMap();
 
         } catch (Exception e) {
             log.error("Error While reading Load Balancer configuration file" + e.toString());
@@ -122,38 +120,38 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
         }
     }
 
-    private Map<String, TenantDomainRangeContext> loadHostDomainMap() {
+    /*  private Map<String, TenantDomainRangeContext> loadHostDomainMap() {
 
-        Map<String, TenantDomainRangeContext> map = new HashMap<String, TenantDomainRangeContext>();
+       Map<String, TenantDomainRangeContext> map = new HashMap<String, TenantDomainRangeContext>();
 
-        // get domains elements for each service 
-        for (Map.Entry<String, Node> entry : lbConfig.getServiceToDomainsMap().entrySet()) {
-            //String serviceName = entry.getKey();
-            Node domains = entry.getValue();
-            TenantDomainRangeContext domainRangeContext = new TenantDomainRangeContext();
+       // get domains elements for each service
+       for (Map.Entry<String, Node> entry : lbConfig.getServiceToDomainsMap().entrySet()) {
+           //String serviceName = entry.getKey();
+           Node domains = entry.getValue();
+           TenantDomainRangeContext domainRangeContext = new TenantDomainRangeContext();
 
-            // get domain to tenant range map for each domains element and iterate over it
-            for (Map.Entry<String, String> entry2 : lbConfig.getdomainToTenantRangeMap(domains).entrySet()) {
+           // get domain to tenant range map for each domains element and iterate over it
+           for (Map.Entry<String, String> entry2 : lbConfig.getdomainToTenantRangeMap(domains).entrySet()) {
 
-                String domainName = entry2.getKey();
-                String tenantRange = entry2.getValue();
-                domainRangeContext.addTenantDomain(domainName, tenantRange);
-            }
+               String domainName = entry2.getKey();
+               String tenantRange = entry2.getValue();
+               domainRangeContext.addTenantDomain(domainName, tenantRange);
+           }
 
-            // get host to domains node map and iterate over it
-            for (Map.Entry<String, Node> entry3 : lbConfig.getHostDomainMap().entrySet()) {
-                String host = entry3.getKey();
-                Node domainsNode = entry3.getValue();
+           // get host to domains node map and iterate over it
+           for (Map.Entry<String, Node> entry3 : lbConfig.getHostDomainMap().entrySet()) {
+               String host = entry3.getKey();
+               Node domainsNode = entry3.getValue();
 
-                if (domainsNode.equals(domains)) {
-                    map.put(host, domainRangeContext);
-                }
-            }
+               if (domainsNode.equals(domains)) {
+                   map.put(host, domainRangeContext);
+               }
+           }
 
-        }
+       }
 
-        return map;
-    }
+       return map;
+   } */
 
     public void setConfiguration(String paramEle) {
         this.configuration = paramEle;
@@ -186,10 +184,10 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
 
     public void send(MessageContext synCtx) {
         /*   setCookieHeader(synCtx);     */
-        int tenantId=getTenantId(synCtx.getTo().toString());
+        int tenantId = getTenantId(synCtx.getTo().toString());
         Member currentMember = null;
         SessionInformation sessionInformation = null;
-       // if (isSessionAffinityBasedLB()) {
+        // if (isSessionAffinityBasedLB()) {
         if (isSessionAffinityBasedLB()) {
             // first check if this session is associated with a session. if so, get the endpoint
             // associated for that session.

@@ -11,7 +11,7 @@ import org.apache.synapse.SynapseException;
 import org.apache.synapse.core.LoadBalanceMembershipHandler;
 import org.apache.synapse.endpoints.algorithms.AlgorithmContext;
 import org.apache.synapse.endpoints.algorithms.LoadbalanceAlgorithm;
-import org.wso2.carbon.lb.endpoint.util.TenantDomainRangeContext;
+import org.wso2.carbon.lb.common.conf.util.TenantDomainRangeContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -127,14 +127,15 @@ public class TenantLoadBalanceMembershipHandler implements LoadBalanceMembership
 
     /**
      * This method allows get clustering domain from tenantId and host
+     *
      * @param targetHost address of the host
      * @param tenantId   tenant id of given tenant
      * @return returns clustering domain of given tenant for given host address
      */
-    public static String getDomainFormHostTenant(String targetHost, int tenantId)
-    {
-      return hostDomainAlgorithmContextMap.get(targetHost).getDomain(tenantId);
+    public static String getDomainFormHostTenant(String targetHost, int tenantId) {
+        return hostDomainAlgorithmContextMap.get(targetHost).getDomain(tenantId);
     }
+
     /**
      * POJO for maintaining the domain & AlgorithmContext for a particular host
      */

@@ -108,6 +108,34 @@
             %>
 
 
+
+
+            <tr>
+                <td>
+                    <fmt:message key="config.key"/><span class="required">*</span>
+                </td>
+                <td>
+                    <input class="longInput" type="text"
+                           value="<%= bamMediator.getConfigKey() != null ? bamMediator.getConfigKey() : "" %>"
+                           id="seq_ref" name="seq_ref" readonly="true"/>
+                </td>
+                <td>
+                    <a href="#registryBrowserLink"
+                       class="registry-picker-icon-link"
+                       onclick="showRegistryBrowser('seq_ref','/_system/config')"><fmt:message key="conf.registry.browser"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="#registryBrowserLink"
+                       class="registry-picker-icon-link"
+                       onclick="showRegistryBrowser('seq_ref','/_system/governance')"><fmt:message key="gov.registry.browser"/>
+                    </a>
+                </td>
+            </tr>
+
+
+
+
             <tr>
                 <td colspan="4">
                     <h3 class="mediator">
@@ -149,7 +177,7 @@
             </tr>
             <tr>
                 <td><fmt:message key="password"/></td>
-                <td><input type="text" name="password" id="password" value="<%=password%>"/></td>
+                <td><input type="password" name="password" id="password" value="<%=password%>"/></td>
             </tr>
             <tr>
                 <td colspan="4">

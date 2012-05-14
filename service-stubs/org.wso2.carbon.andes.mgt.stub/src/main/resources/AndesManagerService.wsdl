@@ -63,16 +63,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="refreshMemUsageThroughputAndMessageCount">
-                <xs:complexType>
-                    <xs:sequence />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="initialize">
-                <xs:complexType>
-                    <xs:sequence />
-                </xs:complexType>
-            </xs:element>
             <xs:element name="getZookeeperConnection">
                 <xs:complexType>
                     <xs:sequence />
@@ -133,6 +123,20 @@
                 </xs:complexType>
             </xs:element>
             <xs:element name="getNumberOfQueuesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:long" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNumberOfMessagesForQueue">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="queueName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNumberOfMessagesForQueueResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:long" />
@@ -270,23 +274,23 @@
     <wsdl:message name="getCassandraConnectionResponse">
         <wsdl:part name="parameters" element="ns:getCassandraConnectionResponse" />
     </wsdl:message>
-    <wsdl:message name="initializeRequest">
-        <wsdl:part name="parameters" element="ns:initialize" />
-    </wsdl:message>
     <wsdl:message name="getAllTopicsForNodeRequest">
         <wsdl:part name="parameters" element="ns:getAllTopicsForNode" />
     </wsdl:message>
     <wsdl:message name="getAllTopicsForNodeResponse">
         <wsdl:part name="parameters" element="ns:getAllTopicsForNodeResponse" />
     </wsdl:message>
-    <wsdl:message name="refreshMemUsageThroughputAndMessageCountRequest">
-        <wsdl:part name="parameters" element="ns:refreshMemUsageThroughputAndMessageCount" />
-    </wsdl:message>
     <wsdl:message name="getAllNodeDetailRequest">
         <wsdl:part name="parameters" element="ns:getAllNodeDetail" />
     </wsdl:message>
     <wsdl:message name="getAllNodeDetailResponse">
         <wsdl:part name="parameters" element="ns:getAllNodeDetailResponse" />
+    </wsdl:message>
+    <wsdl:message name="getNumberOfMessagesForQueueRequest">
+        <wsdl:part name="parameters" element="ns:getNumberOfMessagesForQueue" />
+    </wsdl:message>
+    <wsdl:message name="getNumberOfMessagesForQueueResponse">
+        <wsdl:part name="parameters" element="ns:getNumberOfMessagesForQueueResponse" />
     </wsdl:message>
     <wsdl:message name="getNumberofSubscriptionsForTopicRequest">
         <wsdl:part name="parameters" element="ns:getNumberofSubscriptionsForTopic" />
@@ -340,23 +344,22 @@
         <wsdl:operation name="getCassandraConnection">
             <wsdl:input message="ns:getCassandraConnectionRequest" wsaw:Action="urn:getCassandraConnection" />
             <wsdl:output message="ns:getCassandraConnectionResponse" wsaw:Action="urn:getCassandraConnectionResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="initialize">
-            <wsdl:input message="ns:initializeRequest" wsaw:Action="urn:initialize" />
+            <wsdl:fault message="ns:AndesManagerServiceClusterMgtAdminException" name="AndesManagerServiceClusterMgtAdminException" wsaw:Action="urn:getCassandraConnectionAndesManagerServiceClusterMgtAdminException" />
         </wsdl:operation>
         <wsdl:operation name="getAllTopicsForNode">
             <wsdl:input message="ns:getAllTopicsForNodeRequest" wsaw:Action="urn:getAllTopicsForNode" />
             <wsdl:output message="ns:getAllTopicsForNodeResponse" wsaw:Action="urn:getAllTopicsForNodeResponse" />
             <wsdl:fault message="ns:AndesManagerServiceClusterMgtAdminException" name="AndesManagerServiceClusterMgtAdminException" wsaw:Action="urn:getAllTopicsForNodeAndesManagerServiceClusterMgtAdminException" />
         </wsdl:operation>
-        <wsdl:operation name="refreshMemUsageThroughputAndMessageCount">
-            <wsdl:input message="ns:refreshMemUsageThroughputAndMessageCountRequest" wsaw:Action="urn:refreshMemUsageThroughputAndMessageCount" />
-            <wsdl:fault message="ns:AndesManagerServiceClusterMgtAdminException" name="AndesManagerServiceClusterMgtAdminException" wsaw:Action="urn:refreshMemUsageThroughputAndMessageCountAndesManagerServiceClusterMgtAdminException" />
-        </wsdl:operation>
         <wsdl:operation name="getAllNodeDetail">
             <wsdl:input message="ns:getAllNodeDetailRequest" wsaw:Action="urn:getAllNodeDetail" />
             <wsdl:output message="ns:getAllNodeDetailResponse" wsaw:Action="urn:getAllNodeDetailResponse" />
             <wsdl:fault message="ns:AndesManagerServiceClusterMgtAdminException" name="AndesManagerServiceClusterMgtAdminException" wsaw:Action="urn:getAllNodeDetailAndesManagerServiceClusterMgtAdminException" />
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfMessagesForQueue">
+            <wsdl:input message="ns:getNumberOfMessagesForQueueRequest" wsaw:Action="urn:getNumberOfMessagesForQueue" />
+            <wsdl:output message="ns:getNumberOfMessagesForQueueResponse" wsaw:Action="urn:getNumberOfMessagesForQueueResponse" />
+            <wsdl:fault message="ns:AndesManagerServiceClusterMgtAdminException" name="AndesManagerServiceClusterMgtAdminException" wsaw:Action="urn:getNumberOfMessagesForQueueAndesManagerServiceClusterMgtAdminException" />
         </wsdl:operation>
         <wsdl:operation name="getNumberofSubscriptionsForTopic">
             <wsdl:input message="ns:getNumberofSubscriptionsForTopicRequest" wsaw:Action="urn:getNumberofSubscriptionsForTopic" />
@@ -455,12 +458,9 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="initialize">
-            <soap:operation soapAction="urn:initialize" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
+            <wsdl:fault name="AndesManagerServiceClusterMgtAdminException">
+                <soap:fault use="literal" name="AndesManagerServiceClusterMgtAdminException" />
+            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="getAllTopicsForNode">
             <soap:operation soapAction="urn:getAllTopicsForNode" style="document" />
@@ -470,15 +470,6 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="AndesManagerServiceClusterMgtAdminException">
-                <soap:fault use="literal" name="AndesManagerServiceClusterMgtAdminException" />
-            </wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="refreshMemUsageThroughputAndMessageCount">
-            <soap:operation soapAction="urn:refreshMemUsageThroughputAndMessageCount" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
             <wsdl:fault name="AndesManagerServiceClusterMgtAdminException">
                 <soap:fault use="literal" name="AndesManagerServiceClusterMgtAdminException" />
             </wsdl:fault>
@@ -506,6 +497,18 @@
         </wsdl:operation>
         <wsdl:operation name="getNumberofSubscriptionsForTopic">
             <soap:operation soapAction="urn:getNumberofSubscriptionsForTopic" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AndesManagerServiceClusterMgtAdminException">
+                <soap:fault use="literal" name="AndesManagerServiceClusterMgtAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfMessagesForQueue">
+            <soap:operation soapAction="urn:getNumberOfMessagesForQueue" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -611,12 +614,9 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="initialize">
-            <soap12:operation soapAction="urn:initialize" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
+            <wsdl:fault name="AndesManagerServiceClusterMgtAdminException">
+                <soap12:fault use="literal" name="AndesManagerServiceClusterMgtAdminException" />
+            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="getAllTopicsForNode">
             <soap12:operation soapAction="urn:getAllTopicsForNode" style="document" />
@@ -626,15 +626,6 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="AndesManagerServiceClusterMgtAdminException">
-                <soap12:fault use="literal" name="AndesManagerServiceClusterMgtAdminException" />
-            </wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="refreshMemUsageThroughputAndMessageCount">
-            <soap12:operation soapAction="urn:refreshMemUsageThroughputAndMessageCount" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
             <wsdl:fault name="AndesManagerServiceClusterMgtAdminException">
                 <soap12:fault use="literal" name="AndesManagerServiceClusterMgtAdminException" />
             </wsdl:fault>
@@ -662,6 +653,18 @@
         </wsdl:operation>
         <wsdl:operation name="getNumberofSubscriptionsForTopic">
             <soap12:operation soapAction="urn:getNumberofSubscriptionsForTopic" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AndesManagerServiceClusterMgtAdminException">
+                <soap12:fault use="literal" name="AndesManagerServiceClusterMgtAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNumberOfMessagesForQueue">
+            <soap12:operation soapAction="urn:getNumberOfMessagesForQueue" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -750,12 +753,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="initialize">
-            <http:operation location="initialize" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-        </wsdl:operation>
         <wsdl:operation name="getAllTopicsForNode">
             <http:operation location="getAllTopicsForNode" />
             <wsdl:input>
@@ -764,12 +761,6 @@
             <wsdl:output>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="refreshMemUsageThroughputAndMessageCount">
-            <http:operation location="refreshMemUsageThroughputAndMessageCount" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
         </wsdl:operation>
         <wsdl:operation name="getAllNodeDetail">
             <http:operation location="getAllNodeDetail" />
@@ -798,6 +789,15 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="getNumberOfMessagesForQueue">
+            <http:operation location="getNumberOfMessagesForQueue" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="getNumOfNodes">
             <http:operation location="getNumOfNodes" />
             <wsdl:input>
@@ -810,13 +810,13 @@
     </wsdl:binding>
     <wsdl:service name="AndesManagerService">
         <wsdl:port name="AndesManagerServiceHttpsSoap11Endpoint" binding="ns:AndesManagerServiceSoap11Binding">
-            <soap:address location="https://127.0.0.1:9443/services/AndesManagerService.AndesManagerServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://10.200.3.189:9443/services/AndesManagerService.AndesManagerServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="AndesManagerServiceHttpsSoap12Endpoint" binding="ns:AndesManagerServiceSoap12Binding">
-            <soap12:address location="https://127.0.0.1:9443/services/AndesManagerService.AndesManagerServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://10.200.3.189:9443/services/AndesManagerService.AndesManagerServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="AndesManagerServiceHttpsEndpoint" binding="ns:AndesManagerServiceHttpBinding">
-            <http:address location="https://127.0.0.1:9443/services/AndesManagerService.AndesManagerServiceHttpsEndpoint/" />
+            <http:address location="https://10.200.3.189:9443/services/AndesManagerService.AndesManagerServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

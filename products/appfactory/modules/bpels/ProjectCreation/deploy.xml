@@ -9,7 +9,7 @@
     </provide>
     <invoke partnerLink="ProjectMgtServicePL">
       <service name="internal.mgt.project.appfactory.carbon.wso2.org:ProjectManagementService" port="ProjectManagementServiceHttpsSoap11Endpoint">
-<endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/endpoints/ProjectManagementService.epr"/>
+<endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/ProjectManagementService.epr"/>
 </service>
     </invoke>
   </process>

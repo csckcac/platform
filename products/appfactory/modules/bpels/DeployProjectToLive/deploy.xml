@@ -9,7 +9,7 @@
     </provide>
     <invoke partnerLink="ArtifactDeploymentServicePL">
       <service name="service.deployment.artifact.carbon.wso2.org:ArtifactDeploymentService" port="ArtifactDeploymentServiceHttpSoap11Endpoint">
-<endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/endpoints/ArtifactDeploymentService.epr"/>
+<endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/ArtifactDeploymentService.epr"/>
 </service>
     </invoke>
   </process>

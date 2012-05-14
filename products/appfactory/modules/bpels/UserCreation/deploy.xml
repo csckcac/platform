@@ -14,7 +14,7 @@
     </invoke>
     <invoke partnerLink="EmailSenderServicePL">
       <service name="services.registration.user.carbon.wso2.org:EmailSenderService" port="EmailSenderServiceHttpsSoap11Endpoint">
-<endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/endpoints/EmailSenderService.epr"/>
+<endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/EmailSenderService.epr"/>
 </service>
     </invoke>
   </process>

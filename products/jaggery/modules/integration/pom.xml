@@ -70,10 +70,10 @@
             <version>4.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-        	<groupId>org.wso2.carbon</groupId>
-        	<artifactId>SecVerifier</artifactId>
-        	<version>4.0.0-SNAPSHOT</version>
-        	<type>aar</type>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>SecVerifier</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+            <type>aar</type>
         </dependency>
     </dependencies>
 
@@ -96,7 +96,7 @@
                         <http.port>9763</http.port>
                         <samples.dir>${basedir}/src/test/resources</samples.dir>
                         <extracted.dir>jaggery-${project.version}</extracted.dir>
-                        <sec.verifier.dir>${basedir}/../../../integration/security-verifier/</sec.verifier.dir>
+                        <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <!--  
                         <emma.home>${basedir}/target/emma</emma.home>
                         <emma.output>${basedir}/target/emma</emma.output>
@@ -129,24 +129,12 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--  
-             <plugin>
+
+            <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-emma-dependencies</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/emma</outputDirectory>
-                            <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>emma,org.wso2.carbon.integration.framework</includeArtifactIds>
-                        </configuration>
-                    </execution>
-                    <execution>
-                    	<id>copy-secVerifier</id>
+                        <id>copy-secVerifier</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
@@ -160,7 +148,7 @@
                     </execution>
                 </executions>
             </plugin>
-            -->
+
         </plugins>
     </build>
 

@@ -31,6 +31,14 @@ function getPropertyTemp(expression) {
             return app.webService.getUsersOfProject.text();
         case "bpel.createUser":
             return app.bpel.createUser.text();
+        case "webService.emailVarificationService":
+            return app.webService.emailVarificationService.text();
+        case "bpel.activateUser":
+            return app.bpel.activateUser.text();
+        case "adminUserName":
+            return app.adminUserName.text();
+        case "adminPassword":
+            return app.adminPassword.text();
         default:
             return;
     }

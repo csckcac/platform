@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>WSO2 Project Management Tool</title>
+</head>
+<body>
+ <%
+
+ include('process/webServiceUtil.jag');
+
+ %>
+
+<link href="css/global.css" rel="stylesheet">
+<link href="css/formStyles.css" rel="stylesheet">
+
+<table id="main-table" border="0" cellspacing="0">
+     <%
+        // include the header here
+        include("includes/header.jag");
+    %>
+    <tr>
+            <%
+            // include the left navigation menu as the 1st column in the row
+            include("includes/menu.jag");
+        %>
+
+        <td id="middle-content">
+            <table id="content-table" border="0" cellspacing="0">
+                <!--tr>
+                    <td id="page-header-links"></td> => USER FOR BREADCRUMB
+                </tr-->
+                <tr>
+                    <td id="body">
+                        <img src="../admin/images/1px.gif" width="735px" height="1px"/>
+                        <!-- dummy implementation of the closure of the table structure used to define
+                the UI structured in a table. The table and other html element such as the
+                body element is terminated appropriately in the template_footer.jag file-->
+
+<div id="middle">
+
+
+    <div id="workArea">
+       <%
+       var confirm = request.getParameter("confirmation");
+       var confirmationObject=getConfirmationObject(confirm);
+       if(confirmationObject!=null){
+       if(invokeUserActivationProcess(confirmationObject.admin,confirmationObject.email,confirmationObject.confirmationKey)){
+       %>
+        <div style="margin:20px">You have successfully validated your email address and the contact information associated with your WSO2
+            Cloud Services account is updated. Click <a href="../project-mgt/index.jag">here</a> to access WSO2 Appfactory Project Manager.
+        </div>
+       <%
+       }else{
+         %>
+        <div style="margin:20px">Your activation request is failed
+                </div>
+          <%
+       }
+
+       }else{
+       %>
+        You have already click the link that post to you to validate your email address or
+               we were unable to validate your email address. If there are any issues, please report
+               them on <a href="http://www.wso2.com/cloud/services/support">http://www.wso2.com/cloud/services/support</a>.
+       <%
+       }
+        %>
+    </div>
+</div>
+
+<%
+    include('includes/template_footer.jag');
+%>

@@ -155,4 +155,64 @@
         }
         return result;
     }
+      function getConfirmationObject(secreteKey){
+      var ws = require("ws");
+
+      var EmailVerificationService = new ws.WSRequest();
+      var options = new Array();
+      options.useSOAP = 1.2;
+      options.action = "urn:ConfirmationBean";
+      var payload =<ser:confirmUser xmlns:ser="http://services.verification.email.carbon.wso2.org"></ser:confirmUser>;
+      var ser=new Namespace("http://services.verification.email.carbon.wso2.org");
+      payload.ser::secretKey=secreteKey;
+      var result;
+
+
+      try {
+      var endPoint = getProperty('webService.emailVarificationService');
+      EmailVerificationService.open(options, endPoint, false);
+      EmailVerificationService.send(payload);
+      result = EmailVerificationService.responseE4X;
+      } catch (e) {
+      log("Email varification failed","error");
+      return null;
+      }
+
+
+     var ax2342=new Namespace("http://util.verification.email.carbon.wso2.org/xsd");
+     var ns=new Namespace("http://services.verification.email.carbon.wso2.org");
+     var data=new XML(result.ns::["return"].ax2342::data+"");
+
+     var confirmationObject=new Array();
+     confirmationObject.admin=(data.admin.text());
+     confirmationObject.email=data.email.text();
+     confirmationObject.confirmationKey=data.confirmationKey.text();
+
+
+      return confirmationObject;
+      }
+       function invokeUserActivationProcess(userName,email,confirmationKey){
+       var ws = require('ws');
+
+       var UserActivationProcess = new ws.WSRequest();
+       var options = new Array();
+       options.useWSA = 1.0;
+       options.action = "urn:process";
+       var payload = <UserActivationProcessRequest xmlns:int="http://wso2.org"></UserActivationProcessRequest>;
+       var wso2=new Namespace("http://wso2.org");
+       payload.wso2::userName=userName;
+       payload.wso2::email=email;
+       payload.wso2::confirmationKey=confirmationKey;
+       var result;
+
+       try {
+        var endPoint = getProperty('bpel.activateUser');
+        UserActivationProcess.open(options,endPoint, false);
+        UserActivationProcess.send(payload);
+        result = UserActivationProcess.responseE4X;
+       } catch (e) {
+        log(e.toString(),"error");
+        return result;
+
+       }
 %>

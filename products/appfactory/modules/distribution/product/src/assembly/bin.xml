@@ -146,6 +146,12 @@
                 <include>**/**.xml</include>
             </includes>
         </fileSet>
+
+        <!-- Coping endpoint reference files for BPEL artifacts -->
+        <fileSet>
+            <directory>repository/conf/appfactory/endpoints</directory>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/conf/endpoints</outputDirectory>
+        </fileSet>
 	
     </fileSets>
 

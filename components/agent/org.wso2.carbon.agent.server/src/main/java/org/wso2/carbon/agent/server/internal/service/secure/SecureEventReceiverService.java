@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.agent.server.internal.service.sequre;
+package org.wso2.carbon.agent.server.internal.service.secure;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

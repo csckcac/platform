@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.agent.server.internal.service.sequre;
+package org.wso2.carbon.agent.server.internal.service.secure;
 
 import org.apache.thrift.TException;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;

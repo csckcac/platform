@@ -34,7 +34,7 @@ import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
 import org.wso2.carbon.agent.server.internal.service.general.ThriftEventTransmissionServiceImpl;
-import org.wso2.carbon.agent.server.internal.service.sequre.ThriftSecureEventTransmissionServiceImpl;
+import org.wso2.carbon.agent.server.internal.service.secure.ThriftSecureEventTransmissionServiceImpl;
 import org.wso2.carbon.agent.server.internal.utils.AgentServerConstants;
 
 import java.net.InetAddress;

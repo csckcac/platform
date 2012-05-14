@@ -101,6 +101,12 @@ public class JaggeryTestServerManager extends TestServerManager {
     	sourcePath = computeSourcePath(fileName);
     	destinationPath = computeDestPath(carbonHome, fileName);
         copySampleFile(sourcePath, destinationPath);
+        
+        //request object
+    	fileName = "request.jag";
+    	sourcePath = computeSourcePath(fileName);
+    	destinationPath = computeDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
     }
 
     private void copySampleFile(String sourcePath, String destPath) {

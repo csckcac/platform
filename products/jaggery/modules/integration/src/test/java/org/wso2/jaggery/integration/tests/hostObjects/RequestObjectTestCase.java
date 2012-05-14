@@ -31,19 +31,19 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 
 /**
- * Test cases for Database Host Object
+ * Test cases for Request Object
  */
-public class WSRequestHostObjectTestCase {
+public class RequestObjectTestCase {
 
     @Test(groups = {"jaggery"},
-          description = "Test for WSRequest host object")
-    public void testWSRequestExist() {
+          description = "Test request object")
+    public void testRequest() {
         ClientConnectionUtil.waitForPort(9763);
         
         String finalOutput = null;
         
         try {
-        	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag");
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/request.jag?param=test");
         	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
         	BufferedReader in = new BufferedReader(new InputStreamReader(
         			jaggeryServerConnection.getInputStream()));
@@ -57,37 +57,34 @@ public class WSRequestHostObjectTestCase {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			System.out.println(">>>>>>>>>> "+finalOutput);
 	        assertNotNull(finalOutput, "Result cannot be null");
 		}
         
     }
     
-    @Test(groups = {"jaggery"},
-            description = "Test for WSRequest host object")
-      public void testWSRequest() {
-          ClientConnectionUtil.waitForPort(9763);
-          
-          String finalOutput = null;
-          
-          try {
-          	URL jaggeryURL = new URL("http://localhost:9763/testapp/wsrequest.jag");
-          	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
-          	BufferedReader in = new BufferedReader(new InputStreamReader(
-          			jaggeryServerConnection.getInputStream()));
-          
+    public void testReadRequest() {
+        ClientConnectionUtil.waitForPort(9763);
+        
+        String finalOutput = null;
+        
+        try {
+        	URL jaggeryURL = new URL("http://localhost:9763/testapp/request.jag?param=test");
+        	URLConnection jaggeryServerConnection = jaggeryURL.openConnection();
+        	BufferedReader in = new BufferedReader(new InputStreamReader(
+        			jaggeryServerConnection.getInputStream()));
+        
           	String inputLine;
   			while ((inputLine = in.readLine()) != null) {
   				finalOutput = inputLine;
   			}
-  
-  			in.close();
-  		} catch (IOException e) {
-  			e.printStackTrace();
-  		} finally {
-  	        assertEquals(finalOutput, "Jaggery Runtime-1.0.0-SNAPSHOT_M5");
-  		}
-          
-      }
+			    
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			assertEquals(finalOutput, "Param : test");
+		}
+        
+    }
 
 }

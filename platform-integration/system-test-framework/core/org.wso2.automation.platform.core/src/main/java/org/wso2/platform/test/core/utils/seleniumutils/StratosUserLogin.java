@@ -38,8 +38,9 @@ public class StratosUserLogin {
         driver.findElement(By.id("username")).sendKeys(userName);
         driver.findElement(By.id("password")).sendKeys(password);
         driver.findElement(By.xpath("//tr[4]/td[2]/input")).click();
-
+        Thread.sleep(5000);
         if (productName.equalsIgnoreCase("manager")) {
+
             assertTrue(driver.getPageSource().contains("Application Server"),
                        "Manager Home page Failed");
             assertTrue(driver.getPageSource().contains("Mashup Server"), "Manager Home page Failed");

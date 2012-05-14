@@ -42,13 +42,15 @@ public class ManagerStratosTestSuite extends MasterTestSuite {
 
                                                       StratosManagerUserCreatorSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("ManagerAddNewRole",
-
                                                       StratosManagerRoleCreatorSeleniumTest.class));
+
             suiteVariablesList.add(new SuiteVariables("ManagerLoginPermissionScenariotest",
                                                       StratosManagerPermissionScenarioSeleniumTest.class));
 
             suiteVariablesList.add(new SuiteVariables("ManagerSSOTest", ManagerSSOTest.class));
-            suiteVariablesList.add(new SuiteVariables("ManagerSuperAdminLoginTest", ManagerSuperAdminLoginTest.class));
+
+            suiteVariablesList.add(new SuiteVariables("ManagerSuperAdminLoginTest",
+                                                      ManagerSuperAdminLoginTest.class));
 
             superSuite("StratosManagerSeleniumTestSuite", suiteVariablesList).run();
         }

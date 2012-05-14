@@ -34,6 +34,7 @@ import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
+import org.wso2.platform.test.core.utils.seleniumutils.UserManagementSeleniumUtils;
 
 import java.net.MalformedURLException;
 import java.util.Calendar;
@@ -42,7 +43,7 @@ import static org.testng.Assert.assertTrue;
 
 
 public class ISUserCreatorSeleniumTest {
-    private static final Log log = LogFactory.getLog(ISClaimManagementSeleniumTest.class);
+    private static final Log log = LogFactory.getLog(ISUserCreatorSeleniumTest.class);
     private static Selenium selenium;
     private static WebDriver driver;
     String productName = "is";
@@ -56,8 +57,8 @@ public class ISUserCreatorSeleniumTest {
         userName = userDetails.getUserName();
         password = userDetails.getPassword();
         domain = userDetails.getDomain();
-        String baseUrl = new ProductUrlGeneratorUtil().getServiceHomeURL(
-                ProductConstant.IS_SERVER_NAME);
+        String baseUrl = new ProductUrlGeneratorUtil().getServiceHomeURL(ProductConstant
+                                                                                 .IS_SERVER_NAME);
         log.info("baseURL is :" + baseUrl);
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
@@ -65,23 +66,21 @@ public class ISUserCreatorSeleniumTest {
     }
 
 
-    @Test(groups = {"wso2.greg"}, description = "create a new user with admin role", priority = 1)
+    @Test(groups = {"wso2.is"}, description = "create a new user with admin role", priority = 1)
     public void testAddNewUser() throws Exception {
-        String baseURL = "https://identity.stratoslive.wso2.com";
-        String newUserName = "isuser123";
-        String newUserpassword = "isuser123";
-        String userManagementURL = baseURL + "/t/" + domain + "/carbon/userstore/index.jsp?region" +
-                                   "=region1&item=userstores_menu";
+        String newUserName = "manager123";
+        String newUserPassword = "manager123";
 
         try {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
-            log.info("Stratos IS Login Success");
-            gotoUserManagementPage(userManagementURL);
-            createNewUser(newUserName, newUserpassword);
+            log.info("Stratos Manager Login Success");
+            gotoUserManagementPage();
+            UserManagementSeleniumUtils.deleteUserByName(driver, newUserName);
+            createNewUser(newUserName, newUserPassword);
             findUser(newUserName);
-            deleteUser();
+            UserManagementSeleniumUtils.deleteUserByName(driver, newUserName);
             userLogout();
-            log.info("*******IS Stratos - Add New User Test - Passed ***********");
+            log.info("*******Manager Stratos - Add New User Test - Passed ***********");
         } catch (AssertionFailedError e) {
             log.info("Failed to create  new User :" + e.getMessage());
             userLogout();
@@ -95,6 +94,7 @@ public class ISUserCreatorSeleniumTest {
             userLogout();
             throw new Exception("Failed to create  new User :" + e.getMessage());
         }
+
     }
 
     @AfterClass(alwaysRun = true)
@@ -102,15 +102,23 @@ public class ISUserCreatorSeleniumTest {
         driver.quit();
     }
 
-    private void deleteUser() throws InterruptedException {
-        driver.findElement(By.linkText("Delete")).click();
-        waitTimeforElement("//div[3]/div/div");
-        assertTrue(selenium.isTextPresent("exact:Do you want to delete the user 'isuser123'?"),
-                   "Failed to delete user :");
-        selenium.click("//button");
-        waitTimeforElement("//div[3]/div/div");
-        selenium.click("//button");
-        waitTimeforElement("//li[3]/a");
+    private void createNewUser(String newUserName, String newUserpassword)
+            throws InterruptedException {
+        driver.findElement(By.linkText("Add New User")).click();
+        //enter user info
+        driver.findElement(By.name("username")).sendKeys(newUserName);
+        driver.findElement(By.name("password")).sendKeys(newUserpassword);
+        driver.findElement(By.name("retype")).sendKeys(newUserpassword);
+        driver.findElement(By.xpath("//form/table/tbody/tr[2]/td/input")).click();
+        //assign roles
+        driver.findElement(By.name("userRoles")).click();
+        driver.findElement(By.xpath("//input[2]")).click();
+    }
+
+    private void gotoUserManagementPage() throws InterruptedException {
+        driver.findElement(By.id("menu-panel-button3")).click();
+        driver.findElement(By.linkText("Users and Roles")).click();
+        driver.findElement(By.linkText("Users")).click();
     }
 
     private void findUser(String newUserName) {
@@ -119,50 +127,7 @@ public class ISUserCreatorSeleniumTest {
         driver.findElement(By.xpath("//td[3]/input")).click();
     }
 
-    public void createNewUser(String newUserName, String newUserpassword)
-            throws InterruptedException {
-        driver.findElement(By.linkText("Users")).click();
-        waitTimeforElement("//table[2]/tbody/tr/td/a");
-        driver.findElement(By.linkText("Add New User")).click();
-        waitTimeforElement("//input");
-        //enter user info
-        driver.findElement(By.name("username")).sendKeys(newUserName);
-        driver.findElement(By.name("password")).sendKeys(newUserpassword);
-        driver.findElement(By.name("retype")).sendKeys(newUserpassword);
-        driver.findElement(By.xpath("//form/table/tbody/tr[2]/td/input")).click();
-        waitTimeforElement("//input");
-        //assign roles
-        driver.findElement(By.name("userRoles")).click();
-        driver.findElement(By.xpath("//input[2]")).click();
-        waitTimeforElement("//input");
-    }
-
-    public void gotoUserManagementPage(String userManagementURL) throws InterruptedException {
-        driver.get(userManagementURL);
-        log.info("User Management URL is :" + userManagementURL);
-        waitTimeforElement("//div/table/tbody/tr/td/table/tbody/tr/td/a");
-    }
-
-
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
-    }
-
-
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
-            }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
     }
 }

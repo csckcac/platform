@@ -266,12 +266,12 @@ public class EsbEndpointSetter {
         ProductUrlGeneratorUtil productUrlGeneratorUtil = new ProductUrlGeneratorUtil();
         if (!containsHttps) {
             if (properties.getEnvironmentSettings().is_runningOnStratos()) {
-                url = productUrlGeneratorUtil.getHttpServiceURLOfStratos(properties.getProductVariables().getHttpPort(), properties.getProductVariables().getHostName(), properties, info);
+                url = productUrlGeneratorUtil.getHttpServiceURLOfStratos(properties.getProductVariables().getHttpPort(),properties.getProductVariables().getHttpPort(), properties.getProductVariables().getHostName(), properties, info);
                 String service = oldUrl.substring(oldUrl.indexOf("services/") + 9);
                 url = url + File.separator + service;
 
             } else {
-                url = productUrlGeneratorUtil.getHttpServiceURLOfProduct(properties.getProductVariables().getHttpPort(), properties.getProductVariables().getHostName(), properties);
+                url = productUrlGeneratorUtil.getHttpServiceURLOfProduct(properties.getProductVariables().getHttpPort(),properties.getProductVariables().getHttpPort(), properties.getProductVariables().getHostName(), properties);
                 String service = oldUrl.substring(oldUrl.indexOf("services/"));
                 url = url + File.separator + service;
             }

@@ -82,7 +82,7 @@ public class StratosMSServiceTest {
         WSRequest();
     }
 
-    @Test(invocationCount = 5)
+    @Test(invocationCount = 5, enabled = false)
     public void IMServiceTest() throws AxisFault {
         IMService();
     }

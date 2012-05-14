@@ -26,6 +26,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -39,6 +40,8 @@ import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.net.MalformedURLException;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -77,6 +80,7 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             gotoAdministrationPage();
+            deleteEntitlementPolicy();
             createEntitlement(policyName, policyDescription, resourceName);
             defineRule1();
             defineRule2();
@@ -122,6 +126,7 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
         driver.findElement(By.id("resourceNames")).sendKeys(resourceName);
         driver.findElement(By.id("subjectNames")).sendKeys("admin");
         driver.findElement(By.xpath("//tr[7]/td/input")).click();
+        Thread.sleep(5000);
         assertTrue(selenium.isTextPresent("Permit"), "admin Policy has not been applied :");
         selenium.click("//button");
 
@@ -129,6 +134,7 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
         driver.findElement(By.id("subjectNames")).sendKeys("admin123");
         driver.findElement(By.id("actionNames")).sendKeys("read");
         driver.findElement(By.xpath("//tr[7]/td/input")).click();
+        Thread.sleep(5000);
         assertTrue(selenium.isTextPresent("Deny"), "admin Policy has not been applied :");
         selenium.click("//button");
     }
@@ -180,5 +186,14 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
+    }
+    
+    private void deleteEntitlementPolicy(){
+        WebElement webElementList = driver.findElement(By.className("chkBox"));
+        if (webElementList.getAttribute("value").contains("stratostestpolicy1")){
+            webElementList.click();
+            driver.findElement(By.id("delete1")).click();
+            driver.findElement(By.xpath("//div[3]/div[2]/button")).click();
+        }
     }
 }

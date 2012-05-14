@@ -62,10 +62,17 @@ include('/includes/topnavi.jag');
                 this
                 framework is to reduce the gap between writing web apps and web services.</p>
 
-            <p>This Framework uses <code>Mozilla Rhino</code> to process Javascript at the server and also contains a
+            <p>As a pure Javascript server-side scripting engine, Jaggery combines all the strengths of Javascript with
+                <u><em> flexibility</em></u> and <u><em>freedom</em></u> at both the development and deployment stages. Most JavaScript webapp development
+                mechanisms restrict developers to a framework-specific structure or patterns, which demand an additional
+                learning curve. By contrast, with Jaggery, any developers who are versed in Javascript have everything
+                they need to get going.</p>
+
+
+            <!--p>This Framework uses <code>Mozilla Rhino</code> to process Javascript at the server and also contains a
                 <code>powerful caching layer</code> with the support of <code>Rhino compiled
                     scripts</code>; so its as fast as the JVM. As few key features, Jaggery
-                has <code>native JSON support</code> and also <code>E4X support</code> for XML manipulation.</p>
+                has <code>native JSON support</code> and also <code>E4X support</code> for XML manipulation.</p-->
 
             <h3>Say Hello to Jaggery</h3>
 

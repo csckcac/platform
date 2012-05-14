@@ -106,61 +106,60 @@ include('/includes/topnavi.jag');
                 </p>
                 <br>
 
- <% hasMembers = false; %>
-<div id="pageLinks">
-<a class="navilink" href="#overview">Overview</a>
-    <%if(hasMembers) {%>
-<a class="navilink" href="#members">Members</a>
-        <%}%>
-        <%if(hasOps) {%>
-<a class="navilink" href="#operations">Operations</a>
-            <%}%>
-</div>
+                <% hasRets = false; %>
+                <div id="pageLinks">
+                    <a class="navilink" href="#overview">Overview</a>
+                    <%if(hasParams) {%>
+                    <a class="navilink" href="#parameters">Parameters</a>
+                    <%}%>
+                    <%if(hasRets) {%>
+                    <a class="navilink" href="#returnVals">Return values</a>
+                    <%}%>
+                </div>
                 
 <section id="overview">
     <h4>Overview</h4>
           <p class="description">In-built function <code>print() </code> will write server-side output to the document.</p>
+
+    <pre class="prettyprint">print(str | obj)</pre>
 </section>
 
-<section id="operations">
+                <section id="parameters">
 
-   <h4>Operations</h4> 
-             <table class="clsStd operations-table">
-                    <tbody>
-                    <tr>
-                        <th>Member</th>
-                        <th>Description</th>
-                    </tr>
-                    <tr>
-                        <td><code>print()</code></td>
-                        <td>
+                    <h4>Parameters</h4>
+                    <table class="clsStd operations-table">
+                        <tbody>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>str</code></td>
+                            <td>String</td>
+                            <td>
         <pre class="prettyprint">
-print("hi");
-// return a string with value of "hi"
+print("hello");
 </pre>
-                            Returns string
-                            <br>     <br>
-<pre class="prettyprint"> 
-var obj = {"name": "Madhuka", "company":"WSO2"};<br>
+                                print a string to the response
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>obj</code></td>
+                            <td>Object</td>
+                            <td>
+<pre class="prettyprint">
+var obj = {"name": "jaggery"};
 print(obj);
-// return a JSON object
         </pre>
-                            Passing a Javascript object to <code>print()</code> will return a JSON object.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><code>Escape sequences</code></td>
-                        <td>
-        <pre class="prettyprint">
-print("\"\'");
-</pre>
-                            Escape sequences that can appear inside of double quotes.
-                        </td>
-                    </tr>
+                                Passing a Javascript object to <code>print()</code> serialize the object to the response
 
-                    </tbody>
-                </table>
-        </section><!-- /members section -->
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </section>
 
             </div>
             <!-- /print div -->
@@ -170,7 +169,7 @@ print("\"\'");
 
     </div>
     <%
-    include('/includes/footer.jag');
+    include('/includes/footerfunc.jag');
     %>
 
 </div>

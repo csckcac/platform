@@ -16,6 +16,9 @@
 <%
 var hasMembers = true;
 var hasOps = true;
+
+var hasParams = true;
+var hasRets = true;
 %>
 
 

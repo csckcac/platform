@@ -173,6 +173,7 @@ public class LoadBalancerConfiguration implements Serializable{
 
         // Set services configuration
         createServicesConfig(servicesConfigNode);
+        this.setHostDomainMap(loadHostDomainMap());
     }
 
 

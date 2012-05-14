@@ -65,7 +65,12 @@ public class MediatorTest {
             Thread.sleep(2000);
             loopCount++;
         }
-        NHTTP_PORT = "http://" + environmentObj.getEsb().getProductVariables().getHostName() + ":" + environmentObj.getEsb().getProductVariables().getNhttpPort();
+        if (environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+            NHTTP_PORT = environmentObj.getEsb().getServiceUrl();
+        } else {
+            NHTTP_PORT = "http://" + environmentObj.getEsb().getProductVariables().getHostName() + ":"
+                    + environmentObj.getEsb().getProductVariables().getNhttpPort();
+        }
 
     }
 
@@ -84,18 +89,18 @@ public class MediatorTest {
         return method;
     }
 
-   @Test(groups = {"wso2.esb"}, description = "Testing Mediator IN and OUT")
+    @Test(groups = {"wso2.esb"}, description = "Testing Mediator IN and OUT")
     public void testMediatorInOut() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorInOut.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
-       log.info("Response : " + omElement.toString());
+        log.info("Response : " + omElement.toString());
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
-   }
+    }
 
     @Test(groups = {"wso2.esb"}, description = "Testing Mediator Aggregate")
     public void testMediatorAggregate()
-               throws IOException, XMLStreamException, ServletException, InterruptedException {
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorAggregate.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
@@ -123,7 +128,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
- /*   @Test(alwaysRun = true)
+    /*   @Test(alwaysRun = true)
     public void testMediatorCallOut() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorCallout.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -260,7 +265,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(enabled = false,groups = {"wso2.esb"}, description = "Testing rule mediator")
+    @Test(enabled = false, groups = {"wso2.esb"}, description = "Testing rule mediator")
     public void testMediatorRule_Simple_Msg_Trans()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRule-simple-msg-trans.xml");
@@ -270,7 +275,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(enabled = false,groups = {"wso2.esb"}, description = "Testing rule mediator")
+    @Test(enabled = false, groups = {"wso2.esb"}, description = "Testing rule mediator")
     public void testMediatorRule_Drools()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRule_drools.xml");
@@ -280,7 +285,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(enabled = false,groups = {"wso2.esb"}, description = "Testing rule mediator")
+    @Test(enabled = false, groups = {"wso2.esb"}, description = "Testing rule mediator")
     public void testMediatorRule_Simple()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRule_simple.xml");
@@ -290,7 +295,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(enabled = false,groups = {"wso2.esb"}, description = "Testing rule mediator")
+    @Test(enabled = false, groups = {"wso2.esb"}, description = "Testing rule mediator")
     public void testMediatorRule_Simple_Reg()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRule_simple_reg.xml");
@@ -300,7 +305,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(enabled = false,groups = {"wso2.esb"}, description = "Testing rule mediator")
+    @Test(enabled = false, groups = {"wso2.esb"}, description = "Testing rule mediator")
     public void testMediatorRule_Switch()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRule_switch.xml");
@@ -398,8 +403,8 @@ public class MediatorTest {
         Assert.assertTrue(omElement.toString().contains("WSO2"));
         LogMessage[] logMessages =
                 new AdminServiceLogViewer(environmentObj.getEsb().getSessionCookie(),
-                                          environmentObj.getEsb().getBackEndUrl()).
-                                          getLogs("INFO", "LogMediator");
+                        environmentObj.getEsb().getBackEndUrl()).
+                        getLogs("INFO", "LogMediator");
 
         Assert.assertTrue(logMessages != null && logMessages.length > 0 && logMessages[0] != null);
 
@@ -410,13 +415,13 @@ public class MediatorTest {
             String message = l.getLogMessage();
 
             if (message.contains("inComing = ***Incoming Message***") &&
-                message.contains("inExpression = Echo String - urn:getQuote") &&
-                !message.contains("Envelope") && !message.contains("WSO2")) {
+                    message.contains("inExpression = Echo String - urn:getQuote") &&
+                    !message.contains("Envelope") && !message.contains("WSO2")) {
                 requestLogOk = true;
             }
 
             if (message.contains("outgoing = ***Outgoing Message***") &&
-                !message.contains("Envelope") && !message.contains("WSO2 Company")) {
+                    !message.contains("Envelope") && !message.contains("WSO2 Company")) {
                 responseLogOk = true;
             }
         }
@@ -442,14 +447,14 @@ public class MediatorTest {
             String message = l.getLogMessage();
 
             if (message.contains("inComing = ***Incoming Message***") &&
-                message.contains("inExpression = Echo String - urn:getQuote") &&
-                !message.contains("Envelope") && !message.contains("WSO2") &&
-                message.contains("TestHeader") && message.contains("TestHeaderValue")) {
+                    message.contains("inExpression = Echo String - urn:getQuote") &&
+                    !message.contains("Envelope") && !message.contains("WSO2") &&
+                    message.contains("TestHeader") && message.contains("TestHeaderValue")) {
                 requestLogOk = true;
             }
 
             if (message.contains("outgoing = ***Outgoing Message***") &&
-                message.contains("Envelope") && message.contains("WSO2 Company")) {
+                    message.contains("Envelope") && message.contains("WSO2 Company")) {
                 responseLogOk = true;
             }
         }
@@ -475,13 +480,13 @@ public class MediatorTest {
             String message = l.getLogMessage();
 
             if (message.contains("inComing = ***Incoming Message***") &&
-                message.contains("inExpression = Echo String - urn:getQuote") &&
-                message.contains("Envelope") && message.contains("WSO2")) {
+                    message.contains("inExpression = Echo String - urn:getQuote") &&
+                    message.contains("Envelope") && message.contains("WSO2")) {
                 requestLogOk = true;
             }
 
             if (message.contains("outgoing = ***Outgoing Message***") &&
-                message.contains("Envelope") && message.contains("WSO2 Company")) {
+                    message.contains("Envelope") && message.contains("WSO2 Company")) {
                 responseLogOk = true;
             }
         }
@@ -507,15 +512,15 @@ public class MediatorTest {
             String message = l.getLogMessage();
 
             if (message.contains("inComing = ***Incoming Message***") &&
-                message.contains("inExpression = Echo String - urn:getQuote") &&
-                !message.contains("Envelope") && !message.contains("WSO2") &&
-                !message.contains("Direction") && !message.contains("SOAPAction")) {
+                    message.contains("inExpression = Echo String - urn:getQuote") &&
+                    !message.contains("Envelope") && !message.contains("WSO2") &&
+                    !message.contains("Direction") && !message.contains("SOAPAction")) {
                 requestLogOk = true;
             }
 
             if (message.contains("outgoing = ***Outgoing Message***") &&
-                !message.contains("Envelope") && !message.contains("WSO2 Company") &&
-                !message.contains("Direction") && !message.contains("SOAPAction")) {
+                    !message.contains("Envelope") && !message.contains("WSO2 Company") &&
+                    !message.contains("Direction") && !message.contains("SOAPAction")) {
                 responseLogOk = true;
             }
         }
@@ -524,5 +529,4 @@ public class MediatorTest {
     }
 
 
-
-    }
+}

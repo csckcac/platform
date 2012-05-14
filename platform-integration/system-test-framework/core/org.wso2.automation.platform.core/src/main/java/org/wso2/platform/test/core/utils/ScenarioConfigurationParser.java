@@ -123,16 +123,19 @@ public class ScenarioConfigurationParser {
      * @param documentElement - OMElement of processed test configuration file.
      */
     private static void processScenarioConfigurationElements(OMElement documentElement) {
-        for (Iterator itrScenario = documentElement.getChildrenWithName(new QName(SCENARIO)); itrScenario.hasNext(); ) {
+        for (Iterator itrScenario = documentElement.getChildrenWithName(new QName(SCENARIO));
+             itrScenario.hasNext(); ) {
             OMElement OmClassDocument = (OMElement) itrScenario.next();
 
             OMAttribute testMethodAttr = OmClassDocument.getAttribute(new QName(TEST_NAME));
 
-            for (Iterator itrProducts = OmClassDocument.getChildrenWithName(new QName(PRODUCTS)); itrProducts.hasNext(); ) {
+            for (Iterator itrProducts = OmClassDocument.getChildrenWithName(new QName(PRODUCTS));
+                 itrProducts.hasNext(); ) {
                 OMElement omProducts = (OMElement) itrProducts.next();
 
                 List<ProductConfig> productMapList = new ArrayList<ProductConfig>();
-                for (Iterator itrProduct = omProducts.getChildrenWithName(new QName(PRODUCT)); itrProduct.hasNext(); ) {
+                for (Iterator itrProduct = omProducts.getChildrenWithName(new QName(PRODUCT));
+                     itrProduct.hasNext(); ) {
                     OMElement omProduct = (OMElement) itrProduct.next();
                     OMAttribute omProductAttr = omProduct.getAttribute(new QName(PRODUCT_NAME));
 
@@ -149,9 +152,12 @@ public class ScenarioConfigurationParser {
                         for (Iterator itrArtifact = omArtifacts.getChildrenWithName(new QName(ARTIFACT));
                              itrArtifact.hasNext(); ) {
                             OMElement omArtifact = (OMElement) itrArtifact.next();
-                            OMAttribute omArtifactNameAttr = omArtifact.getAttribute(new QName(ARTIFACT_NAME));
-                            OMAttribute omArtifactTypeAttr = omArtifact.getAttribute(new QName(ARTIFACT_TYPE));
-                            OMAttribute omArtifactLocationAttr = omArtifact.getAttribute(new QName(LOCATION));
+                            OMAttribute omArtifactNameAttr = omArtifact.getAttribute(new QName
+                                                                                     (ARTIFACT_NAME));
+                            OMAttribute omArtifactTypeAttr = omArtifact.getAttribute(new QName
+                                                                                     (ARTIFACT_TYPE));
+                            OMAttribute omArtifactLocationAttr = omArtifact.getAttribute(new
+                                                                                         QName(LOCATION));
 
                             Artifact artifact = new Artifact();
 
@@ -171,9 +177,12 @@ public class ScenarioConfigurationParser {
                             for (Iterator itrDependency = omArtifact.getChildrenWithName(new QName(DEPENDENCY));
                                  itrDependency.hasNext(); ) {
                                 OMElement omDependency = (OMElement) itrDependency.next();
-                                OMAttribute omDependencyNameAttr = omDependency.getAttribute(new QName(DEPENDENCY_NAME));
-                                OMAttribute omDependencyTypeAttr = omDependency.getAttribute(new QName(DEPENDENCY_TYPE));
-                                OMAttribute omDependencyLocationAttr = omDependency.getAttribute(new QName(LOCATION));
+                                OMAttribute omDependencyNameAttr = omDependency.getAttribute(new
+                                                                                             QName(DEPENDENCY_NAME));
+                                OMAttribute omDependencyTypeAttr = omDependency.getAttribute(new
+                                                                                             QName(DEPENDENCY_TYPE));
+                                OMAttribute omDependencyLocationAttr = omDependency.getAttribute
+                                                                                            (new QName(LOCATION));
 
                                 ArtifactDependency artifactDependencies = new ArtifactDependency();
 
@@ -184,8 +193,8 @@ public class ScenarioConfigurationParser {
                                     } else {
                                         artifactDependencies.setDepArtifactLocation("");
                                     }
-                                    artifactDependencies.setDepArtifactType(ArtifactTypeFactory.
-                                            getType(omDependencyTypeAttr.getAttributeValue()));
+                                    artifactDependencies.setDepArtifactType(ArtifactTypeFactory
+                                                                                    .getType(omDependencyTypeAttr.getAttributeValue()));
                                     depMapList.add(artifactDependencies);
                                     artifact.setDependencyArtifactList(depMapList);
                                 } else {

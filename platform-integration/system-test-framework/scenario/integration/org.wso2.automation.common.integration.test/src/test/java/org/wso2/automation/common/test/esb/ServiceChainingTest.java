@@ -56,7 +56,7 @@ public class ServiceChainingTest {
     @BeforeTest(alwaysRun = true)
     public void initializeProperties()
             throws LoginAuthenticationExceptionException, RemoteException {
-        int userId = 0;
+        int userId = 1;
         String jarServiceName = "CreditService";
         String creditProxyName = "CreditProxy";
         String personInfoServiceName = "PersonInfoService";

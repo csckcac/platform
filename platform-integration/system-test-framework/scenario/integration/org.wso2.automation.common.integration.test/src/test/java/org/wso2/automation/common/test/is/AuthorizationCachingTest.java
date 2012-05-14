@@ -42,13 +42,12 @@ public class AuthorizationCachingTest {
     private String roleName;
     private String userName;
     private String userPassword;
-    private EnvironmentBuilder builder;
     private ManageEnvironment environment;
 
     @BeforeClass
     public void initializeProperties()
             throws LoginAuthenticationExceptionException, RemoteException {
-        builder = new EnvironmentBuilder().is(10);
+        EnvironmentBuilder builder = new EnvironmentBuilder().is(10);
         environment = builder.build();
         userInfo = UserListCsvReader.getUserInfo(10);
         sessionCookie = environment.getIs().getSessionCookie();

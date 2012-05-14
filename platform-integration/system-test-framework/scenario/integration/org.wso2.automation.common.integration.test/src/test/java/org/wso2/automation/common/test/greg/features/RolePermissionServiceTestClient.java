@@ -17,7 +17,6 @@ package org.wso2.automation.common.test.greg.features;
 
 
 
-import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.*;
@@ -26,7 +25,6 @@ import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.user.mgt.common.UserAdminException;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
-import org.wso2.platform.test.core.utils.frameworkutils.FrameworkSettings;
 
 import java.rmi.RemoteException;
 
@@ -35,7 +33,6 @@ public class RolePermissionServiceTestClient {
     private static final Log log = LogFactory.getLog(RolePermissionServiceTestClient.class);
     private AdminServiceUserMgtService userAdminStub;
     private EnvironmentVariables gregServer;
-    private String gregBackEndUrl;
     private String sessionCookie;
     private String roleName;
     private String userName;
@@ -47,16 +44,20 @@ public class RolePermissionServiceTestClient {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
         gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();
-        gregBackEndUrl = gregServer.getBackEndUrl();
+        String gregBackEndUrl = gregServer.getBackEndUrl();
         userAdminStub = new AdminServiceUserMgtService(gregBackEndUrl);
     }
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with login permission",
           priority = 1)
-    private void testAddLoginPermission() throws UserAdminException {
+    public void testAddLoginPermission() throws UserAdminException {
         roleName = "login";
         userName = "greguser1";
         userPassword = "greguser1";
+
+
+        deleteRolesIfExists();
+
         String permission[] = {"/permission/admin/login"};
         String userList[] = {"admin"};
 
@@ -73,10 +74,14 @@ public class RolePermissionServiceTestClient {
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with configure permission",
           priority = 2)
-    private void testAddConfigurePermission() throws UserAdminException {
+    public void testAddConfigurePermission() throws UserAdminException {
         roleName = "configure";
         userName = "greguser2";
         userPassword = "greguser2";
+
+
+        deleteRolesIfExists();
+
         String permission[] = {"/permission/admin/configure"};
         String userList[] = {"admin"};
 
@@ -94,10 +99,14 @@ public class RolePermissionServiceTestClient {
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with manage permission",
           priority = 3)
-    private void testAddManagePermission() throws UserAdminException {
+    public void testAddManagePermission() throws UserAdminException {
         roleName = "manage";
         userName = "greguser3";
         userPassword = "greguser3";
+
+
+        deleteRolesIfExists();
+
         String permission[] = {"/permission/admin/manage"};
         String userList[] = {"admin"};
 
@@ -120,6 +129,10 @@ public class RolePermissionServiceTestClient {
         roleName = "monitor";
         userName = "greguser4";
         userPassword = "greguser4";
+
+
+        deleteRolesIfExists();
+
         String permission[] = {"/permission/admin/monitor"};
         String userList[] = {"admin"};
 
@@ -135,12 +148,25 @@ public class RolePermissionServiceTestClient {
         }
     }
 
+    private void deleteRolesIfExists() {
+        if (userAdminStub.roleNameExists(roleName, sessionCookie)) {  //delete the role if exists
+            userAdminStub.deleteRole(sessionCookie, roleName);
+        }
+
+        if (userAdminStub.userNameExists(roleName, sessionCookie, userName)) { //delete user if exists
+            userAdminStub.deleteUser(sessionCookie, userName);
+        }
+    }
+
     @Test(groups = {"wso2.greg"}, description = "test add a role with multiple permission",
           priority = 5)
-    private void testAddMultiplePermissions() throws UserAdminException {
+    public void testAddMultiplePermissions() throws UserAdminException {
         roleName = "mulitpermission";
         userName = "greguser5";
         userPassword = "greguser5";
+
+        deleteRolesIfExists();
+
         String permission[] = {"/permission/admin/login", "/permission/admin/configure",
                                "/permission/admin/manage", "/permission/admin/monitor"};
         String userList[] = {"admin"};
@@ -160,10 +186,13 @@ public class RolePermissionServiceTestClient {
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with super admin permission",
           priority = 6)
-    private void testAddSuperAdminPermission() throws UserAdminException {
+    public void testAddSuperAdminPermission() throws UserAdminException {
         roleName = "superadmin";
         userName = "greguser6";
         userPassword = "greguser6";
+
+        deleteRolesIfExists();
+
         String permission[] = {"/permission/super admin/configure"};
         String userList[] = {"admin"};
 
@@ -180,7 +209,7 @@ public class RolePermissionServiceTestClient {
 
     }
 
-    private void addRolewithUser(String[] permission, String[] userList) throws UserAdminException {
+    public void addRolewithUser(String[] permission, String[] userList) throws UserAdminException {
         userAdminStub.addRole(roleName, null , permission, sessionCookie);
         log.info("Successfully added Role :" + roleName);
 

@@ -15,14 +15,14 @@
     <scenario testName="org.wso2.automation.common.test.esb.ServiceChainingTest">
         <products>
             <product name="AS">
-                <artifacts userId="0">
+                <artifacts userId="1">
                     <artifact name="CreditService.jar" type="jar">
                         <association name="location" value="artifact3"/>
                     </artifact>
                 </artifacts>
             </product>
             <product name="ESB">
-                <artifacts userId="0">
+                <artifacts userId="1">
                     <artifact name="ServiceChaining-1.0.0.car" type="car"/>
                 </artifacts>
             </product>

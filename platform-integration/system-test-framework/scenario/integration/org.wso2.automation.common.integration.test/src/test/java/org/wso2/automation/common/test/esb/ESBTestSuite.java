@@ -20,6 +20,7 @@ package org.wso2.automation.common.test.esb;
 import org.testng.annotations.AfterSuite;
 import org.wso2.automation.common.test.esb.mediators.test.MediatorTest;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 
@@ -32,9 +33,17 @@ public class ESBTestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
 
-//        suiteVariablesList.add(new SuiteVariables("CustomProxyTest", CustomProxyTest.class));
+        suiteVariablesList.add(new SuiteVariables("CustomProxyTest", CustomProxyTest.class));
         suiteVariablesList.add(new SuiteVariables("MediatorTest", MediatorTest.class));
+
+        if (!environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_enableSelenium
+                                                                                        ()) {
+            suiteVariablesList.add(new SuiteVariables("ServiceChainingTest", ServiceChainingTest.class));
+            suiteVariablesList.add(new SuiteVariables("CustomXpathTest", CustomXpathTest.class));
+        }
+
         setServerList(ProductConstant.ESB_SERVER_NAME + "," + ProductConstant.APP_SERVER_NAME);
         superSuite("ESBTestSuite", suiteVariablesList).run();
     }

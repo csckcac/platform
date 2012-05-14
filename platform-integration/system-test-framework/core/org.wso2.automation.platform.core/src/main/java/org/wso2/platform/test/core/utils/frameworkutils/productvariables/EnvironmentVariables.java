@@ -41,7 +41,9 @@ public class EnvironmentVariables {
         return keyStrorePassword;
     }
 
-    public void setEnvironmentVariables(String deploymentFrameworkPath, List<String> productList, int deploymentDelay, String ldapUserName, String ldapPasswd, String keystorePath, String keyStrorePassword) {
+    public void setEnvironmentVariables(String deploymentFrameworkPath, List<String> productList,
+                                        int deploymentDelay, String ldapUserName, String ldapPasswd,
+                                        String keystorePath, String keyStrorePassword) {
 
         this.deploymentDelay = deploymentDelay;
         this.deploymentFrameworkPath = deploymentFrameworkPath;

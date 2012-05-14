@@ -236,7 +236,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             sendToApplicationMember(synCtx, currentMember, faultHandler, false);
         } else {
             // prepare for a new session
-            currentMember = tlbMembershipHandler.getNextApplicationMember(targetHost, getTenantId(synCtx.toString()));
+            currentMember = tlbMembershipHandler.getNextApplicationMember(targetHost, tenantId);
             if (currentMember == null) {
                 String msg = "No application members available";
                 log.error(msg);
@@ -256,15 +256,19 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
      * while sending to some member. This is a failover mechanism
      */
 
+    /**
+     *
+     * @param url to url for target
+     * @return tenantID if tenant id available else 0
+     */
     private int getTenantId(String url) {
-        String address = url;
         String servicesPrefix = "/t/";
-        if (address != null && address.contains(servicesPrefix)) {
+        if (url != null && url.contains(servicesPrefix)) {
             int domainNameStartIndex =
-                    address.indexOf(servicesPrefix) + servicesPrefix.length();
-            int domainNameEndIndex = address.indexOf('/', domainNameStartIndex);
-            String domainName = address.substring(domainNameStartIndex,
-                    domainNameEndIndex == -1 ? address.length() : domainNameEndIndex);
+                    url.indexOf(servicesPrefix) + servicesPrefix.length();
+            int domainNameEndIndex = url.indexOf('/', domainNameStartIndex);
+            String domainName = url.substring(domainNameStartIndex,
+                    domainNameEndIndex == -1 ? url.length() : domainNameEndIndex);
             // return tenant id if domain name is not null
             if (domainName != null) {
                 try {
@@ -278,6 +282,11 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
         return 0;
     }
 
+    /**
+     *
+     * @param synCtx synapse context from incoming message to be sent
+     * @return target host address of mesaage
+     */
     private String getTargetHost(MessageContext synCtx) {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) synCtx).getAxis2MessageContext();

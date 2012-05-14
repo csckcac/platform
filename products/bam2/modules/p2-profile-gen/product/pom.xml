@@ -161,15 +161,15 @@
 
                                 <!-- BAM features -->
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bam.feature:3.2.3</featureArtifactDef>-->
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.bam2.analyzer.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.bam2.analyzer.server.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.bam2.analyzer.ui.feature:${carbon.version}
-                                </featureArtifactDef>
+                                <!--<featureArtifactDef>-->
+                                    <!--org.wso2.carbon:org.wso2.carbon.bam2.analyzer.feature:${carbon.version}-->
+                                <!--</featureArtifactDef>-->
+                                <!--<featureArtifactDef>-->
+                                    <!--org.wso2.carbon:org.wso2.carbon.bam2.analyzer.server.feature:${carbon.version}-->
+                                <!--</featureArtifactDef>-->
+                                <!--<featureArtifactDef>-->
+                                    <!--org.wso2.carbon:org.wso2.carbon.bam2.analyzer.ui.feature:${carbon.version}-->
+                                <!--</featureArtifactDef>-->
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.bam2.receiver.server.feature:${carbon.version}
                                 </featureArtifactDef>
@@ -345,10 +345,10 @@
                                 </feature>
 
                                 <!-- bam2 features -->
-                                <feature>
-                                    <id>org.wso2.carbon.bam2.analyzer.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.carbon.bam2.analyzer.feature.group</id>-->
+                                    <!--<version>${carbon.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.bam2.receiver.server.feature.group</id>
                                     <version>${carbon.version}</version>
@@ -376,7 +376,7 @@
                                    <id>org.wso2.carbon.hive.explorer.ui.feature.group</id>
 				    <version>${carbon.version}</version>
                                 </feature>
-                                <!-- end Analytics features -->				
+                                <!-- end Analytics features -->
 
                                 <feature>
                                     <id>org.wso2.carbon.reporting.feature.group</id>
@@ -408,7 +408,7 @@
                                     <version>${carbon.version}</version>
                                 </feature>-->
                                 <!-- end ntask features -->
-	
+
                                 <!--<feature>
                                     <id>org.wso2.carbon.admin.mgt.server.feature.group</id>
                                     <version>${carbon.version}</version>

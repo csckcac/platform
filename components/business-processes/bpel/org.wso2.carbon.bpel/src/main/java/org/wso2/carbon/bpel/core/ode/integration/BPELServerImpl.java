@@ -556,7 +556,6 @@ public final class BPELServerImpl implements BPELServer {
     }
 
     private void initExecutorService(ThreadFactory threadFactory) {
-        // TODO: Add this configuration to bps.xml
         if (odeConfigurationProperties.getThreadPoolMaxSize() == 0) {
             executorService = Executors.newCachedThreadPool(threadFactory);
         } else {

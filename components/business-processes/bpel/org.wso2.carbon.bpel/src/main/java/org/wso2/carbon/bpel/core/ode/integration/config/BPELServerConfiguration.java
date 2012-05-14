@@ -96,7 +96,7 @@ public class BPELServerConfiguration {
 
     private boolean syncWithRegistry = false;
 
-    private int inMemoryInstanceTTL = 0;
+    private long inMemoryInstanceTTL = 600000;
 
     private int odeSchedulerThreadPoolSize = 0;
 
@@ -285,7 +285,7 @@ public class BPELServerConfiguration {
                 Boolean.toString(acquireTransactionLocks));
 
         odeConfig.setProperty(addPrefix(OdeConfigProperties.PROP_MEX_INMEM_TTL),
-                Integer.toString(inMemoryInstanceTTL));
+                Long.toString(inMemoryInstanceTTL));
 
         odeConfig.setProperty(addPrefix(OdeConfigProperties.PROP_THREAD_POOL_SIZE),
                 Integer.toString(odeSchedulerThreadPoolSize));
@@ -512,11 +512,16 @@ public class BPELServerConfiguration {
 //    }
 
     private void populateInMemoryInstanceTTL() {
-        this.inMemoryInstanceTTL = bpsConfigDocument.getWSO2BPS().getInMemoryInstanceTimeToLive();
+        if (bpsConfigDocument.getWSO2BPS().isSetInMemoryInstanceTimeToLive()) {
+            this.inMemoryInstanceTTL = bpsConfigDocument.getWSO2BPS().getInMemoryInstanceTimeToLive();
+        }
     }
 
     private void populateOdeSchedulerThreadPoolSize() {
-        this.odeSchedulerThreadPoolSize = bpsConfigDocument.getWSO2BPS().getODESchedulerThreadPoolSize();
+        if (bpsConfigDocument.getWSO2BPS().isSetODESchedulerThreadPoolSize()) {
+            this.odeSchedulerThreadPoolSize = bpsConfigDocument.getWSO2BPS().
+                    getODESchedulerThreadPoolSize();
+        }
     }
 
     private static String addPrefix(String prop) {

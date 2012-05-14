@@ -526,7 +526,7 @@
                                     <td><%=varInfo.getSelf().getName()%>
                                     </td>
                                     <%
-                                        String varStr = "<div class='xmlverb-default'>Nil</div>";
+                                        String varStr = "<div>Nil</div>";
                                         if (varInfo.getValue() != null && varInfo.getValue().getExtraElement() != null
                                                 && varInfo.getValue().getExtraElement()[0] != null) {
                                             String id = varInfo.getSelf().getName() + "_HiddenField";
@@ -540,7 +540,7 @@
                                             }
                                             boolean isEmpty = false;
                                             if (varValue == null || varValue.length() == 0 || varValue.equals("Nil")) {
-                                                varStr = "<div class='xmlverb-default'>Nil</div>";
+                                                varStr = "<div>Nil</div>";
                                                 isEmpty = true;
                                             } else if (varValue.equals("<empty-value>Nil</empty-value>")) {
                                                 isEmpty = true;
@@ -574,9 +574,6 @@
                                             </div>
                                         </div>
 
-                                        <script type="text/javascript">
-                                            jQuery(".xmlverb-default").css("border", "0px none");
-                                        </script>
                                         <a href="#" class="icon-link" style="background-image:url(images/view.gif);"
                                            onclick="showVariableValue('dialog<%=id%>');">View Value</a>
                                         <%

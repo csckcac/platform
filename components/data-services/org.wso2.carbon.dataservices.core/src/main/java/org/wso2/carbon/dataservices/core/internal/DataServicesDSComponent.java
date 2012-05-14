@@ -29,6 +29,7 @@ import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
 import org.wso2.carbon.event.core.EventBroker;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.transaction.manager.TransactionManagerDummyService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
@@ -78,6 +79,8 @@ public class DataServicesDSComponent {
                     new DSAxis2ConfigurationContextObserver(), null);
             bundleContext.registerService(DSDummyService.class.getName(), new DSDummyService(),
                     null);
+            bundleContext.registerService(TransactionManagerDummyService.class.getName(),
+                    new TransactionManagerDummyService(), null);
             log.debug("Data Services bundle is activated ");
         } catch (Throwable e) {
             log.error(e.getMessage(), e);

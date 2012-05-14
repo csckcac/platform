@@ -50,6 +50,11 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.transaction.manager</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
             <version>${wso2carbon.version.data-services}</version>
         </dependency>
@@ -211,7 +216,8 @@
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Axis2Deployer>DataServicesDeployer</Axis2Deployer>
                         <Axis2RequiredServices>
-                            org.wso2.carbon.dataservices.core.internal.DSDummyService
+                            org.wso2.carbon.dataservices.core.internal.DSDummyService,
+                            org.wso2.carbon.transaction.manager.TransactionManagerDummyService
                         </Axis2RequiredServices>
                     </instructions>
                 </configuration>

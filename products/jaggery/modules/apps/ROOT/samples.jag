@@ -46,17 +46,15 @@ include('/includes/topnavi.jag');
             </div>
 
       <ul class="sampleapps">
-         <li>
-         <img src="images/docs_thumb.jpg" alt="" class="sample_thumb" />
+          <li>
+              <img src="images/task_thumb.jpg" alt="" class="sample_thumb" />
 
-         <h3>Jaggery Documentation</h3>
+              <h3>TaskMaster</h3>
 
-         <p>
-             The Documentation section of te jaggery site runs on Jaggery. it is the centralized and in-depth area to
-             view descriptions, demos and samples and try out jaggery code. The documentation site also includes downloads
-             and sample apps.
-         </p>
-             <a href="/" target="_blank" class="btn primary">View Demo</a>
+              <p>
+                  The TaskMaster is a task manager app which makes use of the session in Jaggery. The tasks are saved and can be viewed via the main page.
+              </p>
+              <a href="/taskmaster/index.jag" target="_blank" class="btn primary">View Demo</a>
           </li>
 
           <li>
@@ -69,6 +67,7 @@ include('/includes/topnavi.jag');
              the one client. Shout! requires the user to authenticate and approve the app before being able to
              read / publish to their feeds.
          </p>
+              <p><span class="label warning">Important</span> Sample requires you to be online</p>
                <a href="/shout" target="_blank" class="btn primary">View Demo</a>
           </li>
 
@@ -81,18 +80,21 @@ include('/includes/topnavi.jag');
              The Fresh-o-meter app allows you to search for any movie title, and retrieve its information (Cast, Movie Poster,
              Release year, Plot and rating) as well as related videos from youtube. it acts as a central movie information search engine.
          </p>
+              <p><span class="label warning">Important</span> Sample requires you to be online</p>
                <a href="/freshometer/index.jag" target="_blank" class="btn primary">View Demo</a>
           </li>
 
-		  <li>
-         <img src="images/task_thumb.jpg" alt="" class="sample_thumb" />
+          <li>
+              <img src="images/docs_thumb.jpg" alt="" class="sample_thumb" />
 
-         <h3>TaskMaster</h3>
+              <h3>Jaggery Documentation</h3>
 
-         <p>
-             The TaskMaster is a task manager app which makes use of the session in Jaggery. The tasks are saved and can be viewed via the main page.
-         </p>
-               <a href="/taskmaster/index.jag" target="_blank" class="btn primary">View Demo</a>
+              <p>
+                  The Documentation section of te jaggery site runs on Jaggery. it is the centralized and in-depth area to
+                  view descriptions, demos and samples and try out jaggery code. The documentation site also includes downloads
+                  and sample apps.
+              </p>
+              <a href="/" target="_blank" class="btn primary">View Demo</a>
           </li>
 
 

@@ -84,8 +84,8 @@ public class BpelActComposeUrl{
     public void removeArtifacts()
             throws PackageManagementException, InterruptedException, RemoteException,
                    LogoutAuthenticationExceptionException {
-        bpelManager.undeployBPEL("TestComposeUrl");
-        adminServiceAuthentication.logOut();
+        //bpelManager.undeployBPEL("TestComposeUrl");
+      //  adminServiceAuthentication.logOut();
     }
 
     public void forEachRequest() throws Exception {
@@ -109,7 +109,7 @@ public class BpelActComposeUrl{
         List<String> expectedOutput = new ArrayList<String>();
         expectedOutput.add("www.google");
 
-        requestSender.sendRequest(serviceUrl+"/" + serviceName, operation, payload,
+        requestSender.sendRequest(serviceUrl + serviceName, operation, payload,
                 1, expectedOutput, true);
     }
 }

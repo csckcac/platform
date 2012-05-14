@@ -31,14 +31,6 @@ public class ProjectDeploymentConfigBuilder {
                     new QName(ProjectDeploymentConstants.PROJECT_DEPLOYMENT_CONFIG_ROOT_ELEMENT))) {
                 throw new ProjectDeploymentExceptions("Invalid root element in deployment configuration");
             }
-
-            OMElement svnBaseURLElement = deploymentConfig.getFirstChildWithName(new QName(
-                    ProjectDeploymentConstants.PROJECT_DEPLOYMENT_CONFIG_SVN_URL));
-            if (svnBaseURLElement == null) {
-                throw new ProjectDeploymentExceptions("SVN base url is not defined in deployment configuration.");
-            }
-            configuration.setSvnBaseURL(svnBaseURLElement.getText());
-
             Iterator stagesItr = deploymentConfig.getChildrenWithName(new QName(
                     ProjectDeploymentConstants.PROJECT_DEPLOYMENT_CONFIG_STAGE));
             if (!stagesItr.hasNext()) {
@@ -47,13 +39,13 @@ public class ProjectDeploymentConfigBuilder {
             while (stagesItr.hasNext()) {
                 OMElement stageElement = (OMElement) stagesItr.next();
                 String stageName = stageElement.getAttributeValue(new QName("name")).trim();
-                Iterator deploymentServerLocationsItr = stageElement.getChildrenWithName(new QName(ProjectDeploymentConstants.PROJECT_DEPLOYMENT_CONFIG_SERVER_LOCATION));
-                List<String> deploymentServerLocations = new ArrayList<String>();
-                while (deploymentServerLocationsItr.hasNext()) {
-                    OMElement deploymentServerLocationElement = (OMElement) deploymentServerLocationsItr.next();
-                    deploymentServerLocations.add(deploymentServerLocationElement.getText().trim());
+                Iterator deploymentServerUrlsItr = stageElement.getChildrenWithName(new QName(ProjectDeploymentConstants.PROJECT_DEPLOYMENT_CONFIG_SERVER_URL));
+                List<String> deploymentServerUrls = new ArrayList<String>();
+                while (deploymentServerUrlsItr.hasNext()) {
+                    OMElement deploymentServerUrlElement = (OMElement) deploymentServerUrlsItr.next();
+                    deploymentServerUrls.add(deploymentServerUrlElement.getText().trim());
                 }
-                configuration.addDeploymentServerLocations(stageName, deploymentServerLocations);
+                configuration.addDeploymentServerUrls(stageName, deploymentServerUrls);
             }
 
         }
@@ -63,8 +55,8 @@ public class ProjectDeploymentConfigBuilder {
 
     private static OMElement loadConfigXML() throws ProjectDeploymentExceptions {
 
-        String carbonHome = System.getProperty("carbon.config.dir.path");
-        String path = carbonHome + File.separator + ProjectDeploymentConstants.PROJECT_DEPLOYMENT_CONFIG_FILE_NAME;
+        String carbonConfigDir = System.getProperty("carbon.config.dir.path");
+        String path = carbonConfigDir + File.separator + ProjectDeploymentConstants.PROJECT_DEPLOYMENT_CONFIG_FILE_NAME;
 
         BufferedInputStream inputStream = null;
         try {

@@ -21,16 +21,22 @@ import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapterFa
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.svnkit.SvnKitClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.utils.Depth;
+import org.wso2.carbon.application.mgt.stub.upload.types.carbon.UploadedFileItem;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectDeploymentImpl implements ProjectDeployingService {
     private static final Log log = LogFactory.getLog(ProjectDeploymentImpl.class);
-    private static final String tempDirPath = "TEMP_DIR";
+    private static String tempDirPath = System.getProperty("java.io.tmpdir").endsWith(
+            File.separator) ? System.getProperty("java.io.tmpdir") + "checkOutCode" :
+                                        System.getProperty("java.io.tmpdir") + File.separator + "checkOutCode";
     private ISVNClientAdapter svnClient;
 
 
@@ -76,19 +82,19 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
     /**
      * Check out from given url
      *
-     * @param svnBaseUrl - base svn url location
-     * @param projectId  - svn project name, this name is used with base url to construct the svn path
+     * @param projectSvnUrl - project svn url location
+     * @param projectId     - svn project name, this name is used with base url to construct the svn path
      * @return project check out path.
      * @throws ProjectDeploymentExceptions
      */
-    private String checkoutProject(String svnBaseUrl, String projectId)
+    private String checkoutProject(String projectSvnUrl, String projectId)
             throws ProjectDeploymentExceptions {
-        File root = createProjectCheckoutDirectory(projectId);
+        File checkoutDirectory = createProjectCheckoutDirectory(projectId);
         initSVNClient();
 
         SVNUrl svnUrl = null;
         try {
-            svnUrl = new SVNUrl(svnBaseUrl + "/" + projectId);
+            svnUrl = new SVNUrl(projectSvnUrl);
         } catch (MalformedURLException e) {
             handleException("SVN URL of project is malformed.", e);
         }
@@ -96,15 +102,15 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
         try {
             if (svnClient instanceof CmdLineClientAdapter) {
                 // CmdLineClientAdapter does not support all the options
-                svnClient.checkout(svnUrl, root, SVNRevision.HEAD, true);
+                svnClient.checkout(svnUrl, checkoutDirectory, SVNRevision.HEAD, true);
             } else {
-                svnClient.checkout(svnUrl, root, SVNRevision.HEAD,
+                svnClient.checkout(svnUrl, checkoutDirectory, SVNRevision.HEAD,
                                    Depth.infinity, true, true);
             }
         } catch (SVNClientException e) {
             handleException("Failed to checkout code from SVN URL:" + svnUrl, e);
         }
-        return root.getAbsolutePath();
+        return checkoutDirectory.getAbsolutePath();
     }
 
     /**
@@ -151,27 +157,21 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
     }
 
 
-    public Artifact[] deployProject(String projectId, String artifactType,
+    public Artifact[] deployProject(String projectSvnUrl, String projectId, String artifactType,
                                     String stage) throws ProjectDeploymentExceptions {
         ProjectDeploymentConfiguration configuration = ProjectDeploymentConfigBuilder.createDeploymentConfiguration();
 
-        List<String> deploymentPaths = configuration.getDeploymentServerLocations(stage);
+        List<String> deploymentServerUrls = configuration.getDeploymentServerUrls(stage);
 
-        if (deploymentPaths.isEmpty()) {
+        if (deploymentServerUrls.isEmpty()) {
             handleException("No deployment paths are configured for stage:" + stage);
         }
 
-        if (configuration.getSvnBaseURL() == null) {
-            handleException("Base svn path is not configured.");
-        }
-
-        String checkoutPath = checkoutProject(configuration.getSvnBaseURL(), projectId);
+        String checkoutPath = checkoutProject(projectSvnUrl, projectId);
         try {
             buildProject(checkoutPath);
 
             File targetArtifacts = new File(checkoutPath + File.separator + "target");
-
-            createDeploymentDirs(deploymentPaths);
 
             String[] fileExtension = {artifactType.toLowerCase()};
             List<File> artifactFiles = (List<File>) FileUtils.listFiles(targetArtifacts, fileExtension, false);
@@ -180,13 +180,10 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
 
             for (File deployArtifact : artifactFiles) {
                 artifacts.add(new Artifact(deployArtifact.getName(), FileUtils.sizeOf(deployArtifact)));
-                for (String deploymentPath : deploymentPaths) {
-                    File deployDir = new File(deploymentPath);
-                    try {
-                        FileUtils.copyFileToDirectory(deployArtifact, deployDir);
-                    } catch (IOException e) {
-                        handleException("Failed to copy artifact:" + deployArtifact.getName() + " to deploy directory:" + deploymentPath);
-                    }
+
+                // upload artifact to given deployment servers
+                for (String deploymentServerUrl : deploymentServerUrls) {
+                    uploadArtifact(projectId, artifactType, deployArtifact, deploymentServerUrl);
                 }
             }
 
@@ -196,16 +193,37 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
         }
     }
 
-    private void createDeploymentDirs(List<String> paths) throws ProjectDeploymentExceptions {
-        for (String path : paths) {
-            File file = new File(path);
-            if (!file.exists()) {
-                if (!file.mkdirs()) {
-                    handleException("Failed to create directory structure:" + path + " to deploy artifacts");
-                }
+    private void uploadArtifact(String projectId, String artifactType, File deployArtifact,
+                                String deploymentServerUrl) throws ProjectDeploymentExceptions {
+        ArtifactUploadClient artifactUploadClient = new ArtifactUploadClient(deploymentServerUrl);
+
+        UploadedFileItem uploadedFileItem = new UploadedFileItem();
+
+        DataHandler dataHandler = new DataHandler(new FileDataSource(deployArtifact));
+        uploadedFileItem.setDataHandler(dataHandler);
+        uploadedFileItem.setFileName(deployArtifact.getName());
+        //Todo:file name need to be verified.
+        uploadedFileItem.setFileType("jar");
+
+        UploadedFileItem[] uploadedFileItems = {uploadedFileItem};
+
+        String remoteIp = null;
+        try {
+            URL deploymentURL = new URL(deploymentServerUrl);
+            remoteIp = deploymentURL.getHost();
+        } catch (MalformedURLException e) {
+            handleException("Deployment server url is malformed.");
+        }
+
+        try {
+            if (artifactUploadClient.authenticate(getAdminUsername(projectId), getAdminPassword(), remoteIp)) {
+                artifactUploadClient.uploadCarbonApp(uploadedFileItems);
             }
+        } catch (Exception e) {
+            handleException("Failed to upload the artifact:" + deployArtifact + " of project:" + projectId + " to deployment location:" + deploymentServerUrl);
         }
     }
+
 
     private boolean executeMavenGoal(String projectPath) throws ProjectDeploymentExceptions {
         if (System.getProperty("maven.home") == null) {
@@ -255,6 +273,17 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
         } catch (IOException ignore) {
             log.warn("Failed to clean up project at path:" + projectPath);
         }
+    }
+
+    private String getAdminUsername(String projectId) {
+        //Todo:get from configuration file
+//        return "admin@" + projectId;
+        return "admin";
+    }
+
+    private String getAdminPassword() {
+        //Todo:get from configuration file
+        return "admin";
     }
 
 }

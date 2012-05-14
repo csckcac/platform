@@ -1,28 +1,26 @@
 <!--this file should be copied to app server at repository/conf/ to be used in service.-->
 <ProjectDeploymentConfig xmlns:p="http://www.wso2.org/appFactory/artifactDeploymentConfig">
 
-    <!--Projects will be checkout out from this base svn repository location-->
-    <BaseSvnURL>https://svn.wso2.org/repos/wso2/carbon/platform/trunk</BaseSvnURL>
-
-    <!-- build artifacts will be copied to following locations based on the staging.
-    The deployment locations should be in service hosting server,
-    This will be improved to deploy artifacts in to other servers as well.-->
+    <!-- build artifacts will be uploaded to following locations based on the staging.-->
     <Stage name="Development">
-        <DeploymentServerLocation>
-            /home/manjula/servers/temp/wso2as-4.1.2/repository/deployment/server/webapps
-        </DeploymentServerLocation>
-        <DeploymentServerLocation>
-            /home/manjula/servers/temp/wso2as-4.1.2/repository/deployment/server/axis2services
-        </DeploymentServerLocation>
+        <DeploymentServerURL>
+            https://localhost:9443/services/
+        </DeploymentServerURL>
     </Stage>
     <Stage name="QA">
-        <DeploymentServerLocation>
-            /home/manjula/servers/temp/wso2as-4.1.2/repository/deployment/server
-        </DeploymentServerLocation>
+        <DeploymentServerURL>
+            https://localhost:9445/services/
+        </DeploymentServerURL>
+        <DeploymentServerURL>
+            https://localhost:9443/services/
+        </DeploymentServerURL>
     </Stage>
     <Stage name="LIVE">
-        <DeploymentServerLocation>
-            /home/manjula/servers/temp/wso2as-4.1.2/repository/deployment/server
-        </DeploymentServerLocation>
+        <DeploymentServerURL>
+            https://localhost:9445/services/
+        </DeploymentServerURL>
+        <DeploymentServerURL>
+            https://localhost:9443/services/
+        </DeploymentServerURL>
     </Stage>
 </ProjectDeploymentConfig>

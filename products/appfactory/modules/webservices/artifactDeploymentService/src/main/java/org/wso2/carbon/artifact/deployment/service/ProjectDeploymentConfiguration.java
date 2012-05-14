@@ -5,22 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 public class ProjectDeploymentConfiguration {
-    private String svnBaseURL;
-    private Map<String, List<String>> deploymentServerLocations = new HashMap<String, List<String>>();
+    private Map<String, List<String>> deploymentServerUrls = new HashMap<String, List<String>>();
 
-    public String getSvnBaseURL() {
-        return svnBaseURL;
+    public void addDeploymentServerUrls(String stage, List<String> locations) {
+        deploymentServerUrls.put(stage, locations);
     }
 
-    public void setSvnBaseURL(String svnBaseURL) {
-        this.svnBaseURL = svnBaseURL;
-    }
-
-    public void addDeploymentServerLocations(String stage, List<String> locations) {
-        deploymentServerLocations.put(stage, locations);
-    }
-
-    public List<String> getDeploymentServerLocations(String stage) {
-        return deploymentServerLocations.get(stage);
+    public List<String> getDeploymentServerUrls(String stage) {
+        return deploymentServerUrls.get(stage);
     }
 }

@@ -9,7 +9,7 @@ public interface ProjectDeployingService {
      * @return artifacts contains file name and size in bytes
      * @throws ProjectDeploymentExceptions
      */
-    Artifact[] deployProject(String projectId, String artifactType, String stage)
+    Artifact[] deployProject(String projectSvnUrl, String projectId, String artifactType, String stage)
             throws ProjectDeploymentExceptions;
 
 }

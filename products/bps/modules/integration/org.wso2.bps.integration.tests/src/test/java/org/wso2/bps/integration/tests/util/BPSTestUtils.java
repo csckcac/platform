@@ -23,7 +23,6 @@ package org.wso2.bps.integration.tests.util;
 import junit.framework.Assert;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
-import org.apache.axiom.om.impl.llom.util.XMLComparator;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.AxisFault;
@@ -35,12 +34,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.xml.stream.XMLStreamException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class BPSTestUtils {
@@ -296,4 +295,22 @@ public class BPSTestUtils {
     public static String convertStreamToString(InputStream is) {
         return new Scanner(is).useDelimiter("\\A").next();
     }
+
+    /**
+     *  Get the BPS Sample folder location relative to the extracted BPS Distribution
+     * @return
+     */
+    public static String getBpelSampleLocation(String carbonHome){
+        String bpsSampleLoc = carbonHome + File.separator + "repository" + File.separator + "samples" +
+                File.separator  + "bpel" + File.separator;
+
+        return bpsSampleLoc;
+    }
+
+    public static String getHumanTaskSampleLocation(String carbonHome){
+        String bpsSampleLoc = carbonHome + File.separator + "repository" + File.separator + "samples" +
+                File.separator  + "humantask" + File.separator;
+        return bpsSampleLoc;
+    }
+
 }

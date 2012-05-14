@@ -75,7 +75,7 @@ public class BPSSecurityServerManager extends TestServerManager {
 
     private void copySampleProcess(String carbonHome, String packageName) throws IOException {
         //copy + deploy sample process
-        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.BPEL_SAMPLE_LOCATION,
+        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.getBpelSampleLocation(carbonHome),
                                                           packageName, "zip");
         File bpelRepo = new File(carbonHome + File.separator + "repository" + File.separator +
                                  "deployment" + File.separator +

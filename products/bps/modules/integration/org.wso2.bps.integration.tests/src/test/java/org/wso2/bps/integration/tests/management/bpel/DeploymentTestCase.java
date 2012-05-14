@@ -99,10 +99,10 @@ public class DeploymentTestCase {
         SERVICE_URL_PREFIX = "https://" + FrameworkSettings.HOST_NAME + ":" +
                              FrameworkSettings.HTTPS_PORT + "/services/";
 
-        if (System.getProperty("bps.sample.location") == null) {
-            log.info("System property: bps.sample.location cannot be null");
-            fail("System property: bps.sample.location cannot be null");
-        }
+//        if (System.getProperty("bps.sample.location") == null) {
+//            log.info("System property: bps.sample.location cannot be null");
+//            fail("System property: bps.sample.location cannot be null");
+//        }
 
 
         deployPackage("HelloWorld2", "HelloService", bpelUploaderStub);
@@ -121,8 +121,9 @@ public class DeploymentTestCase {
                                BPELUploaderStub bpelUploaderStub)
             throws RemoteException, InterruptedException, MalformedURLException {
 
+        String carbonHome = System.getProperty("carbon.home");
         String sampleArchiveName = packageName + ".zip";
-        File bpelZipArchive = new File(BPSTestUtils.BPEL_SAMPLE_LOCATION + sampleArchiveName);
+        File bpelZipArchive = new File(BPSTestUtils.getBpelSampleLocation(carbonHome) + sampleArchiveName);
         UploadedFileItem[] uploadedFileItems = new UploadedFileItem[1];
         uploadedFileItems[0] = getUploadedFileItem(new DataHandler(bpelZipArchive.toURI().toURL()),
                                                    sampleArchiveName,

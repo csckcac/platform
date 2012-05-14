@@ -68,7 +68,7 @@ public class BPSCleanupServerManager extends TestServerManager {
         FileManipulator.copyFileToDir(bpsConfig, configDir);
 
         //copy + deploy sample process
-        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.BPEL_SAMPLE_LOCATION,
+        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.getBpelSampleLocation(carbonHome),
                                                           "HelloWorld2", "zip");
         File bpelRepo = new File(carbonHome + File.separator + "repository" + File.separator +
                                  "deployment" + File.separator +

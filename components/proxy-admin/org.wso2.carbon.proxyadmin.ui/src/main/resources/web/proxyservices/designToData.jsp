@@ -147,6 +147,10 @@
         if (anonInXML != null && !"".equals(anonInXML) && !bundle.getString("anon.add").equals(request.getParameter("anonInAction"))) {
             anonInXML = anonInXML.replaceAll("&gt", ">");
             anonInXML = anonInXML.replaceAll("&lt", "<");
+
+            anonInXML = anonInXML.replaceAll(">;", "&gt;");
+            anonInXML = anonInXML.replaceAll("<;", "&lt;");
+
             pd.setInSeqXML(anonInXML);
             pd.setInSeqKey(null);
             // removes session attribute after using it

@@ -4,10 +4,12 @@ import com.amazonaws.services.ec2.model.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.autoscaler.service.IAutoscalerService;
-import org.wso2.carbon.autoscaler.service.internal.AutoscalerServiceDSHolder;
+import org.wso2.carbon.autoscaler.service.impl.AutoscalerServiceImpl;
+//import org.wso2.carbon.autoscaler.service.internal.AutoscalerServiceDSHolder;
 import org.wso2.carbon.lb.common.ec2.EC2InstanceManager;
 import org.wso2.carbon.lb.common.ec2.EC2Util;
 import org.wso2.carbon.lb.common.conf.EC2Configuration;
+import org.wso2.carbon.lb.common.persistence.AgentPersistenceManager;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
@@ -37,13 +39,18 @@ public class EC2Adapter extends Adapter {
     // instanceIdToEC2IdMap will keep a map between started instance Id and EC2 generated ID
     private Map<String, String> instanceIdToEC2IdMap = new HashMap<String, String>();
 
-    private IAutoscalerService autoscalerService = AutoscalerServiceDSHolder.getInstance().getAutoscalerService();
+    //private IAutoscalerService autoscalerService = AutoscalerServiceDSHolder.getInstance().getAutoscalerService();
+    private IAutoscalerService autoscalerService ;
+
+    // Use AgentPersistenceManager to persist  EC2 instance Id related details
+    //AgentPersistenceManager agentPersistenceManager = AgentPersistenceManager.getPersistenceManager();
 
     /**
      * Default constructor which creates EC2 Configuration and EC2 Instance Manager
      */
-    public EC2Adapter(){
+    public EC2Adapter(AutoscalerServiceImpl autoscalerService1){
         log.info("Constructing EC2 Adapter...");
+        autoscalerService = autoscalerService1;
 
         // Create ec2Configuration from given file
 
@@ -69,7 +76,7 @@ public class EC2Adapter extends Adapter {
 
     @Override
     public boolean spawnInstance(final String domainName, String instanceId) throws ClassNotFoundException, SQLException {
-
+        log.info("--------------------------------------------");
         log.info("Trying to spawn instance in EC2 Adapter");
 
         EC2Configuration.ServiceConfiguration serviceConfig = ec2Configuration.getServiceConfig(domainName);
@@ -91,9 +98,12 @@ public class EC2Adapter extends Adapter {
                     public void run() {
                         try {
                             log.info("Starting a new Thread to handle pending instance count");
+
+                            // TODO : Need better way to detect server startup rather than waiting for constant time
                             try {
-                                log.info("Thread Sleeping for 4 minutes...");
-                                Thread.sleep(240000);
+                                log.info("Waiting 8 minutes to complete the EC2 Instance startup...");
+                                //Thread.sleep(240000);
+                                Thread.sleep(480000);
                             } catch (InterruptedException e) {
                                 log.error("InterruptedException while waiting for new instance startup", e);
                             }
@@ -101,8 +111,15 @@ public class EC2Adapter extends Adapter {
                             // Reducing the pending instance count by one in AutoscalerService
                             // Here we assumes that the server instance is successfully started
 
-                            log.info("Sleeep finished and decrementing pending count");
+                            log.info("Waiting completed and reducing pending instance count by one");
+
+                            log.debug("Pending count before reducing the pending count: " +
+                                    autoscalerService.getPendingInstanceCount(domainName));
+
                             autoscalerService.addPendingInstanceCount(domainName, -1);
+
+                            log.debug("Pending count after reducing the pending count: " +
+                                    autoscalerService.getPendingInstanceCount(domainName));
 
                         } catch (Exception e) {
                             log.error("Error occurred inside pending instance count management Thread ", e);

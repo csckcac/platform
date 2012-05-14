@@ -89,6 +89,10 @@ public class AdminServiceBpelPackageManager {
             DeployedPackagesPaginated deployedPackages = bpelPackageManagementServiceStub.
                     listDeployedPackagesPaginated(page);
             packageDeployed = false;
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+            }
             for (Package_type0 bpelPackage : deployedPackages.get_package()) {
                 if (bpelPackage.getName().equals(packageName)) {
                     System.out.println(packageName + " has deployed successfully");

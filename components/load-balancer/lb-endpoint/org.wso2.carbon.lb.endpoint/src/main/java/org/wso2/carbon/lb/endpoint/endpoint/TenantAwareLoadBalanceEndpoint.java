@@ -67,7 +67,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             String configURL = System.getProperty("loadbalancer.conf");
             lbConfig = new LoadBalancerConfiguration();
             lbConfig.init(configURL);
-            hostDomainMap = lbConfig.loadHostDomainMap();
+            hostDomainMap = lbConfig.getHostDomainMap();
 
         } catch (Exception e) {
             log.error("Error While reading Load Balancer configuration file" + e.toString());

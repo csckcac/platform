@@ -132,7 +132,7 @@ class DependencyGraph {
     public ConfigurationObject find(int type, String Id) {
         for (ConfigurationObject o : vertices) {
 			if (o.getId() !=null) {   //default type doesnt have ID
-				if (o.getType() == type && o.getId().equals(Id)) {
+				if (o.getType() == type && o.getId() != null && o.getId().equals(Id)) {
 					return o;
 				}
 			}

@@ -27,6 +27,14 @@ public class HiveConstants {
     public static final String HIVE_URL_KEY = "url";
     public static final String HIVE_USERNAME_KEY = "username";
     public static final String HIVE_PASSWORD_KEY = "password";
-    
+    public static final String HIVE_SCRIPT_NAME = "scriptName";
+    public static final String SCRIPT_TRIGGER_CRON = "cron";
+    public static final String DEFAULT_TRIGGER_CRON = "1 * * * * ? *";
+
+    public static final String TENANT_TRACKER_PATH = "/repository/hive/tenants";
+    public static final String TENANTS_PROPERTY = "Tenants";
+
+    public static final String HIVE_DEFAULT_TASK_CLASS = "org.wso2.carbon.analytics.hive.task.HiveScriptExecutorTask";
+    public static final String HIVE_TASK = "HIVE_TASK";
 
 }

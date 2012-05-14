@@ -16,36 +16,49 @@
 
 package org.wso2.carbon.analytics.hive.persistence;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.hive.HiveConstants;
 import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.exception.HiveScriptStoreException;
+import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class HiveScriptPersistenceManager {
 
     private static final Log log = LogFactory.getLog(HiveScriptPersistenceManager.class);
 
+    private static HiveScriptPersistenceManager instance = new HiveScriptPersistenceManager();
+
     private HiveScriptPersistenceManager() {
 
     }
 
-    public static String retrieveScript(String scriptName) throws HiveScriptStoreException {
+    public static HiveScriptPersistenceManager getInstance() {
+        return instance;
+    }
+
+    public String retrieveScript(String scriptName) throws HiveScriptStoreException {
         Registry registry;
         Resource resource;
         InputStream scriptStream = null;
-        String script = "";
+        String script;
         try {
             registry = ServiceHolder.getRegistryService().getConfigSystemRegistry();
         } catch (RegistryException e) {
@@ -77,20 +90,39 @@ public class HiveScriptPersistenceManager {
         }
     }
 
-    public static void saveScript(String scriptName, String scriptContent) throws HiveScriptStoreException {
-        Registry registry = null;
+    public void saveScript(String scriptName, String scriptContent)
+            throws HiveScriptStoreException {
+        int tenantId = CarbonContext.getCurrentContext().getTenantId();
+        UserRegistry configSystemRegistry;
         try {
-            registry = ServiceHolder.getRegistryService().getConfigSystemRegistry();
-            Resource resource = registry.newResource();
+            configSystemRegistry = ServiceHolder.getRegistryService().
+                    getConfigSystemRegistry(tenantId);
+            Resource resource = configSystemRegistry.newResource();
             resource.setContent(scriptContent);
-            registry.put(HiveConstants.HIVE_SCRIPT_BASE_PATH + scriptName + HiveConstants.HIVE_SCRIPT_EXT, resource);
+            resource.setProperty(HiveConstants.HIVE_SCRIPT_NAME, scriptName);
+            resource.setProperty(HiveConstants.SCRIPT_TRIGGER_CRON,
+                                 HiveConstants.DEFAULT_TRIGGER_CRON);
+            resource.setMediaType("text/plain");
+            configSystemRegistry.put(HiveConstants.HIVE_SCRIPT_BASE_PATH + scriptName +
+                                     HiveConstants.HIVE_SCRIPT_EXT, resource);
+
         } catch (RegistryException e) {
             throw new HiveScriptStoreException("Failed to get registry", e);
+        }
+
+        try {
+            updateTenantTracker(tenantId);
+        } catch (RegistryException e) {
+            log.error("Unable to store tenant information for the script : " + scriptName +
+                      ". May not be rescheduled at startup due to this..", e);
+            throw new HiveScriptStoreException("Unable to store tenant information for the script" +
+                                               " : " + scriptName + ". May not be rescheduled at" +
+                                               " startup due to this..", e);
         }
     }
 
 
-    public static String[] getAllHiveScriptNames() throws HiveScriptStoreException {
+    public String[] getAllHiveScriptNames() throws HiveScriptStoreException {
         Resource resource;
         ArrayList<String> scriptNames = null;
         try {
@@ -119,7 +151,7 @@ public class HiveScriptPersistenceManager {
             throw new HiveScriptStoreException("Error occurred getting all the script names", e);
         }
         String[] nameArray = new String[0];
-        if(scriptNames != null && scriptNames.size()>0){
+        if (scriptNames != null && scriptNames.size() > 0) {
             nameArray = new String[scriptNames.size()];
             nameArray = scriptNames.toArray(nameArray);
         }
@@ -127,20 +159,80 @@ public class HiveScriptPersistenceManager {
     }
 
 
-    public static void deleteScript(String scriptName) throws HiveScriptStoreException {
+    public void deleteScript(String scriptName) throws HiveScriptStoreException {
         try {
-                  Registry registry = ServiceHolder.getRegistryService().getConfigSystemRegistry();
-                   if (registry.resourceExists(HiveConstants.HIVE_SCRIPT_BASE_PATH)) {
-                       registry.delete(HiveConstants.HIVE_SCRIPT_BASE_PATH + scriptName + HiveConstants.HIVE_SCRIPT_EXT);
-                   } else {
-                       if (log.isDebugEnabled()) {
-                           log.info("no any script called " + scriptName + " , to delete");
-                       }
-                   }
-               } catch (RegistryException e) {
-                   throw new HiveScriptStoreException("Error occurred deleting the script : "+ scriptName, e);
-               }
+            Registry registry = ServiceHolder.getRegistryService().getConfigSystemRegistry();
+            if (registry.resourceExists(HiveConstants.HIVE_SCRIPT_BASE_PATH)) {
+                registry.delete(HiveConstants.HIVE_SCRIPT_BASE_PATH + scriptName + HiveConstants.HIVE_SCRIPT_EXT);
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.info("no any script called " + scriptName + " , to delete");
+                }
+            }
+        } catch (RegistryException e) {
+            throw new HiveScriptStoreException("Error occurred deleting the script : " + scriptName, e);
+        }
 
+
+    }
+
+    private void updateTenantTracker(int tenantId) throws RegistryException {
+        ConfigurationContext superTenantContext = ServiceHolder.getConfigurationContextService().
+                getServerConfigContext();
+        UserRegistry superTenantRegistry = ServiceHolder.getRegistryService().
+                getConfigSystemRegistry(SuperTenantCarbonContext.
+                        getCurrentContext(superTenantContext).getTenantId());
+
+        checkAndSetTenantId(superTenantRegistry, tenantId);
+
+    }
+
+    private synchronized void checkAndSetTenantId(UserRegistry superTenantRegistry, int tenantId)
+            throws RegistryException {
+
+        String trackerPath = HiveConstants.TENANT_TRACKER_PATH;
+
+        Resource tenantTrackerResource;
+        if (superTenantRegistry.resourceExists(trackerPath)) {
+            tenantTrackerResource = superTenantRegistry.get(trackerPath);
+            List<String> propertyValues = tenantTrackerResource.getPropertyValues(
+                    HiveConstants.TENANTS_PROPERTY);
+            if (propertyValues == null) {
+                propertyValues = new ArrayList<String>();
+            }
+            propertyValues.add(String.valueOf(tenantId));
+            //propertyValues.add("1");
+
+            // Make sure that there is no duplication of tenant id's
+            Set<String> uniqueProperties = new HashSet<String>();
+            uniqueProperties.addAll(propertyValues);
+
+            propertyValues.clear();
+            for (String id : uniqueProperties) {
+                propertyValues.add(id);
+            }
+
+            tenantTrackerResource.setProperty(HiveConstants.TENANTS_PROPERTY,
+                                              propertyValues);
+        } else {
+            tenantTrackerResource = superTenantRegistry.newResource();
+            List<String> propertyValues = new ArrayList<String>();
+            propertyValues.add(String.valueOf(tenantId));
+
+            // Make sure that there is no duplication of tenant id's
+            Set<String> uniqueProperties = new HashSet<String>();
+            uniqueProperties.addAll(propertyValues);
+
+            propertyValues.clear();
+            for (String id : uniqueProperties) {
+                propertyValues.add(id);
+            }
+
+            tenantTrackerResource.setProperty(HiveConstants.TENANTS_PROPERTY,
+                                              propertyValues);
+        }
+
+        superTenantRegistry.put(trackerPath, tenantTrackerResource);
 
     }
 }

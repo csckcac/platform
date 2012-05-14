@@ -28,13 +28,18 @@ import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.analytics.hive.HiveConstants;
 import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.impl.HiveExecutorServiceImpl;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
+import org.wso2.carbon.ntask.common.TaskException;
+import org.wso2.carbon.ntask.core.TaskManager;
+import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.ConfigurationContextService;
 
 import java.util.Map;
 import java.util.Properties;
@@ -45,6 +50,11 @@ import java.util.concurrent.Executors;
  * @scr.component name="bam.hive.component" immediate="true"
  * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
+ * @scr.reference name="config.context.service"
+ * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="0..1" policy="dynamic"
+ * bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
+ * @scr.reference name="ntask.component" interface="org.wso2.carbon.ntask.core.service.TaskService"
+ * cardinality="1..1" policy="dynamic" bind="setTaskService" unbind="unsetTaskService"
  */
 
 public class HiveServiceComponent {
@@ -81,6 +91,18 @@ public class HiveServiceComponent {
                 null);
         HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
         connectionManager.loadHiveConnectionConfiguration(ctx.getBundleContext());
+
+        TaskService taskService = ServiceHolder.getTaskService();
+
+        try {
+            taskService.registerTaskType(HiveConstants.HIVE_TASK);
+            TaskManager taskManager =
+                    taskService.getTaskManager(HiveConstants.HIVE_TASK);
+            ServiceHolder.setTaskManager(taskManager);
+        } catch (TaskException e) {
+            log.error("Error while initializing TaskManager. Script scheduling may not" +
+                      " work properly..", e);
+        }
     }
 
     protected void deactivate(ComponentContext ctxt) {
@@ -98,6 +120,22 @@ public class HiveServiceComponent {
 
     protected void unsetRegistryService(RegistryService registryService) {
         ServiceHolder.setRegistryService(null);
+    }
+
+    protected void setTaskService(TaskService taskService) throws RegistryException {
+        ServiceHolder.setTaskService(taskService);
+    }
+
+    protected void unsetTaskService(TaskService taskService) {
+        ServiceHolder.setTaskService(null);
+    }
+
+    protected void setConfigurationContextService(ConfigurationContextService contextService) {
+        ServiceHolder.setConfigurationContextService(contextService);
+    }
+
+    protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
+        ServiceHolder.setConfigurationContextService(null);
     }
 
     public class HiveRunnable implements Runnable {
@@ -145,8 +183,8 @@ public class HiveServiceComponent {
                 TServer server = new TThreadPoolServer(sargs);
 
                 String msg = "Starting hive server on port " + cli.port
-                        + " with " + cli.minWorkerThreads + " min worker threads and "
-                        + cli.maxWorkerThreads + " max worker threads";
+                             + " with " + cli.minWorkerThreads + " min worker threads and "
+                             + cli.maxWorkerThreads + " max worker threads";
 
                 HiveServer.HiveServerHandler.LOG.info(msg);
 

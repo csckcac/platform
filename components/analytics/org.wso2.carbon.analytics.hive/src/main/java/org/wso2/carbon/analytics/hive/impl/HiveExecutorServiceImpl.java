@@ -32,12 +32,17 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
     private static final Log log = LogFactory.getLog(HiveExecutorServiceImpl.class);
 
+    private boolean initialized;
+
     public void initialize(String driverName) {
         try {
             Class.forName(driverName);
         } catch (ClassNotFoundException e) {
             log.error("Error during initialization of Hive driver", e);
         }
+
+        this.initialized = true;
+
     }
 
     /**
@@ -49,12 +54,17 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
         if (script != null) {
             Connection con = null;
             HiveConnectionManager confManager = HiveConnectionManager.getInstance();
-            initialize(confManager.getConfValue(HiveConstants.HIVE_DRIVER_KEY));
+
+            if (!initialized) {
+                initialize(confManager.getConfValue(HiveConstants.HIVE_DRIVER_KEY));
+            }
+
             try {
-                con = DriverManager.getConnection(confManager.getConfValue(HiveConstants.HIVE_URL_KEY),
-                        confManager.getConfValue(HiveConstants.HIVE_USERNAME_KEY),
-                        confManager.getConfValue(HiveConstants.HIVE_PASSWORD_KEY));
-                Statement stmt = con.createStatement();
+                con = DriverManager.getConnection(confManager.
+                        getConfValue(HiveConstants.HIVE_URL_KEY), confManager.
+                        getConfValue(HiveConstants.HIVE_USERNAME_KEY), confManager.
+                        getConfValue(HiveConstants.HIVE_PASSWORD_KEY));
+                Statement stmt = con.createStatement(); // TODO: Use datasource
 
                 String[] cmdLines = script.split(";\\r?\\n|;\\r"); // Tokenize with ;[new-line]
 
@@ -85,8 +95,11 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                             List<String> columnValues = new ArrayList<String>();
                             for (int i = 1; i <= columnCount; i++) {
                                 Object resObj = rs.getObject(i);
-                                if (null != resObj) columnValues.add(rs.getObject(i).toString());
-                                else columnValues.add("");
+                                if (null != resObj) {
+                                    columnValues.add(rs.getObject(i).toString());
+                                } else {
+                                    columnValues.add("");
+                                }
                             }
 
                             resultRow.setColumnValues(columnValues.toArray(new String[]{}));
@@ -106,9 +119,11 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
             } catch (SQLException e) {
                 throw new HiveExecutionException("Error while executing Hive script..", e);
             } finally {
-                if (null != con) try {
-                    con.close();
-                } catch (SQLException e) {
+                if (null != con) {
+                    try {
+                        con.close();
+                    } catch (SQLException e) {
+                    }
                 }
             }
 
@@ -119,13 +134,14 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
     }
 
     @Override
-    public boolean setConnectionParameters(String driverName, String url, String username, String password) {
+    public boolean setConnectionParameters(String driverName, String url, String username,
+                                           String password) {
         Connection con = null;
         try {
             Class.forName(driverName);
             con = DriverManager.getConnection(url, username, password);
             HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
-            connectionManager.saveConfiguration(driverName, url, username,password);
+            connectionManager.saveConfiguration(driverName, url, username, password);
         } catch (ClassNotFoundException e) {
             log.error("Error during initialization of Hive driver", e);
         } catch (SQLException e) {

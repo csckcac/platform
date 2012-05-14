@@ -323,9 +323,9 @@ public class ApiMgtDAO {
         }
         APIKeyValidationInfoDTO keyValidationInfoDTO = new APIKeyValidationInfoDTO();
         String status;
-        //Timestamp timestamp;
-        //Long validityPeriod;
         String tier;
+        String type;
+        
         // First check whether the token is valid, active and not expired.
         Connection conn = null;
         PreparedStatement ps = null;
@@ -362,6 +362,7 @@ public class ApiMgtDAO {
                 //validityPeriod = rs.getLong(APIConstants.IDENTITY_OAUTH2_FIELD_VALIDITY_PERIOD);
                 status = rs.getString(APIConstants.IDENTITY_OAUTH2_FIELD_TOKEN_STATE);
                 tier = rs.getString(APIConstants.SUBSCRIPTION_FIELD_TIER_ID);
+                type = rs.getString(APIConstants.SUBSCRIPTION_KEY_TYPE);
             } else { // invalid token.
                 if (log.isDebugEnabled()) {
                     log.debug("Invalid Access Token is provided : " + accessToken);
@@ -378,6 +379,7 @@ public class ApiMgtDAO {
                 }
                 keyValidationInfoDTO.setAuthorized(true);
                 keyValidationInfoDTO.setTier(tier);
+                keyValidationInfoDTO.setType(type);
                 return keyValidationInfoDTO;
             }
 

@@ -25,6 +25,7 @@ public class AuthenticationContext {
     private boolean authenticated;
     private String tier;
     private String apiKey;
+    private String keyType;
 
     public boolean isAuthenticated() {
         return authenticated;
@@ -48,5 +49,13 @@ public class AuthenticationContext {
     
     public void setTier(String tier) {
         this.tier = tier;
+    }
+
+    public String getKeyType() {
+        return keyType;
+    }
+
+    public void setKeyType(String keyType) {
+        this.keyType = keyType;
     }
 }

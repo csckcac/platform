@@ -17,7 +17,7 @@
  -->
 <resource xmlns="http://ws.apache.org/ns/synapse" url-mapping="[1]" methods="[2]">
     <inSequence>
-        <filter xpath="$ctx:AM_PRODUCTION_KEY">
+        <filter source="$ctx:AM_KEY_TYPE" regex="PRODUCTION">
             <then>
                 <send>
                     <endpoint name="[4]_APIEndpoint_[5]">

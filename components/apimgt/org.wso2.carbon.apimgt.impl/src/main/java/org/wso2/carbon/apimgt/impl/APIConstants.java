@@ -89,6 +89,8 @@ public final class APIConstants {
     public static final String SUBSCRIPTION_FIELD_ACCESS_TOKEN = "ACCESS_TOKEN";
     public static final String SUBSCRIPTION_FIELD_LAST_ACCESS = "LAST_ACCESSED";
 
+    public static final String SUBSCRIPTION_KEY_TYPE = "KEY_TYPE";
+
     //IDENTITY OAUTH2 table
     public static final String IDENTITY_OAUTH2_FIELD_TOKEN_STATE="TOKEN_STATE";
 
@@ -134,5 +136,7 @@ public final class APIConstants {
     public static final String API_KEY_MANAGER_URL = API_KEY_MANAGER + "ServerURL";
     public static final String API_KEY_MANAGER_USERNAME = API_KEY_MANAGER + "Username";
     public static final String API_KEY_MANAGER_PASSWORD = API_KEY_MANAGER + "Password";
+    
+    public static final String API_KEY_TYPE = "AM_KEY_TYPE";
 
 }

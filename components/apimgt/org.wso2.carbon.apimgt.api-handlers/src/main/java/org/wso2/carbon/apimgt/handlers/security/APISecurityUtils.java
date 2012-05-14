@@ -17,6 +17,7 @@
 package org.wso2.carbon.apimgt.handlers.security;
 
 import org.apache.synapse.MessageContext;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 
 public class APISecurityUtils {
     
@@ -37,6 +38,7 @@ public class APISecurityUtils {
             throw new IllegalStateException("Attempting to override existing AuthenticationContext");
         }
         synCtx.setProperty(API_AUTH_CONTEXT, authContext);
+        synCtx.setProperty(APIConstants.API_KEY_TYPE, authContext.getKeyType());
     }
 
     /**

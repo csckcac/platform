@@ -114,7 +114,7 @@ public class APIStoreHostObject extends ScriptableObject {
         apiInfo.setVersion((String) args[2]);
         apiInfo.setContext((String) args[3]);
         try {
-            return keyMgtClient.getAccessKey((String) args[5], apiInfo, (String) args[4]);
+            return keyMgtClient.getAccessKey((String) args[5], apiInfo, (String) args[4], "PRODUCTION");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);

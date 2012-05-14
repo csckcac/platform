@@ -25,6 +25,7 @@ public class APIKeyValidationInfoDTO {
 
     private boolean authorized;
     private String tier;
+    private String type;
 
     public boolean isAuthorized() {
         return authorized;
@@ -40,6 +41,14 @@ public class APIKeyValidationInfoDTO {
 
     public void setTier(String tier) {
         this.tier = tier;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
 

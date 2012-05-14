@@ -40,13 +40,15 @@ public class APIKeyMgtSubscriberService extends AbstractAdmin {
      * @param apiInfoDTO Information about the API to which the Access token will be issued.
      *                   Provider name, API name and the version should be provided to uniquely identify
      *                   an API.
+     * @param tokenType Type (scope) of the required access token
      * @return  Access Token
      * @throws APIKeyMgtException Error when getting the AccessToken from the underlying token store.
      */
-    public String getAccessToken(String userId, APIInfoDTO apiInfoDTO,String applicationName) throws APIKeyMgtException,
+    public String getAccessToken(String userId, APIInfoDTO apiInfoDTO, 
+                                 String applicationName, String tokenType) throws APIKeyMgtException,
             APIManagementException, IdentityException {
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
-        String accessToken = apiMgtDAO.getAccessKeyForAPI(userId, applicationName, apiInfoDTO, "PRODUCTION");
+        String accessToken = apiMgtDAO.getAccessKeyForAPI(userId, applicationName, apiInfoDTO, tokenType);
         if(accessToken == null){
             //get the tenant id for the corresponding domain
             String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(userId);
@@ -55,7 +57,7 @@ public class APIKeyMgtSubscriberService extends AbstractAdmin {
             String[] credentials = apiMgtDAO.addOAuthConsumer(tenantAwareUserId, tenantId);
 
             accessToken = apiMgtDAO.registerAccessToken(credentials[0],applicationName,
-                    tenantAwareUserId, tenantId, apiInfoDTO, "PRODUCTION");
+                    tenantAwareUserId, tenantId, apiInfoDTO, tokenType);
         }
         return accessToken;
     }

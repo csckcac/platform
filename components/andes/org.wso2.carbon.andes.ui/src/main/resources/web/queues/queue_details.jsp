@@ -27,12 +27,14 @@
         if (pageNumberAsStr != null) {
             pageNumber = Integer.parseInt(pageNumberAsStr);
         }
-        int numberOfPages;
+        int numberOfPages =1;
 
 
         try {
-            totalQueueCount = queueList.length;
-            numberOfPages =  (int) Math.ceil(((float) totalQueueCount) / queueCountPerPage);
+            if (queueList != null) {
+                totalQueueCount = queueList.length;
+                numberOfPages =  (int) Math.ceil(((float) totalQueueCount) / queueCountPerPage);
+            }
         } catch (Exception e) {
             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
             e.printStackTrace();
@@ -111,67 +113,23 @@
                 <thead>
                 <tr>
                     <th><fmt:message key="queue.name"/></th>
-                    <th><fmt:message key="queue.depth"/></th>
                     <th><fmt:message key="queue.messageCount"/></th>
-                    <th><fmt:message key="queue.created"/></th>
-                    <th><fmt:message key="queue.updated"/></th>
-                    <th><fmt:message key="queue.type"/></th>
-                    <th colspan="2"><fmt:message key="queue.worker"/></th>
                 </tr>
                 </thead>
                 <tbody>
                 <%
                     if (queueList != null) {
-                        int index = 0;
                         for (Queue queue : queueList) {
-                            String queueName = queue.getQueueName();
-                            long queueSize = queue.getQueueDepth();
-                            String queueSizeWithPostFix;
-                            if (queueSize > 1000000000) {
-                                queueSizeWithPostFix = Long.toString(queueSize / 1000000000) + " GB";
-                            } else if (queueSize > 1000000) {
-                                queueSizeWithPostFix = Long.toString(queueSize / 1000000) + " MB";
-                            } else if (queueSize > 1000) {
-                                queueSizeWithPostFix = Long.toString(queueSize / 1000) + " KB";
-                            } else {
-                                queueSizeWithPostFix = Long.toString(queueSize) + " bytes";
-                            }
                 %>
                 <tr>
                     <td>
-                    <%=queueName%>
-                    </td>
-                    <td><%=queueSizeWithPostFix%>
+                    <%=queue.getQueueName()%>
                     </td>
                     <td><%=queue.getMessageCount()%>
-                    </td>
-                    <td><%=queue.getCreatedTime().getTime().toString()%>
-                    </td>
-                    <td><%=queue.getUpdatedTime().getTime().toString()%>
-                    </td>
-                    <td>
-                        <%
-                            if (Constants.MB_QUEUE_CREATED_FROM_SQS_CLIENT.equals(queue.getCreatedFrom())) {
-                        %>
-                        <img src="images/queue_type_sqs.gif" alt="">
-
-                        <%
-                        } else if (Constants.MB_QUEUE_CREATED_FROM_AMQP.equals(queue.getCreatedFrom())) {
-                        %>
-                        <img src="images/queue_type_amqp.gif" alt="">
-                        <%
-                            }
-                        %>
-                    </td>
-                    <td>
-                        <a style="background-image: url(images/move.gif);"
-                        class="icon-link" onclick="updateWorkerLocationForQueue('<%=queueName%>','<%=index%>','<%=Constants.SUCCESS%>')"></a>
                     </td>
                 </tr>
                 <%
                         }
-
-                        index++;
                     }
                 %>
                 </tbody>

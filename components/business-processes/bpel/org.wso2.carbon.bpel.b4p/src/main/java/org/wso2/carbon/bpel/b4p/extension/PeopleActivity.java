@@ -88,6 +88,8 @@ public class PeopleActivity {
     private QName callbackServiceName;
     private Definition hiWSDL;
 
+    private AttachmentPropagation attachmentPropagation;
+
 
     private static final long serialVersionUID = -89894857418738012L;
 
@@ -179,63 +181,41 @@ public class PeopleActivity {
 //        return partnerLinkName;
 //    }
 
-    private void init(ExtensionContext extensionContext, Element element) throws FaultException {
-        if (!element.getLocalName().equals("peopleActivity") || !element.getNamespaceURI().equals(BPEL4PeopleConstants.B4P_NAMESPACE)) {
-            throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE, "no peopleActivity found"));
-        }
+    /**
+     * Parse a localTask node and extract the information
+     *
+     * @param localTaskNode Node reference of the localTask
+     */
+    private void parseLocalTask(Node localTaskNode) {
+        activityType = InteractionType.NOTIFICATION;
+        String warnMsg = localTaskNode.getLocalName() + " is not supported yet!";
+        log.warn(warnMsg);
+        throw new RuntimeException(warnMsg);
+    }
 
-        name = element.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_NAME);
-        inputVarName = element.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_INPUT_VARIABLE);
-        outputVarName = element.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_OUTPUT_VARIABLE);
-        isSkipable = "yes".equalsIgnoreCase(
-                element.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_IS_SKIPABLE));
+    /**
+     * Parse a localNotification node and extract the information
+     *
+     * @param localNotificationNode Node reference of the localNotification
+     */
+    private void parseLocalNotification(Node localNotificationNode) {
+        activityType = InteractionType.NOTIFICATION;
+        String warnMsg = localNotificationNode.getLocalName() + " is not supported yet!";
+        log.warn(warnMsg);
+        throw new RuntimeException(warnMsg);
+    }
 
-        NodeList taskList = element.getChildNodes();
-
-        Node task = null;
-        int elementNodeCount = 0;
-        for (int i = 0; i < taskList.getLength(); i++) {
-            if (taskList.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                elementNodeCount++;
-                if (elementNodeCount > 1) {
-                    break;
-                }
-                task = taskList.item(i);
-            }
-        }
-
-        if (elementNodeCount != 1 || task == null) {
-            log.error("Invalid peopleActivity definition");
-            throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE, "Invalid peopleActivity definition"));
-        }
-
-        /*TODO this only checks for b4p namespace, we need to check for <htd:task>...</htd:task> and
-         <htd:notification>...</htd:notification> which r in ht namespace*/
-        if (!task.getNamespaceURI().equals(BPEL4PeopleConstants.B4P_NAMESPACE)) {
-            throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
-                    "Invalid namespace uri for the task. " +
-                            "The valid namespace: " + BPEL4PeopleConstants.B4P_NAMESPACE));
-        }
-        //TODO is it required to read through the element per task type? cant we jst do it once? what about null elements 
-        if (task.getLocalName().equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_REMOTE_TASK)) {
-            activityType = InteractionType.TASK;
-            if (task.getNodeType() == Node.ELEMENT_NODE) {
-                Element remoteTaskEle = (Element) task;
-                partnerLinkName =
-                        remoteTaskEle.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_PARTNER_LINK);
-                operation = remoteTaskEle.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_OPERATION);
-                callbackOperationName = remoteTaskEle.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_RESPONSE_OPERATION);
-                if (log.isDebugEnabled()) {
-                    log.debug("name: " + name + " inputVarName: " + inputVarName +
-                            " outPutVarName: " + outputVarName + " isSkipable: " +
-                            isSkipable + " partnerLinkName: " + partnerLinkName + " operation: " +
-                            operation + " responseOperation: " + callbackOperationName);
-                }
-            } //TODO what if NODE type is not ELEMENT_NODE
-        } else if (task.getLocalName().equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_REMOTE_NOTIFICATION)) {
-            activityType = InteractionType.NOTIFICATION;
-            if (task.getNodeType() == Node.ELEMENT_NODE) {
-                Element remoteTaskEle = (Element) task;
+    /**
+     * Parse a remoteNotification node and extract the information
+     * eg -
+     * <b4p:remoteNotification partnerLink="b4pNPartnerLink" operation="notify"></b4p:remoteNotification>
+     *
+     * @param remoteNotificationNode Node reference of the remoteNotification
+     */
+    private void parseRemoteNotification(Node remoteNotificationNode) {
+        activityType = InteractionType.NOTIFICATION;
+            if (remoteNotificationNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element remoteTaskEle = (Element) remoteNotificationNode;
                 partnerLinkName = remoteTaskEle.
                         getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_PARTNER_LINK);
                 operation = remoteTaskEle.
@@ -245,18 +225,209 @@ public class PeopleActivity {
                             partnerLinkName + " operation: " + operation);
                 }
             } //TODO what if NODE type is not ELEMENT_NODE
-        } else if (task.getLocalName().
-                equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_LOCAL_NOTIFICATION)) {
-            activityType = InteractionType.NOTIFICATION;
-            String warnMsg = task.getLocalName() + " is not supported yet!";
-            log.warn(warnMsg);
-            throw new RuntimeException(warnMsg);
-        } else if (task.getLocalName().equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_LOCAL_TASK)) {
-            activityType = InteractionType.TASK;
-            String warnMsg = task.getLocalName() + " is not supported yet!";
-            log.warn(warnMsg);
-            throw new RuntimeException(warnMsg);
+    }
+
+    /**
+     * Parse a remoteTask node and extract the information
+     * eg -
+     *    <b4p:remoteTask partnerLink="b4pPartnerLink" operation="approve" responseOperation="approvalResponse">
+	 *    </b4p:remoteTask>
+     *
+     * @param remoteTaskNode Node reference of the remoteTask
+     */
+    private void parseRemoteTask(Node remoteTaskNode) {
+        activityType = InteractionType.TASK;
+        if (remoteTaskNode.getNodeType() == Node.ELEMENT_NODE) {
+            Element remoteTaskEle = (Element) remoteTaskNode;
+            partnerLinkName =
+                    remoteTaskEle.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_PARTNER_LINK);
+            operation = remoteTaskEle.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_OPERATION);
+            callbackOperationName = remoteTaskEle.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_RESPONSE_OPERATION);
+            if (log.isDebugEnabled()) {
+                log.debug("name: " + name + " inputVarName: " + inputVarName +
+                          " outPutVarName: " + outputVarName + " isSkipable: " +
+                          isSkipable + " partnerLinkName: " + partnerLinkName + " operation: " +
+                          operation + " responseOperation: " + callbackOperationName);
+            }
+        } //TODO what if NODE type is not ELEMENT_NODE
+    }
+
+    /**
+     * Determine the type of the standard element
+     *
+     * @param element element to be processed.
+     *
+     * @return the type of Standard Element
+
+     * @throws FaultException if the given element is not a standard element
+     */
+    private String getTypeOfStandardElement(Node element) throws FaultException {
+        if (element.getLocalName().equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_REMOTE_TASK)) {
+            return BPEL4PeopleConstants.PEOPLE_ACTIVITY_REMOTE_TASK;
+        } else if (element.getLocalName().equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_REMOTE_NOTIFICATION)) {
+            return BPEL4PeopleConstants.PEOPLE_ACTIVITY_REMOTE_NOTIFICATION;
+        } else if (element.getLocalName().equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_LOCAL_NOTIFICATION)) {
+            return BPEL4PeopleConstants.PEOPLE_ACTIVITY_LOCAL_NOTIFICATION;
+        } else if (element.getLocalName().equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_LOCAL_TASK)) {
+            return BPEL4PeopleConstants.PEOPLE_ACTIVITY_LOCAL_TASK;
+        } else {
+            throw new FaultException (new QName(BPEL4PeopleConstants.PEOPLE_ACTIVITY_NAME,
+                                                BPEL4PeopleConstants.PEOPLE_ACTIVITY),
+                                      "The given element:" + element.getLocalName() + " is not a standard Element.");
         }
+    }
+
+    /**
+     * In a peopleActivity element there can be exist only one standard element.
+     * eg - Standard Elements are
+     *  1. task
+     *  2. localTask
+     *  3. remoteTask
+     *  4. remoteNotification etc.
+     *
+     * This method verify there's only one standard element exist and return the type of that standard element
+     * @return
+     */
+    private String extractStandardElementType(Element parentElement) throws FaultException {
+        NodeList taskList = parentElement.getChildNodes();
+        String elementType = null;
+        int standardElementCounter = 0;
+        for (int i = 0; i < taskList.getLength(); i++) {
+            if (taskList.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                try {
+                    elementType = getTypeOfStandardElement(taskList.item(i));
+
+                    standardElementCounter++;
+                    if (standardElementCounter > 1) {
+                        throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                           BPEL4PeopleConstants.PEOPLE_ACTIVITY),
+                                                 "There is exist more than one standard child elements in " +
+                                                 BPEL4PeopleConstants.PEOPLE_ACTIVITY);
+                    }
+
+                } catch (FaultException e) {
+                    //Do nothing
+                }
+            }
+        }
+        if (elementType != null) {
+            return elementType;
+        } else {
+            throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                           BPEL4PeopleConstants.PEOPLE_ACTIVITY),
+                                                 "There is no standard child elements defined in " +
+                                                 BPEL4PeopleConstants.PEOPLE_ACTIVITY);
+        }
+    }
+
+    /**
+     * Determine what the standard element is and process it
+     * @param peopleActivityElement
+     * @throws FaultException
+     */
+    private void processStandardElement (Element peopleActivityElement) throws FaultException {
+        try {
+            String elementType = extractStandardElementType(peopleActivityElement);
+
+            if (elementType.equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_REMOTE_TASK)) {
+                Node node = peopleActivityElement.getElementsByTagNameNS(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                                             BPEL4PeopleConstants
+                                                                                   .PEOPLE_ACTIVITY_REMOTE_TASK).item(0);
+                if (node == null) {
+                    throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                       BPEL4PeopleConstants.PEOPLE_ACTIVITY),
+                                             "Namespace for element:" + elementType + " is not " + BPEL4PeopleConstants.B4P_NAMESPACE);
+                }
+                parseRemoteTask(node);
+            } else if (elementType.equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_REMOTE_NOTIFICATION)) {
+                Node node = peopleActivityElement.getElementsByTagNameNS(BPEL4PeopleConstants
+                                                                                             .B4P_NAMESPACE,BPEL4PeopleConstants
+                                                                                           .PEOPLE_ACTIVITY_REMOTE_NOTIFICATION).item(0);
+                 if (node == null) {
+                     throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                       BPEL4PeopleConstants.PEOPLE_ACTIVITY),
+                                             "Namespace for element:" + elementType + " is not " + BPEL4PeopleConstants.B4P_NAMESPACE);
+                }
+                parseRemoteNotification(node);
+            } else if (elementType.equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_LOCAL_NOTIFICATION)) {
+                Node node = peopleActivityElement.getElementsByTagNameNS(BPEL4PeopleConstants
+                                                                                            .B4P_NAMESPACE,BPEL4PeopleConstants
+                                                                                          .PEOPLE_ACTIVITY_LOCAL_NOTIFICATION).item(0);
+
+                if (node == null) {
+                     throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                       BPEL4PeopleConstants.PEOPLE_ACTIVITY),
+                                             "Namespace for element:" + elementType + " is not " + BPEL4PeopleConstants.B4P_NAMESPACE);
+                }
+                parseLocalNotification(node);
+            } else if (elementType.equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_LOCAL_TASK)) {
+                Node node = peopleActivityElement.getElementsByTagNameNS(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                                            BPEL4PeopleConstants
+                                                                                  .PEOPLE_ACTIVITY_LOCAL_TASK).item(0);
+
+                if (node == null) {
+                     throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                       BPEL4PeopleConstants.PEOPLE_ACTIVITY),
+                                             "Namespace for element:" + elementType + " is not " + BPEL4PeopleConstants.B4P_NAMESPACE);
+                }
+                parseLocalTask(node);
+            }
+        } catch (FaultException fex) {
+            throw fex;
+        }
+    }
+
+    /**
+     * Process the &lt;attachmentPropagation/&gt; element defined under peopleActivity
+     *
+     * @param peopleActivityElement peopleActivity (parent element) where the &lt;attachmentPropagation/&gt; resides
+     *
+     * @throws FaultException can be raised if there are more than one &lt;attachmentPropagation/&gt; elements
+     * defined or the namespace for the &lt;attachmentPropagation/&gt; element is not defined correctly
+     */
+    private void processAttachmentPropagationElement(Element peopleActivityElement) throws FaultException {
+        NodeList attachmentElementList = peopleActivityElement.getElementsByTagNameNS(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                                           BPEL4PeopleConstants
+                                                                                   .ATTACHMENT_PROPAGATION_ACTIVITY);
+        if (attachmentElementList.getLength() > 1) {
+            throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                       BPEL4PeopleConstants.PEOPLE_ACTIVITY),
+                                             "More than one elements defined for:" + BPEL4PeopleConstants
+                                                     .ATTACHMENT_PROPAGATION_ACTIVITY + " inside " + BPEL4PeopleConstants.PEOPLE_ACTIVITY);
+        } else if (attachmentElementList.getLength() == 1) {
+            // <attachmentPropagation/> element processing logic
+            Node attachmentPropagationElement = attachmentElementList.item(0);
+            this.attachmentPropagation = new AttachmentPropagation((Element) attachmentPropagationElement);
+
+        } else {
+            if (peopleActivityElement.getElementsByTagName(BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY)
+                    .getLength() > 0) {
+                throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                       BPEL4PeopleConstants.PEOPLE_ACTIVITY),
+                                             "Namespace defined for :" + BPEL4PeopleConstants
+                                                     .ATTACHMENT_PROPAGATION_ACTIVITY + " inside " +
+                                             BPEL4PeopleConstants.PEOPLE_ACTIVITY + " is wrong.");
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("No " + BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY + " activities found.");
+            }
+        }
+    }
+
+    private void init(ExtensionContext extensionContext, Element element) throws FaultException {
+        if (!element.getLocalName().equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY) || !element.getNamespaceURI().equals(BPEL4PeopleConstants.B4P_NAMESPACE)) {
+            throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE, "no " + BPEL4PeopleConstants.PEOPLE_ACTIVITY +" found"));
+        }
+
+        name = element.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_NAME);
+        inputVarName = element.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_INPUT_VARIABLE);
+        outputVarName = element.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_OUTPUT_VARIABLE);
+        isSkipable = "yes".equalsIgnoreCase(
+                element.getAttribute(BPEL4PeopleConstants.PEOPLE_ACTIVITY_IS_SKIPABLE));
+
+        processStandardElement(element);
+
+        processAttachmentPropagationElement(element);
 
         DeploymentUnitDir du = new DeploymentUnitDir(new File(extensionContext.getDUDir()));
         processId = new QName(extensionContext.getProcessModel().getQName().getNamespaceURI(),
@@ -440,12 +611,45 @@ public class PeopleActivity {
         return attachmentIDs;
     }
 
+    /**
+     * Generate an attachment id list to be sent to the human-task based on the fromProcess attribute defined inside
+     * &lt;attachmentPropagation/&gt; element
+     *
+     * @param extensionContext
+     * @param taskMessageContext
+     *
+     * @return a list of attachment ids. The list can be empty if attachment propagation is not allowed from process
+     * to human task
+     */
+    private List<Long> extractAttachmentIDsToBeSentToHumanTask(ExtensionContext extensionContext,
+                                                               BPELMessageContext taskMessageContext) {
+        List<Long> attachmentIDList = new ArrayList<Long>();
+        if (attachmentPropagation != null && attachmentPropagation.isInitialized) {
+            if (FromProcessSpec.all.equals(attachmentPropagation.getFromProcess())) {
+                attachmentIDList = (List) getAttachmentIDs(extensionContext);
+                taskMessageContext.setAttachmentIDList(attachmentIDList);
+            } else if (FromProcessSpec.none.equals(attachmentPropagation.getFromProcess())) {
+                if (log.isDebugEnabled()) {
+                    log.debug("No attachments will be propagated to the human-task as attribute value of " +
+                              BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY_FROM_PROCESS + " is " + FromProcessSpec.none);
+                }
+            }
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("AttachmentPropagation element is not initialized yet. So attachments are ignored by the " +
+                          "BPEL4People extension runtime.");
+            }
+        }
+        return attachmentIDList;
+    }
+
     public String invoke(ExtensionContext extensionContext) throws FaultException {
         BPELMessageContext taskMessageContext = new BPELMessageContext(hiWSDL);
         try {
             //Setting the attachment id attachmentIDList
-            List<Long> attachmentIDList = (List) getAttachmentIDs(extensionContext);
-            taskMessageContext.setAttachmentIDList(attachmentIDList);
+            List<Long> attachmentIDList = extractAttachmentIDsToBeSentToHumanTask(extensionContext,
+                                                                                  taskMessageContext);
+
             taskMessageContext.setOperationName(getOperationName());
 
             SOAPHelper soapHelper = new SOAPHelper(getBinding(), getSoapFactory(), isRPC);
@@ -483,4 +687,79 @@ public class PeopleActivity {
         plink = extensionContext.getPartnerLinkInstance(partnerLinkName);
         return plink.partnerLink.getName() + "." + callbackOperationName;
     }
+
+    /**
+     * Manage the child element of PeopleActivity
+     * eg -
+     * <b4p:attachmentPropagation fromProcess="all|none" toProcess="all|newOnly|none" />
+     */
+    class AttachmentPropagation {
+        private String fromProcess;
+        private String toProcess;
+        private boolean isInitialized;
+
+        public boolean isInitialized() {
+            return isInitialized;
+        }
+
+        public String getFromProcess() {
+            return fromProcess;
+        }
+
+        public String getToProcess() {
+            return toProcess;
+        }
+
+        private AttachmentPropagation(Element element) throws FaultException {
+            init(element);
+        }
+
+        private void init(Element element) throws FaultException {
+            if (!element.getLocalName().equals(BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY) || !element.getNamespaceURI().equals(BPEL4PeopleConstants.B4P_NAMESPACE)) {
+                throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE, "no " + BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY + " found"));
+            }
+
+            this.fromProcess = extractFromProcessValue(element.getAttribute(BPEL4PeopleConstants
+                                                                                    .ATTACHMENT_PROPAGATION_ACTIVITY_FROM_PROCESS));
+            this.toProcess = extractToProcessValue(element.getAttribute(BPEL4PeopleConstants
+                                                                                .ATTACHMENT_PROPAGATION_ACTIVITY_TO_PROCESS));
+
+            isInitialized = true;
+        }
+
+        private String extractFromProcessValue(String fromProcessValue) throws FaultException {
+            if (FromProcessSpec.all.equals(fromProcessValue) || FromProcessSpec.none.equals(fromProcessValue)) {
+                return fromProcessValue;
+            } else {
+                throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                   BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY_FROM_PROCESS)
+                        , "Assigned value for " + BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY_FROM_PROCESS +
+                " attribute is not compliant with the specification.");
+            }
+        }
+
+        private String extractToProcessValue(String toProcessValue) throws FaultException {
+            if (ToProcessSpec.all.equals(toProcessValue) || ToProcessSpec.none.equals(toProcessValue) ||
+                ToProcessSpec.newOnly.equals(toProcessValue)) {
+                return toProcessValue;
+            } else {
+                throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
+                                                   BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY_TO_PROCESS)
+                        , "Assigned value for " + BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY_TO_PROCESS +
+                " attribute is not compliant with the specification.");
+            }
+        }
+    }
+
+    enum FromProcessSpec {
+        all,
+        none
+    }
+
+    enum ToProcessSpec {
+        all,
+        newOnly,
+        none
+    }
 }
+

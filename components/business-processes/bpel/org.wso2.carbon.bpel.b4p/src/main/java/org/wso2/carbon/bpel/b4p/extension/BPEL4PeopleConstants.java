@@ -40,4 +40,8 @@ public final class BPEL4PeopleConstants {
     public static final String PEOPLE_ACTIVITY_REMOTE_NOTIFICATION = "remoteNotification";
     public static final String PEOPLE_ACTIVITY_LOCAL_NOTIFICATION = "localNotification";
     public static final String PEOPLE_ACTIVITY_LOCAL_TASK = "localTask";
+
+    public static final String ATTACHMENT_PROPAGATION_ACTIVITY = "attachmentPropagation";
+    public static final String ATTACHMENT_PROPAGATION_ACTIVITY_FROM_PROCESS = "fromProcess";
+    public static final String ATTACHMENT_PROPAGATION_ACTIVITY_TO_PROCESS = "toProcess";
 }

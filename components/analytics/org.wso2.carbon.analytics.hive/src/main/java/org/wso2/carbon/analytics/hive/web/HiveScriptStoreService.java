@@ -94,6 +94,12 @@ public class HiveScriptStoreService {
 
     }
 
+    public void editHiveScript(String scriptName, String scriptContent)
+            throws HiveScriptStoreException {
+        deleteScript(scriptName);
+        saveHiveScript(scriptName, scriptContent);
+    }
+
     public String[] getAllScriptNames() throws HiveScriptStoreException {
         try {
             HiveScriptPersistenceManager manager = HiveScriptPersistenceManager.getInstance();

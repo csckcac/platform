@@ -404,8 +404,8 @@ BPEL.deployment.addRow = function() {
     alternateTableRows('bpelTbl', 'tableEvenRow', 'tableOddRow');
 }
 
-    var tableRow = document.getElementById(rowId);
 BPEL.deployment.deleteRow = function(rowId) {
+    var tableRow = document.getElementById(rowId);
     tableRow.parentNode.deleteRow(tableRow.rowIndex);
     alternateTableRows('bpelTbl', 'tableEvenRow', 'tableOddRow');
 }

@@ -21,10 +21,8 @@ package org.wso2.carbon.appfactory.common;
  */
 public class AppFactoryConstants {
     public static final String PROJECT_DEPLOYMENT_CONFIG_ROOT_ELEMENT = "ProjectDeploymentConfig";
-    public static final String PROJECT_DEPLOYMENT_CONFIG_SVN_URL = "BaseSvnURL";
     public static final String PROJECT_DEPLOYMENT_CONFIG_STAGE = "Stage";
-    public static final String PROJECT_DEPLOYMENT_CONFIG_SERVER_LOCATIONS = "DeploymentServerLocations";
-    public static final String PROJECT_DEPLOYMENT_CONFIG_SERVER_LOCATION = "DeploymentServerLocation";
+    public static final String PROJECT_DEPLOYMENT_CONFIG_SERVER_URL = "DeploymentServerURL";
 
     public static final String WEB_SERVICE_CONFIG_ROOT_ELEMENT = "webService";
     public static final String WEB_SERVICE_CONFIG_ADD_USER_TO_PROJECT = "addUserToProject";

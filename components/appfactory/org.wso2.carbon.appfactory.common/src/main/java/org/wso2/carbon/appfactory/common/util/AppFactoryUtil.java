@@ -54,7 +54,6 @@ public class AppFactoryUtil {
 
         while (iterator.hasNext()) {
             OMElement element = (OMElement) iterator.next();
-
             if (AppFactoryConstants.SSO_CONFIG_ROOT_ELEMENT.equals(element.getLocalName())) {
                 getSSOConfigs(element, config);
             } else if (AppFactoryConstants.WEB_SERVICE_CONFIG_ROOT_ELEMENT.equals(element.getLocalName())) {
@@ -98,31 +97,29 @@ public class AppFactoryUtil {
     private static void getProjectDeploymentConfig(OMElement deploymentConfig,
                                                    AppFactoryConfiguration config)
             throws AppFactoryException {
-        OMElement svnBaseURLElement = deploymentConfig.getFirstChildWithName(new QName(
-                AppFactoryConstants.PROJECT_DEPLOYMENT_CONFIG_SVN_URL));
-        if (svnBaseURLElement == null) {
-            throw new AppFactoryException("SVN base url is not defined in deployment configuration.");
+        if (deploymentConfig == null) {
+            throw new AppFactoryException("Deployment configuration element is null.");
         }
-        config.setSvnBaseURL(svnBaseURLElement.getText());
 
+        if (!deploymentConfig.getQName().equals(
+                new QName(AppFactoryConstants.PROJECT_DEPLOYMENT_CONFIG_ROOT_ELEMENT))) {
+            throw new AppFactoryException("Invalid root element in deployment configuration");
+        }
         Iterator stagesItr = deploymentConfig.getChildrenWithName(new QName(
                 AppFactoryConstants.PROJECT_DEPLOYMENT_CONFIG_STAGE));
         if (!stagesItr.hasNext()) {
-            throw new AppFactoryException("No stages defined for deployment of artifacts in " +
-                                          "deployment configuration.");
+            throw new AppFactoryException("No stages defined for deployment of artifacts in deployment configuration.");
         }
         while (stagesItr.hasNext()) {
             OMElement stageElement = (OMElement) stagesItr.next();
             String stageName = stageElement.getAttributeValue(new QName("name")).trim();
-            Iterator deploymentServerLocationsItr = stageElement.getChildrenWithName(new QName(
-                    AppFactoryConstants.PROJECT_DEPLOYMENT_CONFIG_SERVER_LOCATION));
-            List<String> deploymentServerLocations = new ArrayList<String>();
-            while (deploymentServerLocationsItr.hasNext()) {
-                OMElement deploymentServerLocationElement
-                        = (OMElement) deploymentServerLocationsItr.next();
-                deploymentServerLocations.add(deploymentServerLocationElement.getText().trim());
+            Iterator deploymentServerUrlsItr = stageElement.getChildrenWithName(new QName(AppFactoryConstants.PROJECT_DEPLOYMENT_CONFIG_SERVER_URL));
+            List<String> deploymentServerUrls = new ArrayList<String>();
+            while (deploymentServerUrlsItr.hasNext()) {
+                OMElement deploymentServerUrlElement = (OMElement) deploymentServerUrlsItr.next();
+                deploymentServerUrls.add(deploymentServerUrlElement.getText().trim());
             }
-            config.getDeploymentServerLocations().put(stageName, deploymentServerLocations);
+            config.addDeploymentServerUrls(stageName, deploymentServerUrls);
         }
     }
 

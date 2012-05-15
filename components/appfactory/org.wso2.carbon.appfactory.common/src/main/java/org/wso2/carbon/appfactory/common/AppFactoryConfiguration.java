@@ -45,11 +45,10 @@ public class AppFactoryConfiguration {
     private String sCMServerAdminUserName;
     private String sCMServerAdminPassword;
     private String sCMReadWritePermissionName;
-    private String svnBaseURL;
-    private Map<String, List<String>> deploymentServerLocations;
+    private Map<String, List<String>> deploymentServerUrls;
 
     public AppFactoryConfiguration() {
-        deploymentServerLocations = new HashMap<String, List<String>>();
+        deploymentServerUrls = new HashMap<String, List<String>>();
     }
 
     public String getsSOName() {
@@ -222,20 +221,11 @@ public class AppFactoryConfiguration {
         this.sCMReadWritePermissionName = sCMReadWritePermissionName;
     }
 
-    public String getSvnBaseURL() {
-        return svnBaseURL;
+   public void addDeploymentServerUrls(String stage, List<String> locations) {
+        deploymentServerUrls.put(stage, locations);
     }
 
-    public void setSvnBaseURL(String svnBaseURL) {
-        this.svnBaseURL = svnBaseURL;
+    public List<String> getDeploymentServerUrls(String stage) {
+        return deploymentServerUrls.get(stage);
     }
-
-    public Map<String, List<String>> getDeploymentServerLocations() {
-        return deploymentServerLocations;
-    }
-
-    public void setDeploymentServerLocations(Map<String, List<String>> deploymentServerLocations) {
-        this.deploymentServerLocations = deploymentServerLocations;
-    }
-
 }

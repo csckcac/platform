@@ -82,7 +82,7 @@
                         <Import-Package>
                             !org.wso2.carbon.lb.endpoint.endpoint,
                             !org.wso2.carbon.lb.endpoint,
-                            org.wso2.carbon.lb.common.LBConfigParser,
+                            org.wso2.carbon.lb.common,
                             org.wso2.carbon.registry.core.service; version=1.0.1,
                             *;resolution:=optional
                         </Import-Package>

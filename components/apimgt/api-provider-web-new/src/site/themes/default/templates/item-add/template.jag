@@ -34,8 +34,7 @@
                     <label class="control-label" for="description">Description:</label>
                     <div class="controls">
                         <textarea class="input-xlarge" id="description" name="description" rows="3"
-                                  style="margin-left: 0px; margin-right: 0px; width: 501px; ">
-                        </textarea>
+                                  style="margin-left: 0px; margin-right: 0px; width: 501px; "></textarea>
                     </div>
                 </div>
 

@@ -1545,7 +1545,7 @@
 	<orbit.version.commons-configuration>1.6.0.wso2v1</orbit.version.commons-configuration>
 	<orbit.version.javax.servlet>3.0.0.wso2v1</orbit.version.javax.servlet>
         <orbit.version.infinispan>5.1.2.wso2v1</orbit.version.infinispan>
-        <zookeeper.orbit.version>3.3.4.wso2v1</zookeeper.orbit.version>
+        <zookeeper.orbit.version>3.3.5.wso2v1</zookeeper.orbit.version>
         <quartz.orbit.version>1.6.0.wso2v2</quartz.orbit.version>
         <quartz2.orbit.version>2.1.1.wso2v1</quartz2.orbit.version>
         <mvel2.orbit.version>2.0.19.wso2v1</mvel2.orbit.version>

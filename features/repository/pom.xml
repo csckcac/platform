@@ -482,7 +482,7 @@
                                 </featureArtifactDef>
 
 				<featureArtifactDef>
-				    org.wso2.carbon:org.wso2.carbon.coordination.core.feature:${carbon.version}
+				    org.wso2.carbon:org.wso2.carbon.coordination.feature:${carbon.version}
 				</featureArtifactDef>
 				<featureArtifactDef>
 				    org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}

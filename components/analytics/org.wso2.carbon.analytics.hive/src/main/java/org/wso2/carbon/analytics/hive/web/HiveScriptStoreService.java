@@ -78,6 +78,7 @@ public class HiveScriptStoreService {
             int tenantId = CarbonContext.getCurrentContext().getTenantId();
             try {
                 ServiceHolder.getTaskManager().registerTask(info);
+                ServiceHolder.getTaskManager().scheduleTask(info.getName());
             } catch (TaskException e) {
                 log.error("Error while scheduling script : " + info.getName() + " for tenant : " +
                           tenantId + "..", e);

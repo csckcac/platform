@@ -32,14 +32,16 @@ public class DSSStratosTestSuite extends MasterTestSuite {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
         EnvironmentBuilder env = new EnvironmentBuilder();
         if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
-            suiteVariablesList.add(new SuiteVariables("DSSPriviledgeGroupCreatorSeleniumTest",
-                                                      DSSPriviledgeGroupCreatorSeleniumTest.class));
-            suiteVariablesList.add(new SuiteVariables("DSSExploreDatabaseSeleniumTest",
-                                                      DSSExploreDatabaseSeleniumTest.class));
-            suiteVariablesList.add(new SuiteVariables("CreateDataServiceUITest",
-                                                      DSSCreateDataServiceSeleniumTest.class));
-            suiteVariablesList.add(new SuiteVariables("UploadDataServiceUITest",
-                                                      DSSUploadDataServiceSeleniumTest.class));
+//            suiteVariablesList.add(new SuiteVariables("DSSPriviledgeGroupCreatorSeleniumTest",
+//                                                      DSSPriviledgeGroupCreatorSeleniumTest.class));
+//            suiteVariablesList.add(new SuiteVariables("DSSExploreDatabaseSeleniumTest",
+//                                                      DSSExploreDatabaseSeleniumTest.class));
+//            suiteVariablesList.add(new SuiteVariables("CreateDataServiceUITest",
+//                                                      DSSCreateDataServiceSeleniumTest.class));
+//            suiteVariablesList.add(new SuiteVariables("UploadDataServiceUITest",
+//                                                      DSSUploadDataServiceSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("DSSEditQueryInputMappingInfoSeleniumTest",
+                                                      DSSEditQueryInputMappingInfoSeleniumTest.class));
             superSuite("StratosDSSSeleniumTestSuite", suiteVariablesList).run();
         }
     }

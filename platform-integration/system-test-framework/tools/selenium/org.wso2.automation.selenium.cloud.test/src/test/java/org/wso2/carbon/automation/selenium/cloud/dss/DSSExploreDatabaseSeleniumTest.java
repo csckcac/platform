@@ -47,7 +47,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static org.testng.Assert.assertTrue;
-
+/*https://wso2.org/jira/browse/STRATOS-1630*/
 public class DSSExploreDatabaseSeleniumTest {
     private static final Log log = LogFactory.getLog(DSSExploreDatabaseSeleniumTest.class);
     private WebDriver driver;
@@ -202,14 +202,16 @@ public class DSSExploreDatabaseSeleniumTest {
         driver.findElement(By.xpath("/html/body/form/input[2]")).click();
         driver.findElement(By.xpath("/html/body/form/input")).click();
         driver.findElement(By.id("sql")).sendKeys("SELECT * FROM Employee");
+        Thread.sleep(1000);
         driver.findElement(By.xpath("/html/body/form/input")).click();
 
         Thread.sleep(sleeptime);
         driver.switchTo().defaultContent();
         driver.switchTo().frame("page1").switchTo().frame("h2result");
-        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Perera"), "SELECT Query Failed. Expected out put not found");
-        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Liyanage"), "SELECT Query Failed. Expected out put not found");
-        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Amarasiri"), "SELECT Query Failed. Expected out put not found");
+        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Perera"), "SELECT Query Failed. Expected result not found");
+        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Liyanage"), "SELECT Query Failed. Expected result not found");
+        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Amarasiri"), "SELECT Query Failed. Expected result not found");
+        driver.switchTo().defaultContent();
 
 
     }

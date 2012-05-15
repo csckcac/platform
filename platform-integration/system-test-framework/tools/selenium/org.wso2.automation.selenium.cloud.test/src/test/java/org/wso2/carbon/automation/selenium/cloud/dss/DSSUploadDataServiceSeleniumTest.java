@@ -154,9 +154,10 @@ public class DSSUploadDataServiceSeleniumTest {
     }
 
     @Test(priority = 6, dependsOnMethods = {"serviceDeployment"})
-    public void serviceInvocation() throws AxisFault {
+    public void serviceInvocation() throws AxisFault, InterruptedException {
         String serviceEndPoint = dssProperties.getProductVariables().getBackendUrl()
                                  + "t/" + domain + "/" + dataServiceName;
+        Thread.sleep(15000);
         for (int i = 0; i < 5; i++) {
             getCustomerInBoston(serviceEndPoint);
         }

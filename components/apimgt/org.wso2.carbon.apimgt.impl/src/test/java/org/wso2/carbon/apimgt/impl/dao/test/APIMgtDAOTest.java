@@ -198,7 +198,7 @@ public class APIMgtDAOTest extends TestCase {
     	Subscriber subscriber1 = new Subscriber("LA_F");
     	subscriber1.setEmail("laf@wso2.com");
     	subscriber1.setSubscribedDate(new Date());
-    	subscriber1.setTenantId(25);
+    	subscriber1.setTenantId(0);
     	apiMgtDAO.addSubscriber(subscriber1);
     	assertTrue(subscriber1.getId() > 0);
     	Subscriber subscriber2 = apiMgtDAO.getSubscriber(subscriber1.getId());
@@ -206,15 +206,15 @@ public class APIMgtDAOTest extends TestCase {
     }
     
     public void testUpdateGetSubscriber() throws Exception {
-    	Subscriber subscriber1 = new Subscriber("LA_F");
+    	Subscriber subscriber1 = new Subscriber("LA_F2");
     	subscriber1.setEmail("laf@wso2.com");
     	subscriber1.setSubscribedDate(new Date());
-    	subscriber1.setTenantId(25);
+    	subscriber1.setTenantId(0);
     	apiMgtDAO.addSubscriber(subscriber1);
     	assertTrue(subscriber1.getId() > 0);
     	subscriber1.setEmail("laf2@wso2.com");
     	subscriber1.setSubscribedDate(new Date());
-    	subscriber1.setTenantId(35);
+    	subscriber1.setTenantId(0);
     	apiMgtDAO.updateSubscriber(subscriber1);
     	Subscriber subscriber2 = apiMgtDAO.getSubscriber(subscriber1.getId());
     	this.checkSubscribersEqual(subscriber1, subscriber2);

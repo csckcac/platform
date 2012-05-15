@@ -394,6 +394,10 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
         apiMgtDAO.addApplication(application, userId);
     }
 
+    public void updateApplication(Application application) throws APIManagementException {
+        apiMgtDAO.updateApplication(application);
+    }
+
     public Application[] getApplications(Subscriber subscriber) throws APIManagementException {
         return apiMgtDAO.getApplications(subscriber);
     }

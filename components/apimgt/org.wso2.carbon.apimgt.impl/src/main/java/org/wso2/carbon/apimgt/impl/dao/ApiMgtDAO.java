@@ -427,6 +427,11 @@ public class ApiMgtDAO {
                 subscriberId = rs.getInt(1);
             }
             subscriber.setId(subscriberId);
+
+            // Add default application
+            Application defaultApp = new Application(APIConstants.DEFAULT_APPLICATION_NAME, subscriber);
+            addApplication(defaultApp, subscriber.getName());
+
         } catch (SQLException e) {
 			String msg = "Error in adding new subscriber: " + e.getMessage();
 			log.error(msg, e);
@@ -435,7 +440,7 @@ public class ApiMgtDAO {
 			APIMgtDBUtil.closeAllConnections(ps, conn, rs);
 		}
     }
-    
+
     public void updateSubscriber(Subscriber subscriber) throws APIManagementException {
     	Connection conn = null;
         ResultSet rs = null;
@@ -1278,6 +1283,46 @@ public class ApiMgtDAO {
             APIMgtDBUtil.closeAllConnections(ps, conn, resultSet);
         }
 
+    }
+
+    public void updateApplication(Application application) throws APIManagementException {
+        Connection conn = null;
+        ResultSet resultSet = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = APIMgtDBUtil.getConnection();
+
+            //This query to update the AM_APPLICATION table
+            String sqlQuery = "UPDATE " +
+                    "AM_APPLICATION" +
+                    " SET NAME = ? " +
+                    "WHERE" +
+                    " APPLICATION_ID = ?";
+            // Adding data to the AM_APPLICATION  table
+            ps = conn.prepareStatement(sqlQuery);
+            ps.setString(1, application.getName());
+            ps.setInt(2, application.getId());
+
+            ps.executeUpdate();
+            ps.close();
+            // finally commit transaction
+            conn.commit();
+
+        } catch (SQLException e) {
+            String msg = "Failed to update Application";
+            log.error(msg, e);
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    log.error("Failed to rollback the update Application ", e);
+                }
+            }
+            throw new APIManagementException(msg, e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(ps, conn, resultSet);
+        }
     }
 
     /**

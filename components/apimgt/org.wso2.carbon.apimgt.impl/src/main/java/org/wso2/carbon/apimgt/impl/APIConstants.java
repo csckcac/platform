@@ -141,5 +141,7 @@ public final class APIConstants {
     public static final String API_KEY_TYPE = "AM_KEY_TYPE";
     public static final String API_KEY_TYPE_PRODUCTION = "PRODUCTION";
     public static final String API_KEY_TYPE_SANDBOX = "SANDBOX";
+    
+    public static final String DEFAULT_APPLICATION_NAME = "DefaultApplication";
 
 }

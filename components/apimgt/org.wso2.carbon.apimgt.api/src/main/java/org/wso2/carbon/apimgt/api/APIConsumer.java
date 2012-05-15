@@ -175,6 +175,14 @@ public interface APIConsumer extends APIManager {
     public void addApplication(Application application, String userId) throws APIManagementException;
 
     /**
+     * Updates the details of the specified user application.
+     *
+     * @param application Application object containing updated data
+     * @throws APIManagementException If an error occurs while updating the application
+     */
+    public void updateApplication(Application application) throws APIManagementException;
+
+    /**
      * Returns a list of applications for a given subscriber
      *
      * @param subscriber Subscriber

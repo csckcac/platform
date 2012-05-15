@@ -53,6 +53,7 @@ include("/jagg/jagg.jag");
         provider = request.getParameter("provider");
         context = request.getParameter("context");
         application = request.getParameter("application");
+        keyType = request.getParameter("keyType");
         username = user.username;
 
         mod = jagg.module("subscription");
@@ -60,7 +61,7 @@ include("/jagg/jagg.jag");
             name:name,
             version:version,
             provider:provider
-        }, context, application, username);
+        }, context, application, username,keyType);
 
         if (result.error) {
             obj = {

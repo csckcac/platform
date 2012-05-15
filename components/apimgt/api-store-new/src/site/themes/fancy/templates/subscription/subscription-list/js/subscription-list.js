@@ -14,7 +14,8 @@ $(document).ready(function () {
             version:elem.attr("data-version"),
             provider:elem.attr("data-provider"),
             context:elem.attr("data-context"),
-            application:elem.attr("data-application")
+            application:elem.attr("data-application"),
+            keyType:elem.attr("data-keyType")
         }, function (result) {
             if (result.error == false) {
                 window.location.reload();

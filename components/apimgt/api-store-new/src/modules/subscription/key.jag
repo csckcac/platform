@@ -1,11 +1,11 @@
 <%
-var generateAPIKey = function (api, context, application, username) {
+var generateAPIKey = function (api, context, application, username, keyType) {
     var key,
             log = new Log(),
             store = jagg.module("greg").getAPIStoreObj();
 
     try {
-        key = store.getKey(api.provider, api.name, api.version, context, application, username);
+        key = store.getKey(api.provider, api.name, api.version, context, application, username, keyType);
         if (log.isDebugEnabled()) {
             log.debug("generateAPIKey");
         }

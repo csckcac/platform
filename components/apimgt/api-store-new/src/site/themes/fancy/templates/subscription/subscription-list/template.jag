@@ -5,6 +5,9 @@
     for(i = 0; i < lenI; i++) {
         app = apps[i];
     %>
+     <script type="text/javascript">
+        var foo = '<%=app%>';
+    </script>
     <div class="subscription-list">
         <div class="accordion-group">
             <div class="accordion-heading">
@@ -19,10 +22,11 @@
                     lenJ = apis.length;
                     for(j = 0; j < lenJ; j++) {
                         api = apis[j];
-                        key = api.key;
+                        prodKey = api.prodKey;
                         clazz = (j%2) == 0 ? "even" : "odd";
                         path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
                     %>
+
                     <tr class="application-api <%=clazz%>">
                         <td>
                              <a href="<%=path%>"><img alt="" src="<%=api.thumburl%>"/></a>
@@ -35,15 +39,34 @@
                         </td>
                         <td>
                         <div class="api-key-listing">
-                            <% if(key) { %>
-                            <div class="api-key"><%=key%></div>
+                            <% if(prodKey) { %>
+                            <div class="api-key"><%=prodKey%></div>
                             <% } else { %>
-                            <button class="key-generate-button"
-                                data-name="<%=api.name%>"
-                                data-version="<%=api.version%>"
-                                data-provider="<%=api.provider%>"
-                                data-context="<%=api.context%>"
-                                data-application="<%=app.name%>" class="small green">Generate</button>
+                                <button class="key-generate-button"
+                                    data-name="<%=api.name%>"
+                                    data-version="<%=api.version%>"
+                                    data-provider="<%=api.provider%>"
+                                    data-context="<%=api.context%>"
+                                    data-application="<%=app.name%>"
+                                    data-keyType="PRODUCTION" class="small green">Generate Production Key</button>
+                            <script>
+                                var foo = '<%=apis[j]%>';
+                            </script>
+                                <% if(apis[j].sandboxKey) { %>
+                                    <div class="api-key"><%=apis[j].sandboxKey%></div>
+                                <% } else { %>
+                                    <% if(apis[j].hasMultipleEndpoints == "true"){ %><br />
+                                    <button class="key-generate-button"
+                                        data-name="<%=api.name%>"
+                                        data-version="<%=api.version%>"
+                                        data-provider="<%=api.provider%>"
+                                        data-context="<%=api.context%>"
+                                        data-application="<%=app.name%>"
+                                        data-keyType="SANDBOX" class="small green">Generate Sandbox Key</button>
+                                    <% } %>
+                                <% } %>
+
+
                             <% } %>
                         </div>
                         </td>

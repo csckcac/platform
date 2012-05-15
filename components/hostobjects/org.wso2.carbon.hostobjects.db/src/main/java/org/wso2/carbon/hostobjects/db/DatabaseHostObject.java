@@ -113,7 +113,7 @@ public class DatabaseHostObject extends ScriptableObject {
             rdbmsConfig.setPassword((String) args[2]);
             rdbmsConfig.setUrl(dbUrl);
 
-            RDBMSDataSource rdbmsDataSource = null;
+            RDBMSDataSource rdbmsDataSource;
             try {
                 rdbmsDataSource = new RDBMSDataSource(rdbmsConfig);
 

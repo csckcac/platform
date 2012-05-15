@@ -239,6 +239,7 @@ public class DSSServerUIUtils {
                 driver.switchTo().frame("h2query");
                 driver.findElement(By.id("sql")).sendKeys(sqlScript);
                 driver.findElement(By.xpath("/html/body/form/input")).click();
+                Thread.sleep(1000);
                 //to clear text area
                 driver.findElement(By.xpath("/html/body/form/input[2]")).click();
 
@@ -306,17 +307,10 @@ public class DSSServerUIUtils {
 
     }
 
-    public List<String> getCarbonDataSourceList(String databaseName, String userDomain) {
-        String baseUrlData = "https://" + dssProperties.getProductVariables().getHostName();
-        if (dssProperties.getEnvironmentSettings().isEnablePort()) {
-            baseUrlData = baseUrlData + ":" + dssProperties.getProductVariables().getHttpsPort();
-        }
-        if (dssProperties.getEnvironmentSettings().isEnableCarbonWebContext()) {
-            baseUrlData = baseUrlData + "/" + dssProperties.getProductVariables().getWebContextRoot();
-        }
-        String dataSourceUrl = baseUrlData + "/t/" + userDomain + "/carbon/datasource/index.jsp?region=" +
-                               "region1&item=datasource_menu";
-        driver.get(dataSourceUrl);
+    public List<String> getCarbonDataSourceList(String databaseName) {
+
+        clickOnConfig();
+        driver.findElement(By.linkText("Data Sources")).click();
         List<String> dataSourceList = new ArrayList<String>();
         List<WebElement> carbonDataSourceList = driver.findElement(By.id("myTable")).
                 findElements(By.tagName("tr"));
@@ -329,6 +323,53 @@ public class DSSServerUIUtils {
         }
 
         return dataSourceList;
+    }
+
+    public void deleteCarbonDataSource(String dataSourceName)
+            throws InterruptedException {
+        clickOnConfig();
+        driver.findElement(By.linkText("Data Sources")).click();
+        List<WebElement> carbonDataSourceList = driver.findElement(By.id("myTable")).findElement(By.tagName("tbody")).
+                findElements(By.tagName("tr"));
+        for (WebElement cds : carbonDataSourceList) {
+            if (cds.findElements(By.tagName("td")).get(0).getText().equalsIgnoreCase(dataSourceName)) {
+                cds.findElements(By.tagName("td")).get(1).findElement(By.linkText("Delete")).click();
+                Thread.sleep(1000);
+                Assert.assertEquals("Do you want to delete the data source ' " + dataSourceName + " ' ?",
+                                    driver.findElement(By.id("dialog")).findElement(By.id("messagebox-confirm")).getText(),
+                                    "DataSource Deletion Confirmation message mismatched");
+
+                driver.findElement(By.xpath("//button")).click();
+                break;
+            }
+        }
+
+    }
+
+    public void editCarbonDataSourcePassword(String dataSourceName, String password)
+            throws InterruptedException {
+        clickOnConfig();
+        driver.findElement(By.linkText("Data Sources")).click();
+        List<WebElement> carbonDataSourceList = driver.findElement(By.id("myTable")).findElement(By.tagName("tbody")).
+                findElements(By.tagName("tr"));
+        for (WebElement cds : carbonDataSourceList) {
+            if (cds.findElements(By.tagName("td")).get(0).getText().equalsIgnoreCase(dataSourceName)) {
+                cds.findElements(By.tagName("td")).get(1).findElement(By.linkText("Edit")).click();
+                driver.findElement(By.id("dseditform")).findElement(By.id("password")).clear();
+                driver.findElement(By.id("dseditform")).findElement(By.id("password")).sendKeys(password);
+                Thread.sleep(1000);
+                for (WebElement button : driver.findElements(By.className("button"))) {
+                    if (button.getAttribute("value").equalsIgnoreCase("Save")) {
+                        button.click();
+                        break;
+                    }
+                }
+
+                break;
+            }
+
+        }
+
     }
 
     private void addNewQuery(String queryId, String sqlQuery, List<String> outputMappingList)
@@ -411,5 +452,13 @@ public class DSSServerUIUtils {
             b[i] = (byte) ((value >>> offset) & 0xFF);
         }
         return b;
+    }
+
+    public void clickOnMenu() {
+        driver.findElement(By.id("menu-panel-button1")).click();
+    }
+
+    public void clickOnConfig() {
+        driver.findElement(By.id("menu-panel-button3")).click();
     }
 }

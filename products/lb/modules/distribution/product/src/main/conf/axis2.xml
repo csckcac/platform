@@ -212,14 +212,16 @@
     <!--             Transport Ins (Listeners)             -->
     <!-- ================================================= -->
 
-    <!-- the non blocking http transport based on HttpCore + NIO extensions -->
-    <transportReceiver name="http" class="org.apache.synapse.transport.nhttp.HttpCoreNIOListener">
+    <!-- the non blocking http transport based on HttpCore + NIO extensions>
+   <transportReceiver name="http" class="org.wso2.carbon.transport.passthru.PassThroughHttpListener">
         <parameter name="port" locked="false">8280</parameter>
         <parameter name="non-blocking" locked="false">true</parameter>
-        <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
-        <!--parameter name="WSDLEPRPrefix" locked="false">https://apachehost:port/somepath</parameter-->
         <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.NHttpGetProcessor</parameter>
-    </transportReceiver>
+    </transportReceiver-->
+<transportReceiver name="http" class="org.wso2.carbon.transport.passthru.PassThroughHttpListener">
+   <parameter name="port">8280</parameter>
+   <parameter name="non-blocking"> true</parameter>
+</transportReceiver>
 
     <!-- the non blocking https transport based on HttpCore + SSL-NIO extensions -->
     <transportReceiver name="https" class="org.apache.synapse.transport.nhttp.HttpCoreNIOSSLListener">
@@ -251,9 +253,13 @@
     <!--             Transport Outs (Senders)              -->
     <!-- ================================================= -->
 
-    <!-- the non-blocking http transport based on HttpCore + NIO extensions -->
+    <!-- the non-blocking http transport based on HttpCore + NIO extensions>
     <transportSender name="http" class="org.apache.synapse.transport.nhttp.HttpCoreNIOSender">
         <parameter name="non-blocking" locked="false">true</parameter>
+    </transportSender-->
+    <transportSender name="http"  class="org.wso2.carbon.transport.passthru.PassThroughHttpSender">
+     <parameter name="non-blocking" locked="false">true</parameter>
+     <parameter name="warnOnHTTP500" locked="false">*</parameter>
     </transportSender>
     <transportSender name="https" class="org.apache.synapse.transport.nhttp.HttpCoreNIOSSLSender">
         <parameter name="non-blocking" locked="false">true</parameter>

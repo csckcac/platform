@@ -1,0 +1,84 @@
+<!--
+  ~ Copyright 2005-2011 WSO2, Inc. (http://wso2.com)
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+<!-- this is a example appfactory.xml -->
+<app>
+    <adminUserName>admin</adminUserName>
+    <adminPassword>admin</adminPassword>
+    <sso>
+        <name>WSO2 AppFactory Project Management</name>
+        <identityProviderURL>https://localhost:9443/samlsso</identityProviderURL>
+        <keyStorePassword>wso2carbon</keyStorePassword>
+        <identityAlias>wso2carbon</identityAlias>
+        <keyStoreName>
+            E:\src\java\carbon_trunk\platform\products\appfactory\modules\distribution\product\target\wso2appfactory-1.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks
+        </keyStoreName>
+    </sso>
+
+    <webService>
+        <addUserToProject>http://localhost:9763/services/AddUserToProjectService/process
+        </addUserToProject>
+        <createProject>http://localhost:9763/services/CreateProjectService/process</createProject>
+        <createRepo>http://localhost:9763/services/IDTMESVNService/createRepository</createRepo>
+        <getRolesOfUserForProject>
+            http://localhost:9763/services/UserRoleService/getRolesOfUserPerProject
+        </getRolesOfUserForProject>
+        <getUsersOfProject>http://localhost:9763/services/UserMgtService/getUserListForProject
+        </getUsersOfProject>
+        <emailVarificationService>https://localhost:9443/services/EmailVerificationService
+        </emailVarificationService>
+    </webService>
+
+    <bpel>
+        <createUser>http://localhost:9763/services/UserCreationProcess</createUser>
+        <activateUser>http://localhost:9763/services/activateUserProcess</activateUser>
+    </bpel>
+    <SVNRepositoryMGTConfig>
+        <SCMServerIp>0.0.0.0</SCMServerIp>
+        <SCMServerPort>8080</SCMServerPort>
+        <SCMServerRealmName>SONIA :: SCM Manager</SCMServerRealmName>
+        <SCMServerAdminUserName>scmadmin</SCMServerAdminUserName>
+        <SCMServerAdminPassword>scmadmin</SCMServerAdminPassword>
+        <ReadWritePermissionName>RW</ReadWritePermissionName>
+    </SVNRepositoryMGTConfig>
+    <ProjectDeploymentConfig>
+
+        <!--Projects will be checkout out from this base svn repository location-->
+        <BaseSvnURL>https://svn.wso2.org/repos/wso2/carbon/platform/trunk</BaseSvnURL>
+
+        <!-- build artifacts will be copied to following locations based on the staging.
+        The deployment locations should be in service hosting server,
+        This will be improved to deploy artifacts in to other servers as well.-->
+        <Stage name="Development">
+            <DeploymentServerLocation>
+                /home/manjula/servers/temp/wso2as-4.1.2/repository/deployment/server/webapps
+            </DeploymentServerLocation>
+            <DeploymentServerLocation>
+                /home/manjula/servers/temp/wso2as-4.1.2/repository/deployment/server/axis2services
+            </DeploymentServerLocation>
+        </Stage>
+        <Stage name="QA">
+            <DeploymentServerLocation>
+                /home/manjula/servers/temp/wso2as-4.1.2/repository/deployment/server
+            </DeploymentServerLocation>
+        </Stage>
+        <Stage name="LIVE">
+            <DeploymentServerLocation>
+                /home/manjula/servers/temp/wso2as-4.1.2/repository/deployment/server
+            </DeploymentServerLocation>
+        </Stage>
+    </ProjectDeploymentConfig>
+
+</app>

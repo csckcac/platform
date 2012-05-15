@@ -42,7 +42,7 @@
         <module>lb-endpoint</module>
         <module>autoscaler-service</module>
         <!--module>jvm-autoscaler-agent</module-->
-        <module>autoscaler</module>
+        <!--module>autoscaler</module-->
         <!--module>autoscaler-service/jvmagentmgtservice</module>
         <module>autoscaler-service/autoscalerservice</module>
         <module>jvm-autoscaler-agent/jvmagentclient</module>

@@ -205,7 +205,7 @@
         <synapse.version>2.1.0-wso2v6</synapse.version>
         <scxml.version>0.9.0.wso2v1</scxml.version>
         <wsdl.validator.version>1.2.0-SNAPSHOT.wso2v1</wsdl.validator.version>
-        <zookeeper.wso2.version>3.3.4.wso2v1</zookeeper.wso2.version>
+        <zookeeper.wso2.version>3.3.5.wso2v1</zookeeper.wso2.version>
         <quartz2.wso2.version>2.1.1.wso2v1</quartz2.wso2.version>
         <google.guava.wso2.version>11.0.1.wso2v1</google.guava.wso2.version>
     </properties>

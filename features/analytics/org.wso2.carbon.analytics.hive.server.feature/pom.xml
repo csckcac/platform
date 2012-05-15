@@ -163,7 +163,7 @@
     <properties>
         <hive.orbit.version>0.8.1-wso2v1</hive.orbit.version>
         <antlr.orbit.version>3.0.1.wso2v1</antlr.orbit.version>
-        <zookeeper.orbit.version>3.3.4.wso2v1</zookeeper.orbit.version>
+        <zookeeper.orbit.version>3.3.5.wso2v1</zookeeper.orbit.version>
         <asm.orbit.version>3.1.wso2v1</asm.orbit.version>
         <commons.cli.orbit.version>1.2.0.wso2v1</commons.cli.orbit.version>
 	<commons.codec.orbit.version>1.4.0.wso2v1</commons.codec.orbit.version>

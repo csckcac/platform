@@ -57,7 +57,11 @@ public class SampleJCRRegistryClient {
     private static Node getOrAddNode(Node node, String name) throws RepositoryException {
             Node node1 = null;
             try {
-                node1 = node.addNode(name);
+                if(!node.hasNode(name)){
+                    node1 = node.addNode(name);
+                } else {
+                    node1 = node.getNode(name);
+                }
 
             } catch (RepositoryException e) {
 
@@ -71,6 +75,7 @@ public class SampleJCRRegistryClient {
 
 
         private static void addPropertyTestData(Node node) throws RepositoryException {
+            System.out.println("addPropertyTestData:"+node);
             node.setProperty("boolean", true);
             node.setProperty("double", Math.PI);
             node.setProperty("long", 90834953485278298l);
@@ -205,7 +210,6 @@ public class SampleJCRRegistryClient {
         try {
 
             loadSystemSpecificDate(session);
-
             Node data = getOrAddNode(session.getRootNode(), "testdata");
             addPropertyTestData(getOrAddNode(data, "property"));
             addQueryTestData(getOrAddNode(data, "query"));
@@ -221,15 +225,25 @@ public class SampleJCRRegistryClient {
 
     }
     private static void loadSystemSpecificDate(Session session) throws RepositoryException {
-        session.getRootNode().addNode("jcr_system").addNode("jcr_activities");
-        session.getRootNode().getNode("jcr_system").addNode("jcr_gregVersionLabels");
+        if(!session.getRootNode().hasNode("jcr_system")) {
+            session.getRootNode().addNode("jcr_system");
+        }
+        if(!session.getRootNode().getNode("jcr_system").hasNode("jcr_activities")) {
+            session.getRootNode().getNode("jcr_system").addNode("jcr_activities");
+        }
+          if(!session.getRootNode().getNode("jcr_system").hasNode("jcr_gregVersionLabels")) {
+              session.getRootNode().getNode("jcr_system").addNode("jcr_gregVersionLabels");
+          }
     }
     
     public static void main(String[] args) throws Exception {
         initialize();
         Session session = repository.login(credentials);
         Workspace workspace = session.getWorkspace();
-        Node root_node = session.getRootNode().addNode("testroot");
+        if(!session.getRootNode().hasNode("testroot")) {
+            Node root_node = session.getRootNode().addNode("testroot");
+        }
         loadTestdata(session);
     }
 }
+

@@ -32,6 +32,7 @@
                 <fileset dir="${registry.home}/repository/lib">
                         <include name="*.jar" />
                 </fileset>
+
 	</path>
 
 	<target name="clean">
@@ -44,7 +45,7 @@
             	<mkdir dir="${dest.dir.lib}" />
 	</target>
 
-	<target name="copyjars">
+	<target name="copyjars" >
 		<copy todir="${registry.home}/lib/" overwrite="false">
             		<fileset dir="${registry.home}/repository/components/plugins/">
                 		<include name="abdera*.jar"/>
@@ -54,10 +55,11 @@
                 		<include name="org.wso2.carbon.user.core*.jar"/>
                 		<include name="axis2-transport-base*.jar"/>
 				<include name="axiom*.jar"/>
+                                <include name="org.wso2.carbon.securevault*.jar"/> 
             		</fileset>
         	</copy>
-	</target>
-
+          </target>
+         
 	<target name="compile" depends="clean,copyjars,prepare">
 		<javac srcdir="org.wso2.carbon.registry.jcr.client" destdir="${dest.dir.classes}">
 			<classpath refid="client.class.path" />
@@ -73,7 +75,9 @@
 		<antcall target="jar" />
 		<java classname="org.wso2.carbon.registry.jcr.client.SampleJCRRegistryClient">
 			<classpath refid="client.class.path" />
+                        <sysproperty key="wso2.registry.nodetype.xml"  value="${registry.home}/samples/jcr-client/bin/built_in_nodetypes.xml" />
             	</java>
 	</target>
 </project>
+
 

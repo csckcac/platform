@@ -28,6 +28,10 @@ import org.apache.axis2.transport.base.ProtocolEndpoint;
 public class HL7Endpoint extends ProtocolEndpoint {
 
     private int port = HL7Constants.DEFAULT_SYNAPSE_HL7_PORT;
+    
+    private boolean autoAck;
+    
+    private boolean validateMessage;
 
     @Override
     public boolean loadConfiguration(ParameterInclude params) throws AxisFault {
@@ -35,15 +39,24 @@ public class HL7Endpoint extends ProtocolEndpoint {
             this.port = ParamUtils.getOptionalParamInt(params, HL7Constants.HL7_PORT, -1);
             if (this.port == -1) {
             	return false;
-            } else {
-                return true;
             }
+            this.autoAck = ParamUtils.getOptionalParamBoolean(params, HL7Constants.HL7_AUTO_ACKNOWLEDGE, true);
+            this.validateMessage = ParamUtils.getOptionalParamBoolean(params, HL7Constants.HL7_VALIDATE_MESSAGE, true);
+            return true;
         } else {
         	return false;
         }        
     }
 
-    @Override
+    public boolean isAutoAck() {
+		return autoAck;
+	}
+
+	public boolean isValidateMessage() {
+		return validateMessage;
+	}
+
+	@Override
     public EndpointReference[] getEndpointReferences(AxisService axisService, String ip) throws AxisFault {
 
         String url = HL7Constants.TRANSPORT_NAME + "://" + ip + ":" + port;

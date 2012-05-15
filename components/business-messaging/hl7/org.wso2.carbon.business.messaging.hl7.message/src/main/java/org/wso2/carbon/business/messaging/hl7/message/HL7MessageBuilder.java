@@ -106,11 +106,6 @@ public class HL7MessageBuilder implements Builder {
         String xmlDoc = null;
         try {
             Message message = ediParser.parse(rowHL7);
-            ConformanceProfileRule rule = new ConformanceProfileRule();
-    		ValidationException[] exs = rule.test(message);
-    		if (exs != null && exs.length > 0) {
-    			throw new HL7Exception(exs[0].getMessage());
-    		}	
             if(log.isDebugEnabled()){
                 log.debug("HL7 parsing completed." + message);
             }

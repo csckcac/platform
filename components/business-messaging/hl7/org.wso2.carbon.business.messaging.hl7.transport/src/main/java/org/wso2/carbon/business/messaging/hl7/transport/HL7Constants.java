@@ -31,5 +31,17 @@ public class HL7Constants {
     public static final String TIMEOUT_PARAM = "timeout";
     
     public static final String HL7_RAW_MESSAGE_PROPERTY_NAME = "HL7_RAW_MESSAGE";
+    
+	public static final String HL7_VALIDATE_MESSAGE = "transport.hl7.ValidateMessage";
+	
+	public static final String HL7_AUTO_ACKNOWLEDGE = "transport.hl7.AutoAck";
+	
+	public static final String HL7_RESULT_MODE = "HL7_RESULT_MODE";
+	
+	public static final String HL7_RESULT_MODE_ACK = "ACK";
+	
+	public static final String HL7_RESULT_MODE_NACK = "NACK";
+	
+	public static final String HL7_NACK_MESSAGE = "HL7_NACK_MESSAGE";
 
 }

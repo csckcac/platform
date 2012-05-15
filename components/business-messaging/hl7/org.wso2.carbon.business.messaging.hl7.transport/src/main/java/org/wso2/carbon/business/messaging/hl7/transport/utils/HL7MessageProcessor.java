@@ -57,7 +57,6 @@ public class HL7MessageProcessor implements Application {
         if (log.isDebugEnabled()) {
             log.debug("Received HL7 message: " + message.toString());
         }
-
         try {
             MessageContext messageContext = endpoint.createMessageContext();
             messageContext.setIncomingTransportName(HL7Constants.TRANSPORT_NAME);
@@ -66,14 +65,30 @@ public class HL7MessageProcessor implements Application {
             messageContext.setProperty(HL7Constants.HL7_RAW_MESSAGE_PROPERTY_NAME, 
             		new PipeParser().encode(message));
             AxisEngine.receive(messageContext);
-            return createAck(message);
-
+            return this.handleHL7Result(messageContext, message);
         } catch (AxisFault axisFault) {
             return createNAck(message, "Error while processing the HL7 message " +
                     "through the engine", axisFault);
         } catch (XMLStreamException e) {
             return createNAck(message, "IO error while processing the HL7 content", e);
         }
+    }
+    
+    private Message handleHL7Result(MessageContext ctx, Message hl7Msg) throws HL7Exception {
+    	if (this.endpoint.isAutoAck()) {
+    		return this.createAck(hl7Msg);
+    	} else {
+    		String resultMode = (String) ctx.getProperty(HL7Constants.HL7_RESULT_MODE);
+    		if (resultMode != null) {
+    			if (HL7Constants.HL7_RESULT_MODE_ACK.equals(resultMode)) {
+    				return this.createAck(hl7Msg);
+    			} else if (HL7Constants.HL7_RESULT_MODE_NACK.equals(resultMode)) {
+    				String nackMessage = (String) ctx.getProperty(HL7Constants.HL7_NACK_MESSAGE);
+    				return this.createNAck(hl7Msg, nackMessage, new Exception(nackMessage));
+    			}
+    		}
+    	}
+    	throw new HL7Exception("Application Error");
     }
 
     private Message createAck(Message message) throws HL7Exception {

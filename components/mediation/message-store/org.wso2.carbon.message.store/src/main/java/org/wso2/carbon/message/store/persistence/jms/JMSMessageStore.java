@@ -310,7 +310,7 @@ public class JMSMessageStore extends AbstractMessageStore {
 
     public MessageContext remove(String messageId) {
         // Removing a Random Message is not supported in JMS Message store;
-        throw new RuntimeException("Removing a Random Message is not supported in JMS Message store");
+        throw new UnsupportedOperationException("Removing a Random Message is not supported in JMS Message store");
     }
 
     public MessageContext get(int i) {
@@ -666,7 +666,7 @@ public class JMSMessageStore extends AbstractMessageStore {
         }
     }
 
-    private void cleanupCachedReadConnection() {
+    private synchronized void cleanupCachedReadConnection() {
         if (cachedReadConnection != null) {
             if (log.isDebugEnabled()) {
                 log.debug("Closing the cached JMS connection in: " + name);
@@ -681,7 +681,7 @@ public class JMSMessageStore extends AbstractMessageStore {
         }
     }
 
-    private void cleanupCachedWriteConnection() {
+    private synchronized void cleanupCachedWriteConnection() {
         if (cachedReadConnection != null) {
             if (log.isDebugEnabled()) {
                 log.debug("Closing the cached JMS connection in: " + name);

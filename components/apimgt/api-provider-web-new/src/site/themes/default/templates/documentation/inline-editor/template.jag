@@ -44,7 +44,7 @@ var docName = '<%=request.getParameter("docName")%>';
     <script type="text/javascript">
     $("#inline-save-button").click(function() {
             var contentDoc = tinyMCE.get('inlineEditor').getContent();
-            jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:saveDocContent,apiName:apiName,version:version,docName:docName,content:contentDoc},
+            jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"addInlineContent",apiName:apiName,version:apiVersion,docName:docName,content:contentDoc},
     function (result) {
             if (result.error) {
               jagg.message(result.message);

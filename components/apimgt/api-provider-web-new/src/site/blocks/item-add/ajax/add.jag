@@ -19,7 +19,7 @@ include("/jagg/jagg.jag");
         apiData.wsdl = request.getParameter("wsdl");
         apiData.tags = request.getParameter("tags");
         apiData.tier = request.getParameter("tier");
-        apiData.imageUrl = request.getParameter("apiThumb");
+        apiData.imageUrl = request.getFile("apiThumb");
         apiData.context = request.getParameter("context");
         var resCount = new Array();
         if (request.getParameter("resourceCount") != null) {
@@ -41,9 +41,9 @@ include("/jagg/jagg.jag");
         apiData.status = request.getParameter("status");
         result = mod.updateAPI(apiData);
         }
-        if (result.error=="true") {
+        if (result.error==true) {
             obj = {
-                error:result.error,
+                error:true,
                 message:msg.error.backendError(action)
             };
         } else {
@@ -56,9 +56,9 @@ include("/jagg/jagg.jag");
         mod = jagg.module("api");
         var context = request.getParameter("context");
         result = mod.isContextExist(context);
-        if (result.error=="true") {
+        if (result.error) {
             obj = {
-                error:result.error,
+                error:true,
                 message:msg.error.backendError(action)
             };
         } else {

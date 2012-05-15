@@ -1,6 +1,9 @@
-var resourcesCount = 1;
+
 var rowNums = new Array();
+rowNums.push(0);
 var addResourcesToApi = function () {
+    var resourcesCount=$('#resourceTable tr').length-2;
+    var countLength=$('#resourceCount').length;
     $('#resourceTableError').hide('fast');
     $('#resourceRow').clone(true).attr('id', 'item-' + resourcesCount).insertAfter($('#resourceRow'));
     $('#item-' + resourcesCount + ' #resourceMethod').val($('#resourceMethod').val());
@@ -23,7 +26,7 @@ var addResourcesToApi = function () {
     rowNums.push(resourcesCount);
     resourcesCount++;
 
-    if ($('#resourceCount').length == 0) {
+    if (countLength == 0) {
         $('<input>').attr('type', 'hidden')
             .attr('name', 'resourceCount')
             .attr('id', 'resourceCount')

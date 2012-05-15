@@ -1,9 +1,12 @@
 <% jagg.template("item-add", function(inputs, outputs, jagg) { %>
 <div id="item-add">
     <h2>Add New API</h2>
+    <div class="alert alert-error" id="addAPIError" style="display:none">
+                            <span>Sorry. This API cannot be added. Error occurred while adding the API.</span>
+                        </div>
     <div class="row-fluid">
         <div class="span12">
-            <form class="form-horizontal well"
+            <form class="form-horizontal well" method="POST"
               id="addAPIForm"
               enctype="multipart/form-data">
 
@@ -206,7 +209,9 @@ $('input#addNewAPIButton').click( function() {
                   if(!data.error){
                       location.href = "site/pages/index.jag";
                       $("#addAPIForm")[0].reset();
-                  }
+                  }else{
+         $('#addAPIError').show('fast');
+        }
                  }
     });
          return false;

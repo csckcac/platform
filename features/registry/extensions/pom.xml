@@ -64,6 +64,11 @@
                 <artifactId>wsdl-validator</artifactId>
                 <version>${wsdl.validator.version.extensions}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.maven.scm.wso2</groupId>
+                <artifactId>maven-scm</artifactId>
+                <version>${orbit.version.maven-scm}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

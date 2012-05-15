@@ -49,6 +49,10 @@
         <dependency>
             <groupId>org.wso2.wsdl.validator.wso2</groupId>
             <artifactId>wsdl-validator</artifactId>
+        </dependency>            
+        <dependency>
+            <groupId>org.apache.maven.scm.wso2</groupId>
+            <artifactId>maven-scm</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-scxml.wso2</groupId>
@@ -84,6 +88,7 @@
                             </bundles>
                             <importBundles>
                                 <importBundleDef>org.wso2.wsdl.validator.wso2:wsdl-validator</importBundleDef>
+                                <importBundleDef>org.apache.maven.scm.wso2:maven-scm</importBundleDef>
                                 <importBundleDef>commons-scxml.wso2:commons-scxml</importBundleDef>
                             </importBundles>
                             <importFeatures>

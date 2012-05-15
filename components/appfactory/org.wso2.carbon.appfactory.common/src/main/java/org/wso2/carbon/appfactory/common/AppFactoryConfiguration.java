@@ -238,32 +238,4 @@ public class AppFactoryConfiguration {
         this.deploymentServerLocations = deploymentServerLocations;
     }
 
-    @Override
-    public String toString() {
-        return "AppFactoryConfiguration{" +
-               "sSOName='" + sSOName + '\'' +
-               ", sSOIdentityProviderEPR='" + sSOIdentityProviderEPR + '\'' +
-               ", sSOKeyStorePassword='" + sSOKeyStorePassword + '\'' +
-               ", sSOIdentityAlias='" + sSOIdentityAlias + '\'' +
-               ", sSOKeyStoreName='" + sSOKeyStoreName + '\'' +
-               ", webServiceEPRAddUserToProject='" + webServiceEPRAddUserToProject + '\'' +
-               ", webServiceEPRCreateProject='" + webServiceEPRCreateProject + '\'' +
-               ", webServiceEPRCreateRepo='" + webServiceEPRCreateRepo + '\'' +
-               ", webServiceEPRGetRolesOfUserForProject='" + webServiceEPRGetRolesOfUserForProject + '\'' +
-               ", webServiceEPRGetUsersOfProject='" + webServiceEPRGetUsersOfProject + '\'' +
-               ", webServiceEPREmailVarificationService='" + webServiceEPREmailVarificationService + '\'' +
-               ", bpelEPRCreateUser='" + bpelEPRCreateUser + '\'' +
-               ", bpelEPRActivateUser='" + bpelEPRActivateUser + '\'' +
-               ", adminUserName='" + adminUserName + '\'' +
-               ", adminPassword='" + adminPassword + '\'' +
-               ", sCMServerIp='" + sCMServerIp + '\'' +
-               ", sCMServerPort='" + sCMServerPort + '\'' +
-               ", sCMServerRealmName='" + sCMServerRealmName + '\'' +
-               ", sCMServerAdminUserName='" + sCMServerAdminUserName + '\'' +
-               ", sCMServerAdminPassword='" + sCMServerAdminPassword + '\'' +
-               ", sCMReadWritePermissionName='" + sCMReadWritePermissionName + '\'' +
-               ", svnBaseURL='" + svnBaseURL + '\'' +
-               ", deploymentServerLocations=" + deploymentServerLocations +
-               '}';
-    }
 }

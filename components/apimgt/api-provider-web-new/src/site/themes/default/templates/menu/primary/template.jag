@@ -1,5 +1,6 @@
 <% jagg.template("menu/primary", function(inputs, outputs, jagg) { %>
-
+<%var reqUrl = request.getRequestURI();
+ var inlineUrl=jagg.getAbsoluteUrl("/site/pages/inline-editor.jag"); %>
 <link href="<%=site.context%>/site/themes/default/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="<%=site.context%>/site/themes/default/lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 <link rel="shortcut icon" href="<%=site.context%>/site/themes/default/images/favicon.ico">
@@ -20,7 +21,8 @@
                    </a>
                    <a class="brand" href="#"><a class="brand" style="position:absolute;"><img src="<%=site.context%>/site/themes/default/images/logo.png"
                                                                                                        alt="API PROVIDER"></a></a>
-
+                       <%
+                       if(reqUrl.indexOf(inlineUrl)>=0){%> <div class="nav-collapse" style="height:35px">  <%}else{%>
                        <div class="nav-collapse">
                        <ul class="nav pull-right">
                            <li><a class="user-name" id="userNameShow"><%=outputs.user.username%></a></li>
@@ -32,7 +34,7 @@
                              </ul>
                            </li>
                          </ul>
-                   </div>
+                   </div><%}%>
                    <!--/.nav-collapse -->
                </div>
            </div>

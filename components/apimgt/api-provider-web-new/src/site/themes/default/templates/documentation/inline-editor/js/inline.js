@@ -15,7 +15,7 @@ $(document).ready(function() {
 
 
 function loadDefaultTinyMCEContent(apiName, version, docName) {
-    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"getInlineContent", apiName:apiName,version:version,docName:docName password:pass },
+    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"getInlineContent", apiName:apiName,version:version,docName:docName,password:pass },
               function (json) {
                   if (!json.error) {
                       var docName = json.doc[0].docName;

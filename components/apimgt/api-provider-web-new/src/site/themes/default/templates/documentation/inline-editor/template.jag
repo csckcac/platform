@@ -6,11 +6,9 @@ var docName = '<%=request.getParameter("docName")%>';
 </script>
 
 
-<div class="container-fluid content-section">
-      <div class="row-fluid">
         <div class="span10" style="margin:20px 0px 0px 40px;">
 			<div id="apiDeatils">
-				<h2>InLine Editor</h2>
+				<h2><%=request.getParameter("docName")%></h2>
 			</div>
 		</div>
         <div class="span8">
@@ -41,13 +39,12 @@ var docName = '<%=request.getParameter("docName")%>';
 
             </div>
         </div>
-      </div>
-</div>
+
 
     <script type="text/javascript">
     $("#inline-save-button").click(function() {
             var contentDoc = tinyMCE.get('inlineEditor').getContent();
-            jagg.post("/site/blocks/documentation/ajax/docs.jag", { action=saveDocContent,apiName:apiName,version:version,docName:docName,content:contentDoc},
+            jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:saveDocContent,apiName:apiName,version:version,docName:docName,content:contentDoc},
     function (result) {
             if (result.error) {
               jagg.message(result.message);

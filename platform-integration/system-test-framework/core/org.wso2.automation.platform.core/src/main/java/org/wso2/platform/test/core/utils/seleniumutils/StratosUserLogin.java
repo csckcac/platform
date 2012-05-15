@@ -38,10 +38,10 @@ public class StratosUserLogin {
         driver.findElement(By.id("username")).sendKeys(userName);
         driver.findElement(By.id("password")).sendKeys(password);
         driver.findElement(By.xpath("//tr[4]/td[2]/input")).click();
-        Thread.sleep(5000);
-        if (productName.equalsIgnoreCase("manager")) {
 
-            assertTrue(driver.getPageSource().contains("Application Server"),
+        if (productName.equalsIgnoreCase("manager")) {
+            assertTrue(driver.findElement(By.id("workArea")).findElement(By.className("dashboard-title")).getText().
+                    contains("Application Server"),
                        "Manager Home page Failed");
             assertTrue(driver.getPageSource().contains("Mashup Server"), "Manager Home page Failed");
             assertTrue(driver.getPageSource().contains("Identity Server"), "Manager Home page Failed");
@@ -49,7 +49,8 @@ public class StratosUserLogin {
             assertTrue(driver.getPageSource().contains("Enterprise Service Bus"),
                        "Manager Home page Failed");
         } else {
-            assertTrue(driver.getPageSource().toLowerCase().contains("quick start dashboard"),
+            assertTrue(driver.findElement(By.id("workArea")).findElement(By.className("dashboard-title")).getText().
+                    contains("quick start dashboard"),
                        "Failed to display service home Page :");
         }
     }

@@ -12,8 +12,7 @@
                 <label class="control-label" for="editDescription">Description:</label>
                 <div class="controls">
                     <textarea class="input-xlarge" id="editDescription" rows="3"
-                              style="margin-left: 0px; margin-right: 0px; width: 501px; " name="description"><%=api.description%>
-                    </textarea>
+                              style="margin-left: 0px; margin-right: 0px; width: 501px; " name="description"><%=api.description%></textarea>
                 </div>
             </div>
 

@@ -53,7 +53,7 @@ include("/jagg/jagg.jag");
         provider = request.getParameter("provider");
         context = request.getParameter("context");
         application = request.getParameter("application");
-        keyType = request.getParameter("keyType");
+        keyType = request.getParameter("keytype");
         username = user.username;
 
         mod = jagg.module("subscription");

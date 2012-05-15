@@ -87,7 +87,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			Object[] args, Function funObj) throws ScriptException {
 		int argsCount = args.length;
         String methodName = "getKey";
-        if(argsCount != 6) {
+        if(argsCount != 7) {
             HostObjectUtil.invalidNumberOfArgs(hostObjectName, methodName, argsCount, false);
         }
         if(!(args[0] instanceof String)) {
@@ -108,13 +108,16 @@ public class APIStoreHostObject extends ScriptableObject {
         if(!(args[5] instanceof String)) {
             HostObjectUtil.invalidArgsError(hostObjectName, methodName, "6", "string", args[5], false);
         }
+        if(!(args[5] instanceof String)) {
+            HostObjectUtil.invalidArgsError(hostObjectName, methodName, "7", "string", args[6], false);
+        }
         APIInfoDTO apiInfo = new APIInfoDTO();
         apiInfo.setProviderId((String) args[0]);
         apiInfo.setApiName((String) args[1]);
         apiInfo.setVersion((String) args[2]);
         apiInfo.setContext((String) args[3]);
         try {
-            return keyMgtClient.getAccessKey((String) args[5], apiInfo, (String) args[4], "PRODUCTION");
+            return keyMgtClient.getAccessKey((String) args[5], apiInfo, (String) args[4], (String) args[6]);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);
@@ -1126,18 +1129,18 @@ public class APIStoreHostObject extends ScriptableObject {
                 NativeObject row = new NativeObject();
                 row.put("application", row, api.getApplication().getName());
                 row.put("applicationId", row, api.getApplication().getId());
-                row.put("key", row, getProductionKey(api));
+                row.put("prodKey", row, getKey(api, APIConstants.API_KEY_TYPE_PRODUCTION));
+                row.put("sandboxKey", row, getKey(api, APIConstants.API_KEY_TYPE_SANDBOX));
                 myn.put(i++, myn, row);
             }
         }
         return myn;
     }
 
-    private static String getProductionKey(SubscribedAPI api) {
-        // TODO: Remove this when the UI is improved to handle sand boxing (Hiranya)
+    private static String getKey(SubscribedAPI api, String keyType) {
         List<APIKey> apiKeys = api.getKeys();
         for (APIKey key : apiKeys) {
-            if (APIConstants.API_KEY_TYPE_PRODUCTION.equals(key.getType())) {
+            if (keyType.equals(key.getType())) {
                 return key.getKey();
             }
         }
@@ -1188,7 +1191,9 @@ public class APIStoreHostObject extends ScriptableObject {
             apiObj.put("version", apiObj, subscribedAPI.getApiId().getVersion());
             apiObj.put("thumburl", apiObj, api.getThumbnailUrl());
             apiObj.put("context", apiObj, api.getContext());
-            apiObj.put("key", apiObj, getProductionKey(subscribedAPI));
+            apiObj.put("prodKey", apiObj, getKey(subscribedAPI, APIConstants.API_KEY_TYPE_PRODUCTION));
+            apiObj.put("sandboxKey", apiObj, getKey(subscribedAPI, APIConstants.API_KEY_TYPE_SANDBOX));
+            apiObj.put("hasMultipleEndpoints", apiObj, String.valueOf(api.getSandboxUrl() != null));
             apisArray.put(apisArray.getIds().length, apisArray, apiObj);
         } catch (APIManagementException e) {
             throw new ScriptException(e);

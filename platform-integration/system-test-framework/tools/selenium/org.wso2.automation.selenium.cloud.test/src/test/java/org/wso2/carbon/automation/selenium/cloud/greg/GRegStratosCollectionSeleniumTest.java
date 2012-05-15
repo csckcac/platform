@@ -72,7 +72,7 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath);
             waitTime("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
-                         "New Created Collection does not Exists :");
+                    "New Created Collection does not Exists :");
             userLogout();
             log.info("********GReg Stratos Add New Collection Test - Passed ***********");
         } catch (AssertionFailedError e) {
@@ -101,7 +101,7 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath);
             waitTime("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
-                         "New Created Collection does not Exists :");
+                    "New Created Collection does not Exists :");
 
             addComment(comment);
             deleteComment();
@@ -111,12 +111,12 @@ public class GRegStratosCollectionSeleniumTest {
             log.info("Add a Comment to Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Add a Comment to Collection Test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Add a Comment to Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Add a Comment to Collection Test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Add a Comment to Collection Test Failed :" + e.getMessage());
             userLogout();
@@ -136,7 +136,7 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath);      //Create Collection  1
             waitTime("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
-                         "New Created Collection does not Exists :");
+                    "New Created Collection does not Exists :");
             addTag(tag);
             selenium.mouseOver("//div[12]/div[3]/a");
             Thread.sleep(sleeptime);
@@ -147,12 +147,12 @@ public class GRegStratosCollectionSeleniumTest {
             log.info("Apply Tag to Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Apply Tag to Collection Test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Apply Tag to Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Apply Tag to Collection Test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Apply Tag to Collection Test Failed :" + e.getMessage());
             userLogout();
@@ -170,14 +170,14 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath);
             waitTime("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
-                         "New Created Collection does not Exists :");
+                    "New Created Collection does not Exists :");
             addServiceLifeCycle();
             promoteState();
-            assertTrue(selenium.isTextPresent("Tested"),
-                       "Service Life cycle Testing State fail:");
+            assertTrue(selenium.isTextPresent("Testing"),
+                    "Service Life cycle Testing State fail:");
             promoteState();
             assertTrue(selenium.isTextPresent("Production"),
-                       "Service Life Cycle Production State fail:");
+                    "Service Life Cycle Production State fail:");
             //Delete LifeCycle
             deleteServiceLifeCycle();
             userLogout();            //Sign out
@@ -186,12 +186,12 @@ public class GRegStratosCollectionSeleniumTest {
             log.info("Add Life Cycle to Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Add Life Cycle to Collection Test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Add Life Cycle to Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Add Life Cycle to Collection Test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Add Life Cycle to Collection Test Failed :" + e.getMessage());
             userLogout();
@@ -209,7 +209,7 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath);
             waitTime("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
-                         "New Created Collection does not Exists :");
+                    "New Created Collection does not Exists :");
             addRating();
             userLogout();
             log.info("********GReg Stratos Add Rating To Collection Test - Passed ***********");
@@ -217,12 +217,12 @@ public class GRegStratosCollectionSeleniumTest {
             log.info("Add Rating To Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Add Rating To Collection Test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Add Rating To Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Add Rating To Collection Test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Add Rating To Collection Test Failed :" + e.getMessage());
             userLogout();
@@ -242,7 +242,7 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath);
             waitTime("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
-                         "New Created Collection does not Exists :");
+                    "New Created Collection does not Exists :");
             findLocation("/selenium_root/collection_root/rename");
             assertTrue(selenium.isTextPresent("a1"), "Collection a1 does not Exists :");
             renameCollection(rename);
@@ -252,12 +252,12 @@ public class GRegStratosCollectionSeleniumTest {
             log.info("Rename Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Rename Collection Test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Rename Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Rename Collection Test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Rename Collection Test Failed :" + e.getMessage());
             userLogout();
@@ -278,17 +278,19 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath1);   //Create Collection  1
             waitTime("//input");
             assertEquals(collectionPath1, selenium.getValue("//input"),
-                         "New Created Collection1 does not Exists :");
+                    "New Created Collection1 does not Exists :");
             driver.findElement(By.xpath("//input")).clear();
             findLocation("/");
             addCollection(collectionPath2);          //Create Collection  2
             waitTime("//input");
             assertEquals(collectionPath2, selenium.getValue("//input"),
-                         "New Created Collection does not Exists :");
+                    "New Created Collection does not Exists :");
             findLocation("/selenium_root/collection_root/move/collection1");
             assertTrue(selenium.isTextPresent("a1"), "a1 Collection does not Exists :");
             moveCollection(movePath);
+            Thread.sleep(sleeptime);
             findPath(movePath);
+            Thread.sleep(sleeptime);
             addCollection(collection3);
             findPath(movePath);
             assertTrue(selenium.isTextPresent("a1"), "Moved Collection a1 does not Exists :");
@@ -300,12 +302,12 @@ public class GRegStratosCollectionSeleniumTest {
             log.info("Move a Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Move a Collection Test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Move a Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Move a Collection Test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Move a Collection Test Failed :" + e.getMessage());
             userLogout();
@@ -326,12 +328,12 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath1);            //Create Collection  1
             waitTime("//input");
             assertEquals(collectionPath1, selenium.getValue("//input"),
-                         "New Created Collection1 does not Exists :");
+                    "New Created Collection1 does not Exists :");
             findLocation("/");
             addCollection(collectionPath2);             //Create Collection  2
             waitTime("//input");
             assertEquals(collectionPath2, selenium.getValue("//input"),
-                         "New Created Collection2 does not Exists :");
+                    "New Created Collection2 does not Exists :");
             findLocation("/selenium_root/collection_root/copy/collection1");
             copyCollection(collectionPath2);
             findPath(collectionPath2);
@@ -346,12 +348,12 @@ public class GRegStratosCollectionSeleniumTest {
             log.info("Copy Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Copy Collection Test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Copy Collection Test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Copy Collection Test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Copy Collection Test Failed :" + e.getMessage());
             userLogout();
@@ -368,7 +370,7 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath1);               //Create Collection  1
             waitTime("//input");
             assertEquals(collectionPath1, selenium.getValue("//input"),
-                         "New Created Collection does not Exists :");
+                    "New Created Collection does not Exists :");
             findLocation("/selenium_root/collection_root/delete/");
             deleteCollection();
             userLogout();
@@ -377,12 +379,12 @@ public class GRegStratosCollectionSeleniumTest {
             log.info("Delete Collection Test  Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Delete Collection Test  Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Delete Collection Test  Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Delete Collection Test  Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Delete Collection Test  Failed :" + e.getMessage());
             userLogout();
@@ -401,11 +403,11 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.linkText("Delete")).click();
         waitTime("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"),
-                   "Delete Collection pop-up Title does not appear :");
+                "Delete Collection pop-up Title does not appear :");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete " +
-                                          "'/selenium_root/collection_root/delete/collection1'" +
-                                          " permanently?"), "Delete Collection pop-up message" +
-                                                            " fail:");
+                "'/selenium_root/collection_root/delete/collection1'" +
+                " permanently?"), "Delete Collection pop-up message" +
+                " fail:");
         selenium.click("//button");
         Thread.sleep(sleeptime);
     }
@@ -420,9 +422,9 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.xpath("//td/table/tbody/tr[2]/td/input")).click();
         waitTime("//body/div[3]/div/div");
         assertTrue(driver.getPageSource().contains("WSO2 Carbon"),
-                   "Copy Collection pop-up Title Failed:");
+                "Copy Collection pop-up Title Failed:");
         assertTrue(driver.getPageSource().contains("Successfully copied collection."),
-                   "Copy Collection pop-up Message Failed :");
+                "Copy Collection pop-up Message Failed :");
         driver.findElement(By.xpath("//button")).click();
         Thread.sleep(sleeptime);
     }
@@ -435,10 +437,12 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.id("move_destination_path1")).sendKeys(movePath);
         Thread.sleep(sleeptime);
         driver.findElement(By.xpath("//tr[5]/td/table/tbody/tr[2]/td/input")).click();
+        Thread.sleep(sleeptime);
         waitTime("//body/div[3]/div/div");
+        Thread.sleep(sleeptime);
         assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Move pop-up window Title fail");
         assertTrue(selenium.isTextPresent("Successfully moved collection."),
-                   "Move pop-up window message fail");
+                "Move pop-up window message fail");
         selenium.click("//button");
         Thread.sleep(sleeptime);
     }
@@ -461,7 +465,9 @@ public class GRegStratosCollectionSeleniumTest {
 
     private void findPath(String path) throws InterruptedException {
         driver.findElement(By.id("uLocationBar")).clear();
+        Thread.sleep(sleeptime);
         driver.findElement(By.id("uLocationBar")).sendKeys(path);
+        Thread.sleep(sleeptime);
         driver.findElement(By.xpath("//input[2]")).click();
         Thread.sleep(sleeptime);
     }
@@ -502,8 +508,8 @@ public class GRegStratosCollectionSeleniumTest {
         waitTime("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Delete Lifecycle pop-up Title fail:");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete'ServiceLifeCycle'" +
-                                          " permanently?"),
-                   "Delete Lifecycle pop-up message fail :");
+                " permanently?"),
+                "Delete Lifecycle pop-up message fail :");
         driver.findElement(By.xpath("//button")).click();
         Thread.sleep(sleeptime);
     }
@@ -519,9 +525,9 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.xpath("//tr[2]/td/div/input")).click();
         waitTime("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"),
-                   "Life Cycle Promote pop-up Title fail :");
+                "Life Cycle Promote pop-up Title fail :");
         assertTrue(selenium.isTextPresent("Successfully Promoted"),
-                   "Life Cycle promote pop-up message fail :");
+                "Life Cycle promote pop-up message fail :");
         // click on OK button
         selenium.click("//button");
         Thread.sleep(sleeptime);
@@ -533,15 +539,15 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.linkText("Add Lifecycle")).click();
         waitTime("//div[3]/div[3]/form/table/tbody/tr[2]/td/input");
         assertTrue(selenium.isTextPresent("Enable Lifecycle"),
-                   "Enable LifeCycle Text does not appear :");
+                "Enable LifeCycle Text does not appear :");
         assertEquals("Add", selenium.getValue("//div[3]/div[3]/form/table/tbody/tr[2]/td/input"),
-                     "Lifecycle Add Button does not appear :");
+                "Lifecycle Add Button does not appear :");
         assertEquals("Cancel", selenium.getValue("//div[3]/div[3]/form/table/tbody/tr[2]/td/input[2]"),
-                     "Lifecycle Cancel button does not appear");
+                "Lifecycle Cancel button does not appear");
         selenium.click("//div[3]/div[3]/form/table/tbody/tr[2]/td/input");
         waitTime("//tr[2]/td/div/input");
         assertTrue(selenium.isTextPresent("Development"),
-                   "Service Life cycle default state does not exists:");
+                "Service Life cycle default state does not exists:");
     }
 
 
@@ -550,7 +556,7 @@ public class GRegStratosCollectionSeleniumTest {
         waitTime("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Delete Tag Pop-up Title fail :");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this tag?"),
-                   "Delete Tag Pop-up Message fail :");
+                "Delete Tag Pop-up Message fail :");
         //click on "yes" button
         selenium.click("//button");
         Thread.sleep(sleeptime1);
@@ -572,7 +578,7 @@ public class GRegStratosCollectionSeleniumTest {
         waitTime("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Comment Delete pop-up title failed :");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this comment?"),
-                   "Comment Delete pop-up  message failed :");
+                "Comment Delete pop-up  message failed :");
         selenium.click("//button");
         Thread.sleep(sleeptime);
     }
@@ -583,15 +589,15 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.linkText("Add Comment")).click();
         waitTime("//div[3]/form/table/tbody/tr/td/textarea");
         assertTrue(selenium.isTextPresent("Add New Comment"),
-                   "Add comment window pop -up failed :");
+                "Add comment window pop -up failed :");
         assertEquals("Add", selenium.getValue("//div[12]/div/div[3]/div[3]/form/table/tbody/" +
-                                              "tr[2]/td/input"), "Add comment window  pop -up failed :");
+                "tr[2]/td/input"), "Add comment window  pop -up failed :");
         assertEquals("Cancel", selenium.getValue("//div[12]/div/div[3]/div[3]" +
-                                                 "/form/table/tbody/tr[2]/td/input[2]"),
-                     "Add comment window  pop -up failed :");
+                "/form/table/tbody/tr[2]/td/input[2]"),
+                "Add comment window  pop -up failed :");
         driver.findElement(By.id("comment")).sendKeys(comment);
         driver.findElement(By.xpath("//div[12]/div/div[3]/div[3]/form/table/tbody/" +
-                                    "tr[2]/td/input")).click();
+                "tr[2]/td/input")).click();
         waitTime("//div[4]/div/div[2]/table/tbody/tr/td/div");
     }
 
@@ -622,9 +628,9 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.xpath("//div[7]/form/table/tbody/tr[5]/td/input")).click();
         waitTime("//button");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"),
-                   "Add new Collection pop -up title failed :");
+                "Add new Collection pop -up title failed :");
         assertTrue(selenium.isTextPresent("Successfully added new collection."),
-                   "Add new Collection pop -up message failed :");
+                "Add new Collection pop -up message failed :");
         //click on OK button
         selenium.click("//button");
         Thread.sleep(sleeptime);
@@ -637,7 +643,7 @@ public class GRegStratosCollectionSeleniumTest {
         long time;
         boolean element = false;
         while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
+                < 120 * 1000) {
             if (selenium.isElementPresent(elementName)) {
                 element = true;
                 break;

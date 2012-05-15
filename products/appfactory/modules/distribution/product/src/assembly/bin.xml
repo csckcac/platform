@@ -281,6 +281,13 @@
             <filtered>true</filtered>
             <fileMode>744</fileMode>
         </file>
+                <file>
+                        <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/email/confirmation-email-config.xml</source>
+                        <outputDirectory>wso2appfactory-${pom.version}/repository/conf/email/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>744</fileMode>
+        </file>
+
 
         <file>
 			<source>resources/bpel/conf/bps.xml</source>

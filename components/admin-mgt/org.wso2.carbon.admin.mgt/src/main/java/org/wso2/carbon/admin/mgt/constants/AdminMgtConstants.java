@@ -34,8 +34,14 @@ public class AdminMgtConstants {
     public static final String ILLEGAL_CHARACTERS_FOR_TENANT_DOMAIN =
             ".*[^a-zA-Z0-9\\._\\-].*";
     
+    public static final String NO_EMAIL_ADDRESS_SET_ERROR =
+            "No email address associated with the given user account";
+    
     public static final String EMAIL_CONF_DIRECTORY = "email";
     
     public static final String EMAIL_ADMIN_CONF_FILE = "email-admin-config.xml";
+
+    public static final String DEFAULT_VALUE_SUBJECT = "Configure Admin Account";
+    public static final String DEFAULT_VALUE_MESSAGE = "Please point your browser to : ";
 
 }

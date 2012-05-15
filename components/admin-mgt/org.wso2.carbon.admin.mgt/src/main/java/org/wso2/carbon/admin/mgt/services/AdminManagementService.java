@@ -28,23 +28,23 @@ import org.wso2.carbon.admin.mgt.internal.util.PasswordUtil;
 import org.wso2.carbon.admin.mgt.util.AdminMgtUtil;
 import org.wso2.carbon.captcha.mgt.beans.CaptchaInfoBean;
 import org.wso2.carbon.captcha.mgt.util.CaptchaUtil;
-import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.UserStoreManager;
-import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 
 /**
- * AdminManagement Service Class
+ * The service that is responsible for the password reset functionality of carbon.
  */
 public class AdminManagementService {
     private static final Log log = LogFactory.getLog(AdminManagementService.class);
 
-
+    /**
+     *  Confirms that the link shared in the email is used only once in password reset.
+     * @param secretKey - the key given in the password reset email.
+     * @return ConfirmationBean, that has the data and redirect path.
+     * @throws Exception, if the key provided in the link is expired, already clicked, or invalid.
+     */
     public static ConfirmationBean confirmUser(String secretKey) throws Exception {
         return AdminMgtUtil.confirmUser(secretKey);
     }
@@ -67,9 +67,9 @@ public class AdminManagementService {
         String tenantDomain = adminInfoBean.getTenantDomain();
         if (!(tenantDomain.trim().equals(""))) {
             try {
-                AdminMgtUtil.validateDomain(adminInfoBean.getTenantDomain());
+                AdminMgtUtil.checkIsDomainValid(adminInfoBean.getTenantDomain());
             } catch (Exception e) {
-                String msg = "Domain Validation Failed.";
+                String msg = "Attempt to validate the given domain for the password reset failed.";
                 log.error(msg, e);
                 // Password Reset Failed. Not passing the error details to client.
                 return false;
@@ -137,7 +137,8 @@ public class AdminManagementService {
                 actualConfirmationKey = new String((byte[]) content);
             }
 
-            if ((actualConfirmationKey != null) && (actualConfirmationKey.equals(confirmationKey))) {
+            if ((actualConfirmationKey != null) &&
+                    (actualConfirmationKey.equals(confirmationKey))) {
                 if (log.isDebugEnabled()) {
                     log.debug("Password resetting for the user of the domain: " + domain);
                 }
@@ -158,8 +159,7 @@ public class AdminManagementService {
      * Generates a random Captcha
      *
      * @return captchaInfoBean
-     * @throws Exception, if exception in cleaning old captchas or generating new
-     *                    captcha image.
+     * @throws Exception, if exception in cleaning old captchas or generating new captcha image.
      */
     public CaptchaInfoBean generateRandomCaptcha() throws Exception {
         // we will clean the old captchas asynchronously

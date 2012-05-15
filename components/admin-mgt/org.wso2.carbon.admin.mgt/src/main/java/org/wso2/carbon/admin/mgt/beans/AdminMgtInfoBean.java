@@ -18,10 +18,6 @@
  */
 package org.wso2.carbon.admin.mgt.beans;
 
-import org.wso2.carbon.admin.mgt.services.AdminManagementService;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.UserStoreManager;
-
 /**
  * Bean class for Tenant Information
  */

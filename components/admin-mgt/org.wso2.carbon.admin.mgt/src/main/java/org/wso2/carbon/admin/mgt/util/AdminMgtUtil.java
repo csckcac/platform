@@ -112,11 +112,11 @@ public class AdminMgtUtil {
     }
 
     /**
-     * Confirm that the admin management request has been sent by the user.
-     *
-     * @param secretKey the secret key to be sent
-     * @return ConfirmationBean
-     * @throws Exception if admin account management attempt failed.
+     * Confirms that the password reset request has been sent by the user.
+     * @param secretKey the secret key that was sent in the email
+     * @return ConfirmationBean, the bean with the data and redirect path.
+     * @throws Exception if the attempt failed - mostly due to the password reset link always being
+     * used or expired..
      */
     public static ConfirmationBean confirmUser(String secretKey) throws Exception {
         ConfirmationBean confirmationBean = new ConfirmationBean();
@@ -174,25 +174,6 @@ public class AdminMgtUtil {
      * @throws Exception if loading config or sending verification fail.
      */
     public static void requestUserVerification(Map<String, String> data) throws Exception {
-        try {
-            requestUserVerification(data, adminMgtConfig);
-        } catch (Exception e) {
-            String msg = "Error in sending verification";
-            log.error(msg, e);
-            throw new Exception(msg, e);
-        }
-    }
-
-
-    /**
-     * verifying the admin management request
-     *
-     * @param data          - data to include in the mail
-     * @param serviceConfig - adminManagementConfig
-     * @throws Exception if sending verification fails.
-     */
-    public static void requestUserVerification(
-            Map<String, String> data, AdminManagementConfig serviceConfig) throws Exception {
         String emailAddress = data.get("email");
 
         Map<String, String> userParams = new HashMap<String, String>();
@@ -210,7 +191,7 @@ public class AdminMgtUtil {
                     getConfigSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
             Resource resource = registry.newResource();
             // store the redirector url
-            resource.setProperty("redirectPath", serviceConfig.getRedirectPath());
+            resource.setProperty("redirectPath", adminMgtConfig.getRedirectPath());
             // store the user data, redirectPath can be overwritten here.
             for (String s : data.keySet()) {
                 resource.setProperty(s, data.get(s));
@@ -219,11 +200,11 @@ public class AdminMgtUtil {
             ((ResourceImpl) resource).setVersionableChange(false);
             String secretKeyPath = AdminMgtConstants.ADMIN_MANAGEMENT_COLLECTION +
                     RegistryConstants.PATH_SEPARATOR + secretKey;
+            // resource put into the registry, with the secretKeyPath
             registry.put(secretKeyPath, resource);
             // sending the mail
-            EmailSender sender = new EmailSender(serviceConfig, emailAddress, secretKey,
-                                                 SuperTenantCarbonContext.getCurrentContext().
-                                                         getTenantDomain(true), userParams);
+            EmailSender sender = new EmailSender(adminMgtConfig, emailAddress, secretKey,
+                    SuperTenantCarbonContext.getCurrentContext().getTenantDomain(true), userParams);
             sender.sendEmail();
         } catch (Exception e) {
             String msg = "Error in sending the email.";
@@ -233,12 +214,12 @@ public class AdminMgtUtil {
     }
 
     /**
-     * Validate the tenant domain
+     * Is the given tenant domain valid
      *
      * @param domainName tenant domain
      * @throws Exception , if invalid tenant domain name is given
      */
-    public static void validateDomain(String domainName) throws Exception {
+    public static void checkIsDomainValid(String domainName) throws Exception {
         if (domainName == null || domainName.equals("")) {
             String msg = "Provided domain name is empty.";
             log.error(msg);

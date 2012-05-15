@@ -28,6 +28,7 @@ import org.apache.axis2.transport.base.BaseConstants;
 import org.apache.axis2.transport.mail.MailConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
 import org.wso2.carbon.admin.mgt.internal.AdminManagementServiceComponent;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -81,8 +82,7 @@ public class EmailSender extends Thread {
             SuperTenantCarbonContext.getCurrentContext().setTenantDomain(tenantDomain, true);
             if (config.getSubject().length() == 0) {
                 headerMap.put(MailConstants.MAIL_HEADER_SUBJECT,
-                        AdminManagementConfig.DEFAULT_VALUE_SUBJECT);
-
+                        AdminMgtConstants.DEFAULT_VALUE_SUBJECT);
             } else {
                 headerMap.put(MailConstants.MAIL_HEADER_SUBJECT, replacePlaceHolders(
                         config.getSubject(), userParameters));
@@ -108,11 +108,11 @@ public class EmailSender extends Thread {
             options.setTo(new EndpointReference("mailto:" + emailAddr));
             serviceClient.setOptions(options);
             serviceClient.fireAndForget(payload);
-            log.debug("Sending " +
-                    "user credentials configuration mail to " + emailAddr);
-            log.debug("Verification url : " + requestMessage);
+            if (log.isDebugEnabled()) {
+                log.debug("Sending user credentials configuration mail to " + emailAddr);
+                log.debug("Verification url : " + requestMessage);
+            }
             // Send the message
-
             log.info("User credentials configuration mail has been sent to " + emailAddr);
         } catch (AxisFault e) {
             log.error("Failed Sending Email", e);
@@ -134,7 +134,7 @@ public class EmailSender extends Thread {
                     MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain + "/carbon");
         }
         if (config.getEmailBody().length() == 0) {
-            msg = AdminManagementConfig.DEFAULT_VALUE_MESSAGE + "\n" + targetEpr + "?"
+            msg = AdminMgtConstants.DEFAULT_VALUE_MESSAGE + "\n" + targetEpr + "?"
                     + CONF_STRING + "=" + secretKey + "\n";
         } else {
             msg = config.getEmailBody() + "\n" + targetEpr + "?" + CONF_STRING + "="

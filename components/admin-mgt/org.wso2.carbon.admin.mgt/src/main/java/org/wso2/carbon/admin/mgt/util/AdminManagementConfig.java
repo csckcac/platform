@@ -17,17 +17,16 @@
 */
 package org.wso2.carbon.admin.mgt.util;
 
+import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
+
 /**
  * AdminManagement Configurations, those to be included in the admin management email to be sent.
  */
 public class AdminManagementConfig {
 
-    public final static String DEFAULT_VALUE_SUBJECT = "Configure Admin Account";
-    public final static String DEFAULT_VALUE_MESSAGE = "Please point your browser to : ";
-    
-    private String subject = DEFAULT_VALUE_SUBJECT;
-    private String emailBody = DEFAULT_VALUE_MESSAGE;
-    private String emailFooter;    
+    private String subject = AdminMgtConstants.DEFAULT_VALUE_SUBJECT;
+    private String emailBody = AdminMgtConstants.DEFAULT_VALUE_MESSAGE;
+    private String emailFooter;
     private String redirectPath;
     private String targetEpr;
 
@@ -38,7 +37,6 @@ public class AdminManagementConfig {
     public void setTargetEpr(String targetEpr) {
         this.targetEpr = targetEpr;
     }
-
 
     public String getRedirectPath() {
         return redirectPath;

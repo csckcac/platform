@@ -72,7 +72,7 @@ public class AdminManagementServiceComponent {
     }
 
     protected void setConfigurationContextService(ConfigurationContextService configurationContextService) {
-        log.debug("Recieving ConfigurationContext Service");
+        log.debug("Receiving ConfigurationContext Service");
         AdminManagementServiceComponent.configurationContextService = configurationContextService;
     }
 

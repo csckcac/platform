@@ -55,7 +55,6 @@ public class PasswordUtil {
         String domainName = adminInfoBean.getTenantDomain();
         String email;
         String userName;
-        String errorMsg = "No email address associated with the given user account";
 
         TenantManager tenantManager = AdminManagementServiceComponent.getTenantManager();
         int tenantId = AdminMgtUtil.getTenantIdFromDomain(domainName);
@@ -70,25 +69,27 @@ public class PasswordUtil {
         try {
             email = getEmailAddressForUser(adminName, userName, tenantId, tenant);
         } catch (Exception e) {
-            log.debug(errorMsg, e);
+            log.debug(AdminMgtConstants.NO_EMAIL_ADDRESS_SET_ERROR, e);
             return false;
         }
 
         if ((email == null) || (email.trim().equalsIgnoreCase(""))) {
             if (log.isDebugEnabled()) {
-                log.debug(errorMsg);
+                log.debug(AdminMgtConstants.NO_EMAIL_ADDRESS_SET_ERROR);
             }
             return false;
         }
 
+        // generates the confirmationKey to include in the email, and to set the resource under the adminMgtPath
+        // of the tenant.
         String confirmationKey = generateConfirmationKey(tenantId);
         Map<String, String> dataToStore =
                 populateDataMap(adminInfoBean, adminName, email, tenantId, tenant, confirmationKey);
 
-        return VerifyPasswordResetRequest(userName, dataToStore);
+        return verifyPasswordResetRequest(userName, dataToStore);
     }
 
-    private static boolean VerifyPasswordResetRequest(String userName,
+    private static boolean verifyPasswordResetRequest(String userName,
                                                       Map<String, String> dataToStore) {
         try {
             AdminMgtUtil.requestUserVerification(dataToStore);
@@ -105,13 +106,16 @@ public class PasswordUtil {
     }
 
     private static String generateConfirmationKey(int tenantId) throws RegistryException {
-        // generating the confirmation key
+        // generating the confirmation key as a random UUID.
         String confirmationKey = UUIDGenerator.generateUUID();
+        // resources are stored in the superTenant registry space, since no user is initially associated with the
+        // password reset invocation, as no user logged in.
         UserRegistry superTenantGovernanceSystemRegistry =
                 AdminManagementServiceComponent.getGovernanceSystemRegistry(
                         MultitenantConstants.SUPER_TENANT_ID);
 
         Resource resource;
+        // adminManagementPath is associated with the tenantId, by appending it.
         String adminManagementPath = AdminMgtConstants.ADMIN_MANAGEMENT_FLAG_PATH +
                 RegistryConstants.PATH_SEPARATOR + tenantId;
 
@@ -120,7 +124,9 @@ public class PasswordUtil {
         } else {
             resource = superTenantGovernanceSystemRegistry.newResource();
         }
+        // confirmationKey is set as the content of the new resource.
         resource.setContent(confirmationKey);
+        // resource is put into the superTenant Registry, with the adminMgtPath associated to the tenant.
         superTenantGovernanceSystemRegistry.put(adminManagementPath, resource);
         return confirmationKey;
     }

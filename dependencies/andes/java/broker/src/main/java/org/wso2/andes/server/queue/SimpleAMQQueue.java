@@ -577,8 +577,9 @@ public class SimpleAMQQueue implements AMQQueue, Subscription.StateListener
             try
             {
                 entry = _entries.add(message);
-               // commenting this code since we do not need this in the andes delivery path
-              //  deliverToSubscription(exclusiveSub, entry);
+               // commenting this code since we do not need this in the andes delivery path - But it is for
+               //queue delivery. For JMS Topics, it goes through here. So un commenting the code
+                deliverToSubscription(exclusiveSub, entry);
             }
             finally
             {

@@ -17,8 +17,9 @@ import java.util.Map;
 /**
  *
  */
-public class AppFactoryLDAPRealmBuilder implements MultiTenantRealmConfigBuilder{
-    private static final Log logger= LogFactory.getLog(AppFactoryLDAPRealmBuilder.class);
+public class AppFactoryLDAPRealmBuilder implements MultiTenantRealmConfigBuilder {
+    private static final Log logger = LogFactory.getLog(AppFactoryLDAPRealmBuilder.class);
+
     @Override
     public RealmConfiguration getRealmConfigForTenantToCreateRealm(
             RealmConfiguration
@@ -56,13 +57,15 @@ public class AppFactoryLDAPRealmBuilder implements MultiTenantRealmConfigBuilder
             String userContextRDN = orgSubContextAttribute + "=" +
                                     LDAPConstants.USER_CONTEXT_NAME;
             //eg: ou=groups,o=cse.org, dc=cloud, dc=com
-            String userSearchBase = userContextRDN  + "," +
+            String userSearchBase = userContextRDN + "," +
                                     partitionDN;
             //replace the tenant specific user search base.
-            userStoreProperties.put(LDAPConstants.USER_SEARCH_BASE,bootStrapConfig.getUserStoreProperty(LDAPConstants.USER_SEARCH_BASE));
+            userStoreProperties.put(LDAPConstants.USER_SEARCH_BASE, bootStrapConfig.
+                    getUserStoreProperty(LDAPConstants.USER_SEARCH_BASE));
 
             //if read ldap group is enabled, set the tenant specific group search base
-            if (("true").equals(bootStrapConfig.getUserStoreProperty(LDAPConstants.READ_EXTERNAL_ROLES))) {
+            if (("true").equals(bootStrapConfig.getUserStoreProperty
+                    (LDAPConstants.READ_EXTERNAL_ROLES))) {
                 //eg: ou=groups
                 String groupContextRDN = orgSubContextAttribute + "=" +
                                          LDAPConstants.GROUP_CONTEXT_NAME;
@@ -85,6 +88,6 @@ public class AppFactoryLDAPRealmBuilder implements MultiTenantRealmConfigBuilder
     public RealmConfiguration getRealmConfigForTenantToCreateRealmOnTenantCreation(
             RealmConfiguration realmConfiguration, RealmConfiguration realmConfiguration1, int i)
             throws UserStoreException {
-        return realmConfiguration;  //To change body of implemented methods use File | Settings | File Templates.
+        return realmConfiguration;
     }
 }

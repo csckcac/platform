@@ -29,7 +29,6 @@ import java.util.Map;
  */
 public class AppFactoryLDAPTenantManager extends JDBCTenantManager{
     private static final Log logger= LogFactory.getLog(AppFactoryLDAPTenantManager.class);
-    public static final String SUPER_TENANT_USER_CONTEXT_NAME="peoples";
     private LDAPConnectionContext ldapConnectionSource;
     private TenantMgtConfiguration tenantMgtConfig = null;
     private RealmConfiguration realmConfig = null;

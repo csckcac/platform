@@ -25,15 +25,15 @@ public class Util {
 
 
 
-    public static synchronized void setRegistryService(RegistryService registryService) {
+    public static synchronized void setRegistryService(RegistryService reg) {
         if(registryService==null){
-            registryService=registryService;
+            registryService=reg;
         }
     }
 
-    public static synchronized void setRealmService(RealmService realmService) {
+    public static synchronized void setRealmService(RealmService realmSer) {
         if(realmService==null){
-            realmService=realmService;
+           realmService=realmSer;
         }
     }
 

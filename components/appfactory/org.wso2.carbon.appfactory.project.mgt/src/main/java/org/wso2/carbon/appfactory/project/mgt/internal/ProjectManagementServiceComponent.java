@@ -31,13 +31,13 @@ public class ProjectManagementServiceComponent {
     protected void activate(ComponentContext context) {
 
 
-            log.debug("*******  bundle is activated ******* ");
+            log.debug("*******ProjectManagement Service  bundle is activated ******* ");
 
     }
 
     protected void deactivate(ComponentContext context) {
 
-        log.debug("*******  bundle is deactivated ******* ");
+        log.debug("*******ProjectManagement Service  bundle is deactivated ******* ");
     }
 
     protected void setRegistryService(RegistryService registryService) {
@@ -49,6 +49,7 @@ public class ProjectManagementServiceComponent {
     }
 
     protected void setRealmService(RealmService realmService) {
+
         Util.setRealmService(realmService);
     }
 

@@ -106,7 +106,7 @@ public class UserRegistrationService extends AbstractAdmin {
             }
             updateUserRole(userName);
             return true;
-        }
+
         return false;
     }
 

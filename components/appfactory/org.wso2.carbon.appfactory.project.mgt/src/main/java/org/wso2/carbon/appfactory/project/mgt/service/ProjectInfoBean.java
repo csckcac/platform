@@ -16,31 +16,24 @@ public class ProjectInfoBean {
     public String getOwnerUserName() {
         return ownerUserName;
     }
-
     public void setOwnerUserName(String ownerUserName) {
         this.ownerUserName = ownerUserName;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
-
     public String getProjectKey() {
         return projectKey;
     }
-
     public void setProjectKey(String projectKey) {
         this.projectKey = projectKey;
     }

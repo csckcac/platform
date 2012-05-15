@@ -65,11 +65,7 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * This class is responsible for manipulating ApacheDS data. This class provides
- * facility to add/delete/modify/view user info in a directory server. The LDAPUserStoreManager
- * only operates under read only mode. i.e. using LDAPUserStoreManager user is not allowed to
- * do any modifications to data in directory server. But with ApacheDSUserStoreManager user
- * can do modifications to directory server.
+ *
  */
 @SuppressWarnings({"UnusedDeclaration"})
 public class AppFactoryCommonLDAPUserStoreManager extends LDAPUserStoreManager {
@@ -231,17 +227,21 @@ public class AppFactoryCommonLDAPUserStoreManager extends LDAPUserStoreManager {
     public void addUser(String userName, Object credential, String[] roleList,
                         Map<String, String> claims, String profileName) throws UserStoreException {
     if(this.getTenantId()==0){
-        this.addUserHelper(userName, credential, roleList, claims, profileName, false);
+
+        this.addUserToSuperTenant(userName, credential, roleList, claims, profileName, false);
     }else {
+
         this.addUserToTenant(userName, credential, roleList, claims, profileName, false);
+
     }
 }
 
     private void addUserToTenant(String userName, Object credential, String[] roleList,
                                  Map<String, String> claims, String profileName, boolean b) {
+        //TODO:check for existance of the user
         if ((roleList != null) && (roleList.length != 0)) {
             //add user to role according to the group configuration in user-mgt.xml
-            log.info("start to add ...");
+            
             try {
                 for (String role : roleList) {
                     if ((readLDAPUserGroups) &&
@@ -274,14 +274,14 @@ public class AppFactoryCommonLDAPUserStoreManager extends LDAPUserStoreManager {
                         Map<String, String> claims, String profileName,
                         boolean requirePasswordChange) throws UserStoreException {
         if(this.getTenantId()==0){
-            this.addUserHelper(userName,credential,roleList,claims,profileName,requirePasswordChange);
+            this.addUserToSuperTenant(userName, credential, roleList, claims, profileName, requirePasswordChange);
         }else {
             this.addUserToTenant(userName,credential,roleList,claims,profileName,requirePasswordChange);
         }
     }
-    public void addUserHelper(String userName, Object credential, String[] roleList,
-                        Map<String, String> claims, String profileName,
-                        boolean requirePasswordChange) throws UserStoreException {
+    public void addUserToSuperTenant(String userName, Object credential, String[] roleList,
+                                     Map<String, String> claims, String profileName,
+                                     boolean requirePasswordChange) throws UserStoreException {
 
         if (!checkUserNameValid(userName)) {
             throw new UserStoreException(
@@ -553,8 +553,9 @@ public class AppFactoryCommonLDAPUserStoreManager extends LDAPUserStoreManager {
                     }
                 }
             }
-            //delete user entry
-            if (userResult.getAttributes().get(userNameAttribute).get().equals(userName)) {
+            //delete user entry if it for supertenant
+
+            if ((this.getTenantId()==0) &&(userResult.getAttributes().get(userNameAttribute).get().equals(userName))) {
                 subDirContext = (DirContext) mainDirContext.lookup(userSearchBase);
                 subDirContext.destroySubcontext(userDN);
             }
@@ -1757,7 +1758,7 @@ public class AppFactoryCommonLDAPUserStoreManager extends LDAPUserStoreManager {
                         NamingEnumeration<String> en= (NamingEnumeration<String>) attr.getAll();
                         while(en.hasMore()) {
                         //log.info("more users :"+en.next());
-                            names.add(getUserNameFromDN(en.next()));
+                            names.add((en.next().split(",")[0].split("="))[1]);
                         }
                         //String name = (String) attr.get();
                         //names.add(name);
@@ -1791,7 +1792,7 @@ public class AppFactoryCommonLDAPUserStoreManager extends LDAPUserStoreManager {
       buff.append(searchFilter);
 
       String serviceNameAttribute = "sn";
-      String returnedAtts[] = { userNameProperty, serviceNameAttribute };
+      String returnedAtts[] = { userNameProperty };
 
       searchCtls.setReturningAttributes(returnedAtts);
       DirContext dirContext = null;
@@ -1803,6 +1804,8 @@ public class AppFactoryCommonLDAPUserStoreManager extends LDAPUserStoreManager {
       
           answer = dirContext.search(searchBase, buff.toString(),
                                      searchCtls);
+          log.info("def "+answer.next().getName());
+
           if(!answer.hasMore()){
             return (String) answer.next().getAttributes().get(userNameProperty).get();
           }

@@ -23,6 +23,9 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.wso2.carbon.integration.framework.TestServerManager;
+import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
+import org.wso2.carbon.integration.framework.utils.ServerUtils;
+import org.wso2.carbon.integration.framework.utils.TestUtil;
 import org.wso2.carbon.utils.FileManipulator;
 
 import java.io.File;
@@ -40,13 +43,25 @@ public class JaggeryTestServerManager extends TestServerManager {
     @BeforeSuite(timeOut = 300000)
     public String startServer() throws IOException {
     	
-        String carbonHome = super.startServer();
+    	String carbonZip = System.getProperty("carbon.zip");
+    	ServerUtils serverUtils = new ServerUtils();
+        String carbonHome = serverUtils.setUpCarbonHome(carbonZip);
+        String carbonFolderPath = "";
+    	if(carbonHome != null) {
+    		carbonFolderPath = carbonHome + File.separator + "carbon";
+    	}
+        TestUtil.copySecurityVerificationService(carbonFolderPath);
+        copyArtifacts(carbonFolderPath);
+        System.setProperty("JAGGERY_HOME", carbonHome);
+        serverUtils.startServerUsingCarbonHome(carbonFolderPath, 0);
+        FrameworkSettings.init();
+        
         System.setProperty("carbon.home", carbonHome);
         
         // Copying jaggery configuration file
         String fileName = "jaggery.conf";
         String sourcePath = computeSourcePath(fileName);
-        String destinationPath = computeDestPath(carbonHome, fileName);
+        String destinationPath = computeDestPath(carbonFolderPath, fileName);
         copySampleFile(sourcePath, destinationPath);
         
         return carbonHome;
@@ -134,4 +149,5 @@ public class JaggeryTestServerManager extends TestServerManager {
         }
         return deploymentPath + File.separator + fileName;
     }
+    
 }

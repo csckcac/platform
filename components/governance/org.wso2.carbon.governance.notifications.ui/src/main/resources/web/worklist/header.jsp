@@ -45,6 +45,7 @@ under the License.
         var priority = jQuery('#workListPriorityInput').val();
         sessionAwareFunction(function() {
             new Ajax.Request('../worklist/create-task-ajaxprocessor.jsp', {
+				asynchronous: false,
                 method: 'post',
                 parameters: {role: role, description: description, priority: priority},
                 onSuccess: function(transport) {
@@ -69,49 +70,13 @@ under the License.
             });
         }, org_wso2_carbon_governance_notifications_ui_jsi18n["session.timed.out"]);
         jQuery('#notificationPopupView').toggle('slow');
+		updateNotifications();
     }
 </script>
 
 <fmt:bundle basename="org.wso2.carbon.governance.notifications.ui.i18n.Resources">
-<li class="right">
-    <a class="view-notification" id="viewNotification"><%=workItems.length%></a>
-    <div id="notificationPopupView" class="notificationPopup" style="display:none">
-        <div class="popupPointer"></div>
-        <div class="popupBox">
-            <div class="title"><strong><fmt:message key="work.list.notifications"/></strong></div>
-            <div class="notificationElementWrapper">
-                <%
-                    for (WorkItem workItem : workItems) {
-                %>
-                <div class="notificationElement odd">
-                    <ul>
-                        <li class="notificationCell1">#<%=workItem.getId()%></li>
-                        <li class="notificationCell2"><fmt:message key="work.list.role"/>: <%=workItem.getRole()%></li>
-                        <li class="notificationCell3"><%=workItem.getCreatedTime().getTime()%></li>
-                    </ul>
-                    <div style="clear:both"></div>
-                    <div class="notificationDescription">
-                        <% if (workItem.getPresentationSubject() != null && workItem.getPresentationSubject().getTPresentationSubject() != null) {%>
-                        <%=workItem.getPresentationSubject().getTPresentationSubject()%>
-                        <% } else if (workItem.getPresentationName() != null && workItem.getPresentationName().getTPresentationName() != null) {%>
-                        <%=workItem.getPresentationName().getTPresentationName()%>
-                        <% } %>
-                    </div>
-                    <ul>
-                        <li class="notificationCell1"><fmt:message key="work.list.priority"/>: <%=workItem.getPriority()%></li>
-                        <li class="notificationCell2"><fmt:message key="work.list.status"/>: <%=workItem.getStatus()%></li>
-                        <li class="notificationCell3">
-                            <input type="button" onclick="completeTask(<%=workItem.getId()%>)" class="button notificationButton" value="<fmt:message key="work.list.hide"/>" />
-                        </li>
-                    </ul>
-                    <div style="clear:both"></div>
-                </div>
-                <%
-                    }
-                %>
-            </div>
-        </div>
-    </div>
+<li class="right" id="view-notifications-container">
+    <jsp:include page="view-notifications-ajaxprocessor.jsp" />
 </li>
 <li class="middle">|</li>
 <li class="right">
@@ -167,14 +132,6 @@ under the License.
 </li>
 </fmt:bundle>
 <li class="middle">|<script type="text/javascript">
-    jQuery('#viewNotification').click(
-            function(){
-                if(jQuery('#notificationPopupAdd').is(":visible")){
-                    jQuery('#notificationPopupAdd').hide();
-                }
-                jQuery('#notificationPopupView').toggle('slow');
-            }
-    );
     jQuery('#addNotification').click(
             function(){
                 if(jQuery('#notificationPopupView').is(":visible")){
@@ -188,8 +145,17 @@ under the License.
     });
     jQuery('#addNotificationCreateButton').click(function(){
         createTask();
+		updateNotifications();
         jQuery('#notificationPopupAdd').toggle('slow');
     });
+	function updateNotifications(){
+        jQuery.ajax({
+            url:"../worklist/view-notifications-ajaxprocessor.jsp",
+            success:function(data){
+                jQuery('#view-notifications-container').html(data);
+            }
+        });
+    }
 </script>
     <style>
         div.header-links a.add-notification{
@@ -308,4 +274,8 @@ under the License.
         .notificationAddTable textarea{
             width:90%;
         }
+		div#header-div div.header-links div.right-links div.notificationElement ul{
+			background-image: none;
+			padding: 0;
+		}
     </style></li>

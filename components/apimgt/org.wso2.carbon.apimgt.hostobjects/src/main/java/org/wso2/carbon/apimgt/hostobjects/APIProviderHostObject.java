@@ -143,6 +143,10 @@ public class APIProviderHostObject extends ScriptableObject {
         String version = (String) apiData.get("version", apiData);
         String description = (String) apiData.get("description", apiData);
         String endpoint = (String) apiData.get("endpoint", apiData);
+        String sandboxUrl = (String) apiData.get("sandbox", apiData);
+        if ("".equals(sandboxUrl)) {
+            sandboxUrl = null;
+        }
         String wsdl = (String) apiData.get("wsdl", apiData);
         String tags = (String) apiData.get("tags", apiData);
 
@@ -189,6 +193,7 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setWsdlUrl(wsdl);
             api.setLastUpdated(new Date());
             api.setUrl(endpoint);
+            api.setSandboxUrl(sandboxUrl);
             api.addTags(tag);
             Set<Tier> availableTier = new HashSet<Tier>();
             availableTier.add(new Tier(tier));
@@ -249,6 +254,10 @@ public class APIProviderHostObject extends ScriptableObject {
         String description = (String) apiData.get("description", apiData);
         String imageUrl = (String) apiData.get("imageUrl", apiData);
         String endpoint = (String) apiData.get("endpoint", apiData);
+        String sandboxUrl = (String) apiData.get("sandbox", apiData);
+        if ("".equals(sandboxUrl)) {
+            sandboxUrl = null;
+        }
         String wsdl = (String) apiData.get("wsdl", apiData);
         String tags = (String) apiData.get("tags", apiData);
         Set<String> tag = new HashSet<String>();
@@ -285,6 +294,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     templates.setUriTemplate(template);
                     templates.setMethod((String) uriMethodArr.get(i, uriMethodArr));
                     templates.setResourceURI(endpoint);
+                    templates.setResourceSandboxURI(sandboxUrl);
                     uriTemplates.add(templates);
                 }
                 api.setUriTemplates(uriTemplates);
@@ -297,6 +307,7 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setThumbnailUrl(imageUrl);
             api.setLastUpdated(new Date());
             api.setUrl(endpoint);
+            api.setSandboxUrl(sandboxUrl);
             api.addTags(tag);
             api.setContext(context);
             Set<Tier> availableTier = new HashSet<Tier>();
@@ -396,6 +407,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
 
                 myn.put(12, myn, uriTempArr);
+                myn.put(13, myn, checkValue(api.getSandboxUrl()));
             }
         } catch (APIManagementException e) {
             log.error("Error from registry while getting API information for the api: " + apiName + "-" + version, e);

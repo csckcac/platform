@@ -22,8 +22,8 @@ var getAPI = function (api) {
             context:result[9],
             lastUpdated:result[10],
             subs:result[11],
-            templates:result[12]
-
+            templates:result[12],
+            sandbox:result[13]
         };
 
         return {

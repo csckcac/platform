@@ -144,6 +144,15 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.ec2.client.feature:${carbon.version}
                                 </featureArtifactDef>
+<featureArtifactDef>
+org.wso2.carbon:org.wso2.carbon.mediator.autoscale.feature:${carbon.version}
+</featureArtifactDef>
+<featureArtifactDef>
+org.wso2.carbon:org.wso2.carbon.autoscaler.service.feature:${carbon.version}
+</featureArtifactDef>
+<featureArtifactDef>
+org.wso2.carbon:org.wso2.carbon.lb.endpoint.server.feature:${carbon.version}
+</featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -226,6 +235,19 @@
                                 <feature>
                                     <id>org.wso2.carbon.aws.java.sdk.feature.group</id>
                                     <version>1.0.0</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.mediator.autoscale.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.autoscaler.service.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.lb.endpoint.server.feature.group</id>
+                                    <version>${carbon.version}</version>
                                 </feature>
                             </features>
                         </configuration>

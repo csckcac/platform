@@ -101,8 +101,13 @@
 
         <!-- BPEL Samples -->
         <fileSet>
-            <directory>target/samples</directory>
+            <directory>target/samples/bpel</directory>
             <outputDirectory>wso2bps-${pom.version}/repository/samples/bpel</outputDirectory>
+        </fileSet>
+        <!-- Human Task Samples-->
+        <fileSet>
+            <directory>target/samples/humantask</directory>
+            <outputDirectory>wso2bps-${pom.version}/repository/samples/humantask</outputDirectory>
         </fileSet>
 
         <fileSet>

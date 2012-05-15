@@ -18,9 +18,7 @@ package org.wso2.carbon.admin.mgt.internal;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.admin.mgt.util.AdminManagementSubscriber;
 import org.wso2.carbon.admin.mgt.util.AdminMgtUtil;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -52,19 +50,13 @@ public class AdminManagementServiceComponent {
 
 
     protected void activate(ComponentContext context) {
+        AdminMgtUtil.loadAdminManagementConfig();
         log.debug("******* Admin Management bundle is activated ******* ");
         try {
-            start(context.getBundleContext());
             log.debug("******* Admin Management bundle is activated ******* ");
         } catch (Exception e) {
             log.debug("******* Failed to activate Admin Management bundle ******* ");
         }
-    }
-
-    public void start(BundleContext context) {
-        // Registering the AdminManagement Service as an OSGi Service
-        AdminManagementSubscriber verifier = new AdminManagementSubscriber();
-        context.registerService(AdminManagementSubscriber.class.getName(), verifier, null);
     }
 
     protected void deactivate(ComponentContext context) {
@@ -82,7 +74,6 @@ public class AdminManagementServiceComponent {
     protected void setConfigurationContextService(ConfigurationContextService configurationContextService) {
         log.debug("Recieving ConfigurationContext Service");
         AdminManagementServiceComponent.configurationContextService = configurationContextService;
-
     }
 
     protected void unsetConfigurationContextService(ConfigurationContextService configurationContextService) {
@@ -128,5 +119,4 @@ public class AdminManagementServiceComponent {
     public static UserRegistry getConfigSystemRegistry(int tenantId) throws RegistryException {
         return registryService.getConfigSystemRegistry(tenantId);
     }
-
 }

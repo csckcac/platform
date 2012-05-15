@@ -21,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.mgt.beans.AdminMgtInfoBean;
 import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
 import org.wso2.carbon.admin.mgt.internal.AdminManagementServiceComponent;
-import org.wso2.carbon.admin.mgt.util.AdminManagementSubscriber;
 import org.wso2.carbon.admin.mgt.util.AdminMgtUtil;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
@@ -52,7 +51,6 @@ public class PasswordUtil {
      * @throws Exception if reset password failed.
      */
     public static boolean resetPassword(AdminMgtInfoBean adminInfoBean) throws Exception {
-        AdminManagementSubscriber adminMgtSubscriber = new AdminManagementSubscriber();
         String adminName = adminInfoBean.getAdmin();
         String domainName = adminInfoBean.getTenantDomain();
         String email;
@@ -87,17 +85,15 @@ public class PasswordUtil {
         Map<String, String> dataToStore =
                 populateDataMap(adminInfoBean, adminName, email, tenantId, tenant, confirmationKey);
 
-        return VerifyPasswordResetRequest(adminMgtSubscriber, userName, dataToStore);
+        return VerifyPasswordResetRequest(userName, dataToStore);
     }
 
-    private static boolean VerifyPasswordResetRequest(AdminManagementSubscriber adminMgtSubscriber,
-                                                      String userName, Map<String,
-                    String> dataToStore) {
+    private static boolean VerifyPasswordResetRequest(String userName,
+                                                      Map<String, String> dataToStore) {
         try {
-            // Uses admin-mgt component to handle the admin credentials management.
-            adminMgtSubscriber.requestUserVerification(dataToStore);
+            AdminMgtUtil.requestUserVerification(dataToStore);
             if (log.isDebugEnabled()) {
-                log.info("Credentials Configurations mail has been sent for: " + userName);
+                log.debug("Credentials Configurations mail has been sent for: " + userName);
             }
             return true;
         } catch (Exception e) {
@@ -150,7 +146,7 @@ public class PasswordUtil {
         if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
             if (log.isDebugEnabled()) {
                 // Admin Name is included in the email, in case if the user has forgotten that.
-                log.debug("The super tenant user password reset");
+                log.debug("Getting email address for the super tenant user password reset");
             }
             email = ClaimsMgtUtil.getEmailAddressFromUserProfile(
                     AdminManagementServiceComponent.getRealmService(), userName, tenant, tenantId);

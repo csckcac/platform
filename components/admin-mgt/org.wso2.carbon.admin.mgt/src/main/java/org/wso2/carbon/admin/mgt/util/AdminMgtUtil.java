@@ -61,7 +61,12 @@ public class AdminMgtUtil {
         String confXml = CarbonUtils.getCarbonConfigDirPath() + File.separator +
                 AdminMgtConstants.EMAIL_CONF_DIRECTORY + File.separator +
                 AdminMgtConstants.EMAIL_ADMIN_CONF_FILE;
-        adminMgtConfig = loadAdminManagementConfig(confXml);
+        try {
+            adminMgtConfig = loadAdminManagementConfig(confXml);
+        } catch (Exception e) {
+            String msg = "Error in loading the admin management configuration file.";
+            log.error(msg, e);
+        }
     }
 
     /**
@@ -129,7 +134,7 @@ public class AdminMgtUtil {
             String secretKeyPath = AdminMgtConstants.ADMIN_MANAGEMENT_COLLECTION + 
                     RegistryConstants.PATH_SEPARATOR + secretKey;
             if (!registry.resourceExists(secretKeyPath)) {
-                String msg = "Failed Admin account management attempt.";
+                String msg = "Password reset attempt failed, since the link was already clicked.";
                 log.error(msg);
                 throw new Exception(msg);
             }
@@ -169,13 +174,6 @@ public class AdminMgtUtil {
      * @throws Exception if loading config or sending verification fail.
      */
     public static void requestUserVerification(Map<String, String> data) throws Exception {
-        try {
-            loadAdminManagementConfig();
-        } catch (Exception e) {
-            String msg = "Error in loading the admin management configurations";
-            log.error(msg, e);
-            throw new Exception(msg, e);
-        }
         try {
             requestUserVerification(data, adminMgtConfig);
         } catch (Exception e) {
@@ -275,7 +273,7 @@ public class AdminMgtUtil {
         if (domain.trim().equals("")) {
             tenantId = MultitenantConstants.SUPER_TENANT_ID;
             if (log.isDebugEnabled()) {
-                String msg = "Super Tenant";
+                String msg = "Password reset attempt on Super Tenant";
                 log.debug(msg);
             }
         } else {

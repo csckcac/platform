@@ -146,6 +146,8 @@
     String ruleRegistryKeyValue = (isInline || isURL) ? "" : ruleValue;
     String ruleURLValue = isURL ? ruleValue : "";
 
+    String ruleType = (rule.getResourceType() != null) ? rule.getResourceType() : "";
+
     String ruleScriptID = SequenceEditorHelper.getEditingMediatorPosition(session) + "_rulescript";
     Map ruleScriptsMap = (Map) request.getSession().getAttribute("rulemediator_script_map");
     if (ruleScriptsMap == null) {
@@ -306,6 +308,7 @@
     <td>
         <table class="normal">
             <tr>
+                <td><fmt:message key="mediator.rule.rule.script.as"/><span class="required">*</span></td>
                 <td>
                     <%
                         if (isInline) {
@@ -367,6 +370,7 @@
                 </td>
             </tr>
             <tr>
+                <td></td>
                 <td id="inline_rulescript" style="<%=!isInline?"display:none" : ""%>">
                     <a
                             href="#ruleScriptBrowserLink" class="policie-icon-link"
@@ -374,7 +378,7 @@
                             onclick="showInLinedRuleScriptPolicyEditor('<%=ruleScriptID%>');"><fmt:message
                             key="ruleScript.policy.editor"/></a>
                 </td>
-                <td id="url_rulescript" style="<%=!isURL ? "display:none;" : ""%>">
+                <td id="url_rulescript" style="<%=!isURL ? "display:none;" : ""%>" >
                     <input type="text" class="longInput" id="mediator.rule.url"
                            name="mediator.rule.url" value="<%=ruleURLValue%>"/>
                 </td>
@@ -397,7 +401,16 @@
                 </td>
             </tr>
             <tr>
+                <td><fmt:message key="mediator.rule.type"/></td>
                 <td>
+                    <select id="rule.script.type.id" name="rule.script.type">
+                        <option value="regular" <% if ("regular".equals(ruleType)){ %> selected="true" <%} %> ><fmt:message key="mediator.rule.type.regular"/></option>
+                        <option value="dtable" <% if ("dtable".equals(ruleType)){ %> selected="true" <%} %>><fmt:message key="mediator.rule.type.dtable"/></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
                     <a name="ruleScriptBrowserLink"></a>
 
                     <div id="ruleScriptBrowser" style="display:none;"></div>

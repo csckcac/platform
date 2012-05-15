@@ -56,18 +56,24 @@
             rule = ruleMediatorConfig.getRuleSet().getRules().get(0);
         }
 
+        String ruleType = request.getParameter("rule.script.type");
+        if ((ruleType != null) && !ruleType.trim().equals("")){
+            rule.setResourceType(ruleType);
+        } else {
+            rule.setResourceType("regular");
+        }
+
+
         boolean isKey = "key".equals(request.getParameter("ruleScriptType"));
         boolean isURL = "url".equals(request.getParameter("ruleScriptType"));
         if (isKey) {
             String registryKey = request.getParameter("mediator.rule.key");
             rule.setSourceType("registry");
-            rule.setResourceType("regular");
             rule.setValue(registryKey);
 
         } else if (isURL) {
             String ruleScriptURL = request.getParameter("mediator.rule.url");
             rule.setSourceType("url");
-            rule.setResourceType("regular");
             rule.setValue(ruleScriptURL);
 
         } else {
@@ -76,7 +82,6 @@
             if (ruleScriptsMap != null) {
                 String ruleScript = (String) ruleScriptsMap.get(ruleScriptID);
                 rule.setSourceType("inline");
-                rule.setResourceType("regular");
                 rule.setValue(ruleScript);
             }
         }

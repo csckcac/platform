@@ -15,6 +15,7 @@ include("/jagg/jagg.jag");
         apiData.version = request.getParameter("version");
         apiData.description = request.getParameter("description");
         apiData.endpoint = request.getParameter("endpoint");
+        apiData.sandbox = request.getParameter("sandbox");
         apiData.wsdl = request.getParameter("wsdl");
         apiData.tags = request.getParameter("tags");
         apiData.tier = request.getParameter("tier");

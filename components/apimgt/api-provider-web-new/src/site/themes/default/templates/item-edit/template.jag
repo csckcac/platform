@@ -47,6 +47,14 @@
             </div>
 
             <div class="control-group">
+                <label class="control-label" for="editEndpoint">Sandbox URL:</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" id="editSandbox" name="sandbox" value="<%=api.sandbox%>"/>
+                    <p class="help-block">Ex:http://cs1.foo.com</p>
+                </div>
+            </div>
+
+            <div class="control-group">
                 <label class="control-label" for="editWsdl">WSDL/WADL:</label>
                 <div class="controls">
                     <input type="text" class="input-xlarge" id="editWsdl" name="wsdl" value="<%=api.wsdl%>">

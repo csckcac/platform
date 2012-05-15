@@ -70,6 +70,10 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 
                 <extensions>true</extensions>
@@ -92,6 +96,8 @@
                         </Private-Package>
                         <Import-Package>
                             org.wso2.carbon.registry.core.*,
+                            org.apache.maven.scm.*,
+                            org.codehaus.plexus.*,
                             !javax.xml.namespace,
                             javax.xml.namespace; version=0.0.0,
                             org.apache.axiom.*; version="${axiom.osgi.version.range}",
@@ -275,6 +281,11 @@
 			<version>${orbit.version.infinispan}</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.maven.scm.wso2</groupId>
+            <artifactId>maven-scm</artifactId>
+            <version>${orbit.version.maven-scm}</version>
+        </dependency>
     </dependencies>
 
 </project>

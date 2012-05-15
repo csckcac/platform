@@ -84,7 +84,7 @@
                                 <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bpel.b4p.feature:${carbon.version}</featureArtifactDef-->
                                 <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bpel.bam.publisher.feature:${carbon.version}</featureArtifactDef-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.humantask.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.wsdl.tools.ui.feature:${carbon.version}</featureArtifactDef>
+                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.wsdl.tools.ui.feature:${carbon.version}</featureArtifactDef>-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.soaptracer.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.version}</featureArtifactDef>
@@ -92,9 +92,8 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transport.mgt.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.message.flows.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.sts.feature:${carbon.version}</featureArtifactDef>
-                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.eventing.server.feature:${carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.eventing.ui.feature:${carbon.version}</featureArtifactDef>-->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.server.feature:${carbon.version}</featureArtifactDef>
+								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.eventing.ui.feature:${carbon.version}</featureArtifactDef>&ndash;&gt;-->
+								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.server.feature:${carbon.version}</featureArtifactDef>-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.tryit.feature:${carbon.version}</featureArtifactDef>
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.server.feature:${carbon.version}</featureArtifactDef>
@@ -123,13 +122,15 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.admin.ui.feature:${carbon.version}</featureArtifactDef>
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.ui.feature:${carbon.version}</featureArtifactDef>-->
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.platform.version}</featureArtifactDef>
-								
+
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.server.feature:${carbon.platform.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.feature:${carbon.platform.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transport.jms.feature:${carbon.version}</featureArtifactDef>
+								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transport.jms.feature:${carbon.version}</featureArtifactDef>-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>
-				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}</featureArtifactDef>
+
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}</featureArtifactDef>
 				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.attachment.mgt.feature:${carbon.version}</featureArtifactDef>
                                 <!-- reporting features -->
                                 <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.feature:${carbon.version}
@@ -285,10 +286,10 @@
 									<id>org.wso2.carbon.deployment.synchronizer.feature.group</id>
 									<version>${carbon.platform.version}</version>
 								</feature>
-								<feature>
-                                    <id>org.wso2.carbon.transport.jms.feature.group</id>
-                                    <version>${carbon.version}</version>
-    				</feature>
+								<!--<feature>-->
+                                    <!--<id>org.wso2.carbon.transport.jms.feature.group</id>-->
+                                    <!--<version>${carbon.version}</version>-->
+    				<!--</feature>-->
                                 <!--feature>
                                     <id>org.wso2.carbon.bpel.bam.publisher.feature.group</id>
                                     <version>${carbon.version}</version>

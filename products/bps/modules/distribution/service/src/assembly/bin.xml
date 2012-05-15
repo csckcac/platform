@@ -38,7 +38,7 @@
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
                 <exclude>**/dbscripts/**</exclude>
-	            <exclude>**/INSTALL.txt</exclude>
+                <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/README.txt</exclude>
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
@@ -49,14 +49,14 @@
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>wso2stratos-bps-${pom.version}</outputDirectory>
             <excludes>
-                <exclude>**/wso2server.bat</exclude>                 
+                <exclude>**/wso2server.bat</exclude>
             </excludes>
             <includes>
                 <include>**/*.sh</include>
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
-	<fileSet>
+        <fileSet>
             <directory>
                 ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/
             </directory>
@@ -66,7 +66,7 @@
                 <include>**/qpid-config.xml</include>
                 <include>**/qpid-jmxremote.access</include>
                 <include>**/qpid-virtualhosts.xml</include>
-				<include>**/coordination-client-config.xml</include>
+                <include>**/coordination-client-config.xml</include>
             </includes>
         </fileSet>
         <!--copying registry dbscripts-->
@@ -96,7 +96,7 @@
         <fileSet>
             <directory>target/database</directory>
             <outputDirectory>wso2stratos-bps-${pom.version}/repository/database</outputDirectory>
-        </fileSet>  
+        </fileSet>
 
         <fileSet>
             <directory>
@@ -104,60 +104,64 @@
             </directory>
             <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf</outputDirectory>
             <includes>
+                <include>**/identity.xml</include>
+                <!--include>**/eula.xml</include-->
+                <include>**/stratos.xml</include>
                 <include>**/multitenancy-packages.xml</include>
             </includes>
         </fileSet>
-      
-	<fileSet>
+
+        <fileSet>
             <directory>
                 ../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/repository/conf/security
             </directory>
-            <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf/security</outputDirectory>
+            <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf/security
+            </outputDirectory>
             <includes>
                 <include>**/krb5.conf</include>
                 <include>**/jaas.conf</include>
             </includes>
-        </fileSet>      
+        </fileSet>
 
 
         <!-- BPEL Samples -->
         <!--<fileSet>-->
-            <!--<directory>target/samples</directory>-->
-            <!--<outputDirectory>wso2stratos-bps-${pom.version}/repository/deployment/server/bpel</outputDirectory>-->
+        <!--<directory>target/samples</directory>-->
+        <!--<outputDirectory>wso2stratos-bps-${pom.version}/repository/deployment/server/bpel</outputDirectory>-->
         <!--</fileSet>-->
 
         <!--<fileSet>-->
-            <!--<directory>../../modules/samples/sample-utils/src/main/scripts</directory>-->
-            <!--<outputDirectory>wso2stratos-bps-${pom.version}/samples/axis2Server</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>axis2server.sh</include>-->
-            <!--</includes>-->
-            <!--<fileMode>755</fileMode>-->
+        <!--<directory>../../modules/samples/sample-utils/src/main/scripts</directory>-->
+        <!--<outputDirectory>wso2stratos-bps-${pom.version}/samples/axis2Server</outputDirectory>-->
+        <!--<includes>-->
+        <!--<include>axis2server.sh</include>-->
+        <!--</includes>-->
+        <!--<fileMode>755</fileMode>-->
         <!--</fileSet>-->
         <!--<fileSet>-->
-            <!--<directory>../../modules/samples/sample-utils/src/main/scripts</directory>-->
-            <!--<outputDirectory>wso2stratos-bps-${pom.version}/samples/axis2Server</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>axis2server.bat</include>-->
-            <!--</includes>-->
+        <!--<directory>../../modules/samples/sample-utils/src/main/scripts</directory>-->
+        <!--<outputDirectory>wso2stratos-bps-${pom.version}/samples/axis2Server</outputDirectory>-->
+        <!--<includes>-->
+        <!--<include>axis2server.bat</include>-->
+        <!--</includes>-->
         <!--</fileSet>-->
 
         <!--copying eventlistener sample-->
         <!--<fileSet>-->
-            <!--<directory>../../modules/samples/bpel-eventlistener/target</directory>-->
-            <!--<outputDirectory>wso2stratos-bps-${pom.version}/repository/components/lib</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>bpel-eventlistener-${pom.version}.jar</include>-->
-            <!--</includes>-->
+        <!--<directory>../../modules/samples/bpel-eventlistener/target</directory>-->
+        <!--<outputDirectory>wso2stratos-bps-${pom.version}/repository/components/lib</outputDirectory>-->
+        <!--<includes>-->
+        <!--<include>bpel-eventlistener-${pom.version}.jar</include>-->
+        <!--</includes>-->
         <!--</fileSet>-->
 
         <!--copying bpel extension sample-->
         <!--<fileSet>-->
-            <!--<directory>../../modules/samples/bpel-extension/target</directory>-->
-            <!--<outputDirectory>wso2stratos-bps-${pom.version}/repository/components/lib</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>bpel-extension-${pom.version}.jar</include>-->
-            <!--</includes>-->
+        <!--<directory>../../modules/samples/bpel-extension/target</directory>-->
+        <!--<outputDirectory>wso2stratos-bps-${pom.version}/repository/components/lib</outputDirectory>-->
+        <!--<includes>-->
+        <!--<include>bpel-extension-${pom.version}.jar</include>-->
+        <!--</includes>-->
         <!--</fileSet>-->
 
         <!--copying bps management client sample-->
@@ -203,10 +207,12 @@
             </includes>
         </fileSet-->
 
-		<!-- copy the landing page webapp -->
+        <!-- copy the landing page webapp -->
         <fileSet>
-			<directory>lib/home</directory>
-			<outputDirectory>wso2stratos-bps-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
+            <directory>lib/home</directory>
+            <outputDirectory>
+                wso2stratos-bps-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT
+            </outputDirectory>
         </fileSet>
     </fileSets>
 
@@ -220,12 +226,13 @@
                 <!--include>org.hibernate:hibernate:jar</include-->
             </includes>
         </dependencySet>
-	<dependencySet>
-		<outputDirectory>wso2stratos-bps-${pom.version}/repository/deployment/client/modules</outputDirectory>
-		<includes>
-                    <include>org.apache.rampart:rampart:mar</include>
-		</includes>
-	</dependencySet>
+        <dependencySet>
+            <outputDirectory>wso2stratos-bps-${pom.version}/repository/deployment/client/modules
+            </outputDirectory>
+            <includes>
+                <include>org.apache.rampart:rampart:mar</include>
+            </includes>
+        </dependencySet>
         <!--<dependencySet>
             <outputDirectory>wso2stratos-bps-${pom.version}/repository/deployment/client/modules</outputDirectory>
             <includes>
@@ -234,12 +241,12 @@
             <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
         </dependencySet>-->
         <!--<dependencySet>-->
-            <!--<outputDirectory>wso2stratos-bps-${pom.version}/samples/axis2Server/repository/modules</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>org.apache.axis2:addressing:mar</include>-->
-                <!--<include>org.apache.rampart:rampart:mar</include>-->
-            <!--</includes>-->
-            <!--<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>-->
+        <!--<outputDirectory>wso2stratos-bps-${pom.version}/samples/axis2Server/repository/modules</outputDirectory>-->
+        <!--<includes>-->
+        <!--<include>org.apache.axis2:addressing:mar</include>-->
+        <!--<include>org.apache.rampart:rampart:mar</include>-->
+        <!--</includes>-->
+        <!--<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>-->
         <!--</dependencySet>-->
 
     </dependencySets>
@@ -293,7 +300,8 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.version}/repository/conf/axis2/axis2.xml</source>
+            <source>target/wso2carbon-core-${carbon.version}/repository/conf/axis2/axis2.xml
+            </source>
             <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf/axis2/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -311,11 +319,14 @@
             <fileMode>744</fileMode>
         </file>
         <file>
-            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks</source>
-            <outputDirectory>wso2stratos-bps-${pom.version}/repository/resources/security/</outputDirectory>
+            <source>
+                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks
+            </source>
+            <outputDirectory>wso2stratos-bps-${pom.version}/repository/resources/security/
+            </outputDirectory>
             <fileMode>644</fileMode>
         </file>
-	<file>
+        <file>
             <source>conf/attach-mgt-conf.properties</source>
             <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
@@ -342,41 +353,48 @@
         </file>
         <!-- Including syslog-config.xml file -->
         <file>
-            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml</source>
-            <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf/advanced</outputDirectory>
+            <source>
+                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml
+            </source>
+            <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf/advanced
+            </outputDirectory>
         </file>
-		<file>
-			<source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml</source>
-			<outputDirectory>wso2stratos-bps-${pom.version}/repository/conf</outputDirectory>
-		</file>
-	<!--broker config is copied at the very beginning from carbon-core. therefore it is commented here to stop copying it twice.-->
- 	<!--<file>
+        <file>
+            <source>
+                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml
+            </source>
+            <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf</outputDirectory>
+        </file>
+        <!--broker config is copied at the very beginning from carbon-core. therefore it is commented here to stop copying it twice.-->
+        <!--<file>
             <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/broker-config.xml</source>
             <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf</outputDirectory>
         </file>-->
- 	<file>
-            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml</source>
+        <file>
+            <source>
+                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
+            </source>
             <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf</outputDirectory>
         </file>
-	
+
         <!--<file>-->
-            <!--<source>../../modules/samples/sample-utils/src/main/conf/server/axis2.xml</source>-->
-            <!--<outputDirectory>wso2stratos-bps-${pom.version}/samples/axis2Server/repository/conf</outputDirectory>-->
-            <!--<destName>axis2.xml</destName>-->
+        <!--<source>../../modules/samples/sample-utils/src/main/conf/server/axis2.xml</source>-->
+        <!--<outputDirectory>wso2stratos-bps-${pom.version}/samples/axis2Server/repository/conf</outputDirectory>-->
+        <!--<destName>axis2.xml</destName>-->
         <!--</file>-->
         <!--<file>-->
-            <!--<source>../../modules/samples/sample-utils/src/main/conf/server/sample-server-wrapper.conf</source>-->
-            <!--<outputDirectory>wso2stratos-bps-${pom.version}/repository/conf</outputDirectory>-->
-            <!--<destName>sample-server-wrapper.conf</destName>-->
+        <!--<source>../../modules/samples/sample-utils/src/main/conf/server/sample-server-wrapper.conf</source>-->
+        <!--<outputDirectory>wso2stratos-bps-${pom.version}/repository/conf</outputDirectory>-->
+        <!--<destName>sample-server-wrapper.conf</destName>-->
         <!--</file>-->
         <!--<file>-->
-            <!--<source>../../modules/samples/sample-utils/src/main/conf/server/README.txt</source>-->
-            <!--<outputDirectory>wso2stratos-bps-${pom.version}/tmp/sampleServer</outputDirectory>-->
-            <!--<destName>README.txt</destName>-->
+        <!--<source>../../modules/samples/sample-utils/src/main/conf/server/README.txt</source>-->
+        <!--<outputDirectory>wso2stratos-bps-${pom.version}/tmp/sampleServer</outputDirectory>-->
+        <!--<destName>README.txt</destName>-->
         <!--</file>-->
         <!--<file>-->
-            <!--<source>../../modules/services/CreditRatingService/target/CreditRatingService-${pom.version}.aar</source>-->
-            <!--<outputDirectory>wso2stratos-bps-${pom.version}/samples/axis2Server/repository/services</outputDirectory>-->
+        <!--<source>../../modules/services/CreditRatingService/target/CreditRatingService-${pom.version}.aar</source>-->
+        <!--<outputDirectory>wso2stratos-bps-${pom.version}/samples/axis2Server/repository/services</outputDirectory>-->
         <!--</file>-->
     </files>
 

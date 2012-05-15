@@ -103,7 +103,7 @@ public class AdminManagementService {
             CaptchaUtil.processCaptchaInfoBean(captchaInfoBean);
             // change the password with the user input password
             if (log.isDebugEnabled()) {
-                log.debug("Initializing TenantMgtAdminService for the admin account configuration.");
+                log.debug("Calling the password update method for the user: " + userName);
             }
             isPasswordUpdated = PasswordUtil.updateTenantPassword(adminInfoBean);
         }

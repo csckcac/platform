@@ -349,9 +349,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.xkms.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                           	<featureArtifactDef>
                                     org.wso2.esb:org.wso2.esb.styles.feature:${esb.version}
-                                </featureArtifactDef>
+                           	</featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.governance:org.wso2.governance.styles.feature:${governance.version}
                                 </featureArtifactDef>
@@ -367,13 +367,13 @@
                                 <featureArtifactDef>
                                     org.wso2.identity:org.wso2.identity.utils.feature:${identity.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                            	<featureArtifactDef>
                                     org.wso2.ms:org.wso2.ms.styles.feature:${mashup.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.appserver:org.wso2.appserver.styles.feature:${appserver.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                            	<featureArtifactDef>
                                     org.wso2.bps:org.wso2.bps.styles.feature:${bps.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -444,7 +444,7 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.repomanager.axis2.feature:${carbon.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                            	<featureArtifactDef>
                                     org.wso2.bam:org.wso2.bam.styles.feature:${bam.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -480,7 +480,390 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.humantask.feature:${carbon.version}
                                 </featureArtifactDef>
+
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.coordination.core.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.aarservices.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.jarservices.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.jaxwsservices.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.springservices.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.jaxws.webapp.mgt.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.dataservices.task.feature:${carbon.version}
+				</featureArtifactDef>
+				<featureArtifactDef>
+				    org.wso2.dss:org.wso2.dataservices.styles.feature:${dss.version}
+				</featureArtifactDef>
+
                             </featureArtifacts>
+							<categories>
+								<category>
+									<id>org.wso2.carbon.appserver.category</id>
+									<label>Application Server</label>
+									<description>This category contains features required for WSO2 Application Server</description>
+									<features>
+										<catFeature>
+											<id>org.wso2.carbon.coordination.core</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.ntask</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.logging.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.wsdl.tools</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.system.statistics</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.soaptracer</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.repomanager.axis2</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.security.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.aarservices</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.jarservices</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.jaxwsservices</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.springservices</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.service.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.webapp.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.jaxws.webapp.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.transport.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.transport.jms</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.transport.mail</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.message.flows</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.sts</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.xfer</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.mex</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.ejbservices</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.event.common</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.event.server</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.tryit</id>
+											<version>${carbon.platform.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.registry.core</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.registry.ui.menu</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.registry.resource.properties</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.discovery.core</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.appserver.utils</id>
+											<version>${appserver.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.identity.authenticator.token</id>
+											<version>${identity.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.application.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.application.mgt.webapp</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.application.deployer.webapp</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.dataservices</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.datasource</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.jsscraper</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.deployment.synchronizer</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.admin.mgt.server</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.admin.mgt.ui</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.captcha.mgt.server</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+									</features>
+								</category>
+							
+								<category>
+									<id>org.wso2.carbon.dss.category</id>
+									<label>Data Services Server</label>
+									<description>This category contains features required for WSO2 Data Services Server</description>
+									<features>
+										<catFeature>
+											<id>org.wso2.carbon.coordination.core</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.ntask</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.logging.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.wsdl.tools</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.system.statistics</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.soaptracer</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.security.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.dataservices</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.dataservices.task</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.datasource</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.service.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.transport.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.transport.jms</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.transport.mail</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.message.flows</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.xkms.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.sts</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.xfer</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.mex</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.registry.core</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.registry.ui.menu</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.registry.resource.properties</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.event.common</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.event.server</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.tryit</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.identity.authenticator.token</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.discovery.core</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.application.mgt</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.jsscraper</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.qpid</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.dbconsole.ui</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.deployment.synchronizer</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.admin.mgt.server</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.admin.mgt.ui</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.captcha.mgt.server</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.carbon.transaction.manager</id>
+											<version>${carbon.version}</version>
+										</catFeature>
+									</features>
+								</category>
+							
+								<category>
+									<id>org.wso2.styles.category</id>
+									<label>Product Styles</label>
+									<description>This category contains WSO2 product styles</description>
+									<features>
+										<catFeature>
+											<id>org.wso2.dataservices.styles</id>
+											<version>${dss.version}</version>
+										</catFeature>
+										<catFeature>
+											<id>org.wso2.appserver.styles</id>
+											<version>${appserver.version}</version>
+										</catFeature>
+									</features>
+								</category>
+							</categories>				
                         </configuration>
                     </execution>
                 </executions>
@@ -499,7 +882,8 @@
         <gs.version>1.3.1-SNAPSHOT</gs.version>
         <mashup.version>2.3.0-SNAPSHOT</mashup.version>
         <qpid.version>0.11.wso2v1</qpid.version>
-        <bam.version>2.0.0-ALPHA</bam.version>
+        <bam.version>2.0.0-SNAPSHOT</bam.version>
         <bps.version>3.0.0-SNAPSHOT</bps.version>
+	<dss.version>3.0.0-SNAPSHOT</dss.version>
     </properties>
 </project>

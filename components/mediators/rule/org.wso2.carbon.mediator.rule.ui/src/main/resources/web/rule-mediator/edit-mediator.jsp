@@ -280,9 +280,17 @@
                 <td><fmt:message key="mediator.rule.target.action"/>
                 </td>
                 <td>
-                    <input type="text" id="mediator.rule.target.action"
-                           name="mediator.rule.target.action"
-                           style="width:300px;" value='<%=targetAction%>'/>
+                    <select id="mediator.rule.target.action" name="mediator.rule.target.action">
+                        <option id="request" value="replace" <% if ("replace".equals(targetAction)){ %> selected="true" <%} %> >
+                            <fmt:message key="mediator.rule.target.replace"/>
+                        </option>
+                        <option id="application" value="child" <% if ("child".equals(targetAction)){ %> selected="true" <%} %>>
+                            <fmt:message key="mediator.rule.target.child"/>
+                        </option>
+                        <option id="soapSession" value="sibling" <% if ("sibling".equals(targetAction)){ %> selected="true" <%} %>>
+                            <fmt:message key="mediator.rule.target.sibling"/>
+                        </option>
+                    </select>
                 </td>
             </tr>
         </table>

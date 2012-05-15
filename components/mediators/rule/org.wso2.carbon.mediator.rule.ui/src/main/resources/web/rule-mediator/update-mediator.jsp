@@ -61,13 +61,13 @@
         if (isKey) {
             String registryKey = request.getParameter("mediator.rule.key");
             rule.setSourceType("registry");
-            rule.setResourceType("drl");
+            rule.setResourceType("regular");
             rule.setValue(registryKey);
 
         } else if (isURL) {
             String ruleScriptURL = request.getParameter("mediator.rule.url");
             rule.setSourceType("url");
-            rule.setResourceType("drl");
+            rule.setResourceType("regular");
             rule.setValue(ruleScriptURL);
 
         } else {
@@ -76,7 +76,7 @@
             if (ruleScriptsMap != null) {
                 String ruleScript = (String) ruleScriptsMap.get(ruleScriptID);
                 rule.setSourceType("inline");
-                rule.setResourceType("drl");
+                rule.setResourceType("regular");
                 rule.setValue(ruleScript);
             }
         }

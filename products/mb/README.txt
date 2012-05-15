@@ -1,8 +1,8 @@
 ================================================================================
-                        WSO2 Message Broker Server 1.0.0
+                        WSO2 Message Broker Server 2.0.0
 ================================================================================
 
-Welcome to the WSO2 MB 1.0.0 release
+Welcome to the WSO2 MB 2.0.0 release
 
 WSO2 MB is a lightweight and easy-to-use Open Source Message Brokering
 Server (MB) which is available under the Apache Software License v2.0.
@@ -13,10 +13,9 @@ have been developed as pluggable Carbon components.
 Key Features of WSO2 MB
 ==================================
 WSO2 Message Broker brings messaging and eventing capabilities into your SOA framework.
-This latest addition to the WSO2 family of products possesses following key features.
+The latest version of this product possesses following key features.
 
 - WS-Eventing
-- Message store based on Amazon SQS API
 - JMS Pub/Sub and Queuing
 
 The underlying messaging framework of the WSO2 Message Broker is powered by Apache Qpid,
@@ -54,7 +53,7 @@ For more details see
 Installation & Running
 ==================================
 
-1. Extract the wso2mb-1.0.0.zip and go to the extracted directory
+1. Extract the wso2mb-2.0.0.zip and go to the extracted directory
 2. Run the wso2server.sh or wso2server.bat as appropriate
 3. Point your favourite browser to
 
@@ -67,7 +66,7 @@ Installation & Running
 
    
 
-WSO2 MB 1.0.0 distribution directory structure
+WSO2 MB 2.0.0 distribution directory structure
 =============================================
 
 	CARBON_HOME
@@ -201,5 +200,5 @@ Crypto Notice
    Bouncycastle     : http://www.bouncycastle.org/
 
 --------------------------------------------------------------------------------
-(c) Copyright 2011 WSO2 Inc.
+(c) Copyright 2012 WSO2 Inc.
 

@@ -153,6 +153,7 @@
 		<module>data-agents</module>
 		<module>gadget-ide</module>
 		<module>url-mapper</module>
+		<module>load-balancer</module>
             </modules>
 	    <build>
 	        <plugins>
@@ -1446,7 +1447,26 @@
                 <artifactId>org.wso2.carbon.hosting.container.mgt.stub</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>	
-            
+            <dependency>
+                 <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hosting.wnagent.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+	   <dependency>
+                 <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hosting.wnregistration.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+	   <dependency>
+                 <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.load.balance.autoscaler.service.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+	   <dependency>
+                 <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.autoscaler.service.jvm.agentmgt.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
 	<!-- Test Scope -->
 
             <dependency>

@@ -548,13 +548,13 @@ function updateTextContent(resourcePath,mediaType,override) {
                  browser will break due to unavailability of resource in current location.
                  */
                 onSuccess: function() {
-                    if (mediaType == 'application/wsdl+xml') {
+                    if ((mediaType == 'application/wsdl+xml') && isGovernanceListFeatureInstalled()) {
                         location.href = '../list/wsdl.jsp?region=region3&item=governance_list_wsdl_menu'
-                    } else if (mediaType == 'application/policy+xml') {
+                    } else if ((mediaType == 'application/policy+xml') && isGovernanceListFeatureInstalled()) {
                         location.href = '../list/policy.jsp?region=region3&item=governance_list_policy_menu'
-                    } else if (mediaType == 'application/x-xsd+xml') {
+                    } else if ((mediaType == 'application/x-xsd+xml') && isGovernanceListFeatureInstalled()) {
                         location.href = '../list/schema.jsp?region=region3&item=governance_list_schema_menu'
-                    } else if (mediaType == 'application/vnd.wso2-service+xml') {
+                    } else if ((mediaType == 'application/vnd.wso2-service+xml') && isGovernanceListFeatureInstalled()) {
                         location.href = '../list/service.jsp?region=region3&item=governance_list_services_menu'
                     } else {
                         refreshContentSection(resourcePath);
@@ -585,6 +585,28 @@ function updateTextContent(resourcePath,mediaType,override) {
         textDiv.style.display = "block";
     }, org_wso2_carbon_registry_resource_ui_jsi18n["session.timed.out"]);
 }
+
+function isGovernanceListFeatureInstalled() {
+         new Ajax.Request('../resources/feature_installed_verification_ajaxprocessor.jsp',
+            {
+                method:'post',
+                parameters: {feature_id: "/list/"},
+                onSuccess: function(transport) {
+                var returnValue = transport.responseText;
+                 if (returnValue.search(/---FEATURE INSTALLED----/) != -1) {
+                    return true;
+                 } else {
+                    return false;
+                 }
+                },
+                onFailure: function(transport) {
+                    CARBON.showWarningDialog(transport.responseText);
+                    return false;
+                }
+            });
+}
+
+
 
 function cancelTextContentEdit() {
     document.getElementById('generalContentDiv').style.display = "none";

@@ -578,8 +578,15 @@ public class SimpleAMQQueue implements AMQQueue, Subscription.StateListener
             {
                 entry = _entries.add(message);
                // commenting this code since we do not need this in the andes delivery path - But it is for
-               //queue delivery. For JMS Topics, it goes through here. So un commenting the code
-                deliverToSubscription(exclusiveSub, entry);
+               //queue delivery. For JMS Topics, it goes through here. So un commenting the code and it will invoke
+               // the deliverToSubscription method only for jms topic. But there can be a performance hit in this place.
+               // For the moment we need to support topics also
+                for (Binding binding : _virtualHost.getExchangeRegistry().getExchange("amq.topic").getBindings()) {
+                    if (binding.getQueue().getName().equalsIgnoreCase(entry.getQueue().getName())) {
+                        deliverToSubscription(exclusiveSub, entry);
+                        break;
+                    }
+                }
             }
             finally
             {

@@ -235,22 +235,22 @@
     </wsdl:binding>
     <wsdl:service name="UserRegistrationService">
         <wsdl:port name="UserRegistrationServiceHttpsSoap11Endpoint" binding="ns:UserRegistrationServiceSoap11Binding">
-            <soap:address location="https://192.168.4.26:9447/services/UserRegistrationService.UserRegistrationServiceHttpsSoap11Endpoint/"/>
+            <soap:address location="https://localhost:9447/services/UserRegistrationService.UserRegistrationServiceHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="UserRegistrationServiceHttpSoap11Endpoint" binding="ns:UserRegistrationServiceSoap11Binding">
-            <soap:address location="http://192.168.4.26:9767/services/UserRegistrationService.UserRegistrationServiceHttpSoap11Endpoint/"/>
+            <soap:address location="http://localhost:9767/services/UserRegistrationService.UserRegistrationServiceHttpSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="UserRegistrationServiceHttpsSoap12Endpoint" binding="ns:UserRegistrationServiceSoap12Binding">
-            <soap12:address location="https://192.168.4.26:9447/services/UserRegistrationService.UserRegistrationServiceHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://localhost:9447/services/UserRegistrationService.UserRegistrationServiceHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="UserRegistrationServiceHttpSoap12Endpoint" binding="ns:UserRegistrationServiceSoap12Binding">
-            <soap12:address location="http://192.168.4.26:9767/services/UserRegistrationService.UserRegistrationServiceHttpSoap12Endpoint/"/>
+            <soap12:address location="http://localhost:9767/services/UserRegistrationService.UserRegistrationServiceHttpSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="UserRegistrationServiceHttpEndpoint" binding="ns:UserRegistrationServiceHttpBinding">
-            <http:address location="http://192.168.4.26:9767/services/UserRegistrationService.UserRegistrationServiceHttpEndpoint/"/>
+            <http:address location="http://localhost:9767/services/UserRegistrationService.UserRegistrationServiceHttpEndpoint/"/>
         </wsdl:port>
         <wsdl:port name="UserRegistrationServiceHttpsEndpoint" binding="ns:UserRegistrationServiceHttpBinding">
-            <http:address location="https://192.168.4.26:9447/services/UserRegistrationService.UserRegistrationServiceHttpsEndpoint/"/>
+            <http:address location="https://localhost:9447/services/UserRegistrationService.UserRegistrationServiceHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

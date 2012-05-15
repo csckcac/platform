@@ -99,22 +99,22 @@
     </wsdl:binding>
     <wsdl:service name="ArtifactDeploymentService">
         <wsdl:port name="ArtifactDeploymentServiceHttpSoap11Endpoint" binding="ns:ArtifactDeploymentServiceSoap11Binding">
-            <soap:address location="http://192.168.4.26:9767/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpSoap11Endpoint/"/>
+            <soap:address location="http://localhost:9767/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="ArtifactDeploymentServiceHttpsSoap11Endpoint" binding="ns:ArtifactDeploymentServiceSoap11Binding">
-            <soap:address location="https://192.168.4.26:9447/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpsSoap11Endpoint/"/>
+            <soap:address location="https://localhost:9447/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="ArtifactDeploymentServiceHttpSoap12Endpoint" binding="ns:ArtifactDeploymentServiceSoap12Binding">
-            <soap12:address location="http://192.168.4.26:9767/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpSoap12Endpoint/"/>
+            <soap12:address location="http://localhost:9767/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="ArtifactDeploymentServiceHttpsSoap12Endpoint" binding="ns:ArtifactDeploymentServiceSoap12Binding">
-            <soap12:address location="https://192.168.4.26:9447/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://localhost:9447/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="ArtifactDeploymentServiceHttpEndpoint" binding="ns:ArtifactDeploymentServiceHttpBinding">
-            <http:address location="http://192.168.4.26:9767/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpEndpoint/"/>
+            <http:address location="http://localhost:9767/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpEndpoint/"/>
         </wsdl:port>
         <wsdl:port name="ArtifactDeploymentServiceHttpsEndpoint" binding="ns:ArtifactDeploymentServiceHttpBinding">
-            <http:address location="https://192.168.4.26:9447/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpsEndpoint/"/>
+            <http:address location="https://localhost:9447/services/ArtifactDeploymentService.ArtifactDeploymentServiceHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

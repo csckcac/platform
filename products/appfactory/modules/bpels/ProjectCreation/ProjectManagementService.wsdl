@@ -336,13 +336,13 @@
     </wsdl:binding>
     <wsdl:service name="ProjectManagementService">
         <wsdl:port name="ProjectManagementServiceHttpsSoap11Endpoint" binding="ns:ProjectManagementServiceSoap11Binding">
-            <soap:address location="https://10.100.3.175:9443/services/ProjectManagementService.ProjectManagementServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://localhost:9443/services/ProjectManagementService.ProjectManagementServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ProjectManagementServiceHttpsSoap12Endpoint" binding="ns:ProjectManagementServiceSoap12Binding">
-            <soap12:address location="https://10.100.3.175:9443/services/ProjectManagementService.ProjectManagementServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://localhost:9443/services/ProjectManagementService.ProjectManagementServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ProjectManagementServiceHttpsEndpoint" binding="ns:ProjectManagementServiceHttpBinding">
-            <http:address location="https://10.100.3.175:9443/services/ProjectManagementService.ProjectManagementServiceHttpsEndpoint/" />
+            <http:address location="https://localhost:9443/services/ProjectManagementService.ProjectManagementServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

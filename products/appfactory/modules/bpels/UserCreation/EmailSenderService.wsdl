@@ -71,13 +71,13 @@
     </wsdl:binding>
     <wsdl:service name="EmailSenderService">
         <wsdl:port name="EmailSenderServiceHttpsSoap11Endpoint" binding="ns:EmailSenderServiceSoap11Binding">
-            <soap:address location="https://192.168.4.26:9447/services/EmailSenderService.EmailSenderServiceHttpsSoap11Endpoint/"/>
+            <soap:address location="https://localhost:9447/services/EmailSenderService.EmailSenderServiceHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="EmailSenderServiceHttpsSoap12Endpoint" binding="ns:EmailSenderServiceSoap12Binding">
-            <soap12:address location="https://192.168.4.26:9447/services/EmailSenderService.EmailSenderServiceHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://localhost:9447/services/EmailSenderService.EmailSenderServiceHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="EmailSenderServiceHttpsEndpoint" binding="ns:EmailSenderServiceHttpBinding">
-            <http:address location="https://192.168.4.26:9447/services/EmailSenderService.EmailSenderServiceHttpsEndpoint/"/>
+            <http:address location="https://localhost:9447/services/EmailSenderService.EmailSenderServiceHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

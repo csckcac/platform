@@ -299,6 +299,9 @@
 	 <!--Andes -->
         <orbit.version.andes-client>0.13.wso2v1</orbit.version.andes-client>
         <orbit.version.andes>0.13.wso2v1</orbit.version.andes>
+    
+    <!--SCM-->
+    <orbit.version.maven-scm>1.7.0.wso2v1</orbit.version.maven-scm>
 
 
 	<!--Wso2 Secure Vault -->

@@ -33,6 +33,7 @@ import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
+import org.wso2.platform.test.core.utils.seleniumutils.EntitlementManagementSeleniumUtil;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.io.BufferedReader;
@@ -54,7 +55,7 @@ public class ISNewEntitlementUploaderSeleniumTest {
     String productName = "is";
     String userName;
     String password;
-    long sleeptime = 5000;
+    long sleepTime = 5000;
     String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION;
 
 
@@ -71,22 +72,24 @@ public class ISNewEntitlementUploaderSeleniumTest {
         driver.get(baseUrl);
     }
 
-//    @Test(groups = {"wso2.is"}, description = "Apply xacmal policy IIA001 from file", priority = 1)
-    public void testaddxacmlPolicyIIA001() throws Exception {
+    @Test(groups = {"wso2.is"}, description = "Apply xacmal policy IIA001 from file", priority = 1)
+    public void testAddXacmlPolicyIIA001() throws Exception {
         String policyfilePath = resourcePath + File.separator + "artifacts" + File.separator + "IS" + File.separator + "IIA001Policy.xml";
         String requestFilePath = resourcePath + File.separator + "artifacts" + File.separator + "IS" + File.separator + "IIA001Request.xml";
         String requestXML = getDatafromFile(requestFilePath);
         try {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
-            uploadPolicyfromFile(policyfilePath);
+            driver.findElement(By.linkText("Administration")).click();
+            EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);
+            uploadPolicyFromFile(policyfilePath);
             assertTrue(selenium.isTextPresent("exact:urn:oasis:names:tc:xacml:2.0:conformance-test:" +
                                               "IIA1:policy"), "Failed to upload policy IIA001Policy.xml");
             driver.findElement(By.linkText("Enable")).click();
             gotoTryITpage(requestXML);
             assertTrue(selenium.isTextPresent("Permit"), "Policy IIA001 Response Failed :");
             selenium.click("//button");
-            Thread.sleep(sleeptime);
+            Thread.sleep(sleepTime);
             deletePolicy();
             userLogout();
             log.info("********IS Stratos XACML Policy IIA001 Uploader Test -Passed **************");
@@ -108,8 +111,8 @@ public class ISNewEntitlementUploaderSeleniumTest {
 
     }
 
-    @Test(groups = {"wso2.is"}, description = "Apply xacmal policy IIA003 from file", priority = 2)
-    public void testaddxacmlPolicyIIA003() throws Exception {
+    @Test(groups = {"wso2.is"}, description = "Apply Xacmal policy IIA003 from file", priority = 2)
+    public void testAddXacmlPolicyIIA003() throws Exception {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator +
                           "IS" + File.separator +"IIA003Policy.xml";
         String requestFilePath = resourcePath + File.separator + "artifacts" + File.separator +
@@ -118,7 +121,9 @@ public class ISNewEntitlementUploaderSeleniumTest {
         try {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
-            uploadPolicyfromFile(filePath);
+            driver.findElement(By.linkText("Administration")).click();
+            EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);
+            uploadPolicyFromFile(filePath);
             assertTrue(selenium.isTextPresent("exact:urn:oasis:names:tc:xacml:2.0:conformance-test" +
                                               ":IIA003:policy"),
                        "Failed to upload policy IIA001Policy.xml");
@@ -126,7 +131,7 @@ public class ISNewEntitlementUploaderSeleniumTest {
             gotoTryITpage(requestXML);
             assertTrue(selenium.isTextPresent("NotApplicable"), "Policy IIA003 Response Failed :");
             selenium.click("//button");
-            Thread.sleep(sleeptime);
+            Thread.sleep(sleepTime);
             deletePolicy();
             userLogout();
             log.info("********IS Stratos XACML Policy IIA003 Uploader Test -Passed **************");
@@ -172,15 +177,14 @@ public class ISNewEntitlementUploaderSeleniumTest {
         driver.findElement(By.linkText("Create Request Using Editor")).click();
         selenium.selectFrame("frame_txtPolicyTemp");
         driver.findElement(By.id("textarea")).clear();
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
         driver.findElement(By.id("textarea")).sendKeys(requestXML);
         driver.switchTo().defaultContent();
         driver.findElement(By.xpath("//td/input")).click();
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
     }
 
-    private void uploadPolicyfromFile(String filePath) throws InterruptedException {
-        driver.findElement(By.linkText("Administration")).click();
+    private void uploadPolicyFromFile(String filePath) throws InterruptedException {
         driver.findElement(By.linkText("Import New Entitlement Policy")).click();
         driver.findElement(By.id("policyFromFileSystem")).sendKeys(filePath);
         driver.findElement(By.xpath("//tr[4]/td/input")).click();
@@ -198,7 +202,7 @@ public class ISNewEntitlementUploaderSeleniumTest {
         try {
             //Construct the BufferedReader object
             bufferedReader = new BufferedReader(new FileReader(xmlFile));
-            String line = null;
+            String line;
 
             while ((line = bufferedReader.readLine()) != null) {
                 //Process the data, here we just print it out

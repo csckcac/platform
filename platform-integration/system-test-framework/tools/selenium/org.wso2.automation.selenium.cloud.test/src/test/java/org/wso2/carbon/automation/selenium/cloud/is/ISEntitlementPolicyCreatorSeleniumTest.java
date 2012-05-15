@@ -26,7 +26,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -36,12 +35,10 @@ import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
+import org.wso2.platform.test.core.utils.seleniumutils.EntitlementManagementSeleniumUtil;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.net.MalformedURLException;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -55,7 +52,7 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
     String userName;
     String password;
     long sleeptime = 5 * 1000; // 5 seconds
-    
+
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, InterruptedException {
@@ -63,7 +60,7 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
         userName = userDetails.getUserName();
         password = userDetails.getPassword();
         String baseUrl = new ProductUrlGeneratorUtil().getServiceHomeURL(
-                ProductConstant.IS_SERVER_NAME);
+                                                                                ProductConstant.IS_SERVER_NAME);
         log.info("baseURL is :" + baseUrl);
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
@@ -80,14 +77,15 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             gotoAdministrationPage();
-            deleteEntitlementPolicy();
+            EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);
             createEntitlement(policyName, policyDescription, resourceName);
             defineRule1();
             defineRule2();
             saveEntitlement();
             driver.findElement(By.linkText("Enable")).click();          //enable policy
             gotoTryLinkPage(resourceName);
-            deleteEntitlement();
+            gotoAdministrationPage();
+            EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);
             userLogout();
             log.info("*******IS Stratos - Create a new Policy from UI Test - Passed ***********");
         } catch (AssertionFailedError e) {
@@ -110,15 +108,6 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
     @AfterClass(alwaysRun = true)
     public void cleanup() {
         driver.quit();
-    }
-
-    private void deleteEntitlement() throws InterruptedException {
-        driver.findElement(By.linkText("Administration")).click();
-        driver.findElement(By.name("policies")).click();
-        driver.findElement(By.id("delete1")).click();
-        assertTrue(selenium.isTextPresent("exact:Do you want to delete the selected polices?"),
-                   "Failed to Delete Policy :");
-        selenium.click("//button");
     }
 
     private void gotoTryLinkPage(String resourceName) throws InterruptedException {
@@ -186,14 +175,5 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-    }
-    
-    private void deleteEntitlementPolicy(){
-        WebElement webElementList = driver.findElement(By.className("chkBox"));
-        if (webElementList.getAttribute("value").contains("stratostestpolicy1")){
-            webElementList.click();
-            driver.findElement(By.id("delete1")).click();
-            driver.findElement(By.xpath("//div[3]/div[2]/button")).click();
-        }
     }
 }

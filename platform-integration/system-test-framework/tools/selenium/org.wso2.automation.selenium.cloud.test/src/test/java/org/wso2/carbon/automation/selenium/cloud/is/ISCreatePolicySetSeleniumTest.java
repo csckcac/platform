@@ -34,11 +34,11 @@ import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
+import org.wso2.platform.test.core.utils.seleniumutils.EntitlementManagementSeleniumUtil;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.Calendar;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -80,6 +80,7 @@ public class ISCreatePolicySetSeleniumTest {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             gotoAdministrationPage();
+            EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);
             addPolicyfromFile(filePath1);
             assertTrue(selenium.isTextPresent("exact:urn:oasis:names:tc:xacml:2.0:" +
                                               "conformance-test:IIA1:policy"),
@@ -94,7 +95,7 @@ public class ISCreatePolicySetSeleniumTest {
             driver.findElement(By.linkText("Enable")).click();
             gotoTryItPage(resourceName);
             gotoAdministrationPage();
-            deleteArtifacts();
+            EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);
             userLogout();
             log.info("********** IS Stratos Create Policy Set Test - passed ***********");
         } catch (AssertionFailedError e) {
@@ -117,23 +118,13 @@ public class ISCreatePolicySetSeleniumTest {
         driver.quit();
     }
 
-    private void deleteArtifacts() throws InterruptedException {
-        driver.findElement(By.xpath("//td[2]/input")).click();
-        driver.findElement(By.xpath("//tr[2]/td[2]/input")).click();
-        driver.findElement(By.xpath("//tr[3]/td[2]/input")).click();
-        driver.findElement(By.id("delete1")).click();
-        assertTrue(selenium.isTextPresent("exact:Do you want to delete the selected polices?"),
-                   "Failed to delete created Policy Group :");
-        selenium.click("//button");
-        log.info("Artifacts were deleted successfully !");
-    }
-
     private void gotoTryItPage(String resourceName) throws InterruptedException {
         driver.findElement(By.linkText("TryIt")).click();
         driver.findElement(By.id("resourceNames")).sendKeys(resourceName);
         driver.findElement(By.id("subjectNames")).sendKeys("admin");
         driver.findElement(By.id("actionNames")).sendKeys("read");
         driver.findElement(By.xpath("//tr[7]/td/input")).click();
+        Thread.sleep(10000);
         assertTrue(selenium.isTextPresent("Deny"), "Failed to invoke created Policy Group :");
         selenium.click("//button");
     }
@@ -150,12 +141,12 @@ public class ISCreatePolicySetSeleniumTest {
         driver.findElement(By.id("subjectNamesTarget")).sendKeys("admin");
         driver.findElement(By.id("actionNamesTarget")).sendKeys("read");
         driver.findElement(By.linkText("Add to Policy Set")).click();
-//        Thread.sleep(10000L);
         Select selectPolicyType = new Select(driver.findElement(By.id("policyIds")));
         selectPolicyType.selectByVisibleText("urn:oasis:names:tc:xacml:2.0:conformance-test:" +
                                              "IIA1:policy");
         driver.findElement(By.linkText("Add to Policy Set")).click();
         driver.findElement(By.xpath("//tr[7]/td/input")).click();
+        Thread.sleep(30000);
         assertTrue(selenium.isTextPresent("Entitlement policy added successfully. Policy is " +
                                           "disabled by default."),
                    "Failed to create a set of Policies :");

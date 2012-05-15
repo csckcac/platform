@@ -37,7 +37,6 @@ import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 import org.wso2.platform.test.core.utils.seleniumutils.UserManagementSeleniumUtils;
 
 import java.net.MalformedURLException;
-import java.util.Calendar;
 
 import static org.testng.Assert.assertTrue;
 

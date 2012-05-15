@@ -67,18 +67,13 @@ public class ISClaimManagementSeleniumTest {
 
     @Test(groups = {"wso2.greg"}, description = "Apply wso2.org claim Nick Name", priority = 1)
     public void testAddNewClaimManagement() throws Exception {
-        String baseUrl = "https://identity.stratoslive.wso2.com";
-        String claimManagmentURL = baseUrl + "/t/" + domain + "/carbon/claim-mgt/index.jsp?" +
-                                   "region=region1&item=claim_mgt_menu";
-        String userProfileURL = baseUrl + "/t/" + domain + "/carbon/userprofile/index.jsp?" +
-                                "region=region5&item=userprofiles_menu";
         try {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
-            addClaim(claimManagmentURL);
+            addClaim();
             log.info("Stratos IS Claim was updated");
-            verifyUserProfile(userProfileURL);
-            addClaim(claimManagmentURL);
+            verifyUserProfile();
+            addClaim();
             log.info("Stratos IS Claim was removed");
             userLogout();
             log.info("*******IS Stratos - Claim Management Test - Passed **********");
@@ -102,15 +97,17 @@ public class ISClaimManagementSeleniumTest {
         driver.quit();
     }
 
-    private void verifyUserProfile(String userProfileURL) throws InterruptedException {
-        driver.get(userProfileURL);
+    private void verifyUserProfile() throws InterruptedException {
+        driver.findElement(By.id("menu-panel-button1")).click();
+        driver.findElement(By.linkText("My Profiles")).click();
         driver.findElement(By.linkText("Add New Profile")).click();
         assertTrue(selenium.isTextPresent("Other Phone"),
                    "Failed to Update newly added Claim to user profile :");
     }
 
-    private void addClaim(String claimManagmentURL) throws InterruptedException {
-        driver.get(claimManagmentURL);
+    private void addClaim() throws InterruptedException {
+        driver.findElement(By.id("menu-panel-button3")).click();
+        driver.findElement(By.linkText("Claim Management")).click();
         driver.findElement(By.linkText("http://wso2.org/claims")).click();
         log.info("Claim was selected successfully ");
         driver.findElement(By.linkText("Edit")).click();

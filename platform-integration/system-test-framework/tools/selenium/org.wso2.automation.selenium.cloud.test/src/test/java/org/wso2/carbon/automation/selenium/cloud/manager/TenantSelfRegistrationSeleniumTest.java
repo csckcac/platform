@@ -37,8 +37,6 @@ public class TenantSelfRegistrationSeleniumTest {
     private static final Log log = LogFactory.getLog(TenantSelfRegistrationSeleniumTest.class);
     private static WebDriver driver;
     String productName = "manager";
-    private static UserInfo userDetails;
-    private static String baseURL;
     String userName;
     String password;
     String domain;
@@ -47,12 +45,12 @@ public class TenantSelfRegistrationSeleniumTest {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, InterruptedException {
-        userDetails = UserListCsvReader.getUserInfo(0);
+        UserInfo userDetails = UserListCsvReader.getUserInfo(0);
         userName = userDetails.getUserName();
         password = userDetails.getPassword();
         domain = userDetails.getDomain();
-        baseURL = new ProductUrlGeneratorUtil().getServiceHomeURL(
-                ProductConstant.MANAGER_SERVER_NAME);
+        String baseURL = new ProductUrlGeneratorUtil().getServiceHomeURL(
+                                                                                ProductConstant.MANAGER_SERVER_NAME);
         log.info("baseURL is :" + baseURL);
         driver = BrowserManager.getWebDriver();
         driver.get(baseURL);

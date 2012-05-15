@@ -190,7 +190,7 @@ public class GRegStratosResourceSeleniumTest {
             findLocation(collectionPath + "/" + resourceName);
             addServiceLifeCycle();
             promoteState();
-            assertTrue(selenium.isTextPresent("Tested"),
+            assertTrue(selenium.isTextPresent("Testing"),
                        "Service Life Cycle Testing state fail:");
             promoteState();
             assertTrue(selenium.isTextPresent("Production"),
@@ -440,13 +440,18 @@ public class GRegStratosResourceSeleniumTest {
 
     private void copyResource(String copyPath) throws InterruptedException {
         waitTimeforElement("//td/table/tbody/tr/td[2]/table/tbody/tr/td[2]/a");
+        Thread.sleep(sleeptime);
         driver.findElement(By.id("actionLink1")).click();
+        Thread.sleep(sleeptime);
         waitTimeforElement("//div/a[4]");
         driver.findElement(By.linkText("Copy")).click();
+        Thread.sleep(sleeptime);
         waitTimeforElement("//td/table/tbody/tr/td[2]/input");
         driver.findElement(By.id("copy_destination_path1")).sendKeys(copyPath);
+        Thread.sleep(sleeptime);
         waitTimeforElement("//td/table/tbody/tr[2]/td/input");
         driver.findElement(By.xpath("//td/table/tbody/tr[2]/td/input")).click();
+        Thread.sleep(sleeptime);
         waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"), "copy pop-up title fail :");
         assertTrue(selenium.isTextPresent("Successfully copied resource."),

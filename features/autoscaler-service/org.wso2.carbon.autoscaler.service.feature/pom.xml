@@ -54,7 +54,6 @@
             <artifactId>org.wso2.carbon.autoscaler.service.jvm.agentmgt</artifactId>
             <version>${project.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -71,7 +70,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.mediator.autoscale</id>
+                            <id>org.wso2.carbon.autoscaler.service</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>

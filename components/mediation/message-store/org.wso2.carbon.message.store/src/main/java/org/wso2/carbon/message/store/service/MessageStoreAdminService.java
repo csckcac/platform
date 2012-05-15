@@ -366,7 +366,7 @@ public class MessageStoreAdminService extends AbstractServiceBusAdmin {
         MessageStore store = getMessageStoreImpl(name);
 
         if (store != null) {
-            MessageContext synCtx = store.remove();
+            store.remove();
         } else {
             handleException(log, "Message Store " + name + " does not exist", null);
         }

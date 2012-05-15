@@ -34,7 +34,7 @@ import java.io.IOException;
  * test runs
  */
 public class BPSCleanupServerManager extends TestServerManager {
-    private static final Log log = LogFactory.getLog(BPSTestServerManager.class);
+    private static final Log log = LogFactory.getLog(BPSCleanupServerManager.class);
 
     @Override
     @BeforeSuite

@@ -53,7 +53,7 @@ public class BPSHumanTaskServerManager  extends TestServerManager {
     @Override
     protected void copyArtifacts(String carbonHome) throws IOException {
 
-        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.HUMANTASK_SAMPLE_LOCATION, null, "zip");
+        File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.getHumanTaskSampleLocation(carbonHome), null, "zip");
         File humanTaskRepo = new File(carbonHome + File.separator + "repository" + File.separator +
                                  "deployment" + File.separator +
                                  "server" + File.separator + "humantask" + File.separator);

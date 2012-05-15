@@ -35,7 +35,7 @@ import static org.testng.Assert.fail;
  * test runs
  */
 public class BPSSecurityServerManager extends TestServerManager {
-    private static final Log log = LogFactory.getLog(BPSTestServerManager.class);
+    private static final Log log = LogFactory.getLog(BPSSecurityServerManager.class);
 
     @Override
     @BeforeSuite

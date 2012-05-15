@@ -206,7 +206,7 @@
                     <font style="color: red; font-size: 8pt;">*</font>
                 </td>
                 <td>
-                    <input type="text" id="mediator.rule.source.value"
+                    <input title="<fmt:message key="mediator.rule.source.value.tip"/>" type="text" id="mediator.rule.source.value"
                            name="mediator.rule.source.value"
                            style="width:300px;" value='<%=sourceValue%>'/>
                 </td>
@@ -241,7 +241,7 @@
                     <font style="color: #ff0000; font-size: 8pt;">*</font>
                 </td>
                 <td>
-                    <input type="text" id="mediator.rule.target.value"
+                    <input title="<fmt:message key="mediator.rule.target.value.tip"/>" type="text" id="mediator.rule.target.value"
                            name="mediator.rule.target.value"
                            style="width:300px;" value='<%=targetValue%>'/>
                 </td>
@@ -638,7 +638,7 @@
             <a class="add-icon-link"
                href="#addresultLink"
                onclick="addFact('result')">
-                <fmt:message key="add.result"/></a>
+                <fmt:message key="add.fact"/></a>
         </div>
     </td>
 </tr>

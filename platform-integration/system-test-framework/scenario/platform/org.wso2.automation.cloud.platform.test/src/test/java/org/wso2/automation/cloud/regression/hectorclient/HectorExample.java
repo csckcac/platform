@@ -50,7 +50,7 @@ public class HectorExample {
         log.info("Tenant Password: ");
         String tenantPasswd = "admin123";
         log.info("Keyspace Name: ");
-        String keyspaceName = "TestKeySpace";
+        String keyspaceName = "TestKeySpace888";
         log.info("Column Family: ");
         String ColumnFamilyName = "TestColumnFamily";
         log.info("Column Name List ( separated by colon) : ");
@@ -70,10 +70,10 @@ public class HectorExample {
         String tenantPasswd = user.getPassword();
         log.info("Tenant Password: ");
 
-        String keyspaceName = "TestKeySpace";
+        String keyspaceName = "TestKeySpace444";
         log.info("Keyspace Name: " + keyspaceName);
 
-        String columnFamilyName = "TestColumnFamily";
+        String columnFamilyName = "TestColumnFamily444";
         log.info("Column Family: " + columnFamilyName);
 
         String columnNameList = "AAA:BBB:CCC:DDD";
@@ -105,7 +105,7 @@ public class HectorExample {
         Keyspace keyspace;
         //Create Keyspace
         KeyspaceDefinition definition = new ThriftKsDef(keyspaceName);
-        cluster.dropKeyspace(keyspaceName);
+//        cluster.dropKeyspace(keyspaceName);
         Thread.sleep(3000);
 
         addKeySpace = cluster.addKeyspace(definition);
@@ -149,6 +149,7 @@ public class HectorExample {
                 }
             }
         }
+
         return cassendraSampleStatus;
     }
 }

@@ -32,7 +32,8 @@ public class StratosUserLogin {
     private static final Log log = LogFactory.getLog(StratosUserLogin.class);
 
 
-    public void userLogin(WebDriver driver, Selenium selenium, String userName, String password,
+    public static void userLogin(WebDriver driver, Selenium selenium, String userName,
+                              String password,
                           String productName) throws InterruptedException {
         driver.findElement(By.xpath("//a[2]/img")).click();
         driver.findElement(By.id("username")).sendKeys(userName);
@@ -40,17 +41,18 @@ public class StratosUserLogin {
         driver.findElement(By.xpath("//tr[4]/td[2]/input")).click();
 
         if (productName.equalsIgnoreCase("manager")) {
-            assertTrue(driver.findElement(By.id("workArea")).findElement(By.className("dashboard-title")).getText().
-                    contains("Application Server"),
+            assertTrue(driver.findElement(By.id("middle")).findElement(By.id("cloudService"))
+                               .getText().contains("Application Server"),
                        "Manager Home page Failed");
-            assertTrue(driver.getPageSource().contains("Mashup Server"), "Manager Home page Failed");
-            assertTrue(driver.getPageSource().contains("Identity Server"), "Manager Home page Failed");
-            assertTrue(driver.getPageSource().contains("Message Broker"), "Manager Home page Failed");
-            assertTrue(driver.getPageSource().contains("Enterprise Service Bus"),
+            String pageSource = driver.getPageSource();
+            assertTrue(pageSource.contains("Mashup Server"), "Manager Home page Failed");
+            assertTrue(pageSource.contains("Identity Server"), "Manager Home page Failed");
+            assertTrue(pageSource.contains("Message Broker"), "Manager Home page Failed");
+            assertTrue(pageSource.contains("Enterprise Service Bus"),
                        "Manager Home page Failed");
         } else {
-            assertTrue(driver.findElement(By.id("workArea")).findElement(By.className("dashboard-title")).getText().
-                    contains("quick start dashboard"),
+            assertTrue(driver.findElement(By.className("dashboard-title"))
+                               .getText().toLowerCase().contains("quick start dashboard"),
                        "Failed to display service home Page :");
         }
     }

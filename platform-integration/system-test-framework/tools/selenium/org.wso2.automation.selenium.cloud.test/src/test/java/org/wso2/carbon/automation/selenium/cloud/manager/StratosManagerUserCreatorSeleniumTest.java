@@ -50,7 +50,7 @@ public class StratosManagerUserCreatorSeleniumTest {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, InterruptedException {
-        UserInfo userDetails = UserListCsvReader.getUserInfo(6);
+        UserInfo userDetails = UserListCsvReader.getUserInfo(7);
         userName = userDetails.getUserName();
         password = userDetails.getPassword();
         domain = userDetails.getDomain();

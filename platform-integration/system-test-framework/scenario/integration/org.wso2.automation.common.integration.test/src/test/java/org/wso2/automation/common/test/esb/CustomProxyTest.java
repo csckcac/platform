@@ -38,10 +38,11 @@ public class CustomProxyTest {
     @Test(groups = {"wso2.esb"}, description = "Invoke custom proxy service")
     public void testCustomProxy() throws Exception {
         String payload = createPayLoad().toString();
-        EnvironmentBuilder builder = new EnvironmentBuilder().esb(1).as(1);
+        EnvironmentBuilder builder = new EnvironmentBuilder().esb(2).as(2);
         ManageEnvironment environment = builder.build();
         String eprAxis2service = environment.getAs().getServiceUrl() + "/Axis2Service";
         String eprDemoProxy = environment.getEsb().getServiceUrl() + "/DemoProxy2";
+
         List<String> expectedOutput = new ArrayList<String>();
         expectedOutput.add(">123<");
         log.info("Waiting for EPR " + eprDemoProxy);

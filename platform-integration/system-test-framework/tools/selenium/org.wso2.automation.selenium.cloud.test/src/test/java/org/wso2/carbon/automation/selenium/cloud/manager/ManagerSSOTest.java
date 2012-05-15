@@ -90,8 +90,8 @@ public class ManagerSSOTest {
                 //True if current url is not manger and windows id is the last one.
                 if (!driver.getCurrentUrl().contains(baseURL) && !itr.hasNext()) {
                     log.info("Current URL is : " + driver.getCurrentUrl());
-                    System.out.println(driver.findElement(By.id("logged-user")).getText());
-                    System.out.println(userName + "@" + userDetails.getDomain());
+                    log.info(driver.findElement(By.id("logged-user")).getText());
+                    log.info(userName + "@" + userDetails.getDomain());
                     assertTrue(driver.findElement(By.id("logged-user")).getText().contains(userName), "user not log in");
                     assertTrue(driver.getPageSource().toLowerCase().contains("quick start dashboard"), "Dashboard text not found");
                     driver.switchTo().window(originalWindowId);

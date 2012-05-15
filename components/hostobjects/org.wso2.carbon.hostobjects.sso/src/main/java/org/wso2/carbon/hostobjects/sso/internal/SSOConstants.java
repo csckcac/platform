@@ -32,4 +32,7 @@ public class SSOConstants {
 
     public static final String SAML2_NAME_ID_POLICY = "urn:oasis:names:tc:SAML:2.0:nameid-format:entity";
     public static final String LOGOUT_USER = "urn:oasis:names:tc:SAML:2.0:logout:user";
+
+    public SSOConstants() {
+    }
 }

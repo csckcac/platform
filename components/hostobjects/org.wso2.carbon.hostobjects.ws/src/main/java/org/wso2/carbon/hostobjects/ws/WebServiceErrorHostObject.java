@@ -23,11 +23,11 @@ import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 
 public class WebServiceErrorHostObject extends ScriptableObject {
 
-    String code;
+    private String code;
 
-    String reason;
+    private String reason;
 
-    String detail;
+    private String detail;
 
     public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj,
                                            boolean inNewExpr) throws ScriptException {

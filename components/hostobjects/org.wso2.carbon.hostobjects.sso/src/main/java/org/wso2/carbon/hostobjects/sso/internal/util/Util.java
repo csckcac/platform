@@ -228,8 +228,8 @@ public class Util {
                     count = iis.read(buf);
                 }
                 iis.close();
-                String decodedStr = new String(baos.toByteArray());
-                return decodedStr;
+
+                return new String(baos.toByteArray());
             }
         } catch (IOException e) {
             throw new Exception("Error when decoding the SAML Request.", e);

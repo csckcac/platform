@@ -48,7 +48,7 @@ public class FileHostObject extends ScriptableObject {
         return hostObjectName;
     }
 
-    public static void jsFunction_open(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+    public static void jsFunction_open(Context cx, Scriptable thisObj, Object[] args, Function funObj)//NOPMD
             throws ScriptException {
         String functionName = "open";
         int argsCount = args.length;
@@ -62,7 +62,7 @@ public class FileHostObject extends ScriptableObject {
         fho.file.open((String) args[0]);
     }
 
-    public static void jsFunction_write(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+    public static void jsFunction_write(Context cx, Scriptable thisObj, Object[] args, Function funObj)//NOPMD
             throws ScriptException {
         String functionName = "write";
         int argsCount = args.length;

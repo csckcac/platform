@@ -56,13 +56,19 @@ public class WSRequestCallback implements AxisCallback {
         if (ex instanceof AxisFault) {
             AxisFault e = (AxisFault) ex;
             OMElement detail = e.getDetail();
-            if (detail != null) wsrequest.error.jsSet_detail(detail.toString());
+            if (detail != null) {
+                wsrequest.error.jsSet_detail(detail.toString());
+            }
             QName faultCode = e.getFaultCode();
-            if (faultCode != null) wsrequest.error.jsSet_code(faultCode.toString());
+            if (faultCode != null) {
+                wsrequest.error.jsSet_code(faultCode.toString());
+            }
             wsrequest.error.jsSet_reason(e.getReason());
         } else {
             Throwable cause = ex.getCause();
-            if (cause != null) wsrequest.error.jsSet_detail(cause.toString());
+            if (cause != null) {
+                wsrequest.error.jsSet_detail(cause.toString());
+            }
             wsrequest.error.jsSet_code("No SOAP Body.");
             wsrequest.error.jsSet_reason(ex.getMessage());
         }

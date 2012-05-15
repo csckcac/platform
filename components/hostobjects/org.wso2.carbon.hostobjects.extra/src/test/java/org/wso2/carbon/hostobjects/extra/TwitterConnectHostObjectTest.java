@@ -2,7 +2,6 @@ package org.wso2.carbon.hostobjects.extra;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 
 /**
  * TwitterConnect Test Suite

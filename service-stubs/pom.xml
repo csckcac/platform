@@ -209,6 +209,10 @@
 				<module>org.wso2.carbon.bam.service.data.publisher.stub</module>
 				<module>org.wso2.carbon.analytics.hive.stub</module>
 				<module>org.wso2.carbon.andes.stub</module>
+				<module>org.wso2.carbon.hosting.wnagent.stub</module>
+				<module>org.wso2.carbon.hosting.wnregistration.stub</module>
+				<module>org.wso2.carbon.load.balance.autoscaler.service.stub</module>
+				<module>org.wso2.carbon.autoscaler.service.jvm.agentmgt.stub</module>
 			</modules>
 
     <build>

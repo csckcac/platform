@@ -496,8 +496,19 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 
 .api-key-listing {
     display: inline-block;
+    width:100%;
+    background: #efefef;
 }
-
+.api-key-sandbox{
+    padding:0 5px;
+}
+.api-key{
+    padding:5px;
+    background: #ccccff;
+}
+.api-key a{
+    color:#444;
+}
 .accordion-inner .odd {
     background: #F6F6F6;
 }
@@ -582,5 +593,9 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 .comment-text{
     padding:5px;
     color:#888;
+}
+.key-generate-button{
+    margin-bottom:10px;
+    width:200px;
 }
 

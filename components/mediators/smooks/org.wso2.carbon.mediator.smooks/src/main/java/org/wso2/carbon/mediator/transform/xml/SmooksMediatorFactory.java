@@ -36,6 +36,8 @@ public class SmooksMediatorFactory extends AbstractMediatorFactory {
             SynapseConstants.SYNAPSE_NAMESPACE, "smooks");
 
     public static final QName CONFIG_KEY = new QName("config-key");
+    /** JPA Persistence Unit Name */
+    public static final QName PERSISTENCE_UNIT = new QName("persistence-unit");
 
     public Mediator createSpecificMediator(OMElement omElement, Properties properties) {
         SmooksMediator smooks = new SmooksMediator();
@@ -44,6 +46,11 @@ public class SmooksMediatorFactory extends AbstractMediatorFactory {
 
         if (configFileAttr != null) {
             smooks.setConfigKey(configFileAttr.getAttributeValue());
+        }
+        
+        OMAttribute persistenceUnitAttr = omElement.getAttribute(PERSISTENCE_UNIT);
+        if (persistenceUnitAttr != null) {
+        	smooks.setPersistenceUnitAttr(persistenceUnitAttr.getAttributeValue());
         }
 
         OMElement inputElement = omElement.getFirstChildWithName(
@@ -110,6 +117,8 @@ public class SmooksMediatorFactory extends AbstractMediatorFactory {
             in.setType(SmooksMediator.TYPES.TEXT);
         } else if (typeValue.equals("xml")) {
             in.setType(SmooksMediator.TYPES.XML);
+        } else if (typeValue.equals("java")){
+        	 in.setType(SmooksMediator.TYPES.JAVA);
         } else {
             handleException("Unexpected type specified as the input: " + typeValue);
         }

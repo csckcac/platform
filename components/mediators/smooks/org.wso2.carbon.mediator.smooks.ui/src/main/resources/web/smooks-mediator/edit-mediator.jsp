@@ -129,6 +129,7 @@
                     <select name="outputTypeSelect" id="outputTypeSelect">
                         <option value="xml" <%=outputType.equals("xml") ? "selected=\"selected\"": ""%>>XML</option>
                         <option value="text" <%=outputType.equals("text") ? "selected=\"selected\"": ""%>>Text</option>
+                         <option value="java" <%=outputType.equals("java") ? "selected=\"selected\"": ""%>>Java</option>
                     </select>
                 </td>
             </tr>

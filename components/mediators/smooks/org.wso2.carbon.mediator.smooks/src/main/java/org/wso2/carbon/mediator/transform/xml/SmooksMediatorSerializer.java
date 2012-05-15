@@ -34,6 +34,8 @@ public class SmooksMediatorSerializer extends AbstractMediatorSerializer {
         OMElement smooks = fac.createOMElement("smooks", synNS);
 
         smooks.addAttribute(fac.createOMAttribute("config-key", nullNS, smooksMediator.getConfigKey()));
+        
+        smooks.addAttribute(fac.createOMAttribute("persistence-unit", nullNS, smooksMediator.getPersistenceUnitName()));
 
         smooks.addChild(createInput(smooksMediator.getInput()));
         smooks.addChild(createOutput(smooksMediator.getOutput()));
@@ -64,6 +66,8 @@ public class SmooksMediatorSerializer extends AbstractMediatorSerializer {
             outputElement.addAttribute(fac.createOMAttribute("type", nullNS, "text"));
         } else if (output.getType() == SmooksMediator.TYPES.XML) {
             outputElement.addAttribute(fac.createOMAttribute("type", nullNS, "xml"));
+        } else if (output.getType() == SmooksMediator.TYPES.JAVA) {
+        	outputElement.addAttribute(fac.createOMAttribute("type", nullNS, "java"));
         }
 
         if (output.getExpression() != null) {

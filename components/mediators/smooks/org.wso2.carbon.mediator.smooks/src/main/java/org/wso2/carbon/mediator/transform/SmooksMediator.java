@@ -16,169 +16,248 @@
 
 package org.wso2.carbon.mediator.transform;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.axis2.AxisFault;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseLog;
-import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.Entry;
+import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.mediators.AbstractMediator;
 import org.milyn.Smooks;
 import org.milyn.container.ExecutionContext;
+import org.milyn.payload.JavaResult;
+import org.milyn.persistence.util.PersistenceUtil;
+import org.milyn.scribe.adapter.jpa.EntityManagerRegister;
 import org.xml.sax.SAXException;
-
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Transforms the current message payload using the given Smooks configuration.
  * The current message context is replaced with the result as XML.
  */
 public class SmooksMediator extends AbstractMediator {
-    public enum TYPES {
-        TEXT,
-        XML
-    }
+	public enum TYPES {
+		TEXT, XML, JAVA
+	}
 
-    /** Smooks engine */
-    private Smooks smooks = null;
-    /** Smooks configuration file */
-    private String configKey = null;
-    /** This lock is used to create the smooks configuration synchronously */
-    private volatile Lock lock = new ReentrantLock();
+	/** Smooks engine */
+	private Smooks smooks = null;
+	/** Smooks configuration file */
+	private String configKey = null;
+	/** This lock is used to create the smooks configuration synchronously */
+	private volatile Lock lock = new ReentrantLock();
 
-    private Input input = null;
+	private Input input = null;
 
-    private Output output = null;
+	private Output output = null;
+	/** JPA Persistence Unit Name */
+	private String persistenceUnitName = null;
 
-    public boolean mediate(MessageContext synCtx) {
-        SynapseLog synLog = getLog(synCtx);
+	private EntityTransaction transaction = null;
 
-        if (synLog.isTraceOrDebugEnabled()) {
-            synLog.traceOrDebug("Start : Smooks mediator");
+	private boolean transactionStarted = false;
 
-            if (synLog.isTraceTraceEnabled()) {
-                synLog.traceTrace("Message : " + synCtx.getEnvelope());
-            }
-        }
+	private EntityManagerFactory emf;
 
-        // check weather we need to create the smooks configuration
-        lock.lock();
-        try {
-            if (isCreationOrRecreationRequired(synCtx.getConfiguration())) {
-                smooks = createSmooksConfig(synCtx);
-            }
-        } finally {
-            lock.unlock();
-        }
+	public boolean mediate(MessageContext synCtx) {
+		SynapseLog synLog = getLog(synCtx);
 
-        // get the input as an stream
-        ByteArrayInputStream byteArrayInputStream = input.process(synCtx, synLog);
+		if (synLog.isTraceOrDebugEnabled()) {
+			synLog.traceOrDebug("Start : Smooks mediator");
 
-        // create the execution context for smooks. This is required for every message
-        ExecutionContext executionContext = smooks.createExecutionContext();
+			if (synLog.isTraceTraceEnabled()) {
+				synLog.traceTrace("Message : " + synCtx.getEnvelope());
+			}
+		}
 
-        // create a output stream for store the result
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        StreamResult streamResult = new StreamResult(outputStream);
+		// check weather we need to create the smooks configuration
+		lock.lock();
+		try {
+			if (isCreationOrRecreationRequired(synCtx.getConfiguration())) {
+				smooks = createSmooksConfig(synCtx);
+			}
+		} finally {
+			lock.unlock();
+		}
 
-        // filter the message through smooks
-        smooks.filterSource(executionContext, new StreamSource(byteArrayInputStream), streamResult);
+		// get the input as an stream
+		StreamSource streamSource = input.process(synCtx, synLog);
 
-        // add result
-        output.process(outputStream, synCtx, synLog);
+		// create the execution context for smooks. This is required for every
+		// message
+		ExecutionContext executionContext = smooks.createExecutionContext();
 
-        if (synLog.isTraceOrDebugEnabled()) {
-            synLog.traceOrDebug("End : Smooks mediator");
+		try {
+			// Start transaction if persistenceUnit name is provided
+			if (persistenceUnitName != null) {
+				startTransaction(synCtx, executionContext);
+			}
 
-            if (synLog.isTraceTraceEnabled()) {
-                synLog.traceTrace("Message : " + synCtx.getEnvelope());
-            }
-        }
+			if (output.getType().equals(SmooksMediator.TYPES.JAVA)) {
+				// create a JavaResult object to store java result
+				JavaResult result = new JavaResult();
+				// filter the message through smooks
+				smooks.filterSource(executionContext, streamSource, result);
+				// add result
+				output.process(null, synCtx, synLog, result);
+			} else {
+				// create an output stream for store the result
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+				StreamResult streamResult = new StreamResult(outputStream);
+				// filter the message through smooks
+				smooks.filterSource(executionContext, streamSource, streamResult);
+				// add result
+				output.process(outputStream, synCtx, synLog, null);
+			}
+			if (transactionStarted) {
+				commitTransaction();
+				transactionStarted = false;
+			}
+		} catch (AxisFault e) {
+			handleException("Error occured while processing smooks output", e, synCtx);
+		} catch (Exception e) {
+			handleException("Error occured while processing transaction", e, synCtx);
+			if (transactionStarted) {
+				this.transaction.rollback();
+			}
+		}
 
-        return true;
-    }
+		if (synLog.isTraceOrDebugEnabled()) {
+			synLog.traceOrDebug("End : Smooks mediator");
 
-    /**
-     * Create the smoooks configuration from the configuration key. Smooks configuration can be
-     * stored as a local entry or can be stored in the registry.
-     * @param synCtx synapse context
-     * @return Smooks configuration
-     */
-    private Smooks createSmooksConfig(MessageContext synCtx) {
-        SynapseLog log = getLog(synCtx);
-        Object o = synCtx.getEntry(configKey);
-        if (o == null) {
-            handleException("Cannot find the object for smooks config key: "
-                    + configKey, synCtx);
-        }
+			if (synLog.isTraceTraceEnabled()) {
+				synLog.traceTrace("Message : " + synCtx.getEnvelope());
+			}
+		}
 
-        InputStream in = SynapseConfigUtils.getInputStream(o);
-        if (in == null) {
-            handleException("Cannot get the input stream from the config key: " +
-                    configKey, synCtx);
-        }
+		return true;
+	}
 
-        try {
-            Smooks smooks = new Smooks(in);
-            if (log.isTraceOrDebugEnabled()) {
-                log.traceOrDebug("Smooks configuration is created from the config key: "
-                        + configKey);                
-            }
-            return smooks;
-        } catch (IOException e) {
-            handleException("I/O error occurred while creating the Smooks " +
-                    "configuration from the config key: " + configKey, e, synCtx);
-        } catch (SAXException e) {
-            handleException("XML error occurred while creating the Smooks " +
-                    "configuration from the config key: " + configKey, e, synCtx);
-        }
+	/**
+	 * create the entity manager if not created before and begin transaction
+	 * 
+	 * @param synCtx
+	 * @param executionContext
+	 */
+	private void startTransaction(MessageContext synCtx, ExecutionContext executionContext) {
+		if (emf == null) {
+			emf = Persistence.createEntityManagerFactory(persistenceUnitName);
+		}
+		EntityManager em = emf.createEntityManager();
+		PersistenceUtil.setDAORegister(executionContext, new EntityManagerRegister(em));
+		this.transaction = em.getTransaction();
+		this.transaction.begin();
+		this.transactionStarted = true;
+	}
 
-        return null;
-    }
+	/**
+	 * commit transaction
+	 */
+	private void commitTransaction() {
+		this.transaction.commit();
+	}
 
-    private boolean isCreationOrRecreationRequired(SynapseConfiguration synCfg) {
-        // if there are no cachedTemplates we need to create a one
-        if (smooks == null) {
-            // this is a creation case
-            return true;
-        } else {
-            // build transformer - if necessary
-            Entry dp = synCfg.getEntryDefinition(configKey);
-            // if the smooks config key refers to a dynamic resource, and if it has been expired
-            // it is a recreation case
-            boolean shouldRecreate = dp != null && dp.isDynamic() && (!dp.isCached() || dp.isExpired());
-            if (shouldRecreate) {
-                // we should clear all the existing resources
-                smooks.close();
-            }
-            return shouldRecreate;
-        }
-    }
+	/**
+	 * Create the smoooks configuration from the configuration key. Smooks
+	 * configuration can be stored as a local entry or can be stored in the
+	 * registry.
+	 * 
+	 * @param synCtx
+	 *            synapse context
+	 * @return Smooks configuration
+	 */
+	private Smooks createSmooksConfig(MessageContext synCtx) {
+		SynapseLog log = getLog(synCtx);
+		Object o = synCtx.getEntry(configKey);
+		if (o == null) {
+			handleException("Cannot find the object for smooks config key: " + configKey, synCtx);
+		}
 
-    public String getConfigKey() {
-        return configKey;
-    }
+		InputStream in = SynapseConfigUtils.getInputStream(o);
+		if (in == null) {
+			handleException("Cannot get the input stream from the config key: " + configKey, synCtx);
+		}
 
-    public void setConfigKey(String configKey) {
-        this.configKey = configKey;
-    }
+		try {
+			Smooks smooks = new Smooks(in);
+			if (log.isTraceOrDebugEnabled()) {
+				log.traceOrDebug("Smooks configuration is created from the config key: "
+						+ configKey);
+			}
+			return smooks;
+		} catch (IOException e) {
+			handleException("I/O error occurred while creating the Smooks "
+					+ "configuration from the config key: " + configKey, e, synCtx);
+		} catch (SAXException e) {
+			handleException("XML error occurred while creating the Smooks "
+					+ "configuration from the config key: " + configKey, e, synCtx);
+		}
 
-    public Input getInput() {
-        return input;
-    }
+		return null;
+	}
 
-    public Output getOutput() {
-        return output;
-    }
+	private boolean isCreationOrRecreationRequired(SynapseConfiguration synCfg) {
+		// if there are no cachedTemplates we need to create a one
+		if (smooks == null) {
+			// this is a creation case
+			return true;
+		} else {
+			// build transformer - if necessary
+			Entry dp = synCfg.getEntryDefinition(configKey);
+			// if the smooks config key refers to a dynamic resource, and if it
+			// has been expired
+			// it is a recreation case
+			boolean shouldRecreate = dp != null && dp.isDynamic()
+					&& (!dp.isCached() || dp.isExpired());
+			if (shouldRecreate) {
+				// we should clear all the existing resources
+				smooks.close();
+			}
+			return shouldRecreate;
+		}
+	}
 
-    public void setInput(Input input) {
-        this.input = input;
-    }
+	public String getConfigKey() {
+		return configKey;
+	}
 
-    public void setOutput(Output output) {
-        this.output = output;
-    }
+	public void setConfigKey(String configKey) {
+		this.configKey = configKey;
+	}
+
+	public Input getInput() {
+		return input;
+	}
+
+	public Output getOutput() {
+		return output;
+	}
+
+	public void setInput(Input input) {
+		this.input = input;
+	}
+
+	public void setOutput(Output output) {
+		this.output = output;
+	}
+
+	public void setPersistenceUnitAttr(String persistenceUnitName) {
+		this.persistenceUnitName = persistenceUnitName;
+	}
+
+	public String getPersistenceUnitName() {
+		return persistenceUnitName;
+	}
 }

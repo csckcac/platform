@@ -77,12 +77,12 @@ public class GRegStratosRootSeleniumTest {
             log.info("Add Collection to Root test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Add Collection to Root test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Add Collection to Root test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Add Collection to Root test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Add Collection to Root test Failed :" + e.getMessage());
             userLogout();
@@ -104,12 +104,12 @@ public class GRegStratosRootSeleniumTest {
             log.info("Add Resource to Root test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Add Resource to Root test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Add Resource to Root test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Add Resource to Root test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Add Resource to Root test Failed :" + e.getMessage());
             userLogout();
@@ -132,12 +132,12 @@ public class GRegStratosRootSeleniumTest {
             log.info("Add a Comment to Root test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Add a Comment to Root test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Add a Comment to Root test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Add a Comment to Root test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Add a Comment to Root test Failed :" + e.getMessage());
             userLogout();
@@ -161,12 +161,12 @@ public class GRegStratosRootSeleniumTest {
             log.info("Apply a Tag to Root test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Apply a Tag to Root test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Apply a Tag to Root test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Apply a Tag to Root test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Apply a Tag to Root test Failed :" + e.getMessage());
             userLogout();
@@ -186,12 +186,12 @@ public class GRegStratosRootSeleniumTest {
             log.info("Apply Rating to Root test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Apply Rating to Root test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Apply Rating to Root test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Apply Rating to Root test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Apply Rating to Root test Failed :" + e.getMessage());
             userLogout();
@@ -211,12 +211,12 @@ public class GRegStratosRootSeleniumTest {
             log.info("Delete a  Resource from Root test Failed :" + e.getMessage());
             userLogout();
             throw new AssertionFailedError("Delete a  Resource from Root test Failed :" +
-                                           e.getMessage());
+                    e.getMessage());
         } catch (WebDriverException e) {
             log.info("Delete a  Resource from Root test Failed :" + e.getMessage());
             userLogout();
             throw new WebDriverException("Delete a  Resource from Root test Failed :" +
-                                         e.getMessage());
+                    e.getMessage());
         } catch (Exception e) {
             log.info("Delete a  Resource from Root test Failed :" + e.getMessage());
             userLogout();
@@ -224,9 +224,14 @@ public class GRegStratosRootSeleniumTest {
         }
     }
 
+    @Test(groups = {"wso2.greg"}, description = "delete a collection from root", priority = 7)
+    public void testDeleteCollectionFromRoot() throws Exception {
+        new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+        deleteTestArtifact();
+    }
 
     @AfterClass(alwaysRun = true)
-    public void cleanup() {
+    public void cleanup() throws InterruptedException {
         driver.quit();
     }
 
@@ -236,10 +241,10 @@ public class GRegStratosRootSeleniumTest {
         driver.findElement(By.xpath("//tr[9]/td/div/a[3]")).click();
         waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"),
-                   "Delete root resource pop-up dialog title fail:");
+                "Delete root resource pop-up dialog title fail:");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete " +
-                                          "'/root_resource' permanently?"),
-                   "Delete root resource pop-up message fail :");
+                "'/root_resource' permanently?"),
+                "Delete root resource pop-up message fail :");
         selenium.click("//button");
         Thread.sleep(sleeptime);
     }
@@ -274,7 +279,7 @@ public class GRegStratosRootSeleniumTest {
         waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Delete Tag Pop-up Title fail :");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this tag?"),
-                   "Delete Tag Pop-up Message fail :");
+                "Delete Tag Pop-up Message fail :");
 
         selenium.click("//button");                //click on "yes" button
         Thread.sleep(sleeptime);
@@ -302,10 +307,10 @@ public class GRegStratosRootSeleniumTest {
 //        Thread.sleep(4000L);
         assertTrue(selenium.isTextPresent("Add New Comment"), "Add comment window pop -up failed :");
         assertEquals("Add", selenium.getValue("//div[3]/div[3]/form/table/tbody/tr[2]/td/input"),
-                     "Add comment window  pop -up Add button failed :");
+                "Add comment window  pop -up Add button failed :");
         assertEquals("Cancel", selenium.getValue("//div[3]/div[3]/form/table/tbody/tr[2]/" +
-                                                 "td/input[2]"),
-                     "Add comment window  pop -up Cancel Button failed :");
+                "td/input[2]"),
+                "Add comment window  pop -up Cancel Button failed :");
         driver.findElement(By.id("comment")).sendKeys(comment);
         driver.findElement(By.xpath("//div[3]/div[3]/form/table/tbody/tr[2]/td/input")).click();
         Thread.sleep(sleeptime);
@@ -318,9 +323,9 @@ public class GRegStratosRootSeleniumTest {
         driver.findElement(By.id("closeC0")).click();
         waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"),
-                   "root Comment Delete pop-up  title failed :");
+                "root Comment Delete pop-up  title failed :");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this comment?"),
-                   "root Comment Delete pop-up  message failed :");
+                "root Comment Delete pop-up  message failed :");
         selenium.click("//button");
         Thread.sleep(sleeptime);
     }
@@ -350,7 +355,7 @@ public class GRegStratosRootSeleniumTest {
         waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Add new Collection pop -up failed :");
         assertTrue(selenium.isTextPresent("Successfully added new collection."),
-                   "Add new Collection pop -up failed :");
+                "Add new Collection pop -up failed :");
         selenium.click("//button");
         Thread.sleep(sleeptime);
 
@@ -373,9 +378,9 @@ public class GRegStratosRootSeleniumTest {
         driver.findElement(By.xpath("//tr[4]/td/form/table/tbody/tr[6]/td/input")).click();
         waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"),
-                   "Add Resource pop-up message title fail :");
+                "Add Resource pop-up message title fail :");
         assertTrue(selenium.isTextPresent("Successfully added Text content."),
-                   "Add Resource pop-up message fail :");
+                "Add Resource pop-up message fail :");
         //Click on OK button
         driver.findElement(By.xpath("//button")).click();
         Thread.sleep(sleeptime);
@@ -394,7 +399,7 @@ public class GRegStratosRootSeleniumTest {
         long time;
         boolean element = false;
         while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
+                < (120 * 1000)) {
             if (selenium.isElementPresent(elementName)) {
                 element = true;
                 break;
@@ -404,5 +409,19 @@ public class GRegStratosRootSeleniumTest {
         }
         assertTrue(element, "Element Not Found within 2 minutes :");
     }
+
+    private void deleteTestArtifact() throws InterruptedException {
+        driver.findElement(By.linkText("Browse")).click();    //Click on Browse link
+        Thread.sleep(sleeptime);
+        waitTimeforElement("//a[2]");
+        driver.findElement(By.linkText("Root")).click();
+        driver.findElement(By.id("actionLink2")).click();
+        driver.findElement(By.linkText("Delete")).click();
+        assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete " +
+                "'/selenium_root' permanently?"),
+                "Delete root resource pop-up message fail :");
+        selenium.click("//button");
+    }
+
 
 }

@@ -76,15 +76,20 @@ include('/includes/topnavi.jag');
 
             <h3>Say Hello to Jaggery</h3>
 
-				<pre class="prettyprint" id="indexsample">
-&lt%
-    var name = 'Jaggery';
-    print("Hello " + name);
-%&gt
-						</pre>
+				<pre class="prettyprint linenums" id="indexsample">
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;h1&gt;
+        &lt%
+            var name = 'Jaggery';
+            print("Hello " + name);
+        %&gt
+        &lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
 
             <%
-            var codeSnip = encodeURIComponent('&lt% \n var name = "Jaggery"; \n print("Hello " + name); \n %&gt');
+            var codeSnip = encodeURIComponent('&lt;html&gt; \n  &lt;body&gt; \n &lt;h1&gt; \n &lt% \n var name = "Jaggery"; \n print("Hello " + name); \n %&gt \n &lt;/h1&gt; \n &lt;/body&gt; \n &lt;/html&gt;');
             var urlString = 'tryitframe.jag?code='+codeSnip;
             %>
 

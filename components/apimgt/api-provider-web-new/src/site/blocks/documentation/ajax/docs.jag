@@ -41,7 +41,6 @@ include("/jagg/jagg.jag");
         api.version = request.getParameter("version");
         doc.name = request.getParameter("docName");
         doc.content = request.getParameter("content");
-
         result = mod.addInlineContent(api,doc);
         if (result.error == "true") {
             obj = {
@@ -71,7 +70,7 @@ include("/jagg/jagg.jag");
             };
         } else {
             obj = {
-                tags:result.tags,
+                doc:result.doc,
                 error:false
             }
         }

@@ -48,12 +48,17 @@ import java.util.Arrays;
  * @scr.reference name="registry.service" immediate="true"
  * interface="org.wso2.carbon.registry.core.service.RegistryService" cardinality="1..1"
  * policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
+ * @scr.reference name="repository.reference.service"
+ * interface="org.wso2.carbon.deployment.synchronizer.ArtifactRepository" cardinality="0..n"
+ * policy="dynamic" bind="addArtifactRepository" unbind="removeArtifactRepository"
  */
 public class DeploymentSynchronizerComponent {
 
     private static final Log log = LogFactory.getLog(DeploymentSynchronizerComponent.class);
 
     private ServiceRegistration observerRegistration;
+    private ServiceRegistration registryDepSynServiceRegistration;
+
 
     protected void activate(ComponentContext context) {
 
@@ -63,10 +68,10 @@ public class DeploymentSynchronizerComponent {
         DeploymentSynchronizationManager.getInstance().init(serverConfig);
 
         //Register the Registry Based Artifact Repository
-        RepositoryReferenceHolder repositoryReferenceHolder = RepositoryReferenceHolder.getInstance();
-        ArtifactRepository artifactRepository =  new RegistryBasedArtifactRepository();
-        //Passing null for the parameter list since a RegistryBasedArtifactRepository does not have any specific parameters.
-        repositoryReferenceHolder.addRepository(artifactRepository, null);
+        ArtifactRepository registryBasedArtifactRepository =  new RegistryBasedArtifactRepository();
+        registryDepSynServiceRegistration =
+                context.getBundleContext().registerService(ArtifactRepository.class.getName(),
+                                                           registryBasedArtifactRepository, null);
 
         try {
             initDeploymentSynchronizerForSuperTenant();
@@ -111,6 +116,11 @@ public class DeploymentSynchronizerComponent {
             observerRegistration = null;
         }
 
+        if(registryDepSynServiceRegistration != null){
+            registryDepSynServiceRegistration.unregister();
+            registryDepSynServiceRegistration = null;
+        }
+
         log.debug("Deployment synchronizer component deactivated");
     }
 
@@ -142,6 +152,16 @@ public class DeploymentSynchronizerComponent {
             log.debug("Deployment synchronizer component unbound from the registry service");
         }
         ServiceReferenceHolder.setRegistryService(null);
+    }
+
+    protected void addArtifactRepository(ArtifactRepository artifactRepository){
+        RepositoryReferenceHolder repositoryReferenceHolder = RepositoryReferenceHolder.getInstance();
+        repositoryReferenceHolder.addRepository(artifactRepository, artifactRepository.getParameters());
+    }
+
+    protected void removeArtifactRepository(ArtifactRepository artifactRepository){
+        RepositoryReferenceHolder repositoryReferenceHolder = RepositoryReferenceHolder.getInstance();
+        repositoryReferenceHolder.removeRepository(artifactRepository);
     }
 
     /**

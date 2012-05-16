@@ -45,6 +45,10 @@ public final class RepositoryReferenceHolder {
     public void addRepository(ArtifactRepository repositoryType, List<RepositoryConfigParameter> parameters){
         repositories.put(repositoryType, parameters);
     }
+
+    public void removeRepository(ArtifactRepository repositoryType){
+        repositories.remove(repositoryType);
+    }
     
     public ArtifactRepository getRepositoryByType(String repositoryType){
         if(repositoryType == null){

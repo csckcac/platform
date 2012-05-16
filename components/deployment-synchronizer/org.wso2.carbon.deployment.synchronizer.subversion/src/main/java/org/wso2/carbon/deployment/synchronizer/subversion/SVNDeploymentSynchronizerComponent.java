@@ -20,6 +20,7 @@ package org.wso2.carbon.deployment.synchronizer.subversion;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
 import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapterFactory;
@@ -37,6 +38,8 @@ import java.util.Arrays;
 public class SVNDeploymentSynchronizerComponent {
 
     private static final Log log = LogFactory.getLog(SVNDeploymentSynchronizerComponent.class);
+
+    private ServiceRegistration svnDepSyncServiceRegistration;
 
     protected void activate(ComponentContext context) throws DeploymentSynchronizerException {
         
@@ -76,14 +79,20 @@ public class SVNDeploymentSynchronizerComponent {
             throw new DeploymentSynchronizerException(error);
         }
 
-        RepositoryReferenceHolder repositoryReferenceHolder = RepositoryReferenceHolder.getInstance();
-        ArtifactRepository artifactRepository = new SVNBasedArtifactRepository();
-        repositoryReferenceHolder.addRepository(artifactRepository, artifactRepository.getParameters());
+        ArtifactRepository svnBasedArtifactRepository = new SVNBasedArtifactRepository();
+        svnDepSyncServiceRegistration = context.getBundleContext().registerService(ArtifactRepository.class.getName(),
+                svnBasedArtifactRepository, null);
 
         log.debug("SVN based deployment synchronizer component activated");
     }
 
     protected void deactivate(ComponentContext context) {
+
+        if(svnDepSyncServiceRegistration != null){
+            svnDepSyncServiceRegistration.unregister();
+            svnDepSyncServiceRegistration = null;
+        }
+
         log.debug("SVN based deployment synchronizer component deactivated");
     }
 

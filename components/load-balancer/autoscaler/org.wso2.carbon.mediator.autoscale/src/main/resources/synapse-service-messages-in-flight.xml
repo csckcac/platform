@@ -31,7 +31,7 @@
     <!-- Given below is the auto-scale mediator specific task. Uncomment it, if you want to
          auto-scale your applications.
     -->
-    <task class="org.wso2.carbon.mediator.autoscale.ec2autoscale.ServiceRequestsInFlightAutoscaler"
+    <task class="org.wso2.carbon.mediator.autoscale.lbautoscale.ServiceRequestsInFlightAutoscaler"
           name="LoadAnalyzer">
 
         <!--

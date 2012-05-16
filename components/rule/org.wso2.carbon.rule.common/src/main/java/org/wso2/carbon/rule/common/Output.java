@@ -24,15 +24,19 @@ import org.wso2.carbon.rule.common.util.Constants;
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Output {
 
     private String wrapperElementName;
     private String nameSpace;
     private List<Fact> facts;
+    private Map<String, QName> classTypeQNameMap;
 
      public Output() {
         this.facts = new ArrayList<Fact>();
+        this.classTypeQNameMap = new HashMap<String, QName>();
     }
 
     public OMElement toOM(){
@@ -55,6 +59,20 @@ public class Output {
         }
 
         return ruleOutputOMElement;
+    }
+
+    public void populateClassTypes() {
+        for (Fact fact : this.facts) {
+            this.classTypeQNameMap.put(fact.getType(), new QName(fact.getNamespace(), fact.getElementName()));
+        }
+    }
+
+    public boolean isFactTypeExists(String type){
+        return this.classTypeQNameMap.containsKey(type);
+    }
+
+    public QName getFactTypeQName(String type){
+        return this.classTypeQNameMap.get(type);
     }
 
     public void addFact(Fact fact){

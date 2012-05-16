@@ -60,21 +60,15 @@ public class RuleSession {
 
         List resultObjects = this.session.execute(inputFactObjects);
 
-        Map<String, QName> classTypeQNameMap = new HashMap<String, QName>();
-
-        for (Fact fact : output.getFacts()){
-             classTypeQNameMap.put(fact.getType(), new QName(fact.getNamespace(), fact.getElementName()));
-        }
-
         OMFactory omFactory = OMAbstractFactory.getOMFactory();
         OMElement outWrapperElement =
                 omFactory.createOMElement(new QName(output.getNameSpace(), output.getWrapperElementName()));
 
         for (Object object : resultObjects){
             // we need to add the object types only present in the output fact mappings.
-            if (classTypeQNameMap.get(object.getClass().getName()) != null) {
+            if (output.isFactTypeExists(object.getClass().getName())) {
                  outWrapperElement.addChild(DataBindUtil.toOM(object,
-                                       classTypeQNameMap.get(object.getClass().getName())));
+                                       output.getFactTypeQName(object.getClass().getName())));
             }
         }
 

@@ -1,8 +1,8 @@
-<ruleMediator xmlns="http://wso2.org/carbon/rules">
+<rule xmlns="http://wso2.org/carbon/rules">
     <source xpath="//m0:wrapper/m0:placeOrder" xmlns:m0="http://com.test/placeorder">soapBody</source>
     <target action="replace" resultXpath="//m0:placeOrderRespone/m0:orderReject/m0:reason/text()" xmlns:m0="http://com.test/placeorder">$result</target>
     <ruleSet>
-        <rule resourceType="drl" sourceType="inline">
+        <rule resourceType="regular" sourceType="inline">
             <![CDATA[
                 package OrderApproval;
 
@@ -69,4 +69,4 @@
         <fact elementName="orderReject" namespace="http://com.test/placeorder"
               type="samples.userguide.OrderReject"></fact>
     </output>
-</ruleMediator>
+</rule>

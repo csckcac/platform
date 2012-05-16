@@ -83,6 +83,8 @@ public class RuleMessageReceiver extends AbstractInOutMessageReceiver {
                 (RuleSession) serviceContext.getProperty(Constants.RULE_SESSION_OBJECT);
         if (ruleSession == null){
             ruleSession = this.ruleEngine.createSession(Constants.RULE_STATEFUL_SESSION);
+
+            // put a configuration to invalidate the session or keep the session countinued
             serviceContext.setProperty(Constants.RULE_SESSION_OBJECT, ruleSession);
         }
 

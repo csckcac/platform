@@ -14,12 +14,7 @@
             path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
         %>
         <li>
-            <a class="tooltip-right medium orange pill" data-content="#tooltipcontentID<%=String(i)%>"><%=api.name%></a>
-            <div class="tooltip-content" id="tooltipcontentID<%=String(i)%>">
-                <h5><a href="<%=path%>"><%=api.name%></a></h5>
-                <img src="<%=thumbURL%>"/>
-                <p><%=api.description%></p>
-            </div>
+            <a class="tooltip-right medium orange pill" href="<%=path%>"><%=api.name%></a>
         </li>
         <% } %>
     </ol>

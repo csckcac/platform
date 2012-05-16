@@ -19,88 +19,25 @@ body {
 	padding-top: 60px;
     background: none;
 }
+
+    .CodeMirror-scroll, .CodeMirror {
+        height:460px !important;
+    }
+
 </style>
 
-<script language="Javascript" type="text/javascript"
-	src="edit_area/edit_area_full.js"></script>
-<script language="Javascript" type="text/javascript">
-	// initialisation
-	editAreaLoader.init({
-		id : "codeinput" // id of the textarea to transform
-		,
-		start_highlight : true // if start with highlight
-		,
-		allow_resize : "both",
-		allow_toggle : true,
-		word_wrap : true,
-		language : "en",
-		syntax : "php"
-	});
-	// callback functions
-	function my_save(id, content) {
-		alert("Here is the content of the EditArea '" + id
-				+ "' as received by the save callback function:\n" + content);
-	}
-
-	function my_load(id) {
-		editAreaLoader
-				.setValue(id,
-						"The content is loaded from the load_callback function into EditArea");
-	}
-
-	function test_setSelectionRange(id) {
-		editAreaLoader.setSelectionRange(id, 100, 150);
-	}
-
-	function test_getSelectionRange(id) {
-		var sel = editAreaLoader.getSelectionRange(id);
-		alert("start: " + sel["start"] + "\nend: " + sel["end"]);
-	}
-
-	function test_setSelectedText(id) {
-		text = "[REPLACED SELECTION]";
-		editAreaLoader.setSelectedText(id, text);
-	}
-
-	function test_getSelectedText(id) {
-		alert(editAreaLoader.getSelectedText(id));
-	}
-
-	function editAreaLoaded(id) {
-		if (id == "example_2") {
-			open_file1();
-			open_file2();
-		}
-	}
-
-	function open_file1() {
-		var new_file = {
-			id : "to\\ � # � to",
-			text : "$authors= array();\n$news= array();",
-			syntax : 'php',
-			title : 'beautiful title'
-		};
-		editAreaLoader.openFile('example_2', new_file);
-	}
-
-	function open_file2() {
-		var new_file = {
-			id : "Filename",
-			text : "<a href=\"toto\">\n\tbouh\n</a>\n<!-- it's a comment -->",
-			syntax : 'html'
-		};
-		editAreaLoader.openFile('example_2', new_file);
-	}
-
-	function close_file1() {
-		editAreaLoader.closeFile('example_2', "to\\ � # � to");
-	}
-
-	function toogle_editable(id) {
-		editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader
-				.execCommand(id, 'is_editable'));
-	}
-</script>
+<link rel="stylesheet" href="css/codemirror.css">
+    <script src="js/codemirror.js"></script>
+    <script src="js/simple-hint.js"></script>
+    <link rel="stylesheet" href="css/simple-hint.css">
+    <script src="js/javascript-hint.js"></script>
+    <script src="js/xml.js"></script>
+    <script src="js/javascript.js"></script>
+    <script src="js/css.js"></script>
+    <script src="js/htmlmixed.js"></script>
+    <script src="js/htmlembedded.js"></script>
+    <script src="js/jaggery-hint-api.js"></script>
+    <script src="js/jaggery.js"></script>
 
 <link href="css/prettify.css" rel="stylesheet">
 <!-- Le fav and touch icons -->
@@ -116,12 +53,7 @@ body {
 
 	<div class="container-fluid">
 
-		<!-- Main hero unit for a primary marketing message or call to action -->
-        <script language="Javascript" type="text/javascript">
-
-
-        </script>
-
+	
 		<!-- Example row of columns -->
 
 		<div class="row" style="margin-top: 0px;">
@@ -130,10 +62,9 @@ body {
 				<input type="submit" value="Try it >>" id="tryitbtn"
 					class="btn primary" onclick="Tryit.call('')">
 
-				<textarea class="span-full prettyprint linenums" id="codeinput"
-					style="height: 440px;"></textarea>
-				<span class="help-block"> Edit the code above to generate
-					your output </span>
+			    <textarea id="codeinput" name="codeinput">
+</textarea>
+           <span class="help-block"> Edit the code above to generate your output <strong>(use Ctrl + space for autocompletion)</strong></span>
 			</div>
 
 			<div class="span8">

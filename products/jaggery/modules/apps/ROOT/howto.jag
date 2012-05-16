@@ -94,7 +94,6 @@ include('/includes/topnavi.jag');
                     The "Hello World" Jaggery App
                 </h2>
             </div>
-            <span id="jaggeryserver"></span>
             <ol>
                 <li>Create a directory called <code>helloapp</code> at <code><code>{JAGGERY_HOME}/apps/</code></code></li>
                 <li>Create a jaggery file <code>helloworld.jag</code> inside the <code>helloapp</code> directory and add the following code snippet</li>
@@ -105,16 +104,18 @@ include('/includes/topnavi.jag');
     print("Hello " + name);
 %&gt
 						</pre><br/>
+                 <span id="deploying"></span>
                 <li>Thats it! now point to  <code>{http://localhost:9443/helloapp/helloworld.jag}</code></li>
             </ol>
             <p>Excited ?? check out the <a href="/documentation.jag">Jaggery API</a></p>
+
         </div>
     </div>
 
     <div class="row">
         <div class="span16">
             <h2>How To Deploy A Jaggery App</h2>
-            <span id="deploying"></span>
+
 
             <p>In-order to compose a Jaggery script you will need to give it a <code>.jag</code> extension.</p>
 
@@ -124,13 +125,15 @@ include('/includes/topnavi.jag');
 
             <p>Alternatively your app could be uploaded as a .zip archive using the management console. The upload page can be found under the Add link in Jaggery Applications section.</p>
             <br/>
+            <span id="jaggeryserver"></span>
             <img alt="Upload Jaggery" src="images/uploadjaggery.png"/>
+
         </div>
     </div>
 
     <br/>
 	<div class="row">
-	    <div class="span16">
+	    <div class="span16"> 
 	        <div class="page-header">
 	            <h2>
 	                Jaggery Server
@@ -147,10 +150,10 @@ include('/includes/topnavi.jag');
 	            <br/> <br/>
 	            Management console can be accessed by <code>{https://localhost:9443/admin}</code>
 	        </p>
-			<span id="commandline"></span>
-	
-	        <img alt="Jaggery Management Console" src="images/j-mgt-console.png"/>
-	
+
+
+	        <img alt="Jaggery Management Console" src="images/j-mgt-console.png" />
+            <span id="commandline"></span>
 	    </div>
 	</div>
     <br/>
@@ -200,7 +203,7 @@ include('/includes/topnavi.jag');
     <div class="row">
     <div class="span16">
         <div class="page-header">
-            <h2 id="shell">
+            <h2>
                 The Shell Mode
             </h2>
         </div>

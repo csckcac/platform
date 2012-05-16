@@ -2498,7 +2498,13 @@ a.download {
 
 #codeinput {
     margin-top:20px;
-    height:466px;
+    border:1px solid #ccc !important;
+}
+
+.formsection {
+    clear:both;
+    width:100%;
+    float:left;
 }
 
 #output {

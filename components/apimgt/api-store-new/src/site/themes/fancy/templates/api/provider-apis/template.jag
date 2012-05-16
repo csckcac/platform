@@ -1,7 +1,7 @@
 <% jagg.template("api/provider-apis", function(inputs, outputs, jagg) { %>
 <% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
 <div class="provider-more">
-    <h4>More from provider</h4>
+    <h4>More APIs from '<%=outputs.apis[0].provider%>'</h4>
     <hr/>
     <%
     var i, api, path, thumbURL, apis = outputs.apis, length = apis.length;
@@ -18,9 +18,7 @@
             <a href=""><img class="thumbnail" src="<%=thumbURL%>"/></a>
         </div>
         <div class="col_7">
-            <a href="<%=path%>" class="item-title"><%=api.name%></a>
-            <a href="<%=path%>" class="item-provider"><%=api.provider%></a>
-
+            <a href="<%=path%>"><%=api.name%></a>
             <div class="star-ratings"><%=stars.getStaticStars(site.context, api.rating)%></div>
         </div>
     </div>

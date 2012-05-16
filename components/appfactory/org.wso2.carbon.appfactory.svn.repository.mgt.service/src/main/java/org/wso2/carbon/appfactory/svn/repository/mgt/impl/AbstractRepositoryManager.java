@@ -34,8 +34,8 @@ public abstract class AbstractRepositoryManager implements RepositoryManager {
 
         HttpClient client = new HttpClient();
 
-        String userName = config.getsCMServerAdminUserName();
-        String password = config.getsCMServerAdminPassword();
+        String userName = config.getScmServerAdminUserName();
+        String password = config.getScmServerAdminPassword();
 
         AuthScope authScope = AuthScope.ANY;
 
@@ -48,7 +48,7 @@ public abstract class AbstractRepositoryManager implements RepositoryManager {
 
     protected String getServerURL( AppFactoryConfiguration config) {
         //TODO:create a field backend url instead of ip+port
-        return "http://" + config.getsCMServerIp() + ":" + config.getsCMServerPort();
+        return "http://" + config.getScmServerIp() + ":" + config.getScmServerPort();
     }
 
 }

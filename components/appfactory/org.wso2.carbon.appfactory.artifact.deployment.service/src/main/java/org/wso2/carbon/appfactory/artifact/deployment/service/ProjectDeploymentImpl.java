@@ -23,6 +23,7 @@ import org.tigris.subversion.svnclientadapter.svnkit.SvnKitClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.utils.Depth;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.application.mgt.stub.upload.types.carbon.UploadedFileItem;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -36,9 +37,7 @@ import java.util.List;
 
 public class ProjectDeploymentImpl implements ProjectDeployingService {
     private static final Log log = LogFactory.getLog(ProjectDeploymentImpl.class);
-    private static String tempDirPath = System.getProperty("java.io.tmpdir").endsWith(
-            File.separator) ? System.getProperty("java.io.tmpdir") + "checkOutCode" :
-                                        System.getProperty("java.io.tmpdir") + File.separator + "checkOutCode";
+    private static AppFactoryConfiguration appFactoryConfiguration = AppFactoryConfigurationHolder.getInstance().getAppFactoryConfiguration();
     private ISVNClientAdapter svnClient;
 
 
@@ -72,7 +71,8 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
         try {
             clientType = SVNClientAdapterFactory.getPreferredSVNClientType();
             svnClient = SVNClientAdapterFactory.createSVNClient(clientType);
-//            svnClient.setUsername();
+            svnClient.setUsername(appFactoryConfiguration.getAdminUserName());
+            svnClient.setUsername(appFactoryConfiguration.getAdminPassword());
         } catch (SVNClientException e) {
             throw new ProjectDeploymentExceptions("Client type can not be defined.");
         }
@@ -138,7 +138,7 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
 
     private File createProjectCheckoutDirectory(String projectName)
             throws ProjectDeploymentExceptions {
-        File tempDir = new File(tempDirPath + File.separator + projectName);
+        File tempDir = new File(CarbonUtils.getTmpDir() + File.separator + projectName);
         if (!tempDir.exists()) {
             boolean directoriesCreated = tempDir.mkdirs();
             if (!directoriesCreated) {
@@ -162,9 +162,8 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
 
     public Artifact[] deployProject(String projectSvnUrl, String projectId, String artifactType,
                                     String stage) throws ProjectDeploymentExceptions {
-        AppFactoryConfiguration configuration = AppFactoryConfigurationHolder.getInstance().getAppFactoryConfiguration();
 
-        List<String> deploymentServerUrls = configuration.getDeploymentServerUrls(stage);
+        List<String> deploymentServerUrls = appFactoryConfiguration.getDeploymentServerUrls(stage);
 
         if (deploymentServerUrls.isEmpty()) {
             handleException("No deployment paths are configured for stage:" + stage);
@@ -218,19 +217,22 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
         }
 
         try {
-            if (artifactUploadClient.authenticate(getAdminUsername(projectId), getAdminPassword(), remoteIp)) {
+            if (artifactUploadClient.authenticate(getAdminUsername(projectId),
+                                                  appFactoryConfiguration.getAdminPassword(),
+                                                  remoteIp)) {
                 artifactUploadClient.uploadCarbonApp(uploadedFileItems);
             }
         } catch (Exception e) {
-            handleException("Failed to upload the artifact:" + deployArtifact + " of project:" + projectId + " to deployment location:" + deploymentServerUrl);
+            handleException("Failed to upload the artifact:" + deployArtifact + " of project:" +
+                            projectId + " to deployment location:" + deploymentServerUrl);
         }
     }
 
 
     private boolean executeMavenGoal(String projectPath) throws ProjectDeploymentExceptions {
-       /* if (System.getProperty("maven.home") == null) {
+        if (System.getProperty("maven.home") == null) {
             throw new ProjectDeploymentExceptions("System property 'maven.home' is not set.");
-        }*/
+        }
         InvocationRequest request = new DefaultInvocationRequest();
         request.setShowErrors(true);
 
@@ -278,12 +280,7 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
     }
 
     private String getAdminUsername(String projectId) {
-        String adminUsername = AppFactoryConfigurationHolder.getInstance().getAppFactoryConfiguration().getAdminUserName();
-        return adminUsername + "@" + projectId;
-    }
-
-    private String getAdminPassword() {
-        return AppFactoryConfigurationHolder.getInstance().getAppFactoryConfiguration().getAdminPassword();
+        return appFactoryConfiguration.getAdminUserName() + "@" + projectId;
     }
 
 }

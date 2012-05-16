@@ -44,7 +44,7 @@ limitations under the License.
 
 <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
-    <title>WSO2 Stratos ESB</title>
+    <title>WSO2 Stratos CSG</title>
     <link href="../admin/css/global.css" rel="stylesheet" type="text/css" media="all"/>
     <link href="../styles/css/main.css" rel="stylesheet" type="text/css" media="all"/>
 
@@ -143,28 +143,28 @@ limitations under the License.
     <link rel="stylesheet" type="text/css" href="../tenant-login/css/loginpage.css"/>
 <div id="login-content">
 					<div class="main-text">
-						The WSO2 ESB, with an innovative design, offering one of the highest performance and lowest footprint approaches to implementing a SOA, delivered as a multi-tenant, elastically scaling, metered platform
+						The WSO2 CSG, creates a managed, secured channel for business processes and other tasks running in public cloud to get access to enterprise data and services resides behinds a firewall.
 					</div>
 					<div class="clear"></div>
 					<div class="feature feature-left">
 						<img src="../tenant-login/images/feature-01-icon.gif"/>
-						<h2>Proxy Services</h2>
+						<h2>API Protection</h2>
 						<p>
-							Proxy services facilitate location transparency and provides the means for the integration between  various other services, on different formats.
+							Protect services published to outside world from exploits and attacks using schema validations, WS-security and throttling.
 						</p>
 					</div>
 					<div class="feature">
 						<img src="../tenant-login/images/feature-02-icon.gif"/>
-						<h2>Sequences</h2>
+						<h2>Private Data Access</h2>
 						<p>
-							Sequence is a collection of mediators attached to perform a given mediation flow in an integration.
+							Selectively publish data stored in private networks to public cloud through services in a secured and controlled manner.
 						</p>
 					</div>
 					<div class="feature">
 					 	<img src="../tenant-login/images/feature-03-icon.gif"/>
-						<h2>Endpoints</h2>
+						<h2>Outsourcing Computations</h2>
 						<p>
-							Endpoints represent the third party services or other endpoints the ESB is talking to, this  configuration allows you to record a set of meta data about the external endpoint apart from it's EPR.
+							 Make use of computational resources hosted outside the enterprise with data/resources reside on premises in a secure and controlled manner.
 						</p>
 					</div>
 					<div class="clear"></div>
@@ -266,7 +266,7 @@ limitations under the License.
 					<div class="powered">
 						<span>Powered by</span><a target="_blank" href="http://wso2.org/projects/esb"><img src="../tenant-login/images/powered.gif"/></a>
 					</div>
-					&copy; appserver.stratoslive.wso2.com copyright 2010 WSO2, Inc. &nbsp;
+					&copy; stratoslive.wso2.com copyright 2010-2011 WSO2, Inc. &nbsp;
 					<a target="_blank" href="http://www.wso2.com/cloud/services/terms-of-use">Terms of Service</a>
 					|
 					<a target="_blank"  href="http://www.wso2.com/cloud/services/privacy-policy">Privacy Policy</a>

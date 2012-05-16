@@ -55,7 +55,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.stratos.esb.styles</id>
+                            <id>org.wso2.stratos.csg.styles</id>
                             <propertiesFile>../etc/feature.properties</propertiesFile>
                             <bundles>
                                 <bundleDef>org.wso2.csg:org.wso2.stratos.csg.styles</bundleDef>

@@ -127,7 +127,8 @@
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.rule.mediator.feature:${carbon.version}</featureArtifactDef>-->
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.rule.engine.drools.feature:${carbon.version}</featureArtifactDef>-->
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.rule.engine.jsr94.feature:${carbon.version}</featureArtifactDef>-->
-                                <!--<featureArtifactDef>org.wso2.esb:org.wso2.stratos.esb.styles.feature:${project.version}</featureArtifactDef>-->
+                                <!--<featureArtifactDef>org.wso2.csg:org.wso2.csg.styles.feature:${project.version}</featureArtifactDef> -->
+                                <featureArtifactDef>org.wso2.csg:org.wso2.stratos.csg.styles.feature:${project.version}</featureArtifactDef>
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.core.feature:${carbon.version}</featureArtifactDef>-->
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.ui.feature:${carbon.version}</featureArtifactDef>-->
 								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.admin.ui.feature:${carbon.version}</featureArtifactDef>-->
@@ -232,7 +233,7 @@
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.cloud.csg..mediation.initializer.feature.group</id>-->
+                                    <!--<id>org.wso2.carbon.cloud.csg.mediation.initializer.feature.group</id>-->
                                     <!--<version>${carbon.version}</version>-->
                                 <!--</feature>-->
                                 <!--<feature>-->
@@ -387,10 +388,14 @@
                                     <id>org.wso2.carbon.relay.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.stratos.esb.styles.feature.group</id>-->
-                                    <!--<version>${project.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.stratos.csg.styles.feature.group</id>        
+                                    <version>${project.version}</version>
+                                </feature>
+                               <!-- <feature>
+                                    <id>org.wso2.csg.styles.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature> -->
                                 <!--<feature>-->
                                     <!--<id>org.apache.axis2.transports.jms.feature.group</id>-->
                                     <!--<version>${axis2.transport.version}</version>-->
@@ -443,10 +448,10 @@
                                     <version>${carbon.version}</version>
                                 </feature-->
 
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.stratos.csg.login.ui.feature.group</id>-->
-                                    <!--<version>${project.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.stratos.csg.login.ui.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
 
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.mediation.templates.feature.group</id>-->

@@ -43,80 +43,41 @@
 <div id="middle">
 <div id="workArea">
 <style type="text/css">
-    .tip-table td.proxy {
-        background-image: url(../../carbon/tenant-dashboard/images/proxy.png);
+    .tip-table td.apiproection {
+        background-image: url(../../carbon/tenant-dashboard/images/api-protection.png);
+    }
+    .tip-table td.pvtdata {
+        background-image: url(../../carbon/tenant-dashboard/images/private-data-access.png);
     }
 
-    .tip-table td.sequence {
-        background-image: url(../../carbon/tenant-dashboard/images/sequence.png);
-    }
-    .tip-table td.endpoint {
-        background-image: url(../../carbon/tenant-dashboard/images/endpoint.png);
-    }
-    .tip-table td.schedule-tasks {
-        background-image: url(../../carbon/tenant-dashboard/images/schedule-tasks.png);
+    .tip-table td.outsourcecomp {
+        background-image: url(../../carbon/tenant-dashboard/images/outsource-computations.png);
     }
 
-    
-    .tip-table td.message-processors {
-        background-image: url(../../carbon/tenant-dashboard/images/message-processors.png);
-    }
-    .tip-table td.priority-executors {
-        background-image: url(../../carbon/tenant-dashboard/images/priority-executors.png);
-    }
-    .tip-table td.service-testing {
-        background-image: url(../../carbon/tenant-dashboard/images/service-testing.png);
-    }
-    .tip-table td.message-tracing {
-        background-image: url(../../carbon/tenant-dashboard/images/message-tracing.png);
-    }
 </style>
- <h2 class="dashboard-title">WSO2 ESB Quick Start Dashboard</h2>
+ <h2 class="dashboard-title">WSO2 CSG Quick Start Dashboard</h2>
         <table class="tip-table">
             <tr>
-                <td class="tip-top proxy"></td>
-                <td class="tip-empty"></td>
-                <td class="tip-top sequence"></td>
+                <td class="tip-top apiproection"></td>
                 <td class="tip-empty "></td>
-                <td class="tip-top endpoint"></td>
+                <td class="tip-top pvtdata"></td>
                 <td class="tip-empty "></td>
-                <td class="tip-top schedule-tasks"></td>
+                <td class="tip-top outsourcecomp"></td>
             </tr>
-            <tr>
-                <td class="tip-content">
-                    <div class="tip-content-lifter">
-                        <%
-							if (hasPermission) {
-						%>
-                        <a class="tip-title" href="../proxyservices/templates.jsp?region=region1&item=proxy_services_menu">Proxy Service</a> <br/>
-						<%
-							} else {
-						%>
-						<h3>Proxy Service</h3> <br/>
-						<%
-							}
-						%>
-                        <p>Proxy services facilitate location transparency and provides the means for the integration between
-                        various other services, on different formats</p>
-
-                    </div>
-                </td>
-                <td class="tip-empty"></td>
                 <td class="tip-content">
                     <div class="tip-content-lifter">
                    	   <%
 							if (hasPermission) {
 						%>
-                        <a class="tip-title" href="../sequences/list_sequences.jsp?region=region1&item=sequences_menu">Sequence</a><br/>
+                        <a class="tip-title" href="#">API protection</a><br/>
                         <%
 							} else {
 						%>
-						<h3>Sequence</h3><br/>
+						<h3>API protection</h3><br/>
 						<%
 							}
 						%>
-                        <p>Sequence is a collection of mediators attached to perform a given mediation flow in an
-                        integration.</p>
+                        <p>Protect services published to outside world from exploits and attacks using schema validations, WS-security and throttling.</p>
 
                     </div>
                 </td>
@@ -126,17 +87,15 @@
                          <%
 							if (hasPermission) {
 						%>
-                        <a class="tip-title" href="../endpoints/index.jsp?region=region1&item=endpoints_menu">Endpoint</a> <br/>
+                        <a class="tip-title" href="#">Private Data Access</a> <br/>
                          <%
 							} else {
 						%>
-						<h3>Endpoint </h3><br/>
+						<h3>Private Data Access</h3><br/>
 						<%
 							}
 						%>
-                        <p>Endpoints represent the third party services or other endpoints the ESB is talking to, this
-                        configuration allows you to record a set of meta data about the external endpoint apart from it's
-                        EPR</p>
+                        <p>Selectively publish data stored in private networks to public cloud through services in a secured and controlled manner.</p>
 
                     </div>
                 </td>
@@ -146,22 +105,20 @@
                      <%
 							if (hasPermission) {
 						%>
-                        <a class="tip-title" href="../task/index.jsp?region=region1&item=tasks_menu">Scheduled Tasks</a> <br/>
+                        <a class="tip-title" href="#">Outsource Computations</a> <br/>
 						  <%
 							} else {
 						%>
-						<h3>Scheduled Tasks</h3> <br/>
+						<h3>Outsource Computations</h3> <br/>
 							<%
 							}
 						%>
-                        <p>Job scheduling facility in the ESB with quartz scheduler, helping several tasks to be initiated and scheduled by the ESB.</p>
+                        <p>Make use of computational resources hosted outside the enterprise with data/resources reside on premises in a secure and controlled manner.</p>
 
                     </div>
                 </td>
             </tr>
             <tr>
-                <td class="tip-bottom"></td>
-                <td class="tip-empty"></td>
                 <td class="tip-bottom"></td>
                 <td class="tip-empty"></td>
                 <td class="tip-bottom"></td>
@@ -169,103 +126,6 @@
                 <td class="tip-bottom"></td>
             </tr>
         </table>
-	<div class="tip-table-div"></div>
-        <table class="tip-table">
-            <tr>
-                <td class="tip-top message-processors"></td>
-                <td class="tip-empty"></td>
-                <td class="tip-top priority-executors"></td>
-                <td class="tip-empty "></td>
-                <td class="tip-top service-testing"></td>
-                <td class="tip-empty "></td>
-                <td class="tip-top message-tracing"></td>
-            </tr>
-            <tr>
-                <td class="tip-content">
-                    <div class="tip-content-lifter">
-                    <%
-							if (hasPermission) {
-						%>
-                        <a class="tip-title" href="../message_processor/index.jsp?region=region1&item=messageProcessor_menu">Store & Forward</a> <br/>
- 						<%
-							} else {
-						%>
-						<h3>Store & Forward</h3> <br/>
-							<%
-							}
-						%>
-                        <p>Message Stores and Processors can be used to persist messages to queues and then process preserving SLAs</p>
-
-                    </div>
-                </td>
-                <td class="tip-empty"></td>
-                <td class="tip-content">
-                    <div class="tip-content-lifter">
-                    <%
-							if (hasPermission) {
-						%>
-                        <a class="tip-title" href="../executors/list_executors.jsp?region=region1&item=priority_executor_menu">Priority Execution</a><br/>
-						 <%
-							} else {
-						%>
-						 <h3>Priority Execution</h3><br/>
-							<%
-							}
-						%>
-                        <p>Ability to categorize mediation flows with a priority allowing certain messages or mediation paths
-                            to get a high priority with compared to other messages or paths.</p>
-
-                    </div>
-                </td>
-                <td class="tip-empty"></td>
-                <td class="tip-content">
-                    <div class="tip-content-lifter">
-                    <%
-							if (hasPermission) {
-						%>
-                        <a class="tip-title" href="../tryit/index.jsp?region=region5&item=tryit">Service Testing</a> <br/>
-						 <%
-							} else {
-						%>
-						<h3>Service Testing</h3> <br/>
-							<%
-							}
-						%>
-
-                        <p>Tryit tool can be used as a simple Web Service client which can be used to try your services
-                            within Enterprise Service Bus itself.</p>
-
-                    </div>
-                </td>
-                <td class="tip-empty"></td>
-                <td class="tip-content">
-                    <div class="tip-content-lifter">
-                    <%
-							if (hasPermission) {
-						%>
-                        <a class="tip-title" href="../tracer/index.jsp?region=region4&item=tracer_menu">Message Tracing</a> <br/>
-						 <%
-							} else {
-						%>
-						<h3>Message Tracing</h3> <br/>
-							<%
-							}
-						%>
-                        <p>Trace the request and responses to your service. Message Tracing is a vital debugging tool when you have clients from heterogeneous platforms.</p>
-
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="tip-bottom"></td>
-                <td class="tip-empty"></td>
-                <td class="tip-bottom"></td>
-                <td class="tip-empty"></td>
-                <td class="tip-bottom"></td>
-                <td class="tip-empty"></td>
-                <td class="tip-bottom"></td>
-            </tr>
-        </table>
-        
+	<div class="tip-table-div"></div>  
      </div>
 </div>

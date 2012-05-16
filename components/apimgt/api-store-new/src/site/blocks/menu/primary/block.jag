@@ -18,6 +18,7 @@ jagg.block("menu/primary", {
             "title":"APIs",
             "url":jagg.getMappedUrl("/"),
             "classes":"link-home",
+            "tooltip":"Browse the latest versions of published APIs, make subscriptions and generate API keys.",
             "active":(path == "/site/pages/list-apis.jag")
         });
 
@@ -25,6 +26,7 @@ jagg.block("menu/primary", {
             "title":"My Applications",
             "url":jagg.getMappedUrl("/site/pages/applications.jag"),
             "classes":"link-myapplications" + (user ? "" : " need-login"),
+            "tooltip":"Browse and create applications. Applications are required to make API subscriptions and consume them.",
             "active":(path == "/site/pages/applications.jag")
         });
 
@@ -32,6 +34,7 @@ jagg.block("menu/primary", {
             "title":"My Subscriptions",
             "url":jagg.getMappedUrl("/site/pages/subscriptions.jag"),
             "classes":"link-mysubscriptions" + (user ? "" : " need-login"),
+            "tooltip":"Browse through all the API subscriptions made so far and review the generated API keys.",
             "active":(path == "/site/pages/subscriptions.jag")
         });
 

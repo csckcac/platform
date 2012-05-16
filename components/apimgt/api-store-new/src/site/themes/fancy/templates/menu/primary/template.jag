@@ -10,7 +10,7 @@
                     link = links[i];
                 %>
                 <li <%=(link.active ? 'class="current"' : '')%>>
-                    <a href="<%=link.url%>"<%=(link.classes ? ' class="' + link.classes + '"' : "")%>><%=link.title%></a>
+                    <a title="<%=link.tooltip%>" href="<%=link.url%>"<%=(link.classes ? ' class="' + link.classes + '"' : "")%>><%=link.title%></a>
                 </li>
                 <% } %>
             </ul>

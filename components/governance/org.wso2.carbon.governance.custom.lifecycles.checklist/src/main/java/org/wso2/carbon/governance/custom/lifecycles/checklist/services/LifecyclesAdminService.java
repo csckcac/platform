@@ -19,6 +19,7 @@ package org.wso2.carbon.governance.custom.lifecycles.checklist.services;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.beans.LifecycleBean;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.util.*;
+import org.wso2.carbon.registry.admin.api.governance.IChecklistLifecycleService;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
 import org.wso2.carbon.registry.common.utils.RegistryUtil;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -28,7 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LifecyclesAdminService extends RegistryAbstractAdmin {
+public class LifecyclesAdminService extends RegistryAbstractAdmin implements IChecklistLifecycleService {
 
     public LifecycleBean getLifecycleBean(String path) throws Exception {
         return LifecycleBeanPopulator.getLifecycleBean(path, (UserRegistry)getRootRegistry(),

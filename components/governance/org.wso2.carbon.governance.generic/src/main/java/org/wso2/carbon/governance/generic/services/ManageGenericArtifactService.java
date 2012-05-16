@@ -29,6 +29,7 @@ import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.generic.beans.ArtifactBean;
 import org.wso2.carbon.governance.generic.beans.ArtifactsBean;
 import org.wso2.carbon.governance.list.util.GovernanceArtifactFilter;
+import org.wso2.carbon.registry.admin.api.governance.IManageGenericArtifactService;
 import org.wso2.carbon.registry.common.CommonConstants;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
 import org.wso2.carbon.registry.core.*;
@@ -45,7 +46,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SuppressWarnings({"unused", "NonJaxWsWebServices", "ValidExternallyBoundObject"})
-public class ManageGenericArtifactService extends RegistryAbstractAdmin {
+public class ManageGenericArtifactService extends RegistryAbstractAdmin implements IManageGenericArtifactService {
     private static final Log log = LogFactory.getLog(ManageGenericArtifactService.class);
     private static final String GOVERNANCE_ARTIFACT_CONFIGURATION_PATH =
             RegistryConstants.GOVERNANCE_COMPONENT_PATH + "/configuration/";

@@ -27,6 +27,7 @@ import org.wso2.carbon.governance.api.services.dataobjects.Service;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.services.util.Util;
 import org.wso2.carbon.governance.services.util.XMLConfigValidatorUtil;
+import org.wso2.carbon.registry.admin.api.governance.IManageServicesService;
 import org.wso2.carbon.registry.common.CommonConstants;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
 import org.wso2.carbon.registry.core.*;
@@ -49,7 +50,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @SuppressWarnings({"unused", "NonJaxWsWebServices", "ValidExternallyBoundObject"})
-public class AddServicesService extends RegistryAbstractAdmin {
+public class AddServicesService extends RegistryAbstractAdmin implements IManageServicesService {
     private static final Log log = LogFactory.getLog(AddServicesService.class);
     private static Map<String, Boolean> lifecycleAspects = new HashMap<String, Boolean>();
     private static final String TRUNK = "trunk";

@@ -20,10 +20,11 @@ package org.wso2.carbon.governance.lcm.services;
 import org.wso2.carbon.governance.lcm.beans.LifecycleBean;
 import org.wso2.carbon.governance.lcm.util.CommonUtil;
 import org.wso2.carbon.governance.lcm.util.LifecycleBeanPopulator;
+import org.wso2.carbon.registry.admin.api.governance.ILifecycleManagementService;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
-public class LifeCycleManagementService extends RegistryAbstractAdmin {
+public class LifeCycleManagementService extends RegistryAbstractAdmin implements ILifecycleManagementService {
     public String getLifecyclesCollectionLocation() throws Exception  {
         return CommonUtil.getContextRoot();
     }

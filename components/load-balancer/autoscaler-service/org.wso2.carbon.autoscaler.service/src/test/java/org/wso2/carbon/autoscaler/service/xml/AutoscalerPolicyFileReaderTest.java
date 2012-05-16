@@ -30,7 +30,7 @@ public class AutoscalerPolicyFileReaderTest extends TestCase {
 
     public void testGetPolicy() throws Exception {
         
-        String file = "src/main/resources/conf/autoscaler-policy.xml";
+        String file = "src/test/resources/autoscaler-policy.xml";
         AutoscalerPolicyFileReader reader = new AutoscalerPolicyFileReader(file);
         
         Policy policy = reader.getPolicy();

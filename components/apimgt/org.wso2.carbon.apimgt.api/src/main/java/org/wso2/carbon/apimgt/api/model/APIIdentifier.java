@@ -26,6 +26,7 @@ import org.wso2.carbon.apimgt.api.APIManagementException;
  */
 @SuppressWarnings("unused")
 public class APIIdentifier {
+
     private final String providerName;
     private final String apiName;
     private final String version;

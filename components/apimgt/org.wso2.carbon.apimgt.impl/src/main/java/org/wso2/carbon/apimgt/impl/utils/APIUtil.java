@@ -76,7 +76,13 @@ public final class APIUtil {
             api.setWsdlUrl(artifact.getAttribute(APIConstants.API_OVERVIEW_WSDL));
 
             Set<Tier> availableTier = new HashSet<Tier>();
-            availableTier.add(new Tier(artifact.getAttribute(APIConstants.API_OVERVIEW_TIER)));
+            String tiers = artifact.getAttribute(APIConstants.API_OVERVIEW_TIER);
+            if (tiers != null && !"".equals(tiers)) {
+                String[] tierNames = tiers.split("\\|\\|");
+                for (String tierName : tierNames) {
+                    availableTier.add(new Tier(tierName));
+                }
+            }
             api.addAvailableTiers(availableTier);
             api.setContext(artifact.getAttribute(APIConstants.API_OVERVIEW_CONTEXT));
             api.setLatest(Boolean.valueOf(artifact.getAttribute(APIConstants.API_OVERVIEW_IS_LATEST)));
@@ -160,7 +166,14 @@ public final class APIUtil {
             artifact.setAttribute(APIConstants.API_OVERVIEW_WSDL, api.getWsdlUrl());
             artifact.setAttribute(APIConstants.API_OVERVIEW_THUMBNAIL_URL, api.getThumbnailUrl());
             artifact.setAttribute(APIConstants.API_OVERVIEW_STATUS, apiStatus);
-            artifact.setAttribute(APIConstants.API_OVERVIEW_TIER, api.getAvailableTiers().iterator().next().getName());
+            String tiers = "";
+            for (Tier tier : api.getAvailableTiers()) {
+                tiers += tier.getName() + "||";
+            }
+            if (!"".equals(tiers)) {
+                tiers = tiers.substring(0, tiers.length() - 2);
+                artifact.setAttribute(APIConstants.API_OVERVIEW_TIER, tiers);
+            }
             if (APIConstants.PUBLISHED.equals(apiStatus)){
                 artifact.setAttribute(APIConstants.API_OVERVIEW_IS_LATEST, "true");
             }

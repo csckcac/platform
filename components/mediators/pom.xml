@@ -69,7 +69,7 @@
 				<module>oauth</module>
 				<module>transaction</module>
 		<!--		<module>rule</module> -->
-				<module>autoscale</module>
+				<!--module>autoscale</module-->
 				<module>uiless</module>
 				<module>enqueue</module>
 			  	<module>smooks</module>

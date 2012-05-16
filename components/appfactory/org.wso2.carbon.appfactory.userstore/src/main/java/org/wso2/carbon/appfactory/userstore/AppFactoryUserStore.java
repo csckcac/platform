@@ -27,7 +27,8 @@ public class AppFactoryUserStore extends ApacheDSUserStoreManager {
                                ProfileConfigurationManager profileManager) throws UserStoreException {
         super(realmConfig, claimManager, profileManager);
     }
-
+    
+    @Override
     public boolean authenticate(String username, Object credential) throws UserStoreException {
         boolean isAuthenticated = false;
         isAuthenticated = super.authenticate(username, credential);
@@ -40,6 +41,7 @@ public class AppFactoryUserStore extends ApacheDSUserStoreManager {
         return isAuthenticated;
     }
 
+    @Override
     public String[] listUsers(String arg0, int maxItemLimit) throws UserStoreException {
         String[] roles = getRoleNames();
         List<String> users = new ArrayList<String>();

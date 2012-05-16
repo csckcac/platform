@@ -57,8 +57,8 @@ public class TestPaths {
             deleteResources("/testkrishantha");
             log.info("*************WS-API Get On Paths test - Passed *************");
         } catch (RegistryException e) {
-            log.error("WS-API Get On Paths test-Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Get On Paths test - Failed:" + e.getMessage());
+            log.error("WS-API Get On Paths test-Failed:" + e);
+            throw new RegistryException("WS-API Get On Paths test - Failed:" + e);
         }
     }
 
@@ -83,8 +83,8 @@ public class TestPaths {
             deleteResources("/testkrishantha1");
             log.info("**************** WS-API Put On Paths test - Passed********************");
         } catch (RegistryException e) {
-            log.error("WS-API Put On Paths test - Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Put On Paths test - Failed:" + e.getMessage());
+            log.error("WS-API Put On Paths test - Failed:" + e);
+            throw new RegistryException("WS-API Put On Paths test - Failed:" + e);
         }
     }
 
@@ -102,8 +102,8 @@ public class TestPaths {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

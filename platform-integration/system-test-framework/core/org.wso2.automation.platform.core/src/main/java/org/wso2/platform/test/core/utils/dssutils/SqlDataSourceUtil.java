@@ -293,10 +293,10 @@ public class SqlDataSourceUtil {
             log.error("IOException When reading SQL files: ", e);
             throw new IOException("IOException When reading SQL files: ", e);
         } catch (ClassNotFoundException e) {
-            log.error("Class Not Found. Check MySql-jdbc Driver in classpath: " + e.getMessage());
+            log.error("Class Not Found. Check MySql-jdbc Driver in classpath: " + e);
             throw new ClassNotFoundException("Class Not Found. Check MySql-jdbc Driver in classpath: ", e);
         } catch (SQLException e) {
-            log.error("SQLException When executing SQL: " + e.getMessage());
+            log.error("SQLException When executing SQL: " + e);
             throw new SQLException("SQLException When executing SQL: ", e);
         }
     }

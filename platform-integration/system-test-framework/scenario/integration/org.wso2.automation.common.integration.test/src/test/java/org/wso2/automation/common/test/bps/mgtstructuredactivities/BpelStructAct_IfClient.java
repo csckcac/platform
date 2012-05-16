@@ -97,8 +97,8 @@ public class BpelStructAct_IfClient {
                     Assert.fail("Instance is not created for the request");
                 }
             } catch (InterruptedException e) {
-                log.error("Process management failed" + e.getMessage());
-                Assert.fail(e.getMessage());
+                log.error("Process management failed" + e);
+                Assert.fail("Process management failed" + e);
             }
         }
         bpelInstance.clearInstancesOfProcess(processID);
@@ -120,8 +120,8 @@ public class BpelStructAct_IfClient {
                     Assert.fail("Instance is not created for the request");
                 }
             } catch (InterruptedException e) {
-                log.error("Process management failed" + e.getMessage());
-                Assert.fail(e.getMessage());
+                log.error("Process management failed" + e);
+                Assert.fail("Process management failed" + e);
             }
         }
         bpelInstance.clearInstancesOfProcess(processID);

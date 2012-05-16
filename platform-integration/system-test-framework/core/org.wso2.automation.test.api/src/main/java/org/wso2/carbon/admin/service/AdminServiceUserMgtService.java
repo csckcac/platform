@@ -139,7 +139,7 @@ public class AdminServiceUserMgtService {
 
     protected void handleException(String msg, Exception e) {
         log.error(msg, e);
-        Assert.fail(msg + ": " + e.getMessage());
+        Assert.fail(msg + ": " + e);
     }
 
     public void updateUserListOfRole(String roleName, String[] addingUsers,

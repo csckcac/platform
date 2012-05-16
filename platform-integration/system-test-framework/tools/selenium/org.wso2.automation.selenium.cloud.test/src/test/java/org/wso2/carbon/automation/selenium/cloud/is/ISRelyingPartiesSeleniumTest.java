@@ -79,17 +79,17 @@ public class ISRelyingPartiesSeleniumTest {
             userLogout();
             log.info("********** IS Stratos Add new Relying party Test - passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Failed to add new Relying Party :" + e.getMessage());
+            log.info("Failed to add new Relying Party :" + e);
             userLogout();
-            throw new AssertionFailedError("Failed to add new Relying Party :" + e.getMessage());
+            throw new AssertionFailedError("Failed to add new Relying Party :" + e);
         } catch (WebDriverException e) {
-            log.info("Failed to add new Relying Party :" + e.getMessage());
+            log.info("Failed to add new Relying Party :" + e);
             userLogout();
-            throw new WebDriverException("Failed to add new Relying Party :" + e.getMessage());
+            throw new WebDriverException("Failed to add new Relying Party :" + e);
         } catch (Exception e) {
-            log.info("Failed to add new Relying Party :" + e.getMessage());
+            log.info("Failed to add new Relying Party :" + e);
             userLogout();
-            throw new Exception("Failed to add new Relying Party :" + e.getMessage());
+            throw new Exception("Failed to add new Relying Party :" + e);
         }
     }
 

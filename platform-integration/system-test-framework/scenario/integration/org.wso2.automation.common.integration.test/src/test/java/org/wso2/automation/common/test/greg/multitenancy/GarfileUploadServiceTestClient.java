@@ -71,8 +71,8 @@ public class GarfileUploadServiceTestClient {
                 registry_diffDomainUser1.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 
@@ -105,11 +105,11 @@ public class GarfileUploadServiceTestClient {
             r1.setMediaType("application/vnd.wso2.governance-archive");
             registry.put("/a1/a2/a3/r1", r1);
         } catch (FileNotFoundException e) {
-            log.error("Registry Put GAR File upload -Failed:" + e.getMessage());
-            throw new FileNotFoundException("Registry Put GAR File upload -Failed:" + e.getMessage());
+            log.error("Registry Put GAR File upload -Failed:" + e);
+            throw new FileNotFoundException("Registry Put GAR File upload -Failed:" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Registry Put GAR File upload -Failed:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("Registry Put GAR File upload -Failed:" + e.getMessage());
+            log.error("Registry Put GAR File upload -Failed:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("Registry Put GAR File upload -Failed:" + e);
         }
     }
 
@@ -122,8 +122,8 @@ public class GarfileUploadServiceTestClient {
             // admin user - admin123@wso2autoQA0008.org
             assertFalse(registry_diffDomainUser1.resourceExists(artifact), "WSDL Exists for different domain user:");
         } catch (RegistryException e) {
-            log.error("verifyResourceExists RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourceExists RegistryException throw:" + e.getMessage());
+            log.error("verifyResourceExists RegistryException thrown:" + e);
+            throw new RegistryException("verifyResourceExists RegistryException throw:" + e);
         }
     }
 
@@ -136,8 +136,8 @@ public class GarfileUploadServiceTestClient {
             // admin user - admin123@wso2autoQA0008.org
             assertFalse(registry_diffDomainUser1.resourceExists(artifact), "WSDL has not been properly deleted for different domain user:");
         } catch (RegistryException e) {
-            log.error("Resource has not been properly deleted -Failed:" + e.getMessage());
-            throw new RegistryException("Resource has not been properly deleted -Failed:" + e.getMessage());
+            log.error("Resource has not been properly deleted -Failed:" + e);
+            throw new RegistryException("Resource has not been properly deleted -Failed:" + e);
         }
     }
 
@@ -161,11 +161,11 @@ public class GarfileUploadServiceTestClient {
             verifyResourceDeleted(schema_path);      //assert schema was deleted
             log.info("Multi Tenancy GarfileUploadServiceTestClient - Passed ");
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Resource has not been properly deleted -Failed:" + e.getMessage());
-            throw new RegistryException("Resource has not been properly deleted -Failed:" + e.getMessage());
+            log.error("Resource has not been properly deleted -Failed:" + e);
+            throw new RegistryException("Resource has not been properly deleted -Failed:" + e);
         } catch (FileNotFoundException e) {
-            log.error("Resource has not been properly deleted -Failed:" + e.getMessage());
-            throw new FileNotFoundException("Resource has not been properly deleted -Failed:" + e.getMessage());
+            log.error("Resource has not been properly deleted -Failed:" + e);
+            throw new FileNotFoundException("Resource has not been properly deleted -Failed:" + e);
         }
     }
 }

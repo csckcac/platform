@@ -51,11 +51,11 @@ public class AdminServiceStratosAccountMgt {
         try {
             accountMgtServiceStub.deactivate();
         } catch (RemoteException e) {
-            log.error("Tenant deactivation fail " + e.getMessage());
-            throw new RemoteException("Tenant deactivation fail " + e.getMessage());
+            log.error("Tenant deactivation fail " + e);
+            throw new RemoteException("Tenant deactivation fail " + e);
         } catch (DeactivateExceptionException e) {
-            log.error("Tenant deactivation fail " + e.getMessage());
-            throw new DeactivateExceptionException("Tenant deactivation fail " + e.getMessage());
+            log.error("Tenant deactivation fail " + e);
+            throw new DeactivateExceptionException("Tenant deactivation fail " + e);
         }
     }
 
@@ -65,11 +65,11 @@ public class AdminServiceStratosAccountMgt {
         try {
             accountMgtServiceStub.updateContact(email);
         } catch (RemoteException e) {
-            log.error("Tenant contact info update fail " + e.getMessage());
-            throw new RemoteException("Tenant contact info update fail " + e.getMessage());
+            log.error("Tenant contact info update fail " + e);
+            throw new RemoteException("Tenant contact info update fail " + e);
         } catch (UpdateContactExceptionException e) {
-            log.error("Tenant contact info update fail " + e.getMessage());
-            throw new UpdateContactExceptionException("Tenant contact info update fail " + e.getMessage());
+            log.error("Tenant contact info update fail " + e);
+            throw new UpdateContactExceptionException("Tenant contact info update fail " + e);
         }
     }
 
@@ -79,11 +79,11 @@ public class AdminServiceStratosAccountMgt {
         try {
             accountMgtServiceStub.updateFullname(accountInfoBean);
         } catch (RemoteException e) {
-            log.error("Tenant full name update fail " + e.getMessage());
-            throw new RemoteException("Tenant full name update fail " + e.getMessage());
+            log.error("Tenant full name update fail " + e);
+            throw new RemoteException("Tenant full name update fail " + e);
         } catch (UpdateFullnameExceptionException e) {
-            log.error("Tenant full name update fail " + e.getMessage());
-            throw new UpdateFullnameExceptionException("Tenant full name update fail " + e.getMessage());
+            log.error("Tenant full name update fail " + e);
+            throw new UpdateFullnameExceptionException("Tenant full name update fail " + e);
         }
     }
 
@@ -94,12 +94,12 @@ public class AdminServiceStratosAccountMgt {
         try {
             contactInfo = accountMgtServiceStub.getContact();
         } catch (RemoteException e) {
-            log.error("Cannot retrieve tenant contact info " + e.getMessage());
-            throw new RemoteException("Cannot retrieve tenant contact info " + e.getMessage());
+            log.error("Cannot retrieve tenant contact info " + e);
+            throw new RemoteException("Cannot retrieve tenant contact info " + e);
 
         } catch (GetContactExceptionException e) {
-            log.error("Cannot retrieve tenant contact info " + e.getMessage());
-            throw new GetContactExceptionException("Cannot retrieve tenant contact info " + e.getMessage());
+            log.error("Cannot retrieve tenant contact info " + e);
+            throw new GetContactExceptionException("Cannot retrieve tenant contact info " + e);
         }
         return contactInfo;
     }
@@ -111,11 +111,11 @@ public class AdminServiceStratosAccountMgt {
         try {
             accountInfoBean = accountMgtServiceStub.getFullname();
         } catch (RemoteException e) {
-            log.error("Cannot retrieve tenant full name " + e.getMessage());
-            throw new RemoteException("Cannot retrieveenant full name " + e.getMessage());
+            log.error("Cannot retrieve tenant full name " + e);
+            throw new RemoteException("Cannot retrieveenant full name " + e);
         } catch (GetFullnameExceptionException e) {
-            log.error("Cannot retrieve tenant full name " + e.getMessage());
-            throw new GetFullnameExceptionException("Cannot retrieve tenant full name " + e.getMessage());
+            log.error("Cannot retrieve tenant full name " + e);
+            throw new GetFullnameExceptionException("Cannot retrieve tenant full name " + e);
         }
         return accountInfoBean;
     }

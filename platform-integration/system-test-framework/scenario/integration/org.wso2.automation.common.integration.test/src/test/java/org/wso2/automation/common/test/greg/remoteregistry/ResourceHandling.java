@@ -135,8 +135,8 @@ public class ResourceHandling {
             deleteResources("/f96");
             log.info("****************Registry API Root Level Resource Rename Test - Passed**************");
         } catch (RegistryException e) {
-            log.error("Registry API Root Level Resource Rename Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Root Level Resource Rename Test - Failed:" + e.getMessage());
+            log.error("Registry API Root Level Resource Rename Test - Failed :" + e);
+            throw new RegistryException("Registry API Root Level Resource Rename Test - Failed:" + e);
         }
     }
 
@@ -201,8 +201,8 @@ public class ResourceHandling {
             deleteResources("/c9111");
             log.info("***************Registry API Collection Copy Test - Passed******************");
         } catch (RegistryException e) {
-            log.error("Registry API Collection Copy Test - Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Collection Copy Test - Failed:" + e.getMessage());
+            log.error("Registry API Collection Copy Test - Failed:" + e);
+            throw new RegistryException("Registry API Collection Copy Test - Failed:" + e);
         }
     }
 
@@ -240,8 +240,8 @@ public class ResourceHandling {
             deleteResources("/testk");
             log.info("**************Registry API Get Resource operation Test - Passed*****************");
         } catch (RegistryException e) {
-            log.error("Registry API Get Resource operation Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Get Resource operation Test - Failed:" + e.getMessage());
+            log.error("Registry API Get Resource operation Test - Failed :" + e);
+            throw new RegistryException("Registry API Get Resource operation Test - Failed:" + e);
         }
     }
 
@@ -274,8 +274,8 @@ public class ResourceHandling {
             deleteResources("/testk2");
             log.info("***************Registry API Get Collection operation Test - Passed *****************");
         } catch (RegistryException e) {
-            log.error("Registry API Get Collection operation Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Get Collection operation Test- Failed:" + e.getMessage());
+            log.error("Registry API Get Collection operation Test - Failed :" + e);
+            throw new RegistryException("Registry API Get Collection operation Test- Failed:" + e);
         }
 
 
@@ -296,8 +296,8 @@ public class ResourceHandling {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

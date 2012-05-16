@@ -74,7 +74,7 @@ public class DataServiceAdminService {
             log.info("ScheduleTask added");
         } catch (RemoteException e) {
             log.error("Remote Exception when adding scheduleTask :", e);
-            Assert.fail("Remote Exception when adding scheduleTask : " + e.getMessage());
+            Assert.fail("Remote Exception when adding scheduleTask : " + e);
         }
 
     }
@@ -86,7 +86,7 @@ public class DataServiceAdminService {
             log.info("Task rescheduled");
         } catch (RemoteException e) {
             log.error("Remote Exception when rescheduling Task :", e);
-            Assert.fail("Remote Exception when rescheduling Task : " + e.getMessage());
+            Assert.fail("Remote Exception when rescheduling Task : " + e);
         }
 
     }
@@ -98,7 +98,7 @@ public class DataServiceAdminService {
             log.info("ScheduleTask deleted");
         } catch (RemoteException e) {
             log.error("Remote Exception when deleting Task :", e);
-            Assert.fail("Remote Exception when deleting Task : " + e.getMessage());
+            Assert.fail("Remote Exception when deleting Task : " + e);
         }
 
     }
@@ -109,7 +109,7 @@ public class DataServiceAdminService {
             return dataServiceAdminStub.isTaskScheduled(taskName);
         } catch (RemoteException e) {
             log.error("Remote Exception when getting task info :", e);
-            Assert.fail("Remote Exception when getting task info : " + e.getMessage());
+            Assert.fail("Remote Exception when getting task info : " + e);
         }
         return false;
     }
@@ -120,7 +120,7 @@ public class DataServiceAdminService {
             return dataServiceAdminStub.getAllTaskNames();
         } catch (RemoteException e) {
             log.error("Remote Exception when getting AllTaskNames :", e);
-            Assert.fail("Remote Exception when getting AllTaskNames : " + e.getMessage());
+            Assert.fail("Remote Exception when getting AllTaskNames : " + e);
         }
         return null;
     }*/

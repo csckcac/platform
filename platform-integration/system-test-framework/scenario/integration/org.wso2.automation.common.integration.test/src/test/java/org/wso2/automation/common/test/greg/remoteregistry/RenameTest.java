@@ -64,8 +64,8 @@ public class RenameTest {
             deleteResources("/rename4");
             log.info("**************Registry API Root Level Resource Rename Test - Passed ***************");
         } catch (RegistryException e) {
-            log.error("Registry API Root Level Resource Rename Test-Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Root Level Resource Rename Test-Failed:" + e.getMessage());
+            log.error("Registry API Root Level Resource Rename Test-Failed :" + e);
+            throw new RegistryException("Registry API Root Level Resource Rename Test-Failed:" + e);
         }
     }
 
@@ -91,8 +91,8 @@ public class RenameTest {
             deleteResources("/tests");
             log.info("*************Registry API General Resource Rename Test - Passed***************");
         } catch (RegistryException e) {
-            log.error("Registry API General Resource Rename Test-Failed :" + e.getMessage());
-            throw new RegistryException("Registry API General Resource Rename Test-Failed:" + e.getMessage());
+            log.error("Registry API General Resource Rename Test-Failed :" + e);
+            throw new RegistryException("Registry API General Resource Rename Test-Failed:" + e);
         }
     }
 
@@ -119,8 +119,8 @@ public class RenameTest {
             deleteResources("/rename44k");
             log.info("**************Registry API Root Level Collection Rename Test - Passed**************");
         } catch (RegistryException e) {
-            log.error("Registry API Root Level Collection Rename Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Root Level Collection Rename Test-Failed:" + e.getMessage());
+            log.error("Registry API Root Level Collection Rename Test - Failed :" + e);
+            throw new RegistryException("Registry API Root Level Collection Rename Test-Failed:" + e);
         }
     }
 
@@ -149,8 +149,8 @@ public class RenameTest {
             deleteResources("/c2");
             log.info("******************Registry API General Collection Rename Test - Passed*****************");
         } catch (RegistryException e) {
-            log.error("Registry API -GeneralCollectionRenameTest RegistryException thrown :" + e.getMessage());
-            throw new RegistryException("Registry API Root Level Collection Rename Test-Failed:" + e.getMessage());
+            log.error("Registry API -GeneralCollectionRenameTest RegistryException thrown :" + e);
+            throw new RegistryException("Registry API Root Level Collection Rename Test-Failed:" + e);
         }
     }
 
@@ -166,8 +166,8 @@ public class RenameTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

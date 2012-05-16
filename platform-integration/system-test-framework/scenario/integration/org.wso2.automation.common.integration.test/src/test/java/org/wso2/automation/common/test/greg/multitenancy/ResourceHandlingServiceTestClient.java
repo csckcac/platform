@@ -80,8 +80,8 @@ public class ResourceHandlingServiceTestClient {
             verifyResourceDelete(path);           //assert Resources have been deleted properly
             log.info("***********************Multi Tenancy Resource Handling Service Test Client Test - Passed******************");
         } catch (RegistryException e) {
-            log.error("Multi Tenancy Resource Handling Service Test Client Test -Failed:" + e.getMessage());
-            throw new RegistryException("Multi Tenancy Resource Handling Service Test Client Test -Failed:" + e.getMessage());
+            log.error("Multi Tenancy Resource Handling Service Test Client Test -Failed:" + e);
+            throw new RegistryException("Multi Tenancy Resource Handling Service Test Client Test -Failed:" + e);
         }
     }
 
@@ -96,8 +96,8 @@ public class ResourceHandlingServiceTestClient {
             r1.setProperty("key2", "value2");
             registry.put(path, r1);
         } catch (RegistryException e) {
-            log.error("Unable to upload a resource :" + e.getMessage());
-            throw new RegistryException("Unable to upload a resource :" + e.getMessage());
+            log.error("Unable to upload a resource :" + e);
+            throw new RegistryException("Unable to upload a resource :" + e);
         }
     }
 
@@ -110,8 +110,8 @@ public class ResourceHandlingServiceTestClient {
                 registry_diffDomainUser1.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 
@@ -127,8 +127,8 @@ public class ResourceHandlingServiceTestClient {
             assertTrue(registry_testUser.resourceExists(path), "Resource exists:");            // Assert Test user - testuser1@wso2manualQA0006.org
             assertFalse(registry_diffDomainUser1.resourceExists(path), "Resource exists:");   // Assert differnt doamin user 1
         } catch (RegistryException e) {
-            log.error("verifyResourceExists RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e.getMessage());
+            log.error("verifyResourceExists RegistryException thrown:" + e);
+            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e);
         }
     }
 
@@ -138,8 +138,8 @@ public class ResourceHandlingServiceTestClient {
             assertFalse(registry_testUser.resourceExists(path), "Resource exists:");               // Assert Test user - testuser1@wso2manualQA0006.org
             assertFalse(registry_diffDomainUser1.resourceExists(path), "Resource exists:");       // Assert differnt doamin user 1
         } catch (RegistryException e) {
-            log.error("verifyResourceDelete RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourceDelete RegistryException thrown:" + e.getMessage());
+            log.error("verifyResourceDelete RegistryException thrown:" + e);
+            throw new RegistryException("verifyResourceDelete RegistryException thrown:" + e);
         }
     }
 
@@ -153,8 +153,8 @@ public class ResourceHandlingServiceTestClient {
             registry.addComment(path, new Comment(comment1));
             registry.addComment(path, new Comment(comment2));
         } catch (RegistryException e) {
-            log.error("Unable to add an comment :" + e.getMessage());
-            throw new RegistryException("Unable to add an comment:" + e.getMessage());
+            log.error("Unable to add an comment :" + e);
+            throw new RegistryException("Unable to add an comment:" + e);
         }
     }
 
@@ -184,8 +184,8 @@ public class ResourceHandlingServiceTestClient {
             }
             assertTrue(commentFound, "Comment not found");
         } catch (RegistryException e) {
-            log.error("verifyComments by admin123@wso2manualQA0006.org RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("verifyComments by admin123@wso2manualQA0006.org RegistryException thrown:" + e.getMessage());
+            log.error("verifyComments by admin123@wso2manualQA0006.org RegistryException thrown:" + e);
+            throw new RegistryException("verifyComments by admin123@wso2manualQA0006.org RegistryException thrown:" + e);
         }
         // verify admin user comments : testuser1@wso2manualQA0006.org
         Comment[] comments_testUser;
@@ -215,8 +215,8 @@ public class ResourceHandlingServiceTestClient {
             }
             assertTrue(commentFound, "Comment not found");
         } catch (RegistryException e) {
-            log.error("verifyComments by testuser1@wso2manualQA0006.org RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("verifyComments by testuser1@wso2manualQA0006.org RegistryException thrown:" + e.getMessage());
+            log.error("verifyComments by testuser1@wso2manualQA0006.org RegistryException thrown:" + e);
+            throw new RegistryException("verifyComments by testuser1@wso2manualQA0006.org RegistryException thrown:" + e);
         }
         // verify by different domain user
         Comment[] comments_diffDomainUser = new Comment[0];
@@ -225,7 +225,7 @@ public class ResourceHandlingServiceTestClient {
             // assert array lenght zero
             assertEquals(comments_diffDomainUser.length, 0, "Comments Array length 0 :");
         } catch (Exception e) {
-            log.info("verifyComments by diffDomainUser Exception thrown:" + e.getMessage());
+            log.info("verifyComments by diffDomainUser Exception thrown:" + e);
             //registry null exception is caught to assert resource does not exists:
             assertNotNull(comments_diffDomainUser);
         }
@@ -236,8 +236,8 @@ public class ResourceHandlingServiceTestClient {
             registry.applyTag(path, tag1);
             registry.applyTag(path, tag2);
         } catch (RegistryException e) {
-            log.error("addTag RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("addTag RegistryException thrown:" + e.getMessage());
+            log.error("addTag RegistryException thrown:" + e);
+            throw new RegistryException("addTag RegistryException thrown:" + e);
         }
     }
 
@@ -254,15 +254,15 @@ public class ResourceHandlingServiceTestClient {
             assertEquals(tagPath_testuser1[0].getResourcePath(), path);
             assertEquals(tagPath_testUser2[0].getResourcePath(), path);
         } catch (RegistryException e) {
-            log.error("verifyTag RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("verifyTag RegistryException thrown:" + e.getMessage());
+            log.error("verifyTag RegistryException thrown:" + e);
+            throw new RegistryException("verifyTag RegistryException thrown:" + e);
         }
         TaggedResourcePath[] tagPath_diffDomainUser1 = new TaggedResourcePath[0];
         try {
             tagPath_diffDomainUser1 = registry_diffDomainUser1.getResourcePathsWithTag(tag1);
             tagPath_diffDomainUser1[0].getResourcePath();
         } catch (Exception e) {
-            log.info("verifyTag by diffDomainUser Exception thrown:" + e.getMessage());
+            log.info("verifyTag by diffDomainUser Exception thrown:" + e);
             //registry null exception is caught to assert resource does not exists:
             assertNull(tagPath_diffDomainUser1);
         }

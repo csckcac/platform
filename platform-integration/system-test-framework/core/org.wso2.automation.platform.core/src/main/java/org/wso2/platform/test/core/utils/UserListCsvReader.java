@@ -67,8 +67,8 @@ public class UserListCsvReader {
                                                                File.separator + "userList.csv")));
             }
         } catch (FileNotFoundException e) {
-            log.error("User list not found" + e.getMessage());
-            throw new FileNotFoundException("User list not found" + e.getMessage());
+            log.error("User list not found" + e);
+            throw new FileNotFoundException("User list not found" + e);
         }
         return reader;
     }
@@ -80,7 +80,7 @@ public class UserListCsvReader {
         try {
             userDetailsList = reader.readAll();
         } catch (IOException e) {
-            log.error("unable to read user details: " + e.getMessage());
+            log.error("unable to read user details: " + e);
             throw new IOException("Cannot read user details");
         }
 

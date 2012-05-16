@@ -73,8 +73,8 @@ public class TestAssociation {
             deleteResources("/testk12");
             log.info("***************Registry API Add Association To Resource Test - Passed ****************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Association To Resource Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Add Association To Resource Test -Failed :" + e.getMessage());
+            log.error("Registry API Add Association To Resource Test -Failed :" + e);
+            throw new RegistryException("Registry API Add Association To Resource Test -Failed :" + e);
         }
     }
 
@@ -104,8 +104,8 @@ public class TestAssociation {
             deleteResources("/assocol1");
             log.info("******************** REgistry API Add Association To Collection Test - Passed ***********************");
         } catch (RegistryException e) {
-            log.error("REgistry API Add Association To Collection Test -Failed :" + e.getMessage());
-            throw new RegistryException("REgistry API Add Association To Collection Test -Failed :" + e.getMessage());
+            log.error("REgistry API Add Association To Collection Test -Failed :" + e);
+            throw new RegistryException("REgistry API Add Association To Collection Test -Failed :" + e);
         }
     }
 
@@ -130,8 +130,8 @@ public class TestAssociation {
             registry.removeAssociation(path, "/vtr2123/test", "testasstype3");
             log.info("*************Registry API Add Association To Root Test - Passed***************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Association To Root Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Add Association To Root Test -Failed :" + e.getMessage());
+            log.error("Registry API Add Association To Root Test - Failed :" + e);
+            throw new RegistryException("Registry API Add Association To Root Test -Failed :" + e);
         }
     }
 
@@ -160,8 +160,8 @@ public class TestAssociation {
             deleteResources("/getcol1");
             log.info("***************Registry API Get Collection Association Test - Passed *******************");
         } catch (RegistryException e) {
-            log.error("Registry API Get Collection Association Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Get Collection Association Tes-Failed :" + e.getMessage());
+            log.error("Registry API Get Collection Association Test - Failed :" + e);
+            throw new RegistryException("Registry API Get Collection Association Tes-Failed :" + e);
         }
     }
 
@@ -192,8 +192,8 @@ public class TestAssociation {
             registry.removeAssociation(path, "/vtr21231/test", "testasstype3");
             log.info("***************Registry API Get Root Association Test - Passed*****************");
         } catch (RegistryException e) {
-            log.error("Registry API Get Root Association Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Get Root Association Test-Failed :" + e.getMessage());
+            log.error("Registry API Get Root Association Test - Failed :" + e);
+            throw new RegistryException("Registry API Get Root Association Test-Failed :" + e);
         }
     }
 
@@ -236,8 +236,8 @@ public class TestAssociation {
             deleteResources("/testk1234/");
             log.info("***************Registry API Remove Resource Association Test - Passed ****************");
         } catch (RegistryException e) {
-            log.error("Registry API Remove Resource Association Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Remove Resource Association Test-Failed :" + e.getMessage());
+            log.error("Registry API Remove Resource Association Test -Failed :" + e);
+            throw new RegistryException("Registry API Remove Resource Association Test-Failed :" + e);
         }
     }
 
@@ -282,8 +282,8 @@ public class TestAssociation {
             deleteResources("/assoColremove1");
             log.info("****************Registry API Remove Collection Association Test - Passed *****************");
         } catch (RegistryException e) {
-            log.error("Registry API Remove Collection Association Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Remove Collection Association Test-Failed :" + e.getMessage());
+            log.error("Registry API Remove Collection Association Test -Failed :" + e);
+            throw new RegistryException("Registry API Remove Collection Association Test-Failed :" + e);
         }
     }
 
@@ -328,8 +328,8 @@ public class TestAssociation {
             assertFalse(getAssocitionbySourceByType(path, "testasstype31"), "association Source path not exist");
             log.info("****************Registry API Remove Root Association Test - Passed ******************");
         } catch (RegistryException e) {
-            log.error("Registry API Remove Root Association Test -Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Remove Root Association Test-Failed :" + e.getMessage());
+            log.error("Registry API Remove Root Association Test -Failed:" + e);
+            throw new RegistryException("Registry API Remove Root Association Test-Failed :" + e);
         }
     }
 
@@ -349,8 +349,8 @@ public class TestAssociation {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

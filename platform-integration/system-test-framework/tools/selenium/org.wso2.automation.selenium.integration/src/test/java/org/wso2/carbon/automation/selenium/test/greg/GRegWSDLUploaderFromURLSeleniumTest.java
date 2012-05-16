@@ -104,20 +104,20 @@ public class GRegWSDLUploaderFromURLSeleniumTest {
             new GregUserLogout().userLogout(driver);
             log.info("GRegWSDLUploaderfromURLSeleniumTest -testAddWSDLfromURL()- Passed");
         } catch (AssertionFailedError e) {
-            log.info("GregAddWsdlfromURLSeleniumTest - Assertion Failure ::" + e.getMessage());
+            log.info("GregAddWsdlfromURLSeleniumTest - Assertion Failure ::" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GregAddWsdlfromURLSeleniumTest");
             new GregUserLogout().userLogout(driver);
-            throw new AssertionFailedError("Failed to upload echo wsdl from url:" + e.getMessage());
+            throw new AssertionFailedError("Failed to upload echo wsdl from url:" + e);
         } catch (WebDriverException e) {
-            log.info("GregAddWsdlfromURLSeleniumTest - WebDriver Exception :" + e.getMessage());
+            log.info("GregAddWsdlfromURLSeleniumTest - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GregAddWsdlfromURLSeleniumTest");
             new GregUserLogout().userLogout(driver);
-            throw new WebDriverException("Failed to upload echo wsdl from url:" + e.getMessage());
+            throw new WebDriverException("Failed to upload echo wsdl from url:" + e);
         } catch (Exception e) {
-            log.info("GregAddWsdlfromURLSeleniumTest - Fail :" + e.getMessage());
+            log.info("GregAddWsdlfromURLSeleniumTest - Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GregAddWsdlfromURLSeleniumTest");
             new GregUserLogout().userLogout(driver);
-            throw new Exception("Failed to upload echo wsdl from url:" + e.getMessage());
+            throw new Exception("Failed to upload echo wsdl from url:" + e);
         }
     }
 

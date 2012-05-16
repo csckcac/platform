@@ -98,14 +98,14 @@ public class WsdlUpadateContentServiceTestClient {
             assertFalse(registry.resourceExists(wsdl_path), "WSDL Deleted");         //Assert resource does not exists any more
             log.info("WsdlUpadateContentServiceTestClient testUpdateWsdlContent() - Passed");
         } catch (GovernanceException e) {
-            log.error("Failed to update WSDL :" + e.getMessage());
-            throw new GovernanceException("Failed to update WSDL :" + e.getMessage());
+            log.error("Failed to update WSDL :" + e);
+            throw new GovernanceException("Failed to update WSDL :" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to update WSDL :" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("Failed to update WSDL :" + e.getMessage());
+            log.error("Failed to update WSDL :" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("Failed to update WSDL :" + e);
         } catch (Exception e) {
-            log.error("Failed to update WSDL :" + e.getMessage());
-            throw new Exception("Failed to update WSDL :" + e.getMessage());
+            log.error("Failed to update WSDL :" + e);
+            throw new Exception("Failed to update WSDL :" + e);
         }
     }
 
@@ -116,8 +116,8 @@ public class WsdlUpadateContentServiceTestClient {
                 registry.delete("/_system/governance/trunk/wsdls");
             }
         } catch (RegistryException e) {
-            log.error("Failed to Delete WSDL:" + e.getMessage());
-            throw new RegistryException("Failed to Delete WSDL:" + e.getMessage());
+            log.error("Failed to Delete WSDL:" + e);
+            throw new RegistryException("Failed to Delete WSDL:" + e);
         }
     }
 

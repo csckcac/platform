@@ -56,8 +56,8 @@ public class asSecurityUtils implements CallbackHandler {
             result = sc.sendReceive(org.apache.axiom.om.impl.llom.util.AXIOMUtil.stringToOM(payload));
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("Loading policy failed:" + e.getMessage());
-            Assert.fail("Loading policy failed" + e.getMessage());
+            log.error("Loading policy failed:" + e);
+            Assert.fail("Loading policy failed" + e);
         }
         return result;
 

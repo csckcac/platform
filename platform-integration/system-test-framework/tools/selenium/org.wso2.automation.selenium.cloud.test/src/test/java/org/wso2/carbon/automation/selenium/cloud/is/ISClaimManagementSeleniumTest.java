@@ -78,17 +78,17 @@ public class ISClaimManagementSeleniumTest {
             userLogout();
             log.info("*******IS Stratos - Claim Management Test - Passed **********");
         } catch (AssertionFailedError e) {
-            log.info("Claim Management Test Failed :" + e.getMessage());
+            log.info("Claim Management Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Claim Management Test Failed :" + e.getMessage());
+            throw new AssertionFailedError("Claim Management Test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("Claim Management Test Failed:" + e.getMessage());
+            log.info("Claim Management Test Failed:" + e);
             userLogout();
-            throw new WebDriverException("Claim Management Test Failed :" + e.getMessage());
+            throw new WebDriverException("Claim Management Test Failed :" + e);
         } catch (Exception e) {
-            log.info("Claim Management Test Failed :" + e.getMessage());
+            log.info("Claim Management Test Failed :" + e);
             userLogout();
-            throw new Exception("Claim Management Test Failed:" + e.getMessage());
+            throw new Exception("Claim Management Test Failed:" + e);
         }
     }
 

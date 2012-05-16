@@ -33,8 +33,8 @@ public class HttpClientUtil {
 
             in.close();
         } catch (Exception e) {
-            log.error("Failed to get the response " + e.getMessage());
-            throw new Exception("Failed to get the response :" + e.getMessage());
+            log.error("Failed to get the response " + e);
+            throw new Exception("Failed to get the response :" + e);
         } finally {
             if(httpCon != null) {
                 httpCon.disconnect();
@@ -45,8 +45,8 @@ public class HttpClientUtil {
             try {
                 return AXIOMUtil.stringToOM(xmlContent);
             } catch (XMLStreamException e) {
-                log.error("Error while processing response to OMElement" + e.getMessage());
-                throw new XMLStreamException("Error while processing response to OMElement" + e.getMessage());
+                log.error("Error while processing response to OMElement" + e);
+                throw new XMLStreamException("Error while processing response to OMElement" + e);
 
             }
         } else{
@@ -74,8 +74,8 @@ public class HttpClientUtil {
             responseCode = httpCon.getResponseCode();
             in.close();
         } catch (Exception e) {
-            log.error("Failed to get the response " + e.getMessage());
-            throw new Exception("Failed to get the response :" + e.getMessage());
+            log.error("Failed to get the response " + e);
+            throw new Exception("Failed to get the response :" + e);
         } finally {
             if(httpCon != null) {
                 httpCon.disconnect();
@@ -86,8 +86,8 @@ public class HttpClientUtil {
             try {
                 return AXIOMUtil.stringToOM(xmlContent);
             } catch (XMLStreamException e) {
-                log.error("Error while processing response to OMElement" + e.getMessage());
-                throw new XMLStreamException("Error while processing response to OMElement" + e.getMessage());
+                log.error("Error while processing response to OMElement" + e);
+                throw new XMLStreamException("Error while processing response to OMElement" + e);
 
             }
         } else{
@@ -106,8 +106,8 @@ public class HttpClientUtil {
             httpCon.setRequestMethod("DELETE");
             responseCode = httpCon.getResponseCode();
         } catch (Exception e) {
-            log.error("Failed to get the response " + e.getMessage());
-            throw new Exception("Failed to get the response :" + e.getMessage());
+            log.error("Failed to get the response " + e);
+            throw new Exception("Failed to get the response :" + e);
         }finally{
            if(httpCon != null) {
                 httpCon.disconnect();
@@ -133,8 +133,8 @@ public class HttpClientUtil {
             httpCon.getInputStream().close();
 
         } catch (Exception e) {
-            log.error("Failed to get the response " + e.getMessage());
-            throw new Exception("Failed to get the response :" + e.getMessage());
+            log.error("Failed to get the response " + e);
+            throw new Exception("Failed to get the response :" + e);
         } finally {
               if(httpCon != null) {
                 httpCon.disconnect();
@@ -161,8 +161,8 @@ public class HttpClientUtil {
             httpCon.getInputStream().close();
 
         } catch (Exception e) {
-            log.error("Failed to get the response " + e.getMessage());
-            throw new Exception("Failed to get the response :" + e.getMessage());
+            log.error("Failed to get the response " + e);
+            throw new Exception("Failed to get the response :" + e);
         } finally {
             if(httpCon != null) {
                 httpCon.disconnect();
@@ -189,8 +189,8 @@ public class HttpClientUtil {
             responseCode = httpCon.getResponseCode();
             httpCon.getInputStream().close();
         } catch (Exception e) {
-            log.error("Failed to get the response " + e.getMessage());
-            throw new Exception("Failed to get the response :" + e.getMessage());
+            log.error("Failed to get the response " + e);
+            throw new Exception("Failed to get the response :" + e);
         } finally {
               if(httpCon != null) {
                 httpCon.disconnect();
@@ -209,8 +209,8 @@ public class HttpClientUtil {
                 retValue.append(new String(buff, 0, i));
             }
         } catch (Exception e) {
-            log.error("Failed to get the response " + e.getMessage());
-            throw new Exception("Failed to get the response :" + e.getMessage());
+            log.error("Failed to get the response " + e);
+            throw new Exception("Failed to get the response :" + e);
         }
         return retValue.toString();
     }

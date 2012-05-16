@@ -91,17 +91,17 @@ public class GRegSchemaUploaderSeleniumTest {
             new GregUserLogout().userLogout(driver);
             log.info("******GRegSchemaUploaderSeleniumTest - testAddSchemafromURL() -Passed******");
         } catch (WebDriverException e) {
-            log.info("Failed to upload schema from url- WebDriver Exception :" + e.getMessage());
+            log.info("Failed to upload schema from url- WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegSchemaUploader_addSchemafromURL");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(4000L);
-            throw new WebDriverException("Failed to upload schema from url:" + e.getMessage());
+            throw new WebDriverException("Failed to upload schema from url:" + e);
         } catch (Exception e) {
-            log.info("Failed to upload schema from url:- Fail :" + e.getMessage());
+            log.info("Failed to upload schema from url:- Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegSchemaUploader_addSchemafromURL");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(4000L);
-            throw new Exception("Failed to upload schema from url:" + e.getMessage());
+            throw new Exception("Failed to upload schema from url:" + e);
         }
     }
 
@@ -149,17 +149,17 @@ public class GRegSchemaUploaderSeleniumTest {
             log.info("******GRegSchemaUploaderSeleniumTest - testAddSchemafromFile() -Passed******");
 
         } catch (WebDriverException e) {
-            log.info("Failed to add schema from file- WebDriver Exception :" + e.getMessage());
+            log.info("Failed to add schema from file- WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegSchemaUploader_addSchemafromFile");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(5000L);
-            throw new WebDriverException("Failed to add schema from file:" + e.getMessage());
+            throw new WebDriverException("Failed to add schema from file:" + e);
         } catch (Exception e) {
-            log.info("Failed to add schema from file:- Fail :" + e.getMessage());
+            log.info("Failed to add schema from file:- Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegSchemaUploader_addSchemafromFile");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(5000L);
-            throw new WebDriverException("Failed to upload schema from url:" + e.getMessage());
+            throw new WebDriverException("Failed to upload schema from url:" + e);
         }
     }
 

@@ -53,15 +53,15 @@ public class PackageCreator {
                     }
                 } catch (IOException e) {
                     success = false;
-                    throw new IOException("Script Execution Failed:" + e.getMessage());
+                    throw new IOException("Script Execution Failed:" + e);
                 }
             } else {
                 log.info("Command Failure");
             }
         } catch (Exception e) {
             success = false;
-            log.error("Script Execution Failed:" + e.getMessage());
-            throw new Exception("Script Execution Failed:" + e.getMessage());
+            log.error("Script Execution Failed:" + e);
+            throw new Exception("Script Execution Failed:" + e);
         }
         return success;
     }

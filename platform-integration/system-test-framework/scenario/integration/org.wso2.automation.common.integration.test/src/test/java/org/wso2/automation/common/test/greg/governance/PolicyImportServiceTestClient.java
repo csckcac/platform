@@ -65,8 +65,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);     //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddEncrOnlyAnonymousPolicy()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add EncrOnlyAnonymous Policy " + e.getMessage());
-            throw new RegistryException("Failed to add EncrOnlyAnonymous Policy:" + e.getMessage());
+            log.error("Failed to add EncrOnlyAnonymous Policy " + e);
+            throw new RegistryException("Failed to add EncrOnlyAnonymous Policy:" + e);
         }
     }
 
@@ -87,8 +87,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                  //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService01()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService01 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService01 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService01 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService01 Policy:" + e);
         }
     }
 
@@ -109,8 +109,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                    //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService02()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService02 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService02 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService02 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService02 Policy:" + e);
         }
     }
 
@@ -131,8 +131,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                     //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService03()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService03 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService03 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService03 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService03 Policy:" + e);
         }
     }
 
@@ -152,8 +152,8 @@ public class PolicyImportServiceTestClient {
             registry.delete(policy_path);                                                                             //Remove Policy
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService04()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService04 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService04 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService04 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService04 Policy:" + e);
         }
     }
 
@@ -174,8 +174,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService05()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService05 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService05 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService05 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService05 Policy:" + e);
         }
     }
 
@@ -196,8 +196,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService06()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService06 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService06 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService06 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService06 Policy:" + e);
         }
     }
 
@@ -218,8 +218,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService07()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService07 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService07 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService07 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService07 Policy:" + e);
         }
     }
 
@@ -240,8 +240,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService08()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService08 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService08 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService08 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService08 Policy:" + e);
         }
 
     }
@@ -263,8 +263,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService09()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService09 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService09 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService09 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService09 Policy:" + e);
         }
     }
 
@@ -285,8 +285,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService10()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService10 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService10 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService10 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService10 Policy:" + e);
         }
     }
 
@@ -307,8 +307,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService11()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService11 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService11 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService11 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService11 Policy:" + e);
         }
     }
 
@@ -329,8 +329,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService12()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService12 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService12 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService12 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService12 Policy:" + e);
         }
     }
 
@@ -351,8 +351,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService13()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService13 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService13 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService13 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService13 Policy:" + e);
         }
     }
 
@@ -373,8 +373,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService14()-Passed");                  //Assert Resource was deleted successfully
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService14 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService14 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService14 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService14 Policy:" + e);
         }
     }
 
@@ -395,8 +395,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);                       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddPolicySecurePartnerService15()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add SecurePartnerService15 Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecurePartnerService15 Policy:" + e.getMessage());
+            log.error("Failed to add SecurePartnerService15 Policy:" + e);
+            throw new RegistryException("Failed to add SecurePartnerService15 Policy:" + e);
         }
     }
 
@@ -417,8 +417,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);   //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddSecConSignOnly()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add SecConSignOnly Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SecConSignOnly Policy:" + e.getMessage());
+            log.error("Failed to add SecConSignOnly Policy:" + e);
+            throw new RegistryException("Failed to add SecConSignOnly Policy:" + e);
         }
     }
 
@@ -440,8 +440,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddSgnEncrAnonymous()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add SgnEncrAnonymous Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SgnEncrAnonymous Policy:" + e.getMessage());
+            log.error("Failed to add SgnEncrAnonymous Policy:" + e);
+            throw new RegistryException("Failed to add SgnEncrAnonymous Policy:" + e);
         }
     }
 
@@ -462,8 +462,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);  //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddSigEncr()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add SigEncr Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SigEncr Policy:" + e.getMessage());
+            log.error("Failed to add SigEncr Policy:" + e);
+            throw new RegistryException("Failed to add SigEncr Policy:" + e);
         }
     }
 
@@ -484,8 +484,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);   //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddSigOnly()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add SigOnly Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SigOnly Policy:" + e.getMessage());
+            log.error("Failed to add SigOnly Policy:" + e);
+            throw new RegistryException("Failed to add SigOnly Policy:" + e);
         }
     }
 
@@ -506,8 +506,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);           //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddSignOnlyAnonymous()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add SignOnlyAnonymous Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add SignOnlyAnonymous Policy:" + e.getMessage());
+            log.error("Failed to add SignOnlyAnonymous Policy:" + e);
+            throw new RegistryException("Failed to add SignOnlyAnonymous Policy:" + e);
         }
     }
 
@@ -528,8 +528,8 @@ public class PolicyImportServiceTestClient {
             assertFalse(registry.resourceExists(policy_path), "Policy exists at " + policy_path);       //Assert Resource was deleted successfully
             log.info("PolicyImportServiceTestClient testAddUTOverTransport()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add UTOverTransport Policy:" + e.getMessage());
-            throw new RegistryException("Failed to add UTOverTransport Policy:" + e.getMessage());
+            log.error("Failed to add UTOverTransport Policy:" + e);
+            throw new RegistryException("Failed to add UTOverTransport Policy:" + e);
         }
     }
 
@@ -544,8 +544,8 @@ public class PolicyImportServiceTestClient {
             policy.addAttribute("version", "1.0.0");
             policyManager.addPolicy(policy);
         } catch (GovernanceException e) {
-            log.error("Failed to add Policy:" + e.getMessage());
-            throw new GovernanceException("Failed to add Policy :" + e.getMessage());
+            log.error("Failed to add Policy:" + e);
+            throw new GovernanceException("Failed to add Policy :" + e);
         }
     }
 
@@ -555,8 +555,8 @@ public class PolicyImportServiceTestClient {
                 registry.delete("/_system/governance/trunk/policies");
             }
         } catch (RegistryException e) {
-            log.error("Failed to delete Policy:" + e.getMessage());
-            throw new RegistryException("Failed to delete Policy :" + e.getMessage());
+            log.error("Failed to delete Policy:" + e);
+            throw new RegistryException("Failed to delete Policy :" + e);
         }
     }
 
@@ -568,8 +568,8 @@ public class PolicyImportServiceTestClient {
             assertEquals(resource.getProperty("creator"), "Aaaa", "WSDL Property - WSI creator");
             assertEquals(resource.getProperty("version"), "1.0.0", "WSDL Property - WSI version");
         } catch (RegistryException e) {
-            log.error("Failed to Assert Properties :" + e.getMessage());
-            throw new RegistryException("Failed to Assert Properties :" + e.getMessage());
+            log.error("Failed to Assert Properties :" + e);
+            throw new RegistryException("Failed to Assert Properties :" + e);
         }
     }
 
@@ -583,8 +583,8 @@ public class PolicyImportServiceTestClient {
             assertTrue(content.indexOf(keyword1) > 0, "Assert Content Policy file - keyword1");
             assertTrue(content.indexOf(keyword2) > 0, "Assert Content Policy file - keyword2");
         } catch (RegistryException e) {
-            log.error("Registry Exception thrown:" + e.getMessage());
-            throw new RegistryException("Failed to Assert Properties :" + e.getMessage());
+            log.error("Registry Exception thrown:" + e);
+            throw new RegistryException("Failed to Assert Properties :" + e);
         }
     }
 

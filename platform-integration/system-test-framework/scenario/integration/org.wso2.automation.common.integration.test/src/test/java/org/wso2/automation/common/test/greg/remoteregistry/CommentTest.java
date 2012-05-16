@@ -112,8 +112,8 @@ public class CommentTest {
             assertFalse(registry.resourceExists(path), path + "has not been deleted properly");
             log.info("**************Registry API Add Comment test - Passed******************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Comment test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Add Comment test-Failed:" + e.getMessage());
+            log.error("Registry API Add Comment test - Failed :" + e);
+            throw new RegistryException("Registry API Add Comment test-Failed:" + e);
         }
     }
 
@@ -180,8 +180,8 @@ public class CommentTest {
             deleteResources("/d1");
             log.info("**************Registry API Add Comment To Resource test - Passed****************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Comment To Resource test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Add Comment To Resource test - Failed:" + e.getMessage());
+            log.error("Registry API Add Comment To Resource test - Failed :" + e);
+            throw new RegistryException("Registry API Add Comment To Resource test - Failed:" + e);
         }
     }
 
@@ -247,8 +247,8 @@ public class CommentTest {
             deleteResources("/d11");
             log.info("**************Registry API Add Comment To Collection test - Passed****************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Comment To Collection test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Add Comment To Collection test-Failed:" + e.getMessage());
+            log.error("Registry API Add Comment To Collection test - Failed :" + e);
+            throw new RegistryException("Registry API Add Comment To Collection test-Failed:" + e);
         }
     }
 
@@ -313,8 +313,8 @@ public class CommentTest {
             }
             log.info("**************Registry API Add Comment To Root test- Passed********************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Comment To Root test-Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Add Comment To Root test-Failed:" + e.getMessage());
+            log.error("Registry API Add Comment To Root test-Failed:" + e);
+            throw new RegistryException("Registry API Add Comment To Root test-Failed:" + e);
         }
     }
 
@@ -369,8 +369,8 @@ public class CommentTest {
             deleteResources("/c101");
             log.info("***************Registry API Edit Comment test - Passed****************");
         } catch (RegistryException e) {
-            log.error("Registry API Edit Comment test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Edit Comment test-Failed:" + e.getMessage());
+            log.error("Registry API Edit Comment test -Failed :" + e);
+            throw new RegistryException("Registry API Edit Comment test-Failed:" + e);
         }
     }
 
@@ -400,8 +400,8 @@ public class CommentTest {
             deleteResources("/c1d1");
             log.info("****************Registry API Delete Comment test - Passed********************");
         } catch (RegistryException e) {
-            log.error("Registry API Delete Comment test - Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Delete Comment test-Failed:" + e.getMessage());
+            log.error("Registry API Delete Comment test - Failed:" + e);
+            throw new RegistryException("Registry API Delete Comment test-Failed:" + e);
         }
     }
 
@@ -419,8 +419,8 @@ public class CommentTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

@@ -51,8 +51,8 @@ public class OnDemandContentTest {
             deleteResources("/ondemand");
             log.info("***********WS-API on Demand Content - Passed************");
         } catch (Exception e) {
-            log.error("Delete on Demand Content Fail:" + e.getMessage());
-            throw new Exception("Delete on Demand Content Fail:" + e.getMessage());
+            log.error("Delete on Demand Content Fail:" + e);
+            throw new Exception("Delete on Demand Content Fail:" + e);
         }
     }
 
@@ -66,8 +66,8 @@ public class OnDemandContentTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
 
     }

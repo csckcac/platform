@@ -67,8 +67,12 @@ public class InputParametersValidationTest extends DataServiceTest {
             addEmployee("1");
         } catch (AxisFault e) {
             validatePrimaryKey = true;
-            Assert.assertTrue(e.getMessage().contains("DATABASE_ERROR"), "DATABASE_ERROR Not Found in error message");
-            Assert.assertTrue(e.getMessage().contains("Duplicate entry"), "Message Duplicate entry Not Found in error message");
+            Assert.assertTrue(e.getMessage().contains("DATABASE_ERROR"), "DATABASE_ERROR Not Found in " +
+                                                                "error " +
+                                                             "message");
+            Assert.assertTrue(e.getMessage().contains("Duplicate entry"),
+                              "Message Duplicate entry Not " +
+                                                                "Found in error message");
 
         }
         Assert.assertTrue(validatePrimaryKey, "primary key validation failed in Employees table");
@@ -104,9 +108,12 @@ public class InputParametersValidationTest extends DataServiceTest {
             new AxisServiceClient().sendRobust(payload, serviceEndPoint, "addEmployee");
         } catch (AxisFault e) {
             validationStatus = true;
-            Assert.assertTrue(e.getMessage().contains("VALIDATION_ERROR"), "VALIDATION_ERROR Not Found in error message");
-            Assert.assertTrue(e.getMessage().contains("Field Name: lastName"), "Field Name: lastName Not Found in error message");
-            Assert.assertTrue(e.getMessage().contains("The value length must be between 3 and 20"), "Validation Message: The value length must be between 3 and 20 Not Found in error message");
+            Assert.assertTrue(e.getMessage().contains("VALIDATION_ERROR"), "VALIDATION_ERROR Not Found in " +
+                                                               "error message");
+            Assert.assertTrue(e.getMessage().contains("Field Name: lastName"),
+                    "Field Name: lastName Not Found in error message");
+            Assert.assertTrue(e.getMessage().contains("The value length must be between 3 and 20"),
+                    "Validation Message: The value length must be between 3 and 20 Not Found in error message");
             log.info("Last Name length validated");
         }
         Assert.assertTrue(validationStatus, "Last Name length Not validated");
@@ -143,9 +150,14 @@ public class InputParametersValidationTest extends DataServiceTest {
 
         } catch (AxisFault e) {
             validationStatus = true;
-            Assert.assertTrue(e.getMessage().contains("VALIDATION_ERROR"), "VALIDATION_ERROR Not Found in error message");
-            Assert.assertTrue(e.getMessage().contains("Field Name: email"), "Field Name: email Not Found in error message");
-            Assert.assertTrue(e.getMessage().contains("Pattern"), "Validation Message: Pattern Not Found in error message");
+            Assert.assertTrue(e.getMessage().contains("VALIDATION_ERROR"), "VALIDATION_ERROR Not Found in " +
+                                                                  "error message");
+            Assert.assertTrue(e.getMessage().contains("Field Name: email"), "Field Name: email Not Found in" +
+                                                                  " error message");
+            Assert.assertTrue(e.getMessage().contains("Pattern"), "Validation Message: Pattern " +
+                                                                  "Not Found " +
+                                                         "in " +
+                                                       "error message");
 
             log.info("email length validated");
         }

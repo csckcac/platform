@@ -92,8 +92,8 @@ public class WsdlImportServiceTestClient {
             verifyResourcesDeleted(wsdl_path);                          //Assert resources has been deleted properly
             log.info("*******************Multi Tenancy Wsdl Import Service Test Client- Passed********************");
         } catch (RegistryException e) {
-            log.error("Multi Tenancy Wsdl Import Service Test Client -Failed:" + e.getMessage());
-            throw new RegistryException("Multi Tenancy Wsdl Import Service Test Client - Failed:" + e.getMessage());
+            log.error("Multi Tenancy Wsdl Import Service Test Client -Failed:" + e);
+            throw new RegistryException("Multi Tenancy Wsdl Import Service Test Client - Failed:" + e);
         }
     }
 
@@ -107,8 +107,8 @@ public class WsdlImportServiceTestClient {
             wsdlManager.addWsdl(wsdl);
             log.info("wsdl was successfully added");
         } catch (GovernanceException e) {
-            log.error("Unable to add WSDL:" + e.getMessage());
-            throw new RegistryException("Unable to add WSDL :" + e.getMessage());
+            log.error("Unable to add WSDL:" + e);
+            throw new RegistryException("Unable to add WSDL :" + e);
         }
     }
 
@@ -137,14 +137,14 @@ public class WsdlImportServiceTestClient {
 
             } catch (RegistryException e) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Cannot get WSDL resource by different tenant:" + e.getMessage());
+                    log.debug("Cannot get WSDL resource by different tenant:" + e);
                 }
             }
             assertFalse(registry_diffDomainUser1.resourceExists(wsdl_path), "wsdl resource exits");
 
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Registry Exception thrown:" + e.getMessage());
-            throw new RegistryException("Registry Exception thrown:" + e.getMessage());
+            log.error("Registry Exception thrown:" + e);
+            throw new RegistryException("Registry Exception thrown:" + e);
         }
     }
 
@@ -166,11 +166,11 @@ public class WsdlImportServiceTestClient {
                 }
             }
         } catch (GovernanceException e) {
-            log.error("checkServiceExsist Exception thrown:" + e.getMessage());
-            throw new GovernanceException("checkServiceExsist Exception thrown:" + e.getMessage());
+            log.error("checkServiceExsist Exception thrown:" + e);
+            throw new GovernanceException("checkServiceExsist Exception thrown:" + e);
         } catch (RegistryException e) {
-            log.error("checkServiceExsist Exception thrown:" + e.getMessage());
-            throw new RegistryException("checkServiceExsist Exception thrown:" + e.getMessage());
+            log.error("checkServiceExsist Exception thrown:" + e);
+            throw new RegistryException("checkServiceExsist Exception thrown:" + e);
         }
     }
 
@@ -185,8 +185,8 @@ public class WsdlImportServiceTestClient {
             registry_testUser.delete("/_system/governance/trunk/services");
             registry_diffDomainUser1.delete("/_system/governance/trunk/services");
         } catch (RegistryException e) {
-            log.error("deleteWsdl RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteWsdl RegistryException thrown:" + e.getMessage());
+            log.error("deleteWsdl RegistryException thrown:" + e);
+            throw new RegistryException("deleteWsdl RegistryException thrown:" + e);
         }
     }
 
@@ -199,8 +199,8 @@ public class WsdlImportServiceTestClient {
             // Assert differnt doamin user 1
             assertFalse(registry_diffDomainUser1.resourceExists(wsdl_path), "wsdl exists:");
         } catch (RegistryException e) {
-            log.error("verifyResourceExists RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e.getMessage());
+            log.error("verifyResourceExists RegistryException thrown:" + e);
+            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e);
         }
     }
 
@@ -213,8 +213,8 @@ public class WsdlImportServiceTestClient {
             // Assert differnt doamin user 1
             assertFalse(registry_diffDomainUser1.resourceExists(wsdl_path), "wsdl exists:");
         } catch (RegistryException e) {
-            log.error("verifyResourcesDeleted( RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourcesDeleted( RegistryException thrown:" + e.getMessage());
+            log.error("verifyResourcesDeleted( RegistryException thrown:" + e);
+            throw new RegistryException("verifyResourcesDeleted( RegistryException thrown:" + e);
         }
     }
 
@@ -238,8 +238,8 @@ public class WsdlImportServiceTestClient {
                 assertTrue(associations_diffDomainUser[1].getDestinationPath().equalsIgnoreCase(association_path), "Association Path exsits :");
             }
         } catch (RegistryException e) {
-            log.error("getAssociationPath Exception thrown:" + e.getMessage());
-            throw new RegistryException("getAssociationPath Exception thrown:" + e.getMessage());
+            log.error("getAssociationPath Exception thrown:" + e);
+            throw new RegistryException("getAssociationPath Exception thrown:" + e);
         }
     }
 

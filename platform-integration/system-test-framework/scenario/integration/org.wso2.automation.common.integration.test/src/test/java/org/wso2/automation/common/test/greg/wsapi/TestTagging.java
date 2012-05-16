@@ -97,8 +97,8 @@ public class TestTagging {
             deleteResources("/d11");
             log.info("**************WS-API Apply Tag test - Passed************");
         } catch (RegistryException e) {
-            log.error("*WS-API Apply Tag test -Failed:" + e.getMessage());
-            throw new RegistryException("*WS-API Apply Tag test - Failed:" + e.getMessage());
+            log.error("*WS-API Apply Tag test -Failed:" + e);
+            throw new RegistryException("*WS-API Apply Tag test - Failed:" + e);
         }
     }
 
@@ -131,8 +131,8 @@ public class TestTagging {
             deleteResources("/d12");
             log.info("************WS-API Duplicate Tagging test - Passed*************");
         } catch (RegistryException e) {
-            log.error("WS-API Duplicate Tagging test -Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Duplicate Tagging test - Failed:" + e.getMessage());
+            log.error("WS-API Duplicate Tagging test -Failed:" + e);
+            throw new RegistryException("WS-API Duplicate Tagging test - Failed:" + e);
         }
     }
 
@@ -157,8 +157,8 @@ public class TestTagging {
             deleteResources("/d13");
             log.info("**************WS-API Apply Tag to Collection test - Passed***************");
         } catch (RegistryException e) {
-            log.error("WS-API Apply Tag to Collection test - Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Apply Tag to Collection test -Failed:" + e.getMessage());
+            log.error("WS-API Apply Tag to Collection test - Failed:" + e);
+            throw new RegistryException("WS-API Apply Tag to Collection test -Failed:" + e);
         }
     }
 
@@ -214,8 +214,8 @@ public class TestTagging {
             deleteResources("/d14");
             log.info("*************WS-API Edit Tag Test - Passed *****************");
         } catch (RegistryException e) {
-            log.error("WS-API Edit Tag Test -Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Edit Tag Test  -Failed:" + e.getMessage());
+            log.error("WS-API Edit Tag Test -Fail:" + e);
+            throw new RegistryException("WS-API Edit Tag Test  -Failed:" + e);
         }
     }
 
@@ -266,8 +266,8 @@ public class TestTagging {
             deleteResources("/d15");
             log.info("**************WS-API Remove Resource Tagging test - Passed*************");
         } catch (RegistryException e) {
-            log.error("WS-API Remove Resource Tagging test - Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Remove Resource Tagging test -Failed:" + e.getMessage());
+            log.error("WS-API Remove Resource Tagging test - Failed:" + e);
+            throw new RegistryException("WS-API Remove Resource Tagging test -Failed:" + e);
         }
     }
 
@@ -321,8 +321,8 @@ public class TestTagging {
             deleteResources("/d15");
             log.info("*************WS-API Remove Tag from Collection test - Passed**************");
         } catch (RegistryException e) {
-            log.error("WS-API Remove Tag from Collection test - Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Remove Tag from Collection test -Failed:" + e.getMessage());
+            log.error("WS-API Remove Tag from Collection test - Failed:" + e);
+            throw new RegistryException("WS-API Remove Tag from Collection test -Failed:" + e);
         }
 
 
@@ -384,8 +384,8 @@ public class TestTagging {
             deleteResources("/d11");
             log.info("*****************WS-API tagging test- Passed********************");
         } catch (RegistryException e) {
-            log.error("tagging Registry Exception thrown:" + e.getMessage());
-            throw new RegistryException("WS-API Remove Tag from Collection test -Failed:" + e.getMessage());
+            log.error("tagging Registry Exception thrown:" + e);
+            throw new RegistryException("WS-API Remove Tag from Collection test -Failed:" + e);
         }
     }
 
@@ -403,8 +403,8 @@ public class TestTagging {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 }

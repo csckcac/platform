@@ -117,8 +117,8 @@ public class UserPopulator {
                 log.info("Role " + roleName[roleNameIndex] + " was created successfully");
             }
         } catch (UserAdminException e) {
-            log.error("Unable to add Role :" + e.getMessage());
-            throw new UserAdminException("Unable to add Role :" + e.getMessage());
+            log.error("Unable to add Role :" + e);
+            throw new UserAdminException("Unable to add Role :" + e);
         } catch (AxisFault axisFault) {
             log.error("Unable assign registry permission to the role :", axisFault);
             throw new AxisFault("Unable assign registry permission to the role :", axisFault);
@@ -137,8 +137,8 @@ public class UserPopulator {
                         log.info("User " + userDetails.getUserName() + " was created successfully");
                     }
                 } catch (UserAdminException e) {
-                    log.error("Unable to add users :" + e.getMessage());
-                    throw new UserAdminException("Unable to add role :" + e.getMessage());
+                    log.error("Unable to add users :" + e);
+                    throw new UserAdminException("Unable to add role :" + e);
                 }
             }
         }

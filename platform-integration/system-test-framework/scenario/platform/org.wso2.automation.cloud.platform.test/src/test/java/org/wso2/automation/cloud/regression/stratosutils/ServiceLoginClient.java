@@ -62,12 +62,12 @@ public class ServiceLoginClient {
             sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
 
         } catch (AxisFault e) {
-            log.error("Fail to login to service:" + hostName + "" + e.getMessage());
-            fail("Fail to login to service:" + hostName + "" + e.getMessage());
+            log.error("Fail to login to service:" + hostName + "" + e);
+            fail("Fail to login to service:" + hostName + "" + e);
 
         } catch (Exception e) {
-            log.error("Fail to login to service:" + hostName + "" + e.getMessage());
-            fail("Fail to login to service:" + hostName + "" + e.getMessage());
+            log.error("Fail to login to service:" + hostName + "" + e);
+            fail("Fail to login to service:" + hostName + "" + e);
         }
         return sessionCookie;
     }

@@ -79,17 +79,17 @@ public class StratosManagerUserCreatorSeleniumTest {
             userLogout();
             log.info("*******Manager Stratos - Add New User Test - Passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Failed to create  new User :" + e.getMessage());
+            log.info("Failed to create  new User :" + e);
             userLogout();
-            throw new AssertionFailedError("Failed to create  new User :" + e.getMessage());
+            throw new AssertionFailedError("Failed to create  new User :" + e);
         } catch (WebDriverException e) {
-            log.info("Failed to create  new User :" + e.getMessage());
+            log.info("Failed to create  new User :" + e);
             userLogout();
-            throw new WebDriverException("Failed to create  new User :" + e.getMessage());
+            throw new WebDriverException("Failed to create  new User :" + e);
         } catch (Exception e) {
-            log.info("Failed to create  new User :" + e.getMessage());
+            log.info("Failed to create  new User :" + e);
             userLogout();
-            throw new Exception("Failed to create  new User :" + e.getMessage());
+            throw new Exception("Failed to create  new User :" + e);
         }
 
     }

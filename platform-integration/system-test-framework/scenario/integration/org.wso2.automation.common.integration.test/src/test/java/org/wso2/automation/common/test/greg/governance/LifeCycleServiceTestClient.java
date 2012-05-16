@@ -68,8 +68,8 @@ public class LifeCycleServiceTestClient {
             wsdlManager.addWsdl(wsdl);
             log.info("LifeCycleServiceTestClient -WSDL added successfully");
         } catch (GovernanceException e) {
-            log.error("Failed to add WSDL:" + e.getMessage());
-            throw new GovernanceException("Failed to add WSDL :" + e.getMessage());
+            log.error("Failed to add WSDL:" + e);
+            throw new GovernanceException("Failed to add WSDL :" + e);
         }
     }
 
@@ -115,11 +115,11 @@ public class LifeCycleServiceTestClient {
             deleteWSDL();      //Delete wsdl
             log.info("LifeCycleServiceTestClient testCheckLifeCycle() - Passed");
         } catch (RegistryException e) {
-            log.error("Failed to Promote/Demote Life Cycle :" + e.getMessage());
-            throw new RegistryException("Failed to Promote/Demote Life Cycle :" + e.getMessage());
+            log.error("Failed to Promote/Demote Life Cycle :" + e);
+            throw new RegistryException("Failed to Promote/Demote Life Cycle :" + e);
         } catch (InterruptedException e) {
-            log.error("Failed to Promote/Demote Life Cycle :" + e.getMessage());
-            throw new InterruptedException("Failed to Promote/Demote Life Cycle :" + e.getMessage());
+            log.error("Failed to Promote/Demote Life Cycle :" + e);
+            throw new InterruptedException("Failed to Promote/Demote Life Cycle :" + e);
         }
     }
 
@@ -133,8 +133,8 @@ public class LifeCycleServiceTestClient {
                 registry.delete(service_path);
             }
         } catch (RegistryException e) {
-            log.error("Failed to delete WSDL :" + e.getMessage());
-            throw new RegistryException("Failed to delete WSDL :" + e.getMessage());
+            log.error("Failed to delete WSDL :" + e);
+            throw new RegistryException("Failed to delete WSDL :" + e);
         }
     }
 }

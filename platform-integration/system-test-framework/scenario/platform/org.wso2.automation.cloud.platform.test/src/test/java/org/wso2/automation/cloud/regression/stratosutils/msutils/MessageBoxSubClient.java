@@ -249,7 +249,7 @@ public class MessageBoxSubClient {
             // base64-encode the hmac
             result = Base64.encode(rawHmac);
         } catch (Exception e) {
-            throw new SignatureException("Failed to generate HMAC : " + e.getMessage());
+            throw new SignatureException("Failed to generate HMAC : " + e);
         }
 
         return result;

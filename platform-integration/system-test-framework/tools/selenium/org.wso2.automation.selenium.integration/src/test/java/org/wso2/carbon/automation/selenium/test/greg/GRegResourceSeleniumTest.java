@@ -91,19 +91,19 @@ public class GRegResourceSeleniumTest {
             new GregUserLogout().userLogout(driver);
             log.info("********GRegResourceSeleniumTest addResourceToCollection() - Passed ***********");
         } catch (WebDriverException e) {
-            log.info("Failed to add a resource to collection:" + e.getMessage());
+            log.info("Failed to add a resource to collection:" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegResourceSeleniumTest_addResourceToCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(4000L);
-            throw new WebDriverException("Failed to add a resource to collection:" + e.getMessage());
+            throw new WebDriverException("Failed to add a resource to collection:" + e);
         } catch (Exception e) {
-            log.info("Failed to add a resource to collection :" + e.getMessage());
+            log.info("Failed to add a resource to collection :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegResourceSeleniumTest_addResourceToCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(4000L);
-            throw new Exception("Failed to add a resource to collection:" + e.getMessage());
+            throw new Exception("Failed to add a resource to collection:" + e);
         }
     }
 
@@ -165,19 +165,19 @@ public class GRegResourceSeleniumTest {
             new GregUserLogout().userLogout(driver);         //signout
             log.info("********GRegResourceSeleniumTest addCommentToResource() - Passed ***********");
         } catch (WebDriverException e) {
-            log.info("Failed to add a comment to resource :" + e.getMessage());
+            log.info("Failed to add a comment to resource :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegResourceSeleniumTest_addCommentToResource");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(5000L);
-            throw new WebDriverException("Failed to add a comment to resource:" + e.getMessage());
+            throw new WebDriverException("Failed to add a comment to resource:" + e);
         } catch (Exception e) {
-            log.info("Failed to add a comment to resource :" + e.getMessage());
+            log.info("Failed to add a comment to resource :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegResourceSeleniumTest_addCommentToResource");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(5000L);
-            throw new Exception("Failed to add a comment to resource:" + e.getMessage());
+            throw new Exception("Failed to add a comment to resource:" + e);
         }
 
     }
@@ -227,15 +227,15 @@ public class GRegResourceSeleniumTest {
             log.info("********GRegResourceSeleniumTest addTagToResource() - Passed ***********");
 
         } catch (WebDriverException e) {
-            log.info("Failed to add a tag to resource: :" + e.getMessage());
+            log.info("Failed to add a tag to resource: :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_addTagToResource");
             new GregUserLogout().userLogout(driver);
-            throw new WebDriverException("Failed to add a tag to resource:" + e.getMessage());
+            throw new WebDriverException("Failed to add a tag to resource:" + e);
         } catch (Exception e) {
-            log.info("Failed to add a tag to resource::" + e.getMessage());
+            log.info("Failed to add a tag to resource::" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_addTagToResource");
             new GregUserLogout().userLogout(driver);
-            throw new Exception("Failed to add a tag to resource:" + e.getMessage());
+            throw new Exception("Failed to add a tag to resource:" + e);
         }
 
     }
@@ -261,13 +261,13 @@ public class GRegResourceSeleniumTest {
             assertTrue(selenium.isTextPresent("Entries"), "Browse Detail View Page fail :");
 
         } catch (WebDriverException e) {
-            log.info("GRegResourceSeleniumTestt-gotoDetailViewTab() - WebDriver Exception :" + e.getMessage());
+            log.info("GRegResourceSeleniumTestt-gotoDetailViewTab() - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_gotoDetailViewTab");
-            throw new WebDriverException("GRegResourceSeleniumTestt-gotoDetailViewTab():" + e.getMessage());
+            throw new WebDriverException("GRegResourceSeleniumTestt-gotoDetailViewTab():" + e);
         } catch (Exception e) {
-            log.info("GRegResourceSeleniumTest-gotoDetailViewTab() Fail :" + e.getMessage());
+            log.info("GRegResourceSeleniumTest-gotoDetailViewTab() Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_gotoDetailViewTab");
-            throw new Exception("GRegResourceSeleniumTestt-gotoDetailViewTab():" + e.getMessage());
+            throw new Exception("GRegResourceSeleniumTestt-gotoDetailViewTab():" + e);
         }
     }
 
@@ -281,17 +281,17 @@ public class GRegResourceSeleniumTest {
             Thread.sleep(3000L);
         } catch (WebDriverException e) {
             log.info("Failed to find Location collection/resource path:- WebDriver Exception :" +
-                     e.getMessage());
+                     e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_findLocation");
             throw new WebDriverException("Failed to find Location collection/resource path:" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Failed to find Location collection/resource path:" + e.getMessage());
+            log.info("Failed to find Location collection/resource path:" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_findLocation");
             throw new Exception("Failed to find Location collection/resource path:" +
-                                e.getMessage());
+                                e);
         }
     }
 
@@ -310,13 +310,13 @@ public class GRegResourceSeleniumTest {
             //click on OK button
             selenium.click("//button");
         } catch (WebDriverException e) {
-            log.info("GRegCollectionSeleniumTest-addCollection() Fail  :" + e.getMessage());
+            log.info("GRegCollectionSeleniumTest-addCollection() Fail  :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegCollectionSeleniumTest_addCollection");
-            throw new WebDriverException("GRegCollectionSeleniumTest-addCollection() Fail  :" + e.getMessage());
+            throw new WebDriverException("GRegCollectionSeleniumTest-addCollection() Fail  :" + e);
         } catch (Exception e) {
-            log.info("GRegCollectionSeleniumTest-addCollection() Fail :" + e.getMessage());
+            log.info("GRegCollectionSeleniumTest-addCollection() Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegCollectionSeleniumTest_addCollection");
-            throw new Exception("GRegCollectionSeleniumTest-addCollection() Fail  :" + e.getMessage());
+            throw new Exception("GRegCollectionSeleniumTest-addCollection() Fail  :" + e);
         }
     }
 
@@ -343,13 +343,13 @@ public class GRegResourceSeleniumTest {
             driver.findElement(By.xpath("//button")).click();
             Thread.sleep(2000L);
         } catch (WebDriverException e) {
-            log.info("GRegResourceSeleniumTest-addResource() - WebDriver Exception :" + e.getMessage());
+            log.info("GRegResourceSeleniumTest-addResource() - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_addResource");
-            throw new WebDriverException("GRegResourceSeleniumTest-addResource()  :" + e.getMessage());
+            throw new WebDriverException("GRegResourceSeleniumTest-addResource()  :" + e);
         } catch (Exception e) {
-            log.info("GRegResourceSeleniumTest-addResource() Fail :" + e.getMessage());
+            log.info("GRegResourceSeleniumTest-addResource() Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_addResource");
-            throw new Exception("GRegResourceSeleniumTest-addResource()  :" + e.getMessage());
+            throw new Exception("GRegResourceSeleniumTest-addResource()  :" + e);
         }
     }
 
@@ -402,16 +402,16 @@ public class GRegResourceSeleniumTest {
             new GregUserLogout().userLogout(driver);
             log.info("********GRegResourceSeleniumTest addLifeCycleToResource() - Passed ***********");
         } catch (WebDriverException e) {
-            log.info("Failed to add a life cycle to resource :" + e.getMessage());
+            log.info("Failed to add a life cycle to resource :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_addLifeCycleToResource");
             new GregUserLogout().userLogout(driver);
-            throw new Exception("Failed to add a life cycle to resource :" + e.getMessage());
+            throw new Exception("Failed to add a life cycle to resource :" + e);
 
         } catch (Exception e) {
-            log.info("Failed to add a life cycle to resource :" + e.getMessage());
+            log.info("Failed to add a life cycle to resource :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_addLifeCycleToResource");
             new GregUserLogout().userLogout(driver);
-            throw new Exception("Failed to add a life cycle to resource  :" + e.getMessage());
+            throw new Exception("Failed to add a life cycle to resource  :" + e);
         }
 
     }
@@ -435,13 +435,13 @@ public class GRegResourceSeleniumTest {
             Thread.sleep(3000L);
 
         } catch (WebDriverException e) {
-            log.info("GRegResourceSeleniumTest-promoteState() - WebDriver Exception :" + e.getMessage());
+            log.info("GRegResourceSeleniumTest-promoteState() - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_promoteState");
-            throw new Exception("GRegResourceSeleniumTest-addResource()  :" + e.getMessage());
+            throw new Exception("GRegResourceSeleniumTest-addResource()  :" + e);
         } catch (Exception e) {
-            log.info("GRegResourceSeleniumTest-promoteState() Fail :" + e.getMessage());
+            log.info("GRegResourceSeleniumTest-promoteState() Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_promoteState");
-            throw new Exception("GRegResourceSeleniumTest-addResource()  :" + e.getMessage());
+            throw new Exception("GRegResourceSeleniumTest-addResource()  :" + e);
         }
     }
 

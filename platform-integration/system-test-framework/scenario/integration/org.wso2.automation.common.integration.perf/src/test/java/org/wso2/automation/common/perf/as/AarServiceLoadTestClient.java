@@ -119,7 +119,7 @@ public class AarServiceLoadTestClient {
 //                clientThread[i].join();
 //            } catch (InterruptedException e) {
 //                fail("Thread join operation interrupted");
-//                log.error("Thread join operation interrupted " + e.getMessage());
+//                log.error("Thread join operation interrupted " + e);
 //            }
 //        }
     }

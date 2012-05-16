@@ -171,8 +171,8 @@ public class CarbonDataSourceTest extends DataServiceTest {
                         try {
                             Thread.sleep(2000);
                         } catch (InterruptedException e) {
-                            log.error("InterruptedException : " + e.getMessage());
-                            Assert.fail("InterruptedException : " + e.getMessage());
+                            log.error("InterruptedException : " + e);
+                            Assert.fail("InterruptedException : " + e);
                         }
                     }
                 }
@@ -183,8 +183,8 @@ public class CarbonDataSourceTest extends DataServiceTest {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                log.error("InterruptedException : " + e.getMessage());
-                Assert.fail("InterruptedException : " + e.getMessage());
+                log.error("InterruptedException : " + e);
+                Assert.fail("InterruptedException : " + e);
             }
 
             dataSourceInfo = dataSourceAdminService.getCarbonDataSources(sessionCookie, createDataSourceResponse);
@@ -199,8 +199,8 @@ public class CarbonDataSourceTest extends DataServiceTest {
                         try {
                             Thread.sleep(2000);
                         } catch (InterruptedException e) {
-                            log.error("InterruptedException : " + e.getMessage());
-                            Assert.fail("InterruptedException : " + e.getMessage());
+                            log.error("InterruptedException : " + e);
+                            Assert.fail("InterruptedException : " + e);
                         }
                     }
                 }

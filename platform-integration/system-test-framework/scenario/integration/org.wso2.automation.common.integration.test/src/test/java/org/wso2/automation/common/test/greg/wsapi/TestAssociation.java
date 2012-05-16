@@ -59,11 +59,11 @@ public class TestAssociation {
             deleteResources("/testk12");
             log.info("**************WS-API Add Association To Resource test - Passed***************");
         } catch (RegistryException e) {
-            log.error("WS-API Add Association To Resource test - Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Add Association To Resource test - Fail:" + e.getMessage());
+            log.error("WS-API Add Association To Resource test - Fail:" + e);
+            throw new RegistryException("WS-API Add Association To Resource test - Fail:" + e);
         } catch (Exception e) {
-            log.error("WS-API Add Association To Resource test-Fail:" + e.getMessage());
-            throw new Exception("WS-API Add Association To Resource test - Fail:" + e.getMessage());
+            log.error("WS-API Add Association To Resource test-Fail:" + e);
+            throw new Exception("WS-API Add Association To Resource test - Fail:" + e);
         }
     }
 
@@ -93,11 +93,11 @@ public class TestAssociation {
             deleteResources("/assocol1");
             log.info("**************WS-API Add an Association To Collection test-Passed***************");
         } catch (RegistryException e) {
-            log.error("WS-API Add an Association To Collection test - Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Add an Association To Collection test - Fail:" + e.getMessage());
+            log.error("WS-API Add an Association To Collection test - Fail:" + e);
+            throw new RegistryException("WS-API Add an Association To Collection test - Fail:" + e);
         } catch (Exception e) {
-            log.error("WS-API Add an Association To Collection test - Fail:" + e.getMessage());
-            throw new Exception("WS-API Add an Association To Collection test- Fail:" + e.getMessage());
+            log.error("WS-API Add an Association To Collection test - Fail:" + e);
+            throw new Exception("WS-API Add an Association To Collection test- Fail:" + e);
         }
     }
 
@@ -124,11 +124,11 @@ public class TestAssociation {
             registry.removeAssociation(path, "/vtr2121/test", "testasstype1");
             log.info("**************WS-API Add an Association To Root test - Passed");
         } catch (RegistryException e) {
-            log.error("WS-API Add an Association To Root test - Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Add an Association To Root test- Fail:" + e.getMessage());
+            log.error("WS-API Add an Association To Root test - Fail:" + e);
+            throw new RegistryException("WS-API Add an Association To Root test- Fail:" + e);
         } catch (Exception e) {
-            log.error("WS-API Add an Association To Root test - Fail:" + e.getMessage());
-            throw new Exception("WS-API Add an Association To Root test - Fail:" + e.getMessage());
+            log.error("WS-API Add an Association To Root test - Fail:" + e);
+            throw new Exception("WS-API Add an Association To Root test - Fail:" + e);
         }
     }
 
@@ -157,11 +157,11 @@ public class TestAssociation {
             assertTrue(getAssocitionbySourceByType(path, "testasstype3"), "association Source path not exist");
             log.info("*************WS-API Get Resource Association test - Passed **************");
         } catch (RegistryException e) {
-            log.error("WS-API Get Resource Association test-Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Get Resource Association test- Fail:" + e.getMessage());
+            log.error("WS-API Get Resource Association test-Fail:" + e);
+            throw new RegistryException("WS-API Get Resource Association test- Fail:" + e);
         } catch (Exception e) {
-            log.error("WS-API Get Resource Association test-Fail:" + e.getMessage());
-            throw new Exception("WS-API Get Resource Association test- Fail:" + e.getMessage());
+            log.error("WS-API Get Resource Association test-Fail:" + e);
+            throw new Exception("WS-API Get Resource Association test- Fail:" + e);
         }
     }
 
@@ -190,11 +190,11 @@ public class TestAssociation {
             deleteResources("/getcol1");
             log.info("*****************WS-API Get Collection Association test - Passed *************************");
         } catch (RegistryException e) {
-            log.error("WS-API Get Collection Association test-Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Get Collection Association test- Fail:" + e.getMessage());
+            log.error("WS-API Get Collection Association test-Fail:" + e);
+            throw new RegistryException("WS-API Get Collection Association test- Fail:" + e);
         } catch (Exception e) {
-            log.error("WS-API Get Collection Association test - Fail:" + e.getMessage());
-            throw new Exception("WS-API Get Collection Association test Fail:" + e.getMessage());
+            log.error("WS-API Get Collection Association test - Fail:" + e);
+            throw new Exception("WS-API Get Collection Association test Fail:" + e);
         }
     }
 
@@ -239,11 +239,11 @@ public class TestAssociation {
             deleteResources("/testk123456");
             log.info("*************WS-API Remove an association from resource test - Passed ***************");
         } catch (RegistryException e) {
-            log.error("WS-API Remove an association from resource test - Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Remove an association from resource test- Fail:" + e.getMessage());
+            log.error("WS-API Remove an association from resource test - Fail:" + e);
+            throw new RegistryException("WS-API Remove an association from resource test- Fail:" + e);
         } catch (Exception e) {
-            log.error("WS-API Remove an association from resource test - Fail:" + e.getMessage());
-            throw new Exception("WS-API Remove an association from resource test- Fail:" + e.getMessage());
+            log.error("WS-API Remove an association from resource test - Fail:" + e);
+            throw new Exception("WS-API Remove an association from resource test- Fail:" + e);
         }
     }
 
@@ -285,11 +285,11 @@ public class TestAssociation {
             deleteResources("/assoColremove1");
             log.info("*******************WS-API Remove an association from Collection test - Passed ******************");
         } catch (RegistryException e) {
-            log.error("WS-API Remove an association from Collection test-Fail" + e.getMessage());
-            throw new RegistryException("WS-API Remove an association from Collection test- Fail:" + e.getMessage());
+            log.error("WS-API Remove an association from Collection test-Fail" + e);
+            throw new RegistryException("WS-API Remove an association from Collection test- Fail:" + e);
         } catch (Exception e) {
-            log.error("WS-API Remove an association from Collection test -Fail:" + e.getMessage());
-            throw new Exception("WS-API Remove an association from Collection test- Fail:" + e.getMessage());
+            log.error("WS-API Remove an association from Collection test -Fail:" + e);
+            throw new Exception("WS-API Remove an association from Collection test- Fail:" + e);
         }
     }
 
@@ -308,8 +308,8 @@ public class TestAssociation {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
 
     }

@@ -74,20 +74,20 @@ public class StratosManagerAccountValidatorSeleniumTest {
             userLogout();
             log.info("*******Stratos Manager Account Validation Page Viewer Test - Passed *******");
         } catch (AssertionFailedError e) {
-            log.info("Manager Account Validation Page Viewer Test Failed :" + e.getMessage());
+            log.info("Manager Account Validation Page Viewer Test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Manager Account Validation Page Viewer Test Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Manager Account Validation Page Viewer Test Failed :" + e.getMessage());
+            log.info("Manager Account Validation Page Viewer Test Failed :" + e);
             userLogout();
             throw new WebDriverException("Manager Account Validation Page Viewer Test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Manager Account Validation Page Viewer Test Failed :" + e.getMessage());
+            log.info("Manager Account Validation Page Viewer Test Failed :" + e);
             userLogout();
             throw new Exception("Manager Account Validation Page Viewer Test Failed :" +
-                                e.getMessage());
+                                e);
         }
 
     }

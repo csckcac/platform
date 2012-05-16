@@ -75,17 +75,17 @@ public class GRegStratosWSDLUploaderSeleniumTest {
             userLogout();
             log.info("**********GReg Stratos WSDL Upload from URL Test - Passed ****************");
         } catch (AssertionFailedError e) {
-            log.info("WSDL Upload from URL Test Failed :" + e.getMessage());
+            log.info("WSDL Upload from URL Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("WSDL Upload from URL Test Failed :" + e.getMessage());
+            throw new AssertionFailedError("WSDL Upload from URL Test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("WSDL Upload from URL Test Failed :" + e.getMessage());
+            log.info("WSDL Upload from URL Test Failed :" + e);
             userLogout();
-            throw new WebDriverException("WSDL Upload from URL Test Failed :" + e.getMessage());
+            throw new WebDriverException("WSDL Upload from URL Test Failed :" + e);
         } catch (Exception e) {
-            log.info("WSDL Upload from URL Test Failed :" + e.getMessage());
+            log.info("WSDL Upload from URL Test Failed :" + e);
             userLogout();
-            throw new Exception("WSDL Upload from URL Test Failed :" + e.getMessage());
+            throw new Exception("WSDL Upload from URL Test Failed :" + e);
         }
     }
 
@@ -106,17 +106,17 @@ public class GRegStratosWSDLUploaderSeleniumTest {
             userLogout();
             log.info("**********GReg Stratos WSDL Upload from File Test - Passed ****************");
         } catch (AssertionFailedError e) {
-            log.info("WSDL Upload from File Test Failed :" + e.getMessage());
+            log.info("WSDL Upload from File Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("WSDL Upload from File Test Failed :" + e.getMessage());
+            throw new AssertionFailedError("WSDL Upload from File Test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("WSDL Upload from File Test Failed :" + e.getMessage());
+            log.info("WSDL Upload from File Test Failed :" + e);
             userLogout();
-            throw new WebDriverException("WSDL Upload from File Test Failed :" + e.getMessage());
+            throw new WebDriverException("WSDL Upload from File Test Failed :" + e);
         } catch (Exception e) {
-            log.info("WSDL Upload from File Test Failed :" + e.getMessage());
+            log.info("WSDL Upload from File Test Failed :" + e);
             userLogout();
-            throw new Exception("WSDL Upload from File Test Failed :" + e.getMessage());
+            throw new Exception("WSDL Upload from File Test Failed :" + e);
         }
 
     }

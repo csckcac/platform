@@ -88,17 +88,17 @@ public class GRegPolicyUploaderSeleniumTest {
             new GregUserLogout().userLogout(driver);
             log.info("******GRegPolicyUploaderSeleniumTest - testAddPolicyFromURL()-Passed*******");
         } catch (WebDriverException e) {
-            log.info("Failed to upload policy from url - WebDriver Exception :" + e.getMessage());
+            log.info("Failed to upload policy from url - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GregAddPolicyfromURLSeleniumTest");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(4000L);
-            throw new WebDriverException("Failed to upload policy from url:" + e.getMessage());
+            throw new WebDriverException("Failed to upload policy from url:" + e);
         } catch (Exception e) {
-            log.info("Failed to upload policy from url - Fail :" + e.getMessage());
+            log.info("Failed to upload policy from url - Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GregAddPolicyfromURLSeleniumTest");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(4000L);
-            throw new Exception("Failed to upload policy from url:" + e.getMessage());
+            throw new Exception("Failed to upload policy from url:" + e);
         }
 
     }

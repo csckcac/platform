@@ -95,8 +95,8 @@ public class TestResources {
             deleteResources("/d1");
             log.info("*************WS-API Hierachical Resource test- Passed***************");
         } catch (RegistryException e) {
-            log.error("WS-API Hierachical Resource test-Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Hierachical Resource test -Failed:" + e.getMessage());
+            log.error("WS-API Hierachical Resource test-Fail:" + e);
+            throw new RegistryException("WS-API Hierachical Resource test -Failed:" + e);
         }
     }
 
@@ -161,8 +161,8 @@ public class TestResources {
             deleteResources("/d1");
             log.info("************WS-API Update Resource Content test - Passed****************");
         } catch (RegistryException e) {
-            log.error("WS-API Update Resource Content test-Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Update Resource Content test -Failed:" + e.getMessage());
+            log.error("WS-API Update Resource Content test-Fail:" + e);
+            throw new RegistryException("WS-API Update Resource Content test -Failed:" + e);
         }
     }
 
@@ -192,8 +192,8 @@ public class TestResources {
             deleteResources("/d1");
             log.info("*************WS-API Get MetaData test - Passed************");
         } catch (RegistryException e) {
-            log.error("WS-API Get MetaData test -Failed" + e.getMessage());
-            throw new RegistryException("WS-API Get MetaData test-Failed:" + e.getMessage());
+            log.error("WS-API Get MetaData test -Failed" + e);
+            throw new RegistryException("WS-API Get MetaData test-Failed:" + e);
         }
     }
 
@@ -237,8 +237,8 @@ public class TestResources {
             deleteResources("/d1");
             log.info("*************WS-API Add an Another Resource test - Passed**************");
         } catch (RegistryException e) {
-            log.error("WS-API Add an Another Resource test - Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Add an Another Resource test-Failed:" + e.getMessage());
+            log.error("WS-API Add an Another Resource test - Failed:" + e);
+            throw new RegistryException("WS-API Add an Another Resource test-Failed:" + e);
         }
     }
 
@@ -282,8 +282,8 @@ public class TestResources {
             deleteResources("/c11");
             log.info("**************WS-API Set Resource Details test - Passed*******************");
         } catch (RegistryException e) {
-            log.error("WS-API Set Resource Details test-Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Set Resource Details test-Failed:" + e.getMessage());
+            log.error("WS-API Set Resource Details test-Failed:" + e);
+            throw new RegistryException("WS-API Set Resource Details test-Failed:" + e);
         }
     }
 
@@ -320,8 +320,8 @@ public class TestResources {
             deleteResources("/c1");
             log.info("*************WS-API Collection Details test - Passed**************");
         } catch (RegistryException e) {
-            log.error("WS-API Collection Details test-Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Collection Details test-Failed:" + e.getMessage());
+            log.error("WS-API Collection Details test-Failed:" + e);
+            throw new RegistryException("WS-API Collection Details test-Failed:" + e);
         }
     }
 
@@ -350,8 +350,8 @@ public class TestResources {
             deleteResources("/c1");
             log.info("**************WS-API Set Collection Details test - Passed ********************");
         } catch (RegistryException e) {
-            log.error("WS-API Set Collection Details test-Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Set Collection Details test-Failed:" + e.getMessage());
+            log.error("WS-API Set Collection Details test-Fail:" + e);
+            throw new RegistryException("WS-API Set Collection Details test-Failed:" + e);
         }
     }
 
@@ -404,8 +404,8 @@ public class TestResources {
             deleteResources("/c11");
             log.info("************WS-API Delete Resource test - Passed***************");
         } catch (RegistryException e) {
-            log.error("WS-API Delete Resource test -Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Delete Resource test-Failed:" + e.getMessage());
+            log.error("WS-API Delete Resource test -Failed:" + e);
+            throw new RegistryException("WS-API Delete Resource test-Failed:" + e);
         }
     }
 
@@ -454,8 +454,8 @@ public class TestResources {
             deleteResources("/c20");
             log.info("**************WS-API Delete Collection test - Passed ******************");
         } catch (RegistryException e) {
-            log.error("WS-API Delete Collection test-Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Delete Collection test-Failed:" + e.getMessage());
+            log.error("WS-API Delete Collection test-Failed:" + e);
+            throw new RegistryException("WS-API Delete Collection test-Failed:" + e);
         }
     }
 
@@ -496,8 +496,8 @@ public class TestResources {
             deleteResources("/d11");
             log.info("************WS-API Add Spaces to a Resource Name test- Passed***************");
         } catch (RegistryException e) {
-            log.error("WS-API Add Spaces to a Resource Name test -Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Add Spaces to a Resource Name test -Failed:" + e.getMessage());
+            log.error("WS-API Add Spaces to a Resource Name test -Failed:" + e);
+            throw new RegistryException("WS-API Add Spaces to a Resource Name test -Failed:" + e);
         }
     }
 
@@ -525,8 +525,8 @@ public class TestResources {
             deleteResources("/col1");
             log.info("**************WS-APIS Add Spaces to a Collection name test - Passed**************");
         } catch (Exception e) {
-            log.error("WS-APIS Add Spaces to a Collection name test -Fail:" + e.getMessage());
-            throw new RegistryException("WS-APIS Add Spaces to a Collection name test -Failed:" + e.getMessage());
+            log.error("WS-APIS Add Spaces to a Collection name test -Fail:" + e);
+            throw new RegistryException("WS-APIS Add Spaces to a Collection name test -Failed:" + e);
         }
     }
 
@@ -561,8 +561,8 @@ public class TestResources {
             deleteResources("/d25");
             log.info("************WS-API Add Resource From URL test - Passed**************");
         } catch (Exception e) {
-            log.error("WS-API Add Resource From URL test -Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Add Resource From URL test -Failed:" + e.getMessage());
+            log.error("WS-API Add Resource From URL test -Failed:" + e);
+            throw new RegistryException("WS-API Add Resource From URL test -Failed:" + e);
         }
 
 
@@ -620,8 +620,8 @@ public class TestResources {
             deleteResources("/d30");
             log.info("*************WS-API Rename Resource test - Passed************");
         } catch (RegistryException e) {
-            log.error("WS-API Rename Resource test - Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Rename Resource test -Failed:" + e.getMessage());
+            log.error("WS-API Rename Resource test - Failed:" + e);
+            throw new RegistryException("WS-API Rename Resource test -Failed:" + e);
         }
     }
 
@@ -687,8 +687,8 @@ public class TestResources {
             deleteResources("/d40");
             log.info("************WS-API Delete And Update a Resource test - Passed*************");
         } catch (RegistryException e) {
-            log.error("WS-API Delete And Update a Resource test - Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Delete And Update a Resource test -Failed:" + e.getMessage());
+            log.error("WS-API Delete And Update a Resource test - Failed:" + e);
+            throw new RegistryException("WS-API Delete And Update a Resource test -Failed:" + e);
         }
     }
 
@@ -729,8 +729,8 @@ public class TestResources {
             deleteResources("/m11");
             log.info("*************WS-API Resource Multiple Properties test - Passed ************");
         } catch (Exception e) {
-            log.error("WS-API Resource Multiple Properties test -Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Resource Multiple Properties test-Failed:" + e.getMessage());
+            log.error("WS-API Resource Multiple Properties test -Failed:" + e);
+            throw new RegistryException("WS-API Resource Multiple Properties test-Failed:" + e);
         }
     }
 
@@ -765,8 +765,8 @@ public class TestResources {
             deleteResources("/m15");
             log.info("*************WS-API Collection Multiple Properties test - Passed**************");
         } catch (Exception e) {
-            log.error("WS-API Collection Multiple Properties test -Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Collection Multiple Properties test-Failed:" + e.getMessage());
+            log.error("WS-API Collection Multiple Properties test -Failed:" + e);
+            throw new RegistryException("WS-API Collection Multiple Properties test-Failed:" + e);
         }
     }
 
@@ -794,11 +794,11 @@ public class TestResources {
             deleteResources("/lastModTest2");
             log.info("*************WS-API Last Modified Date Change test - Passed***************");
         } catch (RegistryException e) {
-            log.error("WS-API Last Modified Date Change test -Failed:" + e.getMessage());
-            throw new RegistryException("WS-API Last Modified Date Change test -Failed:" + e.getMessage());
+            log.error("WS-API Last Modified Date Change test -Failed:" + e);
+            throw new RegistryException("WS-API Last Modified Date Change test -Failed:" + e);
         } catch (InterruptedException e) {
-            log.error("WS-API Last Modified Date Change test -Failed:" + e.getMessage());
-            throw new InterruptedException("WS-API Last Modified Date Change test -Failed:" + e.getMessage());
+            log.error("WS-API Last Modified Date Change test -Failed:" + e);
+            throw new InterruptedException("WS-API Last Modified Date Change test -Failed:" + e);
         }
     }
 
@@ -827,8 +827,8 @@ public class TestResources {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

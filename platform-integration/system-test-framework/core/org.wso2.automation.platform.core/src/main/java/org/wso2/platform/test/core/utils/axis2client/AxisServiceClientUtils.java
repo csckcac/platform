@@ -149,8 +149,8 @@ public class AxisServiceClientUtils {
                     AxisServiceClientUtils.sendRequestOneWay(payload, epr);
                 }
             } catch (XMLStreamException e) {
-                log.error(e.getMessage());
-                throw new XMLStreamException("cannot read xml stream " + e.getMessage());
+                log.error(e);
+                throw new XMLStreamException("cannot read xml stream " + e);
             } catch (AxisFault axisFault) {
                 log.error(axisFault.getMessage());
                 throw new AxisFault("cannot read xml stream " + axisFault.getMessage());
@@ -174,7 +174,7 @@ public class AxisServiceClientUtils {
                 }
             } catch (XMLStreamException e) {
                 if (!e.getClass().getSimpleName().equals(expectedException)) {
-                    throw new XMLStreamException(e.getMessage());
+                    throw new XMLStreamException(e);
                 }
             } catch (AxisFault axisFault) {
                 if (!axisFault.getClass().getSimpleName().equals(expectedException)) {

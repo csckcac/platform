@@ -125,7 +125,7 @@ public class EventingServiceTest extends DataServiceTest {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
-            Assert.fail("InterruptedException :" + e.getMessage());
+            Assert.fail("InterruptedException :" + e);
         }
 
         OMElement response = getProduct(150);
@@ -239,11 +239,11 @@ public class EventingServiceTest extends DataServiceTest {
 
 
         } catch (XMLStreamException e) {
-            log.error("XMLStreamException when Reading Service File" + e.getMessage());
-            throw new RuntimeException("XMLStreamException when Reading Service File" + e.getMessage(), e);
+            log.error("XMLStreamException when Reading Service File" + e);
+            throw new RuntimeException("XMLStreamException when Reading Service File" + e, e);
         } catch (IOException e) {
-            log.error("IOException when Reading Service File" + e.getMessage());
-            throw new RuntimeException("IOException  when Reading Service File" + e.getMessage(), e);
+            log.error("IOException when Reading Service File" + e);
+            throw new RuntimeException("IOException  when Reading Service File" + e, e);
         }
     }
 
@@ -255,7 +255,7 @@ public class EventingServiceTest extends DataServiceTest {
             builder = new EnvironmentBuilder().esb(3);
         } catch (RemoteException e) {
             throw new RemoteException("No Response from ESB Server. Please Check whether ESB is up and running. "
-                                      + e.getMessage(), e);
+                                      + e, e);
         }
         EnvironmentVariables esbServer = builder.build().getEsb();
         String esbBackEndUrl = esbServer.getBackEndUrl();
@@ -273,7 +273,7 @@ public class EventingServiceTest extends DataServiceTest {
             try {
                 Thread.sleep(10 * 1000);
             } catch (InterruptedException e) {
-                Assert.fail("Thread InterruptedException :" + e.getMessage());
+                Assert.fail("Thread InterruptedException :" + e);
             }
         }
 
@@ -305,7 +305,7 @@ public class EventingServiceTest extends DataServiceTest {
                 try {
                     Thread.sleep(2 * 1000);
                 } catch (InterruptedException e) {
-                    Assert.fail("Thread InterruptedException :" + e.getMessage());
+                    Assert.fail("Thread InterruptedException :" + e);
                 }
 
             }
@@ -326,13 +326,13 @@ public class EventingServiceTest extends DataServiceTest {
 
         } catch (MalformedURLException e) {
             log.error(e);
-            throw new RuntimeException("MalformedURLException : " + e.getMessage(), e);
+            throw new RuntimeException("MalformedURLException : " + e, e);
         } catch (IOException e) {
             log.error(e);
-            throw new RuntimeException("IOException : " + e.getMessage(), e);
+            throw new RuntimeException("IOException : " + e, e);
         } catch (XMLStreamException e) {
             log.error(e);
-            throw new RuntimeException("XMLStreamException : " + e.getMessage(), e);
+            throw new RuntimeException("XMLStreamException : " + e, e);
         }
 
     }

@@ -93,8 +93,8 @@ public class TestResources {
             deleteResources("/d1");
             log.info("****************Registry API Hierachical Resource Test- Passed *************");
         } catch (RegistryException e) {
-            log.error("Registry API Hierachical Resource Test-Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Hierachical Resource Test-Failed:" + e.getMessage());
+            log.error("Registry API Hierachical Resource Test-Failed :" + e);
+            throw new RegistryException("Registry API Hierachical Resource Test-Failed:" + e);
         }
 
     }
@@ -163,8 +163,8 @@ public class TestResources {
             deleteResources("/d1");
             log.info("************* Registry API Update Resouce Content Test - Passed *************");
         } catch (RegistryException e) {
-            log.error("Registry API Update Resouce Content Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Update Resouce Content Test - Failed :" + e.getMessage());
+            log.error("Registry API Update Resouce Content Test - Failed :" + e);
+            throw new RegistryException("Registry API Update Resouce Content Test - Failed :" + e);
         }
 
     }
@@ -211,8 +211,8 @@ public class TestResources {
             deleteResources("/d1");
             log.info("*************Registry API Add Another Resource Test - Passed ***************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Another Resource Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Add Another Resource Test- Failed :" + e.getMessage());
+            log.error("Registry API Add Another Resource Test -Failed :" + e);
+            throw new RegistryException("Registry API Add Another Resource Test- Failed :" + e);
         }
     }
 
@@ -258,8 +258,8 @@ public class TestResources {
             deleteResources("/c11");
             log.info("************Registry API Set Resource Details Test - Passed*************");
         } catch (RegistryException e) {
-            log.error("Registry API Set Resource Details Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Set Resource Details Test -Failed :" + e.getMessage());
+            log.error("Registry API Set Resource Details Test -Failed :" + e);
+            throw new RegistryException("Registry API Set Resource Details Test -Failed :" + e);
         }
     }
 
@@ -307,8 +307,8 @@ public class TestResources {
             deleteResources("/c1");
             log.info("***************Registry API Set Resource Details Test - Passed ***************");
         } catch (RegistryException e) {
-            log.error("Registry API Set Resource Details Test - Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Set Resource Details Test -Failed :" + e.getMessage());
+            log.error("Registry API Set Resource Details Test - Failed:" + e);
+            throw new RegistryException("Registry API Set Resource Details Test -Failed :" + e);
         }
     }
 
@@ -341,8 +341,8 @@ public class TestResources {
             deleteResources("/c1");
             log.info("**************Registry API Set Collection Details Test - Passed***************");
         } catch (RegistryException e) {
-            log.error("Registry API Set Collection Details Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Set Collection Details Test -Failed :" + e.getMessage());
+            log.error("Registry API Set Collection Details Test -Failed :" + e);
+            throw new RegistryException("Registry API Set Collection Details Test -Failed :" + e);
         }
     }
 
@@ -412,8 +412,8 @@ public class TestResources {
             deleteResources("/c11");
             log.info("*************Registry API Delete Resource Test - Passed*****************");
         } catch (RegistryException e) {
-            log.error("Registry API Delete Resource Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Delete Resource Test -Failed :" + e.getMessage());
+            log.error("Registry API Delete Resource Test -Failed :" + e);
+            throw new RegistryException("Registry API Delete Resource Test -Failed :" + e);
         }
     }
 
@@ -477,8 +477,8 @@ public class TestResources {
             deleteResources("/c20");
             log.info("**************Registry API Delete Collection Test - Passed **************");
         } catch (RegistryException e) {
-            log.error("Registry API Delete Collection Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Delete Collection Test -Failed :" + e.getMessage());
+            log.error("Registry API Delete Collection Test - Failed :" + e);
+            throw new RegistryException("Registry API Delete Collection Test -Failed :" + e);
         }
     }
 
@@ -522,8 +522,8 @@ public class TestResources {
             deleteResources("/d11");
             log.info("************Registry API Add a Spaces to a resource Name Test - Passed*********************");
         } catch (RegistryException e) {
-            log.error("Registry API Add a Spaces to a resource Name Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Add a Spaces to a resource Name Test - Failed :" + e.getMessage());
+            log.error("Registry API Add a Spaces to a resource Name Test - Failed :" + e);
+            throw new RegistryException("Registry API Add a Spaces to a resource Name Test - Failed :" + e);
         }
     }
 
@@ -569,8 +569,8 @@ public class TestResources {
             deleteResources("/d25");
             log.info("******************Registry API Add Resource From URL Test -Passed ************************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Resource From URL Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Add Resource From URL Test - Failed :" + e.getMessage());
+            log.error("Registry API Add Resource From URL Test - Failed :" + e);
+            throw new RegistryException("Registry API Add Resource From URL Test - Failed :" + e);
         }
 
     }
@@ -635,8 +635,8 @@ public class TestResources {
             deleteResources("/d33");
             log.info("************** Registry API Rename Resource Test = Passed*********************");
         } catch (RegistryException e) {
-            log.error("Registry API Rename Resource Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Rename Resource Test - Failed :" + e.getMessage());
+            log.error("Registry API Rename Resource Test -Failed :" + e);
+            throw new RegistryException("Registry API Rename Resource Test - Failed :" + e);
         }
     }
 
@@ -705,8 +705,8 @@ public class TestResources {
             registry.delete("/d40");
             log.info("***************Registry API Delete and Update Resource Test - Passed *********************");
         } catch (RegistryException e) {
-            log.error("Registry API Delete and Update Resource Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Delete and Update Resource Test - Failed :" + e.getMessage());
+            log.error("Registry API Delete and Update Resource Test -Failed :" + e);
+            throw new RegistryException("Registry API Delete and Update Resource Test - Failed :" + e);
         }
 
     }
@@ -749,8 +749,8 @@ public class TestResources {
             deleteResources("/m11");
             log.info("********************Registry API Resource multiple Properties Test - Passed **********************");
         } catch (RegistryException e) {
-            log.error("Registry API Resource multiple Properties Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Resource multiple Properties Test - Failed :" + e.getMessage());
+            log.error("Registry API Resource multiple Properties Test - Failed :" + e);
+            throw new RegistryException("Registry API Resource multiple Properties Test - Failed :" + e);
         }
     }
 
@@ -788,8 +788,8 @@ public class TestResources {
             log.info("******************Registry API Collection multiple Properties Test - Passed ******************");
         }
         catch (RegistryException e) {
-            log.error("Registry API Collection multiple Properties Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Collection multiple Properties Test - Failed :" + e.getMessage());
+            log.error("Registry API Collection multiple Properties Test - Failed :" + e);
+            throw new RegistryException("Registry API Collection multiple Properties Test - Failed :" + e);
         }
 
     }
@@ -813,8 +813,8 @@ public class TestResources {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

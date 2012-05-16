@@ -43,11 +43,11 @@ public class GregRemoteRegistryProvider {
         try {
             registry = new RemoteRegistry(new URL(registryURL), username, password);
         } catch (RegistryException e) {
-            log.error("Registry API RegistryException thrown :" + e.getMessage());
-            throw new RegistryException("Registry API RegistryException thrown :" + e.getMessage());
+            log.error("Registry API RegistryException thrown :" + e);
+            throw new RegistryException("Registry API RegistryException thrown :" + e);
         } catch (MalformedURLException e) {
-            log.error("Registry API MalformedURLException thrown :" + e.getMessage());
-            throw new MalformedURLException("Registry API MalformedURLException thrown :" + e.getMessage());
+            log.error("Registry API MalformedURLException thrown :" + e);
+            throw new MalformedURLException("Registry API MalformedURLException thrown :" + e);
 
         }
         return registry;

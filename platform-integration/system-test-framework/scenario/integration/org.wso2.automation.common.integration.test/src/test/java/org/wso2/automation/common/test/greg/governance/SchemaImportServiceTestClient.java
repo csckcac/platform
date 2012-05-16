@@ -88,11 +88,11 @@ public class SchemaImportServiceTestClient {
         try {
             remote_registry = new RemoteRegistry(new URL(registryURL), username, password);
         } catch (RegistryException e) {
-            log.error("Failed to create Remote Registry:" + e.getMessage());
-            throw new RegistryException("Failed to create Remote Registry:" + e.getMessage());
+            log.error("Failed to create Remote Registry:" + e);
+            throw new RegistryException("Failed to create Remote Registry:" + e);
         } catch (MalformedURLException e) {
-            log.error("Failed to create Remote Registry:" + e.getMessage());
-            throw new MalformedURLException("Failed to create Remote Registry:" + e.getMessage());
+            log.error("Failed to create Remote Registry:" + e);
+            throw new MalformedURLException("Failed to create Remote Registry:" + e);
         }
 
         deleteSchema();   //  Delete Schemas already existing
@@ -126,8 +126,8 @@ public class SchemaImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path2), "Schema exists at " + schema_path2);
             log.info("SchemaImportServiceTestClient testAddPatientSchema()- Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add Patient Schema  :" + e.getMessage());
-            throw new RegistryException("Failed to add Patient Schema  :" + e.getMessage());
+            log.error("Failed to add Patient Schema  :" + e);
+            throw new RegistryException("Failed to add Patient Schema  :" + e);
         }
     }
 
@@ -151,8 +151,8 @@ public class SchemaImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path), "Schema exists at " + schema_path);
             log.info("SchemaImportServiceTestClient testAddBookSchema()- Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add Book Schema  :" + e.getMessage());
-            throw new RegistryException("Failed to add Book Schema  :" + e.getMessage());
+            log.error("Failed to add Book Schema  :" + e);
+            throw new RegistryException("Failed to add Book Schema  :" + e);
         }
     }
 
@@ -182,11 +182,11 @@ public class SchemaImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path), "Schema exists at " + schema_path);
             log.info("SchemaImportServiceTestClient testAddListing3Schema()- Passed");
         } catch (GovernanceException e) {
-            log.error("Failed to add Listing3 Schema:" + e.getMessage());
-            throw new GovernanceException("Failed to add Listing3 Schema:" + e.getMessage());
+            log.error("Failed to add Listing3 Schema:" + e);
+            throw new GovernanceException("Failed to add Listing3 Schema:" + e);
         } catch (RegistryException e) {
-            log.error("Failed to add Listing3 Schema:" + e.getMessage());
-            throw new RegistryException("Failed to add Listing3 Schema:" + e.getMessage());
+            log.error("Failed to add Listing3 Schema:" + e);
+            throw new RegistryException("Failed to add Listing3 Schema:" + e);
         }
     }
 
@@ -209,11 +209,11 @@ public class SchemaImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path), "Schema exists at " + schema_path);
             log.info("SchemaImportServiceTestClient testAddListing4Schema()- Passed");
         } catch (GovernanceException e) {
-            log.error("Failed to add Listing4 Schema:" + e.getMessage());
-            throw new GovernanceException("Failed to add Listing4 Schema:" + e.getMessage());
+            log.error("Failed to add Listing4 Schema:" + e);
+            throw new GovernanceException("Failed to add Listing4 Schema:" + e);
         } catch (RegistryException e) {
-            log.error("Failed to add Listing4 Schema:" + e.getMessage());
-            throw new RegistryException("Failed to add Listing4 Schema:" + e.getMessage());
+            log.error("Failed to add Listing4 Schema:" + e);
+            throw new RegistryException("Failed to add Listing4 Schema:" + e);
         }
     }
 
@@ -236,11 +236,11 @@ public class SchemaImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path), "Schema exists at " + schema_path);
             log.info("SchemaImportServiceTestClient testAddPurchasingSchema()- Passed");
         } catch (GovernanceException e) {
-            log.error("Failed to add Purchasing Schema:" + e.getMessage());
-            throw new GovernanceException("Failed to add Purchasing Schema:" + e.getMessage());
+            log.error("Failed to add Purchasing Schema:" + e);
+            throw new GovernanceException("Failed to add Purchasing Schema:" + e);
         } catch (RegistryException e) {
-            log.error("Failed to add Purchasing Schema:" + e.getMessage());
-            throw new RegistryException("Failed to add Purchasing Schema:" + e.getMessage());
+            log.error("Failed to add Purchasing Schema:" + e);
+            throw new RegistryException("Failed to add Purchasing Schema:" + e);
         }
     }
 
@@ -262,8 +262,8 @@ public class SchemaImportServiceTestClient {
             assertFalse(remote_registry.resourceExists(schema_path), "Schema exists at " + schema_path);
             log.info("SchemaImportServiceTestClient testAddSchemafromFile()- Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add Purchasing Schema from File:" + e.getMessage());
-            throw new RegistryException("Failed to add Purchasing Schema from File:" + e.getMessage());
+            log.error("Failed to add Purchasing Schema from File:" + e);
+            throw new RegistryException("Failed to add Purchasing Schema from File:" + e);
         }
     }
 
@@ -277,8 +277,8 @@ public class SchemaImportServiceTestClient {
             schemaManager.addSchema(schema);
             log.info("Schema was added successfully");
         } catch (GovernanceException e) {
-            log.error("Failed to create Schema:" + e.getMessage());
-            throw new GovernanceException("Failed to create Schema:" + e.getMessage());
+            log.error("Failed to create Schema:" + e);
+            throw new GovernanceException("Failed to create Schema:" + e);
         }
     }
 
@@ -288,8 +288,8 @@ public class SchemaImportServiceTestClient {
                 registry.delete("/_system/governance/trunk/schemas");
             }
         } catch (RegistryException e) {
-            log.error("Failed to Delete Schemas :" + e.getMessage());
-            throw new RegistryException("Failed to Delete Schemas :" + e.getMessage());
+            log.error("Failed to Delete Schemas :" + e);
+            throw new RegistryException("Failed to Delete Schemas :" + e);
         }
     }
 
@@ -303,8 +303,8 @@ public class SchemaImportServiceTestClient {
             assertEquals(resource.getProperty("targetNamespace"), property2, "Schema Property - targetNamespace");
             assertEquals(resource.getProperty("creator"), property3, "Schema Property - Creator");
         } catch (RegistryException e) {
-            log.error("Failed to assert Schema Properties:" + e.getMessage());
-            throw new RegistryException("Failed to assert Schema Properties:" + e.getMessage());
+            log.error("Failed to assert Schema Properties:" + e);
+            throw new RegistryException("Failed to assert Schema Properties:" + e);
         }
     }
 
@@ -318,8 +318,8 @@ public class SchemaImportServiceTestClient {
             assertTrue(content.indexOf(keyword1) > 0, "Assert Content Schema file - key word 1");
             assertTrue(content.indexOf(keyword2) > 0, "Assert Content Schema file - key word 2");
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to assert Schema content :" + e.getMessage());
-            throw new RegistryException("Failed to assert Schema content :" + e.getMessage());
+            log.error("Failed to assert Schema content :" + e);
+            throw new RegistryException("Failed to assert Schema content :" + e);
         }
     }
 

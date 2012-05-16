@@ -48,7 +48,7 @@ public class WebAppWorker extends Thread {
             deployerUtil.warFileUploder(session, backendURL, filePath);
 
         } catch (RemoteException e) {
-            fail("Webapp deployment fail " + e.getMessage());
+            fail("Webapp deployment fail " + e);
         }
     }
 

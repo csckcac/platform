@@ -79,17 +79,17 @@ public class GRegServiceCreatorSeleniumTest {
             userLogout();
             log.info("*********GReg Stratos - Add Simple Service Test - Passed****************");
         } catch (AssertionFailedError e) {
-            log.info("Add Simple Service Test Failed :" + e.getMessage());
+            log.info("Add Simple Service Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Add Simple Service Test Failed :" + e.getMessage());
+            throw new AssertionFailedError("Add Simple Service Test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("Add Simple Service Test Failed :" + e.getMessage());
+            log.info("Add Simple Service Test Failed :" + e);
             userLogout();
-            throw new WebDriverException("Add Simple Service Test Failed :" + e.getMessage());
+            throw new WebDriverException("Add Simple Service Test Failed :" + e);
         } catch (Exception e) {
-            log.info("Add Simple Service Test Failed:" + e.getMessage());
+            log.info("Add Simple Service Test Failed:" + e);
             userLogout();
-            throw new Exception("Add Simple Service Test Failed :" + e.getMessage());
+            throw new Exception("Add Simple Service Test Failed :" + e);
         }
     }
 

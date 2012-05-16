@@ -70,8 +70,8 @@ public class SchemaUploadServiceTestClient {
             verifyResourceDelete(schema_path);                                        //assert resources have been proprly deleted
             log.info("***************Multi Tenancy Schema Upload Service Test Client - Passed*****************");
         } catch (RegistryException e) {
-            log.error("Multi Tenancy Schema Upload Service Test Client - Failed:" + e.getMessage());
-            throw new RegistryException("Multi Tenancy Schema Upload Service Test Client - Failed:" + e.getMessage());
+            log.error("Multi Tenancy Schema Upload Service Test Client - Failed:" + e);
+            throw new RegistryException("Multi Tenancy Schema Upload Service Test Client - Failed:" + e);
         }
     }
 
@@ -81,8 +81,8 @@ public class SchemaUploadServiceTestClient {
             registry.delete("/_system/governance/trunk/schemas");
             registry_diffDomainUser1.delete("/_system/governance/trunk/schemas");
         } catch (RegistryException e) {
-            log.error("Schema Delete functionality -Failed:" + e.getMessage());
-            throw new RegistryException("Schema Delete Functionality -Failed:" + e.getMessage());
+            log.error("Schema Delete functionality -Failed:" + e);
+            throw new RegistryException("Schema Delete Functionality -Failed:" + e);
         }
     }
 
@@ -96,8 +96,8 @@ public class SchemaUploadServiceTestClient {
             schemaManager.addSchema(schema);
             log.info("Schema was added successfully");
         } catch (GovernanceException e) {
-            log.error("Unable to create Schema:" + e.getMessage());
-            throw new RegistryException("Unable to Create Schema:" + e.getMessage());
+            log.error("Unable to create Schema:" + e);
+            throw new RegistryException("Unable to Create Schema:" + e);
         }
     }
 
@@ -111,8 +111,8 @@ public class SchemaUploadServiceTestClient {
             assertEquals(resource_adminUser.getProperty("targetNamespace"), property2, "Schema Property - targetNamespace");
             assertEquals(resource_adminUser.getProperty("creator"), property3, "Schema Property - Creator");
         } catch (RegistryException e) {
-            log.error("propertyAssertion adminUser Exception thrown:" + e.getMessage());
-            throw new RegistryException("propertyAssertion adminUser Exception thrown:" + e.getMessage());
+            log.error("propertyAssertion adminUser Exception thrown:" + e);
+            throw new RegistryException("propertyAssertion adminUser Exception thrown:" + e);
         }
 
         try {
@@ -121,14 +121,14 @@ public class SchemaUploadServiceTestClient {
             assertEquals(resource_testUser.getProperty("targetNamespace"), property2, "Schema Property - targetNamespace");
             assertEquals(resource_testUser.getProperty("creator"), property3, "Schema Property - Creator");
         } catch (RegistryException e) {
-            log.error("propertyAssertion testUser Exception thrown:" + e.getMessage());
-            throw new RegistryException("propertyAssertion testUser Exception thrown:" + e.getMessage());
+            log.error("propertyAssertion testUser Exception thrown:" + e);
+            throw new RegistryException("propertyAssertion testUser Exception thrown:" + e);
         }
 
         try {
             resource_diffDomainUser = registry_diffDomainUser1.get(schema_path);
         } catch (RegistryException e) {
-            log.info("propertyAssertion diffDomainUser Exception thrown:" + e.getMessage());
+            log.info("propertyAssertion diffDomainUser Exception thrown:" + e);
             //registry null exception is caught to assert resource does not exists:
             assertNull(resource_diffDomainUser);
         }
@@ -143,8 +143,8 @@ public class SchemaUploadServiceTestClient {
             // Assert differnt doamin user 1
             assertFalse(registry_diffDomainUser1.resourceExists(schema_path), "schema exists:");
         } catch (RegistryException e) {
-            log.error("verifyResourceExists Exception thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourceExists Exception thrown:" + e.getMessage());
+            log.error("verifyResourceExists Exception thrown:" + e);
+            throw new RegistryException("verifyResourceExists Exception thrown:" + e);
         }
     }
 
@@ -157,8 +157,8 @@ public class SchemaUploadServiceTestClient {
             // Assert differnt doamin user 1
             assertFalse(registry_diffDomainUser1.resourceExists(schema_path), "wsdl exists:");
         } catch (RegistryException e) {
-            log.error("verifyResourceExists Exception thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourceExists Exception thrown:" + e.getMessage());
+            log.error("verifyResourceExists Exception thrown:" + e);
+            throw new RegistryException("verifyResourceExists Exception thrown:" + e);
         }
     }
 
@@ -175,8 +175,8 @@ public class SchemaUploadServiceTestClient {
             assertTrue(content_adminUser.indexOf(keyword1) > 0, "Assert Content Schema file - key word 1");
             assertTrue(content_adminUser.indexOf(keyword2) > 0, "Assert Content Schema file - key word 2");
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("schemaContentAssertion adminUser Registry Exception thrown:" + e.getMessage());
-            throw new RegistryException("schemaContentAssertion adminUser Registry Exception thrown:" + e.getMessage());
+            log.error("schemaContentAssertion adminUser Registry Exception thrown:" + e);
+            throw new RegistryException("schemaContentAssertion adminUser Registry Exception thrown:" + e);
         }
 
         try {
@@ -186,8 +186,8 @@ public class SchemaUploadServiceTestClient {
             assertTrue(content_testUser.indexOf(keyword1) > 0, "Assert Content Schema file - key word 1");
             assertTrue(content_testUser.indexOf(keyword2) > 0, "Assert Content Schema file - key word 2");
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("schemaContentAssertion testUser Registry Exception thrown:" + e.getMessage());
-            throw new RegistryException("schemaContentAssertion testUser Registry Exception thrown:" + e.getMessage());
+            log.error("schemaContentAssertion testUser Registry Exception thrown:" + e);
+            throw new RegistryException("schemaContentAssertion testUser Registry Exception thrown:" + e);
         }
 
         try {
@@ -197,7 +197,7 @@ public class SchemaUploadServiceTestClient {
             assertTrue(content_adminUser.indexOf(keyword1) > 0, "Assert Content Schema file - key word 1");
             assertTrue(content_adminUser.indexOf(keyword2) > 0, "Assert Content Schema file - key word 2");
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.info("propertyAssertion diffDomainUser Exception thrown:" + e.getMessage());
+            log.info("propertyAssertion diffDomainUser Exception thrown:" + e);
             //registry null exception is caught to assert resource does not exists:
             assertNull(content_diffDomainUser);
         }

@@ -21,7 +21,7 @@ public class AdminServiceGadgetDashbordService {
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed isSessionValid test" + e.getMessage());
+            Assert.fail("Failed to executed isSessionValid test" + e);
         }
     }
 
@@ -39,7 +39,7 @@ public class AdminServiceGadgetDashbordService {
             log.info("Successfully executed getDefaultGadgetUrlSet test");
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed getDefaultGadgetUrlSet test" + e.getMessage());
+            Assert.fail("Failed to executed getDefaultGadgetUrlSet test" + e);
         }
     }
 
@@ -52,7 +52,7 @@ public class AdminServiceGadgetDashbordService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed getDashboardContent test" + e.getMessage());
+            Assert.fail("Failed to executed getDashboardContent test" + e);
         }
     }
 
@@ -70,7 +70,7 @@ public class AdminServiceGadgetDashbordService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed getTabLayout test" + e.getMessage());
+            Assert.fail("Failed to executed getTabLayout test" + e);
         }
     }
 
@@ -90,7 +90,7 @@ public class AdminServiceGadgetDashbordService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to execute getGadgetLayout test" + e.getMessage());
+            Assert.fail("Failed to execute getGadgetLayout test" + e);
         }
 
     }
@@ -108,7 +108,7 @@ public class AdminServiceGadgetDashbordService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to execute isReadOnlyMode test" + e.getMessage());
+            Assert.fail("Failed to execute isReadOnlyMode test" + e);
         }
     }
 
@@ -127,7 +127,7 @@ public class AdminServiceGadgetDashbordService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed populateDefaultThreeColumnLayout test" + e.getMessage());
+            Assert.fail("Failed to executed populateDefaultThreeColumnLayout test" + e);
         }
     }
 
@@ -146,7 +146,7 @@ public class AdminServiceGadgetDashbordService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed setGadgetPrefs test" + e.getMessage());
+            Assert.fail("Failed to executed setGadgetPrefs test" + e);
         }
     }
 
@@ -165,7 +165,7 @@ public class AdminServiceGadgetDashbordService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed getGadgetPrefs test" + e.getMessage());
+            Assert.fail("Failed to executed getGadgetPrefs test" + e);
         }
     }
 
@@ -186,7 +186,7 @@ public class AdminServiceGadgetDashbordService {
             log.info("Successfully executed getGadgetUrlsToLayout test");
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed getGadgetUrlsToLayout test" + e.getMessage());
+            Assert.fail("Failed to executed getGadgetUrlsToLayout test" + e);
         }
     }
 
@@ -199,7 +199,7 @@ public class AdminServiceGadgetDashbordService {
             log.info("Successfully executed addNewTab test");
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed addNewTab test" + e.getMessage());
+            Assert.fail("Failed to executed addNewTab test" + e);
         }
         return tabID;
     }
@@ -220,7 +220,7 @@ public class AdminServiceGadgetDashbordService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to execute getTabTitle test" + e.getMessage());
+            Assert.fail("Failed to execute getTabTitle test" + e);
         }
         return tabTitle;
     }
@@ -240,7 +240,7 @@ public class AdminServiceGadgetDashbordService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to execute removeTab test" + e.getMessage());
+            Assert.fail("Failed to execute removeTab test" + e);
         }
     }
 
@@ -253,7 +253,7 @@ public class AdminServiceGadgetDashbordService {
             log.info("Successfully executed duplicateTab test");
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed duplicateTab test" + e.getMessage());
+            Assert.fail("Failed to executed duplicateTab test" + e);
         }
         return tabID;
     }
@@ -272,7 +272,7 @@ public class AdminServiceGadgetDashbordService {
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed addGadgetToUser test" + e.getMessage());
+            Assert.fail("Failed to executed addGadgetToUser test" + e);
         }
 
     }

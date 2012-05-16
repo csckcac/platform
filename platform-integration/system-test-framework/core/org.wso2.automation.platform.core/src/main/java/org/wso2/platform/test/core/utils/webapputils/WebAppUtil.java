@@ -83,8 +83,8 @@ public class WebAppUtil {
             }
 
         } catch (IOException e) {
-            log.error("Unable to wait for webapp deployment: IO Exception" + e.getMessage());
-            throw new IOException("Unable to wait for webapp deployment" + e.getMessage());
+            log.error("Unable to wait for webapp deployment: IO Exception" + e);
+            throw new IOException("Unable to wait for webapp deployment" + e);
         }
     }
 
@@ -105,8 +105,8 @@ public class WebAppUtil {
                 }
             }
         } catch (IOException e) {
-            log.error("Unable to wait for webapp deployment" + e.getMessage());
-            throw new IOException("Unable to wait for webapp deployment" + e.getMessage());
+            log.error("Unable to wait for webapp deployment" + e);
+            throw new IOException("Unable to wait for webapp deployment" + e);
         }
     }
 }

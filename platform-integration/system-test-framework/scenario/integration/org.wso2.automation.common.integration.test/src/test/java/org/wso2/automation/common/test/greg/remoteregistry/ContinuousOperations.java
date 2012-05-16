@@ -68,11 +68,11 @@ public class ContinuousOperations {
                 Thread.sleep(100);
                 deleteResources("/con-delete");
             } catch (RegistryException e) {
-                log.error("Registry API Continous Delete test - Failed :" + e.getMessage());
-                throw new RegistryException("Registry API Continous Delete test - Failed" + e.getMessage());
+                log.error("Registry API Continous Delete test - Failed :" + e);
+                throw new RegistryException("Registry API Continous Delete test - Failed" + e);
             } catch (InterruptedException e) {
-                log.error("Registry API Continous Delete test - Failed :" + e.getMessage());
-                throw new InterruptedException("Registry API Continous Delete test - Failed:" + e.getMessage());
+                log.error("Registry API Continous Delete test - Failed :" + e);
+                throw new InterruptedException("Registry API Continous Delete test - Failed:" + e);
             }
         }
         log.info("****************Registry API Continous Delete test -Passed***************");
@@ -110,11 +110,11 @@ public class ContinuousOperations {
                 Thread.sleep(100);
                 deleteResources("/con-delete");
             } catch (RegistryException e) {
-                log.error("Registry API Continous Update test - Failed :" + e.getMessage());
-                throw new RegistryException("Registry API Continous Update test - Failed:" + e.getMessage());
+                log.error("Registry API Continous Update test - Failed :" + e);
+                throw new RegistryException("Registry API Continous Update test - Failed:" + e);
             } catch (InterruptedException e) {
-                log.error("Registry API Continous Update test - Failed :" + e.getMessage());
-                throw new InterruptedException("Registry API Continous Update test - Failed:" + e.getMessage());
+                log.error("Registry API Continous Update test - Failed :" + e);
+                throw new InterruptedException("Registry API Continous Update test - Failed:" + e);
             }
 
         }
@@ -133,8 +133,8 @@ public class ContinuousOperations {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 }

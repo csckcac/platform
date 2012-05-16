@@ -134,7 +134,7 @@ public class DataSourceAdminService {
             properties.loadFromXML(in);
             return properties;
         } catch (IOException e) {
-            throw new RuntimeException("IOException while reading DataSource information" + e.getMessage(), e);
+            throw new RuntimeException("IOException while reading DataSource information" + e, e);
         } finally {
             if (in != null) {
                 try {
@@ -173,9 +173,9 @@ public class DataSourceAdminService {
             return builder.getDocumentElement();
 
         } catch (XMLStreamException e) {
-            throw new RuntimeException("Error Creating a OMElement from properties : " + properties + ":" + e.getMessage(), e);
+            throw new RuntimeException("Error Creating a OMElement from properties : " + properties + ":" + e, e);
         } catch (IOException e) {
-            throw new RuntimeException("Error Creating a OMElement from properties : " + properties + ":" + e.getMessage(), e);
+            throw new RuntimeException("Error Creating a OMElement from properties : " + properties + ":" + e, e);
         } finally {
             if (baos != null) {
                 try {

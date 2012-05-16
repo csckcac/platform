@@ -80,8 +80,8 @@ public class BrowserManager {
         try {
             url = new URL(remoteWebDriverURL);
         } catch (MalformedURLException e) {
-            log.error("Malformed URL " + e.getMessage());
-            throw new MalformedURLException("Malformed URL " + e.getMessage());
+            log.error("Malformed URL " + e);
+            throw new MalformedURLException("Malformed URL " + e);
         }
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setJavascriptEnabled(true);

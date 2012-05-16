@@ -341,7 +341,7 @@ public class JmeterCore extends AbstractMojo {
                     throw new MojoExecutionException("Test failed", e);
                 }
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println(e);
 
             } finally {
                 System.setSecurityManager(oldManager);

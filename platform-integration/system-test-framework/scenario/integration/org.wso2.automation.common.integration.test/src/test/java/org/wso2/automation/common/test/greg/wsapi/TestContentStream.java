@@ -60,11 +60,11 @@ public class TestContentStream {
             deleteResources("/wso2registry");
             log.info("**************WS-API Put Resource as StreamXML test - Passed**************");
         } catch (FileNotFoundException e) {
-            log.error("WS-API Put Resource as StreamXML test - Fail :" + e.getMessage());
-            throw new FileNotFoundException("WS-API Put Resource as StreamXML test- Fail:" + e.getMessage());
+            log.error("WS-API Put Resource as StreamXML test - Fail :" + e);
+            throw new FileNotFoundException("WS-API Put Resource as StreamXML test- Fail:" + e);
         } catch (RegistryException e) {
-            log.error("WS-API Put Resource as StreamXML test - Fail :" + e.getMessage());
-            throw new RegistryException("WS-API Put Resource as StreamXML test - Fail:" + e.getMessage());
+            log.error("WS-API Put Resource as StreamXML test - Fail :" + e);
+            throw new RegistryException("WS-API Put Resource as StreamXML test - Fail:" + e);
         }
     }
 
@@ -97,8 +97,8 @@ public class TestContentStream {
             deleteResources("/content");
             log.info("*************WS-API Content Streaming test - Passed******************");
         } catch (RegistryException e) {
-            log.error("contentStreaming RegistryException thrown :" + e.getMessage());
-            throw new RegistryException("WS-API Put Resource as StreamXML test - Fail:" + e.getMessage());
+            log.error("contentStreaming RegistryException thrown :" + e);
+            throw new RegistryException("WS-API Put Resource as StreamXML test - Fail:" + e);
         }
     }
 
@@ -124,11 +124,11 @@ public class TestContentStream {
             deleteResources("/wso2registry");
             log.info("**************WS-API set Contain StreamXML test - Passed ***************");
         } catch (FileNotFoundException e) {
-            log.error("WS-API set Contain StreamXML test - FAil :" + e.getMessage());
-            throw new FileNotFoundException("WS-API set Contain StreamXML test- Fail:" + e.getMessage());
+            log.error("WS-API set Contain StreamXML test - FAil :" + e);
+            throw new FileNotFoundException("WS-API set Contain StreamXML test- Fail:" + e);
         } catch (RegistryException e) {
-            log.error("WS-API set Contain StreamXML test-Fail :" + e.getMessage());
-            throw new RegistryException("WS-API set Contain StreamXML test- Fail:" + e.getMessage());
+            log.error("WS-API set Contain StreamXML test-Fail :" + e);
+            throw new RegistryException("WS-API set Contain StreamXML test- Fail:" + e);
         }
     }
 
@@ -144,8 +144,8 @@ public class TestContentStream {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

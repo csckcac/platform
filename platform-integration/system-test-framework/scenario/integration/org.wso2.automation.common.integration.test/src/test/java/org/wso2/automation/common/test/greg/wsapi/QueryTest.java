@@ -74,8 +74,8 @@ public class QueryTest {
             deleteResources(QUERY_EPR_BY_PATH);
             log.info("***********WS-API put Registry Queries test - Passed***********");
         } catch (Exception e) {
-            log.error("WS-API put Registry Queries test -fail :" + e.getMessage());
-            throw new Exception("WS-API put Registry Queries test -fail:" + e.getMessage());
+            log.error("WS-API put Registry Queries test -fail :" + e);
+            throw new Exception("WS-API put Registry Queries test -fail:" + e);
         }
 
     }
@@ -101,8 +101,8 @@ public class QueryTest {
             deleteResources("/Queries1");
             log.info("*************WS-API Execute Queries test - Passed*************");
         } catch (Exception e) {
-            log.error("WS-API Execute Queries test -fail:" + e.getMessage());
-            throw new Exception("WS-API Execute Queries test -fail:" + e.getMessage());
+            log.error("WS-API Execute Queries test -fail:" + e);
+            throw new Exception("WS-API Execute Queries test -fail:" + e);
         }
     }
 
@@ -116,8 +116,8 @@ public class QueryTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 
@@ -132,8 +132,8 @@ public class QueryTest {
                     RegistryConstants.RESOURCES_RESULT_TYPE);
             registry.put(path, q1);
         } catch (RegistryException e) {
-            log.error("storeSQLQuery RegistryException thrown-fail :" + e.getMessage());
-            throw new RegistryException("storeSQLQuery RegistryException thrown -fail:" + e.getMessage());
+            log.error("storeSQLQuery RegistryException thrown-fail :" + e);
+            throw new RegistryException("storeSQLQuery RegistryException thrown -fail:" + e);
         }
 
     }

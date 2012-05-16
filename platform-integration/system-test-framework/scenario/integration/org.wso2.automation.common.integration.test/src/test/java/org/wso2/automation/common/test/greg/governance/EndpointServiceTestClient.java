@@ -95,8 +95,8 @@ public class EndpointServiceTestClient {
             deleteResources(endpoint_path);
             log.info("EndpointServiceTestClient testAddWsdlWithEndpoints()- Passed");
         } catch (GovernanceException e) {
-            log.error("Failed to add WSDL:" + e.getMessage());
-            throw new RegistryException("Failed to add WSDL:" + e.getMessage());
+            log.error("Failed to add WSDL:" + e);
+            throw new RegistryException("Failed to add WSDL:" + e);
         }
     }
 
@@ -127,11 +127,11 @@ public class EndpointServiceTestClient {
             deleteResources(endpoint_path2);
             log.info("EndpointServiceTestClient testAddServiceWithEndpoints()- Passed");
         } catch (GovernanceException e) {
-            log.error("testAddServiceWithEndpoints GovernanceException Exception thrown:" + e.getMessage());
-            throw new GovernanceException("testAddServiceWithEndpoints-Governance Registry Exception thrown:" + e.getMessage());
+            log.error("testAddServiceWithEndpoints GovernanceException Exception thrown:" + e);
+            throw new GovernanceException("testAddServiceWithEndpoints-Governance Registry Exception thrown:" + e);
         } catch (RegistryException e) {
-            log.error("testAddServiceWithEndpoints RegistryException Exception thrown:" + e.getMessage());
-            throw new RegistryException("testAddServiceWithEndpoints-Registry Exception thrown:" + e.getMessage());
+            log.error("testAddServiceWithEndpoints RegistryException Exception thrown:" + e);
+            throw new RegistryException("testAddServiceWithEndpoints-Registry Exception thrown:" + e);
         }
 
     }
@@ -174,8 +174,8 @@ public class EndpointServiceTestClient {
             deleteResources(endpoint_path2);
             log.info("EndpointServiceTestClient testAttachEndpointsToService()- Passed");
         } catch (GovernanceException e) {
-            log.error("testAttachEndpointsToService GovernanceException Exception thrown:" + e.getMessage());
-            throw new RegistryException("testAttachEndpointsToService-Registry Exception thrown:" + e.getMessage());
+            log.error("testAttachEndpointsToService GovernanceException Exception thrown:" + e);
+            throw new RegistryException("testAttachEndpointsToService-Registry Exception thrown:" + e);
         }
     }
 
@@ -232,8 +232,8 @@ public class EndpointServiceTestClient {
             endpointManager.addEndpoint(endpoint1);
             log.info("Endpoint was successfully added");
         } catch (GovernanceException e) {
-            log.error("Unable add Endpoint:" + e.getMessage());
-            throw new GovernanceException("Unable to add Endpoint:" + e.getMessage());
+            log.error("Unable add Endpoint:" + e);
+            throw new GovernanceException("Unable to add Endpoint:" + e);
         }
     }
 
@@ -244,8 +244,8 @@ public class EndpointServiceTestClient {
             assertEquals(resource.getProperty("status1"), property1, "Endpoint Property - Status1 does not Exists :");
             assertEquals(resource.getProperty("status2"), property2, "Endpoint Property - Status2 does not Exists :");
         } catch (RegistryException e) {
-            log.error("propertyAssertion Exception thrown:" + e.getMessage());
-            throw new RegistryException("propertyAssertion-Registry Exception thrown:" + e.getMessage());
+            log.error("propertyAssertion Exception thrown:" + e);
+            throw new RegistryException("propertyAssertion-Registry Exception thrown:" + e);
         }
     }
 

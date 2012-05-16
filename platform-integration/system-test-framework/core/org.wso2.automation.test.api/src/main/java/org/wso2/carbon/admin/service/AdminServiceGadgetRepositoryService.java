@@ -59,7 +59,7 @@ public class AdminServiceGadgetRepositoryService {
             return returnGadget;
         } catch (Exception e) {
             e.printStackTrace();
-            Assert.fail("Failed to get gadget Data" + e.getMessage());
+            Assert.fail("Failed to get gadget Data" + e);
             return null;
         }
 
@@ -79,7 +79,7 @@ public class AdminServiceGadgetRepositoryService {
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed getGadgetFromPath test" + e.getMessage());
+            Assert.fail("Failed to executed getGadgetFromPath test" + e);
         }
     }
 
@@ -100,7 +100,7 @@ public class AdminServiceGadgetRepositoryService {
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed addGadgetToPortal test" + e.getMessage());
+            Assert.fail("Failed to executed addGadgetToPortal test" + e);
         }
     }
 
@@ -116,7 +116,7 @@ public class AdminServiceGadgetRepositoryService {
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed userHasGadget test" + e.getMessage());
+            Assert.fail("Failed to executed userHasGadget test" + e);
         }
 
     }
@@ -135,7 +135,7 @@ public class AdminServiceGadgetRepositoryService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed addCommentForGadget test" + e.getMessage());
+            Assert.fail("Failed to executed addCommentForGadget test" + e);
         }
     }
 
@@ -154,7 +154,7 @@ public class AdminServiceGadgetRepositoryService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed getCommentCountForGadget test" + e.getMessage());
+            Assert.fail("Failed to executed getCommentCountForGadget test" + e);
         }
     }
 
@@ -175,7 +175,7 @@ public class AdminServiceGadgetRepositoryService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed getCommentSetForGadget test" + e.getMessage());
+            Assert.fail("Failed to executed getCommentSetForGadget test" + e);
         }
         return gadgetxpath;
     }
@@ -196,7 +196,7 @@ public class AdminServiceGadgetRepositoryService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed deleteCommentOnGadget test" + e.getMessage());
+            Assert.fail("Failed to executed deleteCommentOnGadget test" + e);
         }
     }
 
@@ -215,7 +215,7 @@ public class AdminServiceGadgetRepositoryService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed addRatingForGadget test" + e.getMessage());
+            Assert.fail("Failed to executed addRatingForGadget test" + e);
         }
     }
 
@@ -232,7 +232,7 @@ public class AdminServiceGadgetRepositoryService {
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed getRatingOnGadget test" + e.getMessage());
+            Assert.fail("Failed to executed getRatingOnGadget test" + e);
         }
     }
 
@@ -250,7 +250,7 @@ public class AdminServiceGadgetRepositoryService {
 
         } catch (RemoteException e) {
             e.printStackTrace();
-            Assert.fail("Failed to executed deleteGadgetFromRepo test" + e.getMessage());
+            Assert.fail("Failed to executed deleteGadgetFromRepo test" + e);
         }
     }
 

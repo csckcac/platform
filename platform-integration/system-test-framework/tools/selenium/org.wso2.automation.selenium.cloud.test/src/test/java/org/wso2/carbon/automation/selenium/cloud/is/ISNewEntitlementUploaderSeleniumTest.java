@@ -94,19 +94,19 @@ public class ISNewEntitlementUploaderSeleniumTest {
             userLogout();
             log.info("********IS Stratos XACML Policy IIA001 Uploader Test -Passed **************");
         } catch (AssertionFailedError e) {
-            log.info("XACML Policy IIA001 Uploader Test Failed:" + e.getMessage());
+            log.info("XACML Policy IIA001 Uploader Test Failed:" + e);
             userLogout();
             throw new AssertionFailedError("XACML Policy IIA001 Uploader Test Failed:" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("XACML Policy IIA001 Uploader Test Failed :" + e.getMessage());
+            log.info("XACML Policy IIA001 Uploader Test Failed :" + e);
             userLogout();
             throw new WebDriverException("XACML Policy IIA001 Uploader Test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("XACML Policy IIA001 Uploader Test Failed:" + e.getMessage());
+            log.info("XACML Policy IIA001 Uploader Test Failed:" + e);
             userLogout();
-            throw new Exception("XACML Policy IIA001 Uploader Test Failed :" + e.getMessage());
+            throw new Exception("XACML Policy IIA001 Uploader Test Failed :" + e);
         }
 
     }
@@ -136,19 +136,19 @@ public class ISNewEntitlementUploaderSeleniumTest {
             userLogout();
             log.info("********IS Stratos XACML Policy IIA003 Uploader Test -Passed **************");
         } catch (AssertionFailedError e) {
-            log.info("XACML Policy IIA003 Uploader Test Failed:" + e.getMessage());
+            log.info("XACML Policy IIA003 Uploader Test Failed:" + e);
             userLogout();
             throw new AssertionFailedError("XACML Policy IIA003 Uploader Test Failed:" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("XACML Policy IIA003 Uploader Test Failed :" + e.getMessage());
+            log.info("XACML Policy IIA003 Uploader Test Failed :" + e);
             userLogout();
             throw new WebDriverException("XACML Policy IIA003 Uploader Test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("XACML Policy IIA003 Uploader Test Failed:" + e.getMessage());
+            log.info("XACML Policy IIA003 Uploader Test Failed:" + e);
             userLogout();
-            throw new Exception("XACML Policy IIA003 Uploader Test Failed :" + e.getMessage());
+            throw new Exception("XACML Policy IIA003 Uploader Test Failed :" + e);
         }
 
     }

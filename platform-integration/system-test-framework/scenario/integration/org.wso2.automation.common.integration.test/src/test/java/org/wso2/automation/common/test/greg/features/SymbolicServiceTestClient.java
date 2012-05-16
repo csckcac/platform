@@ -81,13 +81,13 @@ public class SymbolicServiceTestClient {
             admin_service_resource_admin.deleteResource(sessionCookie, targetPath);
             log.info("*************Add Symbolink to Root Level Collection test - Passed **********");
         } catch (RemoteException e) {
-            log.info("Add Symbolink to Root Level Collection test - Failed :" + e.getMessage());
+            log.info("Add Symbolink to Root Level Collection test - Failed :" + e);
             throw new RemoteException("Add Symbolink to Root Level Collection test - Failed :" +
-                                      e.getMessage());
+                                      e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.info("Add Symbolink to Root Level Collection test - Failed :" + e.getMessage());
+            log.info("Add Symbolink to Root Level Collection test - Failed :" + e);
             throw new ResourceAdminServiceExceptionException(
-                    "Add Symbolink to Root Level Collection test - Failed :" + e.getMessage());
+                    "Add Symbolink to Root Level Collection test - Failed :" + e);
         }
     }
 
@@ -125,13 +125,13 @@ public class SymbolicServiceTestClient {
             admin_service_resource_admin.deleteResource(sessionCookie, targetPath);
             log.info("*************Add Symbolink to Root Level Resource test - Passed **********");
         } catch (RemoteException e) {
-            log.info("Add Symbolink to Root Level Resource test - Failed :" + e.getMessage());
+            log.info("Add Symbolink to Root Level Resource test - Failed :" + e);
             throw new RemoteException("Add Symbolink to Root Level Resource test - Failed :" +
-                                      e.getMessage());
+                                      e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.info("Add Symbolink to Root Level Resource test - Failed :" + e.getMessage());
+            log.info("Add Symbolink to Root Level Resource test - Failed :" + e);
             throw new ResourceAdminServiceExceptionException(
-                    "Add Symbolink to Root Level Resource test - Failed :" + e.getMessage());
+                    "Add Symbolink to Root Level Resource test - Failed :" + e);
         }
 
 
@@ -170,13 +170,13 @@ public class SymbolicServiceTestClient {
             admin_service_resource_admin.deleteResource(sessionCookie, "/collection");
             log.info("*********Add Symbolink to Collection at General level test - Passed ********");
         } catch (RemoteException e) {
-            log.info("Add Symbolink to Collection at General level test - Failed :" + e.getMessage());
+            log.info("Add Symbolink to Collection at General level test - Failed :" + e);
             throw new RemoteException("Add Symbolink to Collection at General level test- Failed :" +
-                                      e.getMessage());
+                                      e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.info("Add Symbolink Collection at General level test - Failed :" + e.getMessage());
+            log.info("Add Symbolink Collection at General level test - Failed :" + e);
             throw new ResourceAdminServiceExceptionException(
-                    "Add Symbolink Collection at General level test - Failed :" + e.getMessage());
+                    "Add Symbolink Collection at General level test - Failed :" + e);
         }
     }
 
@@ -214,13 +214,13 @@ public class SymbolicServiceTestClient {
             admin_service_resource_admin.deleteResource(sessionCookie, "/resource");
             log.info("******Add Symbolink to Resource at General Level test - Passed ********");
         } catch (RemoteException e) {
-            log.info("Add Symbolink to Resource at General Level test - Failed :" + e.getMessage());
+            log.info("Add Symbolink to Resource at General Level test - Failed :" + e);
             throw new RemoteException("Add Symbolink to Resource at General Level test - Failed :" +
-                                      e.getMessage());
+                                      e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.info("Add Symbolink to Resource at General Level test - Failed :" + e.getMessage());
+            log.info("Add Symbolink to Resource at General Level test - Failed :" + e);
             throw new ResourceAdminServiceExceptionException(
-                    "Add Symbolink to Resource at General Level test - Failed :" + e.getMessage());
+                    "Add Symbolink to Resource at General Level test - Failed :" + e);
         }
     }
 }

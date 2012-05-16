@@ -83,19 +83,19 @@ public class GRegStratosResourceSeleniumTest {
             userLogout();
             log.info("********GReg Stratos - Add Resource To a Collection test - Passed********");
         } catch (AssertionFailedError e) {
-            log.info("Add Resource To a Collection test Failed :" + e.getMessage());
+            log.info("Add Resource To a Collection test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Add Resource To a Collection test Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Add Resource To a Collection test Failed :" + e.getMessage());
+            log.info("Add Resource To a Collection test Failed :" + e);
             userLogout();
             throw new WebDriverException("Add Resource To a Collection test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Add Resource To a Collection test Failed :" + e.getMessage());
+            log.info("Add Resource To a Collection test Failed :" + e);
             userLogout();
-            throw new Exception("Add Resource To a Collection test Failed :" + e.getMessage());
+            throw new Exception("Add Resource To a Collection test Failed :" + e);
         }
     }
 
@@ -120,19 +120,19 @@ public class GRegStratosResourceSeleniumTest {
             userLogout();
             log.info("********GReg Stratos - Add Comment To a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Add Comment To a Resource test Failed :" + e.getMessage());
+            log.info("Add Comment To a Resource test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Add Comment To a Resource test Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Add Comment To a Resource test Failed :" + e.getMessage());
+            log.info("Add Comment To a Resource test Failed :" + e);
             userLogout();
             throw new WebDriverException("Add Comment To a Resource test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Add Comment To a Resource test Failed :" + e.getMessage());
+            log.info("Add Comment To a Resource test Failed :" + e);
             userLogout();
-            throw new Exception("Add Comment To a Resource test Failed :" + e.getMessage());
+            throw new Exception("Add Comment To a Resource test Failed :" + e);
         }
     }
 
@@ -158,19 +158,19 @@ public class GRegStratosResourceSeleniumTest {
             userLogout();
             log.info("********GReg Stratos- Add Tag To a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Add Tag To a Resource test Failed :" + e.getMessage());
+            log.info("Add Tag To a Resource test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Add Tag To a Resource test Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Add Tag To a Resource test Failed :" + e.getMessage());
+            log.info("Add Tag To a Resource test Failed :" + e);
             userLogout();
             throw new WebDriverException("Add Tag To a Resource test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Add Tag To a Resource test Failed :" + e.getMessage());
+            log.info("Add Tag To a Resource test Failed :" + e);
             userLogout();
-            throw new Exception("Add Tag To a Resource test Failed :" + e.getMessage());
+            throw new Exception("Add Tag To a Resource test Failed :" + e);
         }
     }
 
@@ -199,19 +199,19 @@ public class GRegStratosResourceSeleniumTest {
             userLogout();
             log.info("********GReg Stratos -Add Life Cycle To a Resource test - Passed **********");
         } catch (AssertionFailedError e) {
-            log.info("Add Life Cycle To a Resource test Failed :" + e.getMessage());
+            log.info("Add Life Cycle To a Resource test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Add Life Cycle To a Resource test Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Add Life Cycle To a Resource test Failed :" + e.getMessage());
+            log.info("Add Life Cycle To a Resource test Failed :" + e);
             userLogout();
             throw new WebDriverException("Add Life Cycle To a Resource test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Add Life Cycle To a Resource test Failed :" + e.getMessage());
+            log.info("Add Life Cycle To a Resource test Failed :" + e);
             userLogout();
-            throw new Exception("Add Life Cycle To a Resource test Failed :" + e.getMessage());
+            throw new Exception("Add Life Cycle To a Resource test Failed :" + e);
         }
     }
 
@@ -233,19 +233,19 @@ public class GRegStratosResourceSeleniumTest {
             userLogout();
             log.info("********GReg Stratos - Add a Rating To a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Add a Rating To a Resource Failed :" + e.getMessage());
+            log.info("Add a Rating To a Resource Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Add a Rating To a Resource Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Add a Rating To a Resource Failed :" + e.getMessage());
+            log.info("Add a Rating To a Resource Failed :" + e);
             userLogout();
             throw new WebDriverException("Add a Rating To a Resource Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Add a Rating To a Resource Failed :" + e.getMessage());
+            log.info("Add a Rating To a Resource Failed :" + e);
             userLogout();
-            throw new Exception("Add a Rating To a Resource Failed :" + e.getMessage());
+            throw new Exception("Add a Rating To a Resource Failed :" + e);
         }
     }
 
@@ -269,19 +269,19 @@ public class GRegStratosResourceSeleniumTest {
             userLogout();
             log.info("********GReg Stratos - Rename a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Rename a Resource test Failed :" + e.getMessage());
+            log.info("Rename a Resource test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Rename a Resource test Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Rename a Resource test Failed :" + e.getMessage());
+            log.info("Rename a Resource test Failed :" + e);
             userLogout();
             throw new WebDriverException("Rename a Resource test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Rename a Resource test Failed :" + e.getMessage());
+            log.info("Rename a Resource test Failed :" + e);
             userLogout();
-            throw new Exception("Rename a Resource test Failed :" + e.getMessage());
+            throw new Exception("Rename a Resource test Failed :" + e);
         }
     }
 
@@ -316,19 +316,19 @@ public class GRegStratosResourceSeleniumTest {
             userLogout();
             log.info("********GReg Stratos - Move a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Move a Resource test Failed :" + e.getMessage());
+            log.info("Move a Resource test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Move a Resource test Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Move a Resource test Failed :" + e.getMessage());
+            log.info("Move a Resource test Failed :" + e);
             userLogout();
             throw new WebDriverException("Move a Resource test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Move a Resource test Failed :" + e.getMessage());
+            log.info("Move a Resource test Failed :" + e);
             userLogout();
-            throw new Exception("Move a Resource test Failed :" + e.getMessage());
+            throw new Exception("Move a Resource test Failed :" + e);
         }
     }
 
@@ -352,19 +352,19 @@ public class GRegStratosResourceSeleniumTest {
             userLogout();
             log.info("********GReg Stratos - Delete Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Delete Resource test Failed :" + e.getMessage());
+            log.info("Delete Resource test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Delete Resource test Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Delete Resource test Failed :" + e.getMessage());
+            log.info("Delete Resource test Failed :" + e);
             userLogout();
             throw new WebDriverException("Delete Resource test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Delete Resource test Failed :" + e.getMessage());
+            log.info("Delete Resource test Failed :" + e);
             userLogout();
-            throw new Exception("Delete Resource test Failed :" + e.getMessage());
+            throw new Exception("Delete Resource test Failed :" + e);
         }
     }
 
@@ -401,19 +401,19 @@ public class GRegStratosResourceSeleniumTest {
             userLogout();
             log.info("********GReg Stratos - Copy a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Copy a Resource test Failed :" + e.getMessage());
+            log.info("Copy a Resource test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Copy a Resource tes Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Copy a Resource test Failed :" + e.getMessage());
+            log.info("Copy a Resource test Failed :" + e);
             userLogout();
             throw new WebDriverException("Copy a Resource test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Copy a Resource test Failed :" + e.getMessage());
+            log.info("Copy a Resource test Failed :" + e);
             userLogout();
-            throw new Exception("Copy a Resource test Failed :" + e.getMessage());
+            throw new Exception("Copy a Resource test Failed :" + e);
         }
     }
 

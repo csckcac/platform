@@ -19,9 +19,9 @@ public class MBThread extends Thread {
         try {
             results.add(topicSubscriber.subscribe());
         } catch (NamingException e) {
-            Assert.fail("NamingException exception occurred while subscribing to queue: " + e.getMessage());
+            Assert.fail("NamingException exception occurred while subscribing to queue: " + e);
         } catch (JMSException e) {
-            Assert.fail("JMSException exception occurred while subscribing to queue: " + e.getMessage());
+            Assert.fail("JMSException exception occurred while subscribing to queue: " + e);
         }
     }
 }

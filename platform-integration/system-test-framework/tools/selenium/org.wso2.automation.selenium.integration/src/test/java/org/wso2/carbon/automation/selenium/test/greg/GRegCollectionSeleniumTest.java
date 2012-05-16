@@ -81,20 +81,20 @@ public class GRegCollectionSeleniumTest {
             log.info("********GRegCollectionSeleniumTest testAddCollection() - Passed ***********");
         } catch (WebDriverException e) {
             log.info("Failed to add collection to selenium_root: - WebDriver Exception :" +
-                     e.getMessage());
+                     e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_testAddCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
             throw new WebDriverException("Failed to add collection to selenium_root:" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Failed to add collection to selenium_root:- Fail :" + e.getMessage());
+            log.info("Failed to add collection to selenium_root:- Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_testAddCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new Exception("Failed to add collection to selenium_root:" + e.getMessage());
+            throw new Exception("Failed to add collection to selenium_root:" + e);
         }
     }
 
@@ -147,19 +147,19 @@ public class GRegCollectionSeleniumTest {
             log.info("********GRegCollectionSeleniumTest testAddComment() - Passed ***********");
 
         } catch (WebDriverException e) {
-            log.info("Failed to add a comment to collection  - WebDriver Exception :" + e.getMessage());
+            log.info("Failed to add a comment to collection  - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addComment");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new WebDriverException("Failed to add a comment to collection :" + e.getMessage());
+            throw new WebDriverException("Failed to add a comment to collection :" + e);
         } catch (Exception e) {
-            log.info("Failed to add a comment to collection " + e.getMessage());
+            log.info("Failed to add a comment to collection " + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addComment");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new Exception("Failed to add a comment to collection :" + e.getMessage());
+            throw new Exception("Failed to add a comment to collection :" + e);
         }
     }
 
@@ -202,19 +202,19 @@ public class GRegCollectionSeleniumTest {
             log.info("********GRegCollectionSeleniumTest addTagToCollection() - Passed ***********");
 
         } catch (WebDriverException e) {
-            log.info("Failed to apply tag  to collection - WebDriver Exception :" + e.getMessage());
+            log.info("Failed to apply tag  to collection - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addTagToCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new WebDriverException("Failed to apply tag  to collection :" + e.getMessage());
+            throw new WebDriverException("Failed to apply tag  to collection :" + e);
         } catch (Exception e) {
-            log.info("Failed to apply tag  to collection :" + e.getMessage());
+            log.info("Failed to apply tag  to collection :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addTagToCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new Exception("Failed to apply tag  to collection:" + e.getMessage());
+            throw new Exception("Failed to apply tag  to collection:" + e);
         }
     }
 
@@ -269,19 +269,19 @@ public class GRegCollectionSeleniumTest {
             log.info("********GRegCollectionSeleniumTest addLifeCycleToCollection() - Passed ***********");
 
         } catch (WebDriverException e) {
-            log.info("Failed to apply Lifecycle  to collection:- WebDriver Exception :" + e.getMessage());
+            log.info("Failed to apply Lifecycle  to collection:- WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addLifeCycleToCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new WebDriverException("Failed to apply Lifecycle  to collection:" + e.getMessage());
+            throw new WebDriverException("Failed to apply Lifecycle  to collection:" + e);
         } catch (Exception e) {
-            log.info("Failed to apply Lifecycle  to collection: :" + e.getMessage());
+            log.info("Failed to apply Lifecycle  to collection: :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addLifeCycleToCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new Exception("Failed to apply Lifecycle  to collection:" + e.getMessage());
+            throw new Exception("Failed to apply Lifecycle  to collection:" + e);
         }
     }
 
@@ -327,19 +327,19 @@ public class GRegCollectionSeleniumTest {
             log.info("********GRegCollectionSeleniumTest addRatingToCollection() - Passed ***********");
 
         } catch (WebDriverException e) {
-            log.info("Failed to add a rating to collection: - WebDriver Exception :" + e.getMessage());
+            log.info("Failed to add a rating to collection: - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addRatingToCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new WebDriverException("Failed to add a rating to collection:" + e.getMessage());
+            throw new WebDriverException("Failed to add a rating to collection:" + e);
         } catch (Exception e) {
-            log.info("Failed to add a rating to collection:- Fail :" + e.getMessage());
+            log.info("Failed to add a rating to collection:- Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addRatingToCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new Exception("Failed to add a rating to collection:" + e.getMessage());
+            throw new Exception("Failed to add a rating to collection:" + e);
         }
     }
 
@@ -380,20 +380,20 @@ public class GRegCollectionSeleniumTest {
             new GregUserLogout().userLogout(driver);
             log.info("********GRegCollectionSeleniumTest renameCollection() - Passed ***********");
         } catch (WebDriverException e) {
-            log.info("Failed to rename collection: - WebDriver Exception :" + e.getMessage());
+            log.info("Failed to rename collection: - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addRatingToCollection");
             Thread.sleep(5000L);
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new WebDriverException("Failed to rename collection:" + e.getMessage());
+            throw new WebDriverException("Failed to rename collection:" + e);
         } catch (Exception e) {
-            log.info("GRegCollectionSeleniumTest addRatingToCollection()- Fail :" + e.getMessage());
+            log.info("GRegCollectionSeleniumTest addRatingToCollection()- Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addRatingToCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new Exception("Failed to rename collection:" + e.getMessage());
+            throw new Exception("Failed to rename collection:" + e);
         }
 
     }
@@ -449,19 +449,19 @@ public class GRegCollectionSeleniumTest {
             log.info("********GRegCollectionSeleniumTest moveCollection() - Passed ***********");
         } catch (WebDriverException e) {
             log.info("GRegCollectionSeleniumTest moveCollection() - WebDriver Exception :" +
-                     e.getMessage());
+                     e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_moveCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new WebDriverException("Failed to Move Collection :" + e.getMessage());
+            throw new WebDriverException("Failed to Move Collection :" + e);
         } catch (Exception e) {
-            log.info("GRegCollectionSeleniumTest moveCollection()- Fail :" + e.getMessage());
+            log.info("GRegCollectionSeleniumTest moveCollection()- Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_moveCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new Exception("Failed to Move Collection :" + e.getMessage());
+            throw new Exception("Failed to Move Collection :" + e);
         }
     }
 
@@ -516,20 +516,20 @@ public class GRegCollectionSeleniumTest {
             log.info("********GRegCollectionSeleniumTest copyCollection() - Passed ***********");
         } catch (WebDriverException e) {
             log.info("GRegCollectionSeleniumTest moveCollection() - WebDriver Exception :"
-                     + e.getMessage());
+                     + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_copyCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new WebDriverException("Failed to Move Collection :" + e.getMessage());
+            throw new WebDriverException("Failed to Move Collection :" + e);
         } catch (Exception e) {
             log.info("GRegCollectionSeleniumTest copyCollection()- Fail :"
-                     + e.getMessage());
+                     + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_copyCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new Exception("Failed to Move Collection :" + e.getMessage());
+            throw new Exception("Failed to Move Collection :" + e);
         }
     }
 
@@ -565,22 +565,22 @@ public class GRegCollectionSeleniumTest {
             log.info("********GRegCollectionSeleniumTest deleteCollection() - Passed ***********");
         } catch (WebDriverException e) {
             log.info("GRegCollectionSeleniumTest deleteCollection() - WebDriver Exception :"
-                     + e.getMessage());
+                     + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_deleteCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
             throw new WebDriverException("Failed to find Location collection/resource path:"
-                                         + e.getMessage());
+                                         + e);
         } catch (Exception e) {
             log.info("GRegCollectionSeleniumTest deleteCollection()- Fail :"
-                     + e.getMessage());
+                     + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_deleteCollection");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
             throw new Exception("Failed to find Location collection/resource path:"
-                                + e.getMessage());
+                                + e);
         }
     }
 
@@ -605,15 +605,15 @@ public class GRegCollectionSeleniumTest {
 
         } catch (WebDriverException e) {
             log.info("GRegCollectionSeleniumTest-promoteState() - WebDriver Exception :" +
-                     e.getMessage());
+                     e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_promoteState");
-            throw new WebDriverException("Failed to promote Lifecycle :" + e.getMessage());
+            throw new WebDriverException("Failed to promote Lifecycle :" + e);
         } catch (Exception e) {
-            log.info("GRegCollectionSeleniumTest-promoteState() Fail :" + e.getMessage());
+            log.info("GRegCollectionSeleniumTest-promoteState() Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_promoteState");
-            throw new Exception("Failed to promote Lifecycle:" + e.getMessage());
+            throw new Exception("Failed to promote Lifecycle:" + e);
         }
     }
 
@@ -634,15 +634,15 @@ public class GRegCollectionSeleniumTest {
             //click on OK button
             selenium.click("//button");
         } catch (WebDriverException e) {
-            log.info("Failed to create a new collection:- WebDriver Exception :" + e.getMessage());
+            log.info("Failed to create a new collection:- WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addCollection");
-            throw new WebDriverException("Failed to create a new collection:" + e.getMessage());
+            throw new WebDriverException("Failed to create a new collection:" + e);
         } catch (Exception e) {
-            log.info("Failed to create a new collection: :" + e.getMessage());
+            log.info("Failed to create a new collection: :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addCollection");
-            throw new Exception("Failed to create a new collection:" + e.getMessage());
+            throw new Exception("Failed to create a new collection:" + e);
         }
     }
 
@@ -658,15 +658,15 @@ public class GRegCollectionSeleniumTest {
             assertTrue(selenium.isTextPresent("Metadata"), "Browse Detail View Page fail :");
             assertTrue(selenium.isTextPresent("Entries"), "Browse Detail View Page fail :");
         } catch (WebDriverException e) {
-            log.info("Failed to goto Detail view Tab- WebDriver Exception :" + e.getMessage());
+            log.info("Failed to goto Detail view Tab- WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_gotoDetailViewTab");
-            throw new WebDriverException("Failed to goto Detail view Tab:" + e.getMessage());
+            throw new WebDriverException("Failed to goto Detail view Tab:" + e);
         } catch (Exception e) {
-            log.info("Failed to goto Detail view Tab :" + e.getMessage());
+            log.info("Failed to goto Detail view Tab :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_gotoDetailViewTab");
-            throw new Exception("Failed to goto Detail view Tab:" + e.getMessage());
+            throw new Exception("Failed to goto Detail view Tab:" + e);
         }
     }
 
@@ -680,17 +680,17 @@ public class GRegCollectionSeleniumTest {
             Thread.sleep(3000L);
         } catch (WebDriverException e) {
             log.info("Failed to find Location collection/resource path:- WebDriver Exception :" +
-                     e.getMessage());
+                     e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_findLocation");
             throw new WebDriverException("Failed to find Location collection/resource path:" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Failed to find Location collection/resource path:" + e.getMessage());
+            log.info("Failed to find Location collection/resource path:" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_findLocation");
             throw new Exception("Failed to find Location collection/resource path:" +
-                                e.getMessage());
+                                e);
         }
     }
 

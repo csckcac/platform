@@ -84,20 +84,20 @@ public class GRegRootSeleniumTest {
             selenium.waitForPageToLoad("30000");
             log.info("GRegRootSeleniumTest addCollectionToRoot() - Passed ");
         } catch (AssertionFailedError e) {
-            log.info("Failed to add a collection to root- Assertion Fail:" + e.getMessage());
+            log.info("Failed to add a collection to root- Assertion Fail:" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addCollectionToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new AssertionFailedError("Failed to add a collection to root:" + e.getMessage());
+            throw new AssertionFailedError("Failed to add a collection to root:" + e);
         } catch (WebDriverException e) {
-            log.info("Failed to add a collection to root- WebDriver Error: :" + e.getMessage());
+            log.info("Failed to add a collection to root- WebDriver Error: :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addCollectionToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new WebDriverException("Failed to add collection to root:" + e.getMessage());
+            throw new WebDriverException("Failed to add collection to root:" + e);
         } catch (Exception e) {
-            log.info("Failed to add a collection to root:" + e.getMessage());
+            log.info("Failed to add a collection to root:" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addCollectionToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new Exception("Failed to add collection to root:" + e.getMessage());
+            throw new Exception("Failed to add collection to root:" + e);
         }
     }
 
@@ -125,20 +125,20 @@ public class GRegRootSeleniumTest {
             selenium.waitForPageToLoad("30000");
             log.info("GRegRootSeleniumTest addResourceToRoot() - Passed ");
         } catch (AssertionFailedError e) {
-            log.info("GRegRootSeleniumTest -addResourceToRoot() Assertion Failure ::" + e.getMessage());
+            log.info("GRegRootSeleniumTest -addResourceToRoot() Assertion Failure ::" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addResourceToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new AssertionFailedError("Failed to a add resource to root:" + e.getMessage());
+            throw new AssertionFailedError("Failed to a add resource to root:" + e);
         } catch (WebDriverException e) {
-            log.info("GRegRootSeleniumTest addResourceToRoot() - WebDriver Exception :" + e.getMessage());
+            log.info("GRegRootSeleniumTest addResourceToRoot() - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addResourceToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new WebDriverException("Failed to a add resource to root:" + e.getMessage());
+            throw new WebDriverException("Failed to a add resource to root:" + e);
         } catch (Exception e) {
-            log.info("GRegRootSeleniumTest addResourceToRoot()- Fail :" + e.getMessage());
+            log.info("GRegRootSeleniumTest addResourceToRoot()- Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addResourceToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new Exception("Failed to add a resource to root:" + e.getMessage());
+            throw new Exception("Failed to add a resource to root:" + e);
         }
     }
 
@@ -182,20 +182,20 @@ public class GRegRootSeleniumTest {
             selenium.waitForPageToLoad("30000");
             log.info("GRegRootSeleniumTest addCommentToRoot() - Passed");
         } catch (AssertionFailedError e) {
-            log.info("GRegRootSeleniumTest -addCommentToRoot() Assertion Failure ::" + e.getMessage());
+            log.info("GRegRootSeleniumTest -addCommentToRoot() Assertion Failure ::" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addCommentToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new AssertionFailedError("Failed to add a comment to root:" + e.getMessage());
+            throw new AssertionFailedError("Failed to add a comment to root:" + e);
         } catch (WebDriverException e) {
-            log.info("GRegRootSeleniumTest addCommentToRoot() - WebDriver Exception :" + e.getMessage());
+            log.info("GRegRootSeleniumTest addCommentToRoot() - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addCommentToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new WebDriverException("Failed to add a comment to root:" + e.getMessage());
+            throw new WebDriverException("Failed to add a comment to root:" + e);
         } catch (Exception e) {
-            log.info("GRegRootSeleniumTest addCommentToRoot()- Fail :" + e.getMessage());
+            log.info("GRegRootSeleniumTest addCommentToRoot()- Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addCommentToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new Exception("Failed to add a comment to root:" + e.getMessage());
+            throw new Exception("Failed to add a comment to root:" + e);
         }
     }
 
@@ -228,20 +228,20 @@ public class GRegRootSeleniumTest {
             selenium.waitForPageToLoad("30000");
             log.info("GRegRootSeleniumTest addTagToRoot() - Passed ");
         } catch (AssertionFailedError e) {
-            log.info("Failed to add a tag to root -Assertion Error:" + e.getMessage());
+            log.info("Failed to add a tag to root -Assertion Error:" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addTagToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new AssertionFailedError("Failed to add a tag to root:" + e.getMessage());
+            throw new AssertionFailedError("Failed to add a tag to root:" + e);
         } catch (WebDriverException e) {
-            log.info("Failed to add a tag to root - Webdriver Error:" + e.getMessage());
+            log.info("Failed to add a tag to root - Webdriver Error:" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addTagToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new WebDriverException("Failed to add a tag to root:" + e.getMessage());
+            throw new WebDriverException("Failed to add a tag to root:" + e);
         } catch (Exception e) {
-            log.info("Failed to add a tag to root - Exception Error:" + e.getMessage());
+            log.info("Failed to add a tag to root - Exception Error:" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addTagToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new Exception("Failed to add a tag to root:" + e.getMessage());
+            throw new Exception("Failed to add a tag to root:" + e);
         }
     }
 
@@ -280,20 +280,20 @@ public class GRegRootSeleniumTest {
             selenium.waitForPageToLoad("30000");
             log.info("GRegRootSeleniumTest addRatingToRoot() - Passed ");
         } catch (AssertionFailedError e) {
-            log.info("GRegRootSeleniumTest -addRatingToRoot() Assertion Failure ::" + e.getMessage());
+            log.info("GRegRootSeleniumTest -addRatingToRoot() Assertion Failure ::" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addRatingToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new AssertionFailedError("Failed to apply rating to root:" + e.getMessage());
+            throw new AssertionFailedError("Failed to apply rating to root:" + e);
         } catch (WebDriverException e) {
-            log.info("GRegRootSeleniumTest addRatingToRoot() - WebDriver Exception :" + e.getMessage());
+            log.info("GRegRootSeleniumTest addRatingToRoot() - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addRatingToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new WebDriverException("Failed to apply rating to root:" + e.getMessage());
+            throw new WebDriverException("Failed to apply rating to root:" + e);
         } catch (Exception e) {
-            log.info("GRegRootSeleniumTest addRatingToRoot()- Fail :" + e.getMessage());
+            log.info("GRegRootSeleniumTest addRatingToRoot()- Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addRatingToRoot");
             new GregUserLogout().userLogout(driver);
-            throw new Exception("Failed to apply rating to root:" + e.getMessage());
+            throw new Exception("Failed to apply rating to root:" + e);
         }
     }
 
@@ -328,17 +328,17 @@ public class GRegRootSeleniumTest {
             assertTrue(selenium.isTextPresent("Metadata"), "Browse Detail View Page fail Metadata:");
             assertTrue(selenium.isTextPresent("Entries"), "Browse Detail View Page Entries fail :");
         } catch (AssertionFailedError e) {
-            log.info("GRegRootSeleniumTest - gotoDetailViewTab() Assertion Failure ::" + e.getMessage());
+            log.info("GRegRootSeleniumTest - gotoDetailViewTab() Assertion Failure ::" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_gotoDetailViewTab");
-            throw new AssertionFailedError("Failed to goto Detail View Tab:" + e.getMessage());
+            throw new AssertionFailedError("Failed to goto Detail View Tab:" + e);
         } catch (WebDriverException e) {
-            log.info("GRegRootSeleniumTest-gotoDetailViewTab() - WebDriver Exception :" + e.getMessage());
+            log.info("GRegRootSeleniumTest-gotoDetailViewTab() - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_gotoDetailViewTab");
-            throw new WebDriverException("Failed to goto Detail View Tab:" + e.getMessage());
+            throw new WebDriverException("Failed to goto Detail View Tab:" + e);
         } catch (Exception e) {
-            log.info("GRegRootSeleniumTest-gotoDetailViewTab() Fail :" + e.getMessage());
+            log.info("GRegRootSeleniumTest-gotoDetailViewTab() Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_gotoDetailViewTab");
-            throw new Exception("Failed to goto Detail View Tab:" + e.getMessage());
+            throw new Exception("Failed to goto Detail View Tab:" + e);
         }
     }
 
@@ -356,17 +356,17 @@ public class GRegRootSeleniumTest {
             Thread.sleep(3000L);
             selenium.click("//button");                           //click on OK button
         } catch (AssertionFailedError e) {
-            log.info("GRegRootSeleniumTest - Failed to create collection Assertion Failure ::" + e.getMessage());
+            log.info("GRegRootSeleniumTest - Failed to create collection Assertion Failure ::" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addCollection");
-            throw new AssertionFailedError("Failed to create collection:" + e.getMessage());
+            throw new AssertionFailedError("Failed to create collection:" + e);
         } catch (WebDriverException e) {
-            log.info("GRegRootSeleniumTest-Failed to create collection:- WebDriver Exception :" + e.getMessage());
+            log.info("GRegRootSeleniumTest-Failed to create collection:- WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addCollection");
-            throw new WebDriverException("Failed to create collection:" + e.getMessage());
+            throw new WebDriverException("Failed to create collection:" + e);
         } catch (Exception e) {
-            log.info("GRegRootSeleniumTest-Failed to create collection:" + e.getMessage());
+            log.info("GRegRootSeleniumTest-Failed to create collection:" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addCollection");
-            throw new Exception("Failed to create collection:" + e.getMessage());
+            throw new Exception("Failed to create collection:" + e);
         }
     }
 
@@ -395,17 +395,17 @@ public class GRegRootSeleniumTest {
             Thread.sleep(2000L);
 
         } catch (AssertionFailedError e) {
-            log.info("GRegRootSeleniumTest- addResource() Assertion Failure ::" + e.getMessage());
+            log.info("GRegRootSeleniumTest- addResource() Assertion Failure ::" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addResource");
-            throw new AssertionFailedError("Failed to create resource:" + e.getMessage());
+            throw new AssertionFailedError("Failed to create resource:" + e);
         } catch (WebDriverException e) {
-            log.info("GRegRootSeleniumTest-addResource() - WebDriver Exception :" + e.getMessage());
+            log.info("GRegRootSeleniumTest-addResource() - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addResource");
-            throw new WebDriverException("Failed to create resource:" + e.getMessage());
+            throw new WebDriverException("Failed to create resource:" + e);
         } catch (Exception e) {
-            log.info("GRegRootSeleniumTest-addResource() Fail :" + e.getMessage());
+            log.info("GRegRootSeleniumTest-addResource() Fail :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegRootSeleniumTest_addResource");
-            throw new Exception("Failed to create resource:" + e.getMessage());
+            throw new Exception("Failed to create resource:" + e);
         }
     }
 

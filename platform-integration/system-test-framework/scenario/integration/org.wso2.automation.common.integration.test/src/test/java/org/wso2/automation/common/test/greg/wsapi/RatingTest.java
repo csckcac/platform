@@ -59,9 +59,9 @@ public class RatingTest {
             deleteResources("/d16");
             log.info("************WS-API Add a Rating to a Resource test  - Passed***************");
         } catch (RegistryException e) {
-            log.error("WS-API Add a Rating to a Resource test - Failed" + e.getMessage());
+            log.error("WS-API Add a Rating to a Resource test - Failed" + e);
             throw new RegistryException("WS-API Add a Rating to a Resource test - Failed:"
-                                        + e.getMessage());
+                                        + e);
         }
     }
 
@@ -79,9 +79,9 @@ public class RatingTest {
             deleteResources("/d16");
             log.info("***************WS-API Add a Rating to a Collection test - Passed ***********");
         } catch (RegistryException e) {
-            log.error("WS-API Add a Rating to a Collection test - Failed:" + e.getMessage());
+            log.error("WS-API Add a Rating to a Collection test - Failed:" + e);
             throw new RegistryException("WS-API Add a Rating to a Collection test -Failed:"
-                                        + e.getMessage());
+                                        + e);
         }
     }
 
@@ -108,9 +108,9 @@ public class RatingTest {
             deleteResources("/d61");
             log.info("**************WS-API Edit Rating of a Resource test- Passed ***************");
         } catch (RegistryException e) {
-            log.error("WS-API Edit Rating of a Resource test- Failed:" + e.getMessage());
+            log.error("WS-API Edit Rating of a Resource test- Failed:" + e);
             throw new RegistryException("WS-API Edit Rating of a Resource test - Failed"
-                                        + e.getMessage());
+                                        + e);
         }
     }
 
@@ -143,9 +143,9 @@ public class RatingTest {
             deleteResources("/c1");
             log.info("*************WS- API Apply Rating to a Path test - Passed *****************");
         } catch (RegistryException e) {
-            log.error("WS- API Apply Rating to a Path test -Failed:" + e.getMessage());
+            log.error("WS- API Apply Rating to a Path test -Failed:" + e);
             throw new RegistryException("WS- API Apply Rating to a Path test -Failed:"
-                                        + e.getMessage());
+                                        + e);
         }
     }
 
@@ -162,9 +162,9 @@ public class RatingTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
             throw new RegistryException("deleteResources RegistryException thrown:"
-                                        + e.getMessage());
+                                        + e);
         }
     }
 }

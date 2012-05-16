@@ -92,8 +92,8 @@ public class BpelStructAct_WhileClient {
                     Assert.fail("Instance is not created for the request");
                 }
             } catch (InterruptedException e) {
-                log.error("Process management failed" + e.getMessage());
-                Assert.fail(e.getMessage());
+                log.error("Process management failed" + e);
+                Assert.fail("Process management failed" + e);
             } catch (Exception e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }

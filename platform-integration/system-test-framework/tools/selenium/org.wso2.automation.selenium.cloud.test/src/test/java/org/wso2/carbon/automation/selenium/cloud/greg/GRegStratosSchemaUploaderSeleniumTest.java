@@ -84,17 +84,17 @@ public class GRegStratosSchemaUploaderSeleniumTest {
             userLogout();
             log.info("*************GReg Stratos Schema Upload from URL Test - Passed*************");
         } catch (AssertionFailedError e) {
-            log.info("Schema Upload from URL Test Failed :" + e.getMessage());
+            log.info("Schema Upload from URL Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Schema Upload from URL Test Failed :" + e.getMessage());
+            throw new AssertionFailedError("Schema Upload from URL Test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("Schema Upload from URL Test Failed :" + e.getMessage());
+            log.info("Schema Upload from URL Test Failed :" + e);
             userLogout();
-            throw new WebDriverException("Schema Upload from URL Test Failed :" + e.getMessage());
+            throw new WebDriverException("Schema Upload from URL Test Failed :" + e);
         } catch (Exception e) {
-            log.info("Schema Upload from URL Test Failed :" + e.getMessage());
+            log.info("Schema Upload from URL Test Failed :" + e);
             userLogout();
-            throw new Exception("Schema Upload from URL Test Failed :" + e.getMessage());
+            throw new Exception("Schema Upload from URL Test Failed :" + e);
         }
     }
 
@@ -113,17 +113,17 @@ public class GRegStratosSchemaUploaderSeleniumTest {
             userLogout();
             log.info("*************GReg Stratos Schema Upload from File Test - Passed*************");
         } catch (AssertionFailedError e) {
-            log.info("Schema Upload from File Test Failed :" + e.getMessage());
+            log.info("Schema Upload from File Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Schema Upload from File Test Failed :" + e.getMessage());
+            throw new AssertionFailedError("Schema Upload from File Test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("Schema Upload from File Test Failed :" + e.getMessage());
+            log.info("Schema Upload from File Test Failed :" + e);
             userLogout();
-            throw new WebDriverException("Schema Upload from File Test Failed :" + e.getMessage());
+            throw new WebDriverException("Schema Upload from File Test Failed :" + e);
         } catch (Exception e) {
-            log.info("Schema Upload from File Test Failed :" + e.getMessage());
+            log.info("Schema Upload from File Test Failed :" + e);
             userLogout();
-            throw new Exception("Schema Upload from File Test Failed :" + e.getMessage());
+            throw new Exception("Schema Upload from File Test Failed :" + e);
         }
     }
 

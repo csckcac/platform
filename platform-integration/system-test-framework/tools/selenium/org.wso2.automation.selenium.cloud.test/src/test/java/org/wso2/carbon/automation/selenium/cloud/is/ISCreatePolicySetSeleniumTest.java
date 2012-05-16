@@ -99,17 +99,17 @@ public class ISCreatePolicySetSeleniumTest {
             userLogout();
             log.info("********** IS Stratos Create Policy Set Test - passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Create Policy Set Test Failed :" + e.getMessage());
+            log.info("Create Policy Set Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Create Policy Set Test Failed :" + e.getMessage());
+            throw new AssertionFailedError("Create Policy Set Test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("Create Policy Set Test Failed :" + e.getMessage());
+            log.info("Create Policy Set Test Failed :" + e);
             userLogout();
-            throw new WebDriverException("Create Policy Set Test Failed :" + e.getMessage());
+            throw new WebDriverException("Create Policy Set Test Failed :" + e);
         } catch (Exception e) {
-            log.info("Create Policy Set Test Failed :" + e.getMessage());
+            log.info("Create Policy Set Test Failed :" + e);
             userLogout();
-            throw new Exception("Create Policy Set Test Failed :" + e.getMessage());
+            throw new Exception("Create Policy Set Test Failed :" + e);
         }
     }
 

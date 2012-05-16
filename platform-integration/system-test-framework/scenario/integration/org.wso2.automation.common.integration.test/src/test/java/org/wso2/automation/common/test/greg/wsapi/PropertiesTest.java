@@ -56,8 +56,8 @@ public class PropertiesTest {
             assertEquals(rootb.getProperty("p1"), "v1", "Root should have a property named p1 with value v1");
             log.info("************WS-API root Level Properties test -Passed*************");
         } catch (RegistryException e) {
-            log.error("WS-API rootLevelProperties fail :" + e.getMessage());
-            throw new RegistryException("WS-API rootLevelProperties fail :" + e.getMessage());
+            log.error("WS-API rootLevelProperties fail :" + e);
+            throw new RegistryException("WS-API rootLevelProperties fail :" + e);
         }
     }
 
@@ -77,8 +77,8 @@ public class PropertiesTest {
             deleteResources("/propTest");
             log.info("**********WS-API Single Valued Properties test - Passed**********");
         } catch (RegistryException e) {
-            log.error("WS-API Single Valued Properties test fail:" + e.getMessage());
-            throw new RegistryException("WS-API Single Valued Properties test fail :" + e.getMessage());
+            log.error("WS-API Single Valued Properties test fail:" + e);
+            throw new RegistryException("WS-API Single Valued Properties test fail :" + e);
         }
     }
 
@@ -101,8 +101,8 @@ public class PropertiesTest {
             deleteResources("/propTest");
             log.info("************WS-API Multi Valued Properties test- Passed ***********");
         } catch (RegistryException e) {
-            log.error("WS-API Multi Valued Properties test fail :" + e.getMessage());
-            throw new RegistryException("WS-API Multi Valued Properties test fail :" + e.getMessage());
+            log.error("WS-API Multi Valued Properties test fail :" + e);
+            throw new RegistryException("WS-API Multi Valued Properties test fail :" + e);
         }
     }
 
@@ -127,8 +127,8 @@ public class PropertiesTest {
             deleteResources("/props");
             log.info("***********WS-API Removing Properties - Passed***************");
         } catch (RegistryException e) {
-            log.error("WS-API Removing Properties fail :" + e.getMessage());
-            throw new RegistryException("WS-API Removing Properties fail :" + e.getMessage());
+            log.error("WS-API Removing Properties fail :" + e);
+            throw new RegistryException("WS-API Removing Properties fail :" + e);
         }
     }
 
@@ -153,8 +153,8 @@ public class PropertiesTest {
             deleteResources("/props");
             log.info("***********WS-API Removing Multivalued Properties test - Passed**************");
         } catch (RegistryException e) {
-            log.error("WS-API Removing Multivalued Properties test -fail :" + e.getMessage());
-            throw new RegistryException("WS-API Removing Multivalued Properties test- fail :" + e.getMessage());
+            log.error("WS-API Removing Multivalued Properties test -fail :" + e);
+            throw new RegistryException("WS-API Removing Multivalued Properties test- fail :" + e);
         }
     }
 
@@ -181,8 +181,8 @@ public class PropertiesTest {
             deleteResources("/props");
             log.info("*************WS-API Editing Multivalued Properties test - Passed************");
         } catch (RegistryException e) {
-            log.error("WS-API Editing Multivalued Properties test- fail:" + e.getMessage());
-            throw new RegistryException("WS-API Editing Multivalued Properties test- fail :" + e.getMessage());
+            log.error("WS-API Editing Multivalued Properties test- fail:" + e);
+            throw new RegistryException("WS-API Editing Multivalued Properties test- fail :" + e);
         }
     }
 
@@ -197,8 +197,8 @@ public class PropertiesTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
 
     }

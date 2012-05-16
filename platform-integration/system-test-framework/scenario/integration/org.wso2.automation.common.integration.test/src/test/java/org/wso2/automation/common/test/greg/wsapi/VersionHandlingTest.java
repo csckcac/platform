@@ -88,8 +88,8 @@ public class VersionHandlingTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 
@@ -125,8 +125,8 @@ public class VersionHandlingTest {
                 deleteResources("/ver1");
                 log.info("************WS-API Create Versions test - Passed **********************");
             } catch (RegistryException e) {
-                log.error("WS-API Create Versions test -Failed :" + e.getMessage());
-                throw new RegistryException("WS-API Create Versions test -Failed:" + e.getMessage());
+                log.error("WS-API Create Versions test -Failed :" + e);
+                throw new RegistryException("WS-API Create Versions test -Failed:" + e);
             }
         }
     }
@@ -160,8 +160,8 @@ public class VersionHandlingTest {
                 deleteResources("/v2");
                 log.info("*************WS-API Resource Content Versioning test- Passed*************");
             } catch (RegistryException e) {
-                log.error("resourceContentVersioning RegistryException thrown :" + e.getMessage());
-                throw new RegistryException("WS-API Create Versions test -Failed:" + e.getMessage());
+                log.error("resourceContentVersioning RegistryException thrown :" + e);
+                throw new RegistryException("WS-API Create Versions test -Failed:" + e);
             }
         }
     }
@@ -195,8 +195,8 @@ public class VersionHandlingTest {
                 deleteResources("/ver4");
                 log.info("**************WS-API Resource Property Versioning test- Passed ************");
             } catch (RegistryException e) {
-                log.error("resourcePropertyVersioning RegistryException thrown :" + e.getMessage());
-                throw new RegistryException("WS-API Create Versions test -Failed:" + e.getMessage());
+                log.error("resourcePropertyVersioning RegistryException thrown :" + e);
+                throw new RegistryException("WS-API Create Versions test -Failed:" + e);
             }
         }
     }
@@ -232,8 +232,8 @@ public class VersionHandlingTest {
                     deleteResources("/v3");
                     log.info("**************WS-API Simple Collection Versioning test - Passed ***************");
                 } catch (RegistryException e) {
-                    log.error("WS-API Simple Collection Versioning test - Failed:" + e.getMessage());
-                    throw new RegistryException("WS-API Simple Collection Versioning test -Failed:" + e.getMessage());
+                    log.error("WS-API Simple Collection Versioning test - Failed:" + e);
+                    throw new RegistryException("WS-API Simple Collection Versioning test -Failed:" + e);
                 }
             }
 

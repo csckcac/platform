@@ -206,7 +206,7 @@ public class DistributedTransactionTest extends DataServiceTest {
             return Integer.parseInt(((OMElement) ((OMElement) response.getChildrenWithLocalName("Entry").next())
                     .getChildrenWithLocalName("ID").next()).getText());
         } catch (Exception e) {
-            Assert.fail("Id Not Found in response : " + e.getMessage());
+            Assert.fail("Id Not Found in response : " + e);
         }
         return -1;
     }
@@ -217,7 +217,7 @@ public class DistributedTransactionTest extends DataServiceTest {
         try {
             return Double.parseDouble(((OMElement) response.getChildrenWithLocalName("Value").next()).getText());
         } catch (Exception e) {
-            Assert.fail("Balance Not Found in response : " + e.getMessage());
+            Assert.fail("Balance Not Found in response : " + e);
         }
         return -1;
     }

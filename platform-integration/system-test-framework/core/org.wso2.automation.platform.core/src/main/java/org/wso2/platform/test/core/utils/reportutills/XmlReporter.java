@@ -101,7 +101,7 @@ public class XmlReporter
         } catch (UnsupportedEncodingException e) {
             throw new ReporterException("Unable to use UTF-8 encoding", e);
         } catch (FileNotFoundException e) {
-            throw new ReporterException("Unable to create file: " + e.getMessage(), e);
+            throw new ReporterException("Unable to create file: " + e, e);
         } finally {
             IOUtil.close(writer);
         }

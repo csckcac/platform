@@ -76,8 +76,8 @@ public class BpelProcessManagementClient {
             Assert.assertFalse(requestSender.isServiceAvailable(serviceUrl + "/XKLoanService"), "Service is still available");
             Thread.sleep(5000);
         } catch (InterruptedException e) {
-            log.error("Process management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
+            log.error("Process management failed " + e);
+            Assert.fail("Process management failed " + e);
         }
     }
 
@@ -90,8 +90,8 @@ public class BpelProcessManagementClient {
             Assert.assertTrue(bpelProcrss.getStatus(processID).equals("ACTIVE"), "PPEL process is not set as ACTIVE");
             Assert.assertTrue(requestSender.isServiceAvailable(serviceUrl + "/XKLoanService"), "Service is not available");
         } catch (InterruptedException e) {
-            log.error("Process management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
+            log.error("Process management failed" + e);
+            Assert.fail("Process management failed" + e);
         }
     }
 

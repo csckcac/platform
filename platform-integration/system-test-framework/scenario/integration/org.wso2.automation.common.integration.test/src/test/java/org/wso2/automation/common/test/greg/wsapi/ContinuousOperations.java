@@ -56,11 +56,11 @@ public class ContinuousOperations {
                 Thread.sleep(100);
                 deleteResources("/con-delete");
             } catch (RegistryException e) {
-                log.error("WS-API Continuous Delete Operations Fail:" + e.getMessage());
-                throw new RegistryException("WS-API Continuous Delete Operations Fail:" + e.getMessage());
+                log.error("WS-API Continuous Delete Operations Fail:" + e);
+                throw new RegistryException("WS-API Continuous Delete Operations Fail:" + e);
             } catch (InterruptedException e) {
-                log.error("WS-API Continuous Delete Operations Fail:" + e.getMessage());
-                throw new InterruptedException("WS-API Continuous Delete Operations Fail:" + e.getMessage());
+                log.error("WS-API Continuous Delete Operations Fail:" + e);
+                throw new InterruptedException("WS-API Continuous Delete Operations Fail:" + e);
             }
         }
         log.info("***********WS-API Continous Delete - Passed**********");
@@ -101,11 +101,11 @@ public class ContinuousOperations {
                 Thread.sleep(100);
                 deleteResources("/con-delete");
             } catch (RegistryException e) {
-                log.error("WS-API Continuous Update Operations Fail:" + e.getMessage());
-                throw new RegistryException("WS-API Continuous Update Operations Fail:" + e.getMessage());
+                log.error("WS-API Continuous Update Operations Fail:" + e);
+                throw new RegistryException("WS-API Continuous Update Operations Fail:" + e);
             } catch (InterruptedException e) {
-                log.error("WS-API Continuous Update Operations Fail:" + e.getMessage());
-                throw new InterruptedException("WS-API Continuous Update Operations Fail:" + e.getMessage());
+                log.error("WS-API Continuous Update Operations Fail:" + e);
+                throw new InterruptedException("WS-API Continuous Update Operations Fail:" + e);
             }
         }
         log.info("**********WS-API Continuous Update - Passed ***********");
@@ -123,8 +123,8 @@ public class ContinuousOperations {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("ContinuousOperations deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("ContinuousOperations deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("ContinuousOperations deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("ContinuousOperations deleteResources RegistryException thrown:" + e);
         }
 
     }

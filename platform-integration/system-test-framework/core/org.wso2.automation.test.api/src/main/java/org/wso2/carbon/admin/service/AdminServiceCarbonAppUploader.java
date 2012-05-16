@@ -58,8 +58,8 @@ public class AdminServiceCarbonAppUploader {
         try {
             carbonAppUploaderStub.uploadApp(carbonAppArray);
         } catch (RemoteException e) {
-            log.error("Remote Exception thrown while uploding car artifact :" + e.getMessage());
-            Assert.fail("Remote Exception thrown while uploding car artifact :" + e.getMessage());
+            log.error("Remote Exception thrown while uploding car artifact :" + e);
+            Assert.fail("Remote Exception thrown while uploding car artifact :" + e);
         }
     }
 }

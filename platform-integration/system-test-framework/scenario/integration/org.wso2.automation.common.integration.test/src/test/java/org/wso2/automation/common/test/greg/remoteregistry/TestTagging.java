@@ -55,8 +55,8 @@ public class TestTagging {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 
@@ -116,8 +116,8 @@ public class TestTagging {
             deleteResources("/d11");
             log.info("***************Registry API Add Tagging Test - Passed ********************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Tagging Test - Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Add Tagging Test -Failed:" + e.getMessage());
+            log.error("Registry API Add Tagging Test - Failed:" + e);
+            throw new RegistryException("Registry API Add Tagging Test -Failed:" + e);
         }
     }
 
@@ -145,8 +145,8 @@ public class TestTagging {
             deleteResources("/d12");
             log.info("****************Registry API Duplicate Tagging Test - Passed ***********************");
         } catch (RegistryException e) {
-            log.error("Registry API Duplicate Tagging Test- Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Duplicate Tagging Test -Failed:" + e.getMessage());
+            log.error("Registry API Duplicate Tagging Test- Failed :" + e);
+            throw new RegistryException("Registry API Duplicate Tagging Test -Failed:" + e);
         }
     }
 
@@ -171,8 +171,8 @@ public class TestTagging {
             deleteResources("/d13");
             log.info("***************Registry API Add Tagging Collection Test - Passed ********************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Tagging Collection Test - Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Add Tagging Collection Test -Failed :" + e.getMessage());
+            log.error("Registry API Add Tagging Collection Test - Failed:" + e);
+            throw new RegistryException("Registry API Add Tagging Collection Test -Failed :" + e);
         }
     }
 
@@ -230,8 +230,8 @@ public class TestTagging {
             deleteResources("/d14");
             log.info("************Registry API Edit Tagging Test - Passed ******************");
         } catch (RegistryException e) {
-            log.error("Registry API Edit Tagging Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Edit Tagging Test-Failed:" + e.getMessage());
+            log.error("Registry API Edit Tagging Test - Failed :" + e);
+            throw new RegistryException("Registry API Edit Tagging Test-Failed:" + e);
         }
     }
 
@@ -274,8 +274,8 @@ public class TestTagging {
             deleteResources("/d15");
             log.info("************ Registry API Remove Resource Tagging Test - Passed ******************");
         } catch (RegistryException e) {
-            log.error("Registry API Remove Resource Tagging Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Remove Resource Tagging Test-Failed:" + e.getMessage());
+            log.error("Registry API Remove Resource Tagging Test - Failed :" + e);
+            throw new RegistryException("Registry API Remove Resource Tagging Test-Failed:" + e);
         }
 
     }
@@ -318,8 +318,8 @@ public class TestTagging {
             deleteResources("/d15");
             log.info("***************Registry API Remove Collection Tagging Test - Passed ******************");
         } catch (RegistryException e) {
-            log.error("Registry API Remove Collection Tagging Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Remove Collection Tagging Test - Failed :" + e.getMessage());
+            log.error("Registry API Remove Collection Tagging Test -Failed :" + e);
+            throw new RegistryException("Registry API Remove Collection Tagging Test - Failed :" + e);
         }
 
 
@@ -376,8 +376,8 @@ public class TestTagging {
             deleteResources("/d11");
             log.info("******************Registry API Tagging Test - Passed ********************");
         } catch (RegistryException e) {
-            log.error("Registry API Tagging Test -Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Tagging Test -Failed :" + e.getMessage());
+            log.error("Registry API Tagging Test -Failed:" + e);
+            throw new RegistryException("Registry API Tagging Test -Failed :" + e);
         }
     }
 }

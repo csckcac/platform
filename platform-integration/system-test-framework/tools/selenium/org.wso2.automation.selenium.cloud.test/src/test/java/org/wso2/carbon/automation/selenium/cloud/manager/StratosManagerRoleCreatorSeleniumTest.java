@@ -77,17 +77,17 @@ public class StratosManagerRoleCreatorSeleniumTest {
 
             log.info("*******Stratos Manager - Add New Role Test - Passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Failed to create  new role :" + e.getMessage());
+            log.info("Failed to create  new role :" + e);
             userLogout();
-            throw new AssertionFailedError("Failed to create  new role :" + e.getMessage());
+            throw new AssertionFailedError("Failed to create  new role :" + e);
         } catch (WebDriverException e) {
-            log.info("Failed to create  new role :" + e.getMessage());
+            log.info("Failed to create  new role :" + e);
             userLogout();
-            throw new WebDriverException("Failed to create  new role :" + e.getMessage());
+            throw new WebDriverException("Failed to create  new role :" + e);
         } catch (Exception e) {
-            log.info("Failed to create  new role :" + e.getMessage());
+            log.info("Failed to create  new role :" + e);
             userLogout();
-            throw new Exception("Failed to create  new role :" + e.getMessage());
+            throw new Exception("Failed to create  new role :" + e);
         }
 
     }

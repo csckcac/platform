@@ -57,8 +57,8 @@ public class RenameTest {
             deleteResources("/rename4");
             log.info("*************WS-API Root Level Resource Rename test - Passed***************");
         } catch (RegistryException e) {
-            log.error("WS-API Root Level Resource Rename test -fail :" + e.getMessage());
-            throw new RegistryException("WS-API Root Level Resource Rename test- fail:" + e.getMessage());
+            log.error("WS-API Root Level Resource Rename test -fail :" + e);
+            throw new RegistryException("WS-API Root Level Resource Rename test- fail:" + e);
         }
     }
 
@@ -78,8 +78,8 @@ public class RenameTest {
             deleteResources("/tests");
             log.info("***************WS-API General Resource Rename test- Passed**************");
         } catch (RegistryException e) {
-            log.error("WS-API General Resource Rename test - Fail" + e.getMessage());
-            throw new RegistryException("WS-API General Resource Rename test- Fail" + e.getMessage());
+            log.error("WS-API General Resource Rename test - Fail" + e);
+            throw new RegistryException("WS-API General Resource Rename test- Fail" + e);
         }
     }
 
@@ -100,8 +100,8 @@ public class RenameTest {
             deleteResources("/rename44k");
             log.info("************WS-API Root Level Collection Rename test - Passed**************");
         } catch (RegistryException e) {
-            log.error("WS-API Root Level Collection Rename test-fail :" + e.getMessage());
-            throw new RegistryException("WS-API Root Level Collection Rename test - Fail" + e.getMessage());
+            log.error("WS-API Root Level Collection Rename test-fail :" + e);
+            throw new RegistryException("WS-API Root Level Collection Rename test - Fail" + e);
         }
     }
 
@@ -122,8 +122,8 @@ public class RenameTest {
             deleteResources("/c2");
             log.info("**************WS-API General Collection Rename test - Passed **********************");
         } catch (RegistryException e) {
-            log.error("WS-API General Collection Rename test-fail :" + e.getMessage());
-            throw new RegistryException("WS-API General Collection Rename test-fail" + e.getMessage());
+            log.error("WS-API General Collection Rename test-fail :" + e);
+            throw new RegistryException("WS-API General Collection Rename test-fail" + e);
         }
     }
 
@@ -143,8 +143,8 @@ public class RenameTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 }

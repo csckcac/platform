@@ -83,11 +83,11 @@ public class GarFileImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path), "Schema Deleted :");
             log.info("GarFileImportServiceTestClient testAddAxis2ServiceGarFile()- Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add Axis2ServiceGarFile  RegistryException thrown:" + e.getMessage());
+            log.error("Failed to add Axis2ServiceGarFile  RegistryException thrown:" + e);
             throw new RegistryException("Failed to add Axis2ServiceGarFile: " + e);
         } catch (FileNotFoundException e) {
             log.error("Failed to add Axis2ServiceGarFile FileNotFoundException  thrown: " + e);
-            throw new RegistryException("Failed to add Axis2ServiceGarFile :" + e.getMessage());
+            throw new RegistryException("Failed to add Axis2ServiceGarFile :" + e);
         } finally {
             is.close();
         }
@@ -121,11 +121,11 @@ public class GarFileImportServiceTestClient {
             assertFalse(registry.resourceExists(wsdl_path), "WSDL Deleted :");
             log.info("GarFileImportServiceTestClient testAddSimpleStockQuoteServiceGarFile()- Passed");
         } catch (FileNotFoundException e) {
-            log.error("Failed to add SimpleStockQuoteService GarFile:" + e.getMessage());
-            throw new FileNotFoundException("Failed to add SimpleStockQuoteService GarFile:" + e.getMessage());
+            log.error("Failed to add SimpleStockQuoteService GarFile:" + e);
+            throw new FileNotFoundException("Failed to add SimpleStockQuoteService GarFile:" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to add SimpleStockQuoteService GarFile:" + e.getMessage());
-            throw new RegistryException("Failed to add SimpleStockQuoteService GarFile:" + e.getMessage());
+            log.error("Failed to add SimpleStockQuoteService GarFile:" + e);
+            throw new RegistryException("Failed to add SimpleStockQuoteService GarFile:" + e);
         }
     }
 
@@ -157,11 +157,11 @@ public class GarFileImportServiceTestClient {
             assertFalse(registry.resourceExists(wsdl_path), "WSDL Deleted :");
             log.info("GarFileImportServiceTestClient testAddEnterprisePersonServiceGarFile()- Passed");
         } catch (FileNotFoundException e) {
-            log.error("Failed to add EnterprisePersonService Gar-File:" + e.getMessage());
-            throw new FileNotFoundException("Failed to add EnterprisePersonService Gar-File:" + e.getMessage());
+            log.error("Failed to add EnterprisePersonService Gar-File:" + e);
+            throw new FileNotFoundException("Failed to add EnterprisePersonService Gar-File:" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to add EnterprisePersonService Gar-File:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add EnterprisePersonService Gar-File:" + e.getMessage());
+            log.error("Failed to add EnterprisePersonService Gar-File:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add EnterprisePersonService Gar-File:" + e);
         }
     }
 
@@ -195,11 +195,11 @@ public class GarFileImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path3), "schema_path3 Deleted :");
             log.info("GarFileImportServiceTestClient testAddRegistryGarFile()- Passed");
         } catch (FileNotFoundException e) {
-            log.error("Failed to add Registry Gar-File:" + e.getMessage());
-            throw new FileNotFoundException("Failed to add Registry Gar-File:" + e.getMessage());
+            log.error("Failed to add Registry Gar-File:" + e);
+            throw new FileNotFoundException("Failed to add Registry Gar-File:" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to add Registry Gar-File:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add Registry Gar-File:" + e.getMessage());
+            log.error("Failed to add Registry Gar-File:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add Registry Gar-File:" + e);
         }
     }
 
@@ -239,11 +239,11 @@ public class GarFileImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path4), "schema_path4 Deleted :");
             log.info("GarFileImportServiceTestClient testAddXSDAllGarFile()- Passed");
         } catch (FileNotFoundException e) {
-            log.error("Failed to add XSDAll Gar-File:" + e.getMessage());
-            throw new FileNotFoundException("Failed to add XSDAll Gar-File:" + e.getMessage());
+            log.error("Failed to add XSDAll Gar-File:" + e);
+            throw new FileNotFoundException("Failed to add XSDAll Gar-File:" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to add XSDAll Gar-File:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add XSDAll Gar-File:" + e.getMessage());
+            log.error("Failed to add XSDAll Gar-File:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add XSDAll Gar-File:" + e);
         }
     }
 
@@ -278,11 +278,11 @@ public class GarFileImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path3), "schema_path3 Deleted :");
             log.info("GarFileImportServiceTestClient testAddHeterogeneousNamespaceGarFile()- Passed");
         } catch (FileNotFoundException e) {
-            log.error("Failed to add HeterogeneousNamespace Gar-File:" + e.getMessage());
-            throw new FileNotFoundException("Failed to add HeterogeneousNamespace Gar-File:" + e.getMessage());
+            log.error("Failed to add HeterogeneousNamespace Gar-File:" + e);
+            throw new FileNotFoundException("Failed to add HeterogeneousNamespace Gar-File:" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to add HeterogeneousNamespace Gar-File:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add HeterogeneousNamespace Gar-File:" + e.getMessage());
+            log.error("Failed to add HeterogeneousNamespace Gar-File:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add HeterogeneousNamespace Gar-File:" + e);
         }
     }
 
@@ -317,11 +317,11 @@ public class GarFileImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path), "schema_path Deleted :");
             log.info("GarFileImportServiceTestClient testAddArtistRegistryGarFile()- Passed");
         } catch (FileNotFoundException e) {
-            log.error("Failed to add ArtistRegistry Gar-File:" + e.getMessage());
-            throw new FileNotFoundException("Failed to add ArtistRegistry Gar-File:" + e.getMessage());
+            log.error("Failed to add ArtistRegistry Gar-File:" + e);
+            throw new FileNotFoundException("Failed to add ArtistRegistry Gar-File:" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to add ArtistRegistry Gar-File:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add ArtistRegistry Gar-File:" + e.getMessage());
+            log.error("Failed to add ArtistRegistry Gar-File:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add ArtistRegistry Gar-File:" + e);
         }
     }
 
@@ -361,11 +361,11 @@ public class GarFileImportServiceTestClient {
             assertFalse(registry.resourceExists(wsdl_path2), "WSDL2 Deleted :");
             log.info("GarFileImportServiceTestClient testAddOriginalWSDLGarFile()- Passed");
         } catch (FileNotFoundException e) {
-            log.error("Failed to add OriginalWSDL Gar-File:" + e.getMessage());
-            throw new FileNotFoundException("Failed to add OriginalWSDL Gar-File:" + e.getMessage());
+            log.error("Failed to add OriginalWSDL Gar-File:" + e);
+            throw new FileNotFoundException("Failed to add OriginalWSDL Gar-File:" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to add OriginalWSDL Gar-File:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add OriginalWSDL Gar-File:" + e.getMessage());
+            log.error("Failed to add OriginalWSDL Gar-File:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add OriginalWSDL Gar-File:" + e);
         }
     }
 
@@ -400,11 +400,11 @@ public class GarFileImportServiceTestClient {
             assertFalse(registry.resourceExists(schema_path3), "Schema3 Deleted :");
             log.info("GarFileImportServiceTestClient testAddHomogeneousNamespaceGarFile()- Passed");
         } catch (FileNotFoundException e) {
-            log.error("Failed to add HomogeneousNamespace Gar-File:" + e.getMessage());
-            throw new FileNotFoundException("Failed to add HomogeneousNamespace Gar-File:" + e.getMessage());
+            log.error("Failed to add HomogeneousNamespace Gar-File:" + e);
+            throw new FileNotFoundException("Failed to add HomogeneousNamespace Gar-File:" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to add HomogeneousNamespace Gar-File:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add HomogeneousNamespace Gar-File:" + e.getMessage());
+            log.error("Failed to add HomogeneousNamespace Gar-File:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("Failed to add HomogeneousNamespace Gar-File:" + e);
         }
     }
 
@@ -415,8 +415,8 @@ public class GarFileImportServiceTestClient {
             deleteResources("/_system/governance/trunk/schemas");
             deleteResources("/a1");
         } catch (RegistryException e) {
-            log.error("Failed to Remove Resource :" + e.getMessage());
-            throw new RegistryException("Failed to Remove Resource :" + e.getMessage());
+            log.error("Failed to Remove Resource :" + e);
+            throw new RegistryException("Failed to Remove Resource :" + e);
         }
     }
 
@@ -426,8 +426,8 @@ public class GarFileImportServiceTestClient {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("Failed to Delete Resource :" + e.getMessage());
-            throw new RegistryException("Failed to Delete Resource :" + e.getMessage());
+            log.error("Failed to Delete Resource :" + e);
+            throw new RegistryException("Failed to Delete Resource :" + e);
         }
     }
 

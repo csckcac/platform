@@ -95,20 +95,20 @@ public class ISPermissionScenarioSeleniumTest {
             userLogout();
             log.info("*******IS Stratos - Login Only Permission Scenario Test - Passed **********");
         } catch (AssertionFailedError e) {
-            log.info("Login Only Permission Scenario Test Failed :" + e.getMessage());
+            log.info("Login Only Permission Scenario Test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Login Only Permission Scenario Test Failed " +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Login Only Permission Scenario Test Failed :" + e.getMessage());
+            log.info("Login Only Permission Scenario Test Failed :" + e);
             userLogout();
             throw new WebDriverException("Login Only Permission Scenario Test Failed :" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Login Only Permission Scenario Test Failed :" + e.getMessage());
+            log.info("Login Only Permission Scenario Test Failed :" + e);
             userLogout();
             throw new Exception("Login Only Permission Scenario Test Failed :" +
-                                e.getMessage());
+                                e);
         }
     }
 

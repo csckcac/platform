@@ -56,8 +56,8 @@ public class CollectionChildCountTest {
             assertTrue(true, "Child count is " + collection.getChildCount());
             log.info("***********WS-API getChildCountForCollection  - Passed*************");
         } catch (RegistryException e) {
-            log.error("Get Child count collection/resource from root Failed :" + e.getMessage());
-            throw new RegistryException("Get Child count collection/resource from root Failed :" + e.getMessage());
+            log.error("Get Child count collection/resource from root Failed :" + e);
+            throw new RegistryException("Get Child count collection/resource from root Failed :" + e);
         }
     }
 }

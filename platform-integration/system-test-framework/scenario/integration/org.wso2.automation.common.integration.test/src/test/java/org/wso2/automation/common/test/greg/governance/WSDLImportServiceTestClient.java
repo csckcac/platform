@@ -80,8 +80,8 @@ public class WSDLImportServiceTestClient {
             assertFalse(registry.resourceExists(wsdl_path), "Simple WSDL file exists");                        //Assert wsdl was Removed successfully
             log.info("WSDLImportServiceTestClient testAddSimpleWsdl_Import()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to assert WSDL Service Exsits:" + e.getMessage());
-            throw new RegistryException("Failed to assert WSDL Service Exsits:" + e.getMessage());
+            log.error("Failed to assert WSDL Service Exsits:" + e);
+            throw new RegistryException("Failed to assert WSDL Service Exsits:" + e);
         }
     }
 
@@ -113,8 +113,8 @@ public class WSDLImportServiceTestClient {
             assertFalse(registry.resourceExists(wsdl_path), "WSDL which ends with uppercase WSDL extension exists");                 //Assert wsdl was Removed successfully
             log.info("WSDLImportServiceTestClient testAddUppercase_WSDL_extension()-Passed");
         } catch (RegistryException e) {
-            log.error("Failed to add Upper Case WSDL:" + e.getMessage());
-            throw new RegistryException("Failed to add Upper Case WSDL:" + e.getMessage());
+            log.error("Failed to add Upper Case WSDL:" + e);
+            throw new RegistryException("Failed to add Upper Case WSDL:" + e);
         }
     }
 
@@ -128,8 +128,8 @@ public class WSDLImportServiceTestClient {
             wsdlManager.addWsdl(wsdl);
             log.info("wsdl was successfully added");
         } catch (GovernanceException e) {
-            log.error("Failed to create WSDL:" + e.getMessage());
-            throw new GovernanceException("Failed to create WSDL:" + e.getMessage());
+            log.error("Failed to create WSDL:" + e);
+            throw new GovernanceException("Failed to create WSDL:" + e);
         }
     }
 
@@ -139,8 +139,8 @@ public class WSDLImportServiceTestClient {
                 registry.delete("/_system/governance/trunk/wsdls");
             }
         } catch (RegistryException e) {
-            log.error("Failed to delete WSDL:" + e.getMessage());
-            throw new RegistryException("Failed to delete WSDL:" + e.getMessage());
+            log.error("Failed to delete WSDL:" + e);
+            throw new RegistryException("Failed to delete WSDL:" + e);
         }
     }
 
@@ -152,8 +152,8 @@ public class WSDLImportServiceTestClient {
             assertEquals(resource.getProperty("WSI Validation"), property2, "WSDL Property - WSI Validation");
             assertEquals(resource.getProperty("creator"), property3, "WSDL Property - WSI creator");
         } catch (RegistryException e) {
-            log.error("Failed to assert WSDL property:" + e.getMessage());
-            throw new RegistryException("Failed to assert WSDL property:" + e.getMessage());
+            log.error("Failed to assert WSDL property:" + e);
+            throw new RegistryException("Failed to assert WSDL property:" + e);
         }
     }
 
@@ -167,8 +167,8 @@ public class WSDLImportServiceTestClient {
             assertTrue(content.indexOf(keyword1) > 0, "Assert Content wsdl file - key word 1");
             assertTrue(content.indexOf(keyword2) > 0, "Assert Content wsdl file - key word 2");
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("Failed to assert WSDL content:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("Failed to assert WSDL content:" + e.getMessage());
+            log.error("Failed to assert WSDL content:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("Failed to assert WSDL content:" + e);
         }
     }
 
@@ -178,8 +178,8 @@ public class WSDLImportServiceTestClient {
             associations = registry.getAssociations(wsdl_path, "usedBy");
             assertTrue(associations[1].getDestinationPath().equalsIgnoreCase(association_path), "Association Path exsits :");
         } catch (RegistryException e) {
-            log.error("Failed to assert WSDL Association Path:" + e.getMessage());
-            throw new RegistryException("Failed to assert WSDL Association Path:" + e.getMessage());
+            log.error("Failed to assert WSDL Association Path:" + e);
+            throw new RegistryException("Failed to assert WSDL Association Path:" + e);
         }
     }
 
@@ -194,11 +194,11 @@ public class WSDLImportServiceTestClient {
                 }
             }
         } catch (GovernanceException e) {
-            log.error("Failed to assert WSDL Service Exsits:" + e.getMessage());
-            throw new GovernanceException("Failed to assert WSDL Service Exsits:" + e.getMessage());
+            log.error("Failed to assert WSDL Service Exsits:" + e);
+            throw new GovernanceException("Failed to assert WSDL Service Exsits:" + e);
         } catch (RegistryException e) {
-            log.error("Failed to assert WSDL Service Exsits:" + e.getMessage());
-            throw new RegistryException("Failed to assert WSDL Service Exsits:" + e.getMessage());
+            log.error("Failed to assert WSDL Service Exsits:" + e);
+            throw new RegistryException("Failed to assert WSDL Service Exsits:" + e);
         }
     }
 }

@@ -72,11 +72,11 @@ public class PolicyUploadServiceTestClient {
             verifyResourceDelete(policy_path);
             log.info("Multi Tenancy PolicyUploadServiceTestClient - Passed");
         } catch (RegistryException e) {
-            log.error("verifyResourceExists Exception thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e.getMessage());
+            log.error("verifyResourceExists Exception thrown:" + e);
+            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("verifyResourceExists Exception thrown:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("verifyResourceExists RegistryException thrown:" + e.getMessage());
+            log.error("verifyResourceExists Exception thrown:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("verifyResourceExists RegistryException thrown:" + e);
         }
     }
 
@@ -89,8 +89,8 @@ public class PolicyUploadServiceTestClient {
             assertEquals(resource_adminUser.getProperty("version"), property1, "Policy Property - targetNamespace");
             assertEquals(resource_adminUser.getProperty("creator"), property2, "Policy Property - Creator");
         } catch (RegistryException e) {
-            log.error("Property does not exsits:" + e.getMessage());
-            throw new RegistryException("Property does not exsits:" + e.getMessage());
+            log.error("Property does not exsits:" + e);
+            throw new RegistryException("Property does not exsits:" + e);
         }
 
         try {
@@ -98,8 +98,8 @@ public class PolicyUploadServiceTestClient {
             assertEquals(resource_adminUser.getProperty("version"), property1, "Policy Property - targetNamespace");
             assertEquals(resource_adminUser.getProperty("creator"), property2, "Policy Property - Creator");
         } catch (RegistryException e) {
-            log.error("Property does not exsits:" + e.getMessage());
-            throw new RegistryException("Property does not exsits:" + e.getMessage());
+            log.error("Property does not exsits:" + e);
+            throw new RegistryException("Property does not exsits:" + e);
         }
 
         try {
@@ -120,8 +120,8 @@ public class PolicyUploadServiceTestClient {
             policyManager.addPolicy(policy);
             log.info("Policy was added successfully");
         } catch (GovernanceException e) {
-            log.error("createPolicy Exception thrown:" + e.getMessage());
-            throw new GovernanceException("createPolicy Exception thrown:" + e.getMessage());
+            log.error("createPolicy Exception thrown:" + e);
+            throw new GovernanceException("createPolicy Exception thrown:" + e);
         }
     }
 
@@ -131,8 +131,8 @@ public class PolicyUploadServiceTestClient {
             assertTrue(registry_testUser.resourceExists(policy_path), "wsdl exists:");           // Assert Test user - testuser1@wso2manualQA0006.org
             assertFalse(registry_diffDomainUser1.resourceExists(policy_path), "wsdl exists:");  // Assert differnt doamin user 1
         } catch (RegistryException e) {
-            log.error("verifyResourceExists RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e.getMessage());
+            log.error("verifyResourceExists RegistryException thrown:" + e);
+            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e);
         }
     }
 
@@ -147,8 +147,8 @@ public class PolicyUploadServiceTestClient {
             assertTrue(content_adminUser.indexOf(keyword1) > 0, "Assert Content Schema file - key word 1");
             assertTrue(content_adminUser.indexOf(keyword2) > 0, "Assert Content Schema file - key word 2");
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("schemaContentAssertion adminUser Registry Exception thrown:" + e.getMessage());
-            throw new org.wso2.carbon.registry.api.RegistryException("schemaContentAssertion adminUser Registry Exception thrown:" + e.getMessage());
+            log.error("schemaContentAssertion adminUser Registry Exception thrown:" + e);
+            throw new org.wso2.carbon.registry.api.RegistryException("schemaContentAssertion adminUser Registry Exception thrown:" + e);
         }
 
 
@@ -159,8 +159,8 @@ public class PolicyUploadServiceTestClient {
             assertTrue(content_testUser.indexOf(keyword1) > 0, "Assert Content Schema file - key word 1");
             assertTrue(content_testUser.indexOf(keyword2) > 0, "Assert Content Schema file - key word 2");
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
-            log.error("schemaContentAssertion testUser Registry Exception thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e.getMessage());
+            log.error("schemaContentAssertion testUser Registry Exception thrown:" + e);
+            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e);
         }
 
         try {
@@ -180,8 +180,8 @@ public class PolicyUploadServiceTestClient {
             // Assert differnt doamin user 1
             assertFalse(registry_diffDomainUser1.resourceExists(policy_path), "wsdl exists:");
         } catch (RegistryException e) {
-            log.error("verifyResourceExists Exception thrown:" + e.getMessage());
-            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e.getMessage());
+            log.error("verifyResourceExists Exception thrown:" + e);
+            throw new RegistryException("verifyResourceExists RegistryException thrown:" + e);
         }
     }
 
@@ -196,8 +196,8 @@ public class PolicyUploadServiceTestClient {
                 registry_diffDomainUser1.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

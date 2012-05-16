@@ -64,8 +64,8 @@ public class AdminServiceAARServiceUploader {
         try {
             url = new URL("file://" + filePath);
         } catch (MalformedURLException e) {
-            log.error("File path URL is invalid" + e.getMessage());
-            Assert.fail("File path URL is invalid" + e.getMessage());
+            log.error("File path URL is invalid" + e);
+            Assert.fail("File path URL is invalid" + e);
         }
         DataHandler dh = new DataHandler(url);
         return dh;

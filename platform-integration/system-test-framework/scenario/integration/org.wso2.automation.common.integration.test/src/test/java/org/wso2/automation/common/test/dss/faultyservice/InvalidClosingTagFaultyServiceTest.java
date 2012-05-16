@@ -118,8 +118,8 @@ public class InvalidClosingTagFaultyServiceTest extends DataServiceTest {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
-            log.error("InterruptedException " + e.getMessage());
-            Assert.fail("InterruptedException " + e.getMessage());
+            log.error("InterruptedException " + e);
+            Assert.fail("InterruptedException " + e);
         }
         Assert.assertFalse(adminServiceClientDSS.isServiceFaulty(sessionCookie, serviceName), "Service Still in service list");
     }

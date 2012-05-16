@@ -57,8 +57,8 @@ public class PropertiesTest {
             r1e1.removeProperty("p1");
             log.info("**************Registry API Root Level Properties Test - Passed***************");
         } catch (RegistryException e) {
-            log.error("Registry API Root Level Properties Test -Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Root Level Properties Test -Failed:" + e.getMessage());
+            log.error("Registry API Root Level Properties Test -Failed:" + e);
+            throw new RegistryException("Registry API Root Level Properties Test -Failed:" + e);
         }
     }
 
@@ -76,8 +76,8 @@ public class PropertiesTest {
             deleteResources("/propTest");
             log.info("**************Registry API Single Valued Properties Test  - Passed***************");
         } catch (RegistryException e) {
-            log.error("Registry API Single Valued Properties Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Single Valued Properties Test -Failed:" + e.getMessage());
+            log.error("Registry API Single Valued Properties Test -Failed :" + e);
+            throw new RegistryException("Registry API Single Valued Properties Test -Failed:" + e);
         }
     }
 
@@ -101,8 +101,8 @@ public class PropertiesTest {
             deleteResources("/propTest");
             log.info("***************Registry API Multi Valued Properties Test - Passed************************");
         } catch (RegistryException e) {
-            log.error("Registry API Multi Valued Properties Test_Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Multi Valued Properties Test -Failed:" + e.getMessage());
+            log.error("Registry API Multi Valued Properties Test_Failed :" + e);
+            throw new RegistryException("Registry API Multi Valued Properties Test -Failed:" + e);
         }
 
     }
@@ -122,8 +122,8 @@ public class PropertiesTest {
             deleteResources("/propTest3");
             log.info("***************Registry API Null Valued Properties Test - Passed******************");
         } catch (RegistryException e) {
-            log.error("Registry API Null Valued Properties Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Null Valued Properties Test - Failed :" + e.getMessage());
+            log.error("Registry API Null Valued Properties Test - Failed :" + e);
+            throw new RegistryException("Registry API Null Valued Properties Test - Failed :" + e);
         }
     }
 
@@ -148,8 +148,8 @@ public class PropertiesTest {
             deleteResources("/propTest4");
             log.info("***************Registry API Null Multi Valued Properties Test - Passed****************");
         } catch (RegistryException e) {
-            log.error("Registry API Null Multi Valued Properties Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Null Multi Valued Properties Test - Failed :" + e.getMessage());
+            log.error("Registry API Null Multi Valued Properties Test - Failed :" + e);
+            throw new RegistryException("Registry API Null Multi Valued Properties Test - Failed :" + e);
         }
     }
 
@@ -174,8 +174,8 @@ public class PropertiesTest {
             deleteResources("/props");
             log.info("***************Registry API Removing Properties Test - Passed*****************");
         } catch (RegistryException e) {
-            log.error("Registry API Removing Properties Test-Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Removing Properties Test - Failed :" + e.getMessage());
+            log.error("Registry API Removing Properties Test-Failed :" + e);
+            throw new RegistryException("Registry API Removing Properties Test - Failed :" + e);
         }
     }
 
@@ -199,8 +199,8 @@ public class PropertiesTest {
             deleteResources("/props");
             log.info("***************Registry API Removing Multivalued Properties Test - Passed ***********************");
         } catch (RegistryException e) {
-            log.error("Registry API Removing Multivalued Properties Test-Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Removing Multivalued Properties Test - Failed :" + e.getMessage());
+            log.error("Registry API Removing Multivalued Properties Test-Failed :" + e);
+            throw new RegistryException("Registry API Removing Multivalued Properties Test - Failed :" + e);
         }
     }
 
@@ -229,8 +229,8 @@ public class PropertiesTest {
             deleteResources("/props");
             log.info("***************Registry API Editing Multivalued Properties Test - Passed *******************");
         } catch (RegistryException e) {
-            log.error("Registry API Editing Multivalued Properties Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Editing Multivalued Properties Test - Failed :" + e.getMessage());
+            log.error("Registry API Editing Multivalued Properties Test -Failed :" + e);
+            throw new RegistryException("Registry API Editing Multivalued Properties Test - Failed :" + e);
         }
     }
 
@@ -249,8 +249,8 @@ public class PropertiesTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 }

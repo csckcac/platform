@@ -76,17 +76,17 @@ public class GRegStratosPolicyUploaderSeleniumTest {
             userLogout();
             log.info("********** GReg Stratos Policy Uploader from URL test - Passed ************");
         } catch (AssertionFailedError e) {
-            log.info("Policy Uploader from URL test Failed :" + e.getMessage());
+            log.info("Policy Uploader from URL test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Policy Uploader from URL test Failed :" + e.getMessage());
+            throw new AssertionFailedError("Policy Uploader from URL test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("Policy Uploader from URL test Failed :" + e.getMessage());
+            log.info("Policy Uploader from URL test Failed :" + e);
             userLogout();
-            throw new WebDriverException("Policy Uploader from URL test Failed :" + e.getMessage());
+            throw new WebDriverException("Policy Uploader from URL test Failed :" + e);
         } catch (Exception e) {
-            log.info("Policy Uploader from URL test Failed :" + e.getMessage());
+            log.info("Policy Uploader from URL test Failed :" + e);
             userLogout();
-            throw new Exception("Policy Uploader from URL test Failed :" + e.getMessage());
+            throw new Exception("Policy Uploader from URL test Failed :" + e);
         }
     }
 
@@ -107,17 +107,17 @@ public class GRegStratosPolicyUploaderSeleniumTest {
             userLogout();
             log.info("********** GReg Stratos Policy Uploader from File test - Passed ************");
         } catch (AssertionFailedError e) {
-            log.info("Policy Uploader from File test  Failed :" + e.getMessage());
+            log.info("Policy Uploader from File test  Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Policy Uploader from File test Failed :" + e.getMessage());
+            throw new AssertionFailedError("Policy Uploader from File test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("Policy Uploader from File test  Failed :" + e.getMessage());
+            log.info("Policy Uploader from File test  Failed :" + e);
             userLogout();
-            throw new WebDriverException("Policy Uploader from File test  Failed :" + e.getMessage());
+            throw new WebDriverException("Policy Uploader from File test  Failed :" + e);
         } catch (Exception e) {
-            log.info("Policy Uploader from File test  Failed :" + e.getMessage());
+            log.info("Policy Uploader from File test  Failed :" + e);
             userLogout();
-            throw new Exception("Policy Uploader from File test  Failed :" + e.getMessage());
+            throw new Exception("Policy Uploader from File test  Failed :" + e);
         }
     }
 

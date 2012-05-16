@@ -60,8 +60,8 @@ public class RatingTest {
             deleteResources("/d16");
             log.info("****************Registry API Add Rating to a  Resource Test - Passed***************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Rating to a  Resource Test - Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Add Rating to a  Resource Test - Failed:" + e.getMessage());
+            log.error("Registry API Add Rating to a  Resource Test - Failed:" + e);
+            throw new RegistryException("Registry API Add Rating to a  Resource Test - Failed:" + e);
         }
     }
 
@@ -78,8 +78,8 @@ public class RatingTest {
             deleteResources("/d16");
             log.info("****************Registry API Add Rating to a  Collection Test - Passed***************");
         } catch (RegistryException e) {
-            log.error("Registry API Add Rating to a  Collection Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Add Rating to a  Collection Test  - Failed:" + e.getMessage());
+            log.error("Registry API Add Rating to a  Collection Test -Failed :" + e);
+            throw new RegistryException("Registry API Add Rating to a  Collection Test  - Failed:" + e);
         }
     }
 
@@ -102,8 +102,8 @@ public class RatingTest {
             deleteResources("/d61");
             log.info("************Registry API Edit Resource Rating Test - Passed***************");
         } catch (RegistryException e) {
-            log.error("Registry API Edit Resource Rating Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Edit Resource Rating Test  - Failed:" + e.getMessage());
+            log.error("Registry API Edit Resource Rating Test - Failed :" + e);
+            throw new RegistryException("Registry API Edit Resource Rating Test  - Failed:" + e);
         }
     }
 
@@ -131,11 +131,11 @@ public class RatingTest {
             deleteResources("/c1");
             log.info("**************Registry API Ratings Path Test - Passed**************");
         } catch (RegistryException e) {
-            log.error("Registry API Ratings Path Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Ratings Path Test  - Failed:" + e.getMessage());
+            log.error("Registry API Ratings Path Test - Failed :" + e);
+            throw new RegistryException("Registry API Ratings Path Test  - Failed:" + e);
         } catch (IOException e) {
-            log.error("Registry API Ratings Path Test :" + e.getMessage());
-            throw new IOException("Registry API Ratings Path Test - Failed:" + e.getMessage());
+            log.error("Registry API Ratings Path Test :" + e);
+            throw new IOException("Registry API Ratings Path Test - Failed:" + e);
         }
 
     }
@@ -152,8 +152,8 @@ public class RatingTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

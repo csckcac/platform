@@ -42,7 +42,7 @@ public class DataServiceUtility {
             try {
                 Thread.sleep(10 * 1000);
             } catch (InterruptedException e) {
-                Assert.fail("InterruptedException :" + e.getMessage());
+                Assert.fail("InterruptedException :" + e);
             }
         } else if (adminServiceService.isServiceFaulty(sessionCookie, serviceName)) {
             log.info("Service already in faulty service list");
@@ -51,7 +51,7 @@ public class DataServiceUtility {
             try {
                 Thread.sleep(10 * 1000);
             } catch (InterruptedException e) {
-                Assert.fail("InterruptedException :" + e.getMessage());
+                Assert.fail("InterruptedException :" + e);
             }
         }
 

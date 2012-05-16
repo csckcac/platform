@@ -66,7 +66,7 @@ public class StratosManagerPermissionScenarioSeleniumTest {
             userLogout();
             //loging with new user credientails
             StratosUserLogin.userLogin(driver, selenium, newFulluserName,
-                                             newUserpassword, productName);
+                                       newUserpassword, productName);
             assertTrue(driver.getPageSource().contains("dashboard"),
                        "New User Failed to Log in :");
             userLogout();
@@ -79,20 +79,17 @@ public class StratosManagerPermissionScenarioSeleniumTest {
             userLogout();
             log.info("*******IS Stratos - Login Only Permission Scenario Test - Passed **********");
         } catch (AssertionFailedError e) {
-            log.info("Login Only Permission Scenario Test Failed :" + e.getMessage());
+            log.info("Login Only Permission Scenario Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Login Only Permission Scenario Test Failed " +
-                                           e.getMessage());
+            throw new AssertionFailedError("Login Only Permission Scenario Test Failed " + e);
         } catch (WebDriverException e) {
-            log.info("Login Only Permission Scenario Test Failed :" + e.getMessage());
+            log.info("Login Only Permission Scenario Test Failed :" + e);
             userLogout();
-            throw new WebDriverException("Login Only Permission Scenario Test Failed :" +
-                                         e.getMessage());
+            throw new WebDriverException("Login Only Permission Scenario Test Failed :" + e);
         } catch (Exception e) {
-            log.info("Login Only Permission Scenario Test Failed :" + e.getMessage());
+            log.info("Login Only Permission Scenario Test Failed :" + e);
             userLogout();
-            throw new Exception("Login Only Permission Scenario Test Failed :" +
-                                e.getMessage());
+            throw new Exception("Login Only Permission Scenario Test Failed :" + e);
         }
     }
 

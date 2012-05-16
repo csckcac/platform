@@ -155,7 +155,7 @@ public class RequestSender {
                 }
             } catch (XMLStreamException e) {
                 if (!e.getClass().getSimpleName().equals(expectedException)) {
-                    throw new XMLStreamException(e.getMessage());
+                    throw new XMLStreamException(e);
                 }
             } catch (AxisFault axisFault) {
                 axisFault.printStackTrace();

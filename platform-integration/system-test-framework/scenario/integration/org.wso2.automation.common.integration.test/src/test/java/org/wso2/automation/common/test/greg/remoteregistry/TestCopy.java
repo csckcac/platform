@@ -68,8 +68,8 @@ public class TestCopy {
             deleteResources("/test1");
             log.info("***************Registry API Resource Copy Test - Passed *******************");
         } catch (RegistryException e) {
-            log.error("Registry API Resource Copy Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Resource Copy Test - Failed:" + e.getMessage());
+            log.error("Registry API Resource Copy Test -Failed :" + e);
+            throw new RegistryException("Registry API Resource Copy Test - Failed:" + e);
         }
     }
 
@@ -94,8 +94,8 @@ public class TestCopy {
             deleteResources("/test1");
             log.info("***************Registry API Collection Copy Test - Failed *****************");
         } catch (RegistryException e) {
-            log.error("Registry API Collection Copy Test-Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Collection Copy Test - Failed:" + e.getMessage());
+            log.error("Registry API Collection Copy Test-Failed :" + e);
+            throw new RegistryException("Registry API Collection Copy Test - Failed:" + e);
         }
     }
 
@@ -109,8 +109,8 @@ public class TestCopy {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 }

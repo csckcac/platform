@@ -70,11 +70,11 @@ public class LifeCycleComparisonServiceTestClient {
             verifyResourceDeleted(wsdl_path_admin1, wsdl_path_admin2);           //assert resource deleted successfully
             log.info("***************Multi Tenancy Life Cycle Comparison Service Test Client - Passed***************");
         } catch (GovernanceException e) {
-            log.error("Multi Tenancy Life Cycle Comparison Service Test Client - Failed:" + e.getMessage());
-            throw new GovernanceException("Multi Tenancy Life Cycle Comparison Service Test Client - Failed :" + e.getMessage());
+            log.error("Multi Tenancy Life Cycle Comparison Service Test Client - Failed:" + e);
+            throw new GovernanceException("Multi Tenancy Life Cycle Comparison Service Test Client - Failed :" + e);
         } catch (RegistryException e) {
-            log.error("Multi Tenancy Life Cycle Comparison Service Test Client - Failed:" + e.getMessage());
-            throw new RegistryException("Multi Tenancy Life Cycle Comparison Service Test Client - Failed :" + e.getMessage());
+            log.error("Multi Tenancy Life Cycle Comparison Service Test Client - Failed:" + e);
+            throw new RegistryException("Multi Tenancy Life Cycle Comparison Service Test Client - Failed :" + e);
         }
     }
 
@@ -87,8 +87,8 @@ public class LifeCycleComparisonServiceTestClient {
                 registry_diffDomainUser1.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 
@@ -107,8 +107,8 @@ public class LifeCycleComparisonServiceTestClient {
             wsdlManager.addWsdl(wsdl);
             log.info("Add wsdl");
         } catch (GovernanceException e) {
-            log.error("Failed to add WSDL:" + e.getMessage());
-            throw new GovernanceException("Failed to add WSDL:" + e.getMessage());
+            log.error("Failed to add WSDL:" + e);
+            throw new GovernanceException("Failed to add WSDL:" + e);
         }
     }
 
@@ -119,8 +119,8 @@ public class LifeCycleComparisonServiceTestClient {
             assertFalse(registry.resourceExists(wsdl_path_admin2), "admin1 resource exist:");
             assertTrue(registry_diffDomainUser1.resourceExists(wsdl_path_admin2), "admin2 resource exist:");
         } catch (RegistryException e) {
-            log.error("Resource does not Exists -Failed:" + e.getMessage());
-            throw new RegistryException("Resource does not Exists -Failed:" + e.getMessage());
+            log.error("Resource does not Exists -Failed:" + e);
+            throw new RegistryException("Resource does not Exists -Failed:" + e);
         }
     }
 
@@ -132,8 +132,8 @@ public class LifeCycleComparisonServiceTestClient {
             assertFalse(registry.resourceExists(wsdl_path_admin2), "admin1 resource exist:");
             assertFalse(registry_diffDomainUser1.resourceExists(wsdl_path_admin2), "admin2 resource exist:");
         } catch (RegistryException e) {
-            log.error("Resource has not been properly deleted : " + e.getMessage());
-            throw new RegistryException("Resource has not been properly deleted :" + e.getMessage());
+            log.error("Resource has not been properly deleted : " + e);
+            throw new RegistryException("Resource has not been properly deleted :" + e);
         }
     }
 
@@ -164,8 +164,8 @@ public class LifeCycleComparisonServiceTestClient {
             // assert admin 1 & admin 2 life cycle states are the same
             assertEquals(registry.get(wsdl_path_admin1).getProperty(StateProperty_admin1), registry_diffDomainUser1.get(wsdl_path_admin2).getProperty(StateProperty_admin2), "Domain user1 & Domain user2 are not in production states:");
         } catch (RegistryException e) {
-            log.error("promoteLifeCycle RegistryExceptio thrown:" + e.getMessage());
-            throw new RegistryException("Resource has not been properly deleted :" + e.getMessage());
+            log.error("promoteLifeCycle RegistryExceptio thrown:" + e);
+            throw new RegistryException("Resource has not been properly deleted :" + e);
         }
 
 
@@ -174,7 +174,7 @@ public class LifeCycleComparisonServiceTestClient {
             admin1_state = registry.get(wsdl_path_admin2).getProperty(StateProperty_admin2);
         } catch (RegistryException e) {
 
-            log.info("promoteLifeCycle RegistryExceptio Exception thrown:" + e.getMessage());
+            log.info("promoteLifeCycle RegistryExceptio Exception thrown:" + e);
             //registry null exception is caught to assert life cycle does not appear to admin1:
             assertNull(admin1_state);
             log.info("admin 1 is unable to view admin2 life cycle state");
@@ -184,7 +184,7 @@ public class LifeCycleComparisonServiceTestClient {
             // assert admin 2 life cycle state is visible from admin 1
             admin2_state = registry_diffDomainUser1.get(wsdl_path_admin1).getProperty(StateProperty_admin1);
         } catch (RegistryException e) {
-            log.info("promoteLifeCycle RegistryExceptio Exception thrown:" + e.getMessage());
+            log.info("promoteLifeCycle RegistryExceptio Exception thrown:" + e);
             //registry null exception is caught to assert life cycle does not appear to admin1:
             assertNull(admin2_state);
             log.info("admin 2 is unable to view admin1 life cycle state");
@@ -217,15 +217,15 @@ public class LifeCycleComparisonServiceTestClient {
                          "After Demoting service Lifecycle user1 & user2 are not in development stage:");
 
         } catch (RegistryException e) {
-            log.error("promoteLifeCycle RegistryExceptio thrown:" + e.getMessage());
-            throw new RegistryException("Resource has not been properly deleted :" + e.getMessage());
+            log.error("promoteLifeCycle RegistryExceptio thrown:" + e);
+            throw new RegistryException("Resource has not been properly deleted :" + e);
         }
 
         try {
             // assert admin 2 life cycle state is visible from admin 1
             admin1_state = registry.get(wsdl_path_admin2).getProperty(StateProperty_admin2);
         } catch (RegistryException e) {
-            log.info("promoteLifeCycle RegistryExceptio Exception thrown:" + e.getMessage());
+            log.info("promoteLifeCycle RegistryExceptio Exception thrown:" + e);
             //registry null exception is caught to assert life cycle does not appear to admin1:
             assertNull(admin1_state);
             log.info("Demote - admin 1 is unable to view admin2 life cycle state");
@@ -236,7 +236,7 @@ public class LifeCycleComparisonServiceTestClient {
             admin2_state = registry_diffDomainUser1.get(wsdl_path_admin1).getProperty(StateProperty_admin1);
 
         } catch (RegistryException e) {
-            log.info("promoteLifeCycle RegistryExceptio Exception thrown:" + e.getMessage());
+            log.info("promoteLifeCycle RegistryExceptio Exception thrown:" + e);
             //registry null exception is caught to assert life cycle does not appear to admin1:
             assertNull(admin2_state);
             log.info("Demote -admin 2 is unable to view admin1 life cycle state");

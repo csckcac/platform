@@ -78,17 +78,17 @@ public class DSSPriviledgeGroupCreatorSeleniumTest {
             userLogout();
             log.info("*******Data Stratos - Add Privilege Group  Test - Passed **********");
         } catch (AssertionFailedError e) {
-            log.info("Add Privilege Group  Test Failed :" + e.getMessage());
+            log.info("Add Privilege Group  Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Add Privilege Group  Test Failed :" + e.getMessage());
+            throw new AssertionFailedError("Add Privilege Group  Test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("Add Privilege Group  Test Failed:" + e.getMessage());
+            log.info("Add Privilege Group  Test Failed:" + e);
             userLogout();
-            throw new WebDriverException("Add Privilege Group  Test Failed :" + e.getMessage());
+            throw new WebDriverException("Add Privilege Group  Test Failed :" + e);
         } catch (Exception e) {
-            log.info("Add Privilege Group  Test Failed :" + e.getMessage());
+            log.info("Add Privilege Group  Test Failed :" + e);
             userLogout();
-            throw new Exception("Add Privilege Group  Test Failed:" + e.getMessage());
+            throw new Exception("Add Privilege Group  Test Failed:" + e);
         }
     }
 

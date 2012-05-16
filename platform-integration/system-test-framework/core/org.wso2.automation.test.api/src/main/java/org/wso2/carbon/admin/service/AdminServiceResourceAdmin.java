@@ -84,15 +84,15 @@ public class AdminServiceResourceAdmin {
         try {
             collectionContentBean = resourceAdminServiceStub.getCollectionContent(destinationPath);
         } catch (RemoteException e) {
-            log.error("Resource getting failed due to RemoteException : " + e.getMessage());
+            log.error("Resource getting failed due to RemoteException : " + e);
             throw new RemoteException("Resource getting failed due to RemoteException :" +
-                                      e.getMessage());
+                                      e);
         } catch (ResourceAdminServiceExceptionException e) {
             log.error("Resource getting failed due to ResourceAdminServiceExceptionException : " +
-                      e.getMessage());
+                      e);
             throw new ResourceAdminServiceExceptionException(
                     "Resource getting failed due to ResourceAdminServiceExceptionException:" +
-                    e.getMessage());
+                    e);
         }
 
         return collectionContentBean;
@@ -114,11 +114,11 @@ public class AdminServiceResourceAdmin {
             Assert.assertTrue("WSDL Adding failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_WSDL, description, dh, null));
             log.info("WSDL Added");
         } catch (RemoteException e) {
-            log.error("WSDL adding failed due to RemoteException : " + e.getMessage());
-            Assert.fail("WSDL adding failed due to RemoteException : " + e.getMessage());
+            log.error("WSDL adding failed due to RemoteException : " + e);
+            Assert.fail("WSDL adding failed due to RemoteException : " + e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.error("WSDL adding failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("WSDL adding failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
+            log.error("WSDL adding failed due to ResourceAdminServiceExceptionException : " + e);
+            Assert.fail("WSDL adding failed due to ResourceAdminServiceExceptionException : " + e);
         }
 
     }
@@ -131,11 +131,11 @@ public class AdminServiceResourceAdmin {
             Assert.assertTrue("Importing WSDL from URL failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_WSDL, description, fetchURL, null));
             log.info("WSDL imported");
         } catch (RemoteException e) {
-            log.error("Importing WSDL from URL failed due to RemoteException : " + e.getMessage());
-            Assert.fail("Importing WSDL from URL failed due to RemoteException : " + e.getMessage());
+            log.error("Importing WSDL from URL failed due to RemoteException : " + e);
+            Assert.fail("Importing WSDL from URL failed due to RemoteException : " + e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Importing WSDL from URL failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("Importing WSDL from URL failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
+            log.error("Importing WSDL from URL failed due to ResourceAdminServiceExceptionException : " + e);
+            Assert.fail("Importing WSDL from URL failed due to ResourceAdminServiceExceptionException : " + e);
         }
 
     }
@@ -148,11 +148,11 @@ public class AdminServiceResourceAdmin {
             Assert.assertTrue("Schema Adding failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SCHEMA, description, dh, null));
             log.info("Schema Added");
         } catch (RemoteException e) {
-            log.error("Schema adding failed due to RemoteException : " + e.getMessage());
-            Assert.fail("Schema adding failed due to RemoteException : " + e.getMessage());
+            log.error("Schema adding failed due to RemoteException : " + e);
+            Assert.fail("Schema adding failed due to RemoteException : " + e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Schema adding failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("Schema adding failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
+            log.error("Schema adding failed due to ResourceAdminServiceExceptionException : " + e);
+            Assert.fail("Schema adding failed due to ResourceAdminServiceExceptionException : " + e);
         }
 
 
@@ -166,11 +166,11 @@ public class AdminServiceResourceAdmin {
             Assert.assertTrue("Importing Schema from URL failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_SCHEMA, description, fetchURL, null));
             log.info("Schema Imported");
         } catch (RemoteException e) {
-            log.error("Importing Schema from URL failed due to RemoteException : " + e.getMessage());
-            Assert.fail("Importing Schema from URL failed due to RemoteException : " + e.getMessage());
+            log.error("Importing Schema from URL failed due to RemoteException : " + e);
+            Assert.fail("Importing Schema from URL failed due to RemoteException : " + e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Importing Schema from URL failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("Importing Schema from URL failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
+            log.error("Importing Schema from URL failed due to ResourceAdminServiceExceptionException : " + e);
+            Assert.fail("Importing Schema from URL failed due to ResourceAdminServiceExceptionException : " + e);
         }
 
     }
@@ -183,11 +183,11 @@ public class AdminServiceResourceAdmin {
             Assert.assertTrue("Adding Policy failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_POLICY, description, dh, null));
             log.info("Policy Added");
         } catch (RemoteException e) {
-            log.error("Policy adding failed due to RemoteException : " + e.getMessage());
-            Assert.fail("Policy adding failed due to RemoteException : " + e.getMessage());
+            log.error("Policy adding failed due to RemoteException : " + e);
+            Assert.fail("Policy adding failed due to RemoteException : " + e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Policy adding failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("Policy adding failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
+            log.error("Policy adding failed due to ResourceAdminServiceExceptionException : " + e);
+            Assert.fail("Policy adding failed due to ResourceAdminServiceExceptionException : " + e);
         }
 
     }
@@ -200,11 +200,11 @@ public class AdminServiceResourceAdmin {
             Assert.assertTrue("Importing Policy failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY, description, fetchURL, null));
             log.info("Policy imported");
         } catch (RemoteException e) {
-            log.error("Importing Policy from URL failed due to ExceptionException : " + e.getMessage());
-            Assert.fail("Importing Policy from URL failed due to ExceptionException : " + e.getMessage());
+            log.error("Importing Policy from URL failed due to ExceptionException : " + e);
+            Assert.fail("Importing Policy from URL failed due to ExceptionException : " + e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Importing Policy from URL failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("Importing Policy from URL failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
+            log.error("Importing Policy from URL failed due to ResourceAdminServiceExceptionException : " + e);
+            Assert.fail("Importing Policy from URL failed due to ResourceAdminServiceExceptionException : " + e);
         }
 
 
@@ -218,11 +218,11 @@ public class AdminServiceResourceAdmin {
             Assert.assertTrue("uploading vnd.wso2.governance-archive failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_GOVERNANCE_ARCHIVE, description, dh, null));
             log.info("Artifact Uploaded");
         } catch (RemoteException e) {
-            log.error("Uploading artifact vnd.wso2.governance-archive failed due to RemoteException : " + e.getMessage());
-            Assert.fail("Uploading artifact vnd.wso2.governance-archive failed due to RemoteException : " + e.getMessage());
+            log.error("Uploading artifact vnd.wso2.governance-archive failed due to RemoteException : " + e);
+            Assert.fail("Uploading artifact vnd.wso2.governance-archive failed due to RemoteException : " + e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Uploading artifact vnd.wso2.governance-archive failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("Uploading artifact vnd.wso2.governance-archive failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
+            log.error("Uploading artifact vnd.wso2.governance-archive failed due to ResourceAdminServiceExceptionException : " + e);
+            Assert.fail("Uploading artifact vnd.wso2.governance-archive failed due to ResourceAdminServiceExceptionException : " + e);
         }
 
     }
@@ -234,11 +234,11 @@ public class AdminServiceResourceAdmin {
             resourceAdminServiceStub.addCollection(parentPath, collectionName, mediaType, description);
             log.info("Collection Added");
         } catch (RemoteException e) {
-            log.error("Collection adding failed due to RemoteException : " + e.getMessage());
-            Assert.fail("Collection adding failed due to RemoteException : " + e.getMessage());
+            log.error("Collection adding failed due to RemoteException : " + e);
+            Assert.fail("Collection adding failed due to RemoteException : " + e);
         } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Collection adding failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("Collection adding failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
+            log.error("Collection adding failed due to ResourceAdminServiceExceptionException : " + e);
+            Assert.fail("Collection adding failed due to ResourceAdminServiceExceptionException : " + e);
         }
 
     }
@@ -252,15 +252,15 @@ public class AdminServiceResourceAdmin {
             resourceAdminServiceStub.addSymbolicLink(parentPath, name, targetPath);
             log.info("Symbolink added :");
         } catch (RemoteException e) {
-            log.error("Symbolink adding failed due to RemoteException : " + e.getMessage());
+            log.error("Symbolink adding failed due to RemoteException : " + e);
             throw new RemoteException("Symbolink adding failed due to RemoteException:" +
-                                      e.getMessage());
+                                      e);
         } catch (ResourceAdminServiceExceptionException e) {
             log.error("Symbolink adding failed due to ResourceAdminServiceExceptionException : " +
-                      e.getMessage());
+                      e);
             throw new ResourceAdminServiceExceptionException(
                     "Symbolink adding failed due to ResourceAdminServiceExceptionException:" +
-                    e.getMessage());
+                    e);
 
         }
     }
@@ -274,15 +274,15 @@ public class AdminServiceResourceAdmin {
             resourceAdminServiceStub.addTextResource(parentPath, fileName, mediaType, description, content);
             log.info("Text resource added :");
         } catch (RemoteException e) {
-            log.error("Text Resource adding failed due to RemoteException : " + e.getMessage());
+            log.error("Text Resource adding failed due to RemoteException : " + e);
             throw new RemoteException("Text Resource adding failed due to RemoteException:" +
-                                      e.getMessage());
+                                      e);
         } catch (ResourceAdminServiceExceptionException e) {
             log.error("Text Resource adding failed due to ResourceAdminServiceExceptionException : " +
-                      e.getMessage());
+                      e);
             throw new ResourceAdminServiceExceptionException(
                     "Text Resource adding failed due to ResourceAdminServiceExceptionException:" +
-                    e.getMessage());
+                    e);
         }
 
     }

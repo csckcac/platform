@@ -52,8 +52,8 @@ public class GregUserCreator {
             String roles[] = {roleName};
             userAdminStub.addUser(sessionCookie, userID, userPassword, roles, null);
         } catch (UserAdminException e) {
-            log.error("Add user fail" + e.getMessage());
-            throw new UserAdminException("Add user fail" + e.getMessage());
+            log.error("Add user fail" + e);
+            throw new UserAdminException("Add user fail" + e);
         }
     }
 
@@ -99,8 +99,8 @@ public class GregUserCreator {
             log.error("Axis2 fault thrown :" + axisFault.getMessage());
             throw new AxisFault("Axis2 fault thrown :" + axisFault.getMessage());
         } catch (RegistryException e) {
-            log.error("Registry Exception thrown:" + e.getMessage());
-            throw new RegistryException("Registry Exception thrown:" + e.getMessage());
+            log.error("Registry Exception thrown:" + e);
+            throw new RegistryException("Registry Exception thrown:" + e);
         }
         log.info("GReg Registry -Login Success");
         return registry;

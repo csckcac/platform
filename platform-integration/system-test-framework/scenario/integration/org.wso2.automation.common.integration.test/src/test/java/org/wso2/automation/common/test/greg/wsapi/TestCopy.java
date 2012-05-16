@@ -50,8 +50,8 @@ public class TestCopy {
             deleteResources("/test1");
             log.info("****************WS-API Resource Copy test - Passed**********************");
         } catch (RegistryException e) {
-            log.error("WS-API Resource Copy test-Fail :" + e.getMessage());
-            throw new RegistryException("WS-API Resource Copy test-Fail:" + e.getMessage());
+            log.error("WS-API Resource Copy test-Fail :" + e);
+            throw new RegistryException("WS-API Resource Copy test-Fail:" + e);
         }
     }
 
@@ -75,8 +75,8 @@ public class TestCopy {
             deleteResources("/test1");
             log.info("*******************WS-API Collection Copy test - Passed ********************");
         } catch (RegistryException e) {
-            log.error("WS-API Collection Copy test-Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Collection Copy test-Fail:" + e.getMessage());
+            log.error("WS-API Collection Copy test-Fail:" + e);
+            throw new RegistryException("WS-API Collection Copy test-Fail:" + e);
         }
     }
 
@@ -90,8 +90,8 @@ public class TestCopy {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

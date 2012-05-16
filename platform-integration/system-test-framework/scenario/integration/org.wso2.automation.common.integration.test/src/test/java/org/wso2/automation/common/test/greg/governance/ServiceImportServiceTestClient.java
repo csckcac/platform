@@ -67,8 +67,8 @@ public class ServiceImportServiceTestClient {
             assertFalse(registry.resourceExists(service_path), "Service Exists");
             log.info("ServiceImportServiceTestClient testAddService() - Passed");
         } catch (RegistryException e) {
-            log.error("Failed testAddService() test :" + e.getMessage());
-            throw new RegistryException("Failed testAddService() test :" + e.getMessage());
+            log.error("Failed testAddService() test :" + e);
+            throw new RegistryException("Failed testAddService() test :" + e);
         }
     }
 
@@ -82,8 +82,8 @@ public class ServiceImportServiceTestClient {
             serviceManager.addService(service);
             log.info("Service Added Successfully");
         } catch (GovernanceException e) {
-            log.error("Failed to add Service:" + e.getMessage());
-            throw new GovernanceException("Failed to add Service:" + e.getMessage());
+            log.error("Failed to add Service:" + e);
+            throw new GovernanceException("Failed to add Service:" + e);
         }
         return service;
     }
@@ -94,8 +94,8 @@ public class ServiceImportServiceTestClient {
                 registry.delete("/_system/governance/trunk/services/com/example/demo/services/ExampleService");
             }
         } catch (RegistryException e) {
-            log.error("Failed to Delete Service :" + e.getMessage());
-            throw new RegistryException("Failed to Delete Service :" + e.getMessage());
+            log.error("Failed to Delete Service :" + e);
+            throw new RegistryException("Failed to Delete Service :" + e);
         }
     }
 

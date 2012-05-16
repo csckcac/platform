@@ -69,8 +69,8 @@ public class TestMove {
             deleteResources("/test");
             log.info("***************Registry API Resource Move From Root Test - Passed**************");
         } catch (RegistryException e) {
-            log.error("Registry API Resource Move From Root Test - Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Resource Move From Root Test - Failed:" + e.getMessage());
+            log.error("Registry API Resource Move From Root Test - Failed:" + e);
+            throw new RegistryException("Registry API Resource Move From Root Test - Failed:" + e);
         }
     }
 
@@ -98,8 +98,8 @@ public class TestMove {
             deleteResources("/move2");
             log.info("**************Registry API Resource Move To Root Test - Passed***************");
         } catch (RegistryException e) {
-            log.error("Registry API Resource Move To Root Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Resource Move To Root Test - Failed:" + e.getMessage());
+            log.error("Registry API Resource Move To Root Test -Failed :" + e);
+            throw new RegistryException("Registry API Resource Move To Root Test - Failed:" + e);
         }
     }
 
@@ -129,8 +129,8 @@ public class TestMove {
             deleteResources("/test");
             log.info("***************Registry API General Resource Move Test -Passed *************");
         } catch (RegistryException e) {
-            log.error("Registry API -GeneralResourceMoveTest RegistryException thrown :" + e.getMessage());
-            throw new RegistryException("Registry API Resource Move To Root Test - Failed:" + e.getMessage());
+            log.error("Registry API -GeneralResourceMoveTest RegistryException thrown :" + e);
+            throw new RegistryException("Registry API Resource Move To Root Test - Failed:" + e);
         }
     }
 
@@ -161,8 +161,8 @@ public class TestMove {
             deleteResources("/test");
             log.info("***************Registry API General Collection Move Test - Passed ***************");
         } catch (RegistryException e) {
-            log.error("Registry API General Collection Move Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API General Collection Move Test - Failed:" + e.getMessage());
+            log.error("Registry API General Collection Move Test -Failed :" + e);
+            throw new RegistryException("Registry API General Collection Move Test - Failed:" + e);
         }
 
     }
@@ -177,8 +177,8 @@ public class TestMove {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 }

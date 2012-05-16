@@ -107,11 +107,11 @@ public class GRegServiceCreatorSeleniumTest {
             new GregUserLogout().userLogout(driver);
             log.info("*****GRegServiceCreatorSeleniumTest - testaddService() -Passed*****");
         } catch (Exception e) {
-            log.info("GRegServiceCreatorSeleniumTest - WebDriver Exception :" + e.getMessage());
+            log.info("GRegServiceCreatorSeleniumTest - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegServiceCreatorSeleniumTest");
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
-            throw new Exception("Failed to add a service:" + e.getMessage());
+            throw new Exception("Failed to add a service:" + e);
         }
 
     }

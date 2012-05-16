@@ -76,17 +76,17 @@ public class ISOpenIDSeleniumTest {
             logintoLiveJournal(openID, liveJournelURL);
             log.info("**********IS Stratos - Open ID Test -Passed *************");
         } catch (AssertionFailedError e) {
-            log.info("Open ID Test Failed :" + e.getMessage());
+            log.info("Open ID Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Open ID Test Failed :" + e.getMessage());
+            throw new AssertionFailedError("Open ID Test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("Open ID Test Failed :" + e.getMessage());
+            log.info("Open ID Test Failed :" + e);
             userLogout();
-            throw new WebDriverException("Open ID Test Failed :" + e.getMessage());
+            throw new WebDriverException("Open ID Test Failed :" + e);
         } catch (Exception e) {
-            log.info("Open ID Test Failed :" + e.getMessage());
+            log.info("Open ID Test Failed :" + e);
             userLogout();
-            throw new Exception("Open ID Test Failed :" + e.getMessage());
+            throw new Exception("Open ID Test Failed :" + e);
         }
     }
 

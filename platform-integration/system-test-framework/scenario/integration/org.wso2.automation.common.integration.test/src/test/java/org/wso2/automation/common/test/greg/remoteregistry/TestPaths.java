@@ -53,8 +53,8 @@ public class TestPaths {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 
@@ -77,8 +77,8 @@ public class TestPaths {
             deleteResources("/testkrishantha");
             log.info("****************Registry API Get On Paths Test - Passed ***************");
         } catch (RegistryException e) {
-            log.error("Registry API Get On Paths Test -Failed:" + e.getMessage());
-            throw new RegistryException("Registry API Get On Paths Test -Failed:" + e.getMessage());
+            log.error("Registry API Get On Paths Test -Failed:" + e);
+            throw new RegistryException("Registry API Get On Paths Test -Failed:" + e);
         }
 
 
@@ -109,8 +109,8 @@ public class TestPaths {
             deleteResources("/testkrishantha1");
             log.info("**************Registry API Put On Paths Test - Passed *****************");
         } catch (RegistryException e) {
-            log.error("Registry API Put On Paths Test -Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Put On Paths Test - Failed:" + e.getMessage());
+            log.error("Registry API Put On Paths Test -Failed :" + e);
+            throw new RegistryException("Registry API Put On Paths Test - Failed:" + e);
         }
     }
 }

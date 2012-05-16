@@ -43,8 +43,8 @@ public class AddWSDLTest {
             wsdlManager.addWsdl(wsdl);
             deleteWSDL();
         } catch (GovernanceException e) {
-            log.error("Failed to add WSDL:" + e.getMessage());
-            throw new GovernanceException("Failed to add WSDL :" + e.getMessage());
+            log.error("Failed to add WSDL:" + e);
+            throw new GovernanceException("Failed to add WSDL :" + e);
         }
     }
 
@@ -58,8 +58,8 @@ public class AddWSDLTest {
                 registry.delete(service_path);
             }
         } catch (RegistryException e) {
-            log.error("Failed to delete WSDL :" + e.getMessage());
-            throw new RegistryException("Failed to delete WSDL :" + e.getMessage());
+            log.error("Failed to delete WSDL :" + e);
+            throw new RegistryException("Failed to delete WSDL :" + e);
         }
     }
 

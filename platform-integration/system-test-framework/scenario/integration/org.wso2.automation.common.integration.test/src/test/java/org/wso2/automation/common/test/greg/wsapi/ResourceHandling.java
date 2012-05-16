@@ -77,8 +77,8 @@ public class ResourceHandling {
             deleteResources("/f1012");
             log.info("*************WS-API New Collection test -Passed *************");
         } catch (RegistryException e) {
-            log.error("WS-API New Collection test - Fail:" + e.getMessage());
-            throw new RegistryException("WS-API New Collection test - Fail:" + e.getMessage());
+            log.error("WS-API New Collection test - Fail:" + e);
+            throw new RegistryException("WS-API New Collection test - Fail:" + e);
         }
     }
 
@@ -164,11 +164,11 @@ public class ResourceHandling {
             deleteResources("/f96");
             log.info("**************WS-API Resource Copy test -Passed *************");
         } catch (RegistryException e) {
-            log.error("WS-API Resource Copy test -Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Resource Copy test - Fail:" + e.getMessage());
+            log.error("WS-API Resource Copy test -Fail:" + e);
+            throw new RegistryException("WS-API Resource Copy test - Fail:" + e);
         } catch (Exception e) {
-            log.error("WS-API Resource Copy test - Fail:" + e.getMessage());
-            throw new Exception("WS-API Resource Copy test - Fail:" + e.getMessage());
+            log.error("WS-API Resource Copy test - Fail:" + e);
+            throw new Exception("WS-API Resource Copy test - Fail:" + e);
         }
     }
 
@@ -241,11 +241,11 @@ public class ResourceHandling {
             deleteResources("/c9111");
             log.info("*************WS-API Collection Copy test -Passed ************");
         } catch (RegistryException e) {
-            log.error("WS-API Collection Copy test- Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Collection Copy test- Fail:" + e.getMessage());
+            log.error("WS-API Collection Copy test- Fail:" + e);
+            throw new RegistryException("WS-API Collection Copy test- Fail:" + e);
         } catch (Exception e) {
-            log.error("WS-API Collection Copy test-Fail" + e.getMessage());
-            throw new Exception("WS-API Collection Copy test- Fail:" + e.getMessage());
+            log.error("WS-API Collection Copy test-Fail" + e);
+            throw new Exception("WS-API Collection Copy test- Fail:" + e);
         }
     }
 
@@ -286,8 +286,8 @@ public class ResourceHandling {
             deleteResources("/testk");
             log.info("**************WS-API Get Resource Operation test -Passed *************");
         } catch (RegistryException e) {
-            log.error("WS-API Get Resource Operation test- Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Get Resource Operation test- Fail:" + e.getMessage());
+            log.error("WS-API Get Resource Operation test- Fail:" + e);
+            throw new RegistryException("WS-API Get Resource Operation test- Fail:" + e);
         }
     }
 
@@ -316,8 +316,8 @@ public class ResourceHandling {
             deleteResources("/testk2");
             log.info("*************WS-API Get Collection Operation test - Passed *************");
         } catch (RegistryException e) {
-            log.error("WS-API Get Collection Operation test-Fail:" + e.getMessage());
-            throw new RegistryException("WS-API Get Collection Operation test- Fail:" + e.getMessage());
+            log.error("WS-API Get Collection Operation test-Fail:" + e);
+            throw new RegistryException("WS-API Get Collection Operation test- Fail:" + e);
         }
     }
 
@@ -336,8 +336,8 @@ public class ResourceHandling {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 

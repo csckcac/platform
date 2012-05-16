@@ -78,8 +78,8 @@ public class RegistryProvider {
             log.error("Unable to initialize WSRegistryServiceClient :" + axisFault.getMessage());
             throw new AxisFault("Unable to initialize WSRegistryServiceClient :" + axisFault.getMessage());
         } catch (RegistryException e) {
-            log.error("Unable to initialize WSRegistryServiceClient:" + e.getMessage());
-            throw new RegistryException("Unable to initialize WSRegistryServiceClient:" + e.getMessage());
+            log.error("Unable to initialize WSRegistryServiceClient:" + e);
+            throw new RegistryException("Unable to initialize WSRegistryServiceClient:" + e);
         }
         return registry;
     }
@@ -93,8 +93,8 @@ public class RegistryProvider {
         try {
             governance = GovernanceUtils.getGovernanceUserRegistry(registry, userName);
         } catch (RegistryException e) {
-            log.error("getGovernance Registry Exception thrown:" + e.getMessage());
-            throw new RegistryException("getGovernance Registry Exception thrown:" + e.getMessage());
+            log.error("getGovernance Registry Exception thrown:" + e);
+            throw new RegistryException("getGovernance Registry Exception thrown:" + e);
         }
         return governance;
     }

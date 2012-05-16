@@ -200,7 +200,7 @@ public class SecureAxisServiceClient implements CallbackHandler {
                 }
 
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.error(e);
                 throw new Exception(e.getMessage(), e);
             }
 

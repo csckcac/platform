@@ -80,7 +80,7 @@ public class ReScheduleTaskTest extends DataServiceTest {
                         Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         log.error("InterruptedException :", e);
-                        Assert.fail("InterruptedException :" + e.getMessage());
+                        Assert.fail("InterruptedException :" + e);
                     }
                     break;
                 }
@@ -117,7 +117,7 @@ public class ReScheduleTaskTest extends DataServiceTest {
                 Thread.sleep(taskInterval);
             } catch (InterruptedException e) {
                 log.error("InterruptedException :", e);
-                Assert.fail("InterruptedException :" + e.getMessage());
+                Assert.fail("InterruptedException :" + e);
             }
         }
         log.info("ScheduleTask verifying Success");
@@ -153,7 +153,7 @@ public class ReScheduleTaskTest extends DataServiceTest {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 log.error("InterruptedException :", e);
-                Assert.fail("InterruptedException :" + e.getMessage());
+                Assert.fail("InterruptedException :" + e);
             }
         }
         log.info("schedule task stopped");
@@ -166,7 +166,7 @@ public class ReScheduleTaskTest extends DataServiceTest {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 log.error("InterruptedException :", e);
-                Assert.fail("InterruptedException :" + e.getMessage());
+                Assert.fail("InterruptedException :" + e);
             }
 
         }
@@ -180,7 +180,7 @@ public class ReScheduleTaskTest extends DataServiceTest {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 log.error("InterruptedException :", e);
-                Assert.fail("InterruptedException :" + e.getMessage());
+                Assert.fail("InterruptedException :" + e);
             }
         }
         log.info("reschedule task verified");
@@ -193,7 +193,7 @@ public class ReScheduleTaskTest extends DataServiceTest {
                 Thread.sleep(taskInterval);
             } catch (InterruptedException e) {
                 log.error("InterruptedException :", e);
-                Assert.fail("InterruptedException :" + e.getMessage());
+                Assert.fail("InterruptedException :" + e);
             }
         }
         log.info("Task Count verified");

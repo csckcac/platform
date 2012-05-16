@@ -74,11 +74,11 @@ public class AdminServiceAuthentication {
         try {
             loginStatus = authenticationAdminStub.login(userName, password, backEndURL);
         } catch (RemoteException e) {
-            log.error("Login to " + endPoint + " fail :" + e.getMessage());
-            Assert.fail("Login to " + endPoint + " fail :" + e.getMessage());
+            log.error("Login to " + endPoint + " fail :" + e);
+            Assert.fail("Login to " + endPoint + " fail :" + e);
         } catch (LoginAuthenticationExceptionException e) {
-            log.error("Login to " + endPoint + " fail :" + e.getMessage());
-            Assert.fail("Login to " + endPoint + " fail :" + e.getMessage());
+            log.error("Login to " + endPoint + " fail :" + e);
+            Assert.fail("Login to " + endPoint + " fail :" + e);
         }
         Assert.assertTrue(loginStatus, "Login unsuccessful");
         log.info("Login Successful");

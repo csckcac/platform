@@ -267,12 +267,12 @@ public class StratosAppServiceTest {
             Assert.fail("Axis2 Exception login failed" + axisFault.getMessage());
         } catch (RemoteException e) {
             e.printStackTrace();
-            log.error("RMI exception" + e.getMessage());
-            Assert.fail("Securiy invocation failed" + e.getMessage());
+            log.error("RMI exception" + e);
+            Assert.fail("Securiy invocation failed" + e);
         } catch (SecurityAdminServiceSecurityConfigExceptionException e) {
             e.printStackTrace();
-            log.error("Security admin services failed" + e.getMessage());
-            Assert.fail("Security Admin services failed" + e.getMessage());
+            log.error("Security admin services failed" + e);
+            Assert.fail("Security Admin services failed" + e);
         } catch (Exception e1) {
             e1.printStackTrace();
             log.error("Security failed" + e1.getMessage());

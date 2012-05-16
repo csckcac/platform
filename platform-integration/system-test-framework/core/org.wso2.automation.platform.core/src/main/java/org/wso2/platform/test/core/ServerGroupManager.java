@@ -95,20 +95,20 @@ public class ServerGroupManager {
             }
 
         } catch (ServerConfigurationException e) {
-            log.error("Server configuration error " + e.getMessage());
-            throw new ServerConfigurationException("Server configuration error " + e.getMessage());
+            log.error("Server configuration error " + e);
+            throw new ServerConfigurationException("Server configuration error " + e);
         } catch (ClassNotFoundException e) {
-            log.error("Database Driver Not Found " + e.getMessage());
-            throw new ClassNotFoundException("Database Driver Not Found " + e.getMessage());
+            log.error("Database Driver Not Found " + e);
+            throw new ClassNotFoundException("Database Driver Not Found " + e);
         } catch (SQLException e) {
-            log.error("Database Server connection failed " + e.getMessage());
-            throw new SQLException("Database Server connection failed " + e.getMessage());
+            log.error("Database Server connection failed " + e);
+            throw new SQLException("Database Server connection failed " + e);
         } catch (IOException e) {
-            log.error("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
-            throw new IOException("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
+            log.error("Exception while reading  commonConfig.xml in deployment framework " + e);
+            throw new IOException("Exception while reading  commonConfig.xml in deployment framework " + e);
         } catch (XMLStreamException e) {
-            log.error("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
-            throw new XMLStreamException("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
+            log.error("Exception while reading  commonConfig.xml in deployment framework " + e);
+            throw new XMLStreamException("Exception while reading  commonConfig.xml in deployment framework " + e);
         }
 
         //create users in each server
@@ -169,11 +169,11 @@ public class ServerGroupManager {
             wso2registry = AXIOMUtil.stringToOM(FileManager.readFile(carbonHome + File.separator + "repository" + File.separator + "conf" + File.separator + "registry.xml").trim());
 
         } catch (IOException e) {
-            log.error("Exception while reading  registry.xml in deployment framework " + e.getMessage());
-            Assert.fail("Exception while reading  registry.xml in deployment framework " + e.getMessage());
+            log.error("Exception while reading  registry.xml in deployment framework " + e);
+            Assert.fail("Exception while reading  registry.xml in deployment framework " + e);
         } catch (XMLStreamException e) {
-            log.error("Exception while reading  registry.xml in deployment framework " + e.getMessage());
-            Assert.fail("Exception while reading  registry.xml in deployment framework " + e.getMessage());
+            log.error("Exception while reading  registry.xml in deployment framework " + e);
+            Assert.fail("Exception while reading  registry.xml in deployment framework " + e);
         }
         OMElement currentDBConfig = wso2registry.getFirstChildWithName(new QName("currentDBConfig"));
         Iterator dbConfigList = wso2registry.getChildrenWithName(new QName("dbConfig"));

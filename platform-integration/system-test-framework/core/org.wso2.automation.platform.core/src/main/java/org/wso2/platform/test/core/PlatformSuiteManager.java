@@ -25,7 +25,7 @@ public class PlatformSuiteManager implements ISuiteListener {
             }
         } catch (Exception e) {  /*cannot throw the exception */
             log.error(e);
-            Assert.fail("Fail start servers " + e.getMessage());
+            Assert.fail("Fail start servers " + e);
         }
     }
 
@@ -40,7 +40,7 @@ public class PlatformSuiteManager implements ISuiteListener {
             }
         } catch (Exception e) { /*cannot throw the exception */
             log.error(e);
-            Assert.fail("Fail to stop servers " + e.getMessage());
+            Assert.fail("Fail to stop servers " + e);
         }
     }
 

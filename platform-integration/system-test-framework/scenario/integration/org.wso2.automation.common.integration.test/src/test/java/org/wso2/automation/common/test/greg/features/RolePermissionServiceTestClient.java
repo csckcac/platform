@@ -67,8 +67,8 @@ public class RolePermissionServiceTestClient {
             deleteRoleAndUsers(roleName, userName);
             log.info("********GReg Create a Role with only Login privilege test - passed ********");
         } catch (UserAdminException e) {
-            log.error("Failed to add login Role with User :" + e.getMessage());
-            throw new UserAdminException("Failed to add login Role with User :" + e.getMessage());
+            log.error("Failed to add login Role with User :" + e);
+            throw new UserAdminException("Failed to add login Role with User :" + e);
         }
     }
 
@@ -91,9 +91,9 @@ public class RolePermissionServiceTestClient {
             deleteRoleAndUsers(roleName, userName);
             log.info("*******GReg Create a Role with only configure permission  test - passed ***");
         } catch (UserAdminException e) {
-            log.error("Failed to add configure permission with User :" + e.getMessage());
+            log.error("Failed to add configure permission with User :" + e);
             throw new UserAdminException("Failed to add configure permission with User :" +
-                                         e.getMessage());
+                                         e);
         }
     }
 
@@ -116,9 +116,9 @@ public class RolePermissionServiceTestClient {
             deleteRoleAndUsers(roleName, userName);
             log.info("*******GReg Create a Role with only manage permission  test - passed ***");
         } catch (UserAdminException e) {
-            log.error("Failed to add manage permission with User :" + e.getMessage());
+            log.error("Failed to add manage permission with User :" + e);
             throw new UserAdminException("Failed to add manage permission with User :" +
-                                         e.getMessage());
+                                         e);
         }
 
     }
@@ -142,9 +142,9 @@ public class RolePermissionServiceTestClient {
             deleteRoleAndUsers(roleName, userName);
             log.info("*******GReg Create a Role with only monitor permission  test - passed ***");
         } catch (UserAdminException e) {
-            log.error("Failed to add monitor permission with User :" + e.getMessage());
+            log.error("Failed to add monitor permission with User :" + e);
             throw new UserAdminException("Failed to add monitor permission with User :" +
-                                         e.getMessage());
+                                         e);
         }
     }
 
@@ -177,9 +177,9 @@ public class RolePermissionServiceTestClient {
             deleteRoleAndUsers(roleName, userName);
             log.info("*******GReg Create a Role with only monitor permission  test - passed ***");
         } catch (UserAdminException e) {
-            log.error("Failed to add monitor permission with User :" + e.getMessage());
+            log.error("Failed to add monitor permission with User :" + e);
             throw new UserAdminException("Failed to add monitor permission with User :" +
-                                         e.getMessage());
+                                         e);
         }
 
     }
@@ -202,9 +202,9 @@ public class RolePermissionServiceTestClient {
             deleteRoleAndUsers(roleName, userName);
             log.info("*******GReg Create a Role with super admin permission  test - passed ***");
         } catch (UserAdminException e) {
-            log.error("Failed to add super admin permission with User :" + e.getMessage());
+            log.error("Failed to add super admin permission with User :" + e);
             throw new UserAdminException("Failed to add super admin permission with User :" +
-                                         e.getMessage());
+                                         e);
         }
 
     }

@@ -57,7 +57,7 @@ public class AdminServiceWebAppAdmin {
         try {
             url = new URL("file://" + filePath);
         } catch (MalformedURLException e) {
-            log.error("Malformed URL " + e.getMessage());
+            log.error("Malformed URL " + e);
         }
         DataHandler dh = new DataHandler(url);
         WebappUploadData webApp;
@@ -69,8 +69,8 @@ public class AdminServiceWebAppAdmin {
             assertTrue(webappAdminStub.uploadWebapp(new WebappUploadData[]{webApp})
                     , "webapp upload unsuccessful");
         } catch (RemoteException e) {
-            log.error("Fail to upload webapp file :" + e.getMessage());
-            throw new RemoteException("Fail to upload webapp file :" + e.getMessage());
+            log.error("Fail to upload webapp file :" + e);
+            throw new RemoteException("Fail to upload webapp file :" + e);
         }
     }
 
@@ -79,8 +79,8 @@ public class AdminServiceWebAppAdmin {
         try {
             webappAdminStub.deleteStartedWebapps(new String[]{fileName});
         } catch (RemoteException e) {
-            log.error("Webapp deletion error:" + e.getMessage());
-            throw new RemoteException("Webapp deletion error:" + e.getMessage());
+            log.error("Webapp deletion error:" + e);
+            throw new RemoteException("Webapp deletion error:" + e);
         }
     }
 

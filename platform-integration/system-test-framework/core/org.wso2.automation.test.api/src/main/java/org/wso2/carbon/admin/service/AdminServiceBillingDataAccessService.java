@@ -58,8 +58,8 @@ public class AdminServiceBillingDataAccessService {
             updateStatus = billingDataAccessServiceStub.changeSubscription(customer.getId(), usagePlanName);
         } catch (Exception e) {
             updateStatus = false;
-            log.error("Unable to update usage plan : " + e.getMessage());
-            throw new Exception("Unable to update usage plan : " + e.getMessage());
+            log.error("Unable to update usage plan : " + e);
+            throw new Exception("Unable to update usage plan : " + e);
         }
         return updateStatus;
     }
@@ -70,12 +70,12 @@ public class AdminServiceBillingDataAccessService {
         try {
             billingDataAccessServiceStub.getActiveSubscriptionOfCustomer(customerId);
         } catch (RemoteException e) {
-            log.error("Subscription update failed:" + e.getMessage());
-            throw new RemoteException("Subscription update failed:" + e.getMessage());
+            log.error("Subscription update failed:" + e);
+            throw new RemoteException("Subscription update failed:" + e);
         } catch (BillingDataAccessServiceExceptionException e) {
-            log.error("Subscription update failed :" + e.getMessage());
+            log.error("Subscription update failed :" + e);
             throw new BillingDataAccessServiceExceptionException("Subscription update failed :" +
-                                                                 e.getMessage());
+                                                                 e);
         }
     }
 
@@ -86,11 +86,11 @@ public class AdminServiceBillingDataAccessService {
         try {
             customer = billingDataAccessServiceStub.getCustomerWithName(customerName);
         } catch (RemoteException e) {
-            log.error("Subscription update failed:" + e.getMessage());
-            throw new RemoteException ("Subscription update failed:" + e.getMessage());
+            log.error("Subscription update failed:" + e);
+            throw new RemoteException ("Subscription update failed:" + e);
         } catch (BillingDataAccessServiceExceptionException e) {
-            log.error("Subscription update failed :" + e.getMessage());
-            throw new BillingDataAccessServiceExceptionException("Subscription update failed :" + e.getMessage());
+            log.error("Subscription update failed :" + e);
+            throw new BillingDataAccessServiceExceptionException("Subscription update failed :" + e);
         }
         return customer;
     }
@@ -102,12 +102,12 @@ public class AdminServiceBillingDataAccessService {
         try {
             subscription = billingDataAccessServiceStub.getSubscription(subscriptionId);
         } catch (RemoteException e) {
-            log.error("Subscription update failed:" + e.getMessage());
-            throw new RemoteException("Subscription update failed:" + e.getMessage());
+            log.error("Subscription update failed:" + e);
+            throw new RemoteException("Subscription update failed:" + e);
         } catch (BillingDataAccessServiceExceptionException e) {
-            log.error("Subscription update failed :" + e.getMessage());
+            log.error("Subscription update failed :" + e);
             throw new BillingDataAccessServiceExceptionException("Subscription update failed :"
-                                                                 + e.getMessage());
+                                                                 + e);
         }
         return subscription;
     }

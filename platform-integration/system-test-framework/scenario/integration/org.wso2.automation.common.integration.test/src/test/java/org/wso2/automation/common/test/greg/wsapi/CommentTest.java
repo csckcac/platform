@@ -129,8 +129,8 @@ public class CommentTest {
             assertFalse(registry.resourceExists(path), path + "has not been deleted properly");    //assert resource has been properly deleted
             log.info("***********WS-API CommentTest AddComment - Passed**********");
         } catch (Exception e) {
-            log.error("WS-API add comment Failed :" + e.getMessage());
-            throw new Exception("WS-API add comment Failed :" + e.getMessage());
+            log.error("WS-API add comment Failed :" + e);
+            throw new Exception("WS-API add comment Failed :" + e);
         }
     }
 
@@ -199,8 +199,8 @@ public class CommentTest {
             assertFalse(registry.resourceExists(path), path + "has not been deleted properly");                  //assert resource has been properly deleted
             log.info("**********WS-API add Comment To Resource - passed**********");
         } catch (Exception e) {
-            log.error("WS-API add Comment To Resource  Failed:" + e.getMessage());
-            throw new Exception("WS-API add Comment To Resource Failed:" + e.getMessage());
+            log.error("WS-API add Comment To Resource  Failed:" + e);
+            throw new Exception("WS-API add Comment To Resource Failed:" + e);
         }
     }
 
@@ -286,8 +286,8 @@ public class CommentTest {
             assertFalse(registry.resourceExists(path), path + "Resource Deleted");                    //Assert resource has been properly deleted
             log.info("**********WS-API add Comment to Collection - Passed**********");
         } catch (Exception e) {
-            log.error("WS-API add Comment to Collection Failed:" + e.getMessage());
-            throw new Exception("WS-API add Comment to Collection Failed:" + e.getMessage());
+            log.error("WS-API add Comment to Collection Failed:" + e);
+            throw new Exception("WS-API add Comment to Collection Failed:" + e);
         }
     }
 
@@ -368,8 +368,8 @@ public class CommentTest {
             }
             log.info("***********WS-API add Comment to Root - passed**********");
         } catch (Exception e) {
-            log.error("WS-API add Comment to Root Failed:" + e.getMessage());
-            throw new Exception("WS-API add Comment to Root Failed:" + e.getMessage());
+            log.error("WS-API add Comment to Root Failed:" + e);
+            throw new Exception("WS-API add Comment to Root Failed:" + e);
         }
     }
 
@@ -433,8 +433,8 @@ public class CommentTest {
                 fail("Failed to get comments form URL:/c101/c11/r1;comments");
             }
         } catch (Exception e) {
-            log.error("WS-API Edit Comment Failed:" + e.getMessage());
-            throw new Exception("WS-API Edit Comment Failed:" + e.getMessage());
+            log.error("WS-API Edit Comment Failed:" + e);
+            throw new Exception("WS-API Edit Comment Failed:" + e);
         }
     }
 
@@ -469,8 +469,8 @@ public class CommentTest {
             assertFalse(registry.resourceExists(r1Path), "Resource has been properly deleted:");      // assert Resource properly deleted
             log.info("***********WS-API Delete comment from a collection - Passed***********");
         } catch (RegistryException e) {
-            log.error("WS-API Delete comment from a collection Failed:" + e.getMessage());
-            throw new Exception("WS-API Delete comment from a collection Failed:" + e.getMessage());
+            log.error("WS-API Delete comment from a collection Failed:" + e);
+            throw new Exception("WS-API Delete comment from a collection Failed:" + e);
         }
     }
 
@@ -488,8 +488,8 @@ public class CommentTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
 
     }

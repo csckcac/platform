@@ -89,19 +89,19 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
             userLogout();
             log.info("*******IS Stratos - Create a new Policy from UI Test - Passed ***********");
         } catch (AssertionFailedError e) {
-            log.info("Create a new Policy from UI Test Failed :" + e.getMessage());
+            log.info("Create a new Policy from UI Test Failed :" + e);
             userLogout();
             throw new AssertionFailedError("Create a new Policy from UI Test Failed :" +
-                                           e.getMessage());
+                                           e);
         } catch (WebDriverException e) {
-            log.info("Create a new Policy from UI Test Failed :" + e.getMessage());
+            log.info("Create a new Policy from UI Test Failed :" + e);
             userLogout();
             throw new WebDriverException("Create a new Policy from UI Test Failed:" +
-                                         e.getMessage());
+                                         e);
         } catch (Exception e) {
-            log.info("Create a new Policy from UI Test Failed :" + e.getMessage());
+            log.info("Create a new Policy from UI Test Failed :" + e);
             userLogout();
-            throw new Exception("Create a new Policy from UI Test Failed :" + e.getMessage());
+            throw new Exception("Create a new Policy from UI Test Failed :" + e);
         }
     }
 

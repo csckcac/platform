@@ -50,7 +50,7 @@ public class SecureDataServiceTest extends DataServiceTest {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
-            Assert.fail("InterruptedException :" + e.getMessage());
+            Assert.fail("InterruptedException :" + e);
 
         }
         this.secureService(policyId);
@@ -382,7 +382,7 @@ public class SecureDataServiceTest extends DataServiceTest {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
-            Assert.fail("InterruptedException :" + e.getMessage());
+            Assert.fail("InterruptedException :" + e);
 
         }
     }

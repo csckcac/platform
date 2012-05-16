@@ -81,17 +81,17 @@ public class StratosManagerInvoiceSeleniumTest {
             userLogout();
             log.info("*******Stratos Manager Verify Invoice Test - Passed *******");
         } catch (AssertionFailedError e) {
-            log.info("Verify Invoice Test Failed :" + e.getMessage());
+            log.info("Verify Invoice Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Verify Invoice Test Failed :" + e.getMessage());
+            throw new AssertionFailedError("Verify Invoice Test Failed :" + e);
         } catch (WebDriverException e) {
-            log.info("Verify Invoice Test Failed :" + e.getMessage());
+            log.info("Verify Invoice Test Failed :" + e);
             userLogout();
-            throw new WebDriverException("Verify Invoice Test Failed:" + e.getMessage());
+            throw new WebDriverException("Verify Invoice Test Failed:" + e);
         } catch (Exception e) {
-            log.info("Verify Invoice Test Failed :" + e.getMessage());
+            log.info("Verify Invoice Test Failed :" + e);
             userLogout();
-            throw new Exception("Verify Invoice Test Failed :" + e.getMessage());
+            throw new Exception("Verify Invoice Test Failed :" + e);
         }
 
     }

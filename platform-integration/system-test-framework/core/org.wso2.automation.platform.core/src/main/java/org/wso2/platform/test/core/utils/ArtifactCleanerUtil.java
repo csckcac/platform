@@ -68,11 +68,11 @@ public class ArtifactCleanerUtil {
                 try {
                     adminServiceApplicationAdmin.deleteApplication(sessionCookie, aCarAppList);
                 } catch (ApplicationAdminExceptionException e) {
-                    log.error("CApp deployment error " + e.getMessage());
-                    throw new ApplicationAdminExceptionException("CApp deployment error :" + e.getMessage());
+                    log.error("CApp deployment error " + e);
+                    throw new ApplicationAdminExceptionException("CApp deployment error :" + e);
                 } catch (RemoteException e) {
-                    log.error("CApp deployment error " + e.getMessage());
-                    throw new RemoteException("CApp deployment error :" + e.getMessage());
+                    log.error("CApp deployment error " + e);
+                    throw new RemoteException("CApp deployment error :" + e);
                 }
             }
         }
@@ -88,11 +88,11 @@ public class ArtifactCleanerUtil {
             appList = adminServiceApplicationAdmin.listAllApplications(sessionCookie);
 
         } catch (ApplicationAdminExceptionException e) {
-            log.error("Error occurred while getting CApp list " + e.getMessage());
-            throw new ApplicationAdminExceptionException("Error occurred while getting CApp list " + e.getMessage());
+            log.error("Error occurred while getting CApp list " + e);
+            throw new ApplicationAdminExceptionException("Error occurred while getting CApp list " + e);
         } catch (RemoteException e) {
-            log.error("Error occurred while getting CApp list " + e.getMessage());
-            throw new RemoteException("Error occurred while getting CApp list " + e.getMessage());
+            log.error("Error occurred while getting CApp list " + e);
+            throw new RemoteException("Error occurred while getting CApp list " + e);
         }
         return appList;
     }

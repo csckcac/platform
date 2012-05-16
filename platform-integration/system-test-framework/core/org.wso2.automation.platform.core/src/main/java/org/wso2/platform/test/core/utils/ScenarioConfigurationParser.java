@@ -112,7 +112,7 @@ public class ScenarioConfigurationParser {
             }
         } catch (IOException e) {
             String msg = "Unable to close the file input stream created for config file";
-            log.warn(msg + " " + e.getMessage());
+            log.warn(msg + " " + e);
             throw new IOException(msg, e);
         }
     }

@@ -67,8 +67,8 @@ public class QueryTest {
             log.info("**************Registry API Put Registry Queries Test - Passed*****************************");
             assertTrue(successful);
         } catch (Exception e) {
-            log.error("*Registry API Put Registry Queries Test-Failed :" + e.getMessage());
-            throw new RegistryException("*Registry API Put Registry Queries Test - Failed" + e.getMessage());
+            log.error("*Registry API Put Registry Queries Test-Failed :" + e);
+            throw new RegistryException("*Registry API Put Registry Queries Test - Failed" + e);
         }
     }
 
@@ -93,8 +93,8 @@ public class QueryTest {
             deleteResources("/_system/Queries1");
             log.info("***************Registry API Put Registry Queries Test - Passed ******************");
         } catch (Exception e) {
-            log.error("Registry API Put Registry Queries Test - Failed :" + e.getMessage());
-            throw new RegistryException("Registry API Put Registry Queries Test - Failed" + e.getMessage());
+            log.error("Registry API Put Registry Queries Test - Failed :" + e);
+            throw new RegistryException("Registry API Put Registry Queries Test - Failed" + e);
         }
     }
 
@@ -120,8 +120,8 @@ public class QueryTest {
                 registry.delete(resourceName);
             }
         } catch (RegistryException e) {
-            log.error("deleteResources RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("deleteResources RegistryException thrown:" + e.getMessage());
+            log.error("deleteResources RegistryException thrown:" + e);
+            throw new RegistryException("deleteResources RegistryException thrown:" + e);
         }
     }
 }

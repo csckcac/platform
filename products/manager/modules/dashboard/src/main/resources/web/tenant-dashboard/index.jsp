@@ -187,6 +187,13 @@
 
         </script>
         <%
+        } else if (name.equals("WSO2 Stratos Cloud Services Gateway")) {
+        %>
+        <script type="text/javascript">
+            csgUrl = '<%=link%>';
+
+        </script>
+        <%
         } else {
         %>
         <script type="text/javascript">

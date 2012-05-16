@@ -87,6 +87,7 @@ div#left div.stratos-products div.products a.dss { width: 180px; background-posi
 div#left div.stratos-products div.products a.as { width: 165px; background-position: left -270px; }
 div#left div.stratos-products div.products a.cep { width: 235px; background-position: left -300px; }
 div#left div.stratos-products div.products a.mb { width: 160px; background-position: left -331px; }
+div#left div.stratos-products div.products a.csg { width: 207px; background-position: left -363px; }
 div#left div.stratos-products div.products a:hover { opacity:0.7;filter:alpha(opacity=70) }
 div#right {
 	float: left;

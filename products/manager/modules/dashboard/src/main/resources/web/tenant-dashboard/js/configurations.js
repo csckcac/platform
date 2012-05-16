@@ -12,6 +12,7 @@ var isUrl;
 var bpsUrl;
 var brsUrl;
 var bamUrl;
+var csgUrl;
 
 // array definitions to store service feature urls
 var managerFeaturesURL=new Array;
@@ -27,7 +28,7 @@ var isFeaturesUrl = new Array;
 var bpsFeaturesUrl = new Array;
 var brsFeaturesUrl = new Array;
 var bamFeaturesUrl = new Array;
-
+var csgFeaturesUrl = new Array;
 
 
 // urls of features
@@ -242,6 +243,10 @@ msFeaturesUrl[14]="";//service testing
 msFeaturesUrl[15]="";//service testing docs */
 
 
+//csg server
+csgFeaturesUrl[0]="/carbon/service-mgt/index.jsp";  
+csgFeaturesUrl[1]="/carbon/service-mgt/docs/userguide.html"; 
+
 // functions to generate urls of features upon onclick
 
  function generateManagerFeatureUrl(which){
@@ -302,7 +307,10 @@ function generateMsFeatureUrl(which){
 	var featureUrl=window.msUrl + msFeaturesUrl[which];
 	window.open(featureUrl);
  }
-
+function generateCsgFeatureUrl(which){
+	var featureUrl=window.csgUrl + csgFeaturesUrl[which];
+	window.open(featureUrl);
+ }
 
 
 // functions to set the urls of services
@@ -359,7 +367,9 @@ function gotoMb(){
   window.open(mbUrl,'_newtab')  ;
 }
 
-
+function gotoCsg(){
+  window.open(mbUrl,'_newtab')  ;
+}
 
 
 

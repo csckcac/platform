@@ -384,19 +384,19 @@ ul.tabs li.current a:hover{
     margin-top:7px;
 }
 input[type='text'],input[type='password']{
-    box-shadow:none;
-    -moz-border-radius:0;
-    border-radius:0;
+    /*box-shadow:none;*/
+    /*-moz-border-radius:0;*/
+    /*border-radius:0;*/
 }
 input[type='button'],button{
     padding:6px;
-    -moz-border-radius:0;
-    border-radius:0;
+    /*-moz-border-radius:0;*/
+    /*border-radius:0;*/
 }
 input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:focus, input[type="file"]:focus, input[type="password"]:focus, .rte-editor:focus, textarea.rte:focus {
-    border: solid 1px #ccc;
-    box-shadow: none;
-    outline: none none;
+    /*border: solid 1px #ccc;*/
+    /*box-shadow: none;*/
+    /*outline: none none;*/
 }
 .no-surround-table td{
     border-right:solid 1px #ccc;

@@ -6,8 +6,8 @@
     <table cellspacing="0" cellpadding="0" class="sortable">
         <thead>
             <tr class="alt first last">
-                <th value="Name" rel="0">Name</th>
-                <th value="Actions" rel="1" colspan="2">Actions</th>
+                <th value="Name" rel="0" style="width:450px;">Name</th>
+                <th value="Actions" rel="1" colspan="2" style="width:100px;">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -20,10 +20,10 @@
             <tr class="<%=classes%>">
                 <td value="<%=app.name%>"><%=app.name%></td>
                 <td value="">
-                    <a><span class="icon black small" data-icon="7"></span></a>
+                    <a onclick="changeAppNameMode(this)"><span class="icon black small" data-icon="7"></span> Edit</a>
                 </td>
                 <td>
-                    <a><span class="icon black small" data-icon="T"></span></a>
+                    <a><span class="icon black small" data-icon="T"></span> Delete</a>
                 </td>
             </tr>
             <% } %>

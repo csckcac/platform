@@ -643,6 +643,7 @@ public class APIStoreHostObject extends ScriptableObject {
         row.put("wsdl", row, "http://appserver/services/echo?wsdl");
         row.put("updatedDate", row, api.getLastUpdated().toString());
         row.put("context",row, api.getContext());
+        row.put("status", row, api.getStatus().getStatus());
 
         APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
         row.put("serverURL", row, config.getFirstProperty(APIConstants.API_GATEWAY_API_ENDPOINT));

@@ -24,6 +24,7 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.TenantManager;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.logging.registry.RegistryManager;
 import org.wso2.carbon.logging.util.LoggingConstants;
 import org.wso2.carbon.logging.util.LoggingUtil;
@@ -103,9 +104,13 @@ public class LoggingServiceComponent {
     private void initLoggingConfiguration() throws Exception {
 
         //checking whether log4j.properies file is changed.
-        URL url = Thread.currentThread().getContextClassLoader().getResource("log4j.properties");
-
-        if (url == null) {
+    	 File confFolder = new File(CarbonUtils.getCarbonConfigDirPath());
+         String loggingPropFilePath = confFolder.getAbsolutePath() + File.separator +
+                 "log4j.properties";
+       // URL url = Thread.currentThread().getContextClassLoader().getResource("log4j.properties");
+         File log4jFile = new File(loggingPropFilePath);
+        
+        if (!log4jFile.isFile()) {
             LoggingUtil.removeAllLoggersAndAppenders();
             LoggingUtil.updateConfigurationProperty(LoggingConstants.LOG4J_FILE_FOUND, "false");
             return;
@@ -113,7 +118,7 @@ public class LoggingServiceComponent {
             LoggingUtil.updateConfigurationProperty(LoggingConstants.LOG4J_FILE_FOUND, "true");
         }
 
-        long currentLastModified = new File(url.getFile()).lastModified();
+        long currentLastModified = log4jFile.lastModified();
 
         String lmStr =
                 new RegistryManager().

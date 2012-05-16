@@ -1,14 +1,25 @@
 <%
 var param = request.getParameter('code');
 %>
-<script language="Javascript" type="text/javascript">
+<script>
 
-    function htmlDecode(input){
-      var e = document.createElement('div');
-      e.innerHTML = input;
-      return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-    }
 
-    var dataset = '<%=escape(param)%>';
-    editAreaLoader.setValue('codeinput',htmlDecode(unescape(dataset)));
-</script>
+
+       var editor = CodeMirror.fromTextArea(document.getElementById("codeinput"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "application/x-ejs",
+        indentUnit: 4,
+        indentWithTabs: true,
+        enterMode: "keep",
+        tabMode: "shift",
+           extraKeys: {"Ctrl-Space": function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}
+      });
+       
+	function populate() {
+		var text = editor.getValue();
+		alert(text);
+		document.getElementById("cont").innerHTML = document.editor.getvalue();
+	}
+
+    </script>

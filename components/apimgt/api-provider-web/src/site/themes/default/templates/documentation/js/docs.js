@@ -74,7 +74,7 @@ var editInlineContent = function (apiName, version, docName) {
     if (current.indexOf("item-info.jag") >= 0) {
         window.open("inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version);
     } else {
-        window.open("inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version);
+        window.open("site/pages/inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version);
     }
 
 };

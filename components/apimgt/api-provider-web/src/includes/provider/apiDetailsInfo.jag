@@ -1,8 +1,0 @@
-<ul class="nav nav-list">
-  <li><a href="#"><img id="apiThumb" src="" alt="" /></a></li>
-  <li><a href="#" onclick="showTab('usersLink')"><i class="icon-user"></i><span class="userCount"></span></a></li>
-  <!--li><span><i class="icon-heart"></i> Up time: 90%</span></li-->
-  <li><span id="status"><i class="icon-pencil"></i></span></li>
-  <li><span id="version"><i class="icon-th"></i></span></li>
-  <li><a href="#"  onclick="showTab('docsLink')"><i class="icon-file"></i> Docs</a></li>
-</ul>

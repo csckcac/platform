@@ -1,8 +1,0 @@
-<%
-var un = session.get("username");
-if(un == null){
-    response.sendRedirect("login.jag")
-}
-
-%>
-

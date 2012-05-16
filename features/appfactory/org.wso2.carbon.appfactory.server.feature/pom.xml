@@ -36,6 +36,11 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.appfactory.hostobjects.configuration</artifactId>
+            <version>${appfactory.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hostobjects.sysprop</artifactId>
             <version>${hostobjects.version}</version>
         </dependency>
@@ -144,14 +149,15 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sysprop</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sso</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.svnclient</bundleDef>
-								<bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.project.mgt</bundleDef>
-								<bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.user.registration</bundleDef>
-								<bundleDef>org.wso2.carbon:org.wso2.carbon.email.sender</bundleDef>
-								<bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification</bundleDef>
-								<bundleDef>org.tigris:svn-client-adapter</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.project.mgt</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.user.registration</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.email.sender</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification</bundleDef>
+                                <bundleDef>org.tigris:svn-client-adapter</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.svn.repository.mgt.service</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.artifact.deployment.service</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.common</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.hostobjects.configuration</bundleDef>
                             </bundles>
                             <importBundles>
                             </importBundles>

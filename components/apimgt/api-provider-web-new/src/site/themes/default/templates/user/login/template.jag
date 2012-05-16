@@ -5,7 +5,7 @@
             <div class="alert alert-error" id="loginError" style="display:none">
                 <span id="loginErrorSpan"></span>
             </div>
-            <form class="well" action="index.jag?place=" id="loginForm">
+            <form class="well" action="index.jag" id="loginForm">
                 <label>Username:<span class="requiredAstrix">*</span></label>
                 <input type="text" class="span3" id="username" autofocus="autofocus" validation="required"  />
 

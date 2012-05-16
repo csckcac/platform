@@ -18,9 +18,9 @@ function loadDefaultTinyMCEContent(apiName, version, docName) {
     jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"getInlineContent", apiName:apiName,version:version,docName:docName },
               function (json) {
                   if (!json.error) {
-                      var docName = json.doc[0].docName;
-                      var apiName = json.doc[0].apiName;
-                      var docContent = json.doc[0].docContent;
+                      var docName = json.doc.provider.docName;
+                      var apiName = json.doc.provider.apiName;
+                      var docContent = json.doc.provider.content;
                       $('#apiDeatils').empty().html('<p><h1> ' + docName + '</h1></p>');
                       console.log(docContent);
                       var stringOut = decodeURI(docContent);
@@ -31,7 +31,8 @@ function loadDefaultTinyMCEContent(apiName, version, docName) {
                       console.log(xout);
                       tinyMCE.activeEditor.setContent(xout);
                   } else {
-                      jagg.message(result.message);
+                      $('#inlineError').show('fast');
+                      $('#inlineSpan').html('<strong>Sorry. The content of this document cannot be loaded.</strong><br />'+result.message);
                   }
               }, "json");
 

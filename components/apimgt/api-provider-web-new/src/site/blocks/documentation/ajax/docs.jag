@@ -8,19 +8,19 @@ include("/jagg/jagg.jag");
             msg = require("/site/conf/ui-messages.jag");
     if (action === "addDocumentation") {
         mod = jagg.module("documentation");
-        var api= {};
-        var doc= {};
-        api.provider = jagg.getUser().username;
-        api.name = request.getParameter("apiName");
-        api.version = request.getParameter("version");
-        doc.name = request.getParameter("docName");
-        doc.type = request.getParameter("docType");
-        doc.sourceType = request.getParameter("sourceType");
-        doc.sourceUrl = request.getParameter("docUrl");
-        doc.summary = request.getParameter("summary");
+        var apiData = {};
+        var docData = {};
+        apiData.provider = jagg.getUser().username;
+        apiData.name = request.getParameter("apiName");
+        apiData.version = request.getParameter("version");
+        docData.name = request.getParameter("docName");
+        docData.type = request.getParameter("docType");
+        docData.sourceType = request.getParameter("sourceType");
+        docData.sourceUrl = request.getParameter("docUrl");
+        docData.summary = request.getParameter("summary");
 
 
-        result = mod.addDocumentation(api,doc);
+        result = mod.addDocumentation(apiData, docData);
         if (result.error == "true") {
             obj = {
                 error:result.error,
@@ -32,16 +32,16 @@ include("/jagg/jagg.jag");
             }
         }
         print(obj);
-} else if (action === "addInlineContent") {
+    } else if (action === "addInlineContent") {
         mod = jagg.module("documentation");
-        var api= {};
-        var doc= {};
-        api.provider = jagg.getUser().username;
-        api.name = request.getParameter("apiName");
-        api.version = request.getParameter("version");
-        doc.name = request.getParameter("docName");
-        doc.content = request.getParameter("content");
-        result = mod.addInlineContent(api,doc);
+        var apiDetails = {};
+        var docDetails = {};
+        apiDetails.provider = jagg.getUser().username;
+        apiDetails.name = request.getParameter("apiName");
+        apiDetails.version = request.getParameter("version");
+        docDetails.name = request.getParameter("docName");
+        docDetails.content = request.getParameter("content");
+        result = mod.addInlineContent(apiDetails, docDetails);
         if (result.error == "true") {
             obj = {
                 error:result.error,
@@ -53,16 +53,14 @@ include("/jagg/jagg.jag");
             }
         }
         print(obj);
-}else if (action === "getInlineContent") {
+    } else if (action === "getInlineContent") {
         mod = jagg.module("documentation");
-        var api= {};
-        var doc= {};
+        var api = {};
         api.provider = jagg.getUser().username;
         api.name = request.getParameter("apiName");
         api.version = request.getParameter("version");
-        doc.name = request.getParameter("docName");
-
-        result = mod.getInlineContent(api,doc);
+        docName = request.getParameter("docName");
+        result = mod.getInlineContent(api, docName);
         if (result.error == "true") {
             obj = {
                 error:result.error,
@@ -76,16 +74,16 @@ include("/jagg/jagg.jag");
         }
         print(obj);
 
-    }else if (action === "removeDocumentation") {
+    } else if (action === "removeDocumentation") {
         mod = jagg.module("documentation");
-        var api= {};
-        var doc= {};
-        api.provider = jagg.getUser().username;
-        api.name = request.getParameter("apiName");
-        api.version = request.getParameter("version");
-        doc.name = request.getParameter("docName");
-        doc.type = request.getParameter("docType");
-        result = mod.removeDocumentation(api,doc);
+        var apiInfo = {};
+        var docInfo = {};
+        apiInfo.provider = jagg.getUser().username;
+        apiInfo.name = request.getParameter("apiName");
+        apiInfo.version = request.getParameter("version");
+        docInfo.name = request.getParameter("docName");
+        docInfo.type = request.getParameter("docType");
+        result = mod.removeDocumentation(apiInfo, docInfo);
         if (result.error == "true") {
             obj = {
                 error:result.error,
@@ -98,7 +96,7 @@ include("/jagg/jagg.jag");
         }
         print(obj);
 
-    }else {
+    } else {
         print({
                   error:true,
                   message:msg.error.invalidAction(action)

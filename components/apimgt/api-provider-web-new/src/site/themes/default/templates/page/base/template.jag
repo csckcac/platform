@@ -18,6 +18,7 @@
     <!--Loca styles-->
     <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/css/localstyles.css")%>" rel="stylesheet">
     <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery-1.7.1.min.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery.cookie.js")%>"></script>
 
     <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
     <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
@@ -41,7 +42,12 @@
     }
     %>
 </head>
-<body>
+<%var reqUrl = request.getRequestURI();
+var name = request.getParameter("apiName");
+var version = request.getParameter("version")
+var docName = request.getParameter("docName");
+var inlineUrl=jagg.getAbsoluteUrl("/site/pages/inline-editor.jag"); %>
+<body <% if(reqUrl.indexOf(inlineUrl)>=0){%> onload="loadDefaultTinyMCEContent('<%=name%>','<%=version%>','<%=docName%>')"<%}%> >
     <div id="header"><% jagg.includeBlocks(outputs.header); %></div>
     <div id="body"><% jagg.includeBlocks(outputs.body); %></div>
     <hr>

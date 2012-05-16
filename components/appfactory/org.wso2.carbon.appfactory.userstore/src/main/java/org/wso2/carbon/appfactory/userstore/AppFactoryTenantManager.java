@@ -27,7 +27,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.user.api.RealmConfiguration;
-import org.wso2.carbon.user.api.Tenant;
+import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.api.TenantMgtConfiguration;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserStoreException;
@@ -76,8 +76,10 @@ public class AppFactoryTenantManager extends CommonHybridLDAPTenantManager {
      * @param initialDirContext The directory connection.
      * @throws UserStoreException If an error occurred while creating.
      */
+    @Override
     protected void createOrganizationalUnit(String orgName, Tenant tenant, DirContext initialDirContext)
             throws UserStoreException {
+        
         //e.g: ou=wso2.com
         String partitionDN = tenantMgtConfig.getTenantStoreProperties().get(
                 UserCoreConstants.TenantMgtConfig.PROPERTY_ROOT_PARTITION);
@@ -115,7 +117,6 @@ public class AppFactoryTenantManager extends CommonHybridLDAPTenantManager {
             createAdminGroup(dnOfGroupContext, dnOfUserEntry, initialDirContext);
         }
     }
-
 
 
     private String getAdminEntryDN(String dnOfUserContext, Tenant tenant, DirContext initialDirContext)

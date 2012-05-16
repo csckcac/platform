@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fn="http://www.w3.org/2005/02/xpath-functions"
+                xmlns:m0="http://services.samples"
+                xmlns:gg="http://wso2.com/bam/gadgetgen"
+                exclude-result-prefixes="gg m0 fn">
+    <xsl:output method="html" omit-xml-declaration="yes" indent="yes"/>
+
+
+    <xsl:template match="/">
+
+   <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
   <ModulePrefs title="Gadget Gen Sample" height="300" scaling="false">
     <Require feature="dynamic-height"/>
@@ -61,7 +72,7 @@
                     axes: {
                         xaxis: {
                             renderer: $.jqplot.CategoryAxisRenderer,
-                            label: 'Product Name',
+                            label: '<xsl:value-of select="//gg:bar-title" />',
                             // labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                             tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                             tickOptions: {
@@ -94,3 +105,6 @@
   ]]>
   </Content>
 </Module>
+    </xsl:template>
+
+</xsl:stylesheet>

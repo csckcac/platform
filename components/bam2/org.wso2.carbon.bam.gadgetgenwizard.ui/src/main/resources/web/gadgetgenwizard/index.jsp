@@ -44,7 +44,8 @@
         $("#Finish").hide();
 
         $("#Finish").click(function() {
-            sendAjaxRequest("generate_gadget_ajaxprocessor.jsp", null);
+            var data = $("form").serialize();
+            sendAjaxRequest("generate_gadget_ajaxprocessor.jsp", data);
         })
 
         $("#Back").click(function() {

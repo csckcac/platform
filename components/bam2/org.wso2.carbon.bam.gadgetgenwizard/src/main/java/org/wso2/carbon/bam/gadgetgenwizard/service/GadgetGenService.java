@@ -3,14 +3,22 @@ package org.wso2.carbon.bam.gadgetgenwizard.service;
 import org.apache.axiom.om.*;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.impl.jaxp.OMSource;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.client.Options;
+import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.bam.gadgetgenwizard.internal.GGWUtils;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.registry.core.ActionConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceResourceServiceExceptionException;
+import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLStreamException;
@@ -38,7 +46,7 @@ import java.io.*;
  */
 public class GadgetGenService extends AbstractAdmin {
 
-    public static final String GADGET_GEN_TRANSFORM_XSLT = "gadget-gen-jaggery-app.xslt";
+    public static final String GADGET_GEN_TRANSFORM_XSLT = "jaggery-app-generator.xslt";
 
     public static final String JQPLOT_CSS = "gadgetgen/css/jquery.jqplot.min.css";
     public static final String JQUERY_JS = "gadgetgen/js/jquery.min.js";
@@ -55,6 +63,10 @@ public class GadgetGenService extends AbstractAdmin {
 
     public static final String GADGET_REGISTRY_PATH = "repository/components/org.wso2.carbon.bam.gadgetgen/";
 
+    public static final String RESOURCE_ADMIN_SERVICE_URL = "services/ResourceAdminService";
+    public static final String ALLOW_PERMISSION_TYPE = "1";
+    public static final String WSO2_ANONYMOUS_ROLE = "wso2.anonymous.role";
+
     public String createGadget(WSMap map) throws GadgetGenException {
         OMDocument intermediateXML = createIntermediateXML(map);
         OMElement gadgetXML = applyXSLTForGadgetXML(intermediateXML);
@@ -64,8 +76,25 @@ public class GadgetGenService extends AbstractAdmin {
         return null;
     }
 
+    private ResourceAdminServiceStub createRegistryAdminClient() throws GadgetGenException {
+        try {
+            String serviceURL = CarbonUtils.getServerURL(GGWUtils.getCarbonConfiguration(),
+                    GGWUtils.getConfigurationContextService().getServerConfigContext()) + RESOURCE_ADMIN_SERVICE_URL;
+            ResourceAdminServiceStub registryResourceStub = new ResourceAdminServiceStub(GGWUtils.getConfigurationContextService().getServerConfigContext(), serviceURL);
+            ServiceClient client = registryResourceStub._getServiceClient();
+            Options option = client.getOptions();
+            option.setManageSession(true);
+            return registryResourceStub;
+        } catch (AxisFault e) {
+            String msg = "Error creating Resource Admin Stub. " + e.getMessage() ;
+            log.error(msg, e);
+            throw new GadgetGenException(msg, e);
+        }
+    }
+
     private void copyGadgetFilesToRegistry(Registry registry, String gadgetRegistryPath) throws GadgetGenException {
         try {
+            ResourceAdminServiceStub resourceAdminServiceStub = createRegistryAdminClient();
             for (int i = 0; i < GADGET_RESOURCES.length; i++) {
                 String gadgetResource = GADGET_RESOURCES[i];
 
@@ -73,14 +102,19 @@ public class GadgetGenService extends AbstractAdmin {
                 String gadgetResourcePath = gadgetRegistryPath + gadgetResource;
                 if (!registry.resourceExists(gadgetResourcePath)) {
                     registry.put(gadgetResourcePath, resource);
+                    resourceAdminServiceStub.addRolePermission(gadgetResourcePath, CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME, ActionConstants.GET, ALLOW_PERMISSION_TYPE);
                 }
             }
         } catch (RegistryException e) {
-            String msg = "Error inserting resource to registry";
+            String msg = "Error inserting resource to registry. " + e.getMessage();
             log.error(msg, e);
             throw new GadgetGenException(msg, e);
         } catch (IOException e) {
-            String msg = "Error converting file to byte array";
+            String msg = "Error converting file to byte array. " + e.getMessage() ;
+            log.error(msg, e);
+            throw new GadgetGenException(msg, e);
+        } catch (ResourceAdminServiceResourceServiceExceptionException e) {
+            String msg = "Error converting file to byte array. " + e.getMessage() ;
             log.error(msg, e);
             throw new GadgetGenException(msg, e);
         }
@@ -126,19 +160,19 @@ public class GadgetGenService extends AbstractAdmin {
             Transformer transformer = transFact.newTransformer(xsltSource);
             transformer.transform(xmlSource, result);
         } catch (XMLStreamException e) {
-            String error = "XML error reading XSLT file.";
+            String error = "XML error reading XSLT file. " + e.getMessage() ;;
             log.error(error, e);
             throw new GadgetGenException(error, e);
         } catch (FileNotFoundException e) {
-            String error = "XSLT file not found. This should be in the classpath.";
+            String error = "XSLT file not found. This should be in the classpath. " + e.getMessage() ;;
             log.error(error, e);
             throw new GadgetGenException(error, e);
         } catch (TransformerException e) {
-           String error = "XSLT transformation error during Code generation.";
+           String error = "XSLT transformation error during Code generation. " + e.getMessage() ;;
             log.error(error, e);
             throw new GadgetGenException(error, e);
         } catch (IOException e) {
-            String error = "Error creating directory structure for jaggery app";
+            String error = "Error creating directory structure for jaggery app. " + e.getMessage() ;
             log.error(error, e);
             throw new GadgetGenException(error, e);
         }

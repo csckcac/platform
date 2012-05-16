@@ -28,10 +28,7 @@ import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.beans.BusinessServiceInfo;
-import org.wso2.carbon.registry.extensions.handlers.utils.EndpointUtils;
-import org.wso2.carbon.registry.extensions.handlers.utils.UDDIPublisher;
-import org.wso2.carbon.registry.extensions.handlers.utils.WSDLInfo;
-import org.wso2.carbon.registry.extensions.handlers.utils.WSDLProcessor;
+import org.wso2.carbon.registry.extensions.handlers.utils.*;
 import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 import org.wso2.carbon.registry.extensions.utils.CommonUtil;
 
@@ -360,6 +357,9 @@ public class ServiceMediaTypeHandler extends Handler {
                 UDDIPublisher publisher = new UDDIPublisher(businessServiceInfo);
                 publisher.publishBusinessService();
             }
+
+            String path = RegistryUtils.getRelativePathToOriginal(servicePath, RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH);
+            ServiceUtils.addToModifiedList(path);
         } finally {
             CommonUtil.releaseUpdateLock();
         }

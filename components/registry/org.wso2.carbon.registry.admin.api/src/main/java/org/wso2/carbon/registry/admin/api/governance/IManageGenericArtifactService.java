@@ -16,23 +16,24 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.registry.admin.api.generic;
+
+package org.wso2.carbon.registry.admin.api.governance;
 
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 /**
-        * This provides functionality to manage generic artifacts
-        * on the registry.
-        * <br />
-        * <b>Statistics:</b>
-        * <ul>
-        * <li>addArtifact</li>
-        * <li>listArtifacts</li>
-        * <li>editArtifact</li>
-        * </ul>
-        *
-        *@param <ArtifactsBean> a bean containing a list of artifacts on the repository.
-        */
+ * This provides functionality to manage generic artifacts
+ * on the registry.
+ * <br />
+ * <b>Statistics:</b>
+ * <ul>
+ * <li>addArtifact</li>
+ * <li>listArtifacts</li>
+ * <li>editArtifact</li>
+ * </ul>
+ *
+ *@param <ArtifactsBean> a bean containing a list of artifacts on the repository.
+ */
 public interface IManageGenericArtifactService<ArtifactsBean> {
 
     /**

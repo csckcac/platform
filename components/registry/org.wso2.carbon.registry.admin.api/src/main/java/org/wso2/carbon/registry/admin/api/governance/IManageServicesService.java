@@ -73,4 +73,24 @@ public interface IManageServicesService {
      * @throws RegistryException if the operation failed.
      */
     String getServicePath() throws RegistryException;
+
+    /**
+     * Method to obtain the service configuration.
+     *
+     * @return the string config of the service
+     *
+     * @throws RegistryException if the operation failed.
+     */
+    String getServiceConfiguration()throws RegistryException;
+
+    /**
+     * Method to update the service configuration of a service
+     *
+     * @param content the content of the config
+     *
+     * @return a boolean value
+     *
+     * @throws RegistryException if the operation failed.
+     */
+    boolean saveServiceConfiguration(String content) throws RegistryException;
 }

@@ -104,7 +104,7 @@ public class AgentClient implements Runnable {
                                                                   "  ]" +
                                                                   "}");
                 for (int i = 0; i < NO_OF_EVENTS + STABLE; i++) {
-                    dataPublisher.securePublish(generateEvent(streamId));
+                    dataPublisher.publish(generateEvent(streamId));
                 }
                 try {
                     Thread.sleep(20000);

@@ -27,13 +27,18 @@ public class AgentServerURL {
     private String protocol;
     private String host;
     private int port;
+    private boolean isSecured = false;
 
     public AgentServerURL(String url) throws MalformedURLException {
         URL theUrl;
-        if (!url.contains("tcp")) {
-            throw new MalformedURLException("tcp protocol not found in the URL " + url);
-        } else {
+        if (url.startsWith("tcp")) {
             theUrl = new URL(url.replaceFirst("tcp", "http"));
+            isSecured=false;
+        } else if (url.startsWith("ssl")) {
+            theUrl = new URL(url.replaceFirst("ssl", "http"));
+            isSecured=true;
+        } else {
+            throw new MalformedURLException("The url protocol is not tcp or ssl " + url);
         }
         this.protocol = theUrl.getProtocol();
         this.host = theUrl.getHost();
@@ -62,5 +67,13 @@ public class AgentServerURL {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public boolean isSecured() {
+        return isSecured;
+    }
+
+    public void setSecured(boolean secured) {
+        isSecured = secured;
     }
 }

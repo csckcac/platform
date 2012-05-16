@@ -32,16 +32,18 @@ public class ReceiverConfiguration {
     private int eventReceiverPort;
     private String secureEventReceiverIp;
     private int secureEventReceiverPort;
+    private boolean dataTransferSecured=false;
 
     public ReceiverConfiguration(String userName, String password, String eventReceiverIp,
                                  int eventReceiverPort, String secureEventReceiverIp,
-                                 int secureEventReceiverPort) {
+                                 int secureEventReceiverPort, boolean secured) {
         this.userName = userName;
         this.password = password;
         this.eventReceiverIp = eventReceiverIp;
         this.eventReceiverPort = eventReceiverPort;
         this.secureEventReceiverIp = secureEventReceiverIp;
         this.secureEventReceiverPort = secureEventReceiverPort;
+        this.dataTransferSecured = secured;
     }
 
     public String getEventReceiverIp() {
@@ -90,5 +92,13 @@ public class ReceiverConfiguration {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isDataTransferSecured() {
+        return dataTransferSecured;
+    }
+
+    public void setDataTransferSecured(boolean dataTransferSecured) {
+        this.dataTransferSecured = dataTransferSecured;
     }
 }

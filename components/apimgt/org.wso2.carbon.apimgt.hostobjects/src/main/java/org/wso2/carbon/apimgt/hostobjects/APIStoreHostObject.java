@@ -1310,8 +1310,33 @@ public class APIStoreHostObject extends ScriptableObject {
         }
         return false;
     }
-    
 
+    public static boolean jsFunction_updateApplication(Context cx,
+                                                    Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException, APIManagementException {
+
+        if (isStringArray(args)) {
+            String name = (String) args[0];
+            String oldName = (String) args[1];
+            String username = (String) args[2];
+            Subscriber subscriber = new Subscriber(username);            
+            APIConsumer apiConsumer = getAPIConsumer(thisObj);
+            Application[] apps = apiConsumer.getApplications(subscriber);
+            if (apps == null || apps.length == 0) {
+                return false;
+            }
+            for (Application app : apps) {
+                if (app.getName().equals(oldName)) {
+                    Application application = new Application(name, subscriber);
+                    application.setId(app.getId());
+                    apiConsumer.updateApplication(application);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     public static NativeArray jsFunction_getInlineContent(Context cx,
 			Scriptable thisObj, Object[] args, Function funObj)
 			throws ScriptException, APIManagementException {

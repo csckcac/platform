@@ -1,4 +1,4 @@
-
+var rowNums=new Array();
 var updateResourcesToApi = function (rowNums) {
     var resourcesCount=$('#resource-table tr').length-2;
     $('#resourceTableError').hide('fast');

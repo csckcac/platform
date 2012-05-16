@@ -136,7 +136,7 @@
                             for (i = 0; i < api.templates.length; i++) {
                             j=1;
                             %>
-                            <tr id="item-<%=j%>">
+                            <tr id="item-<%=String(j)%>">
                                 <td>
                                     <input type="text" class="input" id="uriTemplate" disabled="disabled" name="resourceTemplate" value="<%=api.templates[i][0]%>"/>
                                 </td>
@@ -150,7 +150,7 @@
                                     </select>
                                 </td>
                                 <td id="buttons">
-                                    <a class="btn btn-danger" id="resourceDelBtn" onClick="deleteResource('<%=j%>')"><i class="icon-trash icon-white"></i> Delete</a>
+                                    <a class="btn btn-danger" id="resourceDelBtn" onClick="deleteResource('<%=String(j)%>')"><i class="icon-trash icon-white"></i> Delete</a>
                                 </td>
                             </tr>
                             <input type="hidden" name="resourceMethod-<%=String(i)%>" value="<%=api.templates[i][1]%>">

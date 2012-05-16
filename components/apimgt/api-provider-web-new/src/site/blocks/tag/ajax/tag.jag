@@ -2,7 +2,7 @@
 include("/jagg/jagg.jag");
 
 (function () {
-    var mod, obj, result, username,
+    var mod, tags,obj, result, username,
             action = request.getParameter("action"),
             site = require("/site/conf/site.json"),
             msg = require("/site/conf/ui-messages.jag");
@@ -17,7 +17,8 @@ include("/jagg/jagg.jag");
             };
         } else {
             obj = {
-                error:false
+                error:false,
+                tags:result.tags
             }
         }
 

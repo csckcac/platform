@@ -156,16 +156,16 @@ public final class APIUtil {
             throws APIManagementException {
         try {
             String apiStatus = api.getStatus().getStatus();
-            artifact.setAttribute(APIConstants.API_OVERVIEW_NAME, api.getId().getApiName().trim());
-            artifact.setAttribute(APIConstants.API_OVERVIEW_VERSION, api.getId().getVersion().trim());
-            artifact.setAttribute(APIConstants.API_OVERVIEW_CONTEXT, api.getContext().trim());
-            artifact.setAttribute(APIConstants.API_OVERVIEW_PROVIDER, api.getId().getProviderName().trim());
-            artifact.setAttribute(APIConstants.API_OVERVIEW_DESCRIPTION, api.getDescription().trim());
-            artifact.setAttribute(APIConstants.API_OVERVIEW_ENDPOINT_URL, api.getUrl().trim());
-            artifact.setAttribute(APIConstants.API_OVERVIEW_SANDBOX_URL, api.getSandboxUrl().trim());
-            artifact.setAttribute(APIConstants.API_OVERVIEW_WSDL, api.getWsdlUrl().trim());
-            artifact.setAttribute(APIConstants.API_OVERVIEW_THUMBNAIL_URL, api.getThumbnailUrl().trim());
-            artifact.setAttribute(APIConstants.API_OVERVIEW_STATUS, apiStatus.trim());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_NAME, api.getId().getApiName());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_VERSION, api.getId().getVersion());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_CONTEXT, api.getContext());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_PROVIDER, api.getId().getProviderName());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_DESCRIPTION, api.getDescription());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_ENDPOINT_URL, api.getUrl());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_SANDBOX_URL, api.getSandboxUrl());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_WSDL, api.getWsdlUrl());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_THUMBNAIL_URL, api.getThumbnailUrl());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_STATUS, apiStatus);
             String tiers = "";
             for (Tier tier : api.getAvailableTiers()) {
                 tiers += tier.getName() + "||";

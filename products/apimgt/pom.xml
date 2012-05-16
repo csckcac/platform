@@ -48,8 +48,8 @@
         <module>modules/styles</module>
         <module>modules/features</module>
         <module>modules/p2-profile</module>
-        <module>modules/jaggery-apps/api-provider-web</module>
-        <module>modules/jaggery-apps/api-store-web</module>
+        <!--module>modules/jaggery-apps/api-provider-web</module>
+        <module>modules/jaggery-apps/api-store-web</module-->
         <module>modules/distribution</module>
     </modules>
 

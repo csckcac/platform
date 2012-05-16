@@ -74,18 +74,12 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../jaggery-apps/api-provider-web/target</directory>
-            <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
-            <includes>
-                <include>**/**.zip</include>
-            </includes>
+            <directory>../../jaggery-apps/api-provider-web/src</directory>
+            <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps/apiprovider</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../../jaggery-apps/api-store-web/target</directory>
-            <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
-            <includes>
-                <include>**/**.zip</include>
-            </includes>
+            <directory>../../jaggery-apps/api-store-web/src</directory>
+            <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps/apistore</outputDirectory>
         </fileSet>
         <!-- Copying throttling policy -->
         <fileSet>

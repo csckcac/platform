@@ -186,9 +186,9 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
             if (limit < dateList.size()) {
                 start = dateList.size() - limit;
             }
-            for (int i = start; i < dateList.size(); i++) {
-                GenericArtifact genericArtifact1 = apiMap.get(dateList.get(i));
 
+            for (int i = dateList.size() - 1; i >= start; i--) {
+                GenericArtifact genericArtifact1 = apiMap.get(dateList.get(i));
                 apiSortedSet.add(APIUtil.getAPI(genericArtifact1, registry));
             }
 

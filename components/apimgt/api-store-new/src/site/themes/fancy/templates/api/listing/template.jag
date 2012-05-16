@@ -18,7 +18,7 @@
                 <a href="<%=path%>">
                     <img src="<%=thumbURL%>" width="100" height="100"/>
                 </a>
-                <div><a href="<%=path%>"><%=api.name%></a></div>
+                <div><a href="<%=path%>"><%=api.name%> (<%=api.version%>)</a></div>
                 <div><a href="<%=path%>"><%=api.provider%></a></div>
                 <div class="star-ratings"><%=stars.getStaticStars(site.context, api.rating)%></div>
             </div>

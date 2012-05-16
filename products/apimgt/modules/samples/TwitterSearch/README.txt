@@ -45,7 +45,7 @@ Username/password - provider1/provider1
 Take a note of the fact that there are no APIs published. Next step adds an API & publishes it to API store.
 
 7. Run wso2am-1.0.0-SNAPSHOT/samples/TwitterSearch/APIPopulator.sh  (eg: sh APIPopulator.sh)
-You will see an output similar to following on the console. Fresh above page & you should be seeing the newly added TwitterSearch API.
+You will see an output similar to following on the console. Refresh above page & you should be seeing the newly added TwitterSearch API.
 
 {"error" : "false"}
 {"error" : "false"}
@@ -59,8 +59,8 @@ to the API Store and obtain an API key. Launch a web browser and enter the URL h
 the top of the page, and create a new application. Provide any name you prefer.
 
 10. Now click on the "APIs" tab at the top of the page, select the "TwitterSearch" API and subscribe to
-it using the newly created application. You will be redirected to the "My Subscriptions" tab. Click
-on the "Generate" button to obtain an API key.
+it using the newly created application. Go to the "My Subscriptions" tab. Click
+on the "Generate Production Key" button followed by the "Show Key" button to obtain an API key.
 
 11. Now we are ready to invoke the API. Copy and paste following into a new console window & execute it.
 

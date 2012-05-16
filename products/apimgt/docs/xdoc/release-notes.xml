@@ -27,10 +27,10 @@
     </head>
     <body>
         <div id="main-content">
-            <h1>The WSO2 API Manager 1.0.0-M2 Released!</h1>
+            <h1>The WSO2 API Manager 1.0.0-M4 Released!</h1>
 
             <p>
-                The WSO2 API Manager team is pleased to announce the release of version 1.0.0-M2 of
+                The WSO2 API Manager team is pleased to announce the release of version 1.0.0-M4 of
                 the Open Source API Manager.
             </p>
 
@@ -83,13 +83,12 @@
                 </li>                
             </ol>
 
-            <h2>New Features of WSO2 API Manager 1.0.0-M2</h2>
+            <h2>New Features of WSO2 API Manager 1.0.0-M4</h2>
             <p>
                 This release of API Manager comes with a horde of new features and bug fixes.
             </p>
             <ul>
-                <li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?requestId=10684">New features</a></li>
-                <li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?requestId=10683">Bug fixes</a></li>
+                <li><a href="https://wso2.org/jira/secure/ReleaseNote.jspa?projectId=10230&amp;version=10558">List of resolved issues</a></li>
             </ul>
 
             <h2>Key Features of WSO2 API Manager</h2>
@@ -102,7 +101,7 @@
                     API Publisher:
                     <ul>
                         <li>Publish APIs to external consumers and partners, as well as internal
-                        users ? SOAP and REST services are supported</li>
+                        users; SOAP and REST services are supported</li>
                         <li>Manage API versions (several versions can be deployed in parallel)</li>
                         <li>Govern the API lifecycle (publish, deprecate, retire)</li>
                         <li>Attach documentation (files, external URLs) to APIs</li>

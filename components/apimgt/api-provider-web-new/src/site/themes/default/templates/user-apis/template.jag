@@ -13,12 +13,13 @@
             </tr>
             </thead>
             <tbody id="userSubscribedAPIs">
-            <%var i, api, apis = outputs.apis, length = apis.length;
+            <%var i, api,apiPath, apis = outputs.apis, length = apis.length;
             for(i = 0; i < length; i++) {
             api = apis[i];
+            apiPath=jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version;
             %>
             <tr>
-            <td><i class="icon-user"></i><a href="?place=api-details&name=<%=api.name%>&version=<%=api.version%>"><%=api.name%></a></td>
+            <td><i class="icon-user"></i><a href="<%=apiPath%>"><%=api.name%></a></td>
             <td><%=api.lastUpdatedDate%></td>
             <td><i class="icon-edit"></i><a href="#">Stats</a>
                 <i class="icon-trash"></i><a href="#">Revoke Access</a>

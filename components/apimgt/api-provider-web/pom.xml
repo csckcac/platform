@@ -9,7 +9,7 @@
         <relativePath>../../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>api-provider-web-new</artifactId>
+    <artifactId>api-provider</artifactId>
     <packaging>war</packaging>
     <name>WSO2 Carbon - API Provider Web Application New</name>
 
@@ -21,7 +21,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
                 <configuration>
-                    <warName>apiproviderNew</warName>
+                    <warName>apiprovider</warName>
                     <packagingIncludes>**/*</packagingIncludes>
                     <!--<packagingExcludes>WEB-INF/classes/WEB-INF/*</packagingExcludes>-->
                     <webResources>
@@ -44,7 +44,7 @@
 
               <target>
                 <echo message="Renaming to a zip file"/>
-                <copy file="target/apiproviderNew.war" tofile="target/apiproviderNew.zip"/>
+                <copy file="target/apiprovider.war" tofile="target/apiprovider.zip"/>
               </target>
 
             </configuration>

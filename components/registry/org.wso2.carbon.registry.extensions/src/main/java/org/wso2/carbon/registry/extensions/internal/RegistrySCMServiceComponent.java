@@ -57,6 +57,7 @@ import java.util.regex.Pattern;
 public class RegistrySCMServiceComponent {
 
     private static Log log = LogFactory.getLog(RegistrySCMServiceComponent.class);
+    private static final int DEFAULT_UPDATE_FREQUENCY = 60;
 
     protected void activate(ComponentContext context) {
         log.debug("Registry SCM component is activated ");
@@ -106,6 +107,17 @@ public class RegistrySCMServiceComponent {
                                     connection.getAttributeValue(new QName("workingDir"));
                             String mountPoint =
                                     connection.getAttributeValue(new QName("mountPoint"));
+                            String username =
+                                    connection.getAttributeValue(new QName("username"));
+                            String password =
+                                    connection.getAttributeValue(new QName("password"));
+                            int updateFrequency = DEFAULT_UPDATE_FREQUENCY;
+                            try {
+                                updateFrequency = Integer.parseInt(
+                                        connection.getAttributeValue(new QName("updateFrequency")));
+                            } catch (NumberFormatException ignore) {
+
+                            }
                             UserRegistry registry = registryService
                                     .getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
                             File directory = new File(workingDir);
@@ -134,7 +146,8 @@ public class RegistrySCMServiceComponent {
                             registryContext.getHandlerManager().addHandler(null,
                                     urlMatcher, externalContentHandler);
                             executorService.scheduleWithFixedDelay(new SCMUpdateTask(directory,
-                                    checkOutURL, checkInURL, readOnly), 0, 60, TimeUnit.HOURS);
+                                    checkOutURL, checkInURL, readOnly, externalContentHandler,
+                                    username, password), 0, updateFrequency, TimeUnit.MINUTES);
                         }
                     }
                 } catch (XMLStreamException e) {

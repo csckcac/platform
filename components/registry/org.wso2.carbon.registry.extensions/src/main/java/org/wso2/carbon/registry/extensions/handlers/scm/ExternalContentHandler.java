@@ -44,6 +44,7 @@ public class ExternalContentHandler extends Handler {
 
     private FilesystemManager filesystemManager;
     private String mountPath;
+    private volatile boolean busy;
 
     public void setFilePath(String filePath) {
         this.filesystemManager = new FilesystemManager(filePath);
@@ -51,6 +52,17 @@ public class ExternalContentHandler extends Handler {
 
     public void setMountPath(String mountPath) {
         this.mountPath = mountPath;
+    }
+
+    public void setBusy(boolean busy) {
+        this.busy = busy;
+    }
+
+    private void validateUpdateInProgress() throws RegistryException {
+        if (busy) {
+            throw new RegistryException("An update is currently in progress. Please try again " +
+                    "later.");
+        }
     }
 
     // Operations: CRUD
@@ -124,6 +136,7 @@ public class ExternalContentHandler extends Handler {
     }
 
     public void put(RequestContext requestContext) throws RegistryException {
+        validateUpdateInProgress();
         if (!CommonUtil.isUpdateLockAvailable()) {
             return;
         }
@@ -148,6 +161,7 @@ public class ExternalContentHandler extends Handler {
     }
 
     public void delete(RequestContext requestContext) throws RegistryException {
+        validateUpdateInProgress();
         if (!CommonUtil.isUpdateLockAvailable()) {
             return;
         }
@@ -157,6 +171,7 @@ public class ExternalContentHandler extends Handler {
     }
 
     public void importResource(RequestContext requestContext) throws RegistryException {
+        validateUpdateInProgress();
         try {
             URL sourceURL = new URL(requestContext.getSourceURL());
             InputStream inputStream = sourceURL.openStream();
@@ -174,6 +189,7 @@ public class ExternalContentHandler extends Handler {
     }
 
     public String move(RequestContext requestContext) throws RegistryException {
+        validateUpdateInProgress();
         String sourcePath = requestContext.getSourcePath();
         String targetPath = requestContext.getTargetPath();
         if (sourcePath.startsWith(mountPath) && targetPath.startsWith(mountPath)) {
@@ -192,6 +208,7 @@ public class ExternalContentHandler extends Handler {
     }
 
     public String copy(RequestContext requestContext) throws RegistryException {
+        validateUpdateInProgress();
         String sourcePath = requestContext.getSourcePath();
         String targetPath = requestContext.getTargetPath();
         if (sourcePath.startsWith(mountPath) && targetPath.startsWith(mountPath)) {
@@ -205,6 +222,7 @@ public class ExternalContentHandler extends Handler {
     }
 
     public String rename(RequestContext requestContext) throws RegistryException {
+        validateUpdateInProgress();
         String sourcePath = requestContext.getSourcePath();
         String targetPath = requestContext.getTargetPath();
         String source = RegistryUtils.getRelativePathToOriginal(sourcePath, mountPath);

@@ -18,10 +18,14 @@
  */
 package org.wso2.carbon.registry.extensions.internal;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.maven.scm.ScmException;
+import org.apache.maven.scm.ScmFile;
 import org.apache.maven.scm.ScmFileSet;
+import org.apache.maven.scm.ScmFileStatus;
+import org.apache.maven.scm.command.status.StatusScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.manager.ScmManager;
 import org.apache.maven.scm.repository.ScmRepository;
@@ -29,8 +33,12 @@ import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.embed.Embedder;
+import org.wso2.carbon.registry.extensions.handlers.scm.ExternalContentHandler;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SCMUpdateTask implements Runnable {
 
@@ -38,14 +46,21 @@ public class SCMUpdateTask implements Runnable {
 
     private String checkOutURL;
     private String checkInURL;
+    private String username;
+    private String password;
     private File workingDir;
     private boolean readOnly;
+    private ExternalContentHandler handler;
 
-    public SCMUpdateTask(File workingDir, String checkOutURL, String checkInURL, boolean readOnly) {
+    public SCMUpdateTask(File workingDir, String checkOutURL, String checkInURL, boolean readOnly,
+                         ExternalContentHandler handler, String username, String password) {
         this.workingDir = workingDir;
         this.checkOutURL = checkOutURL;
         this.checkInURL = checkInURL;
         this.readOnly = readOnly;
+        this.handler = handler;
+        this.username = username;
+        this.password = password;
     }
 
     public void run() {
@@ -54,8 +69,22 @@ public class SCMUpdateTask implements Runnable {
         try {
             plexus = new Embedder();
             plexus.start();
+            handler.setBusy(true);
             ScmManager scmManager = (ScmManager) plexus.lookup(ScmManager.ROLE);
             ScmRepository scmRepository = scmManager.makeScmRepository(checkOutURL);
+            if (username != null && password != null) {
+                scmRepository.getProviderRepository().setUser(username);
+                scmRepository.getProviderRepository().setPassword(password);
+            }
+            StatusScmResult status =
+                    scmManager.status(scmRepository, new ScmFileSet(workingDir));
+            List<ScmFile> changedFiles = status.getChangedFiles();
+            List<File> toDelete = new LinkedList<File>();
+            for (ScmFile file : changedFiles) {
+                if (file.getStatus() == ScmFileStatus.MISSING) {
+                    toDelete.add(new File(file.getPath()));
+                }
+            }
             if (workingDir.list() == null) {
                 log.error("A directory was not found in the given path: " +
                         workingDir.getAbsolutePath());
@@ -65,12 +94,54 @@ public class SCMUpdateTask implements Runnable {
             } else {
                 scmManager.update(scmRepository, new ScmFileSet(workingDir));
             }
+            status = scmManager.status(scmRepository, new ScmFileSet(workingDir));
+            changedFiles = status.getChangedFiles();
+            List<File> toAdd = new LinkedList<File>();
+            List<File> conflicts = new LinkedList<File>();
+            List<File> toCheckIn = new LinkedList<File>();
+            for (ScmFile file : changedFiles) {
+                if (file.getStatus() == ScmFileStatus.UNKNOWN) {
+                    File fileToAdd = new File(file.getPath());
+                    toAdd.add(fileToAdd);
+                    toCheckIn.add(fileToAdd);
+                } else if  (file.getStatus() == ScmFileStatus.CONFLICT) {
+                    conflicts.add(new File(file.getPath()));
+                } else if (file.getStatus() == ScmFileStatus.MODIFIED ||
+                        file.getStatus() == ScmFileStatus.ADDED ||
+                        file.getStatus() == ScmFileStatus.DELETED) {
+                    toCheckIn.add(new File(file.getPath()));
+                }
+            }
+            if (conflicts.size() > 0) {
+                for (File conflict : conflicts) {
+                    try {
+                        log.warn("Resolving conflict: " + conflict.getAbsolutePath());
+                        FileUtils.forceDelete(conflict);
+                    } catch (IOException e) {
+                        log.error("Unable to resolve conflict", e);
+                    }
+                }
+                scmManager.update(scmRepository, new ScmFileSet(workingDir, conflicts));
+            }
+            if (toDelete.size() > 0) {
+                for (File file : toDelete) {
+                    try {
+                        if (file.exists()) {
+                            FileUtils.forceDelete(file);
+                        }
+                        toCheckIn.add(file);
+                    } catch (IOException e) {
+                        log.error("Unable to remove file to delete", e);
+                    }
+                }
+                scmManager.update(scmRepository, new ScmFileSet(workingDir, conflicts));
+            }
             if (!readOnly) {
                 if (checkInURL == null) {
-                    scmManager.checkIn(scmRepository, new ScmFileSet(workingDir), "");
+                    makeChanges(scmManager, scmRepository, toCheckIn, toDelete, toAdd);
                 } else {
                     scmRepository = scmManager.makeScmRepository(checkInURL);
-                    scmManager.checkIn(scmRepository, new ScmFileSet(workingDir), "");
+                    makeChanges(scmManager, scmRepository, toCheckIn, toDelete, toAdd);
                 }
             }
         } catch (PlexusContainerException e) {
@@ -83,6 +154,8 @@ public class SCMUpdateTask implements Runnable {
             log.error("A provider was not found for the specified SCM URL", e);
         } catch (ScmException e) {
             log.error("The SCM operation failed", e);
+        } finally {
+            handler.setBusy(false);
         }
 
 
@@ -90,6 +163,20 @@ public class SCMUpdateTask implements Runnable {
             plexus.stop();
         } catch (RuntimeException ignore) {
             // Exceptions can be ignored as in the example from Maven.
+        }
+    }
+
+    private void makeChanges(ScmManager scmManager, ScmRepository scmRepository,
+                             List<File> toCheckIn, List<File> toDelete, List<File> toAdd)
+            throws ScmException {
+        if (toAdd.size() > 0) {
+            scmManager.add(scmRepository, new ScmFileSet(workingDir, toAdd), "");
+        }
+        if (toDelete.size() > 0) {
+            scmManager.remove(scmRepository, new ScmFileSet(workingDir, toDelete), "");
+        }
+        if (toCheckIn.size() > 0) {
+            scmManager.checkIn(scmRepository, new ScmFileSet(workingDir, toCheckIn), "");
         }
     }
 }

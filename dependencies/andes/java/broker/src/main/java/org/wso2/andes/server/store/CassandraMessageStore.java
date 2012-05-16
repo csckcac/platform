@@ -60,6 +60,7 @@ import java.lang.ref.SoftReference;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
 /**
  * Class <code>CassandraMessageStore</code> is the Message Store implemented for cassandra
@@ -119,7 +120,7 @@ public class CassandraMessageStore implements MessageStore {
 
     private final AtomicLong _messageId = new AtomicLong(0);
 
-    private SortedMap<Long,Long> contentDeletionTasks = new TreeMap<Long,Long>();
+    private SortedMap<Long,Long> contentDeletionTasks = new ConcurrentSkipListMap<Long,Long>();
 
     private ConcurrentHashMap<Long,Long> pubSubMessageContentDeletionTasks;
 

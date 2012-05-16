@@ -22,10 +22,10 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.server.store.CassandraMessageStore;
 
-import java.util.*;
+import java.util.Map;
+import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * TODO handle message timeouts
@@ -38,9 +38,9 @@ public class QueueSubscriptionAcknowledgementHandler {
 
     private Map<Long, QueueMessageTag> sentMessagesMap = new ConcurrentHashMap<Long, QueueMessageTag>();
 
-    private SortedMap<Long, Long> timeStampAckedMessageIdMap = new TreeMap<Long, Long>();
+    private SortedMap<Long, Long> timeStampAckedMessageIdMap = new ConcurrentSkipListMap<Long, Long>();
 
-    private SortedMap<Long, Long> timeStampMessageIdMap = new TreeMap<Long, Long>();
+    private SortedMap<Long, Long> timeStampMessageIdMap = new ConcurrentSkipListMap<Long, Long>();
 
     private QueueMessageTagCleanupJob cleanupJob;
 

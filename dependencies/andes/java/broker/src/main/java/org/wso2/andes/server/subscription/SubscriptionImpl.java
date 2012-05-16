@@ -20,6 +20,8 @@
  */
 package org.wso2.andes.server.subscription;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 
 import org.wso2.andes.AMQException;
@@ -69,6 +71,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class SubscriptionImpl implements Subscription, FlowCreditManager.FlowCreditManagerListener,
                                                   SubscriptionConfig
 {
+
+
+    private static Log log = LogFactory.getLog(SubscriptionImpl.class);
 
     private StateListener _stateListener = new StateListener()
                                             {
@@ -280,7 +285,9 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
                     sendToClient(entry, deliveryTag);
 
                 } else {
-                    System.out.println("false");
+                    if(log.isDebugEnabled()) {
+                        log.debug("Message Send attempt stopped. This can be an already delivered message");
+                    }
                 }
 
             } catch (Exception e) {

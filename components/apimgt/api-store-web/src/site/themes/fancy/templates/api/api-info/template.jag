@@ -33,13 +33,17 @@
                                     length = apps.length;
                                 %>
                                 <select id="application-list" class="fancy">
-                                    <option value="-">-- Select an Application --</option>
-                                    <%
-                                    for(i = 0; i < length; i++) {
+                                    <option value="-">Select Application...</option>
+                                    <option value="createNewApp">Create Application...</option>
+                                    <optgroup label="______________________">
+                                        <%
+                                        for(i = 0; i < length; i++) {
                                         app = apps[i];
-                                    %>
-                                    <option value="<%=app.id%>"><%=app.name%></option>
-                                    <% } %>
+                                        %>
+                                        <option value="<%=app.id%>"><%=app.name%></option>
+                                        <% } %>
+                                    </optgroup>
+
                                 </select>
                                 <% } %>
                                     <div class="simple-space-maker"><button id="subscribe-button" class="medium green">Subscribe</button></div>

@@ -3,6 +3,10 @@
     <%
     var i, classes, path, app, apps = outputs.applications, length = apps.length;
     if(length > 0) { %>
+
+    <script type="text/javascript">
+        var foo='<%=apps%>';
+    </script>
     <table cellspacing="0" cellpadding="0" class="sortable">
         <thead>
             <tr class="alt first last">

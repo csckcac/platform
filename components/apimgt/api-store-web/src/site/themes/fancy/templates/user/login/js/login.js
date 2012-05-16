@@ -47,6 +47,14 @@ $(document).ready(function () {
         }
     });
 
+    $('#mainLoginForm input').keydown(function(event){
+        if (event.which == 13) {
+            event.preventDefault();
+            login.loginbox.login($("#username").val(), $("#password").val(), $(this).dialog("close").data("url"));
+
+       }
+    });
+
     $("#logout-link").click(function () {
         login.loginbox.logout();
     });

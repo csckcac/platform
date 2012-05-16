@@ -214,14 +214,6 @@
             <fileMode>644</fileMode>
         </file>
 
-		<!-- deploy the web services -->
-        <file>
-			<source>../../webservices/artifactDeploymentService/target/org.wso2.carbon.artifact.deployment.service-1.0.0.aar</source>
-            <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/axis2services</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-
         <file>
             <source>../../../INSTALL.txt</source>
             <outputDirectory>wso2appfactory-${pom.version}</outputDirectory>

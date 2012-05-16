@@ -119,7 +119,14 @@
                 <tr id="<%=api.name%>-<%=doc.name%>">
                     <td><a href="#"><%=doc.name%></a></td>
                     <td><%=doc.type%></td>
-                    <td><a href="#">View</a></td>
+                    <td>
+                        <% if(doc.sourceType == "INLINE") { %>
+                        <a href="javascript:editInlineContent('<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">
+                        <%}else{%>
+                        <a href="<%=doc.sourceUrl%>">
+                        <%}%>
+                        View
+                        </a></td>
 
                     <td><a href="#"><%=user.username%></a></td>
                     <td><%=doc.lastUpdated%></td>

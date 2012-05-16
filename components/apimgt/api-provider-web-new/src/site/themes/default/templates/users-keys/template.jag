@@ -15,13 +15,15 @@
         <tbody id="users">
 
         <%
-        var i, subscriber, subscribers = outputs.subscribers;
+        var i, path,apiPath,subscriber, subscribers = outputs.subscribers;
         if(subscribers!=null){
         var length = subscribers.length;
         for(i = 0; i < length; i++) {
-        subscriber = subscribers[i];%>
+        subscriber = subscribers[i];
+        path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + subscriber.userName;
+        %>
         <tr>
-        <td><i class="icon-user"></i><a href="?place=user&uname=<%=subscriber.userName%>"><%=subscriber.userName%></a></td>
+        <td><i class="icon-user"></i><a href="<%=path%>"><%=subscriber.userName%></a></td>
         <td><%=subscriber.application%></td><td>
         <% var apiList =subscriber.apis;
         var apiName;
@@ -32,15 +34,17 @@
         for(var n=0;n<apis.length;n++){
         api=apis[n].split("-");
         apiName=api[0];
-        version=api[1]; %>
-        <a href="?place=api-details&name=<%=apiName%>&version=<%=version%>"><%=apis[n]%></a>
+        version=api[1];
+        apiPath=jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + apiName + "&version=" + version;
+        %>
+        <a href="<%= apiPath%>"><%=apis[n]%></a>
 
 
         <% if(n!=apis.length-1){%> , <%}}}else{
         api= apiList.split("-");
         apiName = api[0];
         version = api[1];%>
-        <a href="?place=api-details&name=<%=apiName%>&version=<%=version%>"><%=apiList%></a>
+        <a href="<%= apiPath%>"><%=apiList%></a>
         <%}%>
     </td>
     </tr>

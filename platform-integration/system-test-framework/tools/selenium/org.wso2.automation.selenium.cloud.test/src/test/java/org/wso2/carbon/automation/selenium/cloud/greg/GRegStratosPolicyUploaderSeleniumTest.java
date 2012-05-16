@@ -36,7 +36,6 @@ import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.Calendar;
 
 import static org.testng.Assert.*;
 
@@ -48,15 +47,14 @@ public class GRegStratosPolicyUploaderSeleniumTest {
     String productName = "greg";
     String userName;
     String password;
-    long sleeptime = 4000;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, InterruptedException {
         UserInfo userDetails = UserListCsvReader.getUserInfo(3);
         userName = userDetails.getUserName();
         password = userDetails.getPassword();
-        String baseUrl = new ProductUrlGeneratorUtil().getServiceHomeURL(
-                ProductConstant.GREG_SERVER_NAME);
+        String baseUrl = new ProductUrlGeneratorUtil().getServiceHomeURL(ProductConstant
+                                                                                 .GREG_SERVER_NAME);
         log.info("baseURL is :" + baseUrl);
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
@@ -70,7 +68,7 @@ public class GRegStratosPolicyUploaderSeleniumTest {
         String policyName = "policy.xml";
         String policyPath = "/_system/governance/trunk/policies/";
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoAddPolicyPage();
             addPolicyURLDetails(policyURL, policyName);
             findPolicy(policyPath);
@@ -93,17 +91,17 @@ public class GRegStratosPolicyUploaderSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a policy from File", priority = 2)
-    public void testAddPolicyfromFile() throws Exception {
+    public void testAddPolicyFromFile() throws Exception {
         String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION;
         String file_path = resourcePath + File.separator + "artifacts" + File.separator +
-                           "Selenium" + File.separator + "GREG" + File.separator + "policy" +
+                            File.separator + "GREG" + File.separator + "policy" +
                            File.separator + "policy.xml";
         String policyPath = "/_system/governance/trunk/policies/";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoAddPolicyPage();
-            addPolicyfromFile(file_path);
+            addPolicyFromFile(file_path);
             findPolicy(policyPath);
             deletePolicy();
             userLogout();
@@ -128,42 +126,30 @@ public class GRegStratosPolicyUploaderSeleniumTest {
         driver.quit();
     }
 
-    private void addPolicyfromFile(String file_path) throws InterruptedException {
+    private void addPolicyFromFile(String file_path) throws InterruptedException {
         Select select = new Select(driver.findElement(By.id("addMethodSelector")));
         select.selectByVisibleText("Upload Policy from a file");
-        waitTimeforElement("//p/input");
-        selenium.focus("id=uResourceFile");
-        Thread.sleep(sleeptime);
         driver.findElement(By.id("uResourceFile")).sendKeys(file_path);
         driver.findElement(By.xpath("//div/table/tbody/tr[2]/td/input")).click();
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//form/table/tbody/tr/td/a");
-        assertTrue(driver.getPageSource().contains("Service Policy List"), "Failed to display " +
-                                                                           "Policy Dash board ");
+        waitForPolicyListPage();
         assertTrue(driver.getPageSource().contains("policy.xml"), "Policy Has not been uploaded");
-        Thread.sleep(sleeptime);
     }
 
 
     private void deletePolicy() throws InterruptedException {
         driver.findElement(By.id("actionLink1")).click();
-        waitTimeforElement("//div/a[3]");
         driver.findElement(By.linkText("Delete")).click();
-        waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete '/_system/" +
                                           "governance/trunk/policies/policy.xml' permanently?"),
                    "Delete Policy Message Failed :");
         selenium.click("//button");
-        waitTimeforElement("//li[3]/a");
     }
 
     private void findPolicy(String policyPath) throws InterruptedException {
         driver.findElement(By.linkText("policy.xml")).click();
-        waitTimeforElement("//input");
         driver.findElement(By.xpath("//input")).clear();
         driver.findElement(By.xpath("//input")).sendKeys(policyPath);
         driver.findElement(By.xpath("//input[2]")).click();
-        waitTimeforElement("//div[9]/table/tbody/tr/td/table/tbody/tr/td/a");
     }
 
     private void addPolicyURLDetails(String policyURL, String policyName)
@@ -171,39 +157,37 @@ public class GRegStratosPolicyUploaderSeleniumTest {
         driver.findElement(By.id("irFetchURL")).sendKeys(policyURL);
         driver.findElement(By.id("irResourceName")).sendKeys(policyName);
         driver.findElement(By.cssSelector("input.button.registryWriteOperation")).click();
-        waitTimeforElement("//form/table/tbody/tr/td/a");
-        assertTrue(driver.getPageSource().contains("Service Policy List"), "Failed to display " +
-                                                                           "Policy Dash board ");
+        selenium.waitForPageToLoad("40000");
+        waitForPolicyListPage();
         assertTrue(driver.getPageSource().contains("policy.xml"), "Policy Has not been uploaded");
     }
 
     private void gotoAddPolicyPage() throws InterruptedException {
         driver.findElement(By.linkText("WS Policy")).click();
-        waitTimeforElement("//select");
         assertTrue(selenium.isTextPresent("Add Policy"), "Add Policy Page Title Fail :");
         assertTrue(selenium.isTextPresent("Add New Policy"), "Add Policy Page Fail :");
-        Thread.sleep(sleeptime);
     }
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
     }
 
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
+    private boolean waitForPolicyListPage() {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        do {
+            try {
+                if (driver.findElement(By.id("middle")).findElement(By.tagName("h2")).getText()
+                            .contains("Service Policy List")) {
+                    return true;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for the element");
             }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
+            exceededTime = System.currentTimeMillis();
+        } while (!(((exceededTime - currentTime) / 1000) > 60));
+        return false;
     }
+
 
 }

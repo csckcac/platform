@@ -17,78 +17,82 @@
 package org.wso2.carbon.appfactory.common;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Model to represent the appfactory.xml
  */
 public class AppFactoryConfiguration {
-    private String sSOName;
-    private String sSOIdentityProviderEPR;
-    private String sSOKeyStorePassword;
-    private String sSOIdentityAlias;
-    private String sSOKeyStoreName;
+    private String ssoRelyingPartyName;
+    private String ssoIdentityProviderEpr;
+    private String ssoKeyStorePassword;
+    private String ssoIdentityAlias;
+    private String ssoKeyStoreName;
     private String webServiceEPRAddUserToProject;
     private String webServiceEPRCreateProject;
     private String webServiceEPRCreateRepo;
     private String webServiceEPRGetRolesOfUserForProject;
     private String webServiceEPRGetUsersOfProject;
-    private String webServiceEPREmailVarificationService;
-    private String bpelEPRCreateUser;
-    private String bpelEPRActivateUser;
+    private String webServiceEPREmailVerificationService;
+    private String webServiceEPRCreateUser;
+    private String webServiceEPRActivateUser;
     private String adminUserName;
     private String adminPassword;
-    private String sCMServerIp;
-    private String sCMServerPort;
-    private String sCMServerRealmName;
-    private String sCMServerAdminUserName;
-    private String sCMServerAdminPassword;
-    private String sCMReadWritePermissionName;
+    private String scmServerIp;
+    private String scmServerPort;
+    private String scmServerRealmName;
+    private String scmServerAdminUserName;
+    private String scmServerAdminPassword;
+    private String scmReadWritePermissionName;
     private Map<String, List<String>> deploymentServerUrls;
+    private Set<String> defaultProjectUserRoles;
 
     public AppFactoryConfiguration() {
         deploymentServerUrls = new HashMap<String, List<String>>();
+        defaultProjectUserRoles = new HashSet<String>();
     }
 
-    public String getsSOName() {
-        return sSOName;
+    public String getSsoRelyingPartyName() {
+        return ssoRelyingPartyName;
     }
 
-    public void setsSOName(String sSOName) {
-        this.sSOName = sSOName;
+    public void setSsoRelyingPartyName(String ssoRelyingPartyName) {
+        this.ssoRelyingPartyName = ssoRelyingPartyName;
     }
 
-    public String getsSOIdentityProviderEPR() {
-        return sSOIdentityProviderEPR;
+    public String getSsoIdentityProviderEpr() {
+        return ssoIdentityProviderEpr;
     }
 
-    public void setsSOIdentityProviderEPR(String sSOIdentityProviderEPR) {
-        this.sSOIdentityProviderEPR = sSOIdentityProviderEPR;
+    public void setSsoIdentityProviderEpr(String ssoIdentityProviderEpr) {
+        this.ssoIdentityProviderEpr = ssoIdentityProviderEpr;
     }
 
-    public String getsSOKeyStorePassword() {
-        return sSOKeyStorePassword;
+    public String getSsoKeyStorePassword() {
+        return ssoKeyStorePassword;
     }
 
-    public void setsSOKeyStorePassword(String sSOKeyStorePassword) {
-        this.sSOKeyStorePassword = sSOKeyStorePassword;
+    public void setSsoKeyStorePassword(String ssoKeyStorePassword) {
+        this.ssoKeyStorePassword = ssoKeyStorePassword;
     }
 
-    public String getsSOIdentityAlias() {
-        return sSOIdentityAlias;
+    public String getSsoIdentityAlias() {
+        return ssoIdentityAlias;
     }
 
-    public void setsSOIdentityAlias(String sSOIdentityAlias) {
-        this.sSOIdentityAlias = sSOIdentityAlias;
+    public void setSsoIdentityAlias(String ssoIdentityAlias) {
+        this.ssoIdentityAlias = ssoIdentityAlias;
     }
 
-    public String getsSOKeyStoreName() {
-        return sSOKeyStoreName;
+    public String getSsoKeyStoreName() {
+        return ssoKeyStoreName;
     }
 
-    public void setsSOKeyStoreName(String sSOKeyStoreName) {
-        this.sSOKeyStoreName = sSOKeyStoreName;
+    public void setSsoKeyStoreName(String ssoKeyStoreName) {
+        this.ssoKeyStoreName = ssoKeyStoreName;
     }
 
     public String getWebServiceEPRAddUserToProject() {
@@ -132,29 +136,29 @@ public class AppFactoryConfiguration {
         this.webServiceEPRGetUsersOfProject = webServiceEPRGetUsersOfProject;
     }
 
-    public String getWebServiceEPREmailVarificationService() {
-        return webServiceEPREmailVarificationService;
+    public String getWebServiceEPREmailVerificationService() {
+        return webServiceEPREmailVerificationService;
     }
 
-    public void setWebServiceEPREmailVarificationService(
-            String webServiceEPREmailVarificationService) {
-        this.webServiceEPREmailVarificationService = webServiceEPREmailVarificationService;
+    public void setWebServiceEPREmailVerificationService(
+            String webServiceEPREmailVerificationService) {
+        this.webServiceEPREmailVerificationService = webServiceEPREmailVerificationService;
     }
 
-    public String getBpelEPRCreateUser() {
-        return bpelEPRCreateUser;
+    public String getWebServiceEPRCreateUser() {
+        return webServiceEPRCreateUser;
     }
 
-    public void setBpelEPRCreateUser(String bpelEPRCreateUser) {
-        this.bpelEPRCreateUser = bpelEPRCreateUser;
+    public void setWebServiceEPRCreateUser(String webServiceEPRCreateUser) {
+        this.webServiceEPRCreateUser = webServiceEPRCreateUser;
     }
 
-    public String getBpelEPRActivateUser() {
-        return bpelEPRActivateUser;
+    public String getWebServiceEPRActivateUser() {
+        return webServiceEPRActivateUser;
     }
 
-    public void setBpelEPRActivateUser(String bpelEPRActivateUser) {
-        this.bpelEPRActivateUser = bpelEPRActivateUser;
+    public void setWebServiceEPRActivateUser(String webServiceEPRActivateUser) {
+        this.webServiceEPRActivateUser = webServiceEPRActivateUser;
     }
 
     public String getAdminUserName() {
@@ -173,59 +177,71 @@ public class AppFactoryConfiguration {
         this.adminPassword = adminPassword;
     }
 
-    public String getsCMServerIp() {
-        return sCMServerIp;
+    public String getScmServerIp() {
+        return scmServerIp;
     }
 
-    public void setsCMServerIp(String sCMServerIp) {
-        this.sCMServerIp = sCMServerIp;
+    public void setScmServerIp(String scmServerIp) {
+        this.scmServerIp = scmServerIp;
     }
 
-    public String getsCMServerPort() {
-        return sCMServerPort;
+    public String getScmServerPort() {
+        return scmServerPort;
     }
 
-    public void setsCMServerPort(String sCMServerPort) {
-        this.sCMServerPort = sCMServerPort;
+    public void setScmServerPort(String scmServerPort) {
+        this.scmServerPort = scmServerPort;
     }
 
-    public String getsCMServerRealmName() {
-        return sCMServerRealmName;
+    public String getScmServerRealmName() {
+        return scmServerRealmName;
     }
 
-    public void setsCMServerRealmName(String sCMServerRealmName) {
-        this.sCMServerRealmName = sCMServerRealmName;
+    public void setScmServerRealmName(String scmServerRealmName) {
+        this.scmServerRealmName = scmServerRealmName;
     }
 
-    public String getsCMServerAdminUserName() {
-        return sCMServerAdminUserName;
+    public String getScmServerAdminUserName() {
+        return scmServerAdminUserName;
     }
 
-    public void setsCMServerAdminUserName(String sCMServerAdminUserName) {
-        this.sCMServerAdminUserName = sCMServerAdminUserName;
+    public void setScmServerAdminUserName(String scmServerAdminUserName) {
+        this.scmServerAdminUserName = scmServerAdminUserName;
     }
 
-    public String getsCMServerAdminPassword() {
-        return sCMServerAdminPassword;
+    public String getScmServerAdminPassword() {
+        return scmServerAdminPassword;
     }
 
-    public void setsCMServerAdminPassword(String sCMServerAdminPassword) {
-        this.sCMServerAdminPassword = sCMServerAdminPassword;
+    public void setScmServerAdminPassword(String scmServerAdminPassword) {
+        this.scmServerAdminPassword = scmServerAdminPassword;
     }
 
-    public String getsCMReadWritePermissionName() {
-        return sCMReadWritePermissionName;
+    public String getScmReadWritePermissionName() {
+        return scmReadWritePermissionName;
     }
 
-    public void setsCMReadWritePermissionName(String sCMReadWritePermissionName) {
-        this.sCMReadWritePermissionName = sCMReadWritePermissionName;
+    public void setScmReadWritePermissionName(String scmReadWritePermissionName) {
+        this.scmReadWritePermissionName = scmReadWritePermissionName;
     }
 
-   public void addDeploymentServerUrls(String stage, List<String> locations) {
+    public void addDeploymentServerUrls(String stage, List<String> locations) {
         deploymentServerUrls.put(stage, locations);
     }
 
     public List<String> getDeploymentServerUrls(String stage) {
         return deploymentServerUrls.get(stage);
+    }
+
+    public Set<String> getDefaultProjectUserRoles() {
+        return defaultProjectUserRoles;
+    }
+
+    public void addDefaultProjectUserRole(String[] roles) {
+        for (String role : roles) {
+            if (role != null && !("".equals(role.trim()))) {
+                defaultProjectUserRoles.add(role);
+            }
+        }
     }
 }

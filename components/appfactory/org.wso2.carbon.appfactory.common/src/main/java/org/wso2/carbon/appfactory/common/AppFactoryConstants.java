@@ -20,23 +20,36 @@ package org.wso2.carbon.appfactory.common;
  * Constants for AppFactory configuration
  */
 public class AppFactoryConstants {
-    public static final String PROJECT_DEPLOYMENT_CONFIG_ROOT_ELEMENT = "ProjectDeploymentConfig";
-    public static final String PROJECT_DEPLOYMENT_CONFIG_STAGE = "Stage";
-    public static final String PROJECT_DEPLOYMENT_CONFIG_SERVER_URL = "DeploymentServerURL";
+    public static final String APPFACTORY_CONFIG_FILE_NAME = "appfactory.xml";
+    public static final String APPFACTORY_CONFIG_NAMESPACE = "http://www.wso2.org/appfactory/";
 
-    public static final String WEB_SERVICE_CONFIG_ROOT_ELEMENT = "webService";
-    public static final String WEB_SERVICE_CONFIG_ADD_USER_TO_PROJECT = "addUserToProject";
-    public static final String WEB_SERVICE_CONFIG_CREATE_PROJECT = "createProject";
-    public static final String WEB_SERVICE_CONFIG_GET_ROLES_OF_USER_FOR_PROJECT = "getRolesOfUserForProject";
-    public static final String WEB_SERVICE_CONFIG_GET_USERS_OF_PROJECT = "getUsersOfProject";
-    public static final String WEB_SERVICE_CONFIG_EMAIL_VERIFICATION_SERVICE = "emailVerificationService";
+    public static final String APPFACTORY_CONFIG_ROOT_ELEMENT = "AppFactory";
+
+    public static final String APPFACTORY_CONFIG_ADMIN_USER = "AdminUserName";
+    public static final String APPFACTORY_CONFIG_ADMIN_PASSWORD = "AdminPassword";
+
+    public static final String APPFACTORY_CONFIG_PROJECT_MGT = "ProjectMgt";
+    public static final String APPFACTORY_CONFIG_PROJECT_USER_ROLES = "DefaultProjectUserRoles";
+
+    public static final String SSO_CONFIG_ROOT_ELEMENT = "SSORelyingParty";
+    public static final String SSO_CONFIG_NAME = "Name";
+    public static final String SSO_CONFIG_IDENTITY_PROVIDER_URL = "IdentityProviderURL";
+    public static final String SSO_CONFIG_KEY_STORE_PASSWORD = "KeyStorePassword";
+    public static final String SSO_CONFIG_IDENTITY_ALIAS = "IdentityKeyAlias";
+    public static final String SSO_CONFIG_KEY_STORE_NAME = "KeyStoreName";
+
+    public static final String WEB_SERVICE_CONFIG_ROOT_ELEMENT = "WebServiceEndPoints";
+    public static final String WEB_SERVICE_CONFIG_ADD_USER_TO_PROJECT = "AddUserToProject";
+    public static final String WEB_SERVICE_CONFIG_CREATE_USER = "CreateUser";
+    public static final String WEB_SERVICE_CONFIG_ACTIVATE_USER = "ActivateUser";
+    public static final String WEB_SERVICE_CONFIG_CREATE_REPO = "CreateRepo";
+    public static final String WEB_SERVICE_CONFIG_CREATE_PROJECT = "CreateProject";
+    public static final String WEB_SERVICE_CONFIG_GET_ROLES_OF_USER_FOR_PROJECT = "GetRolesOfUserForProject";
+    public static final String WEB_SERVICE_CONFIG_GET_USERS_OF_PROJECT = "GetUsersOfProject";
+    public static final String WEB_SERVICE_CONFIG_EMAIL_VERIFICATION_SERVICE = "EmailVerificationService";
 
 
-    public static final String BPEL_CONFIG_ROOT_ELEMENT = "bpel";
-    public static final String BPEL_CONFIG_CREATE_USER = "crateUser";
-    public static final String BPEL_CONFIG_ACTIVATE_USER = "activateUser";
-
-    public static final String SVN_REPO_MGT_CONFIG_ROOT_ELEMENT = "SVNRepositoryMGTConfig";
+    public static final String REPO_MGT_CONFIG_ROOT_ELEMENT = "RepositoryMGTConfig";
     public static final String SCM_SERVER_IP = "SCMServerIp";
     public static final String SCM_SERVER_PORT = "SCMServerPort";
     public static final String SCM_SERVER_REALM_NAME = "SCMServerRealmName";
@@ -44,15 +57,9 @@ public class AppFactoryConstants {
     public static final String SCM_SERVER_ADMIN_PASSWORD = "SCMServerAdminPassword";
     public static final String SCM_READ_WRITE_PERMISSION_NAME = "ReadWritePermissionName";
 
-    public static final String ADMIN_USER_NAME_CONFIG_ROOT_ELEMENT = "adminUserName";
-    public static final String ADMIN_PASSWORD_CONFIG_ROOT_ELEMENT = "adminPassword";
-
-    public static final String SSO_CONFIG_ROOT_ELEMENT = "sso";
-    public static final String SSO_CONFIG_NAME = "name";
-    public static final String SSO_CONFIG_IDENTITY_PROVIDER_URL = "identityProviderURL";
-    public static final String SSO_CONFIG_KEY_STORE_PASSWORD = "keyStorePassword";
-    public static final String SSO_CONFIG_IDENTITY_ALIAS = "identityAlias";
-    public static final String SSO_CONFIG_KEY_STORE_NAME = "keyStoreName";
+    public static final String PROJECT_DEPLOYMENT_ROOT_ELEMENT = "ProjectDeployment";
+    public static final String PROJECT_DEPLOYMENT_STAGE = "DeploymentStage";
+    public static final String PROJECT_DEPLOYMENT_SERVER_URL = "DeploymentServerURL";
 
 
 }

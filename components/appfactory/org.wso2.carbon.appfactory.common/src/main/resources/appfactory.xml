@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2005-2011 WSO2, Inc. (http://wso2.com)
+  ~ Copyright 2005-2012 WSO2, Inc. (http://wso2.com)
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
   ~    you may not use this file except in compliance with the License.
@@ -14,68 +14,74 @@
   ~    limitations under the License.
   -->
 <!-- this is a example appfactory.xml -->
-<app>
-    <adminUserName>admin</adminUserName>
-    <adminPassword>admin</adminPassword>
-    <sso>
-        <name>WSO2 AppFactory Project Management</name>
-        <identityProviderURL>https://localhost:9443/samlsso</identityProviderURL>
-        <keyStorePassword>wso2carbon</keyStorePassword>
-        <identityAlias>wso2carbon</identityAlias>
-        <keyStoreName>
+<AppFactory xmlns="http://www.wso2.org/appfactory/">
+
+    <!--Admin user in the app factory. This user is added to each and every project as the administrator-->
+    <AdminUserName>admin</AdminUserName>
+    <AdminPassword>admin</AdminPassword>
+
+    <!--Project Management configurations-->
+    <ProjectMgt>
+        <DefaultProjectUserRoles>Developer</DefaultProjectUserRoles>
+    </ProjectMgt>
+
+    <!--SSO relying party configuration.-->
+    <SSORelyingParty>
+        <Name>WSO2 AppFactory Project Management</Name>
+        <IdentityProviderURL>https://localhost:9443/samlsso</IdentityProviderURL>
+        <KeyStorePassword>wso2carbon</KeyStorePassword>
+        <IdentityKeyAlias>wso2carbon</IdentityKeyAlias>
+        <KeyStoreName>
             E:\src\java\carbon_trunk\platform\products\appfactory\modules\distribution\product\target\wso2appfactory-1.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks
-        </keyStoreName>
-    </sso>
+        </KeyStoreName>
+        adminPassword
+    </SSORelyingParty>
 
-    <webService>
-        <addUserToProject>http://localhost:9763/services/AddUserToProjectService/process
-        </addUserToProject>
-        <createProject>http://localhost:9763/services/CreateProjectService/process</createProject>
-        <createRepo>http://localhost:9763/services/IDTMESVNService/createRepository</createRepo>
-        <getRolesOfUserForProject>
+    <!-- Web service end points including BPEL services-->
+    <WebServiceEndPoints>
+        <GetRolesOfUserForProject>
             http://localhost:9763/services/UserRoleService/getRolesOfUserPerProject
-        </getRolesOfUserForProject>
-        <getUsersOfProject>http://localhost:9763/services/UserMgtService/getUserListForProject
-        </getUsersOfProject>
-        <emailVarificationService>https://localhost:9443/services/EmailVerificationService
-        </emailVarificationService>
-    </webService>
+        </GetRolesOfUserForProject>
 
-    <bpel>
-        <createUser>http://localhost:9763/services/UserCreationProcess</createUser>
-        <activateUser>http://localhost:9763/services/activateUserProcess</activateUser>
-    </bpel>
-    <SVNRepositoryMGTConfig>
+        <CreateRepo>http://localhost:9763/services/IDTMESVNService/createRepository</CreateRepo>
+
+        <GetUsersOfProject>http://localhost:9763/services/UserMgtService/getUserListForProject
+        </GetUsersOfProject>
+
+        <EmailVerificationService>https://localhost:9443/services/EmailVerificationService
+        </EmailVerificationService>
+
+        <AddUserToProject>http://localhost:9763/services/AddUserToProjectService/process
+        </AddUserToProject>
+        <CreateProject>http://localhost:9763/services/CreateProjectService/process</CreateProject>
+        <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
+        <ActivateUser>http://localhost:9763/services/activateUserProcess</ActivateUser>
+    </WebServiceEndPoints>
+
+    <!--Project repository related configurations-->
+    <RepositoryMGTConfig>
         <SCMServerIp>0.0.0.0</SCMServerIp>
         <SCMServerPort>8080</SCMServerPort>
         <SCMServerRealmName>SONIA :: SCM Manager</SCMServerRealmName>
         <SCMServerAdminUserName>scmadmin</SCMServerAdminUserName>
         <SCMServerAdminPassword>scmadmin</SCMServerAdminPassword>
         <ReadWritePermissionName>RW</ReadWritePermissionName>
-    </SVNRepositoryMGTConfig>
-   <ProjectDeploymentConfig>
+    </RepositoryMGTConfig>
 
-    <!-- build artifacts will be uploaded to following locations based on the staging.-->
-    <Stage name="Development">
-        <DeploymentServerURL>
-            https://localhost:9443/services/
-        </DeploymentServerURL>
-    </Stage>
-    <Stage name="QA">
-        <DeploymentServerURL>
-            https://localhost:9445/services/
-        </DeploymentServerURL>
-        <DeploymentServerURL>
-            https://localhost:9443/services/
-        </DeploymentServerURL>
-    </Stage>
-    <Stage name="LIVE">
-        <DeploymentServerURL>
-            https://localhost:9445/services/
-        </DeploymentServerURL>
-        <DeploymentServerURL>
-            https://localhost:9443/services/
-        </DeploymentServerURL>
-    </Stage>
-</ProjectDeploymentConfig>
-</app>
+    <!--This element defines the set of staging servers, where the project artifacts are deployed. -->
+    <ProjectDeployment>
+        <DeploymentStage name="Development">
+            <DeploymentServerURL>
+                https://localhost:9443/services/
+            </DeploymentServerURL>
+        </DeploymentStage>
+        <DeploymentStage name="QA">
+            <DeploymentServerURL>
+                https://localhost:9445/services/
+            </DeploymentServerURL>
+            <DeploymentServerURL>
+                https://localhost:9447/services/
+            </DeploymentServerURL>
+        </DeploymentStage>
+    </ProjectDeployment>
+</AppFactory>

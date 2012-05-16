@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
+import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.appfactory.common.AppFactoryException;
 import org.wso2.carbon.appfactory.common.util.AppFactoryUtil;
 
@@ -39,7 +40,7 @@ public class AppFactoryCommonServiceComponent {
             AppFactoryUtil.setAppFactoryConfiguration(configuration);
             bundleContext.registerService(AppFactoryConfiguration.class.getName(), configuration, null);
         } catch (AppFactoryException e) {
-            log.error("Error in loading " + AppFactoryUtil.APPFACTORY_CONFIG_FILE_NAME);
+            log.error("Error in loading " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
         }
         if (log.isDebugEnabled()) {
             log.debug("Appfactory common bundle is activated");

@@ -40,161 +40,299 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Util class
+ * Util class for building app factory configuration
  */
 public class AppFactoryUtil {
     private static final Log log = LogFactory.getLog(AppFactoryUtil.class);
     private static AppFactoryConfiguration configuration;
-    public static final String APPFACTORY_CONFIG_FILE_NAME = "appfactory.xml";
 
     public static AppFactoryConfiguration loadAppFactoryConfiguration() throws AppFactoryException {
-        OMElement appfactory = loadAppfactoryXML();
-        Iterator iterator = appfactory.getChildElements();
+        OMElement appFactory = loadAppFactoryXML();
         AppFactoryConfiguration config = new AppFactoryConfiguration();
 
-        while (iterator.hasNext()) {
-            OMElement element = (OMElement) iterator.next();
-            if (AppFactoryConstants.SSO_CONFIG_ROOT_ELEMENT.equals(element.getLocalName())) {
-                getSSOConfigs(element, config);
-            } else if (AppFactoryConstants.WEB_SERVICE_CONFIG_ROOT_ELEMENT.equals(element.getLocalName())) {
-                getWebServiceConfigs(element, config);
-            } else if (AppFactoryConstants.BPEL_CONFIG_ROOT_ELEMENT.equals(element.getLocalName())) {
-                getBpelConfig(element, config);
-            } else if (AppFactoryConstants.ADMIN_USER_NAME_CONFIG_ROOT_ELEMENT.equals(element.getLocalName())) {
-                config.setAdminUserName(element.getText());
-            } else if (AppFactoryConstants.ADMIN_PASSWORD_CONFIG_ROOT_ELEMENT.equals(element.getLocalName())) {
-                config.setAdminPassword(element.getText());
-            } else if (AppFactoryConstants.PROJECT_DEPLOYMENT_CONFIG_ROOT_ELEMENT.equals(element.getLocalName())) {
-                getProjectDeploymentConfig(element, config);
-            } else if (AppFactoryConstants.SVN_REPO_MGT_CONFIG_ROOT_ELEMENT.equals(element.getLocalName())) {
-                getSVNRepositoryMGTConfig(element, config);
-            }
+        if (!AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE.equals(appFactory.getNamespace().getNamespaceURI())) {
+            handleError("AppFactory namespace is invalid.");
         }
+
+        // set admin user name
+        OMElement adminUsername = appFactory.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                             AppFactoryConstants.APPFACTORY_CONFIG_ADMIN_USER));
+        if (adminUsername == null) {
+            handleError("Admin user name is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+        } else {
+            config.setAdminUserName(adminUsername.getText().trim());
+        }
+
+        // set admin password
+        OMElement adminPassword = appFactory.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                             AppFactoryConstants.APPFACTORY_CONFIG_ADMIN_PASSWORD));
+        if (adminPassword == null) {
+            handleError("Admin password is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+        } else {
+            config.setAdminPassword(adminPassword.getText().trim());
+        }
+
+        // set project management configuration
+        setProjectMgtConfig(appFactory, config);
+
+        // set SSO relying party configuration
+        setSSOConfigs(appFactory, config);
+
+        // set web service end point configuration
+        setWebServiceConfigs(appFactory, config);
+
+        //set project repository configuration
+        setRepositoryMGTConfig(appFactory, config);
+
+        // set project deployment configuration
+        setProjectDeploymentConfig(appFactory, config);
+
         return config;
     }
 
-    private static void getSVNRepositoryMGTConfig(OMElement element,
-                                                  AppFactoryConfiguration config) {
-        Iterator iterator = element.getChildElements();
-        while (iterator.hasNext()) {
-            OMElement childElement = (OMElement) iterator.next();
-            if (AppFactoryConstants.SCM_SERVER_IP.equals(childElement.getLocalName())) {
-                config.setsCMServerIp(childElement.getText());
-            } else if (AppFactoryConstants.SCM_SERVER_PORT.equals(childElement.getLocalName())) {
-                config.setsCMServerPort(childElement.getText());
-            } else if (AppFactoryConstants.SCM_SERVER_REALM_NAME.equals(childElement.getLocalName())) {
-                config.setsCMServerRealmName(childElement.getText());
-            } else if (AppFactoryConstants.SCM_SERVER_ADMIN_USER_NAME.equals(childElement.getLocalName())) {
-                config.setsCMServerAdminUserName(childElement.getText());
-            } else if (AppFactoryConstants.SCM_SERVER_ADMIN_PASSWORD.equals(childElement.getLocalName())) {
-                config.setsCMServerAdminPassword(childElement.getText());
-            } else if (AppFactoryConstants.SCM_READ_WRITE_PERMISSION_NAME.equals(childElement.getLocalName())) {
-                config.setsCMReadWritePermissionName(childElement.getText());
+
+    private static void setProjectMgtConfig(OMElement element,
+                                            AppFactoryConfiguration config)
+            throws AppFactoryException {
+        OMElement projectMgt = element.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                       AppFactoryConstants.APPFACTORY_CONFIG_PROJECT_MGT));
+        if (projectMgt == null) {
+            handleError("Project Management is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+        } else {
+            OMElement defaultProjectUserRoles = projectMgt.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                           AppFactoryConstants.APPFACTORY_CONFIG_PROJECT_USER_ROLES));
+            if (defaultProjectUserRoles == null) {
+                handleError("DefaultProjectUserRoles is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                String[] roles = defaultProjectUserRoles.getText().trim().split(",");
+                config.addDefaultProjectUserRole(roles);
+            }
+        }
+
+
+    }
+
+    private static void setRepositoryMGTConfig(OMElement element,
+                                               AppFactoryConfiguration config)
+            throws AppFactoryException {
+        OMElement repositoryMgt = element.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                          AppFactoryConstants.REPO_MGT_CONFIG_ROOT_ELEMENT));
+        if (repositoryMgt == null) {
+            handleError("Repository Management is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+        } else {
+            OMElement scmServerIp = repositoryMgt.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                  AppFactoryConstants.SCM_SERVER_IP));
+            if (scmServerIp == null) {
+                handleError("scmServerIp is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setScmServerIp(scmServerIp.getText().trim());
+            }
+
+            OMElement scmServerPort = repositoryMgt.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                    AppFactoryConstants.SCM_SERVER_PORT));
+            if (scmServerPort == null) {
+                handleError("scmServerIp is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setScmServerPort(scmServerPort.getText().trim());
+            }
+            OMElement scmServerRealmName = repositoryMgt.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                         AppFactoryConstants.SCM_SERVER_REALM_NAME));
+            if (scmServerRealmName == null) {
+                handleError("scmServerRealmName is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setScmServerRealmName(scmServerRealmName.getText().trim());
+            }
+            OMElement scmServerAdminName = repositoryMgt.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                         AppFactoryConstants.SCM_SERVER_ADMIN_USER_NAME));
+            if (scmServerAdminName == null) {
+                handleError("scmServerAdminName is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setScmServerAdminUserName(scmServerAdminName.getText().trim());
+            }
+            OMElement scmServerAdminPassword = repositoryMgt.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                             AppFactoryConstants.SCM_SERVER_ADMIN_PASSWORD));
+            if (scmServerAdminPassword == null) {
+                handleError("scmServerAdminPassword is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setScmServerAdminPassword(scmServerAdminPassword.getText().trim());
+            }
+            OMElement scmReadWritePermissionName = repositoryMgt.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                                 AppFactoryConstants.SCM_READ_WRITE_PERMISSION_NAME));
+            if (scmReadWritePermissionName == null) {
+                handleError("scmReadWritePermissionName is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setScmReadWritePermissionName(scmReadWritePermissionName.getText().trim());
             }
         }
     }
 
-    private static void getProjectDeploymentConfig(OMElement deploymentConfig,
+    private static void setProjectDeploymentConfig(OMElement element,
                                                    AppFactoryConfiguration config)
             throws AppFactoryException {
-        if (deploymentConfig == null) {
-            throw new AppFactoryException("Deployment configuration element is null.");
-        }
-
-        if (!deploymentConfig.getQName().equals(
-                new QName(AppFactoryConstants.PROJECT_DEPLOYMENT_CONFIG_ROOT_ELEMENT))) {
-            throw new AppFactoryException("Invalid root element in deployment configuration");
-        }
-        Iterator stagesItr = deploymentConfig.getChildrenWithName(new QName(
-                AppFactoryConstants.PROJECT_DEPLOYMENT_CONFIG_STAGE));
-        if (!stagesItr.hasNext()) {
-            throw new AppFactoryException("No stages defined for deployment of artifacts in deployment configuration.");
-        }
-        while (stagesItr.hasNext()) {
-            OMElement stageElement = (OMElement) stagesItr.next();
-            String stageName = stageElement.getAttributeValue(new QName("name")).trim();
-            Iterator deploymentServerUrlsItr = stageElement.getChildrenWithName(new QName(AppFactoryConstants.PROJECT_DEPLOYMENT_CONFIG_SERVER_URL));
-            List<String> deploymentServerUrls = new ArrayList<String>();
-            while (deploymentServerUrlsItr.hasNext()) {
-                OMElement deploymentServerUrlElement = (OMElement) deploymentServerUrlsItr.next();
-                deploymentServerUrls.add(deploymentServerUrlElement.getText().trim());
+        OMElement projectDeployment = element.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                              AppFactoryConstants.PROJECT_DEPLOYMENT_ROOT_ELEMENT));
+        if (projectDeployment == null) {
+            handleError("Repository Management is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+        } else {
+            Iterator stagesItr = projectDeployment.getChildrenWithName(new QName(
+                    AppFactoryConstants.PROJECT_DEPLOYMENT_STAGE));
+            if (!stagesItr.hasNext()) {
+                handleError("Project Deployment stages are not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
             }
-            config.addDeploymentServerUrls(stageName, deploymentServerUrls);
-        }
-    }
-
-    private static void getBpelConfig(OMElement element, AppFactoryConfiguration config) {
-        Iterator iterator = element.getChildElements();
-        while (iterator.hasNext()) {
-            OMElement childElement = (OMElement) iterator.next();
-            if (AppFactoryConstants.BPEL_CONFIG_CREATE_USER.equals(childElement.getLocalName())) {
-                config.setBpelEPRCreateUser(childElement.getText());
-            } else if (AppFactoryConstants.BPEL_CONFIG_ACTIVATE_USER.equals(childElement.getLocalName())) {
-                config.setBpelEPRActivateUser(childElement.getText());
+            while (stagesItr.hasNext()) {
+                OMElement stageElement = (OMElement) stagesItr.next();
+                String stageName = stageElement.getAttributeValue(new QName("name")).trim();
+                Iterator deploymentServerUrlsItr = stageElement.getChildrenWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                              AppFactoryConstants.PROJECT_DEPLOYMENT_SERVER_URL));
+                List<String> deploymentServerUrls = new ArrayList<String>();
+                while (deploymentServerUrlsItr.hasNext()) {
+                    OMElement deploymentServerUrlElement = (OMElement) deploymentServerUrlsItr.next();
+                    deploymentServerUrls.add(deploymentServerUrlElement.getText().trim());
+                }
+                config.addDeploymentServerUrls(stageName, deploymentServerUrls);
             }
         }
 
+
     }
 
-    private static void getWebServiceConfigs(OMElement element, AppFactoryConfiguration config) {
-        Iterator iterator = element.getChildElements();
-        while (iterator.hasNext()) {
-            OMElement childElement = (OMElement) iterator.next();
-            if (AppFactoryConstants.WEB_SERVICE_CONFIG_ADD_USER_TO_PROJECT.equals(childElement.getLocalName())) {
-                config.setWebServiceEPRAddUserToProject(childElement.getText());
-            } else if (AppFactoryConstants.WEB_SERVICE_CONFIG_CREATE_PROJECT.equals(childElement.getLocalName())) {
-                config.setWebServiceEPRCreateProject(childElement.getText());
-            } else if (AppFactoryConstants.WEB_SERVICE_CONFIG_GET_ROLES_OF_USER_FOR_PROJECT.equals(childElement.getLocalName())) {
-                config.setWebServiceEPRGetRolesOfUserForProject(childElement.getText());
-            } else if (AppFactoryConstants.WEB_SERVICE_CONFIG_GET_USERS_OF_PROJECT.equals(childElement.getLocalName())) {
-                config.setWebServiceEPRGetUsersOfProject(childElement.getText());
-            } else if (AppFactoryConstants.WEB_SERVICE_CONFIG_EMAIL_VERIFICATION_SERVICE.equals(childElement.getLocalName())) {
-                config.setWebServiceEPREmailVarificationService(childElement.getText());
+
+    private static void setWebServiceConfigs(OMElement element, AppFactoryConfiguration config)
+            throws AppFactoryException {
+        OMElement webServiceEndPoints = element.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                AppFactoryConstants.WEB_SERVICE_CONFIG_ROOT_ELEMENT));
+        if (webServiceEndPoints == null) {
+            handleError("Web service endpoint is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+        } else {
+            OMElement getRolesOfUserProject = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                                  AppFactoryConstants.WEB_SERVICE_CONFIG_GET_ROLES_OF_USER_FOR_PROJECT));
+            if (getRolesOfUserProject == null) {
+                handleError("GetRolesOfUserProject web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setWebServiceEPRGetRolesOfUserForProject(getRolesOfUserProject.getText().trim());
             }
 
+            OMElement createRepo = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                       AppFactoryConstants.WEB_SERVICE_CONFIG_CREATE_REPO));
+            if (createRepo == null) {
+                handleError("CreateRepo web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setWebServiceEPRCreateRepo(createRepo.getText().trim());
+            }
 
+            OMElement getUsersOfProject = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                              AppFactoryConstants.WEB_SERVICE_CONFIG_GET_USERS_OF_PROJECT));
+            if (getUsersOfProject == null) {
+                handleError("getUsersOfProject web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setWebServiceEPRGetUsersOfProject(getUsersOfProject.getText().trim());
+            }
+            OMElement emailVerification = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                              AppFactoryConstants.WEB_SERVICE_CONFIG_EMAIL_VERIFICATION_SERVICE));
+            if (emailVerification == null) {
+                handleError("emailVerification web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setWebServiceEPREmailVerificationService(emailVerification.getText().trim());
+            }
+            OMElement addUserToProject = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                             AppFactoryConstants.WEB_SERVICE_CONFIG_ADD_USER_TO_PROJECT));
+            if (addUserToProject == null) {
+                handleError("addUserToProject web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setWebServiceEPRAddUserToProject(addUserToProject.getText().trim());
+            }
+            OMElement createProject = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                          AppFactoryConstants.WEB_SERVICE_CONFIG_CREATE_PROJECT));
+            if (createProject == null) {
+                handleError("addUserToProject web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setWebServiceEPRCreateProject(createProject.getText().trim());
+            }
+            OMElement createUser = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                       AppFactoryConstants.WEB_SERVICE_CONFIG_CREATE_USER));
+            if (createUser == null) {
+                handleError("addUserToProject web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setWebServiceEPRCreateUser(createUser.getText().trim());
+            }
+            OMElement activateUser = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                         AppFactoryConstants.WEB_SERVICE_CONFIG_ACTIVATE_USER));
+            if (activateUser == null) {
+                handleError("activateUser web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setWebServiceEPRActivateUser(activateUser.getText().trim());
+            }
         }
     }
 
-    private static void getSSOConfigs(OMElement element, AppFactoryConfiguration config) {
-        Iterator iterator = element.getChildElements();
-        while (iterator.hasNext()) {
-            OMElement childElement = (OMElement) iterator.next();
-            if (AppFactoryConstants.SSO_CONFIG_NAME.equals((childElement.getLocalName()))) {
-                config.setsSOName(childElement.getText());
-            } else if (AppFactoryConstants.SSO_CONFIG_IDENTITY_PROVIDER_URL.equals(childElement.getLocalName())) {
-                config.setsSOIdentityProviderEPR(childElement.getText());
-            } else if (AppFactoryConstants.SSO_CONFIG_KEY_STORE_PASSWORD.equals(childElement.getLocalName())) {
-                config.setsSOKeyStorePassword(childElement.getText());
-            } else if (AppFactoryConstants.SSO_CONFIG_IDENTITY_ALIAS.equals(childElement.getLocalName())) {
-                config.setsSOIdentityAlias(childElement.getText());
-            } else if (AppFactoryConstants.SSO_CONFIG_KEY_STORE_NAME.equals(childElement.getLocalName())) {
-                config.setsSOKeyStoreName(childElement.getLocalName());
+    private static void setSSOConfigs(OMElement element, AppFactoryConfiguration config)
+            throws AppFactoryException {
+        OMElement ssoRelyingParty = element.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                            AppFactoryConstants.SSO_CONFIG_ROOT_ELEMENT));
+        if (ssoRelyingParty == null) {
+            handleError("SSO Relying Party is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+        } else {
+            OMElement name = ssoRelyingParty.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                             AppFactoryConstants.SSO_CONFIG_NAME));
+            if (name == null) {
+                handleError("SSO relying party name is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setSsoRelyingPartyName(name.getText().trim());
+            }
+
+            OMElement identityProviderUrl = ssoRelyingParty.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                            AppFactoryConstants.SSO_CONFIG_IDENTITY_PROVIDER_URL));
+            if (identityProviderUrl == null) {
+                handleError("SSO identity provider url is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setSsoIdentityProviderEpr(identityProviderUrl.getText().trim());
+            }
+
+            OMElement keyStore = ssoRelyingParty.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                 AppFactoryConstants.SSO_CONFIG_KEY_STORE_NAME));
+            if (keyStore == null) {
+                handleError("SSO key store name is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setSsoKeyStoreName(keyStore.getText().trim());
+            }
+
+            OMElement keyStorePassword = ssoRelyingParty.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                         AppFactoryConstants.SSO_CONFIG_KEY_STORE_PASSWORD));
+            if (keyStorePassword == null) {
+                handleError("SSO key store password is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setSsoKeyStorePassword(keyStorePassword.getText().trim());
+            }
+
+            OMElement alias = ssoRelyingParty.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                              AppFactoryConstants.SSO_CONFIG_IDENTITY_ALIAS));
+            if (alias == null) {
+                handleError("SSO identity alias is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setSsoIdentityAlias(alias.getText().trim());
             }
         }
+
+
     }
 
-    private static OMElement loadAppfactoryXML() throws AppFactoryException {
+    private static OMElement loadAppFactoryXML() throws AppFactoryException {
         String fileLocation = new StringBuilder().append(CarbonUtils.getCarbonConfigDirPath())
                 .append(RegistryConstants.PATH_SEPARATOR).
-                        append(AppFactoryUtil.APPFACTORY_CONFIG_FILE_NAME).toString();
+                        append(AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME).toString();
 
         File configFile = new File(fileLocation);
         InputStream inputStream = null;
-        OMElement configXMLFile;
+        OMElement configXMLFile = null;
         try {
             inputStream = new FileInputStream(configFile);
             XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
             StAXOMBuilder builder = new StAXOMBuilder(parser);
             configXMLFile = builder.getDocumentElement();
         } catch (FileNotFoundException ignore) {
-            String msg = "Unable to locate the " + APPFACTORY_CONFIG_FILE_NAME;
-            log.error(msg);
-            throw new AppFactoryException(msg);
+            handleError("Unable to locate the file " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME + " at " + fileLocation, ignore);
         } catch (XMLStreamException e) {
-            String msg = "Error in reading " + APPFACTORY_CONFIG_FILE_NAME;
-            log.error(msg, e);
-            throw new AppFactoryException(msg, e);
+            handleError("Error in reading " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME, e);
         } finally {
             try {
                 if (inputStream != null) {
@@ -203,7 +341,6 @@ public class AppFactoryUtil {
             } catch (IOException e) {
                 String msg = "Error in closing stream ";
                 log.error(msg, e);
-
             }
         }
         return configXMLFile;
@@ -216,4 +353,15 @@ public class AppFactoryUtil {
     public static AppFactoryConfiguration getConfiguration() {
         return configuration;
     }
+
+    private static void handleError(String msg, Exception e) throws AppFactoryException {
+        log.error(msg, e);
+        throw new AppFactoryException(msg, e);
+    }
+
+    private static void handleError(String msg) throws AppFactoryException {
+        log.error(msg);
+        throw new AppFactoryException(msg);
+    }
+
 }

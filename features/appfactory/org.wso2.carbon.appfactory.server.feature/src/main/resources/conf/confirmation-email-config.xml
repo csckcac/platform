@@ -26,11 +26,11 @@
     </targetEpr>
     <subject>WSO2 AppFactory Registration - Email validation instructions</subject>
     <body>
-        Hi {firstName},
+        Hi {first-name},
 
         Thank you for registering an account in WSO2 App Factory.
 
-        Your User Name: {userName}.
+        Your User Name: {admin}.
 
         Please click the following link to verify your email address.
     </body>

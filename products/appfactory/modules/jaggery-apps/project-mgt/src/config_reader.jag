@@ -1,44 +1,35 @@
 <%
-var module = require("systemPropertyReader");
-var sysPropertyReader = new module.SystemPropertyReaderObject();
-var CARBON_HOME=sysPropertyReader.getProperty("carbon.home");
-var file = new File("file:///"+CARBON_HOME+"/repository/conf/appfactory.xml");
-file.open("r");
-var config = file.readAll();
-var app = new XML(config);
+var appFactoryConfigReaderModule = require("appFactoryConfigReaderModule");
+var appFactoryConfigReader = new appFactoryConfigReaderModule.AppFactoryConfigurationReader();
 
 function getPropertyTemp(expression) {
     switch (expression) {
         case "sso.name":
-            return app.sso.name.text();
+            return appFactoryConfigReader.getSsoRelyingPartyName();
         case "sso.identityProviderURL":
-            return app.sso.identityProviderURL.text();
+            return appFactoryConfigReader.getSsoIdentityProviderEpr();
         case "sso.keyStorePassword":
-            return app.sso.keyStorePassword.text();
+          return appFactoryConfigReader.getSsoKeyStorePassword();
         case "sso.identityAlias":
-            return app.sso.identityAlias.text();
+           return appFactoryConfigReader.getSsoIdentityAlias();
         case "sso.keyStoreName":
-            return app.sso.keyStoreName.text();
+          return appFactoryConfigReader.getSsoKeyStoreName();
         case "webService.addUserToProject":
-            return app.webService.addUserToProject.text();
+           return appFactoryConfigReader.getWebServiceEPRAddUserToProject();
         case "webService.createProject":
-            return app.webService.createProject.text();
+           return appFactoryConfigReader.getWebServiceEPRCreateProject();
         case "webService.createRepo":
-            return app.webService.createRepo.text();
+          return appFactoryConfigReader.getWebServiceEPRCreateRepo();
         case "webService.getRolesOfUserForProject":
-            return app.webService.getRolesOfUserForProject.text();
+           return appFactoryConfigReader.getWebServiceEPRGetRolesOfUserForProject();
         case "webService.getUsersOfProject":
-            return app.webService.getUsersOfProject.text();
+           return appFactoryConfigReader.getWebServiceEPRGetUsersOfProject();
         case "bpel.createUser":
-            return app.bpel.createUser.text();
+          return appFactoryConfigReader.getWebServiceEPRCreateUser();
         case "webService.emailVarificationService":
-            return app.webService.emailVarificationService.text();
+           return appFactoryConfigReader.getWebServiceEPREmailVerificationService();
         case "bpel.activateUser":
-            return app.bpel.activateUser.text();
-        case "adminUserName":
-            return app.adminUserName.text();
-        case "adminPassword":
-            return app.adminPassword.text();
+           return appFactoryConfigReader.getWebServiceEPRActivateUser();
         default:
             return;
     }

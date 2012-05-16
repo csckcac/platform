@@ -9,7 +9,7 @@
     </provide>
     <invoke partnerLink="UserRegistrationServicePL">
       <service name="services.registration.user.carbon.wso2.org:UserRegistrationService" port="UserRegistrationServiceHttpsSoap11Endpoint">
-<endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/endpoints/UserRegistrationService.epr"/>
+<endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/UserRegistrationService.epr"/>
 </service>
     </invoke>
     <invoke partnerLink="EmailSenderServicePL">

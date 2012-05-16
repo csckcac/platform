@@ -25,8 +25,7 @@
                         prodKey = api.prodKey;
                         clazz = (j%2) == 0 ? "even" : "odd";
                         path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
-                        prodKey = 'kskssks';
-                        apis[j].sandboxKey = 'ksksalkskss';
+
                     %>
 
                     <tr class="application-api <%=clazz%>">

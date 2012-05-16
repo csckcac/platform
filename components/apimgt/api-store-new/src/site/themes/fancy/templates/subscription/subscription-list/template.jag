@@ -25,12 +25,13 @@
                         prodKey = api.prodKey;
                         clazz = (j%2) == 0 ? "even" : "odd";
                         path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
-
+                        prodKey = 'kskssks';
+                        apis[j].sandboxKey = 'ksksalkskss';
                     %>
 
                     <tr class="application-api <%=clazz%>">
                         <td>
-                             <a href="<%=path%>"><img alt="" src="<%=api.thumburl%>"/></a>
+                             <a href="<%=path%>"><img alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/storenew/site/themes/fancy/images/api-default.png<% }%>"/></a>
                         </td>
                         <td>
                             <a href="<%=path%>" class="service-name"><%=api.name%></a>
@@ -38,11 +39,11 @@
                         <td>
                             <%=api.provider%>
                         </td>
-                        <td style="padding:0;border-left:solid  1px #ccc">
+                        <td class="api-key-cell">
                         <div class="api-key-listing">
                             <div class="api-key">
                                 <% if(prodKey) { %>
-                                Production Key: <span class="icon white small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
+                                Production Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
                                     <div class="keyField" style="display:none;font-weight:bold"><%=prodKey%></div>
                                 <% } else { %>
                                     <a class="key-generate-button small green"
@@ -51,12 +52,12 @@
                                         data-provider="<%=api.provider%>"
                                         data-context="<%=api.context%>"
                                         data-application="<%=app.name%>"
-                                        data-keytype="PRODUCTION"><span class="icon gray small" data-icon="O"></span> Generate Production Key</a>
+                                        data-keytype="PRODUCTION"><span class="icon black small" data-icon="O"></span> Generate Production Key</a>
                                 <% } %>
                             </div>
                             <div class="api-key-sandbox">
                                 <% if(apis[j].sandboxKey) { %>
-                                     Production Key: <span class="icon white small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
+                                     Sandbox Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
                                     <div class="keyField" style="display:none;font-weight:bold"><%=apis[j].sandboxKey%></div>
                                 <% } else { %>
                                     <% if(apis[j].hasMultipleEndpoints == "true"){ %>

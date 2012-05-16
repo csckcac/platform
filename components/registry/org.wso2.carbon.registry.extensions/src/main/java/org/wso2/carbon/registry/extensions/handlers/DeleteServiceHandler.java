@@ -23,7 +23,6 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
-import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 /**
  * This handler implementation customizes the delete process of a service with versioning in the repository.
@@ -34,45 +33,52 @@ public class DeleteServiceHandler extends Handler {
     @Override
     public void delete(RequestContext requestContext) throws RegistryException {
 
-        Registry registry = requestContext.getRegistry();
+        if(!isDeleteLockAvailable()){
+            return;
+        }
+        acquireDeleteLock();
+        try {
+            Registry registry =  requestContext.getRegistry();
+            String parentPath =  requestContext.getResource().getParentPath();
 
-        String patchVersionPath = requestContext.getResource().getParentPath();
-        String minorVersionPath = RegistryUtils.getParentPath(patchVersionPath);
-        String majorVersionPath =  RegistryUtils.getParentPath(minorVersionPath);
+//        First we are going to delete the actual service resource
+            registry.delete(requestContext.getResource().getPath());
+            deleteRecursively(parentPath,registry);
+//        Now we check whether there are any children of that parent collection.
+//        We do this recursively and delete all the parent collections until there is a parent collection with children.
 
-
-        Resource minorVersionNode = registry.get(minorVersionPath);
-
-        if(minorVersionNode instanceof Collection) {
-
-            Collection minorVersionNodeCol = (Collection) minorVersionNode;
-            if (minorVersionNodeCol.getChildren().length > 2) {
-
-                registry.delete(patchVersionPath);
-            } else {
-
-                Resource majorVersionPathNode = registry.get(majorVersionPath);
-                if (majorVersionPathNode instanceof Collection) {
-
-                    Collection majorVersionPathNodeCol = (Collection) majorVersionPathNode;
-                    if (majorVersionPathNodeCol.getChildren().length > 2) {
-
-                        registry.delete(minorVersionPath);
-                    } else if (majorVersionPathNodeCol.getChildren().length == 2) {
-
-                        registry.delete(majorVersionPath);
-                        if(((Collection) registry.get(RegistryUtils.getParentPath(majorVersionPath))).getChildren().length == 0) {
-                            registry.delete(RegistryUtils.getParentPath(majorVersionPath));
-                        }
-                    }
-                } else {
-                     throw new RegistryException("Unable to delete. Collection is expected for major version.");
-                }
-            }
-        } else {
-            throw new RegistryException("Unable to delete. Collection is expected for minor version.");
+            requestContext.setProcessingComplete(true);
+        } finally {
+            releaseDeleteLock();
         }
 
-        requestContext.setProcessingComplete(true);
+    }
+
+    private void deleteRecursively(String path,Registry registry) throws RegistryException {
+        Resource currentResource = registry.get(path);
+
+        if((currentResource instanceof Collection) && ((Collection)currentResource).getChildCount() == 0 ){
+            registry.delete(path);
+            deleteRecursively(currentResource.getParentPath(),registry);
+        }
+
+    }
+
+    private static ThreadLocal<Boolean> deleteInProgress = new ThreadLocal<Boolean>() {
+        protected Boolean initialValue() {
+            return false;
+        }
+    };
+
+    public static boolean isDeleteLockAvailable() {
+        return !deleteInProgress.get();
+    }
+
+    public static void acquireDeleteLock() {
+        deleteInProgress.set(true);
+    }
+
+    public static void releaseDeleteLock() {
+        deleteInProgress.set(false);
     }
 }

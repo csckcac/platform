@@ -655,8 +655,8 @@ public class APIStoreHostObject extends ScriptableObject {
             row.put("tier", row, tier.getName());
         }
 
-        row.put("status", row, "Deployed"); // api.getStatus().toString()
-        row.put("status", row, "Deployed"); // api.getStatus().toString()
+        // row.put("status", row, "Deployed"); // api.getStatus().toString()
+        // row.put("status", row, "Deployed"); // api.getStatus().toString()
         row.put("subscribed", row, isSubscribed);
         if (api.getThumbnailUrl() == null) {
             row.put("thumbnailurl", row, "images/api-default.png");

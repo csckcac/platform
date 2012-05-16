@@ -189,7 +189,7 @@ public class GenerateDataServiceSeleniumTest {
         Thread.sleep(20000);
     }
 
-    @Test(priority = 6)
+    @Test(priority = 7, dependsOnMethods = {"serviceDeployment"})
     public void serviceInvocationAddEmployee() throws AxisFault {
         String serviceEndPoint = dssProperties.getProductVariables().getBackendUrl()
                                  + "t/" + userDetails.getDomain() + "/" + dataServiceName;
@@ -200,7 +200,7 @@ public class GenerateDataServiceSeleniumTest {
         }
     }
 
-    @Test(priority = 6, dependsOnMethods = {"serviceInvocationAddEmployee"})
+    @Test(priority = 8, dependsOnMethods = {"serviceInvocationAddEmployee"})
     public void serviceInvocationGetEmployees() throws InterruptedException, AxisFault {
         String serviceEndPoint = dssProperties.getProductVariables().getBackendUrl()
                                  + "t/" + userDetails.getDomain() + "/" + dataServiceName;

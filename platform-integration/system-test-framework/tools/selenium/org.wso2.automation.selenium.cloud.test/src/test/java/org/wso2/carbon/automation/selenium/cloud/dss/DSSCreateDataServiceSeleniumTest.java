@@ -171,9 +171,10 @@ public class DSSCreateDataServiceSeleniumTest {
 
         }
         assertTrue(driver.findElement(By.id("sgTable")).getText().contains(dataServiceName), "Service Name not fount in service list");
+        Thread.sleep(10000);
     }
 
-    @Test(priority = 8, dependsOnMethods = {"serviceDeployment"})
+    @Test(priority = 9, dependsOnMethods = {"serviceDeployment"})
     public void serviceInvocation() throws AxisFault {
         String serviceEndPoint = dssProperties.getProductVariables().getBackendUrl()
                                  + "t/" + domain + "/" + dataServiceName;

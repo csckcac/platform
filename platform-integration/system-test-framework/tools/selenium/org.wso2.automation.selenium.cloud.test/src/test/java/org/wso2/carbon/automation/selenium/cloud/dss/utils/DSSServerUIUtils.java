@@ -474,4 +474,12 @@ public class DSSServerUIUtils {
     public void clickOnConfig() {
         driver.findElement(By.id("menu-panel-button3")).click();
     }
+
+    public void clickOnTools() {
+        driver.findElement(By.id("menu-panel-button4")).click();
+    }
+
+    public void clickOnMonitor() {
+        driver.findElement(By.id("menu-panel-button2")).click();
+    }
 }

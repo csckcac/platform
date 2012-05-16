@@ -1,7 +1,7 @@
 <% jagg.template("item-edit", function(inputs, outputs, jagg) { %>
 <% var i,j,resCount,rowNums = [],api = outputs.api;%>
 <div class="alert alert-error" id="editAPIError" style="display:none">
-<span>Sorry. This API cannot be updated. Error occurred while updating the API.</span>
+<span id="editErrorSpan"></span>
 </div>
 <div class="row-fluid">
     <div class="span12">
@@ -196,6 +196,7 @@ $('input#updateButton').click( function() {
                       $("#editAPIForm")[0].reset();
                   }else{
          $('#editAPIError').show('fast');
+         $('#editErrorSpan').html('<strong>Sorry. This API cannot be updated.</strong><br />'+data.message);
          }
          }
          });

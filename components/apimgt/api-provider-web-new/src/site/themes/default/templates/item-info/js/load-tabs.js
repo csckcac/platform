@@ -141,7 +141,7 @@ $(document).ready(function() {
             jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIUserUsage", apiName:apiName, server:"https://localhost:9444/" },
                       function (json) {
                           if (!json.error) {
-                              var length = json.data.usage.length,data = [];
+                              var length = json.usage.length,data = [];
                               $('#userChart').empty();
                               $('#userTable').find("tr:gt(0)").remove();
                               for (var i = 0; i < length; i++) {

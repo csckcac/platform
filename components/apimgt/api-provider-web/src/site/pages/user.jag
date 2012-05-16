@@ -8,11 +8,11 @@ var site = require("/site/conf/site.json");
         response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/login.jag"));
         return;
     }
-    var userId = request.getParameter("username");
+    var userId = request.getParameter("uname");
     var apis, result, mod;
 
     mod = jagg.module("subscription");
-    result = mod.getSubscribedAPIs("admin");
+    result = mod.getSubscribedAPIs(userId);
     apis = result.apis;
     jagg.render({
         "name":"page/base",

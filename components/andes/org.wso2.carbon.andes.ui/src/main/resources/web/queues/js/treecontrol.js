@@ -37,3 +37,8 @@ function addQueueToBackEnd(queue, createdFrom) {
     var request = YAHOO.util.Connect.asyncRequest('POST', "add_queue_to_backend_ajaxprocessor.jsp", callback, "queue=" + queue + "&type=input");
 
 }
+ function doDelete(queueName) {
+        var theform = document.getElementById('deleteForm');
+        theform.queueName.value = queueName;
+        theform.submit();
+ }

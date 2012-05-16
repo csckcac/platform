@@ -22,9 +22,20 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.andes.core.QueueManagerService;
 import org.wso2.carbon.andes.core.internal.builder.QueueManagerServiceBuilder;
+import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
  * @scr.component name="QueueManagerService.component" immediate="true"
+ * @scr.reference name="registry.service"
+ * interface="org.wso2.carbon.registry.core.service.RegistryService" cardinality="1..1"
+ * policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
+ * @scr.reference name="realm.service" interface="org.wso2.carbon.user.core.service.RealmService"
+ * cardinality="1..1" policy="dynamic" bind="setRealmService"  unbind="unsetRealmService"
+ * @scr.reference name="configurationcontext.service"
+ * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
+ * policy="dynamic" bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
  */
 
 public class QueueManagerServiceDS {
@@ -40,6 +51,32 @@ public class QueueManagerServiceDS {
         } catch (RuntimeException e) {
             log.error("Can not create queue manager service ", e);
         }
+    }
+
+    protected void setRealmService(RealmService realmService) {
+        QueueManagerServiceValueHolder.getInstance().registerRealmService(realmService);
+    }
+
+    protected void unsetRealmService(RealmService realmService) {
+
+    }
+
+    protected void setRegistryService(RegistryService registryService) {
+        QueueManagerServiceValueHolder.getInstance().registerRegistryService(registryService);
+    }
+
+    protected void unsetRegistryService(RegistryService registryService) {
+
+    }
+
+    protected void setConfigurationContextService(
+            ConfigurationContextService configurationContextService) {
+        QueueManagerServiceValueHolder.getInstance().registerConfigurationContextService(configurationContextService);
+    }
+
+    protected void unsetConfigurationContextService(
+            ConfigurationContextService configurationContextService) {
+
     }
 
 }

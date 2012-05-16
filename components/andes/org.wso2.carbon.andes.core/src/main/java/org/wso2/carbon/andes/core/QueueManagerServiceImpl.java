@@ -21,9 +21,13 @@ package org.wso2.carbon.andes.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.configuration.ClientProperties;
-import org.wso2.carbon.andes.core.types.Queue;
 import org.wso2.carbon.andes.core.internal.registry.QueueManagementBeans;
+import org.wso2.carbon.andes.core.internal.util.QueueManagementConstants;
+import org.wso2.carbon.andes.core.internal.util.Utils;
+import org.wso2.carbon.andes.core.types.Queue;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 
 import javax.jms.*;
 import javax.naming.InitialContext;
@@ -85,7 +89,17 @@ public class QueueManagerServiceImpl implements QueueManagerService {
 
     @Override
     public void deleteQueue(String queueName) throws QueueManagerException {
-        //To change body of implemented methods use File | Settings | File Templates.
+         try {
+            UserRegistry userRegistry = Utils.getUserRegistry();
+            String resourcePath = QueueManagementConstants.MB_QUEUE_STORAGE_PATH + "/" + queueName;
+            if(QueueManagementBeans.getInstance().queueExists(queueName)){
+                QueueManagementBeans.getInstance().deleteQueue(queueName);
+                userRegistry.delete(resourcePath);
+            }
+        } catch (RegistryException e) {
+            throw new QueueManagerException("Failed to delete queue: " + queueName, e);
+        }
+
     }
 
     private int readPortOffset() {

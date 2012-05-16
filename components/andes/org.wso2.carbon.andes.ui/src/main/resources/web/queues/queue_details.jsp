@@ -1,11 +1,11 @@
-<%@ page import="org.wso2.carbon.andes.stub.AndesAdminServiceStub" %>
+<%@ page import="org.apache.axis2.AxisFault" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="carbon" uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" %>
+<%@ page import="org.wso2.carbon.andes.stub.AndesAdminServiceStub" %>
 <%@ page import="org.wso2.carbon.andes.stub.admin.types.Queue" %>
-<%@ page import="org.wso2.carbon.andes.ui.Constants" %>
 <%@ page import="org.wso2.carbon.andes.ui.UIUtils" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
-
+<script type="text/javascript" src="js/treecontrol.js"></script>
 <fmt:bundle basename="org.wso2.carbon.andes.ui.i18n.Resources">
     <carbon:jsi18n
             resourceBundle="org.wso2.carbon.andes.ui.i18n.Resources"
@@ -50,6 +50,8 @@
         }
     %>
 
+
+
     <script type="text/javascript">
 
         function updateWorkerLocationForQueue(queueName, index, successMessage)
@@ -91,6 +93,30 @@
     topPage="false"
     request="<%=request%>"/>
 
+    <%
+
+        String queueName = request.getParameter("queueName");
+        if (queueName != null) {
+            try {
+                stub.deleteQueue(queueName);
+    %>
+    <script type="text/javascript">CARBON.showInfoDialog('Queue <%=queueName %> successfully deleted.', function
+            () {
+        location.href = 'queue_details.jsp';
+    });</script>
+    <%
+
+    } catch (AxisFault fault) {
+    %>
+    <script type="text/javascript">
+        CARBON.showErrorDialog('<%=fault.getMessage()%>');
+
+    </script>
+    <%
+            }
+        }
+    %>
+
     <div id="middle">
         <h2><fmt:message key="queues.list"/></h2>
         <div id="workArea">
@@ -114,6 +140,7 @@
                 <tr>
                     <th><fmt:message key="queue.name"/></th>
                     <th><fmt:message key="queue.messageCount"/></th>
+                    <th style="width:40px;"><fmt:message key="queue.operations"/></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -127,6 +154,11 @@
                     </td>
                     <td><%=queue.getMessageCount()%>
                     </td>
+                       <td>
+                        <a style="background-image: url(../admin/images/delete.gif);"
+                           class="icon-link"
+                           onclick="doDelete('<%=queue.getQueueName()%>')">Delete</a>
+                    </td>
                 </tr>
                 <%
                         }
@@ -137,6 +169,11 @@
             <%
                 }
             %>
+             <div>
+                <form id="deleteForm" name="input" action="" method="get"><input type="HIDDEN"
+                                                                                 name="queueName"
+                                                                                 value=""/></form>
+            </div>
              </div>
     </div>
 </fmt:bundle>

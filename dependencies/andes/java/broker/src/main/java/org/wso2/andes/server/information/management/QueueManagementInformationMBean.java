@@ -55,8 +55,18 @@ public class QueueManagementInformationMBean extends AMQManagedObject implements
 
     }
 
+    public boolean isQueueExists(String queueName) {
+        try {
+            List<String> queuesList = messageStore.getGlobalQueues();
+            return queuesList.contains(queueName);
+        } catch (Exception e) {
+          throw new RuntimeException("Error in accessing global queues",e);
+        }
+    }
+
     public void deleteQueue(@MBeanOperationParameter(name = "queueName",
             description = "Name of the queue to be deleted") String queueName) {
+        throw new UnsupportedOperationException("Queue Deletion Operation is currently unsupported");
     }
 
     public int getMessageCount(String queueName) {

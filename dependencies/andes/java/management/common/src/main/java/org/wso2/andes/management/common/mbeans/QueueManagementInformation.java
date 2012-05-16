@@ -22,7 +22,6 @@
 package org.wso2.andes.management.common.mbeans;
 
 import org.wso2.andes.management.common.mbeans.annotations.MBeanAttribute;
-import org.wso2.andes.management.common.mbeans.annotations.MBeanOperation;
 import org.wso2.andes.management.common.mbeans.annotations.MBeanOperationParameter;
 
 public interface QueueManagementInformation {
@@ -32,7 +31,7 @@ public interface QueueManagementInformation {
     @MBeanAttribute(name="Queues",description = "All queue names")
     String[] getAllQueueNames();
 
-    @MBeanOperation(name="Delete Queue" ,description = "Deleting the specified queue from the server")
+    @MBeanAttribute(name="Delete Queue" ,description = "Deleting the specified queue from the server")
     void deleteQueue(@MBeanOperationParameter(name = "queueName" ,
             description = "Name of the queue to be deleted") String queueName);
 
@@ -41,4 +40,8 @@ public interface QueueManagementInformation {
 
     @MBeanAttribute(name="SubscriptionCount", description = "Number of subscriptions for the queue")
     int getSubscriptionCount(String queueName);
+
+    @MBeanAttribute(name = " Queue Exists", description = "Check whether the queue exists in the server")
+    boolean isQueueExists(@MBeanOperationParameter(name = "queueName" ,
+            description = "Name of the queue to be checked") String queueName);
 }

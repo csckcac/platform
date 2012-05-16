@@ -66,5 +66,16 @@ public class AndesAdminService extends AbstractAdmin {
         return queuesDTO;
     }
 
+    public void deleteQueue(String queueName) throws QueueManagerAdminException {
+        try {
+            QueueManagerService queueManagerService =
+                    AndesQueueManagerAdminServiceDSHolder.getInstance().getQueueManagerService();
+            queueManagerService.deleteQueue(queueName);
+        } catch (QueueManagerException e) {
+            throw new QueueManagerAdminException("Error in deleting queue",e);
+        }
+
+    }
+
 
 }

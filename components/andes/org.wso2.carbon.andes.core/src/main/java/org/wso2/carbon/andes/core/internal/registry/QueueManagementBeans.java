@@ -18,8 +18,8 @@
 package org.wso2.carbon.andes.core.internal.registry;
 
 import org.wso2.carbon.andes.core.QueueManagerException;
-import org.wso2.carbon.andes.core.types.Queue;
 import org.wso2.carbon.andes.core.internal.util.QueueManagementConstants;
+import org.wso2.carbon.andes.core.types.Queue;
 
 import javax.management.*;
 import java.lang.management.ManagementFactory;
@@ -106,6 +106,56 @@ public  class QueueManagementBeans {
         }
     }
 
+    public void deleteQueue(String queueName) throws QueueManagerException {
+        try {
+            MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+            ObjectName objectName =
+                    new ObjectName("org.wso2.andes:type=QueueManagementInformation,name=QueueManagementInformation");
+            String operationName = "deleteQueue";
+            Object[] parameters = new Object[]{queueName};
+            String[] signature = new String[]{String.class.getName()};
+            Object result = mBeanServer.invoke(
+                    objectName,
+                    operationName,
+                    parameters,
+                    signature);
+
+        } catch (MalformedObjectNameException e) {
+            throw new QueueManagerException(e);
+        } catch (InstanceNotFoundException e) {
+            throw new QueueManagerException(e);
+        } catch (MBeanException e) {
+            throw new QueueManagerException(e);
+        } catch (JMException e) {
+            throw new QueueManagerException(e);
+        }
+    }
+
+    public static boolean queueExists(String queueName) throws QueueManagerException {
+        try {
+            boolean status = false;
+            MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+            ObjectName objectName =
+                    new ObjectName("org.wso2.andes:type=QueueManagementInformation,name=QueueManagementInformation");
+            String operationName = "isQueueExists";
+            Object[] parameters = new Object[]{queueName};
+            String[] signature = new String[]{String.class.getName()};
+            Object result = mBeanServer.invoke(
+                    objectName,
+                    operationName,
+                    parameters,
+                    signature);
+            if (result != null) {
+                status = (Boolean) result;
+            }
+
+            return status;
+        } catch (MalformedObjectNameException e) {
+            throw new QueueManagerException(e);
+        } catch (JMException e) {
+            throw new QueueManagerException(e);
+        }
+    }
 
 
 }

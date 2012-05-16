@@ -80,41 +80,90 @@
                             <publishArtifactRepository>true</publishArtifactRepository>
                             <featureArtifacts>
 
-                                <!-- bpel hosting-->    
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bpel.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.humantask.feature:${carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.coordination.core.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.unifiedendpoint.server.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.service.mgt.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.server.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.tryit.feature:${carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.attachment.mgt.feature:${carbon.version}</featureArtifactDef>
+                                <!-- bpel hosting-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.bpel.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.humantask.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.coordination.core.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.unifiedendpoint.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.service.mgt.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.datasource.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.tryit.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.attachment.mgt.feature:${carbon.version}
+                                </featureArtifactDef>
+
+                                <!-- capp uploading features-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.application.mgt.feature:${carbon.version}
+                                </featureArtifactDef>
 
                                 <!-- jaggary hosting -->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.jaggery.server.feature:1.0.0-SNAPSHOT</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.jaggery.ui.feature:1.0.0-SNAPSHOT</featureArtifactDef>
-                         
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.jaggery.server.feature:1.0.0-SNAPSHOT
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.jaggery.ui.feature:1.0.0-SNAPSHOT
+                                </featureArtifactDef>
+
                                 <!-- registry related features-->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ui.menu.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.resource.properties.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.registry.ui.menu.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.registry.resource.properties.feature:${carbon.version}
+                                </featureArtifactDef>
 
                                 <!-- saml2 sso -->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.sso.saml.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.feature:${stratos.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.relying.party.feature:${carbon.version}</featureArtifactDef>                            
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.core.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.sso.saml.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.feature:${stratos.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.relying.party.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.core.feature:${carbon.version}
+                                </featureArtifactDef>
 
-								<!-- AppFactory related features -->
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.appfactory.server.feature:1.0.0-SNAPSHOT</featureArtifactDef>
+                                <!-- AppFactory related features -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.appfactory.server.feature:1.0.0-SNAPSHOT
+                                </featureArtifactDef>
 
                                 <!-- generic features -->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.version}</featureArtifactDef>
-                                
-                                
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.version}
+                                </featureArtifactDef>
+
+
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -134,7 +183,7 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
-                                
+
                                 <!-- bpel -->
                                 <feature>
                                     <id>org.wso2.carbon.bpel.feature.group</id>
@@ -144,18 +193,18 @@
                                     <id>org.wso2.carbon.humantask.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                               <feature>
+                                <feature>
                                     <id>org.wso2.carbon.ntask.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.coordination.core.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>  
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.system.statistics.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>              
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>
                                     <version>${carbon.version}</version>
@@ -168,7 +217,7 @@
                                     <id>org.wso2.carbon.datasource.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                
+
                                 <!-- Jaggary application -->
                                 <feature>
                                     <id>org.wso2.carbon.jaggery.server.feature.group</id>
@@ -177,6 +226,12 @@
                                 <feature>
                                     <id>org.wso2.carbon.jaggery.ui.feature.group</id>
                                     <version>1.0.0-SNAPSHOT</version>
+                                </feature>
+
+                                <!-- cApp uploading features-->
+                                <feature>
+                                    <id>org.wso2.carbon.application.mgt.feature.group</id>
+                                    <version>${carbon.version}</version>
                                 </feature>
 
                                 <!--registry-->
@@ -189,24 +244,25 @@
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.registry.resource.properties.feature.group</id>
+                                    <id>org.wso2.carbon.registry.resource.properties.feature.group
+                                    </id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                
+
                                 <!-- generic -->
                                 <feature>
                                     <id>org.wso2.carbon.logging.mgt.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
 
-								<!-- AppFactory related features -->
-								<feature>
-									<id>org.wso2.carbon.appfactory.server.feature.group</id>
-									<version>1.0.0-SNAPSHOT</version>
-								</feature>
+                                <!-- AppFactory related features -->
+                                <feature>
+                                    <id>org.wso2.carbon.appfactory.server.feature.group</id>
+                                    <version>1.0.0-SNAPSHOT</version>
+                                </feature>
 
-								<!-- SSO features -->
-								<feature>
+                                <!-- SSO features -->
+                                <feature>
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
@@ -214,7 +270,7 @@
                                     <id>org.wso2.stratos.identity.saml2.sso.mgt.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
-								<feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.core.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
@@ -222,33 +278,33 @@
                                     <id>org.wso2.carbon.identity.relying.party.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-				
+
                             </features>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-	    <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-            <execution>
-                <phase>package</phase>
-                <configuration>
-                    <tasks>
-                        <replace token="false" value="true"
-                                 dir="target/wso2carbon-core-4.0.0-SNAPSHOT/repository/components/configuration/org.eclipse.equinox.simpleconfigurator">
-                            <include name="**/bundles.info"/>
-                        </replace>
-                    </tasks>
-                </configuration>
-                <goals>
-                    <goal>run</goal>
-                </goals>
-            </execution>
-        </executions>
-    </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks>
+                                <replace token="false" value="true"
+                                         dir="target/wso2carbon-core-4.0.0-SNAPSHOT/repository/components/configuration/org.eclipse.equinox.simpleconfigurator">
+                                    <include name="**/bundles.info"/>
+                                </replace>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 

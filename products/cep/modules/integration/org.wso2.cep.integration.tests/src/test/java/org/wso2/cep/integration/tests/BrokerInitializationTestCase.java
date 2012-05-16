@@ -116,52 +116,6 @@ public class BrokerInitializationTestCase {
                     wsEventBrokerProperties[1].setSecured(false);
                     wsEventBrokerPropertyArrayList.add(wsEventBrokerProperties[1]);
                 }
-
-
-            } else if (brokerName.equalsIgnoreCase("jms-qpid")) {
-                BrokerProperty[] brokerProperties = brokerManagerAdminServiceStub.getBrokerProperties(brokerName);
-                if (brokerProperties != null) {
-                    jmsBrokerPropertyArrayList = new ArrayList<BrokerProperty>();
-
-                    for (BrokerProperty jmsBrokerProperty : brokerProperties) {
-                        if (jmsBrokerProperty.getKey().equals("jndiName")) {
-                            jmsBrokerProperty.setValue("org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
-                        } else if (jmsBrokerProperty.getKey().equals("username")) {
-                            jmsBrokerProperty.setValue("admin");
-                        } else if (jmsBrokerProperty.getKey().equals("password")) {
-                            jmsBrokerProperty.setValue("admin");
-                        } else if (jmsBrokerProperty.getKey().equals("serverName")) {
-                            jmsBrokerProperty.setValue("");
-                        } else if (jmsBrokerProperty.getKey().equals("virtualHostName")) {
-                            jmsBrokerProperty.setValue("carbon");
-                        } else if (jmsBrokerProperty.getKey().equals("ipAddress")) {
-                            jmsBrokerProperty.setValue("localhost");
-                        } else if (jmsBrokerProperty.getKey().equals("port")) {
-                            jmsBrokerProperty.setValue("5672");
-                        }
-                        jmsBrokerPropertyArrayList.add(jmsBrokerProperty);
-                    }
-                    BrokerProperty[] jmsBrokerProperties = new BrokerProperty[2];
-
-                    jmsBrokerProperties[0] = new BrokerProperty();
-                    jmsBrokerProperties[0].setKey("name");
-                    jmsBrokerProperties[0].setValue("jmsBroker");
-                    jmsBrokerProperties[0].setRequired(true);
-                    jmsBrokerProperties[0].setDisplayName("Broker Name");
-                    jmsBrokerProperties[0].setSecured(false);
-
-                    jmsBrokerPropertyArrayList.add(jmsBrokerProperties[0]);
-
-
-                    jmsBrokerProperties[1] = new BrokerProperty();
-                    jmsBrokerProperties[1].setKey("type");
-                    jmsBrokerProperties[1].setValue("jms-qpid");
-                    jmsBrokerProperties[1].setRequired(true);
-                    jmsBrokerProperties[1].setDisplayName("Broker Type");
-                    jmsBrokerProperties[1].setSecured(false);
-                    jmsBrokerPropertyArrayList.add(jmsBrokerProperties[1]);
-                }
-
             }
         }
 
@@ -178,66 +132,12 @@ public class BrokerInitializationTestCase {
             brokerManagerAdminServiceStub.addBrokerConfiguration("wsEventBroker", "ws-event", wsEventBrokerProperties);
         }
 
-        if (jmsBrokerPropertyArrayList != null) {
-            BrokerProperty[] jmsEventBrokerProperties = new BrokerProperty[jmsBrokerPropertyArrayList.size()];
-            jmsBrokerPropertyArrayList.toArray(jmsEventBrokerProperties);
-            brokerManagerAdminServiceStub.addBrokerConfiguration("jmsBroker", "jms-qpid", jmsEventBrokerProperties);
-        }
 
 
         BrokerConfigurationDetails[] brokerConfigurationDetailList = brokerManagerAdminServiceStub.getAllBrokerConfigurationNamesAndTypes();
         for (BrokerConfigurationDetails brokerConfigurationDetails : brokerConfigurationDetailList) {
             String brokerName = brokerConfigurationDetails.getBrokerName();
-            if ("jmsBroker".equals(brokerName)) {
-                Assert.assertEquals("jms-qpid", brokerConfigurationDetails.getBrokerType());
-                BrokerProperty[] createdBrokerProperties = brokerConfigurationDetails.getBrokerProperties();
-                for (BrokerProperty brokerProperty : createdBrokerProperties) {
-                    String brokerPropertyKey = brokerProperty.getKey();
-                    if ("jndiName".equals(brokerPropertyKey)) {
-                        Assert.assertNull(brokerProperty.getDisplayName());
-                        Assert.assertEquals("org.apache.qpid.jndi.PropertiesFileInitialContextFactory", brokerProperty.getValue());
-                        Assert.assertFalse(brokerProperty.getRequired());
-                        Assert.assertFalse(brokerProperty.getSecured());
-                    } else if ("port".equals(brokerPropertyKey)) {
-                        Assert.assertNull(brokerProperty.getDisplayName());
-                        Assert.assertEquals("5672", brokerProperty.getValue());
-                        Assert.assertFalse(brokerProperty.getRequired());
-                        Assert.assertFalse(brokerProperty.getSecured());
-                    } else if ("username".equals(brokerPropertyKey)) {
-                        Assert.assertNull(brokerProperty.getDisplayName());
-                        Assert.assertEquals("admin", brokerProperty.getValue());
-                        Assert.assertFalse(brokerProperty.getRequired());
-                        Assert.assertFalse(brokerProperty.getSecured());
-                    } else if ("name".equals(brokerPropertyKey)) {
-                        Assert.assertNull(brokerProperty.getDisplayName());
-                        Assert.assertEquals("jmsBroker", brokerProperty.getValue());
-                        Assert.assertFalse(brokerProperty.getRequired());
-                        Assert.assertFalse(brokerProperty.getSecured());
-                    } else if ("virtualHostName".equals(brokerPropertyKey)) {
-                        Assert.assertNull(brokerProperty.getDisplayName());
-                        Assert.assertEquals("carbon", brokerProperty.getValue());
-                        Assert.assertFalse(brokerProperty.getRequired());
-                        Assert.assertFalse(brokerProperty.getSecured());
-                    } else if ("password".equals(brokerPropertyKey)) {
-                        Assert.assertNull(brokerProperty.getDisplayName());
-                        Assert.assertEquals("admin", brokerProperty.getValue());
-                        Assert.assertFalse(brokerProperty.getRequired());
-                        Assert.assertFalse(brokerProperty.getSecured());
-                    } else if ("ipAddress".equals(brokerPropertyKey)) {
-                        Assert.assertNull(brokerProperty.getDisplayName());
-                        Assert.assertEquals("localhost", brokerProperty.getValue());
-                        Assert.assertFalse(brokerProperty.getRequired());
-                        Assert.assertFalse(brokerProperty.getSecured());
-                    } else if ("type".equals(brokerPropertyKey)) {
-                        Assert.assertNull(brokerProperty.getDisplayName());
-                        Assert.assertEquals("jms-qpid", brokerProperty.getValue());
-                        Assert.assertFalse(brokerProperty.getRequired());
-                        Assert.assertFalse(brokerProperty.getSecured());
-                    } else {
-                        Assert.fail("Broker Property Key");
-                    }
-                }
-            } else if ("wsEventBroker".equals(brokerName)) {
+            if ("wsEventBroker".equals(brokerName)) {
                 Assert.assertEquals("ws-event", brokerConfigurationDetails.getBrokerType());
                 BrokerProperty[] createdBrokerProperties = brokerConfigurationDetails.getBrokerProperties();
                 for (BrokerProperty brokerProperty : createdBrokerProperties) {

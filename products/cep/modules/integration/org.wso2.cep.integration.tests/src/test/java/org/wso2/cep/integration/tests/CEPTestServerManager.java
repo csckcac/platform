@@ -43,9 +43,6 @@ public class CEPTestServerManager extends TestServerManager {
         ClientConnectionUtil.waitForPort(7611);
         ClientConnectionUtil.waitForPort(7711);
 
-        //waiting till Qpid server to start
-        ClientConnectionUtil.waitForPort(5672);
-
         return carbonHome;
     }
 

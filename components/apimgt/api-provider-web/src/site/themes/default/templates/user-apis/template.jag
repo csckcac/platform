@@ -13,7 +13,9 @@
             </tr>
             </thead>
             <tbody id="userSubscribedAPIs">
-            <%var i, api,apiPath, apis = outputs.apis, length = apis.length;
+            <%var i, api,apiPath, apis = outputs.apis;
+            if(apis!=null){
+            var length = apis.length
             for(i = 0; i < length; i++) {
             api = apis[i];
             apiPath=jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version;
@@ -26,7 +28,7 @@
                 <i class="icon-ban-circle"></i><a href="#">Block</a>
             </td>
             </tr>
-            <%}%>
+            <%}}%>
             </tbody>
         </table>
         <div class="pagination">

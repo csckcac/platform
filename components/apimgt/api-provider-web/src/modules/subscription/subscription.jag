@@ -63,7 +63,7 @@ var getSubscribersOfProvider = function (username) {
 };
 
 var getSubscribedAPIs = function (username) {
-    var api, apis, i, length,
+    var api, apis, i, length,log = new Log(),
             list = [],
             provider = jagg.module("greg").getAPIProviderObj();
     try {

@@ -33,10 +33,7 @@ import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
-
 import java.net.MalformedURLException;
-import java.util.Calendar;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -48,7 +45,7 @@ public class GRegStratosRootSeleniumTest {
     String productName = "greg";
     String userName;
     String password;
-    long sleeptime = 3000;
+    long sleepTime = 3000;
 
 
     @BeforeClass(alwaysRun = true)
@@ -68,7 +65,7 @@ public class GRegStratosRootSeleniumTest {
     public void testAddCollectionToRoot() throws Exception {
         String collectionPath = "/selenium_root";
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             userLogout();
@@ -95,7 +92,7 @@ public class GRegStratosRootSeleniumTest {
     public void testAddResourceToRoot() throws Exception {
         String resourceName = "root_resource";
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addResource(resourceName);
             userLogout();
@@ -122,7 +119,7 @@ public class GRegStratosRootSeleniumTest {
     public void testAddCommentToRoot() throws Exception {
         String comment = "rootcomment";
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addComment(comment);
             deleteComment();
@@ -149,11 +146,11 @@ public class GRegStratosRootSeleniumTest {
     public void addTagToRoot() throws Exception {
         String tagName = "roottag";
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addTag(tagName);
             selenium.mouseOver("//div[12]/div[3]/a");
-            Thread.sleep(sleeptime);
+            Thread.sleep(sleepTime);
             deleteTag();
             userLogout();
             log.info("********GReg Stratos - Apply a Tag to Root test - Passed********");
@@ -177,7 +174,7 @@ public class GRegStratosRootSeleniumTest {
     @Test(groups = {"wso2.greg"}, description = "apply a rating to root", priority = 5)
     public void addRatingToRoot() throws Exception, AssertionFailedError {
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             applyRating();
             userLogout();
@@ -202,7 +199,7 @@ public class GRegStratosRootSeleniumTest {
     @Test(groups = {"wso2.greg"}, description = "delete a resource from root", priority = 6)
     public void testDeleteResourceFromRoot() throws Exception {
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             deleteResource();
             userLogout();
@@ -226,7 +223,7 @@ public class GRegStratosRootSeleniumTest {
 
     @Test(groups = {"wso2.greg"}, description = "delete a collection from root", priority = 7)
     public void testDeleteCollectionFromRoot() throws Exception {
-        new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+        StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
         deleteTestArtifact();
     }
 
@@ -237,74 +234,63 @@ public class GRegStratosRootSeleniumTest {
 
     private void deleteResource() throws InterruptedException {
         driver.findElement(By.id("actionLink2")).click();
-        waitTimeforElement("//tr[9]/td/div/a[3]");
         driver.findElement(By.xpath("//tr[9]/td/div/a[3]")).click();
-        waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"),
                 "Delete root resource pop-up dialog title fail:");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete " +
                 "'/root_resource' permanently?"),
                 "Delete root resource pop-up message fail :");
         selenium.click("//button");
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
     }
 
 
     private void applyRating() throws InterruptedException {
         // Add rating 1
         driver.findElement(By.xpath("//span/img[3]")).click();
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
         assertTrue(selenium.isTextPresent("(1.0)"), "Rating 1 has failed :");
         // Add rating 2
         driver.findElement(By.xpath("//span/img[5]")).click();
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
         assertTrue(selenium.isTextPresent("(2.0)"), "Rating 2 has failed :");
         // Add rating 3
         driver.findElement(By.xpath("//img[7]")).click();
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
         assertTrue(selenium.isTextPresent("(3.0)"), "Rating 3 has failed :");
         // Add rating 4
         driver.findElement(By.xpath("//img[9]")).click();
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
         assertTrue(selenium.isTextPresent("(4.0)"), "Rating 4 has failed :");
         // Add rating 5
         driver.findElement(By.xpath("//img[11]")).click();
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
         assertTrue(selenium.isTextPresent("(5.0)"), "Rating 5 has failed :");
     }
 
     private void deleteTag() throws InterruptedException {
-        waitTimeforElement("//a[2]/img");
         driver.findElement(By.xpath("//a[2]/img")).click();           //Delete Tag
-        waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Delete Tag Pop-up Title fail :");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this tag?"),
                 "Delete Tag Pop-up Message fail :");
-
         selenium.click("//button");                //click on "yes" button
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
     }
 
     private void addTag(String tagName) throws InterruptedException {
-        waitTimeforElement("//div[10]/table/tbody/tr/td[2]/a/img[2]");
         driver.findElement(By.id("tagsIconMinimized")).click();        //Apply Tag
-        waitTimeforElement("//div[12]/div/a");
+
         driver.findElement(By.linkText("Add New Tag")).click();          //click on Add New Tag
-        waitTimeforElement("//div[2]/input[2]");
         driver.findElement(By.id("tfTag")).sendKeys(tagName);
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
         driver.findElement(By.xpath("//div[2]/input[3]")).click();
-        waitTimeforElement("//div[12]/div[3]/a");
     }
 
     private void addComment(String comment) throws InterruptedException {
-        waitTimeforElement("//div[12]/div/div/table/tbody/tr/td[2]/a/img[2]");
         driver.findElement(By.id("commentsIconMinimized")).click();
-        waitTimeforElement("//div[12]/div/div[3]/div[2]/a");
-//        Thread.sleep(4000L);
+        Thread.sleep(sleepTime);
         driver.findElement(By.linkText("Add Comment")).click();
-        waitTimeforElement("//div[3]/form/table/tbody/tr/td/textarea");
-//        Thread.sleep(4000L);
+        Thread.sleep(sleepTime);
         assertTrue(selenium.isTextPresent("Add New Comment"), "Add comment window pop -up failed :");
         assertEquals("Add", selenium.getValue("//div[3]/div[3]/form/table/tbody/tr[2]/td/input"),
                 "Add comment window  pop -up Add button failed :");
@@ -313,107 +299,81 @@ public class GRegStratosRootSeleniumTest {
                 "Add comment window  pop -up Cancel Button failed :");
         driver.findElement(By.id("comment")).sendKeys(comment);
         driver.findElement(By.xpath("//div[3]/div[3]/form/table/tbody/tr[2]/td/input")).click();
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//div[4]/div/div[2]/table/tbody/tr/td/div");
-    }
+        Thread.sleep(sleepTime);
+     }
 
 
     private void deleteComment() throws InterruptedException {
-        waitTimeforElement("//div[4]/div/div[2]/table/tbody/tr/td/div");
         driver.findElement(By.id("closeC0")).click();
-        waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("WSO2 Carbon"),
                 "root Comment Delete pop-up  title failed :");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this comment?"),
                 "root Comment Delete pop-up  message failed :");
         selenium.click("//button");
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
     }
 
 
     private void gotoDetailViewTab() throws Exception {
         driver.findElement(By.linkText("Browse")).click();    //Click on Browse link
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//a[2]");
+        Thread.sleep(sleepTime);
         driver.findElement(By.id("stdView")).click();        //Go to Detail view Tab
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//div[3]/div[2]/a");
+        Thread.sleep(sleepTime);
         assertTrue(selenium.isTextPresent("Browse"), "Browse Detail View Page fail :");
         assertTrue(selenium.isTextPresent("Metadata"), "Browse Detail View Page fail Metadata:");
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
 
     }
 
 
     private void addCollection(String collectionPath) throws Exception {
-        waitTimeforElement("//div[3]/div[2]/a");
+        Thread.sleep(sleepTime);
         driver.findElement(By.linkText("Add Collection")).click();
-        waitTimeforElement("//div[7]/form/table/tbody/tr[2]/td[2]/input");
+        Thread.sleep(sleepTime);
         driver.findElement(By.id("collectionName")).sendKeys(collectionPath);
         driver.findElement(By.id("colDesc")).sendKeys("Selenium Test");
         driver.findElement(By.xpath("//div[7]/form/table/tbody/tr[5]/td/input")).click();
-        waitTimeforElement("//body/div[3]/div/div");
+        Thread.sleep(sleepTime);
         assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Add new Collection pop -up failed :");
         assertTrue(selenium.isTextPresent("Successfully added new collection."),
                 "Add new Collection pop -up failed :");
-        selenium.click("//button");
-        Thread.sleep(sleeptime);
+        driver.findElement(By.xpath("//button")).click();
+        Thread.sleep(sleepTime);
 
     }
 
     private void addResource(String resourceName) throws Exception {
-        waitTimeforElement("//div[3]/div[3]/div/a");
         driver.findElement(By.linkText("Add Resource")).click();
-        waitTimeforElement("//tr[3]/td[2]/input");
         assertTrue(selenium.isTextPresent("Add Resource"), "Add new resource page failed :");
         //select create text content
         selenium.select("id=addMethodSelector", "label=Create Text content");
         selenium.click("css=option[value=\"text\"]");
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
         driver.findElement(By.id("trFileName")).sendKeys(resourceName);
         driver.findElement(By.id("trMediaType")).sendKeys("txt");
         driver.findElement(By.id("trDescription")).sendKeys("selenium test resource");
         driver.findElement(By.id("trPlainContent")).sendKeys("selenium test123");
         // Click on Add button
         driver.findElement(By.xpath("//tr[4]/td/form/table/tbody/tr[6]/td/input")).click();
-        waitTimeforElement("//body/div[3]/div/div");
+        Thread.sleep(sleepTime);
         assertTrue(selenium.isTextPresent("WSO2 Carbon"),
                 "Add Resource pop-up message title fail :");
         assertTrue(selenium.isTextPresent("Successfully added Text content."),
                 "Add Resource pop-up message fail :");
         //Click on OK button
         driver.findElement(By.xpath("//button")).click();
-        Thread.sleep(sleeptime);
+        Thread.sleep(sleepTime);
     }
 
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//a[2]/img");
-    }
-
-
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-                < (120 * 1000)) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
-            }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
+        Thread.sleep(sleepTime);
     }
 
     private void deleteTestArtifact() throws InterruptedException {
         driver.findElement(By.linkText("Browse")).click();    //Click on Browse link
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//a[2]");
+        Thread.sleep(sleepTime);
         driver.findElement(By.linkText("Root")).click();
         driver.findElement(By.id("actionLink2")).click();
         driver.findElement(By.linkText("Delete")).click();

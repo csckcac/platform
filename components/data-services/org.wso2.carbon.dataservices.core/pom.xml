@@ -173,10 +173,10 @@
 
     <build>
         <plugins>
-            <plugin>
+           <!-- <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-scr-plugin</artifactId>
-            </plugin>
+            </plugin> -->
 
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -221,6 +221,11 @@
                         </Axis2RequiredServices>
                     </instructions>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
             </plugin>
 
             <plugin>

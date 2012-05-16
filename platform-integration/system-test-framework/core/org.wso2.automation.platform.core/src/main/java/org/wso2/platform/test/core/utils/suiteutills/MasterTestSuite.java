@@ -1,5 +1,7 @@
 package org.wso2.platform.test.core.utils.suiteutills;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.testng.TestNG;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlSuite;
@@ -12,6 +14,7 @@ import java.io.File;
 import java.util.*;
 
 public class MasterTestSuite {
+    private static final Log log = LogFactory.getLog(MasterTestSuite.class);
     private Map<String, String> parameters = new HashMap<String, String>();
 
     public TestNG superSuite(String SuiteName, List<SuiteVariables> suiteVariablesList) {
@@ -19,6 +22,7 @@ public class MasterTestSuite {
         suite.setName(SuiteName);
         suite.setVerbose(1);
         suite.setThreadCount(2);
+        log.info("[TESTAUTOMATION]----"+SuiteName);
 
         parameters.put("first-name", "Cedric");
 

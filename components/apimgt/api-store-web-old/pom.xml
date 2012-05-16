@@ -26,7 +26,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>apistore</artifactId>
+    <artifactId>apistore-old</artifactId>
     <packaging>war</packaging>
     <name>WSO2 Carbon - API Store web Application</name>
     <build>
@@ -42,7 +42,7 @@
 
               <target>
                 <echo message="Renaming to a zip file"/>
-                <copy file="target/apistore.war" tofile="target/apistore.zip"/>
+                <copy file="target/apistore-old.war" tofile="target/apistore-old.zip"/>
               </target>
 
             </configuration>
@@ -61,7 +61,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
                 <configuration>
-                    <warName>apistore</warName>
+                    <warName>apistore-old</warName>
                     <packagingIncludes>**/*</packagingIncludes>
                     <!--<packagingExcludes>WEB-INF/classes/WEB-INF/*</packagingExcludes>-->
                     <webResources>

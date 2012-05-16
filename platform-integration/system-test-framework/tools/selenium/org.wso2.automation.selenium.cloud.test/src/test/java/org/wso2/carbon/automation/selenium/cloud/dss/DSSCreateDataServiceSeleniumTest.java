@@ -172,6 +172,8 @@ public class DSSCreateDataServiceSeleniumTest {
         for (int i = 0; i < 5; i++) {
             OMElement response = serviceClient.sendReceive(payload, serviceEndPoint, "getEmployee");
             Assert.assertNotNull(response, "Response Message is null");
+            Assert.assertTrue(response.toString().contains("<employeeID>"), "EmployeeID record Not Found");
+            Assert.assertTrue(response.toString().contains("<lastName>"), "LastName Record Not Found");
         }
 
     }
@@ -344,7 +346,7 @@ public class DSSCreateDataServiceSeleniumTest {
         Select dataSource = new Select(driver.findElement(By.id("datasource")));
         dataSource.selectByVisibleText("test");  //datasource name
         waitTimeforElement("//textarea");
-        driver.findElement(By.id("sql")).sendKeys("SELECT ID, LName FROM Employee");   //sql query
+        driver.findElement(By.id("sql")).sendKeys("SELECT employeeNumber, lastName FROM Employees");   //sql query
         driver.findElement(By.id("addAutoResponse")).click();
         waitTimeforElement("//tr[20]/td/table/tbody/tr/td");
         driver.findElement(By.linkText("Edit")).click();
@@ -357,6 +359,7 @@ public class DSSCreateDataServiceSeleniumTest {
         waitTimeforElement("//div[3]/table/tbody/tr/td/table/tbody/tr[2]/td[2]/input");
         driver.findElement(By.id("txtDataServiceOMElementName")).clear();
         driver.findElement(By.id("txtDataServiceOMElementName")).sendKeys("lastName");
+        driver.findElement(By.id("txtDataServiceElementNamespace")).clear();
         driver.findElement(By.xpath("//tr[5]/td/input[2]")).click();
         //click on button to goto main cofiguration
         waitTimeforElement("//form/table/tbody/tr[5]/td/input");

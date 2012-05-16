@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,39 +15,45 @@
  */
 package org.wso2.stratos.manager.services.mgt.util;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.stratos.common.config.CloudServiceConfig;
+import org.wso2.carbon.stratos.common.config.CloudServicesDescConfig;
+import org.wso2.carbon.stratos.common.config.PermissionConfig;
+import org.wso2.carbon.stratos.common.listeners.TenantActivationListener;
+import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.user.api.RealmConfiguration;
+import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.user.mgt.UserMgtConstants;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.stratos.common.config.*;
-import org.wso2.carbon.stratos.common.constants.StratosConstants;
-import org.wso2.carbon.stratos.common.listeners.TenantActivationListener;
-import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
-import org.wso2.carbon.stratos.common.util.CommonUtil;
 
-import javax.activation.MimetypesFileTypeMap;
+import org.apache.axiom.om.OMElement;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.activation.MimetypesFileTypeMap;
 
 public class Util {
 
     private static final Log log = LogFactory.getLog(Util.class);
 
     private static final String CONFIG_FILENAME = "cloud-services-desc.xml";
-    
+
     private static RegistryService registryService;
     private static RealmService realmService;
     private static CloudServicesDescConfig cloudServicesDescConfig = null;
@@ -56,16 +62,17 @@ public class Util {
             new HashSet<TenantActivationListener>();
 
     public static synchronized void setRegistryService(RegistryService service) {
-        if (registryService == null) {
+        if ((registryService == null) || (service == null)) {
             registryService = service;
         }
     }
+
     public static RegistryService getRegistryService() {
         return registryService;
     }
 
     public static synchronized void setRealmService(RealmService service) {
-        if (realmService == null) {
+        if ((realmService == null) || (service == null)) {
             realmService = service;
         }
     }
@@ -78,13 +85,11 @@ public class Util {
         return realmService.getTenantManager();
     }
 
-    public static void addTenantActivationListener(
-            TenantActivationListener tenantActivationListener) {
+    public static void addTenantActivationListener(TenantActivationListener tenantActivationListener) {
         tenantActivationListeners.add(tenantActivationListener);
     }
 
-    public static void removeTenantActivationListener(
-            TenantActivationListener tenantActivationListener) {
+    public static void removeTenantActivationListener(TenantActivationListener tenantActivationListener) {
         tenantActivationListeners.remove(tenantActivationListener);
     }
 
@@ -112,13 +117,14 @@ public class Util {
 
     public static void loadCloudServicesConfiguration() throws Exception {
         // now load the cloud services configuration
-        String configFileName = CarbonUtils.getCarbonConfigDirPath() + "/" + CONFIG_FILENAME;
+        String configFileName =
+                CarbonUtils.getCarbonConfigDirPath() + File.separator + CONFIG_FILENAME;
         OMElement configElement;
         try {
             configElement = CommonUtil.buildOMElement(new FileInputStream(configFileName));
         } catch (Exception e) {
-            String msg = "Error in building the cloud service configuration. " +
-                    "config filename: " + configFileName + ".";
+            String msg = "Error in building the cloud service configuration. config filename: " +
+                            configFileName + ".";
             log.error(msg, e);
             throw new Exception(msg, e);
         }
@@ -135,12 +141,11 @@ public class Util {
         return cloudServiceConfigs.get(cloudServiceName);
     }
 
-    public static void setCloudServiceActive(boolean active,
-                                            String cloudServiceName,
-                                            int tenantId) throws Exception {
+    public static void setCloudServiceActive(boolean active, String cloudServiceName, 
+                                             int tenantId)throws Exception {
         CloudServiceConfig cloudServiceConfig = getCloudServiceConfig(cloudServiceName);
         if (cloudServiceConfig.getLabel() == null) {
-            // for the non-labled services, we are not setting/unsetting the service active 
+            // for the non-labeled services, we are not setting/unsetting the service active
             return;
         }
 
@@ -155,9 +160,9 @@ public class Util {
             throw new Exception(msg, e);
         }
 
-        String cloudServiceInfoPath = Constants.CLOUD_SERVICE_INFO_STORE_PATH +
-                RegistryConstants.PATH_SEPARATOR + tenantId  +
-                RegistryConstants.PATH_SEPARATOR + cloudServiceName;
+        String cloudServiceInfoPath =
+                Constants.CLOUD_SERVICE_INFO_STORE_PATH + RegistryConstants.PATH_SEPARATOR +
+                        tenantId + RegistryConstants.PATH_SEPARATOR + cloudServiceName;
         Resource cloudServiceInfoResource;
         if (tenantZeroSystemGovernanceRegistry.resourceExists(cloudServiceInfoPath)) {
             cloudServiceInfoResource = tenantZeroSystemGovernanceRegistry.get(cloudServiceInfoPath);
@@ -165,12 +170,12 @@ public class Util {
             cloudServiceInfoResource = tenantZeroSystemGovernanceRegistry.newCollection();
         }
         cloudServiceInfoResource.setProperty(Constants.CLOUD_SERVICE_IS_ACTIVE_PROP_KEY,
-                active? "true": "false");
+                active ? "true" : "false");
         tenantZeroSystemGovernanceRegistry.put(cloudServiceInfoPath, cloudServiceInfoResource);
 
         // then we will copy the permissions
         List<PermissionConfig> permissionConfigs = cloudServiceConfig.getPermissionConfigs();
-        for (PermissionConfig permissionConfig: permissionConfigs) {
+        for (PermissionConfig permissionConfig : permissionConfigs) {
             String path = permissionConfig.getPath();
             String name = permissionConfig.getName();
             if (active) {
@@ -187,10 +192,8 @@ public class Util {
         }
     }
 
-
-    public static boolean isCloudServiceActive(String cloudServiceName,
-                                            int tenantId) throws Exception {
-
+    public static boolean isCloudServiceActive(String cloudServiceName, 
+                                               int tenantId)throws Exception {
         UserRegistry systemGovernanceRegistry;
         try {
             systemGovernanceRegistry = Util.getTenantZeroSystemGovernanceRegistry();
@@ -200,26 +203,28 @@ public class Util {
             throw new Exception(msg, e);
         }
 
-        String cloudServiceInfoPath = Constants.CLOUD_SERVICE_INFO_STORE_PATH +
-                RegistryConstants.PATH_SEPARATOR + tenantId  +
-                RegistryConstants.PATH_SEPARATOR + cloudServiceName;
-        Resource cloudServiceInfoResource;
+        String cloudServiceInfoPath =
+                Constants.CLOUD_SERVICE_INFO_STORE_PATH + RegistryConstants.PATH_SEPARATOR +
+                        tenantId + RegistryConstants.PATH_SEPARATOR + cloudServiceName;
+        
         if (systemGovernanceRegistry.resourceExists(cloudServiceInfoPath)) {
-            cloudServiceInfoResource = systemGovernanceRegistry.get(cloudServiceInfoPath);
+            Resource cloudServiceInfoResource = systemGovernanceRegistry.get(cloudServiceInfoPath);
             String isActiveStr = cloudServiceInfoResource.getProperty(
                     Constants.CLOUD_SERVICE_IS_ACTIVE_PROP_KEY);
             return "true".equals(isActiveStr);
         }
+        
         return false;
     }
 
     /**
      * Currently this is not used, as the icons are loaded from the webapps
+     * 
      * @throws Exception
      */
     public static void loadServiceIcons() throws Exception {
-        String serviceIconDirLocation = CarbonUtils.getCarbonHome() +
-                "/resources/cloud-service-icons";
+        String serviceIconDirLocation =
+                CarbonUtils.getCarbonHome() + "/resources/cloud-service-icons";
         File serviceIconDirDir = new File(serviceIconDirLocation);
         UserRegistry registry = getTenantZeroSystemGovernanceRegistry();
         try {
@@ -237,7 +242,8 @@ public class Util {
 
             for (File file : filesDirs) {
                 String filename = file.getName();
-                String fileRegistryPath = Constants.CLOUD_SERVICE_ICONS_STORE_PATH + RegistryConstants.PATH_SEPARATOR + filename;
+                String fileRegistryPath = Constants.CLOUD_SERVICE_ICONS_STORE_PATH +
+                                RegistryConstants.PATH_SEPARATOR + filename;
 
                 // Add the file to registry
                 Resource newResource = registry.newResource();
@@ -255,13 +261,14 @@ public class Util {
             }
         } catch (Exception e) {
             String msg = "Error loading icons to the system registry for registry path: " +
-                    Constants.CLOUD_SERVICE_ICONS_STORE_PATH;
+                            Constants.CLOUD_SERVICE_ICONS_STORE_PATH;
             log.error(msg, e);
             throw new Exception(msg, e);
         }
 
         try {
-            CommonUtil.setAnonAuthorization(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + Constants.CLOUD_SERVICE_ICONS_STORE_PATH, registry.getUserRealm());
+            CommonUtil.setAnonAuthorization(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + 
+                    Constants.CLOUD_SERVICE_ICONS_STORE_PATH, registry.getUserRealm());
         } catch (RegistryException e) {
             String msg = "Setting the annon access enabled for the services icons paths.";
             log.error(msg, e);

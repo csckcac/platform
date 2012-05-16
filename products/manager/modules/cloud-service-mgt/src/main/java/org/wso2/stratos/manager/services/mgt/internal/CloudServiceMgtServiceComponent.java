@@ -17,12 +17,14 @@
 */
 package org.wso2.stratos.manager.services.mgt.internal;
 
-import org.wso2.stratos.manager.services.mgt.util.Util;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.stratos.manager.services.mgt.util.Util;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.osgi.service.component.ComponentContext;
 
 /**
  * @scr.component name="org.wso2.stratos.manager.services.mgt"
@@ -43,7 +45,7 @@ public class CloudServiceMgtServiceComponent {
             Util.loadCloudServicesConfiguration();
             Util.loadServiceIcons();
             log.debug("******* Cloud Manager Service Manager bundle is activated ******* ");
-        } catch (Exception e) {
+        } catch (Throwable e) {
             String msg = "******* Cloud Manager Service Manager bundle activation failed. ******* ";
             log.error(msg, e);
         }

@@ -17,29 +17,33 @@
 */
 package org.wso2.stratos.manager.services.mgt.services;
 
+import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.stratos.common.config.CloudServiceConfig;
 import org.wso2.carbon.stratos.common.config.CloudServicesDescConfig;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
-import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.stratos.manager.services.mgt.beans.CloudService;
 import org.wso2.stratos.manager.services.mgt.util.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CloudManagerService extends AbstractAdmin {
     
     public CloudService[] retrieveCloudServiceInfo() throws Exception {
         UserRegistry registry = (UserRegistry)getConfigUserRegistry();
         int tenantId = registry.getTenantId();
-        
+
         CloudServicesDescConfig cloudServicesDesc = Util.getCloudServicesDescConfig();
-        Map<String, CloudServiceConfig> cloudServiceConfigs = 
+        Map<String, CloudServiceConfig> cloudServiceConfigs =
                 cloudServicesDesc.getCloudServiceConfigs();
         List<CloudService> cloudServices = new ArrayList<CloudService>();
         if (cloudServiceConfigs != null) {
             Set<String> configKeys = cloudServiceConfigs.keySet();
-            for (String configKey: configKeys) {
+            for (String configKey : configKeys) {
                 CloudServiceConfig cloudServiceConfig = cloudServiceConfigs.get(configKey);
                 String label = cloudServiceConfig.getLabel();
                 if (label == null) {
@@ -73,14 +77,14 @@ public class CloudManagerService extends AbstractAdmin {
 
         List<String> activeServiceNamesList = Arrays.asList(activeServiceNames);
         if (cloudServiceConfigMap != null) {
-            for (String cloudServiceName: cloudServiceConfigMap.keySet()) {
+            for (String cloudServiceName : cloudServiceConfigMap.keySet()) {
                 if (activeServiceNamesList.contains(cloudServiceName)) {
                     // this should be made active
                     if (!Util.isCloudServiceActive(cloudServiceName, tenantId)) {
                         Util.setCloudServiceActive(true, cloudServiceName, tenantId);
                     }
                 } else {
-                    // this should make inactive
+                    // this should be made inactive
                     if (Util.isCloudServiceActive(cloudServiceName, tenantId)) {
                         Util.setCloudServiceActive(false, cloudServiceName, tenantId);
                     }
@@ -94,20 +98,20 @@ public class CloudManagerService extends AbstractAdmin {
     }
 
     public void activate(String cloudServiceName) throws Exception {
-        UserRegistry registry = (UserRegistry)getConfigUserRegistry();
+        UserRegistry registry = (UserRegistry) getConfigUserRegistry();
         int tenantId = registry.getTenantId();
         if (!Util.isCloudServiceActive(cloudServiceName, tenantId)) {
             Util.setCloudServiceActive(true, cloudServiceName, tenantId);
         }
-    } 
+    }
 
     public void deactivate(String cloudServiceName) throws Exception {
         if (StratosConstants.CLOUD_IDENTITY_SERVICE.equals(cloudServiceName) ||
-                StratosConstants.CLOUD_GOVERNANCE_SERVICE.equals(cloudServiceName)) {
-            // cloud identity service can not be deactivated..
+            StratosConstants.CLOUD_GOVERNANCE_SERVICE.equals(cloudServiceName)) {
+            // cloud identity and governance services cannot be deactivated..
             return;
         }
-        UserRegistry registry = (UserRegistry)getConfigUserRegistry();
+        UserRegistry registry = (UserRegistry) getConfigUserRegistry();
         int tenantId = registry.getTenantId();
         if (Util.isCloudServiceActive(cloudServiceName, tenantId)) {
             Util.setCloudServiceActive(false, cloudServiceName, tenantId);

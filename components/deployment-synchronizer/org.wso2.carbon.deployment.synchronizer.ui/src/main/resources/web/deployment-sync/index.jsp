@@ -409,57 +409,62 @@
                     </tbody>
                 </table>
                 
-                <%for(String repositoryType : repositoryTypes){ 
-                	
-                	RepositoryConfigParameter[] configParams = client.getParamsByRepositoryType(repositoryType);
-                	if(configParams != null){%>
-	                <table id="<%=repositoryType%>.ConfigTable" class="styledLeft" style="margin-top: 20px; display: <%=(repoType.equals(repositoryType)?"":"none")%>"> 
-	                    <thead>
-	                        <tr>
-	                            <th colspan="2"><fmt:message key="<%="deployment.sync." + repositoryType + ".config"%>"/></th>
-	                        </tr>
-	                    </thead>
-	                    <tbody>
-	                    	<%for(int i=0; i<configParams.length; i++){ %>
-	                    		<tr id="<%=repositoryType + ".row."+i%>">
-	                    			<td width="30%"><fmt:message key="<%=configParams[i].getName()%>"/></td>
-	                    			<td>
-		                    			<!-- If type of parameter is string. Display text/password field. If not, display check-box -->
-		                        		<input id="<%=configParams[i].getName()%>" name="<%=configParams[i].getName()%>"
-		                        			<% if(disableFields){%>
-		                        				disabled="disabled"
-		                        			<% }%>
-		                        			<%if(configParams[i].getType().equalsIgnoreCase("string")){ %>
-		                        				value="<%=configParams[i].getValue() == null ? "" : 
-		                        						configParams[i].getValue()%>"
-		                       					size=<%=configParams[i].getMaxlength()%>
-		                     					<%if(configParams[i].getMasked()){ %>
-		                     						type="password"
-		                     					<%}
-		                        				  else{%>
-		                        				  	type="text"
-		                        				<%} %>
-		                        			<%}
-		                        			else{%>
-		                        				type="checkbox" 
-		                        			<%} %> 
-		                        		/>
-		                        		<%if (configParams[i].getValue() != null && configParams[i].getValue().length() != 0) {%>
-			                                <script type="text/javascript">
-			                                    document.getElementById("<%=configParams[i].getName()%>").setAttribute('checked', 'true');
-			                                </script>
-		                                <%}%>
-	                        		</td>
-	                    		</tr>
-	                    	<%} %>
-	                    </tbody>
-	                </table>
-	                
-	                <script type="text/javascript">
-				        alternateTableRows('<%=repositoryType%>.ConfigTable', 'tableEvenRow', 'tableOddRow');
-				    </script>
-                	<%}
-                } %>
+                <%if(repositoryTypes != null){
+	                for(String repositoryType : repositoryTypes){ 
+	                	
+	                	RepositoryConfigParameter[] configParams = client.getParamsByRepositoryType(repositoryType);
+	                	
+	                	if(configParams != null){%>
+	                	
+		                <table id="<%=repositoryType%>.ConfigTable" class="styledLeft" style="margin-top: 20px; display: <%=(repoType.equals(repositoryType)?"":"none")%>"> 
+		                    <thead>
+		                        <tr>
+		                            <th colspan="2"><fmt:message key="<%="deployment.sync." + repositoryType + ".config"%>"/></th>
+		                        </tr>
+		                    </thead>
+		                    <tbody>
+		                    	<%for(int i=0; i<configParams.length; i++){ %>
+		                    		<tr id="<%=repositoryType + ".row."+i%>">
+		                    			<td width="30%"><fmt:message key="<%=configParams[i].getName()%>"/></td>
+		                    			<td>
+			                    			<!-- If type of parameter is string. Display text/password field. If not, display check-box -->
+			                        		<input id="<%=configParams[i].getName()%>" name="<%=configParams[i].getName()%>"
+			                        			<% if(disableFields){%>
+			                        				disabled="disabled"
+			                        			<% }%>
+			                        			<%if(configParams[i].getType().equalsIgnoreCase("string")){ %>
+			                        				value="<%=configParams[i].getValue() == null ? "" : 
+			                        						configParams[i].getValue()%>"
+			                       					size=<%=configParams[i].getMaxlength()%>
+			                     					<%if(configParams[i].getMasked()){ %>
+			                     						type="password"
+			                     					<%}
+			                        				  else{%>
+			                        				  	type="text"
+			                        				<%} %>
+			                        			<%}
+			                        			else{%>
+			                        				type="checkbox" 
+			                        			<%} %> 
+			                        		/>
+			                        		<%if (configParams[i].getValue() != null && configParams[i].getValue().length() != 0) {%>
+				                                <script type="text/javascript">
+				                                    document.getElementById("<%=configParams[i].getName()%>").setAttribute('checked', 'true');
+				                                </script>
+			                                <%}%>
+		                        		</td>
+		                    		</tr>
+		                    	<%} %>
+		                    </tbody>
+		                </table>
+		                
+		                <script type="text/javascript">
+					        alternateTableRows('<%=repositoryType%>.ConfigTable', 'tableEvenRow', 'tableOddRow');
+					    </script>
+	                	<%}
+	                } 
+                
+                }%>
                 
                 <input type="hidden" id="currentRepo" name="currentRepo"/>
                 
@@ -527,6 +532,7 @@
                         </tbody>
                     </table>
                     <p>&nbsp;</p>
+                    
                     <table id="checkoutStatusTable" class="styledLeft">
                         <thead>
                             <tr>

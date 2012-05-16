@@ -67,6 +67,10 @@ public class DeploymentSynchronizerServiceImpl implements DeploymentSynchronizer
             if (synchronizer == null) {
                 synchronizer =
                         CarbonRepositoryUtils.newCarbonRepositorySynchronizer(tenantId);
+
+                if(synchronizer == null){
+                    return false;
+                }
                 synchronizer.doInitialSyncUp();
             }
             return synchronizer.checkout();
@@ -90,6 +94,10 @@ public class DeploymentSynchronizerServiceImpl implements DeploymentSynchronizer
             if (synchronizer == null) {
                 synchronizer =
                         CarbonRepositoryUtils.newCarbonRepositorySynchronizer(tenantId);
+
+                if(synchronizer == null){
+                    return false;
+                }
                 synchronizer.doInitialSyncUp();
             }
             return synchronizer.commit();

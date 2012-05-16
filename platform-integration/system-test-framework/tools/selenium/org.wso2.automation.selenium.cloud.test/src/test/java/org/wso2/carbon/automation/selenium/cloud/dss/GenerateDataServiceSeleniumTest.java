@@ -17,19 +17,27 @@
 */
 package org.wso2.carbon.automation.selenium.cloud.dss;
 
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.selenium.cloud.dss.utils.DSSServerUIUtils;
 import org.wso2.platform.test.core.BrowserManager;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
+import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
 import org.wso2.platform.test.core.utils.fileutils.FileManager;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
@@ -42,6 +50,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.testng.Assert.assertTrue;
+
 /* This Class tests data service generation wizard */
 public class GenerateDataServiceSeleniumTest {
 
@@ -71,6 +80,7 @@ public class GenerateDataServiceSeleniumTest {
         dssServerUI.deleteServiceIfExists(dataServiceName);
         dssServerUI.dropDatabaseIfExist(dataBaseName + "_" + userDetails.getDomain().replace('.', '_'));
         dssServerUI.deletePrivilegeGroupIfExists(privilegeGroupName);
+        dssServerUI.deleteCarbonDataSources(dataBaseName);
     }
 
     @Test(priority = 0)
@@ -176,8 +186,35 @@ public class GenerateDataServiceSeleniumTest {
 
         }
         assertTrue(driver.findElement(By.id("sgTable")).getText().contains(dataServiceName), "Service Name not fount in service list");
+        Thread.sleep(20000);
     }
 
+    @Test(priority = 6)
+    public void serviceInvocationAddEmployee() throws AxisFault {
+        String serviceEndPoint = dssProperties.getProductVariables().getBackendUrl()
+                                 + "t/" + userDetails.getDomain() + "/" + dataServiceName;
+        AxisServiceClient serviceClient = new AxisServiceClient();
+        for (int i = 1; i < 6; i++) {
+            serviceClient.sendRobust(getAddEmployee(i), serviceEndPoint, "insert_Employees_operation");
+            log.info("Employee Added");
+        }
+    }
+
+    @Test(priority = 6, dependsOnMethods = {"serviceInvocationAddEmployee"})
+    public void serviceInvocationGetEmployees() throws InterruptedException, AxisFault {
+        String serviceEndPoint = dssProperties.getProductVariables().getBackendUrl()
+                                 + "t/" + userDetails.getDomain() + "/" + dataServiceName;
+        AxisServiceClient serviceClient = new AxisServiceClient();
+        OMElement response;
+        for (int i = 0; i < 5; i++) {
+            response = serviceClient.sendReceive(getEmployees(), serviceEndPoint, "select_all_Employees_operation");
+            log.info("Employee Record Received");
+            Assert.assertTrue(response.toString().contains("<Employees>"), "Employees Record Not Found");
+            Assert.assertTrue(response.toString().contains("<employeeNumber>"), "employeeNumber Record Not Found");
+            Assert.assertTrue(response.toString().contains("<lastName>"), "lastName Record Not Found");
+            Assert.assertTrue(response.toString().contains("<firstName>"), "firstName Record Not Found");
+        }
+    }
 
     @AfterClass(alwaysRun = true)
     public void cleanup() throws InterruptedException {
@@ -187,6 +224,57 @@ public class GenerateDataServiceSeleniumTest {
             driver.quit();
         }
 
+    }
+
+    private OMElement getAddEmployee(int employeeNumber) {
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
+        OMElement payload = fac.createOMElement("insert_Employees_operation", omNs);
+
+        OMElement empNo = fac.createOMElement("employeeNumber", omNs);
+        empNo.setText(employeeNumber + "");
+        payload.addChild(empNo);
+
+        OMElement lastName = fac.createOMElement("lastName", omNs);
+        lastName.setText("BBB");
+        payload.addChild(lastName);
+
+        OMElement fName = fac.createOMElement("firstName", omNs);
+        fName.setText("AAA");
+        payload.addChild(fName);
+
+        OMElement extension = fac.createOMElement("extension", omNs);
+        extension.setText("1225");
+        payload.addChild(extension);
+
+        OMElement email = fac.createOMElement("email", omNs);
+        email.setText("aaa@ccc.com");
+        payload.addChild(email);
+
+        OMElement officeCode = fac.createOMElement("officeCode", omNs);
+        officeCode.setText("15");
+        payload.addChild(officeCode);
+
+        OMElement reportsTo = fac.createOMElement("reportsTo", omNs);
+        reportsTo.setText(10 + "");
+        payload.addChild(reportsTo);
+
+        OMElement jobTitle = fac.createOMElement("jobTitle", omNs);
+        jobTitle.setText("Software Engineer");
+        payload.addChild(jobTitle);
+
+        OMElement salary = fac.createOMElement("salary", omNs);
+        salary.setText("500000");
+        payload.addChild(salary);
+
+        return payload;
+    }
+
+    private OMElement getEmployees() {
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
+        OMElement payload = fac.createOMElement("insert_Employees_operation", omNs);
+        return payload;
     }
 
 }

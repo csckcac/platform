@@ -34,6 +34,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.selenium.cloud.dss.utils.DSSServerUIUtils;
 import org.wso2.platform.test.core.BrowserManager;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
@@ -50,6 +51,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -130,11 +132,21 @@ public class DSSCreateDataServiceSeleniumTest {
         if (dssProperties.getEnvironmentSettings().isEnableCarbonWebContext()) {
             baseUrlData = baseUrlData + "/" + dssProperties.getProductVariables().getWebContextRoot();
         }
-        String dataSourceUrl = baseUrlData + "/t/" + domain + "/carbon/datasource/index.jsp?region=" +
-                               "region1&item=datasource_menu";
+
         String serviceCreateUrl = baseUrlData + "/t/" + domain + "/carbon/ds/serviceDetails.jsp" +
                                   "?region=region1&item=ds_create_menu";
-        String dataSourceID = getCarbonDataSourceID(dataSourceUrl);
+        String dataSourceID;
+        DSSServerUIUtils dssServerUI = new DSSServerUIUtils(driver);
+        List<String> cdsList = dssServerUI.getCarbonDataSourceList(dataBaseName);
+        if (cdsList.size() > 0) {
+            Collections.sort(cdsList);
+            dataSourceID = cdsList.get(cdsList.size() - 1);
+            dssServerUI.editCarbonDataSourcePassword(dataSourceID, dbUserPassword);
+            dssServerUI.clickOnMenu();
+        } else {
+            throw new RuntimeException("Carbon Data Source Not Found. framework error");
+        }
+
         addDataSource(serviceCreateUrl, dataSourceID);
     }
 
@@ -188,7 +200,7 @@ public class DSSCreateDataServiceSeleniumTest {
 
     }
 
-    private void setPreConditions() throws InterruptedException {
+    private void setPreConditions() throws InterruptedException, MalformedURLException {
         driver.findElement(By.xpath("/html/body/table/tbody/tr[2]/td[2]/table/tbody/tr/td/div/ul/li[5]/ul/li[2]/ul/li/a")).click();
         if (driver.findElements(By.id("sgTable")).size() > 0) {
             if (driver.findElement(By.id("sgTable")).getText().contains(dataServiceName)) {
@@ -202,6 +214,8 @@ public class DSSCreateDataServiceSeleniumTest {
         }
 
         deletePrivilegeGroupIfExists();
+        DSSServerUIUtils dssServerUI = new DSSServerUIUtils(driver);
+        dssServerUI.deleteCarbonDataSources(dataBaseName);
 
     }
 
@@ -397,15 +411,15 @@ public class DSSCreateDataServiceSeleniumTest {
         List<WebElement> carbonDataSourceList = driver.findElement(By.id("myTable")).
                 findElements(By.tagName("tr"));
         Iterator<WebElement> cdsItr = carbonDataSourceList.iterator();
-        while(cdsItr.hasNext()) {
-            WebElement cds =cdsItr.next();
-            if(cds.getAttribute("id").contains(dataBaseName +"_" + domain.replace('.','_'))) {
-               dataSourceID = cds.findElement(By.tagName("td")).getText();
+        while (cdsItr.hasNext()) {
+            WebElement cds = cdsItr.next();
+            if (cds.getAttribute("id").contains(dataBaseName + "_" + domain.replace('.', '_'))) {
+                dataSourceID = cds.findElement(By.tagName("td")).getText();
                 break;
             }
 
         }
-        if(dataSourceID.equals("")){
+        if (dataSourceID.equals("")) {
             throw new Exception("Carbon Data Source Id not found in DataSource list");
         }
         return dataSourceID;

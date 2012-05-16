@@ -28,6 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.selenium.cloud.dss.utils.DSSServerUIUtils;
 import org.wso2.platform.test.core.BrowserManager;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
@@ -144,7 +145,7 @@ public class DSSEditQueryInputMappingInfoSeleniumTest {
     @Test(priority = 6, dependsOnMethods = {"serviceDeployment"})
     public void editQueryInputMappingInfo() throws InterruptedException {
 
-        dssServerUi.goToService(dataServiceName);
+        dssServerUi.goToServiceInfo(dataServiceName);
         driver.findElement(By.linkText("Edit Data Service (Wizard)")).click();
         Iterator<WebElement> buttons = driver.findElement(By.id("dataSources")).findElement(By.tagName("tbody")).findElements(By.className("button")).iterator();
         while (buttons.hasNext()) {

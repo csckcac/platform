@@ -15,7 +15,7 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.carbon.automation.selenium.cloud.dss;
+package org.wso2.carbon.automation.selenium.cloud.dss.utils;
 
 import org.apache.axiom.om.util.Base64;
 import org.openqa.selenium.By;
@@ -289,7 +289,7 @@ public class DSSServerUIUtils {
         return jdbcUrl;
     }
 
-    public void goToService(String serviceName) throws InterruptedException {
+    public void goToServiceInfo(String serviceName) throws InterruptedException {
         driver.findElement(By.linkText("List")).click();
         List<WebElement> tr;
         tr = driver.findElement(By.id("sgTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
@@ -343,6 +343,19 @@ public class DSSServerUIUtils {
                 break;
             }
         }
+        clickOnMenu();
+
+    }
+
+    public void deleteCarbonDataSources(String dataBaseName)
+            throws InterruptedException {
+
+        List<String> carbonDataSourceList = getCarbonDataSourceList(dataBaseName);
+        for (String dataSourceName : carbonDataSourceList) {
+            deleteCarbonDataSource(dataSourceName);
+        }
+
+        clickOnMenu();
 
     }
 

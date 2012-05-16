@@ -47,10 +47,9 @@ Take a note of the fact that there are no APIs published. Next step adds an API 
 7. Run wso2am-1.0.0-SNAPSHOT/samples/YahooPlaceFinder/APIPopulator.sh  (eg: sh APIPopulator.sh)
 You will see an output similar to following on the console. Fresh above page & you should be seeing the newly added YahooPlaceFinder API.
 
-{"data" : {}, "message" : "Login successful for user provider1", "error" : "false"}
-{"data" : {"cookie" : "JSESSIONID=054B59502342DE9B701832261222359C", "username" : "provider1"}, "message" : {}, "error" : "false"}
-{"data" : {"message" : "success"}, "message" : {}, "error" : "false"}
-{"data" : {"message" : "success"}, "message" : {}, "error" : "false"}
+{"error" : "false"}
+{"error" : "false"}
+{"error" : "false"}
 
 8. Now let's try to access Yahoo's place finder search function through our newly deployed API. First you need to login
 to the API Store and obtain an API key. Launch a web browser and enter the URL http://localhost:9763/apistore

@@ -38,23 +38,23 @@ import org.wso2.carbon.utils.CarbonUtils;
  * Responsible for reading the policy configuration file.
  * Following is a sample XML.
  *
- * <autoscalePolicy useDefault="false">
+ * &lt;autoscalePolicy useDefault="false"&gt;
  *
- *   <!-- specify the order of adapters when scaling up
- *        if not specified, default will be used.-->
- *   <scaleUpOrder>
- *       <adapter name="jvm" />
- *       <adapter name="ec2" />
- *   </scaleUpOrder>
+ *   &lt;!-- specify the order of adapters when scaling up
+ *        if not specified, default will be used.--&gt;
+ *   &lt;scaleUpOrder&gt;
+ *       &lt;adapter name="jvm" /&gt;
+ *       &lt;adapter name="ec2" /&gt;
+ *   &lt;/scaleUpOrder&gt;
  *
- *   <!-- specify the order of adapters when scaling down
- *        if not specified, default will be used.-->
- *   <scaleDownOrder>
- *       <adapter name="jvm" minInstanceCount="1" />
- *       <adapter name="ec2" minInstanceCount="0" />
- *   </scaleDownOrder>
+ *   &lt;!-- specify the order of adapters when scaling down
+ *        if not specified, default will be used.--&gt;
+ *   &lt;scaleDownOrder&gt;
+ *       &lt;adapter name="jvm" minInstanceCount="1" /&gt;
+ *       &lt;adapter name="ec2" minInstanceCount="0" /&gt;
+ *   &lt;/scaleDownOrder&gt;
  *
- * </autoscalePolicy>
+ * &lt;/autoscalePolicy&gt;
  */
 public class AutoscalerPolicyFileReader {
 	

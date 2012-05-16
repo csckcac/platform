@@ -63,14 +63,17 @@ public class StratosManagerInvoiceSeleniumTest {
     @Test(groups = {"wso2.manager"}, description = "verify Invoices page", priority = 1)
     public void testVerifyInvoice() throws Exception {
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos Manager Login Success");
             driver.findElement(By.linkText("Invoices")).click();
+            waitForInvoicePage();
             assertTrue(driver.getPageSource().contains("View Invoice"),
                        "Faile to view invoices page :");
             Select select = new Select(driver.findElement(By.id("yearMonth")));
             select.selectByIndex(1);
             driver.findElement(By.xpath("//input")).click();
+            assertTrue(driver.findElement(By.className("invoiceTable")).isEnabled(),
+                       "Invoice not loaded");
             assertTrue(driver.getPageSource().contains("Value (USD)"),
                        "Faile to display invoce value :");
             assertTrue(driver.getPageSource().contains("Charges for Subscriptions"),
@@ -100,5 +103,22 @@ public class StratosManagerInvoiceSeleniumTest {
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
+    }
+
+    private boolean waitForInvoicePage() {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        do {
+            try {
+                if (driver.findElement(By.id("middle")).findElement(By.tagName("h2")).getText()
+                            .contains("View Invoice")) {
+                    return true;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for the element");
+            }
+            exceededTime = System.currentTimeMillis();
+        } while (!(((exceededTime - currentTime) / 1000) > 60));
+        return false;
     }
 }

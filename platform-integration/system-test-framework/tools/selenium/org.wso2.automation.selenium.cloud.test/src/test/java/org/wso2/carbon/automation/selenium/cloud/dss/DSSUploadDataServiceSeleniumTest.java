@@ -87,7 +87,7 @@ public class DSSUploadDataServiceSeleniumTest {
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
         driver.get(baseUrl);
-        new StratosUserLogin().userLogin(driver, selenium, userDetails.getUserName(),
+        StratosUserLogin.userLogin(driver, selenium, userDetails.getUserName(),
                                          userDetails.getPassword(), productName);
         setPreConditions();
     }

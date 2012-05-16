@@ -67,7 +67,7 @@ public class GRegStratosCollectionSeleniumTest {
     public void testAddCollectionTree() throws Exception {
         String collectionPath = "/selenium_root/collection_root/c1/c2";
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             waitTime("//input");
@@ -96,7 +96,7 @@ public class GRegStratosCollectionSeleniumTest {
         String comment = "Collection Comment1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             waitTime("//input");
@@ -131,7 +131,7 @@ public class GRegStratosCollectionSeleniumTest {
         String tag = "Collection_tag1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);      //Create Collection  1
             waitTime("//input");
@@ -165,7 +165,7 @@ public class GRegStratosCollectionSeleniumTest {
         String collectionPath = "/selenium_root/collection_root/lifecycle/a1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             waitTime("//input");
@@ -204,7 +204,7 @@ public class GRegStratosCollectionSeleniumTest {
         String collectionPath = "/selenium_root/collection_root/rating/a1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             waitTime("//input");
@@ -237,7 +237,7 @@ public class GRegStratosCollectionSeleniumTest {
         String rename = "renameda1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             waitTime("//input");
@@ -273,7 +273,7 @@ public class GRegStratosCollectionSeleniumTest {
         String collection3 = "abc";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath1);   //Create Collection  1
             waitTime("//input");
@@ -323,7 +323,7 @@ public class GRegStratosCollectionSeleniumTest {
         String collectionPath3 = "/abc";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath1);            //Create Collection  1
             waitTime("//input");
@@ -365,7 +365,7 @@ public class GRegStratosCollectionSeleniumTest {
     public void testDeleteCollection() throws Exception {
         String collectionPath1 = "/selenium_root/collection_root/delete/collection1/a1";
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath1);               //Create Collection  1
             waitTime("//input");

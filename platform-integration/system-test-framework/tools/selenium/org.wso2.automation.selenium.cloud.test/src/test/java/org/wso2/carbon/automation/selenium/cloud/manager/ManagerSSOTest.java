@@ -70,7 +70,7 @@ public class ManagerSSOTest {
         assertTrue(driver.getPageSource().
                 contains("Get instant access right now to enterprise-grade Middleware Platform-as-a-Service:"));
         assertTrue(driver.getPageSource().contains("googleAnalyticsProcessor.js"));
-        new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+        StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
         log.info("Stratos Manager Login Success");
     }
 

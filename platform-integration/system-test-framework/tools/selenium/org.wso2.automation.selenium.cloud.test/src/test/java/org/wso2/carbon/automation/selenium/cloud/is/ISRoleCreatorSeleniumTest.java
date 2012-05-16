@@ -73,7 +73,7 @@ public class ISRoleCreatorSeleniumTest {
 
         try {
             String productName = "is";
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos Manager Login Success");
 
             driver.findElement(By.id("menu-panel-button3")).click();

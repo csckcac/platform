@@ -71,7 +71,7 @@ public class GRegStratosResourceSeleniumTest {
         String resourceName = "res1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);   //Create Collection  1
             waitTimeforElement("//input");
@@ -107,7 +107,7 @@ public class GRegStratosResourceSeleniumTest {
         String comment = "resourceComment";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             waitTimeforElement("//input");
@@ -143,7 +143,7 @@ public class GRegStratosResourceSeleniumTest {
         String tagName = "resource";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             waitTimeforElement("//input");
@@ -180,7 +180,7 @@ public class GRegStratosResourceSeleniumTest {
         String resourceName = "res1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             waitTimeforElement("//input");
@@ -221,7 +221,7 @@ public class GRegStratosResourceSeleniumTest {
         String resourceName = "res1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             waitTimeforElement("//input");
@@ -256,7 +256,7 @@ public class GRegStratosResourceSeleniumTest {
         String rename = "rename_res1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath);
             waitTimeforElement("//input");
@@ -293,7 +293,7 @@ public class GRegStratosResourceSeleniumTest {
         String resourceName2 = "res2";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath1);
             waitTimeforElement("//input");
@@ -338,7 +338,7 @@ public class GRegStratosResourceSeleniumTest {
         String resourceName1 = "res1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath1);
             waitTimeforElement("//input");
@@ -377,7 +377,7 @@ public class GRegStratosResourceSeleniumTest {
         String copyPath = "/selenium_root/resource_root/copy2/b1";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             addCollection(collectionPath1);
             waitTimeforElement("//input");

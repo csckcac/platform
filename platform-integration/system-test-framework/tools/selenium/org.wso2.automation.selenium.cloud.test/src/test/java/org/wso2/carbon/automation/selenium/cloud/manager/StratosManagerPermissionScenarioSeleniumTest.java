@@ -55,7 +55,7 @@ public class StratosManagerPermissionScenarioSeleniumTest {
 
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             gotoUserManagementPage();
             UserManagementSeleniumUtils.deleteUserByName(driver, newUserName);
@@ -65,13 +65,13 @@ public class StratosManagerPermissionScenarioSeleniumTest {
             addRole(newUserName, roleName);
             userLogout();
             //loging with new user credientails
-            new StratosUserLogin().userLogin(driver, selenium, newFulluserName,
+            StratosUserLogin.userLogin(driver, selenium, newFulluserName,
                                              newUserpassword, productName);
             assertTrue(driver.getPageSource().contains("dashboard"),
                        "New User Failed to Log in :");
             userLogout();
             //login with admin credientails
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoUserManagementPage();
             UserManagementSeleniumUtils.deleteUserByName(driver, newUserName);
             gotoRoleManagementPage();

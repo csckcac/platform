@@ -76,7 +76,7 @@ public class DSSExploreDatabaseSeleniumTest {
         driver = BrowserManager.getWebDriver();
         driver.get(baseUrl);
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
-        new StratosUserLogin().userLogin(driver, selenium, userName, password, "dss");
+        StratosUserLogin.userLogin(driver, selenium, userName, password, "dss");
         setPreConditions();
     }
 

@@ -86,7 +86,7 @@ public class DSSCreateDataServiceSeleniumTest {
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
         driver.get(baseUrl);
-        new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+        StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
         setPreConditions();
     }
 

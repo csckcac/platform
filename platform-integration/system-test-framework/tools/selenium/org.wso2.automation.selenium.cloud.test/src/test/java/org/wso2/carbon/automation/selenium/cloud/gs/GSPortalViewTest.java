@@ -61,7 +61,7 @@ public class GSPortalViewTest {
     @Test(groups = {"wso2.gs"}, description = "Login to GS service as tenant admin", priority = 1)
     public void testLoginToGsServer() throws Exception {
         String productName = "gadget";
-        new StratosUserLogin().userLogin(driver, null, userName, password, productName);
+        StratosUserLogin.userLogin(driver, null, userName, password, productName);
         log.info("Stratos Gadget server Login Success");
     }
 

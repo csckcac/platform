@@ -70,7 +70,7 @@ public class ISOpenIDSeleniumTest {
         String liveJournelURL = "http://www.livejournal.com/identity/login.bml?type=openid";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             openID = getOpenID();
             logintoLiveJournal(openID, liveJournelURL);

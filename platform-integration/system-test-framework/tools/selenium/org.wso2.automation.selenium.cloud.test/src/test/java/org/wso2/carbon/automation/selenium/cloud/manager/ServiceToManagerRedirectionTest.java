@@ -61,7 +61,7 @@ public class ServiceToManagerRedirectionTest {
     @Test(groups = {"wso2.manager"}, description = "Login to app server as tenant admin", priority = 1)
     public void testLoginToAppServer() throws Exception {
         String productName = "appsServer";
-        new StratosUserLogin().userLogin(driver, null, userName, password, productName);
+        StratosUserLogin.userLogin(driver, null, userName, password, productName);
         log.info("Stratos AppServer Login Success");
     }
 

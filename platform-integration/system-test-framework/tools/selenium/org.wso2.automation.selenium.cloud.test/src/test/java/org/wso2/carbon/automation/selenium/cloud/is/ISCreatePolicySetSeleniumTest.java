@@ -77,7 +77,7 @@ public class ISCreatePolicySetSeleniumTest {
         String policyDescription = "test a set of policies";
         String resourceName = "groupfoo";
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             gotoAdministrationPage();
             EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);

@@ -69,7 +69,7 @@ public class StratosManagerUserCreatorSeleniumTest {
         String newUserPassword = "manager123";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos Manager Login Success");
             gotoUserManagementPage();
             UserManagementSeleniumUtils.deleteUserByName(driver, newUserName);

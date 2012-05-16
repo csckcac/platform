@@ -78,7 +78,7 @@ public class ISNewEntitlementUploaderSeleniumTest {
         String requestFilePath = resourcePath + File.separator + "artifacts" + File.separator + "IS" + File.separator + "IIA001Request.xml";
         String requestXML = getDatafromFile(requestFilePath);
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             driver.findElement(By.linkText("Administration")).click();
             EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);
@@ -119,7 +119,7 @@ public class ISNewEntitlementUploaderSeleniumTest {
                            "IS" + File.separator +"IIA003Request.xml";
         String requestXML = getDatafromFile(requestFilePath);
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             driver.findElement(By.linkText("Administration")).click();
             EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);

@@ -72,7 +72,7 @@ public class ISRelyingPartiesSeleniumTest {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator + "IS" + File.separator + "javarp.cer";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             importRelyingCERT(filePath);
             deleteRelyingCERT();

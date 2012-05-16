@@ -68,7 +68,7 @@ public class ISClaimManagementSeleniumTest {
     @Test(groups = {"wso2.greg"}, description = "Apply wso2.org claim Nick Name", priority = 1)
     public void testAddNewClaimManagement() throws Exception {
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             addClaim();
             log.info("Stratos IS Claim was updated");

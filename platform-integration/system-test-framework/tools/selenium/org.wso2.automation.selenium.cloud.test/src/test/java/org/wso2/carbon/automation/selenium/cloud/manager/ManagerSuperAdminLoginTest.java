@@ -63,7 +63,7 @@ public class ManagerSuperAdminLoginTest {
     @Test(groups = {"wso2.manager"}, description = "Login to manager as super admin", priority = 1)
     public void testLoginToManager() throws Exception {
         String productName = "manager";
-        new StratosUserLogin().userLogin(driver, null, userName, password, productName);
+        StratosUserLogin.userLogin(driver, null, userName, password, productName);
         log.info("Stratos Manager Login Success");
     }
 

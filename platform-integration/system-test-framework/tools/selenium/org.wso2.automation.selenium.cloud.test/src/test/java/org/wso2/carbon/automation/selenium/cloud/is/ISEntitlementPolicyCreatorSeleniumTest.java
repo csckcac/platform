@@ -74,7 +74,7 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
         String resourceName = "foo";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             gotoAdministrationPage();
             EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);

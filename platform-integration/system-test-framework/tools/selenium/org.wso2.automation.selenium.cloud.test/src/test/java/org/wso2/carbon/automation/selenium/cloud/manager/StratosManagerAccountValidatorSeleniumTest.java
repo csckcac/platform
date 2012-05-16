@@ -68,7 +68,7 @@ public class StratosManagerAccountValidatorSeleniumTest {
         String accountManagerUrl = baseurl + "/t/" + domain + "/carbon/account-mgt/" +
                                    "account_mgt.jsp?region=region1&item=gaas_account_mgt_menu";
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos Manager Login Success");
             gotoAccountManagerPage(accountManagerUrl);
             userLogout();

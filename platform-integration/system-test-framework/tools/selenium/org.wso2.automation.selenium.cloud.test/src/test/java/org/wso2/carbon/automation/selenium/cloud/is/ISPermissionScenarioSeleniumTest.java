@@ -72,7 +72,7 @@ public class ISPermissionScenarioSeleniumTest {
         String newUserPassword = "welcome";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             log.info("Stratos IS Login Success");
             gotoUserManagementPage();
             UserManagementSeleniumUtils.deleteUserByName(driver, newUserName);
@@ -81,13 +81,13 @@ public class ISPermissionScenarioSeleniumTest {
             addRole(newUserName, roleName);
             userLogout();
             //loging with new user credientails
-            new StratosUserLogin().userLogin(driver, selenium, newFullUserName,
+            StratosUserLogin.userLogin(driver, selenium, newFullUserName,
                                              newUserPassword, productName);
             assertTrue(driver.getPageSource().contains("Users and Roles"),
                        "New User Failed to Log in :");
             userLogout();
             //login with admin credientails
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoUserManagementPage();
             UserManagementSeleniumUtils.deleteUserByName(driver, newUserName);
             gotoRoleManagementPage();

@@ -71,7 +71,7 @@ public class GRegServiceCreatorSeleniumTest {
         String nameSpace = "service123";
         String servicePath = "/_system/governance/trunk/services/service123/testservice1";
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoAddServicePage();
             createService(serviceName, nameSpace, servicePath);
             findLocation("/_system/governance/trunk/services/service123");

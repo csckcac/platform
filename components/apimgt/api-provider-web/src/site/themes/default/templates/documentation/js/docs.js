@@ -70,7 +70,12 @@ var updateDocumentation = function (apiName, version, docName, docType, summary,
 };
 
 var editInlineContent = function (apiName, version, docName) {
-    window.open("site/pages/inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version);
+    var current = window.location.pathname;
+    if (current.indexOf("item-info.jag") >= 0) {
+        window.open("inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version);
+    } else {
+        window.open("inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version);
+    }
 
 };
 
@@ -90,6 +95,7 @@ var getRadioValue = function (radioButton) {
         return 0;
     }
 };
+
 
 
 

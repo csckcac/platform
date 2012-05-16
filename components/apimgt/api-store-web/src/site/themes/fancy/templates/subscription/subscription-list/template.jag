@@ -5,9 +5,6 @@
     for(i = 0; i < lenI; i++) {
         app = apps[i];
     %>
-     <script type="text/javascript">
-        var foo = '<%=app%>';
-    </script>
     <div class="subscription-list">
         <div class="accordion-group">
             <div class="accordion-heading">

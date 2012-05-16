@@ -8,7 +8,6 @@
 %>
 <div class="api-info">
     <h5><%=api.provider%></h5>
-
     <div class="col_12 no-padding">
         <div class="col_3">
             <img src="<%=thumbURL%>">
@@ -28,6 +27,7 @@
                         </div>
                     </td>
                     <td rowspan="3">
+                            <% if(api.status =="PUBLISHED") { %>
                                <%
                                 if(user && apps) {
                                     length = apps.length;
@@ -47,6 +47,7 @@
                                 </select>
                                 <% } %>
                                     <div class="simple-space-maker"><button id="subscribe-button" class="medium green">Subscribe</button></div>
+                        <% } %>
 
                     </td>
                 </tr>

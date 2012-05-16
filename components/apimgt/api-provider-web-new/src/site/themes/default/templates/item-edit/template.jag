@@ -1,5 +1,5 @@
 <% jagg.template("item-edit", function(inputs, outputs, jagg) { %>
-<% var i,j,resCount,rowNums = [],api = outputs.api;%>
+<% var i,resCount,rowNums = [],api = outputs.api;%>
 <div class="alert alert-error" id="editAPIError" style="display:none">
 <span id="editErrorSpan"></span>
 </div>
@@ -134,9 +134,8 @@
 
                              <%if (api.templates!=null && api.templates.length > 0) {
                             for (i = 0; i < api.templates.length; i++) {
-                            j=1;
                             %>
-                            <tr id="item-<%=String(j)%>">
+                            <tr id="item-<%=String(i)%>">
                                 <td>
                                     <input type="text" class="input" id="uriTemplate" disabled="disabled" name="resourceTemplate" value="<%=api.templates[i][0]%>"/>
                                 </td>
@@ -150,13 +149,13 @@
                                     </select>
                                 </td>
                                 <td id="buttons">
-                                    <a class="btn btn-danger" id="resourceDelBtn" onClick="deleteResource('<%=String(j)%>')"><i class="icon-trash icon-white"></i> Delete</a>
+                                    <a class="btn btn-danger" id="resourceDelBtn" onClick="deleteResource('<%=String(i)%>')"><i class="icon-trash icon-white"></i> Delete</a>
                                 </td>
                             </tr>
                             <input type="hidden" name="resourceMethod-<%=String(i)%>" value="<%=api.templates[i][1]%>">
                             <input type="hidden" name="uriTemplate-<%=String(i)%>" value="<%=api.templates[i][0]%>">
-        <% rowNums.push(j);
-        j++;
+        <% rowNums.push(i);
+
 
         }}%>
                             </tbody>
@@ -171,7 +170,7 @@
 
                 <div id="stateActions" class="controls"></div>
             </div>
-             <input type="hidden" name="resourceCount" id="resourceCount" value="<%=rowNums%>">
+             <input type="hidden" name="resourceCount" id="resourceCount" value="<%=String(rowNums)%>">
 
             <div class="form-actions">
                 <input type="submit" id="updateButton" class="btn btn-primary" value="Save"/>

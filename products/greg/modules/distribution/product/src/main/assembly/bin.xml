@@ -177,7 +177,7 @@
         </fileSet>
         <fileSet>
             <directory>src/main/resources/carbon-home/resources/uddi</directory>
-            <outputDirectory>${pom.artifactId}-${build.version}/lib</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${build.version}</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>

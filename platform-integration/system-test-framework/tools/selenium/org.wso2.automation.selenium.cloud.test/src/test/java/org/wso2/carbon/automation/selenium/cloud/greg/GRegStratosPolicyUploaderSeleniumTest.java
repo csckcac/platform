@@ -188,6 +188,4 @@ public class GRegStratosPolicyUploaderSeleniumTest {
         } while (!(((exceededTime - currentTime) / 1000) > 60));
         return false;
     }
-
-
 }

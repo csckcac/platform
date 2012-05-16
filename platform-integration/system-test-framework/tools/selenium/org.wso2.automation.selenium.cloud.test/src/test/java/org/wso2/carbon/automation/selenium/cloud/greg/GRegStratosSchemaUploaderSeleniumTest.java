@@ -39,7 +39,6 @@ import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.Calendar;
 
 import static org.testng.Assert.assertTrue;
 
@@ -47,12 +46,11 @@ public class GRegStratosSchemaUploaderSeleniumTest {
     private static final Log log = LogFactory.getLog(GRegStratosSchemaUploaderSeleniumTest.class);
     private static Selenium selenium;
     private static WebDriver driver;
-    String productName = "greg";
-    String userName;
-    String password;
-    String schemaName = "books.xsd";
-    String schema_path = "/_system/governance/trunk/schemas/books";
-    long sleeptime = 4000;
+    private static String productName = "greg";
+    private static String userName;
+    private static String password;
+    private static String schemaName = "books.xsd";
+    private static String schema_path = "/_system/governance/trunk/schemas/books";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, InterruptedException {
@@ -60,7 +58,7 @@ public class GRegStratosSchemaUploaderSeleniumTest {
         userName = userDetails.getUserName();
         password = userDetails.getPassword();
         String baseUrl = new ProductUrlGeneratorUtil().getServiceHomeURL(ProductConstant.
-                GREG_SERVER_NAME);
+                                                                                 GREG_SERVER_NAME);
         log.info("baseURL is :" + baseUrl);
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
@@ -70,12 +68,15 @@ public class GRegStratosSchemaUploaderSeleniumTest {
 
     @Test(groups = {"wso2.stratos.greg"}, description = "add schema from url", priority = 1)
     public void testAddSchemafromURL() throws Exception {
-        String schema_url = "http://people.wso2.com/~evanthika/schemas/books.xsd";
+        String schema_url = "https://svn.wso2.org/repos/wso2/carbon/platform/trunk/" +
+                            "platform-integration/system-test-framework/core/org.wso2.automation.platform.core/" +
+                            "src/main/resources/artifacts/GREG/schema/books.xsd";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoSchemaPage();
-            uploadSchemafromUrl(schema_url);
+            uploadSchemaFromURL(schema_url);
+            waitForSchemaListPage();
             assertTrue(driver.getPageSource().contains(schemaName), "Failed to add book schema :");
             assertTrue(driver.getPageSource().contains("urn:books"),
                        "Failed to display schemaNameSpace:");
@@ -101,11 +102,11 @@ public class GRegStratosSchemaUploaderSeleniumTest {
     public void testAddSchemafromFile() throws Exception {
         String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION;
         String file_path = resourcePath + File.separator + "artifacts" + File.separator +
-                           "Selenium" + File.separator + "GREG" + File.separator + "schema" +
+                           File.separator + "GREG" + File.separator + "schema" +
                            File.separator + "books.xsd";
 
         try {
-            new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
+            StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoSchemaPage();
             addSchemaFromFile(file_path);
             deleteSchema(schemaName, schema_path);
@@ -134,74 +135,59 @@ public class GRegStratosSchemaUploaderSeleniumTest {
     private void addSchemaFromFile(String file_path) throws InterruptedException {
         Select select = new Select(driver.findElement(By.id("addMethodSelector")));
         select.selectByVisibleText("Upload Schema from a file");
-        waitTimeforElement("//p/input");
         selenium.focus("id=uResourceFile");
-        Thread.sleep(sleeptime);
         driver.findElement(By.id("uResourceFile")).sendKeys(file_path);
-        Thread.sleep(sleeptime);
         driver.findElement(By.xpath("//div/table/tbody/tr[2]/td/input")).click();
-        waitTimeforElement("//form/table/tbody/tr/td/a");
+        waitForSchemaListPage();
         log.info("Schema was successfully uploaded from file");
         assertTrue(driver.getPageSource().contains(schemaName), "Failed to add book schema :");
         assertTrue(driver.getPageSource().contains("urn:books"),
                    "Failed to display schemaNameSpace:");
     }
 
-
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
     }
 
-
-    private void uploadSchemafromUrl(String schema_url) throws InterruptedException {
+    private void uploadSchemaFromURL(String schema_url) throws InterruptedException {
         driver.findElement(By.id("irFetchURL")).sendKeys(schema_url);
         driver.findElement(By.id("irResourceName")).click();
         driver.findElement(By.xpath("//div/table/tbody/tr[2]/td/input")).click();
-        waitTimeforElement("//form/table/tbody/tr/td/a");
     }
 
     private void gotoSchemaPage() throws InterruptedException {
         driver.findElement(By.linkText("Schema")).click();
-        waitTimeforElement("//td[2]/input");
-        assertTrue(driver.getPageSource().contains("Add Schema"),
-                   "Failed to display Add Schema Page :");
-        Thread.sleep(sleeptime);
+        assertTrue(driver.findElement(By.id("middle")).findElement(By.tagName("h2")).getText()
+                           .contains("Add Schema"), "Add schema page not found");
     }
 
     private void deleteSchema(String schemaName, String path) throws InterruptedException {
         driver.findElement(By.linkText(schemaName)).click();
-        waitTimeforElement("//input");
         driver.findElement(By.id("uLocationBar")).clear();
         driver.findElement(By.id("uLocationBar")).sendKeys(path);
         driver.findElement(By.xpath("//input[2]")).click();
-        waitTimeforElement("//div[9]/table/tbody/tr/td/table/tbody/tr/td/a");
         driver.findElement(By.id("actionLink1")).click();
-        waitTimeforElement("//div/a[3]");
         driver.findElement(By.linkText("Delete")).click();
-        waitTimeforElement("//body/div[3]/div/div");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete '/_system/" +
                                           "governance/trunk/schemas/books/books.xsd' permanently?"),
                    "Failed to delete wsdl :");
         selenium.click("//button");
-        Thread.sleep(sleeptime);
     }
 
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
+    private boolean waitForSchemaListPage() {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        do {
+            try {
+                if (driver.findElement(By.id("middle")).findElement(By.tagName("h2")).getText()
+                            .contains("Schema List")) {
+                    return true;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for the element");
             }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
+            exceededTime = System.currentTimeMillis();
+        } while (!(((exceededTime - currentTime) / 1000) > 60));
+        return false;
     }
-
-
 }

@@ -29,6 +29,7 @@
   </parent>
 
   <artifactId>maven-scm-provider-svnexe</artifactId>
+  <version>1.7.wso2v1</version>
 
   <name>Maven SCM Subversion Provider - SVN Executable Impl.</name>
   <description>Executable library for SCM SVN Provider.</description>
@@ -36,7 +37,18 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-api</artifactId>
+      <version>1.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-manager-plexus</artifactId>
+      <version>1.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-svn-commons</artifactId>
+      <version>1.7</version>
     </dependency>
     <dependency>
       <groupId>regexp</groupId>
@@ -50,7 +62,14 @@
     <!-- Test -->
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-test</artifactId>
+      <version>1.7</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-svntest</artifactId>
+      <version>1.7</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

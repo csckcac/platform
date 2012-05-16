@@ -55,7 +55,7 @@ public class GRegStratosWSDLUploaderSeleniumTest {
         userName = userDetails.getUserName();
         password = userDetails.getPassword();
         String baseUrl = new ProductUrlGeneratorUtil().getServiceHomeURL(ProductConstant.
-                GREG_SERVER_NAME);
+                                                                                 GREG_SERVER_NAME);
         log.info("baseURL is :" + baseUrl);
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
@@ -129,12 +129,9 @@ public class GRegStratosWSDLUploaderSeleniumTest {
     private void addWSDLFromFile(String file_path) throws InterruptedException {
         Select select = new Select(driver.findElement(By.id("addMethodSelector")));
         select.selectByVisibleText("Upload WSDL from a file");
-        selenium.focus("id=uResourceFile");
-        Thread.sleep(sleepTime);
         driver.findElement(By.id("uResourceFile")).sendKeys(file_path);
-        Thread.sleep(sleepTime);
         driver.findElement(By.xpath("//div/table/tbody/tr[2]/td/input")).click();
-        Thread.sleep(40000);
+        waitForWsdlListPage();
         assertTrue(driver.findElement(By.xpath("//tr[2]/td/div/div/form/table/tbody/tr/td/a"))
                            .getText().contains("echo.wsdl"), "echo wsdl not found in the list");
         assertTrue(driver.findElement(By.xpath("//td/div/div/form/table/tbody/tr/td[2]"))
@@ -152,11 +149,11 @@ public class GRegStratosWSDLUploaderSeleniumTest {
         driver.findElement(By.id("irFetchURL")).sendKeys(wsdl_url);
         driver.findElement(By.id("irResourceName")).click();
         driver.findElement(By.xpath("//div/table/tbody/tr[2]/td/input")).click();
-        Thread.sleep(40000);
+        waitForWsdlListPage();
         assertTrue(driver.findElement(By.xpath("//tr[2]/td/div/div/form/table/tbody/tr/td/a"))
-                .getText().contains("echo.wsdl"), "echo wsdl not found in the list");
+                           .getText().contains("echo.wsdl"), "echo wsdl not found in the list");
         assertTrue(driver.findElement(By.xpath("//td/div/div/form/table/tbody/tr/td[2]"))
-                .getText().contains("http://echo.services.core.carbon.wso2.org"),
+                           .getText().contains("http://echo.services.core.carbon.wso2.org"),
                    "List doesn't contain target namespace");
     }
 
@@ -171,7 +168,6 @@ public class GRegStratosWSDLUploaderSeleniumTest {
                                           "governance/trunk/services/org/wso2' permanently?"),
                    "Failed to delete service");
         selenium.click("//button");
-        Thread.sleep(sleepTime);
     }
 
     private void deleteWSDL() throws InterruptedException {
@@ -185,14 +181,28 @@ public class GRegStratosWSDLUploaderSeleniumTest {
                                           "system/governance/trunk/wsdls/org/wso2' permanently?"),
                    "Failed to delete wsdl :");
         selenium.click("//button");
-        Thread.sleep(sleepTime);
     }
 
     private void gotoAddWSDLPage() throws InterruptedException {
         driver.findElement(By.linkText("WSDL")).click();
-        assertTrue(driver.getPageSource().contains("Add WSDL"), "Failed to display Add WSDL Page :");
-        Thread.sleep(sleepTime);
+        assertTrue(driver.findElement(By.id("middle")).findElement(By.tagName("h2")).getText()
+                           .contains("Add WSDL"), "Add wsdl page loading fail");
     }
 
-
+    private boolean waitForWsdlListPage() {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        do {
+            try {
+                if (driver.findElement(By.id("middle")).findElement(By.tagName("h2")).getText()
+                            .contains("WSDL List")) {
+                    return true;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for the element");
+            }
+            exceededTime = System.currentTimeMillis();
+        } while (!(((exceededTime - currentTime) / 1000) > 60));
+      return false;
+    }
 }

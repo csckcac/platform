@@ -495,7 +495,7 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 }
 .api-key-cell{
     padding:0;border-left:solid  1px #ccc;
-    width:270px;
+    width:320px;
 }
 .api-key-listing {
     display: inline-block;

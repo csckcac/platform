@@ -136,7 +136,7 @@
     <properties>
         <carbon.platform.patch.version.321>3.2.1</carbon.platform.patch.version.321>
         <carbon.platform.version>4.0.0-SNAPSHOT</carbon.platform.version>
-        <shindig.platform.patch.version>1.1.0.wso2v5</shindig.platform.patch.version>
+        <shindig.platform.patch.version>1.1.0.wso2v6</shindig.platform.patch.version>
     </properties>
 
 </project>

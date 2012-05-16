@@ -3,6 +3,7 @@
    var subs = jagg.module("subscription");
    var result = subs.getSubscribersOfAPI(api);
    var subscribers = result.subscribers;
+
 %>
     <div class="row-fluid">
         <div class="span2">
@@ -24,10 +25,10 @@
         var length = subscribers.length;
         for(i = 0; i < length; i++) {
         subscriber = subscribers[i];
-        path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + subscriber.userName;
+        path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + subscriber.username;
         %>
         <tr>
-        <td><i class="icon-user"></i><a href="<%=path%></a></td>
+        <td><i class="icon-user"></i><a href="<%=path%>"><%=subscriber.username%></a></td>
         <td><%=subscriber.subscribedDate%></td>
         <td><i class="icon-edit"></i><a href="#">Stats</a>
             <i class="icon-trash"></i><a href="#">Revoke Access</a>

@@ -28,7 +28,7 @@
 
     <!--
         Credentials for the API gateway admin server. This configuration
-        is mainly used by the API provider to connect to the API gateway and
+        is mainly used by the API provider and store to connect to the API gateway and
         create/update published API configurations.
     -->
     <APIGateway>
@@ -46,6 +46,11 @@
             Admin password for the API gateway.
         -->
         <Password>admin</Password>
+
+        <!--
+            Endpoint URLs for the APIs hosted in this API gateway.
+        -->
+        <APIEndpointURL>http://localhost:8280,https://localhost:8243</APIEndpointURL>
     </APIGateway>
 
     <!--

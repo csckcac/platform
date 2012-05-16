@@ -18,6 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.wso2.carbon.hosting.wnagent.util.AgentServiceConstants;
 import org.wso2.carbon.lb.common.dto.Bridge;
 import org.wso2.carbon.lb.common.dto.HostMachine;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -34,7 +35,7 @@ public class AgentConfig {
 	private static final Log log = LogFactory.getLog(AgentConfig.class);
 	
 	private static final String CONFIG_FILENAME = CarbonUtils.getCarbonConfigDirPath() + File.separator + "agent-config.xml";
-	
+	//private static final String CONFIG_FILENAME = "/home/wso2/work/projects/source/platform/trunk/components/hosting-mgt/org.wso2.carbon.hosting.wnagent/conf/agent-config.xml";
 	private static AgentConfig singletonAgentConfig = null;
 		
 	private HostMachine hostMachine;
@@ -44,6 +45,8 @@ public class AgentConfig {
 	private String serviceHostUrl;
 	
 	private String defaultPassword;
+	
+	private String defaultContainerUser;
 	
 	private Map<String, String> domainToTemplateMap;
 	
@@ -114,23 +117,23 @@ public class AgentConfig {
 
 		Map<String, PlanConfig> resourcePlanMap = new HashMap<String, PlanConfig>();
 
-		Element resourcePlanElement = getElementForRootNode("resourcePlan");
+		Element resourcePlanElement = getElementForRootNode(AgentServiceConstants.RESOURCE_PLAN_ELEMENT_NAME);
 		
-		NodeList planList = resourcePlanElement.getElementsByTagName("plan");
+		NodeList planList = resourcePlanElement.getElementsByTagName(AgentServiceConstants.PLAN_ELEMENT_NAME);
 
 		for (int i = 0; i < planList.getLength(); i++) {
 
 			PlanConfig planConfig = new PlanConfig();
 			Node planNode = planList.item(i);
-			String planName = planNode.getAttributes().getNamedItem("name").getNodeValue();
+			String planName = planNode.getAttributes().getNamedItem(AgentServiceConstants.NAME_ELEMENT).getNodeValue();
 
 			Element planElement = (Element) planNode;
 			planConfig.setName(planName);
-			planConfig.setMemory(getValueForElement(planElement, "memory"));
-			planConfig.setCpuSets(getValueForElement(planElement, "cpuSets"));
-			planConfig.setCpuShares(getValueForElement(planElement, "cpuShares"));
-			planConfig.setStorage(getValueForElement(planElement, "storage"));
-			planConfig.setSwap(getValueForElement(planElement, "swap"));
+			planConfig.setMemory(getValueForElement(planElement, AgentServiceConstants.MEMORY_ELEMENT_NAME));
+			planConfig.setCpuSets(getValueForElement(planElement, AgentServiceConstants.CPU_SETS_ELEMENT_NAME));
+			planConfig.setCpuShares(getValueForElement(planElement, AgentServiceConstants.CPU_SHARES_ELEMENT_NAME));
+			planConfig.setStorage(getValueForElement(planElement, AgentServiceConstants.STORAGE_ELEMENT_NAME));
+			planConfig.setSwap(getValueForElement(planElement, AgentServiceConstants.SWAP_ELEMENT_NAME));
 
 			resourcePlanMap.put(planName, planConfig);
 		}
@@ -147,13 +150,13 @@ public class AgentConfig {
 
 		hostMachine = new HostMachine();
 
-		Element workerNodeElement = getElementForRootNode("workerNode");
+		Element workerNodeElement = getElementForRootNode(AgentServiceConstants.HOST_MACHINE_ELEMENT_NAME);
 
 		hostMachine.setAvailable(Boolean.
-		                         parseBoolean(getValueForElement(workerNodeElement,"isAvailable")));
-		hostMachine.setContainerRoot(getValueForElement(workerNodeElement, "templatePath"));
-		hostMachine.setZone(getValueForElement(workerNodeElement, "zone"));
-		hostMachine.setIp(getValueForElement(workerNodeElement, "ip"));	
+		                         parseBoolean(getValueForElement(workerNodeElement,AgentServiceConstants.IS_AVAILABLE_ELEMENT_NAME)));
+		hostMachine.setContainerRoot(getValueForElement(workerNodeElement, AgentServiceConstants.TEMPLATE_PATH));
+		hostMachine.setZone(getValueForElement(workerNodeElement, AgentServiceConstants.ZONE_ELEMENT_NAME));
+		hostMachine.setIp(getValueForElement(workerNodeElement, AgentServiceConstants.IP_ELEMENT_NAME));	
 		hostMachine.setBridges(getBridges(workerNodeElement));
 		
 		
@@ -165,15 +168,15 @@ public class AgentConfig {
 	private void setDomainsList(Element workerNodeElement) {
 	   
 		domainsList = new ArrayList<String>();
-		NodeList domainsNodeList = workerNodeElement.getElementsByTagName("domains");
+		NodeList domainsNodeList = workerNodeElement.getElementsByTagName(AgentServiceConstants.DOMAINS_ELEMENT_NAME);
 	    Node domainsNode = domainsNodeList.item(0);
 	    Element domainElement = (Element) domainsNode;
-	    NodeList domainList = domainElement.getElementsByTagName("domain");
+	    NodeList domainList = domainElement.getElementsByTagName(AgentServiceConstants.DOMAIN_ELEMENT_NAME);
 	    
 	    for (int i = 0; i < domainList.getLength(); i++) {
 	        
 	    	Node domainNode = domainList.item(i);
-			String domainName = domainNode.getAttributes().getNamedItem("name").getNodeValue();
+			String domainName = domainNode.getAttributes().getNamedItem(AgentServiceConstants.NAME_ELEMENT).getNodeValue();
 			domainsList.add(domainName);			
         }
     }
@@ -187,7 +190,8 @@ public class AgentConfig {
 
 		serviceHostUrl = getElementForRootNode("agentManagementHost").getAttribute("url");
 		defaultPassword = getElementForRootNode("defaultPassword").getAttribute("value");
-		
+		defaultContainerUser = getElementForRootNode("defaultUsername").getAttribute("value"); 
+		//agentServiceEpr = getElementForRootNode("agentServiceEpr").getAttribute("url");		
     }
 	
 	/**
@@ -290,5 +294,9 @@ public class AgentConfig {
 	public List<String> getDomainsList() {
 		return domainsList;
 	}
+
+	public String getDefaultContainerUser() {
+	   return defaultContainerUser;
+    }
 	
 }

@@ -113,7 +113,14 @@ public class ServerStartupDetector extends Thread {
     }
     
     private void decrementPendingInstanceCount() {
+       
+        try {
+            Thread.sleep(180000);
+        } catch (InterruptedException ignore) {
+            // nothing to do
+        }
 
+        log.info("slept for 60 seconds..");
         try {
             AutoscaleServiceClient client = new AutoscaleServiceClient(autoscalerEpr);
             

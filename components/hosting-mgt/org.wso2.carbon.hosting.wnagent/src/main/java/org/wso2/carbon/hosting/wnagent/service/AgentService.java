@@ -19,17 +19,16 @@ package org.wso2.carbon.hosting.wnagent.service;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.description.TransportInDescription;
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.autoscaler.service.jvm.agentmgt.stub.AgentManagementServiceStub;
@@ -39,7 +38,6 @@ import org.wso2.carbon.hosting.wnagent.WNAgentConstants;
 import org.wso2.carbon.hosting.wnagent.beans.PlanConfig;
 import org.wso2.carbon.hosting.wnagent.exception.AgentServiceException;
 import org.wso2.carbon.hosting.wnagent.util.PropertyFileReaderUtil;
-import org.wso2.carbon.hosting.wnagent.util.ServerStartupDetector;
 import org.wso2.carbon.lb.common.dto.ContainerInformation;
 
 
@@ -57,10 +55,23 @@ import org.wso2.carbon.lb.common.dto.ContainerInformation;
 public class AgentService {
 
 	private static final Log log = LogFactory.getLog(AgentService.class);
+	
+	private Map<String, Integer> domainToPendingInstanceCountMap;
 
 	private MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 	
+	private ContainerInformation containerInformation = new ContainerInformation();
+	
+	private InetAddress serverAddress = null;
+	
+	private static final long TIME_OUT = 60000;
+	
+	private int port;
+	
 	public AgentService() throws Exception {
+
+	    // TODO persist and retrieve
+	    domainToPendingInstanceCountMap = new HashMap<String, Integer>();
 		PropertyFileReaderUtil.readAgentConfig();
 		if(log.isDebugEnabled()){
 			log.debug("Property file is successfully read");
@@ -84,6 +95,7 @@ public class AgentService {
 	public boolean createContainer(String domainName, ContainerInformation containerInfo)
 																				throws AgentServiceException {
     	
+	    addPendingInstanceCount(domainName, 1);
     	if(log.isDebugEnabled()) {    		
     		StringBuilder logmsg =
                 new StringBuilder().append("Trying to create a container with id [")
@@ -99,7 +111,19 @@ public class AgentService {
 
 	
 	
-	/**
+	private void addPendingInstanceCount(String domainName, int count) {
+
+	    int previousCount = 0;
+	    
+	    if(domainToPendingInstanceCountMap.containsKey(domainName)){
+	        previousCount = domainToPendingInstanceCountMap.get(domainName);
+	    }
+	    
+	    domainToPendingInstanceCountMap.put(domainName, previousCount+count);
+    }
+
+
+    /**
 	 * 
 	 * @param containerName
 	 * @return
@@ -153,10 +177,9 @@ public class AgentService {
 			throw e;
 		}
 		
-		ServerStartupDetector detector = new ServerStartupDetector(this, containerInfo, domainName);
 		// we do not want to block this thread, hence use start()
-		detector.start();
-
+		//detector.start();
+		startServerStartupDetector(domainName);
 		return canCreateMoreContainers;
 	}
 	
@@ -182,7 +205,9 @@ public class AgentService {
 		                                           getScriptsPath(),
 		                                           WNAgentConstants.CONTAINER_CREATE_ACTION,
 		                                           containerInfo.getContainerId(),
+		                                           getDefaultContainerUser(),
 		                                           getDefaultContainerPassword(),
+		                                           getHostMachineIp(),
 		                                           containerInfo.getIp(), /*ContainerIp*/
 		                                           containerInfo.getNetMask(), /*NetMask*/
 		                                           containerInfo.getBridge(), /*BridgeIp*/
@@ -229,6 +254,16 @@ public class AgentService {
     
     
     
+	private String getHostMachineIp() {
+	    return PropertyFileReaderUtil.readHostMachineIp();
+    }
+
+
+	private String getDefaultContainerUser() {
+	   return PropertyFileReaderUtil.readDefaultContainerUser();
+    }
+
+
 	/**
      * @param containerName
      * @param containerRoot
@@ -445,6 +480,8 @@ public class AgentService {
     	// To avoid that check whether containerStopProcess returns an explicit exception of container already stopped exception, 
     	// and handle accordingly
     	
+    	log.info(" Stop and Destroy ....");
+    	
     	invokeContainerStopProcess(containerName, containerRoot);
     	return invokeContainerDestroyProcess(containerName, containerRoot);
     }
@@ -488,7 +525,6 @@ public class AgentService {
 		AgentManagementServiceStub stub;
         try {
         	String agentMgtUrl = PropertyFileReaderUtil.readAgentMgtServiceEpr();
-        	//log.info(" ** AgentMgmntService Url :" + agentMgtUrl);
 	        stub = new AgentManagementServiceStub(agentMgtUrl);
 	        stub.unregisterAgent(getServiceUrl());
         } catch (Exception e) {
@@ -605,29 +641,113 @@ public class AgentService {
 	
 
 
-	public String getServiceUrl() {
-		String baseURL = null;
-		MessageContext messageContext = MessageContext.getCurrentMessageContext();
-		AxisConfiguration configuration =
-		                                  messageContext.getConfigurationContext()
-		                                                .getAxisConfiguration();
-		TransportInDescription inDescription = configuration.getTransportIn("https");
-		
-		EndpointReference[] eprs = null;
-		try {
-			eprs =
-			                           inDescription.getReceiver()
-			                                        .getEPRsForService(messageContext.getAxisService()
-			                                                                         .getName(),
-			                                                           null);
-			//log.info("EPR count : " + eprs.length);
-			baseURL = eprs[0].getAddress();
-		} catch (AxisFault axisFault) {
-		}
-		
-		log.info("*** Service URL of AgentService is : " + baseURL);
-        		
-		return baseURL;
+	public String getServiceUrl() { 
+		String hostmachineIp = PropertyFileReaderUtil.readHostMachineIp();
+		StringBuilder epr = new StringBuilder().append("https://")
+											   .append(hostmachineIp)
+											   .append(":")
+											   .append("9443")
+											   .append("/services/AgentService/");
+		log.debug("Service url is : " + epr.toString());
+		return epr.toString();
 	}
+	
+	
+	
+	    public int getPendingInstanceCount(String domainName){
+	        
+	        if(domainToPendingInstanceCountMap.containsKey(domainName)){
+	            return domainToPendingInstanceCountMap.get(domainName);
+	        }
+	        
+	        return 0;
+	    }
+	
+	    //TODO fix this properly, for now added a temporarily fix
+	    void startServerStartupDetector(final String domainName) {
+	       new Thread(new Runnable() {
+	           @Override
+	           public void run() {
+	
+	               try {
+                    Thread.sleep(120000);
+                } catch (InterruptedException ignore) {
+                }
+	               
+	               addPendingInstanceCount(domainName, -1);
+//	                boolean isServerStarted;
+//	
+//	                long startTime = System.currentTimeMillis();
+//	
+//	                // loop if and only if time out hasn't reached and server address isn't null
+//	                while (serverAddress != null && ((System.currentTimeMillis() - startTime) < TIME_OUT)) {
+//	
+//	                    try {
+//	                        isServerStarted = isServerStarted(serverAddress, port);
+//	
+//	                        System.out.println("Server has started in address: " +
+//	                            serverAddress.getHostAddress() + " and port: " + port);
+//	
+//	                        if (isServerStarted) {
+//	                            // and decrement the pending instance count
+//	                            addPendingInstanceCount(dom);
+//	                            return;
+//	                        }
+//	
+//	                        // sleep for 5s before next check
+//	                        Thread.sleep(5000);
+//	
+//	                    } catch (Exception ignored) {
+//	                        // do nothing
+//	                    }
+//	                }
+//	
+//	                //when it reaches here, we declare the server start up as a failure.
+//	                // hence killing the container
+//	                try {
+//	                    stopAndDestroyContainer(containerInformation.getContainerId(),
+//	                                                  containerInformation.getContainerRoot());
+//	                } catch (AgentServiceException e) {
+//	                    log.error("Failed to destroy the container "+containerInformation.getContainerId(), e);
+//	                }
+//	                // and decrement the pending instance count
+//	                pendingInstanceCount--;
+//	                //decrementPendingInstanceCount();
+	
+	           }
+	        }).start();
+	
+	    }
+	    /**
+	     * Checks whether the given ip, port combination is not available.
+	     * @param ip {@link java.net.InetAddress} to be examined.
+	     * @param port port to be examined.
+	     * @return true if the ip, port combination is not available to be used and false
+	     * otherwise.
+	     */
+	    private static boolean isServerStarted(InetAddress ip, int port) {
+	
+	        ServerSocket ss = null;
+	
+	        try {
+	            ss = new ServerSocket(port, 0, ip);
+	            ss.setReuseAddress(true);
+	            return false;
+	
+	        } catch (IOException e) {
+	        } finally {
+	
+	            if (ss != null) {
+	                try {
+	                    ss.close();
+	                } catch (IOException e) {
+	                    /* should not be thrown */
+	                }
+	            }
+	        }
+	
+	        return true;
+	
+	    }
 
 }

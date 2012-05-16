@@ -73,4 +73,12 @@ public class PropertyFileReaderUtil {
 	public static List<String> readDomainList() {
 		return agentConfig.getDomainsList();
 	}
+	
+	public static String readHostMachineIp() {
+		return readHostMachineConfig().getIp();
+	}
+
+	public static String readDefaultContainerUser() {
+	    return agentConfig.getDefaultContainerUser();
+    }
 }

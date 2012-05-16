@@ -609,15 +609,15 @@ public class APIStoreHostObject extends ScriptableObject {
         providerName = (String) args[0];
 	    apiName = (String) args[1];
 		version = (String) args[2];
-		APIIdentifier apiIdentifyer = new APIIdentifier(providerName, apiName, version);
+		APIIdentifier apiIdentifier = new APIIdentifier(providerName, apiName, version);
 		NativeArray myn = new NativeArray(0);
 		API api;
         APIConsumer apiConsumer = getAPIConsumer(thisObj);
         try {
-            api = apiConsumer.getAPI(apiIdentifyer);
+            api = apiConsumer.getAPI(apiIdentifier);
             if (username != null) {
                 //TODO @sumedha : remove hardcoded tenant Id            
-                isSubscribed = apiConsumer.isSubscribed(apiIdentifyer, username);
+                isSubscribed = apiConsumer.isSubscribed(apiIdentifier, username);
             }
         } catch (APIManagementException e) {
             log.error("Error from Registry API while getting get API Information on " + apiName
@@ -633,7 +633,7 @@ public class APIStoreHostObject extends ScriptableObject {
         }
         
         NativeObject row = new NativeObject();
-        APIIdentifier apiIdentifier = api.getId();
+        apiIdentifier = api.getId();
         row.put("name", row, apiIdentifier.getApiName());
         row.put("provider", row, apiIdentifier.getProviderName());
         row.put("version", row, apiIdentifier.getVersion());
@@ -642,7 +642,10 @@ public class APIStoreHostObject extends ScriptableObject {
         row.put("endpoint", row, api.getUrl());
         row.put("wsdl", row, "http://appserver/services/echo?wsdl");
         row.put("updatedDate", row, api.getLastUpdated().toString());
-        row.put("context",row,api.getContext());
+        row.put("context",row, api.getContext());
+
+        APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
+        row.put("serverURL", row, config.getFirstProperty(APIConstants.API_GATEWAY_API_ENDPOINT));
 
         //TODO : need to pass in the full available tier list to front end
         Set<Tier> tiers = api.getAvailableTiers();

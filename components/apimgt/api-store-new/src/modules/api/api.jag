@@ -21,7 +21,8 @@ var getAPIDescription = function (api, username) {
                 subscribed:api.subscribed,
                 thumbURL:api.thumbnailurl,
                 tier:api.tier,
-                context:api.context
+                context:api.context,
+                serverURL:api.serverURL
             }
         };
     } catch (e) {

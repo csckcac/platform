@@ -1,7 +1,17 @@
 <% jagg.template("api/overview", function(inputs, outputs, jagg) { %>
 <% var api = outputs.api, user = outputs.user; %>
 <div id="overview">
-
+    <h6>URLs:</h6>
+    <ul>
+    <%
+    var serverEndpoints = api.serverURL.split(",");
+    for (i = 0; i < serverEndpoints.length; i++) {
+    %>
+    <li><%=serverEndpoints[i]%><%=api.context%>/<%=api.version%>/</li>
+    <%
+    }
+    %>
+    </ul>
     <% if(api.description && api.description != ""){ %>
         <h6>Description:</h6>
     <p>

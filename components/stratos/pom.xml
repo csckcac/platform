@@ -571,8 +571,8 @@
     </dependencyManagement>    
     <build>
         <pluginManagement>
-            <plugins>
-                <plugin>
+           <plugins>
+                <!-- <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-scr-plugin</artifactId>
                     <version>1.0.10</version>
@@ -584,7 +584,7 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
+                </plugin> -->
             </plugins>
         </pluginManagement>
         <plugins>

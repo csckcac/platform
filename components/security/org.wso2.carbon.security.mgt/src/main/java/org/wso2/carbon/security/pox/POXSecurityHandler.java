@@ -18,6 +18,8 @@ package org.wso2.carbon.security.pox;
 
 import org.apache.axiom.om.impl.dom.jaxp.DocumentBuilderFactoryImpl;
 import org.apache.axiom.om.util.Base64;
+import org.apache.axiom.soap.SOAPHeader;
+import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisService;
@@ -43,7 +45,9 @@ import org.wso2.carbon.security.SecurityServiceHolder;
 import org.wso2.carbon.base.ServerConfiguration;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -77,9 +81,8 @@ public class POXSecurityHandler implements Handler {
             return InvocationResponse.CONTINUE;
         }
 
-        //If this is not a REST/POX message simply return
-        // This handler will intercept REST requests only arriving via HTTPS
-        if (!msgCtx.isDoingREST() || !msgCtx.getIncomingTransportName().equals("https")) {
+         //this handler only intercepts
+        if (!(msgCtx.isDoingREST() || isSOAPWithoutSecHeader(msgCtx)) || !msgCtx.getIncomingTransportName().equals("https")) {
             return InvocationResponse.CONTINUE;
         }
 
@@ -224,6 +227,31 @@ public class POXSecurityHandler implements Handler {
             DocumentBuilderFactoryImpl.setDOOMRequired(false);
         }
         return InvocationResponse.CONTINUE;
+    }
+    /**
+     *
+     * @param msgCtx   message going through the handler chain
+     * @return true if its a soap message without a security header
+     */
+    private boolean isSOAPWithoutSecHeader(MessageContext msgCtx) {
+        //see whether security header present: if so return false
+        SOAPHeader soapHeader = msgCtx.getEnvelope().getHeader();
+        if (soapHeader == null) {
+           return true; // no security header
+        }
+        //getting the set of secuirty headers
+        ArrayList headerBlocks = soapHeader.getHeaderBlocksWithNSURI(WSConstants.WSSE_NS);
+        // Issue is axiom - a returned collection must not be null
+        if (headerBlocks != null) {
+            Iterator headerBlocksIterator = headerBlocks.iterator();
+            while (headerBlocksIterator.hasNext()) {
+                SOAPHeaderBlock elem = (SOAPHeaderBlock) headerBlocksIterator.next();
+                if (WSConstants.WSSE_LN.equals(elem.getLocalName())) {
+                    return false; // security header already present. invalid request.
+                }
+            }
+        }
+        return true;
     }
 
     public void flowComplete(MessageContext msgContext) {

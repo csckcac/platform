@@ -30,8 +30,8 @@
         <activateUser>http://localhost:9763/services/activateUserProcess</activateUser>
     </bpel>
     <SVNRepositoryMGTConfig>
-        <SCMServerIp>0.0.0.0</SCMServerIp>
-        <SCMServerPort>8080</SCMServerPort>
+        <SCMServerIp>192.168.4.26</SCMServerIp>
+        <SCMServerPort>8081</SCMServerPort>
         <SCMServerRealmName>SONIA :: SCM Manager</SCMServerRealmName>
         <SCMServerAdminUserName>scmadmin</SCMServerAdminUserName>
         <SCMServerAdminPassword>scmadmin</SCMServerAdminPassword>

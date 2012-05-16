@@ -38,10 +38,7 @@ import org.wso2.carbon.identity.oauth.OAuthUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -613,7 +610,7 @@ public class ApiMgtDAO {
      *          if failed to get SubscribedAPIs
      */
     public Set<SubscribedAPI> getSubscribedAPIs(Subscriber subscriber) throws APIManagementException {
-        Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
+        Set<SubscribedAPI> subscribedAPIs = new LinkedHashSet<SubscribedAPI> ();
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet result = null;
@@ -647,6 +644,8 @@ public class ApiMgtDAO {
             if (result == null) {
                 return subscribedAPIs;
             }
+            
+            Map<String,Set<SubscribedAPI>> map = new TreeMap<String, Set<SubscribedAPI>>();
 
             while (result.next()) {
                 String apiId = result.getString(APIConstants.SUBSCRIPTION_FIELD_API_ID);
@@ -672,7 +671,21 @@ public class ApiMgtDAO {
                     subscribedAPI.addKey(key);
                 }
 
-                subscribedAPIs.add(subscribedAPI);
+                if (!map.containsKey(application.getName())) {
+                    map.put(application.getName(), new TreeSet<SubscribedAPI>(new Comparator<SubscribedAPI>() {
+                        public int compare(SubscribedAPI o1, SubscribedAPI o2) {
+                            return o1.getApiId().getApiName().compareTo(o2.getApiId().getApiName());
+                        }
+                    }));
+                }
+                map.get(application.getName()).add(subscribedAPI);
+            }
+            
+            for (String application : map.keySet()) {
+                Set<SubscribedAPI> apis = map.get(application);
+                for (SubscribedAPI api : apis) {
+                    subscribedAPIs.add(api);
+                }
             }
 
         } catch (SQLException e) {

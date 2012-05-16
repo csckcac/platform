@@ -7,7 +7,7 @@
         <thead>
             <tr class="alt first last">
                 <th value="Name" rel="0">Name</th>
-                <th value="Actions" rel="1">Actions</th>
+                <th value="Actions" rel="1" colspan="2">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -19,7 +19,12 @@
             %>
             <tr class="<%=classes%>">
                 <td value="<%=app.name%>"><%=app.name%></td>
-                <td value=""><a><span class="icon black small" data-icon="T"></span></a></td>
+                <td value="">
+                    <a><span class="icon black small" data-icon="7"></span></a>
+                </td>
+                <td>
+                    <a><span class="icon black small" data-icon="T"></span></a>
+                </td>
             </tr>
             <% } %>
         </tbody>

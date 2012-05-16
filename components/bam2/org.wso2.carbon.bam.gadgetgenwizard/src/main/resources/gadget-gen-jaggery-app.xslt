@@ -30,7 +30,7 @@
 
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="jquery.jqplot.min.css" />
+    <link rel="stylesheet" type="text/gadgetgen.css" href="jquery.jqplot.min.gadgetgen.css" />
          <xsl:text disable-output-escaping="yes">&#60;</xsl:text>script src="jquery.min.js" type="text/javascript"<xsl:text disable-output-escaping="yes">&#62;</xsl:text><xsl:text disable-output-escaping="yes">&#60;</xsl:text>/script<xsl:text disable-output-escaping="yes">&#62;</xsl:text>
 
 

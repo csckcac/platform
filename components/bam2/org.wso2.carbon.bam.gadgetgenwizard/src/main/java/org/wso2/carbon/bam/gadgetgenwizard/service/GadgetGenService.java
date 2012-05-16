@@ -4,8 +4,13 @@ import org.apache.axiom.om.*;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.impl.jaxp.OMSource;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLStreamException;
@@ -31,20 +36,68 @@ import java.io.*;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class GadgetGenService {
+public class GadgetGenService extends AbstractAdmin {
 
-    public static final String GADGET_GEN_TRANSFORM_XSLT = "gadget-gen-transform.xslt";
+    public static final String GADGET_GEN_TRANSFORM_XSLT = "gadget-gen-jaggery-app.xslt";
+
+    public static final String JQPLOT_CSS = "gadgetgen/css/jquery.jqplot.min.css";
+    public static final String JQUERY_JS = "gadgetgen/js/jquery.min.js";
+    public static final String JQPLOT_JS = "gadgetgen/js/jquery.jqplot.min.js";
+    public static final String BARGRAPH_JS = "gadgetgen/js/plugins/jqplot.barRenderer.js";
+    public static final String CATEGORY_AXIS_JS = "gadgetgen/js/plugins/jqplot.categoryAxisRenderer.js";
+    public static final String[] GADGET_RESOURCES = {JQPLOT_JS, JQUERY_JS, JQPLOT_CSS, BARGRAPH_JS, CATEGORY_AXIS_JS};
+
 
     private static final Log log = LogFactory.getLog(GadgetGenService.class);
     public static final String JAGGERY_APP_DIR = CarbonUtils.getCarbonRepository()  + "jaggeryapps";
     public static final String GADGET_GEN_APP_DIR = JAGGERY_APP_DIR + File.separator + "gadgetgen";
     public static final String GADGETGEN_JAG_FILEPATH = GADGET_GEN_APP_DIR + File.separator + "gadgetgen.jag";
 
+    public static final String GADGET_REGISTRY_PATH = "repository/components/org.wso2.carbon.bam.gadgetgen/";
+
     public String createGadget(WSMap map) throws GadgetGenException {
         OMDocument intermediateXML = createIntermediateXML(map);
         OMElement gadgetXML = applyXSLTForGadgetXML(intermediateXML);
         OutputStream jagFile = applyXSLTForJaggeryScript(intermediateXML);
+        OutputStream jagConf = applyXSLTForJaggeryConf(intermediateXML);
+        copyGadgetFilesToRegistry(getConfigSystemRegistry(), GADGET_REGISTRY_PATH);
         return null;
+    }
+
+    private void copyGadgetFilesToRegistry(Registry registry, String gadgetRegistryPath) throws GadgetGenException {
+        try {
+            for (int i = 0; i < GADGET_RESOURCES.length; i++) {
+                String gadgetResource = GADGET_RESOURCES[i];
+
+                Resource resource = convert(this.getClass().getClassLoader().getResourceAsStream(gadgetResource));
+                String gadgetResourcePath = gadgetRegistryPath + gadgetResource;
+                if (!registry.resourceExists(gadgetResourcePath)) {
+                    registry.put(gadgetResourcePath, resource);
+                }
+            }
+        } catch (RegistryException e) {
+            String msg = "Error inserting resource to registry";
+            log.error(msg, e);
+            throw new GadgetGenException(msg, e);
+        } catch (IOException e) {
+            String msg = "Error converting file to byte array";
+            log.error(msg, e);
+            throw new GadgetGenException(msg, e);
+        }
+    }
+
+    private Resource convert(InputStream inputStream) throws RegistryException, IOException {
+        if (inputStream == null) {
+            throw new IOException("input stream cannot be null");
+        }
+        Resource resource = getConfigSystemRegistry().newResource();
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+        resource.setContent(bytes);
+        return resource;
+    }
+
+    private OutputStream applyXSLTForJaggeryConf(OMDocument intermediateXML) {
+        return null;  //To change body of created methods use File | Settings | File Templates.
     }
 
     private OutputStream applyXSLTForJaggeryScript(OMDocument intermediateXML) throws GadgetGenException {
@@ -94,7 +147,7 @@ public class GadgetGenService {
     }
 
     private OMElement applyXSLTForGadgetXML(OMDocument intermediateXML) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+        return null;
     }
 
     private OMDocument createIntermediateXML(WSMap map) {

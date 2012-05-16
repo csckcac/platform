@@ -1,7 +1,7 @@
 <% include("common.jss"); %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <link rel="stylesheet" type="text/css" href="jquery.jqChart.css" />
+    <link rel="stylesheet" type="text/gadgetgen.css" href="jquery.jqChart.gadgetgen.css" />
     <script src="jquery-1.5.1.min.js" type="text/javascript"></script>
     <script src="jquery.jqChart.min.js" type="text/javascript"></script>
     <!--[if IE]><script lang="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->

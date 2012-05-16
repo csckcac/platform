@@ -12,7 +12,7 @@
          if (to > apis.length) {
          to = apis.length;
          }
-        if(apis==null ){
+        if(apis.length==0 ){
         if(request.getParameter("query")!=null){
         return;
         }else{

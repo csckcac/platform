@@ -495,12 +495,16 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 }
 .api-key-cell{
     padding:0;border-left:solid  1px #ccc;
-    width:220px;
+    width:270px;
 }
 .api-key-listing {
     display: inline-block;
     width:100%;
     background: #efefef;
+}
+.overrideSize{
+    height: 35px !important;
+    padding: 23px 16px !important;
 }
 .api-key-sandbox{
     padding:15px;

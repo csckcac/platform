@@ -16,16 +16,54 @@ var site = require("/site/conf/site.json");
             "pagePath":"/site/pages/subscriptions.jag",
             "body":[
                 {
-                    "name":"layout/extended",
+                    "name":"layout/base",
                     "inputs":{
                         "title":"My Subscriptions",
+                        "top":[
+                            {
+                                "name":"banner/featured",
+                                "inputs":null
+                            },
+                            {
+                                "name":"search/api-search",
+                                "inputs":null
+                            }
+                        ],
+                        "left":[
+                            {
+                                "name":"ui/tab",
+                                "inputs":{
+                                    "classes":"cat_and_charts",
+                                    "tabs":[
+                                        {
+                                            "title":"Top Charts",
+                                            "body":[
+                                                {
+                                                    "name":"api/recently-added",
+                                                    "inputs":null
+                                                },
+                                                {
+                                                    "name":"api/top-rated",
+                                                    "inputs":null
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "title":"Categories",
+                                            "body":null
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
                         "middle":[{
                                 "name":"subscription/subscription-list",
                                 "inputs":{
                                     "user":user
                                 }
                             }
-                        ]
+                        ],
+                        "right":null
                     }
                 }
             ]

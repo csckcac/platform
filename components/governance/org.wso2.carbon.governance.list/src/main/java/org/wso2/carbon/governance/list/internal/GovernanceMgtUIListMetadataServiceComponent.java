@@ -24,6 +24,7 @@ import org.wso2.carbon.governance.api.util.GovernanceArtifactConfiguration;
 import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.list.util.CommonUtil;
+import org.wso2.carbon.governance.list.util.ListServiceUtil;
 import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
@@ -210,6 +211,8 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                             }
                         });
             }
+
+            ListServiceUtil.startArtifactFetcher(registry);
         } catch (RegistryException e) {
             log.error("Unable to load governance artifacts.", e);
         }
@@ -239,6 +242,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
             serviceRegistration.unregister();
             serviceRegistration = null;
         }
+        ListServiceUtil.stopArtifactFetcher();
         log.debug("Governance List Metadata bundle is deactivated ");
     }
 

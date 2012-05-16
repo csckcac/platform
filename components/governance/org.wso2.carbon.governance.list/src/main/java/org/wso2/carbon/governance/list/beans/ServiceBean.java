@@ -27,8 +27,17 @@ public class ServiceBean {
     private String[] namespace;
     private String[] LCName;
     private String[] LCState;
+    private String[] version;
     private boolean[] canDelete;
     private int size=0;
+
+    public String[] getVersion() {
+        return version;
+    }
+
+    public void setVersion(String[] version) {
+        this.version = version;
+    }
 
     public String getDefaultServicePath() {
         return defaultServicePath;

@@ -167,15 +167,9 @@
                   tempPath = tempPath.replace("&", "%26");
               } catch (Exception ignore) {}
                   String urlCompletePath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + tempPath;
-              String urlCompletePathNoVersion = RegistryUtils.getParentPath(
-                      RegistryUtils.getParentPath(urlCompletePath));
-              String version = RegistryUtils.getResourceName(RegistryUtils.getParentPath(tempPath));
-              if (!version.matches(CommonConstants.SERVICE_VERSION_REGEX)) {
-                  urlCompletePathNoVersion = RegistryUtils.getParentPath(urlCompletePath);
-              } else {
-                  urlCompletePathNoVersion = RegistryUtils.getParentPath(
-                      RegistryUtils.getParentPath(urlCompletePath));
-              }
+              String version = bean.getVersion()[i];
+//              String urlCompletePathNoVersion = urlCompletePath.substring(0,urlCompletePath.indexOf(version) -1);
+/*
               if(tempPath.startsWith(bean.getDefaultServicePath())){
                   completePath = completePath.substring(0, completePath.indexOf(version) - 1);
                   urlCompletePath = urlCompletePath.substring(0, urlCompletePath.indexOf(version) - 1);
@@ -184,6 +178,7 @@
                       urlCompletePathNoVersion = urlCompletePathNoVersion.substring(0, urlCompletePathNoVersion.indexOf(version) - 1);
                   }
               }
+*/
                 %>
             <tr>
                 <% if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/resources/browse")) { %>
@@ -203,9 +198,14 @@
                 %>
                 <td>
                     <%if (bean.getCanDelete()[i])  { %>
-                        <a title="<fmt:message key="delete"/>" onclick="deleteService('<%=completePath%>','/','../list/service.jsp?region=region3&item=governance_list_services_menu')" href="#" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);"><fmt:message key="delete"/></a>
+                        <a title="<fmt:message key='delete'/>"
+                           onclick="deleteService('<%=completePath%>','/','../list/service.jsp?region=region3&item=governance_list_services_menu')"
+                           href="#" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);">
+                            <fmt:message key="delete"/></a>
                     <%} else { %>
-                        <a class="icon-link registryWriteOperation" style="background-image:url(./images/delete-desable.gif);color:#aaa !important;cursor:default;"><fmt:message key="delete"/></a>
+                        <a class="icon-link registryWriteOperation"
+                           style="background-image:url(./images/delete-desable.gif);color:#aaa !important;cursor:default;">
+                            <fmt:message key="delete"/></a>
                     <%} %>
             </td>
 		<% } else { %>

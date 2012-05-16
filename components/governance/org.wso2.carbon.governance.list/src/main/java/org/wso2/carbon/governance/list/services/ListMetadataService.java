@@ -17,8 +17,6 @@
 */
 package org.wso2.carbon.governance.list.services;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -29,7 +27,6 @@ import org.wso2.carbon.governance.list.beans.ServiceBean;
 import org.wso2.carbon.governance.list.beans.WSDLBean;
 import org.wso2.carbon.governance.list.util.CommonUtil;
 import org.wso2.carbon.governance.list.util.ListServiceUtil;
-import org.wso2.carbon.governance.list.util.StringComparatorUtil;
 import org.wso2.carbon.registry.admin.api.governance.IListMetadataService;
 import org.wso2.carbon.registry.core.ActionConstants;
 import org.wso2.carbon.registry.core.RegistryConstants;
@@ -40,8 +37,8 @@ import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 import org.wso2.carbon.user.core.UserStoreException;
 
-import javax.xml.stream.XMLStreamException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListMetadataService extends AbstractAdmin implements IListMetadataService<ServiceBean, WSDLBean, PolicyBean, SchemaBean> {
 
@@ -52,96 +49,10 @@ public class ListMetadataService extends AbstractAdmin implements IListMetadataS
     private static Map<String,String> namespaceMap;
 
 
-    /**
-     * This is a structure used to store a service entry prior to sorting**/
-    private static class ServiceEntry {
-        private String path,
-                name,
-                namespace,
-                lcname,
-                lcstate;
-        private boolean canDelete;
-        ServiceEntry(String path, String name, String namespace,String lcname,String lcstate, boolean canDelete) {
-            this.path = path;
-            this.name = name;
-            this.namespace = namespace;
-            this.lcname=lcname;
-            this.lcstate=lcstate;
-            this.canDelete = canDelete;
-        }
+    public ServiceBean listservices(String criteria) throws RegistryException {
+               UserRegistry registry = (UserRegistry) getGovernanceUserRegistry();
+               return ListServiceUtil.fillServiceBean(registry,criteria);
     }
-
-    public ServiceBean listservices(String criteria)throws RegistryException{
-        RegistryUtils.recordStatistics(criteria);
-        UserRegistry registry = (UserRegistry)getGovernanceUserRegistry();
-        ServiceBean bean = new ServiceBean();
-        Resource resource;
-        String[] path;
-
-        String defaultServicePath = RegistryUtils.getRelativePathToOriginal(registry.getRegistryContext().getServicePath()
-                , RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH);
-
-        try {
-            path = ListServiceUtil.filterServices(criteria, registry);
-        } catch (RegistryException e) {
-            log.error("An error occurred while obtaining the list of services.", e);
-            path = new String[0];
-        }
-        String[] name = new String[path.length];
-        String[] namespace = new String[path.length];
-        String[] LCName = new String[path.length];
-        String[] LCState = new String[path.length];
-        boolean[] canDelete = new boolean[path.length];
-        for(int i=0;i<path.length;i++){
-            bean.increment();
-            resource = registry.get(path[i]);
-
-            if(path[i].startsWith(defaultServicePath)){
-                try {
-                    OMElement omElement = AXIOMUtil.stringToOM(new String((byte[]) resource.getContent()));
-                    Iterator it = omElement.getChildrenWithLocalName("overview");
-                    while (it.hasNext()) {
-                        OMElement element = (OMElement) it.next();
-                        Iterator iterator = element.getChildrenWithLocalName("version");
-                        if (iterator.hasNext()) {
-                            OMElement next = (OMElement) iterator.next();
-                            path[i] = org.wso2.carbon.registry.extensions.utils.CommonUtil.computeServicePathWithVersion(path[i],next.getText());
-                        }
-                    }
-                } catch (XMLStreamException e) {
-                    log.error("Error parsing the resource content",e);
-                }
-            }
-            name[i] = CommonUtil.getServiceName(resource);
-            namespace[i] = CommonUtil.getServiceNamespace(resource);
-            LCName[i]=CommonUtil.getLifeCycleName(resource);
-            LCState[i]=CommonUtil.getLifeCycleState(resource);
-
-            if (registry.getUserRealm() != null && registry.getUserName() != null) {
-                try {
-                    canDelete[i] =
-                            registry.getUserRealm().getAuthorizationManager().isUserAuthorized(
-                                    registry.getUserName(),
-                                    RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + path[i],
-                                    ActionConstants.DELETE);
-                } catch (UserStoreException e) {
-                    canDelete[i] = false;
-                }
-            } else {
-                canDelete[i] = false;
-            }
-        }
-        bean.setDefaultServicePath(defaultServicePath);
-        bean.setNames(name);
-        bean.setNamespace(namespace);
-        bean.setPath(path);
-        bean.setLCName(LCName);
-        bean.setLCState(LCState);
-        bean.setCanDelete(canDelete);
-        sortServicesByName(bean);
-        return bean;
-    }
-
     private String[] getLCInfo(Resource resource) {
         String[] LCInfo = new String[2];
         String lifecycleState;
@@ -159,39 +70,6 @@ public class ListMetadataService extends AbstractAdmin implements IListMetadataS
 
         }
         return LCInfo;
-    }
-
-    /**
-     * Sorts the services by name
-     * **/
-    private void sortServicesByName(ServiceBean bean) {
-
-        List<ServiceEntry> serviceEntryList = new ArrayList<ServiceEntry>();
-        for(int i=0; i < bean.getPath().length; i++) {
-            serviceEntryList.add( new ServiceEntry(bean.getPath()[i], bean.getNames()[i], bean.getNamespace()[i],bean.getLCName()[i],bean.getLCState()[i],bean.getCanDelete()[i]));
-        }
-
-        Collections.sort(serviceEntryList, new Comparator<ServiceEntry>() {
-            public int compare(ServiceEntry se1, ServiceEntry se2) {
-                int res = StringComparatorUtil.compare(se1.name, se2.name);
-                if(res != 0) return res;
-
-                return StringComparatorUtil.compare(RegistryUtils.getResourceName(RegistryUtils.getParentPath(se1.path)),
-                        ( RegistryUtils.getResourceName(RegistryUtils.getParentPath(se2.path))));
-            }
-        });
-
-        int i = 0;
-        for(ServiceEntry se : serviceEntryList) {
-            bean.getPath()[i] = se.path;
-            bean.getNames()[i] = se.name;
-            bean.getNamespace()[i] = se.namespace;
-            bean.getLCName()[i]=se.lcname;
-            bean.getLCState()[i]=se.lcstate;
-            bean.getCanDelete()[i] = se.canDelete;
-            i++;
-        }
-
     }
 
     public WSDLBean listwsdls()throws RegistryException{

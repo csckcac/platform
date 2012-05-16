@@ -18,8 +18,11 @@ package org.wso2.carbon.governance.list.util;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jaxen.JaxenException;
+import org.jaxen.SimpleNamespaceContext;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -29,6 +32,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import java.io.StringReader;
+import java.util.List;
 
 public class CommonUtil {
 
@@ -47,7 +51,7 @@ public class CommonUtil {
     }
     
     public static String getServiceName(Resource resource)throws RegistryException {
-        String serviceInfo = new String((byte[])resource.getContent());
+        String serviceInfo = convertContentToString(resource);
         try{
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(serviceInfo));
             StAXOMBuilder builder = new StAXOMBuilder(reader);
@@ -60,7 +64,7 @@ public class CommonUtil {
         }
     }
     public static String getServiceNamespace(Resource resource)throws RegistryException{
-        String serviceInfo = new String((byte[])resource.getContent());
+        String serviceInfo = convertContentToString(resource);
         try{
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(serviceInfo));
             StAXOMBuilder builder = new StAXOMBuilder(reader);
@@ -150,6 +154,52 @@ public class CommonUtil {
                 QName(CommonConstants.SERVICE_ELEMENT_NAMESPACE, "overview")).
                 getFirstChildWithName(new QName(CommonConstants.SERVICE_ELEMENT_NAMESPACE,
                         "name")).getText();
+    }
+    
+    public static OMElement buildServiceOMElement(Resource resource) throws RegistryException {
+        String serviceInfo = convertContentToString(resource);
+        try{
+            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(serviceInfo));
+            StAXOMBuilder builder = new StAXOMBuilder(reader);
+            OMElement serviceInfoElement = builder.getDocumentElement();
+            return serviceInfoElement;
+        } catch (Exception e){
+            log.error("Unable to build service OMElement",e);
+        }
+        return null;
+    }
+
+    private static String convertContentToString(Resource resource) throws RegistryException {
+        if(resource.getContent() instanceof String){
+            return (String) resource.getContent();
+        }else if(resource.getContent() instanceof byte[]){
+            return new String((byte[])resource.getContent());
+        }
+        return "";
+    }
+
+    public static String getVersionFromContent(OMElement content){
+        try {
+            AXIOMXPath xPath = new AXIOMXPath("//pre:version");
+            SimpleNamespaceContext context = new SimpleNamespaceContext();
+            context.addNamespace("pre", content.getNamespace().getNamespaceURI());
+            xPath.setNamespaceContext(context);
+
+            List versionElements = xPath.selectNodes(content);
+
+            if(versionElements != null){
+                for (Object versionElement : versionElements) {
+                    OMElement version = (OMElement) versionElement;
+                    if(((OMElement)version.getParent()).getLocalName().equals("overview")){
+                        return version.getText();
+                    }
+                }
+            }
+
+        } catch (JaxenException e) {
+            log.error("Unable to get the version of the service",e);
+        }
+        return "";
     }
 }
 

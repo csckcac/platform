@@ -38,6 +38,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.config.RegistryContext;
+import org.wso2.carbon.registry.core.config.StaticConfiguration;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -163,7 +164,7 @@ public class GovernanceUtils {
      */
     public static String[] getResultPaths(Registry registry,
                                           String mediaType) throws GovernanceException {
-        String sql = "SELECT REG_PATH_ID, REG_NAME FROM REG_RESOURCE WHERE REG_MEDIA_TYPE=?";
+        String sql = "SELECT DISTINCT REG_PATH_ID, REG_NAME FROM REG_RESOURCE WHERE REG_MEDIA_TYPE=?";
         String[] result;
         try {
             Map<String, String> parameter = new HashMap<String, String>();
@@ -175,7 +176,7 @@ public class GovernanceUtils {
             log.error(msg, e);
             throw new GovernanceException(msg, e);
         }
-        return removeSymbolicLinks(result, registry);
+        return removeMountPaths(result, registry);
     }
 
     // remove symbolic links in search items.
@@ -197,6 +198,19 @@ public class GovernanceUtils {
         }
         return fixedPaths.toArray(new String[fixedPaths.size()]);
     }
+
+    private static String[] removeMountPaths(String[] paths, Registry governanceRegistry) {
+                if (paths == null) {
+                        return new String[0];
+                    }
+                List<String> fixedPaths = new LinkedList<String>();
+                for (String path : paths) {
+                            if (!path.contains(RegistryConstants.SYSTEM_MOUNT_PATH)) {
+                                    fixedPaths.add(path);
+                                }
+                    }
+                return fixedPaths.toArray(new String[fixedPaths.size()]);
+            }
 
     /**
      * Method to load the Governance Artifacts to be used by the API operations.

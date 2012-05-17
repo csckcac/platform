@@ -4,6 +4,7 @@ import org.wso2.carbon.lb.common.dao.ContainerDAO;
 import org.wso2.carbon.lb.common.dao.EC2DAO;
 import org.wso2.carbon.lb.common.dao.HostMachineDAO;
 import org.wso2.carbon.lb.common.dao.InstanceDAO;
+import org.wso2.carbon.lb.common.dao.JVMDAO;
 import org.wso2.carbon.lb.common.dao.ZoneDAO;
 import org.wso2.carbon.lb.common.dto.Container;
 import org.wso2.carbon.lb.common.dto.ContainerInformation;
@@ -13,6 +14,8 @@ import org.wso2.carbon.lb.common.dto.Zone;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *   This class is written to interface all the dao classes through a singleton class. All the access
@@ -150,5 +153,10 @@ public class    AgentPersistenceManager {
         return ec2DAO.delete(uuid);
     }
 
+    public boolean addJVMEprToInstanceCountTable(String epr, int instanceCount)
+            throws SQLException {
+        JVMDAO jvmdao = new JVMDAO();
+        return jvmdao.addToEprToInstanceCountTable(epr, instanceCount);
+    }
 
 }

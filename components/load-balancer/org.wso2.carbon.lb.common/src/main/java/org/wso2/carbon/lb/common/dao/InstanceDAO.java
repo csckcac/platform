@@ -120,7 +120,6 @@ public class InstanceDAO extends AbstractDAO{
     
     public boolean add(String instance, String adapter, String domain) throws SQLException {
         boolean successfullyAdded = false;
-        ResultSet resultSet = null;
         try{
             Class.forName(driver);
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
@@ -138,7 +137,6 @@ public class InstanceDAO extends AbstractDAO{
             throw new SQLException(msg);
         }
         finally {
-            try { if (resultSet != null) resultSet.close(); } catch(Exception e) {}
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
             try { if (con != null) con.close(); } catch(Exception e) {}
         }

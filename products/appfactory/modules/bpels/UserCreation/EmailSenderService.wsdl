@@ -1,83 +1,169 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.registration.user.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.registration.user.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax215="http://services.registration.user.appfactory.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.registration.user.appfactory.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.registration.user.appfactory.carbon.wso2.org">
     <wsdl:documentation>EmailSenderService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.registration.user.carbon.wso2.org">
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.registration.user.appfactory.carbon.wso2.org/xsd">
+            <xs:complexType name="UserRegistrationException">
+                <xs:sequence />
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax216="http://services.registration.user.appfactory.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.registration.user.appfactory.carbon.wso2.org">
+            <xs:import namespace="http://services.registration.user.appfactory.carbon.wso2.org/xsd" />
+            <xs:element name="EmailSenderServiceUserRegistrationException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="UserRegistrationException" nillable="true" type="ax215:UserRegistrationException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="sendMail">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="projectName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="projectKey" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="config" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="sendMailResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="sendActivationEmail">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="key" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="email" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="activationKey" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="sendActivationEmailResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
         </xs:schema>
     </wsdl:types>
     <wsdl:message name="sendActivationEmailRequest">
-        <wsdl:part name="parameters" element="ns:sendActivationEmail"/>
+        <wsdl:part name="parameters" element="ns:sendActivationEmail" />
     </wsdl:message>
     <wsdl:message name="sendActivationEmailResponse">
-        <wsdl:part name="parameters" element="ns:sendActivationEmailResponse"/>
+        <wsdl:part name="parameters" element="ns:sendActivationEmailResponse" />
+    </wsdl:message>
+    <wsdl:message name="EmailSenderServiceUserRegistrationException">
+        <wsdl:part name="parameters" element="ns:EmailSenderServiceUserRegistrationException" />
+    </wsdl:message>
+    <wsdl:message name="sendMailRequest">
+        <wsdl:part name="parameters" element="ns:sendMail" />
+    </wsdl:message>
+    <wsdl:message name="sendMailResponse">
+        <wsdl:part name="parameters" element="ns:sendMailResponse" />
     </wsdl:message>
     <wsdl:portType name="EmailSenderServicePortType">
         <wsdl:operation name="sendActivationEmail">
-            <wsdl:input message="ns:sendActivationEmailRequest" wsaw:Action="urn:sendActivationEmail"/>
-            <wsdl:output message="ns:sendActivationEmailResponse" wsaw:Action="urn:sendActivationEmailResponse"/>
+            <wsdl:input message="ns:sendActivationEmailRequest" wsaw:Action="urn:sendActivationEmail" />
+            <wsdl:output message="ns:sendActivationEmailResponse" wsaw:Action="urn:sendActivationEmailResponse" />
+            <wsdl:fault message="ns:EmailSenderServiceUserRegistrationException" name="EmailSenderServiceUserRegistrationException" wsaw:Action="urn:sendActivationEmailEmailSenderServiceUserRegistrationException" />
+        </wsdl:operation>
+        <wsdl:operation name="sendMail">
+            <wsdl:input message="ns:sendMailRequest" wsaw:Action="urn:sendMail" />
+            <wsdl:output message="ns:sendMailResponse" wsaw:Action="urn:sendMailResponse" />
+            <wsdl:fault message="ns:EmailSenderServiceUserRegistrationException" name="EmailSenderServiceUserRegistrationException" wsaw:Action="urn:sendMailEmailSenderServiceUserRegistrationException" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="EmailSenderServiceSoap11Binding" type="ns:EmailSenderServicePortType">
-        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-        <wsdl:operation name="sendActivationEmail">
-            <soap:operation soapAction="urn:sendActivationEmail" style="document"/>
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="sendMail">
+            <soap:operation soapAction="urn:sendMail" style="document" />
             <wsdl:input>
-                <soap:body use="literal"/>
+                <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-                <soap:body use="literal"/>
+                <soap:body use="literal" />
             </wsdl:output>
+            <wsdl:fault name="EmailSenderServiceUserRegistrationException">
+                <soap:fault use="literal" name="EmailSenderServiceUserRegistrationException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="sendActivationEmail">
+            <soap:operation soapAction="urn:sendActivationEmail" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="EmailSenderServiceUserRegistrationException">
+                <soap:fault use="literal" name="EmailSenderServiceUserRegistrationException" />
+            </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="EmailSenderServiceSoap12Binding" type="ns:EmailSenderServicePortType">
-        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-        <wsdl:operation name="sendActivationEmail">
-            <soap12:operation soapAction="urn:sendActivationEmail" style="document"/>
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="sendMail">
+            <soap12:operation soapAction="urn:sendMail" style="document" />
             <wsdl:input>
-                <soap12:body use="literal"/>
+                <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-                <soap12:body use="literal"/>
+                <soap12:body use="literal" />
             </wsdl:output>
+            <wsdl:fault name="EmailSenderServiceUserRegistrationException">
+                <soap12:fault use="literal" name="EmailSenderServiceUserRegistrationException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="sendActivationEmail">
+            <soap12:operation soapAction="urn:sendActivationEmail" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="EmailSenderServiceUserRegistrationException">
+                <soap12:fault use="literal" name="EmailSenderServiceUserRegistrationException" />
+            </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="EmailSenderServiceHttpBinding" type="ns:EmailSenderServicePortType">
-        <http:binding verb="POST"/>
-        <wsdl:operation name="sendActivationEmail">
-            <http:operation location="sendActivationEmail"/>
+        <http:binding verb="POST" />
+        <wsdl:operation name="sendMail">
+            <http:operation location="sendMail" />
             <wsdl:input>
-                <mime:content type="text/xml" part="parameters"/>
+                <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
             <wsdl:output>
-                <mime:content type="text/xml" part="parameters"/>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="sendActivationEmail">
+            <http:operation location="sendActivationEmail" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="EmailSenderService">
         <wsdl:port name="EmailSenderServiceHttpsSoap11Endpoint" binding="ns:EmailSenderServiceSoap11Binding">
-            <soap:address location="https://localhost:9447/services/EmailSenderService.EmailSenderServiceHttpsSoap11Endpoint/"/>
+            <soap:address location="https://localhost:9443/services/EmailSenderService.EmailSenderServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="EmailSenderServiceHttpsSoap12Endpoint" binding="ns:EmailSenderServiceSoap12Binding">
-            <soap12:address location="https://localhost:9447/services/EmailSenderService.EmailSenderServiceHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://localhost:9443/services/EmailSenderService.EmailSenderServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="EmailSenderServiceHttpsEndpoint" binding="ns:EmailSenderServiceHttpBinding">
-            <http:address location="https://localhost:9447/services/EmailSenderService.EmailSenderServiceHttpsEndpoint/"/>
+            <http:address location="https://localhost:9443/services/EmailSenderService.EmailSenderServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

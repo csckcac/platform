@@ -1,269 +1,233 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.registration.user.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2473="http://beans.registration.user.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.registration.user.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.registration.user.appfactory.carbon.wso2.org" xmlns:ax213="http://beans.registration.user.appfactory.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax211="http://services.registration.user.appfactory.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.registration.user.appfactory.carbon.wso2.org">
     <wsdl:documentation>UserRegistrationService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.registration.user.carbon.wso2.org/xsd">
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.registration.user.appfactory.carbon.wso2.org/xsd">
+            <xs:complexType name="UserRegistrationException">
+                <xs:sequence />
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.registration.user.appfactory.carbon.wso2.org/xsd">
             <xs:complexType name="UserRegistrationInfoBean">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="adminPassword" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="email" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="lastName" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="adminPassword" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="lastName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax2474="http://beans.registration.user.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.registration.user.carbon.wso2.org">
-            <xs:import namespace="http://beans.registration.user.carbon.wso2.org/xsd"/>
-            <xs:element name="generateKey">
+        <xs:schema xmlns:ax214="http://beans.registration.user.appfactory.carbon.wso2.org/xsd" xmlns:ax212="http://services.registration.user.appfactory.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.registration.user.appfactory.carbon.wso2.org">
+            <xs:import namespace="http://services.registration.user.appfactory.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://beans.registration.user.appfactory.carbon.wso2.org/xsd" />
+            <xs:element name="UserRegistrationServiceUserRegistrationException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="UserRegistrationException" nillable="true" type="ax212:UserRegistrationException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="generateKeyResponse">
+            <xs:element name="registerUser">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="user" nillable="true" type="ax214:UserRegistrationInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="registerUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="doesUserExist">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="doesUserExistResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="UserRegistrationServiceException">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="UserRegistrationServiceException" nillable="true" type="ns:Exception"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:complexType name="Exception">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:element name="createUser">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="bean" nillable="true" type="ax2474:UserRegistrationInfoBean"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="createUserResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="activateUser">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="confirmationKey" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="email" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="confirmationKey" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="activateUserResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
         </xs:schema>
     </wsdl:types>
     <wsdl:message name="activateUserRequest">
-        <wsdl:part name="parameters" element="ns:activateUser"/>
+        <wsdl:part name="parameters" element="ns:activateUser" />
     </wsdl:message>
     <wsdl:message name="activateUserResponse">
-        <wsdl:part name="parameters" element="ns:activateUserResponse"/>
+        <wsdl:part name="parameters" element="ns:activateUserResponse" />
     </wsdl:message>
-    <wsdl:message name="createUserRequest">
-        <wsdl:part name="parameters" element="ns:createUser"/>
-    </wsdl:message>
-    <wsdl:message name="createUserResponse">
-        <wsdl:part name="parameters" element="ns:createUserResponse"/>
-    </wsdl:message>
-    <wsdl:message name="UserRegistrationServiceException">
-        <wsdl:part name="parameters" element="ns:UserRegistrationServiceException"/>
+    <wsdl:message name="UserRegistrationServiceUserRegistrationException">
+        <wsdl:part name="parameters" element="ns:UserRegistrationServiceUserRegistrationException" />
     </wsdl:message>
     <wsdl:message name="doesUserExistRequest">
-        <wsdl:part name="parameters" element="ns:doesUserExist"/>
+        <wsdl:part name="parameters" element="ns:doesUserExist" />
     </wsdl:message>
     <wsdl:message name="doesUserExistResponse">
-        <wsdl:part name="parameters" element="ns:doesUserExistResponse"/>
+        <wsdl:part name="parameters" element="ns:doesUserExistResponse" />
     </wsdl:message>
-    <wsdl:message name="generateKeyRequest">
-        <wsdl:part name="parameters" element="ns:generateKey"/>
+    <wsdl:message name="registerUserRequest">
+        <wsdl:part name="parameters" element="ns:registerUser" />
     </wsdl:message>
-    <wsdl:message name="generateKeyResponse">
-        <wsdl:part name="parameters" element="ns:generateKeyResponse"/>
+    <wsdl:message name="registerUserResponse">
+        <wsdl:part name="parameters" element="ns:registerUserResponse" />
     </wsdl:message>
     <wsdl:portType name="UserRegistrationServicePortType">
         <wsdl:operation name="activateUser">
-            <wsdl:input message="ns:activateUserRequest" wsaw:Action="urn:activateUser"/>
-            <wsdl:output message="ns:activateUserResponse" wsaw:Action="urn:activateUserResponse"/>
-        </wsdl:operation>
-        <wsdl:operation name="createUser">
-            <wsdl:input message="ns:createUserRequest" wsaw:Action="urn:createUser"/>
-            <wsdl:output message="ns:createUserResponse" wsaw:Action="urn:createUserResponse"/>
-            <wsdl:fault message="ns:UserRegistrationServiceException" name="UserRegistrationServiceException" wsaw:Action="urn:createUserUserRegistrationServiceException"/>
+            <wsdl:input message="ns:activateUserRequest" wsaw:Action="urn:activateUser" />
+            <wsdl:output message="ns:activateUserResponse" wsaw:Action="urn:activateUserResponse" />
+            <wsdl:fault message="ns:UserRegistrationServiceUserRegistrationException" name="UserRegistrationServiceUserRegistrationException" wsaw:Action="urn:activateUserUserRegistrationServiceUserRegistrationException" />
         </wsdl:operation>
         <wsdl:operation name="doesUserExist">
-            <wsdl:input message="ns:doesUserExistRequest" wsaw:Action="urn:doesUserExist"/>
-            <wsdl:output message="ns:doesUserExistResponse" wsaw:Action="urn:doesUserExistResponse"/>
+            <wsdl:input message="ns:doesUserExistRequest" wsaw:Action="urn:doesUserExist" />
+            <wsdl:output message="ns:doesUserExistResponse" wsaw:Action="urn:doesUserExistResponse" />
+            <wsdl:fault message="ns:UserRegistrationServiceUserRegistrationException" name="UserRegistrationServiceUserRegistrationException" wsaw:Action="urn:doesUserExistUserRegistrationServiceUserRegistrationException" />
         </wsdl:operation>
-        <wsdl:operation name="generateKey">
-            <wsdl:input message="ns:generateKeyRequest" wsaw:Action="urn:generateKey"/>
-            <wsdl:output message="ns:generateKeyResponse" wsaw:Action="urn:generateKeyResponse"/>
+        <wsdl:operation name="registerUser">
+            <wsdl:input message="ns:registerUserRequest" wsaw:Action="urn:registerUser" />
+            <wsdl:output message="ns:registerUserResponse" wsaw:Action="urn:registerUserResponse" />
+            <wsdl:fault message="ns:UserRegistrationServiceUserRegistrationException" name="UserRegistrationServiceUserRegistrationException" wsaw:Action="urn:registerUserUserRegistrationServiceUserRegistrationException" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="UserRegistrationServiceSoap11Binding" type="ns:UserRegistrationServicePortType">
-        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
         <wsdl:operation name="activateUser">
-            <soap:operation soapAction="urn:activateUser" style="document"/>
+            <soap:operation soapAction="urn:activateUser" style="document" />
             <wsdl:input>
-                <soap:body use="literal"/>
+                <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-                <soap:body use="literal"/>
+                <soap:body use="literal" />
             </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="createUser">
-            <soap:operation soapAction="urn:createUser" style="document"/>
-            <wsdl:input>
-                <soap:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal"/>
-            </wsdl:output>
-            <wsdl:fault name="UserRegistrationServiceException">
-                <soap:fault use="literal" name="UserRegistrationServiceException"/>
+            <wsdl:fault name="UserRegistrationServiceUserRegistrationException">
+                <soap:fault use="literal" name="UserRegistrationServiceUserRegistrationException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="doesUserExist">
-            <soap:operation soapAction="urn:doesUserExist" style="document"/>
+            <soap:operation soapAction="urn:doesUserExist" style="document" />
             <wsdl:input>
-                <soap:body use="literal"/>
+                <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-                <soap:body use="literal"/>
+                <soap:body use="literal" />
             </wsdl:output>
+            <wsdl:fault name="UserRegistrationServiceUserRegistrationException">
+                <soap:fault use="literal" name="UserRegistrationServiceUserRegistrationException" />
+            </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="generateKey">
-            <soap:operation soapAction="urn:generateKey" style="document"/>
+        <wsdl:operation name="registerUser">
+            <soap:operation soapAction="urn:registerUser" style="document" />
             <wsdl:input>
-                <soap:body use="literal"/>
+                <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-                <soap:body use="literal"/>
+                <soap:body use="literal" />
             </wsdl:output>
+            <wsdl:fault name="UserRegistrationServiceUserRegistrationException">
+                <soap:fault use="literal" name="UserRegistrationServiceUserRegistrationException" />
+            </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="UserRegistrationServiceSoap12Binding" type="ns:UserRegistrationServicePortType">
-        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
         <wsdl:operation name="activateUser">
-            <soap12:operation soapAction="urn:activateUser" style="document"/>
+            <soap12:operation soapAction="urn:activateUser" style="document" />
             <wsdl:input>
-                <soap12:body use="literal"/>
+                <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-                <soap12:body use="literal"/>
+                <soap12:body use="literal" />
             </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="createUser">
-            <soap12:operation soapAction="urn:createUser" style="document"/>
-            <wsdl:input>
-                <soap12:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal"/>
-            </wsdl:output>
-            <wsdl:fault name="UserRegistrationServiceException">
-                <soap12:fault use="literal" name="UserRegistrationServiceException"/>
+            <wsdl:fault name="UserRegistrationServiceUserRegistrationException">
+                <soap12:fault use="literal" name="UserRegistrationServiceUserRegistrationException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="doesUserExist">
-            <soap12:operation soapAction="urn:doesUserExist" style="document"/>
+            <soap12:operation soapAction="urn:doesUserExist" style="document" />
             <wsdl:input>
-                <soap12:body use="literal"/>
+                <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-                <soap12:body use="literal"/>
+                <soap12:body use="literal" />
             </wsdl:output>
+            <wsdl:fault name="UserRegistrationServiceUserRegistrationException">
+                <soap12:fault use="literal" name="UserRegistrationServiceUserRegistrationException" />
+            </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="generateKey">
-            <soap12:operation soapAction="urn:generateKey" style="document"/>
+        <wsdl:operation name="registerUser">
+            <soap12:operation soapAction="urn:registerUser" style="document" />
             <wsdl:input>
-                <soap12:body use="literal"/>
+                <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-                <soap12:body use="literal"/>
+                <soap12:body use="literal" />
             </wsdl:output>
+            <wsdl:fault name="UserRegistrationServiceUserRegistrationException">
+                <soap12:fault use="literal" name="UserRegistrationServiceUserRegistrationException" />
+            </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="UserRegistrationServiceHttpBinding" type="ns:UserRegistrationServicePortType">
-        <http:binding verb="POST"/>
+        <http:binding verb="POST" />
         <wsdl:operation name="activateUser">
-            <http:operation location="activateUser"/>
+            <http:operation location="activateUser" />
             <wsdl:input>
-                <mime:content type="text/xml" part="parameters"/>
+                <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
             <wsdl:output>
-                <mime:content type="text/xml" part="parameters"/>
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="createUser">
-            <http:operation location="createUser"/>
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters"/>
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters"/>
+                <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="doesUserExist">
-            <http:operation location="doesUserExist"/>
+            <http:operation location="doesUserExist" />
             <wsdl:input>
-                <mime:content type="text/xml" part="parameters"/>
+                <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
             <wsdl:output>
-                <mime:content type="text/xml" part="parameters"/>
+                <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="generateKey">
-            <http:operation location="generateKey"/>
+        <wsdl:operation name="registerUser">
+            <http:operation location="registerUser" />
             <wsdl:input>
-                <mime:content type="text/xml" part="parameters"/>
+                <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
             <wsdl:output>
-                <mime:content type="text/xml" part="parameters"/>
+                <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="UserRegistrationService">
         <wsdl:port name="UserRegistrationServiceHttpsSoap11Endpoint" binding="ns:UserRegistrationServiceSoap11Binding">
-            <soap:address location="https://localhost:9447/services/UserRegistrationService.UserRegistrationServiceHttpsSoap11Endpoint/"/>
+            <soap:address location="https://localhost:9443/services/UserRegistrationService.UserRegistrationServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="UserRegistrationServiceHttpsSoap12Endpoint" binding="ns:UserRegistrationServiceSoap12Binding">
-            <soap12:address location="https://localhost:9447/services/UserRegistrationService.UserRegistrationServiceHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://localhost:9443/services/UserRegistrationService.UserRegistrationServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="UserRegistrationServiceHttpsEndpoint" binding="ns:UserRegistrationServiceHttpBinding">
-            <http:address location="https://localhost:9447/services/UserRegistrationService.UserRegistrationServiceHttpsEndpoint/"/>
+            <http:address location="https://localhost:9443/services/UserRegistrationService.UserRegistrationServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

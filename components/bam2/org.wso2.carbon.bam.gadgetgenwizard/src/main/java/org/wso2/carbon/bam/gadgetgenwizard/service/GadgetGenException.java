@@ -19,4 +19,8 @@ public class GadgetGenException extends Exception {
     public GadgetGenException(String s, Throwable throwable) {
         super(s, throwable);
     }
+
+    public GadgetGenException(String s) {
+        super(s);
+    }
 }

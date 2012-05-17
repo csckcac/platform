@@ -12,13 +12,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.bam.gadgetgenwizard.internal.GGWUtils;
-import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
 import org.wso2.carbon.registry.core.ActionConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceResourceServiceExceptionException;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
+import org.wso2.carbon.user.core.AuthorizationManager;
+import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLStreamException;
@@ -44,7 +46,7 @@ import java.io.*;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class GadgetGenService extends AbstractAdmin {
+public class GadgetGenService extends RegistryAbstractAdmin {
 
     public static final String GADGET_GEN_TRANSFORM_XSLT = "jaggery-app-generator.xslt";
 
@@ -63,7 +65,8 @@ public class GadgetGenService extends AbstractAdmin {
 
     public static final String GADGET_REGISTRY_PATH = "repository/components/org.wso2.carbon.bam.gadgetgen/";
 
-    public static final String RESOURCE_ADMIN_SERVICE_URL = "services/ResourceAdminService";
+    public static final String RESOURCE_ADMIN_SERVICE_NAME = "ResourceAdminService";
+
     public static final String ALLOW_PERMISSION_TYPE = "1";
     public static final String WSO2_ANONYMOUS_ROLE = "wso2.anonymous.role";
 
@@ -78,8 +81,8 @@ public class GadgetGenService extends AbstractAdmin {
 
     private ResourceAdminServiceStub createRegistryAdminClient() throws GadgetGenException {
         try {
-            String serviceURL = CarbonUtils.getServerURL(GGWUtils.getCarbonConfiguration(),
-                    GGWUtils.getConfigurationContextService().getServerConfigContext()) + RESOURCE_ADMIN_SERVICE_URL;
+
+            String serviceURL = "local://services/" + RESOURCE_ADMIN_SERVICE_NAME;
             ResourceAdminServiceStub registryResourceStub = new ResourceAdminServiceStub(GGWUtils.getConfigurationContextService().getServerConfigContext(), serviceURL);
             ServiceClient client = registryResourceStub._getServiceClient();
             Options option = client.getOptions();
@@ -94,7 +97,8 @@ public class GadgetGenService extends AbstractAdmin {
 
     private void copyGadgetFilesToRegistry(Registry registry, String gadgetRegistryPath) throws GadgetGenException {
         try {
-            ResourceAdminServiceStub resourceAdminServiceStub = createRegistryAdminClient();
+//            ResourceAdminServiceStub resourceAdminServiceStub = createRegistryAdminClient();
+            AuthorizationManager authorizationManager = ((UserRegistry) getRootRegistry()).getUserRealm().getAuthorizationManager();
             for (int i = 0; i < GADGET_RESOURCES.length; i++) {
                 String gadgetResource = GADGET_RESOURCES[i];
 
@@ -102,32 +106,48 @@ public class GadgetGenService extends AbstractAdmin {
                 String gadgetResourcePath = gadgetRegistryPath + gadgetResource;
                 if (!registry.resourceExists(gadgetResourcePath)) {
                     registry.put(gadgetResourcePath, resource);
-                    resourceAdminServiceStub.addRolePermission(gadgetResourcePath, CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME, ActionConstants.GET, ALLOW_PERMISSION_TYPE);
+                    authorizationManager.authorizeRole(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME, "/_system/config/" + gadgetResourcePath, ActionConstants.GET);
+                    setPermissionUpdateTimestamp();
+//                    resourceAdminServiceStub.addRolePermission(gadgetResourcePath, CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME, ActionConstants.GET, ALLOW_PERMISSION_TYPE);
                 }
             }
         } catch (RegistryException e) {
             String msg = "Error inserting resource to registry. " + e.getMessage();
             log.error(msg, e);
             throw new GadgetGenException(msg, e);
-        } catch (IOException e) {
-            String msg = "Error converting file to byte array. " + e.getMessage() ;
-            log.error(msg, e);
-            throw new GadgetGenException(msg, e);
-        } catch (ResourceAdminServiceResourceServiceExceptionException e) {
-            String msg = "Error converting file to byte array. " + e.getMessage() ;
+//        } catch (ResourceAdminServiceResourceServiceExceptionException e) {
+//            String msg = "Error inserting permission for resource. " + e.getMessage() ;
+//            log.error(msg, e);
+//            throw new GadgetGenException(msg, e);
+//        } catch (RemoteException e) {
+//            String msg = "Error sending request to " +  RESOURCE_ADMIN_SERVICE_NAME + e.getMessage() ;
+//            log.error(msg, e);
+//            throw new GadgetGenException(msg, e);
+        } catch (UserStoreException e) {
+            String msg = "Cannot get authorization manager. " + e.getMessage() ;
             log.error(msg, e);
             throw new GadgetGenException(msg, e);
         }
     }
 
-    private Resource convert(InputStream inputStream) throws RegistryException, IOException {
-        if (inputStream == null) {
-            throw new IOException("input stream cannot be null");
+    private Resource convert(InputStream inputStream) throws GadgetGenException {
+        try {
+            if (inputStream == null) {
+                throw new GadgetGenException("input stream cannot be null");
+            }
+            Resource resource = getConfigSystemRegistry().newResource();
+            byte[] bytes = IOUtils.toByteArray(inputStream);
+            resource.setContent(bytes);
+            return resource;
+        } catch (IOException e) {
+            String msg = "Error converting file to byte array. " + e.getMessage() ;
+            log.error(msg, e);
+            throw new GadgetGenException(msg, e);
+        } catch (RegistryException e) {
+            String msg = "Error creating new resource. " + e.getMessage();
+            log.error(msg, e);
+            throw new GadgetGenException(msg, e);
         }
-        Resource resource = getConfigSystemRegistry().newResource();
-        byte[] bytes = IOUtils.toByteArray(inputStream);
-        resource.setContent(bytes);
-        return resource;
     }
 
     private OutputStream applyXSLTForJaggeryConf(OMDocument intermediateXML) {

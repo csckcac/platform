@@ -2,7 +2,7 @@ package org.wso2.carbon.bam.gadgetgenwizard.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
@@ -26,7 +26,7 @@ public class GGWUtils {
 
     private static ConfigurationContextService configurationContextService;
 
-    private static ServerConfiguration serverConfiguration;
+    private static ServerConfigurationService serverConfiguration;
 
 
     public static ConfigurationContextService getConfigurationContextService() {
@@ -37,12 +37,11 @@ public class GGWUtils {
         GGWUtils.configurationContextService = configurationContextService;
     }
 
-    public static void setCarbonConfiguration(ServerConfiguration serverConfiguration) {
-        GGWUtils.serverConfiguration = serverConfiguration;
-    }
-
-    public static ServerConfiguration getCarbonConfiguration() {
+    public static ServerConfigurationService getServerConfiguration() {
         return serverConfiguration;
     }
 
+    public static void setServerConfiguration(ServerConfigurationService serverConfigurationService) {
+        GGWUtils.serverConfiguration = serverConfigurationService;
+    }
 }

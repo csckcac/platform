@@ -18,7 +18,8 @@ package org.wso2.carbon.bam.gadgetgenwizard.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.base.ServerConfiguration;
+import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
@@ -26,7 +27,7 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * @scr.reference name="config.context.service" interface="org.wso2.carbon.utils.ConfigurationContextService"
  * cardinality="1..1" policy="dynamic" bind="setConfigurationContextService"
  * unbind="unsetConfigurationContextService"
- * @scr.reference name="server.configuration" interface="org.wso2.carbon.base.ServerConfiguration"
+ * @scr.reference name="server.configuration" interface="org.wso2.carbon.base.api.ServerConfigurationService"
  * cardinality="1..1" policy="dynamic" bind="setServerConfiguration" unbind="unsetServerConfiguration"
  */
 
@@ -34,9 +35,11 @@ public class GadgetGenWizardServiceComponent {
 
     private static final Log log = LogFactory.getLog(GadgetGenWizardServiceComponent.class);
 
+    protected void activate(ComponentContext ctx) {
+
+    }
 
     protected void setConfigurationContextService(ConfigurationContextService ccService) {
-
         GGWUtils.setConfigurationContextService(ccService);
         if (log.isDebugEnabled()) {
             log.debug("ConfigurationContextService set in BAM bundle");
@@ -52,12 +55,12 @@ public class GadgetGenWizardServiceComponent {
 
 
 
-    protected void setServerConfiguration(ServerConfiguration serverConfiguration) {
-        GGWUtils.setCarbonConfiguration(serverConfiguration);
+    protected void setServerConfiguration(ServerConfigurationService serverConfiguration) {
+        GGWUtils.setServerConfiguration(serverConfiguration);
     }
 
-    protected void unsetServerConfiguration(ServerConfiguration serverConfiguration) {
-        GGWUtils.setCarbonConfiguration(null);
+    protected void unsetServerConfiguration(ServerConfigurationService serverConfiguration) {
+        GGWUtils.setServerConfiguration(null);
     }
 
 }

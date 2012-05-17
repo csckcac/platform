@@ -30,8 +30,8 @@
         System.out.println("param key : " + attribute + " param value : " + session.getAttribute(attribute) );
     }
 
-    String sqlParam = request.getParameter("sql");
-    String sql = (sqlParam == null) ? "select * from productsummary" : sqlParam;
+    Object sqlParam = session.getAttribute("sql");
+    String sql = (sqlParam == null) ? "select * from productsummary" : ((String[])sqlParam) [0];
 
 %>
 <form>

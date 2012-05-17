@@ -24,32 +24,33 @@
                 xmlns:m0="http://services.samples"
                 xmlns:gg="http://wso2.com/bam/gadgetgen"
                 exclude-result-prefixes="gg m0 fn">
-    <xsl:output method="xml" omit-xml-declaration="yes" indent="yes"/>
+    <xsl:output method="text" omit-xml-declaration="yes" indent="yes"/>
 
-    <xsl:template match="/">
+    <xsl:template match="/gg:gadgetgen">
 
-<html>
-<head>
-    <link rel="stylesheet" type="text/gadgetgen.css" href="jquery.jqplot.min.gadgetgen.css" />
-         <xsl:text disable-output-escaping="yes">&#60;</xsl:text>script src="jquery.min.js" type="text/javascript"<xsl:text disable-output-escaping="yes">&#62;</xsl:text><xsl:text disable-output-escaping="yes">&#60;</xsl:text>/script<xsl:text disable-output-escaping="yes">&#62;</xsl:text>
-
-
-    <xsl:text disable-output-escaping="yes">&#60;</xsl:text>script src="jquery.jqplot.min.js" type="text/javascript"<xsl:text disable-output-escaping="yes">&#62;</xsl:text><xsl:text disable-output-escaping="yes">&#60;</xsl:text>/script<xsl:text disable-output-escaping="yes">&#62;</xsl:text>
-
-
-    <xsl:text disable-output-escaping="yes">&#60;</xsl:text>script type="text/javascript" src="plugins/jqplot.categoryAxisRenderer.js"<xsl:text disable-output-escaping="yes">&#62;</xsl:text><xsl:text disable-output-escaping="yes">&#60;</xsl:text>/script<xsl:text disable-output-escaping="yes">&#62;</xsl:text>
-
-
-	<xsl:text disable-output-escaping="yes">&#60;</xsl:text>script type="text/javascript" src="plugins/jqplot.barRenderer.js"<xsl:text disable-output-escaping="yes">&#62;</xsl:text><xsl:text disable-output-escaping="yes">&#60;</xsl:text>/script<xsl:text disable-output-escaping="yes">&#62;</xsl:text>
-
-    <script lang="javascript" type="text/javascript">
 
         <xsl:text disable-output-escaping="yes">&#60;</xsl:text><xsl:text>&#37;</xsl:text>
-        var db = new Database("<xsl:value-of select="//gg:jdbcurl" />", "<xsl:value-of select="//gg:username"/>", "<xsl:value-of select="//gg:password"/>");
-    	var result = db.query("<xsl:value-of select="//gg:sql"/>");
+        var config = {};
+        var db = new
+        Database("jdbc:h2:/Users/mackie/tmp/jaggery-1.0.0-SNAPSHOT_M4/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE",
+        "org.h2.Driver", "wso2carbon", "wso2carbon", config);
 
-        var colx = "<xsl:value-of select="//gg:bar-xcolumn" />".toUpperCase();
-    	var coly = "<xsl:value-of select="//gg:bar-ycolumn" />".toUpperCase();
+        var db = new Database("<xsl:value-of select="gg:jdbcurl" />", "<xsl:value-of select="gg:driver"/>",
+        "<xsl:value-of select="gg:username"/>", "<xsl:value-of select="gg:password"/>", config);
+    	var result = db.query("<xsl:value-of select="gg:sql"/>");
+
+        var plotarray = null;
+
+        <xsl:call-template name="BarGraph"/>
+
+        print(plotarray);
+   		 <xsl:text>&#37;</xsl:text><xsl:text disable-output-escaping="yes">&#62;</xsl:text>
+
+        </xsl:template>
+
+    <xsl:template name="BarGraph" match="gg:BarGraph">
+        var colx = "<xsl:value-of select="gg:bar-xcolumn" />".toUpperCase();
+    	var coly = "<xsl:value-of select="gg:bar-ycolumn" />".toUpperCase();
 
     	function convertDBResult(result, colx, coly) {
 			var array = [];
@@ -60,46 +61,6 @@
 
 			return array;
         };
-        var plotarray = convertDBResult(result, colx, coly);
-
-
-   		 <xsl:text>&#37;</xsl:text><xsl:text disable-output-escaping="yes">&#62;</xsl:text>
-        $(document).ready(function () {
-
-            var plot1 = $.jqplot('chart1', [<xsl:text disable-output-escaping="yes">&#60;</xsl:text><xsl:text>&#37;</xsl:text>=plotarray<xsl:text>&#37;</xsl:text><xsl:text disable-output-escaping="yes">&#62;</xsl:text>], {
-    title: '<xsl:value-of select="//gg:bar-title" />',
-    series:[{renderer:$.jqplot.BarRenderer}],
-    axes: {
-      xaxis: {
-        renderer: $.jqplot.CategoryAxisRenderer,
-          label: '<xsl:value-of select="//gg:bar-xlabel" />',
-        // labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-        tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-        tickOptions: {
-          enableFontSupport: true,
-            angle: -30
-        }
-
-      },
-      yaxis: {
-        autoscale:true,
-          label: '<xsl:value-of select="//gg:bar-ylabel" />',
-        // labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-        tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-        tickOptions: {
-          enableFontSupport: true,
-            angle: -30
-        }
-      }
-    }
-  });
-        });
-    </script>
-</head>
-<body>
-        <div id="chart1" style="width: 500px; height: 300px;"/>
-        <div id="text1" />
-</body>
-</html>
-        </xsl:template>
+        plotarray = convertDBResult(result, colx, coly);
+    </xsl:template>
 </xsl:stylesheet>

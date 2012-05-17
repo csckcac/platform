@@ -4,27 +4,35 @@
                 xmlns:m0="http://services.samples"
                 xmlns:gg="http://wso2.com/bam/gadgetgen"
                 exclude-result-prefixes="gg m0 fn">
-    <xsl:output method="html" omit-xml-declaration="yes" indent="yes"/>
+    <xsl:output method="xml" omit-xml-declaration="yes" indent="yes"/>
 
 
-    <xsl:template match="/">
+    <xsl:template match="/gg:gadgetgen">
 
-   <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-  <ModulePrefs title="Gadget Gen Sample" height="300" scaling="false">
+  <ModulePrefs height="300" scaling="false">
+      <xsl:attribute name="title"><xsl:value-of select="gg:gadget-title" /></xsl:attribute>
     <Require feature="dynamic-height"/>
   </ModulePrefs>
   <Content type="html">
-  <![CDATA[
-    <link href="css/jquery.jqplot.min.css" type="text/css" rel="stylesheet"/>
-    <script src="js/jquery.min.js" type="text/javascript"></script>
-    <script src="js/jquery.jqplot.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="js/plugins/jqplot.categoryAxisRenderer.js"></script>
-    <script type="text/javascript" src="js/plugins/jqplot.barRenderer.js"></script>
+      <xsl:text>&#10;</xsl:text>
+      <!-- CDATA -->
+  <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
+    <xsl:text>&#10;</xsl:text>
+    <xsl:text disable-output-escaping="yes">
+    &lt;link href="css/jquery.jqplot.min.css" type="text/css" rel="stylesheet"/&gt;
+    &lt;script src="js/jquery.min.js" type="text/javascript">&lt;/script&gt;
+    &lt;script src="js/jquery.jqplot.min.js" type="text/javascript">&lt;/script&gt;
+    &lt;script type="text/javascript" src="js/plugins/jqplot.categoryAxisRenderer.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="js/plugins/jqplot.barRenderer.js"&gt;&lt;/script&gt;
+    </xsl:text>
+      <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="../src/excanvas.min.js"></script><![endif]-->
+    <xsl:text>&#10;</xsl:text>
+    <xsl:text disable-output-escaping="yes">&lt;!--[if lt IE 9]&gt;&lt;script language="javascript" type="text/javascript" src="js/excanvas.min.js"&gt;&lt;/script&gt;&lt;![endif]--&gt;</xsl:text>
+    <xsl:text>&#10;</xsl:text>
+
     <script type="text/javascript" lang="javascript">
     $(document).ready(function () {
-
-
 
             var widthToHeightRatio = 325/250;
             var width = gadgets.window.getViewportDimensions()["width"];
@@ -41,7 +49,7 @@
             function update() {
                 var plotarray = null;
                 $.ajax({
-                    url: "../../gadgetgen/gadgetgen.jag",
+                    url: "../../gadgetgen/<xsl:value-of select="gg:gadget-filename" />.jag",
 
                     dataType: 'json',
                     //GET method is used
@@ -66,13 +74,31 @@
                 //    plot.destroy();
                 }
 
-                plot = $.jqplot('chart1', [plotarray], {
+        <!--<xsl:if test="gg:BarChart">-->
+                <xsl:call-template name="BarChart"></xsl:call-template>
+        <!--</xsl:if>-->
+                gadgets.window.adjustHeight();
+            };
+        });
+    </script>
+
+<div style="width: 325px; height: 250px;" id="chart1"/>
+<div id="text1"/>
+         <xsl:text>&#10;</xsl:text>
+  <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
+      <xsl:text>&#10;</xsl:text>
+  </Content>
+</Module>
+    </xsl:template>
+
+    <xsl:template name="BarChart" match="gg:BarChart">
+        plot = $.jqplot('chart1', [plotarray], {
                     title: 'Product vs Total Amount',
                     series:[{renderer:$.jqplot.BarRenderer}],
                     axes: {
                         xaxis: {
                             renderer: $.jqplot.CategoryAxisRenderer,
-                            label: '<xsl:value-of select="//gg:bar-title" />',
+                            label: '<xsl:value-of select="gg:bar-xlabel" />',
                             // labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                             tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                             tickOptions: {
@@ -83,7 +109,7 @@
                         },
                         yaxis: {
                             autoscale:true,
-                            label: 'Total Amount (Rs.)',
+                            label: '<xsl:value-of select="gg:bar-ylabel" />',
                             // labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                             tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                             tickOptions: {
@@ -94,17 +120,6 @@
                     }
                 });
                 plot.replot();
-                gadgets.window.adjustHeight();
-            };
-        });
-    </script>
-
-<div style="width: 325px; height: 250px;" id="chart1"/>
-<div id="text1"/>
-
-  ]]>
-  </Content>
-</Module>
     </xsl:template>
 
 </xsl:stylesheet>

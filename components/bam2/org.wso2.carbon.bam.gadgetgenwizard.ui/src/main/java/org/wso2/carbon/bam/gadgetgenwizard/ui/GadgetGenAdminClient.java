@@ -46,8 +46,8 @@ public class GadgetGenAdminClient {
        }
 
 
-    public void generateGraph(WSMap map) throws GadgetGenAdminServiceGadgetGenException, RemoteException {
-        stub.createGadget(map);
+    public String generateGraph(WSMap map) throws GadgetGenAdminServiceGadgetGenException, RemoteException {
+        return stub.createGadget(map);
     }
 
     public WSMap constructWSMap(HttpSession session, List<String> sessionAttrKey) {

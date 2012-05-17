@@ -56,6 +56,8 @@
                 backURL = "sqlinput_ajaxprocessor.jsp";
             } else if ($("#page").val() == "04") {
                 backURL = "pickuielement_ajaxprocessor.jsp";
+            } else if ($("#page").val() == "05") {
+                backURL = "preview_ajaxprocessor.jsp";
             }
 
             var data = $("form").serialize();
@@ -100,6 +102,12 @@
                             $("#Finish").show();
                         } else {
                             $("#Finish").hide();
+                        }
+
+                        if (parseInt($("#page").val()) >= 4) {
+                            $("#Next").hide();
+                        } else {
+                            $("#Next").show();
                         }
 
                     });

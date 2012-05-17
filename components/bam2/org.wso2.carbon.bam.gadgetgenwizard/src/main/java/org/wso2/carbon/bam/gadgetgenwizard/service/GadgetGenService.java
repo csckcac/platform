@@ -3,26 +3,23 @@ package org.wso2.carbon.bam.gadgetgenwizard.service;
 import org.apache.axiom.om.*;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.impl.jaxp.OMSource;
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.bam.gadgetgenwizard.internal.GGWUtils;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
 import org.wso2.carbon.registry.core.ActionConstants;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
 import org.wso2.carbon.user.core.AuthorizationManager;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -48,81 +45,58 @@ import java.io.*;
  */
 public class GadgetGenService extends RegistryAbstractAdmin {
 
-    public static final String GADGET_GEN_TRANSFORM_XSLT = "jaggery-app-generator.xslt";
+    public static final String JAGGERY_APP_GENERATOR_XSLT = "jaggery-app-generator.xslt";
 
-    public static final String JQPLOT_CSS = "gadgetgen/css/jquery.jqplot.min.css";
-    public static final String JQUERY_JS = "gadgetgen/js/jquery.min.js";
-    public static final String JQPLOT_JS = "gadgetgen/js/jquery.jqplot.min.js";
-    public static final String BARGRAPH_JS = "gadgetgen/js/plugins/jqplot.barRenderer.js";
-    public static final String CATEGORY_AXIS_JS = "gadgetgen/js/plugins/jqplot.categoryAxisRenderer.js";
-    public static final String[] GADGET_RESOURCES = {JQPLOT_JS, JQUERY_JS, JQPLOT_CSS, BARGRAPH_JS, CATEGORY_AXIS_JS};
+    public static final String GADGET_GENERATOR_XSLT = "gadget-generator.xsl";
+
+    private static final String JQPLOT_CSS = "gadgetgen/css/jquery.jqplot.min.css";
+    private static final String JQUERY_JS = "gadgetgen/js/jquery.min.js";
+    private static final String JQPLOT_JS = "gadgetgen/js/jquery.jqplot.min.js";
+    private static final String EXCANVAS_JS = "gadgetgen/js/excanvas.min.js";
+    private static final String BARGRAPH_JS = "gadgetgen/js/plugins/jqplot.barRenderer.js";
+    private static final String CATEGORY_AXIS_JS = "gadgetgen/js/plugins/jqplot.categoryAxisRenderer.js";
+    private static final String[] GADGET_RESOURCES = {EXCANVAS_JS, JQPLOT_JS, JQUERY_JS, JQPLOT_CSS, BARGRAPH_JS, CATEGORY_AXIS_JS};
 
 
     private static final Log log = LogFactory.getLog(GadgetGenService.class);
-    public static final String JAGGERY_APP_DIR = CarbonUtils.getCarbonRepository()  + "jaggeryapps";
-    public static final String GADGET_GEN_APP_DIR = JAGGERY_APP_DIR + File.separator + "gadgetgen";
-    public static final String GADGETGEN_JAG_FILEPATH = GADGET_GEN_APP_DIR + File.separator + "gadgetgen.jag";
+    private static final String JAGGERY_APP_DIR = CarbonUtils.getCarbonRepository()  + "jaggeryapps";
+    private static final String GADGET_GEN_APP_DIR = JAGGERY_APP_DIR + File.separator + "gadgetgen";
+//    public static final String GADGETGEN_JAG_FILEPATH = GADGET_GEN_APP_DIR + File.separator + "gadgetgen.jag";
 
-    public static final String GADGET_REGISTRY_PATH = "repository/components/org.wso2.carbon.bam.gadgetgen/";
+    private static final String GADGETGEN_COMP_REG_PATH = "repository/components/org.wso2.carbon.bam.gadgetgen/";
 
-    public static final String RESOURCE_ADMIN_SERVICE_NAME = "ResourceAdminService";
-
-    public static final String ALLOW_PERMISSION_TYPE = "1";
-    public static final String WSO2_ANONYMOUS_ROLE = "wso2.anonymous.role";
 
     public String createGadget(WSMap map) throws GadgetGenException {
         OMDocument intermediateXML = createIntermediateXML(map);
-        OMElement gadgetXML = applyXSLTForGadgetXML(intermediateXML);
-        OutputStream jagFile = applyXSLTForJaggeryScript(intermediateXML);
-        OutputStream jagConf = applyXSLTForJaggeryConf(intermediateXML);
-        copyGadgetFilesToRegistry(getConfigSystemRegistry(), GADGET_REGISTRY_PATH);
-        return null;
+        String gadgetXMLPath = applyXSLTForGadgetXML(intermediateXML);
+        applyXSLTForJaggeryScript(intermediateXML);
+        copyGadgetResourcesToRegistry(GADGETGEN_COMP_REG_PATH);
+        return gadgetXMLPath;
     }
 
-    private ResourceAdminServiceStub createRegistryAdminClient() throws GadgetGenException {
-        try {
-
-            String serviceURL = "local://services/" + RESOURCE_ADMIN_SERVICE_NAME;
-            ResourceAdminServiceStub registryResourceStub = new ResourceAdminServiceStub(GGWUtils.getConfigurationContextService().getServerConfigContext(), serviceURL);
-            ServiceClient client = registryResourceStub._getServiceClient();
-            Options option = client.getOptions();
-            option.setManageSession(true);
-            return registryResourceStub;
-        } catch (AxisFault e) {
-            String msg = "Error creating Resource Admin Stub. " + e.getMessage() ;
-            log.error(msg, e);
-            throw new GadgetGenException(msg, e);
+    private void copyGadgetResourcesToRegistry(String gadgetRegistryPath) throws GadgetGenException {
+        for (String gadgetResource : GADGET_RESOURCES) {
+            Resource resource = convertInputStreamToResource(this.getClass().getClassLoader().getResourceAsStream(gadgetResource));
+            String gadgetResourcePath = gadgetRegistryPath + gadgetResource;
+            copyResourceWithAnonymousPermission(resource, gadgetResourcePath);
         }
     }
 
-    private void copyGadgetFilesToRegistry(Registry registry, String gadgetRegistryPath) throws GadgetGenException {
+    private void copyResourceWithAnonymousPermission( Resource resource, String gadgetResourcePath) throws GadgetGenException {
         try {
-//            ResourceAdminServiceStub resourceAdminServiceStub = createRegistryAdminClient();
-            AuthorizationManager authorizationManager = ((UserRegistry) getRootRegistry()).getUserRealm().getAuthorizationManager();
-            for (int i = 0; i < GADGET_RESOURCES.length; i++) {
-                String gadgetResource = GADGET_RESOURCES[i];
-
-                Resource resource = convert(this.getClass().getClassLoader().getResourceAsStream(gadgetResource));
-                String gadgetResourcePath = gadgetRegistryPath + gadgetResource;
-                if (!registry.resourceExists(gadgetResourcePath)) {
-                    registry.put(gadgetResourcePath, resource);
-                    authorizationManager.authorizeRole(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME, "/_system/config/" + gadgetResourcePath, ActionConstants.GET);
-                    setPermissionUpdateTimestamp();
-//                    resourceAdminServiceStub.addRolePermission(gadgetResourcePath, CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME, ActionConstants.GET, ALLOW_PERMISSION_TYPE);
-                }
+            Registry registry = getConfigSystemRegistry();
+            if (!registry.resourceExists(gadgetResourcePath)) {
+                registry.put(gadgetResourcePath, resource);
+                AuthorizationManager authorizationManager = ((UserRegistry) getRootRegistry()).getUserRealm().getAuthorizationManager();
+                authorizationManager.authorizeRole(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME,
+                        RegistryConstants.CONFIG_REGISTRY_BASE_PATH + "/" + gadgetResourcePath, ActionConstants.GET);
+                setPermissionUpdateTimestamp();
+    //                    resourceAdminServiceStub.addRolePermission(gadgetResourcePath, CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME, ActionConstants.GET, ALLOW_PERMISSION_TYPE);
             }
         } catch (RegistryException e) {
             String msg = "Error inserting resource to registry. " + e.getMessage();
             log.error(msg, e);
             throw new GadgetGenException(msg, e);
-//        } catch (ResourceAdminServiceResourceServiceExceptionException e) {
-//            String msg = "Error inserting permission for resource. " + e.getMessage() ;
-//            log.error(msg, e);
-//            throw new GadgetGenException(msg, e);
-//        } catch (RemoteException e) {
-//            String msg = "Error sending request to " +  RESOURCE_ADMIN_SERVICE_NAME + e.getMessage() ;
-//            log.error(msg, e);
-//            throw new GadgetGenException(msg, e);
         } catch (UserStoreException e) {
             String msg = "Cannot get authorization manager. " + e.getMessage() ;
             log.error(msg, e);
@@ -130,7 +104,7 @@ public class GadgetGenService extends RegistryAbstractAdmin {
         }
     }
 
-    private Resource convert(InputStream inputStream) throws GadgetGenException {
+    private Resource convertInputStreamToResource(InputStream inputStream) throws GadgetGenException {
         try {
             if (inputStream == null) {
                 throw new GadgetGenException("input stream cannot be null");
@@ -150,45 +124,21 @@ public class GadgetGenService extends RegistryAbstractAdmin {
         }
     }
 
-    private OutputStream applyXSLTForJaggeryConf(OMDocument intermediateXML) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
-    }
-
-    private OutputStream applyXSLTForJaggeryScript(OMDocument intermediateXML) throws GadgetGenException {
-
-
+    private void applyXSLTForJaggeryScript(OMDocument intermediateXML) throws GadgetGenException {
         try {
-            InputStream xsltStream = this.getClass().getClassLoader().getResourceAsStream(GADGET_GEN_TRANSFORM_XSLT);
-            StAXOMBuilder stAXOMBuilder = new StAXOMBuilder(xsltStream);
-
-            Source xsltSource = new OMSource(stAXOMBuilder.getDocumentElement());
-            Source xmlSource = new OMSource(intermediateXML.getOMDocumentElement());
-
-
             File gadgetGenAppDir = new File(GADGET_GEN_APP_DIR);
             if (!gadgetGenAppDir.exists()) {
-                 FileUtils.forceMkdir(gadgetGenAppDir);
+                FileUtils.forceMkdir(gadgetGenAppDir);
             }
-            File gadgetGenFile = new File(GADGETGEN_JAG_FILEPATH);
+            String gadgetFileName = getGadgetFileName(intermediateXML);
+            File gadgetGenFile = new File(GADGET_GEN_APP_DIR + File.separator + gadgetFileName + ".jag");
             if (gadgetGenFile.exists()) {
                 FileUtils.forceDelete(gadgetGenFile);
             }
+            applyXSLT(intermediateXML, FileUtils.openOutputStream(gadgetGenFile), JAGGERY_APP_GENERATOR_XSLT);
 
-            StreamResult result = new StreamResult(FileUtils.openOutputStream(gadgetGenFile));
-            TransformerFactory transFact =
-                    TransformerFactory.newInstance();
-            Transformer transformer = transFact.newTransformer(xsltSource);
-            transformer.transform(xmlSource, result);
-        } catch (XMLStreamException e) {
-            String error = "XML error reading XSLT file. " + e.getMessage() ;;
-            log.error(error, e);
-            throw new GadgetGenException(error, e);
         } catch (FileNotFoundException e) {
-            String error = "XSLT file not found. This should be in the classpath. " + e.getMessage() ;;
-            log.error(error, e);
-            throw new GadgetGenException(error, e);
-        } catch (TransformerException e) {
-           String error = "XSLT transformation error during Code generation. " + e.getMessage() ;;
+            String error = "XSLT file not found. This should be in the classpath. " + e.getMessage() ;
             log.error(error, e);
             throw new GadgetGenException(error, e);
         } catch (IOException e) {
@@ -197,11 +147,71 @@ public class GadgetGenService extends RegistryAbstractAdmin {
             throw new GadgetGenException(error, e);
         }
 
-        return null;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    private OMElement applyXSLTForGadgetXML(OMDocument intermediateXML) {
-        return null;
+    private String getGadgetFileName(OMDocument intermediateXML) throws GadgetGenException {
+        OMElement gadgetFileNameEl = intermediateXML.getOMDocumentElement().
+                getFirstChildWithName(new QName("http://wso2.com/bam/gadgetgen", "gadget-filename", "gg"));
+        if (gadgetFileNameEl == null) {
+            String errorMsg = "No gadget file name in intermediate xml" + intermediateXML.getOMDocumentElement().toString();
+            GadgetGenException gadgetGenException = new GadgetGenException(errorMsg);
+            log.error(errorMsg, gadgetGenException);
+            throw gadgetGenException;
+        }
+
+        String gadgetFileName = gadgetFileNameEl.getText();
+        if (!gadgetFileName.matches("[_a-zA-Z0-9\\-\\.]+")) {
+           String errorMsg = "Invalid file name for gadget : " + gadgetFileName;
+            GadgetGenException gadgetGenException = new GadgetGenException(errorMsg);
+            log.error(errorMsg, gadgetGenException);
+            throw gadgetGenException;
+        }
+
+        return gadgetFileName;
+    }
+
+    private void applyXSLT(OMDocument intermediateXML, OutputStream outputStream, String xsltFileName) throws GadgetGenException {
+        try {
+            StreamResult result = new StreamResult(outputStream);
+
+            InputStream xsltStream = this.getClass().getClassLoader().getResourceAsStream(xsltFileName);
+
+            StAXOMBuilder stAXOMBuilder = new StAXOMBuilder(xsltStream);
+
+            Source xsltSource = new OMSource(stAXOMBuilder.getDocumentElement());
+            Source xmlSource = new OMSource(intermediateXML.getOMDocumentElement());
+
+
+            TransformerFactory transFact =
+                    TransformerFactory.newInstance();
+            Transformer transformer = transFact.newTransformer(xsltSource);
+            transformer.transform(xmlSource, result);
+        } catch (XMLStreamException e) {
+            String error = "XML error reading XSLT file. " + e.getMessage() ;
+            log.error(error, e);
+            throw new GadgetGenException(error, e);
+        } catch (TransformerException e) {
+            String error = "XSLT transformation error during Code generation. " + e.getMessage() ;
+            log.error(error, e);
+            throw new GadgetGenException(error, e);
+        }
+    }
+
+    private String applyXSLTForGadgetXML(OMDocument intermediateXML) throws GadgetGenException {
+        Resource resource;
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            applyXSLT(intermediateXML, byteArrayOutputStream, GADGET_GENERATOR_XSLT);
+            resource = getConfigSystemRegistry().newResource();
+            resource.setContent(byteArrayOutputStream.toByteArray());
+            String gadgetXMLPath = GADGETGEN_COMP_REG_PATH + "gadgetgen/" + getGadgetFileName(intermediateXML) + ".xml";
+            copyResourceWithAnonymousPermission(resource, gadgetXMLPath);
+            return RegistryConstants.CONFIG_REGISTRY_BASE_PATH + "/" + gadgetXMLPath;
+        } catch (RegistryException e) {
+            String error = "Error creating resource. " + e.getMessage();
+            log.error(error, e);
+            throw new GadgetGenException(error, e);
+        }
     }
 
     private OMDocument createIntermediateXML(WSMap map) {
@@ -212,9 +222,7 @@ public class GadgetGenService extends RegistryAbstractAdmin {
         WSMapElement[] wsMapElements = map.getWsMapElements();
         boolean barChartFound = false;
         OMElement barChart = factory.createOMElement("BarChart", gadgetgenNamespace);
-        for (int i = 0; i < wsMapElements.length; i++) {
-            WSMapElement wsMapElement = wsMapElements[i];
-
+        for (WSMapElement wsMapElement : wsMapElements) {
             // check for bar graph properties
             if (wsMapElement.getKey().startsWith("bar")) {
                 barChartFound = true;
@@ -228,7 +236,7 @@ public class GadgetGenService extends RegistryAbstractAdmin {
             rootElement.addChild(omElement);
         }
         if (barChartFound) {
-           rootElement.addChild(barChart);
+            rootElement.addChild(barChart);
         }
         omDocument.addChild(rootElement);
         return omDocument;  //To change body of created methods use File | Settings | File Templates.

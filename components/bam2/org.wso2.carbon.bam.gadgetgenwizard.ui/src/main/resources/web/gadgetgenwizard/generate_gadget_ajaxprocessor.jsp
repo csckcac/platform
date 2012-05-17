@@ -5,23 +5,23 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="java.util.*" %>
+<%@ page import="org.wso2.carbon.bam.gadgetgenwizard.stub.GadgetGenAdminServiceGadgetGenException" %>
 <%
     Map parameterMap = request.getParameterMap();
-    for (Iterator iterator = parameterMap.keySet().iterator(); iterator.hasNext();) {
-        String param = (String) iterator.next();
+    for (Object o : parameterMap.keySet()) {
+        String param = (String) o;
         Object value = parameterMap.get(param);
         session.setAttribute(param, value);
         System.out.println("============= Request Map ===================");
         if (value instanceof String[]) {
             String[] strings = (String[]) value;
-            for (int i = 0; i < strings.length; i++) {
-                String string = strings[i];
-                System.out.println("param key : " + param + " param value : " +  string);
+            for (String string : strings) {
+                System.out.println("param key : " + param + " param value : " + string);
 
             }
 
         } else {
-            System.out.println("param key : " + param + " param value : " +  value);
+            System.out.println("param key : " + param + " param value : " + value);
         }
 
     }
@@ -58,5 +58,22 @@
     WSMap wsMap = gadgetGenAdminClient.constructWSMap(session, attrKeys);
 
 
-    gadgetGenAdminClient.generateGraph(wsMap);
+    String gadgetXMLPath = null;
+    String errorMsg = null;
+    try {
+        gadgetXMLPath = gadgetGenAdminClient.generateGraph(wsMap);
+    } catch (GadgetGenAdminServiceGadgetGenException e) {
+        errorMsg = "Error trying to generate graph. " + e.getMessage();
+    }
+    if (errorMsg == null) {
 %>
+<p><label>Gadget Generated at :
+    <input type="text" name="gadget-path" disabled="disabled" value="<%=gadgetXMLPath%>"/>
+</label><input type="button" onclick="" value="Go to Dashboard"></p>
+<p><i>Copy the path to so that it can be added to the dashboard</i></p>
+<%  } else { %>
+
+<%=errorMsg%>
+<%  } %>
+<input type="hidden" name="page" id="page" value="05">
+

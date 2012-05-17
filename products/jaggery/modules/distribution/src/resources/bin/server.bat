@@ -1,7 +1,7 @@
 @echo off
 
 REM ---------------------------------------------------------------------------
-REM        Copyright 2005-2009 WSO2, Inc. http://www.wso2.org
+REM        Copyright 2005-2012 WSO2, Inc. http://www.wso2.org
 REM
 REM  Licensed under the Apache License, Version 2.0 (the "License");
 REM  you may not use this file except in compliance with the License.
@@ -29,4 +29,6 @@ rem ----- Only set CARBON_HOME if not already set ----------------------------
 :checkServer
 rem %~sdp0 is expanded pathname of the current script under NT with spaces in the path removed
 if "%JAGGERY_HOME%"=="" set JAGGERY_HOME=%~sdp0..
-CALL %JAGGERY_HOME%\carbon\bin\wso2server.bat 
+set agra=%1
+set agrb=%2
+Call %JAGGERY_HOME%\carbon\bin\wso2server.bat %agra% %agrb% 

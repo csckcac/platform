@@ -430,20 +430,21 @@ function addInputToList(index,edit) {
         return false;
     }
 
+    var xmlMapping = false;
+    if (document.getElementsByName("inputXMLMapping")[0].style.display != 'none') {
+        xmlMapping = true;
+    }
+
     if (xmlMapping) {
-        var xmlMapping = false;
-        if (document.getElementsByName("inputXMLMapping")[0].style.display != 'none') {
-            xmlMapping = true;
-        }
         var inputXMLPropertiesTable = document.getElementById("inputXMLPropertyTable");
         if (xmlMapping && inputXMLPropertiesTable.rows.length == 0) {
-            CARBON.showErrorDialog("Input properties can not be empty");
+            CARBON.showErrorDialog("Input properties can not be empty in xml mapping");
             return false;
         }
     } else {
         var inputTuplePropertyTable = document.getElementById("inputTuplePropertyTable");
         if (!xmlMapping && inputTuplePropertyTable.rows.length == 0) {
-            CARBON.showErrorDialog("Input properties can not be empty");
+            CARBON.showErrorDialog("Input properties can not be empty in tupple mapping");
             return false;
         }
     }

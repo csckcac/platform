@@ -163,7 +163,7 @@
                 if (isDigest) {
                     address = address.substring(11);
                 }
-            } else {
+            } else if (!notificationMethod.equals("jmx") && !notificationMethod.equals("work")) {
                 address = subscription.getAddress();
                 notificationMethod = "url";
             }
@@ -218,7 +218,7 @@
                 } else {
 %>
             <td>
-                <abbr title='<fmt:message key="<%=notificationMethodPrompt%>"/>: <%=address%>'><fmt:message key="<%=notificationMethod%>"/></abbr>
+                <abbr <% if (address != null) { %> title='<fmt:message key="<%=notificationMethodPrompt%>"/>: <%=address%>' <% } %>><fmt:message key="<%=notificationMethod%>"/></abbr>
             </td>
 <%
                 }

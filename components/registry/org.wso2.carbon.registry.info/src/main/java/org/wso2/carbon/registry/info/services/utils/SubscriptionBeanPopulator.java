@@ -108,6 +108,10 @@ public class SubscriptionBeanPopulator {
                 subscriptionInstance.setNotificationMethod("username");
             } else if (address.startsWith("role://")) {
                 subscriptionInstance.setNotificationMethod("role");
+            } else if (address.startsWith("jmx://")) {
+                subscriptionInstance.setNotificationMethod("jmx");
+            } else if (address.startsWith("work://")) {
+                subscriptionInstance.setNotificationMethod("work");
             } else if (subscription.getProperties() != null &&
                 subscription.getProperties().get(
                         RegistryEventingConstants.DO_REST) != null &&

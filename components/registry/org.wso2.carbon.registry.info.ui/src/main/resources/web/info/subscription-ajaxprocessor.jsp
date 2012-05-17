@@ -184,6 +184,8 @@
                     <option value="3"><fmt:message key="soap"/></option>
                     <option value="4"><fmt:message key="username"/></option>
                     <option value="5"><fmt:message key="role"/></option>
+                    <option value="6"><fmt:message key="work"/></option>
+                    <option value="7"><fmt:message key="jmx"/></option>
                 </select>
             </td>
         </tr>
@@ -284,6 +286,34 @@
                         </select>
                     </p>
                 </div>
+                <div id="subscriptionDataWorkList" style="display:none">
+                    <%
+                        if (canSubscribeOtherRoles) {
+                    %>
+                    <p style="padding:0 0 5px 0"><fmt:message key="enter.role"/></p>
+                    <p>
+                        <fmt:message key="enter.role.prompt"/>&nbsp;<span class="required">*</span>&nbsp;&nbsp;<input type="text" id="subscriptionWorkList" />
+                    </p>
+                    <%
+                    } else {
+                    %>
+                    <p style="padding:0 0 5px 0"><fmt:message key="enter.role.me.work"/></p>
+                    <p>
+                        <fmt:message key="enter.role.prompt"/>&nbsp;<span class="required">*</span>&nbsp;&nbsp;<select id="subscriptionWorkList">
+                        <%
+                            for (String role: roles) {
+                        %>
+                        <option value="<%=role%>"><%=role%></option>
+                        <%
+                            }
+                        %>
+                    </select>
+                    </p>
+                    <%
+                        }
+                    %>
+                </div>
+                <div id="subscriptionDataJMX" style="display:none">
             </td>
         </tr>
         <%
@@ -357,7 +387,7 @@
                 if (isDigest) {
                     address = address.substring(11);
                 }
-            } else {
+            } else if (!notificationMethod.equals("jmx") && !notificationMethod.equals("work")) {
                 address = subscription.getAddress();
                 notificationMethod = "url";
             }
@@ -379,7 +409,7 @@
                         <% if (eventId.startsWith("custom:")) { %><%=eventId.substring("custom:".length())%>
                         <%} else {%><fmt:message key="<%=eventId%>"/><%}%>
                     </fmt:param>
-                    <fmt:param><abbr title='<fmt:message key="<%=notificationMethodPrompt%>"/>: <%=address%>'><fmt:message key="<%=notificationMethod%>"/></abbr></fmt:param>
+                    <fmt:param><abbr <% if (address != null) { %> title='<fmt:message key="<%=notificationMethodPrompt%>"/>: <%=address%>' <% } %>><fmt:message key="<%=notificationMethod%>"/></abbr></fmt:param>
                 </fmt:message>
             </td>
 <%

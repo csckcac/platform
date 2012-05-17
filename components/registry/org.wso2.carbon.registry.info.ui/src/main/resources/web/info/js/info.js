@@ -255,24 +255,75 @@ function subscribe(path) {
                 return;
             }
         }
+    } else if ($('subscriptionDataWorkList').style.display == "") {
+        endpoint += digest + "work://" + $('subscriptionWorkList').value;
+        reason += validateEmpty($('subscriptionWorkList'), org_wso2_carbon_registry_info_ui_jsi18n["role.name"]);
+        if (reason == "") {
+            reason += validateRoleExists($('subscriptionWorkList').value);
+        }
+        if (reason != "") {
+            CARBON.showConfirmationDialog(reason + " " +
+                    org_wso2_carbon_registry_info_ui_jsi18n["are.you.sure.you.want.to.continue"],
+                    function() {
+                        subscribeConfirms = 0;
+                        sessionAwareFunction(function() {
+                            new Ajax.Request('../info/subscription-ajaxprocessor.jsp', {
+                                method: 'post',
+                                parameters: {path: path, endpoint: endpoint, eventName: eventName, delimiter:delimiter},
+                                onSuccess: function(transport) {
+                                    $('subscriptionDiv').innerHTML = transport.responseText;
+                                    alternateTableRows('subscriptionsTable', 'tableEvenRow', 'tableOddRow');
+                                },
+                                onFailure: function(transport) {
+                                    showRegistryError(transport.responseText);
+                                }
+                            });
+                        }, org_wso2_carbon_registry_info_ui_jsi18n["session.timed.out"], function() {subscribeConfirms = 0});
+                    },function() {
+                        subscribeConfirms = 0;
+                    }, function() {
+                        subscribeConfirms = 0;
+                    });
+            return;
+        }
+    } else if ($('subscriptionDataJMX').style.display == "") {
+        endpoint += "jmx://";
     } else {
         reason += validateUrl($('subscriptionURL'), org_wso2_carbon_registry_info_ui_jsi18n["web.service.url"]);
         endpoint += $('subscriptionURL').value;
     }
     if (reason == "") {
-        var mailAddr = $('subscriptionEmail').value;
         switch (notification) {
             case "2":
                 var doRest = true;
                 sessionAwareFunction(function() {
                     new Ajax.Request('../info/subscription-ajaxprocessor.jsp', {
                         method: 'post',
-                        parameters: {path: path, endpoint: endpoint, eventName: eventName, doRest: doRest},
+                        parameters: {path: path, endpoint: endpoint, eventName: eventName, doRest: doRest,delimiter:delimiter},
                         onSuccess: function(transport) {
                             $('subscriptionDiv').innerHTML = transport.responseText;
                             alternateTableRows('subscriptionsTable', 'tableEvenRow', 'tableOddRow');
                             subscribeConfirms = 0;
-                            subscriptionConfirmationAlert(mailAddr);
+                        },
+                        onFailure: function(transport) {
+                            showRegistryError(transport.responseText);
+                            subscribeConfirms = 0;
+                        }
+                    });
+                }, org_wso2_carbon_registry_info_ui_jsi18n["session.timed.out"], function() {subscribeConfirms = 0});
+                break;
+            case 1:
+            case 4:
+            case 5:
+                sessionAwareFunction(function() {
+                    new Ajax.Request('../info/subscription-ajaxprocessor.jsp', {
+                        method: 'post',
+                        parameters: {path: path, endpoint: endpoint, eventName: eventName,delimiter:delimiter},
+                        onSuccess: function(transport) {
+                            $('subscriptionDiv').innerHTML = transport.responseText;
+                            alternateTableRows('subscriptionsTable', 'tableEvenRow', 'tableOddRow');
+                            subscribeConfirms = 0;
+                            subscriptionConfirmationAlert($('subscriptionEmail').value);
                         },
                         onFailure: function(transport) {
                             showRegistryError(transport.responseText);
@@ -290,7 +341,6 @@ function subscribe(path) {
                             $('subscriptionDiv').innerHTML = transport.responseText;
                             alternateTableRows('subscriptionsTable', 'tableEvenRow', 'tableOddRow');
                             subscribeConfirms = 0;
-                            subscriptionConfirmationAlert(mailAddr);
                         },
                         onFailure: function(transport) {
                             showRegistryError(transport.responseText);
@@ -475,6 +525,16 @@ function changeVisibility() {
             $('digestDeliveryRole').disabled = false;
             $('subscribeButton').disabled = false;
             break;
+        case "6":
+            $('subscriptionDataInputRecord').style.display = "";
+            $('subscriptionDataWorkList').style.display = "";
+            $('subscribeButton').disabled = false;
+            break;
+        case "7":
+            $('subscriptionDataInputRecord').style.display = "";
+            $('subscriptionDataJMX').style.display = "";
+            $('subscribeButton').disabled = false;
+            break;
     }
 
 }
@@ -494,6 +554,8 @@ function resetInputVisibility() {
     $('digestDeliveryUser').disabled = true;
     $('digestDeliveryUser').value = "0";
     $('subscriptionDataRoleProfile').style.display = "none";
+    $('subscriptionDataWorkList').style.display = "none";
+    $('subscriptionDataJMX').style.display = "none";
     $('digestDeliveryRole').disabled = true;
     $('digestDeliveryRole').value = "0";
 }

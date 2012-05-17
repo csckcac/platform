@@ -18,14 +18,45 @@
  */
 package org.wso2.carbon.registry.admin.api.jmx;
 
+/**
+ * Contains API for managing properties.
+ */
 public interface IPropertyService {
 
+    /**
+     * Retrieves all properties of a given resource.
+     *
+     * @param path The resource path.
+     *
+     * @return list of properties.
+     */
     String[] getProperties(String path);
 
+    /**
+     * Method to retrieve the value of a specific property.
+     *
+     * @param path The resource path.
+     * @param key  The property key.
+     *
+     * @return the property value.
+     */
     String getProperty(String path, String key);
 
+    /**
+     * Method to set a property.
+     *
+     * @param path  The resource path.
+     * @param key   The property key.
+     * @param value The property value.
+     */
     void setProperty(String path, String key, String value);
 
+    /**
+     * Method to delete a property.
+     *
+     * @param path  The resource path.
+     * @param key   The property key.
+     */
     void removeProperty(String path, String key);
 
 }

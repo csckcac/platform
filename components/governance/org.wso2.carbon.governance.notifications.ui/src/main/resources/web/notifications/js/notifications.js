@@ -165,6 +165,57 @@ function subscribe() {
             }
         }
         endpoint += digest + "role://" + $('subscriptionInput').value;
+    } else if ($('subscriptionDataWorkList').style.display == "") {
+        reason += validateEmpty($('subscriptionInput'), org_wso2_carbon_governance_notifications_ui_jsi18n["role.name"]);
+        if (reason == "") {
+            var role = $('subscriptionWorkList').value;
+            if (role != "") {
+                var roles = role.split(",");
+                var roleFound = false;
+                for (var i = 0; i < roles.length; i++) {
+                    if (roles[i] == $('subscriptionInput').value) {
+                        roleFound = true;
+                        break;
+                    }
+                }
+                if (!roleFound) {
+                    reason = org_wso2_carbon_governance_notifications_ui_jsi18n["you.are.only.allowed.to.subscribe.to.your.roles"];
+                }
+            }
+        }
+        if (reason == "") {
+            reason += validateRoleExists($('subscriptionInput').value);
+        }
+        if (reason != "") {
+            endpoint += digest + "role://" + $('subscriptionInput').value;
+            eventName = $('eventList').value;
+            CARBON.showConfirmationDialog(reason + " " +
+                    org_wso2_carbon_governance_notifications_ui_jsi18n["are.you.sure.you.want.to.continue"],
+                    function() {
+                        subscribeConfirms = 0;
+                        sessionAwareFunction(function() {
+                            new Ajax.Request('../info/subscription-ajaxprocessor.jsp', {
+                                method: 'post',
+                                parameters: {path: path, endpoint: endpoint, eventName: eventName},
+                                onSuccess: function(transport) {
+                                    if (!transport) {return;}
+                                    window.location = "../notifications/notifications.jsp?region=region1&item=governance_notification_menu";
+                                },
+                                onFailure: function(transport) {
+                                    showRegistryError(transport.responseText);
+                                }
+                            });
+                        }, org_wso2_carbon_governance_notifications_ui_jsi18n["session.timed.out"], function() {subscribeConfirms = 0});
+                    },function() {
+                        subscribeConfirms = 0;
+                    }, function() {
+                        subscribeConfirms = 0;
+                    });
+            return;
+        }
+        endpoint += "work://" + $('subscriptionInput').value;
+    } else if ($('subscriptionDataJMX').style.display == "") {
+        endpoint += "jmx://";
     } else {
         reason += validateUrl($('subscriptionInput'), org_wso2_carbon_governance_notifications_ui_jsi18n["web.service.url"]);
         endpoint += $('subscriptionInput').value;
@@ -282,6 +333,17 @@ function changeVisibility() {
             $('subscriptionDigestTypeInput').disabled = false;
             $('subscribeButton').disabled = false;
             break;
+        case "6":
+            $('subscriptionDataInputRecord').style.display = "";
+            $('subscriptionDataWorkList').style.display = "";
+            $('subscribeButton').disabled = false;
+            break;
+        case "7":
+            $('subscriptionDataInputRecord').style.display = "";
+            $('subscriptionDataJMX').style.display = "";
+            $('subscribeButton').disabled = false;
+            $('subscriptionInput').style.display = "none";
+            break;
     }
 
 }
@@ -289,12 +351,15 @@ function changeVisibility() {
 function resetInputVisibility() {
     $('subscribeButton').disabled = true;
     $('subscriptionInput').value = "";
+    $('subscriptionInput').style.display = "";
     $('subscriptionInput').style.background = 'White';
     $('subscriptionDataInputRecord').style.display = "none";
     $('subscriptionDataEmail').style.display = "none";
     $('subscriptionDataHTMLSOAP').style.display = "none";
     $('subscriptionDataUserProfile').style.display = "none";
     $('subscriptionDataRoleProfile').style.display = "none";
+    $('subscriptionDataWorkList').style.display = "";
+    $('subscriptionDataJMX').style.display = "";
     $('subscriptionDigestType').style.display = "none";
     $('subscriptionDigestTypeInput').value = 0;
     $('subscriptionDigestTypeInput').disabled = false;

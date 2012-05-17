@@ -299,6 +299,11 @@ public class RegistryEventDispatcher extends WSEventDispatcher {
                 log.debug("Sending Notification to: " + email);
                 publishEvent(event, subscription, email, true);
             }
+        } else if (endpoint.toLowerCase().startsWith("jmx://")) {
+            log.info("Sending Notification to JMX endpoint");
+        } else if (endpoint.toLowerCase().startsWith("work://")) {
+            String roleName = endpoint.substring(7);
+            log.info("Sending Notification to work-list");
         } else {
             log.debug("Sending Notification to: " + endpoint);
             publishEvent(event, subscription, endpoint, doRest);

@@ -105,6 +105,8 @@
                     <option value="3"><fmt:message key="soap"/></option>
                     <option value="4"><fmt:message key="username"/></option>
                     <option value="5"><fmt:message key="role"/></option>
+                    <option value="6"><fmt:message key="work"/></option>
+                    <option value="7"><fmt:message key="jmx"/></option>
                 </select>
             </td>
         </tr>
@@ -150,6 +152,26 @@
 %>
                     <fmt:message key="enter.role.prompt"/>&nbsp;<span class="required">*</span>
                 </div>
+                <div id="subscriptionDataWorkList" style="display:none">
+                    <%
+                        if (canSubscribeOtherRoles) {
+                    %>
+                    <input type="hidden" id="subscriptionWorkList" value="" />
+                    <%
+                    } else {
+                        StringBuffer sb = new StringBuffer();
+                        for (String role : roles) {
+                            sb.append(role).append(",");
+                        }
+                        String roleList = sb.substring(0, sb.length() - 1);
+                    %>
+                    <input type="hidden" id="subscriptionWorkList" value="<%=roleList%>" />
+                    <%
+                        }
+                    %>
+                    <fmt:message key="enter.role.prompt"/>&nbsp;<span class="required">*</span>
+                </div>
+                <div id="subscriptionDataJMX" style="display:none"></div>
             </td>
             <td><input type="text" id="subscriptionInput" /></td>
         </tr>
@@ -178,6 +200,10 @@
         document.getElementById('notificationMethodList').value = 4;
     } else if (notificationMethod =="role") {
         document.getElementById('notificationMethodList').value = 5;
+    } else if (notificationMethod =="work") {
+        document.getElementById('notificationMethodList').value = 6;
+    } else if (notificationMethod =="jmx") {
+        document.getElementById('notificationMethodList').value = 7;
     } else if (notificationMethod =="html.plain.text") {
         document.getElementById('notificationMethodList').value = 2;
     } else if (notificationMethod =="soap") {

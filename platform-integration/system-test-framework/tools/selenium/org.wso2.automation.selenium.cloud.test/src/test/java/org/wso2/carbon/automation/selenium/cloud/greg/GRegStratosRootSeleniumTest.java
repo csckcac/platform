@@ -27,7 +27,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.annotations.*;
 import org.wso2.platform.test.core.BrowserManager;
@@ -36,6 +35,7 @@ import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
+import org.openqa.selenium.support.ui.Select;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -52,8 +52,6 @@ public class GRegStratosRootSeleniumTest {
     String productName = "greg";
     String userName;
     String password;
-    long sleepTime = 3000;
-
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, InterruptedException {
@@ -104,6 +102,7 @@ public class GRegStratosRootSeleniumTest {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             deleteResourceFromBrowser(getResourceId("root_resource"));
+
             addResource(resourceName);
             userLogout();
             log.info("********GReg Stratos - Add Resource to Root test - Passed********");
@@ -247,29 +246,35 @@ public class GRegStratosRootSeleniumTest {
     private void applyRating() throws InterruptedException {
         // Add rating 1
         driver.findElement(By.xpath("//span/img[3]")).click();
+        waitForValue("1.0");
         assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
                                                "tr[2]/td[2]")).getText().contains("(1.0)"),
                    "Rating 1 has failed :");
+
         // Add rating 2
         driver.findElement(By.xpath("//span/img[5]")).click();
+        waitForValue("2.0");
         assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
                                                "tr[2]/td[2]")).getText().contains("(2.0)"),
-                   "Rating 1 has failed :");
+                   "Rating 2 has failed :");
         // Add rating 3
         driver.findElement(By.xpath("//img[7]")).click();
+        waitForValue("3.0");
         assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
                                                "tr[2]/td[2]")).getText().contains("(3.0)"),
-                   "Rating 1 has failed :");
+                   "Rating 3 has failed :");
         // Add rating 4
         driver.findElement(By.xpath("//img[9]")).click();
+        waitForValue("4.0");
         assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
                                                "tr[2]/td[2]")).getText().contains("(4.0)"),
-                   "Rating 1 has failed :");
+                   "Rating 4 has failed :");
         // Add rating 5
         driver.findElement(By.xpath("//img[11]")).click();
+        waitForValue("5.0");
         assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
-                                                "tr[2]/td[2]")).getText().contains("(5.0)"),
-                    "Rating 1 has failed :");
+                                               "tr[2]/td[2]")).getText().contains("(5.0)"),
+                   "Rating 5 has failed :");
     }
 
     private void deleteTag() throws InterruptedException {
@@ -287,9 +292,11 @@ public class GRegStratosRootSeleniumTest {
             driver.findElement(By.id("tagsIconMinimized")).click();
         }
 
-        driver.findElement(By.linkText("Add New Tag")).click();          //click on Add New Tag
+        driver.findElement(By.linkText("Add New Tag")).click();//click on Add New Tag
+        waitForElement("id", "tfTag");
         driver.findElement(By.id("tfTag")).sendKeys(tagName);
         driver.findElement(By.xpath("//div[2]/input[3]")).click();
+        waitForElement("xpath", "//tr/td[4]/div[12]/div/div[12]/div[3]/a");
     }
 
     private void addComment(String comment) throws InterruptedException {
@@ -332,6 +339,7 @@ public class GRegStratosRootSeleniumTest {
         driver.findElement(By.id("collectionName")).sendKeys(collectionPath);
         driver.findElement(By.id("colDesc")).sendKeys("Selenium Test");
         driver.findElement(By.xpath("//div[7]/form/table/tbody/tr[5]/td/input")).click();
+        waitForElement("id", "ui-dialog-title-dialog");
         assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
                    "Delete Collection pop-up Title does not appear :");
         assertTrue(driver.findElement(By.id("messagebox-info")).getText().contains("Successfully " +
@@ -344,14 +352,21 @@ public class GRegStratosRootSeleniumTest {
         driver.findElement(By.linkText("Add Resource")).click();
         assertTrue(driver.findElement(By.className("middle-header")).getText().contains("Upload " +
                                                                                         "Content From File"));
-        selenium.select("id=addMethodSelector", "label=Create Text content");
-        selenium.click("css=option[value=\"text\"]");
+
+        WebElement dropDownListBox = driver.findElement(By.id("addMethodSelector"));
+        Select clickThis = new Select(dropDownListBox);
+        clickThis.selectByValue("text");
+        waitForElement("id", "trPlainContent");
+        Thread.sleep(2000);
         driver.findElement(By.id("trFileName")).sendKeys(resourceName);
         driver.findElement(By.id("trMediaType")).sendKeys("txt");
         driver.findElement(By.id("trDescription")).sendKeys("selenium test resource");
         driver.findElement(By.id("trPlainContent")).sendKeys("selenium test123");
+        Thread.sleep(2000);
         // Click on Add button
+        waitForElement("xpath", "//tr[4]/td/form/table/tbody/tr[6]/td/input");
         driver.findElement(By.xpath("//tr[4]/td/form/table/tbody/tr[6]/td/input")).click();
+        waitForElement("id", "ui-dialog-title-dialog");
         assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
                    "Popup not found :");
 
@@ -390,11 +405,13 @@ public class GRegStratosRootSeleniumTest {
                                         "/div[2]/div[3]/div[3]/div[9]/table/tbody/tr["
                                         + resourceRowId + "]/td/div/a[3]")).click();
             selenium.waitForPageToLoad("30000");
-            assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Resource Delete pop-up  failed :");
-            assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete"),
-                       "Resource Delete pop-up  failed :");
+            assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                       "Popup not found :");
             selenium.click("//button");
             selenium.waitForPageToLoad("30000");
+            waitForBrowserPage();
+            driver.navigate().refresh();
+            driver.findElement(By.id("stdView")).click();
         }
     }
 
@@ -415,5 +432,43 @@ public class GRegStratosRootSeleniumTest {
         return false;
     }
 
+    private boolean waitForValue(String value) {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        do {
+            try {
+                if (driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
+                                                "tr[2]/td[2]")).getText().contains(value)) {
+                    return true;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for the element");
+            }
+            exceededTime = System.currentTimeMillis();
+        } while (!(((exceededTime - currentTime) / 1000) > 60));
+        return false;
+    }
+
+    private boolean waitForElement(String elementType, String element) {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        do {
+            try {
+                if (elementType.equals("xpath")) {
+                    if (driver.findElement(By.xpath(element)).isDisplayed()) {
+                        return true;
+                    }
+                } else if (elementType.equals("id")) {
+                    if (driver.findElement(By.id(element)).isDisplayed()) {
+                        return true;
+                    }
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for the element");
+            }
+            exceededTime = System.currentTimeMillis();
+        } while (!(((exceededTime - currentTime) / 1000) > 60));
+        return false;
+    }
 
 }

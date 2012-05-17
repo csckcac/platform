@@ -168,21 +168,10 @@
               } catch (Exception ignore) {}
                   String urlCompletePath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + tempPath;
               String version = bean.getVersion()[i];
-//              String urlCompletePathNoVersion = urlCompletePath.substring(0,urlCompletePath.indexOf(version) -1);
-/*
-              if(tempPath.startsWith(bean.getDefaultServicePath())){
-                  completePath = completePath.substring(0, completePath.indexOf(version) - 1);
-                  urlCompletePath = urlCompletePath.substring(0, urlCompletePath.indexOf(version) - 1);
-
-                  if (urlCompletePathNoVersion.contains(version)) {
-                      urlCompletePathNoVersion = urlCompletePathNoVersion.substring(0, urlCompletePathNoVersion.indexOf(version) - 1);
-                  }
-              }
-*/
                 %>
             <tr>
                 <% if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/resources/browse")) { %>
-                <td><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&path=<%=urlCompletePathNoVersion%>"><%=bean.getNames()[i]%></a></td>
+                <td><%=bean.getNames()[i]%></td>
                 <td><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&path=<%=urlCompletePath%>"><%=version%></a></td>
                 <td><%=bean.getNamespace()[i]%></td>
                 <%

@@ -88,17 +88,20 @@ public class SecurityConfigAdmin {
     private Registry registry =  null;
     private UserRegistry govRegistry = null;
     private UserRealm realm = null;
-    private PersistenceFactory pf;
-    private ServiceGroupFilePersistenceManager sfpm;
-    private ModuleFilePersistenceManager mfpm;
+
+    private PersistenceFactory persistenceFactory;
+
+    private ServiceGroupFilePersistenceManager serviceGroupFilePM;
+
+    private ModuleFilePersistenceManager moduleFilePM;
 
     public SecurityConfigAdmin(AxisConfiguration config) throws SecurityConfigException{
         this.axisConfig = config;
 
         try {
-            pf = PersistenceFactory.getInstance(config);
-            sfpm = pf.getServiceGroupFilePM();
-            mfpm = pf.getModuleFilePM();
+            persistenceFactory = PersistenceFactory.getInstance(config);
+            serviceGroupFilePM = persistenceFactory.getServiceGroupFilePM();
+            moduleFilePM = persistenceFactory.getModuleFilePM();
         } catch (Exception e) {
             log.error("Error creating an PersistenceFactory instance", e);
             throw new SecurityConfigException("Error creating an PersistenceFactory instance", e);
@@ -119,9 +122,9 @@ public class SecurityConfigAdmin {
         this.callback = cb;
 
         try {
-            pf = PersistenceFactory.getInstance(config);
-            sfpm = pf.getServiceGroupFilePM();
-            mfpm = pf.getModuleFilePM();
+            persistenceFactory = PersistenceFactory.getInstance(config);
+            serviceGroupFilePM = persistenceFactory.getServiceGroupFilePM();
+            moduleFilePM = persistenceFactory.getModuleFilePM();
         } catch (Exception e) {
             log.error("Error creating an PersistenceFactory instance", e);
             // TODO : handle this exception properly. - kasung
@@ -142,9 +145,9 @@ public class SecurityConfigAdmin {
         this.realm = realm;
 
         try {
-            pf = PersistenceFactory.getInstance(config);
-            sfpm = pf.getServiceGroupFilePM();
-            mfpm = pf.getModuleFilePM();
+            persistenceFactory = PersistenceFactory.getInstance(config);
+            serviceGroupFilePM = persistenceFactory.getServiceGroupFilePM();
+            moduleFilePM = persistenceFactory.getModuleFilePM();
         } catch (Exception e) {
             log.error("Error creating an PersistenceFactory instance", e);
             throw new SecurityConfigException("Error creating an PersistenceFactory instance", e);
@@ -193,16 +196,16 @@ public class SecurityConfigAdmin {
             }
 
             serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
-            boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+            boolean isTransactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
             if(!isTransactionStarted) {
-                sfpm.beginTransaction(serviceGroupId);
+                serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
             String serviceXPath = PersistenceUtils.getResourcePath(service);
             String policyResourcePath = serviceXPath+"/"+Resources.POLICIES+"/"+Resources.POLICY;
 
-            if (!sfpm.elementExists(serviceGroupId, policyResourcePath)) {
+            if (!serviceGroupFilePM.elementExists(serviceGroupId, policyResourcePath)) {
                 if(!isTransactionStarted) {
-                    sfpm.rollbackTransaction(serviceGroupId); //no need to commit because no writes happened.
+                    serviceGroupFilePM.rollbackTransaction(serviceGroupId); //no need to commit because no writes happened.
                 }
                 return data;
             }
@@ -226,12 +229,12 @@ public class SecurityConfigAdmin {
                 }
             }
             if(!isTransactionStarted) {
-                sfpm.commitTransaction(serviceGroupId);
+                serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
             return data;
         } catch (Exception e) {
             log.error("Error while reading persisted data", e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             throw new SecurityConfigException("readingSecurity");
         }
     }
@@ -261,9 +264,9 @@ public class SecurityConfigAdmin {
 
             String serviceXPath = PersistenceUtils.getResourcePath(service);
 
-            boolean transactionStarted1 = sfpm.isTransactionStarted(serviceGroupId);
+            boolean transactionStarted1 = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
             if (!transactionStarted1) {
-                sfpm.beginTransaction(serviceGroupId);
+                serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
 
             // at registry
@@ -274,16 +277,16 @@ public class SecurityConfigAdmin {
             String policyElementPath = serviceXPath+"/"+Resources.POLICIES+"/"+Resources.POLICY;
 
             log.debug("Removing " + policyElementPath);
-            if (!sfpm.elementExists(serviceGroupId, policyElementPath)) {
+            if (!serviceGroupFilePM.elementExists(serviceGroupId, policyElementPath)) {
                 if(!transactionStarted1) {
-                    sfpm.rollbackTransaction(serviceGroupId);
+                    serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                 }
                 return;
             }
             SecurityScenario scenario = readCurrentScenario(serviceName);
             if (scenario == null) {
                 if(!transactionStarted1) {
-                    sfpm.rollbackTransaction(serviceGroupId);
+                    serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                 }
                 return;
             }
@@ -291,8 +294,8 @@ public class SecurityConfigAdmin {
             String secPolicyPath = policyElementPath+
                     PersistenceUtils.
                     getXPathTextPredicate(Resources.ServiceProperties.POLICY_UUID, scenario.getWsuId()) ;
-            if (sfpm.elementExists(serviceGroupId, secPolicyPath)) {
-                sfpm.delete(serviceGroupId, secPolicyPath);
+            if (serviceGroupFilePM.elementExists(serviceGroupId, secPolicyPath)) {
+                serviceGroupFilePM.delete(serviceGroupId, secPolicyPath);
             }
 
             if (isProxyService) {   //if proxy, delete the policy in registry as well.
@@ -325,10 +328,10 @@ public class SecurityConfigAdmin {
                         PersistenceUtils.getXPathAttrPredicate(
                                 Resources.ModuleProperties.TYPE, Resources.Associations.ENGAGED_MODULES);
                                                                           //checks the module is of type engagedModules
-                sfpm.delete(serviceGroupId, modPath);
+                serviceGroupFilePM.delete(serviceGroupId, modPath);
             }
             if (!transactionStarted1) {
-                sfpm.commitTransaction(serviceGroupId);
+                serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
             registry.commitTransaction();
 
@@ -341,13 +344,13 @@ public class SecurityConfigAdmin {
 
             // unpersist data
             try {
-                boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+                boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
                 if (!transactionStarted) {
-                    sfpm.beginTransaction(serviceGroupId);
+                    serviceGroupFilePM.beginTransaction(serviceGroupId);
                 }
 //                registry.removeAssociation(resourceUri, servicePath,
 //                        SecurityConstants.ASSOCIATION_SERVICE_SECURING_POLICY);
-                List roleElements = sfpm.getAll(
+                List roleElements = serviceGroupFilePM.getAll(
                         serviceGroupId, serviceXPath +
                         "/" + Resources.SecurityManagement.ROLE_XML_TAG+
                         PersistenceUtils.getXPathAttrPredicate(
@@ -356,14 +359,14 @@ public class SecurityConfigAdmin {
                     ((OMElement) roleElement).detach();
                 }
 
-                List kss = sfpm.getAssociations(
+                List kss = serviceGroupFilePM.getAssociations(
                         serviceGroupId, serviceXPath, SecurityConstants.ASSOCIATION_PRIVATE_KEYSTORE);
 
                 for (Object ks : kss) {
                     ((OMNode) ks).detach();
                 }
 
-                List tkss = sfpm.getAssociations(
+                List tkss = serviceGroupFilePM.getAssociations(
                         serviceGroupId, serviceXPath, SecurityConstants.ASSOCIATION_TRUSTED_KEYSTORE);
                 
                 for (Object tks : tkss) {
@@ -373,16 +376,16 @@ public class SecurityConfigAdmin {
                 String paramXPath = servicePath+"/"+Resources.ParameterProperties.PARAMETER+
                         PersistenceUtils.getXPathAttrPredicate(
                                 Resources.NAME, SecurityConstants.SECURITY_POLICY_PATH);
-                if (sfpm.elementExists(serviceGroupId, paramXPath)) {
-                    sfpm.delete(serviceGroupId, paramXPath);
+                if (serviceGroupFilePM.elementExists(serviceGroupId, paramXPath)) {
+                    serviceGroupFilePM.delete(serviceGroupId, paramXPath);
                 }
                 if (!transactionStarted) {
-                    sfpm.commitTransaction(serviceGroupId);
+                    serviceGroupFilePM.commitTransaction(serviceGroupId);
                 }
             } catch (Exception e) {
                 String msg = "Unable to remove persisted data.";
                 log.error(msg);
-                sfpm.rollbackTransaction(serviceGroupId);
+                serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                 throw new AxisFault(msg, e);
             }
 
@@ -405,12 +408,12 @@ public class SecurityConfigAdmin {
             Policy policy = this.loadPolicy(scenarioId, policyPath);
             if (isHttpsTransportOnly(policy)) {
                 try {
-                    boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+                    boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
                     if (!transactionStarted) {
-                        sfpm.beginTransaction(serviceGroupId);
+                        serviceGroupFilePM.beginTransaction(serviceGroupId);
                     }
 
-                    pf.getServicePM().deleteServiceProperty(service, Resources.ServiceProperties.IS_UT_ENABLED);
+                    persistenceFactory.getServicePM().deleteServiceProperty(service, Resources.ServiceProperties.IS_UT_ENABLED);
 
                     List<String> transports = getAllTransports();
                     setServiceTransports(serviceName, transports);
@@ -420,7 +423,7 @@ public class SecurityConfigAdmin {
                             service);
                     axisConfig.notifyObservers(event, service);
 
-                    pf.getServicePM().setServiceProperty(service,
+                    persistenceFactory.getServicePM().setServiceProperty(service,
                             RegistryResources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS, Boolean.TRUE.toString());
 
                     for (String trans : transports) {
@@ -430,24 +433,24 @@ public class SecurityConfigAdmin {
                         //in registry - kasung
                         String transPath = RegistryResources.TRANSPORTS + trans;
                         if (registry.resourceExists(transPath)) {
-                            pf.getServicePM().updateServiceAssociation(service,
+                            persistenceFactory.getServicePM().updateServiceAssociation(service,
                                     transPath, Resources.Associations.EXPOSED_TRANSPORTS);
                         } else {
                             String msg = "Transport path " + transPath + " does not exist in the registry";
                             log.error(msg);
-                            sfpm.rollbackTransaction(serviceGroupId);
+                            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                             throw new AxisFault(msg);
                         }
                     }
 
                     if (!transactionStarted) {
-                        sfpm.commitTransaction(serviceGroupId);
+                        serviceGroupFilePM.commitTransaction(serviceGroupId);
                     }
 
                 } catch (Exception e) {
                     String msg = "Service with name " + serviceName + " not found.";
                     log.error(msg);
-                    sfpm.rollbackTransaction(serviceGroupId);
+                    serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                     throw new AxisFault(msg, e);
                 }
             }
@@ -457,15 +460,15 @@ public class SecurityConfigAdmin {
             }
         } catch (AxisFault e) {
             log.error(e.getMessage(), e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             //why don't we throw a exception here? - kasung
         } catch (SecurityConfigException e) {
             log.error(e.getMessage(), e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             throw e;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             throw new SecurityConfigException("removingPolicy", e);
         }
     }
@@ -476,18 +479,18 @@ public class SecurityConfigAdmin {
         String kerberosXPath = getKerberosConfigXPath(service);
         String serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
         try {
-            boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+            boolean isTransactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
             if(!isTransactionStarted) {
-                sfpm.beginTransaction(serviceGroupId);
+                serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
             // First check whether an element path already exists
-            if (!sfpm.elementExists(serviceGroupId, kerberosXPath)) {
+            if (!serviceGroupFilePM.elementExists(serviceGroupId, kerberosXPath)) {
                 if(!isTransactionStarted) {
-                    sfpm.rollbackTransaction(serviceGroupId); //no need to commit because no writes happened.
+                    serviceGroupFilePM.rollbackTransaction(serviceGroupId); //no need to commit because no writes happened.
                 }
                  return null;
             }
-            OMElement kerberosElement = (OMElement) sfpm.get(serviceGroupId, kerberosXPath);
+            OMElement kerberosElement = (OMElement) serviceGroupFilePM.get(serviceGroupId, kerberosXPath);
 
             KerberosConfigData kerberosConfigData = new KerberosConfigData();
             kerberosConfigData.setServicePrincipleName(kerberosElement.
@@ -504,14 +507,14 @@ public class SecurityConfigAdmin {
                 log.warn(msg, e);
             }
             if(!isTransactionStarted) {
-                sfpm.commitTransaction(serviceGroupId);
+                serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
             return kerberosConfigData;
         } catch (PersistenceException e) {
             String msg = "An error occurred while retrieving kerberos configuration data for service "
                     + service.getName();
             log.error(msg, e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             throw new SecurityConfigException(msg);
         }
     }
@@ -530,7 +533,7 @@ public class SecurityConfigAdmin {
             throws SecurityConfigException {
 
         String kerberosXPath = getKerberosConfigXPath(service);
-        ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
+        ServiceGroupFilePersistenceManager sfpm = persistenceFactory.getServiceGroupFilePM();
         String serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
         try {
             boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
@@ -605,9 +608,9 @@ public class SecurityConfigAdmin {
         try {
 
             // Begin registry transaction
-            boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+            boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
             if (!transactionStarted) {
-                sfpm.beginTransaction(serviceGroupId);
+                serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
 
             // Disable security if already a policy is applied
@@ -627,13 +630,13 @@ public class SecurityConfigAdmin {
             persistsKerberosData(service, kerberosConfigurations);
 
             if (!transactionStarted) {
-                sfpm.commitTransaction(serviceGroupId);
+                serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
         } catch (PersistenceException e) {
             StringBuilder str = new StringBuilder("Error persisting security scenario ").
                     append(scenarioId).append(" for service ").append(serviceName);
             log.error(str.toString(),e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             throw new SecurityConfigException(str.toString(), e);
         }
     }
@@ -662,9 +665,9 @@ public class SecurityConfigAdmin {
                 }
             }
 
-            boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+            boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
             if (!transactionStarted) {
-                sfpm.beginTransaction(serviceGroupId);
+                serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
             boolean registryTransactionStarted = Transaction.isStarted();
             if(!registryTransactionStarted) {
@@ -688,7 +691,7 @@ public class SecurityConfigAdmin {
             disableRESTCalls(serviceName, scenrioId);
             persistData(service, scenrioId, privateStore, trustedStores, userGroups, isRahasEngaged);
             if (!transactionStarted) {
-                sfpm.commitTransaction(serviceGroupId);
+                serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
             if(!registryTransactionStarted) {
                 registry.commitTransaction();
@@ -699,7 +702,7 @@ public class SecurityConfigAdmin {
             }
         } catch (RegistryException e) {
             log.error(e.getMessage(), e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             try {
                 registry.rollbackTransaction();
             } catch (RegistryException ex) {
@@ -707,7 +710,7 @@ public class SecurityConfigAdmin {
             }
         } catch (PersistenceException e) {
             log.error(e.getMessage(), e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             try {
                 registry.rollbackTransaction();
             } catch (RegistryException ex) {
@@ -736,7 +739,7 @@ public class SecurityConfigAdmin {
 
             CallbackHandler handler = null;
             if (callback == null) {
-                handler = new ServicePasswordCallbackHandler(pf, serviceGroupId, service.getName(), serviceXPath,
+                handler = new ServicePasswordCallbackHandler(persistenceFactory, serviceGroupId, service.getName(), serviceXPath,
                         registryServicePath, registry, realm);
             } else {
                 handler = this.callback;
@@ -764,7 +767,7 @@ public class SecurityConfigAdmin {
                         policyPath);
                 pathParam.setLocked(true);
                 service.addParameter(pathParam);
-                pf.getServicePM().updateServiceParameter(service, pathParam);
+                persistenceFactory.getServicePM().updateServiceParameter(service, pathParam);
 //                persistParameter(serviceGroupId, pathParam, serviceXPath);
             }
 
@@ -774,18 +777,18 @@ public class SecurityConfigAdmin {
             if (isHttpsTransportOnly(policy)) {
                 setServiceTransports(service.getName(), getHttpsTransports());
                 try {
-                    boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+                    boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
                     if (!transactionStarted) {
-                        sfpm.beginTransaction(serviceGroupId);
+                        serviceGroupFilePM.beginTransaction(serviceGroupId);
                     }
 
-                    OMElement element = (OMElement) sfpm.get(serviceGroupId, serviceXPath);
+                    OMElement element = (OMElement) serviceGroupFilePM.get(serviceGroupId, serviceXPath);
                     element.addAttribute(
                             Resources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS, Boolean.FALSE.toString(), null);
-                    sfpm.setMetaFileModification(serviceGroupId);
+                    serviceGroupFilePM.setMetaFileModification(serviceGroupId);
                     element.addAttribute(
                             Resources.ServiceProperties.IS_UT_ENABLED, Boolean.TRUE.toString(), null);
-                    List exposedTransports = sfpm.getAssociations(serviceGroupId, serviceXPath,
+                    List exposedTransports = serviceGroupFilePM.getAssociations(serviceGroupId, serviceXPath,
                             Resources.Associations.EXPOSED_TRANSPORTS);
 
                     boolean isExists = false;
@@ -820,13 +823,13 @@ public class SecurityConfigAdmin {
                     }
 //                    registry.put(resource.getPath(), resource);
                     if (!transactionStarted) {
-                        sfpm.commitTransaction(serviceGroupId);
+                        serviceGroupFilePM.commitTransaction(serviceGroupId);
 //                        registry.commitTransaction();
                     }
                 } catch (Exception e) {
                     String msg = "Service with name " + service.getName() + " not found.";
                     log.error(msg);
-                    sfpm.rollbackTransaction(serviceGroupId);
+                    serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                     throw new AxisFault(msg, e);
                 }
 
@@ -849,11 +852,11 @@ public class SecurityConfigAdmin {
              */
         } catch (ServerException e) {
             log.error(e.getMessage(), e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             throw new SecurityConfigException(e.getMessage(), e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             throw new SecurityConfigException(e.getMessage(), e);
         }
     }
@@ -871,13 +874,13 @@ public class SecurityConfigAdmin {
         // handle each module required
         try {
             try {
-                boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+                boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
                 if (!transactionStarted) {
-                    sfpm.beginTransaction(serviceGroupId);
+                    serviceGroupFilePM.beginTransaction(serviceGroupId);
                 }
 
-                List assocs = sfpm.getAll(serviceGroupId, serviceXPath+
-                        "/"+Resources.ModuleProperties.MODULE_XML_TAG+
+                List assocs = serviceGroupFilePM.getAll(serviceGroupId, serviceXPath+
+                        "/"+Resources.ModuleProperties.MODULE_XML_TAG +
                         PersistenceUtils.getXPathAttrPredicate(
                                 Resources.ModuleProperties.TYPE, Resources.Associations.ENGAGED_MODULES));
                 for (String modName : moduleNames) {
@@ -889,7 +892,7 @@ public class SecurityConfigAdmin {
                         OMElement tempAssoc = (OMElement) node;
                         String tempModeName = tempAssoc.getAttributeValue(new QName(Resources.NAME));
                         String tempModeVersion = tempAssoc.getAttributeValue(new QName(Resources.VERSION));
-                        
+
                         if (modName.equals(tempModeName) && module.getVersion().toString().equals(tempModeVersion)) {
                             isFound = true;
                             break;
@@ -902,7 +905,7 @@ public class SecurityConfigAdmin {
                                 PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.VERSION_ID,
                                         module.getVersion().toString());
 
-                        if(mfpm.elementExists(modName, modulePath)) {
+                        if(moduleFilePM.elementExists(modName, modulePath)) {
                             OMElement moduleElement = OMAbstractFactory.getOMFactory().createOMElement(
                                     Resources.ModuleProperties.MODULE_XML_TAG, null);
                             moduleElement.addAttribute(Resources.NAME, module.getName(), null);
@@ -911,7 +914,7 @@ public class SecurityConfigAdmin {
                             }
                             moduleElement.addAttribute("type", Resources.Associations.ENGAGED_MODULES, null);
 
-                            sfpm.put(serviceGroupId, moduleElement, serviceXPath);
+                            serviceGroupFilePM.put(serviceGroupId, moduleElement, serviceXPath);
                         }
                     }
                     // engage at axis2
@@ -922,17 +925,17 @@ public class SecurityConfigAdmin {
                     }
                 }
                 if (!transactionStarted) {
-                    sfpm.commitTransaction(serviceGroupId);
+                    serviceGroupFilePM.commitTransaction(serviceGroupId);
                 }
             } catch (PersistenceException e) {
-                sfpm.rollbackTransaction(serviceGroupId);
+                serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                 String msg = "Unable to engage modules.";
                 log.error(msg);
                 throw new AxisFault(msg, e);
             }
         } catch (AxisFault e) {
             log.error(e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             throw new SecurityConfigException(e.getMessage(), e);
         }
         return isRahasEngaged;
@@ -970,9 +973,9 @@ public class SecurityConfigAdmin {
         try {
             String serviceXPath = PersistenceUtils.getResourcePath(service);
 
-            boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+            boolean isTransactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
             if(!isTransactionStarted) {
-                sfpm.beginTransaction(serviceGroupId);
+                serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
 
             // registry.addAssociation(resourceUri, servicePath,
@@ -983,12 +986,12 @@ public class SecurityConfigAdmin {
                 if (govRegistry.resourceExists(ksPath)) {
                     OMElement assoc = PersistenceUtils.createAssociation(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
                             ksPath, SecurityConstants.ASSOCIATION_PRIVATE_KEYSTORE);
-                    sfpm.put(serviceGroupId, assoc, serviceXPath);
+                    serviceGroupFilePM.put(serviceGroupId, assoc, serviceXPath);
                 } else if (KeyStoreUtil.isPrimaryStore(privateStore)) {
                     OMElement assoc = PersistenceUtils.createAssociation(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
                             RegistryResources.SecurityManagement.PRIMARY_KEYSTORE_PHANTOM_RESOURCE,
                             SecurityConstants.ASSOCIATION_PRIVATE_KEYSTORE);
-                    sfpm.put(serviceGroupId, assoc, serviceXPath);
+                    serviceGroupFilePM.put(serviceGroupId, assoc, serviceXPath);
                 } else {
                     throw new SecurityConfigException("Missing key store " + privateStore);
                 }
@@ -1000,12 +1003,12 @@ public class SecurityConfigAdmin {
                     if (govRegistry.resourceExists(ksPath)) {
                         OMElement assoc = PersistenceUtils.createAssociation(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
                                 ksPath, SecurityConstants.ASSOCIATION_TRUSTED_KEYSTORE);
-                        sfpm.put(serviceGroupId, assoc, serviceXPath);
+                        serviceGroupFilePM.put(serviceGroupId, assoc, serviceXPath);
                     } else if (KeyStoreUtil.isPrimaryStore(storeName)) {
                         OMElement assoc = PersistenceUtils.createAssociation(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
                                 RegistryResources.SecurityManagement.PRIMARY_KEYSTORE_PHANTOM_RESOURCE,
                                 SecurityConstants.ASSOCIATION_TRUSTED_KEYSTORE);
-                        sfpm.put(serviceGroupId, assoc, serviceXPath);
+                        serviceGroupFilePM.put(serviceGroupId, assoc, serviceXPath);
                     } else {
                         throw new SecurityConfigException("Missing key store" + storeName);
                     }
@@ -1015,7 +1018,7 @@ public class SecurityConfigAdmin {
 //            todo check whether this is needed in the new file-based persistence model.
             if (userGroups != null) {
                 for (String value : userGroups) {
-                    if (!sfpm.elementExists(serviceGroupId, serviceXPath+
+                    if (!serviceGroupFilePM.elementExists(serviceGroupId, serviceXPath+
                             "/"+Resources.SecurityManagement.ROLE_XML_TAG+
                             PersistenceUtils.getXPathAttrPredicate(
                                     Resources.SecurityManagement.ROLENAME_XML_ATTR, value) )) {
@@ -1025,7 +1028,7 @@ public class SecurityConfigAdmin {
                         roleElement.addAttribute(
                                 Resources.Associations.TYPE, UserCoreConstants.INVOKE_SERVICE_PERMISSION, null);
 
-                        sfpm.put(serviceGroupId, roleElement, serviceXPath);
+                        serviceGroupFilePM.put(serviceGroupId, roleElement, serviceXPath);
                     }
 //                    acAdmin.authorizeRole(value, registryServicePath,
 //                            UserCoreConstants.INVOKE_SERVICE_PERMISSION);
@@ -1039,11 +1042,11 @@ public class SecurityConfigAdmin {
             }
 
             if(!isTransactionStarted) {
-                sfpm.commitTransaction(serviceGroupId);
+                serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             throw new SecurityConfigException(e.getMessage(), e);
         }
     }
@@ -1347,16 +1350,16 @@ public class SecurityConfigAdmin {
                 }
             }
 
-            boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+            boolean isTransactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
             if(!isTransactionStarted) {
-                sfpm.beginTransaction(serviceGroupId);
+                serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
             data = new SecurityConfigData();
 
             //todo how to get roles for a given service. Currently it does by checking authorization in service reg path - kasung
             //may be we don't need this in the new persistence model
             String serviceXPath = PersistenceUtils.getResourcePath(service);
-            List roleElements = sfpm.getAll(serviceGroupId, serviceXPath + "/" + Resources.SecurityManagement.ROLE_XML_TAG);
+            List roleElements = serviceGroupFilePM.getAll(serviceGroupId, serviceXPath + "/" + Resources.SecurityManagement.ROLE_XML_TAG);
             String[] roles = new String[roleElements.size()];
             for (int i = 0; i < roleElements.size(); i++) {
                 OMElement roleElement = (OMElement) roleElements.get(i);
@@ -1364,7 +1367,7 @@ public class SecurityConfigAdmin {
             }
             data.setUserGroups(roles);
 
-            List pvtStores = sfpm.getAssociations(serviceGroupId, serviceXPath,
+            List pvtStores = serviceGroupFilePM.getAssociations(serviceGroupId, serviceXPath,
                     SecurityConstants.ASSOCIATION_PRIVATE_KEYSTORE);
 
             if (pvtStores.size() > 0) {
@@ -1386,7 +1389,7 @@ public class SecurityConfigAdmin {
                 }
             }
 
-            List tstedStores = sfpm.getAssociations(serviceGroupId, serviceXPath,
+            List tstedStores = serviceGroupFilePM.getAssociations(serviceGroupId, serviceXPath,
                     SecurityConstants.ASSOCIATION_TRUSTED_KEYSTORE);
             String[] trustedStores = new String[tstedStores.size()];
             for (int i = 0; i < tstedStores.size(); i++) {
@@ -1413,16 +1416,16 @@ public class SecurityConfigAdmin {
             data.setKerberosConfigurations(kerberosData);
 
             if(!isTransactionStarted) {
-                sfpm.commitTransaction(serviceGroupId);
+                serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
             return data;
         } catch (PersistenceException e) {
             // TODO Auto-generated catch block
             log.error(e.getMessage(), e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
         }
         return data;
     }
@@ -1448,7 +1451,7 @@ public class SecurityConfigAdmin {
             }
 
             // persist
-            ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
+            ServiceGroupFilePersistenceManager sfpm = persistenceFactory.getServiceGroupFilePM();
             boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
             if(!isTransactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
@@ -1539,7 +1542,7 @@ public class SecurityConfigAdmin {
             return scenario;
         } catch (Exception e) {
             log.error("Error while reading Security Scenario", e);
-            sfpm.rollbackTransaction(serviceGroupId);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
             throw new SecurityConfigException("readingSecurity", e);
         }
 
@@ -1586,9 +1589,9 @@ public class SecurityConfigAdmin {
 //                + RegistryResources.SERVICES + serviceName;
 
 //        Resource resource = registry.get(servicePath);
-        List pvtStores = sfpm.getAssociations(serviceGroupId, serviceXPath,
+        List pvtStores = serviceGroupFilePM.getAssociations(serviceGroupId, serviceXPath,
                 SecurityConstants.ASSOCIATION_PRIVATE_KEYSTORE);
-        List tstedStores = sfpm.getAssociations(serviceGroupId, serviceXPath,
+        List tstedStores = serviceGroupFilePM.getAssociations(serviceGroupId, serviceXPath,
                 SecurityConstants.ASSOCIATION_TRUSTED_KEYSTORE);
 
         if (pvtStores != null && pvtStores.size() > 0) {
@@ -1613,10 +1616,10 @@ public class SecurityConfigAdmin {
             setServiceParameterElement(serviceName, RahasUtil.getSCTIssuerConfigParameter(
                     ServerCrypto.class.getName(), cryptoProps, -1, null, true, true));
             setServiceParameterElement(serviceName, RahasUtil.getTokenCancelerConfigParameter());
-            OMElement serviceElement = (OMElement) sfpm.get(serviceGroupId, serviceXPath);
+            OMElement serviceElement = (OMElement) serviceGroupFilePM.get(serviceGroupId, serviceXPath);
 
             serviceElement.addAttribute(SecurityConstants.PROP_RAHAS_SCT_ISSUER, Boolean.TRUE.toString(), null);
-            sfpm.setMetaFileModification(serviceGroupId);
+            serviceGroupFilePM.setMetaFileModification(serviceGroupId);
         } catch (Exception e) {
             throw new AxisFault("Could not configure Rahas parameters", e);
         }
@@ -1625,9 +1628,9 @@ public class SecurityConfigAdmin {
 
     private void persistParameter(String serviceGroupId, Parameter parameter,
                                   String serviceXPath) throws Exception {
-        boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+        boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
         if (!transactionStarted) {
-            sfpm.beginTransaction(serviceGroupId);
+            serviceGroupFilePM.beginTransaction(serviceGroupId);
         }
         String paramName = parameter.getName();
         if (paramName != null && paramName.trim().length() != 0) {
@@ -1641,11 +1644,11 @@ public class SecurityConfigAdmin {
                 if(paramElemenet.getAttribute(new QName(Resources.NAME)) == null) {
                     paramElemenet.addAttribute(Resources.NAME, parameter.getName(), null);
                 }
-                sfpm.put(serviceGroupId, paramElemenet, serviceXPath);
+                serviceGroupFilePM.put(serviceGroupId, paramElemenet, serviceXPath);
             }
         }
         if (!transactionStarted) {
-            sfpm.commitTransaction(serviceGroupId);
+            serviceGroupFilePM.commitTransaction(serviceGroupId);
         }
     }
 
@@ -1653,8 +1656,8 @@ public class SecurityConfigAdmin {
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
         String serviceXPath = PersistenceUtils.getResourcePath(axisService);
         try {
-            if (sfpm.elementExists(serviceGroupId, serviceXPath)) {
-                OMElement serviceElement = (OMElement) sfpm.get(serviceGroupId, serviceXPath);
+            if (serviceGroupFilePM.elementExists(serviceGroupId, serviceXPath)) {
+                OMElement serviceElement = (OMElement) serviceGroupFilePM.get(serviceGroupId, serviceXPath);
                 if(serviceElement.getAttribute(new QName(SecurityConstants.PROP_RAHAS_SCT_ISSUER)) != null) {
                     serviceElement.removeAttribute(
                             serviceElement.getAttribute(new QName(SecurityConstants.PROP_RAHAS_SCT_ISSUER)));

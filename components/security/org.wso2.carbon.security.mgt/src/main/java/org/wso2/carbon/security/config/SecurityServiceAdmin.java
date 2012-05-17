@@ -52,18 +52,18 @@ public class SecurityServiceAdmin {
 
     private static Log log = LogFactory.getLog(SecurityServiceAdmin.class);
 
-    private PersistenceFactory pf;
+    private PersistenceFactory persistenceFactory;
 
-    private ServiceGroupFilePersistenceManager sfpm;
+    private ServiceGroupFilePersistenceManager serviceGroupFilePM;
 
-    private ModuleFilePersistenceManager mfpm;
+    private ModuleFilePersistenceManager moduleFilePM;
 
     public SecurityServiceAdmin(AxisConfiguration config) throws ServerException {
         this.axisConfig = config;
         try {
-            pf = PersistenceFactory.getInstance(config);
-            sfpm = pf.getServiceGroupFilePM();
-            mfpm = pf.getModuleFilePM();
+            persistenceFactory = PersistenceFactory.getInstance(config);
+            serviceGroupFilePM = persistenceFactory.getServiceGroupFilePM();
+            moduleFilePM = persistenceFactory.getModuleFilePM();
         } catch (Exception e) {
             log.error("Error creating an PersistenceFactory instance", e);
             throw new ServerException("Error creating an PersistenceFactory instance", e);
@@ -73,9 +73,9 @@ public class SecurityServiceAdmin {
     public SecurityServiceAdmin(AxisConfiguration config, Registry registry) {
 	    this.axisConfig = config;
         try {
-            pf = PersistenceFactory.getInstance(config);
-            sfpm = pf.getServiceGroupFilePM();
-            mfpm = pf.getModuleFilePM();
+            persistenceFactory = PersistenceFactory.getInstance(config);
+            serviceGroupFilePM = persistenceFactory.getServiceGroupFilePM();
+            moduleFilePM = persistenceFactory.getModuleFilePM();
         } catch (Exception e) {
             log.error("Error creating an PersistenceFactory instance", e);
         }
@@ -99,9 +99,9 @@ public class SecurityServiceAdmin {
             // Generate an ID
             policy.setId(UUIDGenerator.getUUID());
         }
-        boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+        boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
         if (!transactionStarted) {
-            sfpm.beginTransaction(serviceGroupId);
+            serviceGroupFilePM.beginTransaction(serviceGroupId);
         }
 
         OMFactory omFactory = OMAbstractFactory.getOMFactory();
@@ -115,9 +115,9 @@ public class SecurityServiceAdmin {
         String policyResourcePath = policiesXPath+
                 "/"+Resources.POLICY+
                 PersistenceUtils.getXPathTextPredicate(Resources.ServiceProperties.POLICY_UUID, policy.getId());
-        if (!sfpm.elementExists(serviceGroupId, policyResourcePath)) {
+        if (!serviceGroupFilePM.elementExists(serviceGroupId, policyResourcePath)) {
 
-//            todo use pf.getServicePM().persistServicePolicy method instead of below code chunk - kasung
+//            todo use persistenceFactory.getServicePM().persistServicePolicy method instead of below code chunk - kasung
 
             OMElement policyWrapperElement = omFactory.createOMElement(Resources.POLICY, null);
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
@@ -130,8 +130,8 @@ public class SecurityServiceAdmin {
             OMElement policyElementToPersist = PersistenceUtils.createPolicyElement(policy);
             policyWrapperElement.addChild(policyElementToPersist);
 
-            if (!sfpm.elementExists(serviceGroupId, policiesXPath)) {
-                sfpm.put(serviceGroupId,
+            if (!serviceGroupFilePM.elementExists(serviceGroupId, policiesXPath)) {
+                serviceGroupFilePM.put(serviceGroupId,
                         omFactory.createOMElement(Resources.POLICIES, null), serviceXPath);
 //            } else {                              // we already perform a NOT element exists check
 //                //you must manually delete the existing policy before adding new one.
@@ -139,17 +139,17 @@ public class SecurityServiceAdmin {
 //                        "/"+Resources.POLICY+
 //                        PersistenceUtils.getXPathTextPredicate(
 //                                Resources.ServiceProperties.POLICY_UUID, policy.getId() );
-//                if (sfpm.elementExists(serviceGroupId, pathToPolicy)) {
-//                    sfpm.delete(serviceGroupId, pathToPolicy);
+//                if (serviceGroupFilePM.elementExists(serviceGroupId, pathToPolicy)) {
+//                    serviceGroupFilePM.delete(serviceGroupId, pathToPolicy);
 //                }
             }
-            sfpm.put(serviceGroupId, policyWrapperElement, policiesXPath);
+            serviceGroupFilePM.put(serviceGroupId, policyWrapperElement, policiesXPath);
 
 //           todo the old impl doesn't add the policyUUID to the binding elements. Is it ok?
-//            if (!sfpm.elementExists(serviceGroupId, serviceXPath+
+//            if (!serviceGroupFilePM.elementExists(serviceGroupId, serviceXPath+
 //                    PersistenceUtils.getXPathTextPredicate(
 //                            Resources.ServiceProperties.POLICY_UUID, policy.getId() ))) {
-//                sfpm.put(serviceGroupId, idElement.cloneOMElement(), serviceXPath); + path to bindings?
+//                serviceGroupFilePM.put(serviceGroupId, idElement.cloneOMElement(), serviceXPath); + path to bindings?
 //            }
         }
 
@@ -159,7 +159,7 @@ public class SecurityServiceAdmin {
                     + axisService.getAxisServiceGroup().getServiceGroupName()
                     + RegistryResources.SERVICES + axisService.getName();
 
-            pf.getServicePM().persistPolicyToRegistry(policy,
+            persistenceFactory.getServicePM().persistPolicyToRegistry(policy,
                     "" + PolicyInclude.BINDING_POLICY, registryServicePath);
         }
 
@@ -186,13 +186,13 @@ public class SecurityServiceAdmin {
                     "/"+Resources.ServiceProperties.BINDING_XML_TAG+
                     PersistenceUtils.getXPathAttrPredicate(Resources.NAME, bindingName);
 
-            if (!sfpm.elementExists(serviceGroupId, bindingElementPath+
+            if (!serviceGroupFilePM.elementExists(serviceGroupId, bindingElementPath+
                     "/"+Resources.ServiceProperties.POLICY_UUID+
                     PersistenceUtils.getXPathTextPredicate(null, policy.getId())) ) {
 
                 OMElement bindingElement = null;
-                if (sfpm.elementExists(serviceGroupId, bindingElementPath)) {
-                    bindingElement = (OMElement) sfpm.get(serviceGroupId, bindingElementPath);
+                if (serviceGroupFilePM.elementExists(serviceGroupId, bindingElementPath)) {
+                    bindingElement = (OMElement) serviceGroupFilePM.get(serviceGroupId, bindingElementPath);
                 } else {
                     bindingElement = omFactory.createOMElement(Resources.ServiceProperties.BINDINGS, null);
                 }
@@ -201,16 +201,16 @@ public class SecurityServiceAdmin {
                 idElement.setText("" + policy.getId());
                 bindingElement.addChild(idElement.cloneOMElement());
 
-                sfpm.put(serviceGroupId, bindingElement, serviceXPath+"/"+Resources.ServiceProperties.BINDINGS);
+                serviceGroupFilePM.put(serviceGroupId, bindingElement, serviceXPath+"/"+Resources.ServiceProperties.BINDINGS);
             }
         }
         if (!transactionStarted) {
-            sfpm.commitTransaction(serviceGroupId);
+            serviceGroupFilePM.commitTransaction(serviceGroupId);
         }
 	    // at axis2
 	} catch (Exception e) {
-	    log.error(e);
-        sfpm.rollbackTransaction(serviceGroupId);
+        log.error(e);
+        serviceGroupFilePM.rollbackTransaction(serviceGroupId);
 	    throw new ServerException("addPoliciesToService");
 	}
     }
@@ -245,9 +245,9 @@ public class SecurityServiceAdmin {
             }
             // Add the new policy to the registry
         }
-        boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+        boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
         if (!transactionStarted) {
-            sfpm.beginTransaction(serviceGroupId);
+            serviceGroupFilePM.beginTransaction(serviceGroupId);
         }
         Iterator<String> ite = lst.iterator();
         while (ite.hasNext()) {
@@ -256,7 +256,7 @@ public class SecurityServiceAdmin {
                     "/"+Resources.ServiceProperties.BINDINGS+
                     "/"+Resources.ServiceProperties.BINDING_XML_TAG+
                     PersistenceUtils.getXPathAttrPredicate(Resources.NAME, bindingName);
-            OMNode bindingPolicyUuidOM = sfpm.get(serviceGroupId, bindingElementPath +
+            OMNode bindingPolicyUuidOM = serviceGroupFilePM.get(serviceGroupId, bindingElementPath +
                     "/" + Resources.ServiceProperties.POLICY_UUID +
                     PersistenceUtils.getXPathTextPredicate(null, uuid));
             if (bindingPolicyUuidOM != null) {
@@ -264,12 +264,12 @@ public class SecurityServiceAdmin {
             }
         }
         if (!transactionStarted) {
-            sfpm.commitTransaction(serviceGroupId);
+            serviceGroupFilePM.commitTransaction(serviceGroupId);
         }
         // at axis2
 	} catch (Exception e) {
-	    log.error(e.getMessage(), e);
-        sfpm.rollbackTransaction(serviceGroupId);
+        log.error(e.getMessage(), e);
+        serviceGroupFilePM.rollbackTransaction(serviceGroupId);
 	    throw new ServerException("addPoliciesToService");
 	}
     }

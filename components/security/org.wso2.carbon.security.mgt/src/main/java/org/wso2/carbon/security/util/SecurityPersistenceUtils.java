@@ -7,7 +7,6 @@ import org.wso2.carbon.core.Resources;
 import org.wso2.carbon.core.persistence.PersistenceDataNotFoundException;
 import org.wso2.carbon.core.persistence.PersistenceUtils;
 import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
-import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 
@@ -25,13 +24,13 @@ public class SecurityPersistenceUtils {
      * @param realm realm
      * @param tenantAwareUserName tenantAwareUserName
      * @param permissionType Probably UserCoreConstants.INVOKE_SERVICE_PERMISSION is all you need for this
-     * @param sfpm sfpm
+     * @param serviceGroupFilePM serviceGroupFilePM
      * @return false if any of the roles of user does not have permission to access it or no roles assigned for the service.
      * @throws UserStoreException
      */
     public static boolean isUserAuthorized(
             String serviceGroupId, String serviceId, UserRealm realm, String tenantAwareUserName, String permissionType,
-            ServiceGroupFilePersistenceManager sfpm) throws UserStoreException {
+            ServiceGroupFilePersistenceManager serviceGroupFilePM) throws UserStoreException {
         try {
             String[] rolesList = realm.getUserStoreManager().getRoleListOfUser(tenantAwareUserName);
 
@@ -43,7 +42,7 @@ public class SecurityPersistenceUtils {
                             Resources.Associations.TYPE, permissionType)+
                     "/@"+ Resources.SecurityManagement.ROLENAME_XML_ATTR;
 
-            List tmpAllowedRolesAttr = sfpm.getAll(serviceGroupId, rolesPath);
+            List tmpAllowedRolesAttr = serviceGroupFilePM.getAll(serviceGroupId, rolesPath);
             List<String> allowedRoles = new ArrayList<String>(tmpAllowedRolesAttr.size());
             for (Object attr : tmpAllowedRolesAttr) {
                 allowedRoles.add(((OMAttribute) attr).getAttributeValue());

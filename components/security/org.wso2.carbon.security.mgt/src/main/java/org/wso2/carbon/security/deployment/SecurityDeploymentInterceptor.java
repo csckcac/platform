@@ -90,9 +90,9 @@ import java.util.Properties;
 public class SecurityDeploymentInterceptor implements AxisObserver {
     private static final Log log = LogFactory.getLog(SecurityDeploymentInterceptor.class);
 
-    private PersistenceFactory pf;
-    private ServiceGroupFilePersistenceManager sfpm;
-    private ModuleFilePersistenceManager mfpm;
+    private PersistenceFactory persistenceFactory;
+    private ServiceGroupFilePersistenceManager serviceGroupFilePM;
+    private ModuleFilePersistenceManager moduleFilePM;
 
     protected void activate(ComponentContext ctxt) {
         BundleContext bundleCtx = ctxt.getBundleContext();
@@ -138,9 +138,9 @@ public class SecurityDeploymentInterceptor implements AxisObserver {
     public void init(AxisConfiguration axisConfig) {
 
         try {
-            pf = PersistenceFactory.getInstance(axisConfig);
-            sfpm = pf.getServiceGroupFilePM();
-            mfpm = pf.getModuleFilePM();
+            persistenceFactory = PersistenceFactory.getInstance(axisConfig);
+            serviceGroupFilePM = persistenceFactory.getServiceGroupFilePM();
+            moduleFilePM = persistenceFactory.getModuleFilePM();
         } catch (AxisFault e) {
             log.error("Error while adding PersistenceFactory parameter to axisConfig", e);
         }
@@ -160,22 +160,22 @@ public class SecurityDeploymentInterceptor implements AxisObserver {
 
         if (eventType == AxisEvent.SERVICE_DEPLOY) {
             try {
-                boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+                boolean isTransactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
                 if(!isTransactionStarted) {
-                    sfpm.beginTransaction(serviceGroupId);
+                    serviceGroupFilePM.beginTransaction(serviceGroupId);
                 }
                 String policyResourcePath = PersistenceUtils.getResourcePath(axisService)+
                         "/"+Resources.POLICIES+"/"+Resources.POLICY;
                 int tenantID = SuperTenantCarbonContext.getCurrentContext(axisService).getTenantId();
-                if (!sfpm.elementExists(serviceGroupId, policyResourcePath)) {
+                if (!serviceGroupFilePM.elementExists(serviceGroupId, policyResourcePath)) {
                     // do nothing, because no policy
                     if(!isTransactionStarted) {
-                        sfpm.rollbackTransaction(serviceGroupId);
+                        serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                     }
                     return;
                 }
 
-                List policies = sfpm.getAll(serviceGroupId, policyResourcePath);
+                List policies = serviceGroupFilePM.getAll(serviceGroupId, policyResourcePath);
                 SecurityScenario scenario = null;
                 for (Object node : policies) {
                     OMElement policyWrapperElement = (OMElement) node;
@@ -195,13 +195,13 @@ public class SecurityDeploymentInterceptor implements AxisObserver {
                 }
 
                 if(!isTransactionStarted) {
-                    sfpm.commitTransaction(serviceGroupId);
+                    serviceGroupFilePM.commitTransaction(serviceGroupId);
                 }
             } catch (Exception e) {
                 String msg = "Cannot handle service DEPLOY event for service: " +
                              axisService.getName();
                 log.error(msg, e);
-                sfpm.rollbackTransaction(serviceGroupId);
+                serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                 throw new RuntimeException(msg, e);
             }
         }
@@ -305,7 +305,7 @@ public class SecurityDeploymentInterceptor implements AxisObserver {
         try {
             String serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
             String serviceName = service.getName();
-            ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
+            ServiceGroupFilePersistenceManager sfpm = persistenceFactory.getServiceGroupFilePM();
 
             SuperTenantCarbonContext carbonContext = SuperTenantCarbonContext.getCurrentContext(service);
             int tenantID = carbonContext.getTenantId();
@@ -325,7 +325,7 @@ public class SecurityDeploymentInterceptor implements AxisObserver {
             UserRegistry govRegistry = SecurityServiceHolder.getRegistryService().getGovernanceSystemRegistry(tenantID);
 
             ServicePasswordCallbackHandler handler = new ServicePasswordCallbackHandler(
-                    pf, serviceGroupId, serviceName, serviceXPath, registryServicePath, govRegistry, userRealm);
+                    persistenceFactory, serviceGroupId, serviceName, serviceXPath, registryServicePath, govRegistry, userRealm);
 
             Parameter param = new Parameter();
             param.setName(WSHandlerConstants.PW_CALLBACK_REF);

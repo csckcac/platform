@@ -61,10 +61,10 @@ public class ServicePasswordCallbackHandler implements CallbackHandler {
     private UserRealm realm = null;
     private String serviceXPath = null;
     private String registryServicePath = null;
-    private PersistenceFactory pf;
+    private PersistenceFactory persistenceFactory;
 
     //todo there's a API change here. apparently only security component uses this. If not, change the invocations accordingly.
-    public ServicePasswordCallbackHandler(PersistenceFactory pf, String serviceGroupId, String serviceId, String serviceXPath,
+    public ServicePasswordCallbackHandler(PersistenceFactory persistenceFactory, String serviceGroupId, String serviceId, String serviceXPath,
                                           String registryServicePath, Registry registry, UserRealm realm)
             throws RegistryException, SecurityConfigException {
         this.registry = registry;
@@ -73,7 +73,7 @@ public class ServicePasswordCallbackHandler implements CallbackHandler {
         this.realm = realm;
         this.serviceXPath = serviceXPath;
         this.registryServicePath = registryServicePath;
-        this.pf = pf;
+        this.persistenceFactory = persistenceFactory;
     }
 
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
@@ -155,7 +155,7 @@ public class ServicePasswordCallbackHandler implements CallbackHandler {
         String kerberosPath = this.serviceXPath + "/" + RampartConfigUtil.KERBEROS_CONFIG_RESOURCE;
         String servicePrincipalPasswordResource = kerberosPath + "/@" + KerberosConfig.SERVICE_PRINCIPLE_PASSWORD;
 
-        ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
+        ServiceGroupFilePersistenceManager sfpm = persistenceFactory.getServiceGroupFilePM();
         if (!sfpm.elementExists(serviceGroupId, servicePrincipalPasswordResource)) {
             String msg = "Unable to find service principle password registry resource in path "
                     + servicePrincipalPasswordResource;
@@ -210,7 +210,7 @@ public class ServicePasswordCallbackHandler implements CallbackHandler {
 
             isAuthorized = SecurityPersistenceUtils.isUserAuthorized(
                     serviceGroupId, serviceId, realm, tenantAwareUserName,
-                    UserCoreConstants.INVOKE_SERVICE_PERMISSION, pf.getServiceGroupFilePM());
+                    UserCoreConstants.INVOKE_SERVICE_PERMISSION, persistenceFactory.getServiceGroupFilePM());
 
             if (isAuthorized == true) {
                 isAuthenticated = realm.getUserStoreManager().authenticate(tenantAwareUserName, password);

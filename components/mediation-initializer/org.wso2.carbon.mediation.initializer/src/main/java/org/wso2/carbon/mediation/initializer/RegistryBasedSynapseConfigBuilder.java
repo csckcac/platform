@@ -138,6 +138,8 @@ public class RegistryBasedSynapseConfigBuilder {
             buildEvenSourcesFromRegistry(configuration, properties);
             buildExecutorsFromRegistry(configuration, properties);
 			buildAPIsFromRegistry(configuration, properties);
+            buildMessageStoresFromRegistry(configuration, properties);
+            buildMessageProcessorsFromRegistry(configuration, properties);
             if (!transactionStarted) {
                 registry.commitTransaction();
             }
@@ -381,6 +383,40 @@ public class RegistryBasedSynapseConfigBuilder {
                 }
             } catch (SynapseException e) {
                 handleErrorGracefully("API", e);
+            }
+        }
+    }
+
+    private void buildMessageStoresFromRegistry(SynapseConfiguration configuration,
+                                                Properties properties) {
+        if (log.isDebugEnabled()) {
+            log.debug("Build the message stores from the carbon registry");
+        }
+        MessageStoreRegistryStore messageStoreRegistryStore =
+                new MessageStoreRegistryStore(registry, configName);
+        for (OMElement messageStoreElement : messageStoreRegistryStore.getElements()) {
+            try {
+                SynapseXMLConfigurationFactory.defineMessageStore
+                        (configuration, messageStoreElement, properties);
+            } catch (SynapseException e) {
+                handleErrorGracefully("messagestore", e);
+            }
+        }
+    }
+
+    private void buildMessageProcessorsFromRegistry(SynapseConfiguration configuration,
+                                                    Properties properties) {
+        if (log.isDebugEnabled()) {
+            log.debug("Build the message processors from the carbon registry");
+        }
+        MessageProcessorRegistryStore messageProcessorRegistryStore =
+                new MessageProcessorRegistryStore(registry, configName);
+        for (OMElement messageProcessorElement : messageProcessorRegistryStore.getElements()) {
+            try {
+                SynapseXMLConfigurationFactory.defineMessageProcessor(configuration,
+                        messageProcessorElement, properties);
+            } catch (SynapseException e) {
+                handleErrorGracefully("messageprocessor", e);
             }
         }
     }

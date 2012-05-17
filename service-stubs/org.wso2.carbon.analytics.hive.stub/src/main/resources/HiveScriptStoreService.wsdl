@@ -1,12 +1,12 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax27="http://exception.hive.analytics.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://web.hive.analytics.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://web.hive.analytics.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax2369="http://exception.hive.analytics.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://web.hive.analytics.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://web.hive.analytics.carbon.wso2.org">
     <wsdl:documentation>HiveScriptStoreService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax28="http://exception.hive.analytics.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2370="http://exception.hive.analytics.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
             <xs:import namespace="http://exception.hive.analytics.carbon.wso2.org/xsd" />
             <xs:element name="HiveScriptStoreServiceHiveScriptStoreException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="HiveScriptStoreException" nillable="true" type="ax27:HiveScriptStoreException" />
+                        <xs:element minOccurs="0" name="HiveScriptStoreException" nillable="true" type="ax2369:HiveScriptStoreException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -15,6 +15,7 @@
                     <xs:sequence>
                         <xs:element minOccurs="0" name="scriptName" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="scriptContent" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="cron" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -224,13 +225,13 @@
     </wsdl:binding>
     <wsdl:service name="HiveScriptStoreService">
         <wsdl:port name="HiveScriptStoreServiceHttpsSoap11Endpoint" binding="tns:HiveScriptStoreServiceSoap11Binding">
-            <soap:address location="https://10.150.3.173:9443/services/HiveScriptStoreService.HiveScriptStoreServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://10.150.3.23:9443/services/HiveScriptStoreService.HiveScriptStoreServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="HiveScriptStoreServiceHttpsSoap12Endpoint" binding="tns:HiveScriptStoreServiceSoap12Binding">
-            <soap12:address location="https://10.150.3.173:9443/services/HiveScriptStoreService.HiveScriptStoreServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://10.150.3.23:9443/services/HiveScriptStoreService.HiveScriptStoreServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="HiveScriptStoreServiceHttpsEndpoint" binding="tns:HiveScriptStoreServiceHttpBinding">
-            <http:address location="https://10.150.3.173:9443/services/HiveScriptStoreService.HiveScriptStoreServiceHttpsEndpoint/" />
+            <http:address location="https://10.150.3.23:9443/services/HiveScriptStoreService.HiveScriptStoreServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

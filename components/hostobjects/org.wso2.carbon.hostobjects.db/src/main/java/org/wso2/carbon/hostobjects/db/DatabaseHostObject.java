@@ -346,6 +346,23 @@ public class DatabaseHostObject extends ScriptableObject {
         }
     }
 
+	public static void jsFunction_close(Context cx, Scriptable thisObj, Object[] args,
+	                                    Function funObj) throws ScriptException {
+		String functionName = "c";
+		int argsCount = args.length;
+		if (argsCount > 0) {
+			HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+		}
+		DatabaseHostObject db = (DatabaseHostObject) thisObj;
+		try {
+			db.conn.close();
+		} catch (SQLException e) {
+			String msg = "Error while closing the Database Connection";
+			log.warn(msg, e);
+			throw new ScriptException(msg, e);
+		}
+	}
+	
     private static String replaceWildcards(DatabaseHostObject db, String query, NativeArray params) throws SQLException {
         String openedChar = null;
         String lastChar = null;

@@ -1,30 +1,36 @@
 /* ---------------- template styles ------------------------- */
 
 table#main-table td#header {
-	background-image: url( ../images/esb-header-region-bg.gif);
+	background-image: url( ../images/csg-header-region-bg.png);
 }
 
 table#main-table td#menu-panel {
-	border-right: solid 0px #73559D;
+	border-right: solid 1px #deb408;
+	background-image: url(../images/csg-server-menu-panel-bg.png);
+	background-position: right top;
+	background-repeat: repeat-y;
 }
 
 
 /* ---------------- header styles ------------------ */
 div#header-div {
-    background-image: url( ../images/esb-header-bg.gif);
+    background-image: url( ../images/csg-header-back.png);
 }
 
 div#header-div div.left-logo {
-	background-image: url( ../images/esb-header-logo.gif );
-	margin-left:45px;
-	margin-top:35px;
+	background-image: url( ../images/csg-header-logo.png );
+	   margin-left: 30px;
+    margin-top: 25px;
+	
+	width:246px;
+	height:50px;
 }
 
 div#header-div div.right-logo {
 	/*background-image:url("../images/right-logo-bg.gif");
 	background-position:right top;
 	background-repeat:no-repeat;*/
-	color:#542988;
+	color:#8a2c3f;
 	height:32px;
 	margin-right:20px;
 	line-height: 30px;
@@ -33,7 +39,7 @@ div#header-div div.right-logo {
 	padding-top:5px;
 }
 div#header-div div.header-links {
-	margin-top:0px;
+	margin-top:-10px;
 }
 div#header-div div.header-links div.right-links {
 	margin-right: 0px;
@@ -63,12 +69,16 @@ div#menu ul.main li.normal {
 }
 
 div#menu ul.main li a.menu-home {
-	display: none !important;
+background-image:url(../../admin/images/menu_header.gif);
+height:28px;
 }
 
 div#menu ul.main li.menu-header {
-	background-image:url("../images/menu_header.gif");
-	height: 28px;
+	background-image: url(../images/csg-server-menu-header.gif);
+	background-position: left bottom;
+	background-repeat: repeat-x;
+	height: 32px;
+	line-height: 32px;
 }
 
 div#menu ul.main li a.menu-default {
@@ -128,8 +138,8 @@ div#footer-div div.footer-content div.poweredby {
 .tableEvenRow{background-color: #EFECF5;}
 
 .button:hover{
-	background-image:url(../images/esb-button-bg-hover.gif);
-	border:solid 1px #8268A8;
+	/*background-image:url(../images/csg-button-bg-hover.gif);
+	border:solid 1px #8268A8;*/
 }
 
 /* =============================================================================================================== */
@@ -199,4 +209,14 @@ table#main-table td#middle-content {
 background-image: url(../images/menu-margin.gif);
 background-position: left top;
 background-repeat: repeat-y;
+background-color:#f9f8ee;
+}
+div#middle{
+background-color:#f9f8ee;   
+}
+div#middle h2{
+color:#8a2c3f;
+}
+div#menu ul.main li.menu-disabled-link{
+	background-color:#f9f8ee;
 }

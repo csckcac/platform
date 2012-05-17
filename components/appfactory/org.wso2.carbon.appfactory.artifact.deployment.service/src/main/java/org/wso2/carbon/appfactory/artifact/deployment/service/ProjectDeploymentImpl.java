@@ -71,8 +71,8 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
         try {
             clientType = SVNClientAdapterFactory.getPreferredSVNClientType();
             svnClient = SVNClientAdapterFactory.createSVNClient(clientType);
-            svnClient.setUsername(appFactoryConfiguration.getAdminUserName());
-            svnClient.setUsername(appFactoryConfiguration.getAdminPassword());
+            svnClient.setUsername(appFactoryConfiguration.getScmServerAdminUserName());
+            svnClient.setPassword(appFactoryConfiguration.getScmServerAdminPassword());
         } catch (SVNClientException e) {
             throw new ProjectDeploymentExceptions("Client type can not be defined.");
         }
@@ -221,6 +221,9 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
                                                   appFactoryConfiguration.getAdminPassword(),
                                                   remoteIp)) {
                 artifactUploadClient.uploadCarbonApp(uploadedFileItems);
+                log.info(deployArtifact.getName() + " is successfully uploaded.");
+            } else {
+                handleException("Failed to login to " + remoteIp + " to deploy artifact:" + deployArtifact.getName());
             }
         } catch (Exception e) {
             handleException("Failed to upload the artifact:" + deployArtifact + " of project:" +
@@ -230,9 +233,9 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
 
 
     private boolean executeMavenGoal(String projectPath) throws ProjectDeploymentExceptions {
-        if (System.getProperty("maven.home") == null) {
+        /* if (System.getProperty("maven.home") == null) {
             throw new ProjectDeploymentExceptions("System property 'maven.home' is not set.");
-        }
+        }*/
         InvocationRequest request = new DefaultInvocationRequest();
         request.setShowErrors(true);
 

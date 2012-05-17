@@ -109,6 +109,7 @@
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="namespace" nillable="true" type="xs:string" />
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="path" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="size" type="xs:int" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="version" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="SchemaBean">

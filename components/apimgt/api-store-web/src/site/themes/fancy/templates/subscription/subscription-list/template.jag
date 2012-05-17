@@ -30,7 +30,7 @@
                              <a href="<%=path%>"><img alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/fancy/images/api-default.png<% }%>"/></a>
                         </td>
                         <td>
-                            <a href="<%=path%>" class="service-name"><%=api.name%></a>
+                            <a href="<%=path%>" class="service-name"><%=api.name%>-<%=api.version%></a>
                         </td>
                         <td>
                             <%=api.provider%>

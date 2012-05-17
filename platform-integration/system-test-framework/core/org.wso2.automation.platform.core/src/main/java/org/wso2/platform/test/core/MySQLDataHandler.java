@@ -60,6 +60,7 @@ public class MySQLDataHandler {
                 for (int i = 0; i <= fileset.length - 1; i++) {
                     testResultDeployer.writeResult(ProductConstant.REPORT_LOCATION + "reports" +
                                                    File.separator + fileset[i]);
+                    log.info(fileset[i] +" write to database");
                 }
             }
         } catch (ClassNotFoundException e) {

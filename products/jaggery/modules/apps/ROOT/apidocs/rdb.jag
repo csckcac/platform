@@ -197,14 +197,25 @@ var db = new Database("jdbc:h2:demo", "admin", "admin", config);
 
 
                     </tr>
-                    <tr>
+					<tr>
 
                         <td><code>rollback()</code></td>
                         <td>None</td>
-                        <td>
-                              SQL transaction rollback
+                        <td>  
                             <pre class="prettyprint">db.rollback()</pre>
+								SQL transaction rollback
 
+                        </td>
+
+
+                    </tr>
+					<tr>
+
+                        <td><code>close()</code></td>
+                        <td>None</td>
+                        <td>  
+                            <pre class="prettyprint">db.close()</pre>
+								SQL connection close
 
                         </td>
 

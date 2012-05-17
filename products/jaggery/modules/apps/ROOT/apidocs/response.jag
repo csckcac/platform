@@ -110,7 +110,7 @@ include('/includes/topnavi.jag');
 
                         <td><code>status</code></td>
                         <td>String</td>
-                        <td><pre class="prettyprint">request.status</pre>
+                        <td><pre class="prettyprint">response.status</pre>
                             Sets the Status code
                         </td>
 

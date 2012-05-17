@@ -20,7 +20,8 @@ include("/jagg/jagg.jag");
             };
         } else {
             obj = {
-                error:false
+                error:false,
+                usage:result.usage
             }
         }
         print(obj);

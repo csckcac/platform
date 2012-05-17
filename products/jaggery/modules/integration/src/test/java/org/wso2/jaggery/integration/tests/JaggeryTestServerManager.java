@@ -23,9 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.wso2.carbon.integration.framework.TestServerManager;
-import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
-import org.wso2.carbon.integration.framework.utils.ServerUtils;
-import org.wso2.carbon.integration.framework.utils.TestUtil;
 import org.wso2.carbon.utils.FileManipulator;
 
 import java.io.File;
@@ -38,47 +35,41 @@ import java.io.IOException;
 public class JaggeryTestServerManager extends TestServerManager {
 
     private static final Log log = LogFactory.getLog(JaggeryTestServerManager.class);
+    private static final String JAGGERY_ADMIN_CONTEXT = "admin";
 
     @Override
     @BeforeSuite(timeOut = 300000)
     public String startServer() throws IOException {
     	
-    	String carbonZip = System.getProperty("carbon.zip");
-    	ServerUtils serverUtils = new ServerUtils();
-        String carbonHome = serverUtils.setUpCarbonHome(carbonZip);
-        String carbonFolderPath = "";
+        String carbonHome = super.startServerInCarbonFolder(JAGGERY_ADMIN_CONTEXT);
+        
+        String carbonFolder = "";
     	if(carbonHome != null) {
-    		carbonFolderPath = carbonHome + File.separator + "carbon";
+    		carbonFolder = carbonHome + File.separator + "carbon";
     	}
-        TestUtil.copySecurityVerificationService(carbonFolderPath);
-        copyArtifacts(carbonFolderPath);
-        System.setProperty("JAGGERY_HOME", carbonHome);
-        serverUtils.startServerUsingCarbonHome(carbonFolderPath, 0);
-        FrameworkSettings.init();
+    	System.setProperty("carbon.home", carbonFolder);
         
-        System.setProperty("carbon.home", carbonHome);
-        
-        // Copying jaggery configuration file
-        String fileName = "jaggery.conf";
-        String sourcePath = computeSourcePath(fileName);
-        String destinationPath = computeDestPath(carbonFolderPath, fileName);
-        copySampleFile(sourcePath, destinationPath);
-        
-        return carbonHome;
+        return carbonFolder;
     }
 
     @Override
     @AfterSuite(timeOut = 60000)
     public void stopServer() throws Exception {
-        super.stopServer();
+        super.stopServer(JAGGERY_ADMIN_CONTEXT);
     }
 
     protected void copyArtifacts(String carbonHome) throws IOException {
 
+        // Copying jaggery configuration file
+        String fileName = "jaggery.conf";
+        String sourcePath = computeSourcePath(fileName);
+        String destinationPath = computeDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
         //email host object
-    	String fileName = "email.jag";
-    	String sourcePath = computeSourcePath(fileName);
-    	String destinationPath = computeDestPath(carbonHome, fileName);
+    	fileName = "email.jag";
+    	sourcePath = computeSourcePath(fileName);
+    	destinationPath = computeDestPath(carbonHome, fileName);
         copySampleFile(sourcePath, destinationPath);
         
         //database host object
@@ -140,14 +131,12 @@ public class JaggeryTestServerManager extends TestServerManager {
     }
 
     private String computeDestPath(String carbonHome, String fileName) {
-        String deploymentPath = carbonHome + File.separator + "repository" + File.separator
-                                + "deployment" + File.separator + "server" + File.separator
-                                + "jaggeryapps" + File.separator + "testapp";
+        String deploymentPath = carbonHome + File.separator + "apps" + File.separator
+                                 + "testapp";
         File depFile = new File(deploymentPath);
         if (!depFile.exists() && !depFile.mkdir()) {
             log.error("Error while creating the deployment folder : " + deploymentPath);
         }
         return deploymentPath + File.separator + fileName;
     }
-    
 }

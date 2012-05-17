@@ -57,7 +57,6 @@ public class WSRequestHostObjectTestCase {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			System.out.println(">>>>>>>>>> "+finalOutput);
 	        assertNotNull(finalOutput, "Result cannot be null");
 		}
         
@@ -85,7 +84,12 @@ public class WSRequestHostObjectTestCase {
   		} catch (IOException e) {
   			e.printStackTrace();
   		} finally {
-  	        assertEquals(finalOutput, "Jaggery Runtime-1.0.0-SNAPSHOT_M5");
+  			boolean textContains = false;
+  			if(finalOutput != null && finalOutput.contains(
+  					"<ns:getVersionResponse xmlns:ns=\"http://version.services.core.carbon.wso2.org\"><return>")) {
+  				textContains = true;
+  			}
+  	        assertEquals(textContains, true);
   		}
           
       }

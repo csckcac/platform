@@ -69,23 +69,10 @@ public class CSGServiceComponent {
             // add the default csguser into the user store
             String csgRoleName = CSGUtils.getStringProperty(CSGConstant.CSG_ROLE_NAME,
                     CSGConstant.DEFAULT_CSG_ROLE_NAME);
-            String[] permissionList;
-            String permissionString = CSGUtils.getStringProperty(
-                    CSGConstant.CSG_USER_PERMISSION_LIST, null);
-            if (permissionString == null) {
-                permissionList = CSGConstant.CSG_USER_DEFAULT_PERMISSION_LIST;
-            } else {
-                // permission string can be configured as a system property as
-                // csg-user-permission-list=permission1,permission2,permission3 etc..
-                permissionList = new String[]{};
-                int i = 0;
-                for (String permission : permissionString.split(",")) {
-                    permissionList[++i] = permission.trim();
-                }
-            }
+
             addCSGUser(
                     csgRoleName,
-                    permissionList,
+                    CSGUtils.getPermissionsList(),
                     CSGUtils.getStringProperty(CSGConstant.CSG_USER_NAME, CSGConstant.DEFAULT_CSG_USER),
                     CSGUtils.getStringProperty(CSGConstant.CSG_USER_PASSWORD,
                             CSGConstant.DEFAULT_CSG_USER_PASSWORD));
@@ -138,8 +125,8 @@ public class CSGServiceComponent {
             log.error("Unable to start thrift server", axisFault);
             return;
         }
-        if (log.isInfoEnabled()) {
-            log.info("Activated the CSGServiceComponent");
+        if (log.isDebugEnabled()) {
+            log.debug("Activated the CSGServiceComponent");
         }
     }
 

@@ -93,6 +93,9 @@
                     <th><fmt:message key="csg.publish.option"/></th>
                 </tr>
                 </thead>
+                <%
+                    if(CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service")){
+                %>
                 <tbody>
                 <tr>
                     <td>
@@ -177,6 +180,7 @@
                     </td>
                 </tr>
                 </tbody>
+                <% }%>
             </table>
         </div>
     </div>

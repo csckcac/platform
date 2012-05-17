@@ -36,7 +36,7 @@
 
         <div id="workArea">
             <table width="100%">
-            <% if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin")) {%>
+            <% if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service")) {%>
             <tr>
                 <td>
                     <table class="styledLeft" id="internal" width="100%">

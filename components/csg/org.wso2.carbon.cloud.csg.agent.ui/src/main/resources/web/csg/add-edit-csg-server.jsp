@@ -238,6 +238,9 @@
     </h2>
 
     <div id="workArea">
+        <%
+            if(CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service")){
+        %>
         <form method="post" action="save-csg-server.jsp" name="csgServerForm">
             <table class="styledLeft" id="csgServerInfoTableId" width="60%">
                 <thead>
@@ -329,6 +332,9 @@
                 </tr>
             </table>
         </form>
+        <%
+            }
+        %>
     </div>
 </div>
 </fmt:bundle>

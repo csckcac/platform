@@ -129,6 +129,9 @@
     <h2><fmt:message key="csg.publish.unpublish"/></h2>
 
     <div id="workArea">
+    <%
+        if(CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service")){
+    %>
         <form action="service-list.jsp" name="searchForm">
 
         <table class="styledLeft">
@@ -427,8 +430,10 @@
         <script type="text/javascript">
             alternateTableRows('csg_service_table_id', 'tableEvenRow', 'tableOddRow');
         </script>
-
         </form>
+    <%
+        }
+    %>
     </div>
 </div>
 

@@ -53,12 +53,12 @@ public class CSGUtils {
     }
 
     /**
-     * Prevents this utility class being instantiated 
+     * Prevents this utility class being instantiated
      */
-    private CSGUtils(){
-        
+    private CSGUtils() {
+
     }
-    
+
     /**
      * Returns an instance of CSG_TRANSPORT_NAME thrift client
      *
@@ -107,7 +107,7 @@ public class CSGUtils {
      */
     public static void moveElements(BlockingQueue<Message> src,
                                     List<Message> dest,
-                                    final int blockSize) throws AxisFault{
+                                    final int blockSize) throws AxisFault {
         try {
             src.drainTo(dest, blockSize);
         } catch (Exception e) {
@@ -247,8 +247,8 @@ public class CSGUtils {
     public static String getDomainNameFromTenantUserName(String tenantUserName) {
         return tenantUserName.contains("@") ? tenantUserName.substring(tenantUserName.indexOf('@') + 1) : null;
     }
-    
-    public static String getTryItURLFromWSDLURL(String wsdlURL){
+
+    public static String getTryItURLFromWSDLURL(String wsdlURL) {
         //http://localhost:8280/services/SimpleStockQuoteService?wsdl ->
         //http://localhost:8280/services/SimpleStockQuoteService?tryit
         return wsdlURL.substring(0, wsdlURL.indexOf("?wsdl")) + "?tryit";
@@ -332,5 +332,23 @@ public class CSGUtils {
             }
         }
         return isAlive;
+    }
+
+    public static String[] getPermissionsList() {
+        String[] permissionList;
+        String permissionString = CSGUtils.getStringProperty(
+                CSGConstant.CSG_USER_PERMISSION_LIST, null);
+        if (permissionString == null) {
+            permissionList = CSGConstant.CSG_USER_DEFAULT_PERMISSION_LIST;
+        } else {
+            // permission string can be configured as a system property as
+            // csg-user-permission-list=permission1,permission2,permission3 etc..
+            permissionList = new String[]{};
+            int i = 0;
+            for (String permission : permissionString.split(",")) {
+                permissionList[++i] = permission.trim();
+            }
+        }
+        return permissionList;
     }
 }

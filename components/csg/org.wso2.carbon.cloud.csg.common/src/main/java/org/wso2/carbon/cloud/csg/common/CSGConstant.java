@@ -264,6 +264,10 @@ public class CSGConstant {
     public static final String CSG_ROLE_NAME = "csg-role-name";
 
     public static final String DEFAULT_CSG_ROLE_NAME = CSG_ROLE_NAME;
+
+    public static final String CSG_PUBLISH_ROLE_NAME = "Publish";
+
+    public static final String CSG_UNPUBLISH_ROLE_NAME = "Unpublish";
     
     /**
      * Prevents instantiation of this class.

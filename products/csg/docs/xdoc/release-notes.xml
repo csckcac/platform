@@ -116,6 +116,7 @@
         <li>CARBON-12940 - Added all csg.properties into an appendix.</li>
         <li>CARBON-13027 - Fixed issue when clicking Registry browser.</li>
         <li>CARBON-13028 - Source packs for CSG products and CSG service.</li>
+		<li>CARBON-12606 - Added roles per publishing, un publishing and listng of servers.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha RC3</h2>

@@ -62,7 +62,6 @@ public class APIMgtUsageBAMDataPublisher {
      * @param publisherDTO  <code>PublisherDTO</code> that is needed to be published
      */
     public void publishEvent(PublisherDTO publisherDTO) {
-
         Event event = new Event();
         event.setCorrelation(createCorrelationMap());
         event.setEvent(publisherDTO.createEventDataMap());

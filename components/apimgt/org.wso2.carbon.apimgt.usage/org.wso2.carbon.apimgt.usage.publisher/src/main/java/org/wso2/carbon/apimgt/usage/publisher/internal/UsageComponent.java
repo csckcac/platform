@@ -39,7 +39,8 @@ public class UsageComponent {
 
     protected void activate(ComponentContext ctx) {
         try {
-            apimgtConfigReaderService = new APIMGTConfigReaderService(amConfigService.getAPIManagerConfiguration());
+            apimgtConfigReaderService = new APIMGTConfigReaderService(
+                    amConfigService.getAPIManagerConfiguration());
             BundleContext bundleContext = ctx.getBundleContext();
             bundleContext.registerService(APIMGTConfigReaderService.class.getName(),
                                           apimgtConfigReaderService, null);

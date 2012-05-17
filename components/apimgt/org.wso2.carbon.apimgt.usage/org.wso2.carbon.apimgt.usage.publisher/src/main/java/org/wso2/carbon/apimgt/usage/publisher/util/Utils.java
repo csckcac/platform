@@ -1,5 +1,3 @@
-package org.wso2.carbon.apimgt.usage.publisher.util;
-
 /*
 *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -18,6 +16,9 @@ package org.wso2.carbon.apimgt.usage.publisher.util;
 * under the License.
 */
 
+
+package org.wso2.carbon.apimgt.usage.publisher.util;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
@@ -26,7 +27,6 @@ import org.wso2.carbon.apimgt.usage.publisher.APIMgtUsagePublisherConstants;
 
 import java.net.InetAddress;
 import java.util.Map;
-
 
 public class Utils {
 
@@ -100,8 +100,10 @@ public class Utils {
 
     public static String extractCustomerKeyFromSynapseMessageContext(MessageContext mc){
         String consumerKey;
-        Object headers = ((Axis2MessageContext)mc).getAxis2MessageContext().getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS) ;
-        consumerKey = extractCustomerKeyFromAuthHeader((String) ((Map) headers).get(APIMgtUsagePublisherConstants.AUTHORIZATION_HEADER));
+        Object headers = ((Axis2MessageContext)mc).getAxis2MessageContext().getProperty(
+                org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS) ;
+        consumerKey = extractCustomerKeyFromAuthHeader((String) ((Map) headers).get(
+                APIMgtUsagePublisherConstants.AUTHORIZATION_HEADER));
         return consumerKey;
     }
 

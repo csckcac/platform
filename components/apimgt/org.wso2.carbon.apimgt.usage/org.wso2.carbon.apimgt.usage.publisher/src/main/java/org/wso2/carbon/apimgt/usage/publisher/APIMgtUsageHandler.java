@@ -39,90 +39,87 @@ public class APIMgtUsageHandler extends AbstractHandler {
 
     private static Log log   = LogFactory.getLog(APIMgtUsageHandler.class);
 
-        public boolean handleRequest(MessageContext mc) {
+    public boolean handleRequest(MessageContext mc) {
+        String currentTime = String.valueOf(System.currentTimeMillis());
 
-            String currentTime = String.valueOf(System.currentTimeMillis());
+        if (!enabled) {
+            return true;
+        }
 
-            if (!enabled) {
-                return true;
-            }
-
-            if (publisher == null) {
-                synchronized (this){
-                    if (publisher == null){
-                        publisher = new APIMgtUsageBAMDataPublisher(configHolder);
-                    }
+        if (publisher == null) {
+            synchronized (this){
+                if (publisher == null) {
+                    log.debug("Initializing BAM data publisher");
+                    publisher = new APIMgtUsageBAMDataPublisher(configHolder);
                 }
             }
-
-            String consumerKey = Utils.extractCustomerKeyFromSynapseMessageContext(mc);
-            String context = (String)mc.getProperty(RESTConstants.REST_API_CONTEXT);
-            String api_version =  (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API);
-            String api = api_version.split(":")[0];
-            String version = (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION);
-            String resource = extractResource(mc);
-            String method =  (String)((Axis2MessageContext) mc).getAxis2MessageContext().getProperty(APIMgtUsagePublisherConstants.HTTP_METHOD);
-
-            RequestPublisherDTO requestPublisherDTO = new RequestPublisherDTO();
-            requestPublisherDTO.setConsumerKey(consumerKey);
-            requestPublisherDTO.setContext(context);
-            requestPublisherDTO.setApi_version(api_version);
-            requestPublisherDTO.setApi(api);
-            requestPublisherDTO.setVersion(version);
-            requestPublisherDTO.setResource(resource);
-            requestPublisherDTO.setMethod(method);
-            requestPublisherDTO.setRequestTime(currentTime);
-            publisher.publishEvent(requestPublisherDTO);
-
-            mc.setProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY,consumerKey);
-            mc.setProperty(APIMgtUsagePublisherConstants.CONTEXT,context);
-            mc.setProperty(APIMgtUsagePublisherConstants.API_VERSION,api_version);
-            mc.setProperty(APIMgtUsagePublisherConstants.API,api);
-            mc.setProperty(APIMgtUsagePublisherConstants.VERSION,version);
-            mc.setProperty(APIMgtUsagePublisherConstants.RESOURCE,resource);
-            mc.setProperty(APIMgtUsagePublisherConstants.HTTP_METHOD,method);
-            mc.setProperty(APIMgtUsagePublisherConstants.REQUEST_TIME,currentTime);
-
-            return true; // Should never stop the message flow
         }
 
-        public boolean handleResponse(MessageContext mc) {
+        String consumerKey = Utils.extractCustomerKeyFromSynapseMessageContext(mc);
+        String context = (String)mc.getProperty(RESTConstants.REST_API_CONTEXT);
+        String api_version =  (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API);
+        String api = api_version.split(":")[0];
+        String version = (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION);
+        String resource = extractResource(mc);
+        String method =  (String)((Axis2MessageContext) mc).getAxis2MessageContext().getProperty(
+                APIMgtUsagePublisherConstants.HTTP_METHOD);
 
-            Long currentTime = System.currentTimeMillis();
+        RequestPublisherDTO requestPublisherDTO = new RequestPublisherDTO();
+        requestPublisherDTO.setConsumerKey(consumerKey);
+        requestPublisherDTO.setContext(context);
+        requestPublisherDTO.setApi_version(api_version);
+        requestPublisherDTO.setApi(api);
+        requestPublisherDTO.setVersion(version);
+        requestPublisherDTO.setResource(resource);
+        requestPublisherDTO.setMethod(method);
+        requestPublisherDTO.setRequestTime(currentTime);
+        publisher.publishEvent(requestPublisherDTO);
 
-            if (!enabled) {
-                return true;
-            }
+        mc.setProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY,consumerKey);
+        mc.setProperty(APIMgtUsagePublisherConstants.CONTEXT,context);
+        mc.setProperty(APIMgtUsagePublisherConstants.API_VERSION,api_version);
+        mc.setProperty(APIMgtUsagePublisherConstants.API,api);
+        mc.setProperty(APIMgtUsagePublisherConstants.VERSION,version);
+        mc.setProperty(APIMgtUsagePublisherConstants.RESOURCE,resource);
+        mc.setProperty(APIMgtUsagePublisherConstants.HTTP_METHOD,method);
+        mc.setProperty(APIMgtUsagePublisherConstants.REQUEST_TIME,currentTime);
 
-            Long serviceTime = currentTime - Long.parseLong((String)mc.getProperty(APIMgtUsagePublisherConstants.REQUEST_TIME));
+        return true;
+    }
 
-            ResponsePublisherDTO responsePublisherDTO = new ResponsePublisherDTO();
-            responsePublisherDTO.setConsumerKey((String)mc.getProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY));
-            responsePublisherDTO.setContext((String) mc.getProperty(APIMgtUsagePublisherConstants.CONTEXT));
-            responsePublisherDTO.setApi_version((String) mc.getProperty(APIMgtUsagePublisherConstants.API_VERSION));
-            responsePublisherDTO.setApi((String) mc.getProperty(APIMgtUsagePublisherConstants.API));
-            responsePublisherDTO.setVersion((String) mc.getProperty(APIMgtUsagePublisherConstants.VERSION));
-            responsePublisherDTO.setResource((String) mc.getProperty(APIMgtUsagePublisherConstants.RESOURCE));
-            responsePublisherDTO.setMethod((String)mc.getProperty(APIMgtUsagePublisherConstants.HTTP_METHOD));
-            responsePublisherDTO.setResponseTime(String.valueOf(currentTime));
-            responsePublisherDTO.setServiceTime(String.valueOf(serviceTime));
-            publisher.publishEvent(responsePublisherDTO);
+    public boolean handleResponse(MessageContext mc) {
+        Long currentTime = System.currentTimeMillis();
 
-            return true; // Should never stop the message flow
+        if (!enabled) {
+            return true;
         }
 
-        public APIMgtUsageBAMDataPublisher getAPIMgtUsageBAMDataPublisher(){
-            return publisher;
-        }
+        Long serviceTime = currentTime - Long.parseLong((String)mc.getProperty(
+                APIMgtUsagePublisherConstants.REQUEST_TIME));
 
-        private String extractResource(MessageContext mc){
-            String resource = null;
-            Pattern pattern = Pattern.compile("^/.+?/.+?([/?].+)$");
-            Matcher matcher = pattern.matcher((String) mc.getProperty(RESTConstants.REST_FULL_REQUEST_PATH));
-            if(matcher.find()){
-                resource = matcher.group(1);
-            }
-            return resource;
+        ResponsePublisherDTO responsePublisherDTO = new ResponsePublisherDTO();
+        responsePublisherDTO.setConsumerKey((String)mc.getProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY));
+        responsePublisherDTO.setContext((String) mc.getProperty(APIMgtUsagePublisherConstants.CONTEXT));
+        responsePublisherDTO.setApi_version((String) mc.getProperty(APIMgtUsagePublisherConstants.API_VERSION));
+        responsePublisherDTO.setApi((String) mc.getProperty(APIMgtUsagePublisherConstants.API));
+        responsePublisherDTO.setVersion((String) mc.getProperty(APIMgtUsagePublisherConstants.VERSION));
+        responsePublisherDTO.setResource((String) mc.getProperty(APIMgtUsagePublisherConstants.RESOURCE));
+        responsePublisherDTO.setMethod((String)mc.getProperty(APIMgtUsagePublisherConstants.HTTP_METHOD));
+        responsePublisherDTO.setResponseTime(String.valueOf(currentTime));
+        responsePublisherDTO.setServiceTime(String.valueOf(serviceTime));
+        publisher.publishEvent(responsePublisherDTO);
+
+        return true; // Should never stop the message flow
+    }
+
+    private String extractResource(MessageContext mc){
+        String resource = null;
+        Pattern pattern = Pattern.compile("^/.+?/.+?([/?].+)$");
+        Matcher matcher = pattern.matcher((String) mc.getProperty(RESTConstants.REST_FULL_REQUEST_PATH));
+        if(matcher.find()){
+            resource = matcher.group(1);
         }
+        return resource;
+    }
 
 }

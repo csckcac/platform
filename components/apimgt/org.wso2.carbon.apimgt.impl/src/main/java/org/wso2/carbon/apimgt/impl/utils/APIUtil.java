@@ -94,7 +94,10 @@ public final class APIUtil {
                     URITemplate uriTemplate = new URITemplate();
                     String[] s = template.split(":");
                     if (s.length == 2) {
-                        uriTemplate.setMethod(s[0]);
+                        String[] methods = s[0].split(" ");
+                        for (String method : methods) {
+                            uriTemplate.addMethod(method);
+                        }
                         uriTemplate.setUriTemplate(s[1]);
                         uriTemplates.add(uriTemplate);
                     }
@@ -180,7 +183,7 @@ public final class APIUtil {
             Set<URITemplate> uriTemplateSet = api.getUriTemplates();
             for (URITemplate uriTemplate : uriTemplateSet) {
                 artifact.addAttribute(APIConstants.API_URI_TEMPLATES,
-                        uriTemplate.getMethod() + ":" + uriTemplate.getUriTemplate());
+                        uriTemplate.getMethodsAsString() + ":" + uriTemplate.getUriTemplate());
             }
 
         } catch (GovernanceException e) {

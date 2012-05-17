@@ -18,11 +18,6 @@
 
 package org.wso2.carbon.apimgt.hostobjects;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -183,7 +178,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 for (int i = 0; i < uriTemplateArr.getLength(); i++) {
                     URITemplate templates = new URITemplate();
                     templates.setUriTemplate((String) uriTemplateArr.get(i, uriTemplateArr));
-                    templates.setMethod((String) uriMethodArr.get(i, uriMethodArr));
+                    templates.addMethod((String) uriMethodArr.get(i, uriMethodArr));
                     uriTemplates.add(templates);
                 }
                 api.setUriTemplates(uriTemplates);
@@ -273,7 +268,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     String templateVal = (String) uriTemplateArr.get(i, uriTemplateArr);
                     String template = templateVal.startsWith("/") ? templateVal : ("/" + templateVal);
                     templates.setUriTemplate(template);
-                    templates.setMethod((String) uriMethodArr.get(i, uriMethodArr));
+                    templates.addMethod((String) uriMethodArr.get(i, uriMethodArr));
                     templates.setResourceURI(endpoint);
                     templates.setResourceSandboxURI(sandboxUrl);
                     uriTemplates.add(templates);
@@ -368,7 +363,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     List<String> utArr = new ArrayList<String>();
                     URITemplate ut = (URITemplate) i.next();
                     utArr.add(ut.getUriTemplate());
-                    utArr.add(ut.getMethod());
+                    utArr.add(ut.getMethodsAsString());
 
                     NativeArray utNArr = new NativeArray(utArr.size());
                     for (int p = 0; p < utArr.size(); p++) {

@@ -17,10 +17,13 @@
 */
 package org.wso2.carbon.apimgt.api.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class URITemplate {
 
     private String uriTemplate;
-    private String method;
+    private Set<String> methods = new HashSet<String>();
     private String resourceURI;
     private String resourceSandboxURI;
 
@@ -48,11 +51,19 @@ public class URITemplate {
         this.uriTemplate = template;
     }
 
-    public String getMethod() {
-        return method;
+    public Set<String> getMethods() {
+        return methods;
+    }
+    
+    public String getMethodsAsString() {
+        String str = "";
+        for (String method : methods) {
+            str += method + " ";
+        }
+        return str.trim();
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void addMethod(String method) {
+        this.methods.add(method);
     }
 }

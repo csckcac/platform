@@ -104,7 +104,7 @@ $(document).ready(function() {
                           $('#apiTable').append($('<tr><td>' + json.usage[i].apiName + '</td><td>' + json.usage[i].count + '</td></tr>'));
 
                       }
-                      if (json.data.usage.length > 0) {
+                      if (length > 0) {
                           $('#apiTable').show();
                           var plot1 = jQuery.jqplot('apiChart', [data],
                                                     {

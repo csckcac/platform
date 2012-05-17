@@ -60,7 +60,7 @@
 </property>
 <property>
   <name>mapreduce.tasktracker.group</name>
-  <value>wathsala</value>
+  <value>foo</value>
 </property>
 <property>
   <name>mapred.local.dir</name>
@@ -74,7 +74,8 @@
 <!-- Carbon taskcontroller user -->
 <property>
   <name>mapred.tasktracker.carbon.proxy.user</name>
-  <value>wathsala</value>
+  <value>foo</value>
+
   <description>The task-controller will run as this user overiding the 
   provided carbon user. Reason is that carbon users are not real Unix/Win32 users.</description>
 </property>

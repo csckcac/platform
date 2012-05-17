@@ -22,6 +22,7 @@ package org.apache.hadoop.mapreduce.security.token.delegation;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
 
+import java.io.IOException;
 /**
  * A delegation token identifier that is specific to MapReduce.
  */
@@ -51,6 +52,5 @@ public DelegationTokenIdentifier(Text owner, Text renewer, Text realUser) {
 public Text getKind() {
   return MAPREDUCE_DELEGATION_KIND;
 }
-
 }
 

@@ -594,6 +594,7 @@ static int open_file_as_task_tracker(const char* filename) {
  */
 static int copy_file(int input, const char* in_filename, 
 		     const char* out_filename, mode_t perm) {
+  fprintf(LOGFILE, "Copying from %s to %s\n", in_filename, out_filename);
   const int buffer_size = 128*1024;
   char buffer[buffer_size];
   int out_fd = open(out_filename, O_WRONLY|O_CREAT|O_EXCL|O_NOFOLLOW, perm);
@@ -671,13 +672,11 @@ int initialize_job(const char *user, const char *jobid,
     fprintf(LOGFILE, "Either jobid is null or the user passed is null.\n");
     return INVALID_ARGUMENT_NUMBER;
   }
-
   // create the user directory
   int result = initialize_user(user);
   if (result != 0) {
     return result;
   }
-
   // create the log directory for the job
   char *job_log_dir = get_job_log_directory(jobid);
   if (job_log_dir == NULL) {
@@ -688,13 +687,11 @@ int initialize_job(const char *user, const char *jobid,
   if (result != 0) {
     return -1;
   }
-
   // open up the credentials file
   int cred_file = open_file_as_task_tracker(credentials);
   if (cred_file == -1) {
     return -1;
   }
-
   int job_file = open_file_as_task_tracker(job_xml);
   if (job_file == -1) {
     return -1;
@@ -751,12 +748,12 @@ int initialize_job(const char *user, const char *jobid,
     return -1;
   }
   fclose(stdin);
-  fflush(LOGFILE);
   if (LOGFILE != stdout) {
     fclose(stdout);
   }
   fclose(stderr);
   chdir(primary_job_dir);
+  fflush(LOGFILE);
   execvp(args[0], args);
   fprintf(LOGFILE, "Failure to exec job initialization process - %s\n",
 	  strerror(errno));

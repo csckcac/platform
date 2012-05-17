@@ -11,6 +11,21 @@
 </property>
 
 <property>
+  <name>dfs.name.dir</name>
+  <value>/tmp/hadoop/dfs/name</value>
+</property>
+
+<property>
+  <name>dfs.name.edits.dir</name>
+  <value>/tmp/hadoop/dfs/name</value>
+</property>
+
+<property>
+  <name>dfs.data.dir</name>
+  <value>/tmp/hadoop/dfs/data</value>
+</property>
+
+<property>
   <name>dfs.replication</name>
   <value>1</value>
   <description>Default block replication.
@@ -30,9 +45,20 @@
   <name>dfs.https.port</name>
   <value>50475</value>
 </property>
+
+<property>
+  <name>dfs.http.address</name>
+  <value>0.0.0.0:50070</value>
+  <description>
+    The address and the base port where the dfs namenode web ui will listen on.
+    If the port is 0 then the server will start on a free port.
+  </description>
+</property>
+
 <property>
   <name>dfs.namenode.keytab.file</name>
-  <value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/hdfs.keytab</value>
+  <!--<value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/carbon.keytab</value>-->
+  <value>repository/conf/etc/hadoop/carbon.keytab</value>
 </property>
 <property>
   <name>dfs.namenode.kerberos.principal</name>
@@ -60,7 +86,8 @@
 </property>
 <property>
   <name>dfs.secondary.namenode.keytab.file</name>
-  <value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/hdfs.keytab</value>
+  <!--<value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/carbon.keytab</value>-->
+  <value>repository/conf/etc/hadoop/carbon.keytab</value>
 </property>
 <property>
   <name>dfs.secondary.namenode.kerberos.https.principal</name>
@@ -72,7 +99,6 @@
 </property>
 
 <!-- DataNode security config -->
-
 <property>
   <name>dfs.datanode.data.dir.perm</name>
   <value>700</value>
@@ -84,13 +110,24 @@
 </property>
 
 <property>
-  <name>dfs.datanode.http.address</name>
+  <name>dfs.datanode.https.address</name>
   <value>0.0.0.0:1006</value>
 </property>
 
 <property>
+  <name>dfs.datanode.http.address</name>
+  <value>0.0.0.0:50075</value>
+  <description>
+    The datanode http server address and port.
+    If the port is 0 then the server will start on a free port.
+  </description>
+</property>
+
+
+<property>
   <name>dfs.datanode.keytab.file</name>
-  <value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/hdfs.keytab</value>
+  <!--<value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/carbon.keytab</value>-->
+  <value>repository/conf/etc/hadoop/carbon.keytab</value>
 </property>
 
 <property>

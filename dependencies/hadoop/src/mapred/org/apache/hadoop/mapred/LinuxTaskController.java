@@ -163,7 +163,7 @@ class LinuxTaskController extends TaskController {
     command.add("-classpath");
     command.add(System.getProperty("java.class.path"));
     command.add("-Dhadoop.log.dir=" + TaskLog.getBaseLogDir());
-    command.add("-Dhadoop.root.logger=INFO,console");
+    command.add("-Dhadoop.root.logger=INFO,DRFA");
     command.add(JobLocalizer.class.getName());  // main of JobLocalizer
     command.add(user);
     command.add(jobid);
@@ -212,7 +212,6 @@ class LinuxTaskController extends TaskController {
           TaskTracker.getPrivateDirTaskScriptLocation(user, jobId, attemptId),
           getConf()), COMMAND_FILE);
       String commandFile = writeCommand(cmdLine, rawFs, p); 
-
       String[] command = 
         new String[]{taskControllerExe, 
           user,

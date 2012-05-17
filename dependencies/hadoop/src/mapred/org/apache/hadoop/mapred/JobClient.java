@@ -717,6 +717,7 @@ public class JobClient extends Configured implements MRConstants, Tool  {
       }
       Path submitJarFile = JobSubmissionFiles.getJobJar(submitJobDir);
       job.setJar(submitJarFile.toString());
+      LOG.debug("Copying "+originalJarPath+" to "+submitJarFile.toString());
       fs.copyFromLocalFile(new Path(originalJarPath), submitJarFile);
       fs.setReplication(submitJarFile, replication);
       fs.setPermission(submitJarFile, 

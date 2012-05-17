@@ -7,7 +7,7 @@
 
 <property>
   <name>hadoop.tmp.dir</name>
-  <value>/tmp/hadoop</value>
+  <value>tmp/hadoop</value>
   <description>A base for other temporary directories.</description>
 </property>
 
@@ -22,6 +22,18 @@
 </property>
 
 <property>
+  <name>fs.hdfs.impl</name>
+  <value>org.apache.hadoop.hdfs.DistributedFileSystem</value>
+  <description>The FileSystem for hdfs: uris.</description>
+</property>
+
+<property>
+  <name>fs.file.impl</name>
+  <value>org.apache.hadoop.fs.LocalFileSystem</value>
+  <description>The FileSystem for file: uris.</description>
+</property>
+
+<property>
   <name>hadoop.security.authorization</name>
   <value>ture</value> 
 </property>
@@ -30,12 +42,12 @@
   <name>hadoop.security.authentication</name>
   <value>kerberos</value> 
 </property>
-<property> 
+<!--<property> 
   <name>hadoop.security.auth_to_local</name> 
   <value> 
 	RULE:[2:$1](.*@WSO2.COM) DEFAULT 
   </value> 
-</property>
+</property>-->
 <property>
   <name>hadoop.kerberos.kinit.command</name>
   <value>/usr/bin/kinit</value>
@@ -46,15 +58,21 @@
 </property>-->
 <property>
   <name>hadoop.security.group.mapping</name>
-  <value>org.apache.hadoop.security.WSBasedCarbonGroupMapping</value>
+  <value>org.wso2.carbon.hadoop.security.group.mapping.WSBasedCarbonGroupMapping</value>
   <description>The class that provides access to WSO2 carbon groups 
   over web services.</description>
 </property>
 <property>
   <name>hadoop.security.group.mapping.service.url</name>
-  <value>https://localhost:9444/services/</value>
+  <value>https://127.0.0.1:9443/services/</value>
   <description>The URL where WSO2 carbon user group retreival service 
   is located.</description>
+</property>
+<property>
+  <name>hadoop.security.truststore</name>
+  <value>repository/resources/security/wso2carbon.jks</value>
+  <description>The key store file to use when accessing WSO2 carbon 
+  services.</description>
 </property>
 <property>
   <name>hadoop.security.admin.username</name>
@@ -65,11 +83,5 @@
   <name>hadoop.security.admin.password</name>
   <value>admin</value>
   <description>WSO2 carbon admin password</description>
-</property>
-<property>
-  <name>hadoop.security.truststore</name>
-  <value>wso2carbon.jks</value>
-  <description>The key store file to use when accessing WSO2 carbon 
-  services.</description>
 </property>
 </configuration>

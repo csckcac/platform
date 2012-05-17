@@ -50,6 +50,7 @@ import org.apache.hadoop.mapreduce.security.TokenCache;
 import org.apache.hadoop.mapreduce.security.token.JobTokenIdentifier;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.UserGroupInformationThreadLocal;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.util.RunJar;
@@ -477,7 +478,6 @@ public class JobLocalizer {
     createWorkDir(cfgJob);
     localizeJobFiles(JobID.forName(jobid), cfgJob, localJobFile,
         localJobTokenFile, taskTracker);
-
     // $mapred.local.dir/taskTracker/$user/distcache
     return 0;
   }
@@ -508,17 +508,20 @@ public class JobLocalizer {
     final Credentials creds = TokenCache.loadTokens(
         jobTokenFile.toUri().toString(), conf);
     LOG.debug("Loaded tokens from " + jobTokenFile);
+    LOG.debug("CREATING A NEW REMOTE USER FROM USER: "+user);
     UserGroupInformation ugi = UserGroupInformation.createRemoteUser(user);
     for (Token<? extends TokenIdentifier> token : creds.getAllTokens()) {
       ugi.addToken(token);
     }
     
     UserGroupInformation ugiJob = UserGroupInformation.createRemoteUser(jobid);
+    LOG.debug("CREATING A NEW REMOTE USER FROM JOBID: "+jobid);
     Token<JobTokenIdentifier> jt = TokenCache.getJobToken(creds);
     jt.setService(new Text(ttAddr.getAddress().getHostAddress() + ":"
         + ttAddr.getPort()));
     ugiJob.addToken(jt);
-
+    //WSO2 Fix:
+    UserGroupInformationThreadLocal.set(ugiJob);
     final TaskUmbilicalProtocol taskTracker = 
       ugiJob.doAs(new PrivilegedExceptionAction<TaskUmbilicalProtocol>() {
         public TaskUmbilicalProtocol run() throws IOException {
@@ -529,6 +532,9 @@ public class JobLocalizer {
           return taskTracker;
         }
       });
+    //WSO2 Fix:
+    UserGroupInformationThreadLocal.remove();
+    UserGroupInformationThreadLocal.set(ugi);
     System.exit(
       ugi.doAs(new PrivilegedExceptionAction<Integer>() {
         public Integer run() {

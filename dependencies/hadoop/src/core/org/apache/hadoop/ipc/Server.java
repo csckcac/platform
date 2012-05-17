@@ -1377,6 +1377,8 @@ public abstract class Server {
           if (LOG.isDebugEnabled())
             LOG.debug(getName() + ": has #" + call.id + " from " +
                       call.connection+" by user "+call.connection.user.getUserName()+ ". Current Thread ID is "+Thread.currentThread().getId());
+            //LOG.info(getName() + ": has #" + call.id + " from " +
+             //         call.connection+" by user "+call.connection.user.getUserName()+ ". Current Thread ID is "+Thread.currentThread().getId());
           // Set connection user as the thread local user.
 	  // WSO2 Carbon related change...
           UserGroupInformationThreadLocal.set(call.connection.user); 
@@ -1406,7 +1408,7 @@ public abstract class Server {
                   );
             }
           } catch (Throwable e) {
-            LOG.info(getName()+", call "+call+": error: " + e, e);
+            LOG.info(getName()+", call "+call+": error: " + e +" Othear useful information: "+call.connection.user+" "+Thread.currentThread().getId());
             errorClass = e.getClass().getName();
             error = StringUtils.stringifyException(e);
           }

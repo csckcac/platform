@@ -220,9 +220,10 @@ public abstract class FileSystem extends Configured implements Closeable {
     
     String disableCacheName = String.format("fs.%s.impl.disable.cache", scheme);
     if (conf.getBoolean(disableCacheName, false)) {
-      return createFileSystem(uri, conf);
+      FileSystem fs = createFileSystem(uri, conf);
+      return fs;
     }
-
+ 
     return CACHE.get(uri, conf);
   }
 
@@ -1326,6 +1327,7 @@ public abstract class FileSystem extends Configured implements Closeable {
       }
       
       fs = createFileSystem(uri, conf);
+      LOG.debug("Creating FS");
       synchronized (this) {  // refetch the lock again
         FileSystem oldfs = map.get(key);
         if (oldfs != null) { // a file system is created while lock is releasing
@@ -1339,6 +1341,7 @@ public abstract class FileSystem extends Configured implements Closeable {
         }
         fs.key = key;
         map.put(key, fs);
+        LOG.debug("Cached Created FS");
         return fs;
       }
     }

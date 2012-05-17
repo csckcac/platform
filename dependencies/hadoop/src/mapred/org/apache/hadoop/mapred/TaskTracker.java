@@ -94,6 +94,7 @@ import org.apache.hadoop.net.DNS;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.UserGroupInformationThreadLocal;
 import org.apache.hadoop.security.authorize.PolicyProvider;
 import org.apache.hadoop.security.authorize.ServiceAuthorizationManager;
 import org.apache.hadoop.util.DiskChecker;
@@ -553,11 +554,16 @@ public class TaskTracker implements MRConstants, TaskUmbilicalProtocol,
   private FileSystem getFS(final Path filePath, JobID jobId,
       final Configuration conf) throws IOException, InterruptedException {
     RunningJob rJob = runningJobs.get(jobId);
+    //WSO2 Fix:
+    UserGroupInformation currentUGI = UserGroupInformationThreadLocal.get();
+    UserGroupInformationThreadLocal.set(rJob.ugi); 
     FileSystem userFs = 
       rJob.ugi.doAs(new PrivilegedExceptionAction<FileSystem>() {
         public FileSystem run() throws IOException {
           return filePath.getFileSystem(conf);
       }});
+    //WSO2 Fix:
+    UserGroupInformationThreadLocal.set(rJob.ugi); 
     return userFs;
   }
   
@@ -1083,6 +1089,10 @@ public class TaskTracker implements MRConstants, TaskUmbilicalProtocol,
       * is also set up here.
       * To support potential authenticated HDFS accesses, we need the tokens
       */
+    // WSO2 Fix: set rjob.ugi to thread local. Once this doAs job is done, 
+    // restore the ThreadLocal value to it's original.
+    UserGroupInformation currentUGI = UserGroupInformationThreadLocal.get();
+    UserGroupInformationThreadLocal.set(rjob.ugi); 
     rjob.ugi.doAs(new PrivilegedExceptionAction<Object>() {
       public Object run() throws IOException, InterruptedException {
         try {
@@ -1123,6 +1133,9 @@ public class TaskTracker implements MRConstants, TaskUmbilicalProtocol,
         return null;
       }
     });
+    //WSO2 Fix: Restore thread local UGI to it's original value
+    UserGroupInformationThreadLocal.set(currentUGI);
+ 
     //search for the conf that the initializeJob created
     //need to look up certain configs from this conf, like
     //the distributed cache, profiling, etc. ones

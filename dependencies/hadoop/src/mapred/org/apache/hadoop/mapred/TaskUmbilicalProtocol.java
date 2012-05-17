@@ -22,13 +22,17 @@ import java.io.IOException;
 
 import org.apache.hadoop.ipc.VersionedProtocol;
 import org.apache.hadoop.mapred.JvmTask;
+import org.apache.hadoop.security.KerberosInfo;
 import org.apache.hadoop.mapreduce.security.token.JobTokenSelector;
 import org.apache.hadoop.security.token.TokenInfo;
 
+//WSO2 Fix: We need TaskTracker.TT_USER_NAME to communicate with the tasktracker
 /** Protocol that task child process uses to contact its parent process.  The
  * parent is a daemon which which polls the central master for a new map or
  * reduce task and runs it as a child process.  All communication between child
  * and parent is via this protocol. */
+@KerberosInfo(
+    serverPrincipal = TaskTracker.TT_USER_NAME)
 @TokenInfo(JobTokenSelector.class)
 public interface TaskUmbilicalProtocol extends VersionedProtocol {
 

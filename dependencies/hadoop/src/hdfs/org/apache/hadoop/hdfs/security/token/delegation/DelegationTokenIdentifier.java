@@ -22,6 +22,8 @@ package org.apache.hadoop.hdfs.security.token.delegation;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.token.delegation.AbstractDelegationTokenIdentifier;
 
+import java.io.IOException;
+
 /**
  * A delegation token identifier that is specific to HDFS.
  */
@@ -50,5 +52,4 @@ public class DelegationTokenIdentifier
   public Text getKind() {
     return HDFS_DELEGATION_KIND;
   }
-
 }

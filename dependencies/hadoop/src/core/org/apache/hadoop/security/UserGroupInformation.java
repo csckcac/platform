@@ -202,6 +202,7 @@ public class UserGroupInformation {
     isInitialized = true;
     UserGroupInformation.conf = conf;
     metrics = UgiInstrumentation.create(conf);
+    LOG.debug("Initialized UGI: "+useKerberos);
   }
 
   /**
@@ -340,6 +341,7 @@ public class UserGroupInformation {
                 if (LOG.isDebugEnabled()) {
 			LOG.debug("Searching for Tenant's KRB5 Ticket Cache...");
                 }
+		tktCacheFinder.setConf(conf);
     		ticketCache = tktCacheFinder.getTenantTicketCache();
         }
         if (ticketCache != null) {
@@ -351,6 +353,8 @@ public class UserGroupInformation {
         USER_KERBEROS_OPTIONS.put("doNotPrompt", "true");
         USER_KERBEROS_OPTIONS.put("useTicketCache", "true");
         USER_KERBEROS_OPTIONS.put("renewTGT", "true");
+        if (LOG.isDebugEnabled())
+        	USER_KERBEROS_OPTIONS.put("debug", "true");
         /*else {
            USER_KERBEROS_OPTIONS.put("doNotPrompt", "true");
            USER_KERBEROS_OPTIONS.put("useTicketCache", "true");
@@ -449,14 +453,17 @@ public class UserGroupInformation {
         } else {
           login = new LoginContext(HadoopConfiguration.SIMPLE_CONFIG_NAME, subject);
         }
+        LOG.debug("Created login context");
         login.login();
         loginUser = new UserGroupInformation(subject);
         loginUser.setLogin(login);
+        LOG.debug("Loggedin");
         loginUser.setAuthenticationMethod(isSecurityEnabled() ?
                                           AuthenticationMethod.KERBEROS :
                                           AuthenticationMethod.SIMPLE);
         loginUser = new UserGroupInformation(login.getSubject());
         String fileLocation = System.getenv(HADOOP_TOKEN_FILE_LOCATION);
+        UserGroupInformationThreadLocal.set(loginUser);
         if (fileLocation != null && isSecurityEnabled()) {
           // load the token storage file and put all of the tokens into the
           // user.
@@ -467,7 +474,7 @@ public class UserGroupInformation {
           }
         }
         loginUser.spawnAutoRenewalThreadForUserCreds();
-        UserGroupInformationThreadLocal.set(loginUser);
+        //UserGroupInformationThreadLocal.set(loginUser);
       } catch (LoginException le) {
         throw new IOException("failure to login", le);
       }

@@ -727,7 +727,6 @@ public class Client {
       if (shouldCloseConnection.get()) {
         return;
       }
-
       DataOutputBuffer d=null;
       try {
         synchronized (this.out) {
@@ -746,6 +745,7 @@ public class Client {
           out.flush();
         }
       } catch(IOException e) {
+        e.printStackTrace();
         markClosed(e);
       } finally {
         //the buffer is just an in-memory buffer, but it is still polite to
@@ -1027,6 +1027,7 @@ public class Client {
 
       if (call.error != null) {
         if (call.error instanceof RemoteException) {
+          call.error.printStackTrace();
           call.error.fillInStackTrace();
           throw call.error;
         } else { // local exception

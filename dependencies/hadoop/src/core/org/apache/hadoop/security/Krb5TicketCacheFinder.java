@@ -1,5 +1,7 @@
 package org.apache.hadoop.security;
 
+import org.apache.hadoop.conf.Configuration;
+
 /**
  * This interface has to be implemented by a provider that looks for a custom ticket cache.
  * This interface is added to WSO2's carbonized hadoop version to get the ticket cache 
@@ -7,6 +9,16 @@ package org.apache.hadoop.security;
  **/
 
 public interface Krb5TicketCacheFinder {
+	/**
+         * Set current Hadoop Configuration
+	 */
+	public void setConf(Configuration conf);
+
+	/**
+	 * Get current hadoop Configuration
+	 */
+	public Configuration getConf();
+
 	/**
 	 * Returns the ticket cache of the calling tenant.
 	 * Only applicable to files system based Kerberos ticket caches.

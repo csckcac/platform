@@ -93,6 +93,7 @@ import org.apache.hadoop.security.Groups;
 import org.apache.hadoop.security.RefreshUserMappingsProtocol;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.UserGroupInformationThreadLocal;
 import org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod;
 import org.apache.hadoop.security.authorize.AccessControlList;
 import org.apache.hadoop.security.authorize.AuthorizationException;
@@ -3984,9 +3985,20 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
    * @see org.apache.hadoop.mapred.JobSubmissionProtocol#getStagingAreaDir()
    */
   public String getStagingAreaDir() throws IOException {
+    UserGroupInformation callerUGI = null;
     try{
-      final String user =
-        UserGroupInformation.getCurrentUser().getShortUserName();
+      //A WSO2 Fix: Here the JobTracker will try to invoke an RPC call with it's own Kerberos (keytab)
+      //credentials but will fail eventually as UserGroupInformationThreadLocal returns callers UserGroupInformation
+      //instance which is local to this thread resulting the exception 
+      //GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt).
+      //Solution is to store thread local UserGroupInformation object in a temporary variable and set JobTracker's 
+      //UserGroupInformation instance as the thread local varibale before invoking the RPC call. Once the the RPC
+      //invocation is done thread local variable has to be reverted back to it's original value.
+      callerUGI = UserGroupInformation.getCurrentUser();
+      final String user = callerUGI.getShortUserName();
+      UserGroupInformationThreadLocal.set(getMROwner());
+      //final String user =
+        //UserGroupInformation.getCurrentUser().getShortUserName();
       return getMROwner().doAs(new PrivilegedExceptionAction<String>() {
         @Override
         public String run() throws Exception {
@@ -3995,6 +4007,9 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
       });
     } catch(InterruptedException ie) {
       throw new IOException(ie);
+    } finally {
+      //Restore the thread local UserGroupInformation object
+      UserGroupInformationThreadLocal.set(callerUGI);
     }
   }
 
@@ -4174,7 +4189,13 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
       throw new IOException(
           "Delegation Token can be issued only with kerberos authentication");
     }
+    //A WSO2 Fix: Here the JobTracker will try to renew a DelegationToken but will fail eventually as UserGroupInformationThreadLocal 
+    //returns callers UserGroupInformation instance who caused this renewal resulting the exception 
+    //org.apache.hadoop.ipc.RemoteException: org.apache.hadoop.security.AccessControlException: Client admin tries to renew a token with renewer specified as mapred
+    //Solution is to compare the user name of the current threads UserGroupInformation against the user name of the UserGroupInformation objects of the  mapreduce owner. 
     String user = UserGroupInformation.getCurrentUser().getUserName();
+    if (!user.equals(getMROwner().getUserName()))
+      user = getMROwner().getUserName();
     return secretManager.renewToken(token, user);
   }  
 
@@ -4719,7 +4740,14 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
         // or TaskInProgress can modify this object and
         // the changes should not get reflected in TaskTrackerStatus.
         // An old TaskTrackerStatus is used later in countMapTasks, etc.
+
+        //WSO2 Fix: set MROwner UGI as the thread local UGI. Otherwise this call will fail
+        //with a GSS initiate exception
+        UserGroupInformation currentUGI = UserGroupInformationThreadLocal.get();
+        UserGroupInformationThreadLocal.set(getMROwner());
         job.updateTaskStatus(tip, (TaskStatus)report.clone());
+        UserGroupInformationThreadLocal.remove();
+        UserGroupInformationThreadLocal.set(currentUGI);
         JobStatus newStatus = (JobStatus)job.getStatus().clone();
         
         // Update the listeners if an incomplete job completes

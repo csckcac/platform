@@ -52,13 +52,19 @@ void display_usage(FILE *stream) {
 }
 
 int main(int argc, char **argv) {
+  //LOGFILE = stdout;
+  LOGFILE = fopen("/tmp/taskcontroller.log", "a+");
+
+  int i=0;
+  for (i=0; i<argc; i++)
+    fprintf(LOGFILE, "Arg[%i] = %s\n", i, argv[i]);
+
   //Minimum number of arguments required to run the task-controller
   if (argc < 4) {
-    display_usage(stdout);
+    display_usage(LOGFILE);
     return INVALID_ARGUMENT_NUMBER;
   }
 
-  LOGFILE = stdout;
   int command;
   const char * job_id = NULL;
   const char * task_id = NULL;

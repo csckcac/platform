@@ -63,6 +63,7 @@ import org.apache.hadoop.net.NetworkTopology;
 import org.apache.hadoop.net.Node;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.UserGroupInformationThreadLocal;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.util.StringUtils;
@@ -362,6 +363,7 @@ public class JobInProgress {
   JobInProgress(JobTracker jobtracker, final JobConf default_conf, 
       JobInfo jobInfo, int rCount, Credentials ts) 
   throws IOException, InterruptedException {
+    UserGroupInformation currentUGI = null;
     try {
       this.restartCount = rCount;
       this.jobId = JobID.downgrade(jobInfo.getJobID());
@@ -379,7 +381,17 @@ public class JobInProgress {
       // use the user supplied token to add user credentials to the conf
       jobSubmitDir = jobInfo.getJobSubmitDir();
       user = jobInfo.getUser().toString();
+      
+      //A WSO2 Fix: Here the JobInProgress will try to invoke an RPC call with a UserGroupInformation instance created
+      //for the remote user but will fail eventually as UserGroupInformationThreadLocal returns callers UserGroupInformation
+      //instance which is local to this thread resulting the exception 
+      //GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt).
+      //Solution is to store thread local UserGroupInformation object in a temporary variable and set calling user's 
+      //UserGroupInformation instance as the thread local varibale before invoking the RPC call. Once the the RPC
+      //invocation is done thread local variable has to be reverted back to it's original value.
       userUGI = UserGroupInformation.createRemoteUser(user);
+      currentUGI = UserGroupInformation.getCurrentUser();
+      UserGroupInformationThreadLocal.set(userUGI);
       if (ts != null) {
         for (Token<? extends TokenIdentifier> token : ts.getAllTokens()) {
           userUGI.addToken(token);
@@ -390,6 +402,9 @@ public class JobInProgress {
         public FileSystem run() throws IOException {
           return jobSubmitDir.getFileSystem(default_conf);
         }});
+      
+      //Restore the thread local UserGroupInformation object
+      UserGroupInformationThreadLocal.set(currentUGI);
       
       /** check for the size of jobconf **/
       Path submitJobFile = JobSubmissionFiles.getJobConfPath(jobSubmitDir);
@@ -467,6 +482,9 @@ public class JobInProgress {
       // Check task limits
       checkTaskLimits();
     } finally {
+      //Restore the thread local UserGroupInformation object
+      UserGroupInformationThreadLocal.set(currentUGI);
+      
       //close all FileSystems that was created above for the current user
       //At this point, this constructor is called in the context of an RPC, and
       //hence the "current user" is actually referring to the kerberos

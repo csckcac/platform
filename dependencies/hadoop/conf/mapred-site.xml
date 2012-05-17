@@ -28,7 +28,11 @@
 </property>
 <property>
   <name>mapreduce.jobtracker.keytab.file</name>
-  <value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/mapred.keytab</value> <!--path to the MapReduce keytab -->
+  <value>repository/conf/etc/hadoop/carbon.keytab</value> <!--path to the MapReduce keytab -->
+</property>
+<property>
+  <name>mapred.job.tracker.http.address</name>
+  <value>localhost:50030</value>
 </property>
 
 <!-- TaskTracker security configs -->
@@ -42,7 +46,11 @@
 </property>
 <property>
   <name>mapreduce.tasktracker.keytab.file</name>
-  <value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/mapred.keytab</value> <!--path to the MapReduce keytab -->
+  <value>repository/conf/etc/hadoop/carbon.keytab</value> <!--path to the MapReduce keytab -->
+</property>
+<property>
+  <name>mapred.task.tracker.http.address</name>
+  <value>localhost:50060</value>
 </property>
 
 <!-- TaskController settings -->
@@ -60,7 +68,7 @@
 </property>
 <property>
   <name>hadoop.log.dir</name>
-  <value>/tmp/tasktracker</value>
+  <value>/tmp/hadoop/tasktracker</value>
 </property>
 
 <!-- Carbon taskcontroller user -->

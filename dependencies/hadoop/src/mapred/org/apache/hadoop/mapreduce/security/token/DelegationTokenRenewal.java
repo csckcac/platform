@@ -23,6 +23,7 @@ import java.net.InetAddress;
 import java.net.URI;
 import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.UserGroupInformationThreadLocal;
 
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.apache.hadoop.hdfs.security.token.delegation.DelegationTokenIdentifier;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.DataInputBuffer;
 import org.apache.hadoop.mapreduce.JobID;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.token.Token;
@@ -223,7 +225,6 @@ public class DelegationTokenRenewal {
           return (DistributedFileSystem) FileSystem.get(uri, conf);  
         }
       });
-
       
     } catch (Exception e) {
       LOG.warn("Failed to create a dfs to renew for:" + token.getService(), e);

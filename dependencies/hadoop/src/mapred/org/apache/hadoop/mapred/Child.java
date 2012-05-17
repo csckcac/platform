@@ -47,6 +47,7 @@ import org.apache.hadoop.metrics2.source.JvmMetricsSource;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.UserGroupInformationThreadLocal;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.util.Shell;
 import org.apache.hadoop.util.StringUtils;
@@ -111,7 +112,8 @@ class Child {
     
     // Set the credentials
     defaultConf.setCredentials(credentials);
-    
+    //WSO2 Fix:
+    UserGroupInformationThreadLocal.set(taskOwner); 
     final TaskUmbilicalProtocol umbilical = 
       taskOwner.doAs(new PrivilegedExceptionAction<TaskUmbilicalProtocol>() {
         @Override
@@ -122,7 +124,9 @@ class Child {
               defaultConf);
         }
     });
-    
+    //WSO2 Fix:
+    UserGroupInformationThreadLocal.remove(); 
+
     int numTasksToExecute = -1; //-1 signifies "no limit"
     int numTasksExecuted = 0;
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -247,9 +251,11 @@ class Child {
         for(Token<?> token : UserGroupInformation.getCurrentUser().getTokens()) {
           childUGI.addToken(token);
         }
-        
+          
         // Create a final reference to the task for the doAs block
         final Task taskFinal = task;
+        //WSO2 Fix:
+        UserGroupInformationThreadLocal.set(childUGI);
         childUGI.doAs(new PrivilegedExceptionAction<Object>() {
           @Override
           public Object run() throws Exception {
@@ -269,6 +275,8 @@ class Child {
             return null;
           }
         });
+        //WSO2 Fix:
+        UserGroupInformationThreadLocal.remove();
         if (numTasksToExecute > 0 && ++numTasksExecuted == numTasksToExecute) {
           break;
         }
@@ -285,6 +293,8 @@ class Child {
             task.taskCleanup(umbilical);
           } else {
             final Task taskFinal = task;
+            //WSO2 Fix:
+            UserGroupInformationThreadLocal.set(childUGI);
             childUGI.doAs(new PrivilegedExceptionAction<Object>() {
               @Override
               public Object run() throws Exception {
@@ -292,6 +302,8 @@ class Child {
                 return null;
               }
             });
+            //WSO2 Fix:
+            UserGroupInformationThreadLocal.remove();
           }
         }
       } catch (Exception e) {

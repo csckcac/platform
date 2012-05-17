@@ -40,7 +40,6 @@ public class Token<T extends TokenIdentifier> implements Writable {
   private byte[] password;
   private Text kind;
   private Text service;
-  
   /**
    * Construct a token given a token identifier and a secret manager for the
    * type of the token identifier.

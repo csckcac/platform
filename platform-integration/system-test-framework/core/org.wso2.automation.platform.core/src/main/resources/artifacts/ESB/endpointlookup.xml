@@ -6,6 +6,7 @@
         <url type="loadbalance" user="1">"http://10.100.2.122:9766/services/ClubProfileDS1/"</url>
         <url type="failover" user="1">"http://localhost:9001/services/LBService1"</url>
         <url type="address" user="1">"http://localhost:9000/services/SimpleStockQuoteService"</url>
+        <url type="address" user="1">"http://localhost:9000/services/SimpleStockQuoteService/"</url>
         <url type="address" user="1">"http://localhost:9765/services/HelloService"</url>
     </as>
 

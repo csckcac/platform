@@ -229,4 +229,9 @@ public class FileHostObject extends ScriptableObject {
     public String getName() throws ScriptException {
         return file.getName();
     }
+
+    public JavaScriptFile getJavaScriptFile() throws ScriptException {
+        return file;
+    }
+
 }

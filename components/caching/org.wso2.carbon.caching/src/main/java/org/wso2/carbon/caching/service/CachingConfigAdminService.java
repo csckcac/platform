@@ -775,38 +775,4 @@ public class CachingConfigAdminService extends AbstractAdmin {
         }
         return RegistryResources.MODULES + moduleName + "/" + moduleVersion;
     }
-
-//    /**
-//     * Persists the given <code>Policy</code> object under policies associated with the
-//     * <code>servicePath</code> in the registry.
-//     *
-//     * //todo remove this, and replace with AbstractPersistenceManager#persistPolicyToRegistry
-//     *
-//     * @param policy      the <code>Policy</code> instance to be persisted
-//     * @param policyType Policy Type
-//     * @param policyPath       - path in the registry to persist policy
-//     * @throws RegistryException  if saving data to the registry is unsuccessful
-//     * @throws XMLStreamException if serializing the <code>Policy<code> object is unsuccessful
-//     */
-//    private void persistPolicyToRegistry(Policy policy, String policyType, String policyPath)
-//            throws RegistryException, XMLStreamException {
-//        if (log.isDebugEnabled()) {
-//            log.debug("Persisting caching policy in the registry");
-//        }
-//
-//        Resource policyResource = PersistenceUtils.createPolicyResource(
-//                configRegistry, policy, policy.getId(), policyType);
-//        String policyResourcePath = policyPath + RegistryResources.POLICIES
-//                + policy.getId();
-//        try {
-//            configRegistry.beginTransaction();
-//            configRegistry.put(policyResourcePath, policyResource);
-//            configRegistry.commitTransaction();
-//        } catch (Exception e) {
-//            String msg = "Error persisting caching policy in the configRegistry.";
-//            log.error(msg, e);
-//            configRegistry.rollbackTransaction();
-//            throw new RegistryException(e.getMessage(), e);
-//        }
-//    }
 }

@@ -20,12 +20,12 @@ package org.wso2.carbon.mediator.transform.xml;
 import org.apache.synapse.config.xml.AbstractMediatorSerializer;
 import org.apache.synapse.Mediator;
 import org.apache.axiom.om.OMElement;
-import org.apache.synapse.config.xml.SynapseXPathSerializer;
 import org.wso2.carbon.mediator.transform.BamMediator;
-import org.wso2.carbon.mediator.transform.Input;
-import org.wso2.carbon.mediator.transform.Output;
+
+
 
 public class BamMediatorSerializer extends AbstractMediatorSerializer {
+
 
     public OMElement serializeSpecificMediator(Mediator mediator) {
         assert mediator instanceof BamMediator : "BAM mediator is expected";
@@ -36,49 +36,9 @@ public class BamMediatorSerializer extends AbstractMediatorSerializer {
         bam.addAttribute(fac.createOMAttribute("config-key", nullNS, bamMediator.getConfigKey()));
 
         //bam.addChild(createInput(BamMediator.getInput()));
-        bam.addChild(createOutput(bamMediator.getOutput()));
+        //bam.addChild(createOutput(bamMediator.getOutput()));
 
         return bam;
-    }
-
-    private OMElement createInput(Input input) {
-        OMElement inputElement = fac.createOMElement("input", synNS);
-
-        if (input.getType() == BamMediator.TYPES.TEXT) {
-            inputElement.addAttribute(fac.createOMAttribute("type", nullNS, "text"));
-        } else if (input.getType() == BamMediator.TYPES.XML) {
-            inputElement.addAttribute(fac.createOMAttribute("type", nullNS, "xml"));
-        }
-
-        if (input.getExpression() != null) {
-            SynapseXPathSerializer.serializeXPath(input.getExpression(), inputElement, "expression");
-        }
-
-        return inputElement;
-    }
-
-    private OMElement createOutput(Output output) {
-        OMElement outputElement = fac.createOMElement("output", synNS);
-
-        if (output.getType() == BamMediator.TYPES.TEXT) {
-            outputElement.addAttribute(fac.createOMAttribute("type", nullNS, "text"));
-        } else if (output.getType() == BamMediator.TYPES.XML) {
-            outputElement.addAttribute(fac.createOMAttribute("type", nullNS, "xml"));
-        }
-
-        if (output.getExpression() != null) {
-            SynapseXPathSerializer.serializeXPath(output.getExpression(), outputElement, "expression");
-        }
-
-        if (output.getProperty() != null) {
-            outputElement.addAttribute(fac.createOMAttribute("property", nullNS, output.getProperty()));
-        }
-
-        if (output.getAction() != null) {
-            outputElement.addAttribute(fac.createOMAttribute("action", nullNS, output.getAction()));
-        }
-
-        return outputElement;
     }
 
     public String getMediatorClassName() {

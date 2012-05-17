@@ -52,6 +52,7 @@
                             !javax.xml.namespace,
                             javax.xml.namespace; version=0.0.0,
                             org.apache.axiom.om; version=0.0.0,
+                            org.wso2.carbon.bam.mediationstats.data.publisher.stub.*;version="${carbon.platform.package.import.version.range}",
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>
@@ -79,7 +80,15 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.bam.mediationstats.data.publisher.stub</artifactId>
+            <version>${wso2carbon.version.bam-data-publishers}</version>
+        </dependency>
     </dependencies>
+
+    <properties>
+        <wso2carbon.version.bam-data-publishers>${wso2carbon.version}</wso2carbon.version.bam-data-publishers>
+    </properties>
+
 </project>

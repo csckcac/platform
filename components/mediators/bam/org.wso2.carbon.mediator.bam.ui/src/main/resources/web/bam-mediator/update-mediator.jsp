@@ -21,6 +21,10 @@
 <%@ page import="org.wso2.carbon.sequences.ui.util.SequenceEditorHelper" %>
 <%@ page import="org.wso2.carbon.sequences.ui.util.ns.XPathFactory" %>
 
+<%@ page import="org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+
 <%
     Mediator mediator = SequenceEditorHelper.getEditingMediator(request, session);
     String uri = "", prefix = "";
@@ -30,14 +34,36 @@
     }
     BamMediator bamMediator = (BamMediator) mediator;
 
-    bamMediator.setConfigKey(request.getParameter("seq_ref"));
+
 
     bamMediator.setServerUrl(request.getParameter("serverUrl"));
     bamMediator.setUserName(request.getParameter("userName"));
     bamMediator.setPassword(request.getParameter("password"));
     bamMediator.setPort(request.getParameter("port"));
 
-/*    bamMediator.setConfigKey(request.getParameter("seq_ref"));
+    bamMediator.setServerProfile(request.getParameter("serverProfile"));
+
+    String propertyListString = request.getParameter("hfPropertyTableData");
+    List<Property> properties = null;
+    if (propertyListString != null) {
+        properties = new ArrayList<Property>();
+        Property property;
+        String keyValuePair [];
+        String[] propertyList = propertyListString.split(";");
+        for (int i = 0; i < propertyList.length; i++) {
+            property = new Property();
+            keyValuePair = propertyList[i].split(":");
+            property.setKey(keyValuePair[0]);
+            property.setValue(keyValuePair[1]);
+            property.setKey(propertyList[i].split(":")[0]);
+            property.setValue(propertyList[i].split(":")[1]);
+            properties.add(property);
+        }
+    }
+    bamMediator.setProperties(properties);
+
+
+/*    bamMediator.setServerProfile(request.getParameter("seq_ref"));
 
     String inputExpr = request.getParameter("inputExpr");
     if (inputExpr != null && !inputExpr.equals("")) {

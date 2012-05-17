@@ -20,9 +20,12 @@
 <%@ page import="org.wso2.carbon.mediator.service.ui.Mediator" %>
 <%@ page import="org.wso2.carbon.sequences.ui.util.SequenceEditorHelper" %>
 <%@ page import="org.wso2.carbon.sequences.ui.util.ns.NameSpacesRegistrar" %>
+<%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
+<%@ page import="org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property" %>
+<%@ page import="java.util.ArrayList" %>
 
 
 <%! public static final String PROPERTY_VALUES = "propertyValues";
@@ -49,6 +52,14 @@
     String userName = bamMediator.getUserName();
     String password = bamMediator.getPassword();
     String port = bamMediator.getPort();
+
+
+    String configuration = "";
+    if(bamMediator.getServerProfile() != null){
+        configuration = bamMediator.getServerProfile();
+    }
+    List<Property> properties = bamMediator.getProperties();
+
 
     /*String inputType = bamMediator.getInputType();
     String outputType = bamMediator.getOutputType();
@@ -87,6 +98,66 @@
 		request="<%=request%>" i18nObjectName="propertyMediatorJsi18n"/>
     <div>
         <script type="text/javascript" src="../bam-mediator/js/mediator-util.js"></script>
+        <script id="source" type="text/javascript">
+            function showHideDiv(divId) {
+                var theDiv = document.getElementById(divId);
+                if (theDiv.style.display == "none") {
+                    theDiv.style.display = "";
+                } else {
+                    theDiv.style.display = "none";
+                }
+            }
+
+            var rowNum = 1;
+
+            function addColumn() {
+                rowNum++;
+                /*var n =  + parseInt(trId.charAt(trId.length-1))+1;
+                 jQuery("#"+trId+" td div.addIcon").remove();*/
+                //alert(n);
+                var sId = "propertyTable_" + rowNum;
+                //alert(sId);
+                var tableContent = "<tr id=\"" + sId + "\">" +
+                                   "<td>\n" +
+                                   "                        <fmt:message key='property.name'/>\n" +
+                                   "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
+                                   "                    </td>\n" +
+                                   "                    <td>\n" +
+                                   "                        <fmt:message key='property.value'/>\n" +
+                                   "                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +
+                                   "                    </td>" +
+                                   "<td>\n" +
+                                   "                        <a onClick='javaScript:removeColumn(\"" + sId + "\")'" +
+                                   "style='background-image: url(../bampubsvcstat/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
+                                   "                    </td>" +
+                                   "</tr>";
+
+                jQuery("#propertyTable").append(tableContent);
+                updatePropertyTableData();
+            }
+
+            function removeColumn(id) {
+                jQuery("#" + id).remove();
+                updatePropertyTableData();
+            }
+
+            function updatePropertyTableData(){
+                var tableData = "", inputs, numOfInputs;
+                inputs = document.getElementById("propertyTable").getElementsByTagName("input");
+                numOfInputs = inputs.length;
+                for(var i=0; i<numOfInputs; i=i+2){
+                    if(inputs[i].value != "" && inputs[i+1].value != ""){
+                        tableData = tableData + inputs[i].value + ":" + inputs[i+1].value + ";";
+                    }
+                    /*tableData = tableData + jQuery("#propertyName")[i].value + ":"
+                                        + jQuery("#propertyValue")[i].value + ";" ;*/
+                    /*tableData[i]["name"] = jQuery("#propertyName")[i].value;
+                    tableData[i]["value"] = jQuery("#propertyValue")[i].value;*/
+                }
+                document.getElementById("hfPropertyTableData").value = tableData;
+                alert("hf table : " + document.getElementById("hfPropertyTableData").value);
+            }
+        </script>
 
         <table class="normal" width="100%">
             <tbody>
@@ -107,28 +178,35 @@
                  //String port = "port";
             %>
 
+            <tr>
+                <td colspan="4">
+                    <h3 class="mediator">
+                        <fmt:message key="server.profile.header"/>
+                    </h3>
+                </td>
 
+            </tr>
 
 
             <tr>
                 <td>
-                    <fmt:message key="config.key"/><span class="required">*</span>
+                    <fmt:message key="server.profile"/><span class="required">*</span>
                 </td>
                 <td>
                     <input class="longInput" type="text"
-                           value="<%= bamMediator.getConfigKey() != null ? bamMediator.getConfigKey() : "" %>"
-                           id="seq_ref" name="seq_ref" readonly="true"/>
+                           value="<%=configuration%>"
+                           id="serverProfile" name="serverProfile" readonly="true"/>
                 </td>
                 <td>
                     <a href="#registryBrowserLink"
                        class="registry-picker-icon-link"
-                       onclick="showRegistryBrowser('seq_ref','/_system/config')"><fmt:message key="conf.registry.browser"/>
+                       onclick="showRegistryBrowser('serverProfile','/_system/config')"><fmt:message key="conf.registry.browser"/>
                     </a>
                 </td>
                 <td>
                     <a href="#registryBrowserLink"
                        class="registry-picker-icon-link"
-                       onclick="showRegistryBrowser('seq_ref','/_system/governance')"><fmt:message key="gov.registry.browser"/>
+                       onclick="showRegistryBrowser('serverProfile','/_system/governance')"><fmt:message key="gov.registry.browser"/>
                     </a>
                 </td>
             </tr>
@@ -226,9 +304,13 @@
                     </h3>
                 </td>
             </tr>
-            <tbody>
+
+
+
+
             <tr>
-                <%--<table id="propertyTable" width="100%" class="styledLeft" style="margin-left: 0px;">
+                <input name="hfPropertyTableData" id="hfPropertyTableData" type="hidden" value="" />
+                <table id="propertyTable" width="100%" class="styledLeft" style="margin-left: 0px;">
 
                     <%  if (properties != null) {
                         int i = 1;
@@ -238,21 +320,21 @@
                     <tr id="propertyTable_<%=i%>">
                         <td>
                             <fmt:message key="property.name"/>
-                            <input type="text" name="<%=PROPERTY_KEYS%>" value="<%=property.getKey()%>">
+                            <input id="propertyName" type="text" name="<%=PROPERTY_KEYS%>" value="<%=property.getKey()%>">
                         </td>
                         <td>
                             <fmt:message key="property.value"/>
-                            <input type="text" name="<%=PROPERTY_VALUES%>" value="<%=property.getValue()%>">
+                            <input id="propertyValue" type="text" name="<%=PROPERTY_VALUES%>" value="<%=property.getValue()%>">
                         </td>
                         <% if (i == 1) { %>
                         <td>
                             <a onClick='javaScript:addColumn()' style='background-image:
-                                url(../bammediationstatpub/images/add.gif);'class='icon-link addIcon'>Add Property</a>
+                                url(images/add.gif);'class='icon-link addIcon'>Add Property</a>
                         </td>
                         <% } else {  %>
                         <td>
                             <a onClick='javaScript:removeColumn("propertyTable_<%=i%>")' style='background-image:
-                                url(../bammediationstatpub/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>
+                                url(images/delete.gif);'class='icon-link addIcon'>Remove Property</a>
                         </td>
                         <% } %>
 
@@ -263,7 +345,6 @@
                     <%  i++;
                     }
                     } else { %>
-                    >
                     <tr>
                         <td>
                             <fmt:message key="property.name"/>
@@ -275,13 +356,13 @@
                         </td>
 
                         <td>
-                            <a onClick='javaScript:addColumn()' style='background-image: url(../bammediationstatpub/images/add.gif);'class='icon-link addIcon'>Add Property</a>
+                            <a onClick='javaScript:addColumn()' style='background-image: url(images/add.gif);'class='icon-link addIcon'>Add Property</a>
                         </td>
                     </tr>
 
 
                     <% } %>
-                </table>--%>
+                </table>
             </tr>
 
 
@@ -289,7 +370,6 @@
 
 
 
-            </tbody>
         </table>
     </div>
 </fmt:bundle>

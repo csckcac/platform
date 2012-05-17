@@ -22,11 +22,7 @@ import org.apache.synapse.Mediator;
 import org.apache.synapse.SynapseConstants;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMAttribute;
-import org.apache.synapse.config.xml.SynapseXPathFactory;
-import org.jaxen.JaxenException;
 import org.wso2.carbon.mediator.transform.BamMediator;
-import org.wso2.carbon.mediator.transform.Input;
-import org.wso2.carbon.mediator.transform.Output;
 
 import javax.xml.namespace.QName;
 import java.util.Properties;
@@ -46,93 +42,7 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
             bam.setConfigKey(configFileAttr.getAttributeValue());
         }
 
-        OMElement inputElement = omElement.getFirstChildWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "input"));
-        if (inputElement != null) {
-            //bam.setInput(createInput(inputElement));
-        } else {
-            //bam.setInput(new Input());
-        }
-
-        OMElement outputElement = omElement.getFirstChildWithName(
-                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "output"));
-        if (inputElement != null) {
-            bam.setOutput(createOutput(outputElement));
-        } else {
-            bam.setOutput(new Output());
-        }
-
         return bam;
-    }
-
-    private Input createInput(OMElement input) {
-        Input in = new Input();
-
-        OMAttribute typeAttr = input.getAttribute(new QName("type"));
-        if (typeAttr == null) {
-            handleException("type attribute is required for the input element");
-        }
-
-        assert typeAttr != null;
-
-        String typeValue = typeAttr.getAttributeValue();
-        if (typeValue.equals("text")) {
-            in.setType(BamMediator.TYPES.TEXT);
-        } else if (typeValue.equals("xml")) {
-            in.setType(BamMediator.TYPES.XML);
-        } else {
-            handleException("Unexpected type specified as the input: " + typeValue);
-        }
-
-        if (input.getAttribute(new QName("expression")) != null) {
-            try {
-                in.setExpression(SynapseXPathFactory.getSynapseXPath(input, new QName("expression")));
-            } catch (JaxenException e) {
-                handleException("Error creating the XPath expression", e);
-            }
-        }
-
-        return in;
-    }
-
-    private Output createOutput(OMElement output) {
-        Output in = new Output();
-
-        OMAttribute typeAttr = output.getAttribute(new QName("type"));
-        if (typeAttr == null) {
-            handleException("type attribute is required for the input element");
-        }
-
-        assert typeAttr != null;
-
-        String typeValue = typeAttr.getAttributeValue();
-        if (typeValue.equals("text")) {
-            in.setType(BamMediator.TYPES.TEXT);
-        } else if (typeValue.equals("xml")) {
-            in.setType(BamMediator.TYPES.XML);
-        } else {
-            handleException("Unexpected type specified as the input: " + typeValue);
-        }
-
-        if (output.getAttribute(new QName("expression")) != null) {
-            try {
-                in.setExpression(SynapseXPathFactory.getSynapseXPath(output, new QName("expression")));
-            } catch (JaxenException e) {
-                handleException("Error creating the XPath expression", e);
-            }
-        }
-
-        OMAttribute actionAttr = output.getAttribute(new QName("action"));
-        if (actionAttr != null && actionAttr.getAttributeValue() != null) {
-            in.setAction(actionAttr.getAttributeValue());
-        }
-
-        OMAttribute propertyAttr = output.getAttribute(new QName("property"));
-        if (propertyAttr != null && propertyAttr.getAttributeValue() != null) {
-            in.setProperty(propertyAttr.getAttributeValue());
-        }
-
-        return in;
     }
 
     public QName getTagQName() {

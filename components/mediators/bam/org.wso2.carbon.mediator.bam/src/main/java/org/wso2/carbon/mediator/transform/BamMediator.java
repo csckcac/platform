@@ -32,28 +32,238 @@ import java.io.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+
+
+
+
+
+
+
+import org.apache.axis2.description.AxisService;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.Mediator;
+import org.apache.synapse.MessageContext;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.wso2.carbon.agent.Agent;
+import org.wso2.carbon.agent.DataPublisher;
+import org.wso2.carbon.agent.commons.Event;
+import org.wso2.carbon.agent.commons.exception.*;
+import org.wso2.carbon.agent.conf.AgentConfiguration;
+import org.wso2.carbon.agent.exception.AgentException;
+import org.wso2.carbon.agent.exception.TransportException;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+
+import java.net.MalformedURLException;
+
 /**
  * Transforms the current message payload using the given BAM configuration.
  * The current message context is replaced with the result as XML.
  */
 public class BamMediator extends AbstractMediator {
-    public enum TYPES {
-        TEXT,
-        XML
+
+    private static final Log log = LogFactory.getLog(BamMediator.class);
+    private static final String ADMIN_SERVICE_PARAMETER = "adminService";
+    private static final String HIDDEN_SERVICE_PARAMETER = "hiddenService";
+
+    private String varible1 = "10";
+
+    private String varible2 = "10";
+
+    //private int varible3 = 0;
+
+    private String streamId = null;
+    //private AgentConfiguration agentConfiguration = null;
+    //private Agent agent = null;
+    private DataPublisher dataPublisher = null;
+
+    public BamMediator() {
+
     }
 
-    /** BAM engine */
-    //private BAM bam = null;
+    public boolean mediate(MessageContext mc) {
+
+
+
+        SynapseLog synLog = getLog(mc);
+
+        if (synLog.isTraceOrDebugEnabled()) {
+            synLog.traceOrDebug("Start : BAM mediator");
+
+            if (synLog.isTraceTraceEnabled()) {
+                synLog.traceTrace("Message : " + mc.getEnvelope());
+            }
+        }
+
+        // check weather we need to create the bam configuration
+        lock.lock();
+        try {
+            if (isCreationOrRecreationRequired(mc.getConfiguration())) {
+                //bam = createBamConfig(synCtx);
+            }
+        } finally {
+            lock.unlock();
+        }
+
+
+
+
+
+
+        // Do somthing useful..
+        // Note the access to the Synapse Message context
+        org.apache.axis2.context.MessageContext msgCtx = ((Axis2MessageContext) mc).getAxis2MessageContext();
+
+        AxisService service = msgCtx.getAxisService();
+        if (service == null ||
+            service.getParameter(ADMIN_SERVICE_PARAMETER) != null ||
+            service.getParameter(HIDDEN_SERVICE_PARAMETER) != null) {
+            return true;
+        }
+
+        AxisConfiguration axisConfiguration = msgCtx.getConfigurationContext().getAxisConfiguration();
+        int tenantId = SuperTenantCarbonContext.getCurrentContext(axisConfiguration).getTenantId();
+//        Map<Integer, ActivityConfigData> tenantSpecificActivity = TenantActivityConfigData.getTenantSpecificEventingConfigData();
+//        ActivityConfigData activityConfigData = tenantSpecificActivity.get(tenantId);
+        try {
+            logMessage(tenantId, mc);
+        } catch (AgentException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (MalformedStreamDefinitionException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (StreamDefinitionException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (WrongEventTypeException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (MalformedURLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (AuthenticationException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (TransportException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+
+
+
+        if (synLog.isTraceOrDebugEnabled()) {
+            synLog.traceOrDebug("End : BAM mediator");
+
+            if (synLog.isTraceTraceEnabled()) {
+                synLog.traceTrace("Message : " + mc.getEnvelope());
+            }
+        }
+
+
+
+
+        return true;
+    }
+
+    public String getType() {
+        return null;
+    }
+
+    public void setTraceState(int traceState) {
+        traceState = 0;
+    }
+
+    public int getTraceState() {
+        return 0;
+    }
+
+    public void setvarible1(String newValue) {
+        varible1 = newValue;
+    }
+
+    public String getvarible1() {
+        return varible1;
+    }
+
+    public void setvarible2(String newValue) {
+        varible2 = newValue;
+    }
+
+    public String getvarible2() {
+        return varible2;
+    }
+
+    public void setDescription(String s) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public String getDescription() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    private void logMessage(int tenantId, MessageContext messageContext) throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException, WrongEventTypeException, DifferentStreamDefinitionAlreadyDefinedException, MalformedURLException, AuthenticationException, TransportException {
+
+        if (streamId == null) {
+            AgentConfiguration agentConfiguration = new AgentConfiguration();
+            agentConfiguration.setTrustStore("/works/platform_trunk/graphite/components/agent/org.wso2.carbon.agent.server/src/test/resources/client-truststore.jks");
+            agentConfiguration.setTrustStorePassword("wso2carbon");
+            Agent agent = new Agent(agentConfiguration);
+            //create data publisher
+            dataPublisher = new DataPublisher("tcp://localhost:7612", "admin", "admin", agent);
+
+            //Define event stream
+            streamId = dataPublisher.defineEventStream("{" +
+                                                       "  'name':'org.wso2.carbon.mediator.bam.BamMediator'," +
+                                                       "  'version':'1.0.0'," +
+                                                       "  'nickName': 'Log'," +
+                                                       "  'description': 'log to bam'," +
+                                                       "  'metaData':[" +
+                                                       "          {'name':'ProductName','type':'STRING'}" +
+                                                       "  ]," +
+                                                       "  'payloadData':[" +
+                                                       "          {'name':'TenantId','type':'INT'}," +
+                                                       "          {'name':'MessageId','type':'STRING'}," +
+                                                       "          {'name':'SOAPHeaddr','type':'STRING'}," +
+                                                       "          {'name':'SOAPBody','type':'STRING'}" +
+                                                       "  ]" +
+                                                       "}");
+            log.info("Event Stream Created.");
+        }
+        //Publish event for a valid stream
+        if (streamId != null && !streamId.isEmpty()) {
+            log.info("Stream ID: " + streamId);
+            // Event for the message
+            Event eventJohnOne = new Event(streamId, System.currentTimeMillis(), new Object[]{"external"}, null,
+                                           new Object[]{tenantId, messageContext.getMessageID(), messageContext.getEnvelope().getHeader().toString(), messageContext.getEnvelope().getBody().toString()});
+            dataPublisher.publish(eventJohnOne);
+        } else {
+            log.info("streamId is empty.");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //
+
     /** BAM configuration file */
     private String configKey = null;
     /** This lock is used to create the bam configuration synchronously */
     private volatile Lock lock = new ReentrantLock();
 
-    private Input input = null;
-
-    private Output output = null;
-
-    public boolean mediate(MessageContext synCtx) {
+/*    public boolean mediate(MessageContext synCtx) {
         SynapseLog synLog = getLog(synCtx);
 
         if (synLog.isTraceOrDebugEnabled()) {
@@ -74,21 +284,7 @@ public class BamMediator extends AbstractMediator {
             lock.unlock();
         }
 
-        // get the input as an stream
-        ByteArrayInputStream byteArrayInputStream = input.process(synCtx, synLog);
-
-        // create the execution context for bam. This is required for every message
-        //ExecutionContext executionContext = bam.createExecutionContext();
-
-        // create a output stream for store the result
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        StreamResult streamResult = new StreamResult(outputStream);
-
-        // filter the message through bam
-        //bam.filterSource(executionContext, new StreamSource(byteArrayInputStream), streamResult);
-
-        // add result
-        output.process(outputStream, synCtx, synLog);
+        // Code of mediation here.
 
         if (synLog.isTraceOrDebugEnabled()) {
             synLog.traceOrDebug("End : BAM mediator");
@@ -99,7 +295,7 @@ public class BamMediator extends AbstractMediator {
         }
 
         return true;
-    }
+    }*/
 
     /**
      * Create the smoooks configuration from the configuration key. BAM configuration can be
@@ -113,7 +309,23 @@ public class BamMediator extends AbstractMediator {
     }*/
 
     private boolean isCreationOrRecreationRequired(SynapseConfiguration synCfg) {
-        return true;
+        // if there are no cachedTemplates we need to create a one
+        /*if (smooks == null) {
+            // this is a creation case
+            return true;
+        } else {
+            // build transformer - if necessary
+            Entry dp = synCfg.getEntryDefinition(configKey);
+            // if the smooks config key refers to a dynamic resource, and if it has been expired
+            // it is a recreation case
+            boolean shouldRecreate = dp != null && dp.isDynamic() && (!dp.isCached() || dp.isExpired());
+            if (shouldRecreate) {
+                // we should clear all the existing resources
+                smooks.close();
+            }
+            return shouldRecreate;
+        }*/
+        return false;
     }
 
     public String getConfigKey() {
@@ -124,19 +336,4 @@ public class BamMediator extends AbstractMediator {
         this.configKey = configKey;
     }
 
-    /*public Input getInput() {
-        return input;
-    }*/
-
-    public Output getOutput() {
-        return output;
-    }
-
-    /*public void setInput(Input input) {
-        this.input = input;
-    }*/
-
-    public void setOutput(Output output) {
-        this.output = output;
-    }
 }

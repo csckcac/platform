@@ -20,28 +20,29 @@ package org.wso2.carbon.mediator.bam.ui;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.synapse.SynapseConstants;
-import org.apache.synapse.config.xml.SynapseXPathFactory;
-import org.apache.synapse.config.xml.SynapseXPathSerializer;
-import org.apache.synapse.util.xpath.SynapseXPath;
-import org.jaxen.JaxenException;
 import org.wso2.carbon.mediator.service.ui.AbstractMediator;
-import org.wso2.carbon.mediator.service.MediatorException;
+import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class BamMediator extends AbstractMediator {
 
-    private static final QName ATT_CONFIG_KEY = new QName("config-key");
-    private String configKey = null;
+    //private static final QName ATT_CONFIG_KEY = new QName("config-key");
 
     private String serverUrl = "https://localhost:9443";
     private String userName = "admin";
     private String password = "admin";
     private String port = "7611";
 
-    public String getConfigKey(){
-        return configKey;
+    private String serverProfile = "";
+    List<Property> properties = null;
+
+    public String getServerProfile(){
+        return serverProfile;
     }
 
     public String getServerUrl(){
@@ -60,8 +61,12 @@ public class BamMediator extends AbstractMediator {
         return port;
     }
 
-    public void setConfigKey(String configKey1){
-        this.configKey = configKey1;
+    public List<Property> getProperties(){
+        return properties;
+    }
+
+    public void setServerProfile(String serverProfile1){
+        this.serverProfile = serverProfile1;
     }
 
     public void setServerUrl(String serverUrl1){
@@ -80,6 +85,10 @@ public class BamMediator extends AbstractMediator {
         this.port = port1;
     }
 
+    public void setProperties(List<Property> propertyList){
+        this.properties = propertyList;
+    }
+
 
     public String getTagLocalName() {
         return "bam";
@@ -89,15 +98,17 @@ public class BamMediator extends AbstractMediator {
         OMElement bamEle = fac.createOMElement("bam", synNS);
         saveTracingState(bamEle, this);
 
-        /*if (configKey != null) {
+        /*if (serverProfile != null) {
             bamEle.addAttribute(fac.createOMAttribute(
-                    "config-key", nullNS, configKey));
+                    "config-key", nullNS, serverProfile));
         } else {
             throw new MediatorException("config-key not specified");
         }*/
 
         bamEle.addChild(serializeCredential());
         bamEle.addChild(serializeTransport());
+        bamEle.addChild(serializeServerProfile());
+        bamEle.addChild(serializeProperties());
 
         if (parent != null) {
             parent.addChild(bamEle);
@@ -106,13 +117,13 @@ public class BamMediator extends AbstractMediator {
     }
 
     public void build(OMElement elem) {
-        OMAttribute key = elem.getAttribute(ATT_CONFIG_KEY);
+        /*OMAttribute key = elem.getAttribute(ATT_CONFIG_KEY);
 
         if (key == null) {
             String msg = "The 'config-key' attribute is required";
             throw new MediatorException(msg);
         }
-        this.configKey = key.getAttributeValue();
+        this.serverProfile = key.getAttributeValue();*/
 
         OMElement credentialElement = elem.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "credential"));
@@ -124,6 +135,18 @@ public class BamMediator extends AbstractMediator {
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "transport"));
         if (transportElement != null) {
             processTransport(transportElement);
+        }
+
+        OMElement profileElement = elem.getFirstChildWithName(
+                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "serverProfile"));
+        if (profileElement != null){
+            processProfile(profileElement);
+        }
+
+        OMElement propertiesElement = elem.getFirstChildWithName(
+                new QName(SynapseConstants.SYNAPSE_NAMESPACE, "properties"));
+        if (propertiesElement != null){
+            processProperties(propertiesElement);
         }
 
         // after successfully creating the mediator
@@ -160,6 +183,29 @@ public class BamMediator extends AbstractMediator {
         }
     }
 
+    private void processProfile(OMElement profile){
+        OMAttribute pathAttr = profile.getAttribute(new QName("path"));
+        if(pathAttr != null){
+            String pathValue = pathAttr.getAttributeValue();
+            this.setServerProfile(pathValue);
+        }
+    }
+
+    private void processProperties(OMElement properties){
+        if(properties != null){
+            Iterator itr = properties.getChildrenWithName(new QName("property"));
+            this.properties = new ArrayList<Property>();
+            Property property;
+            while (itr.hasNext()){
+                OMElement propertyElement = (OMElement)itr.next();
+                property = new Property();
+                property.setKey(propertyElement.getAttributeValue(new QName("name")));
+                property.setValue(propertyElement.getAttributeValue(new QName("value")));
+                this.properties.add(property);
+            }
+        }
+    }
+
     private OMElement serializeCredential(){
         OMElement credentialElement = fac.createOMElement("credential", synNS);
         credentialElement.addAttribute("serverUrl", serverUrl, nullNS);
@@ -172,6 +218,26 @@ public class BamMediator extends AbstractMediator {
         OMElement credentialElement = fac.createOMElement("transport", synNS);
         credentialElement.addAttribute("port", port, nullNS);
         return credentialElement;
+    }
+
+    private OMElement serializeServerProfile(){
+        OMElement profileElement = fac.createOMElement("serverProfile", synNS);
+        profileElement.addAttribute("path", serverProfile, nullNS);
+        return profileElement;
+    }
+
+    private OMElement serializeProperties(){
+        OMElement propertiesElement = fac.createOMElement("properties", synNS);
+        if(properties != null){
+            OMElement propertyElement;
+            for (Property property : properties) {
+                propertyElement = fac.createOMElement("property", synNS);
+                propertyElement.addAttribute("name", property.getKey(), nullNS);
+                propertyElement.addAttribute("value", property.getValue(), nullNS);
+                propertiesElement.addChild(propertyElement);
+            }
+        }
+        return propertiesElement;
     }
 
 }

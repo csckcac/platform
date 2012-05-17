@@ -24,10 +24,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.statistics.StatisticsCollector;
-import org.wso2.carbon.registry.extensions.jmx.Eventing;
-import org.wso2.carbon.registry.extensions.jmx.InvocationStatistics;
+import org.wso2.carbon.registry.extensions.jmx.*;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.management.*;
@@ -47,13 +48,14 @@ import java.util.Stack;
 @SuppressWarnings({"unused", "JavaDoc"})
 public class RegistryJMXServiceComponent {
 
-    // Property, Notification, Auditing, Search??
+    // Notification
     // Query Processors
 
     private static Log log = LogFactory.getLog(RegistryJMXServiceComponent.class);
     private boolean isJMXEnabled = false;
     private Stack<ServiceRegistration> serviceRegistrations = new Stack<ServiceRegistration>();
     private Stack<ObjectName> mBeans = new Stack<ObjectName>();
+    private RegistryService registryService;
 
     protected void activate(ComponentContext context) {
         if (isJMXEnabled()) {
@@ -61,8 +63,16 @@ public class RegistryJMXServiceComponent {
                 registerMBean(context, new InvocationStatistics(),
                         StatisticsCollector.class.getName());
                 registerMBean(context, new Eventing(), Eventing.class.getName());
+                registerMBean(context, new Activities(registryService.getRegistry(
+                        CarbonConstants.REGISTRY_SYSTEM_USERNAME)),
+                        ActivitiesMBean.class.getName());
+                registerMBean(context, new Properties(registryService.getRegistry(
+                        CarbonConstants.REGISTRY_SYSTEM_USERNAME)),
+                        PropertiesMBean.class.getName());
             } catch (JMException e) {
                 log.error("Unable to register JMX extensions", e);
+            } catch (RegistryException e) {
+                log.error("Unable to obtain registry instance", e);
             }
         }
         log.debug("Registry JMX component is activated");
@@ -93,9 +103,11 @@ public class RegistryJMXServiceComponent {
     }
 
     protected void setRegistryService(RegistryService registryService) {
+        this.registryService = registryService;
     }
 
     protected void unsetRegistryService(RegistryService registryService) {
+        this.registryService = null;
     }
 
     private boolean isJMXEnabled() {

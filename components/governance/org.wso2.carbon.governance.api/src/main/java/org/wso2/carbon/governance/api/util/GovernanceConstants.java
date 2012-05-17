@@ -240,4 +240,9 @@ public class GovernanceConstants {
      */
     public static final String ARTIFACT_CONTENT_PATH="/_system/config/repository/components/org.wso2.carbon.governance/configuration/";
 
+   /*
+     This is the path which save the rxt config files.
+     */
+   public static final String RXT_CONFIGS_PATH = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
+           RegistryConstants.GOVERNANCE_COMPONENT_PATH + RegistryConstants.PATH_SEPARATOR + "types";
 }

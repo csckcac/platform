@@ -538,6 +538,10 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             Resource resource = registry.get(artifactPath);
             resource.setProperty(APIConstants.API_CONTEXT_ID, api.getContext());
             registry.put(artifactPath, resource);
+            //create the wsdl in registry . if  faild we ignore after logging the error.
+            if (api.getWsdlUrl() != null) {
+                APIUtil.createWSDL(api.getWsdlUrl());
+            }
         } catch (RegistryException e) {
             handleException("Error while adding API", e);
         }

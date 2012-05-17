@@ -23,11 +23,15 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
+import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
+import org.wso2.carbon.governance.api.wsdls.WsdlManager;
+import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Tag;
@@ -351,4 +355,29 @@ public final class APIUtil {
         return artifactManager;
     }
 
+    /**
+     * Crate an WSDL from given wsdl url.
+     *
+     * @param wsdlUrl  wsdl url
+     * @throws APIManagementException  if failed to create WSDL in registry.
+     */
+    public static void createWSDL(String wsdlUrl) throws APIManagementException {
+        WsdlManager wsdlManager;
+        try {
+            String user = CarbonContext.getCurrentContext().getUsername();
+            //TODO should be remove, currently apiprovider is not a part of carbon therefore user is null.
+            user = "admin";
+            Registry registry1 = ServiceReferenceHolder.getInstance().getRegistryService().
+                    getGovernanceUserRegistry(user);
+            wsdlManager = new WsdlManager(registry1);
+            Wsdl wsdl = wsdlManager.newWsdl(wsdlUrl);
+            wsdlManager.addWsdl(wsdl);
+        } catch (GovernanceException e) {
+            String msg = "Failed to add wsdl " + wsdlUrl + " to registry ";
+            log.error(msg, e);
+        } catch (RegistryException e) {
+            String msg = "Faild to initialize gov registry for wsdl import";
+            log.error(msg, e);
+        }
+    }
 }

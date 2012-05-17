@@ -37,8 +37,14 @@ public class PlatformReportManager implements IReporter {
                 for(ITestResult results1:results.getTestContext().getPassedTests().getAllResults())
                 {
                     ReportEntry reportEntry= new SimpleReportEntry(results1.getTestClass().getName(),"Test");
-                    xmlReporter.testFailed(reportEntry);
+                    xmlReporter.testSucceeded(reportEntry);
                 }
+                for(ITestResult results1:results.getTestContext().getSkippedTests().getAllResults())
+                {
+                    ReportEntry reportEntry= new SimpleReportEntry(results1.getTestClass().getName(),"Test");
+                    xmlReporter.testSkipped(reportEntry);
+                }
+
             }
         }
          mySQLDataHandler.writeResultData();

@@ -88,7 +88,7 @@ public class DSSUploadDataServiceSeleniumTest {
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
         driver.get(baseUrl);
         StratosUserLogin.userLogin(driver, selenium, userDetails.getUserName(),
-                                         userDetails.getPassword(), productName);
+                                   userDetails.getPassword(), productName);
         setPreConditions();
     }
 
@@ -140,12 +140,14 @@ public class DSSUploadDataServiceSeleniumTest {
 
     }
 
-    @Test(priority = 5, dependsOnMethods = {"uploadServiceFile"})
+    @Test(priority = 5, dependsOnMethods = {"uploadServiceFile"}, timeOut = 1000 * 60 * 2)
     public void serviceDeployment() throws InterruptedException {
         for (int i = 0; i < 5; i++) {
             driver.findElement(By.linkText("List")).click();
-            if (driver.findElement(By.id("sgTable")).getText().contains(dataServiceName)) {
-                break;
+            if (driver.findElements(By.id("sgTable")).size() > 0) {
+                if (driver.findElement(By.id("sgTable")).getText().contains(dataServiceName)) {
+                    break;
+                }
             }
             Thread.sleep(3000);
 
@@ -168,7 +170,7 @@ public class DSSUploadDataServiceSeleniumTest {
     public void cleanup() throws InterruptedException {
         try {
             userLogout();
-            
+
         } finally {
             driver.quit();
         }

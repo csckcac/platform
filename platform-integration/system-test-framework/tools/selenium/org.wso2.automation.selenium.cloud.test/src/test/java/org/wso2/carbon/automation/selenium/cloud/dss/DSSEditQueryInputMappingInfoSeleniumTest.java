@@ -130,7 +130,7 @@ public class DSSEditQueryInputMappingInfoSeleniumTest {
 
     }
 
-    @Test(priority = 5, dependsOnMethods = {"uploadServiceFile"})
+    @Test(priority = 5, dependsOnMethods = {"uploadServiceFile"}, timeOut = 1000 * 60 * 2)
     public void serviceDeployment() throws InterruptedException {
         for (int i = 0; i < 5; i++) {
             if(dssServerUi.isServiceDeployed(dataServiceName)){

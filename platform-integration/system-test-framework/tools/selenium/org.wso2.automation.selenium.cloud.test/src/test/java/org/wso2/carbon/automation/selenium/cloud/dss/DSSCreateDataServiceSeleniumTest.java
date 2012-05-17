@@ -160,12 +160,14 @@ public class DSSCreateDataServiceSeleniumTest {
         addNewOperation();
     }
 
-    @Test(priority = 8, dependsOnMethods = {"addOperation"})
+    @Test(priority = 8, dependsOnMethods = {"addOperation"}, timeOut = 1000 * 60 *2)
     public void serviceDeployment() throws InterruptedException {
         for (int i = 0; i < 5; i++) {
             driver.findElement(By.linkText("List")).click();
-            if (driver.findElement(By.id("sgTable")).getText().contains(dataServiceName)) {
-                break;
+            if (driver.findElements(By.id("sgTable")).size() > 0) {
+                if (driver.findElement(By.id("sgTable")).getText().contains(dataServiceName)) {
+                    break;
+                }
             }
             Thread.sleep(3000);
 

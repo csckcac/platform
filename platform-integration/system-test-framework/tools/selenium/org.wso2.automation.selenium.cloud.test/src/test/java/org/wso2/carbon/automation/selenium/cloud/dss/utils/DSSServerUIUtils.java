@@ -421,9 +421,11 @@ public class DSSServerUIUtils {
     public List<String> getServiceList() {
         driver.findElement(By.linkText("List")).click();
         List<String> serviceList = new ArrayList<String>();
-        List<WebElement> tr = driver.findElement(By.id("sgTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
-        for (WebElement service : tr) {
-            serviceList.add(service.findElements(By.tagName("td")).get(1).getText());
+        if (driver.findElements(By.id("sgTable")).size() > 0) {
+            List<WebElement> tr = driver.findElement(By.id("sgTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+            for (WebElement service : tr) {
+                serviceList.add(service.findElements(By.tagName("td")).get(1).getText());
+            }
         }
         return serviceList;
     }
@@ -440,6 +442,7 @@ public class DSSServerUIUtils {
     }
 
     public void logOut() throws InterruptedException {
+        driver.switchTo().defaultContent();
         driver.findElement(By.linkText("Sign-out")).click();
         driver.quit();
     }

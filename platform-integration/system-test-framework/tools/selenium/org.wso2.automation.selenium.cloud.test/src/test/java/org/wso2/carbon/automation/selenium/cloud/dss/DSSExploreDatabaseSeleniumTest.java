@@ -47,6 +47,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static org.testng.Assert.assertTrue;
+
 /*https://wso2.org/jira/browse/STRATOS-1630*/
 public class DSSExploreDatabaseSeleniumTest {
     private static final Log log = LogFactory.getLog(DSSExploreDatabaseSeleniumTest.class);
@@ -110,6 +111,7 @@ public class DSSExploreDatabaseSeleniumTest {
     @AfterClass(alwaysRun = true)
     public void cleanup() throws InterruptedException {
         try {
+            driver.switchTo().defaultContent();
             userLogout();
         } finally {
             driver.quit();
@@ -201,16 +203,19 @@ public class DSSExploreDatabaseSeleniumTest {
         Thread.sleep(sleeptime1);
         driver.findElement(By.xpath("/html/body/form/input[2]")).click();
         driver.findElement(By.xpath("/html/body/form/input")).click();
-        driver.findElement(By.id("sql")).sendKeys("SELECT * FROM Employee");
+        driver.findElement(By.id("sql")).sendKeys("SELECT * FROM Employees");
         Thread.sleep(1000);
         driver.findElement(By.xpath("/html/body/form/input")).click();
 
         Thread.sleep(sleeptime);
         driver.switchTo().defaultContent();
         driver.switchTo().frame("page1").switchTo().frame("h2result");
-        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Perera"), "SELECT Query Failed. Expected result not found");
-        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Liyanage"), "SELECT Query Failed. Expected result not found");
-        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Amarasiri"), "SELECT Query Failed. Expected result not found");
+        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Murphy"),
+                          "SELECT Query Failed. Expected result not found. Output : " + driver.findElement(By.id("output")).getText());
+        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Patterson"),
+                          "SELECT Query Failed. Expected result not foundOutput : " + driver.findElement(By.id("output")).getText());
+        Assert.assertTrue(driver.findElement(By.id("output")).getText().contains("Firrelli"),
+                          "SELECT Query Failed. Expected result not found Output: " + driver.findElement(By.id("output")).getText());
         driver.switchTo().defaultContent();
 
 

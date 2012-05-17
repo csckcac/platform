@@ -131,16 +131,20 @@ public class GenerateDataServiceSeleniumTest {
         driver.findElement(By.linkText("Generate")).click();
         driver.findElement(By.id("dbName")).sendKeys(dataBaseName);
         Select dataSourceId = new Select(driver.findElement(By.id("datasource")));
+        Thread.sleep(1000);
         dataSourceId.selectByVisibleText(carbonDataSourceName);
+        Thread.sleep(1000);
         for (WebElement button : driver.findElement(By.id("workArea")).findElements(By.className("button"))) {
             if (button.getAttribute("value").equalsIgnoreCase("Next >")) {
                 button.click();
+                Thread.sleep(1000);
                 break;
             }
         }
         driver.findElement(By.id("content-table")).findElement(By.linkText("Select none")).click();
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         driver.findElement(By.id("content-table")).findElement(By.id("Employees")).click();
+        Thread.sleep(1000);
         for (WebElement button : driver.findElement(By.id("content-table")).findElements(By.className("button"))) {
             if (button.getAttribute("value").equalsIgnoreCase("Next >")) {
                 button.click();
@@ -176,7 +180,7 @@ public class GenerateDataServiceSeleniumTest {
 
     }
 
-    @Test(priority = 6, dependsOnMethods = {"generateDataService"})
+    @Test(priority = 6, dependsOnMethods = {"generateDataService"}, timeOut = 1000 * 60 * 2)
     public void serviceDeployment() throws InterruptedException {
         for (int i = 0; i < 5; i++) {
             if (dssServerUI.isServiceDeployed(dataServiceName)) {

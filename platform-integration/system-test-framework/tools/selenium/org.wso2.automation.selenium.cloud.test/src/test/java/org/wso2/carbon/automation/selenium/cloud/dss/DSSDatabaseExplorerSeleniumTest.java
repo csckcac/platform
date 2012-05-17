@@ -17,6 +17,8 @@
 */
 package org.wso2.carbon.automation.selenium.cloud.dss;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -35,7 +37,10 @@ import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUti
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import java.net.MalformedURLException;
+import java.util.Iterator;
 
 /*This class tests DSS> Tools > DB Explorer page*/
 public class DSSDatabaseExplorerSeleniumTest {
@@ -160,13 +165,84 @@ public class DSSDatabaseExplorerSeleniumTest {
 
     }
 
+    @Test(priority = 3)
+    public void DatabaseExplorerDatabaseLoginInfoCashing() throws InterruptedException,
+                                                           XMLStreamException {
+        driver.switchTo().defaultContent();
+        dssServerUI.clickOnTools();
+        driver.findElement(By.linkText("Database Explorer")).click();
+        driver.switchTo().frame("inlineframe");
+        // to verify required attribute found during test
+        boolean isDriverTextFound = false;
+        boolean isJDBCUrlFound = false;
+        boolean isUserNameFound = false;
+        boolean isPasswordFound = false;
+
+        Thread.sleep(2000);
+        /* to get a table content*/
+        OMElement pageSource = AXIOMUtil.stringToOM(driver.getPageSource().substring(
+                driver.getPageSource().indexOf("<tbody>"),
+                driver.getPageSource().indexOf("</table>")));
+        Iterator<OMElement> trItr = pageSource.getChildrenWithName(new QName("tr"));
+
+        while (trItr.hasNext()) {
+            OMElement tr = trItr.next();
+            Iterator<OMElement> tdItr = tr.getChildrenWithName(new QName("td"));
+            while (tdItr.hasNext()) {
+                OMElement td = tdItr.next();
+                Iterator<OMElement> inputItr = td.getChildrenWithName(new QName("input"));
+                while (inputItr.hasNext()) {
+                    OMElement input = inputItr.next();
+                    if ("text".equalsIgnoreCase(input.getAttributeValue(new QName("type")))) {
+                        if ("driver".equalsIgnoreCase(input.getAttributeValue(new QName("name")))) {
+                            isDriverTextFound = true;
+                            Assert.assertTrue((input.getAttributeValue(new QName("value")) == null ||
+                                               input.getAttributeValue(new QName("value")).equalsIgnoreCase("")),
+                                              "Critical Security Issue. Driver name cashed in page source");
+                        } else if ("url".equalsIgnoreCase(input.getAttributeValue(new QName("name")))) {
+                            isJDBCUrlFound = true;
+                            Assert.assertTrue((input.getAttributeValue(new QName("value")) == null ||
+                                               input.getAttributeValue(new QName("value")).equalsIgnoreCase("")),
+                                              "Critical Security Issue. URL cashed in page source");
+                        } else if ("user".equalsIgnoreCase(input.getAttributeValue(new QName("name")))) {
+                            isUserNameFound = true;
+                            Assert.assertTrue((input.getAttributeValue(new QName("value")) == null ||
+                                               input.getAttributeValue(new QName("value")).equalsIgnoreCase("")),
+                                              "Critical Security Issue. User Name cashed in page source");
+
+                        } else if ("password".equalsIgnoreCase(input.getAttributeValue(new QName("name")))) {
+                            isPasswordFound = true;
+                            Assert.assertTrue((input.getAttributeValue(new QName("value")) == null ||
+                                               input.getAttributeValue(new QName("value")).equalsIgnoreCase("")),
+                                              "Critical Security Issue. Password cashed in page source");
+                        }
+                    }
+
+                }
+            }
+
+
+        }
+        Assert.assertTrue(isDriverTextFound, "Driver Text Box not found. Check the test case code to " +
+                                             "verify the issue. There may be UI change");
+        Assert.assertTrue(isJDBCUrlFound, "URL Text Box not found. Check the test case code to verify " +
+                                          "the issue. There may be UI change");
+        Assert.assertTrue(isUserNameFound, "UserName Text Box not found. Check the test case code to " +
+                                           "verify the issue. There may be UI change");
+        Assert.assertTrue(isPasswordFound, "Password Text Box not found. Check the test case code to " +
+                                           "verify the issue. There may be UI change");
+        driver.switchTo().defaultContent();
+    }
+
     @AfterClass(alwaysRun = true)
     public void cleanup() throws InterruptedException {
         try {
+            driver.switchTo().defaultContent();
             dssServerUI.logOut();
         } finally {
             driver.quit();
         }
 
     }
+
 }

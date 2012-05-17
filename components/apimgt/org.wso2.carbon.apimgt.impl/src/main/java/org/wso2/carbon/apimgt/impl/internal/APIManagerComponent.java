@@ -25,6 +25,7 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.impl.*;
+import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
@@ -130,7 +131,8 @@ public class APIManagerComponent {
         }
 
         for (String rxtPath : rxtFilePaths) {
-            String resourcePath = APIConstants.RXT_PATH + RegistryConstants.PATH_SEPARATOR + rxtPath;
+            String resourcePath = GovernanceConstants.RXT_CONFIGS_PATH +
+                    RegistryConstants.PATH_SEPARATOR + rxtPath;
             try {
                 if (registry.resourceExists(resourcePath)) {
                     continue;

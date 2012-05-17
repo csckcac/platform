@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.apimgt.impl;
 
-import org.wso2.carbon.registry.core.RegistryConstants;
-
 /**
  * This class represents the constants that are used for APIManager implementation
  */
@@ -105,10 +103,6 @@ public final class APIConstants {
     public static final String DOC_API_BASE_PATH="overview_apiBasePath";
     public static final String DOC_SOURCE_URL = "overview_sourceURL";
     public static final String DOC_SOURCE_TYPE = "overview_sourceType";
-    
-    public static final String RXT_PATH = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
-            RegistryConstants.GOVERNANCE_COMPONENT_PATH +
-            RegistryConstants.PATH_SEPARATOR + "config";
     public static final String PUBLISHED = "PUBLISHED";
     public static final String CREATED = "CREATED";
 

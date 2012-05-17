@@ -40,19 +40,19 @@ public final class CommandLineExecutor {
      *
      * @param fileURL url of the file
      */
-	public static void parseJaggeryScript(String fileURL) {
+	public static void parseJaggeryScript(final String fileURL) {
 
         try{
 
             //Initialize the Rhino context
             RhinoEngine.enterContext();
-			FileInputStream fstream = new FileInputStream(fileURL);
+			final FileInputStream fstream = new FileInputStream(fileURL);
             
-        	RhinoEngine engine = CommandLineManager.getCommandLineEngine();
-        	ScriptableObject scope = engine.getRuntimeScope();
+			final RhinoEngine engine = CommandLineManager.getCommandLineEngine();
+			final ScriptableObject scope = engine.getRuntimeScope();
         	
         	//initialize JaggeryContext
-        	JaggeryContext jaggeryContext = new JaggeryContext();
+			final JaggeryContext jaggeryContext = new JaggeryContext();
         	jaggeryContext.setEnvironment(CommandLineManager.ENV_COMMAND_LINE);
         	jaggeryContext.setTenantId("0");
         	jaggeryContext.setOutputStream(System.out);
@@ -62,7 +62,7 @@ public final class CommandLineExecutor {
         	RhinoEngine.putContextProperty("jaggeryContext", jaggeryContext);
 
             //Parsing the script
-            Reader source = new ScriptReader(new BufferedInputStream(fstream));
+        	final Reader source = new ScriptReader(new BufferedInputStream(fstream));
             out.println("\n\n************ Executing Jaggery script ***********\n");
             ShellUtilityService.initializeUtilityServices();
             engine.exec(source, scope, null);
@@ -82,18 +82,18 @@ public final class CommandLineExecutor {
      *
      * @param expression Jaggery expression string
      */
-	public static void parseJaggeryExpression(String expression) {
+	public static void parseJaggeryExpression(final String expression) {
 
         try{
 
         	//Initialize the Rhino context
             RhinoEngine.enterContext();
 
-        	RhinoEngine engine = CommandLineManager.getCommandLineEngine();
-        	ScriptableObject scope = engine.getRuntimeScope();
+            final RhinoEngine engine = CommandLineManager.getCommandLineEngine();
+            final ScriptableObject scope = engine.getRuntimeScope();
         	
         	//initialize JaggeryContext
-        	JaggeryContext jaggeryContext = new JaggeryContext();
+            final JaggeryContext jaggeryContext = new JaggeryContext();
         	jaggeryContext.setEnvironment(CommandLineManager.ENV_COMMAND_LINE);
         	jaggeryContext.setTenantId("0");
         	jaggeryContext.setOutputStream(out);

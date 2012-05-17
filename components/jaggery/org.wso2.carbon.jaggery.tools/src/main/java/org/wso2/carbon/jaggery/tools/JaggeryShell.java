@@ -45,8 +45,7 @@ public class JaggeryShell extends ScriptableObject
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private static final Log log = LogFactory.getLog(
-            org.wso2.carbon.jaggery.tools.JaggeryShell.class);
+	private static final Log LOG = LogFactory.getLog(JaggeryShell.class);
 	
 	private static final String CMD_QUIT = "quit";
 	private static final String CMD_HELP = "help";
@@ -55,6 +54,14 @@ public class JaggeryShell extends ScriptableObject
 	private boolean quitting;
 
 	private static PrintStream out = System.out;
+	
+	public boolean isQuitting() {
+		return quitting;
+	}
+
+	public void setQuitting(final boolean quitting) {
+		this.quitting = quitting;
+	}
 	
 	@Override
     public String getClassName()
@@ -68,22 +75,22 @@ public class JaggeryShell extends ScriptableObject
      * @param args argument list of parameters
      * Will need to send empty array to execute expressions.
      */
-    public static void enterContext(String args[]) {
+    public static void enterContext(final String args[]) {
         // Associate a new Context with this thread
-        Context cx = ContextFactory.getGlobal().enterContext();
+        final Context context = ContextFactory.getGlobal().enterContext();
         try {
             // Initialize the standard objects (Object, Function, etc.)
             // This must be done before scripts can be executed.
-            JaggeryShell shell = new JaggeryShell();
-            cx.initStandardObjects(shell);
+            final JaggeryShell shell = new JaggeryShell();
+            context.initStandardObjects(shell);
 
             // Define some global functions particular to the shell. Note
             // that these functions are not part of ECMA.
-            String[] names = {CMD_QUIT, CMD_VERSION, CMD_HELP};
+            final String[] names = {CMD_QUIT, CMD_VERSION, CMD_HELP};
             shell.defineFunctionProperties(names, JaggeryShell.class,
                                            ScriptableObject.DONTENUM);
 
-            String [] optionArgs = processOptions(cx, args);
+            final String [] optionArgs = processOptions(context, args);
 
             // Set up "arguments" in the global scope to contain the command
             // line arguments after the name of the script to execute
@@ -91,15 +98,15 @@ public class JaggeryShell extends ScriptableObject
             if (optionArgs.length == 0) {
                 array = new Object[0];
             } else {
-                int length = optionArgs.length - 1;
+            	final int length = optionArgs.length - 1;
                 array = new Object[length];
                 System.arraycopy(optionArgs, 1, array, 0, length);
             }
-            Scriptable argsObj = cx.newArray(shell, array);
+            final Scriptable argsObj = context.newArray(shell, array);
             shell.defineProperty("arguments", argsObj,
                                  ScriptableObject.DONTENUM);
 
-            shell.processSource(cx, optionArgs.length == 0 ? null : optionArgs[0]);
+            shell.processSource(context, optionArgs.length == 0 ? null : optionArgs[0]);
         } finally {
             Context.exit();
         }
@@ -110,9 +117,9 @@ public class JaggeryShell extends ScriptableObject
      * @param cx context
      * @param args argument list of parameters
      */
-    public static String[] processOptions(Context cx, String args[]) {
+    public static String[] processOptions(final Context context, final String args[]) {
         for (int i=0; i < args.length; i++) {
-            String arg = args[i];
+            final String arg = args[i];
             if (!arg.startsWith("-")) {
                 String[] result = new String[args.length - i];
                 for (int j=i; j < args.length; j++) {
@@ -129,8 +136,8 @@ public class JaggeryShell extends ScriptableObject
      * Print a usage message.
      * @param string to print
      */
-    private static void usage(String s) {
-    	printToConsole("Invalid arguments. Cannot recognize \"" + s + "\".");
+    private static void usage(String passedString) {
+    	printToConsole("Invalid arguments. Cannot recognize \"" + passedString + "\".");
     	help();
     }
 
@@ -156,7 +163,7 @@ public class JaggeryShell extends ScriptableObject
      * supplied to the JavaScript function.
      *
      */
-    public static void execute(Context cx, Scriptable thisObj,
+    public static void execute(Context context, Scriptable thisObj,
                              Object[] args, Function funObj)
     {
         for (int i=0; i < args.length; i++) {
@@ -165,9 +172,9 @@ public class JaggeryShell extends ScriptableObject
             }
 
             // Convert the arbitrary JavaScript value into a string form.
-            String s = Context.toString(args[i]);
+            String contextString = Context.toString(args[i]);
 
-            out.print(s);
+            out.print(contextString);
         }
         out.println();
     }
@@ -240,7 +247,7 @@ public class JaggeryShell extends ScriptableObject
             	try {
             		in.close();
             	} catch (IOException e) {
-            		log.error("Error closing file reader for file " + filename, e);
+            		LOG.error("Error closing file reader for file " + filename, e);
             	}
             	
             }

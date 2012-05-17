@@ -37,7 +37,7 @@ public final class CommandLineClient {
     }
 
     static {
-        Logger rootLogger = Logger.getRootLogger();
+        final Logger rootLogger = Logger.getRootLogger();
         if (!rootLogger.getAllAppenders().hasMoreElements()) {
             rootLogger.setLevel(Level.OFF);
             rootLogger.addAppender(new ConsoleAppender(
@@ -45,7 +45,7 @@ public final class CommandLineClient {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
 
         if (args == null || args.length == 0) {
             out.println("\nEmpty command. Please execute -help for instructions\n");
@@ -53,9 +53,9 @@ public final class CommandLineClient {
         }
 
 
-        CommandLineParser commandLineParser = new GnuParser();
+        final CommandLineParser commandLineParser = new GnuParser();
 
-        Options options = new Options();
+        final Options options = new Options();
         options.addOption(CONSTANT_HELP, false, "Display Jaggery help messages");
         options.addOption(CONSTANT_SHELL, false,
                 "Enter into the Jaggery shell to execute Jaggery expressions");
@@ -64,7 +64,7 @@ public final class CommandLineClient {
                 "Quit Jaggery command line client (for shell mode)");
 
         try {
-            CommandLine line = commandLineParser.parse(options, args);
+            final CommandLine line = commandLineParser.parse(options, args);
 
             if (line.hasOption(CONSTANT_HELP)) {
                 out.println("\n");

@@ -38,7 +38,7 @@ public final class ShellUtilityService {
 	protected static void initializeUtilityServices () throws SQLException {
 		
 		//H2 database
-		H2DatabaseManager databaseManager = H2DatabaseManager.getInstance();
+		final H2DatabaseManager databaseManager = H2DatabaseManager.getInstance();
 		databaseManager.initialize();
 	}
 	
@@ -49,7 +49,7 @@ public final class ShellUtilityService {
 	protected static void destroyUtilityServices () {
 		
 		//H2 database
-		H2DatabaseManager databaseManager = H2DatabaseManager.getInstance();
+		final H2DatabaseManager databaseManager = H2DatabaseManager.getInstance();
 		databaseManager.terminate();
 	}
 }

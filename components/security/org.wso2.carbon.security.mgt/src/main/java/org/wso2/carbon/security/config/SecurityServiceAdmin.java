@@ -41,7 +41,6 @@ import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.utils.ServerException;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -69,18 +68,10 @@ public class SecurityServiceAdmin {
             log.error("Error creating an PersistenceFactory instance", e);
             throw new ServerException("Error creating an PersistenceFactory instance", e);
         }
-
-        try {
-//            this.registry = SecurityServiceHolder.getRegistryService().getConfigSystemRegistry();
-        } catch (Exception e) {
-            String msg = "Error when retrieving the system config registry";
-            log.error(msg);
-            throw new ServerException(msg, e);
-        }
     }
+
     public SecurityServiceAdmin(AxisConfiguration config, Registry registry) {
 	    this.axisConfig = config;
-//	    this.registry = registry;
         try {
             pf = PersistenceFactory.getInstance(config);
             sfpm = pf.getServiceGroupFilePM();
@@ -97,6 +88,7 @@ public class SecurityServiceAdmin {
      * @param axisService
      * @param policy
      * @throws Exception
+     * @throws org.wso2.carbon.utils.ServerException
      */
     public void addSecurityPolicyToAllBindings(AxisService axisService, Policy policy)
 	    throws ServerException {
@@ -276,7 +268,7 @@ public class SecurityServiceAdmin {
         }
         // at axis2
 	} catch (Exception e) {
-	    log.error("", e);
+	    log.error(e.getMessage(), e);
         sfpm.rollbackTransaction(serviceGroupId);
 	    throw new ServerException("addPoliciesToService");
 	}

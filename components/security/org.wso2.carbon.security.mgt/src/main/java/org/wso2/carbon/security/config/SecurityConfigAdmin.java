@@ -23,11 +23,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.description.AxisBinding;
-import org.apache.axis2.description.AxisEndpoint;
-import org.apache.axis2.description.AxisModule;
-import org.apache.axis2.description.AxisService;
-import org.apache.axis2.description.Parameter;
+import org.apache.axis2.description.*;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.AxisEvent;
 import org.apache.commons.logging.Log;
@@ -52,54 +48,32 @@ import org.wso2.carbon.core.Resources;
 import org.wso2.carbon.core.persistence.PersistenceException;
 import org.wso2.carbon.core.persistence.PersistenceFactory;
 import org.wso2.carbon.core.persistence.PersistenceUtils;
-
 import org.wso2.carbon.core.persistence.file.ModuleFilePersistenceManager;
 import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
-import org.wso2.carbon.core.util.CryptoException;
-import org.wso2.carbon.core.util.CryptoUtil;
-import org.wso2.carbon.core.util.KeyStoreManager;
-import org.wso2.carbon.core.util.KeyStoreUtil;
-import org.wso2.carbon.core.util.ParameterUtil;
+import org.wso2.carbon.core.util.*;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.security.SecurityConfigException;
-import org.wso2.carbon.security.SecurityConstants;
-import org.wso2.carbon.security.SecurityScenario;
-import org.wso2.carbon.security.SecurityScenarioDatabase;
-import org.wso2.carbon.security.SecurityServiceHolder;
+import org.wso2.carbon.security.*;
 import org.wso2.carbon.security.config.service.KerberosConfigData;
 import org.wso2.carbon.security.config.service.SecurityConfigData;
 import org.wso2.carbon.security.config.service.SecurityScenarioData;
-import org.wso2.carbon.security.util.RahasUtil;
-import org.wso2.carbon.security.util.RampartConfigUtil;
-import org.wso2.carbon.security.util.SecurityTokenStore;
-import org.wso2.carbon.security.util.ServerCrypto;
-import org.wso2.carbon.security.util.ServicePasswordCallbackHandler;
+import org.wso2.carbon.security.util.*;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.ServerException;
+import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 
 import javax.security.auth.callback.CallbackHandler;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Admin service for configuring Security scenarios
@@ -894,8 +868,6 @@ public class SecurityConfigAdmin {
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
         String serviceXPath = PersistenceUtils.getResourcePath(axisService);
 
-        String registryServicePath = getRegistryServicePath(axisService);
-
         // handle each module required
         try {
             try {
@@ -997,14 +969,11 @@ public class SecurityConfigAdmin {
         String serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
         try {
             String serviceXPath = PersistenceUtils.getResourcePath(service);
-            String registryServicePath = getRegistryServicePath(service);
 
             boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
             if(!isTransactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
-
-            String resourceUri = SecurityConstants.SECURITY_POLICY + "/" + scenrioId;
 
             // registry.addAssociation(resourceUri, servicePath,
             // SecurityConstants.ASSOCIATION_SERVICE_SECURING_POLICY);
@@ -1216,10 +1185,8 @@ public class SecurityConfigAdmin {
         UserRegistry govRegistry = SecurityServiceHolder.getRegistryService().
                 getGovernanceSystemRegistry(((UserRegistry)registry).getTenantId());
 
-        ServerConfiguration config = ServerConfiguration.getInstance();
-
         if (trustedCertStores != null && trustedCertStores.length > 0) {
-            StringBuffer trstString = new StringBuffer();
+            StringBuilder trstString = new StringBuilder();
             for (int i = 0; i < trustedCertStores.length; i++) {
                 trstString.append(trustedCertStores[i]).append(",");
             }
@@ -1254,8 +1221,8 @@ public class SecurityConfigAdmin {
      * 
      * @param serviceId service name
      * @param transportProtocols transport protocols to expose
-     * @throws AxisFault
-     * @throws org.wso2.carbon.security.SecurityConfigException
+     * @throws AxisFault axisfault
+     * @throws org.wso2.carbon.security.SecurityConfigException ex
      */
     public void setServiceTransports(String serviceId, List<String> transportProtocols)
             throws SecurityConfigException, AxisFault {
@@ -1284,7 +1251,7 @@ public class SecurityConfigAdmin {
      * @param policy
      *            service policy
      * @return returns true if the service should only be exposed in HTTPS
-     * @throws org.wso2.carbon.security.SecurityConfigException
+     * @throws org.wso2.carbon.security.SecurityConfigException ex
      */
     public boolean isHttpsTransportOnly(Policy policy) throws SecurityConfigException {
 
@@ -1324,7 +1291,7 @@ public class SecurityConfigAdmin {
     /**
      * Get "https" transports in the AxisConfig
      * 
-     * @return
+     * @return list
      */
     public List<String> getHttpsTransports() {
 
@@ -1340,7 +1307,7 @@ public class SecurityConfigAdmin {
     /**
      * Get all transports in AxisConfig
      *
-     * @return
+     * @return list of all transports
      */
     public List<String> getAllTransports() {
 
@@ -1464,7 +1431,7 @@ public class SecurityConfigAdmin {
         SecurityScenario scenario = null;
 
         AxisService service = axisConfig.getServiceForActivation(serviceName);
-        String serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
+        String serviceGroupId = null;
         try {
             if (service == null) {
                 // try to find it from the transit ghost map
@@ -1475,8 +1442,9 @@ public class SecurityConfigAdmin {
                     log.error("Error while reading Transit Ghosts map", axisFault);
                 }
                 if (service == null) {
-                    throw new SecurityConfigException("AxisService is Null");
+                    throw new SecurityConfigException("AxisService is Null" + service);
                 }
+                serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
             }
 
             // persist
@@ -1683,7 +1651,6 @@ public class SecurityConfigAdmin {
 
     private void removeRahasParameters(AxisService axisService) throws AxisFault {
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
-        String serviceName = axisService.getName();
         String serviceXPath = PersistenceUtils.getResourcePath(axisService);
         try {
             if (sfpm.elementExists(serviceGroupId, serviceXPath)) {

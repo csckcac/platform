@@ -38,12 +38,11 @@ import org.wso2.carbon.core.Resources;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.core.persistence.PersistenceFactory;
 import org.wso2.carbon.core.persistence.PersistenceUtils;
-import org.wso2.carbon.core.persistence.file.*;
+import org.wso2.carbon.core.persistence.file.ModuleFilePersistenceManager;
+import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
 import org.wso2.carbon.core.util.AnonymousSessionUtil;
-import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
@@ -158,7 +157,6 @@ public class SecurityDeploymentInterceptor implements AxisObserver {
     public void serviceUpdate(AxisEvent axisEvent, AxisService axisService) {
         int eventType = axisEvent.getEventType();
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
-        String serviceName = axisService.getName();
 
         if (eventType == AxisEvent.SERVICE_DEPLOY) {
             try {

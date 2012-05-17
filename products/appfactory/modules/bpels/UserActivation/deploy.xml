@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:services.registration.user.carbon.wso2.org="http://services.registration.user.carbon.wso2.org" xmlns:wso2.org="http://wso2.org">
-  <process name="wso2.org:UserActivationProcess">
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:sample="http://wso2.org" xmlns:services.registration.user.appfactory.carbon.wso2.org="http://services.registration.user.appfactory.carbon.wso2.org">
+  <process name="sample:UserActivationProcess">
     <active>true</active>
     <retired>false</retired>
     <process-events generate="all"/>
     <provide partnerLink="client">
-      <service name="wso2.org:UserActivationProcess" port="UserActivationProcessPort"/>
+      <service name="sample:UserActivationProcess" port="UserActivationProcessPort"/>
     </provide>
     <invoke partnerLink="UserActivationServicePL">
-      <service name="services.registration.user.carbon.wso2.org:UserRegistrationService" port="UserRegistrationServiceHttpsSoap11Endpoint">
+      <service name="services.registration.user.appfactory.carbon.wso2.org:UserRegistrationService" port="UserRegistrationServiceHttpsSoap11Endpoint">
 <endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/UserRegistrationService.epr"/>
 </service>
     </invoke>

@@ -1,18 +1,12 @@
 $(document).ready(function() {
+    if(($.cookie("tab")!=null)){
+    var tabLink=$.cookie("tab");
+    $('#' + tabLink).tab('show');
+    $.cookie("tab", null);
+    }
 
     $('a[data-toggle="tab"]').on('shown', function (e) {
         var clickedTab = e.target.href.split('#')[1];
-        ////////////// edit tab
-        if (clickedTab == "edit") {
-            var addRow = function () {
-                if ($(this).parent().parent().parent().parent()[0].rows.length == 2) {
-                    $('#resourceTableError').show('fast');
-                } else {
-                    $('#resourceTableError').hide('fast');
-                    $(this).parent().parent().remove();
-                }
-            };
-        }
         ////////////// edit tab
         if (clickedTab == "versions") {
             var apiName = $("#item-info h2")[0].innerHTML.split("-v")[0];

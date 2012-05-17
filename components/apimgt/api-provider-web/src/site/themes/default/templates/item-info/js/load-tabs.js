@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $('a[data-toggle="tab"]').on('click', function (e) {
+    $('a[data-toggle="tab"]').on('shown', function (e) {
         var clickedTab = e.target.href.split('#')[1];
         ////////////// edit tab
         if (clickedTab == "edit") {

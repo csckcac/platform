@@ -49,7 +49,7 @@ public class CustomProxyTest {
         log.info("Waiting for EPR " + eprAxis2service);
         String operation = ("echoInt");
         AxisServiceClientUtils.waitForServiceDeployment(eprAxis2service);
-        Thread.sleep(120000);
+        Thread.sleep(40000);
         AxisServiceClientUtils.waitForServiceDeployment(eprDemoProxy);
         AxisServiceClientUtils.sendRequest(eprDemoProxy, operation, payload, 1, expectedOutput, true);
     }

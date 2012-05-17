@@ -25,6 +25,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -33,13 +35,12 @@ import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
+import org.wso2.platform.test.core.utils.seleniumutils.GRegSeleniumUtils;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.net.MalformedURLException;
-import java.util.Calendar;
 
 import static org.testng.Assert.*;
-
 
 
 public class GRegStratosResourceSeleniumTest {
@@ -49,7 +50,6 @@ public class GRegStratosResourceSeleniumTest {
     String productName = "greg";
     String userName;
     String password;
-    long sleeptime = 4000;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, InterruptedException {
@@ -57,7 +57,7 @@ public class GRegStratosResourceSeleniumTest {
         userName = userDetails.getUserName();
         password = userDetails.getPassword();
         String baseUrl = new ProductUrlGeneratorUtil().getServiceHomeURL(
-                ProductConstant.GREG_SERVER_NAME);
+                                                                                ProductConstant.GREG_SERVER_NAME);
         log.info("baseURL is :" + baseUrl);
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);
@@ -66,15 +66,15 @@ public class GRegStratosResourceSeleniumTest {
 
 
     @Test(groups = {"wso2.greg"}, description = "add a resource to a collection", priority = 1)
-    public void testaddResourceToCollection() throws Exception {
+    public void testAddResourceToCollection() throws Exception {
         String collectionPath = "/selenium_root/resource_root/resource/a1";
         String resourceName = "res1";
 
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath);   //Create Collection  1
-            waitTimeforElement("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
                          "New Created Collection1 does not Exists :");
             addResource(resourceName);          //add Resource
@@ -101,7 +101,7 @@ public class GRegStratosResourceSeleniumTest {
 
 
     @Test(groups = {"wso2.greg"}, description = "add a comment to a resource", priority = 2)
-    public void testaddCommentToResource() throws Exception {
+    public void testAddCommentToResource() throws Exception {
         String collectionPath = "/selenium_root/resource_root/comment/a1";
         String resourceName = "res1";
         String comment = "resourceComment";
@@ -109,8 +109,8 @@ public class GRegStratosResourceSeleniumTest {
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath);
-            waitTimeforElement("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
             addResource(resourceName);
@@ -145,16 +145,20 @@ public class GRegStratosResourceSeleniumTest {
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath);
-            waitTimeforElement("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
             addResource(resourceName);
             findLocation(collectionPath + "/" + resourceName);
             applyTag(tagName);
-            selenium.mouseOver("//div[3]/a");
-            waitTimeforElement("//a[2]/img");
+
+            Actions builder = new Actions(driver);
+            WebElement tagElement = driver.findElement(By.xpath("//td[4]/div[15]/div/div[12]/div[3]/a"));
+            builder.moveToElement(tagElement).build().perform();
+
             deleteTag();
+
             userLogout();
             log.info("********GReg Stratos- Add Tag To a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
@@ -182,19 +186,17 @@ public class GRegStratosResourceSeleniumTest {
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath);
-            waitTimeforElement("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
             addResource(resourceName);
             findLocation(collectionPath + "/" + resourceName);
             addServiceLifeCycle();
             promoteState();
-            assertTrue(selenium.isTextPresent("Testing"),
-                       "Service Life Cycle Testing state fail:");
+            waitForLifeCycleStateTransition("Tested");
             promoteState();
-            assertTrue(selenium.isTextPresent("Production"),
-                       "ServiceLifeCycle Production State fail:");
+            waitForLifeCycleStateTransition("Production");
             deleteServiceLifeCycle();
             userLogout();
             log.info("********GReg Stratos -Add Life Cycle To a Resource test - Passed **********");
@@ -216,20 +218,20 @@ public class GRegStratosResourceSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a rating to resource", priority = 5)
-    public void testaddRatingToResource() throws Exception {
+    public void testAddRatingToResource() throws Exception {
         String collectionPath = "/selenium_root/resource_root/rating/a1";
         String resourceName = "res1";
 
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath);
-            waitTimeforElement("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
             addResource(resourceName);
             findLocation(collectionPath + "/" + resourceName);
-            addRating();
+            applyRating();
             userLogout();
             log.info("********GReg Stratos - Add a Rating To a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
@@ -258,8 +260,8 @@ public class GRegStratosResourceSeleniumTest {
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath);
-            waitTimeforElement("//input");
             assertEquals(collectionPath, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
             addResource(resourceName);
@@ -295,14 +297,13 @@ public class GRegStratosResourceSeleniumTest {
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath1);
-            waitTimeforElement("//input");
             assertEquals(collectionPath1, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
             addResource(resourceName1);
             findLocation("/");
             addCollection(collectionPath2);
-            waitTimeforElement("//input");
             assertEquals(collectionPath2, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
             findLocation("/selenium_root/resource_root/move1/a1/");
@@ -333,15 +334,15 @@ public class GRegStratosResourceSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "delete a resource", priority = 8)
-    public void testdeleteResource() throws Exception {
+    public void testDeleteResource() throws Exception {
         String collectionPath1 = "/selenium_root/resource_root/delete/a1";
         String resourceName1 = "res1";
 
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath1);
-            waitTimeforElement("//input");
             assertEquals(collectionPath1, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
             addResource(resourceName1);
@@ -369,7 +370,7 @@ public class GRegStratosResourceSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "copy a resource", priority = 9)
-    public void testcopyResource() throws Exception {
+    public void testCopyResource() throws Exception {
         String collectionPath1 = "/selenium_root/resource_root/copy1/a1";
         String collectionPath2 = "/selenium_root/resource_root/copy2/b1";
         String resourceName1 = "res1";
@@ -379,14 +380,13 @@ public class GRegStratosResourceSeleniumTest {
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath1);
-            waitTimeforElement("//input");
             assertEquals(collectionPath1, selenium.getValue("//input"),
                          "New Created Collection1 does not Exists :");
             addResource(resourceName1);
             findLocation("/");
             addCollection(collectionPath2);
-            waitTimeforElement("//input");
             assertEquals(collectionPath2, selenium.getValue("//input"),
                          "New Created Collection2 does not Exists :");
             findLocation("/selenium_root/resource_root/copy1/a1/");
@@ -424,180 +424,154 @@ public class GRegStratosResourceSeleniumTest {
     }
 
     private void deleteResource() throws InterruptedException {
-        waitTimeforElement("//td/table/tbody/tr/td[2]/table/tbody/tr/td[2]/a");
         driver.findElement(By.id("actionLink1")).click();
-        waitTimeforElement("//div/a[3]");
         driver.findElement(By.linkText("Delete")).click();
-        waitTimeforElement("//body/div[3]/div/div");
-        assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Delete Resource pop-up Title fail :");
-        assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete '/selenium_root/" +
-                                          "resource_root/delete/a1/res1' permanently?"),
-                   "Delete Resource pop-up message fail :");
-        selenium.click("//button");
-        Thread.sleep(sleeptime);
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
+        driver.findElement(By.xpath("//button")).click();
     }
 
 
     private void copyResource(String copyPath) throws InterruptedException {
-        waitTimeforElement("//td/table/tbody/tr/td[2]/table/tbody/tr/td[2]/a");
-        Thread.sleep(sleeptime);
         driver.findElement(By.id("actionLink1")).click();
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//div/a[4]");
         driver.findElement(By.linkText("Copy")).click();
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//td/table/tbody/tr/td[2]/input");
         driver.findElement(By.id("copy_destination_path1")).sendKeys(copyPath);
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//td/table/tbody/tr[2]/td/input");
         driver.findElement(By.xpath("//td/table/tbody/tr[2]/td/input")).click();
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//body/div[3]/div/div");
-        assertTrue(selenium.isTextPresent("WSO2 Carbon"), "copy pop-up title fail :");
-        assertTrue(selenium.isTextPresent("Successfully copied resource."),
-                   "copy pop-up message fail :");
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
         driver.findElement(By.xpath("//button")).click();
-        Thread.sleep(sleeptime);
     }
 
     private void moveResource(String collectionPath2) throws InterruptedException {
-        waitTimeforElement("//td/table/tbody/tr/td[2]/table/tbody/tr/td[2]/a");
         driver.findElement(By.id("actionLink1")).click();
-        waitTimeforElement("//tr[2]/td/div/a[2]");
         driver.findElement(By.linkText("Move")).click();
-        waitTimeforElement("//tr[5]/td/table/tbody/tr/td[2]/input");
         driver.findElement(By.id("move_destination_path1")).sendKeys(collectionPath2);
-        waitTimeforElement("//tr[5]/td/table/tbody/tr[2]/td/input");
         driver.findElement(By.xpath("//tr[5]/td/table/tbody/tr[2]/td/input")).click();
-        Thread.sleep(sleeptime);
-        assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Move pop-up window Title fail");
-        assertTrue(selenium.isTextPresent("Successfully moved resource."),
-                   "Move pop-up window message fail");
-        selenium.click("//button");
-        waitTimeforElement("//input");
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
+        driver.findElement(By.xpath("//button")).click();
     }
 
 
     private void renameResource(String rename) throws InterruptedException {
-        waitTimeforElement("//td/table/tbody/tr/td[2]/table/tbody/tr/td[2]/a");
         driver.findElement(By.id("actionLink1")).click();
-        waitTimeforElement("//tr[2]/td/div/a");
         driver.findElement(By.linkText("Rename")).click();
-        waitTimeforElement("//tr[6]/td/table/tbody/tr/td/input");
         driver.findElement(By.id("resourceEdit1")).clear();
         driver.findElement(By.id("resourceEdit1")).sendKeys(rename);
-        waitTimeforElement("//tr[6]/td/table/tbody/tr[2]/td/input");
         driver.findElement(By.xpath("//tr[6]/td/table/tbody/tr[2]/td/input")).click();
-        Thread.sleep(sleeptime);
-        assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Rename pop-up Title fail :");
-        assertTrue(selenium.isTextPresent("Successfully renamed resource."),
-                   "Rename pop-up message fail :");
-        selenium.click("//button");
-        waitTimeforElement("//div[9]/table/tbody/tr/td/table/tbody/tr/td/a");
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
+        driver.findElement(By.xpath("//button")).click();
     }
 
-    private void addRating() throws InterruptedException {
+    private void applyRating() throws InterruptedException {
+        // Add rating 1
         driver.findElement(By.xpath("//span/img[3]")).click();
-        Thread.sleep(sleeptime);
-        assertTrue(selenium.isTextPresent("(1.0)"), "Rating 1 has failed :");
-        driver.findElement(By.xpath("//span/img[5]")).click();         // Add rating 2
-        Thread.sleep(sleeptime);
-        assertTrue(selenium.isTextPresent("(2.0)"), "Rating 2 has failed :");
-        driver.findElement(By.xpath("//img[7]")).click();              // Add rating 3
-        Thread.sleep(sleeptime);
-        assertTrue(selenium.isTextPresent("(3.0)"), "Rating 3 has failed :");
-        driver.findElement(By.xpath("//img[9]")).click();                 // Add rating 4
-        Thread.sleep(sleeptime);
-        assertTrue(selenium.isTextPresent("(4.0)"), "Rating 4 has failed :");
-        driver.findElement(By.xpath("//img[11]")).click();                // Add rating 5
-        Thread.sleep(sleeptime);
-        assertTrue(selenium.isTextPresent("(5.0)"), "Rating 5 has failed :");
+        waitForValue("1.0");
+        assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
+                                               "tr[2]/td[2]")).getText().contains("(1.0)"),
+                   "Rating 1 has failed :");
+
+        // Add rating 2
+        driver.findElement(By.xpath("//span/img[5]")).click();
+        waitForValue("2.0");
+        assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
+                                               "tr[2]/td[2]")).getText().contains("(2.0)"),
+                   "Rating 2 has failed :");
+        // Add rating 3
+        driver.findElement(By.xpath("//img[7]")).click();
+        waitForValue("3.0");
+        assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
+                                               "tr[2]/td[2]")).getText().contains("(3.0)"),
+                   "Rating 3 has failed :");
+        // Add rating 4
+        driver.findElement(By.xpath("//img[9]")).click();
+        waitForValue("4.0");
+        assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
+                                               "tr[2]/td[2]")).getText().contains("(4.0)"),
+                   "Rating 4 has failed :");
+        // Add rating 5
+        driver.findElement(By.xpath("//img[11]")).click();
+        waitForValue("5.0");
+        assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
+                                               "tr[2]/td[2]")).getText().contains("(5.0)"),
+                   "Rating 5 has failed :");
     }
 
 
     private void deleteServiceLifeCycle() throws InterruptedException {
         driver.findElement(By.xpath("//div[3]/div[2]/table/tbody/tr/td/div/a")).click();
-        waitTimeforElement("//body/div[4]/div/div");
-        assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Delete Lifecycle pop-up Title fail:");
-        assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete'ServiceLifeCycle'" +
-                                          " permanently?"), "Delete Lifecycle pop-up message fail :");
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
         driver.findElement(By.xpath("//button")).click();
-        Thread.sleep(sleeptime);
-        waitTimeforElement("//li[3]/a");
     }
 
     private void addServiceLifeCycle() throws InterruptedException {
         driver.findElement(By.id("lifecycleIconMinimized")).click();
-        waitTimeforElement("//div[3]/div[2]/a");
         driver.findElement(By.linkText("Add Lifecycle")).click();
-        waitTimeforElement("//div[3]/div[3]/form/table/tbody/tr[2]/td/input");
         assertTrue(selenium.isTextPresent("Enable Lifecycle"), "Enable LifeCycle Text does not appear :");
         assertEquals("Add", selenium.getValue("//div[3]/div[3]/form/table/tbody/tr[2]/td/input"),
                      "Lifecycle Add Button does not appear :");
         assertEquals("Cancel", selenium.getValue("//div[3]/div[3]/form/table/tbody/tr[2]/td/input[2]"),
                      "Lifecycle Cancel button does not appear");
         driver.findElement(By.xpath("//div[3]/div[3]/form/table/tbody/tr[2]/td/input")).click();
-        waitTimeforElement("//tr[2]/td/div/input");
-        assertTrue(selenium.isTextPresent("Development"),
-                   "Service Life cycle default state does not exists:");
+        assertTrue(driver.findElement(By.id("myTable")).isDisplayed());
     }
 
     private void promoteState() throws Exception {
-        waitTimeforElement("//td/div[3]/table/tbody/tr/td/input");
+        GRegSeleniumUtils.waitForElement(driver, "id", "option0");
+        GRegSeleniumUtils.waitForElement(driver, "id", "option1");
+        GRegSeleniumUtils.waitForElement(driver, "id", "option2");
+
         driver.findElement(By.id("option0")).click();
-        Thread.sleep(sleeptime);
+        waitForLifeCycleCheck("option0");
         driver.findElement(By.id("option1")).click();
-        Thread.sleep(sleeptime);
+        waitForLifeCycleCheck("option1");
+        Thread.sleep(5000);
         driver.findElement(By.id("option2")).click();
-        Thread.sleep(sleeptime);
-        driver.findElement(By.xpath("//tr[2]/td/div/input")).click();
-        waitTimeforElement("//body/div[4]/div/div");
-        assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Life Cycle Promote pop-up Title fail :");
-        assertTrue(selenium.isTextPresent("Successfully Promoted"), "Life Cycle promote pop-up message fail :");
-        // click on OK button
-        selenium.click("css=button[type=\"button\"]");
-        Thread.sleep(sleeptime);
+        waitForLifeCycleCheck("option2");
+
+        driver.findElement(By.xpath("//div[14]/div[3]/div[2]/table/tbody/tr[2]/td/div/input")).click();
+
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
+        driver.findElement(By.xpath("//button")).click();
     }
 
     private void deleteTag() throws InterruptedException {
         driver.findElement(By.xpath("//a[2]/img")).click();
-        waitTimeforElement("//body/div[4]/div/div");
-        assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Delete Tag Pop-up Title fail :");
-        assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this tag?"),
-                   "Delete Tag Pop-up Message fail :");
-        waitTimeforElement("//button");
-        selenium.click("//button");
-        waitTimeforElement("//li[3]/a");
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
+        driver.findElement(By.xpath("//button")).click();
     }
 
     private void applyTag(String tagName) throws InterruptedException {
-        driver.findElement(By.id("tagsIconMinimized")).click();
-        waitTimeforElement("//div[12]/div/a");
-        driver.findElement(By.linkText("Add New Tag")).click();
-        waitTimeforElement("//div[2]/input[2]");
+
+        if (!driver.findElement(By.id("tagAddDiv")).isDisplayed()) {
+            driver.findElement(By.id("tagsIconMinimized")).click();
+        }
+
+        driver.findElement(By.linkText("Add New Tag")).click();//click on Add New Tag
+        GRegSeleniumUtils.waitForElement(driver, "id", "tfTag");
         driver.findElement(By.id("tfTag")).sendKeys(tagName);
-        waitTimeforElement("//div[2]/input[3]");
         driver.findElement(By.xpath("//div[2]/input[3]")).click();
-        waitTimeforElement("//div[3]/a");
+        GRegSeleniumUtils.waitForElement(driver, "xpath",
+                                         "//td[4]/div[15]/div/div[12]/div[3]/a");
     }
 
 
     private void deleteComment() throws InterruptedException {
         driver.findElement(By.id("closeC0")).click();
-        waitTimeforElement("//body/div[4]/div/div");
-        assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Comment Delete pop-up  failed :");
-        assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this comment?"),
-                   "Comment Delete pop-up  failed :");
-        selenium.click("//button");
-        waitTimeforElement("//li[3]/a");  //sign out button appear
-
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
+        driver.findElement(By.xpath("//button")).click();
     }
 
     private void addComment(String comment) throws InterruptedException {
-        driver.findElement(By.id("commentsIconMinimized")).click();
-        waitTimeforElement("//div[15]/div/div[3]/div[2]/a");   // wait till add comment link appear
+        if (!driver.findElement(By.id("commentsIconExpanded")).isDisplayed()) {
+            driver.findElement(By.id("commentsIconMinimized")).click();
+        }
         driver.findElement(By.linkText("Add Comment")).click();
-        waitTimeforElement("//div[15]/div/div[3]/div[3]/form/table/tbody/tr[2]/td/input"); //add button
         assertTrue(selenium.isTextPresent("Add New Comment"),
                    "Add comment window pop -up title failed :");
         assertEquals("Add", selenium.getValue("//div[15]/div/div[3]/div[3]/form/table/tbody/" +
@@ -607,9 +581,7 @@ public class GRegStratosResourceSeleniumTest {
                                                  "tbody/tr[2]/td/input[2]"),
                      "Add comment window  pop -up failed :");
         driver.findElement(By.id("comment")).sendKeys(comment);
-        waitTimeforElement("//div[15]/div/div[3]/div[3]/form/table/tbody/tr[2]/td/input"); //add button
         driver.findElement(By.xpath("//div[15]/div/div[3]/div[3]/form/table/tbody/tr[2]/td/input")).click();
-        waitTimeforElement("//div[4]/div/div[2]/table/tbody/tr/td/div"); // added commnet appear
     }
 
 
@@ -617,54 +589,38 @@ public class GRegStratosResourceSeleniumTest {
         driver.findElement(By.id("uLocationBar")).clear();
         driver.findElement(By.id("uLocationBar")).sendKeys(path);
         driver.findElement(By.xpath("//input[2]")).click();
-        Thread.sleep(sleeptime);
     }
 
 
     private void addCollection(String collectionPath) throws Exception {
-        waitTimeforElement("//div[3]/div[2]/a");
         driver.findElement(By.linkText("Add Collection")).click();
-        waitTimeforElement("//div[7]/form/table/tbody/tr[2]/td[2]/input");
         driver.findElement(By.id("collectionName")).sendKeys(collectionPath);
         driver.findElement(By.id("colDesc")).sendKeys("Selenium Test");
-        waitTimeforElement("//div[7]/form/table/tbody/tr[5]/td/input");
         driver.findElement(By.xpath("//div[7]/form/table/tbody/tr[5]/td/input")).click();
-        Thread.sleep(sleeptime);
-        assertTrue(selenium.isTextPresent("WSO2 Carbon"),
-                   "Add new Collection pop -up Title failed:");
-        assertTrue(selenium.isTextPresent("Successfully added new collection."),
-                   "Add new Collection pop -up Message failed:");
-        selenium.click("//button");
-        Thread.sleep(sleeptime);
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
+        driver.findElement(By.xpath("//button")).click();
     }
 
 
     private void gotoDetailViewTab() throws Exception {
         driver.findElement(By.linkText("Browse")).click();    //Click on Browse link
-        waitTimeforElement("//a[2]");
+        GRegSeleniumUtils.waitForBrowserPage(driver);
         driver.findElement(By.id("stdView")).click();        //Go to Detail view Tab
-        waitTimeforElement("//div[3]/div[3]/div/a");
         assertTrue(selenium.isTextPresent("Browse"), "Browse Detail View Page fail :");
         assertTrue(selenium.isTextPresent("Metadata"), "Browse Detail View Page fail Metadata:");
-        assertTrue(selenium.isTextPresent("Entries"), "Browse Detail View Page Entries fail :");
-        Thread.sleep(sleeptime);
-
     }
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.linkText("Sign-out")).click();
-        waitTimeforElement("//a[2]/img");
     }
 
     private void addResource(String resourceName) throws Exception {
-        waitTimeforElement("//div[3]/div[3]/div/a");
         driver.findElement(By.linkText("Add Resource")).click();
-        waitTimeforElement("//tr[3]/td[2]/input");
         assertTrue(selenium.isTextPresent("Add Resource"), "Add new resource page failed :");
         //select create text content
         selenium.select("id=addMethodSelector", "label=Create Text content");
         selenium.click("css=option[value=\"text\"]");
-        waitTimeforElement("//tr[4]/td/form/table/tbody/tr[2]/td[2]/input");
         // Enter name
         driver.findElement(By.id("trFileName")).sendKeys(resourceName);
         driver.findElement(By.id("trMediaType")).sendKeys("txt");
@@ -672,28 +628,62 @@ public class GRegStratosResourceSeleniumTest {
         driver.findElement(By.id("trPlainContent")).sendKeys("selenium test123");
         // Click on Add button
         driver.findElement(By.xpath("//tr[4]/td/form/table/tbody/tr[6]/td/input")).click();
-        waitTimeforElement("//body/div[3]/div/div");
-        assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Add Resource pop-up title fail :");
-        assertTrue(selenium.isTextPresent("Successfully added Text content."),
-                   "Add Resource pop-up message fail :");
-        //Click on OK button
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
         driver.findElement(By.xpath("//button")).click();
-        Thread.sleep(sleeptime);
     }
 
-    private void waitTimeforElement(String elementName) throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
+    private boolean waitForValue(String value) {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        do {
+            try {
+                if (driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
+                                                "tr[2]/td[2]")).getText().contains(value)) {
+                    break;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for the element");
             }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
+            exceededTime = System.currentTimeMillis();
+        } while (!(((exceededTime - currentTime) / 1000) > 60));
+        return false;
+    }
+
+    private boolean waitForLifeCycleCheck(String optionId) {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        do {
+            try {
+                if (driver.findElement(By.id(optionId)).getAttribute("checked") != null) {
+                    return true;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for LC checklist options");
+            }
+            exceededTime = System.currentTimeMillis();
+
+        } while (!(((exceededTime - currentTime) / 1000) > 60));
+        return false;
+    }
+
+    private void waitForLifeCycleStateTransition(String state) {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        Boolean status = false;
+        do {
+            try {
+                if (driver.findElement(By.xpath("//tr/td[4]/div[14]/div[3]/div[2]/table/tbody/tr/td" +
+                                                "/div[2]/table/tbody/tr[2]/td")).getText().contains(state)) {
+                    status = true;
+                    break;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for LC checklist options");
+            }
+            exceededTime = System.currentTimeMillis();
+
+        } while (!(((exceededTime - currentTime) / 1000) > 30));
+        assertTrue(status, "LifeCycle state not found - " + state);
     }
 }

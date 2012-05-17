@@ -15,8 +15,10 @@ public class GRegSeleniumTestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
         EnvironmentBuilder env = new EnvironmentBuilder();
+        List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
+
         if (!env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
-            List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
+
             suiteVariablesList.add(new SuiteVariables("GReg_Collection_Level_Test",
                                                       GRegCollectionSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("GReg_Resource_Level_Test",

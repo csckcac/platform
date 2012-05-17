@@ -55,7 +55,7 @@ public class StratosManagerAccountValidatorSeleniumTest {
         password = userDetails.getPassword();
         domain = userDetails.getDomain();
         String baseUrl = new ProductUrlGeneratorUtil().getServiceHomeURL(
-                ProductConstant.MANAGER_SERVER_NAME);
+                                                                                ProductConstant.MANAGER_SERVER_NAME);
         log.info("baseURL is :" + baseUrl);
         driver = BrowserManager.getWebDriver();
         selenium = new WebDriverBackedSelenium(driver, baseUrl);

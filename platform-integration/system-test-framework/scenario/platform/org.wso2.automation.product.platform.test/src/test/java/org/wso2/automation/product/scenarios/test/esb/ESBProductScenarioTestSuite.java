@@ -14,7 +14,6 @@ public class ESBProductScenarioTestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
-
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
 
         if (!environmentBuilder.getFrameworkSettings().getEnvironmentSettings()

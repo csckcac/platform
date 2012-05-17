@@ -34,12 +34,11 @@ import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
+import org.wso2.platform.test.core.utils.seleniumutils.GRegSeleniumUtils;
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 import org.openqa.selenium.support.ui.Select;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -73,7 +72,7 @@ public class GRegStratosRootSeleniumTest {
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
-            deleteResourceFromBrowser(getResourceId("selenium_root"));
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath);
             userLogout();
             log.info("********GReg Stratos - Add Collection to Root test - Passed********");
@@ -101,8 +100,7 @@ public class GRegStratosRootSeleniumTest {
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
-            deleteResourceFromBrowser(getResourceId("root_resource"));
-
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "root_resource");
             addResource(resourceName);
             userLogout();
             log.info("********GReg Stratos - Add Resource to Root test - Passed********");
@@ -235,6 +233,7 @@ public class GRegStratosRootSeleniumTest {
     @Test(groups = {"wso2.greg"}, description = "delete a collection from root", priority = 7)
     public void testDeleteCollectionFromRoot() throws Exception {
         StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
+        gotoDetailViewTab();
         deleteResourceFromBrowser(getResourceId("selenium_root"));
     }
 
@@ -283,7 +282,7 @@ public class GRegStratosRootSeleniumTest {
                    "Popup not found :");
         assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this tag?"),
                    "Delete Tag Pop-up Message fail :");
-        selenium.click("//button");                //click on "yes" button
+        driver.findElement(By.xpath("//button")).click();                //click on "yes" button
     }
 
     private void addTag(String tagName) throws InterruptedException {
@@ -357,12 +356,11 @@ public class GRegStratosRootSeleniumTest {
         Select clickThis = new Select(dropDownListBox);
         clickThis.selectByValue("text");
         waitForElement("id", "trPlainContent");
-        Thread.sleep(2000);
         driver.findElement(By.id("trFileName")).sendKeys(resourceName);
         driver.findElement(By.id("trMediaType")).sendKeys("txt");
         driver.findElement(By.id("trDescription")).sendKeys("selenium test resource");
         driver.findElement(By.id("trPlainContent")).sendKeys("selenium test123");
-        Thread.sleep(2000);
+        Thread.sleep(5000);
         // Click on Add button
         waitForElement("xpath", "//tr[4]/td/form/table/tbody/tr[6]/td/input");
         driver.findElement(By.xpath("//tr[4]/td/form/table/tbody/tr[6]/td/input")).click();
@@ -409,9 +407,6 @@ public class GRegStratosRootSeleniumTest {
                        "Popup not found :");
             selenium.click("//button");
             selenium.waitForPageToLoad("30000");
-            waitForBrowserPage();
-            driver.navigate().refresh();
-            driver.findElement(By.id("stdView")).click();
         }
     }
 

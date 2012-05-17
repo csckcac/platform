@@ -16,7 +16,6 @@ $(document).ready(function() {
         ////////////// edit tab
         if (clickedTab == "versions") {
             var apiName = $("#item-info h2")[0].innerHTML.split("-v")[0];
-            var version = $("#item-info h2")[0].innerHTML.split("-v")[1];
             jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUsage", apiName:apiName, server:"https://localhost:9444/" },
                       function (json) {
                           if (!json.error) {
@@ -138,7 +137,8 @@ $(document).ready(function() {
         }
 
         if (clickedTab == "users") {
-            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIUserUsage", apiName:apiName, server:"https://localhost:9444/" },
+            var name = $("#item-info h2")[0].innerHTML.split("-v")[0];
+            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIUserUsage", apiName:name, server:"https://localhost:9444/" },
                       function (json) {
                           if (!json.error) {
                               var length = json.usage.length,data = [];
@@ -177,7 +177,7 @@ $(document).ready(function() {
                           }
                       }, "json");
 
-            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUserUsage", apiName:apiName, server:"https://localhost:9444/" },
+            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUserUsage", apiName:name, server:"https://localhost:9444/" },
                       function (json) {
                           if (!json.error) {
                               $('#userVersionChart').empty();

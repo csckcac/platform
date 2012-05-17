@@ -63,12 +63,12 @@ public final class CommandLineExecutor {
 
             //Parsing the script
         	final Reader source = new ScriptReader(new BufferedInputStream(fstream));
-            out.println("\n\n************ Executing Jaggery script ***********\n");
+            out.println("\n");
             ShellUtilityService.initializeUtilityServices();
             engine.exec(source, scope, null);
             ShellUtilityService.destroyUtilityServices();
             out.flush();
-            out.println("\n\n********************* Done! *********************\n\n");
+            out.println("\n");
 		}catch (Exception e){
 			out.println("\n");
 			out.println("Error: " + e.getMessage());

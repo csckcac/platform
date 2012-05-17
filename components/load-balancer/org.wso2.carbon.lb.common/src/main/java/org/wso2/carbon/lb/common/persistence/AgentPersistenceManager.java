@@ -159,4 +159,34 @@ public class    AgentPersistenceManager {
         return jvmdao.addToEprToInstanceCountTable(epr, instanceCount);
     }
 
+    public boolean updateJVMLastPickedAgentTable(int lastPickedAgent) throws SQLException {
+        JVMDAO jvmdao = new JVMDAO();
+        return jvmdao.updateLastPickedAgentTable(lastPickedAgent);
+    }
+
+    public List<String> getJVMEprList() throws SQLException {//: related query would be "select epr from epr_to_instanceCount;"
+        JVMDAO jvmdao = new JVMDAO();
+        return jvmdao.getEprList();
+
+    }
+
+    Map<String, Integer> getJVMEprToInstanceCountMap() throws SQLException { //: select * from epr_to_instanceCount; and populate to a MapJVMDAO jvmdao = new JVMDAO();
+        JVMDAO jvmdao = new JVMDAO();
+        return jvmdao.getEprToInstanceCountMap();
+    }
+
+    int getJVMTotalInstanceCount() throws SQLException {//: sum up all the instanceCount entries of table epr_to_instanceCount and return.
+        JVMDAO jvmdao = new JVMDAO();
+        return jvmdao.getTotalInstanceCount();
+    }
+    int getJVMLastPickedAgent() throws SQLException { //: return the last entry (most recent) of the table lastPickedAgent
+        JVMDAO jvmdao = new JVMDAO();
+        return jvmdao.getLastPickedAgent();
+    }
+
+    public boolean removeJVMEpr(String epr) throws SQLException {//: this should find the particular row and delete it.
+        JVMDAO jvmdao = new JVMDAO();
+        return jvmdao.removeEpr(epr);
+    }
+
 }

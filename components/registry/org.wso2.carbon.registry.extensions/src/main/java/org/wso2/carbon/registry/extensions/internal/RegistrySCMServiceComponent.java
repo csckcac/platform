@@ -60,11 +60,11 @@ public class RegistrySCMServiceComponent {
     private static final int DEFAULT_UPDATE_FREQUENCY = 60;
 
     protected void activate(ComponentContext context) {
-        log.debug("Registry SCM component is activated ");
+        log.debug("Registry SCM component is activated");
     }
 
     protected void deactivate(ComponentContext context) {
-        log.debug("Registry SCM component is deactivated ");
+        log.debug("Registry SCM component is deactivated");
     }
 
     protected void setRegistryService(RegistryService registryService) {
@@ -99,7 +99,7 @@ public class RegistrySCMServiceComponent {
                                     connection.getAttributeValue(new QName("checkOutURL"));
                             // Read-Only by default, and can be disabled if needed by setting
                             // Read-Only to false.
-                            boolean readOnly = !Boolean.toString(false).equals(
+                            boolean readOnly = !Boolean.toString(false).equalsIgnoreCase(
                                     connection.getAttributeValue(new QName("readOnly")));
                             String checkInURL =
                                     connection.getAttributeValue(new QName("checkInURL"));

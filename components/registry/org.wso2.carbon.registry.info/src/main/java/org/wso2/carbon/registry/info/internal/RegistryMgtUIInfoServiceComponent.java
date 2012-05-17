@@ -20,10 +20,24 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.event.core.exception.EventBrokerException;
+import org.wso2.carbon.event.core.subscription.Subscription;
+import org.wso2.carbon.registry.admin.api.jmx.IEventingService;
+import org.wso2.carbon.registry.common.beans.SubscriptionBean;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.eventing.services.EventingService;
 import org.wso2.carbon.registry.eventing.services.SubscriptionEmailVerficationService;
+import org.wso2.carbon.registry.extensions.jmx.Eventing;
 import org.wso2.carbon.registry.info.Utils;
+import org.wso2.carbon.registry.info.services.utils.SubscriptionBeanPopulator;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import java.util.*;
 
 /**
  * @scr.component name="org.wso2.carbon.registry.info" immediate="true"
@@ -36,6 +50,9 @@ import org.wso2.carbon.registry.info.Utils;
  * @scr.reference name="registry.subscription.email.verification.service"
  * interface="org.wso2.carbon.registry.eventing.services.SubscriptionEmailVerficationService" cardinality="0..1"
  * policy="dynamic" bind="setSubscriptionEmailVerficationService" unbind="unsetSubscriptionEmailVerficationService"
+ * @scr.reference name="registry.eventing.jmx.service"
+ * interface="org.wso2.carbon.registry.extensions.jmx.Eventing" cardinality="0..1"
+ * policy="dynamic" bind="setEventing" unbind="unsetEventing"
  */
 public class RegistryMgtUIInfoServiceComponent {
 
@@ -64,6 +81,93 @@ public class RegistryMgtUIInfoServiceComponent {
 
     protected void unsetRegistryService(RegistryService registryService) {
         Utils.setRegistryService(null);
+    }
+
+    protected void setEventing(Eventing eventing) {
+        eventing.setImplBean(new IEventingService() {
+            private String[] eventNames = null;
+
+            public String subscribe(String endpoint, boolean isRestEndpoint, String path,
+                                    String eventName) {
+                SuperTenantCarbonContext.startTenantFlow();
+                try {
+                    SuperTenantCarbonContext.getCurrentContext().setTenantId(
+                            MultitenantConstants.SUPER_TENANT_ID);
+                    UserRegistry registry = Utils.getRegistryService().getRegistry(
+                            CarbonConstants.REGISTRY_SYSTEM_USERNAME);
+                    if (RegistryUtils.isRegistryReadOnly(registry.getRegistryContext())) {
+                        return null;
+                    }
+
+                    SubscriptionBean subscriptionBean =
+                            SubscriptionBeanPopulator.subscribeAndPopulate(registry, path, endpoint,
+                                    eventName, isRestEndpoint);
+                    if (subscriptionBean != null &&
+                            subscriptionBean.getSubscriptionInstances() != null &&
+                            subscriptionBean.getSubscriptionInstances().length > 0)
+                    return subscriptionBean.getSubscriptionInstances()[0].getId();
+                } catch (RegistryException e) {
+                    log.error("An error occurred while subscribing", e);
+                } finally {
+                    SuperTenantCarbonContext.endTenantFlow();
+                }
+                return "";
+            }
+
+            public void unsubscribe(String id) {
+                SuperTenantCarbonContext.startTenantFlow();
+                try {
+                    SuperTenantCarbonContext.getCurrentContext().setTenantId(
+                            MultitenantConstants.SUPER_TENANT_ID);
+                    Utils.getRegistryEventingService().unsubscribe(id);
+                } finally {
+                    SuperTenantCarbonContext.endTenantFlow();
+                }
+            }
+
+            public String[] getEventNames() {
+                if (eventNames != null) {
+                    return eventNames;
+                }
+                Set<String> output = new TreeSet<String>();
+                Collection values = Utils.getRegistryEventingService().getEventTypes().values();
+                for (Object value : values) {
+                    String[] types = (String[])value;
+                    if (types[0] != null) {
+                        output.add(types[0]);
+                    }
+                    if (types[1] != null) {
+                        output.add(types[1]);
+                    }
+                }
+                eventNames = output.toArray(new String[output.size()]);
+                return eventNames;
+            }
+
+            public String[] getAllSubscriptions() {
+                List<String> output = new LinkedList<String>();
+                SuperTenantCarbonContext.startTenantFlow();
+                try {
+                    SuperTenantCarbonContext.getCurrentContext().setTenantId(
+                            MultitenantConstants.SUPER_TENANT_ID);
+                    List<Subscription> subscriptions =
+                            Utils.getRegistryEventingService().getAllSubscriptions();
+                    for (Subscription subscription : subscriptions) {
+                        output.add(subscription.getId() + ":" + subscription.getTopicName() + ":" +
+                                subscription.getEventSinkURL());
+                    }
+                } catch (EventBrokerException e) {
+                    log.error("Unable to retrieve subscriptions", e);
+                } finally {
+                    SuperTenantCarbonContext.endTenantFlow();
+                }
+                return output.toArray(new String[output.size()]);
+            }
+        });
+    }
+
+    protected void unsetEventing(Eventing eventing) {
+        eventing.setImplBean(null);
     }
 
     protected void setRegistryEventingService(EventingService eventingService) {

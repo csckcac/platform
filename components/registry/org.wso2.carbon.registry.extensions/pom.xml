@@ -83,6 +83,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
+                            org.wso2.carbon.registry.extensions.jmx.*,
                             org.wso2.carbon.registry.extensions.utils.*,
                             org.wso2.carbon.registry.extensions.handlers.*,
                             org.wso2.carbon.registry.extensions.filters.*,

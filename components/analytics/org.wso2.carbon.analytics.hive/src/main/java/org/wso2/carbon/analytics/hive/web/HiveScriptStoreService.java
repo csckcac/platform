@@ -46,7 +46,7 @@ public class HiveScriptStoreService {
         }
     }
 
-    public void saveHiveScript(String scriptName, String scriptContent)
+    public void saveHiveScript(String scriptName, String scriptContent, String cron)
             throws HiveScriptStoreException {
         scriptName = validateScriptName(scriptName);
         if (null != scriptName) {
@@ -58,8 +58,7 @@ public class HiveScriptStoreService {
                                                " script name!");
         }
 
-        String cron = HiveConstants.DEFAULT_TRIGGER_CRON;
-        if (cron != null) {
+        if (cron != null && !cron.equals("")) {
             TaskInfo.TriggerInfo triggerInfo = new TaskInfo.TriggerInfo();
             //triggerInfo.setRepeatCount(sequence.getCount());
             //triggerInfo.setIntervalMillis(sequence.getInterval());
@@ -95,11 +94,12 @@ public class HiveScriptStoreService {
 
     }
 
-    public void editHiveScript(String scriptName, String scriptContent)
-            throws HiveScriptStoreException {
-        deleteScript(scriptName);
-        saveHiveScript(scriptName, scriptContent);
-    }
+// Not needed since the saving the same script will overwrite.
+//    public void editHiveScript(String scriptName, String scriptContent)
+//            throws HiveScriptStoreException {
+//        deleteScript(scriptName);
+//        saveHiveScript(scriptName, scriptContent);
+//    }
 
     public String[] getAllScriptNames() throws HiveScriptStoreException {
         try {

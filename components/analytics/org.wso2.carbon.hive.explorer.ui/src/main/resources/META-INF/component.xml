@@ -31,6 +31,13 @@
             <servlet-class>org.wso2.carbon.hive.explorer.ui.servlet.SaveHiveConfiguration
             </servlet-class>
         </servlet>
+         <servlet id="SaveCronExpression">
+            <servlet-name>SaveCronExpression</servlet-name>
+            <url-pattern>/carbon/hive-explorer/SaveCronExpression</url-pattern>
+            <display-name>SaveCronExpression</display-name>
+            <servlet-class>org.wso2.carbon.hive.explorer.ui.servlet.SaveCronExpression
+            </servlet-class>
+        </servlet>
     </servlets>
     <menus>
         <menu>

@@ -43,8 +43,8 @@ public class HiveScriptStoreClient {
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
     }
 
-    public void saveScript(String scriptName, String script) throws HiveScriptStoreServiceHiveScriptStoreException, RemoteException {
-       stub.saveHiveScript(scriptName, script);
+    public void saveScript(String scriptName, String script, String cron) throws HiveScriptStoreServiceHiveScriptStoreException, RemoteException {
+       stub.saveHiveScript(scriptName, script, cron);
     }
 
     public String[] getAllScriptNames() throws HiveScriptStoreServiceHiveScriptStoreException, RemoteException {

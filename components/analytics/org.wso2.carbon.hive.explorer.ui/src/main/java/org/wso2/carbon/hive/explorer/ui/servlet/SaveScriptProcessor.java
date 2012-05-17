@@ -49,12 +49,14 @@ public class SaveScriptProcessor extends HttpServlet {
 
         String scriptName = request.getParameter("scriptName");
         String scriptContent = request.getParameter("queries");
+        String cron = request.getParameter("cronExp");
+        if(null==cron) cron ="";
         PrintWriter out = null;
         try {
             out = response.getWriter();
         try {
             HiveScriptStoreClient client = new HiveScriptStoreClient(cookie, serverURL, configContext);
-            client.saveScript(scriptName, scriptContent);
+            client.saveScript(scriptName, scriptContent, cron);
             out.println("Successfully updated the Hive script "+ scriptName);
         } catch (AxisFault axisFault) {
             out.println("Error while updating the script");

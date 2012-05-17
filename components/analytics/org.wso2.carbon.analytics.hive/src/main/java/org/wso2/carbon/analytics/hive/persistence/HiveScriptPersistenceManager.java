@@ -25,7 +25,6 @@ import org.wso2.carbon.analytics.hive.exception.HiveScriptStoreException;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.core.Collection;
-import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -55,12 +54,15 @@ public class HiveScriptPersistenceManager {
     }
 
     public String retrieveScript(String scriptName) throws HiveScriptStoreException {
-        Registry registry;
+        UserRegistry registry;
+        int tenantId = CarbonContext.getCurrentContext().getTenantId();
+        if(tenantId <0) tenantId = 0;
         Resource resource;
         InputStream scriptStream = null;
         String script;
         try {
-            registry = ServiceHolder.getRegistryService().getConfigSystemRegistry();
+            registry = ServiceHolder.getRegistryService().
+                    getConfigSystemRegistry(tenantId);
         } catch (RegistryException e) {
             throw new HiveScriptStoreException("Failed to get registry", e);
         }
@@ -123,10 +125,11 @@ public class HiveScriptPersistenceManager {
 
 
     public String[] getAllHiveScriptNames() throws HiveScriptStoreException {
+        int tenantId = CarbonContext.getCurrentContext().getTenantId();
         Resource resource;
         ArrayList<String> scriptNames = null;
         try {
-            Registry registry = ServiceHolder.getRegistryService().getConfigSystemRegistry();
+            UserRegistry registry = ServiceHolder.getRegistryService().getConfigSystemRegistry(tenantId);
             if (registry.resourceExists(HiveConstants.HIVE_SCRIPT_BASE_PATH)) {
                 resource = registry.get(HiveConstants.HIVE_SCRIPT_BASE_PATH);
                 if (resource instanceof Collection) {
@@ -161,7 +164,8 @@ public class HiveScriptPersistenceManager {
 
     public void deleteScript(String scriptName) throws HiveScriptStoreException {
         try {
-            Registry registry = ServiceHolder.getRegistryService().getConfigSystemRegistry();
+            int tenantId = CarbonContext.getCurrentContext().getTenantId();
+            UserRegistry registry = ServiceHolder.getRegistryService().getConfigSystemRegistry(tenantId);
             if (registry.resourceExists(HiveConstants.HIVE_SCRIPT_BASE_PATH)) {
                 registry.delete(HiveConstants.HIVE_SCRIPT_BASE_PATH + scriptName + HiveConstants.HIVE_SCRIPT_EXT);
             } else {
@@ -231,7 +235,6 @@ public class HiveScriptPersistenceManager {
             tenantTrackerResource.setProperty(HiveConstants.TENANTS_PROPERTY,
                                               propertyValues);
         }
-
         superTenantRegistry.put(trackerPath, tenantTrackerResource);
 
     }

@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-
 package org.wso2.carbon.hive.explorer.ui.servlet;
 
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.analytics.hive.stub.HiveExecutionServiceHiveExecutionException;
-import org.wso2.carbon.hive.explorer.ui.client.HiveExecutionClient;
-import org.wso2.carbon.ui.CarbonUIUtil;
-import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.hive.explorer.ui.cron.CronBuilderConstants;
+import org.wso2.carbon.hive.explorer.ui.cron.CronExpressionBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,44 +27,50 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SaveHiveConfiguration extends HttpServlet {
-    private static Log log = LogFactory.getLog(SaveScriptProcessor.class);
+public class SaveCronExpression extends HttpServlet {
+    private static Log log = LogFactory.getLog(SaveCronExpression.class);
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) {
-        String serverURL = CarbonUIUtil.getServerURL(getServletContext(), request.getSession());
-        ConfigurationContext configContext =
-                (ConfigurationContext) getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
-        String cookie = (String) request.getSession().getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
-
-
-        String driver = request.getParameter("driver");
-        String url = request.getParameter("url");
-        String username = request.getParameter("hiveusername");
-        String password = request.getParameter("hivepassword");
-
-
-        try {
-            HiveExecutionClient client = new HiveExecutionClient(cookie, serverURL, configContext);
-            PrintWriter writer = response.getWriter();
-            if (!client.saveConfiguration(driver, url, username, password)) {
-                writer.print("Configuration is not correct! couldn't connect to hive with provided configuration.\n Try Again!");
+        String cronExpression = "";
+        String message = "";
+        if (request.getParameter("optionCron").equalsIgnoreCase("selectUI")) {
+            HashMap<String, String> cronVals = new HashMap<String, String>();
+            cronVals.put(CronBuilderConstants.YEAR, request.getParameter("yearSelected"));
+            cronVals.put(CronBuilderConstants.MONTH, request.getParameter("monthSelected"));
+            if (request.getParameter("selectDay").equalsIgnoreCase("selectDayMonth")) {
+                cronVals.put(CronBuilderConstants.DAY_OF_MONTH, request.getParameter("dayMonthSelected"));
             } else {
-                writer.print("Successfully updated the configuration");
+                cronVals.put(CronBuilderConstants.DAY_OF_WEEK, request.getParameter("dayWeekSelected"));
             }
-        } catch (HiveExecutionServiceHiveExecutionException e) {
-            log.error("exception while updating the configuration", e);
-        } catch (AxisFault axisFault) {
-            log.error("exception while updating the configuration", axisFault);
-        } catch (RemoteException e) {
-            log.error("exception while updating the configuration", e);
-        } catch (IOException e) {
-            log.error("exception while updating the configuration", e);
+            cronVals.put(CronBuilderConstants.HOURS, request.getParameter("hoursSelected"));
+            cronVals.put(CronBuilderConstants.MINUTES, request.getParameter("minutesSelected"));
+
+            CronExpressionBuilder cronBuilder = CronExpressionBuilder.getInstance();
+            cronExpression = cronBuilder.getCronExpression(cronVals);
+            message = "Successfully updated the script scheduling.# cron expression: #" + cronExpression;
+        } else if (request.getParameter("optionCron").equalsIgnoreCase("customCron")) {
+            cronExpression = request.getParameter("customCron");
+            message = "Successfully updated the script scheduling.# cron expression: #" + cronExpression;
+        } else {
+            message = "Interval wise scheduling is not supported yet";
         }
+        log.info(cronExpression);
+
+        PrintWriter writer = null;
+        try {
+            writer = response.getWriter();
+            writer.print(message);
+        } catch (IOException e) {
+            log.error("Error while setting the cronExpression");
+            writer.print("Error while scheduling the script");
+        }
+
     }
+
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -115,6 +115,6 @@ public class SaveHiveConfiguration extends HttpServlet {
      */
 
     public String getServletInfo() {
-        return "used to save the configuration";
+        return "used to save the Hive script";
     }// </editor-fold>
 }

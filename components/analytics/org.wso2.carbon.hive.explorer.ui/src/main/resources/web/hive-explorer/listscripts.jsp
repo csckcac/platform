@@ -75,7 +75,7 @@
                             <%=aName%>
                             </label>
                         </td>
-                        <td width="25%"><a href="../hive-explorer/hiveexplorer.jsp?scriptName=<%=aName%>"><img src="../hive-explorer/images/reports.png">Execute</a>
+                        <td width="25%"><a href="../hive-explorer/hiveexplorer.jsp?mode=edit&scriptName=<%=aName%>"><img src="../hive-explorer/images/reports.png">Execute</a>
                         </td>
                         <td width="25%">
                         <a onclick="deleteRow('<%=aName%>','Do you want to delete')"

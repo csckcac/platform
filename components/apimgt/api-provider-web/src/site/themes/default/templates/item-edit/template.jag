@@ -36,7 +36,7 @@
                     </a>
                 </div>
                 <div class="controls">
-                    <input type="file" class="input-xlarge" id="imageUrl" style="display:none;" name="imageUrl"/>
+                    <input type="file" class="input-xlarge" id="imageUrl" style="display:none;" name="apiThumb"/>
                 </div>
             </div>
 

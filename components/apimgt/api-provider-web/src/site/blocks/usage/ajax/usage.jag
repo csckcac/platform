@@ -13,7 +13,7 @@ include("/jagg/jagg.jag");
         var server = request.getParameter("server");
 
         result = mod.getProviderAPIVersionUsage(provider, apiName, server);
-        if (result.error == "true") {
+        if (result.error) {
             obj = {
                 error:result.error,
                 message:msg.error.backendError(action)

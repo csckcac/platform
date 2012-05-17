@@ -18,6 +18,7 @@ include("/jagg/jagg.jag");
         docData.sourceType = request.getParameter("sourceType");
         docData.sourceUrl = request.getParameter("docUrl");
         docData.summary = request.getParameter("summary");
+        docData.content = "";
 
 
         result = mod.addDocumentation(apiData, docData);

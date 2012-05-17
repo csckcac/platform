@@ -102,7 +102,13 @@ print(result);
 
 <h4>Overview</h4>
 <p class="description">The Database Object is used to connect to a relational database through jaggery and provides most of the default functionality
-and manipulation through the below members / functions.</p>
+and manipulation through the below members / functions. Jaggery out of the box support H2 database engine, and with little configuration
+supports MySql and Oracle.</p>
+     
+     <p class="description">In-order to connect to other database engines, you need to place the connector libs (<a href="http://dev.mysql.com/downloads/connector/j/" target="_blank">MySql lib</a>,  <a href="http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html" target="_blank">Oracle</a> lib) into Jaggery runtime. you can copy these files to
+     <code>{JAGGERY_HOME}/carbon/repository/components/lib/</code></p>
+     
+     
 
 </section>
 

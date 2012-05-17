@@ -41,8 +41,8 @@ public class DBLookupMediator extends AbstractDBMediator {
         Connection con = null;
         ResultSet rs = null;
         try {
-            PreparedStatement ps = getPreparedStatement(stmnt, msgCtx);
-            con = ps.getConnection();
+        	con = this.getDataSource().getConnection();
+            PreparedStatement ps = getPreparedStatement(stmnt, con, msgCtx);
             rs = ps.executeQuery();
 
             if (rs.next()) {

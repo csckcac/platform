@@ -19,6 +19,7 @@ package org.wso2.carbon.governance.list.util;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.xpath.AXIOMXPath;
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
@@ -39,6 +40,7 @@ public class CommonUtil {
     private static final Log log = LogFactory.getLog(CommonUtil.class);
 
     private static RegistryService registryService;
+    private static ConfigurationContext configurationContext;
 
     public static synchronized void setRegistryService(RegistryService service) {
         if (registryService == null) {
@@ -49,7 +51,15 @@ public class CommonUtil {
     public static RegistryService getRegistryService() {
         return registryService;
     }
-    
+
+    public static ConfigurationContext getConfigurationContext() {
+        return configurationContext;
+    }
+
+    public static void setConfigurationContext(ConfigurationContext configurationContext) {
+        CommonUtil.configurationContext = configurationContext;
+    }
+
     public static String getServiceName(Resource resource)throws RegistryException {
         String serviceInfo = convertContentToString(resource);
         try{

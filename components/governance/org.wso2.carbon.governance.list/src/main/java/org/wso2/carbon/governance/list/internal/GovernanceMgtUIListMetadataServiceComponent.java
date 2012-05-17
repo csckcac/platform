@@ -15,14 +15,22 @@
  */
 package org.wso2.carbon.governance.list.internal;
 
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.description.AxisService;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.governance.api.util.GovernanceArtifactConfiguration;
 import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
+import org.wso2.carbon.governance.list.operations.*;
 import org.wso2.carbon.governance.list.util.CommonUtil;
 import org.wso2.carbon.governance.list.util.ListServiceUtil;
 import org.wso2.carbon.registry.core.*;
@@ -38,13 +46,22 @@ import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
+import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.component.xml.config.ManagementPermission;
 
+import javax.xml.namespace.QName;
+import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @scr.component name="org.wso2.carbon.governance.list"
  * immediate="true"
+ * @scr.reference name="configuration.context.service"
+ * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
+ * policy="dynamic" bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
  * @scr.reference name="registry.service"
  * interface="org.wso2.carbon.registry.core.service.RegistryService" cardinality="1..1"
  * policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
@@ -59,13 +76,15 @@ public class GovernanceMgtUIListMetadataServiceComponent {
         try {
             UserRegistry registry =
                     registryService.getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
-            configureGovernanceArtifacts(registry);
+            configureGovernanceArtifacts(registry, CommonUtil.getConfigurationContext().getAxisConfiguration());
             Axis2ConfigurationContextObserver observer =
                     new AbstractAxis2ConfigurationContextObserver() {
-                        public void creatingConfigurationContext(int tenantId) {
+                        public void createdConfigurationContext(ConfigurationContext context) {
                             try {
+                                int tenantId = SuperTenantCarbonContext.getCurrentContext(context).getTenantId();
                                 configureGovernanceArtifacts(registryService.getRegistry(
-                                        CarbonConstants.REGISTRY_SYSTEM_USERNAME, tenantId));
+                                        CarbonConstants.REGISTRY_SYSTEM_USERNAME, tenantId),
+                                        context.getAxisConfiguration());
                             } catch (RegistryException e) {
                                 log.error("Unable to load governance artifacts.", e);
                             }
@@ -94,7 +113,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                             RegistryConstants.CONFIG_REGISTRY_BASE_PATH +
                                                     RegistryConstants.GOVERNANCE_COMPONENT_PATH +
                                                     "/configuration/";
-                                    
+
                                     if(!CurrentSession.getUserRealm().getAuthorizationManager().isUserAuthorized(
                                             CurrentSession.getUser(),layoutStoragePath, ActionConstants.PUT)){
                                         throw new RegistryException("The user is not authorised to add a configurable governance artifact. The required permissions to configure the artifact are not given.");
@@ -102,7 +121,8 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                     systemRegistry.put(
                                             requestContext.getResourcePath().getPath(),
                                             requestContext.getResource());
-                                    configureGovernanceArtifacts(systemRegistry);
+                                    configureGovernanceArtifacts(systemRegistry,
+                                            CommonUtil.getConfigurationContext().getAxisConfiguration());
                                     requestContext.setProcessingComplete(true);
                                 } catch (UserStoreException e) {
                                     log.error("Could not get user information");
@@ -161,15 +181,15 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                             @Override
                             public boolean handleCreateLink(RequestContext requestContext) throws RegistryException {
                                 String targetPath = requestContext.getTargetPath();
-                                    if (!requestContext.getRegistry().resourceExists(targetPath)) {
-                                        return false;
-                                    }
-                                    Resource targetResource = requestContext.getRegistry().get(targetPath);
-                                    String mType = targetResource.getMediaType();
+                                if (!requestContext.getRegistry().resourceExists(targetPath)) {
+                                    return false;
+                                }
+                                Resource targetResource = requestContext.getRegistry().get(targetPath);
+                                String mType = targetResource.getMediaType();
 
-                                    return mType != null && (invert != (mType.matches(
-                                            "application/vnd\\.[a-zA-Z0-9.-]+\\+xml") & !mType.matches(
-                                            "application/vnd.wso2-service\\+xml")));
+                                return mType != null && (invert != (mType.matches(
+                                        "application/vnd\\.[a-zA-Z0-9.-]+\\+xml") & !mType.matches(
+                                        "application/vnd.wso2-service\\+xml")));
                             }
                         },
                         new Handler() {
@@ -219,7 +239,8 @@ public class GovernanceMgtUIListMetadataServiceComponent {
         log.debug("******* Governance List Metadata bundle is activated ******* ");
     }
 
-    private void configureGovernanceArtifacts(Registry systemRegistry) throws RegistryException {
+    private void configureGovernanceArtifacts(Registry systemRegistry, AxisConfiguration axisConfig)
+            throws RegistryException {
         GovernanceUtils.loadGovernanceArtifacts((UserRegistry)systemRegistry);
         List<GovernanceArtifactConfiguration> configurations =
                 GovernanceUtils.findGovernanceArtifactConfigurations(systemRegistry);
@@ -233,6 +254,78 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                 Collection collection = systemRegistry.newCollection();
                 collection.setProperty("name", uiPermission.getDisplayName());
                 systemRegistry.put(resourceId, collection);
+            }
+            RXTMessageReceiver receiver = new RXTMessageReceiver();
+
+            if (axisConfig != null) {
+                try {
+
+                    String singularLabel = configuration.getSingularLabel();
+                    String key = configuration.getKey();
+                    String mediatype = configuration.getMediaType();
+
+                    AxisService service = new AxisService(singularLabel);
+                    XmlSchemaCollection schemaCol = new XmlSchemaCollection();
+                    List<XmlSchema> schemaList = new ArrayList<XmlSchema>();
+
+                    AbstractOperation create = new CreateOperation(new QName("add" + singularLabel), systemRegistry, mediatype, "http://services.add" + singularLabel + ".governance.carbon.wso2.org").init(key, receiver);
+                    service.addOperation(create);
+                    schemaList.addAll(Arrays.asList(create.getSchemas(schemaCol)));
+
+                    AbstractOperation read = new ReadOperation(new QName("get" + singularLabel), systemRegistry, mediatype, "http://services.get" + singularLabel + ".governance.carbon.wso2.org").init(key, receiver);
+                    service.addOperation(read);
+                    schemaList.addAll(Arrays.asList(read.getSchemas(schemaCol)));
+
+                    AbstractOperation update = new UpdateOperation(new QName("update" + singularLabel), systemRegistry, mediatype, "http://services.update" + singularLabel + ".governance.carbon.wso2.org").init(key, receiver);
+                    service.addOperation(update);
+                    schemaList.addAll(Arrays.asList(update.getSchemas(schemaCol)));
+
+                    AbstractOperation delete = new DeleteOperation(new QName("delete" + singularLabel), systemRegistry, mediatype, "http://services.delete" + singularLabel + ".governance.carbon.wso2.org").init(key, receiver);
+                    service.addOperation(delete);
+                    schemaList.addAll(Arrays.asList(delete.getSchemas(schemaCol)));
+
+                    axisConfig.addService(service);
+
+                    String str = "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:ax2232=\"http://api.registry.carbon.wso2.org/xsd\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://exceptions.core.registry.carbon.wso2.org/xsd\">\n" +
+                            "            <xs:import namespace=\"http://api.registry.carbon.wso2.org/xsd\" />\n" +
+                            "            <xs:complexType name=\"RegistryException\">\n" +
+                            "                <xs:complexContent>\n" +
+                            "                    <xs:extension base=\"ax2232:RegistryException\">\n" +
+                            "                        <xs:sequence />\n" +
+                            "                    </xs:extension>\n" +
+                            "                </xs:complexContent>\n" +
+                            "            </xs:complexType>\n" +
+                            "        </xs:schema>";
+                    XmlSchema schema = schemaCol.read(new StreamSource(new ByteArrayInputStream(str.getBytes())), null);
+                    schemaList.add(schema);
+
+                    str = "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:ax2233=\"http://exceptions.core.registry.carbon.wso2.org/xsd\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://exception.api.governance.carbon.wso2.org/xsd\">\n" +
+                            "            <xs:import namespace=\"http://exceptions.core.registry.carbon.wso2.org/xsd\" />\n" +
+                            "            <xs:complexType name=\"GovernanceException\">\n" +
+                            "                <xs:complexContent>\n" +
+                            "                    <xs:extension base=\"ax2233:RegistryException\">\n" +
+                            "                        <xs:sequence />\n" +
+                            "                    </xs:extension>\n" +
+                            "                </xs:complexContent>\n" +
+                            "            </xs:complexType>\n" +
+                            "        </xs:schema>";
+                    schema = schemaCol.read(new StreamSource(new ByteArrayInputStream(str.getBytes())), null);
+                    schemaList.add(schema);
+
+                    str = "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://api.registry.carbon.wso2.org/xsd\">\n" +
+                            "            <xs:complexType name=\"RegistryException\">\n" +
+                            "                <xs:sequence />\n" +
+                            "            </xs:complexType>\n" +
+                            "        </xs:schema>";
+                    schema = schemaCol.read(new StreamSource(new ByteArrayInputStream(str.getBytes())), null);
+                    schemaList.add(schema);
+
+                    service.addSchema(schemaList);
+
+                } catch (AxisFault axisFault) {
+                    String msg = "Error occured while adding services";
+                    log.error(msg);
+                }
             }
         }
     }
@@ -252,5 +345,16 @@ public class GovernanceMgtUIListMetadataServiceComponent {
 
     protected void unsetRegistryService(RegistryService registryService) {
         CommonUtil.setRegistryService(null);
+    }
+
+    protected void setConfigurationContextService(ConfigurationContextService configurationContextService) {
+        log.debug("The Configuration Context Service was set");
+        if (configurationContextService != null) {
+            CommonUtil.setConfigurationContext(configurationContextService.getServerConfigContext());
+        }
+    }
+
+    protected void unsetConfigurationContextService(ConfigurationContextService configurationContextService) {
+        CommonUtil.setConfigurationContext(null);
     }
 }

@@ -28,7 +28,7 @@
     Mediator mediator = SequenceEditorHelper.getEditingMediator(request, session);
     String serviceURL = "", action = "";
     String targetVal = "", sourceVal = "";
-    String repo = "", axis2XML = "";
+    String repo = "", axis2XML = "" , initAxis2ClientOptions="";
     NameSpacesRegistrar nmspRegistrar = NameSpacesRegistrar.getInstance();
     boolean isTargetXpath = false, isSourceXpath = false;
     if (!(mediator instanceof CalloutMediator)) {
@@ -47,6 +47,10 @@
     }
     if (calloutMediator.getAxis2xml() != null) {
         axis2XML = calloutMediator.getAxis2xml();
+    }
+
+    if(calloutMediator.getInitAxis2ClientOptions() != null) {
+        initAxis2ClientOptions = calloutMediator.getInitAxis2ClientOptions();
     }
 
     if (calloutMediator.getRequestKey() != null) {
@@ -114,6 +118,14 @@
                 </td>
                 <td>
                     <input type="text" size="40" id="mediator.callout.axis2XML" name="mediator.callout.axis2XML" value="<%=axis2XML%>" style="width:300px"/>
+                </td>
+            </tr>
+         <tr>
+                <td>
+                    <fmt:message key="mediator.callout.initAxis2ClientOptions"/>
+                </td>
+                <td>
+                    <input type="text" size="40" id="mediator.callout.initAxis2ClientOptions" name="mediator.callout.initAxis2ClientOptions" value="<%=initAxis2ClientOptions%>" style="width:300px"/>
                 </td>
             </tr>
     </table>

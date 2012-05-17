@@ -35,6 +35,7 @@ public class CalloutMediator extends AbstractMediator {
     private static final QName ATT_ACTION = new QName("action");
     private static final QName ATT_AXIS2XML = new QName("axis2xml");
     private static final QName ATT_REPOSITORY = new QName("repository");
+    private static final QName  ATT_INIT_AXIS2_CLIENT_OPTIONS = new QName("initAxis2ClientOptions");
     private static final QName Q_CONFIG
             = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "configuration");
     private static final QName Q_SOURCE
@@ -50,6 +51,8 @@ public class CalloutMediator extends AbstractMediator {
     private String targetKey = null;
     private String clientRepository = null;
     private String axis2xml = null;
+    private String initAxis2ClientOptions = null;
+
     public final static String DEFAULT_CLIENT_REPO = "./samples/axis2Client/client_repo";
     public final static String DEFAULT_AXIS2_XML = "./samples/axis2Client/client_repo/conf/axis2.xml";
 
@@ -59,6 +62,14 @@ public class CalloutMediator extends AbstractMediator {
 
     public void setServiceURL(String serviceURL) {
         this.serviceURL = serviceURL;
+    }
+
+    public String getInitAxis2ClientOptions() {
+        return initAxis2ClientOptions;
+    }
+
+    public void setInitAxis2ClientOptions(String initAxis2ClientOptions) {
+        this.initAxis2ClientOptions = initAxis2ClientOptions;
     }
 
     public String getAction() {
@@ -143,6 +154,10 @@ public class CalloutMediator extends AbstractMediator {
             callout.addChild(config);
         }
 
+        if(initAxis2ClientOptions != null) {
+            callout.addAttribute(fac.createOMAttribute("initAxis2ClientOptions",nullNS,initAxis2ClientOptions));
+        }
+
         OMElement source = fac.createOMElement("source", synNS, callout);
         if (requestXPath != null) {
             SynapseXPathSerializer.serializeXPath(requestXPath, source, "xpath");
@@ -168,6 +183,7 @@ public class CalloutMediator extends AbstractMediator {
     public void build(OMElement elem) {
         OMAttribute attServiceURL = elem.getAttribute(ATT_URL);
         OMAttribute attAction     = elem.getAttribute(ATT_ACTION);
+        OMAttribute attInitAxis2ClientOptions = elem.getAttribute(ATT_INIT_AXIS2_CLIENT_OPTIONS);
         OMElement   configElt     = elem.getFirstChildWithName(Q_CONFIG);
         OMElement   sourceElt     = elem.getFirstChildWithName(Q_SOURCE);
         OMElement   targetElt     = elem.getFirstChildWithName(Q_TARGET);
@@ -180,6 +196,10 @@ public class CalloutMediator extends AbstractMediator {
 
         if (attAction != null) {
             action = attAction.getAttributeValue();
+        }
+
+        if (attInitAxis2ClientOptions != null) {
+            initAxis2ClientOptions = attInitAxis2ClientOptions.getAttributeValue();
         }
 
         if (configElt != null) {

@@ -53,6 +53,12 @@
         calloutMediator.setAxis2xml(param);
     }
 
+    param = request.getParameter("mediator.callout.initAxis2ClientOptions");
+
+    if(param != null && !param.equals("")) {
+        calloutMediator.setInitAxis2ClientOptions(param);
+    }
+
     calloutMediator.setRequestKey(null);
     calloutMediator.setRequestXPath(null);
     calloutMediator.setTargetKey(null);

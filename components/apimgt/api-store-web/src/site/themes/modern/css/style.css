@@ -37,7 +37,7 @@ body {
 
 .page-content {
     /*background: transparent url(../images/whiteBack-more.png) repeat-x center top;*/
-    background-color:#ffffff;
+    background-color:#efefef;
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.25);
     min-height: 500px;
 }

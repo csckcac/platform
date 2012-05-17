@@ -14,7 +14,8 @@ $(document).ready(function () {
             version:elem.attr("data-version"),
             provider:elem.attr("data-provider"),
             context:elem.attr("data-context"),
-            application:elem.attr("data-application")
+            application:elem.attr("data-application"),
+            keytype:elem.attr("data-keytype")
         }, function (result) {
             if (result.error == false) {
                 window.location.reload();
@@ -27,3 +28,13 @@ $(document).ready(function () {
         $(this).html('Please wait...').removeClass('green').addClass('disabled').attr('disabled', 'disabled');
     });
 });
+
+function toggleKey(toggleButton){
+    if($(toggleButton).next().is(":visible")){
+        $(toggleButton).next().hide();
+        $(toggleButton).html('<span class="icon gray small" data-icon="a"></span> Show Key');
+    }else{
+        $(toggleButton).next().show();
+        $(toggleButton).html('<span class="icon gray small" data-icon="O"></span> Hide Key');
+    }
+}

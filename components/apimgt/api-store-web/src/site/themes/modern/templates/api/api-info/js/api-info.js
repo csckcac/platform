@@ -28,7 +28,13 @@ $(document).ready(function () {
 
         $(this).html('Please wait...').removeClass('green').addClass('disabled').attr('disabled', 'disabled');
     });
-
+    $('#application-list').change(
+            function(){
+                if($(this).val() == "createNewApp"){
+                    window.location.href = '../site/pages/applications.jag';
+                }
+            }
+            );
     jagg.initStars($(".api-info"), function (rating, api) {
         jagg.post("/site/blocks/api/api-info/ajax/api-info.jag", {
             action:"addRating",

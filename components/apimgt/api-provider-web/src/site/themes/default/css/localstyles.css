@@ -99,6 +99,16 @@ table a{
     color:#d10000;
     padding:5px 0px;
 }
+label.error{
+    color:#d10000 !important;
+    padding:5px;
+}
+input.error{
+    border-color: rgba(228, 38, 38, 0.8);
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(218, 68, 74, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(218, 68, 74, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(218, 68, 74, 0.6);
+}
 .resourceTableDiv{
     padding-top:10px;
 }

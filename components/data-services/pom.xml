@@ -44,7 +44,7 @@
     <build>
 
     <pluginManagement>
-        <!--<plugins>
+        <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-scr-plugin</artifactId>
@@ -58,7 +58,7 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>-->
+        </plugins>
     </pluginManagement>
     </build>
 

@@ -77,7 +77,7 @@
 						<%
 							}
 						%>
-                        <p>Protect services published to outside world from exploits and attacks using schema validations, WS-security and throttling.</p>
+                        <p>Protect externally published services from exploits, and attacks using schema validations, WS-security, and throttling.</p>
 
                     </div>
                 </td>
@@ -113,7 +113,7 @@
 							<%
 							}
 						%>
-                        <p>Make use of computational resources hosted outside the enterprise with data/resources reside on premises in a secure and controlled manner.</p>
+                        <p>Make use of computational resources hosted outside the enterprise with data/resources residing on-premises, in a secure and controlled manner.</p>
 
                     </div>
                 </td>

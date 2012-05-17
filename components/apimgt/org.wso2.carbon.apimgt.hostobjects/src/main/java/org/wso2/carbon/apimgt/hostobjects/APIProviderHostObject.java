@@ -54,6 +54,7 @@ import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserLastAccessDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
+import org.wso2.carbon.hostobjects.file.FileHostObject;
 import org.wso2.carbon.hostobjects.web.RequestHostObject;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 
@@ -159,7 +160,7 @@ public class APIProviderHostObject extends ScriptableObject {
         }
 
         String tier = (String) apiData.get("tier", apiData);
-        String thumbUrl = (String) apiData.get("imageUrl", apiData);
+        FileHostObject fileHostObject = (FileHostObject) apiData.get("imageUrl", apiData);
         String contextVal = (String) apiData.get("context", apiData);
         String context = contextVal.startsWith("/") ? contextVal : ("/" + contextVal);
 
@@ -188,7 +189,6 @@ public class APIProviderHostObject extends ScriptableObject {
                 api.setUriTemplates(uriTemplates);
             }
 
-            api.setThumbnailUrl(thumbUrl);
             api.setDescription(description);
             api.setWsdlUrl(wsdl);
             api.setLastUpdated(new Date());
@@ -202,12 +202,13 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setContext(context);
 
             apiProvider.addAPI(api);
-            success = true;
-            FileItem fi = getThumbFile(req);
-            if (fi != null) {                
-                api.setThumbnailUrl(apiProvider.addIcon(apiId, fi.getInputStream(), fi.getContentType()));
+
+            if (fileHostObject != null) {
+                api.setThumbnailUrl(apiProvider.addIcon(apiId, fileHostObject.getInputStream(),
+                        fileHostObject.getJavaScriptFile().getContentType()));
                 apiProvider.updateAPI(api);
             }
+            success = true;
 
         } catch (APIManagementException e) {
             log.error("Error from registry while adding the API: " + name + "-" + version, e);
@@ -216,26 +217,6 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         return success;
 
-    }
-
-    private static FileItem getThumbFile(HttpServletRequest request)
-            throws IOException, FileUploadException {
-        if (!ServletFileUpload.isMultipartContent(request)) {
-            return null;
-        }
-        FileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        List items = upload.parseRequest(request);
-        Iterator iterator = items.iterator();
-        while (iterator.hasNext()) {
-            FileItem item = (FileItem) iterator.next();
-            if (item.isFormField()) {
-                continue;
-            } else {
-                return item;
-            }
-        }
-        return null;
     }
 
     public static boolean jsFunction_updateAPI(Context cx, Scriptable thisObj,
@@ -318,14 +299,8 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setLastUpdated(new Date());
             apiProvider.updateAPI(api);
 
-            FileItem fi = getThumbFile(req);
-
-            if (fi != null) {
-                api.setThumbnailUrl(apiProvider.addIcon(apiId, fi.getInputStream(), fi.getContentType()));
-                apiProvider.updateAPI(api);
-            }
+            // TODO: Handle image upload
             success = true;
-
         } catch (APIManagementException e) {
             log.error("Error from registry while updating the API :" + name + "-" + version, e);
         } catch (Exception e) {

@@ -111,7 +111,7 @@ public final class CommandLineManager extends CommonManager {
         }
         PrintWriter writer = new PrintWriter(jaggeryContext.getOutputStream());
         writer.write(HostObjectUtil.serializeObject(args[0]));
-        writer.close();
+        writer.flush();
     }
 
     public static JaggeryContext getJaggeryContext() {

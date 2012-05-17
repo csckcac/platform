@@ -27,10 +27,10 @@
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="javax.xml.namespace.QName" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Arrays" %>
-<%@ page import="java.util.List" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
+
+<fmt:bundle basename="org.wso2.carbon.bpel.ui.i18n.Resources">
 
 <jsp:useBean id="deployDescriptorUpdater" scope="session"
              class="org.wso2.carbon.bpel.ui.DeploymentDescriptorUpdater"/>
@@ -213,7 +213,6 @@
 
 <link type="text/css" rel="stylesheet" href="css/style.css"/>
 <%--<link media="all" type="text/css" rel="stylesheet" href="css/xmlverbatim.css">--%>
-<fmt:bundle basename="org.wso2.carbon.bpel.ui.i18n.Resources">
 <carbon:breadcrumb
         label="dd.info"
         resourceBundle="org.wso2.carbon.bpel.ui.i18n.Resources"
@@ -457,9 +456,8 @@
         </td>
         <td>
             <%
-                List<String> eventsList = deployDescriptorUpdater.getEvents();
+                String[] eventsList = deployDescriptorUpdater.getEvents();
                 deployDescriptorUpdater.setEvents(new String[0]);
-
             %>
             <input type="checkbox" name="events" value="instanceLifecycle" onclick="enableAll(this)"
                     <%= BpelUIUtil.isGivenEventChecked(eventsList, "instanceLifecycle")%>
@@ -498,7 +496,7 @@
     </thead>
 
     <%
-        List<ScopeEventType> scopeEvents = deployDescriptorUpdater.getScopeEvents();
+        ScopeEventType[] scopeEvents = deployDescriptorUpdater.getScopeEvents();
         if (scopeEvents != null) {
 
     %>
@@ -522,7 +520,7 @@
 
         <%
             EnableEventListType scopeLevelenableEventList = scopeEvent.getEnabledEventList();
-            List<String> scopeLevelEnabledEvents = Arrays.asList(scopeLevelenableEventList.getEnableEvent());
+            String[] scopeLevelEnabledEvents = scopeLevelenableEventList.getEnableEvent();
         %>
         <td>
             <input type="checkbox" name="scopeevents" value="instanceLifecycle"
@@ -639,7 +637,7 @@
     <tr>
         <td>Success</td>
         <%
-            List<String> successCategoryList = deployDescriptorUpdater.getSuccesstypecleanups();
+            String[] successCategoryList = deployDescriptorUpdater.getSuccesstypecleanups();
             deployDescriptorUpdater.setSuccesstypecleanups(new String[0]);
         %>
 
@@ -681,7 +679,7 @@
     <tr>
         <td>Failure</td>
         <%
-            List<String> failureCategoryList = deployDescriptorUpdater.getFailuretypecleanups();
+            String[] failureCategoryList = deployDescriptorUpdater.getFailuretypecleanups();
             deployDescriptorUpdater.setFailuretypecleanups(new String[0]);
         %>
         <td>

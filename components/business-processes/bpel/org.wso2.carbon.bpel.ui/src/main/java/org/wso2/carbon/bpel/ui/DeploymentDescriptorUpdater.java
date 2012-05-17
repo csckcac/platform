@@ -18,10 +18,6 @@ package org.wso2.carbon.bpel.ui;
 
 import org.wso2.carbon.bpel.stub.mgt.types.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /*
  *  This is the jsp bean class used to keep the form data of the deployment descriptor editor when
  *  the form is updated at runtime
@@ -31,13 +27,13 @@ public class DeploymentDescriptorUpdater {
     private static final String CHECKED = "checked";
 
 
-    private List<String> events;
+    private String[] events;
 
     private String gentype;   // this is the 'generate' type for radio buttons in process level events table
 
-    private List<String> successtypecleanups;
+    private String[] successtypecleanups;
 
-    private List<String> failuretypecleanups;
+    private String[] failuretypecleanups;
 
     private String processstate;
 
@@ -51,20 +47,14 @@ public class DeploymentDescriptorUpdater {
 
     private PropertyListType propertyList;
 
-    private List<ScopeEventType> scopeEvents;
+    private ScopeEventType[] scopeEvents;
 
-    public DeploymentDescriptorUpdater() {
-        successtypecleanups = new ArrayList<String>();
-        failuretypecleanups = new ArrayList<String>();
-        events = new ArrayList<String>();
-        scopeEvents = new ArrayList<ScopeEventType>();
-    }
 
     public String getInmemorystatus() {
         return inmemorystatus;
     }
 
-    public List<String> getEvents() {
+    public String[] getEvents() {
         return events;
     }
 
@@ -72,12 +62,12 @@ public class DeploymentDescriptorUpdater {
         return gentype;
     }
 
-    public List<String> getSuccesstypecleanups() {
+    public String[] getSuccesstypecleanups() {
         return successtypecleanups;
     }
 
 
-    public List<String> getFailuretypecleanups() {
+    public String[] getFailuretypecleanups() {
         return failuretypecleanups;
     }
 
@@ -97,7 +87,7 @@ public class DeploymentDescriptorUpdater {
         return propertyList;
     }
 
-    public List<ScopeEventType> getScopeEvents() {
+    public ScopeEventType[] getScopeEvents() {
         return scopeEvents;
     }
 
@@ -110,22 +100,17 @@ public class DeploymentDescriptorUpdater {
     }
 
     public void setSuccesstypecleanups(String[] successtypecleanups) {
-        if (successtypecleanups != null) {
-            Collections.addAll(this.successtypecleanups, successtypecleanups);
-        }
+        this.successtypecleanups = successtypecleanups;
     }
 
     public void setFailuretypecleanups(String[] failuretypecleanups) {
-        if (failuretypecleanups != null) {
-            Collections.addAll(this.failuretypecleanups, failuretypecleanups);
-        }
+        this.failuretypecleanups = failuretypecleanups;
     }
 
     public void setScopeEvents(ScopeEventType[] scopeEvents) {
-        if (scopeEvents != null) {
-            Collections.addAll(this.scopeEvents, scopeEvents);
-        }
+        this.scopeEvents = scopeEvents;
     }
+
 
     public void setPropertyList(PropertyListType propertyList) {
         this.propertyList = propertyList;
@@ -149,9 +134,7 @@ public class DeploymentDescriptorUpdater {
     }
 
     public void setEvents(String[] events) {
-        if (events != null) {
-            Collections.addAll(this.events, events);
-        }
+        this.events = events;
     }
 
     public void setGentype(String gentype) {
@@ -377,5 +360,7 @@ public class DeploymentDescriptorUpdater {
         } else {
             return "";
         }
+
+
     }
 }

@@ -89,7 +89,7 @@ public class MediatorTest {
         return method;
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing Mediator IN and OUT")
+    @Test(groups = {"wso2.esb"}, description = "Testing Mediator IN and OUT", priority = 1)
     public void testMediatorInOut() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorInOut.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -98,7 +98,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing Mediator Aggregate")
+    @Test(groups = {"wso2.esb"}, description = "Testing Mediator Aggregate", priority = 2)
     public void testMediatorAggregate()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorAggregate.xml");
@@ -107,7 +107,7 @@ public class MediatorTest {
         log.info("Response : " + omElement.toString());
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing cache mediator with cache ID")
+    @Test(groups = {"wso2.esb"}, description = "Testing cache mediator with cache ID", priority = 3)
     public void testMediatorCache_WithCacheID()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
 
@@ -118,7 +118,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing cache mediator without cache ID")
+    @Test(groups = {"wso2.esb"}, description = "Testing cache mediator without cache ID", priority = 4)
     public void testMediatorCache_WithoutCacheID()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorCache-WithoutCacheID.xml");
@@ -137,7 +137,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }*/
 
-    @Test(groups = {"wso2.esb"}, description = "Testing clone mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing clone mediator", priority = 5)
     public void testMediatorClone() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorClone.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -146,7 +146,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing drop mediator within InSequence")
+    @Test(groups = {"wso2.esb"}, description = "Testing drop mediator within InSequence", priority = 6)
     public void testMediatorDrop_InSeq()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorDrop-InSeq.xml");
@@ -156,7 +156,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing drop mediator with in OutSequence")
+    @Test(groups = {"wso2.esb"}, description = "Testing drop mediator with in OutSequence", priority = 7)
     public void testMediatorDrop_OutSeq()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorDrop-OutSeq.xml");
@@ -166,7 +166,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing enrich mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing enrich mediator", priority = 8)
     public void testMediatorEnrich() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorEnrich.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -187,7 +187,7 @@ public class MediatorTest {
     }*/
 
 
-    @Test(groups = {"wso2.esb"}, description = "Testing header mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing header mediator", priority = 9)
     public void testMediatorHeader() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorHeader.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -196,7 +196,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing Iterate mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing Iterate mediator", priority = 10)
     public void testMediatorIterate() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorIterate.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -205,17 +205,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing Router mediator")
-    public void testMediatorRouter_anon_seq_and_epr()
-            throws IOException, XMLStreamException, ServletException, InterruptedException {
-        new ConfigUploader(environmentObj, "MediatorRouter-anon-seq-and-epr.xml");
-        AxisServiceClient axisServiceClient = new AxisServiceClient();
-        OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
-        log.info("Response : " + omElement.toString());
-        Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
-    }
-
-    @Test(groups = {"wso2.esb"}, description = "Testing router mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing router mediator", priority = 11)
     public void testMediatorRouter_Break_rout()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-break-router.xml");
@@ -225,7 +215,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing router mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing router mediator", priority = 12)
     public void testMediatorRouter_Continue_After()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-continue-after.xml");
@@ -235,7 +225,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing router mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing router mediator", priority = 13)
     public void testMediatorRouter_Expression()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-expression.xml");
@@ -245,7 +235,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing router mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing router mediator", priority = 14)
     public void testMediatorRouter_Match()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-match.xml");
@@ -255,7 +245,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing router mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing router mediator", priority = 15)
     public void testMediatorRouter_Ref_Target()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorRouter-ref-target.xml");
@@ -315,7 +305,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing send mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing send mediator", priority = 16)
     public void testMediatorSend() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorSend.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -324,7 +314,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing send mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing send mediator", priority = 17)
     public void testMediatorSend_EPR_From_Registry()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorSend_EPR_From_Registry.xml");
@@ -334,27 +324,7 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing send mediator")
-    public void testMediatorSend_Non_EPR()
-            throws IOException, XMLStreamException, ServletException, InterruptedException {
-        new ConfigUploader(environmentObj, "MediatorSend_NonEpr.xml");
-        AxisServiceClient axisServiceClient = new AxisServiceClient();
-        OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
-        log.info("Response : " + omElement.toString());
-        Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
-    }
-
-    @Test(groups = {"wso2.esb"}, description = "Testing send mediator")
-    public void testMediatorSend_Proxy()
-            throws IOException, XMLStreamException, ServletException, InterruptedException {
-        new ConfigUploader(environmentObj, "MediatorSend_Proxy.xml");
-        AxisServiceClient axisServiceClient = new AxisServiceClient();
-        OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
-        log.info("Response : " + omElement.toString());
-        Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
-    }
-
-    @Test(groups = {"wso2.esb"}, description = "Testing send mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing send mediator", priority = 18)
     public void testMediatorSend_Sequence()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorSequence.xml");
@@ -365,26 +335,7 @@ public class MediatorTest {
 
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing validate mediator")
-    public void testMediatorValidate()
-            throws IOException, XMLStreamException, ServletException, InterruptedException {
-        new ConfigUploader(environmentObj, "MediatorValidate.xml");
-        AxisServiceClient axisServiceClient = new AxisServiceClient();
-        OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
-        log.info("Response : " + omElement.toString());
-        Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
-    }
-
-    @Test(groups = {"wso2.esb"}, description = "Testing switch mediator")
-    public void testMediatorSwitch() throws IOException, XMLStreamException, ServletException, InterruptedException {
-        new ConfigUploader(environmentObj, "MediatorSwitch.xml");
-        AxisServiceClient axisServiceClient = new AxisServiceClient();
-        OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
-        log.info("Response : " + omElement.toString());
-        Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
-    }
-
-    @Test(groups = {"wso2.esb"}, description = "Testing script mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing script mediator", priority = 19)
     public void testMediatorScript() throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorScript.xml");
         AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -393,7 +344,8 @@ public class MediatorTest {
         Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("MSFT"));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing log mediator")
+
+    @Test(groups = {"wso2.esb"}, description = "Testing log mediator", priority = 20)
     public void testMediatorLog_Simple()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorLog-simple.xml");
@@ -429,7 +381,7 @@ public class MediatorTest {
         Assert.assertTrue("Log mediator error in message response", responseLogOk);
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing log mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing log mediator", priority = 21)
     public void testMediatorLog_Header()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorLog-header.xml");
@@ -462,7 +414,7 @@ public class MediatorTest {
         Assert.assertTrue("Log mediator error in message response", responseLogOk);
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing log mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing log mediator", priority = 22)
     public void testMediatorLog_Full()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorLog-full.xml");
@@ -494,7 +446,7 @@ public class MediatorTest {
         Assert.assertTrue("Log mediator error in message response", responseLogOk);
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Testing log mediator")
+    @Test(groups = {"wso2.esb"}, description = "Testing log mediator", priority = 23)
     public void testMediatorLog_Custom()
             throws IOException, XMLStreamException, ServletException, InterruptedException {
         new ConfigUploader(environmentObj, "MediatorLog-custom.xml");
@@ -527,6 +479,57 @@ public class MediatorTest {
         Assert.assertTrue("Log mediator error in message request", requestLogOk);
         Assert.assertTrue("Log mediator error in message response", responseLogOk);
     }
+
+    @Test(groups = {"wso2.esb"}, description = "Testing validate mediator", priority = 24)
+    public void testMediatorValidate()
+            throws IOException, XMLStreamException, ServletException, InterruptedException {
+        new ConfigUploader(environmentObj, "MediatorValidate.xml");
+        AxisServiceClient axisServiceClient = new AxisServiceClient();
+        OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
+        log.info("Response : " + omElement.toString());
+        Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
+    }
+//
+//    @Test(groups = {"wso2.esb"}, description = "Testing switch mediator", priority = 25)
+//    public void testMediatorSwitch() throws IOException, XMLStreamException, ServletException, InterruptedException {
+//        new ConfigUploader(environmentObj, "MediatorSwitch.xml");
+//        AxisServiceClient axisServiceClient = new AxisServiceClient();
+//        OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
+//        log.info("Response : " + omElement.toString());
+//        Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
+//    }
+//
+//
+//    @Test(groups = {"wso2.esb"}, description = "Testing send mediator", priority = 26)
+//    public void testMediatorSend_Proxy()
+//            throws IOException, XMLStreamException, ServletException, InterruptedException {
+//        new ConfigUploader(environmentObj, "MediatorSend_Proxy.xml");
+//        AxisServiceClient axisServiceClient = new AxisServiceClient();
+//        OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
+//        log.info("Response : " + omElement.toString());
+//        Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
+//    }
+//
+//
+//    @Test(groups = {"wso2.esb"}, description = "Testing Router mediator", priority = 27)
+//    public void testMediatorRouter_anon_seq_and_epr()
+//            throws IOException, XMLStreamException, ServletException, InterruptedException {
+//        new ConfigUploader(environmentObj, "MediatorRouter-anon-seq-and-epr.xml");
+//        AxisServiceClient axisServiceClient = new AxisServiceClient();
+//        OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
+//        log.info("Response : " + omElement.toString());
+//        Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
+//    }
+//
+//    @Test(groups = {"wso2.esb"}, description = "Testing send mediator", priority = 28)
+//    public void testMediatorSend_Non_EPR()
+//            throws IOException, XMLStreamException, ServletException, InterruptedException {
+//        new ConfigUploader(environmentObj, "MediatorSend_NonEpr.xml");
+//        AxisServiceClient axisServiceClient = new AxisServiceClient();
+//        OMElement omElement = axisServiceClient.sendReceive(createPayLoad("IBM"), NHTTP_PORT, "getQuote");
+//        log.info("Response : " + omElement.toString());
+//        Assert.assertTrue("Expected result not found while invoking service.", omElement.toString().contains("IBM"));
+//    }
 
 
 }

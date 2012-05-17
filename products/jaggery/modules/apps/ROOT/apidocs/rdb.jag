@@ -105,7 +105,7 @@ print(result);
 and manipulation through the below members / functions. Jaggery out of the box support H2 database engine, and with little configuration
 supports MySql and Oracle.</p>
      
-     <p class="description">In-order to connect to other database engines, you need to place the connector libs (<a href="http://dev.mysql.com/downloads/connector/j/" target="_blank">MySql lib</a>,  <a href="http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html" target="_blank">Oracle</a> lib) into Jaggery runtime. you can copy these files to
+     <p class="description">In-order to connect to other database engines, you need to place the connector libs (<a href="http://dev.mysql.com/downloads/connector/j/" target="_blank"><i>MySql lib</i></a>,  <a href="http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html" target="_blank"><i>Oracle lib</i></a>) into Jaggery runtime. you can copy these files to
      <code>{JAGGERY_HOME}/carbon/repository/components/lib/</code></p>
      
      

@@ -45,7 +45,8 @@ public interface IAutoscalerService {
      * @throws NoInstanceFoundException if no instance in this particular domain has
      *  spawned.
      */
-	public boolean terminateInstance(String domainName) throws NoInstanceFoundException;
+	public boolean terminateInstance(String domainName)
+            throws NoInstanceFoundException, SQLException;
 	
 	/**
 	 * This will be called by the Autoscaler task, in order to get the pending instances

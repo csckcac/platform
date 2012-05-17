@@ -43,7 +43,7 @@ public abstract class Adapter {
      * @return whether an instance is successfully spawned?
      */
     public abstract boolean spawnInstance(String domainName, String instanceId)
-            throws ClassNotFoundException, SQLException;
+            throws ClassNotFoundException;
 
     /**
      * Finds the Agent who spawned this particular instance, and request it to terminate

@@ -75,7 +75,7 @@ public class EC2Adapter extends Adapter {
     }
 
     @Override
-    public boolean spawnInstance(final String domainName, String instanceId) throws ClassNotFoundException, SQLException {
+    public boolean spawnInstance(final String domainName, String instanceId) throws ClassNotFoundException {
         log.info("--------------------------------------------");
         log.info("Trying to spawn instance in EC2 Adapter");
 

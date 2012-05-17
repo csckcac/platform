@@ -43,6 +43,8 @@ import org.wso2.carbon.lb.common.persistence.AgentPersistenceManager;
  *
  */
 public class AutoscalerServiceImpl implements IAutoscalerService{
+    AgentPersistenceManager agentPersistenceManager
+                                = AgentPersistenceManager.getPersistenceManager();
 	
 	private static final Log log = LogFactory.getLog(AutoscalerServiceImpl.class);
 	
@@ -137,7 +139,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
      * {@link #domainToInstanceIdsMap} and {@link #instanceIdToAdapterMap}.
      * If failed we try to spawn an instance in the adapter next in line of the scale up order.
      */
-    public boolean startInstance(String domainName) throws ClassNotFoundException, SQLException {
+    public boolean startInstance(String domainName) throws ClassNotFoundException {
   
         boolean isSuccessfullyStarted = false;
 
@@ -167,9 +169,12 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
                     // add to domain to instance id map
                     addToDomainToInstanceIdsMap(domainName, instanceId);
                     //add instance details to database
-                    AgentPersistenceManager agentPersistenceManager
-                            = AgentPersistenceManager.getPersistenceManager();
-                    agentPersistenceManager.addInstance(instanceId, adapter, domainName);
+                    try{
+                        agentPersistenceManager.addInstance(instanceId, adapter, domainName);
+                    }catch (SQLException s){
+                        String msg = "Error while adding instance from database";
+                        log.error(msg);
+                    }
                     return true;
                 }
 
@@ -202,7 +207,8 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
      * If instance is successfully get terminated, we remove details corresponds to that
      * instanceId from {@link #domainToInstanceIdsMap} and {@link #instanceIdToAdapterMap}.  
      */
-    public boolean terminateInstance(String domainName) throws NoInstanceFoundException {
+    public boolean terminateInstance(String domainName)
+            throws NoInstanceFoundException {
 
         List<String> scaleDownOrder = autoscalerPolicy.getScaleDownOrderList();
 
@@ -243,7 +249,12 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
                                 // remove this instance id from Maps
                                 instanceIdToAdapterMap.remove(instanceId);
                                 removeFromDomainToInstanceIdsMap(domainName, instanceId);
-
+                                try{
+                                    agentPersistenceManager.deleteInstance(instanceId);
+                                }catch (SQLException s){
+                                    String msg = "Error while deleting instance from database";
+                                    log.error(msg);
+                                }
                                 return true;
                             }
                         }

@@ -17,7 +17,7 @@ public class ContainerAdapter extends Adapter{
 
     @Override
     public boolean spawnInstance(String domainName, String instanceId)
-            throws ClassNotFoundException, SQLException {
+            throws ClassNotFoundException {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

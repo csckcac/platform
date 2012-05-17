@@ -192,7 +192,13 @@
                 <include>**/coordination-client-config.xml</include>
            </includes>
         </fileSet>
-
+        <fileSet>
+           <directory>../../../config/rxts</directory>
+           <outputDirectory>wso2greg-${pom.version}/repository/resources/rxts</outputDirectory>
+           <includes>
+               <include>**/**.rxt</include>
+           </includes>
+        </fileSet>
     </fileSets>
 
     <dependencySets>

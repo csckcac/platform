@@ -10,7 +10,7 @@
 <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/templates/utils/jqplot/plugins/jqplot.barRenderer.min.js")%>"></script>
 <link type="text/css" rel="stylesheet" href="<%=jagg.getAbsoluteUrl("/site/themes/default//templates/utils/jqplot/jquery.jqplot.min.css")%>"/>
 
-    <h2>Usage By APIs</h2>
+    <h2>Overall API Usage (Across All Versions)</h2>
 
         <div class="row-fluid well">
         <div class="span5">
@@ -24,7 +24,7 @@
                 <table class="table" id="apiTable" style="display:none;">
                       <tr>
                         <th>API Name</th>
-                        <th>Usage</th>
+                        <th>Number of API Calls</th>
                       </tr>
                   </table>
             </div>
@@ -32,7 +32,7 @@
 
 </div>
 
-<h2>Average Service Time For APIs</h2>
+<h2>API Response Times (Across All Versions)</h2>
 
         <div class="row-fluid well">
         <div class="span5">
@@ -42,13 +42,13 @@
              <table class="table" id="serviceTimeTable">
                 <tr>
                     <th>API Name</th>
-                    <th>Average Service Time (ms)</th>
+                    <th>Average Response Time (ms)</th>
                 </tr>
              </table>
         </div>
 </div>
 
-<h2>Last Access Time Summary</h2>
+<h2>API Last Access Times</h2>
 
         <div class="row-fluid well">
         <div class="span5">

@@ -21,7 +21,7 @@
             <table class="table" id="versionTable">
                   <tr>
                     <th>Version</th>
-                    <th>Usage</th>
+                    <th>Number of API Calls</th>
                   </tr>
               </table>
         </div>
@@ -38,7 +38,7 @@
                   <tr>
                     <th>Version</th>
                     <th>Subscriber</th>
-                    <th>Usage</th>
+                    <th>Number of API Calls</th>
                   </tr>
               </table>
         </div>

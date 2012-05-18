@@ -56,7 +56,7 @@
                     <table class="table" id="userTable">
                           <tr>
                             <th>User</th>
-                            <th>Usage</th>
+                            <th>Number of API Calls</th>
                           </tr>
                       </table>
                 </div>

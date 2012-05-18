@@ -196,6 +196,7 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setStatus(APIStatus.CREATED);
             api.setContext(context);
 
+            checkFileSize(fileHostObject);
             apiProvider.addAPI(api);
 
             if (fileHostObject != null) {
@@ -288,6 +289,7 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setStatus(getApiStatus(status));
             api.setWsdlUrl(wsdl);
             api.setLastUpdated(new Date());
+            checkFileSize(fileHostObject);
 
             if (fileHostObject != null) {
                 api.setThumbnailUrl(apiProvider.addIcon(apiId, fileHostObject.getInputStream(),
@@ -301,6 +303,15 @@ public class APIProviderHostObject extends ScriptableObject {
             log.error(e.getMessage(), e);
         }
         return success;
+    }
+
+    private static void checkFileSize(FileHostObject fileHostObject) throws ScriptException, Exception {
+        if (fileHostObject != null) {
+            long length = fileHostObject.getJavaScriptFile().getLength();
+            if (length / 1024.0 > 1024) {
+                throw new Exception("Image file exceeds the maximum limit of 1MB");
+            }
+        }
     }
 
     /**

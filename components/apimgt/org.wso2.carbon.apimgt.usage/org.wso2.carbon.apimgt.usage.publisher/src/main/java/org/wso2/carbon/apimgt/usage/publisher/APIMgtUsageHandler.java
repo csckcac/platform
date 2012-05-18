@@ -33,11 +33,12 @@ import java.util.regex.Pattern;
 
 public class APIMgtUsageHandler extends AbstractHandler {
 
+    private static final Log log   = LogFactory.getLog(APIMgtUsageHandler.class);
+
     private APIMgtUsageConfigHolder configHolder = new APIMgtUsageConfigHolder();
     private volatile APIMgtUsageBAMDataPublisher publisher;
-    private boolean enabled = UsageComponent.getApiMgtConfigReaderService().isEnabled();
 
-    private static Log log   = LogFactory.getLog(APIMgtUsageHandler.class);
+    private boolean enabled = UsageComponent.getApiMgtConfigReaderService().isEnabled();
 
     public boolean handleRequest(MessageContext mc) {
         String currentTime = String.valueOf(System.currentTimeMillis());

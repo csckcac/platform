@@ -37,6 +37,7 @@
                 </div>
                 <div class="controls">
                     <input type="file" class="input-xlarge" id="imageUrl" style="display:none;" name="apiThumb"/>
+                    <p class="help-block">Max 1 MB</p>
                 </div>
             </div>
 

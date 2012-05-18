@@ -16,11 +16,8 @@
 * under the License.
 */
 
-
 package org.wso2.carbon.apimgt.usage.publisher.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.apimgt.usage.publisher.APIMgtUsagePublisherConstants;
@@ -29,8 +26,6 @@ import java.net.InetAddress;
 import java.util.Map;
 
 public class Utils {
-
-    private static Log log   = LogFactory.getLog(Utils.class);
 
     /**
      * Extract the customer key from the OAuth Authentication header

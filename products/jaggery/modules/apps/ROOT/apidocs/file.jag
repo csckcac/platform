@@ -68,10 +68,9 @@ include('/includes/topnavi.jag');
 
     var message = "";
 
-    while ((message = file.readLine()) != null) {
-        print(message);
-    }
-
+    message = file.readAll(); 
+    print(message);
+    
     file.close();
 %&gt
 </pre>
@@ -83,9 +82,8 @@ include('/includes/topnavi.jag');
                 + '\n'
                 + '\n var message = "";'
                 + '\n'
-                + '\n while ((message = file.readLine()) != null) {'
+                + '\n message = file.readAll()'
                 + '\n print(message);'
-                + '\n }'
                 + '\n'
                 + '\n file.close();'
                 + '\n %&gt';
@@ -213,25 +211,6 @@ file.close();</pre>
                             If the file is not open for either reading or writing or appending,
                             then calling this will automatically open the file for reading.
                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <code>readLine()</code>
-                        </td>
-                        <td>String</td>
-                        <td><pre class="prettyprint">var file = new File("readme.txt");
-file.open("r");
-print(file.readLine());
-file.close();</pre>
-
-                            Reads a line from the file and return a
-                            string representation of the line. Users are required to open the file
-                            for reading before reading from the file.
-                            <br><br>
-                            If the file is not open for either reading or writing or appending,
-                            then calling this will automatically open the file for reading.
-                            
                         </td>
                     </tr>
                             <tr>

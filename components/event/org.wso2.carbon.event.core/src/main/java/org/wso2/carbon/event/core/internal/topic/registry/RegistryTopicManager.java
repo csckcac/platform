@@ -128,11 +128,11 @@ public class RegistryTopicManager implements TopicManager {
                         loggedInUser, resourcePath, EventBrokerConstants.EB_PERMISSION_CHANGE_PERMISSION);
             }
         } catch (RegistryException e) {
-            throw new EventBrokerException("Can not access the config registry");
+            throw new EventBrokerException("Can not access the config registry", e);
         } catch (UserStoreException e) {
             throw new EventBrokerException("Error while granting user " + loggedInUser +
                                            ", permission " + EventBrokerConstants.EB_PERMISSION_CHANGE_PERMISSION +
-                                           ", on topic " + topicName);
+                                           ", on topic " + topicName, e);
         }
     }
 

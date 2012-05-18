@@ -41,7 +41,6 @@ public class APIStoreHostObject extends ScriptableObject {
 	private static final long serialVersionUID = -3169012616750937045L;
 	private static final Log log = LogFactory.getLog(APIStoreHostObject.class);
     private static final String hostObjectName = "APIStore";
-    private static SubscriberKeyMgtClient keyMgtClient = null;
     
     private APIConsumer apiConsumer;
     
@@ -59,7 +58,6 @@ public class APIStoreHostObject extends ScriptableObject {
 	// The zero-argument constructor used for create instances for runtime
 	public APIStoreHostObject() throws APIManagementException {
         apiConsumer = APIManagerFactory.getInstance().getAPIConsumer(username);
-        login();
 	}
 
 	// Method jsConstructor defines the JavaScript constructor
@@ -77,6 +75,28 @@ public class APIStoreHostObject extends ScriptableObject {
 
     private static APIConsumer getAPIConsumer(Scriptable thisObj) {
         return ((APIStoreHostObject) thisObj).getApiConsumer();
+    }
+
+    private static SubscriberKeyMgtClient getKeyManagementClient() throws APIManagementException {
+        APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
+        String url = config.getFirstProperty(APIConstants.API_KEY_MANAGER_URL);
+        if (url == null) {
+            throw new APIManagementException("API key manager URL unspecified");
+        }
+
+        String username = config.getFirstProperty(APIConstants.API_KEY_MANAGER_USERNAME);
+        String password = config.getFirstProperty(APIConstants.API_KEY_MANAGER_PASSWORD);
+        if (username == null || password == null) {
+            throw new APIManagementException("Authentication credentials for API key manager " +
+                    "unspecified");
+        }
+
+        try {
+            return new SubscriberKeyMgtClient(url, username, password);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new APIManagementException(e);
+        }
     }
 
 	/*
@@ -117,6 +137,7 @@ public class APIStoreHostObject extends ScriptableObject {
         apiInfo.setVersion((String) args[2]);
         apiInfo.setContext((String) args[3]);
         try {
+            SubscriberKeyMgtClient keyMgtClient = getKeyManagementClient();
             return keyMgtClient.getAccessKey((String) args[5], apiInfo, (String) args[4], (String) args[6]);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -129,7 +150,7 @@ public class APIStoreHostObject extends ScriptableObject {
 	public static String jsFunction_login(Context cx, Scriptable thisObj,
 			Object[] args, Function funObj) throws ScriptException,
 			APIManagementException {
-		login();
+        // TODO: Get rid of this
 		return "" + logStatus;
 	}
 
@@ -151,31 +172,8 @@ public class APIStoreHostObject extends ScriptableObject {
         return "" + logStatus;
 	}
 
-    public static boolean login() throws APIManagementException {
-        APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
-        String username = config.getFirstProperty(APIConstants.API_KEY_MANAGER_USERNAME);
-        String password = config.getFirstProperty(APIConstants.API_KEY_MANAGER_PASSWORD);
-        if (username == null || password == null) {
-            throw new APIManagementException("Authentication credentials for API key manager " +
-                    "unspecified");
-        }
-        return login(username, password);
-    }
-
 	public static boolean login(String userName, String password) throws APIManagementException {
         if (!logStatus) {
-            APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
-            String url = config.getFirstProperty(APIConstants.API_KEY_MANAGER_URL);
-            if (url == null) {
-                throw new APIManagementException("API key manager URL unspecified");
-            }
-
-            try {
-                keyMgtClient = new SubscriberKeyMgtClient(url, userName, password);
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                throw new APIManagementException(e);
-            }
             logStatus = true;
         }
         return logStatus;

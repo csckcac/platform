@@ -1,7 +1,8 @@
 Tryit = new function () {
     var viewurl = "/tryit/tryit.jag";
     this.call = function () {
-        var arg = editAreaLoader.getValue('codeinput');
+        var arg = editor.getValue();
+        console.log('Hii' + arg);
         var qString = $('#qString').val();
         var htmlResult;
         TryitUtil.makePost(viewurl,
@@ -15,7 +16,7 @@ Tryit = new function () {
     };
     this.test = function () {
 
-        var xx = editAreaLoader.getValue('codeinput');
+        var xx = editor.getValue();
         console.log(xx + 'Hii' + arg);
         $('#output').html('<p>out' + arg + '</p>');
         return arg;

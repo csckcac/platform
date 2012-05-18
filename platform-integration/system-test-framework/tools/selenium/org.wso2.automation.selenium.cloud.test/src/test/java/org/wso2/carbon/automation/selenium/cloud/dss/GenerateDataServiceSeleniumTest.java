@@ -141,6 +141,9 @@ public class GenerateDataServiceSeleniumTest {
                 break;
             }
         }
+        if(driver.findElement(By.id("content-table")).findElements(By.id("Employees")).size() == 0){
+            Assert.fail("Employees tables not found in Select The Table page to Select for Data Service. data Service Generating failed");
+        }
         driver.findElement(By.id("content-table")).findElement(By.linkText("Select none")).click();
         Thread.sleep(2000);
         driver.findElement(By.id("content-table")).findElement(By.id("Employees")).click();

@@ -43,7 +43,10 @@
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>wso2stratos-mb-${pom.version}</outputDirectory>
-            <includes>
+            <excludes>
+                <exclude>**/wso2server.sh</exclude>     
+            </excludes>
+			<includes>
                 <include>**/*.sh</include>
                 <include>**/native/*</include>
             </includes>
@@ -68,7 +71,7 @@
 
         <fileSet>
            <directory>../../p2-profile/product/target/wso2carbon-core-${carbon.version}/repository/conf/etc/</directory>
-           <outputDirectory>wso2mb-${pom.version}/repository/conf/etc</outputDirectory>
+           <outputDirectory>wso2stratos-mb-${pom.version}/repository/conf/etc</outputDirectory>
            <includes>
                <include>**/cassandra.yaml</include>
            </includes>
@@ -76,8 +79,17 @@
 
 		<!-- copy the landing page webapp -->
         <fileSet>
-			<directory>lib/home</directory>
-			<outputDirectory>wso2stratos-mb-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
+		<directory>lib/home</directory>
+		<outputDirectory>wso2stratos-mb-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>
+                ../../p2-profile/product/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/
+            </directory>
+            <outputDirectory>wso2stratos-mb-${pom.version}/dbscripts/identity</outputDirectory>
+            <includes>
+                <include>**/h2.sql</include>
+            </includes>
         </fileSet>
     </fileSets>
 
@@ -99,17 +111,21 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
-            </source>
+            <source>src/main/conf/event-broker.xml</source>
             <outputDirectory>wso2stratos-mb-${pom.version}/repository/conf</outputDirectory>
         </file>
-          <!--file>
-            <source>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/messagebox-config.xml
-            </source>
-            <outputDirectory>wso2stratos-mb-${pom.version}/repository/conf</outputDirectory>
-        </file-->
+         <file>
+            <source>src/main/resources/wso2server.sh</source>
+            <outputDirectory>wso2stratos-mb-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>755</fileMode>
+        </file>
+         <file>
+            <source>src/main/resources/wso2server.bat</source>
+            <outputDirectory>wso2stratos-mb-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>755</fileMode>
+        </file>
         <file>
             <source>../../../LICENSE.txt</source>
             <outputDirectory>wso2stratos-mb-${pom.version}</outputDirectory>
@@ -128,6 +144,12 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <!--<file>
+            <source>../../distribution/product/target/repository/database/WSO2CARBON_DB.h2.db</source>
+            <outputDirectory>wso2am-${pom.version}/repository/database</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>666</fileMode>
+        </file>-->
         <file>
             <source>../../../docs/xdoc/release-notes.xml</source>
             <outputDirectory>wso2stratos-mb-${pom.version}</outputDirectory>
@@ -163,6 +185,10 @@
         </file>
         <file>
              <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml</source>
+	     <outputDirectory>wso2stratos-mb-${pom.version}/repository/conf/</outputDirectory>
+        </file>
+        <file>
+             <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/identity.xml</source>
 	     <outputDirectory>wso2stratos-mb-${pom.version}/repository/conf/</outputDirectory>
         </file>
         <file>

@@ -35,7 +35,7 @@ public class CustomProxyTest {
 
     private static final Log log = LogFactory.getLog(CustomProxyTest.class);
 
-    @Test(groups = {"wso2.esb"}, description = "Invoke custom proxy service")
+    @Test(groups = {"wso2.esb"}, description = "Invoke custom proxy service", enabled = false)
     public void testCustomProxy() throws Exception {
         String payload = createPayLoad().toString();
         EnvironmentBuilder builder = new EnvironmentBuilder().esb(2).as(2);
@@ -49,7 +49,7 @@ public class CustomProxyTest {
         log.info("Waiting for EPR " + eprAxis2service);
         String operation = ("echoInt");
         AxisServiceClientUtils.waitForServiceDeployment(eprAxis2service);
-        Thread.sleep(40000);
+        Thread.sleep(120000);
         AxisServiceClientUtils.waitForServiceDeployment(eprDemoProxy);
         AxisServiceClientUtils.sendRequest(eprDemoProxy, operation, payload, 1, expectedOutput, true);
     }

@@ -31,6 +31,7 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.governance.notifications.worklist.stub.WorkListServiceStub;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.*;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.*;
+import org.wso2.carbon.registry.common.eventing.WorkListConfig;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.user.mgt.stub.GetAllRolesNamesUserAdminExceptionException;
 import org.wso2.carbon.user.mgt.stub.GetUserStoreInfoUserAdminExceptionException;
@@ -53,16 +54,14 @@ public class HumanTaskClient {
     private UserAdminStub umStub;
     private WorkListServiceStub wlStub;
 
-    //TODO: Create static initializer for these
-    private static final String SERVER_URL = null;
-    private static final String USERNAME = null;
-    private static final String PASSWORD = null;
+    private static WorkListConfig workListConfig = new WorkListConfig();
 
     public HumanTaskClient(ServletConfig config, HttpSession session) throws AxisFault {
         ConfigurationContext configContext =
                 (ConfigurationContext) config.getServletContext().getAttribute(
                         CarbonConstants.CONFIGURATION_CONTEXT);
-        String backendServerURL = SERVER_URL != null ? SERVER_URL :
+        String backendServerURL =
+                workListConfig.getServerURL() != null ? workListConfig.getServerURL() :
                 CarbonUIUtil.getServerURL(config.getServletContext(), session);
 
         htStub = new TaskOperationsStub(configContext, backendServerURL + "taskOperations");
@@ -79,8 +78,9 @@ public class HumanTaskClient {
         ServiceClient client;Options options;
         client = stub._getServiceClient();
         options = client.getOptions();
-        if (USERNAME != null && PASSWORD != null) {
-            CarbonUtils.setBasicAccessSecurityHeaders("admin", "admin", client);
+        if (workListConfig.getUsername() != null && workListConfig.getPassword() != null) {
+            CarbonUtils.setBasicAccessSecurityHeaders(workListConfig.getUsername(),
+                    workListConfig.getPassword(), client);
         } else {
             options.setProperty(HTTPConstants.COOKIE_STRING,
                     session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE));

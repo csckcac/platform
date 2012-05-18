@@ -47,6 +47,7 @@ import org.wso2.carbon.registry.eventing.handlers.erbsm.EmbeddedRegistryBasedSub
 import org.wso2.carbon.registry.eventing.exceptions.ActivationException;
 import org.wso2.carbon.registry.app.RemoteRegistryService;
 import org.wso2.carbon.registry.common.eventing.NotificationService;
+import org.wso2.carbon.registry.extensions.jmx.Notifications;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.NetworkUtils;
@@ -74,6 +75,9 @@ import java.net.SocketException;
  * interface="org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber"
  * cardinality="1..1" policy="dynamic"
  * bind="setEmailVerificationSubscriber" unbind="unsetEmailVerificationSubscriber"
+ * @scr.reference name="registry.notifications.jmx.service"
+ * interface="org.wso2.carbon.registry.extensions.jmx.Notifications" cardinality="0..1"
+ * policy="dynamic" bind="setNotifications" unbind="unsetNotifications"
  */
 public class RegistryEventingServiceComponent {
 
@@ -230,6 +234,17 @@ public class RegistryEventingServiceComponent {
         this.listenerManager = listenerManager;
         //initialize();
         //registerEventingService();
+    }
+
+    protected void setNotifications(Notifications notifications) {
+        JMXNotificationsBean implBean = new JMXNotificationsBean();
+        notifications.setImplBean(implBean);
+        Utils.setNotificationsBean(implBean);
+    }
+
+    protected void unsetNotifications(Notifications notifications) {
+        Utils.setNotificationsBean(null);
+        notifications.setImplBean(null);
     }
 
     protected void unsetListenerManager(ListenerManager listenerManager) {

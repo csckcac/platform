@@ -69,6 +69,7 @@ public class RegistryJMXServiceComponent {
                 registerMBean(context, new Properties(registryService.getRegistry(
                         CarbonConstants.REGISTRY_SYSTEM_USERNAME)),
                         PropertiesMBean.class.getName());
+                registerMBean(context, new Notifications(), Notifications.class.getName());
             } catch (JMException e) {
                 log.error("Unable to register JMX extensions", e);
             } catch (RegistryException e) {

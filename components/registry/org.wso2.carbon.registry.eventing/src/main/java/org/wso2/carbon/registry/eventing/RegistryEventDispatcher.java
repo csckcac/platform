@@ -31,6 +31,7 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.base.BaseConstants;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.transport.mail.MailConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,15 +39,23 @@ import org.wso2.carbon.event.core.Message;
 import org.wso2.carbon.event.core.subscription.Subscription;
 import org.wso2.carbon.event.ws.internal.notify.WSEventDispatcher;
 import org.wso2.carbon.event.ws.internal.util.EventingConstants;
+import org.wso2.carbon.governance.notifications.worklist.stub.WorkListServiceStub;
 import org.wso2.carbon.registry.common.eventing.RegistryEvent;
+import org.wso2.carbon.registry.common.eventing.WorkListConfig;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.eventing.events.DispatchEvent;
+import org.wso2.carbon.registry.eventing.internal.JMXNotificationsBean;
 import org.wso2.carbon.registry.eventing.internal.Utils;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserStoreManager;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.ServerConstants;
 
 import javax.xml.namespace.QName;
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
@@ -55,11 +64,17 @@ import java.util.concurrent.TimeUnit;
 
 public class RegistryEventDispatcher extends WSEventDispatcher {
 
+    private static final SimpleDateFormat EVENT_TIME =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    private static final SimpleDateFormat NOTIFICATION_TIME =
+            new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss,SSS]");
     private ConfigurationContext configContext = null;
 
     private Map<String, Queue<DigestEntry>> digestQueues;
 
     private static final Log log = LogFactory.getLog(RegistryEventDispatcher.class);
+
+    private static WorkListConfig workListConfig = new WorkListConfig();
 
     public static final class DigestEntry implements Serializable {
 
@@ -300,10 +315,46 @@ public class RegistryEventDispatcher extends WSEventDispatcher {
                 publishEvent(event, subscription, email, true);
             }
         } else if (endpoint.toLowerCase().startsWith("jmx://")) {
-            log.info("Sending Notification to JMX endpoint");
+            log.debug("Sending Notification to JMX endpoint");
+            JMXNotificationsBean notificationsBean = Utils.getNotificationsBean();
+            if (notificationsBean == null) {
+                log.warn("Unable to generate notification. The notification bean has not been " +
+                        "registered.");
+            }
+            OMElement message = event.getMessage();
+            OMElement firstElement = message.getFirstElement();
+            String namespaceURI = firstElement.getNamespace().getNamespaceURI();
+            OMElement timestamp = message.getFirstChildWithName(new QName(namespaceURI,
+                    "Timestamp"));
+            String time = "";
+            if (timestamp != null) {
+                try {
+                    time = NOTIFICATION_TIME.format(EVENT_TIME.parse(timestamp.getText())) + " ";
+                } catch (ParseException ignore) {
+                    time = timestamp.getText() + ": ";
+                }
+            }
+            notificationsBean.addNotification(time + firstElement.getText());
         } else if (endpoint.toLowerCase().startsWith("work://")) {
-            String roleName = endpoint.substring(7);
-            log.info("Sending Notification to work-list");
+            log.debug("Sending Notification to work-list");
+            try {
+                if (workListConfig.getServerURL() != null && workListConfig.getUsername() != null
+                        && workListConfig.getPassword() != null) {
+                    WorkListServiceStub stub = new WorkListServiceStub(configContext,
+                            workListConfig.getServerURL() + "WorkListService");
+                    ServiceClient client = stub._getServiceClient();
+                    CarbonUtils.setBasicAccessSecurityHeaders(workListConfig.getUsername(),
+                            workListConfig.getPassword(), client);
+                    client.getOptions().setManageSession(true);
+                    stub.addTask(endpoint.substring(7),
+                            event.getMessage().getFirstElement().getText(), 5);
+                } else {
+                    log.warn("Unable to generate notification. The work list config has not been " +
+                            "setup.");
+                }
+            } catch (RemoteException e) {
+                log.error("Failed Sending Notification to work-list", e);
+            }
         } else {
             log.debug("Sending Notification to: " + endpoint);
             publishEvent(event, subscription, endpoint, doRest);

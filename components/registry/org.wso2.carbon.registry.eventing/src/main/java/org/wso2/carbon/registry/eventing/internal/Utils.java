@@ -41,6 +41,8 @@ public class Utils {
 
     private static EmailVerifierConfig emailVerifierConfig = null;
 
+    private static JMXNotificationsBean notificationsBean;
+
     public static synchronized void setRegistryService(RegistryService service) {
         registryService = service;
     }
@@ -96,5 +98,13 @@ public class Utils {
 
     public static void setEmailVerifierConfig(EmailVerifierConfig emailVerifierConfig) {
         Utils.emailVerifierConfig = emailVerifierConfig;
+    }
+
+    public static JMXNotificationsBean getNotificationsBean() {
+        return notificationsBean;
+    }
+
+    public static void setNotificationsBean(JMXNotificationsBean notificationsBean) {
+        Utils.notificationsBean = notificationsBean;
     }
 }

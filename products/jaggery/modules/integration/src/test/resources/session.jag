@@ -1,0 +1,5 @@
+<%
+	session.put("wso2", "test session value");
+
+	print(session.get("wso2"));
+%>

@@ -113,6 +113,24 @@ public class JaggeryTestServerManager extends TestServerManager {
     	sourcePath = computeSourcePath(fileName);
     	destinationPath = computeDestPath(carbonHome, fileName);
         copySampleFile(sourcePath, destinationPath);
+        
+        //response object
+    	fileName = "response.jag";
+    	sourcePath = computeSourcePath(fileName);
+    	destinationPath = computeDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //session object
+    	fileName = "session.jag";
+    	sourcePath = computeSourcePath(fileName);
+    	destinationPath = computeDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //application object
+    	fileName = "application.jag";
+    	sourcePath = computeSourcePath(fileName);
+    	destinationPath = computeDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
     }
 
     private void copySampleFile(String sourcePath, String destPath) {

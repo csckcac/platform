@@ -39,13 +39,7 @@ import org.wso2.carbon.bam.presentation.stub.QueryServiceStub;
 import javax.xml.namespace.QName;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class APIMgtUsageQueryServiceClient {
 
@@ -121,7 +115,12 @@ public class APIMgtUsageQueryServiceClient {
         Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
         for (String version : versions) {
             Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,version);
+            Map<String,Subscriber> subscriberMap = new HashMap<String, Subscriber>();
+            // Make sure the subscribers passed down from here are unique by name
             for (Subscriber subscriber : subscribers) {
+                subscriberMap.put(subscriber.getName(), subscriber);
+            }
+            for (Subscriber subscriber : subscriberMap.values()) {
                 subscribedAPIs.addAll(this.getSubscribedIdentifiers(subscriber, providerName, apiName, version));
             }
         }
@@ -171,7 +170,12 @@ public class APIMgtUsageQueryServiceClient {
         Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
         for(String version:versions){
             Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,version);
-            for(Subscriber subscriber:subscribers){
+            Map<String,Subscriber> subscriberMap = new HashMap<String, Subscriber>();
+            // Make sure the subscribers passed down from here are unique by name
+            for (Subscriber subscriber : subscribers) {
+                subscriberMap.put(subscriber.getName(), subscriber);
+            }
+            for(Subscriber subscriber:subscriberMap.values()){
                 subscribedAPIs.addAll(this.getSubscribedIdentifiers(subscriber, providerName, apiName, version));
             }
         }
@@ -253,21 +257,50 @@ public class APIMgtUsageQueryServiceClient {
             Set<String> versions = this.getAPIVersions(providerName,apiName);
             for(String version:versions){
                 Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,version);
-                for(Subscriber subscriber:subscribers){
+                // Make sure the subscribers passed down from here are unique by name
+                Map<String,Subscriber> subscriberMap = new HashMap<String, Subscriber>();
+                for (Subscriber subscriber : subscribers) {
+                    subscriberMap.put(subscriber.getName(), subscriber);
+                }
+                for(Subscriber subscriber:subscriberMap.values()){
                     subscribedAPIs.addAll(this.getSubscribedIdentifiers(subscriber,providerName,apiName,version));
                 }
             }
         }
+        
+        Map<String,Double> lastAccessTimes = new HashMap<String, Double>();
         for (SubscribedAPI subscribedAPI:subscribedAPIs) {
             OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
             Iterator oMElementIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
             while(oMElementIterator.hasNext()){
                 OMElement row = (OMElement)oMElementIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText().equals(subscribedAPI.getApiId().getApiName()+":v"+subscribedAPI.getApiId().getVersion()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(getProductionKey(subscribedAPI))){
-                    result.add(new ProviderAPIVersionUserLastAccessDTO(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText(), subscribedAPI.getSubscriber().getName(),(new SimpleDateFormat()).format(Double.parseDouble(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST_TIME)).getText()))));
-                    break;
+                String key = subscribedAPI.getApiId().getApiName() + ":" +
+                        subscribedAPI.getApiId().getVersion() + ":" +
+                        subscribedAPI.getSubscriber().getName();
+                if (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText().equals(
+                        subscribedAPI.getApiId().getApiName()+":v"+subscribedAPI.getApiId().getVersion()) &&
+                        row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(
+                                getProductionKey(subscribedAPI))) {
+                    if (lastAccessTimes.containsKey(key)) {
+                        Double date = lastAccessTimes.get(key);
+                        Double current = Double.parseDouble(row.getFirstChildWithName(
+                                new QName(APIMgtUsageQueryServiceClientConstants.REQUEST_TIME)).getText());
+                        if (current > date) {
+                            lastAccessTimes.put(key, current);
+                        }
+                    } else {
+                        lastAccessTimes.put(key, Double.parseDouble(row.getFirstChildWithName(
+                                new QName(APIMgtUsageQueryServiceClientConstants.REQUEST_TIME)).getText()));
+                    }
                 }
             }
+        }
+        
+        for (Map.Entry<String,Double> accessTime : lastAccessTimes.entrySet()) {
+            String[] keySegments = accessTime.getKey().split(":");
+            result.add(new ProviderAPIVersionUserLastAccessDTO(keySegments[1],
+                    keySegments[2],
+                    new SimpleDateFormat().format(accessTime.getValue())));
         }
         return result;
     }

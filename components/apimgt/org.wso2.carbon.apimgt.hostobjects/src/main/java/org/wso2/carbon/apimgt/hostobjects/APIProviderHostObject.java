@@ -207,7 +207,7 @@ public class APIProviderHostObject extends ScriptableObject {
             success = true;
 
         } catch (APIManagementException e) {
-            log.error("Error from registry while adding the API: " + name + "-" + version, e);
+            log.error("Error while adding the API: " + name + "-" + version, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -301,18 +301,19 @@ public class APIProviderHostObject extends ScriptableObject {
             apiProvider.updateAPI(api);
             success = true;
         } catch (APIManagementException e) {
-            log.error("Error from registry while updating the API :" + name + "-" + version, e);
+            log.error("Error while updating the API: " + name + "-" + version, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         return success;
     }
 
-    private static void checkFileSize(FileHostObject fileHostObject) throws ScriptException, Exception {
+    private static void checkFileSize(FileHostObject fileHostObject)
+            throws ScriptException, APIManagementException {
         if (fileHostObject != null) {
             long length = fileHostObject.getJavaScriptFile().getLength();
             if (length / 1024.0 > 1024) {
-                throw new Exception("Image file exceeds the maximum limit of 1MB");
+                throw new APIManagementException("Image file exceeds the maximum limit of 1MB");
             }
         }
     }
@@ -344,10 +345,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIProvider apiProvider = getAPIProvider(thisObj);
         try {
             API api = apiProvider.getAPI(apiId);
-            Set<Subscriber> subs = apiProvider.getSubscribersOfAPI(apiId);
-
             Set<URITemplate> uriTemplates = api.getUriTemplates();
-
             myn.put(0, myn, checkValue(api.getId().getApiName()));
             myn.put(1, myn, checkValue(api.getDescription()));
             myn.put(2, myn, checkValue(api.getUrl()));
@@ -366,7 +364,7 @@ public class APIProviderHostObject extends ScriptableObject {
             myn.put(8, myn, api.getThumbnailUrl());
             myn.put(9, myn, api.getContext());
             myn.put(10, myn, checkValue(api.getLastUpdated().toString()));
-            myn.put(11, myn, subs.size());
+            myn.put(11, myn, getSubscriberCount(apiId, apiProvider));
 
             if (uriTemplates.size() != 0) {
                 NativeArray uriTempArr = new NativeArray(uriTemplates.size());
@@ -398,6 +396,15 @@ public class APIProviderHostObject extends ScriptableObject {
             log.error(e.getMessage(), e);
         }
         return myn;
+    }
+    
+    private static int getSubscriberCount(APIIdentifier apiId, APIProvider apiProvider) throws APIManagementException {
+        Set<Subscriber> subs = apiProvider.getSubscribersOfAPI(apiId);
+        Set<String> subscriberNames = new HashSet<String>();
+        for (Subscriber sub : subs) {
+            subscriberNames.add(sub.getName());
+        }
+        return subscriberNames.size();
     }
 
     /**
@@ -433,8 +440,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     row.put("version", row, apiIdentifier.getVersion());
                     row.put("status", row, checkValue(api.getStatus().toString()));
                     row.put("thumb", row, api.getThumbnailUrl());
-                    row.put("subs", row, apiProvider.getSubscribersOfAPI(api.getId()).size());
-
+                    row.put("subs", row, getSubscriberCount(apiIdentifier, apiProvider));
                     myn.put(i, myn, row);
                     i++;
                 }
@@ -829,7 +835,7 @@ public class APIProviderHostObject extends ScriptableObject {
         List<ProviderAPIVersionUsageDTO> list = null;
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
-            list = client.getProviderAPIVersionUsage(providerName,APIname);
+            list = client.getProviderAPIVersionUsage(providerName, APIname);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIVersionUsage", e);
         }

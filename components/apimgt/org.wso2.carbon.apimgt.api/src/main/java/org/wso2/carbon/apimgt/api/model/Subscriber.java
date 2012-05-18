@@ -28,10 +28,6 @@ import java.util.Date;
 @SuppressWarnings("unused")
 public class Subscriber {
 
-    public Subscriber(String name) {
-        this.name = name;
-    }
-
     private String name;
     private String description;
     private Date subscribedDate;
@@ -39,6 +35,9 @@ public class Subscriber {
     private int tenantId;
     private String email;
 
+    public Subscriber(String name) {
+        this.name = name;
+    }
 
     public Date getSubscribedDate() {
         return subscribedDate;

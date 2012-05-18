@@ -31,4 +31,4 @@ rem %~sdp0 is expanded pathname of the current script under NT with spaces in th
 if "%JAGGERY_HOME%"=="" set JAGGERY_HOME=%~sdp0..
 set agra=%1
 set agrb=%2
-Call %JAGGERY_HOME%\carbon\bin\wso2server.bat %agra% %agrb% 
+Call %JAGGERY_HOME%\carbon\bin\wso2server.bat %*

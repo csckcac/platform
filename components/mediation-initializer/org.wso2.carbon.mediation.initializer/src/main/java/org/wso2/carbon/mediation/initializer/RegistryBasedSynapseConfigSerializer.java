@@ -29,12 +29,16 @@ import org.apache.synapse.core.axis2.ProxyService;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.synapse.eventing.SynapseEventSource;
 import org.apache.synapse.mediators.base.SequenceMediator;
+import org.apache.synapse.message.processors.MessageProcessor;
+import org.apache.synapse.message.store.MessageStore;
 import org.apache.synapse.registry.Registry;
 import org.wso2.carbon.mediation.initializer.persistence.registry.*;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
 import org.wso2.carbon.registry.core.RegistryConstants;
+
+import java.util.Map;
 
 /**
  * Serializes the {@link org.apache.synapse.config.SynapseConfiguration} to a registry space,
@@ -122,6 +126,17 @@ public class RegistryBasedSynapseConfigSerializer {
             for (Startup startup : configuration.getStartups()) {
                 serializeStartupToRegistry(startup);
             }
+
+            for (Map.Entry<String, MessageStore> store :
+                    configuration.getMessageStores().entrySet()) {
+                serializeMessageStoreToRegistry(store.getValue());
+            }
+
+            for (Map.Entry<String, MessageProcessor> processor :
+                    configuration.getMessageProcessors().entrySet()){
+                serializeMessageProcessorToRegistry(processor.getValue());
+            }
+
 
             for (Object o : configuration.getLocalRegistry().values()) {
 
@@ -222,6 +237,27 @@ public class RegistryBasedSynapseConfigSerializer {
                 new StartupRegistryStore(registry, configName);
         startupStore.persistElement(startup.getName(), StartupFinder.getInstance()
                 .serializeStartup(null, startup), startup.getFileName());
+    }
+
+    private void serializeMessageStoreToRegistry(MessageStore messageStore) {
+        if (log.isDebugEnabled()) {
+            log.debug("Persisting the message store '" + messageStore.getName() + "'");
+        }
+        MessageStoreRegistryStore messageStoreRegistryStore =
+                new MessageStoreRegistryStore(registry, configName);
+        messageStoreRegistryStore.persistElement(messageStore.getName(), MessageStoreSerializer.
+                serializeMessageStore(null, messageStore), messageStore.getFileName());
+    }
+
+    private void serializeMessageProcessorToRegistry(MessageProcessor messageProcessor) {
+        if (log.isDebugEnabled()) {
+            log.debug("Persisting the message processor '" + messageProcessor.getName() + "'");
+        }
+        MessageProcessorRegistryStore messageProcessorRegistryStore =
+                new MessageProcessorRegistryStore(registry, configName);
+        messageProcessorRegistryStore.persistElement(messageProcessor.getName(),
+                MessageProcessorSerializer.serializeMessageProcessor(null, messageProcessor),
+                messageProcessor.getFileName());
     }
 
     private void clearSynapseConfigRegistrySpace() {

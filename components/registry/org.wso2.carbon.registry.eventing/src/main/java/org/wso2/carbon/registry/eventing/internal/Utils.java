@@ -41,7 +41,7 @@ public class Utils {
 
     private static EmailVerifierConfig emailVerifierConfig = null;
 
-    private static JMXNotificationsBean notificationsBean;
+    private static JMXEventsBean eventsBean;
 
     public static synchronized void setRegistryService(RegistryService service) {
         registryService = service;
@@ -100,11 +100,11 @@ public class Utils {
         Utils.emailVerifierConfig = emailVerifierConfig;
     }
 
-    public static JMXNotificationsBean getNotificationsBean() {
-        return notificationsBean;
+    public static JMXEventsBean getEventsBean() {
+        return eventsBean;
     }
 
-    public static void setNotificationsBean(JMXNotificationsBean notificationsBean) {
-        Utils.notificationsBean = notificationsBean;
+    public static void setEventsBean(JMXEventsBean eventsBean) {
+        Utils.eventsBean = eventsBean;
     }
 }

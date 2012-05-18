@@ -24,7 +24,7 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.event.core.exception.EventBrokerException;
 import org.wso2.carbon.event.core.subscription.Subscription;
-import org.wso2.carbon.registry.admin.api.jmx.IEventingService;
+import org.wso2.carbon.registry.admin.api.jmx.ISubscriptionsService;
 import org.wso2.carbon.registry.common.beans.SubscriptionBean;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -32,7 +32,7 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.eventing.services.EventingService;
 import org.wso2.carbon.registry.eventing.services.SubscriptionEmailVerficationService;
-import org.wso2.carbon.registry.extensions.jmx.Eventing;
+import org.wso2.carbon.registry.extensions.jmx.Subscriptions;
 import org.wso2.carbon.registry.info.Utils;
 import org.wso2.carbon.registry.info.services.utils.SubscriptionBeanPopulator;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -50,9 +50,9 @@ import java.util.*;
  * @scr.reference name="registry.subscription.email.verification.service"
  * interface="org.wso2.carbon.registry.eventing.services.SubscriptionEmailVerficationService" cardinality="0..1"
  * policy="dynamic" bind="setSubscriptionEmailVerficationService" unbind="unsetSubscriptionEmailVerficationService"
- * @scr.reference name="registry.eventing.jmx.service"
- * interface="org.wso2.carbon.registry.extensions.jmx.Eventing" cardinality="0..1"
- * policy="dynamic" bind="setEventing" unbind="unsetEventing"
+ * @scr.reference name="registry.subscriptions.jmx.service"
+ * interface="org.wso2.carbon.registry.extensions.jmx.Subscriptions" cardinality="0..1"
+ * policy="dynamic" bind="setSubscriptions" unbind="unsetSubscriptions"
  */
 public class RegistryMgtUIInfoServiceComponent {
 
@@ -83,8 +83,8 @@ public class RegistryMgtUIInfoServiceComponent {
         Utils.setRegistryService(null);
     }
 
-    protected void setEventing(Eventing eventing) {
-        eventing.setImplBean(new IEventingService() {
+    protected void setSubscriptions(Subscriptions eventing) {
+        eventing.setImplBean(new ISubscriptionsService() {
             private String[] eventNames = null;
 
             public String subscribe(String endpoint, boolean isRestEndpoint, String path,
@@ -144,7 +144,7 @@ public class RegistryMgtUIInfoServiceComponent {
                 return eventNames;
             }
 
-            public String[] getAllSubscriptions() {
+            public String[] getList() {
                 List<String> output = new LinkedList<String>();
                 SuperTenantCarbonContext.startTenantFlow();
                 try {
@@ -166,7 +166,7 @@ public class RegistryMgtUIInfoServiceComponent {
         });
     }
 
-    protected void unsetEventing(Eventing eventing) {
+    protected void unsetSubscriptions(Subscriptions eventing) {
         eventing.setImplBean(null);
     }
 

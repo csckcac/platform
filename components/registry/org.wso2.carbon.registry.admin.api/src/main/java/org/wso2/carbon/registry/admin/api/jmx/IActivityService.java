@@ -46,6 +46,6 @@ public interface IActivityService {
      *
      * @return list of activities.
      */
-    String[] getAllActivities();
+    String[] getList();
 
 }

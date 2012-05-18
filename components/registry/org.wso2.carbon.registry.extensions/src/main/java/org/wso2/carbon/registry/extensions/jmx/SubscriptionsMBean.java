@@ -16,26 +16,15 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.registry.eventing.internal;
+package org.wso2.carbon.registry.extensions.jmx;
 
-import org.wso2.carbon.registry.admin.api.jmx.INotificationsService;
+import org.wso2.carbon.registry.admin.api.jmx.ISubscriptionsService;
 
-import java.util.LinkedList;
-import java.util.Queue;
+/**
+ * This interface is created to avoid a typical JMX bean registration issue where the interface and
+ * the implementation needs to be in the same package. The documentation is found in the base
+ * interface.
+ */
+public interface SubscriptionsMBean extends ISubscriptionsService {
 
-public class JMXNotificationsBean implements INotificationsService {
-
-    private volatile Queue<String> notifications = new LinkedList<String>();
-
-    public void addNotification(String notification) {
-        notifications.add(notification);
-    }
-
-    public String[] getAllNotifications() {
-        return notifications.toArray(new String[notifications.size()]);
-    }
-
-    public void clearAllNotifications() {
-        notifications = new LinkedList<String>();
-    }
 }

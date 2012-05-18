@@ -16,23 +16,23 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.registry.extensions.jmx;
+package org.wso2.carbon.registry.admin.api.jmx;
 
-import org.wso2.carbon.registry.admin.api.jmx.INotificationsService;
+/**
+ * Method to manage JMX notifications.
+ */
+public interface IEventsService {
 
-public class Notifications implements NotificationsMBean {
+    /**
+     * Method to retrieve all notifications.
+     *
+     * @return list of notifications.
+     */
+    String[] getList();
 
-    private INotificationsService implBean;
+    /**
+     * Clears list of all notifications.
+     */
+    void clearAll();
 
-    public void setImplBean(INotificationsService implBean) {
-        this.implBean = implBean;
-    }
-
-    public String[] getAllNotifications() {
-        return implBean.getAllNotifications();
-    }
-
-    public void clearAllNotifications() {
-        implBean.clearAllNotifications();
-    }
 }

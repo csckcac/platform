@@ -47,7 +47,7 @@ import org.wso2.carbon.registry.eventing.handlers.erbsm.EmbeddedRegistryBasedSub
 import org.wso2.carbon.registry.eventing.exceptions.ActivationException;
 import org.wso2.carbon.registry.app.RemoteRegistryService;
 import org.wso2.carbon.registry.common.eventing.NotificationService;
-import org.wso2.carbon.registry.extensions.jmx.Notifications;
+import org.wso2.carbon.registry.extensions.jmx.Events;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.NetworkUtils;
@@ -75,9 +75,9 @@ import java.net.SocketException;
  * interface="org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber"
  * cardinality="1..1" policy="dynamic"
  * bind="setEmailVerificationSubscriber" unbind="unsetEmailVerificationSubscriber"
- * @scr.reference name="registry.notifications.jmx.service"
- * interface="org.wso2.carbon.registry.extensions.jmx.Notifications" cardinality="0..1"
- * policy="dynamic" bind="setNotifications" unbind="unsetNotifications"
+ * @scr.reference name="registry.events.jmx.service"
+ * interface="org.wso2.carbon.registry.extensions.jmx.Events" cardinality="0..1"
+ * policy="dynamic" bind="setEvents" unbind="unsetEvents"
  */
 public class RegistryEventingServiceComponent {
 
@@ -236,14 +236,14 @@ public class RegistryEventingServiceComponent {
         //registerEventingService();
     }
 
-    protected void setNotifications(Notifications notifications) {
-        JMXNotificationsBean implBean = new JMXNotificationsBean();
+    protected void setEvents(Events notifications) {
+        JMXEventsBean implBean = new JMXEventsBean();
         notifications.setImplBean(implBean);
-        Utils.setNotificationsBean(implBean);
+        Utils.setEventsBean(implBean);
     }
 
-    protected void unsetNotifications(Notifications notifications) {
-        Utils.setNotificationsBean(null);
+    protected void unsetEvents(Events notifications) {
+        Utils.setEventsBean(null);
         notifications.setImplBean(null);
     }
 

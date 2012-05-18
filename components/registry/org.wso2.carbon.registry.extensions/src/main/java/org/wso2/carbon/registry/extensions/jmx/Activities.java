@@ -46,7 +46,7 @@ public class Activities implements ActivitiesMBean {
         return getActivities(path, null);
     }
 
-    public String[] getAllActivities() {
+    public String[] getList() {
         return getActivities(null, null);
     }
 

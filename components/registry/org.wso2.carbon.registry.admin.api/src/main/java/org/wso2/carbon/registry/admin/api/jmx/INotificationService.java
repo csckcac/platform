@@ -16,15 +16,30 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.registry.extensions.jmx;
+package org.wso2.carbon.registry.admin.api.jmx;
 
-import org.wso2.carbon.registry.admin.api.jmx.INotificationsService;
+import javax.management.NotificationBroadcasterSupport;
+import java.util.Date;
 
 /**
- * This interface is created to avoid a typical JMX bean registration issue where the interface and
- * the implementation needs to be in the same package. The documentation is found in the base
- * interface.
+ * Extended API for handling notifications.
  */
-public interface NotificationsMBean extends INotificationsService {
+public interface INotificationService extends IEventsService {
+
+    /**
+     * Method to create a notification.
+     *
+     * @param timestamp    the timestamp
+     * @param notification the message.
+     */
+    void addNotification(Date timestamp, String notification);
+
+    /**
+     * Registers a JMX broadcaster.
+     *
+     * @param broadcaster the broadcaster.
+     * @param event       the type of event.
+     */
+    void registerBroadcaster(NotificationBroadcasterSupport broadcaster, String event);
 
 }

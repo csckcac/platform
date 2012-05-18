@@ -18,13 +18,13 @@
  */
 package org.wso2.carbon.registry.extensions.jmx;
 
-import org.wso2.carbon.registry.admin.api.jmx.IEventingService;
+import org.wso2.carbon.registry.admin.api.jmx.ISubscriptionsService;
 
-public class Eventing implements EventingMBean {
+public class Subscriptions implements SubscriptionsMBean {
 
-    private IEventingService implBean;
+    private ISubscriptionsService implBean;
 
-    public void setImplBean(IEventingService implBean) {
+    public void setImplBean(ISubscriptionsService implBean) {
         this.implBean = implBean;
     }
 
@@ -49,10 +49,10 @@ public class Eventing implements EventingMBean {
         return implBean.getEventNames();
     }
 
-    public String[] getAllSubscriptions() {
+    public String[] getList() {
         if (implBean == null) {
             return new String[0];
         }
-        return implBean.getAllSubscriptions();
+        return implBean.getList();
     }
 }

@@ -21,7 +21,7 @@ package org.wso2.carbon.registry.admin.api.jmx;
 /**
  * API methods for performing subscription operations.
  */
-public interface IEventingService {
+public interface ISubscriptionsService {
 
     /**
      * Creates a new subscription.
@@ -54,6 +54,6 @@ public interface IEventingService {
      *
      * @return The list of subscriptions.
      */
-    String[] getAllSubscriptions();
+    String[] getList();
 
 }

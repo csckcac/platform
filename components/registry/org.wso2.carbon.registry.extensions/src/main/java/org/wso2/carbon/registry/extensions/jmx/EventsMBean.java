@@ -18,13 +18,13 @@
  */
 package org.wso2.carbon.registry.extensions.jmx;
 
-import org.wso2.carbon.registry.admin.api.jmx.IEventingService;
+import org.wso2.carbon.registry.admin.api.jmx.IEventsService;
 
 /**
  * This interface is created to avoid a typical JMX bean registration issue where the interface and
  * the implementation needs to be in the same package. The documentation is found in the base
  * interface.
  */
-public interface EventingMBean extends IEventingService {
+public interface EventsMBean extends IEventsService {
 
 }

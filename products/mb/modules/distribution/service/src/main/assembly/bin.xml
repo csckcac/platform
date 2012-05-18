@@ -144,12 +144,6 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <!--<file>
-            <source>../../distribution/product/target/repository/database/WSO2CARBON_DB.h2.db</source>
-            <outputDirectory>wso2am-${pom.version}/repository/database</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>666</fileMode>
-        </file>-->
         <file>
             <source>../../../docs/xdoc/release-notes.xml</source>
             <outputDirectory>wso2stratos-mb-${pom.version}</outputDirectory>

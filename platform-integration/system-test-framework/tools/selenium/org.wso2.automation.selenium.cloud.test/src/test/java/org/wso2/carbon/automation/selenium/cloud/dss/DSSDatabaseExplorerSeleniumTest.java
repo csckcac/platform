@@ -167,7 +167,7 @@ public class DSSDatabaseExplorerSeleniumTest {
 
     @Test(priority = 3)
     public void DatabaseExplorerDatabaseLoginInfoCashing() throws InterruptedException,
-                                                           XMLStreamException {
+                                                                  XMLStreamException {
         driver.switchTo().defaultContent();
         dssServerUI.clickOnTools();
         driver.findElement(By.linkText("Database Explorer")).click();
@@ -194,12 +194,7 @@ public class DSSDatabaseExplorerSeleniumTest {
                 while (inputItr.hasNext()) {
                     OMElement input = inputItr.next();
                     if ("text".equalsIgnoreCase(input.getAttributeValue(new QName("type")))) {
-                        if ("driver".equalsIgnoreCase(input.getAttributeValue(new QName("name")))) {
-                            isDriverTextFound = true;
-                            Assert.assertTrue((input.getAttributeValue(new QName("value")) == null ||
-                                               input.getAttributeValue(new QName("value")).equalsIgnoreCase("")),
-                                              "Critical Security Issue. Driver name cashed in page source");
-                        } else if ("url".equalsIgnoreCase(input.getAttributeValue(new QName("name")))) {
+                        if ("url".equalsIgnoreCase(input.getAttributeValue(new QName("name")))) {
                             isJDBCUrlFound = true;
                             Assert.assertTrue((input.getAttributeValue(new QName("value")) == null ||
                                                input.getAttributeValue(new QName("value")).equalsIgnoreCase("")),
@@ -215,6 +210,11 @@ public class DSSDatabaseExplorerSeleniumTest {
                             Assert.assertTrue((input.getAttributeValue(new QName("value")) == null ||
                                                input.getAttributeValue(new QName("value")).equalsIgnoreCase("")),
                                               "Critical Security Issue. Password cashed in page source");
+                        } else if ("driver".equalsIgnoreCase(input.getAttributeValue(new QName("name")))) {
+                            isDriverTextFound = true;
+                            Assert.assertTrue((input.getAttributeValue(new QName("value")) == null ||
+                                               input.getAttributeValue(new QName("value")).equalsIgnoreCase("")),
+                                              "Critical Security Issue. Driver name cashed in page source");
                         }
                     }
 

@@ -119,19 +119,27 @@ public class APIMgtUsageQueryServiceClient {
         omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_USAGE_SUMMARY_TABLE_INDEX, compositeIndex);
         Set<String> versions = this.getAPIVersions(providerName, apiName);
         Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
-        for(String version:versions){
+        for (String version : versions) {
             Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,version);
-            for(Subscriber subscriber:subscribers){
-                subscribedAPIs = this.getSubscribedIdentifiers(subscriber, providerName, apiName, version);
+            for (Subscriber subscriber : subscribers) {
+                subscribedAPIs.addAll(this.getSubscribedIdentifiers(subscriber, providerName, apiName, version));
             }
         }
-        for(SubscribedAPI subscribedAPI:subscribedAPIs){
-            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-            while(rowIterator.hasNext()){
+
+        for (SubscribedAPI subscribedAPI : subscribedAPIs) {
+            OMElement rowsElement = omElement.getFirstChildWithName(
+                    new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+            Iterator rowIterator = rowsElement.getChildrenWithName(
+                    new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            while (rowIterator.hasNext()){
                 OMElement row = (OMElement)rowIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(subscribedAPI.getApiId().getVersion()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(getProductionKey(subscribedAPI))){
-                    result.add(new ProviderAPIVersionUserUsageDTO(subscribedAPI.getApiId().getVersion(), subscribedAPI.getSubscriber().getName(),String.valueOf((Float.valueOf(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText())).intValue())));
+                if (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).
+                        getText().equals(subscribedAPI.getApiId().getVersion()) &&
+                        row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(getProductionKey(subscribedAPI))){
+                    result.add(new ProviderAPIVersionUserUsageDTO(subscribedAPI.getApiId().getVersion(),
+                            subscribedAPI.getSubscriber().getName(), String.valueOf(
+                            (Float.valueOf(row.getFirstChildWithName(new QName(
+                                    APIMgtUsageQueryServiceClientConstants.REQUEST)).getText())).intValue())));
                     break;
                 }
             }
@@ -164,7 +172,7 @@ public class APIMgtUsageQueryServiceClient {
         for(String version:versions){
             Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,version);
             for(Subscriber subscriber:subscribers){
-                subscribedAPIs = this.getSubscribedIdentifiers(subscriber, providerName, apiName, version);
+                subscribedAPIs.addAll(this.getSubscribedIdentifiers(subscriber, providerName, apiName, version));
             }
         }
         Map<String,Float> userUsageMap = new HashMap<String,Float>();

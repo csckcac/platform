@@ -1,8 +1,8 @@
 $(document).ready(function() {
-    if(($.cookie("tab")!=null)){
-    var tabLink=$.cookie("tab");
-    $('#' + tabLink).tab('show');
-    $.cookie("tab", null);
+    if (($.cookie("tab") != null)) {
+        var tabLink = $.cookie("tab");
+        $('#' + tabLink).tab('show');
+        $.cookie("tab", null);
     }
 
     $('a[data-toggle="tab"]').on('shown', function (e) {
@@ -55,28 +55,28 @@ $(document).ready(function() {
                           if (!json.error) {
                               $('#versionUserChart').empty();
                               $('#versionUserTable').find("tr:gt(0)").remove();
-                              var jsonLength = json.usage.length,version_user_associative_array = [];
-                              for (var n = 0; n < jsonLength; n++) {
-                                  if (!version_user_associative_array.hasOwnProperty(json.usage[n].version)) {
-                                      version_user_associative_array[json.usage[n].version] = new Array();
+                              var user_version_associative_array = new Array();
+                              for (var i = 0; i < json.usage.length; i++) {
+                                  if (!user_version_associative_array.hasOwnProperty(json.usage[i].user)) {
+                                      user_version_associative_array[json.usage[i].user] = new Array();
                                   }
-                                  for (var m = 0; m < json.usage.length; m++) {
-                                      version_user_associative_array[json.usage[m].version][json.usage[m].user] = 0;
+                                  for (var j = 0; j < json.usage.length; j++) {
+                                      user_version_associative_array[json.usage[i].user][json.usage[j].version] = 0;
                                   }
                               }
-                              for (var k = 0; k < json.usage.length; k++) {
-                                  version_user_associative_array[json.usage[k].version][json.usage[k].user] = parseInt(json.usage[k].count);
+                              for (var i = 0; i < json.usage.length; i++) {
+                                  user_version_associative_array[json.usage[i].user][json.usage[i].version] = parseInt(json.usage[i].count);
                               }
 
-                              var data = [];
-                              var ticks = [];
-                              var series = [];
+                              var data = new Array();
+                              var ticks = new Array();
+                              var series = new Array();
 
                               var key;
-                              for (key in version_user_associative_array) {
+                              for (key in user_version_associative_array) {
                                   ticks[ticks.length] = key;
                               }
-                              for (key in version_user_associative_array[ticks[0]]) {
+                              for (key in user_version_associative_array[ticks[0]]) {
                                   series[series.length] = {label:key};
                               }
                               for (var i = 0; i < ticks.length; i++) {
@@ -84,27 +84,34 @@ $(document).ready(function() {
                                       data[i] = new Array();
                                   }
                                   for (var j = 0; j < series.length; j++) {
-                                      data[i][j] = version_user_associative_array[ticks[i]][[series[j].label]];
+                                      data[i][j] = user_version_associative_array[ticks[i]][[series[j].label]];
                                   }
                               }
-                              for (var p = 0; p < jsonLength; p++) {
-                                  $('#versionUserTable').append($('<tr><td>' + json.usage[p].version + '</td><td>' + json.usage[p].user + '</td></tr><td>' + json.usage[p].count + '</td></tr>'));
+                              for (var i = 0; i < json.usage.length; i++) {
+                                  $('#versionUserTable').append($('<tr><td>' + json.usage[i].version + '</td><td>' + json.usage[i].user + '</td><td>' + json.usage[i].count + '</td></tr>'));
                               }
 
-                              if (jsonLength > 0) {
+                              if (json.usage.length > 0) {
                                   $('#versionUserTable').show();
                                   var plot1 = $.jqplot('versionUserChart', data, {
 
+                                      stackSeries: true,
+                                      captureRightClick: true,
                                       seriesDefaults:{
                                           renderer:$.jqplot.BarRenderer,
-                                          rendererOptions: {fillToZero: true}
+                                          rendererOptions: {
+                                              barMargin: 30,
+                                              highlightMouseDown: true
+                                          },
+                                          pointLabels: {show: true}
                                       },
 
                                       series:series,
 
                                       legend: {
                                           show: true,
-                                          placement: 'outsideGrid'
+                                          location: 'e',
+                                          placement: 'outside'
                                       },
                                       axes: {
                                           xaxis: {
@@ -112,7 +119,7 @@ $(document).ready(function() {
                                               ticks: ticks
                                           },
                                           yaxis: {
-                                              pad: 1.05,
+                                              padMin: 0,
                                               tickOptions: {formatString: '%d'}
                                           }
                                       }
@@ -170,7 +177,6 @@ $(document).ready(function() {
                               jagg.message(result.message);
                           }
                       }, "json");
-
 
 
         }

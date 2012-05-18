@@ -166,6 +166,16 @@ public class DSSUploadDataServiceSeleniumTest {
         log.info("Select Operation Success");
     }
 
+    @Test(priority = 7, dependsOnMethods = {"serviceDeployment"})
+    public void editAdvanceQueryProperties() throws InterruptedException {
+        updateAdvanceQueryProperties();
+    }
+
+    @Test(priority = 8, dependsOnMethods = {"editAdvanceQueryProperties"})
+    public void verifyAdvanceQueryProperties() throws InterruptedException {
+        viewAdvanceQueryProperties();
+    }
+
     @AfterClass(alwaysRun = true)
     public void cleanup() throws InterruptedException {
         try {
@@ -276,6 +286,133 @@ public class DSSUploadDataServiceSeleniumTest {
 
     }
 
+    private void viewAdvanceQueryProperties() throws InterruptedException {
+        driver.findElement(By.id("menu")).findElement(By.linkText("List")).click();
+        List<WebElement> tr;
+        tr = driver.findElement(By.id("sgTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+        for (WebElement service : tr) {
+            if (service.getText().contains(dataServiceName)) {
+                service.findElement(By.linkText(dataServiceName)).click();
+                Thread.sleep(1000);
+                Assert.assertTrue(driver.findElement(By.id("middle")).findElement(By.tagName("h2")).
+                        getText().contains(dataServiceName), "Service Name not found in service page");
+                break;
+            }
+
+
+        }
+        Thread.sleep(1000);
+        driver.findElement(By.id("serviceOperationsTable")).findElement(By.linkText("Edit Data Service (Wizard)")).click();
+        for (WebElement button : driver.findElement(By.id("dataSources")).findElement(By.tagName("tbody")).findElements(By.className("button"))) {
+            if ("Next >".equalsIgnoreCase(button.getAttribute("value"))) {
+                button.click();
+                break;
+            }
+
+        }
+        Thread.sleep(1000);
+        for (WebElement button : driver.findElement(By.id("datasource-table")).findElement(By.tagName("tbody")).findElements(By.className("button"))) {
+            if ("Next >".equalsIgnoreCase(button.getAttribute("value"))) {
+                button.click();
+                break;
+            }
+
+        }
+        driver.findElement(By.id("query-table")).findElement(By.linkText("Edit Query")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.id("addQuery")).findElement(By.id("propertySymbolMax")).click();
+        WebElement properties = driver.findElement(By.id("addQuery")).findElement(By.id("propertyTable"));
+
+        Assert.assertEquals(properties.findElement(By.id("timeout")).getAttribute("value"), "10", "TimeOut value not saved");
+
+        Assert.assertEquals(properties.findElement(By.id("fetchSize")).getAttribute("value"), "100", "Fetch Size not saved");
+
+        Assert.assertEquals(properties.findElement(By.id("maxRows")).getAttribute("value"), "100", "Max rows not saved");
+
+        Select fetchDirection = new Select(properties.findElement(By.id("fetchDirection")));
+        Assert.assertEquals(fetchDirection.getFirstSelectedOption().getText(), "Forward", "Fetch Direction not saved");
+
+        Thread.sleep(1000);
+        for (WebElement button : driver.findElement(By.id("addQuery")).findElement(By.tagName("tbody")).findElements(By.className("button"))) {
+            if ("Cancel".equalsIgnoreCase(button.getAttribute("value"))) {
+                button.click();
+                break;
+            }
+
+        }
+
+    }
+
+
+    private void updateAdvanceQueryProperties() throws InterruptedException {
+        driver.findElement(By.id("menu")).findElement(By.linkText("List")).click();
+        List<WebElement> tr;
+        tr = driver.findElement(By.id("sgTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+        for (WebElement service : tr) {
+            if (service.getText().contains(dataServiceName)) {
+                service.findElement(By.linkText(dataServiceName)).click();
+                Thread.sleep(1000);
+                Assert.assertTrue(driver.findElement(By.id("middle")).findElement(By.tagName("h2")).
+                        getText().contains(dataServiceName), "Service Name not found in service page");
+                break;
+            }
+
+
+        }
+        Thread.sleep(2000);
+        driver.findElement(By.id("serviceOperationsTable")).findElement(By.linkText("Edit Data Service (Wizard)")).click();
+        for (WebElement button : driver.findElement(By.id("dataSources")).findElement(By.tagName("tbody")).findElements(By.className("button"))) {
+            if ("Next >".equalsIgnoreCase(button.getAttribute("value"))) {
+                button.click();
+                break;
+            }
+
+        }
+        Thread.sleep(1000);
+        for (WebElement button : driver.findElement(By.id("datasource-table")).findElement(By.tagName("tbody")).findElements(By.className("button"))) {
+            if ("Next >".equalsIgnoreCase(button.getAttribute("value"))) {
+                button.click();
+                break;
+            }
+
+        }
+        driver.findElement(By.id("query-table")).findElement(By.linkText("Edit Query")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.id("addQuery")).findElement(By.id("propertySymbolMax")).click();
+        WebElement properties = driver.findElement(By.id("addQuery")).findElement(By.id("propertyTable"));
+
+        properties.findElement(By.id("timeout")).clear();
+        properties.findElement(By.id("timeout")).sendKeys("10");
+
+        properties.findElement(By.id("fetchSize")).clear();
+        properties.findElement(By.id("fetchSize")).sendKeys("100");
+
+        properties.findElement(By.id("maxRows")).clear();
+        properties.findElement(By.id("maxRows")).sendKeys("100");
+
+        Select fetchDirection = new Select(properties.findElement(By.id("fetchDirection")));
+        fetchDirection.selectByVisibleText("Forward");
+        Thread.sleep(2000);
+
+        for (WebElement button : driver.findElement(By.id("addQuery")).findElement(By.tagName("tbody")).findElements(By.className("button"))) {
+            if ("Save".equalsIgnoreCase(button.getAttribute("value"))) {
+                button.click();
+                break;
+            }
+
+        }
+        Thread.sleep(1000);
+        for (WebElement button : driver.findElement(By.id("query-table")).findElement(By.tagName("tbody")).findElements(By.className("button"))) {
+            if ("Finish".equalsIgnoreCase(button.getAttribute("value"))) {
+                button.click();
+                break;
+            }
+
+        }
+
+        Thread.sleep(1000);
+
+    }
 
     private void exploreDatabase(String sqlScript, String dbUserPassword)
             throws InterruptedException {

@@ -4,10 +4,16 @@ var login = function () {
     jagg.post("/site/blocks/user/login/ajax/login.jag", { action:"login", username:name, password:pass },
               function (result) {
                   if (!result.error) {
-                      location.href = 'index.jag';
+                      var current = window.location.pathname;
+                      if (current.indexOf(".jag") >= 0) {
+                          location.href = "index.jag";
+                      } else {
+                          location.href = 'site/pages/index.jag';
+                      }
+
                   } else {
                       $('#loginError').show('fast');
-                      $('#loginErrorSpan').html('<strong>Unable to log you in!</strong><br />'+result.message);
+                      $('#loginErrorSpan').html('<strong>Unable to log you in!</strong><br />' + result.message);
                   }
               }, "json");
 

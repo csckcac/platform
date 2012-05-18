@@ -51,7 +51,7 @@
                     <systemProperties>
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
-                        <carbon.zip>${basedir}/../../distribution/product/target/wso2csg-${csg.version}.zip</carbon.zip>
+                        <carbon.zip>${basedir}/../../distribution/service/target/wso2stratos-csg-${csg.version}.zip</carbon.zip>
                         <emma.home>${basedir}/target/emma</emma.home>
                         <emma.output>${basedir}/target/emma</emma.output>
                     </systemProperties>

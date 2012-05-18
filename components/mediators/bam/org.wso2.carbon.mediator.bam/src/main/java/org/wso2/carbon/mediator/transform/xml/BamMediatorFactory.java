@@ -31,16 +31,16 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
     public static final QName BAM_Q = new QName(
             SynapseConstants.SYNAPSE_NAMESPACE, "bam");
 
-    public static final QName CONFIG_KEY = new QName("config-key");
+    //public static final QName CONFIG_KEY = new QName("config-key");
 
     public Mediator createSpecificMediator(OMElement omElement, Properties properties) {
         BamMediator bam = new BamMediator();
 
-        OMAttribute configFileAttr = omElement.getAttribute(CONFIG_KEY);
+        /*OMAttribute configFileAttr = omElement.getAttribute(CONFIG_KEY);
 
         if (configFileAttr != null) {
             bam.setConfigKey(configFileAttr.getAttributeValue());
-        }
+        }*/
 
         return bam;
     }

@@ -33,7 +33,7 @@ public class BamMediatorSerializer extends AbstractMediatorSerializer {
         BamMediator bamMediator = (BamMediator) mediator;
         OMElement bam = fac.createOMElement("bam", synNS);
 
-        bam.addAttribute(fac.createOMAttribute("config-key", nullNS, bamMediator.getConfigKey()));
+        //bam.addAttribute(fac.createOMAttribute("config-key", nullNS, bamMediator.getConfigKey()));
 
         //bam.addChild(createInput(BamMediator.getInput()));
         //bam.addChild(createOutput(bamMediator.getOutput()));

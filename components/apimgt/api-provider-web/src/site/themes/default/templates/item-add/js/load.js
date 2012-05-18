@@ -11,8 +11,13 @@
                         $('#apiModal a.btn-other').click(function(){
                             v.resetForm();
                         });
-                        $('#apiModal a.btn-primary').click(function(){
-                            location.href = "site/pages/index.jag";
+                        $('#apiModal a.btn-primary').click(function() {
+                            var current = window.location.pathname;
+                            if (current.indexOf(".jag") >= 0) {
+                                location.href = "index.jag";
+                            } else {
+                                location.href = 'site/pages/index.jag';
+                            }
                         });
                         $('#apiModal').modal();
                     }

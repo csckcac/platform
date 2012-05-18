@@ -44,15 +44,13 @@
 
     <modules>
         <module>modules/styles</module>
-	    <module>modules/apps</module>
+	<module>modules/apps</module>
         <module>modules/menu</module>
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
-        <module>modules/login</module>
-		<!--
-        <module>modules/integration</module>
-		-->
+        <module>modules/login</module>		
+        <module>modules/integration</module>		
     </modules>
 
     <dependencyManagement>

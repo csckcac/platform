@@ -49,7 +49,14 @@ var docName = '<%=request.getParameter("docName")%>';
     function (result) {
             if (result.error) {
               jagg.message(result.message);
-            }else{location.href="item-info.jag?name="+apiName+"&version="+apiVersion;}
+            }else{
+            var current = window.location.pathname;
+            if (current.indexOf(".jag") >= 0) {
+            location.href="item-info.jag?name="+apiName+"&version="+apiVersion;
+            }else{
+            location.href="site/pages/item-info.jag?name="+apiName+"&version="+apiVersion;
+            }
+            }
     }, "json");
 
     });

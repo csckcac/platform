@@ -228,7 +228,7 @@ public class APIProviderHostObject extends ScriptableObject {
         String name = (String) apiData.get("apiName", apiData);
         String version = (String) apiData.get("version", apiData);
         String description = (String) apiData.get("description", apiData);
-        String imageUrl = (String) apiData.get("imageUrl", apiData);
+        FileHostObject fileHostObject = (FileHostObject) apiData.get("imageUrl", apiData);
         String endpoint = (String) apiData.get("endpoint", apiData);
         String sandboxUrl = (String) apiData.get("sandbox", apiData);
         if ("".equals(sandboxUrl)) {
@@ -277,10 +277,6 @@ public class APIProviderHostObject extends ScriptableObject {
             }
 
             api.setDescription(description);
-            if (imageUrl == null) {
-                imageUrl = oldApi.getThumbnailUrl();
-            }
-            api.setThumbnailUrl(imageUrl);
             api.setLastUpdated(new Date());
             api.setUrl(endpoint);
             api.setSandboxUrl(sandboxUrl);
@@ -292,9 +288,12 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setStatus(getApiStatus(status));
             api.setWsdlUrl(wsdl);
             api.setLastUpdated(new Date());
-            apiProvider.updateAPI(api);
 
-            // TODO: Handle image upload
+            if (fileHostObject != null) {
+                api.setThumbnailUrl(apiProvider.addIcon(apiId, fileHostObject.getInputStream(),
+                        fileHostObject.getJavaScriptFile().getContentType()));
+            }
+            apiProvider.updateAPI(api);
             success = true;
         } catch (APIManagementException e) {
             log.error("Error from registry while updating the API :" + name + "-" + version, e);

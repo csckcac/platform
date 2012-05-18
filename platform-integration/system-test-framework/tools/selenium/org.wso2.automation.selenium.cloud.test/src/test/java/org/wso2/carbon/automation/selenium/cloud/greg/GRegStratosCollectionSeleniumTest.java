@@ -176,11 +176,9 @@ public class GRegStratosCollectionSeleniumTest {
                          "New Created Collection does not Exists :");
             addServiceLifeCycle();
             promoteState();
-            assertTrue(selenium.isTextPresent("Testing"),
-                       "Service Life cycle Testing State fail:");
+            waitForLifeCycleStateTransition("Testing");
             promoteState();
-            assertTrue(selenium.isTextPresent("Production"),
-                       "Service Life Cycle Production State fail:");
+            waitForLifeCycleStateTransition("Production");
             //Delete LifeCycle
             deleteServiceLifeCycle();
             userLogout();            //Sign out
@@ -487,21 +485,6 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.xpath("//button")).click();
     }
 
-    private void promoteState() throws Exception {
-        driver.findElement(By.id("option0")).click();
-        driver.findElement(By.id("option1")).click();
-        driver.findElement(By.id("option2")).click();
-        // promote
-        driver.findElement(By.xpath("//tr[2]/td/div/input")).click();
-        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"));
-        assertTrue(driver.getPageSource().contains("WSO2 Carbon"),
-                   "Life Cycle Promote pop-up Title fail :");
-        assertTrue(driver.findElement(By.id("messagebox-info")).getText().contains("Successfully Promoted"),
-                   "Life Cycle promote pop-up message fail :");
-        // click on OK button
-        driver.findElement(By.xpath("//button")).click();
-    }
-
     private void addServiceLifeCycle() throws InterruptedException {
         driver.findElement(By.id("lifecycleIconMinimized")).click();
         driver.findElement(By.linkText("Add Lifecycle")).click();
@@ -588,6 +571,64 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.xpath("//div[2]/input[3]")).click();
         GRegSeleniumUtils.waitForElement(driver, "xpath",
                                          "//tr/td[4]/div[12]/div/div[12]/div[3]/a");
+    }
+
+    private void promoteState() throws Exception {
+        GRegSeleniumUtils.waitForElement(driver, "id", "option0");
+        GRegSeleniumUtils.waitForElement(driver, "id", "option1");
+        GRegSeleniumUtils.waitForElement(driver, "id", "option2");
+
+        driver.findElement(By.id("option0")).click();
+        waitForLifeCycleCheck("option0");
+        driver.findElement(By.id("option1")).click();
+        waitForLifeCycleCheck("option1");
+        Thread.sleep(5000);
+        driver.findElement(By.id("option2")).click();
+        waitForLifeCycleCheck("option2");
+
+        driver.findElement(By.xpath("//tr/td[4]/div[11]/div[3]/div[2]/table/tbody/tr[2]/td/div" +
+                                    "/input")).click();
+
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
+        driver.findElement(By.xpath("//button")).click();
+    }
+
+    private boolean waitForLifeCycleCheck(String optionId) {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        do {
+            try {
+                if (driver.findElement(By.id(optionId)).getAttribute("checked") != null) {
+                    return true;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for LC checklist options");
+            }
+            exceededTime = System.currentTimeMillis();
+
+        } while (!(((exceededTime - currentTime) / 1000) > 60));
+        return false;
+    }
+
+    private void waitForLifeCycleStateTransition(String state) {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        Boolean status = false;
+        do {
+            try {
+                if (driver.findElement(By.xpath("//div[11]/div[3]/div[2]/table/tbody/tr/td/div[2]" +
+                                                "/table/tbody/tr[2]/td")).getText().contains(state)) {
+                    status = true;
+                    break;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for LC checklist options");
+            }
+            exceededTime = System.currentTimeMillis();
+
+        } while (!(((exceededTime - currentTime) / 1000) > 30));
+        assertTrue(status, "LifeCycle state not found - " + state);
     }
 
 }

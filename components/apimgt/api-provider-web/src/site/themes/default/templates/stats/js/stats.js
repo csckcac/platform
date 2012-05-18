@@ -1,48 +1,4 @@
 $(document).ready(function() {
-    $.jqplot('apiChart',
-             [
-                 [
-                     ['API1', 9],
-                     ['API2', 2],
-                     ['API3', 2]
-                 ]
-             ],
-             {
-                 title: ' ',
-                 seriesDefaults: {
-                     shadow: false,
-                     renderer: jQuery.jqplot.PieRenderer,
-                     rendererOptions: {
-                         startAngle: 180,
-                         sliceMargin: 4,
-                         showDataLabels: true }
-                 },
-                 legend: { show:true, location: 'w' }
-             }
-            );
-
-    var s1 = [200, 600, 700];
-    var ticks = ['API 1', 'API 2', 'API 3'];
-
-    var plot1 = $.jqplot('serviceTimeChart', [s1], {
-        seriesDefaults:{
-            renderer:$.jqplot.BarRenderer,
-            rendererOptions: {fillToZero: true}
-        },
-        series:[
-            {label:'API'}
-        ],
-        axes: {
-            xaxis: {
-                renderer: $.jqplot.CategoryAxisRenderer,
-                ticks: ticks
-            },
-            yaxis: {
-                pad: 1.05,
-                tickOptions: {formatString: '%dms'}
-            }
-        }
-    });
 
     jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",server:"https://localhost:9444/" },
               function (json) {

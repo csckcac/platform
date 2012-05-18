@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+
 import static org.testng.Assert.assertTrue;
 
 public class GRegSeleniumUtils {
@@ -32,10 +33,11 @@ public class GRegSeleniumUtils {
     public static int getResourceId(WebDriver driver, String resourceName) {
         int pageCount = 10;
         int id = 0;
-        for (int i = 1; i <= pageCount; i++) {
-            if (driver.getPageSource().contains(resourceName)) {
-                if (driver.findElement(By.xpath("//*[@id=\"resourceView" + i + "\"]")).getText()
-                            .equals(resourceName)) {
+        if (driver.getPageSource().contains(resourceName)) {
+            for (int i = 1; i <= pageCount; i++) {
+                if (driver.findElement(By.id("resourceView" + i)).getText().equals(resourceName) ||
+                    driver.findElement(By.id("resourceView" + i)).getText().equals(resourceName +
+                                                                                   " " + "..")) {
                     id = i;
                     break;
                 }
@@ -59,7 +61,7 @@ public class GRegSeleniumUtils {
         }
     }
 
-    public static  boolean waitForBrowserPage(WebDriver driver) {
+    public static boolean waitForBrowserPage(WebDriver driver) {
         long currentTime = System.currentTimeMillis();
         long exceededTime;
         do {

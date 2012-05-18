@@ -53,7 +53,7 @@ public class GRegStratosResourceSeleniumTest {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, InterruptedException {
-        UserInfo userDetails = UserListCsvReader.getUserInfo(3);
+        UserInfo userDetails = UserListCsvReader.getUserInfo(8);
         userName = userDetails.getUserName();
         password = userDetails.getPassword();
         String baseUrl = new ProductUrlGeneratorUtil().getServiceHomeURL(
@@ -267,7 +267,8 @@ public class GRegStratosResourceSeleniumTest {
             addResource(resourceName);
             findLocation(collectionPath);
             renameResource(rename);
-            assertTrue(selenium.isTextPresent(rename), "Renamed Resource does not Exists :");
+            assertTrue(GRegSeleniumUtils.getResourceId(driver, rename) != 0,
+                       "Resource doesn't exists");
             userLogout();
             log.info("********GReg Stratos - Rename a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
@@ -467,40 +468,30 @@ public class GRegStratosResourceSeleniumTest {
     private void applyRating() throws InterruptedException {
         // Add rating 1
         driver.findElement(By.xpath("//span/img[3]")).click();
-        waitForValue("1.0");
-        assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
-                                               "tr[2]/td[2]")).getText().contains("(1.0)"),
-                   "Rating 1 has failed :");
+        assertTrue(waitForValue("1.0"));
+
 
         // Add rating 2
         driver.findElement(By.xpath("//span/img[5]")).click();
-        waitForValue("2.0");
-        assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
-                                               "tr[2]/td[2]")).getText().contains("(2.0)"),
-                   "Rating 2 has failed :");
+        assertTrue(waitForValue("2.0"));
+
         // Add rating 3
         driver.findElement(By.xpath("//img[7]")).click();
-        waitForValue("3.0");
-        assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
-                                               "tr[2]/td[2]")).getText().contains("(3.0)"),
-                   "Rating 3 has failed :");
+        assertTrue(waitForValue("3.0"));
+
         // Add rating 4
         driver.findElement(By.xpath("//img[9]")).click();
-        waitForValue("4.0");
-        assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
-                                               "tr[2]/td[2]")).getText().contains("(4.0)"),
-                   "Rating 4 has failed :");
+        assertTrue(waitForValue("4.0"));
+
         // Add rating 5
         driver.findElement(By.xpath("//img[11]")).click();
-        waitForValue("5.0");
-        assertTrue(driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
-                                               "tr[2]/td[2]")).getText().contains("(5.0)"),
-                   "Rating 5 has failed :");
+        assertTrue(waitForValue("5.0"));
     }
 
 
     private void deleteServiceLifeCycle() throws InterruptedException {
         driver.findElement(By.xpath("//div[3]/div[2]/table/tbody/tr/td/div/a")).click();
+        GRegSeleniumUtils.waitForElement(driver, "id", "ui-dialog-title-dialog");
         assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
                    "Popup not found :");
         driver.findElement(By.xpath("//button")).click();
@@ -638,9 +629,9 @@ public class GRegStratosResourceSeleniumTest {
         long exceededTime;
         do {
             try {
-                if (driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[6]/div/table/tbody/" +
-                                                "tr[2]/td[2]")).getText().contains(value)) {
-                    break;
+                if (driver.findElement(By.xpath
+                                                  ("//tr/td[4]/div[15]/div/div[6]/div/table/tbody/tr[2]/td[2]")).getText().contains(value)) {
+                    return true;
                 }
             } catch (WebDriverException ignored) {
                 log.info("Waiting for the element");

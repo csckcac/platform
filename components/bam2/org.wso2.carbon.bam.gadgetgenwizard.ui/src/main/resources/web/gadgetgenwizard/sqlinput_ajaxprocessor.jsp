@@ -9,33 +9,53 @@
         String param = (String) iterator.next();
         Object value = parameterMap.get(param);
         session.setAttribute(param, value);
-        System.out.println("============= Request Map ===================");
-        if (value instanceof String[]) {
-            String[] strings = (String[]) value;
-            for (int i = 0; i < strings.length; i++) {
-                String string = strings[i];
-                System.out.println("param key : " + param + " param value : " +  string);
 
-            }
-
-        } else {
-            System.out.println("param key : " + param + " param value : " +  value);
-        }
-
-    }
-    System.out.println("============== Session Map ===================");
-    Enumeration attributeNames = session.getAttributeNames();
-    while (attributeNames.hasMoreElements()) {
-        String attribute = (String) attributeNames.nextElement();
-        System.out.println("param key : " + attribute + " param value : " + session.getAttribute(attribute) );
     }
 
     Object sqlParam = session.getAttribute("sql");
     String sql = (sqlParam == null) ? "select * from productsummary" : ((String[])sqlParam) [0];
 
 %>
+<script type="text/javascript" src="../gadgetgenwizard/js/jquery.dataTables.min.js"/>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.("#query-results-holder").hide();
+
+        $("#execute-sql").click(function() {
+            $.post("execute_sql.jsp", $("form").serialize(), function(html) {
+                var success = !(html.toLowerCase().match(/error/));
+                function getaoColumns(columns) {
+                    var json = [];
+                    for (var i = 0; i < columns.length; i++) {
+                        var column = columns[i];
+                        json.push({"sTitle" : column});
+                    }
+                    return json;
+                }
+                if (success) {
+                    $("#query-results-holder").show();
+                    $("#query-results-holder").html("<table class=\"normal\" id=\"query-results\"></table>");
+                    $("#query-results").dataTable({
+                        "aaData" : html.rows,
+                        "aoColumns" : getaoColumns(html.columns)
+                    });
+                } else {
+                    CARBON.showErrorDialog(html);
+                }
+            })
+        });
+    });
+</script>
 <form>
-    <p>SQL Statement : <input type="text" size="50%" name="sql" value="<%=sql%>"/></p>
-    <input type="hidden" name="page" id="page" value="02">
+    <tr>
+        <td>SQL Statement<font color="red">*</font>
+        </td>
+        <td><input type="text" name="sql" value="<%=sql%>" style="width:150px"/></td>
+        <td><input type="button" id="execute-sql"/></td>
+    </tr>
+    <tr id="query-results-holder">
+
+    </tr>
+    <input type="hidden" name="page" id="page" value="2">
 
 </form>

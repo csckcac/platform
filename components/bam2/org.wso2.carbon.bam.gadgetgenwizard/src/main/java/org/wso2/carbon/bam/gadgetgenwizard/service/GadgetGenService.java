@@ -8,6 +8,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.bam.gadgetgenwizard.internal.GGWUtils;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
 import org.wso2.carbon.registry.core.ActionConstants;
 import org.wso2.carbon.registry.core.Registry;
@@ -27,6 +30,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -72,6 +78,99 @@ public class GadgetGenService extends RegistryAbstractAdmin {
         applyXSLTForJaggeryScript(intermediateXML);
         copyGadgetResourcesToRegistry(GADGETGEN_COMP_REG_PATH);
         return gadgetXMLPath;
+    }
+
+    public String[] getDataSourceNames() throws GadgetGenException {
+        try {
+            List<CarbonDataSource> allDataSources = GGWUtils.getDataSourceService().getAllDataSources();
+            List<String> dataSourceNames = new ArrayList<String>();
+            for (CarbonDataSource carbonDataSource : allDataSources) {
+                dataSourceNames.add(carbonDataSource.getDSMInfo().getName());
+            }
+            return dataSourceNames.toArray(new String[dataSourceNames.size()]);
+        } catch (DataSourceException e) {
+            String errorMsg = "Unable to retrieve data sources. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new GadgetGenException(errorMsg, e);
+        }
+
+    }
+
+    public WSResultSet executeQuery(DBConnInfo dbConnInfo, String sqlQuery) throws GadgetGenException {
+        Connection connection = null;
+        try {
+            Class.forName(dbConnInfo.getDriverClass()).newInstance();
+            connection = DriverManager.getConnection(dbConnInfo.getJdbcURL(), dbConnInfo.getUsername(), dbConnInfo.getPassword());
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sqlQuery);
+            ResultSetMetaData metaData = resultSet.getMetaData();
+
+            WSResultSet wsResultSet = new WSResultSet();
+            wsResultSet.setColumnCount(metaData.getColumnCount());
+
+            while (resultSet.next()) {
+            }
+        } catch (InstantiationException e) {
+            String errorMsg = "The class cannot be instantiated. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new GadgetGenException(errorMsg, e);
+        } catch (IllegalAccessException e) {
+            String errorMsg = "The class does not have public constructor. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new GadgetGenException(errorMsg, e);
+        } catch (ClassNotFoundException e) {
+            String errorMsg = "The JDBC Driver Class " + dbConnInfo.getDriverClass() + " is not present in class path. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new GadgetGenException(errorMsg, e);
+        } catch (SQLException e) {
+            String errorMsg = "Cannot establish database connection. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new GadgetGenException(errorMsg, e);
+        } finally {
+           if (connection != null) {
+               try {
+                   connection.close();
+               } catch (SQLException e) {
+                   String errorMsg = "Cannot close connection. " + e.getMessage();
+                   log.error(errorMsg, e);
+               }
+           }
+        }
+        return null;
+    }
+
+    public boolean validateSQLConnection(DBConnInfo dbConnInfo) throws GadgetGenException {
+        Connection connection = null;
+        try {
+            Class.forName(dbConnInfo.getDriverClass()).newInstance();
+            connection = DriverManager.getConnection(dbConnInfo.getJdbcURL(), dbConnInfo.getUsername(), dbConnInfo.getPassword());
+        } catch (InstantiationException e) {
+            String errorMsg = "The class cannot be instantiated. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new GadgetGenException(errorMsg, e);
+        } catch (IllegalAccessException e) {
+            String errorMsg = "The class does not have public constructor. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new GadgetGenException(errorMsg, e);
+        } catch (ClassNotFoundException e) {
+            String errorMsg = "The JDBC Driver Class " + dbConnInfo.getDriverClass() + " is not present in class path. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new GadgetGenException(errorMsg, e);
+        } catch (SQLException e) {
+            String errorMsg = "Cannot establish database connection. " + e.getMessage();
+            log.error(errorMsg, e);
+            throw new GadgetGenException(errorMsg, e);
+        } finally {
+           if (connection != null) {
+               try {
+                   connection.close();
+               } catch (SQLException e) {
+                   String errorMsg = "Cannot close connection. " + e.getMessage();
+                   log.error(errorMsg, e);
+               }
+           }
+        }
+        return true;
     }
 
     private void copyGadgetResourcesToRegistry(String gadgetRegistryPath) throws GadgetGenException {
@@ -170,11 +269,11 @@ public class GadgetGenService extends RegistryAbstractAdmin {
         return gadgetFileName;
     }
 
-    private void applyXSLT(OMDocument intermediateXML, OutputStream outputStream, String xsltFileName) throws GadgetGenException {
+    private void applyXSLT(OMDocument intermediateXML, OutputStream outputStream, String xsltFileNameInClassPath) throws GadgetGenException {
         try {
             StreamResult result = new StreamResult(outputStream);
 
-            InputStream xsltStream = this.getClass().getClassLoader().getResourceAsStream(xsltFileName);
+            InputStream xsltStream = this.getClass().getClassLoader().getResourceAsStream(xsltFileNameInClassPath);
 
             StAXOMBuilder stAXOMBuilder = new StAXOMBuilder(xsltStream);
 

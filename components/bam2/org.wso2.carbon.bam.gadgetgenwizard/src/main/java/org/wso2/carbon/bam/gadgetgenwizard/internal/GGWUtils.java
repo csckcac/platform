@@ -3,6 +3,7 @@ package org.wso2.carbon.bam.gadgetgenwizard.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.api.ServerConfigurationService;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
@@ -28,6 +29,15 @@ public class GGWUtils {
 
     private static ServerConfigurationService serverConfiguration;
 
+    private static DataSourceService dataSourceService;
+
+    public static DataSourceService getDataSourceService() {
+        return dataSourceService;
+    }
+
+    public static void setDataSourceService(DataSourceService dataSourceService) {
+        GGWUtils.dataSourceService = dataSourceService;
+    }
 
     public static ConfigurationContextService getConfigurationContextService() {
         return configurationContextService;

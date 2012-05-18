@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.base.api.ServerConfigurationService;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
@@ -29,6 +30,9 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * unbind="unsetConfigurationContextService"
  * @scr.reference name="server.configuration" interface="org.wso2.carbon.base.api.ServerConfigurationService"
  * cardinality="1..1" policy="dynamic" bind="setServerConfiguration" unbind="unsetServerConfiguration"
+ * @scr.reference name="ndatasource.core" interface="org.wso2.carbon.ndatasource.core.DataSourceService"
+ * cardinality="1..1" policy="dynamic" bind="setDataSourceService" unbind="unsetDataSourceService"
+
  */
 
 public class GadgetGenWizardServiceComponent {
@@ -41,19 +45,19 @@ public class GadgetGenWizardServiceComponent {
 
     protected void setConfigurationContextService(ConfigurationContextService ccService) {
         GGWUtils.setConfigurationContextService(ccService);
-        if (log.isDebugEnabled()) {
-            log.debug("ConfigurationContextService set in BAM bundle");
-        }
     }
 
     protected void unsetConfigurationContextService(ConfigurationContextService ccService) {
         GGWUtils.setConfigurationContextService(null);
-        if (log.isDebugEnabled()) {
-            log.debug("ConfigurationContextService unset in BAM bundle");
-        }
     }
 
+    protected void setDataSourceService(DataSourceService dataSourceService) {
+       GGWUtils.setDataSourceService(null);
+    }
 
+    protected void unsetDataSourceService(DataSourceService dataSourceService) {
+       GGWUtils.setDataSourceService(dataSourceService);
+    }
 
     protected void setServerConfiguration(ServerConfigurationService serverConfiguration) {
         GGWUtils.setServerConfiguration(serverConfiguration);

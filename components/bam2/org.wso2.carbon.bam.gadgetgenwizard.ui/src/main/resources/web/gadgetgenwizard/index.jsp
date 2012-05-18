@@ -37,36 +37,73 @@
 
     $(document).ready(function () {
 
-        if ($("#page").val() == "01") {
-            $("#Back").attr("disabled", "disabled");
+        if ($("#page").val() == "1") {
+            $("#back").attr("disabled", "disabled");
         }
 
-        $("#Finish").hide();
+        $("#generate").hide();
 
-        $("#Finish").click(function() {
-            var data = $("form").serialize();
-            sendAjaxRequest("generate_gadget_ajaxprocessor.jsp", data);
+        $("#generate").click(function() {
+            sendAjaxRequest("generate_gadget_ajaxprocessor.jsp");
         })
 
-        $("#Back").click(function() {
+        $("#back").click(function() {
             var backURL = "";
-            if ($("#page").val() == "02") {
+            if ($("#page").val() == "2") {
                 backURL = "datasource_ajaxprocessor.jsp";
-            } else if ($("#page").val() == "03") {
+            } else if ($("#page").val() == "3") {
                 backURL = "sqlinput_ajaxprocessor.jsp";
-            } else if ($("#page").val() == "04") {
+            } else if ($("#page").val() == "4") {
                 backURL = "pickuielement_ajaxprocessor.jsp";
-            } else if ($("#page").val() == "05") {
+            } else if ($("#page").val() == "5") {
                 backURL = "preview_ajaxprocessor.jsp";
             }
 
-            var data = $("form").serialize();
-            sendAjaxRequest(backURL, data);
+            sendAjaxRequest(backURL);
 
         })
 
+        $("#validate").click(function() {
+            $.post("validate_db_conn.jsp", $(form)function(html) {
+                var success = (html.toLowerCase().match(/success/));
+                if (success) {
+                    CARBON.showInfoDialog(html);
+                } else {
+                    CARBON.showErrorDialog(html);
+                }
+            })
+
+        })
+
+        function changeBackBtnState() {
+            if ($("#page").val() == "01") {
+                $("#back").attr("disabled", "disabled");
+            } else {
+                $("#back").removeAttr('disabled');
+            }
+        }
+
+
+        function changeGenBtnState() {
+            if ($("#page").val() == "04") {
+                $("#generate").show();
+            } else {
+                $("#generate").hide();
+            }
+        }
+
+        function changeNxtBtnState() {
+            if (parseInt($("#page").val()) >= 4) {
+                $("#next").hide();
+            } else {
+                $("#next").show();
+            }
+        }
 
         function sendAjaxRequest(url, data) {
+            if (typeof data == 'undefined' || data == null) {
+                data = $("form").serialize();
+            }
             //start the ajax
             $.ajax({
                 //this is the php file that processes the data and send mail
@@ -87,37 +124,31 @@
                     //hide the form
                     $('#div-form').fadeOut('fast', function() {
 
-                        $('#div-form').html(html);
+                        $('#change-area').html(html);
 
                         //show the success message
-                        $('#div-form').fadeIn('fast');
+                        $('#change-area').fadeIn('fast');
 
-                        if ($("#page").val() == "01") {
-                            $("#Back").attr("disabled", "disabled");
-                        } else {
-                            $("#Back").removeAttr('disabled');
-                        }
+                        changeHeading(parseInt($("#page").val()));
 
-                        if ($("#page").val() == "04") {
-                            $("#Finish").show();
-                        } else {
-                            $("#Finish").hide();
-                        }
-
-                        if (parseInt($("#page").val()) >= 4) {
-                            $("#Next").hide();
-                        } else {
-                            $("#Next").show();
-                        }
-
+                        changeBackBtnState();
+                        changeGenBtnState();
+                        changeNxtBtnState();
                     });
-
-                    //if process.php returned 0/false (send mail failed)
                 }
             });
         }
 
-        $("#Next").click(function() {
+        var wizardPgTitle = ["Data Source", "SQL Queries", "UI Elements", "Gadget", "Done!"];
+
+        function changeHeading(pageNo) {
+            var stepTitle = "Step " + pageNo + " of 5 : ";
+            $("#page-title").html(wizardPgTitle[pageNo]);
+            $("#step-title").html(stepTitle + wizardPgTitle[pageNo]);
+
+        }
+
+        $("#next").click(function() {
             var jdbcurl = $("[name=jdbcurl]").val();
             var username = $("[name=username]").val();
             var password = $("[name=password]").val();
@@ -132,83 +163,25 @@
                nextURL = "preview_ajaxprocessor.jsp";
             }
 
-            var data = $("form").serialize();
 
-           sendAjaxRequest(nextURL, data);
+           sendAjaxRequest(nextURL);
 
         });
     });
 </script>
 
-<style type="text/css">
-    #configXml_Cont ul {
-        list-style: none;
-        padding: 2px;
-    }
-
-    #configXml_Cont ul.secondLevel {
-        padding: 10px 20px;
-        background: #FFFFD0;
-        display: none;
-    }
-
-    #configXml_Cont li {
-        clear: both;
-        overflow: hidden;
-    }
-
-    #configXml_Cont a.showHideParts {
-        float: right;
-        margin: 0 20px 0 0;
-    }
-
-    #configXml_Cont a.addPartsLink {
-        float: right;
-        padding: 10px 20px 10px 0;
-    }
-
-    #configXml_Cont #accordion {
-        padding: 10px;
-    }
-
-    #configXml_Cont .deleteNodeLink {
-        padding: 0 10px;
-    }
-
-    #configXml_Cont input[type="text"] {
-        width: 100px;
-    }
-
-    #configXml_Cont div.textBlock {
-        padding: 0 10px;
-        float: left;
-    }
-
-    #configXml_Cont div.addNewCFBtn, div.saveXmlBtn {
-        clear: both;
-        width: 100%;
-        text-align: right;
-    }
-
-    #configXml_Cont #addNewColumnFamily {
-        clear: both;
-        background: #e8e8e8;
-        padding: 10px 6px;
-    }
-</style>
 <!--link media="all" type="text/css" rel="stylesheet" href="css/registration.css"/-->
 <fmt:bundle basename="org.wso2.carbon.bam.analyzer.ui.i18n.Resources">
     <carbon:breadcrumb label="main.analyzer"
                        resourceBundle="org.wso2.carbon.bam.analyzer.ui.i18n.Resources"
                        topPage="false" request="<%=request%>"/>
 
-    <%
+<%
 
-        String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-        ConfigurationContext configContext =
-                (ConfigurationContext) config.getServletContext().
-                        getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
-        String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+    String jdbcurl = (session.getAttribute("jdbcurl") != null) ? ((String[]) session.getAttribute("jdbcurl")) [0] : "jdbc:h2:/Users/mackie/tmp/jaggery-1.0.0-SNAPSHOT_M4/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE";
+    String driver = (session.getAttribute("driver") != null) ? ((String[]) session.getAttribute("driver")) [0] : "org.h2.Driver";
+    String username = (session.getAttribute("username") != null) ? ((String[]) session.getAttribute("username")) [0] : "wso2carbon";
+    String password = (session.getAttribute("password") != null) ? ((String[]) session.getAttribute("password")) [0] : "wso2carbon";
 
 %>
 
@@ -216,34 +189,59 @@
         <h2>Gadget Generator Wizard</h2>
 
         <div id="workArea">
-
-            <div>
-                <h3>Pick Data Source</h3>
-            </div>
-
-            <div style="height:130px;" id="div-form">
-                <form>
-                <p>JDBC URL : <input type="text" size="50%" name="jdbcurl" value="jdbc:h2:/Users/mackie/tmp/jaggery-1.0.0-SNAPSHOT_M4/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE"/></p>
-                <p>Driver Class Name : <input type="text" size="50%" name="driver" value="org.h2.Driver"/></p>
-                <p>Username : <input type="text" size="50%" name="username" value="wso2carbon"/></p>
-                <p>Password : <input type="text" size="50%" name="password" value="wso2carbon"/></p>
-                    <input type="hidden" name="page" id="page" value="01">
-                </form>
-            </div>
-            <div>
-                <p>
-                    <input type="button" id="Back" value="Back">
-
-                    <input type="button" id="Next" value="Next">
-
-                    <input type="button" id="Finish" value="Finish">
-
-                    </p>
-            </div>
+            <h3 id="step-title">Step 1 of 5 : Enter Data Source</h3>
 
 
+                <table class="styledLeft" id="userAdd" width="60%">
+                    <thead>
+                    <tr>
+                        <th id="page-title">Enter Data Source</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="formRaw">
+                            <table class="normal">
+                                <tbody id="change-area">
+                                <form>
+                                    <tr>
+                                        <td>JDBC URL<font color="red">*</font>
+                                        </td>
+                                        <td><input type="text" name="jdbcurl" value="<%=jdbcurl%>" style="width:150px"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Driver Class Name<font color="red">*</font></td>
+                                        <td><input type="text" name="driver" value="<%=driver%>" style="width:150px"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>User Name<font color="red">*</font></td>
+                                        <td><input type="text" name="username" value="<%=username%>" style="width:150px"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Password<font color="red">*</font></td>
+                                        <td><input type="password" name="password" value="<%=password%>" style="width:150px"></td>
+                                    </tr>
+                                    <tr>
+                                        <input type="button" value="Validate Connection" id="validate"/>
+                                    </tr>
+                                    <input type="hidden" name="page" id="page" value="1">
+                                </form>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="buttonRow">
+                            <input type="button" id="back" value="Back">
+                            <input type="button" id="next" value="Next">
+                            <input type="button" id="generate" value="Generate">
 
-
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
         </div>
+
+
     </div>
 </fmt:bundle>

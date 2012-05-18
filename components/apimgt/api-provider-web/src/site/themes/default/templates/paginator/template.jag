@@ -10,7 +10,7 @@
         <%if(String(i)==currentPage){%><li class="active"><a href="?page=<%=String(i)%>"><%=String(i)%></a></li> <%}else{%>
         <li><a href="?page=<%=String(i)%>"><%=String(i)%></a></li>
          <%}}%>
-        <li><a href="?page=<%=(currentPage-1)%>">Next</a></li>
+        <li><a href="?page=<%=(currentPage+1)%>">Next</a></li>
     </ul>
 </div>
  <% }%>

@@ -19,8 +19,7 @@
         <KeyStoreName>
             E:\src\java\carbon_trunk\platform\products\appfactory\modules\distribution\product\target\wso2appfactory-1.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks
         </KeyStoreName>
-        adminPassword
-    </SSORelyingParty>
+     </SSORelyingParty>
 
     <!-- Web service end points including BPEL services-->
     <WebServiceEndPoints>
@@ -40,7 +39,7 @@
         </AddUserToProject>
         <CreateProject>http://localhost:9763/services/CreateProjectService/process</CreateProject>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
-        <ActivateUser>http://localhost:9763/services/activateUserProcess</ActivateUser>
+        <ActivateUser>http://localhost:9763/services/UserActivationProcess/process</ActivateUser>
     </WebServiceEndPoints>
 
     <!--Project repository related configurations-->

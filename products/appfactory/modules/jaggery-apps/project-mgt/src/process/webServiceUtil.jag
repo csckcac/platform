@@ -133,7 +133,7 @@
     }
 
     // creating a user
-    function createUser(userName, password, email, firstName, lastName) {
+    function createUser(newUserName, password, email, firstName, lastName) {
         var ws = require('ws');
         var request = new ws.WSRequest();
         var options = new Array();
@@ -141,7 +141,7 @@
         options.timeout = 1000000;
         options.action = "urn:process";
 
-        var payload = '<p:UserCreationProcessRequest xmlns:p="http://wso2.org"><userName xmlns="http://wso2.org">' + userName + '</userName><password xmlns="http://wso2.org">' + password + '</password><email xmlns="http://wso2.org">' + email + '</email><firstName xmlns="http://wso2.org">' + firstName + '</firstName><lastName xmlns="http://wso2.org">' + lastName + '</lastName></p:UserCreationProcessRequest>';
+        var payload = '<p:UserCreationProcessRequest xmlns:p="http://wso2.org"><userName xmlns="http://wso2.org">' + newUserName + '</userName><password xmlns="http://wso2.org">' + password + '</password><email xmlns="http://wso2.org">' + email + '</email><firstName xmlns="http://wso2.org">' + firstName + '</firstName><lastName xmlns="http://wso2.org">' + lastName + '</lastName></p:UserCreationProcessRequest>';
         var result;
         try {
             var endPoint = getProperty('bpel.createUser');
@@ -160,8 +160,11 @@
 
       var EmailVerificationService = new ws.WSRequest();
       var options = new Array();
-      options.useSOAP = 1.2;
-      options.action = "urn:ConfirmationBean";
+
+       options.useSOAP = 1.2;
+       options.action = "urn:ConfirmationBean";
+       options.username=getProperty('adminUserName');
+       options.password=getProperty('adminPassword');
       var payload =<ser:confirmUser xmlns:ser="http://services.verification.email.carbon.wso2.org"></ser:confirmUser>;
       var ser=new Namespace("http://services.verification.email.carbon.wso2.org");
       payload.ser::secretKey=secreteKey;
@@ -196,13 +199,12 @@
 
        var UserActivationProcess = new ws.WSRequest();
        var options = new Array();
-       options.useWSA = 1.0;
+       options.useSOAP = 1.1;      
        options.action = "urn:process";
-       var payload = <UserActivationProcessRequest xmlns:int="http://wso2.org"></UserActivationProcessRequest>;
-       var wso2=new Namespace("http://wso2.org");
-       payload.wso2::userName=userName;
-       payload.wso2::email=email;
-       payload.wso2::confirmationKey=confirmationKey;
+       var payload = '<UserActivationProcessRequest xmlns="http://wso2.org"><userName xmlns="http://wso2.org">'+userName+'</userName><email xmlns="http://wso2.org">'+email+'</email><confirmationKey xmlns="http://wso2.org">'+confirmationKey+'</confirmationKey></UserActivationProcessRequest>';
+       
+       
+log(payload);
        var result;
 
        try {
@@ -215,5 +217,7 @@
         return result;
 
        }
+       var wso2=new Namespace("http://wso2.org");
+       return result.wso2::success;
        }
 %>

@@ -30,6 +30,10 @@ function getPropertyTemp(expression) {
            return appFactoryConfigReader.getWebServiceEPREmailVerificationService();
         case "bpel.activateUser":
            return appFactoryConfigReader.getWebServiceEPRActivateUser();
+        case "adminUserName":
+           return appFactoryConfigReader.getAdminUserName();
+        case "adminPassword":
+           return appFactoryConfigReader.getAdminPassword();
         default:
             return;
     }

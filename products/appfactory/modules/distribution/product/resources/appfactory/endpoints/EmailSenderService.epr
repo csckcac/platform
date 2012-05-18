@@ -3,5 +3,12 @@
         xsi:schemaLocation="http://www.w3schools.com uep_schema.xsd"
         xmlns:wsa="http://www.w3.org/2005/08/addressing"
         xmlns:wsdl11="http://schemas.xmlsoap.org/wsdl/">
-    <wsa:Address>http://localhost:9763/services/EmailSenderService/</wsa:Address>
+            <wsa:Address>https://localhost:9443/services/EmailSenderService</wsa:Address>
+        <wsa:Metadata>
+                <id>SInvokeEPR</id>
+                <transport type="http">
+                    <Transfer-Encoding>chunked</Transfer-Encoding>
+                    <Content-Encoding>gzip</Content-Encoding>
+                </transport>
+         </wsa:Metadata>
 </wsa:EndpointReference>

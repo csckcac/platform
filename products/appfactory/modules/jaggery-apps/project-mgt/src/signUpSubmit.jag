@@ -9,7 +9,7 @@
 <%
     //include('includes/template_header.jag');
 
-    var userName = request.getParameter("userName");
+    var userID= request.getParameter("userName");
     var password = request.getParameter("password");
     var email = request.getParameter("email");
     var firstName = request.getParameter("firstName");
@@ -48,8 +48,14 @@
             //print("--submitting signup request--");
             include('mgt/projectManager.jag');
             try {
-                var result = createUserAccount(userName, password, email, firstName, lastName);
-                print(result);
+                var result = createUserAccount(userID, password, email, firstName, lastName);
+                %>
+                Congratulations!!!
+                <br>
+                You have sucessfully registered to WSO2 AppFactory.Please check your mail to continue.
+                <br>
+                Thank you.
+                <%
             } catch (e) {
                 print(e);
             }

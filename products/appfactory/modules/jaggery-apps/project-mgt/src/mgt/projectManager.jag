@@ -70,9 +70,9 @@
     }
 
     //create the user when user registers
-    function createUserAccount(userName, password, email, firstName, lastName) {
+    function createUserAccount(newUserName, password, email, firstName, lastName) {
         try {
-            var result = createUser(userName, password, email, firstName, lastName);
+            var result = createUser(newUserName, password, email, firstName, lastName);
             if( result != null) {
                 return result;
             } else {

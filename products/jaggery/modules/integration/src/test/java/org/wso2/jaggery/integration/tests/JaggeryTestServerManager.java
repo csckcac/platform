@@ -36,13 +36,13 @@ public class JaggeryTestServerManager extends TestServerManager {
 
     private static final Log log = LogFactory.getLog(JaggeryTestServerManager.class);
     private static final String JAGGERY_ADMIN_CONTEXT = "admin";
+    private static final String JAGGERY_SERVER_SCRIPT_NAME = "server";
 
     @Override
     @BeforeSuite(timeOut = 300000)
     public String startServer() throws IOException {
     	
-        String carbonHome = super.startServerInCarbonFolder(JAGGERY_ADMIN_CONTEXT);
-        
+        String carbonHome = super.startServerInCarbonFolder(JAGGERY_ADMIN_CONTEXT, JAGGERY_SERVER_SCRIPT_NAME);
         String carbonFolder = "";
     	if(carbonHome != null) {
     		carbonFolder = carbonHome + File.separator + "carbon";

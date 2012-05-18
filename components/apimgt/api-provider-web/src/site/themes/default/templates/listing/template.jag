@@ -15,9 +15,6 @@
         if(apis.length==0 ){
         if(request.getParameter("query")!=null){
         return;
-        }else{
-        response.sendRedirect(jagg.getMappedUrl("/site/pages/add.jag"));
-        return;
         }
         }
         else{

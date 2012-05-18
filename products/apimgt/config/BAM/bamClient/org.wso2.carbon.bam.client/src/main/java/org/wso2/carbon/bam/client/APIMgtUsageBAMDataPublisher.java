@@ -56,7 +56,7 @@ public class APIMgtUsageBAMDataPublisher {
         bamServerURL = apiMGTDataAgentConfig.getFirstChildWithName(
                 new QName("BAMServerURL")).getText();
         bamServerUser = apiMGTDataAgentConfig.getFirstChildWithName(
-                new QName("BAMUser")).getText();
+                new QName("BAMUsername")).getText();
         bamServerPassword = apiMGTDataAgentConfig.getFirstChildWithName(
                 new QName("BAMPassword")).getText();
         bamAgentTrustStore = apiMGTDataAgentConfig.getFirstChildWithName(

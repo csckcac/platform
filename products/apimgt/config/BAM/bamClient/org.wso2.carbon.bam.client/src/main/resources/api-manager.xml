@@ -14,6 +14,8 @@
         <BAMServerURL>https://localhost:9444/</BAMServerURL>
         <BAMUsername>admin</BAMUsername>
         <BAMPassword>admin</BAMPassword>
+        <BAMTrustStore>repository/resources/security/client-truststore.jks</BAMTrustStore>
+        <BAMTrustStorePassword>wso2carbon</BAMTrustStorePassword>
     </APIUsageTracking>
     <APIKeyManager>
         <ServerURL>https://localhost:9443/services/</ServerURL>

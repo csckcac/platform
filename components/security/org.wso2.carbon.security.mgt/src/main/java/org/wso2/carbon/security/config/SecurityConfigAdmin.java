@@ -1447,36 +1447,35 @@ public class SecurityConfigAdmin {
                 if (service == null) {
                     throw new SecurityConfigException("AxisService is Null" + service);
                 }
-                serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
             }
+            serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
 
             // persist
-            ServiceGroupFilePersistenceManager sfpm = persistenceFactory.getServiceGroupFilePM();
-            boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+            boolean isTransactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
             if(!isTransactionStarted) {
-                sfpm.beginTransaction(serviceGroupId);
+                serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
 
             String servicePath = PersistenceUtils.getResourcePath(service);
             String policyElementPath = servicePath+"/"+Resources.POLICIES+"/"+Resources.POLICY;
 
-            if (!sfpm.elementExists(serviceGroupId, policyElementPath)) {
+            if (!serviceGroupFilePM.elementExists(serviceGroupId, policyElementPath)) {
                 if(!isTransactionStarted) {
-                    sfpm.rollbackTransaction(serviceGroupId);
+                    serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                 }
                 return scenario;
             } else {
                 // if there are no policies under the collection, no need to proceed
-                List policyElements = sfpm.getAll(serviceGroupId, policyElementPath);
+                List policyElements = serviceGroupFilePM.getAll(serviceGroupId, policyElementPath);
                 if (policyElements.size() == 0) {
                     if(!isTransactionStarted) {
-                        sfpm.rollbackTransaction(serviceGroupId);
+                        serviceGroupFilePM.rollbackTransaction(serviceGroupId);
                     }
                     return scenario;
                 }
             }
             if(!isTransactionStarted) {
-                sfpm.commitTransaction(serviceGroupId);
+                serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
 
             // after this point, we are going to do some policy related operations in the

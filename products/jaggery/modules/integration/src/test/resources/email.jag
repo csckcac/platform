@@ -4,8 +4,8 @@
     var to = "mashupserver@gmail.com";
     var subject = "Test Subject";
   
-    var msg = require('msg');
-    var email = new msg.Email("smtp.gmail.com", "25", "mashupserver", "wso2wsas");
+    var msg = require('email');
+    var email = new msg.Sender("smtp.gmail.com", "25", "mashupserver", "wso2wsas");
      
     email.from = "mashupserver@gmail.com";
     email.to = to;

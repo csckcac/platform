@@ -49,6 +49,11 @@
             <artifactId>org.wso2.carbon.apimgt.impl</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.apimgt.usage.publisher</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -62,8 +67,12 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
+                            !org.wso2.carbon.apimgt.usage.client.internal,
                             org.wso2.carbon.apimgt.usage.client.*
                         </Export-Package>
+                        <Private-Package>
+                            org.wso2.carbon.apimgt.usage.client.internal,
+                        </Private-Package>
                         <Import-Package>
                             javax.servlet;version="2.4.0",
                             javax.servlet.http;version="2.4.0",

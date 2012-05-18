@@ -174,7 +174,7 @@ public interface APIProvider extends APIManager {
      *
      * @param apiId         APIIdentifier
      * @param documentation Documentation
-     * @throws APIManagementException if failed to add documetation
+     * @throws APIManagementException if failed to add documentation
      */
     public void addDocumentation(APIIdentifier apiId,
                                  Documentation documentation) throws APIManagementException;

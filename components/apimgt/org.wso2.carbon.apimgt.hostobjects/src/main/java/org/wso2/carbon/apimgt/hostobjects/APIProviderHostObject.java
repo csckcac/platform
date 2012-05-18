@@ -41,7 +41,7 @@ import org.wso2.carbon.apimgt.api.model.Tier;
 import org.wso2.carbon.apimgt.api.model.URITemplate;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
-import org.wso2.carbon.apimgt.usage.client.APIMgtUsageQueryServiceClient;
+import org.wso2.carbon.apimgt.usage.client.APIUsageStatisticsClient;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
@@ -834,10 +834,10 @@ public class APIProviderHostObject extends ScriptableObject {
             throws ScriptException {
         List<ProviderAPIVersionUsageDTO> list = null;
         try {
-            APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getProviderAPIVersionUsage(providerName, APIname);
         } catch (APIMgtUsageQueryServiceClientException e) {
-            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIVersionUsage", e);
+            log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIVersionUsage", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -863,10 +863,10 @@ public class APIProviderHostObject extends ScriptableObject {
             throws ScriptException {
         List<ProviderAPIVersionUserUsageDTO> list = null;
         try {
-            APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getProviderAPIVersionUserUsage(providerName,APIname);
         } catch (APIMgtUsageQueryServiceClientException e) {
-            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIVersionUserUsage", e);
+            log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIVersionUserUsage", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -893,10 +893,10 @@ public class APIProviderHostObject extends ScriptableObject {
     public static NativeArray jsFunction_getProviderAPIUsage(String providerName, String serverURL) throws ScriptException {
         List<ProviderAPIUsageDTO> list = null;
         try {
-            APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getProviderAPIUsage(providerName);
         } catch (APIMgtUsageQueryServiceClientException e) {
-            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIUsage", e);
+            log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIUsage", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -922,10 +922,10 @@ public class APIProviderHostObject extends ScriptableObject {
     public static NativeArray jsFunction_getProviderAPIUserUsage(String providerName, String apiName, String serverURL) throws ScriptException {
         List<ProviderAPIUserUsageDTO> list = null;
         try {
-            APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getProviderAPIUserUsage(providerName, apiName);
         } catch (APIMgtUsageQueryServiceClientException e) {
-            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIUserUsage", e);
+            log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIUserUsage", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -950,10 +950,10 @@ public class APIProviderHostObject extends ScriptableObject {
     public static NativeArray jsFunction_getProviderAPIVersionUserLastAccess(String providerName,String serverURL) throws ScriptException {
         List<ProviderAPIVersionUserLastAccessDTO> list = null;
         try {
-            APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getProviderAPIVersionUserLastAccess(providerName);
         } catch (APIMgtUsageQueryServiceClientException e) {
-            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIVersionLastAccess", e);
+            log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIVersionLastAccess", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -979,10 +979,10 @@ public class APIProviderHostObject extends ScriptableObject {
     public static NativeArray jsFunction_getProviderAPIServiceTime(String providerName,String serverURL) throws ScriptException {
         List<ProviderAPIServiceTimeDTO> list = null;
         try {
-            APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getProviderAPIServiceTime(providerName);
         } catch (APIMgtUsageQueryServiceClientException e) {
-            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIServiceTime", e);
+            log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIServiceTime", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;

@@ -25,6 +25,7 @@ import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
@@ -33,6 +34,8 @@ import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserLastAccessDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
+import org.wso2.carbon.apimgt.usage.client.internal.APIUsageClientServiceComponent;
+import org.wso2.carbon.apimgt.usage.publisher.APIMgtUsagePublisherConstants;
 import org.wso2.carbon.bam.presentation.stub.QueryServiceStoreException;
 import org.wso2.carbon.bam.presentation.stub.QueryServiceStub;
 
@@ -41,40 +44,39 @@ import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class APIMgtUsageQueryServiceClient {
+public class APIUsageStatisticsClient {
 
     private QueryServiceStub qss;
 
     private APIProvider apiProviderImpl;
     private APIConsumer apiConsumerImpl;
 
-    public APIMgtUsageQueryServiceClient(String targetEndpoint) throws APIMgtUsageQueryServiceClientException {
+    public APIUsageStatisticsClient() throws APIMgtUsageQueryServiceClientException {
+        APIManagerConfiguration config = APIUsageClientServiceComponent.getAPIManagerConfiguration();
+        String targetEndpoint = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_URL);
         if (targetEndpoint == null || targetEndpoint.equals("")) {
-            targetEndpoint = "https://localhost:9444/";
-        }
-        String queryServiceEndpoint = targetEndpoint + "services/QueryService";
-        try {
-            qss = new QueryServiceStub(queryServiceEndpoint);
-        } catch (AxisFault e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating QueryServiceStub", e);
+            throw new APIMgtUsageQueryServiceClientException("Required BAM server URL parameter unspecified");
         }
 
         try {
+            qss = new QueryServiceStub(targetEndpoint + "services/QueryService");
             apiProviderImpl = APIManagerFactory.getInstance().getAPIProvider();
             apiConsumerImpl = APIManagerFactory.getInstance().getAPIConsumer();
+        } catch (AxisFault e) {
+            throw new APIMgtUsageQueryServiceClientException("Error while instantiating QueryServiceStub", e);
         } catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating Impl classes", e);
+            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating API manager core objects", e);
         }
     }
 
     /**
      * This method can be used to get total request count for each API version by provider.
-     * @return  List<ProviderAPIVersionUsageDTO>
-     * @throws APIMgtUsageQueryServiceClientException
+     * @return  List<ProviderAPIVersionUsageDTO> a list of usage information beans
+     * @throws APIMgtUsageQueryServiceClientException on error
      */
     public List<ProviderAPIVersionUsageDTO> getProviderAPIVersionUsage(String providerName, String apiName) throws APIMgtUsageQueryServiceClientException {
         List<ProviderAPIVersionUsageDTO> result = new ArrayList<ProviderAPIVersionUsageDTO>();
-        OMElement omElement = null;
+        OMElement omElement;
         QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
         compositeIndex[0] = new QueryServiceStub.CompositeIndex();
         compositeIndex[0].setIndexName("api");

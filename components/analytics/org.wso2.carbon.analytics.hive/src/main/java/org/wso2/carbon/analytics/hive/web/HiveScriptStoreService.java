@@ -108,14 +108,7 @@ public class HiveScriptStoreService {
         }
 
         if (info != null && taskState != null) {
-            try {
-                TaskInfo taskInfo = manager.getTask(scriptName);
-                return taskInfo.getTriggerInfo().getCronExpression();
-            } catch (TaskException e) {
-                log.error("Error while retrieving cron expression of task : " + scriptName + "..", e);
-                throw new HiveScriptStoreException("Error while retrieving cron expression of task : " + scriptName +
-                                                   "..", e);
-            }
+          return info.getTriggerInfo().getCronExpression();
         }
         return  "";
     }

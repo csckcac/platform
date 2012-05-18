@@ -38,13 +38,19 @@
             <artifactId>org.wso2.carbon.deployment.synchronizer.server.feature</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-	    </dependency>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.deployment.synchronizer.ui.feature</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-	    </dependency>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.deployment.synchronizer.subversion.feature</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -67,9 +73,14 @@
                                 <importFeatureDef>org.wso2.carbon.core:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.server.feature</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.ui.feature</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.subversion.feature</includedFeatureDef>
+                                <includedFeatureDef>
+                                    org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.server.feature
+                                </includedFeatureDef>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.ui.feature
+                                </includedFeatureDef>
+                                <includedFeatureDef>
+                                    org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.subversion.feature
+                                </includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

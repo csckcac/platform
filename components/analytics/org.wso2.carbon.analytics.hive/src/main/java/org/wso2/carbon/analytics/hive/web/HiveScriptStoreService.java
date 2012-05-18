@@ -59,6 +59,7 @@ public class HiveScriptStoreService {
         }
 
         if (cron != null && !cron.equals("")) {
+            deleteTask(scriptName);
             TaskInfo.TriggerInfo triggerInfo = new TaskInfo.TriggerInfo();
             //triggerInfo.setRepeatCount(sequence.getCount());
             //triggerInfo.setIntervalMillis(sequence.getInterval());
@@ -94,6 +95,31 @@ public class HiveScriptStoreService {
 
     }
 
+    public String getCronExpression(String scriptName) throws HiveScriptStoreException {
+      scriptName = validateScriptName(scriptName);
+      TaskManager.TaskState taskState = null;
+        TaskInfo info = null;
+        TaskManager manager = ServiceHolder.getTaskManager();
+        try {
+            info = manager.getTask(scriptName);
+            taskState = manager.getTaskState(scriptName);
+        } catch (TaskException ignored) {
+            //
+        }
+
+        if (info != null && taskState != null) {
+            try {
+                TaskInfo taskInfo = manager.getTask(scriptName);
+                return taskInfo.getTriggerInfo().getCronExpression();
+            } catch (TaskException e) {
+                log.error("Error while retrieving cron expression of task : " + scriptName + "..", e);
+                throw new HiveScriptStoreException("Error while retrieving cron expression of task : " + scriptName +
+                                                   "..", e);
+            }
+        }
+        return  "";
+    }
+
 // Not needed since the saving the same script will overwrite.
 //    public void editHiveScript(String scriptName, String scriptContent)
 //            throws HiveScriptStoreException {
@@ -121,8 +147,12 @@ public class HiveScriptStoreService {
             throw new HiveScriptStoreException("Script name is empty. Please provide a valid" +
                                                " script name!");
         }
+        deleteTask(scriptName);
+    }
 
-        TaskManager.TaskState taskState = null;
+
+    private void deleteTask(String scriptName) throws HiveScriptStoreException {
+       TaskManager.TaskState taskState = null;
         TaskInfo info = null;
         TaskManager manager = ServiceHolder.getTaskManager();
         try {
@@ -142,7 +172,6 @@ public class HiveScriptStoreService {
             }
         }
     }
-
     private String validateScriptName(String scriptName) {
         if (scriptName.endsWith(HiveConstants.HIVE_SCRIPT_EXT)) {
             scriptName = scriptName.substring(0, scriptName.length() -

@@ -46,22 +46,22 @@
     String scriptContent = "";
     String cron = "";
     String mode = request.getParameter("mode");
-    if(null != request.getParameter("cron")){
-      cron =  request.getParameter("cron").toString();
+    if (null != request.getParameter("cron")) {
+        cron = request.getParameter("cron").toString();
     }
     boolean scriptNameExists = false;
     if (request.getParameter("scriptName") != null && !request.getParameter("scriptName").equals("")) {
         scriptName = request.getParameter("scriptName");
     }
-    if(null!=mode && mode.equalsIgnoreCase("edit")){
+    if (null != mode && mode.equalsIgnoreCase("edit")) {
         scriptNameExists = true;
-    } else{
-        scriptNameExists  =false;
+    } else {
+        scriptNameExists = false;
         mode = "";
     }
     String requestUrl = request.getHeader("Referer");
     boolean isFromScheduling = false;
-    if(requestUrl != null && requestUrl.contains("scheduletask.jsp")){
+    if (requestUrl != null && requestUrl.contains("scheduletask.jsp")) {
         isFromScheduling = true;
     }
     if (scriptNameExists && !isFromScheduling) {
@@ -72,6 +72,7 @@
             String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
             HiveScriptStoreClient client = new HiveScriptStoreClient(cookie, serverURL, configContext);
             scriptContent = client.getScript(scriptName);
+            cron = client.getCronExpression(scriptName);
         } catch (Exception e) {
             String errorString = e.getMessage();
             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
@@ -84,22 +85,22 @@
             return;
         }
     }
-    if(isFromScheduling){
+    if (isFromScheduling) {
         scriptContent = request.getParameter("scriptContent");
-        if(scriptContent != null && !scriptContent.equals("")){
-          String[] queries = scriptContent.split(";");
-          scriptContent = "";
-        for(String aquery: queries){
-            aquery = aquery.trim();
-            if(!aquery.equals("")) scriptContent = scriptContent + aquery+";"+"\n";
+        if (scriptContent != null && !scriptContent.equals("")) {
+            String[] queries = scriptContent.split(";");
+            scriptContent = "";
+            for (String aquery : queries) {
+                aquery = aquery.trim();
+                if (!aquery.equals("")) scriptContent = scriptContent + aquery + ";" + "\n";
+            }
         }
-        }
-
     }
 %>
 <script type="text/javascript">
     var cron = '<%=cron%>';
     var scriptName = '<%=scriptName%>';
+    var allQueries = '';
     function executeQuery() {
         var allQueries = editAreaLoader.getValue("allcommands");
         if (allQueries != "") {
@@ -128,55 +129,23 @@
     }
 
     function saveScript() {
-        var allQueries = editAreaLoader.getValue("allcommands");
-        if(scriptName==''){
-           scriptName = document.getElementById('scriptName').value;
-        }
+        allQueries = editAreaLoader.getValue("allcommands");
+        scriptName = document.getElementById('scriptName').value;
         if (allQueries != "") {
             if (scriptName != "") {
-                if(cron != ""){
-                new Ajax.Request('../hive-explorer/SaveScriptProcessor', {
-                            method: 'post',
-                            parameters: {queries:allQueries, scriptName:scriptName,
-                                cronExp:cron},
-                            onSuccess: function(transport) {
-                                var result = transport.responseText;
-                                alert(result);
-                                if (result.contains('Success')) {
-                                    CARBON.showInfoDialog(result);
-                                } else {
-                                    CARBON.showErrorDialog(result);
-                                }
-                            },
-                            onFailure: function(transport) {
-                                CARBON.showErrorDialog(result);
-                            }
-                        });
+                if (cron != "") {
+                    checkExistingNameAndSaveScript();
                 }
-                else{
-                    CARBON.showConfirmationDialog("Do you want to schedule the script?", function(){
+                else {
+                    CARBON.showConfirmationDialog("Do you want to schedule the script?", function() {
                         scheduleTask();
-                    }, function(){
-                          new Ajax.Request('../hive-explorer/SaveScriptProcessor', {
-                            method: 'post',
-                            parameters: {queries:allQueries, scriptName:scriptName, cronExp:cron},
-                            onSuccess: function(transport) {
-                                var result = transport.responseText;
-                                alert(result);
-                                if (result.contains('Success')) {
-                                    CARBON.showInfoDialog(result);
-                                } else {
-                                    CARBON.showErrorDialog(result);
-                                }
-                            },
-                            onFailure: function(transport) {
-                                CARBON.showErrorDialog(result);
-                            }
-                        });
-                    }, function(){
+                    }, function() {
+                        checkExistingNameAndSaveScript();
+                    }, function() {
 
                     });
                 }
+
             } else {
                 var message = "Please enter script name to save";
                 CARBON.showErrorDialog(message);
@@ -193,9 +162,57 @@
     }
 
     function scheduleTask() {
-            var allQueries = editAreaLoader.getValue("allcommands")
-            document.getElementById('commandForm').action = "../hive-explorer/scheduletask.jsp?mode="+'<%=mode%>&scriptContent='+allQueries;
-            document.getElementById('commandForm').submit();
+        var allQueries = editAreaLoader.getValue("allcommands")
+        document.getElementById('commandForm').action = "../hive-explorer/scheduletask.jsp?mode=" + '<%=mode%>&scriptContent=' + allQueries + '&cron=' + '<%=cron%>';
+        document.getElementById('commandForm').submit();
+    }
+
+    function checkExistingNameAndSaveScript() {
+        var mode = '<%=mode%>';
+        if (mode != 'edit') {
+            new Ajax.Request('../hive-explorer/ScriptNameChecker', {
+                        method: 'post',
+                        parameters: {scriptName:scriptName},
+                        onSuccess: function(transport) {
+                            var result = transport.responseText;
+                            if (result.indexOf('true') != -1) {
+                                var message = "The script name: " + scriptName + 'already exists in the database. Please enter a different script name.';
+                                CARBON.showErrorDialog(message);
+                            } else {
+                                     sendRequestToSaveScript();
+                            }
+                        },
+                        onFailure: function(transport) {
+                            return true;
+                        }
+                    });
+        } else {
+            sendRequestToSaveScript();
+        }
+    }
+
+    function sendRequestToSaveScript() {
+        new Ajax.Request('../hive-explorer/SaveScriptProcessor', {
+                    method: 'post',
+                    parameters: {queries:allQueries, scriptName:scriptName,
+                        cronExp:cron},
+                    onSuccess: function(transport) {
+                        var result = transport.responseText;
+                        if (result.indexOf('Success') != -1) {
+                            CARBON.showInfoDialog(result, function() {
+                                location.href = "../hive-explorer/listscripts.jsp";
+                            }, function() {
+                                location.href = "../hive-explorer/listscripts.jsp";
+                            });
+
+                        } else {
+                            CARBON.showErrorDialog(result);
+                        }
+                    },
+                    onFailure: function(transport) {
+                        CARBON.showErrorDialog(result);
+                    }
+                });
     }
 
 </script>
@@ -229,7 +246,17 @@
 
 
 <div id="middle">
+    <%
+        if (scriptNameExists) {
+    %>
     <h2>Hive Explorer<%=" - " + scriptName%>
+        <%
+        } else {
+        %>
+        <h2>Hive Explorer</h2>
+        <%
+            }
+        %>
     </h2>
 
     <div id="workArea">
@@ -256,7 +283,8 @@
                                     <fmt:message key="hive.script.name"/>
                                 </td>
                                 <td>
-                                    <input type="text" id="scriptName" name="scriptName" size="60" value="<%=scriptName%>"/>
+                                    <input type="text" id="scriptName" name="scriptName" size="60"
+                                           value="<%=scriptName%>"/>
                                 </td>
                             </tr>
                             </tbody>
@@ -264,9 +292,9 @@
                     </td>
                 </tr>
                 <%
-                    }else{ %>
-                      <input type="hidden" value="<%=scriptName%>" name="scriptName" id="scriptName">
-                   <% }
+                } else { %>
+                <input type="hidden" value="<%=scriptName%>" name="scriptName" id="scriptName">
+                <% }
                 %>
                 <tr>
                     <td>
@@ -311,7 +339,9 @@
                                             <td></td>
                                             <td></td>
                                             <td valign="top">
-                                                <a href="javascript: scheduleTask();"><label><img src="images/schedule_icon.png" alt="schedule_icon">Schedule Script</label></a>
+                                                <a href="javascript: scheduleTask();"><label><img
+                                                        src="images/schedule_icon.png" alt="schedule_icon">Schedule
+                                                    Script</label></a>
                                             </td>
                                         </tr>
                                         </tbody>

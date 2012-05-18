@@ -38,6 +38,13 @@
             <servlet-class>org.wso2.carbon.hive.explorer.ui.servlet.SaveCronExpression
             </servlet-class>
         </servlet>
+         <servlet id="ScriptNameChecker">
+            <servlet-name>ScriptNameChecker</servlet-name>
+            <url-pattern>/carbon/hive-explorer/ScriptNameChecker</url-pattern>
+            <display-name>ScriptNameChecker</display-name>
+            <servlet-class>org.wso2.carbon.hive.explorer.ui.servlet.ScriptNameChecker
+            </servlet-class>
+        </servlet>
     </servlets>
     <menus>
         <menu>

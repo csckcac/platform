@@ -37,8 +37,9 @@
     }
     String scriptContent = request.getParameter("scriptContent");
     String mode = request.getParameter("mode");
-
+    String cron = request.getParameter("cron");
 %>
+
 <script type="text/javascript">
     var cronExpSelected = '';
 
@@ -65,16 +66,16 @@
                             selectDay:selectDay,hoursSelected: hour, minutesSelected:minutes,
                             optionCron:optionCron},
                         onSuccess: function(transport) {
-                            var message = transport.responseText;
-                            var array = message.split('#');
-                            cronExpSelected = array[2];
-                            CARBON.showInfoDialog(array[0], function(){
-                               location.href = '../hive-explorer/hiveexplorer.jsp?cron='+cronExpSelected+ '&scriptName='+'<%=scriptName%>' +'&mode=' + '<%=mode%>' +'&scriptContent='+'<%=scriptContent%>';
-                            }, function(){
-                              location.href = '../hive-explorer/hiveexplorer.jsp?cron='+cronExpSelected+ '&scriptName='+'<%=scriptName%>' +'&mode=' + '<%=mode%>' +'&scriptContent='+'<%=scriptContent%>';
-                            });
-                            if (message.contains("Success")) {
-
+                            var result = transport.responseText;
+                            var array = result.split('#');
+                            var message = array[0];
+                            if (message.indexOf("Success") != -1) {
+                                cronExpSelected = array[2];
+                                CARBON.showInfoDialog(array[0], function() {
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
+                                }, function() {
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
+                                });
 
                             } else {
                                 CARBON.showErrorDialog(message);
@@ -98,10 +99,10 @@
                                 var message = transport.responseText;
                                 var array = message.split('#');
                                 cronExpSelected = array[2];
-                                CARBON.showInfoDialog(array[0], function(){
-                                   location.href = '../hive-explorer/hiveexplorer.jsp?cron='+cronExpSelected+ '&scriptName='+'<%=scriptName%>' +'&mode=' + '<%=mode%>' +'&scriptContent='+'<%=scriptContent%>';
-                                }, function(){
-                                  location.href = '../hive-explorer/hiveexplorer.jsp?cron='+cronExpSelected+ '&scriptName='+'<%=scriptName%>' +'&mode=' + '<%=mode%>' +'&scriptContent='+'<%=scriptContent%>';
+                                CARBON.showInfoDialog(array[0], function() {
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
+                                }, function() {
+                                    location.href = '../hive-explorer/hiveexplorer.jsp?cron=' + cronExpSelected + '&scriptName=' + '<%=scriptName%>' + '&mode=' + '<%=mode%>' + '&scriptContent=' + '<%=scriptContent%>';
                                 });
 
                                 if (message.contains("Success")) {
@@ -202,7 +203,7 @@
         document.getElementById('count').disabled = value;
     }
 
-    function cancelCron(){
+    function cancelCron() {
         history.go(-1);
     }
 
@@ -253,7 +254,17 @@
                                     class="required">*</span></td>
                             <td><input name="cronExpression"
                                        id="cronExpression"
+                                    <%
+                                        if (cron != null && !cron.equals("")) {
+                                    %>
+                                       value='<%=cron%>'
+                                    <%
+                                    } else {
+                                    %>
                                        value="<fmt:message key="default.cron.expression"/>"
+                                    <%
+                                        }
+                                    %>
                                        size="60"/>
                             </td>
 
@@ -329,7 +340,7 @@
                                 <input TYPE=RADIO NAME="selectDay" id="selectDayMonth"
                                        VALUE="selectDayMonth"
                                        checked="true" onclick="dayMonthSelection()"><label>Use
-                                day of month for scheduling: </label><br>
+                                day of month for scheduling </label><br>
                             </td>
 
                             <td>
@@ -356,7 +367,7 @@
                                 <input TYPE=RADIO NAME="selectDay" id="selectDayWeek"
                                        VALUE="selectDayWeek"
                                        onclick="dayWeekSelection();"><label>Use
-                                day of week for scheduling:</label><br>
+                                day of week for scheduling</label><br>
 
                             </td>
 

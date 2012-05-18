@@ -58,4 +58,8 @@ public class HiveScriptStoreClient {
     public void deleteScript(String scriptName) throws HiveScriptStoreServiceHiveScriptStoreException, RemoteException {
         stub.deleteScript(scriptName);
     }
+
+    public String getCronExpression(String scriptName) throws HiveScriptStoreServiceHiveScriptStoreException, RemoteException {
+       return stub.getCronExpression(scriptName);
+    }
 }

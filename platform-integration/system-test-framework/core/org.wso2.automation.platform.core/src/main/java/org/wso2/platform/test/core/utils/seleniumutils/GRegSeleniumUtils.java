@@ -33,16 +33,22 @@ public class GRegSeleniumUtils {
     public static int getResourceId(WebDriver driver, String resourceName) {
         int pageCount = 10;
         int id = 0;
-        if (driver.getPageSource().contains(resourceName)) {
-            for (int i = 1; i <= pageCount; i++) {
-                if (driver.findElement(By.id("resourceView" + i)).getText().equals(resourceName) ||
-                    driver.findElement(By.id("resourceView" + i)).getText().equals(resourceName +
-                                                                                   " " + "..")) {
-                    id = i;
-                    break;
+        long currentTime = System.currentTimeMillis();
+        long actualTime;
+
+        do {
+            if (driver.getPageSource().contains(resourceName)) {
+                for (int i = 1; i <= pageCount; i++) {
+                    if (driver.findElement(By.id("resourceView" + i)).getText().equals(resourceName) ||
+                        driver.findElement(By.id("resourceView" + i)).getText().equals(resourceName +
+                                                                                       " " + "..")) {
+                        return i;
+                    }
                 }
             }
-        }
+            actualTime = System.currentTimeMillis();
+        } while (!(((actualTime - currentTime) / 1000) > 15));
+
         return id;
     }
 

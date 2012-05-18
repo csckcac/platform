@@ -27,6 +27,7 @@ import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -194,7 +195,7 @@ public class GRegStratosResourceSeleniumTest {
             findLocation(collectionPath + "/" + resourceName);
             addServiceLifeCycle();
             promoteState();
-            waitForLifeCycleStateTransition("Tested");
+            waitForLifeCycleStateTransition("Testing");
             promoteState();
             waitForLifeCycleStateTransition("Production");
             deleteServiceLifeCycle();
@@ -267,6 +268,7 @@ public class GRegStratosResourceSeleniumTest {
             addResource(resourceName);
             findLocation(collectionPath);
             renameResource(rename);
+            GRegSeleniumUtils.waitForElement(driver, "id", "resourceView1");
             assertTrue(GRegSeleniumUtils.getResourceId(driver, rename) != 0,
                        "Resource doesn't exists");
             userLogout();
@@ -288,12 +290,11 @@ public class GRegStratosResourceSeleniumTest {
         }
     }
 
-    @Test(groups = {"wso2.greg"}, description = "move a resource", priority = 7)
+    @Test(groups = {"wso2.greg"}, description = "move a resource", enabled = false, priority = 7)
     public void testMoveResource() throws Exception {
         String collectionPath1 = "/selenium_root/resource_root/move1/a1";
         String collectionPath2 = "/selenium_root/resource_root/move2/b1";
         String resourceName1 = "res1";
-        String resourceName2 = "res2";
 
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
@@ -309,12 +310,14 @@ public class GRegStratosResourceSeleniumTest {
                          "New Created Collection does not Exists :");
             findLocation("/selenium_root/resource_root/move1/a1/");
             moveResource(collectionPath2);
+
+            assertFalse(GRegSeleniumUtils.getResourceId(driver, resourceName1) != 0,
+                        "Resource exists even after moving");
             findLocation(collectionPath2);
-            addResource(resourceName2);
-            findLocation(collectionPath2);
-            assertTrue(selenium.isTextPresent("res1"), "Moved res1 resource does not Exists :");
+            assertTrue(GRegSeleniumUtils.getResourceId(driver, resourceName1) != 0,
+                       "Resource doesn't exists");
             findLocation(collectionPath1);
-            assertFalse(selenium.isTextPresent("res1"), "res1 resource has not been moved :");
+
             userLogout();
             log.info("********GReg Stratos - Move a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
@@ -347,10 +350,14 @@ public class GRegStratosResourceSeleniumTest {
             assertEquals(collectionPath1, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
             addResource(resourceName1);
+            assertTrue(GRegSeleniumUtils.getResourceId(driver, resourceName1) != 0,
+                        "Resource doesn't exists");
             findLocation(collectionPath1);
-            deleteResource();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, resourceName1);
             findLocation(collectionPath1);
-            assertFalse(selenium.isTextPresent("res1"), "Resource res1 does Exists:");
+            assertFalse(GRegSeleniumUtils.getResourceId(driver, resourceName1) != 0,
+                        "Resource exists even after deleting");
+            findLocation("/");
             userLogout();
             log.info("********GReg Stratos - Delete Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
@@ -370,35 +377,31 @@ public class GRegStratosResourceSeleniumTest {
         }
     }
 
-    @Test(groups = {"wso2.greg"}, description = "copy a resource", priority = 9)
+    @Test(groups = {"wso2.greg"}, description = "copy a resource", priority = 9, enabled = false)
     public void testCopyResource() throws Exception {
         String collectionPath1 = "/selenium_root/resource_root/copy1/a1";
         String collectionPath2 = "/selenium_root/resource_root/copy2/b1";
         String resourceName1 = "res1";
-        String resourceName2 = "res2";
-        String copyPath = "/selenium_root/resource_root/copy2/b1";
 
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath1);
-            assertEquals(collectionPath1, selenium.getValue("//input"),
-                         "New Created Collection1 does not Exists :");
             addResource(resourceName1);
+            assertTrue(GRegSeleniumUtils.getResourceId(driver, resourceName1) != 0,
+                       "Resource doesn't exists");
             findLocation("/");
             addCollection(collectionPath2);
-            assertEquals(collectionPath2, selenium.getValue("//input"),
-                         "New Created Collection2 does not Exists :");
-            findLocation("/selenium_root/resource_root/copy1/a1/");
-            copyResource(copyPath);
-            findLocation(collectionPath2);
-            addResource(resourceName2);
-            findLocation(collectionPath2);
-            assertTrue(selenium.isTextPresent("res1"),
-                       "copied res1 resource does not Exists in copied to location :");
             findLocation(collectionPath1);
-            assertTrue(selenium.isTextPresent("res1"), "copied resource does not exists : :");
+            copyResource(collectionPath2);
+
+            assertTrue(GRegSeleniumUtils.getResourceId(driver, resourceName1) != 0,
+                       "Resource should exits even after copying");
+            Thread.sleep(3000);
+            findLocation(collectionPath2);
+            assertTrue(GRegSeleniumUtils.getResourceId(driver, resourceName1) != 0,
+                       "Resource doesn't exits at the copied location");
             userLogout();
             log.info("********GReg Stratos - Copy a Resource test - Passed ***********");
         } catch (AssertionFailedError e) {
@@ -424,20 +427,13 @@ public class GRegStratosResourceSeleniumTest {
         driver.quit();
     }
 
-    private void deleteResource() throws InterruptedException {
-        driver.findElement(By.id("actionLink1")).click();
-        driver.findElement(By.linkText("Delete")).click();
-        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
-                   "Popup not found :");
-        driver.findElement(By.xpath("//button")).click();
-    }
-
 
     private void copyResource(String copyPath) throws InterruptedException {
         driver.findElement(By.id("actionLink1")).click();
         driver.findElement(By.linkText("Copy")).click();
         driver.findElement(By.id("copy_destination_path1")).sendKeys(copyPath);
         driver.findElement(By.xpath("//td/table/tbody/tr[2]/td/input")).click();
+        GRegSeleniumUtils.waitForElement(driver, "id", "ui-dialog-title-dialog");
         assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
                    "Popup not found :");
         driver.findElement(By.xpath("//button")).click();
@@ -448,6 +444,7 @@ public class GRegStratosResourceSeleniumTest {
         driver.findElement(By.linkText("Move")).click();
         driver.findElement(By.id("move_destination_path1")).sendKeys(collectionPath2);
         driver.findElement(By.xpath("//tr[5]/td/table/tbody/tr[2]/td/input")).click();
+        GRegSeleniumUtils.waitForElement(driver, "id", "ui-dialog-title-dialog");
         assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
                    "Popup not found :");
         driver.findElement(By.xpath("//button")).click();
@@ -460,6 +457,7 @@ public class GRegStratosResourceSeleniumTest {
         driver.findElement(By.id("resourceEdit1")).clear();
         driver.findElement(By.id("resourceEdit1")).sendKeys(rename);
         driver.findElement(By.xpath("//tr[6]/td/table/tbody/tr[2]/td/input")).click();
+        GRegSeleniumUtils.waitForElement(driver, "id", "ui-dialog-title-dialog");
         assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
                    "Popup not found :");
         driver.findElement(By.xpath("//button")).click();
@@ -608,19 +606,29 @@ public class GRegStratosResourceSeleniumTest {
 
     private void addResource(String resourceName) throws Exception {
         driver.findElement(By.linkText("Add Resource")).click();
-        assertTrue(selenium.isTextPresent("Add Resource"), "Add new resource page failed :");
-        //select create text content
-        selenium.select("id=addMethodSelector", "label=Create Text content");
-        selenium.click("css=option[value=\"text\"]");
-        // Enter name
+        assertTrue(driver.findElement(By.className("middle-header")).getText().contains("Upload " +
+                                                                                        "Content From File"));
+
+        WebElement dropDownListBox = driver.findElement(By.id("addMethodSelector"));
+        Select clickThis = new Select(dropDownListBox);
+        clickThis.selectByValue("text");
+        GRegSeleniumUtils.waitForElement(driver, "id", "trPlainContent");
         driver.findElement(By.id("trFileName")).sendKeys(resourceName);
         driver.findElement(By.id("trMediaType")).sendKeys("txt");
         driver.findElement(By.id("trDescription")).sendKeys("selenium test resource");
         driver.findElement(By.id("trPlainContent")).sendKeys("selenium test123");
+        Thread.sleep(5000);
         // Click on Add button
+        GRegSeleniumUtils.waitForElement(driver, "xpath",
+                                         "//tr[4]/td/form/table/tbody/tr[6]/td/input");
         driver.findElement(By.xpath("//tr[4]/td/form/table/tbody/tr[6]/td/input")).click();
+        GRegSeleniumUtils.waitForElement(driver, "id", "ui-dialog-title-dialog");
         assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
                    "Popup not found :");
+
+        assertTrue(driver.findElement(By.id("messagebox-info")).getText().contains("Successfully " +
+                                                                                   "added"));
+        //Click on OK button
         driver.findElement(By.xpath("//button")).click();
     }
 

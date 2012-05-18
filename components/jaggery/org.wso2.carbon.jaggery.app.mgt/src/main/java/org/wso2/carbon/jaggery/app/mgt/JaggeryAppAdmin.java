@@ -599,24 +599,39 @@ public class JaggeryAppAdmin extends AbstractAdmin {
 
         AxisConfiguration axisConfig = getAxisConfig();
         String repoPath = axisConfig.getRepository().getPath();
+
+        repoPath = (repoPath.endsWith(File.separator)) ? repoPath = repoPath.substring(0, repoPath.length() - 1) : repoPath;
+
         String jaggeryAppsPath = repoPath + File.separator +
                 JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER;
         if (!repoPath.endsWith("/deployment/server/")) {
             jaggeryAppsPath = repoPath + File.separator +
                     JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER_IN_JAGGERY;
         }
-        File webappsDir = new File(jaggeryAppsPath);
-        if (!webappsDir.exists() && !webappsDir.mkdirs()) {
-            log.warn("Could not create directory " + webappsDir.getAbsolutePath());
-        }
+
         for (WebappUploadData uploadData : webappUploadDataList) {
             String fName = uploadData.getFileName();
             if (fName.contains(".")) {
                 fName = fName.split("\\.")[0];
             }
 
+            File webappsDir = new File(jaggeryAppsPath + File.separator + fName);
+            File jaggeryAppsFile = new File(jaggeryAppsPath);
+            if (webappsDir.exists()) {
+                String msg = "Jaggery app with the same name already exists";
+                log.error(msg);
+                throw new AxisFault(msg);
+            } else if (!jaggeryAppsFile.exists()) {
+                //if deployment directory is not there we create it
+                if (!jaggeryAppsFile.mkdir()) {
+                    String error = "Jaggery deployment directory not found and cannot be created when uploading";
+                    log.error(error);
+                    throw new AxisFault(error);
+                }
+            }
+
             try {
-                unZip(uploadData.getDataHandler().getInputStream(), webappsDir + File.separator + fName);
+                unZip(uploadData.getDataHandler().getInputStream(), jaggeryAppsPath + File.separator + fName);
             } catch (IOException e) {
                 log.error("Error Uploading Jaggery App", e);
                 throw new AxisFault(e.getMessage(), e);

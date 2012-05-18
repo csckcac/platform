@@ -125,7 +125,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                             CommonUtil.getConfigurationContext().getAxisConfiguration());
                                     requestContext.setProcessingComplete(true);
                                 } catch (UserStoreException e) {
-                                    log.error("Could not get user information");
+                                    log.error("Could not get user information", e);
                                 } finally {
                                     org.wso2.carbon.registry.extensions.utils.CommonUtil
                                             .releaseUpdateLock();
@@ -324,7 +324,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
 
                 } catch (AxisFault axisFault) {
                     String msg = "Error occured while adding services";
-                    log.error(msg);
+                    log.error(msg, axisFault);
                 }
             }
         }

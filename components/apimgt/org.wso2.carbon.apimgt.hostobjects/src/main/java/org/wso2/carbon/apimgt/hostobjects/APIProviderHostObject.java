@@ -294,6 +294,9 @@ public class APIProviderHostObject extends ScriptableObject {
             if (fileHostObject != null) {
                 api.setThumbnailUrl(apiProvider.addIcon(apiId, fileHostObject.getInputStream(),
                         fileHostObject.getJavaScriptFile().getContentType()));
+            } else if (oldApi.getThumbnailUrl() != null) {
+                // retain the previously uploaded image
+                api.setThumbnailUrl(oldApi.getThumbnailUrl());
             }
             apiProvider.updateAPI(api);
             success = true;

@@ -22,15 +22,14 @@
   -->
 
 <configuration>
-    <targetEpr>https://localhost:9443/carbon/email-verification/validator_ajaxprocessor.jsp
-    </targetEpr>
+    <targetEpr>https://localhost:9443/project-mgt/email-varification-processor.jag</targetEpr>
     <subject>WSO2 AppFactory Registration - Email validation instructions</subject>
     <body>
         Hi {first-name},
 
         Thank you for registering an account in WSO2 App Factory.
 
-        Your User Name: {admin}.
+        Your User Name: {admin-name}.
 
         Please click the following link to verify your email address.
     </body>

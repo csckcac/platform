@@ -137,14 +137,39 @@ public class DSSServerUIUtils {
 
     }
 
+    public void deletePrivilegeGroup(String privilegeGroupName) throws InterruptedException {
+        driver.findElement(By.linkText("Privilege Groups")).click();
+        driver.findElement(By.id("privilegeGroupTable")).findElement(By.id("tr_" + privilegeGroupName)).findElement(By.linkText("Delete")).click();
+        Assert.assertEquals(driver.findElement(By.id("dialog")).findElement(By.id("messagebox-confirm")).getText(),
+                            "Do you want to remove privilege group?",
+                            "Privilege Group deletion confirmation message mismatched");
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//button")).click();
+
+        Assert.assertEquals(driver.findElement(By.id("dialog")).findElement(By.id("messagebox-info")).getText(),
+                            "Privilege group has been successfully removed",
+                            "Verification Message mismatched");
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//button")).click();
+
+
+    }
+
     public void addPrivilegeGroup(String groupName) throws InterruptedException {
         driver.findElement(By.linkText("Privilege Groups")).click();
 
         driver.findElement(By.linkText("Add new privilege group")).click();
         driver.findElement(By.id("privGroupName")).sendKeys(groupName);
         driver.findElement(By.id("selectAll")).click();
-        driver.findElement(By.xpath("//td[3]/table/tbody/tr[3]/td/input")).click();
+        Thread.sleep(1000);
+        for (WebElement button : driver.findElement(By.id("content-table")).findElements(By.className("button"))) {
+            if ("Save".equalsIgnoreCase(button.getAttribute("value"))) {
+                button.click();
+                break;
+            }
 
+        }
+        Thread.sleep(1000);
         Assert.assertEquals(driver.findElement(By.id("dialog")).findElement(By.id("messagebox-info")).getText(),
                             "Privilege group has been successfully created",
                             "Privilege Group Pop-up message mismatched:");

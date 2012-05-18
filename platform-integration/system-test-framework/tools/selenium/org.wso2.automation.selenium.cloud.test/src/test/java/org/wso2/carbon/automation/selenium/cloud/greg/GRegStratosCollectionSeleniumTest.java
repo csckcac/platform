@@ -25,6 +25,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.annotations.*;
 import org.wso2.platform.test.core.BrowserManager;
 import org.wso2.platform.test.core.ProductConstant;
@@ -135,8 +137,12 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath);      //Create Collection  1
             assertEquals(collectionPath, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
-            addTag(tag);
-            selenium.mouseOver("//div[12]/div[3]/a");
+            applyTag(tag);
+
+            Actions builder = new Actions(driver);
+            WebElement tagElement = driver.findElement(By.xpath("//tr/td[4]/div[12]/div/div[12]/div[3]/a"));
+            builder.moveToElement(tagElement).build().perform();
+
             deleteTag();
             userLogout();
             log.info("********GReg Stratos Apply Tag to Collection Test - Passed ***********");
@@ -511,13 +517,10 @@ public class GRegStratosCollectionSeleniumTest {
                    "Service Life cycle default state does not exists:");
     }
 
-
     private void deleteTag() throws InterruptedException {
-        driver.findElement(By.xpath("//div[12]/div[3]/a[2]/img")).click();
-        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"));
-        assertTrue(driver.getPageSource().contains("WSO2 Carbon"), "Tag Delete pop-up title failed :");
-        assertTrue(driver.findElement(By.id("messagebox-confirm")).getText().contains("Are you sure you want to delete this tag?"),
-                   "Comment Delete pop-up  message failed :");
+        driver.findElement(By.xpath("//a[2]/img")).click();
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
         driver.findElement(By.xpath("//button")).click();
     }
 
@@ -571,6 +574,20 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.id("stdView")).click();        //Go to Detail view Tab
         assertTrue(selenium.isTextPresent("Browse"), "Browse Detail View Page fail :");
         assertTrue(selenium.isTextPresent("Metadata"), "Browse Detail View Page fail Metadata:");
+    }
+
+    private void applyTag(String tagName) throws InterruptedException {
+
+        if (!driver.findElement(By.id("tagAddDiv")).isDisplayed()) {
+            driver.findElement(By.id("tagsIconMinimized")).click();
+        }
+
+        driver.findElement(By.linkText("Add New Tag")).click();//click on Add New Tag
+        GRegSeleniumUtils.waitForElement(driver, "id", "tfTag");
+        driver.findElement(By.id("tfTag")).sendKeys(tagName);
+        driver.findElement(By.xpath("//div[2]/input[3]")).click();
+        GRegSeleniumUtils.waitForElement(driver, "xpath",
+                                         "//tr/td[4]/div[12]/div/div[12]/div[3]/a");
     }
 
 }

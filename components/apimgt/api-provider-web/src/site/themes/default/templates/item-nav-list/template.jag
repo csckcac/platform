@@ -1,5 +1,9 @@
 <% jagg.template("item-nav-list", function(inputs, outputs, jagg) { %>
-
+<script type="text/javascript">
+    var showTab = function (tabLink) {
+    $('#' + tabLink).tab('show');
+};
+</script>
 <ul class="nav nav-list">
   <% var api = outputs.api; %>
   <% if(api.thumb==null){%>

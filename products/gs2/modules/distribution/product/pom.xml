@@ -554,42 +554,6 @@
                         <version>1.1.1</version>
                         <executions>
                             <execution>
-                                <id>fix_http_port</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>sed</executable>
-                                    <arguments>
-                                        <argument>-i</argument>
-                                        <argument>-e</argument>
-                                        <argument>s/9763/8080/</argument>
-                                        <argument>
-                                            target/wso2carbon-core-${carbon.version}/repository/conf/mgt-transports.xml
-                                        </argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>fix_https_port</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>sed</executable>
-                                    <arguments>
-                                        <argument>-i</argument>
-                                        <argument>-e</argument>
-                                        <argument>s/9443/8443/</argument>
-                                        <argument>
-                                            target/wso2carbon-core-${carbon.version}/repository/conf/mgt-transports.xml
-                                        </argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <execution>
                                 <id>fix_http_port_axis2</id>
                                 <phase>package</phase>
                                 <goals>

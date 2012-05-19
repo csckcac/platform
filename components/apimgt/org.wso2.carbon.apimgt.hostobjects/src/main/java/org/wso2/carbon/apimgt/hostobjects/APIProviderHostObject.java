@@ -962,6 +962,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
                 APIVersionLastAccessTimeDTO usage = (APIVersionLastAccessTimeDTO) usageObject;
+                row.put("api_name", row, usage.getApiName());
                 row.put("api_version", row, usage.getApiVersion());
                 row.put("user", row, usage.getUser());
                 row.put("lastAccess", row, usage.getLastAccessTime());

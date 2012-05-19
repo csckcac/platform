@@ -48,16 +48,22 @@
         </div>
 </div>
 
-<h2>API Last Access Times</h2>
+<h2>API Last Access Times (Across All Versions)</h2>
 
         <div class="row-fluid well">
         <div class="span5">
 
         </div>
-            <div class="span6">
-                <table class="table" id="lastAccessTable">
-                 </table>
-            </div>
+        <div class="span6">
+            <table class="table" id="lastAccessTable">
+                <tr>
+                    <th>API</th>
+                    <th>Last Accessed Version</th>
+                    <th>Subscriber</th>
+                    <th>Access Time</th>
+                </tr>
+            </table>
+        </div>
 
 
 </div>

@@ -156,6 +156,7 @@ function getProviderAPIVersionUserLastAccess(providerName, server) {
         } else {
             for (var k = 0; k < usage.length; k++) {
                 var elem = {
+                    api_name:usage[k].api_name,
                     api_version:usage[k].api_version,
                     user:usage[k].user,
                     lastAccess:usage[k].lastAccess

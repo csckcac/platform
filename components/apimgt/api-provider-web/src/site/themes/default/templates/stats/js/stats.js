@@ -93,7 +93,7 @@ $(document).ready(function() {
                       $('#lastAccessTable').find("tr:gt(0)").remove();
                       var length = json.usage.length;
                       for (var i = 0; i < json.usage.length; i++) {
-                          $('#lastAccessTable').append($('<tr><td>' + json.usage[i].api_version + '</td><td>' + json.usage[i].user + '</td><td>' + json.usage[i].lastAccess + '</td></tr>'));
+                          $('#lastAccessTable').append($('<tr><td>' + json.usage[i].api_name + '</td><td>' + json.usage[i].api_version + '</td><td>' + json.usage[i].user + '</td><td>' + json.usage[i].lastAccess + '</td></tr>'));
                       }
 
                       if (length == 0) {

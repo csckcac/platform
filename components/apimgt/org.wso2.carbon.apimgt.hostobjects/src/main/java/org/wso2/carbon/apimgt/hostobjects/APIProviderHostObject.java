@@ -944,10 +944,10 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static NativeArray jsFunction_getProviderAPIVersionUserLastAccess(String providerName,String serverURL) throws ScriptException {
-        List<ProviderAPIVersionUserLastAccessDTO> list = null;
+        List<APIVersionLastAccessTimeDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
-            list = client.getProviderAPIVersionUserLastAccess(providerName);
+            list = client.getLastAccessTimesByAPI(providerName);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIVersionLastAccess", e);
         }
@@ -961,10 +961,10 @@ public class APIProviderHostObject extends ScriptableObject {
             while (it.hasNext()) {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
-                ProviderAPIVersionUserLastAccessDTO usage = (ProviderAPIVersionUserLastAccessDTO) usageObject;
-                row.put("api_version", row, usage.getApi_version());
+                APIVersionLastAccessTimeDTO usage = (APIVersionLastAccessTimeDTO) usageObject;
+                row.put("api_version", row, usage.getApiVersion());
                 row.put("user", row, usage.getUser());
-                row.put("lastAccess", row, usage.getLastAccess());
+                row.put("lastAccess", row, usage.getLastAccessTime());
                 myn.put(i, myn, row);
                 i++;
             }

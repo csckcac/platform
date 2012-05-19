@@ -15,42 +15,47 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.usage.client.dto;
 
-public class ProviderAPIVersionUserLastAccessDTO {
-    private String api_version;
+import java.util.Date;
 
+public class APIVersionLastAccessTimeDTO {
+    
+    private String apiName;
+    private String apiVersion;
     private String user;
+    private String lastAccessTime;
 
-    private String lastAccess;
-
-    public String getLastAccess(){
-        return lastAccess;
+    public String getApiName() {
+        return apiName;
     }
 
-    public String getApi_version(){
-        return api_version;
+    public void setApiName(String apiName) {
+        this.apiName = apiName;
     }
 
-    public String getUser(){
+    public String getApiVersion() {
+        return apiVersion;
+    }
+
+    public void setApiVersion(String apiVersion) {
+        this.apiVersion = apiVersion;
+    }
+
+    public String getUser() {
         return user;
     }
 
-    public void setLastAccess(String lastAccess){
-        this.lastAccess = lastAccess;
-    }
-
-    public void setApi_version(String api_version){
-        this.api_version = api_version;
-    }
-
-    public void setUser(String user){
+    public void setUser(String user) {
         this.user = user;
     }
 
-    public ProviderAPIVersionUserLastAccessDTO(String api_version, String user, String lastAccess){
-        this.api_version = api_version;
-        this.user = user;
-        this.lastAccess = lastAccess;
+    public String getLastAccessTime() {
+        return lastAccessTime;
+    }
+
+    public void setLastAccessTime(String lastAccessTime) {
+        this.lastAccessTime = lastAccessTime;
     }
 }

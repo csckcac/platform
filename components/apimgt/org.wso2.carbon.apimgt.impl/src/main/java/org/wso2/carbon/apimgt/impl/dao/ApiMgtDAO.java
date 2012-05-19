@@ -1149,11 +1149,13 @@ public class ApiMgtDAO {
         ResultSet result = null;
         Subscriber subscriber = null;
         String query = " SELECT" +
-                " SB.USER_ID ,SB.DATE_SUBSCRIBED" +
-                " FROM AM_SUBSCRIBER SB , AM_SUBSCRIPTION SP, AM_APPLICATION APP" +
-                " WHERE SP.ACCESS_TOKEN=?" +
+                " SB.USER_ID, SB.DATE_SUBSCRIBED" +
+                " FROM AM_SUBSCRIBER SB , AM_SUBSCRIPTION SP, AM_APPLICATION APP, AM_KEY_CONTEXT_MAPPING KCM, AM_SUBSCRIPTION_KEY_MAPPING SKM" +
+                " WHERE KCM.ACCESS_TOKEN=?" +
                 " AND SP.APPLICATION_ID=APP.APPLICATION_ID" +
-                " AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID";
+                " AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID" +
+                " AND SP.SUBSCRIPTION_ID=SKM.SUBSCRIPTION_ID" +
+                " AND KCM.KEY_CONTEXT_MAPPING_ID=SKM.KEY_CONTEXT_MAPPING_ID";
 
         try {
             connection = APIMgtDBUtil.getConnection();
@@ -1164,7 +1166,6 @@ public class ApiMgtDAO {
             while (result.next()) {
                 subscriber = new Subscriber(result.getString(APIConstants.SUBSCRIBER_FIELD_USER_ID));
                 subscriber.setSubscribedDate(result.getDate(APIConstants.SUBSCRIBER_FIELD_DATE_SUBSCRIBED));
-
             }
 
         } catch (SQLException e) {

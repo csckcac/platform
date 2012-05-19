@@ -37,6 +37,7 @@ import org.wso2.carbon.bam.presentation.stub.QueryServiceStub;
 
 import javax.xml.namespace.QName;
 import java.rmi.RemoteException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -200,6 +201,59 @@ public class APIUsageStatisticsClient {
     }
 
     /**
+     * Returns a list of APIVersionLastAccessTimeDTO objects for all the APIs belonging to the
+     * specified provider. Last access times are calculated without taking API versions into
+     * account. That is all the versions of an API are treated as one.
+     *
+     * @param providerName Name of the API provider
+     * @return a list of APIVersionLastAccessTimeDTO objects, possibly empty
+     * @throws APIMgtUsageQueryServiceClientException on error
+     */
+    public List<APIVersionLastAccessTimeDTO> getLastAccessTimesByAPI(String providerName)
+            throws APIMgtUsageQueryServiceClientException {
+
+        OMElement omElement = this.queryColumnFamily(
+                APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE,
+                APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE_INDEX,
+                null);
+        Collection<APIAccessTime> accessTimes = getAccessTimeData(omElement);
+        List<API> providerAPIs = getAPIsByProvider(providerName);
+        Map<String,APIAccessTime> lastAccessTimes = new TreeMap<String,APIAccessTime>();
+        for (APIAccessTime accessTime : accessTimes) {
+            for (API providerAPI : providerAPIs) {
+                if (providerAPI.getId().getApiName().equals(accessTime.apiName) &&
+                        providerAPI.getId().getVersion().equals(accessTime.apiVersion)) {
+                    APIAccessTime lastAccessTime = lastAccessTimes.get(accessTime.apiName);
+                    if (lastAccessTime == null || lastAccessTime.accessTime < accessTime.accessTime) {
+                        lastAccessTimes.put(accessTime.apiName, accessTime);
+                    }
+                }
+            }
+        }
+
+        List<APIVersionLastAccessTimeDTO> accessTimeDTOs = new ArrayList<APIVersionLastAccessTimeDTO>();
+        DateFormat dateFormat = new SimpleDateFormat();
+        for (APIAccessTime lastAccessTime : lastAccessTimes.values()) {
+            APIVersionLastAccessTimeDTO accessTimeDTO = new APIVersionLastAccessTimeDTO();
+            accessTimeDTO.setApiName(lastAccessTime.apiName);
+            accessTimeDTO.setApiVersion(lastAccessTime.apiVersion);
+            accessTimeDTO.setLastAccessTime(dateFormat.format(lastAccessTime.accessTime));
+            accessTimeDTO.setUser(getUserByAPIKey(lastAccessTime.apiKey).getName());
+            accessTimeDTOs.add(accessTimeDTO);
+        }
+        return accessTimeDTOs;
+    }
+    
+    private Subscriber getUserByAPIKey(String apiKey) throws APIMgtUsageQueryServiceClientException {
+        try {
+            return apiProviderImpl.getSubscriberById(apiKey);
+        } catch (APIManagementException e) {
+            throw new APIMgtUsageQueryServiceClientException("Error while retrieving subscriber " +
+                    "from API key", e);
+        }
+    }
+
+    /**
      * This method can be used to get total request count for each combination of API version and subscriber for provider.
      * @return  List<ProviderAPIVersionUserUsageDTO>
      * @throws APIMgtUsageQueryServiceClientException
@@ -303,69 +357,6 @@ public class APIUsageStatisticsClient {
             result.add(new ProviderAPIUserUsageDTO(key,String.valueOf(count)));
         }
         return result;
-    }    
-
-    /**
-     * This method can be used to get last access time for each combination of API version and subscriber for particular provider.
-     * @return List<ProviderAPIVersionUserLastAccessDTO>.
-     * @throws APIMgtUsageQueryServiceClientException
-     */
-    public List<ProviderAPIVersionUserLastAccessDTO> getProviderAPIVersionUserLastAccess(String providerName) throws APIMgtUsageQueryServiceClientException {
-        List<ProviderAPIVersionUserLastAccessDTO> result = new ArrayList<ProviderAPIVersionUserLastAccessDTO>();
-        OMElement omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE_INDEX, null);
-        List<API> apis = this.getAPIsByProvider(providerName);
-        Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
-        for(API api:apis){
-            String apiName = api.getId().getApiName();
-            Set<String> versions = this.getAPIVersions(providerName,apiName);
-            for(String version:versions){
-                Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,version);
-                // Make sure the subscribers passed down from here are unique by name
-                Map<String,Subscriber> subscriberMap = new HashMap<String, Subscriber>();
-                for (Subscriber subscriber : subscribers) {
-                    subscriberMap.put(subscriber.getName(), subscriber);
-                }
-                for(Subscriber subscriber:subscriberMap.values()){
-                    subscribedAPIs.addAll(this.getSubscribedIdentifiers(subscriber,providerName,apiName,version));
-                }
-            }
-        }
-        
-        Map<String,Double> lastAccessTimes = new HashMap<String, Double>();
-        for (SubscribedAPI subscribedAPI:subscribedAPIs) {
-            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-            Iterator oMElementIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-            while(oMElementIterator.hasNext()){
-                OMElement row = (OMElement)oMElementIterator.next();
-                String key = subscribedAPI.getApiId().getApiName() + ":" +
-                        subscribedAPI.getApiId().getVersion() + ":" +
-                        subscribedAPI.getSubscriber().getName();
-                if (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText().equals(
-                        subscribedAPI.getApiId().getApiName()+":v"+subscribedAPI.getApiId().getVersion()) &&
-                        row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(
-                                getProductionKey(subscribedAPI))) {
-                    if (lastAccessTimes.containsKey(key)) {
-                        Double date = lastAccessTimes.get(key);
-                        Double current = Double.parseDouble(row.getFirstChildWithName(
-                                new QName(APIMgtUsageQueryServiceClientConstants.REQUEST_TIME)).getText());
-                        if (current > date) {
-                            lastAccessTimes.put(key, current);
-                        }
-                    } else {
-                        lastAccessTimes.put(key, Double.parseDouble(row.getFirstChildWithName(
-                                new QName(APIMgtUsageQueryServiceClientConstants.REQUEST_TIME)).getText()));
-                    }
-                }
-            }
-        }
-        
-        for (Map.Entry<String,Double> accessTime : lastAccessTimes.entrySet()) {
-            String[] keySegments = accessTime.getKey().split(":");
-            result.add(new ProviderAPIVersionUserLastAccessDTO(keySegments[1],
-                    keySegments[2],
-                    new SimpleDateFormat().format(accessTime.getValue())));
-        }
-        return result;
     }
 
     private String getNextStringInLexicalOrder(String str) {
@@ -424,15 +415,16 @@ public class APIUsageStatisticsClient {
         }
     }
 
-    private Set<SubscribedAPI> getSubscribedIdentifiers(Subscriber subscriber, String providerName,String apiName, String version) throws APIMgtUsageQueryServiceClientException{
-        Set<SubscribedAPI> subscribedAPIs = null;
+    private Set<SubscribedAPI> getSubscribedIdentifiers(Subscriber subscriber, String providerName, 
+                                                        String apiName, String version) throws APIMgtUsageQueryServiceClientException{
         APIIdentifier apiIdentifier = new APIIdentifier(providerName, apiName, version);
         try {
-            subscribedAPIs = apiConsumerImpl.getSubscribedIdentifiers(subscriber, apiIdentifier);
+            return apiConsumerImpl.getSubscribedIdentifiers(subscriber, apiIdentifier);
         } catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while getting subscribedAPIs for "+subscriber.getName()+"-"+providerName+"-"+apiName+"-"+version+" combination", e);
+            throw new APIMgtUsageQueryServiceClientException("Error while getting subscribedAPIs " +
+                    "for " + subscriber.getName() + "-" + providerName + "-" + apiName + "-" + 
+                    version + " combination", e);
         }
-        return subscribedAPIs;
     }
 
     private Collection<APIUsage> getUsageData(OMElement data) {
@@ -459,6 +451,19 @@ public class APIUsageStatisticsClient {
             responseTimeData.add(new APIResponseTime(rowElement));
         }
         return responseTimeData;
+    }
+
+    private Collection<APIAccessTime> getAccessTimeData(OMElement data) {
+        OMElement rowsElement = data.getFirstChildWithName(new QName(
+                APIMgtUsageQueryServiceClientConstants.ROWS));
+        Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
+                APIMgtUsageQueryServiceClientConstants.ROW));
+        List<APIAccessTime> accessTimeData = new ArrayList<APIAccessTime>();
+        while (rowIterator.hasNext()) {
+            OMElement rowElement = (OMElement) rowIterator.next();
+            accessTimeData.add(new APIAccessTime(rowElement));
+        }
+        return accessTimeData;
     }
     
     private static class APIUsage {
@@ -494,6 +499,26 @@ public class APIUsageStatisticsClient {
                     APIMgtUsageQueryServiceClientConstants.SERVICE_TIME)).getText());
             responseCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(
                     APIMgtUsageQueryServiceClientConstants.RESPONSE)).getText());
+        }
+    }
+    
+    private static class APIAccessTime {
+        
+        private String apiName;
+        private String apiVersion;
+        private double accessTime;
+        private String apiKey;
+
+        public APIAccessTime(OMElement row) {
+            String nameVersion = row.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText();
+            int index = nameVersion.lastIndexOf(":v");
+            apiName = nameVersion.substring(0, index);
+            apiVersion = nameVersion.substring(index + 2);
+            accessTime = Double.parseDouble(row.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.REQUEST_TIME)).getText());
+            apiKey = row.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText();
         }
     }
 

@@ -14,7 +14,7 @@
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Last Accessed</th>
+                        <th>Date of Subscription</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -47,7 +47,7 @@
 
                <div class="row-fluid well">
             <div class="span5">
-            <h3>API Usage by Subscribers</h3>
+            <h3>Usage of <%=api.name%>-<%=api.version%> by Subscribers</h3>
                 <div>
                     <div id="userChart"></div>
                 </div>
@@ -55,7 +55,7 @@
                 <div class="span6">
                     <table class="table" id="userTable">
                           <tr>
-                            <th>User</th>
+                            <th>Subscriber</th>
                             <th>Number of API Calls</th>
                           </tr>
                       </table>

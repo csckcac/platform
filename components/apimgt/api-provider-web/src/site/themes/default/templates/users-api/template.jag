@@ -47,7 +47,7 @@
 
                <div class="row-fluid well">
             <div class="span5">
-            <h3>Usage of <%=api.name%>-<%=api.version%> by Subscribers</h3>
+            <h3>Usage by Subscribers (Across All Versions)</h3>
                 <div>
                     <div id="userChart"></div>
                 </div>

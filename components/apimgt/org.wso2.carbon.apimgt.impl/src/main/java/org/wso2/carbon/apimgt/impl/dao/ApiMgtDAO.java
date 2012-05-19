@@ -600,6 +600,45 @@ public class ApiMgtDAO {
         }
         return subscriber;
     }
+    
+    public APIIdentifier getAPIByConsumerKey(String accessToken) throws APIManagementException {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet result = null;
+
+        String getAPISql = "SELECT" +
+                " SUB.API_ID " +
+                "FROM" +
+                " AM_SUBSCRIPTION SUB," +
+                " AM_SUBSCRIPTION_KEY_MAPPING SKM," +
+                " AM_KEY_CONTEXT_MAPPING KCM " +
+                "WHERE" +
+                " KCM.ACCESS_TOKEN=?" +
+                " AND KCM.KEY_CONTEXT_MAPPING_ID=SKM.KEY_CONTEXT_MAPPING_ID" +
+                " AND SKM.SUBSCRIPTION_ID=SUB.SUBSCRIPTION_ID";
+
+        Set<APIKey> apiKeys = new HashSet<APIKey>();
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            PreparedStatement nestedPS = connection.prepareStatement(getAPISql);
+            nestedPS.setString(1, accessToken);
+            ResultSet nestedRS = nestedPS.executeQuery();
+            String apiId = null;
+            while (nestedRS.next()) {
+                apiId = nestedRS.getString("API_ID");    
+            }
+            if (apiId != null) {
+                String[] apiIdAttributes = apiId.split("_");
+                return new APIIdentifier(apiIdAttributes[0], apiIdAttributes[1], apiIdAttributes[2]);
+            }
+        } catch (SQLException e) {
+            String msg = "Failed to get API ID for token: " + accessToken;
+            throw new APIManagementException(msg, e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(ps, connection, result);
+        }
+        return null;    
+    }
 
     /**
      * This method returns the set of APIs for given subscriber

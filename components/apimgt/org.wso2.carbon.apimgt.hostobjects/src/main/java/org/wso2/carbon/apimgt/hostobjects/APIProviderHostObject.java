@@ -916,10 +916,10 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static NativeArray jsFunction_getProviderAPIUserUsage(String providerName, String apiName, String serverURL) throws ScriptException {
-        List<ProviderAPIUserUsageDTO> list = null;
+        List<PerUserAPIUsageDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
-            list = client.getProviderAPIUserUsage(providerName, apiName);
+            list = client.getUsageBySubscribers(providerName, apiName, 10);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIUserUsage", e);
         }
@@ -933,8 +933,8 @@ public class APIProviderHostObject extends ScriptableObject {
             while (it.hasNext()) {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
-                ProviderAPIUserUsageDTO usage = (ProviderAPIUserUsageDTO) usageObject;
-                row.put("user", row, usage.getUser());
+                PerUserAPIUsageDTO usage = (PerUserAPIUsageDTO) usageObject;
+                row.put("user", row, usage.getUsername());
                 row.put("count", row, usage.getCount());
                 myn.put(i, myn, row);
                 i++;

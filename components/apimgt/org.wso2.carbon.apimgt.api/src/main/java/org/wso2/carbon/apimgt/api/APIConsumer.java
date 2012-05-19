@@ -193,6 +193,8 @@ public interface APIConsumer extends APIManager {
 
     public Set<SubscribedAPI> getSubscribedIdentifiers(Subscriber subscriber,
                                                        APIIdentifier identifier) throws APIManagementException;
+    
+    public APIIdentifier getAPIByConsumerKey(String accessToken) throws APIManagementException;
 
     public Set<API> searchAPI(String searchTerm, String searchType) throws APIManagementException;
 }

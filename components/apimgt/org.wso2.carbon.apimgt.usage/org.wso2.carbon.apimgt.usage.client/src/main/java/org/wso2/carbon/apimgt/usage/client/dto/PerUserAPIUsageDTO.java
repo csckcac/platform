@@ -15,30 +15,27 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.usage.client.dto;
 
-public class ProviderAPIUserUsageDTO {
-    String user;
-    String count;
+public class PerUserAPIUsageDTO {
 
-    public String getCount(){
+    private String user;
+    private long count;
+
+    public long getCount(){
         return count;
     }
 
-    public String getUser(){
+    public String getUsername(){
         return user;
     }
 
-    public void setCount(String count){
+    public void setCount(long count){
         this.count = count;
     }
 
-    public void setVersion(String user){
+    public void setUsername(String user){
         this.user = user;
-    }
-
-    public ProviderAPIUserUsageDTO(String user, String count){
-        this.user = user;
-        this.count = count;
     }
 }

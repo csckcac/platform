@@ -243,6 +243,78 @@ public class APIUsageStatisticsClient {
         }
         return accessTimeDTOs;
     }
+
+    /**
+     * Returns a sorted list of PerUserAPIUsageDTO objects related to a particular API. The returned
+     * list will only have at most limit + 1 entries. This method does not differentiate between
+     * API versions.
+     *
+     * @param providerName API provider name
+     * @param apiName Name of the API
+     * @param limit Number of sorted entries to return
+     * @return a List of PerUserAPIUsageDTO objects - Possibly empty
+     * @throws APIMgtUsageQueryServiceClientException on error
+     */
+    public List<PerUserAPIUsageDTO> getUsageBySubscribers(String providerName, String apiName, int limit)
+            throws APIMgtUsageQueryServiceClientException {
+
+        OMElement omElement = this.queryColumnFamily(
+                APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE,
+                APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
+                null);
+        Map<String,Long> usageData = getUsageBySubscriber(omElement);
+        Map<String,PerUserAPIUsageDTO> usageByUsername = new HashMap<String, PerUserAPIUsageDTO>();
+        for (Map.Entry<String,Long> entry : usageData.entrySet()) {
+            Subscriber subscriber = getUserByAPIKey(entry.getKey());
+            if (subscriber != null) {
+                APIIdentifier apiId = getAPI(entry.getKey());
+                if (apiId.getApiName().equals(apiName) &&
+                        apiId.getProviderName().equals(providerName)) {
+                    PerUserAPIUsageDTO usageDTO = usageByUsername.get(subscriber.getName());
+                    if (usageDTO != null) {
+                        usageDTO.setCount(usageDTO.getCount() + entry.getValue());
+                    } else {
+                        usageDTO = new PerUserAPIUsageDTO();
+                        usageDTO.setUsername(subscriber.getName());
+                        usageDTO.setCount(entry.getValue());
+                        usageByUsername.put(subscriber.getName(), usageDTO);
+                    }
+                }
+            }
+        }
+        return getTopEntries(new ArrayList<PerUserAPIUsageDTO>(usageByUsername.values()), limit);
+    }
+
+    public List<PerUserAPIUsageDTO> getUsageBySubscribers(String providerName, String apiName, 
+                                                          String apiVersion, int limit) throws APIMgtUsageQueryServiceClientException {
+
+        OMElement omElement = this.queryColumnFamily(
+                APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE,
+                APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
+                null);
+        Map<String,Long> usageData = getUsageBySubscriber(omElement);
+        Map<String,PerUserAPIUsageDTO> usageByUsername = new HashMap<String, PerUserAPIUsageDTO>();
+        for (Map.Entry<String,Long> entry : usageData.entrySet()) {
+            Subscriber subscriber = getUserByAPIKey(entry.getKey());
+            if (subscriber != null) {
+                APIIdentifier apiId = getAPI(entry.getKey());
+                if (apiId.getApiName().equals(apiName) &&
+                        apiId.getProviderName().equals(providerName) &&
+                        apiId.getVersion().equals(apiVersion)) {
+                    PerUserAPIUsageDTO usageDTO = usageByUsername.get(subscriber.getName());
+                    if (usageDTO != null) {
+                        usageDTO.setCount(usageDTO.getCount() + entry.getValue());
+                    } else {
+                        usageDTO = new PerUserAPIUsageDTO();
+                        usageDTO.setUsername(subscriber.getName());
+                        usageDTO.setCount(entry.getValue());
+                        usageByUsername.put(subscriber.getName(), usageDTO);
+                    }
+                }
+            }
+        }
+        return getTopEntries(new ArrayList<PerUserAPIUsageDTO>(usageByUsername.values()), limit);
+    }
     
     private Subscriber getUserByAPIKey(String apiKey) throws APIMgtUsageQueryServiceClientException {
         try {
@@ -251,6 +323,28 @@ public class APIUsageStatisticsClient {
             throw new APIMgtUsageQueryServiceClientException("Error while retrieving subscriber " +
                     "from API key", e);
         }
+    }
+    
+    private List<PerUserAPIUsageDTO> getTopEntries(List<PerUserAPIUsageDTO> usageData, int limit) {
+        Collections.sort(usageData, new Comparator<PerUserAPIUsageDTO>() {
+            public int compare(PerUserAPIUsageDTO o1, PerUserAPIUsageDTO o2) {
+                // Note that o2 appears before o1
+                // This is because we need to sort in the descending order
+                return (int) (o2.getCount() - o1.getCount());
+            }
+        });
+        if (usageData.size() > limit) {
+            PerUserAPIUsageDTO other = new PerUserAPIUsageDTO();
+            other.setUsername("[Other]");
+            for (int i = limit; i < usageData.size(); i++) {
+                other.setCount(other.getCount() + usageData.get(i).getCount());
+            }
+            for (int i = limit; i < usageData.size(); i++) {
+                usageData.remove(i);
+            }
+            usageData.add(other);
+        }
+        return usageData;
     }
 
     /**
@@ -311,52 +405,6 @@ public class APIUsageStatisticsClient {
             }
         }
         return null;
-    }
-
-    /**
-     * This method can be used to get total request count by subscribers for a single API provided by a particular provider.
-     * @return  List<ProviderAPIUserUsageDTO>
-     * @throws APIMgtUsageQueryServiceClientException
-     */
-    public List<ProviderAPIUserUsageDTO> getProviderAPIUserUsage(String providerName, String apiName) throws APIMgtUsageQueryServiceClientException {
-        List<ProviderAPIUserUsageDTO> result = new ArrayList<ProviderAPIUserUsageDTO>();
-        OMElement omElement = null;
-        omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX, null);
-        Set<String> versions = this.getAPIVersions(providerName,apiName);
-        Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
-        for(String version:versions){
-            Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,version);
-            Map<String,Subscriber> subscriberMap = new HashMap<String, Subscriber>();
-            // Make sure the subscribers passed down from here are unique by name
-            for (Subscriber subscriber : subscribers) {
-                subscriberMap.put(subscriber.getName(), subscriber);
-            }
-            for(Subscriber subscriber:subscriberMap.values()){
-                subscribedAPIs.addAll(this.getSubscribedIdentifiers(subscriber, providerName, apiName, version));
-            }
-        }
-        Map<String,Float> userUsageMap = new HashMap<String,Float>();
-        for(SubscribedAPI subscribedAPI:subscribedAPIs){
-            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-            while(rowIterator.hasNext()){
-                OMElement row = (OMElement)rowIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(getProductionKey(subscribedAPI))){
-                    String userId = subscribedAPI.getSubscriber().getName();
-                    if(userUsageMap.containsKey(userId)){
-                        userUsageMap.put(userId,userUsageMap.get(userId)+Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
-                    }else{
-                        userUsageMap.put(userId,Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
-                    }
-                }
-            }
-        }
-        Set<String> keys = userUsageMap.keySet();
-        for(String key:keys){
-            int count = userUsageMap.get(key).intValue();
-            result.add(new ProviderAPIUserUsageDTO(key,String.valueOf(count)));
-        }
-        return result;
     }
 
     private String getNextStringInLexicalOrder(String str) {
@@ -426,6 +474,15 @@ public class APIUsageStatisticsClient {
                     version + " combination", e);
         }
     }
+    
+    private APIIdentifier getAPI(String apiKey) throws APIMgtUsageQueryServiceClientException {
+        try {
+            return apiConsumerImpl.getAPIByConsumerKey(apiKey);
+        } catch (APIManagementException e) {
+            throw new APIMgtUsageQueryServiceClientException("Error while retrieving subscribed API " +
+                    "for: " + apiKey);
+        }
+    }
 
     private Collection<APIUsage> getUsageData(OMElement data) {
         OMElement rowsElement = data.getFirstChildWithName(new QName(
@@ -464,6 +521,27 @@ public class APIUsageStatisticsClient {
             accessTimeData.add(new APIAccessTime(rowElement));
         }
         return accessTimeData;
+    }
+    
+    private Map<String,Long> getUsageBySubscriber(OMElement data) {
+        OMElement rowsElement = data.getFirstChildWithName(new QName(
+                APIMgtUsageQueryServiceClientConstants.ROWS));
+        Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
+                APIMgtUsageQueryServiceClientConstants.ROW));
+        Map<String,Long> usageData = new HashMap<String,Long>(); 
+        while (rowIterator.hasNext()) {
+            OMElement rowElement = (OMElement) rowIterator.next();
+            String apiKey = rowElement.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText();
+            long count = (long) Double.parseDouble(rowElement.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.REQUEST)).getText());
+            if (usageData.containsKey(apiKey)) {
+                usageData.put(apiKey, usageData.get(apiKey) + count);
+            } else {
+                usageData.put(apiKey, count);
+            }
+        }
+        return usageData;
     }
     
     private static class APIUsage {

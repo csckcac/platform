@@ -22,6 +22,9 @@ package org.wso2.carbon.appfactory.user.registration.services;
  * Exception for UserRegistration service
  */
 public class UserRegistrationException extends Exception {
+
+    private static final long serialVersionUID = 8634221264383838159L;
+
     public UserRegistrationException() {
     }
 

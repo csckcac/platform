@@ -7,7 +7,9 @@ import org.mozilla.javascript.ScriptableObject;
  * This is a host object used to get system properties 
  */
 public class SystemPropertyReaderObject extends ScriptableObject{
-    private static final String CARBON_HOME="carbon.home";
+
+    private static final long serialVersionUID = -6209794911636336591L;
+    
     private static final String hostObjectName = "SystemPropertyReaderObject";
 
     /**

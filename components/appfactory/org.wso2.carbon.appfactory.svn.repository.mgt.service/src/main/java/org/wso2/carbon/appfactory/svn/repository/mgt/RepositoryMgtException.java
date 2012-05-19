@@ -21,6 +21,9 @@ package org.wso2.carbon.appfactory.svn.repository.mgt;
  *
  */
 public class RepositoryMgtException extends Exception {
+
+    private static final long serialVersionUID = 6072661890886300392L;
+
     public RepositoryMgtException() {
     }
 

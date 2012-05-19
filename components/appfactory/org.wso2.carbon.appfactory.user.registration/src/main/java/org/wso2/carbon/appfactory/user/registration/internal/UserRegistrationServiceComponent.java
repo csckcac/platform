@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.appfactory.user.registration.util.Util;
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
-import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
  * @scr.component name="org.wso2.carbon.appfactory.user.registration" immediate="true"
@@ -35,7 +34,6 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  */
 public class UserRegistrationServiceComponent {
     private static Log log = LogFactory.getLog(UserRegistrationServiceComponent.class);
-    private static ConfigurationContextService configContextService = null;
 
     protected void activate(ComponentContext context) {
         log.debug("*******UserRegistration Service  bundle is activated ******* ");

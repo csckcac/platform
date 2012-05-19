@@ -20,10 +20,9 @@ package org.wso2.carbon.apimgt.usage.publisher;
 public final class APIMgtUsagePublisherConstants {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static String _OAUTH_HEADERS_SPLITTER = ",";
-    public static String _OAUTH_CONSUMER_KEY = "Bearer";
-    public static  String HEADER_SEGMENT_DELIMITER = " ";
-    public static  String HTTP_METHOD = "HTTP_METHOD";
+    public static final String _OAUTH_HEADERS_SPLITTER = ",";
+    public static final String _OAUTH_CONSUMER_KEY = "Bearer";
+    public static final String HEADER_SEGMENT_DELIMITER = " ";
 
     public static final String API_USAGE_TRACKING = "APIUsageTracking.";
     public static final String API_USAGE_ENABLED = API_USAGE_TRACKING + "Enabled";
@@ -31,12 +30,14 @@ public final class APIMgtUsagePublisherConstants {
     public static final String API_USAGE_BAM_SERVER_URL = API_USAGE_TRACKING + "BAMServerURL";
     public static final String API_USAGE_BAM_SERVER_USER = API_USAGE_TRACKING + "BAMUsername";
     public static final String API_USAGE_BAM_SERVER_PASSWORD = API_USAGE_TRACKING + "BAMPassword";
-    public static final String  CONSUMER_KEY = "consumerKey";
-    public static final String  CONTEXT = "context";
-    public static final String  API_VERSION = "api_version";
-    public static final String  API = "api";
-    public static final String  VERSION = "version";
-    public static final String  REQUEST_TIME = "requestTime";
-    public static final String  RESOURCE = "resource";
+
+    public static final String CONSUMER_KEY = "api.ut.consumerKey";
+    public static final String CONTEXT = "api.ut.context";
+    public static final String API_VERSION = "api.ut.api_version";
+    public static final String API = "api.ut.api";
+    public static final String VERSION = "api.ut.version";
+    public static final String REQUEST_TIME = "api.ut.requestTime";
+    public static final String RESOURCE = "api.ut.resource";
+    public static final String HTTP_METHOD = "api.ut.HTTP_METHOD";
 
 }

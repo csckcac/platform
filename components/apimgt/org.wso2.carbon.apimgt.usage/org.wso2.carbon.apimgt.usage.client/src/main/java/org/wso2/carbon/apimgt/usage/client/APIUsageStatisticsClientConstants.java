@@ -17,7 +17,7 @@
 */
 package org.wso2.carbon.apimgt.usage.client;
 
-public final class APIMgtUsageQueryServiceClientConstants {
+public final class APIUsageStatisticsClientConstants {
 
 
     public static final String API_VERSION_SERVICE_TIME_SUMMARY_TABLE = "APIVersionServiceTimeSummaryTable";

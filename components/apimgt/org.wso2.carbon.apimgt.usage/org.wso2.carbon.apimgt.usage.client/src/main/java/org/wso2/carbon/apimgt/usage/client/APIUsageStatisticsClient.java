@@ -82,8 +82,8 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
         
         OMElement omElement = this.queryColumnFamily(
-                APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE,
-                APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_TABLE,
+                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX,
                 null);
         Collection<APIUsage> usageData = getUsageData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
@@ -127,8 +127,8 @@ public class APIUsageStatisticsClient {
         compositeIndex[0].setRangeFirst(apiName);
         compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
         OMElement omElement = this.queryColumnFamily(
-                APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE, 
-                APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX, 
+                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_TABLE,
+                APIUsageStatisticsClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX,
                 compositeIndex);
         Collection<APIUsage> usageData = getUsageData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
@@ -162,8 +162,8 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE,
-                APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE,
+                APIUsageStatisticsClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE_INDEX,
                 null);
         Collection<APIResponseTime> responseTimes = getResponseTimeData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
@@ -213,8 +213,8 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE,
-                APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE,
+                APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE_INDEX,
                 null);
         Collection<APIAccessTime> accessTimes = getAccessTimeData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
@@ -259,8 +259,8 @@ public class APIUsageStatisticsClient {
             throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE,
-                APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE,
+                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
                 null);
         Map<String,Long> usageData = getUsageBySubscriber(omElement);
         Map<String,PerUserAPIUsageDTO> usageByUsername = new HashMap<String, PerUserAPIUsageDTO>();
@@ -289,8 +289,8 @@ public class APIUsageStatisticsClient {
                                                           String apiVersion, int limit) throws APIMgtUsageQueryServiceClientException {
 
         OMElement omElement = this.queryColumnFamily(
-                APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE,
-                APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
+                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE,
+                APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
                 null);
         Map<String,Long> usageData = getUsageBySubscriber(omElement);
         Map<String,PerUserAPIUsageDTO> usageByUsername = new HashMap<String, PerUserAPIUsageDTO>();
@@ -360,7 +360,7 @@ public class APIUsageStatisticsClient {
         compositeIndex[0].setIndexName("api");
         compositeIndex[0].setRangeFirst(apiName);
         compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
-        omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_USAGE_SUMMARY_TABLE_INDEX, compositeIndex);
+        omElement = this.queryColumnFamily(APIUsageStatisticsClientConstants.API_VERSION_KEY_USAGE_SUMMARY_TABLE, APIUsageStatisticsClientConstants.API_VERSION_KEY_USAGE_SUMMARY_TABLE_INDEX, compositeIndex);
         Set<String> versions = this.getAPIVersions(providerName, apiName);
         Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
         for (String version : versions) {
@@ -377,18 +377,18 @@ public class APIUsageStatisticsClient {
 
         for (SubscribedAPI subscribedAPI : subscribedAPIs) {
             OMElement rowsElement = omElement.getFirstChildWithName(
-                    new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+                    new QName(APIUsageStatisticsClientConstants.ROWS));
             Iterator rowIterator = rowsElement.getChildrenWithName(
-                    new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+                    new QName(APIUsageStatisticsClientConstants.ROW));
             while (rowIterator.hasNext()){
                 OMElement row = (OMElement)rowIterator.next();
-                if (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).
+                if (row.getFirstChildWithName(new QName(APIUsageStatisticsClientConstants.VERSION)).
                         getText().equals(subscribedAPI.getApiId().getVersion()) &&
-                        row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(getProductionKey(subscribedAPI))){
+                        row.getFirstChildWithName(new QName(APIUsageStatisticsClientConstants.CONSUMER_KEY)).getText().equals(getProductionKey(subscribedAPI))){
                     result.add(new ProviderAPIVersionUserUsageDTO(subscribedAPI.getApiId().getVersion(),
                             subscribedAPI.getSubscriber().getName(), String.valueOf(
                             (Float.valueOf(row.getFirstChildWithName(new QName(
-                                    APIMgtUsageQueryServiceClientConstants.REQUEST)).getText())).intValue())));
+                                    APIUsageStatisticsClientConstants.REQUEST)).getText())).intValue())));
                     break;
                 }
             }
@@ -486,9 +486,9 @@ public class APIUsageStatisticsClient {
 
     private Collection<APIUsage> getUsageData(OMElement data) {
         OMElement rowsElement = data.getFirstChildWithName(new QName(
-                APIMgtUsageQueryServiceClientConstants.ROWS));
+                APIUsageStatisticsClientConstants.ROWS));
         Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
-                APIMgtUsageQueryServiceClientConstants.ROW));
+                APIUsageStatisticsClientConstants.ROW));
         List<APIUsage> usageData = new ArrayList<APIUsage>();
         while (rowIterator.hasNext()) {
             OMElement rowElement = (OMElement) rowIterator.next();
@@ -499,9 +499,9 @@ public class APIUsageStatisticsClient {
 
     private Collection<APIResponseTime> getResponseTimeData(OMElement data) {
         OMElement rowsElement = data.getFirstChildWithName(new QName(
-                APIMgtUsageQueryServiceClientConstants.ROWS));
+                APIUsageStatisticsClientConstants.ROWS));
         Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
-                APIMgtUsageQueryServiceClientConstants.ROW));
+                APIUsageStatisticsClientConstants.ROW));
         List<APIResponseTime> responseTimeData = new ArrayList<APIResponseTime>();
         while (rowIterator.hasNext()) {
             OMElement rowElement = (OMElement) rowIterator.next();
@@ -512,9 +512,9 @@ public class APIUsageStatisticsClient {
 
     private Collection<APIAccessTime> getAccessTimeData(OMElement data) {
         OMElement rowsElement = data.getFirstChildWithName(new QName(
-                APIMgtUsageQueryServiceClientConstants.ROWS));
+                APIUsageStatisticsClientConstants.ROWS));
         Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
-                APIMgtUsageQueryServiceClientConstants.ROW));
+                APIUsageStatisticsClientConstants.ROW));
         List<APIAccessTime> accessTimeData = new ArrayList<APIAccessTime>();
         while (rowIterator.hasNext()) {
             OMElement rowElement = (OMElement) rowIterator.next();
@@ -525,16 +525,16 @@ public class APIUsageStatisticsClient {
     
     private Map<String,Long> getUsageBySubscriber(OMElement data) {
         OMElement rowsElement = data.getFirstChildWithName(new QName(
-                APIMgtUsageQueryServiceClientConstants.ROWS));
+                APIUsageStatisticsClientConstants.ROWS));
         Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
-                APIMgtUsageQueryServiceClientConstants.ROW));
+                APIUsageStatisticsClientConstants.ROW));
         Map<String,Long> usageData = new HashMap<String,Long>(); 
         while (rowIterator.hasNext()) {
             OMElement rowElement = (OMElement) rowIterator.next();
             String apiKey = rowElement.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText();
+                    APIUsageStatisticsClientConstants.CONSUMER_KEY)).getText();
             long count = (long) Double.parseDouble(rowElement.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.REQUEST)).getText());
+                    APIUsageStatisticsClientConstants.REQUEST)).getText());
             if (usageData.containsKey(apiKey)) {
                 usageData.put(apiKey, usageData.get(apiKey) + count);
             } else {
@@ -552,11 +552,11 @@ public class APIUsageStatisticsClient {
 
         public APIUsage(OMElement row) {
             apiName = row.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.API)).getText();
+                    APIUsageStatisticsClientConstants.API)).getText();
             apiVersion = row.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.VERSION)).getText();
+                    APIUsageStatisticsClientConstants.VERSION)).getText();
             requestCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.REQUEST)).getText());
+                    APIUsageStatisticsClientConstants.REQUEST)).getText());
         }
     }
 
@@ -569,14 +569,14 @@ public class APIUsageStatisticsClient {
 
         public APIResponseTime(OMElement row) {
             String nameVersion = row.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText();
+                    APIUsageStatisticsClientConstants.API_VERSION)).getText();
             int index = nameVersion.lastIndexOf(":v");
             apiName = nameVersion.substring(0, index);
             apiVersion = nameVersion.substring(index + 2);
             responseTime = Double.parseDouble(row.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.SERVICE_TIME)).getText());
+                    APIUsageStatisticsClientConstants.SERVICE_TIME)).getText());
             responseCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.RESPONSE)).getText());
+                    APIUsageStatisticsClientConstants.RESPONSE)).getText());
         }
     }
     
@@ -589,14 +589,14 @@ public class APIUsageStatisticsClient {
 
         public APIAccessTime(OMElement row) {
             String nameVersion = row.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText();
+                    APIUsageStatisticsClientConstants.API_VERSION)).getText();
             int index = nameVersion.lastIndexOf(":v");
             apiName = nameVersion.substring(0, index);
             apiVersion = nameVersion.substring(index + 2);
             accessTime = Double.parseDouble(row.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.REQUEST_TIME)).getText());
+                    APIUsageStatisticsClientConstants.REQUEST_TIME)).getText());
             apiKey = row.getFirstChildWithName(new QName(
-                    APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText();
+                    APIUsageStatisticsClientConstants.CONSUMER_KEY)).getText();
         }
     }
 

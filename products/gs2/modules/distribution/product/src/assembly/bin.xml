@@ -41,25 +41,11 @@
                 <exclude>**/version.txt</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
-                <exclude>**/wrapper.conf</exclude>
                 <exclude>**/ciphertool.bat</exclude>
                 <exclude>**/registry.xml</exclude>
             </excludes>
         </fileSet>
-        <fileSet>
-            <directory>target/wso2carbon-core-${carbon.version}</directory>
-            <outputDirectory>wso2gs-${pom.version}</outputDirectory>
-            <excludes>
-                <exclude>**/daemon.sh</exclude>
-                <exclude>**/wso2server.bat</exclude>
-                <exclude>**/ciphertool.sh</exclude>
-            </excludes>
-            <includes>
-                <include>**/*.sh</include>
-                <include>**/native/*</include>
-            </includes>
-            <fileMode>755</fileMode>
-        </fileSet>
+        
 
         <!--  copying artifacts necessary for the initial gadget repository -->
         <fileSet>
@@ -128,19 +114,7 @@
                 <!--<include>bouncycastle:bcprov-jdk16:jar</include>-->
                 <!--<include>org.apache.derby.wso2:derby:jar</include>-->
                 <include>org.hibernate:hibernate:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.jaggery.core:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.jaggery.javascript:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.commons:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.registry:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.web:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.file:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.extra:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.atom:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.feed:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.rdb:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.ws:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.xhr:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.hostobjects.email:jar</include>
+            
                 <include>org.apache.shindig:shindig-common:jar</include>
                 <include>org.apache.commons:commons-lang3:jar</include>
                 <include>commons-codec.wso2:commons-codec:jar</include>
@@ -241,17 +215,7 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/repository/conf/wrapper.conf</source>
-            <outputDirectory>wso2gs-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/bin/daemon.sh</source>
-            <outputDirectory>wso2gs-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
+       
 
         <file>
             <source>conf/claim-config.xml</source>

@@ -6,6 +6,7 @@
     <property name="test.plan.dir" value="../TestPlanModel"/>
     <property name="application.dir" value="../ApplicationModel"/>
     <property name="project.dir" value="../ProjectModel"/>
+    <property name="wadl.dir" value="../WADLModel"/>
     <property name="username" value="admin"/>
     <property name="password" value="admin"/>
     <property name="host" value="localhost"/>
@@ -110,7 +111,6 @@
         </java>
     </target>
 
-
     <target name="run-application" depends="jar">
         <java classname="org.wso2.carbon.registry.samples.populator.Main" classpathref="javac.classpath"
               fork="true">
@@ -147,6 +147,57 @@
             <arg value="-l" />
             <arg value="${project.dir}"/>
         </java>
+    </target>
+
+    <target name="run-wadl" depends="jar-wadl, jar">
+        <java classname="org.wso2.carbon.registry.samples.populator.Main" classpathref="javac.classpath"
+              fork="true">
+            <sysproperty key="carbon.home"  value="${registry.home}"/>
+            <arg value="-ch" />
+            <arg value="${registry.home}"/>
+            <arg value="-h"/>
+            <arg value="${host}"/>
+            <arg value="-p" />
+            <arg value="${port}"/>
+            <arg value="-u" />
+            <arg value="${username}"/>
+            <arg value="-pw" />
+            <arg value="${password}"/>
+            <arg value="-l" />
+            <arg value="${wadl.dir}"/>
+        </java>
+    </target>
+
+    <target name="jar-wadl" depends="clean-wadl, compile-wadl">
+        <jar jarfile="${wadl.dir}/target/org.wso2.carbon.registry.samples.handler.wadl-${version}.jar">
+            <fileset dir="${wadl.dir}/target/classes">
+                <include name="**/*.class"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="clean-wadl">
+        <delete dir="${wadl.dir}/target" quiet="true"/>
+        <delete dir="${wadl.dir}/target/classes" quiet="true"/>
+    </target>
+
+     <target name="compile-wadl" depends="init-wadl" description="Compile all Java">
+        <javac srcdir="${wadl.dir}/src" destdir="${wadl.dir}/target/classes">
+            <classpath refid="javac.classpath"/>
+        </javac>
+    </target>
+
+    <target name="init-wadl">
+        <mkdir dir="${wadl.dir}/target/classes"/>
+        <path id="javac.classpath">
+             <fileset dir="${registry.home}/repository/components/plugins">
+                <include name="**/axiom*.jar"/>
+                <include name="**/org.wso2.carbon.logging*.jar"/>
+                <include name="**/org.wso2.carbon.registry.api*.jar"/>
+                <include name="**/org.wso2.carbon.registry.core*.jar"/>
+                <include name="**/org.wso2.carbon.governance.api*.jar"/>
+            </fileset>
+        </path>
     </target>
 
     <target name="init">

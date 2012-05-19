@@ -15,6 +15,8 @@ Follow the steps to extend the Registry
 		</filter>
 	</handler>
 
-6. Use the sample processes, process archives to the registry to make sure that the process succeed. 
-   If succeed, registry should populated using those processes and dependancies (wsdl,xsd etc...) should be added. 
-   Use "application/vnd.wso2.registry-ext-process+xml" mediatype for a single process definition file.
+6. Use the sample processes, process archives to make sure that the process succeed. If succeed, registry should populated using those processes and dependancies (wsdl,xsd etc...) should be added. Use "application/vnd.wso2.registry-ext-process+xml" mediatype as the mediatype of process definition file.
+
+
+
+

@@ -54,72 +54,6 @@
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk15</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.jaggery.core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.jaggery.javascript</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.commons</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.web</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.registry</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.file</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.extra</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.email</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.rdb</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.ws</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.xhr</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.atom</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.feed</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -553,7 +487,7 @@
                                         <argument>-i</argument>
                                         <argument>s/9763/8080/</argument>
                                         <argument>
-                                            target/wso2carbon-core-${carbon.version}/repository/conf/axis2.xml
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/axis2/axis2.xml
                                         </argument>
                                     </arguments>
                                 </configuration>
@@ -570,7 +504,7 @@
                                         <argument>-i</argument>
                                         <argument>s/9443/8443/</argument>
                                         <argument>
-                                            target/wso2carbon-core-${carbon.version}/repository/conf/axis2.xml
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/axis2/axis2.xml
                                         </argument>
                                     </arguments>
                                 </configuration>
@@ -668,7 +602,7 @@
                                         <argument>-e</argument>
                                         <argument>s/9763/8080/</argument>
                                         <argument>
-                                            target/wso2carbon-core-${carbon.version}/repository/conf/axis2.xml
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/axis2/axis2.xml
                                         </argument>
                                     </arguments>
                                 </configuration>
@@ -686,7 +620,7 @@
                                         <argument>-e</argument>
                                         <argument>s/9443/8443/</argument>
                                         <argument>
-                                            target/wso2carbon-core-${carbon.version}/repository/conf/axis2.xml
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/axis2/axis2.xml
                                         </argument>
                                     </arguments>
                                 </configuration>

@@ -64,7 +64,7 @@ public class HumanTaskClient {
                 workListConfig.getServerURL() != null ? workListConfig.getServerURL() :
                 CarbonUIUtil.getServerURL(config.getServletContext(), session);
 
-        htStub = new HumanTaskClientAPIAdminStub(configContext, backendServerURL + "taskOperations");
+        htStub = new HumanTaskClientAPIAdminStub(configContext, backendServerURL + "HumanTaskClientAPIAdmin");
         configureServiceClient(htStub, session);
 
         umStub = new UserAdminStub(configContext, backendServerURL + "UserAdmin");

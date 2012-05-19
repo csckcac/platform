@@ -24,6 +24,7 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.registry.common.ResourceData;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.jdbc.queries.QueryProcessorManager;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.indexing.service.ContentBasedSearchService;
@@ -32,6 +33,7 @@ import org.wso2.carbon.registry.search.Utils;
 import org.wso2.carbon.registry.search.beans.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.beans.CustomSearchParameterBean;
 import org.wso2.carbon.registry.search.services.MetadataSearchService;
+import org.wso2.carbon.registry.search.services.XPathQueryProcessor;
 import org.wso2.carbon.registry.search.services.utils.AdvancedSearchResultsBeanPopulator;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
@@ -59,8 +61,22 @@ public class RegistryMgtUISearchServiceComponent {
     private ServiceRegistration serviceRegistration;
 
     protected void activate(ComponentContext context) {
+        MetadataSearchServiceImpl metadataSearchService = new MetadataSearchServiceImpl();
         serviceRegistration = context.getBundleContext().registerService(
-                MetadataSearchService.class.getName(), new MetadataSearchServiceImpl(), null);
+                MetadataSearchService.class.getName(), metadataSearchService, null);
+        try {
+            QueryProcessorManager queryProcessorManager =
+                    Utils.getRegistryService().getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME)
+                            .getRegistryContext().getQueryProcessorManager();
+            if (queryProcessorManager.getQueryProcessor(
+                    XPathQueryProcessor.XPATH_QUERY_MEDIA_TYPE) == null) {
+                // users can extend the XPath query processor if they want to.
+                queryProcessorManager.setQueryProcessor(XPathQueryProcessor.XPATH_QUERY_MEDIA_TYPE,
+                        new XPathQueryProcessor(metadataSearchService));
+            }
+        } catch (RegistryException e) {
+            log.error("Unable to registry query processors", e);
+        }
         log.debug("******* Registry Search bundle is activated ******* ");
     }
 

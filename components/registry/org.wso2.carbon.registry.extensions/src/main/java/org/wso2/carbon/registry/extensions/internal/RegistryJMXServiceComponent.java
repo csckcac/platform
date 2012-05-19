@@ -48,9 +48,6 @@ import java.util.Stack;
 @SuppressWarnings({"unused", "JavaDoc"})
 public class RegistryJMXServiceComponent {
 
-    // Notification
-    // Query Processors
-
     private static Log log = LogFactory.getLog(RegistryJMXServiceComponent.class);
     private boolean isJMXEnabled = false;
     private Stack<ServiceRegistration> serviceRegistrations = new Stack<ServiceRegistration>();

@@ -83,7 +83,7 @@ public class CSGThriftServer {
                     processor(processor).inputProtocolFactory(protocolFactory));
 
             log.info("Starting the CSGThrift server on host '" + hostName + "' on port '" + port
-                    + "'");
+                    + "'...");
             new Thread(new CSGServerMainLoop(server), taskName).start();
 
         } catch (TTransportException e) {

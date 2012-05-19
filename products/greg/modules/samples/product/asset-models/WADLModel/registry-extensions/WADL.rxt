@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<artifactType type="application/vnd.wso2-wadl+xml" shortName="wadl" singularLabel="WADL" pluralLabel="WADLs" hasNamespace="false" iconSet="5">
+	<storagePath>/wadls/@{overview_name}</storagePath>
+	<nameAttribute>overview_name</nameAttribute>
+	<ui>
+		<list>
+			<column name="Name">
+				<data type="path" value="overview_name" href="@{storagePath}"/>
+			</column>
+		</list>
+	</ui>
+	<content>
+		<table name="Overview">
+			<field type="text" required="true">                
+				<name>Name</name>
+			</field>	
+			<field type="text" required="true">                
+				<name>Namespace</name>
+			</field>
+		</table>
+		<table name="Documentation" columns="3">  
+			<subheading>              
+				<heading>Document Type</heading>   
+				<heading>URL</heading>        
+				<heading>Comment</heading>     
+			</subheading>         
+			<field type="text">      
+				<name>Document Type</name>   
+			</field>         
+			<field type="text" url="true"> 
+				<name>URL</name>     
+			</field>       
+			<field type="text-area">    
+				<name>Document Comment</name> 
+			</field>       
+			<field type="text">    
+				<name>Document Type1</name>     
+			</field>     
+			<field type="text" url="true">  
+				<name>URL1</name>     
+			</field>         
+			<field type="text-area">   
+				<name>Document Comment1</name>   
+			</field>      
+			<field type="text">   
+				<name>Document Type2</name>  
+			</field> 
+			<field type="text" url="true">    
+				<name>URL2</name>     
+			</field>       
+			<field type="text-area">  
+				<name>Document Comment2</name>      
+			</field>      
+		</table>
+	</content>
+</artifactType>

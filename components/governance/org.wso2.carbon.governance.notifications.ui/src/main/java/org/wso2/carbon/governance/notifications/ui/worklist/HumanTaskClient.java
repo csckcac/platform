@@ -50,7 +50,7 @@ public class HumanTaskClient {
 
     private static final Log log = LogFactory.getLog(HumanTaskClient.class);
 
-    private TaskOperationsStub htStub;
+    private HumanTaskClientAPIAdminStub htStub;
     private UserAdminStub umStub;
     private WorkListServiceStub wlStub;
 
@@ -64,7 +64,7 @@ public class HumanTaskClient {
                 workListConfig.getServerURL() != null ? workListConfig.getServerURL() :
                 CarbonUIUtil.getServerURL(config.getServletContext(), session);
 
-        htStub = new TaskOperationsStub(configContext, backendServerURL + "taskOperations");
+        htStub = new HumanTaskClientAPIAdminStub(configContext, backendServerURL + "taskOperations");
         configureServiceClient(htStub, session);
 
         umStub = new UserAdminStub(configContext, backendServerURL + "UserAdmin");

@@ -83,8 +83,10 @@ public class TaskCreationTestCase {
 
 
     private void addRoles() throws Exception {
-        userAdminStub.addRole(HumanTaskTestConstants.REGIONAL_CLERKS_ROLE, null, null);
-        userAdminStub.addRole(HumanTaskTestConstants.REGIONAL_MANAGER_ROLE, null, null);
+        userAdminStub.addRole(HumanTaskTestConstants.REGIONAL_CLERKS_ROLE, null, new String[]{"/permission/admin/login",
+        "/permission/admin/manage/humantask/viewtasks"});
+        userAdminStub.addRole(HumanTaskTestConstants.REGIONAL_MANAGER_ROLE, null, new String[]{"/permission/admin/login",
+        "/permission/admin/manage/humantask/viewtasks"});
     }
 
 

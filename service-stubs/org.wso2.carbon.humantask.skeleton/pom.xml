@@ -72,7 +72,7 @@
                                     <classpath refid="maven.compile.classpath"/>
                                     <classpath refid="maven.runtime.classpath"/>
                                 </java>
-                                <delete file="target/generated-code/src/org/wso2/carbon/humantask/client/api/TaskOperationsSkeleton.java"
+                                <delete file="target/generated-code/src/org/wso2/carbon/humantask/client/api/HumanTaskClientAPIAdminSkeleton.java"
                                         verbose="true" failonerror="true"/>
 								<delete file="/target/generated-code/src/org/wso2/carbon/humantask/skeleton/mgt/services/HumanTaskPackageManagementSkeleton.java"
                                         verbose="true" failonerror="true"/>

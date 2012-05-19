@@ -42,12 +42,8 @@ import org.wso2.carbon.apimgt.api.model.URITemplate;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.usage.client.APIUsageStatisticsClient;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserLastAccessDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserUsageDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.*;
+import org.wso2.carbon.apimgt.usage.client.dto.APIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.hostobjects.file.FileHostObject;
 import org.wso2.carbon.hostobjects.web.RequestHostObject;
@@ -832,10 +828,10 @@ public class APIProviderHostObject extends ScriptableObject {
 
     public static NativeArray jsFunction_getProviderAPIVersionUsage(String providerName, String APIname, String serverURL)
             throws ScriptException {
-        List<ProviderAPIVersionUsageDTO> list = null;
+        List<APIVersionUsageDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
-            list = client.getProviderAPIVersionUsage(providerName, APIname);
+            list = client.getUsageByAPIVersions(providerName, APIname);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIVersionUsage", e);
         }
@@ -849,7 +845,7 @@ public class APIProviderHostObject extends ScriptableObject {
             while (it.hasNext()) {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
-                ProviderAPIVersionUsageDTO usage = (ProviderAPIVersionUsageDTO) usageObject;
+                APIVersionUsageDTO usage = (APIVersionUsageDTO) usageObject;
                 row.put("version", row, usage.getVersion());
                 row.put("count", row, usage.getCount());
                 myn.put(i, myn, row);
@@ -891,10 +887,10 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static NativeArray jsFunction_getProviderAPIUsage(String providerName, String serverURL) throws ScriptException {
-        List<ProviderAPIUsageDTO> list = null;
+        List<APIUsageDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
-            list = client.getProviderAPIUsage(providerName);
+            list = client.getUsageByAPIs(providerName);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIUsage", e);
         }
@@ -908,7 +904,7 @@ public class APIProviderHostObject extends ScriptableObject {
             while (it.hasNext()) {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
-                ProviderAPIUsageDTO usage = (ProviderAPIUsageDTO) usageObject;
+                APIUsageDTO usage = (APIUsageDTO) usageObject;
                 row.put("apiName", row, usage.getApiName());
                 row.put("count", row, usage.getCount());
                 myn.put(i, myn, row);

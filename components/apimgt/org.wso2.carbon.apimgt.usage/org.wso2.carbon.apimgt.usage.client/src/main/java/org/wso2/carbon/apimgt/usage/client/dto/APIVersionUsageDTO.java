@@ -17,29 +17,25 @@
 */
 package org.wso2.carbon.apimgt.usage.client.dto;
 
-public class ProviderAPIVersionUsageDTO {
+public class APIVersionUsageDTO {
 
-    String version;
-    String count;
+    private String version;
+    private long count;
 
-    public String getCount(){
+    public long getCount() {
         return count;
     }
 
-    public String getVersion(){
+    public String getVersion() {
         return version;
     }
 
-    public void setCount(String count){
+    public void setCount(long count) {
         this.count = count;
     }
 
-    public void setVersion(String version){
+    public void setVersion(String version) {
         this.version = version;
     }
 
-    public ProviderAPIVersionUsageDTO(String version, String count){
-        this.version = version;
-        this.count = count;
-    }
 }

@@ -18,15 +18,10 @@
 package org.wso2.carbon.apimgt.usage.client.dto;
 
 
-public class ProviderAPIUsageDTO {
+public class APIUsageDTO {
     
-    String apiName;
-    String count;
-
-    public ProviderAPIUsageDTO(String apiName, String count) {
-        this.apiName = apiName;
-        this.count = count;
-    }
+    private String apiName;
+    private long count;
 
     public String getApiName() {
         return apiName;
@@ -36,11 +31,11 @@ public class ProviderAPIUsageDTO {
         this.apiName = apiName;
     }
 
-    public String getCount() {
+    public long getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(long count) {
         this.count = count;
     }
 }

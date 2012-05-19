@@ -27,12 +27,8 @@ import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserLastAccessDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserUsageDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.*;
+import org.wso2.carbon.apimgt.usage.client.dto.APIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.apimgt.usage.client.internal.APIUsageClientServiceComponent;
 import org.wso2.carbon.apimgt.usage.publisher.APIMgtUsagePublisherConstants;
@@ -70,33 +66,86 @@ public class APIUsageStatisticsClient {
     }
 
     /**
-     * This method can be used to get total request count for each API version by provider.
-     * @return  List<ProviderAPIVersionUsageDTO> a list of usage information beans
+     * Returns a list of APIUsageDTO objects that contain information related to APIs that 
+     * belong to a particular provider and the number of total API calls each API has processed
+     * up to now. This method does not distinguish between different API versions. That is all 
+     * versions of a single API are treated as one, and their individual request counts are summed 
+     * up to calculate a grand total per each API.
+     * 
+     * @param providerName Name of the API provider 
+     * @return a List of APIUsageDTO objects - possibly empty
+     * @throws APIMgtUsageQueryServiceClientException if an error occurs while contacting backend services
+     */
+    public List<APIUsageDTO> getUsageByAPIs(String providerName) 
+            throws APIMgtUsageQueryServiceClientException {
+        
+        OMElement omElement = this.queryColumnFamily(
+                APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE,
+                APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX,
+                null);
+        Collection<APIUsage> usageData = getUsageData(omElement);
+        List<API> providerAPIs = getAPIsByProvider(providerName);
+        Map<String,APIUsageDTO> usageByAPIs = new HashMap<String, APIUsageDTO>();
+        for (APIUsage usage : usageData) {
+            for (API providerAPI : providerAPIs) {
+                if (providerAPI.getId().getApiName().equals(usage.apiName) &&
+                        providerAPI.getId().getVersion().equals(usage.apiVersion)) {
+                    APIUsageDTO usageDTO = usageByAPIs.get(usage.apiName);
+                    if (usageDTO != null) {
+                        usageDTO.setCount(usageDTO.getCount() + usage.requestCount);
+                    } else {
+                        usageDTO = new APIUsageDTO();
+                        usageDTO.setApiName(usage.apiName);
+                        usageDTO.setCount(usage.requestCount);
+                        usageByAPIs.put(usage.apiName, usageDTO);
+                    }
+                }
+            }
+        }
+        
+        return new ArrayList<APIUsageDTO>(usageByAPIs.values());
+    }
+
+    /**
+     * Returns a list of APIVersionUsageDTO objects that contain information related to a
+     * particular API of a specified provider, along with the number of API calls processed
+     * by each version of that API.
+     *
+     * @param providerName Name of the API provider
+     * @param apiName Name of th API
+     * @return a List of APIVersionUsageDTO objects, possibly empty
      * @throws APIMgtUsageQueryServiceClientException on error
      */
-    public List<ProviderAPIVersionUsageDTO> getProviderAPIVersionUsage(String providerName, String apiName) throws APIMgtUsageQueryServiceClientException {
-        List<ProviderAPIVersionUsageDTO> result = new ArrayList<ProviderAPIVersionUsageDTO>();
-        OMElement omElement;
+    public List<APIVersionUsageDTO> getUsageByAPIVersions(String providerName,
+                                                          String apiName) throws APIMgtUsageQueryServiceClientException {
+
         QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
         compositeIndex[0] = new QueryServiceStub.CompositeIndex();
         compositeIndex[0].setIndexName("api");
         compositeIndex[0].setRangeFirst(apiName);
         compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
-        omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX, compositeIndex);
-        Set<String> versions = this.getAPIVersions(providerName, apiName);
-        for(String version:versions){
-            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-            while(rowIterator.hasNext()){
-                OMElement row = (OMElement)rowIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(version)){
-                    result.add(new ProviderAPIVersionUsageDTO(version,String.valueOf((Float.valueOf(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText())).intValue())));
-                    break;
+        OMElement omElement = this.queryColumnFamily(
+                APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE, 
+                APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX, 
+                compositeIndex);
+        Collection<APIUsage> usageData = getUsageData(omElement);
+        List<API> providerAPIs = getAPIsByProvider(providerName);
+        Map<String,APIVersionUsageDTO> usageByVersions = new HashMap<String, APIVersionUsageDTO>();
+
+        for (APIUsage usage : usageData) {
+            for (API providerAPI : providerAPIs) {
+                if (providerAPI.getId().getApiName().equals(usage.apiName) &&
+                        providerAPI.getId().getVersion().equals(usage.apiVersion)) {
+
+                    APIVersionUsageDTO usageDTO = new APIVersionUsageDTO();
+                    usageDTO.setVersion(usage.apiVersion);
+                    usageDTO.setCount(usage.requestCount);
+                    usageByVersions.put(usage.apiVersion, usageDTO);
                 }
             }
-
         }
-        return result;
+
+        return new ArrayList<APIVersionUsageDTO>(usageByVersions.values());
     }
 
     /**
@@ -203,46 +252,7 @@ public class APIUsageStatisticsClient {
             result.add(new ProviderAPIUserUsageDTO(key,String.valueOf(count)));
         }
         return result;
-    }
-
-    /**
-     * This method can be used to get total request count for each API by provider.
-     * @return  List<ProviderAPIUsageDTO>
-     * @throws APIMgtUsageQueryServiceClientException
-     */
-    public List<ProviderAPIUsageDTO> getProviderAPIUsage(String providerName) throws APIMgtUsageQueryServiceClientException {
-        List<ProviderAPIUsageDTO> result = new ArrayList<ProviderAPIUsageDTO>();
-        List<API> apis = this.getAPIsByProvider(providerName);
-        Set<APIIdentifier> apiIdentifiers = new HashSet<APIIdentifier>();
-        for(API api:apis){
-            Set<String> versions = this.getAPIVersions(providerName,api.getId().getApiName());
-            for(String version:versions){
-                apiIdentifiers.add(new APIIdentifier(providerName, api.getId().getApiName(), version));
-            }
-        }
-        OMElement omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX, null);
-        Map<String,Float> map = new HashMap<String,Float>();
-        for (APIIdentifier apiIdentifier:apiIdentifiers){
-            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-            while(rowIterator.hasNext()){
-                OMElement row = (OMElement)rowIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
-                    if(map.containsKey(apiIdentifier.getApiName())){
-                        map.put(apiIdentifier.getApiName(),map.get(apiIdentifier.getApiName()) + Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
-                    }else{
-                        map.put(apiIdentifier.getApiName(),Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
-                    }
-                    break;
-                }
-            }
-        }
-        Set<String> keys = map.keySet();
-        for(String key:keys){
-            result.add(new ProviderAPIUsageDTO(key,String.valueOf(map.get(key).intValue())));
-        }
-        return result;
-    }
+    }    
 
     /**
      * This method can be used to get last access time for each combination of API version and subscriber for particular provider.
@@ -371,16 +381,17 @@ public class APIUsageStatisticsClient {
         return new String(bytes);
     }
 
-    private OMElement queryColumnFamily(String columnFamily,String index,QueryServiceStub.CompositeIndex[] compositeIndex) throws APIMgtUsageQueryServiceClientException{
-        OMElement result = null;
-        try{
-            result = qss.queryColumnFamily(columnFamily,index,compositeIndex);
-        }catch(RemoteException e){
-            throw new APIMgtUsageQueryServiceClientException("Error while querying BAM server column family: "+columnFamily, e);
-        }catch(QueryServiceStoreException e){
-            throw new APIMgtUsageQueryServiceClientException("Error while querying BAM server column family: "+columnFamily, e);
+    private OMElement queryColumnFamily(String columnFamily, String index,
+                                        QueryServiceStub.CompositeIndex[] compositeIndex) throws APIMgtUsageQueryServiceClientException{
+        try {
+            return qss.queryColumnFamily(columnFamily,index,compositeIndex);
+        } catch (RemoteException e) {
+            throw new APIMgtUsageQueryServiceClientException("Error while querying BAM server " +
+                    "column family: " + columnFamily, e);
+        } catch (QueryServiceStoreException e) {
+            throw new APIMgtUsageQueryServiceClientException("Error while querying BAM server " +
+                    "column family: " + columnFamily, e);
         }
-        return result;
     }
 
     private Set<String> getAPIVersions(String providerId,String apiName) throws APIMgtUsageQueryServiceClientException{
@@ -408,13 +419,11 @@ public class APIUsageStatisticsClient {
     }
 
     private List<API> getAPIsByProvider(String providerId) throws APIMgtUsageQueryServiceClientException{
-        List<API> apis;
         try {
-            apis = apiProviderImpl.getAPIsByProvider(providerId);
+            return apiProviderImpl.getAPIsByProvider(providerId);
         } catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while retrieving APIs by "+providerId, e);
+            throw new APIMgtUsageQueryServiceClientException("Error while retrieving APIs by " + providerId, e);
         }
-        return apis;
     }
 
     private Set<SubscribedAPI> getSubscribedIdentifiers(Subscriber subscriber, String providerName,String apiName, String version) throws APIMgtUsageQueryServiceClientException{
@@ -426,6 +435,35 @@ public class APIUsageStatisticsClient {
             throw new APIMgtUsageQueryServiceClientException("Error while getting subscribedAPIs for "+subscriber.getName()+"-"+providerName+"-"+apiName+"-"+version+" combination", e);
         }
         return subscribedAPIs;
+    }
+
+    private Collection<APIUsage> getUsageData(OMElement data) {
+        OMElement rowsElement = data.getFirstChildWithName(new QName(
+                APIMgtUsageQueryServiceClientConstants.ROWS));
+        Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
+                APIMgtUsageQueryServiceClientConstants.ROW));
+        List<APIUsage> usageData = new ArrayList<APIUsage>();
+        while (rowIterator.hasNext()) {
+            OMElement rowElement = (OMElement) rowIterator.next();
+            usageData.add(new APIUsage(rowElement));
+        }
+        return usageData;
+    }
+    
+    private static class APIUsage {
+
+        private String apiName;
+        private String apiVersion;
+        private long requestCount;
+
+        public APIUsage(OMElement row) {
+            apiName = row.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.API)).getText();
+            apiVersion = row.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.VERSION)).getText();
+            requestCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.REQUEST)).getText());
+        }
     }
 
 }

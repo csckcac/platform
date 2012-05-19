@@ -55,7 +55,7 @@ public class CSGThriftServer {
      * @param timeOut          the client timeout
      * @param keyStorePath     the path of the key store
      * @param keyStorePassword the password of the key store
-     * @param taskName the name of the main server thread
+     * @param taskName         the name of the main server thread
      * @throws AxisFault throws in case of an starting error
      */
     public void start(final String hostName,
@@ -82,7 +82,8 @@ public class CSGThriftServer {
             server = new TThreadPoolServer(new TThreadPoolServer.Args(socket).
                     processor(processor).inputProtocolFactory(protocolFactory));
 
-            log.info("Starting the CSGThrift server on port : " + port);
+            log.info("Starting the CSGThrift server on host '" + hostName + "' on port '" + port
+                    + "'");
             new Thread(new CSGServerMainLoop(server), taskName).start();
 
         } catch (TTransportException e) {

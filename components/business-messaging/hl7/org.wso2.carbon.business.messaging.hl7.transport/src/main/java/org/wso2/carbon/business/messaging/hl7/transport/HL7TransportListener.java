@@ -21,8 +21,6 @@ package org.wso2.carbon.business.messaging.hl7.transport;
 import ca.uhn.hl7v2.app.Application;
 import ca.uhn.hl7v2.app.SimpleServer;
 import ca.uhn.hl7v2.llp.LowerLayerProtocol;
-import ca.uhn.hl7v2.parser.PipeParser;
-import ca.uhn.hl7v2.validation.impl.NoValidation;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.transport.base.AbstractTransportListenerEx;
@@ -48,11 +46,8 @@ public class HL7TransportListener extends AbstractTransportListenerEx<HL7Endpoin
     @Override
     protected void startEndpoint(HL7Endpoint endpoint) throws AxisFault {
         LowerLayerProtocol llp = LowerLayerProtocol.makeLLP();
-        PipeParser parser = new PipeParser();
-        if (!endpoint.isValidateMessage()) {
-        	parser.setValidationContext(new NoValidation());
-        }
-        SimpleServer server = new SimpleServer(endpoint.getPort(), llp, parser);
+        SimpleServer server = new SimpleServer(endpoint.getPort(), llp, 
+        		endpoint.getProcessingContext().getPipeParser());
         Application callback = new HL7MessageProcessor(endpoint);
         server.registerApplication("*", "*", callback);
         server.start();

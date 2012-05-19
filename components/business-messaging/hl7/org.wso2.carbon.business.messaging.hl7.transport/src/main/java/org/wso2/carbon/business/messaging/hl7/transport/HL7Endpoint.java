@@ -24,15 +24,17 @@ import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.ParameterInclude;
 import org.apache.axis2.transport.base.ParamUtils;
 import org.apache.axis2.transport.base.ProtocolEndpoint;
+import org.wso2.carbon.business.messaging.hl7.common.HL7Constants;
+import org.wso2.carbon.business.messaging.hl7.common.HL7ProcessingContext;
+
+import ca.uhn.hl7v2.HL7Exception;
 
 public class HL7Endpoint extends ProtocolEndpoint {
 
     private int port = HL7Constants.DEFAULT_SYNAPSE_HL7_PORT;
     
-    private boolean autoAck;
+    private HL7ProcessingContext processingContext;
     
-    private boolean validateMessage;
-
     @Override
     public boolean loadConfiguration(ParameterInclude params) throws AxisFault {
     	if (params instanceof AxisService) {
@@ -40,25 +42,26 @@ public class HL7Endpoint extends ProtocolEndpoint {
             if (this.port == -1) {
             	return false;
             }
-            this.autoAck = ParamUtils.getOptionalParamBoolean(params, HL7Constants.HL7_AUTO_ACKNOWLEDGE, true);
-            this.validateMessage = ParamUtils.getOptionalParamBoolean(params, HL7Constants.HL7_VALIDATE_MESSAGE, true);
+            this.processingContext = this.createProcessingContext(params);
             return true;
         } else {
         	return false;
-        }        
+        }
+    }
+    
+    private HL7ProcessingContext createProcessingContext(ParameterInclude params) throws AxisFault {
+    	try {
+    		return new HL7ProcessingContext(params);
+    	} catch (HL7Exception e) {
+			throw new AxisFault("Error creating HL7 processing context: " + e.getMessage(), e);
+		}
+    }
+    
+    public HL7ProcessingContext getProcessingContext() {
+    	return processingContext;
     }
 
-    public boolean isAutoAck() {
-		return autoAck;
-	}
-
-	public boolean isValidateMessage() {
-		return validateMessage;
-	}
-
-	@Override
     public EndpointReference[] getEndpointReferences(AxisService axisService, String ip) throws AxisFault {
-
         String url = HL7Constants.TRANSPORT_NAME + "://" + ip + ":" + port;
         String context = getListener().getConfigurationContext().getServiceContextPath();
         if (!context.startsWith("/")) {

@@ -33,6 +33,7 @@
     <url>http://wso2.org</url>
 
     <modules>
+        <module>org.wso2.carbon.business.messaging.hl7.common</module>
         <module>org.wso2.carbon.business.messaging.hl7.message</module>
         <module>org.wso2.carbon.business.messaging.hl7.transport</module>
         <module>org.wso2.carbon.business.messaging.hl7.samples</module>

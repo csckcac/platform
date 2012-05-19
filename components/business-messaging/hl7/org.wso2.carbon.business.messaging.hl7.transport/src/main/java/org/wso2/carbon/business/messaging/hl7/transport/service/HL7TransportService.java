@@ -16,7 +16,6 @@
 
 package org.wso2.carbon.business.messaging.hl7.transport.service;
 
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.transports.AbstractTransportService;

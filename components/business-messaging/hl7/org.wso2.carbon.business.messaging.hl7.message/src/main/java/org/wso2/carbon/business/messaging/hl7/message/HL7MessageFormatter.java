@@ -27,17 +27,17 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.business.messaging.hl7.HL7Constants;
+import org.wso2.carbon.business.messaging.hl7.common.HL7Constants;
+import org.wso2.carbon.business.messaging.hl7.common.HL7ProcessingContext;
 
 import java.io.OutputStream;
 import java.io.IOException;
 import java.net.URL;
 
 import ca.uhn.hl7v2.model.Message;
-import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v26.message.ACK;
 import ca.uhn.hl7v2.parser.DefaultXMLParser;
 import ca.uhn.hl7v2.parser.PipeParser;
+import ca.uhn.hl7v2.validation.impl.NoValidation;
 import ca.uhn.hl7v2.HL7Exception;
 
 /*
@@ -59,7 +59,19 @@ import ca.uhn.hl7v2.HL7Exception;
 *
 */
 public class HL7MessageFormatter implements MessageFormatter {
+	
     private static final Log log = LogFactory.getLog(HL7MessageFormatter.class);
+    
+    private DefaultXMLParser xmlParser;
+    
+    private PipeParser pipeParser;
+    
+    public HL7MessageFormatter() {
+    	this.xmlParser = new DefaultXMLParser();
+    	this.pipeParser = new PipeParser();
+    	this.xmlParser.setValidationContext(new NoValidation());
+    	this.pipeParser.setValidationContext(new NoValidation());
+    }
 
     /**
      * {@inheritdoc }*
@@ -77,50 +89,75 @@ public class HL7MessageFormatter implements MessageFormatter {
                         OutputStream outputStream,
                         boolean b) throws AxisFault {
         OMElement omElement = msgCtx.getEnvelope().getBody().getFirstElement().getFirstElement();
-
+        HL7ProcessingContext processingCtx;
+        try {
+        	/* The AxisService retrieved at this point from the 
+        	 * message context is not the correct one */
+        	processingCtx = new HL7ProcessingContext(true, false, null, null);
+        } catch (Exception e) {
+			throw new AxisFault(e.getMessage(), e);
+		}
         if (log.isDebugEnabled()) {
-            log.debug("Inside the HL7 formatter" + omElement.toString());
+            log.debug("Inside the HL7 formatter: " + omElement.toString());
         }
         if (msgCtx.getFLOW() == MessageContext.OUT_FAULT_FLOW || msgCtx.getEnvelope().hasFault()) {
             SOAPFault soapFault = msgCtx.getEnvelope().getBody().getFault();
-            ACK ack = new ACK();
             try {
-                //TODO : need to complete the values of the complete hl7 message, this will not properly construct by the parser
-                ack.getMSH().getFieldSeparator().setValue(HL7Constants.HL7_FIELD_SEPARATOR);
-                ack.getMSH().getEncodingCharacters().setValue(HL7Constants.HL7_ENCODING_CHARS);
-                ack.getMSA().getAcknowledgmentCode().setValue(HL7Constants.HL7_ACK_CODE_AR);
-                ack.getERR().getErrorCodeAndLocation(0).getCodeIdentifyingError().getIdentifier()
-                        .setValue("Backend service reject the value");
-                String msg = new PipeParser().encode(ack);
+                Message message = processingCtx.createNack((Message) msgCtx.getProperty(
+                		HL7Constants.HL7_MESSAGE_OBJECT), soapFault.getReason().getText());
                 if (log.isDebugEnabled()) {
-                    log.debug("Generate HL7 error : " + ack);
+                    log.debug("Generate HL7 error: " + message);
                 }
-                outputStream.write(msg.getBytes());
-                outputStream.flush();
-                outputStream.close();
-                msgCtx.setProperty(Constants.Configuration.CONTENT_TYPE,HL7Constants.HL7_CONTENT_TYPE);
-            } catch (DataTypeException e) {
-                handleException("Error on creating HL7 Error segment", e);
+                this.writeMessageOut(message, outputStream, msgCtx);
             } catch (HL7Exception e) {
-                handleException("Error on creating HL7 Error segment", e);
+                throw new AxisFault("Error on creating HL7 Error segment: " + e.getMessage(), e);
             } catch (IOException e) {
-                handleException("Error on writing HL7 Error to output stream", e);
+                throw new AxisFault("Error on writing HL7 Error to output stream: " + 
+                        e.getMessage(), e);
             }
         } else {
             try {
-                String xmlFormat = omElement.toString();
-                Message message = new DefaultXMLParser().parse(xmlFormat);
-                String msg = new PipeParser().encode(message);
+            	String xmlFormat = omElement.toString();
+                Message message = this.xmlParser.parse(xmlFormat);
                 if (log.isDebugEnabled()) {
-                    log.debug("Message inside the formatter : " + message);
+                    log.debug("Message inside the formatter: " + message);
                 }
-                outputStream.write(msg.getBytes());
-                outputStream.flush();
-                outputStream.close();
+            	if (this.isGenerateMessageAck(msgCtx)) {
+            		message = this.createGeneratedMessageAck(processingCtx, message, msgCtx);
+            	}
+                this.writeMessageOut(message, outputStream, msgCtx);
             } catch (Exception e) {
-                handleException("Ecepion occured during HL7 message creation", e);
+                throw new AxisFault("Error occured during HL7 message creation: " + 
+                        e.getMessage(), e);
             }
         }
+    }
+    
+    private Message createGeneratedMessageAck(HL7ProcessingContext processingCtx, 
+    		Message message, MessageContext msgCtx) throws HL7Exception {
+    	try {
+    		return processingCtx.handleHL7Result(msgCtx, message);
+    	} catch (HL7Exception e) {
+			return processingCtx.createNack(null, e.getMessage());
+		}
+    }
+    
+    private boolean isGenerateMessageAck(MessageContext msgCtx) {
+    	Object param = msgCtx.getProperty(HL7Constants.HL7_GENERATE_ACK);
+    	if (param != null) {
+    		return Boolean.parseBoolean(param.toString());
+    	} else {
+    	    return false;
+    	}
+    }
+    
+    private void writeMessageOut(Message message, OutputStream out, 
+    		MessageContext msgCtx) throws IOException, HL7Exception {
+    	msgCtx.setProperty(Constants.Configuration.CONTENT_TYPE, 
+        		HL7Constants.HL7_CONTENT_TYPE);
+    	String txtMsg = this.pipeParser.encode(message);
+        out.write(txtMsg.getBytes());
+        out.flush();
     }
 
     /**
@@ -160,8 +197,4 @@ public class HL7MessageFormatter implements MessageFormatter {
         return soapAction;
     }
 
-    private void handleException(String message, Exception e) {
-        log.error(message, e);
-        throw new RuntimeException(message, e);
-    }
 }

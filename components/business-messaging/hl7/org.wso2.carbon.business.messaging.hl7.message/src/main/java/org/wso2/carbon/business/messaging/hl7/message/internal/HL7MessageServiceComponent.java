@@ -24,8 +24,6 @@ import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.business.messaging.hl7.message.HL7MessageBuilder;
 import org.wso2.carbon.business.messaging.hl7.message.HL7MessageFormatter;
 
-import java.util.Properties;
-
 /**
  * @scr.component name="hl7.message.services" immediate="true"
  * @scr.reference name="config.context.service" interface="org.wso2.carbon.utils.ConfigurationContextService"

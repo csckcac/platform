@@ -27,10 +27,10 @@ import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.parser.DefaultXMLParser;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
+import ca.uhn.hl7v2.validation.impl.NoValidation;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
@@ -38,6 +38,8 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.engine.AxisEngine;
 import org.apache.axis2.transport.OutTransportInfo;
 import org.apache.axis2.transport.base.AbstractTransportSender;
+import org.wso2.carbon.business.messaging.hl7.common.HL7Constants;
+import org.wso2.carbon.business.messaging.hl7.common.HL7Utils;
 
 import javax.xml.stream.XMLStreamException;
 import java.net.URI;
@@ -47,7 +49,12 @@ import java.util.Map;
 
 public class HL7TransportSender extends AbstractTransportSender {
 
-    private Parser parser = new DefaultXMLParser();
+    private Parser parser;
+    
+    public HL7TransportSender() {
+    	parser = new DefaultXMLParser();
+    	parser.setValidationContext(new NoValidation());
+    }
 
     @Override
     public void sendMessage(MessageContext messageContext, String targetEPR,
@@ -147,15 +154,8 @@ public class HL7TransportSender extends AbstractTransportSender {
     private SOAPEnvelope createEnvelope(Message message) throws HL7Exception, XMLStreamException {
         SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();
         SOAPEnvelope envelope = fac.getDefaultEnvelope();
-
-        Parser xmlParser = new DefaultXMLParser();
-        String xmlDoc = xmlParser.encode(message);
-
-        OMElement hl7Element = AXIOMUtil.stringToOM(xmlDoc);
-        OMNamespace ns = fac.createOMNamespace("http://wso2.org/hl7", "hl7");
-        OMElement topicOm = fac.createOMElement("message", ns);
-        topicOm.addChild(hl7Element);
-        envelope.getBody().addChild(topicOm);
+        OMElement messageEl = HL7Utils.generateHL7MessageElement(this.parser.encode(message));
+        envelope.getBody().addChild(messageEl);
         return envelope;
     }
 }

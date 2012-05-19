@@ -15,16 +15,13 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.usage.client.dto;
 
-public class ProviderAPIServiceTimeDTO {
-    String apiName;
-    String serviceTime;
+public class APIResponseTimeDTO {
 
-    public ProviderAPIServiceTimeDTO(String apiName, String serviceTime) {
-        this.apiName = apiName;
-        this.serviceTime = serviceTime;
-    }
+    private String apiName;
+    private double serviceTime;
 
     public String getApiName() {
         return apiName;
@@ -34,11 +31,11 @@ public class ProviderAPIServiceTimeDTO {
         this.apiName = apiName;
     }
 
-    public String getServiceTime() {
+    public double getServiceTime() {
         return serviceTime;
     }
 
-    public void setServiceTime(String serviceTime) {
+    public void setServiceTime(double serviceTime) {
         this.serviceTime = serviceTime;
     }
 }

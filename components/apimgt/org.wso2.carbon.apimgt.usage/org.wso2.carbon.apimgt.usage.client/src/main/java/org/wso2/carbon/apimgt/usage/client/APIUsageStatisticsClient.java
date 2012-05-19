@@ -37,6 +37,7 @@ import org.wso2.carbon.bam.presentation.stub.QueryServiceStub;
 
 import javax.xml.namespace.QName;
 import java.rmi.RemoteException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -146,6 +147,56 @@ public class APIUsageStatisticsClient {
         }
 
         return new ArrayList<APIVersionUsageDTO>(usageByVersions.values());
+    }
+
+    /**
+     * Gets a list of APIResponseTimeDTO objects containing information related to APIs belonging
+     * to a particular provider along with their average response times.
+     *
+     * @param providerName Name of the API provider
+     * @return a List of APIResponseTimeDTO objects, possibly empty
+     * @throws APIMgtUsageQueryServiceClientException on error
+     */
+    public List<APIResponseTimeDTO> getResponseTimesByAPIs(String providerName)
+            throws APIMgtUsageQueryServiceClientException {
+
+        OMElement omElement = this.queryColumnFamily(
+                APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE,
+                APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE_INDEX,
+                null);
+        Collection<APIResponseTime> responseTimes = getResponseTimeData(omElement);
+        List<API> providerAPIs = getAPIsByProvider(providerName);
+        Map<String,Double> apiCumulativeServiceTimeMap = new HashMap<String,Double>();
+        Map<String,Long> apiUsageMap = new HashMap<String,Long>();
+        for (APIResponseTime responseTime : responseTimes) {
+            for (API providerAPI : providerAPIs) {
+                if (providerAPI.getId().getApiName().equals(responseTime.apiName) &&
+                        providerAPI.getId().getVersion().equals(responseTime.apiVersion)) {
+                    Double cumulativeResponseTime = apiCumulativeServiceTimeMap.get(responseTime.apiName);
+                    if (cumulativeResponseTime != null) {
+                        apiCumulativeServiceTimeMap.put(responseTime.apiName,
+                                cumulativeResponseTime + responseTime.responseTime * responseTime.responseCount);
+                        apiUsageMap.put(responseTime.apiName,
+                                apiUsageMap.get(responseTime.apiName) + responseTime.responseCount);
+                    } else {
+                        apiCumulativeServiceTimeMap.put(responseTime.apiName,
+                                responseTime.responseTime * responseTime.responseCount);
+                        apiUsageMap.put(responseTime.apiName, responseTime.responseCount);
+                    }
+                }
+            }
+        }
+        
+        List<APIResponseTimeDTO> result = new ArrayList<APIResponseTimeDTO>();
+        DecimalFormat format = new DecimalFormat("#.##");
+        for (String key : apiUsageMap.keySet()) {
+            APIResponseTimeDTO responseTimeDTO = new APIResponseTimeDTO();
+            responseTimeDTO.setApiName(key);
+            double responseTime = apiCumulativeServiceTimeMap.get(key)/apiUsageMap.get(key);
+            responseTimeDTO.setServiceTime(Double.parseDouble(format.format(responseTime)));
+            result.add(responseTimeDTO);
+        }
+        return result;
     }
 
     /**
@@ -317,59 +368,6 @@ public class APIUsageStatisticsClient {
         return result;
     }
 
-    /**
-     * This method can be used to get average service time for each API by provider.
-     * @return List<ProviderAPIServiceTimeDTO>.
-     * @throws APIMgtUsageQueryServiceClientException
-     */
-    public List<ProviderAPIServiceTimeDTO> getProviderAPIServiceTime(String providerName) throws APIMgtUsageQueryServiceClientException {
-        List<ProviderAPIServiceTimeDTO> result = new ArrayList<ProviderAPIServiceTimeDTO>();
-        OMElement omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE_INDEX, null);
-        List<API> apis = this.getAPIsByProvider(providerName);
-        Set<APIIdentifier> apiIdentifiers = new HashSet<APIIdentifier>();
-        for(API api:apis){
-        Set<String> versions = this.getAPIVersions(providerName,api.getId().getApiName());
-            for(String version:versions){
-                apiIdentifiers.add(new APIIdentifier(providerName, api.getId().getApiName(), version));
-            }
-        }
-        List<String[]> calculationList = new ArrayList<String[]>();
-        for (APIIdentifier apiIdentifier:apiIdentifiers) {
-            String[] api_serviceTime_usage = new String[3];
-            api_serviceTime_usage[0] = apiIdentifier.getApiName();
-            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-            while(rowIterator.hasNext()){
-                OMElement row = (OMElement)rowIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText().equals(apiIdentifier.getApiName()+":v"+apiIdentifier.getVersion())){
-                    api_serviceTime_usage[1] = (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.SERVICE_TIME))).getText();
-                    api_serviceTime_usage[2] = (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.RESPONSE))).getText();
-                    calculationList.add(api_serviceTime_usage);
-                }
-            }
-
-        }
-        Map<String,Float> apiCumulativeServiceTimeMap = new HashMap<String,Float>();
-        Map<String,Integer> apiUsageMap = new HashMap<String,Integer>();
-        for(String[] item:calculationList){
-            if(apiCumulativeServiceTimeMap.containsKey(item[0])){
-                apiCumulativeServiceTimeMap.put(item[0],apiUsageMap.get(item[0])+Float.valueOf(item[1]) * Float.valueOf(item[2]));
-            }else{
-                apiCumulativeServiceTimeMap.put(item[0],Float.valueOf(item[1]) * Float.valueOf(item[2]));
-            }
-            if(apiUsageMap.containsKey(item[0])){
-                apiUsageMap.put(item[0],Float.valueOf(apiUsageMap.get(item[0])+Float.parseFloat(item[2])).intValue());
-            }else{
-                apiUsageMap.put(item[0],Float.valueOf(item[2]).intValue());
-            }
-        }
-        Set<String> keys = apiUsageMap.keySet();
-        for(String key:keys){
-            result.add(new ProviderAPIServiceTimeDTO(key,String.valueOf(apiCumulativeServiceTimeMap.get(key)/apiUsageMap.get(key))));
-        }
-        return result;
-    }
-
     private String getNextStringInLexicalOrder(String str) {
         if ((str == null) || (str.equals(""))) {
             return str;
@@ -449,6 +447,19 @@ public class APIUsageStatisticsClient {
         }
         return usageData;
     }
+
+    private Collection<APIResponseTime> getResponseTimeData(OMElement data) {
+        OMElement rowsElement = data.getFirstChildWithName(new QName(
+                APIMgtUsageQueryServiceClientConstants.ROWS));
+        Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
+                APIMgtUsageQueryServiceClientConstants.ROW));
+        List<APIResponseTime> responseTimeData = new ArrayList<APIResponseTime>();
+        while (rowIterator.hasNext()) {
+            OMElement rowElement = (OMElement) rowIterator.next();
+            responseTimeData.add(new APIResponseTime(rowElement));
+        }
+        return responseTimeData;
+    }
     
     private static class APIUsage {
 
@@ -463,6 +474,26 @@ public class APIUsageStatisticsClient {
                     APIMgtUsageQueryServiceClientConstants.VERSION)).getText();
             requestCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(
                     APIMgtUsageQueryServiceClientConstants.REQUEST)).getText());
+        }
+    }
+
+    private static class APIResponseTime {
+
+        private String apiName;
+        private String apiVersion;
+        private double responseTime;
+        private long responseCount;
+
+        public APIResponseTime(OMElement row) {
+            String nameVersion = row.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText();
+            int index = nameVersion.lastIndexOf(":v");
+            apiName = nameVersion.substring(0, index);
+            apiVersion = nameVersion.substring(index + 2);
+            responseTime = Double.parseDouble(row.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.SERVICE_TIME)).getText());
+            responseCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(
+                    APIMgtUsageQueryServiceClientConstants.RESPONSE)).getText());
         }
     }
 

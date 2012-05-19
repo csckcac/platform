@@ -973,10 +973,10 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static NativeArray jsFunction_getProviderAPIServiceTime(String providerName,String serverURL) throws ScriptException {
-        List<ProviderAPIServiceTimeDTO> list = null;
+        List<APIResponseTimeDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
-            list = client.getProviderAPIServiceTime(providerName);
+            list = client.getResponseTimesByAPIs(providerName);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIServiceTime", e);
         }
@@ -990,7 +990,7 @@ public class APIProviderHostObject extends ScriptableObject {
             while (it.hasNext()) {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
-                ProviderAPIServiceTimeDTO usage = (ProviderAPIServiceTimeDTO) usageObject;
+                APIResponseTimeDTO usage = (APIResponseTimeDTO) usageObject;
                 row.put("apiName", row, usage.getApiName());
                 row.put("serviceTime", row, usage.getServiceTime());
                 myn.put(i, myn, row);

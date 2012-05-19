@@ -25,12 +25,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.databinding.types.URI;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalAccessFault;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalArgumentFault;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalOperationFault;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalStateFault;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.RecipientNotAllowedException;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.TaskOperationsStub;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.*;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.*;
 import org.wso2.carbon.humantask.ui.constants.HumanTaskUIConstants;
 
@@ -50,7 +45,7 @@ public class HumanTaskClientAPIServiceClient {
     /**
      * Task Operations stub.
      */
-    private TaskOperationsStub stub;
+    private HumanTaskClientAPIAdminStub stub;
 
     /**
      * The class constructor.
@@ -66,7 +61,7 @@ public class HumanTaskClientAPIServiceClient {
             ConfigurationContext configContext) throws AxisFault {
         String serviceURL = backendServerURL +
                             HumanTaskUIConstants.SERVICE_NAMES.TASK_OPERATIONS_SERVICE;
-        stub = new TaskOperationsStub(configContext, serviceURL);
+        stub = new HumanTaskClientAPIAdminStub(configContext, serviceURL);
         ServiceClient client = stub._getServiceClient();
         Options options = client.getOptions();
         options.setManageSession(true);

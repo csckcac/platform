@@ -3801,7 +3801,7 @@
         </wsdl:operation>
     </wsdl:binding>
 
-    <wsdl:service name="taskOperations">
+    <wsdl:service name="HumanTaskClientAPIAdmin">
         <wsdl:port name="taskOperationsSOAP" binding="taskOperationsSOAP">
             <soap:address location="http://www.example.org/"/>
         </wsdl:port>

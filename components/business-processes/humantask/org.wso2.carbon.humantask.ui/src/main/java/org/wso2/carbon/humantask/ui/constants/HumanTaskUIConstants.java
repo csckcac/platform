@@ -61,7 +61,7 @@ public final class HumanTaskUIConstants {
         private SERVICE_NAMES() {
         }
 
-        public static final String TASK_OPERATIONS_SERVICE = "taskOperations";
+        public static final String TASK_OPERATIONS_SERVICE = "HumanTaskClientAPIAdmin";
 
         public static final String HUMANTASK_MANAGEMENT_SERVICE = "HumanTaskPackageManagement";
 

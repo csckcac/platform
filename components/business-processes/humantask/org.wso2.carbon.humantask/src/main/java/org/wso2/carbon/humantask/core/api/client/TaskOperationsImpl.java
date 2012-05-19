@@ -27,34 +27,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.humantask.client.api.IllegalAccessFault;
-import org.wso2.carbon.humantask.client.api.IllegalArgumentFault;
-import org.wso2.carbon.humantask.client.api.IllegalOperationFault;
-import org.wso2.carbon.humantask.client.api.IllegalStateFault;
-import org.wso2.carbon.humantask.client.api.RecipientNotAllowedException;
-import org.wso2.carbon.humantask.client.api.TBatchResponse;
-import org.wso2.carbon.humantask.client.api.TaskOperationsSkeletonInterface;
-import org.wso2.carbon.humantask.client.api.types.TAttachment;
-import org.wso2.carbon.humantask.client.api.types.TAttachmentInfo;
-import org.wso2.carbon.humantask.client.api.types.TComment;
-import org.wso2.carbon.humantask.client.api.types.TFault;
-import org.wso2.carbon.humantask.client.api.types.TOrganizationalEntity;
-import org.wso2.carbon.humantask.client.api.types.TPriority;
-import org.wso2.carbon.humantask.client.api.types.TRenderingTypes;
-import org.wso2.carbon.humantask.client.api.types.TSimpleQueryInput;
-import org.wso2.carbon.humantask.client.api.types.TStatus;
-import org.wso2.carbon.humantask.client.api.types.TTaskAbstract;
-import org.wso2.carbon.humantask.client.api.types.TTaskAuthorisationParams;
-import org.wso2.carbon.humantask.client.api.types.TTaskDetails;
-import org.wso2.carbon.humantask.client.api.types.TTaskEventType;
-import org.wso2.carbon.humantask.client.api.types.TTaskEvents;
-import org.wso2.carbon.humantask.client.api.types.TTaskHistoryFilter;
-import org.wso2.carbon.humantask.client.api.types.TTaskInstanceData;
-import org.wso2.carbon.humantask.client.api.types.TTaskOperations;
-import org.wso2.carbon.humantask.client.api.types.TTaskQueryResultSet;
-import org.wso2.carbon.humantask.client.api.types.TTaskSimpleQueryResultSet;
-import org.wso2.carbon.humantask.client.api.types.TTime;
-import org.wso2.carbon.humantask.client.api.types.TUser;
+import org.wso2.carbon.humantask.client.api.*;
+import org.wso2.carbon.humantask.client.api.types.*;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
 import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.HumanTaskCommand;
@@ -98,14 +72,14 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
  * The implementation of the WS Human Task API Operations.
  */
-public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsSkeletonInterface {
+public class TaskOperationsImpl extends AbstractAdmin
+        implements HumanTaskClientAPIAdminSkeletonInterface {
 
     private static Log log = LogFactory.getLog(TaskOperationsImpl.class);
 

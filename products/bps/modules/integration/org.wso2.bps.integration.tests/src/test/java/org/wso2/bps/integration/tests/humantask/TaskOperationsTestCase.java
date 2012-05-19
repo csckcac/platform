@@ -25,7 +25,7 @@ import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
 import org.wso2.bps.integration.tests.util.FrameworkSettings;
 import org.wso2.bps.integration.tests.util.HumanTaskTestConstants;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.TaskOperationsStub;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.HumanTaskClientAPIAdminStub;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
@@ -42,7 +42,7 @@ import java.util.Set;
  */
 public class TaskOperationsTestCase {
 
-    private TaskOperationsStub taskOperationsStub = null;
+    private HumanTaskClientAPIAdminStub taskOperationsStub = null;
 
     private URI taskId = null;
 
@@ -59,8 +59,8 @@ public class TaskOperationsTestCase {
 
         String TASK_OPERATIONS_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
                                              ":" + FrameworkSettings.HTTPS_PORT +
-                                             "/services/taskOperations";
-        taskOperationsStub = new TaskOperationsStub(TASK_OPERATIONS_SERVICE_URL);
+                                             "/services/HumanTaskClientAPIAdmin";
+        taskOperationsStub = new HumanTaskClientAPIAdminStub(TASK_OPERATIONS_SERVICE_URL);
 
         ServiceClient serviceClient = taskOperationsStub._getServiceClient();
         CarbonUtils.setBasicAccessSecurityHeaders(HumanTaskTestConstants.CLERK1_USER,

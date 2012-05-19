@@ -35,6 +35,11 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.business.messaging.hl7.common</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.business.messaging.hl7.transport</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
@@ -72,6 +77,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.business.messaging.hl7.common</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.business.messaging.hl7.transport</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.business.messaging.hl7.message</bundleDef>
                                 <bundleDef>ca.uhn.hapi.wso2:hapi</bundleDef>

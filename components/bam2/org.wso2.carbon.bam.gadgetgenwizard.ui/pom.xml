@@ -94,8 +94,13 @@
             <artifactId>org.wso2.carbon.bam.gadgetgenwizard.stub</artifactId>
             <version>${wso2carbon.version.bam2}</version>
         </dependency>
+       <dependency>
+           <groupId>org.json.wso2</groupId>
+           <artifactId>json</artifactId>
+           <version>${orbit.version.json}</version>
+       </dependency>
 
-    </dependencies>
+   </dependencies>
 
 
 </project>

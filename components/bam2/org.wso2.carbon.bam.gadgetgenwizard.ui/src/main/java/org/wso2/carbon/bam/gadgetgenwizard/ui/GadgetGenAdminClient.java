@@ -4,15 +4,10 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
-import org.wso2.carbon.bam.gadgetgenwizard.stub.GadgetGenAdminServiceGadgetGenException;
+import org.json.JSONObject;
 import org.wso2.carbon.bam.gadgetgenwizard.stub.GadgetGenAdminServiceStub;
-import org.wso2.carbon.bam.gadgetgenwizard.stub.types.WSMap;
-import org.wso2.carbon.bam.gadgetgenwizard.stub.types.WSMapElement;
-
-import javax.servlet.http.HttpSession;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
+import org.wso2.carbon.bam.gadgetgenwizard.stub.beans.DBConnInfo;
+import org.wso2.carbon.bam.gadgetgenwizard.stub.beans.WSMap;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -33,35 +28,27 @@ public class GadgetGenAdminClient {
 
     private GadgetGenAdminServiceStub stub;
 
-       private String GADGETGEN_ADMIN_SERVICE_URL = "GadgetGenAdminService";
-
-       public GadgetGenAdminClient(String cookie, String backendServerURL,
-                                  ConfigurationContext configCtx) throws AxisFault {
-           String serviceURL = backendServerURL + GADGETGEN_ADMIN_SERVICE_URL;
-           stub = new GadgetGenAdminServiceStub(configCtx, serviceURL);
-           ServiceClient client = stub._getServiceClient();
-           Options option = client.getOptions();
-           option.setManageSession(true);
-           option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
-       }
+    public GadgetGenAdminClient(String cookie, String backendServerURL,
+                                ConfigurationContext configCtx) throws AxisFault {
+        String serviceURL = backendServerURL + "GadgetGenAdminService";
+        stub = new GadgetGenAdminServiceStub(configCtx, serviceURL);
+        ServiceClient client = stub._getServiceClient();
+        Options option = client.getOptions();
+        option.setManageSession(true);
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
+    }
 
 
-    public String generateGraph(WSMap map) throws GadgetGenAdminServiceGadgetGenException, RemoteException {
+    public String generateGraph(WSMap map) throws Exception {
         return stub.createGadget(map);
     }
 
-    public WSMap constructWSMap(HttpSession session, List<String> sessionAttrKey) {
-        List<WSMapElement> sessionValues = new ArrayList<WSMapElement>();
-        for (String key : sessionAttrKey) {
-            WSMapElement wsMapElement = new WSMapElement();
-            wsMapElement.setKey(key);
-            wsMapElement.setValue(((String[]) session.getAttribute(key))[0]);
-            sessionValues.add(wsMapElement);
-        }
-        WSMap wsMap = new WSMap();
-        wsMap.setWsMapElements(sessionValues.toArray(new WSMapElement[sessionValues.size()]));
+    public boolean validateDBConn(DBConnInfo dbConnInfo) throws Exception {
+        return stub.validateDBConnection(dbConnInfo);
+    }
 
-        return wsMap;
+    public JSONObject executeQuery(DBConnInfo dbConnInfo, String sql) throws Exception {
+        return GGWUIUtils.convertToJSONObj(stub.executeQuery(dbConnInfo, sql));
     }
 
 

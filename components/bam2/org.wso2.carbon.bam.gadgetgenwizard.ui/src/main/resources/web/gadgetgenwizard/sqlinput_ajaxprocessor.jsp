@@ -1,44 +1,43 @@
-<%@ page import="java.util.Enumeration" %>
-<%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.Map" %>
 
 
 <%
     Map parameterMap = request.getParameterMap();
-    for (Iterator iterator = parameterMap.keySet().iterator(); iterator.hasNext();) {
-        String param = (String) iterator.next();
+    for (Object o : parameterMap.keySet()) {
+        String param = (String) o;
         Object value = parameterMap.get(param);
         session.setAttribute(param, value);
-
     }
 
     Object sqlParam = session.getAttribute("sql");
     String sql = (sqlParam == null) ? "select * from productsummary" : ((String[])sqlParam) [0];
 
 %>
-<script type="text/javascript" src="../gadgetgenwizard/js/jquery.dataTables.min.js"/>
+<script type="text/javascript" src="../gadgetgenwizard/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $.("#query-results-holder").hide();
+        $("#query-results-holder").hide();
 
         $("#execute-sql").click(function() {
-            $.post("execute_sql.jsp", $("form").serialize(), function(html) {
+            $.post("execute_sql_ajaxprocessor.jsp", $("form").serialize(), function(html) {
                 var success = !(html.toLowerCase().match(/error/));
-                function getaoColumns(columns) {
+                function getaoColumns(columnNames) {
                     var json = [];
-                    for (var i = 0; i < columns.length; i++) {
-                        var column = columns[i];
-                        json.push({"sTitle" : column});
+                    for (var i = 0; i < columnNames.length; i++) {
+                        var columnName = columnNames[i];
+                        json.push({ sTitle : columnName});
                     }
                     return json;
                 }
                 if (success) {
-                    $("#query-results-holder").show();
-                    $("#query-results-holder").html("<table class=\"normal\" id=\"query-results\"></table>");
+                    var respJson = JSON.parse(html);
+
+                    $("#query-results-holder").html("<table id=\"query-results\"></table>");
                     $("#query-results").dataTable({
-                        "aaData" : html.rows,
-                        "aoColumns" : getaoColumns(html.columns)
+                        "aaData" : respJson.Rows,
+                        "aoColumns" : getaoColumns(respJson.ColumnNames)
                     });
+                    $("#query-results-holder").show();
                 } else {
                     CARBON.showErrorDialog(html);
                 }
@@ -46,16 +45,16 @@
         });
     });
 </script>
-<form>
     <tr>
         <td>SQL Statement<font color="red">*</font>
         </td>
-        <td><input type="text" name="sql" value="<%=sql%>" style="width:150px"/></td>
-        <td><input type="button" id="execute-sql"/></td>
+        <td><input type="text" name="sql" value="<%=sql%>" style="width:200px"/></td>
+        <td><input type="button" id="execute-sql" value="Preview SQL Results"/></td>
     </tr>
-    <tr id="query-results-holder">
-
+    <tr>
+        <td>
+            <div id="query-results-holder" style="padding-top:25px"></div>
+        </td>
     </tr>
     <input type="hidden" name="page" id="page" value="2">
 
-</form>

@@ -4,33 +4,11 @@
 <%
 
     Map parameterMap = request.getParameterMap();
-    for (Iterator iterator = parameterMap.keySet().iterator(); iterator.hasNext();) {
-        String param = (String) iterator.next();
+    for (Object o : parameterMap.keySet()) {
+        String param = (String) o;
         Object value = parameterMap.get(param);
         session.setAttribute(param, value);
-        System.out.println("============= Request Map ===================");
-        if (value instanceof String[]) {
-            String[] strings = (String[]) value;
-            for (int i = 0; i < strings.length; i++) {
-                String string = strings[i];
-                System.out.println("param key : " + param + " param value : " +  string);
-
-            }
-
-        } else {
-            System.out.println("param key : " + param + " param value : " +  value);
-        }
-
     }
-    System.out.println("============== Session Map ===================");
-    Enumeration attributeNames = session.getAttributeNames();
-    while (attributeNames.hasMoreElements()) {
-        String attribute = (String) attributeNames.nextElement();
-        System.out.println("param key : " + attribute + " param value : " + session.getAttribute(attribute) );
-    }
-
-
-
 
 %>
 <script type="text/javascript">
@@ -54,7 +32,7 @@
     })
 
 </script>
-<form>
+
     <select name="uielement" id="uielement">
         <option value="bar">Bar Chart</option>
         <option value="table">Table</option>
@@ -66,6 +44,5 @@
         <p><label>Y-Axis Label : </label><input type="text" name="bar-ylabel" value="Total Amount (Rs.)"/></p>
         <p><label>Y-Axis Column : </label><input type="text" name="bar-ycolumn" value="total_amount"/></p>
     </div>
-    <input type="hidden" name="page" id="page" value="03"/>
+    <input type="hidden" name="page" id="page" value="3"/>
 
-</form>

@@ -4,10 +4,24 @@
     String username = (session.getAttribute("username") != null) ? ((String[]) session.getAttribute("username")) [0] : "";
     String password = (session.getAttribute("password") != null) ? ((String[]) session.getAttribute("password")) [0] : "";
 %>
-<form>
-    <p>JDBC URL : <input type="text" size="50%" name="jdbcurl" value="<%=jdbcurl%>"/></p>
-    <p>Driver Class Name : <input type="text" size="50%" name="driver" value="<%=driver%>"/></p>
-    <p>Username : <input type="text" size="50%" name="username" value="<%=username%>"/></p>
-    <p>Password : <input type="text" size="50%" name="password" value="<%=password%>"/></p>
-    <input type="hidden" name="page" id="page" value="01">
-</form>
+<tr>
+    <td>JDBC URL<font color="red">*</font>
+    </td>
+    <td><input type="text" name="jdbcurl" value="<%=jdbcurl%>" style="width:150px"/></td>
+</tr>
+<tr>
+    <td>Driver Class Name<font color="red">*</font></td>
+    <td><input type="text" name="driver" value="<%=driver%>" style="width:150px"/></td>
+</tr>
+<tr>
+    <td>User Name<font color="red">*</font></td>
+    <td><input type="text" name="username" value="<%=username%>" style="width:150px"/></td>
+</tr>
+<tr>
+    <td>Password<font color="red">*</font></td>
+    <td><input type="password" name="password" value="<%=password%>" style="width:150px"></td>
+</tr>
+<tr>
+    <td><input type="button" class="button" value="Validate Connection" id="validate"/></td>
+</tr>
+<input type="hidden" name="page" id="page" value="1">

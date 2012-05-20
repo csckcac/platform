@@ -26,9 +26,10 @@
 <script type="text/javascript" src="../admin/js/cookies.js"></script>
 <script type="text/javascript" src="../admin/js/main.js"></script>
 
-
 <link type="text/css" href="../dialog/js/jqueryui/tabs/ui.all.css" rel="stylesheet"/>
-<script type="text/javascript" src="../dialog/js/jqueryui/tabs/jquery-1.2.6.min.js"></script>
+<link type="text/css" href="../gadgetgenwizard/css/jquery.dataTables.css" rel="stylesheet"/>
+
+<script type="text/javascript" src="../admin/js/jquery-1.5.2.min.js"></script>
 <script type="text/javascript"
         src="../dialog/js/jqueryui/tabs/jquery-ui-1.6.custom.min.js"></script>
 <script type="text/javascript" src="../dialog/js/jqueryui/tabs/jquery.cookie.js"></script>
@@ -45,7 +46,7 @@
 
         $("#generate").click(function() {
             sendAjaxRequest("generate_gadget_ajaxprocessor.jsp");
-        })
+        });
 
         $("#back").click(function() {
             var backURL = "";
@@ -61,22 +62,22 @@
 
             sendAjaxRequest(backURL);
 
-        })
+        });
 
         $("#validate").click(function() {
-            $.post("validate_db_conn.jsp", $(form)function(html) {
-                var success = (html.toLowerCase().match(/success/));
+            $.post("validate_db_conn_ajaxprocessor.jsp", $("form").serialize(), function(html) {
+                var success = !(html.toLowerCase().match(/error/));
                 if (success) {
                     CARBON.showInfoDialog(html);
                 } else {
                     CARBON.showErrorDialog(html);
                 }
-            })
+            });
 
-        })
+        });
 
         function changeBackBtnState() {
-            if ($("#page").val() == "01") {
+            if ($("#page").val() == "1") {
                 $("#back").attr("disabled", "disabled");
             } else {
                 $("#back").removeAttr('disabled');
@@ -85,7 +86,7 @@
 
 
         function changeGenBtnState() {
-            if ($("#page").val() == "04") {
+            if ($("#page").val() == "4") {
                 $("#generate").show();
             } else {
                 $("#generate").hide();
@@ -122,7 +123,7 @@
                 success: function (html) {
                     //if process.php returned 1/true (send mail success)
                     //hide the form
-                    $('#div-form').fadeOut('fast', function() {
+                    $('#change-area').fadeOut('fast', function() {
 
                         $('#change-area').html(html);
 
@@ -139,12 +140,12 @@
             });
         }
 
-        var wizardPgTitle = ["Data Source", "SQL Queries", "UI Elements", "Gadget", "Done!"];
+        var wizardPgTitle = ["Data Source", "SQL Queries", "UI Elements", "Gadget Details", "Done!"];
 
         function changeHeading(pageNo) {
             var stepTitle = "Step " + pageNo + " of 5 : ";
-            $("#page-title").html(wizardPgTitle[pageNo]);
-            $("#step-title").html(stepTitle + wizardPgTitle[pageNo]);
+            $("#page-title").html(wizardPgTitle[pageNo - 1]);
+            $("#step-title").html(stepTitle + wizardPgTitle[pageNo - 1]);
 
         }
 
@@ -155,11 +156,11 @@
             var driver = $("[name=driver]").val();
 
             var nextURL = "";
-            if ($("#page").val() == "01") {
+            if ($("#page").val() == "1") {
                nextURL = "sqlinput_ajaxprocessor.jsp";
-            } else if ($("#page").val() == "02") {
+            } else if ($("#page").val() == "2") {
                nextURL = "pickuielement_ajaxprocessor.jsp";
-            } else if ($("#page").val() == "03") {
+            } else if ($("#page").val() == "3") {
                nextURL = "preview_ajaxprocessor.jsp";
             }
 
@@ -191,7 +192,7 @@
         <div id="workArea">
             <h3 id="step-title">Step 1 of 5 : Enter Data Source</h3>
 
-
+                <form method="post">
                 <table class="styledLeft" id="userAdd" width="60%">
                     <thead>
                     <tr>
@@ -203,7 +204,6 @@
                         <td class="formRaw">
                             <table class="normal">
                                 <tbody id="change-area">
-                                <form>
                                     <tr>
                                         <td>JDBC URL<font color="red">*</font>
                                         </td>
@@ -222,24 +222,24 @@
                                         <td><input type="password" name="password" value="<%=password%>" style="width:150px"></td>
                                     </tr>
                                     <tr>
-                                        <input type="button" value="Validate Connection" id="validate"/>
+                                        <td><input type="button" class="button" value="Validate Connection" id="validate"/></td>
                                     </tr>
                                     <input type="hidden" name="page" id="page" value="1">
-                                </form>
                                 </tbody>
                             </table>
                         </td>
                     </tr>
                     <tr>
                         <td class="buttonRow">
-                            <input type="button" id="back" value="Back">
-                            <input type="button" id="next" value="Next">
-                            <input type="button" id="generate" value="Generate">
+                            <input type="button" class="button" id="back" value="Back">
+                            <input type="button" class="button" id="next" value="Next">
+                            <input type="button" class="button" id="generate" value="Generate">
 
                         </td>
                     </tr>
                     </tbody>
                 </table>
+                    </form>
         </div>
 
 

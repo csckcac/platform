@@ -1,9 +1,9 @@
 <% jagg.template("api/api-info", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
+<% var stars = require("/site/themes/modern/utils/ratings/star-generator.js"); %>
 <% var i, length, app, thumbURL, api = outputs.api, apps = outputs.applications, user = outputs.user;
    thumbURL = api.thumbURL;
    if(thumbURL && thumbURL.indexOf("images/") == 0) {
-        thumbURL = site.context + "/site/themes/fancy/" + thumbURL;
+        thumbURL = site.context + "/site/themes/modern/" + thumbURL;
    }
 %>
 <div class="api-info">
@@ -46,7 +46,7 @@
 
                                 </select>
                                 <% } %>
-                                    <div class="simple-space-maker"><button id="subscribe-button" class="medium green">Subscribe</button></div>
+                                    <div class="simple-space-maker"><button id="subscribe-button" class="btn btn-primary">Subscribe</button></div>
                         <% } %>
 
                     </td>

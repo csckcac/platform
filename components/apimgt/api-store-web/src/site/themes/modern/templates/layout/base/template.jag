@@ -7,33 +7,47 @@
         mw = 9;
     }
 %>
+<div id="layouts_base">
+    <div id="top">
+        <% jagg.includeBlocks(outputs.top); %>
+    </div>
 
-<% jagg.includeBlocks(outputs.top); %>
+    <div class="row page-content">
+        <div id="left">
+           <div class="span3 section-shifter-left">
+                <% jagg.includeBlocks(outputs.left); %>
+           </div>
+        </div>
+        <div id="middle">
+           <div class="span<%=String(mw)%>">
+               <div class="main-heading">
+                   <% if(outputs.title == "Applications") { %>
 
-<div class="row page-content">
-   <div class="span3 section-shifter-left">
-        <% jagg.includeBlocks(outputs.left); %>
-   </div>
-   <div class="span6">
-       <div class="main-heading">
-           <% if(outputs.title == "Applications") { %>
+                        <h1>Applications</h1>
+                        <p>Browse and create applications. Applications are required to make API subscriptions and consume them.</p>
 
-           <% } else if(outputs.title == "My Subscriptions") { %>
+                   <% } else if(outputs.title == "My Subscriptions") { %>
 
-           <% } else { %>
-           <h1>APIs</h1>
-           <p>The practice of publishing APIs has allowed web communities to create an open architecture for sharing
-               content
-               and data between communities and applications.</p>
-           <% } %>
+                   <% } else { %>
+                   <h1>APIs</h1>
+                   <p>The practice of publishing APIs has allowed web communities to create an open architecture for sharing
+                       content
+                       and data between communities and applications.</p>
+                   <% } %>
 
-       </div>
+               </div>
 
-       <% if(outputs.title) { %><h2><%=outputs.title%></h2><% } %>
-        <% jagg.includeBlocks(outputs.middle); %>
-   </div>
-   <div class="span3 section-shifter-right">
-       <% jagg.includeBlocks(outputs.right); %>
-   </div>
+               <% if(outputs.title && outputs.title=="APIs") { %><h2><%=outputs.title%></h2><% } %>
+                <% jagg.includeBlocks(outputs.middle); %>
+           </div>
+        </div>
+
+        <div id="right">
+           <div class="span3 section-shifter-right">
+               <% jagg.includeBlocks(outputs.right); %>
+           </div>
+        </div>
+
+    </div>
 </div>
 <% }); %>

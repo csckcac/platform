@@ -3,30 +3,25 @@
     var apis = outputs.apis, length = apis.length;
     if(apis.length > 0) {
 %>
-<div id="top-rated">
-    <h4>Top Rated</h4>
-    <hr/>
-    <ol>
+        <ul class="list-main">
+
         <%
-        var i, thumbURL, api, path;
+        var i, api, path;
         for(i = 0; i < length; i++) {
             api = apis[i];
-            thumbURL = api.thumbURL;
-            if(thumbURL && thumbURL.indexOf("images/") == 0) {
-                thumbURL = site.context + "/site/themes/fancy/" + thumbURL;
-            }
             path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
         %>
-        <li>
-            <a class="tooltip-right medium orange pill" data-content="#tooltipcontentID<%=i%>"><%=api.name%></a>
+         <li><a><%=api.name%></a></li>
+       <!-- <li>
+            <a class="tooltip-right medium orange pill" data-content="#tooltipcontentID<%=i%>"></a>
             <div class="tooltip-content" id="tooltipcontentID<%=i%>">
                 <h5><a href="<%=path%>"><%=api.name%></a></h5>
-                <img src="<%=thumbURL%>"/>
+                <img src="<%=api.thumbURL%>"/>
                 <p><%=api.description%></p>
             </div>
-        </li>
+        </li>-->
         <% } %>
-    </ol>
+    </ul>
 </div>
     <% } %>
 <% }); %>

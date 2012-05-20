@@ -45,18 +45,14 @@ $(document).ready(function () {
     });
 
     $(".need-login").click(function() {
-        $('#login-form').modal('show');
-        $('#loginBtn').data("goto_url", this.href);
-
-
-        $("#login-form").dialog("open").data("url", $(this).attr("href"));
+        $('#login-form').modal('show').data("goto_url", $(this).attr("href"));
         return false;
     });
 
     $('#loginBtn').click(
-                        function() {
-                            var goto_url = $('#loginBtn').data("goto_url");
-                            login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
-                        }
-            );
+        function() {
+            var goto_url = $('#login-form').data("goto_url");
+            login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
+        }
+    );
 });

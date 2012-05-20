@@ -7,7 +7,7 @@
     <script type="text/javascript">
         var foo='<%=apps%>';
     </script>
-    <table cellspacing="0" cellpadding="0" class="sortable">
+    <table cellspacing="0" cellpadding="0" class="table table-bordered table-striped">
         <thead>
             <tr class="alt first last">
                 <th value="Name" rel="0" style="width:450px;">Name</th>
@@ -21,13 +21,13 @@
                 if(i == 0) classes = "first";
                 else if(i + 1 == length) classes = "last";
             %>
-            <tr class="<%=classes%>">
-                <td value="<%=app.name%>"><%=app.name%></td>
-                <td value="">
-                    <a onclick="changeAppNameMode(this)"><span class="icon black small" data-icon="7"></span> Edit</a>
+            <tr class="<%=classes%>" data-value="<%=app.name%>">
+                <td class="app_name_cell"><%=app.name%></td>
+                <td>
+                    <a onclick="changeAppNameMode(this)"><i class="icon-edit"></i> Edit</a>
                 </td>
                 <td>
-                    <a><span class="icon black small" data-icon="T"></span> Delete</a>
+                    <a><i class="icon-trash"></i> Delete</a>
                 </td>
             </tr>
             <% } %>

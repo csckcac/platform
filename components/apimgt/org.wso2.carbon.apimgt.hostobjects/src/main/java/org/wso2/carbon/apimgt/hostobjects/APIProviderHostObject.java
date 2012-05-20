@@ -53,14 +53,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -360,7 +353,7 @@ public class APIProviderHostObject extends ScriptableObject {
             myn.put(8, myn, api.getThumbnailUrl());
             myn.put(9, myn, api.getContext());
             myn.put(10, myn, checkValue(api.getLastUpdated().toString()));
-            myn.put(11, myn, getSubscriberCount(apiId, apiProvider));
+            myn.put(11, myn, getSubscriberCount(apiId, thisObj));
 
             if (uriTemplates.size() != 0) {
                 NativeArray uriTempArr = new NativeArray(uriTemplates.size());
@@ -393,8 +386,93 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         return myn;
     }
+
+    public static NativeArray jsFunction_getSubscriberCountByAPIs(Context cx, Scriptable thisObj,
+                                                Object[] args,
+                                                Function funObj) throws ScriptException {
+        NativeArray myn = new NativeArray(0);
+        String providerName = null;
+        APIProvider apiProvider = getAPIProvider(thisObj);
+        try {
+            if (args.length == 0) {
+                throw new ScriptException("Invalid number of input parameters.");
+            }
+            providerName = (String) args[0];
+            if (providerName != null) {
+                List<API> apiSet = apiProvider.getAPIsByProvider(providerName);
+                Map<String,Integer> subscriptions = new TreeMap<String,Integer>();
+                for (API api : apiSet) {
+                    if (api.getStatus() == APIStatus.CREATED) {
+                        continue;
+                    }
+                    int count = getSubscriberCount(api.getId(), thisObj);
+                    Integer currentCount = subscriptions.get(api.getId().getApiName());
+                    if (currentCount != null) {
+                        subscriptions.put(api.getId().getApiName(), currentCount + count);
+                    } else {
+                        subscriptions.put(api.getId().getApiName(), count);
+                    }
+                }
+                
+                int i = 0;
+                for (Map.Entry<String,Integer> entry : subscriptions.entrySet()) {
+                    NativeObject row = new NativeObject();
+                    row.put("apiName", row, entry.getKey());
+                    row.put("count", row, entry.getValue().intValue());
+                    myn.put(i, myn, row);
+                }                                
+            }
+        } catch (APIManagementException e) {
+            log.error("Error from registry while getting subscribers of the provider: " + providerName, e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return myn;        
+    }
+
+    public static NativeArray jsFunction_getSubscriberCountByAPIVersions(Context cx, Scriptable thisObj,
+                                                                  Object[] args,
+                                                                  Function funObj) throws ScriptException {
+        NativeArray myn = new NativeArray(0);
+        String providerName = null;
+        String apiName = null;
+        APIProvider apiProvider = getAPIProvider(thisObj);
+        try {
+            if (args.length == 0 || args.length == 1) {
+                throw new ScriptException("Invalid number of input parameters.");
+            }
+            providerName = (String) args[0];
+            apiName = (String) args[1];
+            if (providerName != null && apiName != null) {
+                List<API> apiSet = apiProvider.getAPIsByProvider(providerName);
+                Map<String,Integer> subscriptions = new TreeMap<String,Integer>();
+                for (API api : apiSet) {
+                    if (!api.getId().getApiName().equals(apiName) || api.getStatus() == APIStatus.CREATED) {
+                        continue;
+                    }
+                    int count = getSubscriberCount(api.getId(), thisObj);
+                    subscriptions.put(api.getId().getVersion(), count);
+                }
+
+                int i = 0;
+                for (Map.Entry<String,Integer> entry : subscriptions.entrySet()) {
+                    NativeObject row = new NativeObject();
+                    row.put("apiVersion", row, entry.getKey());
+                    row.put("count", row, entry.getValue().intValue());
+                    myn.put(i, myn, row);
+                }
+            }
+        } catch (APIManagementException e) {
+            log.error("Error from registry while getting subscribers of the " +
+                    "provider: " + providerName + " and API: " + apiName, e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return myn;
+    }
     
-    private static int getSubscriberCount(APIIdentifier apiId, APIProvider apiProvider) throws APIManagementException {
+    private static int getSubscriberCount(APIIdentifier apiId, Scriptable thisObj) throws APIManagementException {
+        APIProvider apiProvider = getAPIProvider(thisObj);
         Set<Subscriber> subs = apiProvider.getSubscribersOfAPI(apiId);
         Set<String> subscriberNames = new HashSet<String>();
         for (Subscriber sub : subs) {
@@ -436,7 +514,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     row.put("version", row, apiIdentifier.getVersion());
                     row.put("status", row, checkValue(api.getStatus().toString()));
                     row.put("thumb", row, api.getThumbnailUrl());
-                    row.put("subs", row, getSubscriberCount(apiIdentifier, apiProvider));
+                    row.put("subs", row, getSubscriberCount(apiIdentifier, thisObj));
                     myn.put(i, myn, row);
                     i++;
                 }
@@ -521,8 +599,6 @@ public class APIProviderHostObject extends ScriptableObject {
             log.error(e.getMessage(), e);
         }
         return myn;
-
-
     }
 
     public static NativeArray jsFunction_getAllDocumentation(Context cx, Scriptable thisObj,

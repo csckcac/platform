@@ -53,6 +53,8 @@ public final class APIUsageStatisticsClientConstants {
     public static final String SERVICE_TIME = "serviceTime";
 
     public static final String VERSION = "version";
+    
+    public static final String CONTEXT= "context";
 
     public static final String RESPONSE = "response";
 

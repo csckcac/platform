@@ -91,7 +91,8 @@ public class APIUsageStatisticsClient {
         for (APIUsage usage : usageData) {
             for (API providerAPI : providerAPIs) {
                 if (providerAPI.getId().getApiName().equals(usage.apiName) &&
-                        providerAPI.getId().getVersion().equals(usage.apiVersion)) {
+                        providerAPI.getId().getVersion().equals(usage.apiVersion) &&
+                        providerAPI.getContext().equals(usage.context)) {
                     APIUsageDTO usageDTO = usageByAPIs.get(usage.apiName);
                     if (usageDTO != null) {
                         usageDTO.setCount(usageDTO.getCount() + usage.requestCount);
@@ -137,7 +138,8 @@ public class APIUsageStatisticsClient {
         for (APIUsage usage : usageData) {
             for (API providerAPI : providerAPIs) {
                 if (providerAPI.getId().getApiName().equals(usage.apiName) &&
-                        providerAPI.getId().getVersion().equals(usage.apiVersion)) {
+                        providerAPI.getId().getVersion().equals(usage.apiVersion) &&
+                        providerAPI.getContext().equals(usage.context)) {
 
                     APIVersionUsageDTO usageDTO = new APIVersionUsageDTO();
                     usageDTO.setVersion(usage.apiVersion);
@@ -548,6 +550,7 @@ public class APIUsageStatisticsClient {
 
         private String apiName;
         private String apiVersion;
+        private String context;
         private long requestCount;
 
         public APIUsage(OMElement row) {
@@ -555,6 +558,8 @@ public class APIUsageStatisticsClient {
                     APIUsageStatisticsClientConstants.API)).getText();
             apiVersion = row.getFirstChildWithName(new QName(
                     APIUsageStatisticsClientConstants.VERSION)).getText();
+            context = row.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.CONTEXT)).getText();
             requestCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(
                     APIUsageStatisticsClientConstants.REQUEST)).getText());
         }

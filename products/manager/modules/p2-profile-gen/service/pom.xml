@@ -102,6 +102,15 @@
 				<featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${project.version}
                                 </featureArtifactDef>
+				<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.billing.server.feature:${project.version}
+                                </featureArtifactDef>
+				<featuredArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.rule.service.server.feature:${carbon.version}
+				</featuredArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.billing.ui.feature:${project.version}
+                                </featureArtifactDef>
                                 <!-- Security Mgt feature to manage key stores -->
                               <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.version}
@@ -345,6 +354,18 @@
  				<feature>
                                     <id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>
                                     <version>${project.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.billing.server.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.billing.ui.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.rule.service.server.feature.group</id>
+                                    <version>${carbon.version}</version>
                                 </feature> 
                             </features>
                         </configuration>

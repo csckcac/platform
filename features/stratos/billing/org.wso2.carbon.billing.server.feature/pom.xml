@@ -44,6 +44,21 @@
             <artifactId>org.wso2.carbon.billing.mgt</artifactId>
 	    <version>${stratos.version}</version>
         </dependency>
+	<dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.rule.kernel</artifactId>
+                <version>${wso2carbon.version}</version>
+        </dependency>
+	<dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.rule.common</artifactId>
+                <version>${wso2carbon.version}</version>
+        </dependency>
+	<dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.rule.backend</artifactId>
+                <version>${wso2carbon.version}</version>
+        </dependency>
         </dependencies>
     <build>
         <plugins>
@@ -59,7 +74,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.billing.ui</id>
+                            <id>org.wso2.carbon.billing.server</id>
                             <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -70,6 +85,9 @@
                             <bundles>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.core</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.mgt</bundleDef>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.rule.kernel</bundleDef>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.rule.common</bundleDef>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.rule.backend</bundleDef>
                            </bundles>
                             <!--importFeatures>
                                 <importFeatureDef>org.wso2.carbon.stratos.common:${wso2carbon.version}</importFeatureDef>

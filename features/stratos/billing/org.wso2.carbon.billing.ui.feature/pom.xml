@@ -68,7 +68,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-				<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.mgt.stub:${wso2carbon.version}</bundleDef>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.mgt.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.billing.mgt.ui</bundleDef>
                            </bundles>
                             <!--importFeatures>

@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.billing.core.BillingManager;
 import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.rule.server.RuleServerManagerService;
+import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.billing.mgt.api.MultitenancyBillingInfo;
 import org.wso2.carbon.throttling.manager.utils.Util;
@@ -42,9 +42,11 @@ import org.wso2.carbon.usage.api.TenantUsageRetriever;
  * @scr.reference name="billingManager.service"
  * interface="org.wso2.carbon.billing.core.BillingManager" cardinality="1..1"
  * policy="dynamic" bind="setBillingManager" unbind="unsetBillingManager"
- * @scr.reference name="ruleservermanager.component"
- * interface="org.wso2.carbon.rule.server.RuleServerManagerService" cardinality="1..1"
- * policy="dynamic" bind="setRuleServerManagerService" unbind="unsetRuleServerManagerService"
+ * @scr.reference name="rule.engine.config.server.component"
+ * interface="org.wso2.carbon.rule.kernel.config.RuleEngineConfigService"
+ * cardinality="1..1"
+ * policy="dynamic" bind="setRuleEngineConfigService"
+ * unbind="unsetRuleEngineConfigService"
  * @scr.reference name="metering.service"
  * interface="org.wso2.carbon.usage.api.TenantUsageRetriever" cardinality="1..1"
  * policy="dynamic" bind="setTenantUsageRetriever" unbind="unsetTenantUsageRetriever"
@@ -97,11 +99,11 @@ public class ThrottlingManagerServiceComponent {
         Util.setBillingManager(null);
     }
 
-    protected void setRuleServerManagerService(RuleServerManagerService ruleServerManagerService) {
-        Util.setRuleServerManagerService(ruleServerManagerService);
+    protected void setRuleEngineConfigService(RuleEngineConfigService ruleEngineConfigService) {
+        Util.setRuleEngineConfigService(ruleEngineConfigService);
     }
 
-    protected void unsetRuleServerManagerService(RuleServerManagerService ruleServerManagerService) {
+    protected void unsetRuleEngineConfigService(RuleEngineConfigService ruleEngineConfigService) {
         // we are not dynamically removing schedule helpers
     }
 

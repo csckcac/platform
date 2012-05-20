@@ -88,7 +88,7 @@ public class BaseTestCase extends TestCase {
         RuleServerConfiguration configuration =
                 new RuleServerConfiguration(new JSR94BackendRuntimeFactory());
         ruleServerManager.init(configuration);
-        Util.setRuleServerManagerService(ruleServerManager);
+        Util.setRuleEngineConfigService(ruleServerManager);
     }
 
     public Task getThrottlingTask(String configFile, String ruleFile) throws Exception {

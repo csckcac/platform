@@ -33,7 +33,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
-import org.wso2.carbon.rule.server.RuleServerManagerService;
+import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.Tenant;
@@ -68,7 +68,7 @@ public class Util {
     private static final Log log = LogFactory.getLog(Util.class);
     private static RegistryService registryService;
     private static RealmService realmService;
-    private static RuleServerManagerService ruleServerManagerService;
+    private static RuleEngineConfigService ruleEngineConfigService;
     private static BillingManager billingManager;
     private static BundleContext bundleContext;
     private static TenantUsageRetriever tenantUsageRetriever;
@@ -116,13 +116,13 @@ public class Util {
         return tenantUsageRetriever;
     }
 
-    public static void setRuleServerManagerService(
-            RuleServerManagerService ruleServerManagerService) {
-        Util.ruleServerManagerService = ruleServerManagerService;
+    public static void setRuleEngineConfigService(
+            RuleEngineConfigService ruleEngineConfigService) {
+        Util.ruleEngineConfigService = ruleEngineConfigService;
     }
 
-    public static RuleServerManagerService getRuleServerManagerService() {
-        return Util.ruleServerManagerService;
+    public static RuleEngineConfigService getRuleEngineConfigService() {
+        return Util.ruleEngineConfigService;
     }
 
     public static BillingManager getBillingManager() {

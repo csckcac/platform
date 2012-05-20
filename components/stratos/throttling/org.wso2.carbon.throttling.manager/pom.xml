@@ -61,9 +61,9 @@
                             !org.wso2.carbon.throttling.manager.dataobjects,
                             org.wso2.carbon.throttling.manager.*,
                         </Private-Package>
-                        <Require-Bundle>
+                        <!--<Require-Bundle>
                             drools;visibility:=reexport
-                        </Require-Bundle>
+                        </Require-Bundle>-->
                         <Import-Package>
                             org.wso2.carbon.rule.*,
                             org.wso2.carbon.stratos.common.*,
@@ -126,19 +126,15 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.core</artifactId>
+            <artifactId>org.wso2.carbon.rule.kernel</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.server</artifactId>
+            <artifactId>org.wso2.carbon.rule.common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.engine.drools</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.engine.jsr94</artifactId>
+            <artifactId>org.wso2.carbon.rule.backend</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.synapse</groupId>

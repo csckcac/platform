@@ -542,6 +542,9 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             if (api.getWsdlUrl() != null && !"".equals(api.getWsdlUrl())) {
                 APIUtil.createWSDL(api.getWsdlUrl());
             }
+            if(api.getUrl() !=null && !"".equals(api.getUrl())){
+                APIUtil.createEndpoint(api.getUrl());
+            }
         } catch (RegistryException e) {
             handleException("Error while adding API", e);
         }

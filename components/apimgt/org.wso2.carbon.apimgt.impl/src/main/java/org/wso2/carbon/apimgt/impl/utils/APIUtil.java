@@ -26,6 +26,8 @@ import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
+import org.wso2.carbon.governance.api.endpoints.EndpointManager;
+import org.wso2.carbon.governance.api.endpoints.dataobjects.Endpoint;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
@@ -378,6 +380,28 @@ public final class APIUtil {
         } catch (RegistryException e) {
             String msg = "Faild to initialize gov registry for wsdl import";
             log.error(msg, e);
+        }
+    }
+
+    /**
+     * Create an Endpoint
+     *
+     * @param endpointUrl Endpoint url
+     * @throws org.wso2.carbon.apimgt.api.APIManagementException failed to add endpoint
+     */
+    public static void createEndpoint(String endpointUrl) throws APIManagementException{
+        String user = CarbonContext.getCurrentContext().getUsername();
+        //TODO Remove
+        user = "admin";
+        try {
+            Registry registry = ServiceReferenceHolder.getInstance().getRegistryService().
+                    getGovernanceUserRegistry(user);
+            EndpointManager endpointManager = new EndpointManager(registry);
+            Endpoint endpoint = endpointManager.newEndpoint(endpointUrl);
+            endpointManager.addEndpoint(endpoint);
+        } catch (RegistryException e) {
+            String msg = "Failed to import endpoint "+ endpointUrl +" to registry ";
+            log.error(msg ,e);
         }
     }
 }

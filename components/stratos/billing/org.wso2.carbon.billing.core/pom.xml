@@ -47,14 +47,12 @@
                         <Export-Package>
                             org.wso2.carbon.billing.core.*,
                         </Export-Package>
-                        <Require-Bundle>
+                        <!--<Require-Bundle>
                             drools;visibility:=reexport
-                        </Require-Bundle>
+                        </Require-Bundle>-->
                         <Import-Package>
                             org.wso2.carbon.rule.*,
                             org.wso2.carbon.email.sender.api,
-                            org.drools.*,
-                            org.drools.base.extractors.*,
                             org.quartz.*; version=9.9.9,
                             org.apache.synapse.task.*,
                             org.wso2.carbon.registry.core.*;version=1.0.1,
@@ -114,20 +112,17 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.core</artifactId>
+            <artifactId>org.wso2.carbon.rule.kernel</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.server</artifactId>
+            <artifactId>org.wso2.carbon.rule.common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.engine.drools</artifactId>
+            <artifactId>org.wso2.carbon.rule.backend</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.engine.jsr94</artifactId>
-        </dependency>
+
         <dependency>
            <groupId>org.wso2.carbon</groupId>
            <artifactId>org.wso2.carbon.stratos.common</artifactId>

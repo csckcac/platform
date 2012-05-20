@@ -54,7 +54,7 @@ public class CarbonHome1Test extends TestCase {
 //        RuleServerManager ruleServerManager = new RuleServerManager();
 //        ruleServerManager.init(ruleServerConfiguration);
 
-        Util.setRuleManagerService(ruleServerManager);
+        Util.setRuleEngineConfigService(ruleServerManager);
 
         String configFile = CarbonUtils.getCarbonConfigDirPath() + "/" + BILLING_CONFIG;
         BillingConfiguration billingConfiguration = new BillingConfiguration(configFile);

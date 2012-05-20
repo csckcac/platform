@@ -43,9 +43,9 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Require-Bundle>
+                        <!--<Require-Bundle>
                             drools;visibility:=reexport
-                        </Require-Bundle>
+                        </Require-Bundle>-->
                         <Private-Package>
                             org.wso2.carbon.billing.mgt.internal.*,
                             org.wso2.carbon.billing.mgt.beans.*,
@@ -59,8 +59,6 @@
                         </Export-Package>
                         <Import-Package>
                             org.wso2.carbon.rule.*,
-                            org.drools.*,
-                            org.drools.base.extractors.*,
                             org.quartz.*; version=9.9.9,
                             org.apache.synapse.task.*,
                             org.wso2.carbon.stratos.common.*,

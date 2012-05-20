@@ -27,8 +27,8 @@ import org.wso2.carbon.stratos.common.events.StratosEventListener;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.stratos.common.util.StratosConfiguration;
 import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.rule.server.RuleServerManagerService;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
 
 /**
  * @scr.component name="org.wso2.carbon.billing.core" immediate="true"
@@ -48,19 +48,16 @@ import org.wso2.carbon.user.core.service.RealmService;
  *                cardinality="0..n"
  *                policy="dynamic" bind="setBillingHandlerService"
  *                unbind="unsetBillingHandlerService"
- * @scr.reference 
- *                name="org.wso2.carbon.billing.core.task.schedule.helper.service"
- *                interface=
- *                "org.wso2.carbon.billing.core.scheduler.ScheduleHelper"
+ * @scr.reference name="org.wso2.carbon.billing.core.task.schedule.helper.service"
+ *                interface="org.wso2.carbon.billing.core.scheduler.ScheduleHelper"
  *                cardinality="0..n"
  *                policy="dynamic" bind="setScheduleHelperService"
  *                unbind="unsetScheduleHelperService"
- * @scr.reference name="ruleservermanager.component"
- *                interface=
- *                "org.wso2.carbon.rule.server.RuleServerManagerService"
+ * @scr.reference name="rule.engine.config.server.component"
+ *                interface="org.wso2.carbon.rule.kernel.config.RuleEngineConfigService"
  *                cardinality="1..1"
- *                policy="dynamic" bind="setRuleManagerService"
- *                unbind="unsetRuleManagerService"
+ *                policy="dynamic" bind="setRuleEngineConfigService"
+ *                unbind="unsetRuleEngineConfigService"
  * @scr.reference name="stratos.event.listener"
  *                interface="org.wso2.carbon.stratos.common.events.StratosEventListener"
  *                cardinality="0..1" policy="dynamic"
@@ -129,13 +126,13 @@ public class BillingServiceComponent {
         // we are not dynamically removing schedule helpers
     }
 
-    protected void setRuleManagerService(RuleServerManagerService ruleServerManagerService) {
-        Util.setRuleManagerService(ruleServerManagerService);
+    protected void setRuleEngineConfigService(RuleEngineConfigService ruleEngineConfigService) {
+        Util.setRuleEngineConfigService(ruleEngineConfigService);
     }
 
     @SuppressWarnings("unused")
-    protected void unsetRuleManagerService(RuleServerManagerService ruleServerManagerService) {
-        Util.setRuleManagerService(null);
+    protected void unsetRuleEngineConfigService(RuleEngineConfigService ruleEngineConfigService) {
+        Util.setRuleEngineConfigService(null);
     }
 
     public static StratosEventListener getStratosEventListener() {

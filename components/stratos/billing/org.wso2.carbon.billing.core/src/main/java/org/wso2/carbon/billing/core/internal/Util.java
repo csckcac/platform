@@ -24,16 +24,16 @@ import org.wso2.carbon.billing.core.BillingException;
 import org.wso2.carbon.billing.core.BillingManager;
 import org.wso2.carbon.billing.core.conf.BillingConfiguration;
 import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.rule.server.RuleServerManagerService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
 
 import java.io.File;
 
 public class Util {
     private static RegistryService registryService;
     private static RealmService realmService;
-    private static RuleServerManagerService ruleServerManagerService;
+    private static RuleEngineConfigService ruleEngineConfigService;
 
     public static synchronized void setRegistryService(RegistryService service) {
         if (registryService == null) {
@@ -51,12 +51,12 @@ public class Util {
         return Util.realmService;
     }
 
-    public static void setRuleManagerService(RuleServerManagerService ruleServerManagerService) {
-        Util.ruleServerManagerService = ruleServerManagerService;
+    public static void setRuleEngineConfigService(RuleEngineConfigService ruleServerManagerService) {
+        Util.ruleEngineConfigService = ruleServerManagerService;
     }
 
-    public static RuleServerManagerService getRuleServerManagerService() {
-        return Util.ruleServerManagerService;
+    public static RuleEngineConfigService getRuleEngineConfigService() {
+        return Util.ruleEngineConfigService;
     }
 
     public static void initBillingManager(BundleContext bundleContext) throws BillingException {

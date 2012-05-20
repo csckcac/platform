@@ -41,7 +41,7 @@ public class InvoiceMsgTest extends TestCase {
         RuleServerManager ruleServerManager = new RuleServerManager();
         RuleServerConfiguration configuration = new RuleServerConfiguration(new JSR94BackendRuntimeFactory());
         ruleServerManager.init(configuration);
-        Util.setRuleManagerService(ruleServerManager);
+        Util.setRuleEngineConfigService(ruleServerManager);
 
         String carbonHome = "src/test/resources/carbonhome1";
         System.setProperty("carbon.home", carbonHome);
@@ -53,7 +53,7 @@ public class InvoiceMsgTest extends TestCase {
         configuration = new RuleServerConfiguration(new JSR94BackendRuntimeFactory());
         ruleServerManager.init(configuration);
 
-        Util.setRuleManagerService(ruleServerManager);
+        Util.setRuleEngineConfigService(ruleServerManager);
 
 
         String configFile = CarbonUtils.getCarbonConfigDirPath() + "/" + BILLING_CONFIG;

@@ -20,26 +20,21 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.billing.core.BillingEngineContext;
 import org.wso2.carbon.billing.core.BillingException;
 import org.wso2.carbon.billing.core.BillingHandler;
-import org.wso2.carbon.billing.core.dataobjects.Customer;
-import org.wso2.carbon.billing.core.dataobjects.Invoice;
-import org.wso2.carbon.billing.core.dataobjects.Item;
-import org.wso2.carbon.billing.core.dataobjects.Payment;
-import org.wso2.carbon.billing.core.dataobjects.Subscription;
+import org.wso2.carbon.billing.core.dataobjects.*;
 import org.wso2.carbon.billing.core.internal.Util;
-import org.wso2.carbon.rule.core.Session;
-import org.wso2.carbon.rule.server.RuleEngine;
-import org.wso2.carbon.rulecep.commons.descriptions.rule.RuleSetDescription;
-import org.wso2.carbon.rulecep.commons.descriptions.rule.SessionDescription;
+import org.wso2.carbon.rule.common.Rule;
+import org.wso2.carbon.rule.common.RuleSet;
+import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
+import org.wso2.carbon.rule.common.exception.RuleRuntimeException;
+import org.wso2.carbon.rule.common.util.Constants;
+import org.wso2.carbon.rule.kernel.backend.RuleBackendRuntime;
+import org.wso2.carbon.rule.kernel.backend.RuleBackendRuntimeFactory;
+import org.wso2.carbon.rule.kernel.backend.Session;
+import org.wso2.carbon.rule.kernel.config.RuleEngineProvider;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Runs the billing rules against each subscription
@@ -49,31 +44,48 @@ import java.util.Set;
 public class RuleHandler implements BillingHandler {
 
     private static Log log = LogFactory.getLog(RuleHandler.class);
-    RuleEngine ruleEngine;
-    Session session;
+    private Session ruleSession;
 
     public void init(Map<String, String> handlerConfig) throws BillingException {
-        ruleEngine = Util.getRuleServerManagerService().createRuleEngine(
-                        Thread.currentThread().getContextClassLoader());
-        
-        String ruleFile = handlerConfig.get("file");
-        ruleFile = CarbonUtils.getCarbonConfigDirPath() + File.separator + ruleFile;
-        RuleSetDescription ruleSetDescription = new RuleSetDescription();
-        
-        try {
-            ruleSetDescription.setRuleSource(new FileInputStream(ruleFile));
-        } catch (FileNotFoundException e) {
-            String msg = "file not found. file name: " + ruleFile + ".";
-            throw new BillingException(msg, e);
-        }
-        
-        // ruleSetDescription.setBindURI("file:" + ruleFile);
-        String uri = ruleEngine.addRuleSet(ruleSetDescription);
-        SessionDescription sessionDescription = new SessionDescription();
-        sessionDescription.setSessionType(SessionDescription.STATELESS_SESSION);
-        sessionDescription.setRuleSetURI(uri);
 
-        session = ruleEngine.createSession(sessionDescription);
+        //create a rule run time to execute rules.
+
+        RuleEngineProvider ruleEngineProvider = Util.getRuleEngineConfigService().getRuleConfig().getRuleEngineProvider();
+
+        Class ruleBackendRuntimeFactoryClass;
+
+        try {
+            ruleBackendRuntimeFactoryClass = Class.forName(ruleEngineProvider.getClassName());
+            RuleBackendRuntimeFactory ruleBackendRuntimeFactory =
+                    (RuleBackendRuntimeFactory) ruleBackendRuntimeFactoryClass.newInstance();
+            RuleBackendRuntime ruleBackendRuntime =
+                           ruleBackendRuntimeFactory.getRuleBackendRuntime(ruleEngineProvider.getProperties(),
+                           Thread.currentThread().getContextClassLoader());
+
+            // create a rule set to add
+            RuleSet ruleSet = new RuleSet();
+            Rule rule = new Rule();
+            rule.setResourceType(Constants.RULE_RESOURCE_TYPE_REGULAR);
+
+            rule.setSourceType(Constants.RULE_SOURCE_TYPE_URL);
+
+            String ruleFile = handlerConfig.get("file");
+            ruleFile = CarbonUtils.getCarbonConfigDirPath() + File.separator + ruleFile;
+            rule.setValue("file://" + ruleFile);
+            log.info("Rule: " + rule.getValue());
+
+            ruleSet.addRule(rule);
+
+            ruleBackendRuntime.addRuleSet(ruleSet);
+
+            this.ruleSession = ruleBackendRuntime.createSession(Constants.RULE_STATEFUL_SESSION);
+
+        } catch (Exception e) {
+            String msg = "Error occurred while initializing the rule executing environment: " +
+                    e.getMessage();
+            log.error(msg);
+            throw new BillingException(msg, e);
+        } 
     }
 
     public void execute(BillingEngineContext handlerContext) throws BillingException {
@@ -117,7 +129,14 @@ public class RuleHandler implements BillingHandler {
             }
         }
 
-        session.execute(rulesInput);
+        try {
+            this.ruleSession.execute(rulesInput);
+        } catch (RuleRuntimeException e) {
+            String msg = "Error occurred while executing rules during the bill generation: " +
+                    e.getMessage();
+            log.error(msg);
+            throw new BillingException(msg, e);
+        }
         log.info("Rule execution phase completed.");
     }
 }

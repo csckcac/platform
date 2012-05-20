@@ -1,4 +1,4 @@
-package org.wso2.carbon.bam.gadgetgenwizard.service;
+package org.wso2.carbon.bam.gadgetgenwizard.service.beans;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.

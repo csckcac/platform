@@ -1,4 +1,4 @@
-package org.wso2.carbon.bam.gadgetgenwizard.service;
+package org.wso2.carbon.bam.gadgetgenwizard.service.beans;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -15,14 +15,24 @@ package org.wso2.carbon.bam.gadgetgenwizard.service;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class WSResult {
-    private String[] row;
+public class WSMapElement {
 
-    public String[] getRow() {
-        return row;
+    private String key;
+    private String value;
+
+    public String getKey() {
+        return key;
     }
 
-    public void setRow(String[] row) {
-        this.row = row;
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }

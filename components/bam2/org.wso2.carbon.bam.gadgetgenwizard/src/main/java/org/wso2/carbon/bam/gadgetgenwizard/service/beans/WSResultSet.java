@@ -1,4 +1,4 @@
-package org.wso2.carbon.bam.gadgetgenwizard.service;
+package org.wso2.carbon.bam.gadgetgenwizard.service.beans;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -18,14 +18,14 @@ package org.wso2.carbon.bam.gadgetgenwizard.service;
 public class WSResultSet {
     private String[] columnNames;
     private int columnCount;
-    private WSResult[] results;
+    private WSRow[] rows;
 
     public String[] getColumnNames() {
-        return columnNames;
+        return columnNames.clone();
     }
 
     public void setColumnNames(String[] columnNames) {
-        this.columnNames = columnNames;
+        this.columnNames = columnNames.clone();
     }
 
     public int getColumnCount() {
@@ -36,11 +36,11 @@ public class WSResultSet {
         this.columnCount = columnCount;
     }
 
-    public WSResult[] getResults() {
-        return results;
+    public WSRow[] getRows() {
+        return rows.clone();
     }
 
-    public void setResults(WSResult[] results) {
-        this.results = results;
+    public void setRows(WSRow[] rows) {
+        this.rows = rows.clone();
     }
 }

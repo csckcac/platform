@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.bam.gadgetgenwizard.internal.GGWUtils;
+import org.wso2.carbon.bam.gadgetgenwizard.service.beans.*;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
 import org.wso2.carbon.ndatasource.core.CarbonDataSource;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
@@ -98,18 +99,40 @@ public class GadgetGenService extends RegistryAbstractAdmin {
 
     public WSResultSet executeQuery(DBConnInfo dbConnInfo, String sqlQuery) throws GadgetGenException {
         Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             Class.forName(dbConnInfo.getDriverClass()).newInstance();
             connection = DriverManager.getConnection(dbConnInfo.getJdbcURL(), dbConnInfo.getUsername(), dbConnInfo.getPassword());
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sqlQuery);
             ResultSetMetaData metaData = resultSet.getMetaData();
 
             WSResultSet wsResultSet = new WSResultSet();
-            wsResultSet.setColumnCount(metaData.getColumnCount());
+            int columnCount = metaData.getColumnCount();
+            wsResultSet.setColumnCount(columnCount);
+            List<String> columnNames = new ArrayList<String>();
 
-            while (resultSet.next()) {
+
+            List<WSRow> rows = new ArrayList<WSRow>();
+            // loop if both less than 10 times and if there are no results
+            for (int i = 0; (i < 10 && resultSet.next()); i++) {
+                List<String> rowList = new ArrayList<String>();
+                for (int j = 1; j < (columnCount + 1); j++) {
+                    // optimization: add column names also in this loop, but only once
+                    if (i == 1) {
+                        String columnName = metaData.getColumnName(j);
+                        columnNames.add(columnName);
+                    }
+                    rowList.add(resultSet.getString(j));
+                }
+                WSRow wsRow = new WSRow();
+                wsRow.setRow(rowList.toArray(new String[rowList.size()]));
+                rows.add(wsRow);
             }
+            wsResultSet.setRows(rows.toArray(new WSRow[rows.size()]));
+            wsResultSet.setColumnNames(columnNames.toArray(new String[columnNames.size()]));
+            return wsResultSet;
         } catch (InstantiationException e) {
             String errorMsg = "The class cannot be instantiated. " + e.getMessage();
             log.error(errorMsg, e);
@@ -127,19 +150,34 @@ public class GadgetGenService extends RegistryAbstractAdmin {
             log.error(errorMsg, e);
             throw new GadgetGenException(errorMsg, e);
         } finally {
-           if (connection != null) {
-               try {
-                   connection.close();
-               } catch (SQLException e) {
-                   String errorMsg = "Cannot close connection. " + e.getMessage();
-                   log.error(errorMsg, e);
-               }
-           }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    String errorMsg = "Cannot close connection. " + e.getMessage();
+                    log.error(errorMsg, e);
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    String errorMsg = "Cannot close statement. " + e.getMessage();
+                    log.error(errorMsg, e);
+                }
+            }
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    String errorMsg = "Cannot close result set. " + e.getMessage();
+                    log.error(errorMsg, e);
+                }
+            }
         }
-        return null;
     }
 
-    public boolean validateSQLConnection(DBConnInfo dbConnInfo) throws GadgetGenException {
+    public boolean validateDBConnection(DBConnInfo dbConnInfo) throws GadgetGenException {
         Connection connection = null;
         try {
             Class.forName(dbConnInfo.getDriverClass()).newInstance();
@@ -161,14 +199,14 @@ public class GadgetGenService extends RegistryAbstractAdmin {
             log.error(errorMsg, e);
             throw new GadgetGenException(errorMsg, e);
         } finally {
-           if (connection != null) {
-               try {
-                   connection.close();
-               } catch (SQLException e) {
-                   String errorMsg = "Cannot close connection. " + e.getMessage();
-                   log.error(errorMsg, e);
-               }
-           }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    String errorMsg = "Cannot close connection. " + e.getMessage();
+                    log.error(errorMsg, e);
+                }
+            }
         }
         return true;
     }
@@ -190,7 +228,7 @@ public class GadgetGenService extends RegistryAbstractAdmin {
                 authorizationManager.authorizeRole(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME,
                         RegistryConstants.CONFIG_REGISTRY_BASE_PATH + "/" + gadgetResourcePath, ActionConstants.GET);
                 setPermissionUpdateTimestamp();
-    //                    resourceAdminServiceStub.addRolePermission(gadgetResourcePath, CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME, ActionConstants.GET, ALLOW_PERMISSION_TYPE);
+                //                    resourceAdminServiceStub.addRolePermission(gadgetResourcePath, CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME, ActionConstants.GET, ALLOW_PERMISSION_TYPE);
             }
         } catch (RegistryException e) {
             String msg = "Error inserting resource to registry. " + e.getMessage();
@@ -260,7 +298,7 @@ public class GadgetGenService extends RegistryAbstractAdmin {
 
         String gadgetFileName = gadgetFileNameEl.getText();
         if (!gadgetFileName.matches("[_a-zA-Z0-9\\-\\.]+")) {
-           String errorMsg = "Invalid file name for gadget : " + gadgetFileName;
+            String errorMsg = "Invalid file name for gadget : " + gadgetFileName;
             GadgetGenException gadgetGenException = new GadgetGenException(errorMsg);
             log.error(errorMsg, gadgetGenException);
             throw gadgetGenException;

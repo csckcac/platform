@@ -44,7 +44,7 @@
             var plot = null;
 
             update();
-            setInterval(update, 10000);
+            setInterval(update, <xsl:value-of select="gg:refresh-rate" /> * 1000 );
 
             function update() {
                 var plotarray = null;

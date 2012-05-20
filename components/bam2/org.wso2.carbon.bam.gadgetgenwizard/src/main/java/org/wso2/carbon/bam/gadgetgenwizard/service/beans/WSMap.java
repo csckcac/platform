@@ -1,4 +1,4 @@
-package org.wso2.carbon.bam.gadgetgenwizard.service;
+package org.wso2.carbon.bam.gadgetgenwizard.service.beans;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -20,10 +20,10 @@ public class WSMap {
     private WSMapElement[] wsMapElements;
 
     public WSMapElement[] getWsMapElements() {
-        return wsMapElements;
+        return wsMapElements.clone();
     }
 
     public void setWsMapElements(WSMapElement[] wsMapElements) {
-        this.wsMapElements = wsMapElements;
+        this.wsMapElements = wsMapElements.clone();
     }
 }

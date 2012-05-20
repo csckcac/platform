@@ -400,13 +400,13 @@ public class APIProviderHostObject extends ScriptableObject {
             providerName = (String) args[0];
             if (providerName != null) {
                 List<API> apiSet = apiProvider.getAPIsByProvider(providerName);
-                Map<String,Integer> subscriptions = new TreeMap<String,Integer>();
+                Map<String,Long> subscriptions = new TreeMap<String,Long>();
                 for (API api : apiSet) {
                     if (api.getStatus() == APIStatus.CREATED) {
                         continue;
-                    }
-                    int count = getSubscriberCount(api.getId(), thisObj);
-                    Integer currentCount = subscriptions.get(api.getId().getApiName());
+                    }                    
+                    long count = apiProvider.getAPISubscriptionCountByAPI(api.getId());
+                    Long currentCount = subscriptions.get(api.getId().getApiName());
                     if (currentCount != null) {
                         subscriptions.put(api.getId().getApiName(), currentCount + count);
                     } else {
@@ -415,10 +415,10 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
                 
                 int i = 0;
-                for (Map.Entry<String,Integer> entry : subscriptions.entrySet()) {
+                for (Map.Entry<String,Long> entry : subscriptions.entrySet()) {
                     NativeObject row = new NativeObject();
                     row.put("apiName", row, entry.getKey());
-                    row.put("count", row, entry.getValue().intValue());
+                    row.put("count", row, entry.getValue().longValue());
                     myn.put(i, myn, row);
                 }                                
             }
@@ -445,20 +445,20 @@ public class APIProviderHostObject extends ScriptableObject {
             apiName = (String) args[1];
             if (providerName != null && apiName != null) {
                 List<API> apiSet = apiProvider.getAPIsByProvider(providerName);
-                Map<String,Integer> subscriptions = new TreeMap<String,Integer>();
+                Map<String,Long> subscriptions = new TreeMap<String,Long>();
                 for (API api : apiSet) {
                     if (!api.getId().getApiName().equals(apiName) || api.getStatus() == APIStatus.CREATED) {
                         continue;
                     }
-                    int count = getSubscriberCount(api.getId(), thisObj);
+                    long count = apiProvider.getAPISubscriptionCountByAPI(api.getId());
                     subscriptions.put(api.getId().getVersion(), count);
                 }
 
                 int i = 0;
-                for (Map.Entry<String,Integer> entry : subscriptions.entrySet()) {
+                for (Map.Entry<String,Long> entry : subscriptions.entrySet()) {
                     NativeObject row = new NativeObject();
                     row.put("apiVersion", row, entry.getKey());
-                    row.put("count", row, entry.getValue().intValue());
+                    row.put("count", row, entry.getValue().longValue());
                     myn.put(i, myn, row);
                 }
             }

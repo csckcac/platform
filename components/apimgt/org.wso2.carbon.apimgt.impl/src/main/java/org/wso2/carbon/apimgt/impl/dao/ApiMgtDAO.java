@@ -881,7 +881,7 @@ public class ApiMgtDAO {
 
 
         String sqlQuery = "SELECT" +
-                " COUNT(API_ID)" +
+                " COUNT(API_ID) AS " + APIConstants.SUBSCRIPTION_FIELD_API_ID +
                 " FROM AM_SUBSCRIPTION " +
                 " WHERE API_ID=? ";
         long subscriptions = 0;

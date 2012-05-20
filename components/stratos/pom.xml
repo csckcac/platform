@@ -319,6 +319,22 @@
             	<artifactId>org.wso2.carbon.rule.engine.jsr94</artifactId>
             	<version>${wso2carbon.version}</version>
             </dependency>
+            <dependency>
+            	<groupId>org.wso2.carbon</groupId>
+            	<artifactId>org.wso2.carbon.rule.kernel</artifactId>
+            	<version>${wso2carbon.version}</version>
+            </dependency>
+            <dependency>
+            	<groupId>org.wso2.carbon</groupId>
+            	<artifactId>org.wso2.carbon.rule.common</artifactId>
+            	<version>${wso2carbon.version}</version>
+            </dependency>
+            <dependency>
+            	<groupId>org.wso2.carbon</groupId>
+            	<artifactId>org.wso2.carbon.rule.backend</artifactId>
+            	<version>${wso2carbon.version}</version>
+            </dependency>
+
 	    <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.statistics</artifactId>

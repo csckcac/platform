@@ -5,7 +5,6 @@ var text = decodeURI(request.getParameter("text"));
 var time = request.getParameter("time");
         var id = request.getParameter("id");
 
-		response.contentType='text/html';
 		
         var entry = {
         id : id,

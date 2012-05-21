@@ -26,7 +26,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.automation.common.test.dss.utils.ConcurrencyTest;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
+import org.wso2.automation.common.test.dss.utils.exception.ConcurrencyTestFailedError;
+import org.wso2.automation.common.test.dss.utils.exception.ExceptionHandler;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 
 //https://wso2.org/jira/browse/CARBON-12361
@@ -54,31 +57,64 @@ public class ReturnRequestStatusTest extends DataServiceTest {
         log.info("Delete operation success");
     }
 
+    @Test(priority = 3, dependsOnMethods = {"requestStatusNameSpaceQualifiedForInsertOperation"}, timeOut = 1000 * 60 * 2)
+    public void inOperationConcurrencyTest() throws InterruptedException,
+                                                    ConcurrencyTestFailedError {
+
+        final ExceptionHandler handler = new ExceptionHandler();
+        final int concurrencyNumber = 50;
+        final int numberOfIterations = 1;
+        Thread[] clientThread = new Thread[concurrencyNumber];
+        final AxisServiceClient serviceClient = new AxisServiceClient();
+        for (int i = 0; i < concurrencyNumber; i++) {
+            final int empNo = i + 50;
+            clientThread[i] = new Thread(new Runnable() {
+                public void run() {
+                    for (int j = 0; j < numberOfIterations; j++) {
+                        try {
+                            OMElement response = serviceClient.sendReceive(getAddEmployeePayload(empNo + ""),
+                                                                           serviceEndPoint, "addEmployee");
+                            Assert.assertTrue(response.toString().contains("SUCCESSFUL"), "Response Not Successful");
+                            OMNamespace nameSpace = response.getNamespace();
+                            Assert.assertNotNull(nameSpace, "Response Message NameSpace not qualified");
+                        } catch (AxisFault axisFault) {
+                            log.error(axisFault);
+                            handler.setException(axisFault);
+                        }
+                    }
+                }
+            });
+            clientThread[i].setUncaughtExceptionHandler(handler);
+
+        }
+
+        for (int i = 0; i < concurrencyNumber; i++) {
+            clientThread[i].start();
+        }
+
+        for (int i = 0; i < concurrencyNumber; i++) {
+            try {
+                clientThread[i].join();
+            } catch (InterruptedException e) {
+                throw new InterruptedException("Exception Occurred while joining Thread");
+            }
+        }
+
+        if (!handler.isTestPass()) {
+            throw new ConcurrencyTestFailedError(handler.getFailCount() + " service invocation/s failed out of "
+                                                 + concurrencyNumber * numberOfIterations + " service invocations.\n"
+                                                 + "Concurrency Test Failed for Thread Group=" + concurrencyNumber
+                                                 + " and loop count=" + numberOfIterations, handler.getException());
+        }
+
+    }
+
+
+
     private void addEmployee(String serviceEndPoint, String employeeNumber) throws AxisFault {
         OMElement result;
-        OMElement payload = fac.createOMElement("addEmployee", omNs);
 
-        OMElement empNo = fac.createOMElement("employeeNumber", omNs);
-        empNo.setText(employeeNumber);
-        payload.addChild(empNo);
-
-        OMElement lastName = fac.createOMElement("lastName", omNs);
-        lastName.setText("BBB");
-        payload.addChild(lastName);
-
-        OMElement fName = fac.createOMElement("firstName", omNs);
-        fName.setText("AAA");
-        payload.addChild(fName);
-
-        OMElement email = fac.createOMElement("email", omNs);
-        email.setText("aaa@ccc.com");
-        payload.addChild(email);
-
-        OMElement salary = fac.createOMElement("salary", omNs);
-        salary.setText("50000");
-        payload.addChild(salary);
-
-        result = new AxisServiceClient().sendReceive(payload, serviceEndPoint, "addEmployee");
+        result = new AxisServiceClient().sendReceive(getAddEmployeePayload(employeeNumber), serviceEndPoint, "addEmployee");
         Assert.assertTrue(result.toString().contains("SUCCESSFUL"), "Response Not Successful");
         OMNamespace nameSpace = result.getNamespace();
         Assert.assertNotNull(nameSpace, "Response Message NameSpace not qualified");
@@ -104,6 +140,32 @@ public class ReturnRequestStatusTest extends DataServiceTest {
         Assert.assertNotNull(nameSpace.getPrefix(), "Invalid prefix. prefix value null");
         Assert.assertNotSame(nameSpace.getPrefix(), "", "Invalid prefix");
         Assert.assertEquals(nameSpace.getNamespaceURI(), "http://ws.wso2.org/dataservice", "Invalid NamespaceURI");
+    }
+
+    private OMElement getAddEmployeePayload(String employeeNumber) {
+        OMElement payload = fac.createOMElement("addEmployee", omNs);
+
+        OMElement empNo = fac.createOMElement("employeeNumber", omNs);
+        empNo.setText(employeeNumber);
+        payload.addChild(empNo);
+
+        OMElement lastName = fac.createOMElement("lastName", omNs);
+        lastName.setText("BBB");
+        payload.addChild(lastName);
+
+        OMElement fName = fac.createOMElement("firstName", omNs);
+        fName.setText("AAA");
+        payload.addChild(fName);
+
+        OMElement email = fac.createOMElement("email", omNs);
+        email.setText("aaa@ccc.com");
+        payload.addChild(email);
+
+        OMElement salary = fac.createOMElement("salary", omNs);
+        salary.setText("50000");
+        payload.addChild(salary);
+
+        return payload;
     }
 
 }

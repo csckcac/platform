@@ -19,7 +19,6 @@
 package org.wso2.carbon.automation.selenium.cloud.greg;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -76,10 +75,10 @@ public class GRegStratosRootSeleniumTest {
             addCollection(collectionPath);
             userLogout();
             log.info("********GReg Stratos - Add Collection to Root test - Passed********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Add Collection to Root test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Add Collection to Root test Failed :" +
+            throw new AssertionError("Add Collection to Root test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Add Collection to Root test Failed :" + e);
@@ -104,10 +103,10 @@ public class GRegStratosRootSeleniumTest {
             addResource(resourceName);
             userLogout();
             log.info("********GReg Stratos - Add Resource to Root test - Passed********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Add Resource to Root test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Add Resource to Root test Failed :" +
+            throw new AssertionError("Add Resource to Root test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Add Resource to Root test Failed :" + e);
@@ -132,10 +131,10 @@ public class GRegStratosRootSeleniumTest {
             deleteComment();
             userLogout();
             log.info("********GReg Stratos - Add a Comment to Root test - Passed********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Add a Comment to Root test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Add a Comment to Root test Failed :" +
+            throw new AssertionError("Add a Comment to Root test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Add a Comment to Root test Failed :" + e);
@@ -163,10 +162,10 @@ public class GRegStratosRootSeleniumTest {
             deleteTag();
             userLogout();
             log.info("********GReg Stratos - Apply a Tag to Root test - Passed********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Apply a Tag to Root test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Apply a Tag to Root test Failed :" +
+            throw new AssertionError("Apply a Tag to Root test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Apply a Tag to Root test Failed :" + e);
@@ -181,17 +180,17 @@ public class GRegStratosRootSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "apply a rating to root", priority = 5)
-    public void addRatingToRoot() throws Exception, AssertionFailedError {
+    public void addRatingToRoot() throws Exception, AssertionError {
         try {
             StratosUserLogin.userLogin(driver, selenium, userName, password, productName);
             gotoDetailViewTab();
             applyRating();
             userLogout();
             log.info("********GReg Stratos - Apply Rating to Root test - Passed********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Apply Rating to Root test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Apply Rating to Root test Failed :" +
+            throw new AssertionError("Apply Rating to Root test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Apply Rating to Root test Failed :" + e);
@@ -213,10 +212,10 @@ public class GRegStratosRootSeleniumTest {
             deleteResourceFromBrowser(getResourceId("root_resource"));
             userLogout();
             log.info("********GReg Stratos - Delete a  Resource from Root test - Passed********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Delete a  Resource from Root test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Delete a  Resource from Root test Failed :" +
+            throw new AssertionError("Delete a  Resource from Root test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Delete a  Resource from Root test Failed :" + e);

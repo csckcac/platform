@@ -166,7 +166,7 @@ public class DSSDatabaseExplorerSeleniumTest {
     }
 
     @Test(priority = 3)
-    public void DatabaseExplorerDatabaseLoginInfoCashing() throws InterruptedException,
+    public void DatabaseExplorerLoginInfoCashing() throws InterruptedException,
                                                                   XMLStreamException {
         driver.switchTo().defaultContent();
         dssServerUI.clickOnTools();

@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.is;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -42,7 +41,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Calendar;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -93,10 +91,10 @@ public class ISNewEntitlementUploaderSeleniumTest {
             deletePolicy();
             userLogout();
             log.info("********IS Stratos XACML Policy IIA001 Uploader Test -Passed **************");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("XACML Policy IIA001 Uploader Test Failed:" + e);
             userLogout();
-            throw new AssertionFailedError("XACML Policy IIA001 Uploader Test Failed:" +
+            throw new AssertionError("XACML Policy IIA001 Uploader Test Failed:" +
                                            e);
         } catch (WebDriverException e) {
             log.info("XACML Policy IIA001 Uploader Test Failed :" + e);
@@ -135,10 +133,10 @@ public class ISNewEntitlementUploaderSeleniumTest {
             deletePolicy();
             userLogout();
             log.info("********IS Stratos XACML Policy IIA003 Uploader Test -Passed **************");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("XACML Policy IIA003 Uploader Test Failed:" + e);
             userLogout();
-            throw new AssertionFailedError("XACML Policy IIA003 Uploader Test Failed:" +
+            throw new AssertionError("XACML Policy IIA003 Uploader Test Failed:" +
                                            e);
         } catch (WebDriverException e) {
             log.info("XACML Policy IIA003 Uploader Test Failed :" + e);

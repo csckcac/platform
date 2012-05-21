@@ -19,7 +19,6 @@
 package org.wso2.carbon.automation.selenium.cloud.greg;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -83,10 +82,10 @@ public class GRegStratosSchemaUploaderSeleniumTest {
             deleteSchema(schemaName, schema_path);
             userLogout();
             log.info("*************GReg Stratos Schema Upload from URL Test - Passed*************");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Schema Upload from URL Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Schema Upload from URL Test Failed :" + e);
+            throw new AssertionError("Schema Upload from URL Test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("Schema Upload from URL Test Failed :" + e);
             userLogout();
@@ -112,10 +111,10 @@ public class GRegStratosSchemaUploaderSeleniumTest {
             deleteSchema(schemaName, schema_path);
             userLogout();
             log.info("*************GReg Stratos Schema Upload from File Test - Passed*************");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Schema Upload from File Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Schema Upload from File Test Failed :" + e);
+            throw new AssertionError("Schema Upload from File Test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("Schema Upload from File Test Failed :" + e);
             userLogout();

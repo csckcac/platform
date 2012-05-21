@@ -68,7 +68,7 @@ public class DSSCreateDatabaseSeleniumTest {
 
     }
 
-    @Test(priority = 1, dependsOnMethods = {"createDataBase"})
+    @Test(priority = 1, dependsOnMethods = {"createDataBase"}, invocationCount = 3)
     public void createDatabaseNameAlreadyExistTest() throws InterruptedException {
         driver.findElement(By.linkText("Databases")).click();
         driver.findElement(By.linkText("Add Database")).click();

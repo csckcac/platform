@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.greg;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -75,10 +74,10 @@ public class GRegStratosPolicyUploaderSeleniumTest {
             deletePolicy();
             userLogout();
             log.info("********** GReg Stratos Policy Uploader from URL test - Passed ************");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Policy Uploader from URL test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Policy Uploader from URL test Failed :" + e);
+            throw new AssertionError("Policy Uploader from URL test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("Policy Uploader from URL test Failed :" + e);
             userLogout();
@@ -106,10 +105,10 @@ public class GRegStratosPolicyUploaderSeleniumTest {
             deletePolicy();
             userLogout();
             log.info("********** GReg Stratos Policy Uploader from File test - Passed ************");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Policy Uploader from File test  Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Policy Uploader from File test Failed :" + e);
+            throw new AssertionError("Policy Uploader from File test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("Policy Uploader from File test  Failed :" + e);
             userLogout();

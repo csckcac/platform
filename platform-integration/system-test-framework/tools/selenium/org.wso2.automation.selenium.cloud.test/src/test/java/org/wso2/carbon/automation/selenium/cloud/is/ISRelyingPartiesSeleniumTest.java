@@ -19,7 +19,6 @@
 package org.wso2.carbon.automation.selenium.cloud.is;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -38,7 +37,6 @@ import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.Calendar;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -78,10 +76,10 @@ public class ISRelyingPartiesSeleniumTest {
             deleteRelyingCERT();
             userLogout();
             log.info("********** IS Stratos Add new Relying party Test - passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Failed to add new Relying Party :" + e);
             userLogout();
-            throw new AssertionFailedError("Failed to add new Relying Party :" + e);
+            throw new AssertionError("Failed to add new Relying Party :" + e);
         } catch (WebDriverException e) {
             log.info("Failed to add new Relying Party :" + e);
             userLogout();

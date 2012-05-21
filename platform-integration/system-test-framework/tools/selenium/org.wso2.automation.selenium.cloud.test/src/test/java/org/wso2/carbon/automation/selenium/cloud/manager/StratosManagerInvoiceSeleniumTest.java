@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.manager;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -80,10 +79,10 @@ public class StratosManagerInvoiceSeleniumTest {
                        "Faile to display invoice :");
             userLogout();
             log.info("*******Stratos Manager Verify Invoice Test - Passed *******");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Verify Invoice Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Verify Invoice Test Failed :" + e);
+            throw new AssertionError("Verify Invoice Test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("Verify Invoice Test Failed :" + e);
             userLogout();

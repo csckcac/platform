@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.is;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -94,10 +93,10 @@ public class ISPermissionScenarioSeleniumTest {
             UserManagementSeleniumUtils.deleteRoleByName(driver, roleName);
             userLogout();
             log.info("*******IS Stratos - Login Only Permission Scenario Test - Passed **********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Login Only Permission Scenario Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Login Only Permission Scenario Test Failed " +
+            throw new AssertionError("Login Only Permission Scenario Test Failed " +
                                            e);
         } catch (WebDriverException e) {
             log.info("Login Only Permission Scenario Test Failed :" + e);

@@ -19,7 +19,6 @@
 package org.wso2.carbon.automation.selenium.cloud.is;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -88,10 +87,10 @@ public class ISEntitlementPolicyCreatorSeleniumTest {
             EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);
             userLogout();
             log.info("*******IS Stratos - Create a new Policy from UI Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Create a new Policy from UI Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Create a new Policy from UI Test Failed :" +
+            throw new AssertionError("Create a new Policy from UI Test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Create a new Policy from UI Test Failed :" + e);

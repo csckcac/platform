@@ -1,6 +1,5 @@
 package org.wso2.automation.cloud.regression.stratosutils.asutils;
 
-import junit.framework.Assert;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.addressing.EndpointReference;
@@ -16,6 +15,7 @@ import org.apache.rampart.RampartMessageData;
 import org.apache.rampart.policy.model.CryptoConfig;
 import org.apache.rampart.policy.model.RampartConfig;
 import org.apache.ws.security.WSPasswordCallback;
+import org.testng.Assert;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
@@ -55,8 +55,7 @@ public class asSecurityUtils implements CallbackHandler {
             sc.setOptions(opts);
             result = sc.sendReceive(org.apache.axiom.om.impl.llom.util.AXIOMUtil.stringToOM(payload));
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Loading policy failed:" + e);
+            log.error("Loading policy failed:" , e);
             Assert.fail("Loading policy failed" + e);
         }
         return result;

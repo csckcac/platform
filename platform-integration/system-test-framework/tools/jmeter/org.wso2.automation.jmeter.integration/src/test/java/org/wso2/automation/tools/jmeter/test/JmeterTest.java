@@ -17,9 +17,9 @@
 
 package org.wso2.automation.tools.jmeter.test;
 
-import junit.framework.Assert;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import tools.jmeter.core.JmeterCore;
 import tools.jmeter.core.JmeterProperties;

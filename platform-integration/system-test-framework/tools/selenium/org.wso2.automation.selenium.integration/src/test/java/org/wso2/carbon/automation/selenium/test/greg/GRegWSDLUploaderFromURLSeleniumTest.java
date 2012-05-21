@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.test.greg;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -103,11 +102,11 @@ public class GRegWSDLUploaderFromURLSeleniumTest {
             Thread.sleep(2000);
             new GregUserLogout().userLogout(driver);
             log.info("GRegWSDLUploaderfromURLSeleniumTest -testAddWSDLfromURL()- Passed");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("GregAddWsdlfromURLSeleniumTest - Assertion Failure ::" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GregAddWsdlfromURLSeleniumTest");
             new GregUserLogout().userLogout(driver);
-            throw new AssertionFailedError("Failed to upload echo wsdl from url:" + e);
+            throw new AssertionError("Failed to upload echo wsdl from url:" + e);
         } catch (WebDriverException e) {
             log.info("GregAddWsdlfromURLSeleniumTest - WebDriver Exception :" + e);
             new SeleniumScreenCapture().getScreenshot(driver, "greg", "GregAddWsdlfromURLSeleniumTest");

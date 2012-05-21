@@ -23,13 +23,11 @@ import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
-
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 
 public class ServiceLoginClient {
 
@@ -55,7 +53,8 @@ public class ServiceLoginClient {
             Options options = client.getOptions();
             options.setManageSession(true);
 
-            assertTrue("Failed to login to : + hostName", authenticationAdminStub.login("admin123@manualQA0001.org", "admin123", hostName));
+            Assert.assertTrue(authenticationAdminStub.login("admin123@manualQA0001.org", "admin123", hostName),
+                              "Failed to login to : + hostName");
             log.info("Successfully login to " + hostName + " service");
             ServiceContext serviceContext = authenticationAdminStub.
                     _getServiceClient().getLastOperationContext().getServiceContext();
@@ -63,11 +62,11 @@ public class ServiceLoginClient {
 
         } catch (AxisFault e) {
             log.error("Fail to login to service:" + hostName + "" + e);
-            fail("Fail to login to service:" + hostName + "" + e);
+            Assert.fail("Fail to login to service:" + hostName + "" + e);
 
         } catch (Exception e) {
             log.error("Fail to login to service:" + hostName + "" + e);
-            fail("Fail to login to service:" + hostName + "" + e);
+            Assert.fail("Fail to login to service:" + hostName + "" + e);
         }
         return sessionCookie;
     }

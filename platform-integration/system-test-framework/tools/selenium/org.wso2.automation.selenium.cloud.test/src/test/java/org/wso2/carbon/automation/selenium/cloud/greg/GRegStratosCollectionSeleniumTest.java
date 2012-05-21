@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.greg;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -75,10 +74,10 @@ public class GRegStratosCollectionSeleniumTest {
                          "New Created Collection does not Exists :");
             userLogout();
             log.info("********GReg Stratos Add New Collection Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Add New Collection Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Add New Collection Test Failed :" + e);
+            throw new AssertionError("Add New Collection Test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("Add New Collection Test Failed :" + e);
             userLogout();
@@ -107,10 +106,10 @@ public class GRegStratosCollectionSeleniumTest {
             deleteComment();
             userLogout();
             log.info("********GReg Stratos Add a Comment to Collection Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Add a Comment to Collection Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Add a Comment to Collection Test Failed :" +
+            throw new AssertionError("Add a Comment to Collection Test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Add a Comment to Collection Test Failed :" + e);
@@ -146,10 +145,10 @@ public class GRegStratosCollectionSeleniumTest {
             deleteTag();
             userLogout();
             log.info("********GReg Stratos Apply Tag to Collection Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Apply Tag to Collection Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Apply Tag to Collection Test Failed :" +
+            throw new AssertionError("Apply Tag to Collection Test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Apply Tag to Collection Test Failed :" + e);
@@ -183,10 +182,10 @@ public class GRegStratosCollectionSeleniumTest {
             deleteServiceLifeCycle();
             userLogout();            //Sign out
             log.info("********GReg Stratos Add Life Cycle to Collection Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Add Life Cycle to Collection Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Add Life Cycle to Collection Test Failed :" +
+            throw new AssertionError("Add Life Cycle to Collection Test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Add Life Cycle to Collection Test Failed :" + e);
@@ -214,10 +213,10 @@ public class GRegStratosCollectionSeleniumTest {
             addRating();
             userLogout();
             log.info("********GReg Stratos Add Rating To Collection Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Add Rating To Collection Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Add Rating To Collection Test Failed :" +
+            throw new AssertionError("Add Rating To Collection Test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Add Rating To Collection Test Failed :" + e);
@@ -249,10 +248,10 @@ public class GRegStratosCollectionSeleniumTest {
             renameCollection(rename);
             userLogout();
             log.info("********GReg Stratos Rename Collection Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Rename Collection Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Rename Collection Test Failed :" +
+            throw new AssertionError("Rename Collection Test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Rename Collection Test Failed :" + e);
@@ -296,10 +295,10 @@ public class GRegStratosCollectionSeleniumTest {
             assertFalse(selenium.isTextPresent("a1"), "a1 Collection has not been moved :");
             userLogout();
             log.info("********GReg Stratos Move a Collection Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Move a Collection Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Move a Collection Test Failed :" +
+            throw new AssertionError("Move a Collection Test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Move a Collection Test Failed :" + e);
@@ -341,10 +340,10 @@ public class GRegStratosCollectionSeleniumTest {
             assertTrue(selenium.isTextPresent("a1"), "Copied a1 collection does not Exists :");
             userLogout();
             log.info("********GReg Stratos Copy Collection Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Copy Collection Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Copy Collection Test Failed :" +
+            throw new AssertionError("Copy Collection Test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Copy Collection Test Failed :" + e);
@@ -372,10 +371,10 @@ public class GRegStratosCollectionSeleniumTest {
             deleteCollection();
             userLogout();
             log.info("********GReg Stratos Delete Collection Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Delete Collection Test  Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Delete Collection Test  Failed :" +
+            throw new AssertionError("Delete Collection Test  Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Delete Collection Test  Failed :" + e);

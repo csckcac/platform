@@ -16,12 +16,12 @@
 
 package org.wso2.automation.cloud.regression.stratosutils.gadgetutils;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.stub.GadgetRepoServiceStub;
 import org.wso2.carbon.dashboard.stub.DashboardServiceStub;
 import org.wso2.carbon.dashboard.stub.DashboardUtilServiceStub;

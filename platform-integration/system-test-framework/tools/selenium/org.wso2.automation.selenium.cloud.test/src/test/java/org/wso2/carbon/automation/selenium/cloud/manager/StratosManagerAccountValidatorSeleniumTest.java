@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.manager;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -34,7 +33,6 @@ import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUti
 import org.wso2.platform.test.core.utils.seleniumutils.StratosUserLogin;
 
 import java.net.MalformedURLException;
-import java.util.Calendar;
 
 import static org.testng.Assert.*;
 
@@ -73,10 +71,10 @@ public class StratosManagerAccountValidatorSeleniumTest {
             gotoAccountManagerPage(accountManagerUrl);
             userLogout();
             log.info("*******Stratos Manager Account Validation Page Viewer Test - Passed *******");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Manager Account Validation Page Viewer Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Manager Account Validation Page Viewer Test Failed :" +
+            throw new AssertionError("Manager Account Validation Page Viewer Test Failed :" +
                                            e);
         } catch (WebDriverException e) {
             log.info("Manager Account Validation Page Viewer Test Failed :" + e);

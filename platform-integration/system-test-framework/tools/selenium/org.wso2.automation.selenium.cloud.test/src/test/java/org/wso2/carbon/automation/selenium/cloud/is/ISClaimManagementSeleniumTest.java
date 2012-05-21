@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.is;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -77,10 +76,10 @@ public class ISClaimManagementSeleniumTest {
             log.info("Stratos IS Claim was removed");
             userLogout();
             log.info("*******IS Stratos - Claim Management Test - Passed **********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Claim Management Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Claim Management Test Failed :" + e);
+            throw new AssertionError("Claim Management Test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("Claim Management Test Failed:" + e);
             userLogout();

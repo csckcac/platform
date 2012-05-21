@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.is;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -75,10 +74,10 @@ public class ISOpenIDSeleniumTest {
             openID = getOpenID();
             logintoLiveJournal(openID, liveJournelURL);
             log.info("**********IS Stratos - Open ID Test -Passed *************");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Open ID Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Open ID Test Failed :" + e);
+            throw new AssertionError("Open ID Test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("Open ID Test Failed :" + e);
             userLogout();

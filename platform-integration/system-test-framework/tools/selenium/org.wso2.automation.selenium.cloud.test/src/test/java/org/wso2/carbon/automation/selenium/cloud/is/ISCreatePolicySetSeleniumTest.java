@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.is;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -98,10 +97,10 @@ public class ISCreatePolicySetSeleniumTest {
             EntitlementManagementSeleniumUtil.deleteEntitlementPolicies(driver);
             userLogout();
             log.info("********** IS Stratos Create Policy Set Test - passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Create Policy Set Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Create Policy Set Test Failed :" + e);
+            throw new AssertionError("Create Policy Set Test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("Create Policy Set Test Failed :" + e);
             userLogout();

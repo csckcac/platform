@@ -19,7 +19,6 @@
 package org.wso2.carbon.automation.selenium.cloud.is;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -83,10 +82,10 @@ public class ISRoleCreatorSeleniumTest {
             addRole(roleName);
 
             log.info("*******Stratos Manager - Add New Role Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Failed to create  new role :" + e);
             userLogout();
-            throw new AssertionFailedError("Failed to create  new role :" + e);
+            throw new AssertionError("Failed to create  new role :" + e);
         } catch (WebDriverException e) {
             log.info("Failed to create  new role :" + e);
             userLogout();

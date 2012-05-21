@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.manager;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -35,8 +34,6 @@ import org.testng.annotations.*;
 import org.wso2.platform.test.core.utils.seleniumutils.UserManagementSeleniumUtils;
 
 import java.net.MalformedURLException;
-
-import static org.testng.Assert.assertTrue;
 
 
 public class StratosManagerUserCreatorSeleniumTest {
@@ -78,10 +75,10 @@ public class StratosManagerUserCreatorSeleniumTest {
             UserManagementSeleniumUtils.deleteUserByName(driver, newUserName);
             userLogout();
             log.info("*******Manager Stratos - Add New User Test - Passed ***********");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Failed to create  new User :" + e);
             userLogout();
-            throw new AssertionFailedError("Failed to create  new User :" + e);
+            throw new AssertionError("Failed to create  new User :" + e);
         } catch (WebDriverException e) {
             log.info("Failed to create  new User :" + e);
             userLogout();

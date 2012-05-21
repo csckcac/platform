@@ -1,6 +1,7 @@
 package org.wso2.automation.cloud.regression.stratosutils.msutils;
 
-import junit.framework.Assert;
+
+import org.testng.Assert;
 
 import javax.jms.JMSException;
 import javax.naming.NamingException;

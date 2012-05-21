@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.greg;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -74,10 +73,10 @@ public class GRegStratosWSDLUploaderSeleniumTest {
             deleteService();
             userLogout();
             log.info("**********GReg Stratos WSDL Upload from URL Test - Passed ****************");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("WSDL Upload from URL Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("WSDL Upload from URL Test Failed :" + e);
+            throw new AssertionError("WSDL Upload from URL Test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("WSDL Upload from URL Test Failed :" + e);
             userLogout();
@@ -105,10 +104,10 @@ public class GRegStratosWSDLUploaderSeleniumTest {
             deleteService();
             userLogout();
             log.info("**********GReg Stratos WSDL Upload from File Test - Passed ****************");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("WSDL Upload from File Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("WSDL Upload from File Test Failed :" + e);
+            throw new AssertionError("WSDL Upload from File Test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("WSDL Upload from File Test Failed :" + e);
             userLogout();

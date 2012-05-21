@@ -138,7 +138,7 @@ public class CustomTestNGrReporter implements IReporter {
         ReportSuiteSetter suiteSetter = new ReportSuiteSetter();
         ISuite newSuite = suiteSetter.suiteSetter(suite, resultsFinal);
         for (ITestNGMethod method : suite.getAllMethods()) {
-            resultMap.addResult(results2.setResults(newSuite, method, 3, exception), method);
+            resultMap.addResult(results2.setResults(newSuite, method, 2, exception), method);
         }
 
         final IResultMap reportmap = resultMap;

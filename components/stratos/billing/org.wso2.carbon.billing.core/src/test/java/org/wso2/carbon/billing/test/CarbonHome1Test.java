@@ -22,9 +22,6 @@ import org.wso2.carbon.billing.core.BillingManager;
 import org.wso2.carbon.billing.core.conf.BillingConfiguration;
 import org.wso2.carbon.billing.core.dataobjects.*;
 import org.wso2.carbon.billing.core.internal.Util;
-import org.wso2.carbon.rule.engine.jsr94.JSR94BackendRuntimeFactory;
-import org.wso2.carbon.rule.server.RuleServerConfiguration;
-import org.wso2.carbon.rule.server.RuleServerManager;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.sql.DataSource;
@@ -45,16 +42,16 @@ public class CarbonHome1Test extends TestCase {
 
 //        SessionDescription sessionDescription = new SessionDescription();
 //        sessionDescription.setSessionType(SessionDescription.STATEFUL_SESSION);
-        RuleServerManager ruleServerManager = new RuleServerManager();// TODO to get from a OSGI service
+        /*RuleServerManager ruleServerManager = new RuleServerManager();// TODO to get from a OSGI service
         RuleServerConfiguration configuration = new RuleServerConfiguration(new JSR94BackendRuntimeFactory());
         ruleServerManager.init(configuration);
-
+        */
 //        OMElement config = TestUtils.loadConfigXML();
 ////        RuleServerConfiguration configuration = new RuleServerConfiguration(new JSR94BackendRuntimeFactory());
 //        RuleServerManager ruleServerManager = new RuleServerManager();
 //        ruleServerManager.init(ruleServerConfiguration);
 
-        Util.setRuleEngineConfigService(ruleServerManager);
+        //Util.setRuleEngineConfigService(ruleServerManager);
 
         String configFile = CarbonUtils.getCarbonConfigDirPath() + "/" + BILLING_CONFIG;
         BillingConfiguration billingConfiguration = new BillingConfiguration(configFile);

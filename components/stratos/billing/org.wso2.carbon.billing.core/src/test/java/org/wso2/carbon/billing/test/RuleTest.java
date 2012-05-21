@@ -21,11 +21,6 @@ import org.wso2.carbon.billing.core.BillingException;
 import org.wso2.carbon.billing.core.BillingManager;
 import org.wso2.carbon.billing.core.conf.BillingConfiguration;
 import org.wso2.carbon.billing.core.dataobjects.*;
-import org.wso2.carbon.billing.core.internal.Util;
-import org.wso2.carbon.rule.engine.jsr94.JSR94BackendRuntimeFactory;
-import org.wso2.carbon.rule.server.RuleServerConfiguration;
-import org.wso2.carbon.rule.server.RuleServerManager;
-import org.wso2.carbon.rulecep.commons.descriptions.rule.SessionDescription;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.sql.DataSource;
@@ -40,7 +35,7 @@ public class RuleTest extends TestCase {
     private BillingEngine billingEngine;
 
     public void setUp() throws Exception {
-        RuleServerManager ruleServerManager = new RuleServerManager();
+        /*RuleServerManager ruleServerManager = new RuleServerManager();
         RuleServerConfiguration configuration = new RuleServerConfiguration(new JSR94BackendRuntimeFactory());
         ruleServerManager.init(configuration);
         Util.setRuleEngineConfigService(ruleServerManager);
@@ -56,7 +51,7 @@ public class RuleTest extends TestCase {
         ruleServerManager.init(configuration);
 
         Util.setRuleEngineConfigService(ruleServerManager);
-
+        */
 
         String configFile = CarbonUtils.getCarbonConfigDirPath() + "/" + BILLING_CONFIG;
         BillingConfiguration billingConfiguration = new BillingConfiguration(configFile);

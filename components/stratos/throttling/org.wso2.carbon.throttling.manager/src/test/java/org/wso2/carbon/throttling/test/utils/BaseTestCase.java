@@ -30,9 +30,6 @@ import org.wso2.carbon.registry.core.config.RegistryContext;
 import org.wso2.carbon.registry.core.jdbc.EmbeddedRegistryService;
 import org.wso2.carbon.registry.core.jdbc.InMemoryEmbeddedRegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.rule.engine.jsr94.JSR94BackendRuntimeFactory;
-import org.wso2.carbon.rule.server.RuleServerConfiguration;
-import org.wso2.carbon.rule.server.RuleServerManager;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
@@ -84,11 +81,12 @@ public class BaseTestCase extends TestCase {
 //   TODO      Util.setTenantUsageRetriever(new TenantUsageRetriever(registryDataSource,
 //                superTenantGovernanceRegistry, registryService));
 
-        RuleServerManager ruleServerManager = new RuleServerManager();
+        /*RuleServerManager ruleServerManager = new RuleServerManager();
         RuleServerConfiguration configuration =
                 new RuleServerConfiguration(new JSR94BackendRuntimeFactory());
         ruleServerManager.init(configuration);
         Util.setRuleEngineConfigService(ruleServerManager);
+        */
     }
 
     public Task getThrottlingTask(String configFile, String ruleFile) throws Exception {

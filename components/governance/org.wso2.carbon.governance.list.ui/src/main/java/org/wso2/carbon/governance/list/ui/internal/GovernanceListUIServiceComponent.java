@@ -20,6 +20,7 @@ package org.wso2.carbon.governance.list.ui.internal;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -220,6 +221,8 @@ public class GovernanceListUIServiceComponent {
                 }
             }
             
+        } catch (OMException e) {
+            log.error("Governance artifact configuration of configuration key:" + configuration.getKey() + " is invalid", e);
         } catch (JaxenException e) {
             log.error("Error in getting the lifecycle attribute",e);
         }

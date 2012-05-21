@@ -709,6 +709,9 @@ public class APIProviderHostObject extends ScriptableObject {
         version = args[2].toString();
         docName = args[3].toString();
         docContent = args[4].toString();
+        if (docContent != null) {
+            docContent = docContent.replaceAll("\n", "");
+        }
         APIIdentifier apiId = new APIIdentifier(providerName, apiName,
                                                 version);
         APIProvider apiProvider = getAPIProvider(thisObj);

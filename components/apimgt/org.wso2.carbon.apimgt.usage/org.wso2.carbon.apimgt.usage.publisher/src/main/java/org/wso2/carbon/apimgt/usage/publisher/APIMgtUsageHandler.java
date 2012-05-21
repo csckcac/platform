@@ -17,12 +17,14 @@
 */
 package org.wso2.carbon.apimgt.usage.publisher;
 
+import org.apache.axis2.Constants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.AbstractHandler;
 import org.apache.synapse.rest.RESTConstants;
+import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.carbon.apimgt.usage.publisher.dto.RequestPublisherDTO;
 import org.wso2.carbon.apimgt.usage.publisher.dto.ResponsePublisherDTO;
 import org.wso2.carbon.apimgt.usage.publisher.internal.UsageComponent;
@@ -63,7 +65,7 @@ public class APIMgtUsageHandler extends AbstractHandler {
         String version = (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION);
         String resource = extractResource(mc);
         String method =  (String)((Axis2MessageContext) mc).getAxis2MessageContext().getProperty(
-                APIMgtUsagePublisherConstants.AXIS2_MC_HTTP_METHOD);
+                Constants.Configuration.HTTP_METHOD);
 
         RequestPublisherDTO requestPublisherDTO = new RequestPublisherDTO();
         requestPublisherDTO.setConsumerKey(consumerKey);

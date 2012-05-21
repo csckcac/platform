@@ -2,7 +2,7 @@
     include('includes/template_header.jag');
 %>
 <div id="middle">
-    <h2>Your Projects</h2>
+    <h2>Your Applications</h2>
 
     <div id="workArea">
         <%

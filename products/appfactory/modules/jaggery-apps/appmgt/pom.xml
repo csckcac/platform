@@ -26,9 +26,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>project-mgt</artifactId>
+    <artifactId>appmgt</artifactId>
     <packaging>war</packaging>
-    <name>WSO2 AppFactory - Project Management Web Application</name>
+    <name>WSO2 AppFactory - Application Management Web Application</name>
 
     <build>
         <plugins>
@@ -37,7 +37,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
                 <configuration>
-                    <warName>project-mgt</warName>
+                    <warName>appmgt</warName>
                     <packagingIncludes>**/*</packagingIncludes>
                     <webResources>
                         <resource>
@@ -59,7 +59,7 @@
 
               <target>
                 <echo message="Renaming to zip file"/>
-                <copy file="target/project-mgt.war" tofile="target/project-mgt.zip"/>
+                <copy file="target/appmgt.war" tofile="target/appmgt.zip"/>
               </target>
 
             </configuration>

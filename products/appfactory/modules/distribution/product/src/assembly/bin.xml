@@ -208,7 +208,7 @@
         </file>
         <!-- Deploy the project management tool-->
         <file>
-            <source>../../jaggery-apps/project-mgt/target/project-mgt.zip</source>
+            <source>../../jaggery-apps/appmgt/target/appmgt.zip</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>

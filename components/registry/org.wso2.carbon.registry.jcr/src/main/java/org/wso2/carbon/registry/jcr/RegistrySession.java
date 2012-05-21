@@ -19,6 +19,7 @@ package org.wso2.carbon.registry.jcr;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.core.CollectionImpl;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
@@ -87,43 +88,43 @@ public class RegistrySession implements Session {
     public RegistrySession(RegistryRepository registryRepository, String workspaceName,
                            SimpleCredentials registrySimpleCredentials, UserRegistry userReg, String userID) throws RepositoryException {
 
+        this.workspaceName = workspaceName;
+        this.USER_ID = userID;
+        this.WORKSPACE_ROOT = RegistryJCRSpecificStandardLoderUtil.getJCRRegistryWorkspaceRoot() + "/" + this.workspaceName + "/";
         this.registryRepository = registryRepository;
         this.userRegistry = userReg;
 
         this.registrySimpleCredentials = registrySimpleCredentials;
-        this.workspaceName = workspaceName;
         this.registryWorkspace = new RegistryWorkspace(registrySimpleCredentials.getUserID(), this);
         this.regAccControlMngr = new RegistryAccessControlManager(this);
         this.regRetentionMngr = new RegistryRetentionManager();
-        this.WORKSPACE_ROOT = RegistryJCRSpecificStandardLoderUtil.getJCRRegistryWorkspaceRoot() + "/" + this.workspaceName + "/";
-        USER_ID = userID;
         createRootNode();
         loadJCRSystemConfiguration(userRegistry,WORKSPACE_ROOT);
 
     }
 
     public RegistrySession(RegistryRepository registryRepository, String workspaceName, UserRegistry userReg, String userID) throws RepositoryException {
+        this.workspaceName = workspaceName;
+        USER_ID = userID;
+        this.WORKSPACE_ROOT = RegistryJCRSpecificStandardLoderUtil.getJCRRegistryWorkspaceRoot() + "/" + this.workspaceName + "/";
         this.registryRepository = registryRepository;
         this.userRegistry = userReg;
-        this.workspaceName = workspaceName;
         this.registryWorkspace = new RegistryWorkspace(this);
         this.regAccControlMngr = new RegistryAccessControlManager(this);
         this.regRetentionMngr = new RegistryRetentionManager();
-        this.WORKSPACE_ROOT = RegistryJCRSpecificStandardLoderUtil.getJCRRegistryWorkspaceRoot() + "/" + this.workspaceName + "/";
-        USER_ID = userID;
         createRootNode();
         loadJCRSystemConfiguration(userRegistry,WORKSPACE_ROOT);
 
     }
-
+    //TODO workspace name is "" and have to handle properly
     public RegistrySession(RegistryRepository registryRepository, UserRegistry userReg, String userID) throws RepositoryException {
+        this.USER_ID = userID;
+        this.WORKSPACE_ROOT = RegistryJCRSpecificStandardLoderUtil.getJCRRegistryWorkspaceRoot() + "/" + this.workspaceName + "/";
         this.registryRepository = registryRepository;
         this.registryWorkspace = new RegistryWorkspace(this);
         this.userRegistry = userReg;
         this.regAccControlMngr = new RegistryAccessControlManager(this);
         this.regRetentionMngr = new RegistryRetentionManager();
-        this.WORKSPACE_ROOT = RegistryJCRSpecificStandardLoderUtil.getJCRRegistryWorkspaceRoot() + "/" + this.workspaceName + "/";
-        USER_ID = userID;
         createRootNode();
         loadJCRSystemConfiguration(userRegistry,WORKSPACE_ROOT);
     }
@@ -296,7 +297,6 @@ public class RegistrySession implements Session {
             throw new RepositoryException(msg, e);
         }
         return subNode;
-
     }
 
     public static RegistryProperty getRegistryProperty(String s, String property,

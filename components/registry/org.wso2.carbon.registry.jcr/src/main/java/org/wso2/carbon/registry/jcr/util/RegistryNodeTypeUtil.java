@@ -20,16 +20,19 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.jaxen.JaxenException;
+import org.wso2.carbon.registry.api.Registry;
+import org.wso2.carbon.registry.core.CollectionImpl;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.ResourceImpl;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.jcr.RegistrySession;
+import org.wso2.carbon.registry.jcr.nodetype.RegistryNodeType;
+import org.wso2.carbon.registry.jcr.nodetype.RegistryNodeTypeManager;
 import org.wso2.carbon.registry.jcr.nodetype.RegistryPropertyDefinitionTemplate;
 import org.wso2.carbon.registry.jcr.util.nodetype.xml.NodeTypeReader;
 
-import javax.jcr.Node;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.nodetype.NodeTypeManager;
-import javax.jcr.nodetype.NodeTypeTemplate;
-import javax.jcr.nodetype.PropertyDefinitionTemplate;
+import javax.jcr.*;
+import javax.jcr.nodetype.*;
 import javax.jcr.version.OnParentVersionAction;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -37,7 +40,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.*;
 
 public class RegistryNodeTypeUtil {
 
@@ -91,17 +94,184 @@ public class RegistryNodeTypeUtil {
             for (Object o : attributes) {
                 OMElement omNode = (OMElement) o;
                 NodeTypeTemplate nodeTypeTemplate = new NodeTypeReader(nodeTypeManager).buildNodeType(omNode);
-                nodeTypeManager.registerNodeType(nodeTypeTemplate, false); // allowUpdates - false
+                ((RegistryNodeTypeManager)nodeTypeManager).registerNodeTypeFromXML(nodeTypeTemplate, false); // allowUpdates - false
             }
 
             is.close();
 
         } catch (IOException e) {
-            throw new RepositoryException("Exception occurred while reading from : "+streamPath);
+            throw new RepositoryException("Exception occurred while reading from : " + streamPath);
         } catch (JaxenException e) {
-            throw new RepositoryException("Exception occurred while reading from : "+streamPath);
+            throw new RepositoryException("Exception occurred while reading from : " + streamPath);
         } catch (XMLStreamException e) {
-            throw new RepositoryException("Exception occurred while reading from : "+streamPath);
+            throw new RepositoryException("Exception occurred while reading from : " + streamPath);
         }
     }
+
+    public static void persistNodeTypeToRegistry(NodeTypeDefinition nodeTypeDefinition, RegistrySession registrySession) {
+        try {
+
+            NodeTypeTemplate nodeTypeTemplate = (NodeTypeTemplate) nodeTypeDefinition;
+
+            String nodeTypePath = RegistryJCRSpecificStandardLoderUtil.getSystemConfigNodeTypePath(registrySession)
+                    + "/" + nodeTypeTemplate.getName();
+            CollectionImpl nodetype = (CollectionImpl) registrySession.getUserRegistry().newCollection();
+
+            //set primary attributes of node type
+            nodetype.setProperty("name", nodeTypeTemplate.getName());
+            nodetype.setProperty("primaryItemName", nodeTypeTemplate.getPrimaryItemName());
+            nodetype.setProperty("declaredSuperTypes", Arrays.asList(nodeTypeTemplate.getDeclaredSupertypeNames()));
+            nodetype.setProperty("hasOrderableChildNodes", String.valueOf(nodeTypeTemplate.hasOrderableChildNodes()));
+            nodetype.setProperty("isAbstract", String.valueOf(nodeTypeTemplate.isAbstract()));
+            nodetype.setProperty("isMixin", String.valueOf(nodeTypeTemplate.isMixin()));
+            nodetype.setProperty("isQueryable", String.valueOf(nodeTypeTemplate.isQueryable()));
+
+            nodetype.setParentPath(RegistryJCRSpecificStandardLoderUtil.getSystemConfigNodeTypePath(registrySession));
+            registrySession.getUserRegistry().put(nodeTypePath, nodetype);
+
+            // add property defs
+            for (PropertyDefinition _pd : nodeTypeTemplate.getDeclaredPropertyDefinitions()) {
+                PropertyDefinitionTemplate pd = (PropertyDefinitionTemplate) _pd;
+                String propDefPath = nodeTypePath + "/" + RegistryJCRSpecificStandardLoderUtil.JCR_SYSTEM_PERSIS_PROP_DEFS
+                        + "/" + pd.getName();
+
+                Resource pdNode = registrySession.getUserRegistry().newResource();
+                pdNode.setProperty("name", pd.getName());
+                pdNode.setProperty("autoCreated", String.valueOf(pd.isAutoCreated()));
+                pdNode.setProperty("mandatory", String.valueOf(pd.isMandatory()));
+                pdNode.setProperty("protected", String.valueOf(pd.isProtected()));
+                pdNode.setProperty("multiple", String.valueOf(pd.isMultiple()));
+                pdNode.setProperty("isFullTextSearchable", String.valueOf(pd.isFullTextSearchable()));
+                pdNode.setProperty("isQueryOrderable", String.valueOf(pd.isQueryOrderable()));
+                pdNode.setProperty("availableQueryOperators", Arrays.asList(pd.getAvailableQueryOperators()));
+                pdNode.setProperty("requiredType", String.valueOf(pd.getRequiredType())); //type is integer
+                pdNode.setProperty("valueConstraints", Arrays.asList(pd.getValueConstraints())); //type is string[]
+                pdNode.setProperty("onParentVersion", String.valueOf(pd.getOnParentVersion())); //type int
+
+                //Adding default values
+                List<String> defaultValList = new ArrayList<String>();
+                for (Value value : pd.getDefaultValues()) {
+                    defaultValList.add(value.getString());    // TODO supports only for String type Values
+                }
+                pdNode.setProperty("defaultValues", defaultValList); // type is string []
+
+                registrySession.getUserRegistry().put(propDefPath, pdNode);
+            }
+
+            //Adding child node defs
+            for (NodeDefinition nodeDefinition : nodeTypeTemplate.getDeclaredChildNodeDefinitions()) {
+                NodeDefinitionTemplate nd = (NodeDefinitionTemplate) nodeDefinition;
+
+                String childDefPath = nodeTypePath + "/" + RegistryJCRSpecificStandardLoderUtil.JCR_SYSTEM_PERSIS_CHILDNODE_DEFS
+                        + "/" + nd.getName();
+                Resource childNode = registrySession.getUserRegistry().newResource();
+
+                childNode.setProperty("name", nd.getName());
+                childNode.setProperty("autoCreated", String.valueOf(nd.isAutoCreated()));
+                childNode.setProperty("mandatory", String.valueOf(nd.isMandatory()));
+                childNode.setProperty("protected", String.valueOf(nd.isProtected()));
+                childNode.setProperty("onParentVersion", String.valueOf(nd.getOnParentVersion())); //type is int
+                childNode.setProperty("sameNameSiblings", String.valueOf(nd.allowsSameNameSiblings()));
+                childNode.setProperty("defaultPrimaryType", nd.getDefaultPrimaryTypeName());
+                childNode.setProperty("requiredPrimaryTypes", Arrays.asList(nd.getRequiredPrimaryTypeNames()));
+                registrySession.getUserRegistry().put(childDefPath, childNode);
+            }
+
+
+        } catch (RegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ValueFormatException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
+
+    public static void loadNodeTypesFromRegistry(RegistryNodeTypeManager registryNodeTypeManager, RegistrySession registrySession) {
+        NodeTypeTemplate nodeTypeTemplate = null;
+        try {
+            nodeTypeTemplate = registryNodeTypeManager.createNodeTypeTemplate();
+            String[] paths = ((CollectionImpl) registrySession.getUserRegistry().get(
+                              RegistryJCRSpecificStandardLoderUtil.
+                              getSystemConfigNodeTypePath(registrySession))).getChildren();
+
+            for (String path : paths) {
+                CollectionImpl nodeType = (CollectionImpl)registrySession.getUserRegistry().get(path);
+                String nodeTypePath = RegistryJCRSpecificStandardLoderUtil.getSystemConfigNodeTypePath(registrySession) + "/" +
+                        nodeType.getProperty("name");
+
+                nodeTypeTemplate.setName(nodeType.getProperty("name"));
+                nodeTypeTemplate.setDeclaredSuperTypeNames(nodeType.getPropertyValues("declaredSuperTypes").toArray(new String[0]));
+                nodeTypeTemplate.setMixin(Boolean.valueOf(nodeType.getProperty("isMixin")));
+                nodeTypeTemplate.setOrderableChildNodes(Boolean.valueOf(nodeType.getProperty("hasOrderableChildNodes")));
+                nodeTypeTemplate.setAbstract(Boolean.valueOf(nodeType.getProperty("isAbstract")));
+                nodeTypeTemplate.setQueryable(Boolean.valueOf(nodeType.getProperty("isQueryable")));
+                nodeTypeTemplate.setPrimaryItemName(nodeType.getProperty("primaryItemName"));
+
+                //node defs loading
+                String childDefRootPath = nodeTypePath + "/" + RegistryJCRSpecificStandardLoderUtil.JCR_SYSTEM_PERSIS_CHILDNODE_DEFS;
+                String[] childDefPaths = ((CollectionImpl) registrySession.getUserRegistry().get(childDefRootPath)).getChildren();
+
+                for (String childPath : childDefPaths) {
+                    Resource childDef = registrySession.getUserRegistry().get(childPath);
+
+                    NodeDefinitionTemplate nodeDefinitionTemplate = registryNodeTypeManager.createNodeDefinitionTemplate();
+                    nodeDefinitionTemplate.setName(childDef.getProperty("name"));
+                    nodeDefinitionTemplate.setAutoCreated(Boolean.valueOf(childDef.getProperty("autoCreated")));
+                    nodeDefinitionTemplate.setMandatory(Boolean.valueOf(childDef.getProperty("mandatory")));
+                    nodeDefinitionTemplate.setProtected(Boolean.valueOf(childDef.getProperty("protected")));
+                    nodeDefinitionTemplate.setOnParentVersion(Integer.valueOf(childDef.getProperty("onParentVersion")));
+                    nodeDefinitionTemplate.setSameNameSiblings(Boolean.valueOf(childDef.getProperty("sameNameSiblings")));
+                    nodeDefinitionTemplate.setDefaultPrimaryTypeName(childDef.getProperty("defaultPrimaryType"));
+                    nodeDefinitionTemplate.setRequiredPrimaryTypeNames(childDef.
+                            getPropertyValues("requiredPrimaryTypes").toArray(new String[0]));
+
+                    nodeTypeTemplate.getNodeDefinitionTemplates().add(nodeDefinitionTemplate);
+                }
+
+
+                //load prop defs
+                String propDefRootPath = nodeTypePath + "/" + RegistryJCRSpecificStandardLoderUtil.JCR_SYSTEM_PERSIS_PROP_DEFS;
+                String[] propDefPaths = ((CollectionImpl) registrySession.getUserRegistry().get(propDefRootPath)).getChildren();
+
+                for (String propPath : propDefPaths) {
+                    Resource propdDef = registrySession.getUserRegistry().get(propPath);
+
+                    PropertyDefinitionTemplate propertyDefinitionTemplate = registryNodeTypeManager.createPropertyDefinitionTemplate();
+                    propertyDefinitionTemplate.setName(propdDef.getProperty("name"));
+                    propertyDefinitionTemplate.setAutoCreated(Boolean.valueOf(propdDef.getProperty("autoCreated")));
+                    propertyDefinitionTemplate.setMandatory(Boolean.valueOf(propdDef.getProperty("mandatory")));
+                    propertyDefinitionTemplate.setProtected(Boolean.valueOf(propdDef.getProperty("protected")));
+                    propertyDefinitionTemplate.setMultiple(Boolean.valueOf(propdDef.getProperty("multiple")));
+                    propertyDefinitionTemplate.setFullTextSearchable(Boolean.valueOf(propdDef.getProperty("isFullTextSearchable")));
+                    propertyDefinitionTemplate.setQueryOrderable(Boolean.valueOf(propdDef.getProperty("isQueryOrderable")));
+                    propertyDefinitionTemplate.setAvailableQueryOperators(propdDef.
+                            getPropertyValues("availableQueryOperators").toArray(new String[0]));
+
+                    propertyDefinitionTemplate.setOnParentVersion(Integer.valueOf(propdDef.getProperty("onParentVersion")));
+                    propertyDefinitionTemplate.setOnParentVersion(Integer.valueOf(propdDef.getProperty("requiredType")));
+                    propertyDefinitionTemplate.setValueConstraints(propdDef.
+                            getPropertyValues("valueConstraints").toArray(new String[0]));
+                    propertyDefinitionTemplate.setValueConstraints(propdDef.
+                            getPropertyValues("defaultValues").toArray(new String[0]));
+
+                    nodeTypeTemplate.getPropertyDefinitionTemplates().add(propertyDefinitionTemplate);
+                }
+
+                NodeType nodeTypeBean = new RegistryNodeType(nodeTypeTemplate, registryNodeTypeManager);
+                if (nodeTypeTemplate.getName().startsWith("mix")) {
+                    registryNodeTypeManager.getMixinNodetypes().add(nodeTypeBean);      // TODO should persist to registry tree
+                } else {
+                    registryNodeTypeManager.getPrimaryNodetypes().add(nodeTypeBean);
+                }
+                registryNodeTypeManager.getNodeTypesList().add(nodeTypeBean);
+
+            }
+
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (RegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+}

@@ -16,11 +16,13 @@
 
 package org.wso2.carbon.registry.jcr.util;
 
+import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.jcr.RegistrySession;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.InvalidItemStateException;
 import javax.jcr.ItemNotFoundException;
+import javax.jcr.RepositoryException;
 
 public class RegistryJCRItemOperationUtil {
 
@@ -66,5 +68,31 @@ public class RegistryJCRItemOperationUtil {
           }
 
     }
+
+    public static void validateSystemConfigPath(String path) throws RepositoryException {
+       if(path == null) {
+         throw new RepositoryException("Null is an invalid path expression");
+       }
+
+       if(path.contains(RegistryJCRSpecificStandardLoderUtil.JCR_SYSTEM_CONFIG)) {
+           throw new RepositoryException(RegistryJCRSpecificStandardLoderUtil.
+                   JCR_SYSTEM_CONFIG+" cannot be included in a path,it is a system specific config node");
+       }
+
+    }
+
+    public static boolean isSystemConfigNode(String path) throws RepositoryException {
+       if(path == null) {
+         throw new RepositoryException("Null is an invalid path expression");
+       }
+
+       if(path.contains(RegistryJCRSpecificStandardLoderUtil.JCR_SYSTEM_CONFIG)) {
+        return true;
+       } else {
+         return false;
+       }
+
+    }
+
 
 }

@@ -57,7 +57,7 @@ public class RegistryWorkspace implements Workspace {
 
         this.registrySession = registrySession;
         this.userRegistry = this.registrySession.userRegistry;
-        this.regNodeTypeMan = new RegistryNodeTypeManager(registrySession.getRepository());
+        this.regNodeTypeMan = new RegistryNodeTypeManager(registrySession);
         this.observationMngr = new RegistryObservationManager();
         this.versionMngr = new RegistryVersionManager(this.registrySession);
         this.lockManager = new RegistryLockManager(this.registrySession);
@@ -70,7 +70,7 @@ public class RegistryWorkspace implements Workspace {
         this.userRegistry = this.registrySession.userRegistry;
         sessions.put(userID, registrySession);
         this.userId = userID;
-        this.regNodeTypeMan = new RegistryNodeTypeManager(registrySession.getRepository());
+        this.regNodeTypeMan = new RegistryNodeTypeManager(registrySession);
         this.observationMngr = new RegistryObservationManager();
         this.versionMngr = new RegistryVersionManager(this.registrySession);
         this.lockManager = new RegistryLockManager(this.registrySession);

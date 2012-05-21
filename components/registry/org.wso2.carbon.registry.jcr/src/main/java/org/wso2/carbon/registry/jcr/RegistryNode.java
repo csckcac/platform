@@ -18,6 +18,7 @@ package org.wso2.carbon.registry.jcr;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.core.CollectionImpl;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
@@ -730,6 +731,9 @@ public class RegistryNode implements Node {
                 tempCollection = (CollectionImpl) registrySession.getUserRegistry().get(nodePath);
                 String[] children = tempCollection.getChildren();
                 for (int i = 0; i < children.length; i++) {
+                     if(RegistryJCRItemOperationUtil.isSystemConfigNode(children[i])) {
+                        continue;
+                     }
                     nodes.add(registrySession.getNode(children[i]));
                 }
             }
@@ -743,7 +747,6 @@ public class RegistryNode implements Node {
     }
 
     public NodeIterator getNodes(String s) throws RepositoryException {
-
         List<Node> nodes = new ArrayList<Node>();
         try {
 
@@ -751,6 +754,9 @@ public class RegistryNode implements Node {
             String[] childpaths = coll.getChildren();
 
             for (int i = 0; i < childpaths.length; i++) {
+                if(RegistryJCRItemOperationUtil.isSystemConfigNode(childpaths[i])){
+                 continue;
+                }
                 Node node = new RegistryNode(childpaths[i], registrySession);
                 nodes.add(node);
             }

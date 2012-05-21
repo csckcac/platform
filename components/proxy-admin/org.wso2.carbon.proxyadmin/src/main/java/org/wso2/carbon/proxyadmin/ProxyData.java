@@ -25,6 +25,7 @@ import org.apache.synapse.config.xml.XMLConfigConstants;
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 public class ProxyData {
     private static Log log = LogFactory.getLog(ProxyData.class);
@@ -416,8 +417,16 @@ public class ProxyData {
                 value = serviceParam.getValue();
                 if (value.startsWith("<")) {
                     try {
+                    	byte[] bytes = null;
+                    	try {
+							 bytes = value.getBytes("UTF8");
+						} catch (UnsupportedEncodingException e) {
+							log.error("Unable to extract bytes in UTF-8 encoding. " + 
+									"Extracting bytes in the system default encoding" + e.getMessage());
+							bytes = value.getBytes();
+						}
                         element.addChild(new StAXOMBuilder(
-                                new ByteArrayInputStream(value.getBytes())).getDocumentElement());
+                                new ByteArrayInputStream(bytes)).getDocumentElement());
                     } catch (XMLStreamException e) {
                         String msg = "Service parameter: " + serviceParam.getKey() + " has an invalid XML as its value";
                         log.error(msg);
@@ -470,7 +479,16 @@ public class ProxyData {
      * @throws XMLStreamException if building the <code>OMelement</code> is unsuccessful
      */
     private OMElement createElement(String str) throws XMLStreamException {
-        InputStream in = new ByteArrayInputStream(str.getBytes());
+    	byte[] bytes = null;
+    	try {
+			bytes = str.getBytes("UTF8");
+		} catch (UnsupportedEncodingException e) {
+			log.error("Unable to extract bytes in UTF-8 encoding. " + 
+					"Extracting bytes in the system default encoding" + e.getMessage());
+			bytes = str.getBytes();
+		}
+    	
+        InputStream in = new ByteArrayInputStream(bytes);
         return new StAXOMBuilder(in).getDocumentElement();
     }
 }

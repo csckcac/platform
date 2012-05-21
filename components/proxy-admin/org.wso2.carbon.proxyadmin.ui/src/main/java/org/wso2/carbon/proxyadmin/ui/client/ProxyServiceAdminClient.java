@@ -38,6 +38,7 @@ import org.wso2.carbon.proxyadmin.stub.types.carbon.ProxyData;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -185,8 +186,16 @@ public class ProxyServiceAdminClient {
     public ProxyData getDesignView(String proxyXML88) throws AxisFault {
         ProxyData pd = new ProxyData();
         try {
+           	byte[] bytes = null;
+        	try {
+    			bytes = proxyXML88.getBytes("UTF8");
+    		} catch (UnsupportedEncodingException e) {
+    			log.error("Unable to extract bytes in UTF-8 encoding. " + 
+    					"Extracting bytes in the system default encoding" + e.getMessage());
+    			bytes = proxyXML88.getBytes();
+    		}        	
             OMElement elem = new StAXOMBuilder(
-                    new ByteArrayInputStream(proxyXML88.getBytes())).getDocumentElement();
+                    new ByteArrayInputStream(bytes)).getDocumentElement();
 
             // check whether synapse namespace is present in the configuration.
             Iterator itr = elem.getAllDeclaredNamespaces();

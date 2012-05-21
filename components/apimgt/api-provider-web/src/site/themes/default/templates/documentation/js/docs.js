@@ -13,7 +13,7 @@ var addNewDoc = function () {
               function (result) {
                   if (!result.error) {
                       clearDocs();
-                      $.cookie("tab", "docsLink", { path: '/' });
+                      $.cookie("tab", "docsLink");
                       window.location.reload();
                   } else {
                       jagg.message(result.message);

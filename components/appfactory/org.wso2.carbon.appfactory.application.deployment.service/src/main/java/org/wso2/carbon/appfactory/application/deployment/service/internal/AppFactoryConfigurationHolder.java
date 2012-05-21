@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package org.wso2.carbon.appfactory.artifact.deployment.service;
+package org.wso2.carbon.appfactory.application.deployment.service.internal;
 
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 

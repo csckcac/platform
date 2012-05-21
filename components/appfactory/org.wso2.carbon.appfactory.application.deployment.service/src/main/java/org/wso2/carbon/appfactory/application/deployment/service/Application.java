@@ -1,10 +1,10 @@
-package org.wso2.carbon.appfactory.artifact.deployment.service;
+package org.wso2.carbon.appfactory.application.deployment.service;
 
-public class Artifact {
+public class Application {
     private String name;
     private long size;
 
-    public Artifact(String name, long size) {
+    public Application(String name, long size) {
         this.name = name;
         this.size = size;
     }

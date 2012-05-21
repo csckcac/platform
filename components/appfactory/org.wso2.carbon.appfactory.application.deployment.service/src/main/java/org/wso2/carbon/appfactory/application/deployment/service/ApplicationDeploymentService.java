@@ -1,4 +1,4 @@
-package org.wso2.carbon.appfactory.artifact.deployment.service;
+package org.wso2.carbon.appfactory.application.deployment.service;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -21,6 +21,8 @@ import org.tigris.subversion.svnclientadapter.commandline.CmdLineClientAdapterFa
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.svnkit.SvnKitClientAdapterFactory;
 import org.tigris.subversion.svnclientadapter.utils.Depth;
+import org.wso2.carbon.appfactory.application.deployment.service.internal.AppFactoryConfigurationHolder;
+import org.wso2.carbon.appfactory.application.deployment.service.internal.ApplicationUploadClient;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.application.mgt.stub.upload.types.carbon.UploadedFileItem;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -35,13 +37,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProjectDeploymentImpl implements ProjectDeployingService {
-    private static final Log log = LogFactory.getLog(ProjectDeploymentImpl.class);
+public class ApplicationDeploymentService {
+    private static final Log log = LogFactory.getLog(ApplicationDeploymentService.class);
     private static AppFactoryConfiguration appFactoryConfiguration = AppFactoryConfigurationHolder.getInstance().getAppFactoryConfiguration();
     private ISVNClientAdapter svnClient;
 
 
-    private void initSVNClient() throws ProjectDeploymentExceptions {
+    private void initSVNClient() throws ApplicationDeploymentExceptions {
         try {
             SvnKitClientAdapterFactory.setup();
             log.debug("SVN Kit client adapter initialized");
@@ -74,32 +76,33 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
             svnClient.setUsername(appFactoryConfiguration.getScmServerAdminUserName());
             svnClient.setPassword(appFactoryConfiguration.getScmServerAdminPassword());
         } catch (SVNClientException e) {
-            throw new ProjectDeploymentExceptions("Client type can not be defined.");
+            throw new ApplicationDeploymentExceptions("Client type can not be defined.");
         }
 
         if (svnClient == null) {
-            throw new ProjectDeploymentExceptions("Failed to instantiate svn client.");
+            throw new ApplicationDeploymentExceptions("Failed to instantiate svn client.");
         }
     }
 
     /**
      * Check out from given url
      *
-     * @param projectSvnUrl - project svn url location
-     * @param projectId     - project id
-     * @return project check out path.
-     * @throws ProjectDeploymentExceptions
+     * @param applicationSvnUrl - application svn url location
+     * @param applicationId     - application id
+     * @return application check out path.
+     * @throws ApplicationDeploymentExceptions
+     *
      */
-    private String checkoutProject(String projectSvnUrl, String projectId)
-            throws ProjectDeploymentExceptions {
-        File checkoutDirectory = createProjectCheckoutDirectory(projectId);
+    private String checkoutApplication(String applicationSvnUrl, String applicationId)
+            throws ApplicationDeploymentExceptions {
+        File checkoutDirectory = createApplicationCheckoutDirectory(applicationId);
         initSVNClient();
 
         SVNUrl svnUrl = null;
         try {
-            svnUrl = new SVNUrl(projectSvnUrl);
+            svnUrl = new SVNUrl(applicationSvnUrl);
         } catch (MalformedURLException e) {
-            handleException("SVN URL of project is malformed.", e);
+            handleException("SVN URL of application is malformed.", e);
         }
 
         try {
@@ -117,12 +120,13 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
     }
 
     /**
-     * Build the project from given location
+     * Build the application from given location
      *
      * @param sourcePath - source location
-     * @throws ProjectDeploymentExceptions
+     * @throws ApplicationDeploymentExceptions
+     *
      */
-    private void buildProject(String sourcePath) throws ProjectDeploymentExceptions {
+    private void buildApplication(String sourcePath) throws ApplicationDeploymentExceptions {
         String pomFilePath = sourcePath + File.separator + "pom.xml";
         File pomFile = new File(pomFilePath);
         if (!pomFile.exists()) {
@@ -132,13 +136,13 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
         String targetDirPath = sourcePath + File.separator + "target";
         File targetDir = new File(targetDirPath);
         if (!targetDir.exists()) {
-            handleException("Project build failure.");
+            handleException("Application build failure.");
         }
     }
 
-    private File createProjectCheckoutDirectory(String projectName)
-            throws ProjectDeploymentExceptions {
-        File tempDir = new File(CarbonUtils.getTmpDir() + File.separator + projectName);
+    private File createApplicationCheckoutDirectory(String applicationName)
+            throws ApplicationDeploymentExceptions {
+        File tempDir = new File(CarbonUtils.getTmpDir() + File.separator + applicationName);
         if (!tempDir.exists()) {
             boolean directoriesCreated = tempDir.mkdirs();
             if (!directoriesCreated) {
@@ -149,19 +153,19 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
     }
 
 
-    private void handleException(String msg) throws ProjectDeploymentExceptions {
+    private void handleException(String msg) throws ApplicationDeploymentExceptions {
         log.error(msg);
-        throw new ProjectDeploymentExceptions(msg);
+        throw new ApplicationDeploymentExceptions(msg);
     }
 
-    private void handleException(String msg, Exception e) throws ProjectDeploymentExceptions {
+    private void handleException(String msg, Exception e) throws ApplicationDeploymentExceptions {
         log.error(msg, e);
-        throw new ProjectDeploymentExceptions(msg, e);
+        throw new ApplicationDeploymentExceptions(msg, e);
     }
 
     //TODO car files deployment???
-    public Artifact[] deployProject(String projectSvnUrl, String projectId, String artifactType,
-                                    String stage) throws ProjectDeploymentExceptions {
+    public Application[] deployApplication(String applicationSvnUrl, String applicationId,
+                                           String stage) throws ApplicationDeploymentExceptions {
 
         List<String> deploymentServerUrls = appFactoryConfiguration.getDeploymentServerUrls(stage);
 
@@ -169,35 +173,35 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
             handleException("No deployment paths are configured for stage:" + stage);
         }
 
-        String checkoutPath = checkoutProject(projectSvnUrl, projectId);
+        String checkoutPath = checkoutApplication(applicationSvnUrl, applicationId);
         try {
-            buildProject(checkoutPath);
+            buildApplication(checkoutPath);
 
             File targetArtifacts = new File(checkoutPath + File.separator + "target");
 
-            String[] fileExtension = {artifactType.toLowerCase()};
+            String[] fileExtension = {"car"};
             List<File> artifactFiles = (List<File>) FileUtils.listFiles(targetArtifacts, fileExtension, false);
 
-            List<Artifact> artifacts = new ArrayList<Artifact>();
+            List<Application> applications = new ArrayList<Application>();
 
             for (File deployArtifact : artifactFiles) {
-                artifacts.add(new Artifact(deployArtifact.getName(), FileUtils.sizeOf(deployArtifact)));
+                applications.add(new Application(deployArtifact.getName(), FileUtils.sizeOf(deployArtifact)));
 
                 // upload artifact to given deployment servers
                 for (String deploymentServerUrl : deploymentServerUrls) {
-                    uploadArtifact(projectId, deployArtifact, deploymentServerUrl);
+                    uploadArtifact(applicationId, deployArtifact, deploymentServerUrl);
                 }
             }
 
-            return artifacts.toArray(new Artifact[artifacts.size()]);
+            return applications.toArray(new Application[applications.size()]);
         } finally {
-            cleanProjectDir(checkoutPath);
+            cleanApplicationDir(checkoutPath);
         }
     }
 
-    private void uploadArtifact(String projectId, File deployArtifact,
-                                String deploymentServerUrl) throws ProjectDeploymentExceptions {
-        ArtifactUploadClient artifactUploadClient = new ArtifactUploadClient(deploymentServerUrl);
+    private void uploadArtifact(String applicationId, File deployArtifact,
+                                String deploymentServerUrl) throws ApplicationDeploymentExceptions {
+        ApplicationUploadClient applicationUploadClient = new ApplicationUploadClient(deploymentServerUrl);
 
         UploadedFileItem uploadedFileItem = new UploadedFileItem();
 
@@ -217,29 +221,27 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
         }
 
         try {
-            if (artifactUploadClient.authenticate(getAdminUsername(projectId),
-                                                  appFactoryConfiguration.getAdminPassword(),
-                                                  remoteIp)) {
-                artifactUploadClient.uploadCarbonApp(uploadedFileItems);
+            if (applicationUploadClient.authenticate(getAdminUsername(applicationId),
+                                                     appFactoryConfiguration.getAdminPassword(),
+                                                     remoteIp)) {
+                applicationUploadClient.uploadCarbonApp(uploadedFileItems);
                 log.info(deployArtifact.getName() + " is successfully uploaded.");
             } else {
                 handleException("Failed to login to " + remoteIp + " to deploy artifact:" + deployArtifact.getName());
             }
         } catch (Exception e) {
-            handleException("Failed to upload the artifact:" + deployArtifact + " of project:" +
-                            projectId + " to deployment location:" + deploymentServerUrl);
+            handleException("Failed to upload the artifact:" + deployArtifact + " of application:" +
+                            applicationId + " to deployment location:" + deploymentServerUrl);
         }
     }
 
 
-    private boolean executeMavenGoal(String projectPath) throws ProjectDeploymentExceptions {
-        /* if (System.getProperty("maven.home") == null) {
-            throw new ProjectDeploymentExceptions("System property 'maven.home' is not set.");
-        }*/
+    private boolean executeMavenGoal(String applicationPath)
+            throws ApplicationDeploymentExceptions {
         InvocationRequest request = new DefaultInvocationRequest();
         request.setShowErrors(true);
 
-        request.setPomFile(new File(projectPath + File.separator + "pom.xml"));
+        request.setPomFile(new File(applicationPath + File.separator + "pom.xml"));
 
         List<String> goals = new ArrayList<String>();
         goals.add("clean");
@@ -260,8 +262,8 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
                     if (result.getExitCode() == 0) {
                         return true;
                     } else {
-                        final String errorMessage = "No maven Project found at "
-                                                    + projectPath;
+                        final String errorMessage = "No maven Application found at "
+                                                    + applicationPath;
                         handleException(errorMessage);
                     }
                 }
@@ -273,17 +275,17 @@ public class ProjectDeploymentImpl implements ProjectDeployingService {
         return false;
     }
 
-    private void cleanProjectDir(String projectPath) {
-        File project = new File(projectPath);
+    private void cleanApplicationDir(String applicationPath) {
+        File application = new File(applicationPath);
         try {
-            FileUtils.deleteDirectory(project);
+            FileUtils.deleteDirectory(application);
         } catch (IOException ignore) {
-            log.warn("Failed to clean up project at path:" + projectPath);
+            log.warn("Failed to clean up application at path:" + applicationPath);
         }
     }
 
-    private String getAdminUsername(String projectId) {
-        return appFactoryConfiguration.getAdminUserName() + "@" + projectId;
+    private String getAdminUsername(String applicationId) {
+        return appFactoryConfiguration.getAdminUserName() + "@" + applicationId;
     }
 
 }

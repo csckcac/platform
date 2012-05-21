@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package org.wso2.carbon.appfactory.artifact.deployment.service;
+package org.wso2.carbon.appfactory.application.deployment.service.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,24 +24,24 @@ import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 /**
  * this class is used to get the AppFactory Configuration.
  *
- * @scr.component name="org.wso2.carbon.appfactory.artifact.deployment.service.ArtifactDeploymentServiceComponent" immediate="true"
+ * @scr.component name="org.wso2.carbon.appfactory.application.deployment.service.internal.ApplicationDeploymentServiceComponent" immediate="true"
  * @scr.reference name="appfactory.common"
  * interface="org.wso2.carbon.appfactory.common.AppFactoryConfiguration" cardinality="1..1"
  * policy="dynamic" bind="setAppFactoryConfiguration" unbind="unsetAppFactoryConfiguration"
  */
-public class ArtifactDeploymentServiceComponent {
+public class ApplicationDeploymentServiceComponent {
 
-    private Log log = LogFactory.getLog(ArtifactDeploymentServiceComponent.class);
+    private Log log = LogFactory.getLog(ApplicationDeploymentServiceComponent.class);
 
     protected void activate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
-            log.debug("Activated ArtifactDeploymentServiceComponent");
+            log.debug("Activated ApplicationDeploymentServiceComponent");
         }
     }
 
     protected void deactivate(ComponentContext ctxt) {
         if (log.isDebugEnabled()) {
-            log.debug("Deactivated ArtifactDeploymentServiceComponent");
+            log.debug("Deactivated ApplicationDeploymentServiceComponent");
         }
     }
 

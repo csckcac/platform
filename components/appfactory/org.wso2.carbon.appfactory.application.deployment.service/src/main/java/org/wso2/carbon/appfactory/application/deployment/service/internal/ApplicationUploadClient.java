@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package org.wso2.carbon.appfactory.artifact.deployment.service;
+package org.wso2.carbon.appfactory.application.deployment.service.internal;
 
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -23,12 +23,12 @@ import org.wso2.carbon.application.mgt.stub.upload.CarbonAppUploaderStub;
 import org.wso2.carbon.application.mgt.stub.upload.types.carbon.UploadedFileItem;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 
-public class ArtifactUploadClient {
+public class ApplicationUploadClient {
 
     private String authCookie;
     private String backendServerURL;
 
-    public ArtifactUploadClient(String backendServerURL) {
+    public ApplicationUploadClient(String backendServerURL) {
         if (!backendServerURL.endsWith("/")) {
             backendServerURL += "/";
         }

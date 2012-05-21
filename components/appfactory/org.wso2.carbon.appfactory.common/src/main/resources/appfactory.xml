@@ -68,7 +68,7 @@
         <ReadWritePermissionName>RW</ReadWritePermissionName>
     </RepositoryMGTConfig>
 
-    <!--This element defines the set of staging servers, where the project artifacts are deployed. -->
+    <!--This element defines the set of staging servers, where the project applications are deployed. -->
     <ProjectDeployment>
         <DeploymentStage name="Development">
             <DeploymentServerURL>

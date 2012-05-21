@@ -16,37 +16,22 @@
 
 package org.wso2.carbon.policyeditor;
 
-import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
-import org.wso2.carbon.utils.WSO2Constants;
 import org.w3c.dom.Document;
 
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-import java.net.URL;
-import java.net.URISyntaxException;
-import java.net.MalformedURLException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.File;
-import java.io.StringWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
+import java.net.URL;
 
 
 public class PolicyEditorService {
@@ -75,7 +60,7 @@ public class PolicyEditorService {
             InputStream in = url.openStream();
             BufferedReader dis =
                     new BufferedReader(new InputStreamReader(in));
-            StringBuffer fBuf = new StringBuffer();
+            StringBuilder fBuf = new StringBuilder();
 
             String line = "";
             while ((line = dis.readLine()) != null) {

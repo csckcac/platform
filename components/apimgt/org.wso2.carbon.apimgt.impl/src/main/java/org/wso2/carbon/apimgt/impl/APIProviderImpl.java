@@ -15,6 +15,7 @@ import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
+import org.wso2.carbon.registry.common.CommonConstants;
 import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
@@ -540,10 +541,12 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             registry.put(artifactPath, resource);
             //create the wsdl in registry . if  failed we ignore after logging the error.
             if (api.getWsdlUrl() != null && !"".equals(api.getWsdlUrl())) {
-                APIUtil.createWSDL(api.getWsdlUrl());
+                String path = APIUtil.createWSDL(api.getWsdlUrl());
+                registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);
             }
             if(api.getUrl() !=null && !"".equals(api.getUrl())){
-                APIUtil.createEndpoint(api.getUrl());
+                String path = APIUtil.createEndpoint(api.getUrl());
+                registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);
             }
         } catch (RegistryException e) {
             handleException("Error while adding API", e);

@@ -363,8 +363,9 @@ public final class APIUtil {
      * @param wsdlUrl  wsdl url
      * @throws APIManagementException  if failed to create WSDL in registry.
      */
-    public static void createWSDL(String wsdlUrl) throws APIManagementException {
+    public  static String  createWSDL(String wsdlUrl) throws APIManagementException {
         WsdlManager wsdlManager;
+        String path = null;
         try {
             String user = CarbonContext.getCurrentContext().getUsername();
             //TODO should be remove, currently apiprovider is not a part of carbon therefore user is null.
@@ -374,6 +375,7 @@ public final class APIUtil {
             wsdlManager = new WsdlManager(registry1);
             Wsdl wsdl = wsdlManager.newWsdl(wsdlUrl);
             wsdlManager.addWsdl(wsdl);
+            path =  GovernanceUtils.getArtifactPath(registry1,wsdl.getId());
         } catch (GovernanceException e) {
             String msg = "Failed to add wsdl " + wsdlUrl + " to registry ";
             log.error(msg, e);
@@ -381,6 +383,7 @@ public final class APIUtil {
             String msg = "Faild to initialize gov registry for wsdl import";
             log.error(msg, e);
         }
+        return path;
     }
 
     /**
@@ -389,19 +392,22 @@ public final class APIUtil {
      * @param endpointUrl Endpoint url
      * @throws org.wso2.carbon.apimgt.api.APIManagementException failed to add endpoint
      */
-    public static void createEndpoint(String endpointUrl) throws APIManagementException{
+    public static String createEndpoint(String endpointUrl) throws APIManagementException{
         String user = CarbonContext.getCurrentContext().getUsername();
         //TODO Remove
         user = "admin";
+        String path = null;
         try {
             Registry registry = ServiceReferenceHolder.getInstance().getRegistryService().
                     getGovernanceUserRegistry(user);
             EndpointManager endpointManager = new EndpointManager(registry);
             Endpoint endpoint = endpointManager.newEndpoint(endpointUrl);
             endpointManager.addEndpoint(endpoint);
+            path = GovernanceUtils.getArtifactPath(registry,endpoint.getId());
         } catch (RegistryException e) {
             String msg = "Failed to import endpoint "+ endpointUrl +" to registry ";
             log.error(msg ,e);
         }
+        return path;
     }
 }

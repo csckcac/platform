@@ -933,37 +933,6 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionUserUsage(String providerName, String APIname, String serverURL)
-            throws ScriptException {
-        List<ProviderAPIVersionUserUsageDTO> list = null;
-        try {
-            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
-            list = client.getProviderAPIVersionUserUsage(providerName,APIname);
-        } catch (APIMgtUsageQueryServiceClientException e) {
-            log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIVersionUserUsage", e);
-        }
-        NativeArray myn = new NativeArray(0);
-        Iterator it = null;
-        if (list != null) {
-            it = list.iterator();
-        }
-        int i = 0;
-        if (it != null) {
-            while (it.hasNext()) {
-                NativeObject row = new NativeObject();
-                Object usageObject = it.next();
-                ProviderAPIVersionUserUsageDTO usage = (ProviderAPIVersionUserUsageDTO) usageObject;
-                row.put("version", row, usage.getVersion());
-                row.put("user", row, usage.getUser());
-                row.put("count", row, usage.getCount());
-                myn.put(i, myn, row);
-                i++;
-
-            }
-        }
-        return myn;
-    }
-
     public static NativeArray jsFunction_getProviderAPIUsage(String providerName, String serverURL) throws ScriptException {
         List<APIUsageDTO> list = null;
         try {
@@ -998,6 +967,35 @@ public class APIProviderHostObject extends ScriptableObject {
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
             list = client.getUsageBySubscribers(providerName, apiName, 10);
+        } catch (APIMgtUsageQueryServiceClientException e) {
+            log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIUserUsage", e);
+        }
+        NativeArray myn = new NativeArray(0);
+        Iterator it = null;
+        if (list != null) {
+            it = list.iterator();
+        }
+        int i = 0;
+        if (it != null) {
+            while (it.hasNext()) {
+                NativeObject row = new NativeObject();
+                Object usageObject = it.next();
+                PerUserAPIUsageDTO usage = (PerUserAPIUsageDTO) usageObject;
+                row.put("user", row, usage.getUsername());
+                row.put("count", row, usage.getCount());
+                myn.put(i, myn, row);
+                i++;
+            }
+        }
+        return myn;
+    }
+
+    public static NativeArray jsFunction_getProviderAPIVersionUserUsage(String providerName, String apiName, 
+                                                                        String version, String serverURL) throws ScriptException {
+        List<PerUserAPIUsageDTO> list = null;
+        try {
+            APIUsageStatisticsClient client = new APIUsageStatisticsClient();
+            list = client.getUsageBySubscribers(providerName, apiName, version, 10);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIUsageStatisticsClient for ProviderAPIUserUsage", e);
         }

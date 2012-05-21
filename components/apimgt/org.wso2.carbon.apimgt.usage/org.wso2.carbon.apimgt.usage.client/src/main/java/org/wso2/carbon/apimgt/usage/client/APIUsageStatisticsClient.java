@@ -24,7 +24,6 @@ import org.wso2.carbon.apimgt.api.APIConsumer;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.model.*;
-import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.usage.client.dto.*;
@@ -87,7 +86,7 @@ public class APIUsageStatisticsClient {
                 null);
         Collection<APIUsage> usageData = getUsageData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
-        Map<String,APIUsageDTO> usageByAPIs = new HashMap<String, APIUsageDTO>();
+        Map<String,APIUsageDTO> usageByAPIs = new TreeMap<String, APIUsageDTO>();
         for (APIUsage usage : usageData) {
             for (API providerAPI : providerAPIs) {
                 if (providerAPI.getId().getApiName().equals(usage.apiName) &&
@@ -133,7 +132,7 @@ public class APIUsageStatisticsClient {
                 compositeIndex);
         Collection<APIUsage> usageData = getUsageData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
-        Map<String,APIVersionUsageDTO> usageByVersions = new HashMap<String, APIVersionUsageDTO>();
+        Map<String,APIVersionUsageDTO> usageByVersions = new TreeMap<String, APIVersionUsageDTO>();
 
         for (APIUsage usage : usageData) {
             for (API providerAPI : providerAPIs) {
@@ -170,7 +169,7 @@ public class APIUsageStatisticsClient {
         Collection<APIResponseTime> responseTimes = getResponseTimeData(omElement);
         List<API> providerAPIs = getAPIsByProvider(providerName);
         Map<String,Double> apiCumulativeServiceTimeMap = new HashMap<String,Double>();
-        Map<String,Long> apiUsageMap = new HashMap<String,Long>();
+        Map<String,Long> apiUsageMap = new TreeMap<String,Long>();
         for (APIResponseTime responseTime : responseTimes) {
             for (API providerAPI : providerAPIs) {
                 if (providerAPI.getId().getApiName().equals(responseTime.apiName) &&
@@ -263,7 +262,7 @@ public class APIUsageStatisticsClient {
                 APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
                 null);
         Map<String,Long> usageData = getUsageBySubscriber(omElement);
-        Map<String,PerUserAPIUsageDTO> usageByUsername = new HashMap<String, PerUserAPIUsageDTO>();
+        Map<String,PerUserAPIUsageDTO> usageByUsername = new TreeMap<String, PerUserAPIUsageDTO>();
         for (Map.Entry<String,Long> entry : usageData.entrySet()) {
             Subscriber subscriber = getUserByAPIKey(entry.getKey());
             if (subscriber != null) {
@@ -293,7 +292,7 @@ public class APIUsageStatisticsClient {
                 APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
                 null);
         Map<String,Long> usageData = getUsageBySubscriber(omElement);
-        Map<String,PerUserAPIUsageDTO> usageByUsername = new HashMap<String, PerUserAPIUsageDTO>();
+        Map<String,PerUserAPIUsageDTO> usageByUsername = new TreeMap<String, PerUserAPIUsageDTO>();
         for (Map.Entry<String,Long> entry : usageData.entrySet()) {
             Subscriber subscriber = getUserByAPIKey(entry.getKey());
             if (subscriber != null) {
@@ -347,61 +346,6 @@ public class APIUsageStatisticsClient {
         return usageData;
     }
 
-    public List<ProviderAPIVersionUserUsageDTO> getProviderAPIVersionUserUsage(String providerName, String apiName) throws APIMgtUsageQueryServiceClientException {
-        List<ProviderAPIVersionUserUsageDTO> result = new ArrayList<ProviderAPIVersionUserUsageDTO>();
-        OMElement omElement = null;
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("api");
-        compositeIndex[0].setRangeFirst(apiName);
-        compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
-        omElement = this.queryColumnFamily(APIUsageStatisticsClientConstants.API_VERSION_KEY_USAGE_SUMMARY_TABLE, APIUsageStatisticsClientConstants.API_VERSION_KEY_USAGE_SUMMARY_TABLE_INDEX, compositeIndex);
-        Set<String> versions = this.getAPIVersions(providerName, apiName);
-        Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
-        for (String version : versions) {
-            Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,version);
-            Map<String,Subscriber> subscriberMap = new HashMap<String, Subscriber>();
-            // Make sure the subscribers passed down from here are unique by name
-            for (Subscriber subscriber : subscribers) {
-                subscriberMap.put(subscriber.getName(), subscriber);
-            }
-            for (Subscriber subscriber : subscriberMap.values()) {
-                subscribedAPIs.addAll(this.getSubscribedIdentifiers(subscriber, providerName, apiName, version));
-            }
-        }
-
-        for (SubscribedAPI subscribedAPI : subscribedAPIs) {
-            OMElement rowsElement = omElement.getFirstChildWithName(
-                    new QName(APIUsageStatisticsClientConstants.ROWS));
-            Iterator rowIterator = rowsElement.getChildrenWithName(
-                    new QName(APIUsageStatisticsClientConstants.ROW));
-            while (rowIterator.hasNext()){
-                OMElement row = (OMElement)rowIterator.next();
-                if (row.getFirstChildWithName(new QName(APIUsageStatisticsClientConstants.VERSION)).
-                        getText().equals(subscribedAPI.getApiId().getVersion()) &&
-                        row.getFirstChildWithName(new QName(APIUsageStatisticsClientConstants.CONSUMER_KEY)).getText().equals(getProductionKey(subscribedAPI))){
-                    result.add(new ProviderAPIVersionUserUsageDTO(subscribedAPI.getApiId().getVersion(),
-                            subscribedAPI.getSubscriber().getName(), String.valueOf(
-                            (Float.valueOf(row.getFirstChildWithName(new QName(
-                                    APIUsageStatisticsClientConstants.REQUEST)).getText())).intValue())));
-                    break;
-                }
-            }
-        }
-        return result;
-    }
-
-    private String getProductionKey(SubscribedAPI api) {
-        // TODO: Remove this when the UI is improved to handle sand boxing (Hiranya)
-        List<APIKey> apiKeys = api.getKeys();
-        for (APIKey key : apiKeys) {
-            if (APIConstants.API_KEY_TYPE_PRODUCTION.equals(key.getType())) {
-                return key.getKey();
-            }
-        }
-        return null;
-    }
-
     private String getNextStringInLexicalOrder(String str) {
         if ((str == null) || (str.equals(""))) {
             return str;
@@ -426,48 +370,11 @@ public class APIUsageStatisticsClient {
         }
     }
 
-    private Set<String> getAPIVersions(String providerId,String apiName) throws APIMgtUsageQueryServiceClientException{
-        Set<String> temp_result = null;
-        Set<String> return_result = new HashSet<String>();
-        try {
-            temp_result = apiProviderImpl.getAPIVersions(providerId, apiName);
-        } catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while retrieving versions for " +
-                    providerId + "-" + apiName + " combination", e);
-        }
-        for(String version:temp_result){
-            return_result.add(version.substring(1));
-        }
-        return return_result;
-    }
-
-    private Set<Subscriber> getSubscribersOfAPI(String providerId, String apiName,
-                                                String version) throws APIMgtUsageQueryServiceClientException{
-        try {
-            return apiProviderImpl.getSubscribersOfAPI(new APIIdentifier(providerId,apiName,version));
-        } catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while getting subscribers for " +
-                    providerId + "-" + apiName + "-" + version + " combination", e);
-        }
-    }
-
     private List<API> getAPIsByProvider(String providerId) throws APIMgtUsageQueryServiceClientException{
         try {
             return apiProviderImpl.getAPIsByProvider(providerId);
         } catch (APIManagementException e) {
             throw new APIMgtUsageQueryServiceClientException("Error while retrieving APIs by " + providerId, e);
-        }
-    }
-
-    private Set<SubscribedAPI> getSubscribedIdentifiers(Subscriber subscriber, String providerName, 
-                                                        String apiName, String version) throws APIMgtUsageQueryServiceClientException{
-        APIIdentifier apiIdentifier = new APIIdentifier(providerName, apiName, version);
-        try {
-            return apiConsumerImpl.getSubscribedIdentifiers(subscriber, apiIdentifier);
-        } catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while getting subscribedAPIs " +
-                    "for " + subscriber.getName() + "-" + providerName + "-" + apiName + "-" + 
-                    version + " combination", e);
         }
     }
     

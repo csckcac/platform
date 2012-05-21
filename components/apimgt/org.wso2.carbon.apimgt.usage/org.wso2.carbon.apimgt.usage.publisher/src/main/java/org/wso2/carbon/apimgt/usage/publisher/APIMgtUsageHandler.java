@@ -116,10 +116,10 @@ public class APIMgtUsageHandler extends AbstractHandler {
     }
 
     private String extractResource(MessageContext mc){
-        String resource = null;
+        String resource = "/";
         Pattern pattern = Pattern.compile("^/.+?/.+?([/?].+)$");
         Matcher matcher = pattern.matcher((String) mc.getProperty(RESTConstants.REST_FULL_REQUEST_PATH));
-        if(matcher.find()){
+        if (matcher.find()){
             resource = matcher.group(1);
         }
         return resource;

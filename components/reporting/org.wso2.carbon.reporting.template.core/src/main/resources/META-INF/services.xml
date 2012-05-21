@@ -27,7 +27,7 @@
          <parameter name="enableMTOM" locked="false">true</parameter>
     </service>
 
-    <parameter name="adminService" locked="true">false</parameter>
+    <parameter name="adminService" locked="true">true</parameter>
     <parameter name="hiddenService" locked="true">true</parameter>
     <parameter name="AuthorizationAction" locked="false">/permission/protected/manage</parameter>
 </serviceGroup>

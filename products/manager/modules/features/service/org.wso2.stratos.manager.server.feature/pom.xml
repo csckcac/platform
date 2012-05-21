@@ -38,26 +38,6 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.billing.core</artifactId>
-		<version>${stratos.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.throttling.agent</artifactId>
-	     <version>${stratos.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.throttling.manager</artifactId>
-	     <version>${stratos.version}</version>        
-	</dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.billing.mgt</artifactId>
-		<version>${stratos.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.account.mgt</artifactId>
         </dependency>
         <dependency>
@@ -115,46 +95,6 @@
             <groupId>org.opensymphony.wso2</groupId>
             <artifactId>quartz</artifactId>
 	<version>${quartz.wso2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rulecep.commons</artifactId>
-		<version>${wso2carbon.version}</version>
-        </dependency>
-       <dependency>
-           <groupId>org.wso2.carbon</groupId>
-           <artifactId>org.wso2.carbon.rulecep.adapters</artifactId>
-	<version>${wso2carbon.version}</version>
-       </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.core</artifactId>
-	<version>${wso2carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.server</artifactId>
-	<version>${wso2carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.engine.drools</artifactId>
-	<version>${wso2carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.engine.jsr94</artifactId>
-	<version>${wso2carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.drools.wso2</groupId>
-            <artifactId>drools</artifactId>
-            <version>5.0.1.wso2v1</version>
-        </dependency>
-        <dependency>
-            <groupId>jsr94.wso2</groupId>
-            <artifactId>jsr94</artifactId>
-            <version>1.1.0.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>org.mvel.wso2</groupId>
@@ -250,16 +190,8 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.rulecep.commons</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rulecep.adapters</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rule.core</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rule.server</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rule.engine.drools</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rule.engine.jsr94</bundleDef>-->
                                 <bundleDef>org.opensymphony.wso2:quartz</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.task</bundleDef>
-                                <!--<bundleDef>org.drools.wso2:drools</bundleDef>
-                                <bundleDef>jsr94.wso2:jsr94</bundleDef>-->
                                 <bundleDef>org.mvel.wso2:mvel2</bundleDef>
                                 <bundleDef>joda-time.wso2:joda-time</bundleDef>
                                 <bundleDef>antlr.wso2:antlr</bundleDef>
@@ -271,44 +203,27 @@
                                 <bundleDef>org.apache.synapse:synapse-commons</bundleDef>
                                 <bundleDef>org.apache.synapse:synapse-extensions</bundleDef>
                                 <bundleDef>org.apache.synapse:synapse-tasks</bundleDef>
-                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.core</bundleDef>-->
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.payment.paypal:${stratos.version}</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.business.messaging.paypal.integration.core:${carbon.version}</bundleDef>
 				
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.stratos.common</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.email.sender</bundleDef>
-                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.mgt</bundleDef>-->
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.account.mgt</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt.core</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.theme.mgt</bundleDef>
-								<!--<bundleDef>org.wso2.carbon:org.wso2.carbon.migration</bundleDef>-->
-                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.upgrade</bundleDef>-->
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.validate.domain</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification</bundleDef>
                                 <bundleDef>org.wso2.manager:org.wso2.stratos.manager.services.mgt</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.reg.agent.client</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.keystore.mgt</bundleDef>
-                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.agent</bundleDef>-->
-                                <!--bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.core</bundleDef-->
-                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.manager</bundleDef>-->
                                 <bundleDef>kaptcha.wso2:kaptcha</bundleDef>
                                 <!-- stubs -->
-                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.agent.stub:${carbon.version}</bundleDef>-->
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.reg.agent.stub:${carbon.version}</bundleDef>
                             </bundles>
                             <importFeatures>
-				<!--<importFeatureDef>org.wso2.carbon.billing.server:${stratos.version}</importFeatureDef>-->
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.version}</importFeatureDef>
                                 <importFeatureDef>org.wso2.carbon.security.mgt:${carbon.version}</importFeatureDef>
-                                <!--<importFeatureDef>org.wso2.carbon.rule.service.server</importFeatureDef>-->
-                                <!--<importFeatureDef>org.wso2.carbon.rule.engine.drools</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.task.server</importFeatureDef>
-                                <importFeatureDef>org.apache.synapse.wso2:${synapse.version}</importFeatureDef>-->
-                                <!--<importFeatureDef>org.wso2.carbon.rule.engine.drools</importFeatureDef>-->
-
-                                <!-- <importFeatureDef>org.apache.synapse.wso2:${synapse.version}</importFeatureDef>
-                               <importFeatureDef>org.wso2.carbon.registry.core.server.feature</importFeatureDef>-->
                             </importFeatures>
                         </configuration>
                     </execution>

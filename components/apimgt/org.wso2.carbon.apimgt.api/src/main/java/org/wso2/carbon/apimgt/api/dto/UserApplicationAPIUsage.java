@@ -19,13 +19,17 @@ package org.wso2.carbon.apimgt.api.dto;
 
 import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class is used to transfer data for User/Keys UI in Provider view.
  */
 public class UserApplicationAPIUsage {
+
     private String userId;
     private String applicationName;
-    private APIIdentifier[] apiIdentifiers;
+    private List<APIIdentifier> apiIdentifiers = new ArrayList<APIIdentifier>();
 
     public String getUserId() {
         return userId;
@@ -44,10 +48,10 @@ public class UserApplicationAPIUsage {
     }
 
     public APIIdentifier[] getApiIdentifiers() {
-        return apiIdentifiers;
+        return apiIdentifiers.toArray(new APIIdentifier[apiIdentifiers.size()]);
     }
 
-    public void setApiIdentifiers(APIIdentifier[] apiIdentifiers) {
-        this.apiIdentifiers = apiIdentifiers;
+    public void addApiIdentifier(APIIdentifier apiIdentifier) {
+        apiIdentifiers.add(apiIdentifier);
     }
 }

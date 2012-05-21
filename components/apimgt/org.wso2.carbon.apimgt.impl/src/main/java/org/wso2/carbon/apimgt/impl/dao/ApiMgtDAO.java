@@ -1101,7 +1101,6 @@ public class ApiMgtDAO {
      */
     public UserApplicationAPIUsage[] getAllAPIUsageByProvider(String providerName) throws APIManagementException {
 
-        UserApplicationAPIUsage[] userApplicationAPIUsages = null;
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet result = null;
@@ -1131,41 +1130,23 @@ public class ApiMgtDAO {
             ps.setString(1, providerName + "%");
             result = ps.executeQuery();
 
-            ArrayList<UserApplicationAPIUsage> usages = new ArrayList<UserApplicationAPIUsage>();
-            UserApplicationAPIUsage userApplicationAPIUsage = null;
-            String appName = "";
-            String currentAppName;
-            ArrayList<APIIdentifier> apiIdentifiers = new ArrayList<APIIdentifier>();
+            Map<String,UserApplicationAPIUsage> userApplicationUsages = new TreeMap<String, UserApplicationAPIUsage>();
             while (result.next()) {
-                currentAppName = result.getString("APPNAME");
-
-                if (!currentAppName.equals(appName)) {
-                    if (userApplicationAPIUsage != null) {
-                        userApplicationAPIUsage.setApiIdentifiers(apiIdentifiers.toArray(new APIIdentifier[apiIdentifiers.size()]));
-                        usages.add(userApplicationAPIUsage);
-                    }
-                    userApplicationAPIUsage = new UserApplicationAPIUsage();
-                    apiIdentifiers = new ArrayList<APIIdentifier>();
-
-                    appName = currentAppName;
-                    userApplicationAPIUsage.setUserId(result.getString("USER_ID"));
-                    userApplicationAPIUsage.setApplicationName(appName);
-                    APIIdentifier apiIdentifier = new APIIdentifier(result.getString("API_ID"));
-                    apiIdentifiers.add(apiIdentifier);
-                } else {
-                    APIIdentifier apiIdentifier = new APIIdentifier(result.getString("API_ID"));
-                    apiIdentifiers.add(apiIdentifier);
+                String userId = result.getString("USER_ID");
+                String application = result.getString("APPNAME");
+                String key = userId + "::" + application;
+                UserApplicationAPIUsage usage = userApplicationUsages.get(key);
+                if (usage == null) {
+                    usage = new UserApplicationAPIUsage();
+                    usage.setUserId(userId);
+                    usage.setApplicationName(application);
+                    userApplicationUsages.put(key, usage);
                 }
+                
+                usage.addApiIdentifier(new APIIdentifier(result.getString("API_ID")));
             }
-            if (userApplicationAPIUsage != null) {
-                //Add the last item
-                userApplicationAPIUsage.setApiIdentifiers(apiIdentifiers.toArray(new APIIdentifier[apiIdentifiers.size()]));
-                usages.add(userApplicationAPIUsage);
-            }
-            if (usages != null) {
-                userApplicationAPIUsages = usages.toArray(new UserApplicationAPIUsage[usages.size()]);
-            }
-            return userApplicationAPIUsages;
+            return userApplicationUsages.values().toArray(
+                    new UserApplicationAPIUsage[userApplicationUsages.size()]);
 
         } catch (SQLException e) {
             String msg = "Failed to find API Usage for :" + providerName;

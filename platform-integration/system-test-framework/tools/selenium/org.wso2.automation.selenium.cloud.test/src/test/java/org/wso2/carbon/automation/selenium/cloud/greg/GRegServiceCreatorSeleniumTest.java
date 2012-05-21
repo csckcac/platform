@@ -18,7 +18,6 @@
 package org.wso2.carbon.automation.selenium.cloud.greg;
 
 import com.thoughtworks.selenium.Selenium;
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -78,10 +77,10 @@ public class GRegServiceCreatorSeleniumTest {
             deleteService();
             userLogout();
             log.info("*********GReg Stratos - Add Simple Service Test - Passed****************");
-        } catch (AssertionFailedError e) {
+        } catch (AssertionError e) {
             log.info("Add Simple Service Test Failed :" + e);
             userLogout();
-            throw new AssertionFailedError("Add Simple Service Test Failed :" + e);
+            throw new AssertionError("Add Simple Service Test Failed :" + e);
         } catch (WebDriverException e) {
             log.info("Add Simple Service Test Failed :" + e);
             userLogout();

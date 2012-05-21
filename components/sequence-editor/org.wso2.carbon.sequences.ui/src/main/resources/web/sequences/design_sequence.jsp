@@ -722,13 +722,13 @@
 
                                 <div style="margin-top:0px;">
 
-                            <table id="propertytable" style="<%=propertyTableStyle%>" class="styledInner">
+                            <table id="templatePropertyTable" style="<%=propertyTableStyle%>" class="styledInner">
                                 <thead>
                                     <tr>
                                         <th width="75%"><fmt:message key="template.parameter.name"/></th>
                                         <th><fmt:message key="template.parameter.action"/></th>
                                     </tr>
-                                    <tbody id="propertytbody">
+                                    <tbody id="templatePropertyBody">
                                         <%
                                                 int i = 0;
 
@@ -737,8 +737,8 @@
                                                     String paramName = params.next();
 
                                         %>
-                                                    <tr id="propertyRaw<%=i%>">
-                                                        <td><input type="text" name="propertyName<%=i%>" id="propertyName<%=i%>"
+                                                    <tr id="templatePropertyRaw<%=i%>">
+                                                        <td><input type="text" name="templatePropertyName<%=i%>" id="templatePropertyName<%=i%>"
                                                                    class="esb-edit small_textbox"
                                                                    value="<%=paramName%>"/>
                                                         </td>
@@ -750,7 +750,7 @@
                                                 <%
                                                     i++;
                                                 }%>
-                                                <input type="hidden" name="propertyCount" id="propertyCount" value="<%=i%>"/>
+                                                <input type="hidden" name="templatePropertyCount" id="templatePropertyCount" value="<%=i%>"/>
 
                                             </tbody>
                                         </thead>
@@ -762,10 +762,10 @@
         <tr>
             <td>
                 <div style="margin-top:10px;">
-                    <a name="addNameLink"></a>
+                    <a name="addParamLink"></a>
                     <a class="add-icon-link"
-                       href="#addNameLink"
-                       onclick="addParameter()"><fmt:message key="template.parameter.add"/></a>
+                       href="#addParamLink"
+                       onclick="addTemplateParameter()"><fmt:message key="template.parameter.add"/></a>
                 </div>
             </td>
         </tr>

@@ -27,7 +27,6 @@ import org.wso2.carbon.billing.core.BillingManager;
 import org.wso2.carbon.billing.core.dataobjects.Customer;
 import org.wso2.carbon.billing.core.dataobjects.Item;
 import org.wso2.carbon.billing.core.dataobjects.Subscription;
-import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -446,13 +445,13 @@ public class Util {
      *
      * @throws Exception, if loading the throttling rules failed.
      */
-    public static void loadTrottlingRules() throws Exception {
+    public static void loadThrottlingRules() throws Exception {
         UserRegistry systemRegistry = getSuperTenantGovernanceSystemRegistry();
         if (systemRegistry.resourceExists(StratosConstants.THROTTLING_RULES_PATH)) {
             return;
         }
         String throttlingRuleFile = CarbonUtils.getCarbonConfigDirPath() +
-                RegistryConstants.PATH_SEPARATOR + THROTTLING_RULE_FILE;
+                File.pathSeparator + THROTTLING_RULE_FILE;
         byte[] content = CarbonUtils.getBytesFromFile(new File(throttlingRuleFile));
         Resource ruleResource = systemRegistry.newResource();
         ruleResource.setContent(content);

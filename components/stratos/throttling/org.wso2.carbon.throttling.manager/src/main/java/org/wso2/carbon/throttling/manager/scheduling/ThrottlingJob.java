@@ -62,8 +62,9 @@ public class ThrottlingJob implements Job {
             //updating the rule. this is important if we are having more than one managers running
             ruleInvoker.updateRules();
             ruleInvoker.invoke(knowledgeBase);
+            log.info("Throttling rules executed successfully");
         } catch (ThrottlingException e) {
-            String msg = "Error in invoking the ruleInvoker.";
+            String msg = "Error in invoking the throttling rule invoker.";
             log.error(msg, e);
             throw new JobExecutionException(msg, e);
         }
@@ -73,7 +74,7 @@ public class ThrottlingJob implements Job {
             try {
                 ValidationInfoManager.persistValidationDetails(dataContext);
             } catch (ThrottlingException e) {
-                String msg = "Error in persisting validation details. tenant id: " + tenantId + ".";
+                String msg = "Error in persisting validation details. Tenant id: " + tenantId + ".";
                 log.error(msg, e);
                 throw new JobExecutionException(msg, e);
             }

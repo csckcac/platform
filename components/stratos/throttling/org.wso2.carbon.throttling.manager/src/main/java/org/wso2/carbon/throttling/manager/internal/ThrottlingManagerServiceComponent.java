@@ -60,7 +60,7 @@ public class ThrottlingManagerServiceComponent {
     protected void activate(ComponentContext context) {
         try {
             Util.setBundleContext(context.getBundleContext());
-            Util.loadTrottlingRules();
+            Util.loadThrottlingRules();
             Util.registerThrottlingRuleInvoker();
             Util.initializeThrottling();
             log.debug(" Multitenancy Throttling Manager bundle is activated ");

@@ -2,13 +2,11 @@ package org.wso2.platform.test.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jacoco.core.runtime.IRuntime;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.wso2.platform.test.core.utils.UnknownArtifactTypeException;
-import org.wso2.platform.test.core.utils.coverageutils.CollectCoverageData;
 import org.wso2.platform.test.core.utils.reportutills.CustomTestngReportSetter;
 
 import java.util.ArrayList;
@@ -17,8 +15,8 @@ import java.util.List;
 public class PlatformTestManager implements ITestListener {
 
     private static ArtifactManager artifactManager;
-    IRuntime runtime;
-    String className;
+   // IRuntime runtime;
+  //  String className;
     List<String> classList = new ArrayList<String>();
     private static final Log log = LogFactory.getLog(PlatformTestManager.class);
 
@@ -126,7 +124,7 @@ public class PlatformTestManager implements ITestListener {
      * Configuration methods have been called.
      */
     public void onFinish(ITestContext context) {
-        CollectCoverageData collectCoverageData = new CollectCoverageData();
+      //  CollectCoverageData collectCoverageData = new CollectCoverageData();
         // for(String className2:classList)
         // {
         //   collectCoverageData.CollectData(runtime,classList);

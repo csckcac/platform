@@ -1,6 +1,7 @@
 <%
+     include('../config_reader.jag');
     //var registry = new Registry("SYSTEM_CONFIGURATION");
-	var registry = new MetadataStore("admin", "admin");
+	var registry = new MetadataStore(getProperty('adminUserName'),getProperty('adminPassword'));
 
     // checks whether any resource exists in the given path
     function resourceExists(path) {

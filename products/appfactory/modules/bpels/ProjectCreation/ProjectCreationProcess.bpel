@@ -5,9 +5,10 @@
          suppressJoinFailure="yes"
          xmlns:tns="http://wso2.org/bps/createProject"
          xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
-         xmlns:ns="http://internal.mgt.project.appfactory.carbon.wso2.org" xmlns:xsd="http://service.mgt.project.appfactory.carbon.wso2.org/xsd">
+         xmlns:ns="http://internal.mgt.project.appfactory.carbon.wso2.org" xmlns:xsd="http://service.mgt.project.appfactory.carbon.wso2.org/xsd" xmlns:ns0="http://services.mgt.tenant.carbon.wso2.org">
 
     <!-- Import the client WSDL -->
+    <bpel:import namespace="http://services.mgt.tenant.carbon.wso2.org" location="TenantMgtAdminService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
     <bpel:import namespace="http://internal.mgt.project.appfactory.carbon.wso2.org" location="ProjectManagementService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"></bpel:import>
     <bpel:import location="ProjectCreationProcessArtifacts.wsdl" namespace="http://wso2.org/bps/createProject" 
 	        importType="http://schemas.xmlsoap.org/wsdl/" />
@@ -23,6 +24,7 @@
                      myRole="ProjectCreationProcessProvider"
                      />
         <bpel:partnerLink name="ProjectMgtServicePL" partnerLinkType="tns:ProjectMgtPLType" partnerRole="ProjectMgtRole"></bpel:partnerLink>
+        <bpel:partnerLink name="TenantMgtAdminServicePL" partnerLinkType="tns:TenantMgtAdminServicePLType" partnerRole="TenatMgtAdmin"></bpel:partnerLink>
     </bpel:partnerLinks>
   
     <!-- ================================================================= -->         
@@ -43,6 +45,8 @@
         <bpel:variable name="ProjectMgtServicePLRequest" messageType="ns:createProjectRequest"></bpel:variable>
         <bpel:variable name="ProjectMgtServicePLResponse1" messageType="ns:isProjectKeyAvailableResponse"></bpel:variable>
         <bpel:variable name="ProjectMgtServicePLRequest1" messageType="ns:isProjectKeyAvailableRequest"></bpel:variable>
+        <bpel:variable name="TenantMgtAdminServicePLResponse" messageType="ns0:getTenantResponse"></bpel:variable>
+        <bpel:variable name="TenantMgtAdminServicePLRequest" messageType="ns0:getTenantRequest"></bpel:variable>
     </bpel:variables>
 
     <!-- ================================================================= -->         
@@ -74,9 +78,9 @@
                     </bpel:to>
                 </bpel:copy>
             </bpel:assign>
-            <bpel:invoke name="Invoke-ProjectMgt-Service" partnerLink="ProjectMgtServicePL" operation="isProjectKeyAvailable" portType="ns:ProjectManagementServicePortType" inputVariable="ProjectMgtServicePLRequest1" outputVariable="ProjectMgtServicePLResponse1"></bpel:invoke>
+            <bpel:invoke name="Invoke-ProjectMgt-Service" partnerLink="TenantMgtAdminServicePL" operation="getTenant" portType="ns0:TenantMgtAdminServicePortType" inputVariable="TenantMgtAdminServicePLRequest" outputVariable="TenantMgtAdminServicePLResponse"></bpel:invoke>
             <bpel:if name="IfProjectKeyAvailableToRegister">
-                <bpel:condition><![CDATA[$ProjectMgtServicePLResponse1.parameters/ns:return="false"]]></bpel:condition>
+                <bpel:condition><![CDATA[$TenantMgtAdminServicePLResponse.parameters/ns0:return=count(-1)]]></bpel:condition>
                 <bpel:sequence name="Sequence-Success">
                     <bpel:assign validate="no" name="initialize-projectInfo">
                         <bpel:copy>

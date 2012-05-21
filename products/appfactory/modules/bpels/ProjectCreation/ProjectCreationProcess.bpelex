@@ -18,7 +18,7 @@
   </extensions>
   <extensions>
     <extendedObject href="ProjectCreationProcess.bpel#/"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1336483892000"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1337354903000"/>
   </extensions>
   <extensions>
     <extendedObject href="ProjectCreationProcess.bpel#//@activity/@activities.1/@activities.0"/>
@@ -115,5 +115,13 @@
   <extensions>
     <extendedObject href="ProjectCreationProcess.bpel#//@activity/@activities.1/@activities.2/@activity/@activities.2/@copy.0"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="ProjectCreationProcess.bpel#//@variables/@children.6"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="ProjectCreationProcess.bpel#//@variables/@children.7"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
   </extensions>
 </extensionmodel:ExtensionMap>

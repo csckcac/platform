@@ -214,7 +214,7 @@ public class DSSDatabaseExplorerSeleniumTest {
                             isDriverTextFound = true;
                             Assert.assertTrue((input.getAttributeValue(new QName("value")) == null ||
                                                input.getAttributeValue(new QName("value")).equalsIgnoreCase("")),
-                                              "Critical Security Issue. Driver name cashed in page source");
+                                              "Driver name cashed in page source");
                         }
                     }
 

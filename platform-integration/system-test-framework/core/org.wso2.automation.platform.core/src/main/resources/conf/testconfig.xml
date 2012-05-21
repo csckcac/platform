@@ -739,6 +739,20 @@
         </products>
     </scenario>
 
+    <scenario testName="org.wso2.automation.common.test.dss.service.OutputMappingAsAttributeDataServiceTest">
+            <products>
+                <product name="DSS">
+                    <artifacts userId="3">
+                        <artifact name="OutputMappingAttributeDataService.dbs" type="dbs" location="rdbms/MySql">
+                            <dependency name="CreateTables.sql" dependencyType="sql"
+                                        location="sql/MySql"/>
+                            <dependency name="Offices.sql" dependencyType="sql" location="sql/MySql"/>
+                        </artifact>
+                    </artifacts>
+                </product>
+            </products>
+        </scenario>
+
     <scenario testName="org.wso2.automation.common.test.esb.mediators.test.MediatorTest">
         <products>
             <product name="AS">

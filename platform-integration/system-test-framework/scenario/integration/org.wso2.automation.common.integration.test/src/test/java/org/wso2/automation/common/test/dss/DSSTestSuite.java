@@ -23,6 +23,7 @@ import org.wso2.automation.common.test.dss.faultyservice.InvalidClosingTagFaulty
 import org.wso2.automation.common.test.dss.fileservice.CSVSampleServiceTest;
 import org.wso2.automation.common.test.dss.fileservice.ExcelSampleServiceTest;
 import org.wso2.automation.common.test.dss.rssmanager.RSSManagerTest;
+import org.wso2.automation.common.test.dss.service.OutputMappingAsAttributeDataServiceTest;
 import org.wso2.automation.common.test.dss.syntax.ReturnRequestStatusTest;
 import org.wso2.automation.common.test.dss.syntax.WhiteSpaceWithQueryParamsTest;
 import org.wso2.platform.test.core.ProductConstant;
@@ -81,6 +82,7 @@ public class DSSTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("EditFaultyDataServiceTest", EditFaultyDataServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("ReturnRequestStatusTest", ReturnRequestStatusTest.class));
         suiteVariablesList.add(new SuiteVariables("WhiteSpaceWithQueryParamsTest", WhiteSpaceWithQueryParamsTest.class));
+        suiteVariablesList.add(new SuiteVariables("OutputMappingAsAttributeDataServiceTest", OutputMappingAsAttributeDataServiceTest.class));
 
         if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             suiteVariablesList.add(new SuiteVariables("RSSManager", RSSManagerTest.class));

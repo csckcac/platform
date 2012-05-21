@@ -66,7 +66,7 @@
 		<module>andes</module>
 		<module>closure-js-plugin</module>
                 <module>snappy-java</module>
-		<module>hive</module>
+		<!--<module>hive</module>-->
 		<module>hadoop</module>
 		<module>datanucleus</module>
 		<!-- orbit/modules -->
@@ -94,7 +94,7 @@
 		<module>orbit/andes</module>
 		<module>orbit/andes-client</module>
 		<module>orbit/snappy-java</module>
-		<module>orbit/hive</module>
+		<!--<module>orbit/hive</module>-->
 		<module>orbit/datanucleus-core</module>
 		<module>orbit/hadoop-core</module>
 	     </modules>

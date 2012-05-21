@@ -174,7 +174,8 @@ public class APIUsageStatisticsClient {
         for (APIResponseTime responseTime : responseTimes) {
             for (API providerAPI : providerAPIs) {
                 if (providerAPI.getId().getApiName().equals(responseTime.apiName) &&
-                        providerAPI.getId().getVersion().equals(responseTime.apiVersion)) {
+                        providerAPI.getId().getVersion().equals(responseTime.apiVersion) &&
+                        providerAPI.getContext().equals(responseTime.context)) {
                     Double cumulativeResponseTime = apiCumulativeServiceTimeMap.get(responseTime.apiName);
                     if (cumulativeResponseTime != null) {
                         apiCumulativeServiceTimeMap.put(responseTime.apiName,
@@ -219,16 +220,13 @@ public class APIUsageStatisticsClient {
                 APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE_INDEX,
                 null);
         Collection<APIAccessTime> accessTimes = getAccessTimeData(omElement);
-        List<API> providerAPIs = getAPIsByProvider(providerName);
         Map<String,APIAccessTime> lastAccessTimes = new TreeMap<String,APIAccessTime>();
         for (APIAccessTime accessTime : accessTimes) {
-            for (API providerAPI : providerAPIs) {
-                if (providerAPI.getId().getApiName().equals(accessTime.apiName) &&
-                        providerAPI.getId().getVersion().equals(accessTime.apiVersion)) {
-                    APIAccessTime lastAccessTime = lastAccessTimes.get(accessTime.apiName);
-                    if (lastAccessTime == null || lastAccessTime.accessTime < accessTime.accessTime) {
-                        lastAccessTimes.put(accessTime.apiName, accessTime);
-                    }
+            APIIdentifier api = getAPIByConsumerKey(accessTime.apiKey);
+            if (api.getProviderName().equals(providerName)) {
+                APIAccessTime lastAccessTime = lastAccessTimes.get(accessTime.apiName);
+                if (lastAccessTime == null || lastAccessTime.accessTime < accessTime.accessTime) {
+                    lastAccessTimes.put(accessTime.apiName, accessTime);
                 }
             }
         }
@@ -269,7 +267,7 @@ public class APIUsageStatisticsClient {
         for (Map.Entry<String,Long> entry : usageData.entrySet()) {
             Subscriber subscriber = getUserByAPIKey(entry.getKey());
             if (subscriber != null) {
-                APIIdentifier apiId = getAPI(entry.getKey());
+                APIIdentifier apiId = getAPIByConsumerKey(entry.getKey());
                 if (apiId.getApiName().equals(apiName) &&
                         apiId.getProviderName().equals(providerName)) {
                     PerUserAPIUsageDTO usageDTO = usageByUsername.get(subscriber.getName());
@@ -299,7 +297,7 @@ public class APIUsageStatisticsClient {
         for (Map.Entry<String,Long> entry : usageData.entrySet()) {
             Subscriber subscriber = getUserByAPIKey(entry.getKey());
             if (subscriber != null) {
-                APIIdentifier apiId = getAPI(entry.getKey());
+                APIIdentifier apiId = getAPIByConsumerKey(entry.getKey());
                 if (apiId.getApiName().equals(apiName) &&
                         apiId.getProviderName().equals(providerName) &&
                         apiId.getVersion().equals(apiVersion)) {
@@ -349,11 +347,6 @@ public class APIUsageStatisticsClient {
         return usageData;
     }
 
-    /**
-     * This method can be used to get total request count for each combination of API version and subscriber for provider.
-     * @return  List<ProviderAPIVersionUserUsageDTO>
-     * @throws APIMgtUsageQueryServiceClientException
-     */
     public List<ProviderAPIVersionUserUsageDTO> getProviderAPIVersionUserUsage(String providerName, String apiName) throws APIMgtUsageQueryServiceClientException {
         List<ProviderAPIVersionUserUsageDTO> result = new ArrayList<ProviderAPIVersionUserUsageDTO>();
         OMElement omElement = null;
@@ -439,7 +432,8 @@ public class APIUsageStatisticsClient {
         try {
             temp_result = apiProviderImpl.getAPIVersions(providerId, apiName);
         } catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while retrieving versions for "+providerId+"-"+apiName+" combination", e);
+            throw new APIMgtUsageQueryServiceClientException("Error while retrieving versions for " +
+                    providerId + "-" + apiName + " combination", e);
         }
         for(String version:temp_result){
             return_result.add(version.substring(1));
@@ -447,14 +441,14 @@ public class APIUsageStatisticsClient {
         return return_result;
     }
 
-    private Set<Subscriber> getSubscribersOfAPI(String providerId,String apiName, String version) throws APIMgtUsageQueryServiceClientException{
-        Set<Subscriber> subscribers = null;
+    private Set<Subscriber> getSubscribersOfAPI(String providerId, String apiName,
+                                                String version) throws APIMgtUsageQueryServiceClientException{
         try {
-            subscribers = apiProviderImpl.getSubscribersOfAPI(new APIIdentifier(providerId,apiName,version));
+            return apiProviderImpl.getSubscribersOfAPI(new APIIdentifier(providerId,apiName,version));
         } catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while getting subscribers for "+providerId+"-"+apiName+"-"+version+" combination", e);
+            throw new APIMgtUsageQueryServiceClientException("Error while getting subscribers for " +
+                    providerId + "-" + apiName + "-" + version + " combination", e);
         }
-        return subscribers;
     }
 
     private List<API> getAPIsByProvider(String providerId) throws APIMgtUsageQueryServiceClientException{
@@ -477,7 +471,7 @@ public class APIUsageStatisticsClient {
         }
     }
     
-    private APIIdentifier getAPI(String apiKey) throws APIMgtUsageQueryServiceClientException {
+    private APIIdentifier getAPIByConsumerKey(String apiKey) throws APIMgtUsageQueryServiceClientException {
         try {
             return apiConsumerImpl.getAPIByConsumerKey(apiKey);
         } catch (APIManagementException e) {
@@ -569,6 +563,7 @@ public class APIUsageStatisticsClient {
 
         private String apiName;
         private String apiVersion;
+        private String context;
         private double responseTime;
         private long responseCount;
 
@@ -578,6 +573,8 @@ public class APIUsageStatisticsClient {
             int index = nameVersion.lastIndexOf(":v");
             apiName = nameVersion.substring(0, index);
             apiVersion = nameVersion.substring(index + 2);
+            context = row.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.CONTEXT)).getText();
             responseTime = Double.parseDouble(row.getFirstChildWithName(new QName(
                     APIUsageStatisticsClientConstants.SERVICE_TIME)).getText());
             responseCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(

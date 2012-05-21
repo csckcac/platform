@@ -209,6 +209,11 @@
                 <artifactId>metrics-core</artifactId>
                 <version>${metrics-core.version}</version>
             </dependency>
+	    <dependency>
+		<groupId>com.ning</groupId>
+		<artifactId>compress-lzf</artifactId>
+		<version>${compress-lzf.version}</version>
+	    </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -256,6 +261,7 @@
 	<metrics-core.version>2.0.3.wso2v1</metrics-core.version>
 	<snaptree.version>0.1.wso2v1</snaptree.version>
 	<snappy-java.version>1.0.4.1.wso2v1</snappy-java.version>
+	<compress-lzf.version>0.8.4</compress-lzf.version>
     </properties>
 
 </project>

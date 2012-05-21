@@ -150,6 +150,10 @@
             <groupId>metrics-core.wso2</groupId>
             <artifactId>metrics-core</artifactId>
         </dependency>
+	<dependency>
+		<groupId>com.ning</groupId>
+		<artifactId>compress-lzf</artifactId>
+	</dependency>
     </dependencies>
 
     <build>
@@ -228,6 +232,7 @@
                                 <bundleDef>snappy-java.wso2:snappy-java</bundleDef>
                                 <bundleDef>snaptree.wso2:snaptree</bundleDef>
                                 <bundleDef>metrics-core.wso2:metrics-core</bundleDef>
+				<bundleDef>com.ning:compress-lzf</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>

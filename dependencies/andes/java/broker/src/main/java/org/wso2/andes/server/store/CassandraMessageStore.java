@@ -1606,7 +1606,14 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
     @Override
     public void updateQueue(AMQQueue queue) throws AMQStoreException {
-        throw new UnsupportedOperationException("updateQueue function is unsupported");
+        try {
+            String owner = queue.getOwner() == null ? null : queue.getOwner().toString();
+            String value = queue.getNameShortString().toString() + "|" + owner + "|" + (queue.isExclusive() ? "true" : "false");
+            CassandraDataAccessHelper.addMappingToRaw(QUEUE_DETAILS_COLUMN_FAMILY, QUEUE_DETAILS_ROW,
+                    queue.getNameShortString().toString(), value, keyspace);
+        } catch (CassandraDataAccessException e) {
+           throw new AMQStoreException("Error in updating the queue",e);
+        }
     }
 
     @Override

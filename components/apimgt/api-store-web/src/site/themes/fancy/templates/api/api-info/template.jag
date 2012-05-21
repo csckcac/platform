@@ -35,7 +35,7 @@
                                 <select id="application-list" class="fancy">
                                     <option value="-">Select Application...</option>
                                     <option value="createNewApp">New Application...</option>
-                                    <optgroup label="______________________">
+                                    <optgroup label="My Applications">
                                         <%
                                         for(i = 0; i < length; i++) {
                                         app = apps[i];

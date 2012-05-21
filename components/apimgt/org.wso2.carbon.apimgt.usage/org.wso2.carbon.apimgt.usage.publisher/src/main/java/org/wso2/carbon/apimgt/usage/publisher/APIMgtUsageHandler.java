@@ -63,7 +63,7 @@ public class APIMgtUsageHandler extends AbstractHandler {
         String version = (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION);
         String resource = extractResource(mc);
         String method =  (String)((Axis2MessageContext) mc).getAxis2MessageContext().getProperty(
-                APIMgtUsagePublisherConstants.HTTP_METHOD);
+                APIMgtUsagePublisherConstants.AXIS2_MC_HTTP_METHOD);
 
         RequestPublisherDTO requestPublisherDTO = new RequestPublisherDTO();
         requestPublisherDTO.setConsumerKey(consumerKey);

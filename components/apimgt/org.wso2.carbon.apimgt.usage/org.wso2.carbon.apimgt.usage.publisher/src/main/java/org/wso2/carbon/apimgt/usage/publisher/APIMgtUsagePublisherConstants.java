@@ -23,6 +23,7 @@ public final class APIMgtUsagePublisherConstants {
     public static final String _OAUTH_HEADERS_SPLITTER = ",";
     public static final String _OAUTH_CONSUMER_KEY = "Bearer";
     public static final String HEADER_SEGMENT_DELIMITER = " ";
+    public static final String  AXIS2_MC_HTTP_METHOD = "HTTP_METHOD";
 
     public static final String API_USAGE_TRACKING = "APIUsageTracking.";
     public static final String API_USAGE_ENABLED = API_USAGE_TRACKING + "Enabled";

@@ -26,7 +26,7 @@
     for(i = 0; i < length; i++) {
         tab = tabs[i];
     %>
-    <div class="tab-pane" id="tab<%=String(i)%>"><% jagg.includeBlocks(tab.body); %></div>
+    <div class="tab-pane <% if(i==0){%>active<% } %>" id="tab<%=String(i)%>"><% jagg.includeBlocks(tab.body); %></div>
     <% } %>
     </div>
 </div>

@@ -3,5 +3,5 @@ $(document).ready(function () {
         e.preventDefault();
         $(this).tab('show');
     });
-    $('#tab0').show();
+    //$('#tab0').show();
 });

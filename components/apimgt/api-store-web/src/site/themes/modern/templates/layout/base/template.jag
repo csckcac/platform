@@ -1,10 +1,13 @@
 <% jagg.template("layout/base", function(inputs, outputs, jagg) { %>
 <%
     var mw = 6;
+    var mww = 12;
     if(!outputs.left && !outputs.right) {
         mw = 12;
+        mww = 6;
     } else if(!outputs.left || !outputs.right) {
         mw = 9;
+        mww = 8;
     }
 %>
 <div id="layouts_base">
@@ -21,20 +24,27 @@
         <div id="middle">
            <div class="span<%=String(mw)%>">
                <div class="main-heading">
-                   <% if(outputs.title == "Applications") { %>
+                   <div class="row-fluid">
+                       <div class="span<%=String(mww)%>">
+                       <% if(outputs.title == "Applications") { %>
 
-                        <h1>Applications</h1>
-                        <p>Browse and create applications. Applications are required to make API subscriptions and consume them.</p>
+                            <h1>Applications</h1>
+                            <p>Browse and create applications. Applications are required to make API subscriptions and consume them.</p>
 
-                   <% } else if(outputs.title == "My Subscriptions") { %>
+                       <% } else if(outputs.title == "My Subscriptions") { %>
 
-                   <% } else { %>
-                   <h1>APIs</h1>
-                   <p>The practice of publishing APIs has allowed web communities to create an open architecture for sharing
-                       content
-                       and data between communities and applications.</p>
-                   <% } %>
+                            <h1>Subscriptions</h1>
+                            <p>Browse through all the API subscriptions made so far and review the generated API keys.</p>
 
+
+                       <% } else { %>
+                       <h1>APIs</h1>
+                       <p>The practice of publishing APIs has allowed web communities to create an open architecture for sharing
+                           content
+                           and data between communities and applications.</p>
+                       <% } %>
+                       </div>
+                   </div>
                </div>
 
                <% if(outputs.title && outputs.title=="APIs") { %><h2><%=outputs.title%></h2><% } %>

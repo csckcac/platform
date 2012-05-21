@@ -9,7 +9,7 @@
         <div class="controls">
             <input type="text" class="span4" id="application-name"/>
 
-            <p class="help-block">In addition to freeform text, any HTML5 text-based input appears like so.</p>
+            <p class="help-block">Applications are required to make API subscriptions and consume them. You will be able to subscribe to these applications from the API details page.</p>
         </div>
     </div>
 
@@ -18,7 +18,5 @@
             <button id="application-add-button" class="btn btn-primary">Add</button>
         </div>
     </div>
-
-
 </div>
 <% }); %>

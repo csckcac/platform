@@ -110,12 +110,17 @@ h3{
     margin:10px 10px 30px 0;
 }
 .tabs-section div.tab-pane{
-    background-color:#fff;
+    background-color:#cfcfcf;
+    color:#000;
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.25);
     padding:10px;
     border-left:solid 1px #ddd;
     border-right:solid 1px #ddd;
     border-bottom:solid 1px #ddd;
+}
+.nav-tabs > .active > a, .nav-tabs > .active > a:hover{
+    background-color:#cfcfcf;
+    color:#000;
 }
 .tabs-section ul.nav-tabs{
     margin-bottom:0;
@@ -377,4 +382,7 @@ footer{
 }
 .well{
     background-color:#AFAFAF;
+}
+.search-fix-size{
+    width:280px;
 }

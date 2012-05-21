@@ -112,8 +112,9 @@ div.star-ratings img{
     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#ffffff',EndColorStr='#f0f0f0'); /* IE8 */
       -ms-filter: progid: DXImageTransform.Microsoft.gradient(gradientType = 0, startColor = '#ffffff', endColoStr = '#f0f0f0'); /*Transparent back */
 }
-.accordion-inner {
-  border-top: 1px solid #e5e5e5;
+div div.accordion-inner {
+  border-top: none;
+    padding:0;
 }
 .application-api-listing {
     display:inline-block;

@@ -661,6 +661,7 @@
                                     <fileset dir="${tempdir}/web/">
                                         <exclude name="**/yui/**"/>
                                         <exclude name="**/ajax/**"/>
+                                        <exclude name="**/tenant-login/**"/>
                                         <exclude name="**/WEB-INF/**"/>
                                         <exclude name="**/signin_userguide.html"/>
                                         <exclude name="**/about.html"/>
@@ -675,6 +676,7 @@
                                         <exclude name="**/ajax/**"/>
 										<exclude name="**/dashboard/**"/>
 										<exclude name="**/lifecycles/**"/>
+                                        <exclude name="**/tenant-login/**"/>
 										<exclude name="**/impactAnalysis/**"/>
                                         <exclude name="**/codepress.xml"/>
                                         <exclude name="**/template.xml"/>

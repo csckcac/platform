@@ -199,6 +199,21 @@
                <include>**/**.rxt</include>
            </includes>
         </fileSet>
+        <fileSet>
+            <directory>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <includes>
+                <include>**/multitenancy-packages.xml</include>
+            </includes>
+        </fileSet>
+ 
+        <!-- copy the landing page webapp -->
+        <fileSet>
+            <directory>lib/home</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
+        </fileSet>
     </fileSets>
 
     <dependencySets>
@@ -394,6 +409,21 @@
         <file>
             <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml</source>
             <outputDirectory>${pom.artifactId}-${build.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
+        </file>
+
+        <file>
+            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+        </file>
+        <file>
+            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/stratos.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

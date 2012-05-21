@@ -22,7 +22,7 @@
   -->
 
 <configuration>
-    <targetEpr>https://localhost:9443/project-mgt/email-varification-processor.jag</targetEpr>
+    <targetEpr>https://localhost:9443/appmgt/email-varification-processor.jag</targetEpr>
     <subject>WSO2 AppFactory Registration - Email validation instructions</subject>
     <body>
         Hi {first-name},

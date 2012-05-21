@@ -121,3 +121,9 @@ input.error{
     margin-bottom: 5px;
 }
 
+.top-spaced{
+    padding-top:40px;
+}
+.left-spaced{
+    padding-left:10px;
+}

@@ -11,12 +11,8 @@
         var docs = result.docs;
 
      %>
-    <div class="span2">
-        <% jagg.includeBlock("item-nav-list", {api:api}); %>
-    </div>
-
-    <div class="span10">
-        <div class="row row-fluid">
+    <div class="span12">
+        <div class="row-fluid">
             <div class="control-group">
                 <a onclick="javascript:$('#newDoc').toggle('slow')" href="#">
                     <i class=" icon-plus-sign"></i> Add New Document
@@ -24,7 +20,7 @@
             </div>
         </div>
         <!-- Row -->
-        <div class="row row-fluid" id="newDoc" style="display:none;">
+        <div class="row-fluid" id="newDoc" style="display:none;">
             <div class="span4">
                 <div class="control-group">
                     <label class="control-label" for="docName">Name</label>
@@ -98,7 +94,7 @@
 
         </div>
         <!-- Row -->
-        <div class="row row-fluid">
+        <div class="row-fluid">
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -139,6 +135,13 @@
                     </td>
                 </tr>
                 <% } %>
+                <%
+                if (length == 0) {
+                %>
+                <tr><td colspan="6">No documentation associated with the API</td></tr>
+                <%
+                }
+                %>
                 </tbody>
             </table>
 

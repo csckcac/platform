@@ -32,6 +32,25 @@
 
 </div>
 
+<h2>Overall API Subscriptions (Across All Versions)</h2>
+
+        <div class="row-fluid well">
+        <div class="span5">
+            <div>
+                <div id="subsChart"></div>
+            </div>
+        </div>
+            <div class="span6">
+
+                <table class="table" id="subsTable" style="display:none;">
+                      <tr>
+                        <th>API Name</th>
+                        <th>Number of Subscribers</th>
+                      </tr>
+                  </table>
+            </div>
+         </div>
+
 <h2>API Response Times (Across All Versions)</h2>
 
         <div class="row-fluid well">

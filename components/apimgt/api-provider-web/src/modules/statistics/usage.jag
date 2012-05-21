@@ -217,4 +217,42 @@ function getProviderAPIServiceTime(providerName, server) {
     }
 }
 
+function getSubscriberCountByAPIs(providerName) {
+    var usage = [];
+    var usageout = [];
+    try {
+        usage = apiProvider.getSubscriberCountByAPIs(providerName);
+        if (log.isDebugEnabled()) {
+            log.debug("getSubscriberCountByAPIs for : " + providerName);
+        }
+        if (usage == null) {
+            return {
+                error:true
+            };
+
+        } else {
+            for (var k = 0; k < usage.length; k++) {
+                var elem = {
+                    name:usage[k].apiName,
+                    count:usage[k].count
+                };
+                usageout.push(elem);
+
+
+            }
+            return {
+                error:false,
+                usage:usageout
+            };
+        }
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            usage:null
+
+        };
+    }
+}
+
 %>

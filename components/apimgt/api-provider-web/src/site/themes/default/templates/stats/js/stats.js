@@ -44,7 +44,46 @@ $(document).ready(function() {
 
 
                   } else {
-                      jagg.message(result.message);
+                      jagg.message(json.message);
+                  }
+              }, "json");
+
+
+    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getSubscriberCountByAPIs" },
+              function (json) {
+                  if (!json.error) {
+                      var length = json.usage.length,data = [];
+                      $('#subsChart').empty();
+                      $('#subsTable').find("tr:gt(0)").remove();
+                      for (var i = 0; i < length; i++) {
+                          data[i] = parseFloat(json.usage[i].count);
+                          data[i] = [json.usage[i].name, parseInt(json.usage[i].count)];
+                          $('#subsTable').append($('<tr><td>' + json.usage[i].name + '</td><td>' + json.usage[i].count + '</td></tr>'));
+
+                      }
+                      if (length > 0) {
+                          $('#subsTable').show();
+                          var plot1 = jQuery.jqplot('subsChart', [data],
+                                                    {
+                                                        seriesDefaults:{
+                                                            renderer:jQuery.jqplot.PieRenderer,
+                                                            rendererOptions:{
+                                                                showDataLabels:true
+                                                            }
+                                                        },
+                                                        legend:{ show:true, location:'e' }
+                                                    }
+                                  );
+
+                      } else {
+                          $('#subsTable').hide();
+                          $('#subsChart').css("fontSize", 14);
+                          $('#subsChart').text('No Data Found ...');
+                      }
+
+
+                  } else {
+                      jagg.message(json.message);
                   }
               }, "json");
 
@@ -82,7 +121,7 @@ $(document).ready(function() {
 
 
                   } else {
-                      jagg.message(result.message);
+                      jagg.message(json.message);
                   }
               }, "json");
 
@@ -102,7 +141,7 @@ $(document).ready(function() {
                       }
 
                   } else {
-                      jagg.message(result.message);
+                      jagg.message(json.message);
                   }
               }, "json");
 

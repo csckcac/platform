@@ -62,7 +62,27 @@ include("/jagg/jagg.jag");
         }
         print(obj);
 
-    } else {
+    } else if (action === "getProviderAPIVersionUserUsage") {
+        mod = jagg.module("statistics");
+        var provider = jagg.getUser().username;
+        var apiName = request.getParameter("apiName");
+        var version = request.getParameter("version");
+        var server = request.getParameter("server");
+        result = mod.getProviderAPIVersionUserUsage(provider, apiName,version, server);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false,
+                usage:result.usage
+            }
+        }
+        print(obj);
+
+    }else {
         print({
                   error:true,
                   message:msg.error.invalidAction(action)

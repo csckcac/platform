@@ -91,6 +91,7 @@ $(document).ready(function() {
 
         if (clickedTab == "users") {
             var name = $("#item-info h2")[0].innerHTML.split("-v")[0];
+            var version = $("#item-info h2")[0].innerHTML.split("-v")[1];
             jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIUserUsage", apiName:name, server:"https://localhost:9444/" },
                       function (json) {
                           if (!json.error) {
@@ -126,7 +127,46 @@ $(document).ready(function() {
                               }
 
                           } else {
-                              jagg.message(result.message);
+                              jagg.message(json.message);
+                          }
+                      }, "json");
+
+            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUserUsage", apiName:name,version:version, server:"https://localhost:9444/" },
+                      function (json) {
+                          if (!json.error) {
+                              var length = json.usage.length,data = [];
+                              $('#userVersionChart').empty();
+                              $('#userVersionTable').find("tr:gt(0)").remove();
+                              for (var i = 0; i < length; i++) {
+                                  data[i] = [json.usage[i].user, parseInt(json.usage[i].count)];
+                                  $('#userVersionTable').append($('<tr><td>' + json.usage[i].user + '</td><td>' + json.usage[i].count + '</td></tr>'));
+
+                              }
+
+                              if (length > 0) {
+                                  $('#userVersionTable').show();
+                                  var plot1 = jQuery.jqplot('userVersionChart', [data],
+                                                            {
+                                                                seriesDefaults:{
+                                                                    // Make this a pie chart.
+                                                                    renderer:jQuery.jqplot.PieRenderer,
+                                                                    rendererOptions:{
+                                                                        // Put data labels on the pie slices.
+                                                                        // By default, labels show the percentage of the slice.
+                                                                        showDataLabels:true
+                                                                    }
+                                                                },
+                                                                legend:{ show:true, location:'e' }
+                                                            }
+                                          );
+                              } else {
+                                  $('#userVersionTable').hide();
+                                  $('#userVersionChart').css("fontSize", 14);
+                                  $('#userVersionChart').text('No Data Found ...');
+                              }
+
+                          } else {
+                              jagg.message(json.message);
                           }
                       }, "json");
 

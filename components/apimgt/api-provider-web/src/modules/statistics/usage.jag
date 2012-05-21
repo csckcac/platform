@@ -255,4 +255,43 @@ function getSubscriberCountByAPIs(providerName) {
     }
 }
 
+function getProviderAPIVersionUserUsage(providerName,apiName,version,serverUrl) {
+    var usage = [];
+    var usageout = [];
+    try {
+        usage = apiProvider.getProviderAPIVersionUserUsage(providerName,apiName,version,serverUrl);
+        if (log.isDebugEnabled()) {
+            log.debug("getProviderAPIVersionUserUsage for : " + providerName);
+        }
+        if (usage == null) {
+            return {
+                error:true
+            };
+
+        } else {
+            for (var k = 0; k < usage.length; k++) {
+                var elem = {
+                    user:usage[k].user,
+                    count:usage[k].count
+                };
+                usageout.push(elem);
+
+
+            }
+            return {
+                error:false,
+                usage:usageout
+            };
+        }
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            usage:null
+
+        };
+    }
+}
+
+
 %>

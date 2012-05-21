@@ -420,6 +420,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     row.put("apiName", row, entry.getKey());
                     row.put("count", row, entry.getValue().longValue());
                     myn.put(i, myn, row);
+                    i++;
                 }                                
             }
         } catch (APIManagementException e) {
@@ -460,6 +461,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     row.put("apiVersion", row, entry.getKey());
                     row.put("count", row, entry.getValue().longValue());
                     myn.put(i, myn, row);
+                    i++;
                 }
             }
         } catch (APIManagementException e) {

@@ -23,7 +23,8 @@
 
     <div id="workArea">
      You have already click the link that post to you to configure your administrator account or
-        it must have been expired. If there are any issues, please report
+        it must have been expired. You can retry resetting the password <a href="forgot_password.jsp">here</a>.
+        If there are any issues, please report
         them on <a href="http://www.wso2.com/cloud/services/support">http://www.wso2.com/cloud/services/support</a>.
     </div>
 </div>

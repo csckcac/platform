@@ -59,17 +59,13 @@
             confirmationKey = (String) request.getAttribute("confirmationKey");
 
             client = new AdminManagementClient(config, session);
-            success = client.proceedUpdateCredentials(domain, confirmationKey);
-        } catch (RegistryException e) {
+        } catch (Exception e) {
     %>
     <div>Error in validating the contact.</div>
     <%
             return;
         }
 
-    %>
-
-    <% if (success) {
         CaptchaInfoBean captchaInfoBean;
         try {
             captchaInfoBean = PasswordConfigUtil.generateRandomCaptcha(config, session);
@@ -213,21 +209,4 @@
     <script type="text/javascript">
         showCaptcha('<%=captchaImageUrl%>');
     </script>
-
-    <% } else { %>
-    <div id="middle">
-        <h2>
-            <fmt:message key="password.reset.failed"/>
-        </h2>
-
-        <p><fmt:message key="request.verification.failed"/></p>
-
-        <p>
-            You can retry resetting the password <a href="forgot_password.jsp">here</a> .
-        </p>
-    </div>
-    <%
-        }
-    %>
-
 </fmt:bundle>

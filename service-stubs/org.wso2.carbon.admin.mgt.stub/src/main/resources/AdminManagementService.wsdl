@@ -73,21 +73,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="proceedUpdateCredentials">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="domain" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="confirmationKey" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="proceedUpdateCredentialsResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
             <xs:element name="generateRandomCaptcha">
                 <xs:complexType>
                     <xs:sequence />
@@ -135,12 +120,6 @@
             </xs:complexType>
         </xs:schema>
     </wsdl:types>
-    <wsdl:message name="proceedUpdateCredentialsRequest">
-        <wsdl:part name="parameters" element="ns:proceedUpdateCredentials" />
-    </wsdl:message>
-    <wsdl:message name="proceedUpdateCredentialsResponse">
-        <wsdl:part name="parameters" element="ns:proceedUpdateCredentialsResponse" />
-    </wsdl:message>
     <wsdl:message name="AdminManagementServiceException">
         <wsdl:part name="parameters" element="ns:AdminManagementServiceException" />
     </wsdl:message>
@@ -169,11 +148,6 @@
         <wsdl:part name="parameters" element="ns:generateRandomCaptchaResponse" />
     </wsdl:message>
     <wsdl:portType name="AdminManagementServicePortType">
-        <wsdl:operation name="proceedUpdateCredentials">
-            <wsdl:input message="ns:proceedUpdateCredentialsRequest" wsaw:Action="urn:proceedUpdateCredentials" />
-            <wsdl:output message="ns:proceedUpdateCredentialsResponse" wsaw:Action="urn:proceedUpdateCredentialsResponse" />
-            <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:proceedUpdateCredentialsAdminManagementServiceException" />
-        </wsdl:operation>
         <wsdl:operation name="updateAdminPasswordWithUserInput">
             <wsdl:input message="ns:updateAdminPasswordWithUserInputRequest" wsaw:Action="urn:updateAdminPasswordWithUserInput" />
             <wsdl:output message="ns:updateAdminPasswordWithUserInputResponse" wsaw:Action="urn:updateAdminPasswordWithUserInputResponse" />
@@ -197,18 +171,6 @@
     </wsdl:portType>
     <wsdl:binding name="AdminManagementServiceSoap11Binding" type="ns:AdminManagementServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-        <wsdl:operation name="proceedUpdateCredentials">
-            <soap:operation soapAction="urn:proceedUpdateCredentials" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-            <wsdl:fault name="AdminManagementServiceException">
-                <soap:fault use="literal" name="AdminManagementServiceException" />
-            </wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="updateAdminPasswordWithUserInput">
             <soap:operation soapAction="urn:updateAdminPasswordWithUserInput" style="document" />
             <wsdl:input>
@@ -260,18 +222,6 @@
     </wsdl:binding>
     <wsdl:binding name="AdminManagementServiceSoap12Binding" type="ns:AdminManagementServicePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-        <wsdl:operation name="proceedUpdateCredentials">
-            <soap12:operation soapAction="urn:proceedUpdateCredentials" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
-            <wsdl:fault name="AdminManagementServiceException">
-                <soap12:fault use="literal" name="AdminManagementServiceException" />
-            </wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="updateAdminPasswordWithUserInput">
             <soap12:operation soapAction="urn:updateAdminPasswordWithUserInput" style="document" />
             <wsdl:input>
@@ -323,15 +273,6 @@
     </wsdl:binding>
     <wsdl:binding name="AdminManagementServiceHttpBinding" type="ns:AdminManagementServicePortType">
         <http:binding verb="POST" />
-        <wsdl:operation name="proceedUpdateCredentials">
-            <http:operation location="proceedUpdateCredentials" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
         <wsdl:operation name="updateAdminPasswordWithUserInput">
             <http:operation location="updateAdminPasswordWithUserInput" />
             <wsdl:input>

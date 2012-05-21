@@ -95,7 +95,7 @@ public class AdminManagementService {
         String adminName = adminInfoBean.getAdmin();
         String userName = AdminMgtUtil.getUserNameWithDomain(adminName, domain);
         
-        boolean isValidRequest = proceedUpdateCredentials(domain, confirmationKey);
+        boolean isValidRequest = PasswordUtil.proceedUpdateCredentials(domain, confirmationKey);
         boolean isPasswordUpdated = false;
         
         if (isValidRequest) {
@@ -110,49 +110,6 @@ public class AdminManagementService {
         log.info("Password reset status of user " + userName + " is: " + isPasswordUpdated);
         AdminMgtUtil.cleanupResources(domain);
         return isPasswordUpdated;
-    }
-
-    /**
-     * To proceed updating credentials
-     *
-     * @param domain          domain name to update the credentials
-     * @param confirmationKey confirmation key to verify the request.
-     * @return True, if successful in verifying and hence updating the credentials.
-     * @throws Exception, if confirmation key doesn't exist in the registry.
-     */
-    public boolean proceedUpdateCredentials(String domain, String confirmationKey) throws Exception {
-
-        String adminManagementPath = AdminMgtUtil.getAdminManagementPath(domain);
-
-        UserRegistry superTenantSystemRegistry = AdminManagementServiceComponent.
-                getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
-        Resource resource;
-        if (superTenantSystemRegistry.resourceExists(adminManagementPath)) {
-            resource = superTenantSystemRegistry.get(adminManagementPath);
-            String actualConfirmationKey = null;
-            Object content = resource.getContent();
-            if (content instanceof String) {
-                actualConfirmationKey = (String) content;
-            } else if (content instanceof byte[]) {
-                actualConfirmationKey = new String((byte[]) content);
-            }
-
-            if ((actualConfirmationKey != null) &&
-                    (actualConfirmationKey.equals(confirmationKey))) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Password resetting for the user of the domain: " + domain);
-                }
-                return true;
-            } else if (actualConfirmationKey == null ||
-                    !actualConfirmationKey.equals(confirmationKey)) {
-                String msg = AdminMgtConstants.CONFIRMATION_KEY_NOT_MACHING;
-                log.error(msg);
-                return false; // validation fails; do not proceed
-            }
-        } else {
-            log.warn("The confirmationKey doesn't exist in service.");
-        }
-        return false;
     }
 
     /**

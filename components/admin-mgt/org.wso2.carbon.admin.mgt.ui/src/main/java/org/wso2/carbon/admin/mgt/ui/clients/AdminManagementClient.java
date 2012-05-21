@@ -121,24 +121,6 @@ public class AdminManagementClient {
     }
 
     /**
-     * To proceed updating the credentials.
-     * @param domain tenant domain name
-     * @param confirmationKey Confirmation Key
-     * @return true if credentials update is succeeded
-     * @throws RegistryException If confirmation fails.
-     */
-     public boolean proceedUpdateCredentials(String domain, String confirmationKey)
-            throws RegistryException {
-        try {
-            return stub.proceedUpdateCredentials(domain, confirmationKey);
-        } catch (Exception e) {
-            String msg = "Failed to proceed update credentials.";
-            log.error(msg, e);
-            throw new RegistryException(msg, e);
-        }
-    }
-
-    /**
      * Generates Random Captcha
      * @return CaptchaInfoBean object
      * @throws Exception, if the captcha generation failed.

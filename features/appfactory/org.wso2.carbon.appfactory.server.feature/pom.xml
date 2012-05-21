@@ -54,16 +54,16 @@
             <artifactId>org.wso2.carbon.hostobjects.svnclient</artifactId>
             <version>${hostobjects.version}</version>
         </dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.appfactory.project.mgt</artifactId>
-			<version>${appfactory.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.appfactory.user.registration</artifactId>
-			<version>${appfactory.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.appfactory.project.mgt</artifactId>
+            <version>${appfactory.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.appfactory.user.registration</artifactId>
+            <version>${appfactory.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.appfactory.svn.repository.mgt.service</artifactId>
@@ -71,7 +71,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.appfactory.artifact.deployment.service</artifactId>
+            <artifactId>org.wso2.carbon.appfactory.application.deployment.service</artifactId>
             <version>${appfactory.version}</version>
         </dependency>
         <dependency>
@@ -79,20 +79,30 @@
             <artifactId>org.wso2.carbon.appfactory.common</artifactId>
             <version>${appfactory.version}</version>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.email.sender</artifactId>
-			<version>${email.sender.version}</version>
+            <version>${email.sender.version}</version>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.email.verification</artifactId>
-			<version>${carbon.version}</version>
+            <version>${carbon.version}</version>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>org.tigris</groupId>
             <artifactId>svn-client-adapter</artifactId>
-			<version>${svnclient.version}</version>
+            <version>${svnclient.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>plexus-utils.wso2</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>1.5.12.wso2v1</version>
+        </dependency>
+        <dependency>
+            <groupId>maven-invoker.wso2</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>2.0.11.wso2v1</version>
         </dependency>
     </dependencies>
 
@@ -146,18 +156,34 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sysprop</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sso</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.svnclient</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.project.mgt</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.user.registration</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sysprop
+                                </bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.sso
+                                </bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.svnclient
+                                </bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.project.mgt
+                                </bundleDef>
+                                <bundleDef>
+                                    org.wso2.carbon:org.wso2.carbon.appfactory.user.registration
+                                </bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.email.sender</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification
+                                </bundleDef>
                                 <bundleDef>org.tigris:svn-client-adapter</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.svn.repository.mgt.service</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.artifact.deployment.service</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.common</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.hostobjects.configuration</bundleDef>
+                                <bundleDef>
+                                    org.wso2.carbon:org.wso2.carbon.appfactory.svn.repository.mgt.service
+                                </bundleDef>
+                                <bundleDef>
+                                    org.wso2.carbon:org.wso2.carbon.appfactory.application.deployment.service
+                                </bundleDef>
+                                <bundleDef>maven-invoker.wso2:maven-invoker</bundleDef>
+                                <bundleDef>plexus-utils.wso2:plexus-utils</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.common
+                                </bundleDef>
+                                <bundleDef>
+                                    org.wso2.carbon:org.wso2.carbon.appfactory.hostobjects.configuration
+                                </bundleDef>
                             </bundles>
                             <importBundles>
                             </importBundles>
@@ -170,11 +196,11 @@
         </plugins>
     </build>
 
-	<properties>
-		<hostobjects.version>1.0.0-SNAPSHOT</hostobjects.version>
-		<appfactory.version>1.0.0-SNAPSHOT</appfactory.version>
-		<carbon.version>4.0.0-SNAPSHOT</carbon.version>
-		<email.sender.version>1.1.0-SNAPSHOT</email.sender.version>
-		<svnclient.version>1.6.18.wso2v1</svnclient.version>
+    <properties>
+        <hostobjects.version>1.0.0-SNAPSHOT</hostobjects.version>
+        <appfactory.version>1.0.0-SNAPSHOT</appfactory.version>
+        <carbon.version>4.0.0-SNAPSHOT</carbon.version>
+        <email.sender.version>1.1.0-SNAPSHOT</email.sender.version>
+        <svnclient.version>1.6.18.wso2v1</svnclient.version>
     </properties>
 </project>

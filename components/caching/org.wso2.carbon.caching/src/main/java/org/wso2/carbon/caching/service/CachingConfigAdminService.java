@@ -60,7 +60,11 @@ public class CachingConfigAdminService extends AbstractAdmin {
     private static final Log log = LogFactory.getLog(CachingConfigAdminService.class);
 
     private PersistenceFactory persistenceFactory;
+
+    private ServicePersistenceManager servicePM;
+
     private ServiceGroupFilePersistenceManager serviceGroupFilePM;
+
     private ModuleFilePersistenceManager ModuleFilePM;
 
     private Registry configRegistry;
@@ -86,11 +90,12 @@ public class CachingConfigAdminService extends AbstractAdmin {
     /**
      * Creates a new instance of the <code>CachingConfigAdminService</code>.
      *
-     * @throws Exception
+     * @throws Exception ex
      */
     public CachingConfigAdminService() throws Exception {
         axisConfig = getAxisConfig();
         persistenceFactory = PersistenceFactory.getInstance(axisConfig);
+        servicePM = persistenceFactory.getServicePM();
         serviceGroupFilePM = persistenceFactory.getServiceGroupFilePM();
         ModuleFilePM = persistenceFactory.getModuleFilePM();
         cachingPolicyUtils = new CachingPolicyUtils();
@@ -273,16 +278,21 @@ public class CachingConfigAdminService extends AbstractAdmin {
                 }
 
                 //persist policy to file
-                OMFactory omFactory = OMAbstractFactory.getOMFactory();
-                OMElement policyWrapperElement = omFactory.createOMElement(Resources.POLICY, null);
-
                 String policyType = "" + PolicyInclude.AXIS_SERVICE_POLICY;
                 String policyPath = engagementPath;
                 if (description instanceof AxisOperation) {
-                    policyPath = engagementPath.substring(0, engagementPath     //xpath - /service[@name="xxx"]
+                    policyPath = engagementPath.substring(0, engagementPath     //the service xpath - /service[@name="xxx"]
                             .indexOf("/" + Resources.OPERATION));               //todo make sure this returns the service path.
                     policyType = "" + PolicyInclude.AXIS_OPERATION_POLICY;
                 }
+
+                servicePM.persistServicePolicy( serviceGroupId, policy, policy.getId(), policyType,
+                        policyPath, engagementPath );
+
+/*
+                OMFactory omFactory = OMAbstractFactory.getOMFactory();
+                OMElement policyWrapperElement = omFactory.createOMElement(Resources.POLICY, null);
+
 
                 policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE, policyType, null);
 
@@ -317,10 +327,13 @@ public class CachingConfigAdminService extends AbstractAdmin {
                 if (log.isDebugEnabled()) {
                     log.debug("Caching policy is saved in file system");
                 }
+*/
+
                 description.engageModule(cachingModule);
                 if (!transactionStarted) {
                     serviceGroupFilePM.commitTransaction(serviceGroupId);
                 }
+
                 if (!registryTransactionStarted) {
                     configRegistry.commitTransaction();
                 }
@@ -484,10 +497,10 @@ public class CachingConfigAdminService extends AbstractAdmin {
         return false;
     }
 
-
     /**
      * disengages caching from description
      *
+     * @param serviceGroupId sg name
      * @param description    - AxisService or AxisOperation
      * @param engagementPath - service path or operation path
      * @throws CachingComponentException - error

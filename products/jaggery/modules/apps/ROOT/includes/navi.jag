@@ -86,7 +86,7 @@
             <a href="/apidocs/rdb.jag">Database</a>
         </li>
         <li id="reg">
-            <a href="/apidocs/metadatastore.jag">MatadataStore</a>
+            <a href="/apidocs/metadatastore.jag">MetadataStore</a>
         </li>
     </ul>
 

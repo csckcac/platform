@@ -18,10 +18,10 @@
 
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.account.mgt.stub.services.BillingDataAccessServiceExceptionException;
 import org.wso2.carbon.account.mgt.stub.services.BillingDataAccessServiceStub;
 import org.wso2.carbon.account.mgt.stub.services.beans.xsd.Customer;

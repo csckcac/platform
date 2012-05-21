@@ -16,10 +16,10 @@
 
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.tenant.mgt.stub.*;
 import org.wso2.carbon.tenant.mgt.stub.beans.xsd.TenantInfoBean;
@@ -101,7 +101,7 @@ public class AdminServiceTenantMgtServiceAdmin {
         TenantInfoBean getTenantBean = null;
         try {
             getTenantBean = tenantMgtAdminServiceStub.getTenant(tenantDomain);
-            Assert.assertNotNull("Domain Name not found", getTenantBean);
+            Assert.assertNotNull(getTenantBean, "Domain Name not found");
         } catch (RemoteException e) {
             log.error("RemoteException thrown while retrieving user/tenants : " + e);
             Assert.fail("RemoteException thrown while retrieving user/tenants : " + e);

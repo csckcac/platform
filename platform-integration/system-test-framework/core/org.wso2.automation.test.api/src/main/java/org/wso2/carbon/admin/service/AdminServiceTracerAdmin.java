@@ -18,11 +18,11 @@
 
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.tracer.stub.TracerAdminStub;
 import org.wso2.carbon.tracer.stub.types.carbon.MessagePayload;

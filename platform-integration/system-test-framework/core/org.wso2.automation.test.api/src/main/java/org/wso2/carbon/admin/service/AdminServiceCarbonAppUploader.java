@@ -17,10 +17,10 @@
 */
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.application.mgt.stub.upload.CarbonAppUploaderStub;
 import org.wso2.carbon.application.mgt.stub.upload.types.carbon.UploadedFileItem;

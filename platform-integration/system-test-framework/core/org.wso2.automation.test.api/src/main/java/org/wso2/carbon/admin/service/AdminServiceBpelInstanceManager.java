@@ -21,6 +21,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementServiceStub;
@@ -34,7 +35,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertFalse;
 
 public class AdminServiceBpelInstanceManager {
     String ServiceEndPoint = null;
@@ -189,7 +189,7 @@ public class AdminServiceBpelInstanceManager {
             }
         }
 
-        assertFalse(variableName + " variable not found", !variableFound);
+        Assert.assertFalse(!variableFound, variableName + " variable not found");
         return variableFound;
     }
 

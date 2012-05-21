@@ -1,8 +1,8 @@
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.dashboard.stub.DashboardServiceStub;
 
 import java.rmi.RemoteException;

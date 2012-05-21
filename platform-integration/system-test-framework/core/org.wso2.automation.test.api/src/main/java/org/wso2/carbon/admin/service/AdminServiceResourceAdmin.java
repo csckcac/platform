@@ -17,12 +17,11 @@
 */
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
-import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceResourceServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
@@ -111,7 +110,8 @@ public class AdminServiceResourceAdmin {
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         log.debug(fileName);
         try {
-            Assert.assertTrue("WSDL Adding failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_WSDL, description, dh, null));
+            Assert.assertTrue(resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_WSDL, description, dh, null),
+                              "WSDL Adding failed");
             log.info("WSDL Added");
         } catch (RemoteException e) {
             log.error("WSDL adding failed due to RemoteException : " + e);
@@ -128,7 +128,8 @@ public class AdminServiceResourceAdmin {
 
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         try {
-            Assert.assertTrue("Importing WSDL from URL failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_WSDL, description, fetchURL, null));
+            Assert.assertTrue(resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_WSDL, description, fetchURL, null),
+                              "Importing WSDL from URL failed");
             log.info("WSDL imported");
         } catch (RemoteException e) {
             log.error("Importing WSDL from URL failed due to RemoteException : " + e);
@@ -145,7 +146,8 @@ public class AdminServiceResourceAdmin {
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         try {
-            Assert.assertTrue("Schema Adding failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SCHEMA, description, dh, null));
+            Assert.assertTrue(resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SCHEMA, description, dh, null),
+                              "Schema Adding failed");
             log.info("Schema Added");
         } catch (RemoteException e) {
             log.error("Schema adding failed due to RemoteException : " + e);
@@ -163,7 +165,8 @@ public class AdminServiceResourceAdmin {
 
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         try {
-            Assert.assertTrue("Importing Schema from URL failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_SCHEMA, description, fetchURL, null));
+            Assert.assertTrue(resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_SCHEMA, description, fetchURL, null),
+                              "Importing Schema from URL failed");
             log.info("Schema Imported");
         } catch (RemoteException e) {
             log.error("Importing Schema from URL failed due to RemoteException : " + e);
@@ -180,7 +183,8 @@ public class AdminServiceResourceAdmin {
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         try {
-            Assert.assertTrue("Adding Policy failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_POLICY, description, dh, null));
+            Assert.assertTrue(resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_POLICY, description, dh, null),
+                              "Adding Policy failed");
             log.info("Policy Added");
         } catch (RemoteException e) {
             log.error("Policy adding failed due to RemoteException : " + e);
@@ -197,7 +201,8 @@ public class AdminServiceResourceAdmin {
 
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         try {
-            Assert.assertTrue("Importing Policy failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY, description, fetchURL, null));
+            Assert.assertTrue(resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY, description, fetchURL, null),
+                              "Importing Policy failed");
             log.info("Policy imported");
         } catch (RemoteException e) {
             log.error("Importing Policy from URL failed due to ExceptionException : " + e);
@@ -215,7 +220,8 @@ public class AdminServiceResourceAdmin {
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         try {
-            Assert.assertTrue("uploading vnd.wso2.governance-archive failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_GOVERNANCE_ARCHIVE, description, dh, null));
+            Assert.assertTrue(resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_GOVERNANCE_ARCHIVE, description, dh, null),
+                              "uploading vnd.wso2.governance-archive failed");
             log.info("Artifact Uploaded");
         } catch (RemoteException e) {
             log.error("Uploading artifact vnd.wso2.governance-archive failed due to RemoteException : " + e);

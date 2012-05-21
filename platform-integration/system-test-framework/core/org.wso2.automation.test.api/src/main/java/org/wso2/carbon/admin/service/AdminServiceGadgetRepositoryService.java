@@ -1,8 +1,8 @@
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.stub.GadgetRepoServiceStub;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.stub.types.carbon.Comment;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.stub.types.carbon.Gadget;

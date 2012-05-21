@@ -19,6 +19,6 @@
 		<module>DeployProjectToLive</module>
 		<module>UserActivation</module>
 		<module>UserCreation</module>
-		<module>ProjectCreation</module>
+		<module>ApplicationCreation</module>
 	</modules>
 </project>

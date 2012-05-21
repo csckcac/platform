@@ -260,7 +260,7 @@ exec "$JAVACMD" \
         -XX:PermSize=256m -XX:MaxPermSize=512m \
         -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:-UseGCOverheadLimit \
         -XX:+CMSClassUnloadingEnabled \
-        -XX:+UseCompressedStrings \
+       # -XX:+UseCompressedStrings \
         -XX:+OptimizeStringConcat \
         -XX:-HeapDumpOnOutOfMemoryError \
         -XX:OnOutOfMemoryError="kill -9 `echo $$`;nohup ./wso2server.sh &" \
@@ -269,7 +269,7 @@ exec "$JAVACMD" \
         -XX:OnError="nohup ./wso2server.sh &" \
         $JAVA_OPTS \
         -Dcarbon.pid=$$ \
-        -Dimpl.prefix=Carbon \
+       # -Dimpl.prefix=Carbon \
         -Dcom.sun.management.jmxremote \
         -Dwso2.loadbalancer=true \
         -classpath "$CARBON_CLASSPATH" \

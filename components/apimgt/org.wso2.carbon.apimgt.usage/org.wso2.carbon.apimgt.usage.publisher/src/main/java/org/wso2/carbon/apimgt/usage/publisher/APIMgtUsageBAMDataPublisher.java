@@ -17,7 +17,6 @@
 */
 package org.wso2.carbon.apimgt.usage.publisher;
 
-import org.apache.log4j.BasicConfigurator;
 import org.wso2.carbon.apimgt.usage.publisher.dto.PublisherDTO;
 import org.wso2.carbon.apimgt.usage.publisher.service.APIMGTConfigReaderService;
 import org.wso2.carbon.bam.agent.conf.AgentConfiguration;
@@ -70,7 +69,6 @@ public class APIMgtUsageBAMDataPublisher {
         List<Event> events = new ArrayList<Event>();
         events.add(event);
 
-        BasicConfigurator.configure();
         agent.publish(events, eventReceiver);
     }
 

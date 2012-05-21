@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-function addParameter() {
+function addTemplateParameter() {
 
     /*
      if (!isValidProperties(nameemptymsg, valueemptymsg)) {
      return false;
      }
      */
-    var propertyCount = document.getElementById("propertyCount");
+    var propertyCount = document.getElementById("templatePropertyCount");
     var i = propertyCount.value;
     var currentCount = parseInt(i);
 
@@ -30,20 +30,20 @@ function addParameter() {
 
     propertyCount.value = currentCount;
 
-    var propertytable = document.getElementById("propertytable");
+    var propertytable = document.getElementById("templatePropertyTable");
     propertytable.style.display = "";
-    var propertytbody = document.getElementById("propertytbody");
+    var propertytbody = document.getElementById("templatePropertyBody");
 
     var propertyRaw = document.createElement("tr");
-    propertyRaw.setAttribute("id", "propertyRaw" + i);
+    propertyRaw.setAttribute("id", "templatePropertyRaw" + i);
 
     var nameTD = document.createElement("td");
-    nameTD.innerHTML = "<input type='text' name='propertyName" + i + "' id='propertyName" + i + "'" +
+    nameTD.innerHTML = "<input type='text' name='templatePropertyName" + i + "' id='templatePropertyName" + i + "'" +
                        "class='esb-edit small_textbox' />";
 
 
     var deleteTD = document.createElement("td");
-    deleteTD.innerHTML = "<a href='#' class='delete-icon-link' onclick='deleteProperty(" + i + ")'>" + seqEditi18n["template.parameter.delete"] + "</a>";
+    deleteTD.innerHTML = "<a href='#' class='delete-icon-link' onclick='deleteTemplateProperty(" + i + ")'>" + seqEditi18n["template.parameter.delete"] + "</a>";
 //    deleteTD.innerHTML =  "<a href='#' class='delete-icon-link' onclick='deleteproperty(" + i + ");return false;'>" + logi18n["mediator.log.action.delete"] + "</a>";
 
     propertyRaw.appendChild(nameTD);
@@ -54,14 +54,14 @@ function addParameter() {
 }
 
 function deleteProperty(i) {
-    var propRow = document.getElementById("propertyRaw" + i);
-    var propName = document.getElementById("propertyName" + i);
+    var propRow = document.getElementById("templatePropertyRaw" + i);
+    var propName = document.getElementById("templatePropertyName" + i);
     if (propRow != undefined && propRow != null) {
         var parentTBody = propRow.parentNode;
         if (parentTBody != undefined && parentTBody != null) {
             parentTBody.removeChild(propRow);
             if (!isContainRaw(parentTBody)) {
-                var propertyTable = document.getElementById("propertytable");
+                var propertyTable = document.getElementById("templatePropertyTable");
                 propertyTable.style.display = "none";
             }
         }
@@ -90,7 +90,7 @@ function handleParamAdd(templateName, count) {
     i = 0;
     j = 0;
     for (i = 0; i < count; i++) {
-        var paramElem = document.getElementById("propertyName" + i);
+        var paramElem = document.getElementById("templatePropertyName" + i);
         if (paramElem != null) {
             var paramName = paramElem.value;
             if (paramName != null && paramName != "") {
@@ -114,7 +114,7 @@ function handleParamAdd(templateName, count) {
 }
 
 function getParamCount() {
-    var propertyCount = document.getElementById("propertyCount");
+    var propertyCount = document.getElementById("templatePropertyCount");
     var i = propertyCount.value;
     return parseInt(i);
 }

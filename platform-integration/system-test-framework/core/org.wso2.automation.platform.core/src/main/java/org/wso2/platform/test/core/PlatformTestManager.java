@@ -2,13 +2,24 @@ package org.wso2.platform.test.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.*;
+import org.jacoco.core.runtime.IRuntime;
+import org.testng.ITestContext;
+import org.testng.ITestListener;
+import org.testng.ITestNGMethod;
+import org.testng.ITestResult;
 import org.wso2.platform.test.core.utils.UnknownArtifactTypeException;
+import org.wso2.platform.test.core.utils.coverageutils.CollectCoverageData;
+import org.wso2.platform.test.core.utils.reportutills.CustomTestngReportSetter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlatformTestManager implements ITestListener {
 
     private static ArtifactManager artifactManager;
-
+    IRuntime runtime;
+    String className;
+    List<String> classList = new ArrayList<String>();
     private static final Log log = LogFactory.getLog(PlatformTestManager.class);
 
 
@@ -71,17 +82,41 @@ public class PlatformTestManager implements ITestListener {
      * Invoked after the test class is instantiated and before
      * any configuration method is called.
      */
+
     public void onStart(ITestContext context) {
-        String currentTestClassName =  context.getCurrentXmlTest().getClasses().get(0).getName();
+        String currentTestClassName = context.getCurrentXmlTest().getClasses().get(0).getName();
+
+        /* runtime = new LoggerRuntime();
+        ClassInfo info = new ClassInfo();
+        try {
+            info.dumpInfo("/home/dharshana/wso2Products/wso2bps-2.1.2/repository/components/plugins/org.wso2.carbon.bpel.stub-3.2.1.jar");
+            InitiateCoverage initCoverage = new InitiateCoverage();
+            for(IClassCoverage coverage:info.getCoverageData())
+            {
+                System.out.println(coverage.getName());
+
+                className =  coverage.getName();
+                classList.add(className);
+
+            }
+            initCoverage.runTutorial(classList,runtime);
+
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        //*/
+
+
         log.info("Before executing the test class :" + currentTestClassName);
         if (currentTestClassName != null) {
             try {
+
                 artifactManager = ArtifactManager.getInstance();
                 artifactManager.deployArtifacts(context.getCurrentXmlTest().getClasses().get(0).getName());
-            } catch (UnknownArtifactTypeException e) { /*cannot throw the exception */
-                log.error("Unknown Artifact type to be deployed ", e);
             } catch (Exception e) {
                 log.error("Artifact Deployment Error ", e);
+                CustomTestngReportSetter reportSetter = new CustomTestngReportSetter();
+                reportSetter.createReport(context, e);
             }
         }
     }
@@ -91,6 +126,11 @@ public class PlatformTestManager implements ITestListener {
      * Configuration methods have been called.
      */
     public void onFinish(ITestContext context) {
+        CollectCoverageData collectCoverageData = new CollectCoverageData();
+        // for(String className2:classList)
+        // {
+        //   collectCoverageData.CollectData(runtime,classList);
+        //  }
         try {
             assert artifactManager != null : "Artifact Manger is null";
             artifactManager.cleanArtifacts(context.getCurrentXmlTest().getClasses().get(0).getName());

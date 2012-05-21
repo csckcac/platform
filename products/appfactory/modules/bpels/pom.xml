@@ -15,10 +15,10 @@
 	<description>Parent POM for BPEL</description>
 
 	<modules>
-		<module>DeployProjectToDev</module>
-		<module>DeployProjectToLive</module>
-		<module>UserActivation</module>
 		<module>UserCreation</module>
+		<module>UserActivation</module>
 		<module>ApplicationCreation</module>
+		<module>DeployApplicationToDev</module>
+		<module>DeployApplicationToLive</module>
 	</modules>
 </project>

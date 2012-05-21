@@ -19,7 +19,7 @@
    <div class="left-main-area">
     <h1>Thing's to be done and other short notes.</h1>
 
-    <form id="task">
+    <form id="task" name="task">
                 <textarea rows="" cols="" id="textboxmain" name="textboxmain"></textarea>
                 <input type="button" id="savebtn" value="Save"/>
             </form>   
@@ -68,16 +68,16 @@ return dateStr;
 }
     $("#savebtn").click(function() {
         
-		if (task.textboxmain.value == "") {
+		if (document.task.textboxmain.value == "") {
 			alert("Sorry Task cannot be blank");
-			task.textboxmain.focus();
+			document.task.textboxmain.focus();
 			exit(0);
 		}
 		var id = Math.floor(Math.random()*100000);
         var curtime = getTime();
 
        
-        var textNew = encodeURI(task.textboxmain.value);
+        var textNew = encodeURI(document.task.textboxmain.value);
         $.get("notepad.jag", { text: textNew, time: curtime, action: "add", id:id },
    function(data){
         $(data).hide().prependTo(".feed").fadeIn("slow");

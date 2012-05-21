@@ -5,6 +5,8 @@ var text = decodeURI(request.getParameter("text"));
 var time = request.getParameter("time");
         var id = request.getParameter("id");
 
+		response.contentType='text/html';
+		
         var entry = {
         id : id,
         time : time,
@@ -13,13 +15,11 @@ var time = request.getParameter("time");
 
   if (session.get("entries")) {
         var entries = session.get("entries");
-        print(entry);
         entries.unshift(entry);
 
         } else {
             var entries = new Array();
             entries[0] = entry;
-           print(entry);
         }
 
        session.put("entries",entries);

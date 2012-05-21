@@ -41,6 +41,7 @@ public class CommonManager {
     public static final String JAGGERY_URLS_MAP = "jaggery.urls.map";
 
     public static final String HOST_OBJECT_NAME = "CarbonTopLevel";
+    public static final String DEFAULT_CONTENT_TYPE = "text/html";
 
     private RhinoEngine engine = null;
     private ModuleManager moduleManager = null;
@@ -229,6 +230,13 @@ public class CommonManager {
             throws ScriptException {
         String functionName = "print";
         JaggeryContext jaggeryContext = CommonManager.getJaggeryContext();
+
+        //If the script itself havent set the content type we set the default content type to be text/html
+        if (((WebAppContext) jaggeryContext).getServletResponse().getContentType() == null) {
+            ((WebAppContext) CommonManager.getJaggeryContext()).getServletResponse()
+                    .setContentType(DEFAULT_CONTENT_TYPE);
+        }
+
         int argsCount = args.length;
         if (argsCount != 1) {
             HostObjectUtil.invalidNumberOfArgs("CarbonTopLevel", functionName, argsCount, false);

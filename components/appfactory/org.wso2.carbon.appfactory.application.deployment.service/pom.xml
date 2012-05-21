@@ -34,11 +34,6 @@
                             !org.wso2.carbon.appfactory.application.deployment.service.internal.*,
                             org.wso2.carbon.appfactory.application.deployment.service.*
                         </Export-Package>
-                        <!--ToDO: this need to be fixed properly-->
-                        <!--<Embed-Dependency>;&lt;!&ndash;maven-shared-jar;&ndash;&gt;
-                            maven-invoker;
-                            &lt;!&ndash;  plexus-utils;&ndash;&gt;
-                        </Embed-Dependency>-->
                         <Import-Package>
                             javax.activation.DataHandler.*,javax.activation.DataSource.*
                         </Import-Package>

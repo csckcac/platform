@@ -1,12 +1,12 @@
 /*
  * Copyright 2004,2005 The Apache Software Foundation.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,215 +31,217 @@ import java.util.Set;
  */
 public class IssuedToken extends Token {
 
-    private OMElement issuerEpr;
-    
-    private OMElement issuerMex;
+	private OMElement issuerEpr;
 
-    private OMElement rstTemplate;
+	private OMElement issuerMex;
 
-    boolean requireExternalReference;
+	private OMElement rstTemplate;
 
-    boolean requireInternalReference;
+	boolean requireExternalReference;
 
-    private String rstTokenType;
+	boolean requireInternalReference;
 
-    private Set<String> rstClaimSet;
+	private String rstTokenType;
 
-    
-    public IssuedToken(int version) {
-        setVersion(version);
-    }
+	private Set<String> rstClaimSet;
 
-    /**
-     * @return Returns the issuerEpr.
-     */
-    public OMElement getIssuerEpr() {
-        return issuerEpr;
-    }
+	public IssuedToken(int version) {
+		setVersion(version);
+	}
 
-    /**
-     * @param issuerEpr
-     *            The issuerEpr to set.
-     */
-    public void setIssuerEpr(OMElement issuerEpr) {
-        this.issuerEpr = issuerEpr;
-    }
+	/**
+	 * @return Returns the issuerEpr.
+	 */
+	public OMElement getIssuerEpr() {
+		return issuerEpr;
+	}
 
-    /**
-     * @return Returns the requireExternalReference.
-     */
-    public boolean isRequireExternalReference() {
-        return requireExternalReference;
-    }
+	/**
+	 * @param issuerEpr
+	 *            The issuerEpr to set.
+	 */
+	public void setIssuerEpr(OMElement issuerEpr) {
+		this.issuerEpr = issuerEpr;
+	}
 
-    /**
-     * @param requireExternalReference
-     *            The requireExternalReference to set.
-     */
-    public void setRequireExternalReference(boolean requireExternalReference) {
-        this.requireExternalReference = requireExternalReference;
-    }
+	/**
+	 * @return Returns the requireExternalReference.
+	 */
+	public boolean isRequireExternalReference() {
+		return requireExternalReference;
+	}
 
-    /**
-     * @return Returns the requireInternalReference.
-     */
-    public boolean isRequireInternalReference() {
-        return requireInternalReference;
-    }
+	/**
+	 * @param requireExternalReference
+	 *            The requireExternalReference to set.
+	 */
+	public void setRequireExternalReference(boolean requireExternalReference) {
+		this.requireExternalReference = requireExternalReference;
+	}
 
-    /**
-     * @param requireInternalReference
-     *            The requireInternalReference to set.
-     */
-    public void setRequireInternalReference(boolean requireInternalReference) {
-        this.requireInternalReference = requireInternalReference;
-    }
+	/**
+	 * @return Returns the requireInternalReference.
+	 */
+	public boolean isRequireInternalReference() {
+		return requireInternalReference;
+	}
 
-    /**
-     * @return Returns the rstTemplate.
-     */
-    public OMElement getRstTemplate() {
-        return rstTemplate;
-    }
+	/**
+	 * @param requireInternalReference
+	 *            The requireInternalReference to set.
+	 */
+	public void setRequireInternalReference(boolean requireInternalReference) {
+		this.requireInternalReference = requireInternalReference;
+	}
 
-    /**
-     * @param rstTemplate
-     *            The rstTemplate to set.
-     */
-    public void setRstTemplate(OMElement rstTemplate) {
-        this.rstTemplate = rstTemplate;
-    }
+	/**
+	 * @return Returns the rstTemplate.
+	 */
+	public OMElement getRstTemplate() {
+		return rstTemplate;
+	}
 
-    public QName getName() {
-        if (version == SPConstants.SP_V12) {
-            return SP12Constants.ISSUED_TOKEN;
-        } else {
-            return SP11Constants.ISSUED_TOKEN; 
-        }      
-    }
+	/**
+	 * @param rstTemplate
+	 *            The rstTemplate to set.
+	 */
+	public void setRstTemplate(OMElement rstTemplate) {
+		this.rstTemplate = rstTemplate;
+	}
 
-    public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-        String localname = getName().getLocalPart();
-        String namespaceURI = getName().getNamespaceURI();
+	public QName getName() {
+		if (version == SPConstants.SP_V12) {
+			return SP12Constants.ISSUED_TOKEN;
+		} else {
+			return SP11Constants.ISSUED_TOKEN;
+		}
+	}
 
-        String prefix;
-        String writerPrefix = writer.getPrefix(namespaceURI);
+	public void serialize(XMLStreamWriter writer) throws XMLStreamException {
+		String localname = getName().getLocalPart();
+		String namespaceURI = getName().getNamespaceURI();
 
-        if (writerPrefix == null) {
-            prefix = getName().getPrefix();
-            writer.setPrefix(prefix, namespaceURI);
+		String prefix;
+		String writerPrefix = writer.getPrefix(namespaceURI);
 
-        } else {
-            prefix = writerPrefix;
-        }
+		if (writerPrefix == null) {
+			prefix = getName().getPrefix();
+			writer.setPrefix(prefix, namespaceURI);
 
-        // <sp:IssuedToken>
-        writer.writeStartElement(prefix, localname, namespaceURI);
+		} else {
+			prefix = writerPrefix;
+		}
 
-        if (writerPrefix == null) {
-            writer.writeNamespace(prefix, namespaceURI);
-        }
+		// <sp:IssuedToken>
+		writer.writeStartElement(prefix, localname, namespaceURI);
 
-        String inclusion;
-        
-        if (version == SPConstants.SP_V12) {
-            inclusion = SP12Constants.getAttributeValueFromInclusion(getInclusion());
-        } else {
-            inclusion = SP11Constants.getAttributeValueFromInclusion(getInclusion()); 
-        }
-        
-        if (inclusion != null) {
-            writer.writeAttribute(prefix, namespaceURI,
-                    SPConstants.ATTR_INCLUDE_TOKEN, inclusion);
-        }
+		if (writerPrefix == null) {
+			writer.writeNamespace(prefix, namespaceURI);
+		}
 
-        if (issuerEpr != null) {
-            writer.writeStartElement(prefix, SPConstants.ISSUER,
-                    namespaceURI);
-            issuerEpr.serialize(writer);
-            writer.writeEndElement();
-        }
+		String inclusion;
 
-        if (rstTemplate != null) {
-            // <sp:RequestSecurityTokenTemplate>
-            rstTemplate.serialize(writer);
+		if (version == SPConstants.SP_V12) {
+			inclusion = SP12Constants.getAttributeValueFromInclusion(getInclusion());
+		} else {
+			inclusion = SP11Constants.getAttributeValueFromInclusion(getInclusion());
+		}
 
-        }
+		if (inclusion != null) {
+			writer.writeAttribute(prefix, namespaceURI, SPConstants.ATTR_INCLUDE_TOKEN, inclusion);
+		}
 
-        String policyLocalName = SPConstants.POLICY.getLocalPart();
-        String policyNamespaceURI = SPConstants.POLICY.getNamespaceURI();
+		if (issuerEpr != null) {
+			writer.writeStartElement(prefix, SPConstants.ISSUER, namespaceURI);
+			issuerEpr.serialize(writer);
+			writer.writeEndElement();
+		}
 
-        String wspPrefix;
+		if (rstTemplate != null) {
+			// <sp:RequestSecurityTokenTemplate>
+			rstTemplate.serialize(writer);
 
-        String wspWriterPrefix = writer.getPrefix(policyNamespaceURI);
+		}
 
-        if (wspWriterPrefix == null) {
-            wspPrefix = SPConstants.POLICY.getPrefix();
-            writer.setPrefix(wspPrefix, policyNamespaceURI);
-        } else {
-            wspPrefix = wspWriterPrefix;
-        }
+		String policyLocalName = SPConstants.POLICY.getLocalPart();
+		String policyNamespaceURI = SPConstants.POLICY.getNamespaceURI();
 
-        if (isRequireExternalReference() || isRequireInternalReference() ||
-                this.isDerivedKeys()) {
+		String wspPrefix;
 
-            // <wsp:Policy>
-            writer.writeStartElement(wspPrefix, policyLocalName,
-                    policyNamespaceURI);
+		String wspWriterPrefix = writer.getPrefix(policyNamespaceURI);
 
-            if (wspWriterPrefix == null) {
-                // xmlns:wsp=".."
-                writer.writeNamespace(wspPrefix, policyNamespaceURI);
-            }
+		if (wspWriterPrefix == null) {
+			wspPrefix = SPConstants.POLICY.getPrefix();
+			writer.setPrefix(wspPrefix, policyNamespaceURI);
+		} else {
+			wspPrefix = wspWriterPrefix;
+		}
 
-            if (isRequireExternalReference()) {
-                // <sp:RequireExternalReference />
-                writer.writeEmptyElement(prefix, SPConstants.REQUIRE_EXTERNAL_REFERNCE,
-                        namespaceURI);
-            }
+		if (isRequireExternalReference() || isRequireInternalReference() || this.isDerivedKeys()) {
 
-            if (isRequireInternalReference()) {
-                // <sp:RequireInternalReference />
-                writer.writeEmptyElement(prefix, SPConstants.REQUIRE_INTERNAL_REFERNCE,
-                        namespaceURI);
-            }
+			// <wsp:Policy>
+			writer.writeStartElement(wspPrefix, policyLocalName, policyNamespaceURI);
 
-            if (this.isDerivedKeys()) {
-                // <sp:RequireDerivedKeys />
-                writer.writeEmptyElement(prefix, SPConstants.REQUIRE_DERIVED_KEYS,
-                        namespaceURI);
-            }
-            
-            // <wsp:Policy>
-            writer.writeEndElement();
-        }
+			if (wspWriterPrefix == null) {
+				// xmlns:wsp=".."
+				writer.writeNamespace(wspPrefix, policyNamespaceURI);
+			}
 
-        // </sp:IssuedToken>
-        writer.writeEndElement();
-    }
+			if (isRequireExternalReference()) {
+				// <sp:RequireExternalReference />
+				writer.writeEmptyElement(prefix, SPConstants.REQUIRE_EXTERNAL_REFERNCE,
+				                         namespaceURI);
+			}
 
-    public OMElement getIssuerMex() {
-        return issuerMex;
-    }
+			if (isRequireInternalReference()) {
+				// <sp:RequireInternalReference />
+				writer.writeEmptyElement(prefix, SPConstants.REQUIRE_INTERNAL_REFERNCE,
+				                         namespaceURI);
+			}
 
-    public void setIssuerMex(OMElement issuerMex) {
-        this.issuerMex = issuerMex;
-    }
+			if (this.isDerivedKeys()) {
+				// <sp:RequireDerivedKeys />
+				writer.writeEmptyElement(prefix, SPConstants.REQUIRE_DERIVED_KEYS, namespaceURI);
+			}
 
-    public String getRstTokenType() {
-        return rstTokenType;
-    }
+			// <wsp:Policy>
+			writer.writeEndElement();
+		}
 
-    public void setRstTokenType(String rstTokenType) {
-        this.rstTokenType = rstTokenType;
-    }
+		// </sp:IssuedToken>
+		writer.writeEndElement();
+	}
 
-    public Set<String> getRstClaimSet() {
-        return rstClaimSet;
-    }
+	public OMElement getIssuerMex() {
+		return issuerMex;
+	}
 
-    public void setRstClaimSet(Set<String> rstClaimSet) {
-        this.rstClaimSet = rstClaimSet;
-    }
+	public void setIssuerMex(OMElement issuerMex) {
+		this.issuerMex = issuerMex;
+	}
+
+	public String getRstTokenType() {
+		return rstTokenType;
+	}
+
+	public void setRstTokenType(String rstTokenType) {
+		this.rstTokenType = rstTokenType;
+	}
+
+	public Set<String> getRstClaimSet() {
+		return rstClaimSet;
+	}
+
+	public void setRstClaimSet(Set<String> rstClaimSet) {
+		this.rstClaimSet = rstClaimSet;
+	}
+
+	public String getRstNamespace() {
+		if (rstTokenType.equals("http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV2.0")) {
+			return "urn:oasis:names:tc:SAML:2.0:assertion";
+		} else {
+			return "urn:oasis:names:tc:SAML:1.0:assertion";
+		}
+	}
 
 }

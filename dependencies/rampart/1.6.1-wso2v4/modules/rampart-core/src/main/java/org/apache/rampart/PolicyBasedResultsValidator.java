@@ -337,7 +337,7 @@ public class PolicyBasedResultsValidator implements PolicyValidatorCallbackHandl
                         throw new RampartException("samlversionmismatch");
                     }
 
-                    if (!issuedToken.getRstTokenType().trim().equals(tokenType.trim())) {
+                    if (!issuedToken.getRstNamespace().trim().equals(tokenType.trim())) {
                         if (log.isDebugEnabled()) {
                             log.debug("The issued token should contain a SAML token with the version "
                                     + issuedToken.getRstTokenType());

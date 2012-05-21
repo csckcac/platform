@@ -58,12 +58,12 @@ public class DeploymentSynchronizerServiceImpl implements DeploymentSynchronizer
             DeploymentSynchronizerConfiguration configuration =
                     CarbonRepositoryUtils.getActiveSynchronizerConfiguration(tenantId);
 
-            //If autoCheckout is false, return false
-            if(!configuration.isAutoCheckout()){
+            //If Deployment Synchronization is disabled or autoCheckout is false, return false
+            if(!configuration.isEnabled() || !configuration.isAutoCheckout()){
                 return false;
             }
             DeploymentSynchronizer synchronizer =
-                    syncManager.getSynchronizer(MultitenantUtils.getAxis2RepositoryPath(tenantId));
+                    getSynchronizer(MultitenantUtils.getAxis2RepositoryPath(tenantId));
             if (synchronizer == null) {
                 synchronizer =
                         CarbonRepositoryUtils.newCarbonRepositorySynchronizer(tenantId);
@@ -85,8 +85,8 @@ public class DeploymentSynchronizerServiceImpl implements DeploymentSynchronizer
             DeploymentSynchronizerConfiguration configuration =
                     CarbonRepositoryUtils.getActiveSynchronizerConfiguration(tenantId);
 
-            //If autoCommit is false, return false
-            if(!configuration.isAutoCommit()){
+            //If Deployment Synchronization is disabled or autoCommit is false, return false
+            if(!configuration.isEnabled() || !configuration.isAutoCommit()){
                 return false;
             }
             DeploymentSynchronizer synchronizer =

@@ -25,12 +25,11 @@ include("/jagg/jagg.jag");
             }
         }
         print(obj);
-    } else if (action === "getProviderAPIVersionUserUsage") {
+    } else if (action === "getSubscriberCountByAPIVersions") {
         mod = jagg.module("statistics");
         var provider = jagg.getUser().username;
         var apiName = request.getParameter("apiName");
-        var server = request.getParameter("server");
-        result = mod.getProviderAPIVersionUserUsage(provider, apiName, server);
+        result = mod.getSubscriberCountByAPIVersions(provider, apiName);
         if (result.error == "true") {
             obj = {
                 error:result.error,

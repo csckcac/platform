@@ -28,7 +28,7 @@
 </div>
 <div class="row-fluid well">
     <div class="span5">
-    <h3>API Usage by Versions and Subscribers</h3>
+    <h3>API Subscriptions by Versions</h3>
         <div>
             <div id="versionUserChart"></div>
         </div>
@@ -37,8 +37,7 @@
             <table class="table" id="versionUserTable">
                   <tr>
                     <th>Version</th>
-                    <th>Subscriber</th>
-                    <th>Number of API Calls</th>
+                    <th>Number of Subscribers</th>
                   </tr>
               </table>
         </div>

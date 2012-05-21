@@ -34,18 +34,17 @@ function getProviderAPIVersionUsage(providerName, apiName, server) {
 
 }
 
-function getProviderAPIVersionUserUsage(providerName, apiName, server) {
+function getSubscriberCountByAPIVersions(providerName, apiName) {
     var usage = [];
     var usageout = [];
     try {
-        usage = apiProvider.getProviderAPIVersionUserUsage(providerName, apiName, server);
+        usage = apiProvider.getSubscriberCountByAPIVersions(providerName, apiName);
         if (log.isDebugEnabled()) {
-            log.debug("getProviderAPIVersionUserUsage for : " + server);
+            log.debug("getSubscriberCountByAPIVersions for : " +apiName);
         }
         for (var k = 0; k < usage.length; k++) {
             var elem = {
-                version:usage[k].version,
-                user:usage[k].user,
+                version:usage[k].apiVersion,
                 count:usage[k].count
             };
             usageout.push(elem);

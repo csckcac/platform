@@ -45,93 +45,45 @@ $(document).ready(function() {
                               }
 
                           } else {
-                              jagg.message(result.message);
+                              jagg.message(json.message);
                           }
                       }, "json");
 
 
-            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUserUsage", apiName:apiName, server:"https://localhost:9444/" },
+            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getSubscriberCountByAPIVersions", apiName:apiName },
                       function (json) {
                           if (!json.error) {
+                              var length = json.usage.length,data = [];
                               $('#versionUserChart').empty();
                               $('#versionUserTable').find("tr:gt(0)").remove();
-                              var user_version_associative_array = new Array();
-                              for (var i = 0; i < json.usage.length; i++) {
-                                  if (!user_version_associative_array.hasOwnProperty(json.usage[i].user)) {
-                                      user_version_associative_array[json.usage[i].user] = new Array();
-                                  }
-                                  for (var j = 0; j < json.usage.length; j++) {
-                                      user_version_associative_array[json.usage[i].user][json.usage[j].version] = 0;
-                                  }
+                              for (var i = 0; i < length; i++) {
+                                  data[i] = [json.usage[i].version, parseInt(json.usage[i].count)];
+                                  $('#versionUserTable').append($('<tr><td>' + json.usage[i].version + '</td><td>' + json.usage[i].count + '</td></tr>'));
                               }
-                              for (var i = 0; i < json.usage.length; i++) {
-                                  user_version_associative_array[json.usage[i].user][json.usage[i].version] = parseInt(json.usage[i].count);
-                              }
-
-                              var data = new Array();
-                              var ticks = new Array();
-                              var series = new Array();
-
-                              var key;
-                              for (key in user_version_associative_array) {
-                                  ticks[ticks.length] = key;
-                              }
-                              for (key in user_version_associative_array[ticks[0]]) {
-                                  series[series.length] = {label:key};
-                              }
-                              for (var i = 0; i < ticks.length; i++) {
-                                  if (i == 0) {
-                                      data[i] = new Array();
-                                  }
-                                  for (var j = 0; j < series.length; j++) {
-                                      data[i][j] = user_version_associative_array[ticks[i]][[series[j].label]];
-                                  }
-                              }
-                              for (var i = 0; i < json.usage.length; i++) {
-                                  $('#versionUserTable').append($('<tr><td>' + json.usage[i].version + '</td><td>' + json.usage[i].user + '</td><td>' + json.usage[i].count + '</td></tr>'));
-                              }
-
-                              if (json.usage.length > 0) {
+                              if (length > 0) {
                                   $('#versionUserTable').show();
-                                  var plot1 = $.jqplot('versionUserChart', data, {
-
-                                      stackSeries: true,
-                                      captureRightClick: true,
-                                      seriesDefaults:{
-                                          renderer:$.jqplot.BarRenderer,
-                                          rendererOptions: {
-                                              barMargin: 30,
-                                              highlightMouseDown: true
-                                          },
-                                          pointLabels: {show: true}
-                                      },
-
-                                      series:series,
-
-                                      legend: {
-                                          show: true,
-                                          location: 'e',
-                                          placement: 'outside'
-                                      },
-                                      axes: {
-                                          xaxis: {
-                                              renderer: $.jqplot.CategoryAxisRenderer,
-                                              ticks: ticks
-                                          },
-                                          yaxis: {
-                                              padMin: 0,
-                                              tickOptions: {formatString: '%d'}
-                                          }
-                                      }
-                                  });
-
+                                  var plot1 = jQuery.jqplot('versionUserChart', [data],
+                                                            {
+                                                                seriesDefaults:{
+                                                                    // Make this a pie chart.
+                                                                    renderer:jQuery.jqplot.PieRenderer,
+                                                                    rendererOptions:{
+                                                                        // Put data labels on the pie slices.
+                                                                        // By default, labels show the percentage of the slice.
+                                                                        showDataLabels:true
+                                                                    }
+                                                                },
+                                                                legend:{ show:true, location:'e' }
+                                                            }
+                                          );
                               } else {
                                   $('#versionUserTable').hide();
                                   $('#versionUserChart').css("fontSize", 14);
                                   $('#versionUserChart').text('No Data Found ...');
                               }
+
                           } else {
-                              jagg.message(result.message);
+                              jagg.message(json.message);
                           }
                       }, "json");
 

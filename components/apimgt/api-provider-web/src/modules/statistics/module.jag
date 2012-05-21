@@ -3,8 +3,8 @@ jagg.module("statistics", {
 
     getProviderAPIVersionUsage:function () {
         return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIVersionUsage.apply(this, arguments);
-    },getProviderAPIVersionUserUsage:function () {
-        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIVersionUserUsage.apply(this, arguments);
+    },getSubscriberCountByAPIVersions:function () {
+        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getSubscriberCountByAPIVersions.apply(this, arguments);
     },getProviderAPIUsage:function () {
         return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIUsage.apply(this, arguments);
     },getProviderAPIUserUsage:function () {

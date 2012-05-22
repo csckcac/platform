@@ -19,10 +19,7 @@ package org.wso2.carbon.registry.jcr.util;
 import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.jcr.RegistrySession;
 
-import javax.jcr.AccessDeniedException;
-import javax.jcr.InvalidItemStateException;
-import javax.jcr.ItemNotFoundException;
-import javax.jcr.RepositoryException;
+import javax.jcr.*;
 
 public class RegistryJCRItemOperationUtil {
 
@@ -93,6 +90,17 @@ public class RegistryJCRItemOperationUtil {
        }
 
     }
+
+//    public static boolean isNodeVersionable(Session session, String path) throws RepositoryException {
+//
+//      if(  session.getNode(path).isNodeType("mix:versionable") ||
+//           session.getNode(path).isNodeType("mix:simpleVersionable")){
+//         return true;
+//      } else {
+//          return false;
+//      }
+//    }
+
 
 
 }

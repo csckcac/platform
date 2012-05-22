@@ -95,6 +95,10 @@ public class RegistryVersionManager implements VersionManager {
         Version version = null;
         String latestVersionPath = "";
 
+        if(!isNodeTypeVersionable(s)) {
+         throw new UnsupportedRepositoryOperationException("Cannot apply checkin for non versionalbe nodes .!!!");
+        }
+
         try {
             Value propVal = ((Node) session.getItem(s)).getProperty("jcr:checkedOut").getValue();
             if ((propVal != null) && (propVal.getString().equals("true"))) {
@@ -165,22 +169,24 @@ public class RegistryVersionManager implements VersionManager {
     }
 
     private boolean isNodeTypeVersionable(String s) throws RepositoryException {
-        if ((((Node) session.getItem(s)).isNodeType("mix:simpleVersionable"))
-                || ((((Node) session.getItem(s)).getParent().isNodeType("mix:simpleVersionable")))) {
-            return true;
-        } else {
-            throw new UnsupportedRepositoryOperationException("Node type not Versionable : " + s);
-        }
+      if(  session.getNode(s).isNodeType("mix:versionable") ||
+           session.getNode(s).isNodeType("mix:simpleVersionable")){
+         return true;
+      } else {
+          return false;
+      }
     }
 
     public void checkout(String s) throws UnsupportedRepositoryOperationException, LockException, RepositoryException {
+
+        if(!isNodeTypeVersionable(s)) {
+         throw new UnsupportedRepositoryOperationException("Cannot apply checkout for non versionalbe nodes .!!!");
+        }
         try {
-            if (isNodeTypeVersionable(s)) {
                 Resource resource = ((RegistrySession) session).getUserRegistry().get(s);
                 resource.setProperty("jcr:checkedOut", "true");   // no need both.But as in JCR spec there are two properties to set
                 resource.setProperty("jcr:isCheckedOut", "true");
                 ((RegistrySession) session).getUserRegistry().put(s, resource);
-            }
 
         } catch (RegistryException e) {
             throw new RepositoryException("Exception occurred at Registry level");
@@ -197,9 +203,9 @@ public class RegistryVersionManager implements VersionManager {
 
     public boolean isCheckedOut(String s) throws RepositoryException {
         boolean isCheckedOut = false;
-        if (!((Node) session.getItem(s)).isNodeType("mix:simpleVersionable")) {
-            isCheckedOut = true;
-        }
+//        if (!((Node) session.getItem(s)).isNodeType("mix:simpleVersionable")) {
+//            isCheckedOut = true;
+//        }
 
         Value propVal = ((Node) session.getItem(s)).getProperty("jcr:checkedOut").getValue();
         Value propVal1 = ((Node) session.getItem(s)).getProperty("jcr:isCheckedOut").getValue();

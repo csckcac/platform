@@ -28,6 +28,7 @@ import org.wso2.carbon.apimgt.impl.template.APITemplateBuilder;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.rest.api.stub.RestApiAdminStub;
+import org.wso2.carbon.rest.api.stub.types.carbon.APIData;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -60,6 +61,14 @@ public class RESTAPIAdminClient {
             restApiAdminStub.addApiFromString(apiConfig);
         } catch (Exception e) {
             throw new AxisFault("Error while adding new API", e);
+        }
+    }
+
+    public APIData getApi() throws AxisFault {
+        try {
+            return restApiAdminStub.getApiByName(builder.getAPIName());
+        } catch (Exception e) {
+            throw new AxisFault("Error while obtaining API information from gateway", e);
         }
     }
 

@@ -145,6 +145,16 @@ public interface APIProvider extends APIManager {
      */
     public void updateAPI(API api) throws APIManagementException;
 
+    /**
+     * Change the lifecycle state of the specified API
+     *
+     * @param api The API whose status to be updated
+     * @param status New status of the API
+     * @param updateGatewayConfig Whether the changes should be pushed to the API gateway or not
+     * @throws APIManagementException on error
+     */
+    public void changeAPIStatus(API api, APIStatus status,
+                                boolean updateGatewayConfig) throws APIManagementException;
 
     /**
      * Create a new version of the <code>api</code>, with version <code>newVersion</code>

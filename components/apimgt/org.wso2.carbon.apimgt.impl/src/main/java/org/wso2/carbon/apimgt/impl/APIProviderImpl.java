@@ -286,6 +286,19 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         }
     }
 
+    public void changeAPIStatus(API api, APIStatus status, 
+                                boolean updateGatewayConfig) throws APIManagementException {
+        APIStatus currentStatus = api.getStatus();
+        if (!currentStatus.equals(status)) {
+            api.setStatus(status);
+            createAPI(api);
+            if (updateGatewayConfig && currentStatus.equals(APIStatus.CREATED) &&
+                    status.equals(APIStatus.PUBLISHED)) {
+                publishToGateway(api);
+            }
+        }        
+    }
+
     private void publishToGateway(API api) throws APIManagementException {
         try {
             RESTAPIAdminClient client = new RESTAPIAdminClient(getTemplateBuilder(api));

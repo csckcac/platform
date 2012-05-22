@@ -22,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.account.mgt.util.Util;
-import org.wso2.carbon.stratos.common.beans.TenantBillingService;
+import org.wso2.carbon.stratos.common.TenantBillingService;
 import org.wso2.carbon.stratos.common.events.StratosEventListener;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -54,7 +54,7 @@ import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
  *                bind="setStratosEventListener"
  *                unbind="unsetStratosEventListener"
  * @scr.reference name="default.tenant.billing.service"
- *                interface="org.wso2.carbon.stratos.common.beans.TenantBillingService"
+ *                interface="org.wso2.carbon.stratos.common.TenantBillingService"
  *                cardinality="1..1" policy="dynamic"
  *                bind="setTenantBillingService"
  *                unbind="unsetTenantBillingService"

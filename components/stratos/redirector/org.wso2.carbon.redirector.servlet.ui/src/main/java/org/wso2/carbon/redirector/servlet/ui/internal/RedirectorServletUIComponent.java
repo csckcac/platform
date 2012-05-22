@@ -20,8 +20,6 @@ package org.wso2.carbon.redirector.servlet.ui.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.redirector.servlet.ui.util.Util;
 
 /**
@@ -34,8 +32,8 @@ public class RedirectorServletUIComponent {
     protected void activate(ComponentContext context) {
         try {
             Util.domainRegisterServlet(context.getBundleContext());
-            Util.loginJspRegisterServlet(context.getBundleContext());
-            Util.indexJspRegisterServlet(context.getBundleContext());
+            //Util.loginJspRegisterServlet(context.getBundleContext());
+            //Util.indexJspRegisterServlet(context.getBundleContext());
             Util.adminDocsRegisterServlet(context.getBundleContext());
             log.debug("******* Multitenancy Redirector Servlet UI bundle is activated ******* ");
         } catch (Exception e) {

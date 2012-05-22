@@ -13,7 +13,8 @@
         options.timeout = 1000000;
         options.action = "urn:process";
 
-        var payload = '<p:CreateProjectRequest xmlns:p="http://wso2.org/createproject"><projectKey xmlns="http://wso2.org/createproject">' + projectKey + '</projectKey><projectName xmlns="http://wso2.org/createproject">' + projectName + '</projectName></p:CreateProjectRequest>';
+        var payload = '<p:CreateProjectRequest xmlns:p="http://wso2.org/createproject"><projectName xmlns="http://wso2.org/createproject">' + projectName + '</projectName><userName xmlns="http://wso2.org/createproject">' + userName + '</userName></p:CreateProjectRequest>';
+
         var result;
         try {
             var endPoint = getProperty('webService.createProject');
@@ -36,7 +37,7 @@
         options.timeout = 1000000;
         options.action = "urn:process";
 
-        var payload = '<p:createRepository xmlns:p="http://SCMClient.ws.scm.sonia"><projectKey xmlns="http://SCMClient.ws.scm.sonia">' + projectKey + '</projectKey></p:createRepository>';
+        var payload = '<p:createRepository xmlns:p="http://SCMClient.ws.scm.sonia"><projectName xmlns="http://SCMClient.ws.scm.sonia">' + projectName + '</projectName></p:createRepository>';
         var result;
         try {
             var endPoint = getProperty('webService.createRepo');

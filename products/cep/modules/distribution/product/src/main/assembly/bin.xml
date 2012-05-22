@@ -37,7 +37,6 @@
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
-                <exclude>**/web.xml</exclude>
                 <exclude>**/FastMovingStockQuoteReceiver.aar</exclude>
                 <exclude>**/qpidClientLibs.zip</exclude>
             </excludes>

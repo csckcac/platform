@@ -24,15 +24,15 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.authenticator.proxy.AuthenticationAdminClient;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.tenant.activity.stub.TenantActivityServiceExceptionException;
 import org.wso2.carbon.tenant.activity.stub.beans.xsd.*;
 import org.wso2.carbon.tenant.activity.ui.internal.TenantActivityUIServiceComponent;
 import org.wso2.carbon.ui.CarbonUIUtil;
+import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.tenant.activity.stub.TenantActivityServiceStub;
-
-import static org.wso2.carbon.tenant.reg.agent.client.util.Util.login;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpSession;
@@ -94,8 +94,10 @@ public class TenantActivityServiceClient {
         ConfigurationContext configContext = (ConfigurationContext) config.
                 getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
         try {
-            String cookie = login(url + "/services/", TenantActivityUIServiceComponent.stratosConfiguration.getAdminUserName(),
-                    TenantActivityUIServiceComponent.stratosConfiguration.getAdminPassword());
+            String cookie = login(url + "/services/", 
+                    TenantActivityUIServiceComponent.stratosConfiguration.getAdminUserName(),
+                    TenantActivityUIServiceComponent.stratosConfiguration.getAdminPassword(), 
+                    configContext);
             epr = url + "/services/TenantActivityService";
             stub = new TenantActivityServiceStub(configContext, epr);
             ServiceClient client = stub._getServiceClient();
@@ -130,6 +132,24 @@ public class TenantActivityServiceClient {
 
     public boolean isTenantActiveInService(String domainName) throws TenantActivityServiceExceptionException, RemoteException {
         return stub.isActiveTenantOnService(domainName);
+    }
+    
+    private String login(String serverUrl, String userName, 
+                               String password, ConfigurationContext confContext) throws UserStoreException {
+        String sessionCookie = null;
+        try {
+            AuthenticationAdminClient client =
+                    new AuthenticationAdminClient(confContext, serverUrl, null, null, false);
+            //TODO : get the correct IP
+            boolean isLogin = client.login(userName, password, "127.0.0.1");
+            if (isLogin) {
+                sessionCookie = client.getAdminCookie();
+            }
+        } catch (Exception e) {
+            throw new UserStoreException("Error in login to the server server: " + serverUrl +
+                                         "username: " + userName + ".", e);
+        }
+        return sessionCookie;
     }
 
 }

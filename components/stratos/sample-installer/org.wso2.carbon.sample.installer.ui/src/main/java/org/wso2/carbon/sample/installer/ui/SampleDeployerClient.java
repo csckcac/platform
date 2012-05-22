@@ -28,7 +28,6 @@ import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.sample.installer.stub.SampleDeployerCallbackHandler;
 import org.wso2.carbon.sample.installer.stub.SampleDeployerStub;
 import org.wso2.carbon.sample.installer.stub.SampleInformation;
-import org.wso2.carbon.tenant.reg.agent.client.util.TenantRegListenerServer;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -40,9 +39,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static org.wso2.carbon.tenant.reg.agent.client.util.Util.getListenerServers;
-import static org.wso2.carbon.tenant.reg.agent.client.util.Util.login;
 
 /**
  * Stratos sample deployer service client.
@@ -215,18 +211,18 @@ public class SampleDeployerClient {
                 for (SampleInformation sample : samples) {
                     if (sample.getInstallable()) {
                         if (sampleUploader(sample.getFileName(), tenantDomain)) {
-                            TenantRegListenerServer[] servers = getListenerServers();
+                            ServerInfoBean[] servers = Util.getListenerServers();
 
                             String[] serviceEPRs = sample.getServiceEPRs();
                             SampleDeployerStub[] deployerStubs =
                                     new SampleDeployerStub[serviceEPRs.length];
                             for (int j = 0; j < deployerStubs.length; j++) {
                                 String sampleDeployerCookie = null;
-                                for (TenantRegListenerServer server : servers) {
+                                for (ServerInfoBean server : servers) {
                                     if (server.getServerUrl().equals(serviceEPRs[j])) {
                                         sampleDeployerCookie =
-                                                login(server.getServerUrl(), server.getUserName(),
-                                                      server.getPassword());
+                                                Util.login(server.getServerUrl(), server.getUserName(),
+                                                      server.getPassword(), confContext);
                                         break;
                                     }
                                 }

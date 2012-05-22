@@ -19,6 +19,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
+
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
@@ -29,7 +31,6 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
-import org.wso2.carbon.tenant.mgt.beans.TenantInfoBean;
 import org.wso2.carbon.tenant.mgt.internal.TenantMgtServiceComponent;
 import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.api.TenantMgtConfiguration;
@@ -114,14 +115,14 @@ public class TenantMgtUtil {
     /**
      * Triggers adding the tenant for TenantMgtListener
      *
-     * @param tenant tenant
+     * @param tenantInfo tenant
      * @throws UserStoreException - exception not handled here.
      */
-    public static void triggerAddTenant(Tenant tenant) throws UserStoreException {
+    public static void triggerAddTenant(TenantInfoBean tenantInfo) throws UserStoreException {
         // initializeRegistry(tenantInfoBean.getTenantId());
         for (TenantMgtListener tenantMgtListener :
                 TenantMgtServiceComponent.getTenantMgtListeners()) {
-            tenantMgtListener.addTenant(tenant.getId());
+            tenantMgtListener.addTenant(tenantInfo);
         }
     }
 
@@ -135,7 +136,7 @@ public class TenantMgtUtil {
             TenantInfoBean tenantInfoBean) throws UserStoreException {
         for (TenantMgtListener tenantMgtListener :
                 TenantMgtServiceComponent.getTenantMgtListeners()) {
-            tenantMgtListener.updateTenant(tenantInfoBean.getTenantId());
+            tenantMgtListener.updateTenant(tenantInfoBean);
         }
     }
 

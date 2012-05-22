@@ -36,8 +36,6 @@
         <module>org.wso2.carbon.tenant.mgt.core</module>
         <module>org.wso2.carbon.tenant.mgt</module>
         <module>org.wso2.carbon.tenant.mgt.ui</module>
-        <module>org.wso2.carbon.tenant.reg.agent.service</module>
-        <module>org.wso2.carbon.tenant.reg.agent.client</module>
         <module>org.wso2.carbon.tenant.registration.ui</module>
     </modules>
 

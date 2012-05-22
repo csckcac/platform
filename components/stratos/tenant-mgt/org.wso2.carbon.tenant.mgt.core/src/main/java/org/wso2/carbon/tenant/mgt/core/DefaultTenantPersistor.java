@@ -15,23 +15,19 @@
  */
 package org.wso2.carbon.tenant.mgt.core;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.core.multitenancy.persistence.TenantPersistor;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.stratos.common.config.CloudServiceConfigParser;
 import org.wso2.carbon.stratos.common.config.CloudServicesDescConfig;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.util.CloudServicesUtil;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
-import org.wso2.carbon.core.multitenancy.persistence.TenantPersistor;
-import org.wso2.carbon.keystore.mgt.KeyStoreGenerator;
-import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.tenant.mgt.core.internal.TenantMgtCoreServiceComponent;
 import org.wso2.carbon.tenant.mgt.core.util.TenantCoreUtil;
-import org.wso2.carbon.theme.mgt.util.ThemeUtil;
 import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.api.TenantMgtConfiguration;
 import org.wso2.carbon.user.core.AuthorizationManager;
@@ -45,6 +41,9 @@ import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.user.mgt.UserMgtConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * TenantPersistenceManager - Methods related to persisting the tenant.
@@ -106,7 +105,7 @@ public class DefaultTenantPersistor implements TenantPersistor {
             doPostTenantCreationActions(tenant, originatedService);
         } catch (Exception e) {
             String msg = "Error performing post tenant creation actions";
-            throw new Exception(msg);
+            throw new Exception(msg, e);
         }
 
         return tenantId;
@@ -126,9 +125,6 @@ public class DefaultTenantPersistor implements TenantPersistor {
         updateTenantAdminPassword(userRealm, tenant);
         TenantMgtCoreServiceComponent.getRegistryLoader().loadTenantRegistry(tenant.getId());
         copyUIPermissions(tenant.getId());
-        ThemeUtil.loadTheme(tenant.getId());
-        KeyStoreGenerator ksGenerator = new KeyStoreGenerator(tenant.getId());
-        ksGenerator.generateKeyStore();
 
         TenantCoreUtil.setOriginatedService(tenant.getId(), originatedService);
         setActivationFlags(tenant.getId(), originatedService);

@@ -33,7 +33,7 @@ import org.wso2.carbon.email.verification.util.EmailVerifierConfig;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.stratos.common.TenantBillingService;
+import org.wso2.carbon.stratos.common.beans.TenantBillingService;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
@@ -78,7 +78,7 @@ import java.util.List;
  *                bind="setTenantMgtListenerService"
  *                unbind="unsetTenantMgtListenerService"
  * @scr.reference name="default.tenant.billing.service"
- *                interface="org.wso2.carbon.stratos.common.TenantBillingService"
+ *                interface="org.wso2.carbon.stratos.common.beans.TenantBillingService"
  *                cardinality="0..1" policy="dynamic"
  *                bind="setTenantBillingService"
  *                unbind="unsetTenantBillingService"

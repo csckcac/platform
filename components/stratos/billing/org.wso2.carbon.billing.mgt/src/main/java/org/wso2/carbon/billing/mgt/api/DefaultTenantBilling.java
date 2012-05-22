@@ -8,7 +8,7 @@ import org.wso2.carbon.billing.core.dataobjects.Customer;
 import org.wso2.carbon.billing.core.dataobjects.Item;
 import org.wso2.carbon.billing.core.dataobjects.Subscription;
 import org.wso2.carbon.billing.mgt.services.BillingDataAccessService;
-import org.wso2.carbon.stratos.common.TenantBillingService;
+import org.wso2.carbon.stratos.common.beans.TenantBillingService;
 import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.stratos.common.internal.CloudCommonServiceComponent;
 import org.wso2.carbon.user.api.Tenant;

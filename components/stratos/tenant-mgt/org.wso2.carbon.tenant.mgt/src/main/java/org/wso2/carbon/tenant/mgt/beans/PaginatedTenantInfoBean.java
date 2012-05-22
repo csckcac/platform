@@ -18,6 +18,7 @@
  */
 package org.wso2.carbon.tenant.mgt.beans;
 
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
 import org.wso2.carbon.utils.Pageable;
 
 import java.util.List;

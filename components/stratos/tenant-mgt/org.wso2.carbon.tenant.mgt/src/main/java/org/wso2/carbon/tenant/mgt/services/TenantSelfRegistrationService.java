@@ -24,10 +24,11 @@ import org.wso2.carbon.captcha.mgt.beans.CaptchaInfoBean;
 import org.wso2.carbon.captcha.mgt.constants.CaptchaMgtConstants;
 import org.wso2.carbon.captcha.mgt.util.CaptchaUtil;
 import org.wso2.carbon.core.multitenancy.persistence.TenantPersistor;
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
-import org.wso2.carbon.tenant.mgt.beans.TenantInfoBean;
 import org.wso2.carbon.tenant.mgt.internal.TenantMgtServiceComponent;
 import org.wso2.carbon.tenant.mgt.util.TenantMgtUtil;
+import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -101,6 +102,15 @@ public class TenantSelfRegistrationService {
         TenantPersistor persistor = TenantMgtServiceComponent.getTenantPersistor();
         persistor.persistTenant(tenant, true, tenantInfoBean.getSuccessKey(), tenantInfoBean.getOriginatedService());
         TenantMgtUtil.addClaimsToUserStoreManager(tenant);
+        
+        //Notify tenant addition
+        try {
+            TenantMgtUtil.triggerAddTenant(tenantInfoBean);
+        } catch (UserStoreException e) {
+            String msg = "Error in notifying tenant addition.";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
 
         // For the registration validation - mail for the tenant email address
         TenantMgtUtil.sendEmail(tenant, tenantInfoBean.getOriginatedService());

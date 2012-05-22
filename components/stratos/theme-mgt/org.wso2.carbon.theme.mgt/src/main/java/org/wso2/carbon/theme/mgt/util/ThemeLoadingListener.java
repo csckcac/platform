@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.theme.mgt.util;
 
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,23 +25,18 @@ import org.wso2.carbon.user.core.UserStoreException;
 public class ThemeLoadingListener implements TenantMgtListener {
     private static final Log log = LogFactory.getLog(ThemeLoadingListener.class);
     private static final int EXEC_ORDER = 10;
-    public void addTenant(int tenantId) throws UserStoreException {
+    public void addTenant(TenantInfoBean tenantInfo) throws UserStoreException {
         try {
-            ThemeUtil.loadTheme(tenantId);
+            ThemeUtil.loadTheme(tenantInfo.getTenantId());
         } catch (RegistryException e) {
-            String domainName = null;
-            try {
-                domainName = ThemeUtil.getRealmService().getTenantManager().getDomain(tenantId);
-            } catch (org.wso2.carbon.user.api.UserStoreException e1) {
-                log.error("Cannot get domain for tenant " + tenantId, e1);
-            }
-            String msg = "Error in loading the theme for the tenant: " + domainName + ".";
+            String msg = "Error in loading the theme for the tenant: " 
+                + tenantInfo.getTenantDomain() + ".";
             log.error(msg, e);
             throw new UserStoreException(msg, e);
         }
     }
     
-    public void updateTenant(int tenantId) throws UserStoreException {
+    public void updateTenant(TenantInfoBean tenantInfo) throws UserStoreException {
         // doing nothing
     }
     

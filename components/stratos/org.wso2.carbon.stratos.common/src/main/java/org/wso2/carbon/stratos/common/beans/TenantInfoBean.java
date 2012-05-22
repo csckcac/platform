@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.tenant.mgt.beans;
+package org.wso2.carbon.stratos.common.beans;
 
 import java.util.Calendar;
 

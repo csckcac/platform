@@ -17,13 +17,14 @@ package org.wso2.carbon.tenant.mgt.services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
 import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.persistence.TenantPersistor;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.tenant.mgt.beans.PaginatedTenantInfoBean;
-import org.wso2.carbon.tenant.mgt.beans.TenantInfoBean;
 import org.wso2.carbon.tenant.mgt.internal.TenantMgtServiceComponent;
 import org.wso2.carbon.tenant.mgt.internal.util.PasswordUtil;
 import org.wso2.carbon.tenant.mgt.util.TenantMgtUtil;
@@ -78,7 +79,18 @@ public class TenantMgtAdminService extends AbstractAdmin {
         // not validating the domain ownership, since created by super tenant
         persistor.persistTenant(tenant, false, tenantInfoBean.getSuccessKey(),
                                 tenantInfoBean.getOriginatedService());
+        
         TenantMgtUtil.addClaimsToUserStoreManager(tenant);
+      
+        //Notify tenant addition
+        try {
+            TenantMgtUtil.triggerAddTenant(tenantInfoBean);
+        } catch (UserStoreException e) {
+            String msg = "Error in notifying tenant addition.";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+        
         // For the registration validation - mail for the tenant email address
         TenantMgtUtil.sendEmail(tenant, tenantInfoBean.getOriginatedService());
 
@@ -102,7 +114,6 @@ public class TenantMgtAdminService extends AbstractAdmin {
             log.error("Error occurred while adding the subscription for tenant: " +
                     tenantInfoBean.getTenantDomain() + " " + e.getMessage(), e);    
         }
-
 
         return TenantMgtUtil.prepareStringToShowThemeMgtPage(tenant.getId());
     }

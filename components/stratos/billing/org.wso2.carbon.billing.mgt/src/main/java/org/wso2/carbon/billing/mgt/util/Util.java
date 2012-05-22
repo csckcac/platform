@@ -25,7 +25,7 @@ import org.wso2.carbon.billing.core.*;
 import org.wso2.carbon.billing.mgt.api.DefaultTenantBilling;
 import org.wso2.carbon.billing.mgt.api.MultitenancyBillingInfo;
 import org.wso2.carbon.billing.mgt.handlers.MultitenancySubscriptionFeedingHandler;
-import org.wso2.carbon.stratos.common.TenantBillingService;
+import org.wso2.carbon.stratos.common.beans.TenantBillingService;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.usage.api.TenantUsageRetriever;

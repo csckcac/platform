@@ -374,11 +374,6 @@
                  <version>${stratos.version}</version>
             </dependency>
 	    <dependency>
-                 <groupId>org.wso2.carbon</groupId>
-                 <artifactId>org.wso2.carbon.tenant.reg.agent.client</artifactId>
-                 <version>${stratos.version}</version>
-            </dependency>
-	    <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.keystore.mgt</artifactId>
                 <version>${stratos.version}</version>
@@ -486,11 +481,6 @@
 	    <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.usage.stub</artifactId>
-                <version>${wso2carbon.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.tenant.reg.agent.stub</artifactId>
                 <version>${wso2carbon.version}</version>
             </dependency>
             <dependency>

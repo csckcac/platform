@@ -20,6 +20,7 @@ package org.wso2.carbon.keystore.mgt;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 
 /**
@@ -32,19 +33,19 @@ public class KeystoreTenantMgtListener implements TenantMgtListener {
 
     /**
      * Generate the keystore when a new tenant is registered.
-     * @param tenantId Information about the newly created tenant
+     * @param tenantInfo Information about the newly created tenant
      * @throws UserStoreException 
      */
-    public void addTenant(int tenantId) throws UserStoreException {
+    public void addTenant(TenantInfoBean tenantInfo) throws UserStoreException {
         try {
-            KeyStoreGenerator ksGenerator = new KeyStoreGenerator(tenantId);
+            KeyStoreGenerator ksGenerator = new KeyStoreGenerator(tenantInfo.getTenantId());
             ksGenerator.generateKeyStore();
         } catch (KeyStoreMgtException e) {
             log.error("Error when generating the keystore", e);
         }
     }
 
-    public void updateTenant(int tenantId) throws UserStoreException {
+    public void updateTenant(TenantInfoBean tenantInfo) throws UserStoreException {
         // It is not required to implement this method for keystore mgt. 
     }
 

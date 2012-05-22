@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.tenant.reg.agent.client.util;
+package org.wso2.carbon.sample.installer.ui;
 
-public class TenantRegListenerServer {
+public class ServerInfoBean {
     String serverUrl;
     String userName;
     String password;

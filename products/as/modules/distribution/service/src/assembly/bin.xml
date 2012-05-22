@@ -45,13 +45,6 @@
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
-            <excludes>
-                <exclude>**/wso2server.bat</exclude>
-                <exclude>**/wso2server.sh</exclude>
-            </excludes>
-            <includes>
-                <include>**/*.sh</include>
-            </includes>
             <fileMode>755</fileMode>
         </fileSet>
 
@@ -244,18 +237,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/bin/wso2server.bat</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>bin/wso2server.sh</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/bin</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>755</fileMode>
         </file>
         <file>
             <source>repository/conf/sec.policy</source>

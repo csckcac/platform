@@ -130,10 +130,6 @@
                                             dir="${tempdir}/${project.artifactId}-${project.version}/repository/components">
                                     </fileset>
                                 </copy>
-                                <copy todir="target/wso2carbon-core-${carbon.version}/bin"
-                                      overwrite="true">
-                                    <fileset dir="bin"/>
-                                </copy>
                                 <delete file="target/${project.artifactId}-${project.version}.zip"/>
                                 <delete dir="${tempdir}"/>
                                 <mkdir dir="${tempdir}"/>

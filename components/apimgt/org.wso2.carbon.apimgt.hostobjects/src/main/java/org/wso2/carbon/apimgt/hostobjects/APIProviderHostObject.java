@@ -61,8 +61,7 @@ import java.util.regex.Pattern;
 public class APIProviderHostObject extends ScriptableObject {
     
     private static final Log log = LogFactory.getLog(APIProviderHostObject.class);
-    
-    private String username = "admin";
+
     
     private APIProvider apiProvider;
 
@@ -72,12 +71,24 @@ public class APIProviderHostObject extends ScriptableObject {
 
     // The zero-argument constructor used for create instances for runtime
     public APIProviderHostObject() throws APIManagementException {
-        apiProvider = APIManagerFactory.getInstance().getAPIProvider(username);
+        apiProvider = APIManagerFactory.getInstance().getAPIProvider();
         //apiProvider = APIManagerFactory.getInstance().getAPIProvider();
     }
 
-    // Method jsConstructor defines the JavaScript constructor
-    public void jsConstructor() {
+    public APIProviderHostObject(String loggedUser) throws APIManagementException {
+        apiProvider = APIManagerFactory.getInstance().getAPIProvider(loggedUser);
+    }
+
+    public static Scriptable jsConstructor(Context cx, Object[] args, Function Obj,
+                                           boolean inNewExpr)
+            throws ScriptException, APIManagementException {
+
+        int length = args.length;
+        if (length == 1) {
+            String username = (String) args[0];
+            return new APIProviderHostObject(username);
+        }
+        return new APIProviderHostObject();
     }
 
     public APIProvider getApiProvider() {

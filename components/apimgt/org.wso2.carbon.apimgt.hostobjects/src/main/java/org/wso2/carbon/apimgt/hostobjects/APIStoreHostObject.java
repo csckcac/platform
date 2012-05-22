@@ -44,7 +44,7 @@ public class APIStoreHostObject extends ScriptableObject {
 
     private APIConsumer apiConsumer;
 
-    private String username = "admin"; // TODO: Init with the current username
+    private String username;
 
     public String getUsername() {
         return username;
@@ -56,12 +56,12 @@ public class APIStoreHostObject extends ScriptableObject {
 
     // The zero-argument constructor used for create instances for runtime
     public APIStoreHostObject() throws APIManagementException {
-        apiConsumer = APIManagerFactory.getInstance().getAPIConsumer(username);
+        apiConsumer = APIManagerFactory.getInstance().getAPIConsumer();
     }
 
     public APIStoreHostObject(String loggedUser) throws APIManagementException {
         this.username = loggedUser;
-        apiConsumer = APIManagerFactory.getInstance().getAPIConsumer(loggedUser);
+        apiConsumer = APIManagerFactory.getInstance().getAPIConsumer(username);
     }
 
     public static Scriptable jsConstructor(Context cx, Object[] args, Function Obj,

@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.entitlement.mediator;
+package org.wso2.carbon.identity.entitlement.mediator.callback;
 
 import java.security.cert.X509Certificate;
 
@@ -29,7 +29,7 @@ public class X509EntitlementCallbackHandler extends EntitlementCallbackHandler {
      * (non-Javadoc)
      * 
      * @see
-     * org.wso2.carbon.identity.entitlement.mediator.EntitlementCallbackHandler#getUserName(org.
+     * org.wso2.carbon.identity.entitlement.mediator.callback.EntitlementCallbackHandler#getUserName(org.
      * apache.synapse.MessageContext)
      */
     public String getUserName(MessageContext synCtx) {
@@ -45,7 +45,7 @@ public class X509EntitlementCallbackHandler extends EntitlementCallbackHandler {
      * (non-Javadoc)
      * 
      * @see
-     * org.wso2.carbon.identity.entitlement.mediator.EntitlementCallbackHandler#findEnvironment(
+     * org.wso2.carbon.identity.entitlement.mediator.callback.EntitlementCallbackHandler#findEnvironment(
      * org.apache.synapse.MessageContext)
      */
     public String[] findEnvironment(MessageContext synCtx) {

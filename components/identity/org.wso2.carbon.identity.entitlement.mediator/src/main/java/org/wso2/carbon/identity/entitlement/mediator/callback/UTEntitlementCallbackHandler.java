@@ -17,7 +17,7 @@
  */
 
 
-package org.wso2.carbon.identity.entitlement.mediator;
+package org.wso2.carbon.identity.entitlement.mediator.callback;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;

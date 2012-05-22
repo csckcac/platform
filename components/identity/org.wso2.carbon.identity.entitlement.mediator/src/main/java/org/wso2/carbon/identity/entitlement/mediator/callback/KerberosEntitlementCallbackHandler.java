@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.entitlement.mediator;
+package org.wso2.carbon.identity.entitlement.mediator.callback;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
@@ -27,7 +27,7 @@ public class KerberosEntitlementCallbackHandler extends EntitlementCallbackHandl
      * (non-Javadoc)
      * 
      * @see
-     * org.wso2.carbon.identity.entitlement.mediator.EntitlementCallbackHandler#getUserName(org.
+     * org.wso2.carbon.identity.entitlement.mediator.callback.EntitlementCallbackHandler#getUserName(org.
      * apache.synapse.MessageContext)
      */
     public String getUserName(MessageContext synCtx) {

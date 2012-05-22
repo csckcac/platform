@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03"
-        xmlns:sample="http://wso2.org/carbon/appfactory/applicaiton/deployment"
-        xmlns:service.deployment.application.appfactory.carbon.wso2.org="http://service.deployment.application.appfactory.carbon.wso2.org">
-    <process name="sample:DeployApplicationToDev">
-        <active>true</active>
-        <retired>false</retired>
-        <process-events generate="all"/>
-        <provide partnerLink="client">
-            <service name="sample:DeployApplicationToDev" port="DeployApplicationToDevPort"/>
-        </provide>
-        <invoke partnerLink="ApplicationDeploymentServicePL">
-            <service
-                    name="service.deployment.application.appfactory.carbon.wso2.org:ApplicationDeploymentService"
-                    port="ApplicationDeploymentServiceHttpsSoap11Endpoint">
-                <endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config"
-                          endpointReference="./../../../../repository/conf/appfactory/endpoints/ApplicationDeploymentService.epr"/>
-            </service>
-
-        </invoke>
-    </process>
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:_1="http://wso2.org/bps/bpel/endpoint/config" xmlns:sample="http://wso2.org/carbon/appfactory/applicaiton/deployment" xmlns:service.deployment.application.appfactory.carbon.wso2.org="http://service.deployment.application.appfactory.carbon.wso2.org">
+  <process name="sample:DeployApplicationToDev">
+    <active>true</active>
+    <retired>false</retired>
+    <process-events generate="all"/>
+    <provide partnerLink="client">
+      <service name="sample:DeployApplicationToDev" port="DeployApplicationToDevPort"/>
+    </provide>
+    <invoke partnerLink="ApplicationDeploymentServicePL">
+      <service name="service.deployment.application.appfactory.carbon.wso2.org:ApplicationDeploymentService" port="ApplicationDeploymentServiceHttpsSoap11Endpoint">
+        <_1:endpoint endpointReference="./../../../../repository/conf/appfactory/endpoints/ApplicationDeploymentService.epr"/>
+      </service>
+    </invoke>
+  </process>
 </deploy>

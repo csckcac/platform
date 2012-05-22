@@ -38,5 +38,6 @@
         <module>org.wso2.carbon.appfactory.application.deployment.service</module>
         <module>org.wso2.carbon.appfactory.svn.repository.mgt.service</module>
         <module>org.wso2.carbon.appfactory.hostobjects.configuration</module>
+        <module>org.wso2.carbon.appfactory.login.ui</module>
     </modules>
 </project>

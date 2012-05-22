@@ -46,7 +46,6 @@ import java.util.Iterator;
 
 /**
  * SCM-manager specific repository manager implementation
- *
  */
 public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager {
     private static final Log log = LogFactory.getLog(SCMManagerBasedRepositoryManager.class);
@@ -81,7 +80,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
         Permission permission = new Permission();
         permission.setGroupPermission(true);
         permission.setName(projectKey);
-        permission.setType(PermissionType.OWNER);
+        permission.setType(PermissionType.WRITE);
         ArrayList<Permission> permissions = new ArrayList<Permission>();
         permissions.add(permission);
 
@@ -108,8 +107,8 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
         if (post.getStatusCode() == HttpStatus.SC_CREATED) {
             url = getURL(projectKey);
         } else {
-            String msg = "Repository creation is failed for "+projectKey+" server returned status "+
-                    post.getStatusText();
+            String msg = "Repository creation is failed for " + projectKey + " server returned status " +
+                         post.getStatusText();
             log.error(msg);
             throw new RepositoryMgtException(msg);
         }
@@ -195,7 +194,7 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
 
     @Override
     public void setConfig(AppFactoryConfiguration configuration) {
-        this.configuration=configuration;
+        this.configuration = configuration;
     }
 
     @Override
@@ -236,8 +235,8 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
             throw new RepositoryMgtException(msg, e);
         } finally {
             try {
-                if(reader!=null){
-                reader.close();
+                if (reader != null) {
+                    reader.close();
                 }
             } catch (XMLStreamException e) {
                 String msg = "Error while serializing the payload";

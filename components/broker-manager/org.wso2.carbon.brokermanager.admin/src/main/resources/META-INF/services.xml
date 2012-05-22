@@ -14,6 +14,26 @@
         org.wso2.carbon.brokermanager.admin.internal.BrokerManagerAdminService
     </parameter>
 
+        <parameter name="AuthorizationAction" locked="false">/permission/admin/manage/brokerManager</parameter>
+        <operation name="getBrokerNames">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/brokerManager</parameter>
+        </operation>
+        <operation name="getBrokerProperties">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/brokerManager</parameter>
+        </operation>
+        <operation name="addBrokerConfiguration">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/brokerManager</parameter>
+        </operation>
+        <operation name="removeBrokerConfiguration">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/brokerManager</parameter>
+        </operation>
+        <operation name="getAllBrokerConfigurationNamesAndTypes">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/brokerManager</parameter>
+        </operation>
+        <operation name="getBrokerConfiguration">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/brokerManager</parameter>
+        </operation>
+
       <parameter name="adminService" locked="true">true</parameter>
       <parameter name="hiddenService" locked="true">true</parameter>
 </service>

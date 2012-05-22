@@ -42,6 +42,8 @@ import org.wso2.andes.server.cassandra.AndesConsistantLevelPolicy;
 import org.wso2.andes.server.cassandra.CassandraQueueMessage;
 import org.wso2.andes.server.cassandra.CassandraTopicPublisherManager;
 import org.wso2.andes.server.cluster.ClusterManager;
+import org.wso2.andes.server.cluster.coordination.MessageIdGenerator;
+import org.wso2.andes.server.cluster.coordination.TimeStampBasedMessageIdGenerator;
 import org.wso2.andes.server.configuration.ClusterConfiguration;
 import org.wso2.andes.server.exchange.Exchange;
 import org.wso2.andes.server.logging.LogSubject;
@@ -74,6 +76,7 @@ public class CassandraMessageStore implements MessageStore {
     private final String PASSWORD_KEY = "password";
     private final String CONNECTION_STRING = "connectionString";
     private final String CLUSTER_KEY = "cluster";
+    private final String ID_GENENRATOR= "idGenerator";
 
 
 
@@ -120,6 +123,8 @@ public class CassandraMessageStore implements MessageStore {
 
     private final AtomicLong _messageId = new AtomicLong(0);
 
+    private MessageIdGenerator messageIdGenerator = null;
+
     private SortedMap<Long,Long> contentDeletionTasks = new ConcurrentSkipListMap<Long,Long>();
 
     private ConcurrentHashMap<Long,Long> pubSubMessageContentDeletionTasks;
@@ -162,8 +167,7 @@ public class CassandraMessageStore implements MessageStore {
                 addMessageToGlobalQueue(destinationQueue.getResourceName(), messageId,
                         underlying);
             } catch (Exception e) {
-               log.error("Error in adding incoming message",e);
-               //Todo throw a proper exception up and handle it there
+               throw new RuntimeException("Error while adding messages to queues  " ,e);
             }
         }
     }
@@ -1287,6 +1291,9 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         }
     }
 
+    public AtomicLong currentMessageId() {
+        return _messageId;
+    }
 
     public void createQueue(AMQQueue queue) {
         try {
@@ -1415,10 +1422,26 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         String password = (String) configuration.getProperty(PASSWORD_KEY);
         String connectionString = (String) configuration.getProperty(CONNECTION_STRING);
         String clusterName = (String) configuration.getProperty(CLUSTER_KEY);
-
+        String idGeneratorImpl = (String) configuration.getProperty(ID_GENENRATOR);
 
         cluster = CassandraDataAccessHelper.createCluster(userName, password, clusterName, connectionString);
         keyspace = createKeySpace();
+
+
+        if(idGeneratorImpl != null && !"".equals(idGeneratorImpl)) {
+            try {
+                Class clz = Class.forName(idGeneratorImpl);
+
+                Object o = clz.newInstance();
+                messageIdGenerator = (MessageIdGenerator)o;
+            } catch (Exception e) {
+                log.error("Error while loading Message id generator implementation : " + idGeneratorImpl +
+                        " adding TimeStamp based implementation as the default",e);
+                messageIdGenerator = new TimeStampBasedMessageIdGenerator();
+            }
+        } else {
+            messageIdGenerator = new TimeStampBasedMessageIdGenerator();
+        }
 
         messageContentRemovalTask = new ContentRemoverTask(ClusterResourceHolder.getInstance().getClusterConfiguration().
                 getContentRemovalTaskInterval());
@@ -1458,20 +1481,8 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
     @Override
     public <T extends StorableMessageMetaData> StoredMessage<T> addMessage(T metaData) {
-         long timeStamp = 0;
-        if(metaData instanceof MessageMetaData){
-           timeStamp = ((MessageMetaData) metaData).getArrivalTime();
-        }else {
-             timeStamp = ((MessageMetaData_0_10) metaData).getArrivalTime();
-        }
-
-        StringBuffer midStr = new StringBuffer();
-        timeStamp = ClusterResourceHolder.getInstance().getReferenceTime().getTime(timeStamp);
-        midStr.append(timeStamp).append(_messageId.incrementAndGet()).
-                append(ClusterResourceHolder.getInstance().getClusterManager().getNodeId());
-        long mid = Long.parseLong(midStr.toString());
+        long mid = messageIdGenerator.getNextId();
         return new StoredCassandraMessage(mid, metaData);
-
     }
 
 

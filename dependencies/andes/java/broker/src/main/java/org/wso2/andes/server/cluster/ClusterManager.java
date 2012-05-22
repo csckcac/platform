@@ -251,6 +251,10 @@ public class ClusterManager {
     }
 
 
+    public void handleQueueRemoval(String queueName) throws CoordinationException {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * This will Select the Set of nodes which handle the leader failures and update with
      * appropriate data

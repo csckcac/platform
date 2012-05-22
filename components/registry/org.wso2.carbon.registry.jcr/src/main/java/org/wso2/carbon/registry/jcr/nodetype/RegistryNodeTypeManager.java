@@ -348,15 +348,15 @@ public class RegistryNodeTypeManager implements NodeTypeManager {
             throw new RepositoryException("Cannot remove the base node type");
         }
 
-        NodeType nt = null;
-        NodeTypeIterator it = getAllNodeTypes();
+        unRegisterNodeTypeAt(s);
+//        NodeType nt = null;
+//        NodeTypeIterator it = getAllNodeTypes();
 
-        while (it.hasNext()) {
-            nt = (NodeType) it.next();
-            if ((nt != null) && (nt.getName().equals(s))) {
-                unRegisterNodeTypeAt(s);
-            }
-        }
+//        while (it.hasNext()) {
+//            nt = (NodeType) it.next();
+//            if ((nt != null) && (nt.getName().equals(s))) {
+//            }
+//        }
     }
 
     public void unregisterNodeTypes(String[] strings) throws UnsupportedRepositoryOperationException, NoSuchNodeTypeException, RepositoryException {
@@ -366,7 +366,7 @@ public class RegistryNodeTypeManager implements NodeTypeManager {
         }
     }
 
-    private void unRegisterNodeTypeAt(String nodeType) throws RepositoryException {   //non JCR custom method
+    private void unRegisterNodeTypeAt(String nodeType) throws RepositoryException {   // Non JCR custom method
         NodeType tempNT = getNodeType(nodeType);
         if (tempNT.isMixin()) {
             mixinNodetypes.remove(tempNT);
@@ -374,5 +374,6 @@ public class RegistryNodeTypeManager implements NodeTypeManager {
             primaryNodetypes.remove(tempNT);
         }
         nodeTypesList.remove(tempNT);
+        RegistryNodeTypeUtil.unregisterNodeTypeFromRegistry(registrySession,this,nodeType);
     }
 }

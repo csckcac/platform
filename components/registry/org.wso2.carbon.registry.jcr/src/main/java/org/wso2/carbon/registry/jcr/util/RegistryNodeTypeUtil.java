@@ -94,7 +94,7 @@ public class RegistryNodeTypeUtil {
             for (Object o : attributes) {
                 OMElement omNode = (OMElement) o;
                 NodeTypeTemplate nodeTypeTemplate = new NodeTypeReader(nodeTypeManager).buildNodeType(omNode);
-                ((RegistryNodeTypeManager)nodeTypeManager).registerNodeTypeFromXML(nodeTypeTemplate, false); // allowUpdates - false
+                ((RegistryNodeTypeManager) nodeTypeManager).registerNodeTypeFromXML(nodeTypeTemplate, false); // allowUpdates - false
             }
 
             is.close();
@@ -111,11 +111,14 @@ public class RegistryNodeTypeUtil {
     public static void persistNodeTypeToRegistry(NodeTypeDefinition nodeTypeDefinition, RegistrySession registrySession) {
         try {
 
-            NodeTypeTemplate nodeTypeTemplate = (NodeTypeTemplate) nodeTypeDefinition;
+//            NodeTypeTemplate nodeTypeTemplate = (NodeTypeTemplate) nodeTypeDefinition;
+            NodeTypeDefinition nodeTypeTemplate =  nodeTypeDefinition;
 
             String nodeTypePath = RegistryJCRSpecificStandardLoderUtil.getSystemConfigNodeTypePath(registrySession)
                     + "/" + nodeTypeTemplate.getName();
             CollectionImpl nodetype = (CollectionImpl) registrySession.getUserRegistry().newCollection();
+            nodetype.setName(nodeTypeTemplate.getName());
+
 
             //set primary attributes of node type
             nodetype.setProperty("name", nodeTypeTemplate.getName());
@@ -192,13 +195,13 @@ public class RegistryNodeTypeUtil {
         try {
             nodeTypeTemplate = registryNodeTypeManager.createNodeTypeTemplate();
             String[] paths = ((CollectionImpl) registrySession.getUserRegistry().get(
-                              RegistryJCRSpecificStandardLoderUtil.
-                              getSystemConfigNodeTypePath(registrySession))).getChildren();
+                    RegistryJCRSpecificStandardLoderUtil.
+                            getSystemConfigNodeTypePath(registrySession))).getChildren();
 
             for (String path : paths) {
-                CollectionImpl nodeType = (CollectionImpl)registrySession.getUserRegistry().get(path);
-                String nodeTypePath = RegistryJCRSpecificStandardLoderUtil.getSystemConfigNodeTypePath(registrySession) + "/" +
-                        nodeType.getProperty("name");
+                CollectionImpl nodeType = (CollectionImpl) registrySession.getUserRegistry().get(path);
+                String nodeTypePat = RegistryJCRSpecificStandardLoderUtil.getSystemConfigNodeTypePath(registrySession) + "/" +
+                        nodeType.getProperty("name").replaceAll(":","-");
 
                 nodeTypeTemplate.setName(nodeType.getProperty("name"));
                 nodeTypeTemplate.setDeclaredSuperTypeNames(nodeType.getPropertyValues("declaredSuperTypes").toArray(new String[0]));
@@ -209,7 +212,8 @@ public class RegistryNodeTypeUtil {
                 nodeTypeTemplate.setPrimaryItemName(nodeType.getProperty("primaryItemName"));
 
                 //node defs loading
-                String childDefRootPath = nodeTypePath + "/" + RegistryJCRSpecificStandardLoderUtil.JCR_SYSTEM_PERSIS_CHILDNODE_DEFS;
+                String childDefRootPath = path + "/" + RegistryJCRSpecificStandardLoderUtil.JCR_SYSTEM_PERSIS_CHILDNODE_DEFS;
+                if(registrySession.getUserRegistry().resourceExists(childDefRootPath)) {
                 String[] childDefPaths = ((CollectionImpl) registrySession.getUserRegistry().get(childDefRootPath)).getChildren();
 
                 for (String childPath : childDefPaths) {
@@ -228,15 +232,15 @@ public class RegistryNodeTypeUtil {
 
                     nodeTypeTemplate.getNodeDefinitionTemplates().add(nodeDefinitionTemplate);
                 }
-
+                }
 
                 //load prop defs
-                String propDefRootPath = nodeTypePath + "/" + RegistryJCRSpecificStandardLoderUtil.JCR_SYSTEM_PERSIS_PROP_DEFS;
+                String propDefRootPath = path + "/" + RegistryJCRSpecificStandardLoderUtil.JCR_SYSTEM_PERSIS_PROP_DEFS;
+                if(registrySession.getUserRegistry().resourceExists(propDefRootPath)) {
                 String[] propDefPaths = ((CollectionImpl) registrySession.getUserRegistry().get(propDefRootPath)).getChildren();
 
                 for (String propPath : propDefPaths) {
                     Resource propdDef = registrySession.getUserRegistry().get(propPath);
-
                     PropertyDefinitionTemplate propertyDefinitionTemplate = registryNodeTypeManager.createPropertyDefinitionTemplate();
                     propertyDefinitionTemplate.setName(propdDef.getProperty("name"));
                     propertyDefinitionTemplate.setAutoCreated(Boolean.valueOf(propdDef.getProperty("autoCreated")));
@@ -257,10 +261,12 @@ public class RegistryNodeTypeUtil {
 
                     nodeTypeTemplate.getPropertyDefinitionTemplates().add(propertyDefinitionTemplate);
                 }
+                }
 
+                // Creating the node type
                 NodeType nodeTypeBean = new RegistryNodeType(nodeTypeTemplate, registryNodeTypeManager);
                 if (nodeTypeTemplate.getName().startsWith("mix")) {
-                    registryNodeTypeManager.getMixinNodetypes().add(nodeTypeBean);      // TODO should persist to registry tree
+                    registryNodeTypeManager.getMixinNodetypes().add(nodeTypeBean);
                 } else {
                     registryNodeTypeManager.getPrimaryNodetypes().add(nodeTypeBean);
                 }
@@ -274,4 +280,29 @@ public class RegistryNodeTypeUtil {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
+
+
+    public static void unregisterNodeTypeFromRegistry(RegistrySession registrySession,
+                                                      RegistryNodeTypeManager registryNodeTypeManager,
+                                                      String nodeType) {
+
+        try {
+            String[] paths = ((CollectionImpl) registrySession.getUserRegistry().get(
+                    RegistryJCRSpecificStandardLoderUtil.
+                            getSystemConfigNodeTypePath(registrySession))).getChildren();
+            for (String path : paths) {
+                String name = path.split("/")[path.split("/").length - 1];
+                if (name.equals(nodeType)) {
+                    registrySession.getUserRegistry().delete(path);
+                }
+            }
+
+
+        } catch (RegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+
+    }
+
 }

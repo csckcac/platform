@@ -36,13 +36,13 @@ public class RegistryJCRSpecificStandardLoderUtil {
     private static Map<String, String> nameSpaceURI = new HashMap<String, String>();
     private static List<String> nameSpaceURIList = new ArrayList<String>();
     private static boolean initialized = false;
-    private static final String DEFAULT_REGISTRY_WORKSPACE_NAME = "jcr:default_workspace";
-    private static final String JCR_REGISTRY_WORKSPACE_ROOT = "/jcr:system/workspaces";
-    public static final String WORKSPACE_ROOT_PRIMARY_NODETYPE_NAME = "jcr:system";
+    private static final String DEFAULT_REGISTRY_WORKSPACE_NAME = "default_workspace";
+    private static final String JCR_REGISTRY_WORKSPACE_ROOT = "/jcr_system/workspaces";
+    public static final String WORKSPACE_ROOT_PRIMARY_NODETYPE_NAME = "system_config";
     public static final String WORKSPACE_ROOT_PRIMARY_ITEM_NAME = "greg";
     public static final String JCR_SYSTEM_PERSIS_PROP_DEFS = "prop_defs";
     public static final String JCR_SYSTEM_PERSIS_CHILDNODE_DEFS = "child_defs";
-    public static final String JCR_SYSTEM_CONFIG = "greg:jcr_sys_config";
+    public static final String JCR_SYSTEM_CONFIG = "greg_jcr_config";
     private static final String JCR_SYSTEM_CONFIG_VERSION = "sys_versions";
     private static final String JCR_SYSTEM_CONFIG_NODE_TYPES = "sys_node_types";
 
@@ -224,9 +224,26 @@ public class RegistryJCRSpecificStandardLoderUtil {
     }
 
     public static void loadJCRSystemConfigs(UserRegistry userReg,String workspaceRoot) throws RegistryException {
+        createSysBaseNodes(userReg,workspaceRoot);
         createSystemConfigVersion(userReg,workspaceRoot);
-        createSystemConfigNodeTypes(userReg,workspaceRoot);
+//        createSystemConfigNodeTypes(userReg,workspaceRoot);
     }
+
+    private static void createSysBaseNodes(UserRegistry userReg, String workspaceRoot) throws RegistryException {
+        if(!userReg.resourceExists(workspaceRoot+JCR_SYSTEM_CONFIG)) {
+           CollectionImpl sysConf = (CollectionImpl) userReg.newCollection();
+           userReg.put(workspaceRoot+JCR_SYSTEM_CONFIG,sysConf);
+        }
+        if(!userReg.resourceExists(workspaceRoot+JCR_SYSTEM_CONFIG+"/"+JCR_SYSTEM_CONFIG_NODE_TYPES)) {
+           CollectionImpl sysConf = (CollectionImpl) userReg.newCollection();
+           userReg.put(workspaceRoot+JCR_SYSTEM_CONFIG+"/"+JCR_SYSTEM_CONFIG_NODE_TYPES,sysConf);
+        }
+    }
+
+//    private static void createSysBaseNodes() {
+//       if()
+//        greg:jcr_sys_config/sys_node_types
+//    }
 
 //    private static void createSystemConfig(UserRegistry userReg,String workspaceRoot) throws RegistryException {
 //        String confPath = workspaceRoot

@@ -93,13 +93,12 @@ public class RegistrySession implements Session {
         this.WORKSPACE_ROOT = RegistryJCRSpecificStandardLoderUtil.getJCRRegistryWorkspaceRoot() + "/" + this.workspaceName + "/";
         this.registryRepository = registryRepository;
         this.userRegistry = userReg;
-
+        createRootNode();
+        loadJCRSystemConfiguration(userRegistry,WORKSPACE_ROOT);
         this.registrySimpleCredentials = registrySimpleCredentials;
         this.registryWorkspace = new RegistryWorkspace(registrySimpleCredentials.getUserID(), this);
         this.regAccControlMngr = new RegistryAccessControlManager(this);
         this.regRetentionMngr = new RegistryRetentionManager();
-        createRootNode();
-        loadJCRSystemConfiguration(userRegistry,WORKSPACE_ROOT);
 
     }
 
@@ -109,11 +108,11 @@ public class RegistrySession implements Session {
         this.WORKSPACE_ROOT = RegistryJCRSpecificStandardLoderUtil.getJCRRegistryWorkspaceRoot() + "/" + this.workspaceName + "/";
         this.registryRepository = registryRepository;
         this.userRegistry = userReg;
+        createRootNode();
+        loadJCRSystemConfiguration(userRegistry,WORKSPACE_ROOT);
         this.registryWorkspace = new RegistryWorkspace(this);
         this.regAccControlMngr = new RegistryAccessControlManager(this);
         this.regRetentionMngr = new RegistryRetentionManager();
-        createRootNode();
-        loadJCRSystemConfiguration(userRegistry,WORKSPACE_ROOT);
 
     }
     //TODO workspace name is "" and have to handle properly
@@ -121,12 +120,12 @@ public class RegistrySession implements Session {
         this.USER_ID = userID;
         this.WORKSPACE_ROOT = RegistryJCRSpecificStandardLoderUtil.getJCRRegistryWorkspaceRoot() + "/" + this.workspaceName + "/";
         this.registryRepository = registryRepository;
-        this.registryWorkspace = new RegistryWorkspace(this);
         this.userRegistry = userReg;
-        this.regAccControlMngr = new RegistryAccessControlManager(this);
-        this.regRetentionMngr = new RegistryRetentionManager();
         createRootNode();
         loadJCRSystemConfiguration(userRegistry,WORKSPACE_ROOT);
+        this.registryWorkspace = new RegistryWorkspace(this);
+        this.regAccControlMngr = new RegistryAccessControlManager(this);
+        this.regRetentionMngr = new RegistryRetentionManager();
     }
 
     public String getWorkspaceRootPath() {

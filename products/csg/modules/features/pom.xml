@@ -43,7 +43,7 @@
     </licenses>
 
     <modules>
-        <module>product</module>
+        <!--<module>product</module> -->
         <module>service</module>
     </modules>
 </project>

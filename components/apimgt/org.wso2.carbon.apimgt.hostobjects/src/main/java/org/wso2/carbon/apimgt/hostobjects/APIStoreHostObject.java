@@ -41,9 +41,9 @@ public class APIStoreHostObject extends ScriptableObject {
 	private static final long serialVersionUID = -3169012616750937045L;
 	private static final Log log = LogFactory.getLog(APIStoreHostObject.class);
     private static final String hostObjectName = "APIStore";
-    
+
     private APIConsumer apiConsumer;
-    
+
     private String username = "admin"; // TODO: Init with the current username
 
     public String getUsername() {
@@ -52,19 +52,30 @@ public class APIStoreHostObject extends ScriptableObject {
 
     @Override
 	public String getClassName() {
-		return hostObjectName;
-	}
+		return hostObjectName;	}
 
-	// The zero-argument constructor used for create instances for runtime
-	public APIStoreHostObject() throws APIManagementException {
+    // The zero-argument constructor used for create instances for runtime
+    public APIStoreHostObject() throws APIManagementException {
         apiConsumer = APIManagerFactory.getInstance().getAPIConsumer(username);
-	}
+    }
 
-	// Method jsConstructor defines the JavaScript constructor
-	public void jsConstructor() throws ScriptException, APIManagementException {
-		// jsFunction_registerLogin(username, password);
-	}
-    
+    public APIStoreHostObject(String loggedUser) throws APIManagementException {
+        this.username = loggedUser;
+        apiConsumer = APIManagerFactory.getInstance().getAPIConsumer(loggedUser);
+    }
+
+    public static Scriptable jsConstructor(Context cx, Object[] args, Function Obj,
+                                           boolean inNewExpr)
+            throws ScriptException, APIManagementException {
+
+        int length = args.length;
+        if (length == 1) {
+            String username = (String) args[0];
+            return new APIStoreHostObject(username);
+        }
+        return new APIStoreHostObject();
+    }
+
     private static String getUsernameFromObject(Scriptable obj) {
         return ((APIStoreHostObject) obj).getUsername();
     }
@@ -348,7 +359,7 @@ public class APIStoreHostObject extends ScriptableObject {
 		}// end of the if
 		return apiArray;
 	}
-	
+
 	public static NativeArray jsFunction_searchAPIbyType(Context cx,
 			Scriptable thisObj, Object[] args, Function funObj)
 			throws ScriptException, APIManagementException {
@@ -425,7 +436,7 @@ public class APIStoreHostObject extends ScriptableObject {
                 log.error("Error while getting APIs With Tag Information" + e);
                 return apiArray;
             }
-            
+
 			Iterator it = apiSet.iterator();
 			int i = 0;
 			while (it.hasNext()) {
@@ -510,7 +521,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			log.error("Error while getting All Tags" + e);
 			return tagArray;
 		}
-        
+
 		Iterator tagsI = tags.iterator();
 		int i = 0;
 		while (tagsI.hasNext()) {
@@ -545,7 +556,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			log.error("Error while getting API Information" + e);
 			return myn;
 		}
-        
+
 		Iterator it = apiSet.iterator();
 		int i = 0;
 		while (it.hasNext()) {
@@ -629,7 +640,7 @@ public class APIStoreHostObject extends ScriptableObject {
             log.error("Error while getting API Information" + e);
             return myn;
         }
-        
+
         NativeObject row = new NativeObject();
         apiIdentifier = api.getId();
         row.put("name", row, apiIdentifier.getApiName());
@@ -691,7 +702,7 @@ public class APIStoreHostObject extends ScriptableObject {
             }
             username = (String) args[3];
         }
-        
+
         String providerName = (String) args[0];
 	    String apiName = (String) args[1];
 		String version = (String) args[2];
@@ -757,7 +768,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			log.error("Error while getting All Documentation "+apiName  + e);
 			return myn;
 		}
-        
+
 		Iterator it = doclist.iterator();
 		int i = 0;
 		while (it.hasNext()) {
@@ -766,7 +777,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			Documentation documentation = (Documentation) docObject;
 			Object objectSourceType= documentation.getSourceType();
          	String strSourceType = objectSourceType.toString();
-         
+
 			row.put("name", row, documentation.getName());
 			row.put("sourceType", row, strSourceType);
 			row.put("summary", row, documentation.getSummary());
@@ -779,7 +790,7 @@ public class APIStoreHostObject extends ScriptableObject {
 		return myn;
 	}
 
-	
+
 	public static NativeArray jsFunction_getComments(Context cx,
 			Scriptable thisObj, Object[] args, Function funObj)
 			throws ScriptException, APIManagementException {
@@ -810,19 +821,19 @@ public class APIStoreHostObject extends ScriptableObject {
 			log.error("Error while getting Comments for "+apiName  + e);
 			return myn;
 		}
-		
+
 		int i=0;
 		for (Comment n: commentlist) {
-			NativeObject row = new NativeObject();			
+			NativeObject row = new NativeObject();
 			row.put("userName", row, n.getUser());
-			row.put("comment", row, n.getText());			
+			row.put("comment", row, n.getText());
 			row.put("createdTime", row, n.getCreatedTime().getTime());
 			myn.put(i, myn, row);
 			i++;
 		}
 		return myn;
 	}
-	
+
 	public static NativeArray jsFunction_addComments(Context cx,
 			Scriptable thisObj, Object[] args, Function funObj)
 			throws ScriptException, APIManagementException {
@@ -854,17 +865,17 @@ public class APIStoreHostObject extends ScriptableObject {
 			log.error("Error while adding Comments for "+apiName  + e);
 			return myn;
 		}
-		
+
 		int i=0;
-			NativeObject row = new NativeObject();			
+			NativeObject row = new NativeObject();
 			row.put("userName", row, providerName);
-			row.put("comment", row, commentStr);			
+			row.put("comment", row, commentStr);
 			myn.put(i, myn, row);
-			
+
 		return myn;
 	}
-	
-	
+
+
 	public static NativeArray jsFunction_ListProviders(Context cx,
 			Scriptable thisObj, Object[] args, Function funObj)
 			throws ScriptException {
@@ -938,7 +949,7 @@ public class APIStoreHostObject extends ScriptableObject {
 	}
 
 	public static boolean jsFunction_addSubscription(Context cx,
-			Scriptable thisObj, Object[] args, Function funObj) {		
+			Scriptable thisObj, Object[] args, Function funObj) {
         if(!(args[0] instanceof String) ||
                 !(args[1] instanceof String) ||
                 !(args[2] instanceof String) ||
@@ -947,7 +958,7 @@ public class APIStoreHostObject extends ScriptableObject {
                 !(args[5] instanceof String))) {
             return false;
         }
-        
+
         String providerName = args[0].toString();
         String apiName = args[1].toString();
         String version = args[2].toString();
@@ -993,7 +1004,7 @@ public class APIStoreHostObject extends ScriptableObject {
         }
 	}
 
-    
+
 	public static NativeArray jsFunction_rateAPI(Context cx,
 			Scriptable thisObj, Object[] args, Function funObj)
 			throws ScriptException, APIManagementException {
@@ -1021,7 +1032,7 @@ public class APIStoreHostObject extends ScriptableObject {
 				APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
                 String user = getUsernameFromObject(thisObj);
 				switch (rate) {
-				   case 1: { 
+				   case 1: {
 					  apiConsumer.rateAPI(apiId, APIRating.RATING_ONE, user);
 				      break;
 				   }
@@ -1041,10 +1052,10 @@ public class APIStoreHostObject extends ScriptableObject {
                        apiConsumer.rateAPI(apiId, APIRating.RATING_FIVE, user);
                       break;
                    }
-				   default: { 
+				   default: {
 				      throw new IllegalArgumentException("Can't handle " + rate);
 				   }
-				
+
 			    }
 			} catch (APIManagementException e) {
 				log.error("Error from Registry API while Rating API " + apiName
@@ -1062,18 +1073,18 @@ public class APIStoreHostObject extends ScriptableObject {
 				log.error("Error while Rating API " + apiName+ e);
 				return myn;
 			}
-			
-            NativeObject row = new NativeObject();				
+
+            NativeObject row = new NativeObject();
             row.put("name", row, apiName);
             row.put("provider", row, providerName);
             row.put("version", row, version);
             row.put("rates", row, rateStr);
-            myn.put(0, myn, row);	
+            myn.put(0, myn, row);
 
 		}// end of the if
 		return myn;
 	}
-	
+
 	public static NativeArray jsFunction_getSubscribedAPIs()
 			throws ScriptException {
 		NativeArray purchases = new NativeArray(0);
@@ -1214,7 +1225,7 @@ public class APIStoreHostObject extends ScriptableObject {
             try {
                 subscriber = apiConsumer.getSubscriber(userName);
             }catch (APIManagementException e) {
-				log.error("Error from Registry API while getting Subscriber" 
+				log.error("Error from Registry API while getting Subscriber"
 						+ e);
 				return null;
 			} catch (IllegalArgumentException e) {
@@ -1222,14 +1233,14 @@ public class APIStoreHostObject extends ScriptableObject {
 						+ e);
 				return null;
 			} catch (NullPointerException e) {
-				log.error("Error from Registry API while getting Subscriber" 
+				log.error("Error from Registry API while getting Subscriber"
 						+ e);
 				return null;
 			} catch (Exception e) {
 				log.error("Error while getting Subscriber " + e);
 				return null;
 			}
-            
+
             if (subscriber == null) {
                 return null;
             }
@@ -1256,7 +1267,7 @@ public class APIStoreHostObject extends ScriptableObject {
             try {
                 apiConsumer.addSubscriber(subscriber);
             } catch (APIManagementException e) {
-				log.error("Error from Registry API while adding Subscriber" 
+				log.error("Error from Registry API while adding Subscriber"
 						+ e);
 				return false;
 			} catch (IllegalArgumentException e) {
@@ -1264,7 +1275,7 @@ public class APIStoreHostObject extends ScriptableObject {
 						+ e);
 				return false;
 			} catch (NullPointerException e) {
-				log.error("Error from Registry API while adding Subscriber" 
+				log.error("Error from Registry API while adding Subscriber"
 						+ e);
 				return false;
 			} catch (Exception e) {
@@ -1321,7 +1332,7 @@ public class APIStoreHostObject extends ScriptableObject {
             String name = (String) args[0];
             String oldName = (String) args[1];
             String username = (String) args[2];
-            Subscriber subscriber = new Subscriber(username);            
+            Subscriber subscriber = new Subscriber(username);
             APIConsumer apiConsumer = getAPIConsumer(thisObj);
             Application[] apps = apiConsumer.getApplications(subscriber);
             if (apps == null || apps.length == 0) {
@@ -1338,7 +1349,7 @@ public class APIStoreHostObject extends ScriptableObject {
         }
         return false;
     }
-    
+
     public static NativeArray jsFunction_getInlineContent(Context cx,
 			Scriptable thisObj, Object[] args, Function funObj)
 			throws ScriptException, APIManagementException {
@@ -1348,7 +1359,7 @@ public class APIStoreHostObject extends ScriptableObject {
 		String docName;
 		String content;
 		NativeArray myn = new NativeArray(0);
-		
+
 
 		 if (isStringArray(args)) {
 				providerName = args[0].toString();
@@ -1379,7 +1390,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			 * "Error from Registry API while getting Inline Document Content ",
 			 * e); return null;
 			 */
-		
+
 		return myn;
 	}
 

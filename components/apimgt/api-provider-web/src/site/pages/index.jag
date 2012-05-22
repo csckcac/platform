@@ -24,13 +24,16 @@ var site = require("/site/conf/site.json");
         result = mod.getAPIsByProvider(user.username);
         apis = result.apis;
     }
-    var itemCount=apis.length;
+    var itemCount;
+    if(apis!=null){
+    itemCount=apis.length;
     var numberOfPages = itemCount / itemsPerPage;
     if (itemCount % itemsPerPage != 0) {
      numberOfPages++;
     }
     if (numberOfPages < currentPage || currentPage <= 0) {
             currentPage = 1;
+    }
     }
 
 

@@ -8,7 +8,7 @@
         var i, api,path,itemsPerPage=10,apis = outputs.apis,currentPage=outputs.currentPage,numberOfPages=outputs.numberOfPages;
         var from = currentPage * itemsPerPage - itemsPerPage;
         var to = currentPage * itemsPerPage;
-
+         if(apis!=null){
          if (to > apis.length) {
          to = apis.length;
          }
@@ -47,7 +47,7 @@
                 <p class="status"><%=api.status%></p>
             </div>
         </li>
-        <% }} %>
+        <% }}} %>
     </ul>
      <% jagg.includeBlock("paginator", {currentPage:currentPage,numberOfPages:numberOfPages}); %>
 </div>

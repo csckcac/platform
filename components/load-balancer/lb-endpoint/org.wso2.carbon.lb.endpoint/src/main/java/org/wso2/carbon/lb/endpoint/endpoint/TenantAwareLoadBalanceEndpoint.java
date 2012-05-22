@@ -187,6 +187,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
         int tenantId = getTenantId(synCtx.getTo().toString());
         Member currentMember = null;
         SessionInformation sessionInformation = null;
+
         // if (isSessionAffinityBasedLB()) {
         if (isSessionAffinityBasedLB()) {
             // first check if this session is associated with a session. if so, get the endpoint

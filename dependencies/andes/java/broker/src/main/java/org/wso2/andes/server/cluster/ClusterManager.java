@@ -59,22 +59,12 @@ public class ClusterManager {
 
     private ZooKeeperAgent zkAgent;
 
-    /**
-     * Host name of the zookeeper instance
-     */
-    private String address;
-
     private HashMap<Integer,String[]> queueNodeMap = new HashMap<Integer,String[]>();
 
     /**
      *
      */
     private List<String> workerAssignedQueues = new ArrayList<String>();
-
-    /**
-     * Port of the zookeeper instance
-     */
-    private int port;
 
 
     /**
@@ -86,19 +76,19 @@ public class ClusterManager {
     private int leaderBackNodeGroupSize = 3;
 
 
+
+    private String connectionString;
+
     /**
      * Create a ClusterManager instance
      * @param messageStore Underlying CassandraMessageStore
-     * @param zkHost host name of zookeeper instance running
-     * @param zkPort zookeeper port
+     * @param zkConnectionString zookeeper port
      */
-    public ClusterManager(CassandraMessageStore messageStore , String zkHost ,
-                          int zkPort) {
+    public ClusterManager(CassandraMessageStore messageStore , String zkConnectionString) {
 
 
         this.globalQueueManager = new GlobalQueueManager(messageStore);
-        this.address = zkHost;
-        this.port = zkPort;
+        this.connectionString =zkConnectionString;
 
     }
 
@@ -402,7 +392,7 @@ public class ClusterManager {
             // create a new node with a generated randomId
             // get the node name and id
 
-            zkAgent = new ZooKeeperAgent(address,port);
+            zkAgent = new ZooKeeperAgent(connectionString);
             zkAgent.initQueueWorkerCoordination();
             final String nodeName = CoordinationConstants.QUEUE_WORKER_NODE+
                     (UUID.randomUUID()).toString().replace("-","_");
@@ -665,7 +655,7 @@ public class ClusterManager {
             boolean returnValue;
             try {
 
-                ZooKeeperAgent zooKeeperAgent = new ZooKeeperAgent(address,port);
+                ZooKeeperAgent zooKeeperAgent = new ZooKeeperAgent(connectionString);
                 zooKeeperAgent.initQueueFailOverMCProcess(queue);
 
                 final ZooKeeper localZk = zooKeeperAgent.getZooKeeper();
@@ -719,13 +709,10 @@ public class ClusterManager {
         return nodeId;
     }
 
-    public String getZkServerAddress() {
-        return address;
+    public String getZkConnectionString() {
+        return connectionString;
     }
 
-    public int getZkServerPort() {
-        return port;
-    }
 
     public List<Integer> getZkNodes(){
         return new ArrayList(queueNodeMap.keySet());

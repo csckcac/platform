@@ -293,8 +293,7 @@ public class Broker
 
             if (clusterConfiguration.isClusteringEnabled()) {
                 clusterManager = new ClusterManager(ClusterResourceHolder.getInstance().
-                        getCassandraMessageStore(), clusterConfiguration.getZookeeperHost(),
-                        clusterConfiguration.getZookeeperPort());
+                        getCassandraMessageStore(), clusterConfiguration.getZookeeperConnection());
             } else {
                 clusterManager = new ClusterManager(ClusterResourceHolder.getInstance().getCassandraMessageStore());
             }

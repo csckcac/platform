@@ -47,9 +47,8 @@ public class SubscriptionCoordinationManagerImpl implements SubscriptionCoordina
         try {
             ClusterConfiguration clusterConfiguration = ClusterResourceHolder.getInstance().getClusterConfiguration();
             if(clusterConfiguration.isClusteringEnabled()) {
-                String zkHost = clusterConfiguration.getZookeeperHost();
-                int zkPort = clusterConfiguration.getZookeeperPort();
-                this.zooKeeperAgent  = new ZooKeeperAgent(zkHost, zkPort);
+                String zkServer = clusterConfiguration.getZookeeperConnection();
+                this.zooKeeperAgent  = new ZooKeeperAgent(zkServer);
                 this.zooKeeperAgent.initSubscriptionCoordination();
                 ZooKeeper zk = zooKeeperAgent.getZooKeeper();
                 this.subscriptionParentDataChangeListener = new SubscriptionParentDataChangeListener();

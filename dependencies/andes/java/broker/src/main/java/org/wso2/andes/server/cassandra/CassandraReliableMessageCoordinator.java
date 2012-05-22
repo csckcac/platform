@@ -46,8 +46,7 @@ public class CassandraReliableMessageCoordinator extends Thread{
     private List<InOrderMessageFlusher> flusherList;
     private boolean working = false;
     private boolean markedForRemoval;
-    private String zkServer = "127.0.0.1";
-    private int zkPort = 2181;
+    private String zkServer = "127.0.0.1:2181";
     private QueueResourceLock queueResourceLock;
 
 
@@ -56,10 +55,9 @@ public class CassandraReliableMessageCoordinator extends Thread{
         this.flusherList = flushers;
         ClusterManager clusterManagerInstance = ClusterResourceHolder.getInstance().getClusterManager();
         if(clusterManagerInstance != null){
-            this.zkServer  = clusterManagerInstance.getZkServerAddress();
-            this.zkPort = clusterManagerInstance.getZkServerPort();
+            this.zkServer  = clusterManagerInstance.getZkConnectionString();
             if (ClusterResourceHolder.getInstance().getClusterConfiguration().isClusteringEnabled()) {
-                this.queueResourceLock = new QueueResourceLock(zkServer, zkPort, queueName);
+                this.queueResourceLock = new QueueResourceLock(zkServer, queueName);
             } else {
                 this.queueResourceLock = new QueueResourceLock(queueName);
             }

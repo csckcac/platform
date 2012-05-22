@@ -29,10 +29,8 @@ public class ClusterConfiguration {
      */
     private final ServerConfiguration serverConfig;
 
-    private final int zookeeperPort;
 
-    private final String zookeeperHost;
-
+    private final String zookeeperConnection;
 
 
 
@@ -43,8 +41,7 @@ public class ClusterConfiguration {
      */
     public ClusterConfiguration (final ServerConfiguration serverConfig) {
          this.serverConfig = serverConfig;
-         zookeeperPort = Integer.parseInt(serverConfig.getZookeeperPort());
-         zookeeperHost = serverConfig.getZookeeperhost();
+         this.zookeeperConnection = serverConfig.getZookeeperConnection();
     }
 
     /**
@@ -56,18 +53,10 @@ public class ClusterConfiguration {
     }
 
     /**
-     *
-     * @return  Zookeeper port
+     * @return   Zookeeper connection String
      */
-    public Integer getZookeeperPort() {
-         return zookeeperPort;
-    }
-
-    /**
-     * @return   Zookeeper host name
-     */
-    public String getZookeeperHost() {
-         return zookeeperHost;
+    public String getZookeeperConnection() {
+         return zookeeperConnection;
     }
 
     public boolean isOnceInOrderSupportEnabled() {

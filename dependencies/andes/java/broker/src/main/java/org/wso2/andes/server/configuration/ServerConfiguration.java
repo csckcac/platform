@@ -548,14 +548,9 @@ public class ServerConfiguration extends ConfigurationPlugin implements SignalHa
         return getBooleanValue("clustering.enabled", false);
     }
 
-    public String getZookeeperhost()
+    public String getZookeeperConnection()
     {
-        return getStringValue("clustering.coordination.ZooKeeperHost","127.0.0.1");
-    }
-
-    public  String getZookeeperPort()
-    {
-        return getStringValue("clustering.coordination.ZooKeeperPort","2181");
+        return getStringValue("clustering.coordination.ZooKeeperConnection","127.0.0.1:2180");
     }
 
     public String getReferenceTime() {

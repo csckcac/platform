@@ -50,8 +50,7 @@ public class QueueResourceLock {
     private ZooKeeperAgent zkAgent;
 
 
-    private String address;
-    private int port;
+    private String connectionString;
     private String queue;
 
 
@@ -64,14 +63,12 @@ public class QueueResourceLock {
 
     /**
      * Creates a Distributed Lock for a queue.
-     * @param address zookeeper instance host name
-     * @param port zookeeper instance port
+     * @param connectionString zookeeper instance connection String
      * @param queue queue name
      */
-    public QueueResourceLock(String address, int port, String queue) {
+    public QueueResourceLock(String connectionString ,String queue) {
 
-        this.address = address;
-        this.port = port;
+        this.connectionString = connectionString;
         this.queue = queue;
 
     }
@@ -111,7 +108,7 @@ public class QueueResourceLock {
                 if (zkAgent == null) {
                     synchronized (lock) {
                         if (zkAgent == null) {
-                            zkAgent = new ZooKeeperAgent(address, port);
+                            zkAgent = new ZooKeeperAgent(connectionString);
                             zkAgent.initQueueResourceLockCoordination(queue);
                         }
                     }

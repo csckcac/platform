@@ -39,13 +39,10 @@ public class ClusterManagementInformationMBean extends AMQManagedObject implemen
         this.clusterManager = clusterManager;
     }
 
-    public String getZkServerAddress() {
-        return clusterManager.getZkServerAddress();
+    public String getZkServer() {
+        return clusterManager.getZkConnectionString();
     }
 
-    public int getZkServerPort() {
-        return clusterManager.getZkServerPort();
-    }
 
     public String getObjectInstanceName() {
         return ClusterManagementInformation.TYPE;

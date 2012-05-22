@@ -30,11 +30,8 @@ public interface ClusterManagementInformation {
                                      ATTR_PORT))));
 
 
-    @MBeanAttribute(name = "Address", description = "zookeeper host Name")
-    String getZkServerAddress();
-
-    @MBeanAttribute(name = "Port", description = "zookeeper port")
-    int getZkServerPort();
+    @MBeanAttribute(name = "Address", description = "zookeeper Server")
+    String getZkServer();
 
     @MBeanAttribute(name = "Queues", description = "Existing queues in the node")
     String[] getQueues(int nodeId);

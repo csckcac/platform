@@ -29,12 +29,13 @@ public class ZooKeeperAgent implements Watcher{
 
     private ZooKeeper zk;
 
+    private int sesstionTimeOut=1200000;
     private static Log log = LogFactory.getLog(ZooKeeper.class);
 
-    public ZooKeeperAgent(String address, int port) throws IOException {
-        log.debug("Starting Zookeeper agent for host : " + address + " port : " + port);
-        zk = new ZooKeeper(address,port,this);
-        log.debug("ZooKeeper agent started successfully and connected to  " + address + ":" + port);
+    public ZooKeeperAgent(String connectionString) throws IOException {
+        log.debug("Starting Zookeeper agent for host : " + connectionString);
+        zk = new ZooKeeper(connectionString,sesstionTimeOut,this);
+        log.debug("ZooKeeper agent started successfully and connected to  " +  connectionString);
     }
 
     @Override

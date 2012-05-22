@@ -24,5 +24,6 @@
         </parameter>
         <parameter name="adminService" locked="ture">true</parameter>
         <parameter name="hiddenService" locked="true">true</parameter>
+        <parameter name="AuthorizationAction" locked="true">/permission/admin/</parameter>
     </service>
 </serviceGroup>

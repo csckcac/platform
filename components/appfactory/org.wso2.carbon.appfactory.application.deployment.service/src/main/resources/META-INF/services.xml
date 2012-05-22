@@ -6,5 +6,6 @@
         org.wso2.carbon.appfactory.application.deployment.service.ApplicationDeploymentService
     </parameter>
     <parameter name="adminService" locked="ture">true</parameter>
+    <parameter name="AuthorizationAction" locked="true">/permission/admin/</parameter>
 </service>
 

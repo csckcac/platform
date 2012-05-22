@@ -18,7 +18,16 @@ var getAdminCookie = function() {
 };
 
 var getAPIStoreObj = function() {
-    var store = require('apistore');
-    return new store.APIStore();
+    var user = jagg.getUser();
+    var store;
+    if (user == null) {
+        store = require('apistore');
+        return new store.APIStore();
+    } else {
+        store = require('apistore');
+        return new store.APIStore(user);
+    }
 };
+
+
 %>

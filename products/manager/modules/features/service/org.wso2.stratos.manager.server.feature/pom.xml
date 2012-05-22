@@ -59,11 +59,6 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.tenant.reg.agent.client</artifactId>
-	 <version>${stratos.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.upgrade</artifactId>
 		 <version>${stratos.version}</version>
         </dependency>
@@ -215,11 +210,9 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.validate.domain</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification</bundleDef>
                                 <bundleDef>org.wso2.manager:org.wso2.stratos.manager.services.mgt</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.reg.agent.client</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.keystore.mgt</bundleDef>
                                 <bundleDef>kaptcha.wso2:kaptcha</bundleDef>
                                 <!-- stubs -->
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.reg.agent.stub:${carbon.version}</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.version}</importFeatureDef>

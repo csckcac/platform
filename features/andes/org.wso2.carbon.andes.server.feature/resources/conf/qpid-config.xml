@@ -107,9 +107,8 @@
 
 
         <coordination>
-            <!-- Apache Zookeeper Host name -->
-            <ZooKeeperHost>127.0.0.1</ZooKeeperHost>
-            <ZooKeeperPort>2181</ZooKeeperPort>
+            <!-- Apache Zookeeper Address -->
+            <ZooKeeperConnection>127.0.0.1:2181</ZooKeeperConnection>
              <!-- Format yyyy-MM-dd HH:mm:ss -->
             <ReferenceTime>2012-02-29 08:08:08</ReferenceTime>
         </coordination>

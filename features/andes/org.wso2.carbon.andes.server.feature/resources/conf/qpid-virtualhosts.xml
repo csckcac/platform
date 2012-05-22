@@ -29,6 +29,7 @@
                 <username>admin</username>
                 <password>admin</password>
                 <cluster>ClusterOne</cluster>
+                <idGenerator>org.wso2.andes.server.cluster.coordination.TimeStampBasedMessageIdGenerator</idGenerator>
                 <connectionString>localhost:9160</connectionString>
             </store>
 

@@ -24,6 +24,7 @@
         <description>
             Supports managing topics
         </description>
+        <parameter name="AuthorizationAction" locked="false">/permission/admin/manage/topic</parameter>
         <messageReceivers>
             <messageReceiver mep="http://www.w3.org/ns/wsdl/robust-in-only"
                              class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>

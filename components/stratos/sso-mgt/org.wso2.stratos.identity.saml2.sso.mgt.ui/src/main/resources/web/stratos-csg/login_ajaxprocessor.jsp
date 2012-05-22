@@ -96,14 +96,14 @@
     </script>
 <div id="login-content">
 					<div class="main-text">
-						The WSO2 CSG, creates a managed, secured channel for business processes and other tasks running in public cloud to get access to enterprise data and services resides behinds a firewall.
+						WSO2 Cloud Services Gateway creates a managed, secured channel for business processes, and other tasks running in public cloud, to get access to enterprise data and services resides behind a firewall.
 					</div>
 					<div class="clear"></div>
 					<div class="feature feature-left">
 						<img src="../carbon/stratos-csg/images/feature-01-icon.gif"/>
 						<h2>API Protection</h2>
 						<p>
-							Protect services published to outside world from exploits and attacks using schema validations, WS-security and throttling.
+							Protect externally published services from exploits, and attacks using schema validations, WS-security, and throttling.
 						</p>
 					</div>
 					<div class="feature">
@@ -117,7 +117,7 @@
 					 	<img src="../carbon/stratos-csg/images/feature-03-icon.gif"/>
 						<h2>Outsource Computations</h2>
 						<p>
-							Make use of computational resources hosted outside the enterprise with data/resources reside on premises in a secure and controlled manner.
+							Make use of computational resources hosted outside the enterprise with data/resources residing on-premises, in a secure and controlled manner.
 						</p>
 					</div>
 					<div class="clear"></div>

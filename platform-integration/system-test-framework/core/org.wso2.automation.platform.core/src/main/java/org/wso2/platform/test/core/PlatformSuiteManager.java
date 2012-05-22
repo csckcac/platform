@@ -20,13 +20,24 @@ public class PlatformSuiteManager implements ISuiteListener {
     public void onStart(ISuite suite) {
         setKeyStoreProperties();
         try {
-
-            if (suite.getParameter("server.list") != null) {
-                List<String> productList = Arrays.asList(suite.getParameter("server.list").split(","));
-                startMultipleServers(productList);
-                new UserPopulator().populateUsers(productList);
+            EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
+            boolean deploymentEnabled =
+                    environmentBuilder.getFrameworkSettings().getEnvironmentSettings().isEnableDipFramework();
+            boolean startosEnabled =
+                    environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos();
+            if (startosEnabled) {
+                //stratos user populate on manager. there for product lis set to null
+                new UserPopulator().populateUsers(null);
+            } else {
+                if (suite.getParameter("server.list") != null) {
+                    List<String> productList = Arrays.asList(suite.getParameter("server.list").split(","));
+                    if (deploymentEnabled) {
+                        log.info("Starting all servers");
+                        ServerGroupManager.startServers(productList);
+                    }
+                    new UserPopulator().populateUsers(productList);
+                }
             }
-
 
         } catch (Exception e) {  /*cannot throw the exception */
             log.error(e);
@@ -77,7 +88,7 @@ public class PlatformSuiteManager implements ISuiteListener {
      *
      * @throws Exception if an error occurs while in server startup process
      */
-    private void startMultipleServers(List<String> productList) throws Exception {
+    /*private void startMultipleServers(List<String> productList) throws Exception {
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
         boolean deploymentEnabled =
                 environmentBuilder.getFrameworkSettings().getEnvironmentSettings().isEnableDipFramework();
@@ -87,8 +98,7 @@ public class PlatformSuiteManager implements ISuiteListener {
             log.info("Starting all servers");
             ServerGroupManager.startServers(productList);
         }
-    }
-
+    }*/
     private void setKeyStoreProperties() {
         EnvironmentBuilder builder = new EnvironmentBuilder();
         System.setProperty("javax.net.ssl.trustStore", builder.getFrameworkSettings().

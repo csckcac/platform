@@ -52,6 +52,7 @@ public class UserPopulator {
             throws UserAdminException, RemoteException, LoginAuthenticationExceptionException {
         FrameworkProperties manProperties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.MANAGER_SERVER_NAME);
+        log.info("Populating Users....");
 
         if (!isUsersPopulated) {
             if (framework.getEnvironmentSettings().is_runningOnStratos()) {
@@ -61,7 +62,7 @@ public class UserPopulator {
                 UserInfo superTenantDetails = UserListCsvReader.getUserInfo(0);
                 int userCount = UserListCsvReader.getUserCount();
                 createStratosUsers(tenantStub, superTenantDetails, userCount);
-
+                log.info("Users Populated");
             } else {
                 int adminUserId = 0;
                 UserInfo adminDetails = UserListCsvReader.getUserInfo(adminUserId);

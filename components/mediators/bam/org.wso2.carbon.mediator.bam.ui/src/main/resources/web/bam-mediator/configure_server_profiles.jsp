@@ -10,11 +10,9 @@
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%@ page import="org.wso2.carbon.mediator.bam.ui.BamServerProfileUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<%! public static final String PROPERTY_VALUES = "propertyValues";
-    public static final String PROPERTY_KEYS = "propertyKeys";
-%>
 <fmt:bundle basename="org.wso2.carbon.mediator.bam.ui.i18n.Resources">
 
 <carbon:breadcrumb
@@ -26,6 +24,9 @@
     String userName = "admin";
     String password = "admin";
     String port = "port";
+
+    BamServerProfileUtils bamServerProfileUtils = new BamServerProfileUtils();
+    bamServerProfileUtils.addArtifacts();
 %>
 
 
@@ -41,7 +42,7 @@
                     <fmt:message key="username"/>
                 </td>
                 <td>
-                    <input type="text" id="username"/>
+                    <input type="text" id="username" value="<%=userName%>"/>
                 </td>
             </tr>
             <tr>
@@ -49,7 +50,7 @@
                     <fmt:message key="password"/>
                 </td>
                 <td>
-                    <input type="password" id="password"/>
+                    <input type="password" id="password" value="<%=password%>"/>
                 </td>
             </tr>
             <tr>
@@ -57,7 +58,7 @@
                     <fmt:message key="port"/>
                 </td>
                 <td>
-                    <input type="text" id="port"/>
+                    <input type="text" id="port" value="<%=port%>"/>
                 </td>
             </tr>
         </table>

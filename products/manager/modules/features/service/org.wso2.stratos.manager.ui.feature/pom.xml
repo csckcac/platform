@@ -106,11 +106,7 @@
                 <artifactId>org.wso2.carbon.tenant.activity.stub</artifactId>
               <version>4.0.0-SNAPSHOT</version>
             </dependency>
-            <!--<dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.upgrade.ui</artifactId>
-            </dependency>-->
-	        <dependency>
+	    <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.email.verification.ui</artifactId>
 		<version>${carbon.version}</version>
@@ -120,11 +116,6 @@
                 <artifactId>org.wso2.carbon.email.verification.stub</artifactId>
 		<version>${carbon.version}</version>
             </dependency>
-            <!--<dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.throttling.ui</artifactId>
-		<version>${stratos.version}</version>
-            </dependency>-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.security.mgt</artifactId>
@@ -161,18 +152,6 @@
                  <artifactId>org.wso2.carbon.validate.domain.stub</artifactId>
 		<version>${carbon.version}</version>
             </dependency>
-	    <!--<dependency>
-                 <groupId>org.wso2.carbon</groupId>
-                 <artifactId>org.wso2.carbon.throttling.stub</artifactId>
-		<version>${carbon.version}</version>
-            </dependency>-->
-           <!-- <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.upgrade.stub</artifactId>
-           </dependency>-->
-
-
-
         </dependencies>
     <build>
         <plugins>
@@ -207,8 +186,6 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.register.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.sample.installer.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.sample.installer.stub</bundleDef>
-                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.upgrade.ui</bundleDef>-->
-                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.mgt.ui</bundleDef>-->
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.payment.ui:${stratos.version}</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification.stub</bundleDef>
@@ -216,8 +193,6 @@
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.stratos.manager.dashboard.stub</bundleDef>
                                 <bundleDef>org.wso2.manager:org.wso2.stratos.manager.login.ui</bundleDef>
                                 <bundleDef>org.wso2.manager:org.wso2.stratos.manager.styles</bundleDef>
-                                <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.ui</bundleDef>
-				<bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.stub</bundleDef>-->
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.activity.ui</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.activity.stub:${wso2carbon.version}</bundleDef>
 
@@ -227,9 +202,7 @@
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.validate.domain.stub</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt.stub:${wso2carbon.version}</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.register.stub:${wso2carbon.version}</bundleDef>
-				<!--<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.mgt.stub:${wso2carbon.version}</bundleDef>-->
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.payment.stub:${wso2carbon.version}</bundleDef>
-				<!--<bundleDef>org.wso2.carbon:org.wso2.carbon.upgrade.stub</bundleDef>-->
                             </bundles>
                             <importBundles>
                                 <importBundleDef>org.wso2.carbon:org.wso2.carbon.ui.menu.tools</importBundleDef>

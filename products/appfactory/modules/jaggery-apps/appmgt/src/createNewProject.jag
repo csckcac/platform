@@ -18,16 +18,8 @@
                     <td class="formRow"><input type='text' name='projectKey' size='50'/></td>
                 </tr>
                 <tr>
-                    <td class="formRow">project Name:</td>
+                    <td class="formRow">Project Name:</td>
                     <td class="formRow"><input type='text' name='projectName' size='50'/></td>
-                </tr>
-                <tr>
-                    <td class="formRow">Project Description:</td>
-                    <td class="formRow"><input type='text' name='projectDescription' size='50'/></td>
-                </tr>
-                <tr>
-                    <td class="formRow">Add tasks(a temp field):</td>
-                    <td class="formRow"><input type='text' name='task' size='50'/></td>
                 </tr>
             </table>
             <table class="styledLeft">

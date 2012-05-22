@@ -34,7 +34,7 @@ import javax.xml.stream.XMLStreamException;
 
 public class CreateOperation extends AbstractOperation {
     private Log log = LogFactory.getLog(CreateOperation.class);
-    private boolean succeed;
+    private String artifactId;
 
     public CreateOperation(QName name, Registry systemRegistry, String mediatype, String namespace) throws RegistryException {
         super(name, systemRegistry, mediatype, namespace);
@@ -42,7 +42,7 @@ public class CreateOperation extends AbstractOperation {
 
     @Override
     public void setPayload(OMElement bodyContent, String namespace) throws XMLStreamException {
-        bodyContent.addChild(AXIOMUtil.stringToOM("<return>" + succeed + "</return>"));
+        bodyContent.addChild(AXIOMUtil.stringToOM("<return>" + artifactId + "</return>"));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class CreateOperation extends AbstractOperation {
 
     @Override
     public String getResponseType() {
-        return "boolean";
+        return "string";
     }
 
     public MessageContext process(MessageContext requestMessageContext) throws AxisFault {
@@ -78,12 +78,12 @@ public class CreateOperation extends AbstractOperation {
             GenericArtifactManager artifactManager = new GenericArtifactManager(systemRegistry, rxtKey);
             GenericArtifact artifact = artifactManager.newGovernanceArtifact(content);
             artifactManager.addGenericArtifact(artifact);
+            artifactId = artifact.getId();
         } catch (RegistryException e) {
             String msg = "Error occured while adding the content " + content;
             log.error(msg);
             throw new AxisFault(msg, e);
         }
-        succeed = true;
 
         return getAbstractResponseMessageContext(requestMessageContext);
     }

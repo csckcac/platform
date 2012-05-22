@@ -52,4 +52,36 @@ public class AppFactoryUserStore extends ApacheDSUserStoreManager {
         return users.toArray(new String[users.size()]);
     }
 
+    @Override
+    public void addUser(String userName, Object credential, String[] roleList,
+                        Map<String, String> claims, String profileName) throws UserStoreException {
+        if (isExistingUser(userName)) {
+            // do nothing
+        } else {
+            addUser(userName, credential, roleList, claims, profileName);
+        }
+    }
+
+    @Override
+    public void addUser(String userName, Object credential, String[] roleList,
+                        Map<String, String> claims, String profileName, boolean requirePasswordChange) throws UserStoreException {
+        if (isExistingUser(userName)) {
+            // do nothing
+        } else {
+            addUser(userName, credential, roleList, claims, profileName,
+                    requirePasswordChange);
+        }
+    }
+
+    @Override
+    public void updateCredentialByAdmin(String userName, Object newCredential) throws UserStoreException {
+        // TODO - This is a hack to prevent password being updated each time the project is added
+        String passwordValue = (String) newCredential;
+        if (passwordValue != null && passwordValue.trim().length() > 0) {
+            super.updateCredentialByAdmin(userName, newCredential);
+        }
+    }
+    
+    
+
 }

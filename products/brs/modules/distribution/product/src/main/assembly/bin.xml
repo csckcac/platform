@@ -37,7 +37,6 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/index.html</exclude>
                 <exclude>**/carbon.xml</exclude>
-                <exclude>**/web.xml</exclude>
             </excludes>
         </fileSet>
         <fileSet>

@@ -38,7 +38,6 @@
 				<module>org.wso2.carbon.aarservices.stub</module>
 				<module>org.wso2.carbon.account.mgt.stub</module>
 				<module>org.wso2.carbon.admin.mgt.stub</module>
-				<module>org.wso2.carbon.announcement.stub</module>
 				<module>org.wso2.carbon.application.mgt.bpel.stub</module>
 				<module>org.wso2.carbon.application.mgt.stub</module>
 				<module>org.wso2.carbon.application.mgt.synapse.stub</module>
@@ -165,7 +164,6 @@
 				<module>org.wso2.carbon.xkms.mgt.stub</module>
 				<module>org.wso2.carbon.bpel.skeleton</module>
 				<module>org.wso2.carbon.usage.stub</module>
-				<module>org.wso2.carbon.subscription.mgt.stub</module>
 				<module>org.wso2.carbon.message.processor.stub</module>
 				<module>org.wso2.carbon.identity.entitlement.stub</module>
 				<module>org.wso2.carbon.identity.oauth.stub</module>

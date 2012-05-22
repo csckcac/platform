@@ -39,6 +39,7 @@
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
+		<exclude>**/org.wso2.carbon.redirector.servlet.ui*.jar</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -118,7 +119,9 @@
             <includes>
                 <include>**/**.sql</include>
             </includes>
-       </fileSet>	
+       </fileSet>
+
+
     </fileSets>
     <dependencySets>
         <!-- use the new tool to create a bundles -->
@@ -256,7 +259,13 @@
                <filtered>true</filtered>
                <fileMode>644</fileMode>
         </file>	
-	
+        <file>
+            <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/stratos.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+               <filtered>true</filtered>
+               <fileMode>644</fileMode>
+        </file>
+
     </files>
 </assembly>
 

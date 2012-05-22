@@ -89,6 +89,13 @@
                <include>**/cassandra.yaml</include>
            </includes>
         </fileSet>
+       <fileSet>
+          <directory>../../p2-profile/product/target/wso2carbon-core-${carbon.version}/repository/conf/etc/</directory>
+           <outputDirectory>wso2mb-${pom.version}/repository/conf/etc</outputDirectory>
+           <includes>
+                <include>**/zoo.cfg</include>		
+           </includes>
+        </fileSet>
 
     </fileSets>
 

@@ -45,6 +45,35 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.google.analytics.ui</artifactId>
             </dependency>
+            <dependency>
+            	<groupId>org.wso2.carbon</groupId>
+            	<artifactId>org.wso2.carbon.tenant.mgt.stub</artifactId>
+            	<version>${carbon.version}</version>
+            </dependency>
+            <!--  Tenant Mgmt  -->
+            <dependency>
+            	<groupId>org.wso2.carbon</groupId>
+            	<artifactId>org.wso2.carbon.tenant.mgt.ui</artifactId>
+            	<version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+            	<groupId>org.wso2.carbon</groupId>
+            	<artifactId>
+            		org.wso2.carbon.stratos.common.stub
+            	</artifactId>
+            	<version>${carbon.version}</version>
+            </dependency>
+            <dependency>
+            	<groupId>org.wso2.carbon</groupId>
+            	<artifactId>org.wso2.carbon.theme.mgt.ui</artifactId>
+            	<version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+            	<groupId>org.wso2.carbon</groupId>
+            	<artifactId>org.wso2.carbon.theme.mgt.stub</artifactId>
+            	<version>${carbon.version}</version>
+            </dependency>
+             
         </dependencies>
     <build>
         <plugins>
@@ -70,9 +99,18 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.redirector.servlet.ui</bundleDef>
-				<bundleDef>org.wso2.carbon:org.wso2.carbon.redirector.servlet.stub:${wso2carbon.version}</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.redirector.servlet.stub:${wso2carbon.version}</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.sso.redirector.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.google.analytics.ui</bundleDef>
+                            	
+                            	<!-- Tenant Mgmt-->
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt.ui</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.stratos.common.stub</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.theme.mgt.ui</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt.stub</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.theme.mgt.stub</bundleDef>
+                            	<!-- Tenant Mgmt End-->
+                            	                            
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>

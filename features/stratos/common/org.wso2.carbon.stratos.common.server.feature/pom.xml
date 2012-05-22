@@ -66,7 +66,7 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.throttling.agent</artifactId>
         </dependency>
-	<dependency>
+		<dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.throttling.agent.stub</artifactId>
         </dependency>
@@ -90,6 +90,56 @@
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-tasks</artifactId>
         </dependency>
+
+		<!--  Tenant Mgmt -->
+        <dependency>
+        	<groupId>org.json.wso2</groupId>
+        	<artifactId>json</artifactId>
+        	<version>2.0.0.wso2v1</version>
+        </dependency>
+
+        <dependency>
+        	<groupId>org.wso2.carbon</groupId>
+        	<artifactId>org.wso2.carbon.email.verification</artifactId>
+        	<version>${carbon.version}</version>
+        </dependency>
+
+        <dependency>
+        	<groupId>org.wso2.carbon</groupId>
+        	<artifactId>org.wso2.carbon.tenant.mgt</artifactId>
+        	<version>${stratos.version}</version>
+        </dependency>
+		
+		<dependency>
+			<groupId>kaptcha.wso2</groupId>
+			<artifactId>kaptcha</artifactId>
+			<version>2.3.0.wso2v1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon</groupId>
+			<artifactId>org.wso2.carbon.keystore.mgt</artifactId>
+			<version>${stratos.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon</groupId>
+			<artifactId>org.wso2.carbon.tenant.mgt.core</artifactId>
+			<version>${stratos.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon</groupId>
+			<artifactId>org.wso2.carbon.captcha.mgt</artifactId>
+			<version>${carbon.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.email.sender</artifactId>
+            <version>${stratos.version}</version>
+        </dependency>
+		<dependency>
+			<groupId>org.wso2.carbon</groupId>
+			<artifactId>org.wso2.carbon.theme.mgt</artifactId>
+			<version>${stratos.version}</version>
+		</dependency>
     </dependencies>
 
     <build>
@@ -153,13 +203,27 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.sample.installer</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.dispatcher</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.agent</bundleDef>
-				<bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.agent.stub</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.agent.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.usage.agent</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.stratos.landing.page.deployer</bundleDef>
                                 <bundleDef>org.opensymphony.wso2:quartz</bundleDef>                               
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.activity</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.task</bundleDef>
                                 <bundleDef>org.apache.synapse:synapse-tasks</bundleDef>
+                                
+                                
+                                <!-- Tenant Mgmt -->
+                                <bundleDef>org.json.wso2:json</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.email.verification</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt</bundleDef>
+								<bundleDef>kaptcha.wso2:kaptcha</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.keystore.mgt</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.mgt.core</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.email.sender</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.theme.mgt</bundleDef>
+                                <!-- End Tenant Mgmt -->
+                                
                             </bundles>
                             <importBundles>
                                 <importBundleDef>org.wso2.carbon:org.wso2.carbon.application.upload</importBundleDef>

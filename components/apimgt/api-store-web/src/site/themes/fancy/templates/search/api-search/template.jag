@@ -1,12 +1,17 @@
 <% jagg.template("search/api-search", function(inputs, outputs, jagg) { %>
-<div class="col_12 search-wrapper">
-    <div class="col_3"></div>
-    <div class="col_9">
-        <h1>APIs</h1>
-        <form action="<%=jagg.getMappedUrl("/site/pages/list-apis.jag")%>">
-            <input type="text" class="col_6" name="query" placeholder="Search APIs"/>
-            <button class="medium search-button"><span class="icon" data-icon="s"></span></button>
-        </form>
+    <div class="header-section">
+        <div class="row search-back">
+
+
+                <div class="span9 offset3">
+                    <div class="searchAPIs-title">APIs</div>
+                    <div class="input-append pull-left">
+                        <form action="<%=jagg.getMappedUrl("/site/pages/list-apis.jag")%>">
+                        <input type="text" class="span5" name="query" placeholder="Search APIs"/>
+                        <button class="btn btn-primary search-button"><i class="icon-search icon-white"></i></button>
+                        </form>
+                    </div>
+                </div>
+
     </div>
-</div>
 <% }); %>

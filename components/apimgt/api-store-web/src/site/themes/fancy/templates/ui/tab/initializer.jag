@@ -2,7 +2,7 @@
 jagg.initializer("ui/tab", {
 
     preInitialize:function () {
-
+        jagg.addHeaderJS("api/api-info", "api-info", "templates/ui/tab/js/init-tabs.js");
     }
 });
 %>

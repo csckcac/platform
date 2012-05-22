@@ -11,9 +11,9 @@
                 <a class="accordion-toggle"><%=app.name%></a>
             </div>
             <div class="accordion-body">
-            <table cellspacing="0" cellpadding="0" style="margin:0">
+            <div class="accordion-inner">
+            <table cellspacing="0" cellpadding="0" style="margin:0" class="table">
                 <tbody>
-                <div class="accordion-inner">
                     <%
                     apis = app.subscriptions;
                     lenJ = apis.length;
@@ -27,7 +27,7 @@
 
                     <tr class="application-api <%=clazz%>">
                         <td>
-                             <a href="<%=path%>"><img alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/fancy/images/api-default.png<% }%>"/></a>
+                             <a href="<%=path%>"><img alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/fancy-new/images/api-default.png<% }%>"/></a>
                         </td>
                         <td>
                             <a href="<%=path%>" class="service-name"><%=api.name%>-<%=api.version%></a>
@@ -76,10 +76,9 @@
                         </td>
                     </tr>
                     <% } %>
-                </div>
                 </tbody>
                 </table>
-
+                </div>
             </div>
         </div>
     </div>

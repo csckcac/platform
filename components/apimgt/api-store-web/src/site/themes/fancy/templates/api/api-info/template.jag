@@ -1,19 +1,21 @@
 <% jagg.template("api/api-info", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
+<% var stars = require("/site/themes/fancy-new/utils/ratings/star-generator.js"); %>
 <% var i, length, app, thumbURL, api = outputs.api, apps = outputs.applications, user = outputs.user;
    thumbURL = api.thumbURL;
    if(thumbURL && thumbURL.indexOf("images/") == 0) {
-        thumbURL = site.context + "/site/themes/fancy/" + thumbURL;
+        thumbURL = site.context + "/site/themes/fancy-new/" + thumbURL;
    }
 %>
+<h2><%=api.name%> - <%=api.version%></h2>
 <div class="api-info">
-    <h5><%=api.provider%></h5>
-    <div class="col_12 no-padding">
-        <div class="col_3">
+    <div class="row-fluid">
+    <div class="span12">
+        <div class="span2">
             <img src="<%=thumbURL%>" width="100">
+            <h5><%=api.provider%></h5>
         </div>
-        <div class="col_9">
-            <table cellspacing="0" cellpadding="0" class="info-table">
+        <div class="span6">
+            <table cellspacing="0" cellpadding="0" class="table">
                 <tbody>
                 <tr>
                     <th>Rating:</th>
@@ -26,30 +28,7 @@
                             <% } else { %><%=stars.getStaticStars(site.context, api.rating)%><% } %>
                         </div>
                     </td>
-                    <td rowspan="3">
-                            <% if(api.status =="PUBLISHED") { %>
-                               <%
-                                if(user && apps) {
-                                    length = apps.length;
-                                %>
-                                <select id="application-list" class="fancy">
-                                    <option value="-">Select Application...</option>
-                                    <option value="createNewApp">New Application...</option>
-                                    <optgroup label="My Applications">
-                                        <%
-                                        for(i = 0; i < length; i++) {
-                                        app = apps[i];
-                                        %>
-                                        <option value="<%=app.id%>"><%=app.name%></option>
-                                        <% } %>
-                                    </optgroup>
 
-                                </select>
-                                <% } %>
-                                    <div class="simple-space-maker"><button id="subscribe-button" class="medium green">Subscribe</button></div>
-                        <% } %>
-
-                    </td>
                 </tr>
                 <tr>
                     <th>Version:</th>
@@ -62,9 +41,34 @@
                 </tbody>
             </table>
         </div>
-        <div class="col_12 tabs-section">
+        <div class="span4">
+            <% if(api.status =="PUBLISHED") { %>
+                    <%
+                     if(user && apps) {
+                         length = apps.length;
+                     %>
+                     <select id="application-list" class="fancy">
+                            <option value="-">Select Application...</option>
+                            <option value="createNewApp">New Application...</option>
+                            <optgroup label="My Applications">
+                                <%
+                                for(i = 0; i < length; i++) {
+                                app = apps[i];
+                                %>
+                                <option value="<%=app.id%>"><%=app.name%></option>
+                                <% } %>
+                            </optgroup>
+
+                        </select>
+                     <% } %>
+                         <div class="simple-space-maker"><button id="subscribe-button" class="btn btn-primary">Subscribe</button></div>
+             <% } %>
+
+        </div>
+        <div class="span12 tabs-section">
             <% jagg.includeBlock("ui/tab", outputs.tabs); %>
         </div>
+    </div>
     </div>
 </div>
 <% }); %>

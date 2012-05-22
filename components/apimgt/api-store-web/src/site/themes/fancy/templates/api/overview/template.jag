@@ -1,7 +1,7 @@
 <% jagg.template("api/overview", function(inputs, outputs, jagg) { %>
 <% var api = outputs.api, user = outputs.user; %>
 <div id="overview">
-    <h6>URLs:</h6>
+    <h3>URLs:</h3>
     <ul>
     <%
     var serverEndpoints = api.serverURL.split(",");
@@ -18,7 +18,7 @@
         <%=api.description%>
     </p>
         <% } %>
-    <h6>Comments:</h6>
+    <h3>Comments:</h3>
     <% if(user) jagg.includeBlock("comment/comment-add", null); %>
     <% jagg.includeBlock("comment/comment-list", {api:api}); %>
 </div>

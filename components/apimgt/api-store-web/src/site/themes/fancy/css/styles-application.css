@@ -1,0 +1,176 @@
+div.star-ratings{
+
+}
+div.star-ratings img{
+    display:inline-block;
+}
+.average-rating {
+    background: url("../images/bigstar.png") no-repeat scroll 0 0 transparent;
+    font-size: 20px;
+    font-weight: bold;
+    height: 64px;
+    width:48px;
+    line-height: 70px;
+    padding-left: 28px;''
+}
+
+.star-0 {
+    background: url("../images/star-0.png") no-repeat scroll left center transparent;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 14px;
+    margin-top: 3px;
+    width: 15px;
+}
+
+.star-1 {
+    background: url("../images/star-1.0.png") no-repeat scroll left center transparent;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 14px;
+    margin-top: 3px;
+    width: 15px;
+}
+
+.dynamic-rating span {
+   float: left;
+   margin-right: 5px;
+   clear:left;
+}
+
+.remove-rating {
+    background: url("../images/myRatingRemove.png") no-repeat scroll left center transparent;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 12px;
+    margin-top: 5px;
+    width: 12px;
+}
+
+.remove-rating:hover {
+    background: url("../images/myRatingRemove-hover.png") no-repeat scroll left center transparent;
+}
+
+.documentation {
+    padding: 10px;
+}
+
+.documentation hr {
+    margin: 5px 0;
+}
+
+.api-documentation div.accordion-body {
+    display: none;
+}
+
+.documentaion-body {
+    margin-bottom: 15px;
+}
+.content-section{
+    margin-left:15px;
+}
+.info-table{
+    margin-top:-25px;
+}
+.comment-text{
+    padding:5px;
+    color:#888;
+}
+.key-generate-button{
+    margin-bottom:10px;
+    width:200px;
+}
+
+/* Subscription accordion sections*/
+.accordion {
+  margin-bottom: 18px;
+}
+.accordion-group {
+  margin-bottom: 2px;
+  border: 1px solid #e5e5e5;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.accordion-group a{
+    cursor:pointer;
+}
+.accordion-heading {
+  border-bottom: 0;
+}
+.accordion-heading .accordion-toggle {
+  display: block;
+  padding: 8px 15px;
+     background: -moz-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(255, 255, 255)), color-stop(50%, rgb(255, 255, 255)), color-stop(100%, rgb(240, 240, 240)));
+    background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -o-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -ms-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#ffffff',EndColorStr='#f0f0f0'); /* IE8 */
+      -ms-filter: progid: DXImageTransform.Microsoft.gradient(gradientType = 0, startColor = '#ffffff', endColoStr = '#f0f0f0'); /*Transparent back */
+}
+div div.accordion-inner {
+  border-top: none;
+    padding:0;
+}
+.application-api-listing {
+    display:inline-block;
+    padding: 9px 16px 9px;
+    margin:0 10px 10px 0;
+    text-align: center;
+    font-size: 100%;
+    line-height: 12px;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 1.5px 0 rgba(0, 0, 0, 0.45);
+    -moz-box-shadow: 0 1px 1.5px 0 rgba(0, 0, 0, 0.55);
+    -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.45);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    background: #fff;
+    background: -moz-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(255, 255, 255)), color-stop(50%, rgb(255, 255, 255)), color-stop(100%, rgb(240, 240, 240)));
+    background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -o-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -ms-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+}
+.application-api-listing img{
+    height:40px;
+    width:40px;
+}
+.application-api-listing div{
+    padding-top:10px;
+}
+.api-key-cell{
+    padding:0;border-left:solid  1px #ccc;
+    width:320px;
+}
+.api-key-listing {
+    display: inline-block;
+    width:100%;
+    background: #efefef;
+}
+.api-key-sandbox{
+    padding:15px;
+    height:30px;
+}
+.api-key{
+    padding:15px;
+    background: #e0e0e0;
+    height:30px;
+}
+.api-key a{
+}
+.accordion-inner .odd {
+    background: #F6F6F6;
+}
+
+.application-api {
+    padding: 9px 15px;
+}
+.application-api img{
+    width:60px;
+}

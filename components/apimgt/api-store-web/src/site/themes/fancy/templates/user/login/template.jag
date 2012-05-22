@@ -1,36 +1,27 @@
 <% jagg.template("user/login", function(inputs, outputs, jagg) { %>
 <% var user = outputs.user; %>
-<div id="login-box">
-    <div class="col_4 login-links">
-        <% if(user) { %>
-        <ul>
-            <li>
-                <a id="logout-link">Logout</a>
-            </li>
-            <li>
-                <a class="link-to-user"><%=user.username%></a>
-            </li>
-        </ul>
-        <% } else { %>
-        <ul>
-            <li>
-                <a id="login-link" class="need-login">Login</a>
-            </li>
-        </ul>
-        <% } %>
-    </div>
-    <% if(!user) { %>
-    <div id="login-form" class="hidden" title="Login">
-        <div class="col_4">
-            <form id="mainLoginForm">
-                <label for="text1">Username:</label>
-                <input id="username" name="name" class="loginInputs" placeholder="username" type="text"/>
 
-                <label for="text1">Password:</label>
-                <input type="password" class="loginInputs" id="password" name="pass" placeholder="password"/>
-            </form>
-        </div>
-    </div>
-    <% } %>
-</div>
+
+<% if(user) { %>
+<ul class="nav actions login-sign-up">
+    <li>
+        <a id="logout-link">Logout</a>
+    </li>
+    <li>
+        <a class="link-to-user"><%=user.username%></a>
+    </li>
+</ul>
+<% } else { %>
+<ul class="nav actions login-sign-up">
+    <li>
+        <a id="login-link" data-toggle="modal" href="#login-form">Login</a>
+    </li>
+</ul>
+<% } %>
+
+<% if(!user) { %>
+
+
+
+<% } %>
 <% }); %>

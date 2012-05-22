@@ -1,22 +1,32 @@
 <% jagg.template("api/recently-added", function(inputs, outputs, jagg) { %>
-<div id="recently-added">
-    <h4>Recently Added</h4>
-    <hr/>
-    <ol>
-        <%
+        <ul class="list-main">
+                   <li class="list-header">
+                       Recently Added
+                   </li>
+
+                     <%
         var i, api, path, thumbURL, apis = outputs.apis, length = apis.length;
         for(i = 0; i < length; i++) {
             api = apis[i];
             thumbURL = api.thumbURL;
             if(thumbURL && thumbURL.indexOf("images/") == 0) {
-                thumbURL = site.context + "/site/themes/fancy/" + thumbURL;
+                thumbURL = site.context + "/site/themes/fancy-new/" + thumbURL;
             }
             path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
         %>
-        <li>
-            <a class="tooltip-right medium orange pill" href="<%=path%>"><%=api.name%></a>
-        </li>
+                   <li>
+                       <div class="row-fluid list-item-content">
+                           <div class="span4">
+                               <img src="<%=thumbURL%>" width="70px"/>
+                           </div>
+                           <div class="span8">
+                               <a data-content="#tooltipcontentID1" href="<%=path%>" class="title">
+                                   <%=api.name%></a>
+                               <div><a data-content="#tooltipcontentID1" class="item-provider">Ondango API</a></div>
+                           </div>
+                       </div>
+                   </li>
         <% } %>
-    </ol>
-</div>
+        </ul>
+
 <% }); %>

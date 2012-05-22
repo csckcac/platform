@@ -1,21 +1,58 @@
 <% jagg.template("menu/primary", function(inputs, outputs, jagg) { %>
-<div class="header-wrapper">
-    <div class="wrap">
-        <a class="logo"></a>
-        <div class="col_8">
-            <ul class="menu">
-                <%
-                var i, link, links = outputs.links, length = links.length;
-                for(i = 0; i < length; i++) {
-                    link = links[i];
-                %>
-                <li <%=(link.active ? 'class="current"' : '')%>>
-                    <a title="<%=link.tooltip%>" href="<%=link.url%>"<%=(link.classes ? ' class="' + link.classes + '"' : "")%>><%=link.title%></a>
-                </li>
-                <% } %>
-            </ul>
+   <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+            <a href="/" class="brand"><img src="<%=site.context%>/site/themes/fancy-new/images/logo.png" alt="API Store"></a>
+          <div class="span9 offset3">
+              <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </a>
+              <div class="btn-group pull-right">
+                 <% jagg.includeBlock("user/login", null); %>
+              </div>
+              <div class="nav-collapse">
+                    <ul class="nav">
+                        <%
+                        var i, link, links = outputs.links, length = links.length;
+                        for(i = 0; i < length; i++) {
+                            link = links[i];
+                        %>
+                        <li <%=(link.active ? 'class="active"' : '')%>>
+                            <a title="<%=link.tooltip%>" href="<%=link.url%>"<%=(link.classes ? ' class="' + link.classes + '"' : "")%>><%=link.title%></a>
+                        </li>
+                        <% } %>
+                    </ul>
+                </div><!--/.nav-collapse -->
+              </div>
         </div>
-        <% jagg.includeBlock("user/login", null); %>
+      </div>
     </div>
+
+
+
+
+
+
+
+<div class="modal fade" id="login-form">
+    <form id="mainLoginForm">
+        <div class="modal-header">
+            <button class="close" data-dismiss="modal">×</button>
+            <h3>Login</h3>
+        </div>
+        <div class="modal-body">
+            <label>Username:</label>
+            <input type="text" id="username" name="name" class="span3" placeholder="Enter your user name."/>
+            <label>Password:</label>
+            <input type="password" id="password" name="pass" class="span3"/>
+
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+            <a href="#" class="btn btn-primary" id="loginBtn">Login</a>
+        </div>
+    </form>
 </div>
 <% }); %>

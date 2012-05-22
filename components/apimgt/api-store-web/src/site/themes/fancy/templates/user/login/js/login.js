@@ -4,17 +4,18 @@ var login = login || {};
 
     loginbox.login = function (username, password, url) {
         jagg.post("/site/blocks/user/login/ajax/login.jag", { action:"login", username:username, password:password },
-                function (result) {
-                    if (result.error == false) {
-                        if(url) {
-                            window.location.href = url;
-                        } else {
-                            window.location.reload();
-                        }
-                    } else {
-                        jagg.message(result.message);
-                    }
-                }, "json");
+                 function (result) {
+                     if (result.error == false) {
+                         if (url && url != undefined) {
+                             window.location.href = url;
+                         } else {
+                             window.location.reload();
+                         }
+                     } else {
+                         $('#login-form').modal('hide');
+                         jagg.message(result.message);
+                     }
+                 }, "json");
     };
 
     loginbox.logout = function () {
@@ -26,41 +27,32 @@ var login = login || {};
             }
         }, "json");
     };
+
 }());
 
+
 $(document).ready(function () {
-    $("#login-form").dialog({
-        autoOpen:false,
-        height:270,
-        width:350,
-        modal:true,
-        buttons:{
-            "Login":function () {
-                login.loginbox.login($("#username").val(), $("#password").val(), $(this).dialog("close").data("url"));
-            },
-            "Cancel":function () {
-                $(this).data("url", null).dialog("close");
-            }
-        },
-        close:function () {
+    $('#mainLoginForm input').keydown(function(event) {
+        if (event.which == 13) {
+            var goto_url = $('#loginBtn').data("goto_url");
+            event.preventDefault();
+            login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
 
         }
     });
-
-    $('#mainLoginForm input').keydown(function(event){
-        if (event.which == 13) {
-            event.preventDefault();
-            login.loginbox.login($("#username").val(), $("#password").val(), $(this).dialog("close").data("url"));
-
-       }
-    });
-
     $("#logout-link").click(function () {
         login.loginbox.logout();
     });
 
     $(".need-login").click(function() {
-        $("#login-form").dialog("open").data("url", $(this).attr("href"));
+        $('#login-form').modal('show').data("goto_url", $(this).attr("href"));
         return false;
     });
+
+    $('#loginBtn').click(
+        function() {
+            var goto_url = $('#login-form').data("goto_url");
+            login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
+        }
+    );
 });

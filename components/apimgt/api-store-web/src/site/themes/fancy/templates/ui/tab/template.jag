@@ -4,12 +4,12 @@
         var tabs = outputs.tabs, length = tabs.length;
         var i, index, tab, classes;
     %>
-    <ul class="tabs left">
+    <ul class="nav nav-tabs all-tabs">
     <%
     for(i = 0; i < length; i++) {
         tab = tabs[i];
         if(i == 0) {
-            clazz = "first current bevel-from-left";
+            clazz = "first active";
         } else if(i == length - 1) {
             clazz = "last";
         } else {
@@ -22,11 +22,14 @@
     <% } %>
     </ul>
     <div class="corner-maker-left"></div>
+
+    <div class="tab-content">
     <%
     for(i = 0; i < length; i++) {
         tab = tabs[i];
     %>
-    <div class="tab-content clearfix" id="tab<%=String(i)%>"><% jagg.includeBlocks(tab.body); %></div>
+    <div class="tab-pane <% if(i==0){%>active<% } %>" id="tab<%=String(i)%>"><% jagg.includeBlocks(tab.body); %></div>
     <% } %>
+    </div>
 </div>
 <% }); %>

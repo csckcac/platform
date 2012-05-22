@@ -8,13 +8,14 @@ var jagg = jagg || {};
     };
 
     jagg.message = function (content) {
-        $("#message-box:ui-dialog").dialog("destroy");
+        /*$("#message-box:ui-dialog").dialog("destroy");
         var dialog = $("#message-box");
         $(".message", dialog).text(content);
         dialog.dialog({
             modal:true,
             dialogClass: "alert"
-        });
+        });*/
+        alert(content);
     };
 
     jagg.initStars = function (elem, saveCallback, removeCallback, data) {

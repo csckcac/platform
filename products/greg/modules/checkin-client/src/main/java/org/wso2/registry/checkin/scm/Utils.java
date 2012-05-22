@@ -38,7 +38,7 @@ public class Utils {
         String carbonHome = System.getenv("CARBON_HOME");
         String executableName;
         if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-            executableName = "D:\\Work\\Downloads\\wso2greg-4.0.0-SNAPSHOT\\bin\\" + "checkin-client.bat";
+            executableName = "checkin-client.bat";
         } else {
             executableName = "checkin-client.sh";
         }

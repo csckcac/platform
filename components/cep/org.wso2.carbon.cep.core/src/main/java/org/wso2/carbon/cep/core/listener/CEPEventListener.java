@@ -59,6 +59,8 @@ public class CEPEventListener {
     public void onComplexEvent(List events) {
 
         try {
+
+
             SuperTenantCarbonContext.startTenantFlow();
             SuperTenantCarbonContext.getCurrentContext().setTenantId(tenantId);
             SuperTenantCarbonContext.getCurrentContext().getTenantDomain(true);

@@ -32,6 +32,9 @@ import org.wso2.carbon.cep.core.internal.CEPService;
 import org.wso2.carbon.cep.core.internal.builder.CEPBucketBuilder;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
+import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.CarbonConstants;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -67,6 +70,8 @@ public class BucketDeployer extends AbstractDeployer {
         String path = deploymentFileData.getAbsolutePath();
         File bucketFile = new File(path);
 
+        SuperTenantCarbonContext.getCurrentContext().setUsername(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
+
         try {
 
             OMElement bucketElement = getBucketOMElement(path, bucketFile);
@@ -89,18 +94,15 @@ public class BucketDeployer extends AbstractDeployer {
                 CEPServiceValueHolder.getInstance().getUnDeployedBuckets().add(bucketElement);
             }
 
+            log.info("Successfully deployed the bucket " + bucketName);
+
         } catch (CEPConfigurationException e) {
             String errorMessage = "wrong configuration provided for adding " + bucketFile.getName();
             log.error(errorMessage, e);
             throw new DeploymentException(errorMessage, e);
         } catch (Throwable t) {
-            /*
-            Even though catching Throwable is not recommended, we do not want
-            the server to fail on errors like NoClassDefFoundError
-            */
             log.error("The deployment of " + bucketFile.getName() + " is not valid.", t);
             throw new DeploymentException(t);
-
         }
     }
 
@@ -155,11 +157,10 @@ public class BucketDeployer extends AbstractDeployer {
         try {
             cepService.removeBucket(this.fileNameToBucketNameMap.get(fileName));
         } catch (CEPConfigurationException e) {
-            e.printStackTrace();
             throw new DeploymentException("Can not undeploy the cep bucket with file name " + fileName);
-        } catch (Exception e){
-            e.printStackTrace();
         }
+
+        log.info("Undeployed the bucket " + this.fileNameToBucketNameMap.get(fileName));
     }
 
     public void setDirectory(String directory) {

@@ -14,8 +14,10 @@
     GadgetGenAdminClient gadgetGenAdminClient = new GadgetGenAdminClient(cookie, serverURL, configContext);
 
     String responseHTML;
+    String sqlFromUI = GGWUIUtils.getSQL(session);
+    String sql = (sqlFromUI != null) ? sqlFromUI : request.getParameter("sql");
     try {
-        JSONObject jsonObject = gadgetGenAdminClient.executeQuery(GGWUIUtils.constructDBConnInfo(session), request.getParameter("sql"));
+        JSONObject jsonObject = gadgetGenAdminClient.executeQuery(GGWUIUtils.constructDBConnInfo(session), sql);
         responseHTML = jsonObject.toString();
     } catch (Exception e) {
         responseHTML = "Error executing query. " + e.getMessage();

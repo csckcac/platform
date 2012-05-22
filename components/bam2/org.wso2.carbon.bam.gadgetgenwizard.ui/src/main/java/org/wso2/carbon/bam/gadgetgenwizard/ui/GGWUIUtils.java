@@ -31,13 +31,16 @@ public class GGWUIUtils {
         jsonObject.put("ColumnNames", jsonCols);
         JSONArray allRows = new JSONArray();
         WSRow[] wsRows = wsResultSet.getRows();
-        for (int i = 0; i < wsRows.length; i++) {
-            WSRow wsRow = wsRows[i];
+        for (WSRow wsRow : wsRows) {
             JSONArray row = new JSONArray(wsRow.getRow());
             allRows.put(row);
         }
         jsonObject.put("Rows", allRows);
         return jsonObject;
+    }
+
+    public static String getSQL(HttpSession session) {
+        return (session.getAttribute("sql") != null) ? ((String[]) session.getAttribute("sql")) [0] : null;
     }
 
     public static DBConnInfo constructDBConnInfo(HttpSession session) {

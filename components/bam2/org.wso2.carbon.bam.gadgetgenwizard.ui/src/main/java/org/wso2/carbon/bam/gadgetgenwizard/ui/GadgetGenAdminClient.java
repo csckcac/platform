@@ -5,6 +5,7 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.json.JSONObject;
+import org.wso2.carbon.bam.gadgetgenwizard.stub.GadgetGenAdminServiceGadgetGenException;
 import org.wso2.carbon.bam.gadgetgenwizard.stub.GadgetGenAdminServiceStub;
 import org.wso2.carbon.bam.gadgetgenwizard.stub.beans.DBConnInfo;
 import org.wso2.carbon.bam.gadgetgenwizard.stub.beans.WSMap;
@@ -40,15 +41,27 @@ public class GadgetGenAdminClient {
 
 
     public String generateGraph(WSMap map) throws Exception {
-        return stub.createGadget(map);
+        try {
+            return stub.createGadget(map);
+        } catch (GadgetGenAdminServiceGadgetGenException e) {
+            throw new Exception(e.getFaultMessage().getGadgetGenException().getMessage(), e);
+        }
     }
 
     public boolean validateDBConn(DBConnInfo dbConnInfo) throws Exception {
-        return stub.validateDBConnection(dbConnInfo);
+        try {
+            return stub.validateDBConnection(dbConnInfo);
+        } catch (GadgetGenAdminServiceGadgetGenException e) {
+            throw new Exception( e.getFaultMessage().getGadgetGenException().getMessage(), e);
+        }
     }
 
     public JSONObject executeQuery(DBConnInfo dbConnInfo, String sql) throws Exception {
-        return GGWUIUtils.convertToJSONObj(stub.executeQuery(dbConnInfo, sql));
+        try {
+            return GGWUIUtils.convertToJSONObj(stub.executeQuery(dbConnInfo, sql));
+        } catch (GadgetGenAdminServiceGadgetGenException e) {
+            throw new Exception(e.getFaultMessage().getGadgetGenException().getMessage(), e);
+        }
     }
 
 

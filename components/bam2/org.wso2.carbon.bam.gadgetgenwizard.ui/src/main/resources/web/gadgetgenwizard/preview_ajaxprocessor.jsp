@@ -9,9 +9,19 @@
 
 
 %>
-<form>
-    <p><label>Gadget Title : </label><input type="text" name="gadget-title" value="Gadget Generation Magnifique"/></p>
-    <p><label>Gadget File Name : </label><input type="text" name="gadget-filename" value="generated-gadget"/></p>
-    <p><label>Refresh Rate (in Seconds) : </label><input type="text" name="refresh-rate" value="10"/></p>
-    <input type="hidden" name="page" id="page" value="4">
-</form>
+<tr>
+    <td>Gadget Title<font color="red">*</font>
+    </td>
+    <td><input type="text" name="gadget-title" value="Gadget Generation Magnifique"/></td>
+</tr>
+<tr>
+    <td>Gadget File Name<font color="red">*</font>
+    </td>
+    <td><input type="text" name="gadget-filename" value="generated-gadget" style="width:150px"/></td>
+</tr>
+<tr>
+    <td>Refresh Rate (in Seconds)<font color="red">*</font>
+    </td>
+    <td><input type="text" name="gadget-filename" value="generated-gadget" style="width:150px"/></td>
+</tr>
+<input type="hidden" name="page" id="page" value="4">

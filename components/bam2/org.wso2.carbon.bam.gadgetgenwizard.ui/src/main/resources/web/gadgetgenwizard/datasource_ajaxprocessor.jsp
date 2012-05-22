@@ -4,6 +4,21 @@
     String username = (session.getAttribute("username") != null) ? ((String[]) session.getAttribute("username")) [0] : "";
     String password = (session.getAttribute("password") != null) ? ((String[]) session.getAttribute("password")) [0] : "";
 %>
+
+<script type="text/javascript">
+    $("#validate").click(function() {
+        $.post("validate_db_conn_ajaxprocessor.jsp", $("form").serialize(), function(html) {
+            var success = !(html.toLowerCase().match(/error/));
+            if (success) {
+                CARBON.showInfoDialog(html);
+            } else {
+                CARBON.showErrorDialog(html);
+            }
+        });
+
+    });
+</script>
+
 <tr>
     <td>JDBC URL<font color="red">*</font>
     </td>

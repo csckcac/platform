@@ -16,11 +16,24 @@ package org.wso2.carbon.bam.gadgetgenwizard.service;
  * limitations under the License.
  */
 public class GadgetGenException extends Exception {
+    private String message;
+
     public GadgetGenException(String s, Throwable throwable) {
         super(s, throwable);
+        this.message = s;
     }
 
     public GadgetGenException(String s) {
         super(s);
+        this.message = s;
+    }
+
+    @Override
+    public String getMessage() {
+        return this.message;
+    }
+
+    public String getErrorMessage() {
+        return this.message;
     }
 }

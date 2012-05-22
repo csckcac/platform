@@ -175,7 +175,7 @@ public class GRegStratosCollectionSeleniumTest {
                          "New Created Collection does not Exists :");
             addServiceLifeCycle();
             promoteState();
-            waitForLifeCycleStateTransition("Testing");
+            waitForLifeCycleStateTransition("Tested");
             promoteState();
             waitForLifeCycleStateTransition("Production");
             //Delete LifeCycle
@@ -210,7 +210,7 @@ public class GRegStratosCollectionSeleniumTest {
             addCollection(collectionPath);
             assertEquals(collectionPath, selenium.getValue("//input"),
                          "New Created Collection does not Exists :");
-            addRating();
+            applyRating();
             userLogout();
             log.info("********GReg Stratos Add Rating To Collection Test - Passed ***********");
         } catch (AssertionError e) {
@@ -246,6 +246,9 @@ public class GRegStratosCollectionSeleniumTest {
             findLocation("/selenium_root/collection_root/rename");
             assertTrue(selenium.isTextPresent("a1"), "Collection a1 does not Exists :");
             renameCollection(rename);
+            GRegSeleniumUtils.waitForElement(driver, "id", "resourceView1");
+            assertTrue(GRegSeleniumUtils.getResourceId(driver, rename) != 0,
+                       "Resource doesn't exists");
             userLogout();
             log.info("********GReg Stratos Rename Collection Test - Passed ***********");
         } catch (AssertionError e) {
@@ -277,23 +280,25 @@ public class GRegStratosCollectionSeleniumTest {
             gotoDetailViewTab();
             GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath1);   //Create Collection  1
-            assertEquals(collectionPath1, selenium.getValue("//input"),
-                         "New Created Collection1 does not Exists :");
             driver.findElement(By.xpath("//input")).clear();
             findLocation("/");
             addCollection(collectionPath2);          //Create Collection  2
-            assertEquals(collectionPath2, selenium.getValue("//input"),
-                         "New Created Collection does not Exists :");
             findLocation("/selenium_root/collection_root/move/collection1");
-            assertTrue(selenium.isTextPresent("a1"), "a1 Collection does not Exists :");
+
+            assertTrue(GRegSeleniumUtils.getResourceId(driver, "a1") != 0,
+                       "Resource doesn't exists");
+
             moveCollection(movePath);
-            findPath(movePath);
+            assertFalse(GRegSeleniumUtils.getResourceId(driver, "a1") != 0,
+                        "Resource exists even after moving");
+            findLocation(movePath);
             addCollection(collection3);
-            findPath(movePath);
-            assertTrue(selenium.isTextPresent("a1"), "Moved Collection a1 does not Exists :");
-            findPath("/selenium_root/collection_root/move/collection1");
-            assertFalse(selenium.isTextPresent("a1"), "a1 Collection has not been moved :");
+            findLocation(movePath);
+            assertFalse(GRegSeleniumUtils.getResourceId(driver, "a1") != 0,
+                        "Resource exists even after moving");
+            findLocation("/selenium_root/collection_root/move/collection1");
             userLogout();
+
             log.info("********GReg Stratos Move a Collection Test - Passed ***********");
         } catch (AssertionError e) {
             log.info("Move a Collection Test Failed :" + e);
@@ -332,9 +337,9 @@ public class GRegStratosCollectionSeleniumTest {
                          "New Created Collection2 does not Exists :");
             findLocation("/selenium_root/collection_root/copy/collection1");
             copyCollection(collectionPath2);
-            findPath(collectionPath2);
+            findLocation(collectionPath2);
             addCollection(collectionPath3); //this is add becoz carbon 3.2.2 has a cashing issue
-            findPath(collectionPath2);
+            findLocation(collectionPath2);
             assertTrue(selenium.isTextPresent("a1"), "Copied a1 collection does not Exists :");
             findLocation("/selenium_root/collection_root/copy/collection1");
             assertTrue(selenium.isTextPresent("a1"), "Copied a1 collection does not Exists :");
@@ -365,10 +370,8 @@ public class GRegStratosCollectionSeleniumTest {
             gotoDetailViewTab();
             GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             addCollection(collectionPath1);               //Create Collection  1
-            assertEquals(collectionPath1, selenium.getValue("//input"),
-                         "New Created Collection does not Exists :");
             findLocation("/selenium_root/collection_root/delete/");
-            deleteCollection();
+            GRegSeleniumUtils.deleteResourceFromBrowser(driver, "selenium_root");
             userLogout();
             log.info("********GReg Stratos Delete Collection Test - Passed ***********");
         } catch (AssertionError e) {
@@ -393,16 +396,6 @@ public class GRegStratosCollectionSeleniumTest {
         driver.quit();
     }
 
-    private void deleteCollection() throws InterruptedException {
-        driver.findElement(By.id("actionLink1")).click();
-        driver.findElement(By.linkText("Delete")).click();
-        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
-                   "Delete Collection pop-up Title does not appear :");
-        assertTrue(driver.findElement(By.id("messagebox-confirm")).getText().contains("Are you sure you " +
-                                                                                      "want to delete"), "Delete Collection pop-up message" +
-                                                                                                         " fail:");
-        driver.findElement(By.xpath("//button")).click();
-    }
 
     private void copyCollection(String collectionPath2) throws InterruptedException {
         driver.findElement(By.id("actionLink1")).click();
@@ -423,11 +416,13 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.linkText("Move")).click();
         driver.findElement(By.id("move_destination_path1")).sendKeys(movePath);
         driver.findElement(By.xpath("//tr[5]/td/table/tbody/tr[2]/td/input")).click();
+        GRegSeleniumUtils.waitForElement(driver, "id", "ui-dialog-title-dialog");
         assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"));
         assertTrue(driver.getPageSource().contains("WSO2 Carbon"), "Move pop-up window Title fail");
         assertTrue(driver.getPageSource().contains("Successfully moved collection."),
                    "Move pop-up window message fail");
         driver.findElement(By.xpath("//button")).click();
+        Thread.sleep(3000);
     }
 
     private void renameCollection(String rename) throws InterruptedException {
@@ -438,16 +433,10 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.id("resourceEdit1")).clear();
         driver.findElement(By.id("resourceEdit1")).sendKeys(rename);
         driver.findElement(By.xpath("//tr[6]/td/table/tbody/tr[2]/td/input")).click();
-        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"));
-        assertTrue(driver.getPageSource().contains("WSO2 Carbon"), "rename pop-up title fail :");
+        GRegSeleniumUtils.waitForElement(driver, "id", "ui-dialog-title-dialog");
+        assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                   "Popup not found :");
         driver.findElement(By.xpath("//button")).click();
-        assertTrue(driver.getPageSource().contains(rename), "Renamed Collection does not Exists :");
-    }
-
-    private void findPath(String path) throws InterruptedException {
-        driver.findElement(By.id("uLocationBar")).clear();
-        driver.findElement(By.id("uLocationBar")).sendKeys(path);
-        driver.findElement(By.xpath("//input[2]")).click();
     }
 
 
@@ -457,22 +446,27 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.xpath("//input[2]")).click();
     }
 
-    private void addRating() throws InterruptedException {
+    private void applyRating() throws InterruptedException {
         // Add rating 1
-        driver.findElement(By.xpath("//img[3]")).click();
-        assertTrue(selenium.isTextPresent("(1.0)"), "Rating 1 has failed :");
+        driver.findElement(By.xpath("//span/img[3]")).click();
+        assertTrue(waitForValue("1.0"));
+
+
         // Add rating 2
-        driver.findElement(By.xpath("//img[5]")).click();
-        assertTrue(selenium.isTextPresent("(2.0)"), "Rating 2 has failed :");
+        driver.findElement(By.xpath("//span/img[5]")).click();
+        assertTrue(waitForValue("2.0"));
+
         // Add rating 3
         driver.findElement(By.xpath("//img[7]")).click();
-        assertTrue(selenium.isTextPresent("(3.0)"), "Rating 3 has failed :");
+        assertTrue(waitForValue("3.0"));
+
         // Add rating 4
         driver.findElement(By.xpath("//img[9]")).click();
-        assertTrue(selenium.isTextPresent("(4.0)"), "Rating 4 has failed :");
+        assertTrue(waitForValue("4.0"));
+
         // Add rating 5
         driver.findElement(By.xpath("//img[11]")).click();
-        assertTrue(selenium.isTextPresent("(5.0)"), "Rating 5 has failed :");
+        assertTrue(waitForValue("5.0"));
     }
 
     private void deleteServiceLifeCycle() throws InterruptedException {
@@ -506,12 +500,6 @@ public class GRegStratosCollectionSeleniumTest {
         driver.findElement(By.xpath("//button")).click();
     }
 
-    private void addTag(String tag) throws InterruptedException {
-        driver.findElement(By.id("tagsIconMinimized")).click();
-        driver.findElement(By.linkText("Add New Tag")).click();
-        driver.findElement(By.id("tfTag")).sendKeys(tag);
-        driver.findElement(By.xpath("//div[2]/input[3]")).click();
-    }
 
     private void userLogout() throws InterruptedException {
         driver.findElement(By.className("right-links")).findElement(By.linkText("Sign-out")).click();
@@ -628,6 +616,23 @@ public class GRegStratosCollectionSeleniumTest {
 
         } while (!(((exceededTime - currentTime) / 1000) > 30));
         assertTrue(status, "LifeCycle state not found - " + state);
+    }
+
+    private boolean waitForValue(String value) {
+        long currentTime = System.currentTimeMillis();
+        long exceededTime;
+        do {
+            try {
+                if (driver.findElement(By.xpath("//td[4]/div[12]/div/div[6]/div/table/tbody/tr[2]/td[2]"))
+                            .getText().contains(value)) {
+                    return true;
+                }
+            } catch (WebDriverException ignored) {
+                log.info("Waiting for the element");
+            }
+            exceededTime = System.currentTimeMillis();
+        } while (!(((exceededTime - currentTime) / 1000) > 60));
+        return false;
     }
 
 }

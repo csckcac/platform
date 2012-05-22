@@ -80,6 +80,7 @@ public class ServiceImportServiceTestClient {
             service.addAttribute("creator", "Aaaa");
             service.addAttribute("version", "1.0.0");
             serviceManager.addService(service);
+
             log.info("Service Added Successfully");
         } catch (GovernanceException e) {
             log.error("Failed to add Service:" + e);

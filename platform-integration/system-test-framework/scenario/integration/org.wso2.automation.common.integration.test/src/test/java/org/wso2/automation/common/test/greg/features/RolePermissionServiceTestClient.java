@@ -32,7 +32,6 @@ import java.rmi.RemoteException;
 public class RolePermissionServiceTestClient {
     private static final Log log = LogFactory.getLog(RolePermissionServiceTestClient.class);
     private AdminServiceUserMgtService userAdminStub;
-    private EnvironmentVariables gregServer;
     private String sessionCookie;
     private String roleName;
     private String userName;
@@ -41,8 +40,8 @@ public class RolePermissionServiceTestClient {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws RemoteException, LoginAuthenticationExceptionException {
-        EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
-        gregServer = builder.build().getGreg();
+        EnvironmentBuilder builder = new EnvironmentBuilder().greg(4);
+        EnvironmentVariables gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();
         String gregBackEndUrl = gregServer.getBackEndUrl();
         userAdminStub = new AdminServiceUserMgtService(gregBackEndUrl);

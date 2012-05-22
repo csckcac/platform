@@ -201,7 +201,7 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../bpels/ProjectCreation/target/ProjectCreation.zip</source>
+            <source>../../bpels/ApplicationCreation/target/ApplicationCreation.zip</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>

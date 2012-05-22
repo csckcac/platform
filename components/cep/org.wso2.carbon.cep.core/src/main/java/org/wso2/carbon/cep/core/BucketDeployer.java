@@ -38,6 +38,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Deploy cep buckets as axis2 service
@@ -47,12 +49,11 @@ public class BucketDeployer extends AbstractDeployer {
 
     private static Log log = LogFactory.getLog(BucketDeployer.class);
     private ConfigurationContext configurationContext;
-    private AxisConfiguration axisConfig;
-    private String repositoryDirectory = null;
-    private String extension = null;
+    private Map<String, String> fileNameToBucketNameMap;
 
     public void init(ConfigurationContext configurationContext) {
         this.configurationContext = configurationContext;
+        this.fileNameToBucketNameMap = new ConcurrentHashMap<String, String>();
     }
 
     /**
@@ -66,63 +67,27 @@ public class BucketDeployer extends AbstractDeployer {
         String path = deploymentFileData.getAbsolutePath();
         File bucketFile = new File(path);
 
-        BufferedInputStream inputStream = null;
-        OMElement bucketElement = null;
-
         try {
 
-            try {
-                //read  and build the bucket from file
-                inputStream = new BufferedInputStream(new FileInputStream(bucketFile));
-                XMLStreamReader parser = XMLInputFactory.newInstance().
-                        createXMLStreamReader(inputStream);
-                StAXOMBuilder builder = new StAXOMBuilder(parser);
-                bucketElement = builder.getDocumentElement();
-                bucketElement.build();
-
-            } catch (FileNotFoundException e) {
-                String errorMessage = " .xml file cannot be found in the path : " + path;
-                log.error(errorMessage, e);
-                throw new DeploymentException(errorMessage, e);
-            } catch (XMLStreamException e) {
-                String errorMessage = "Invalid XML for " + bucketFile.getName() + " located in the path : " + path;
-                log.error(errorMessage, e);
-                throw new DeploymentException(errorMessage, e);
-            } finally {
-                try {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-                } catch (IOException e) {
-                    String errorMessage = "Can not close the input stream";
-                    log.error(errorMessage, e);
-                    throw new DeploymentException(errorMessage, e);
-                }
-            }
+            OMElement bucketElement = getBucketOMElement(path, bucketFile);
 
             if (!new QName(CEPConstants.CEP_CONF_NAMESPACE, CEPConstants.CEP_CONF_ELE_BUCKET).equals(bucketElement.getQName())) {
                 throw new DeploymentException("Invalid root element " + bucketElement.getQName() + " in " + bucketFile.getName());
             }
 
+            String bucketName = bucketElement.getAttributeValue(new QName(CEPConstants.CEP_CONF_ELE_NAME));
+            this.fileNameToBucketNameMap.put(deploymentFileData.getAbsolutePath(), bucketName);
             //If the CepService is present adds buckets element to the registry.
             // else keep that in memory for CepService to add them to the registry
-            if (bucketElement != null) {
 
-                CEPService cepService = CEPServiceValueHolder.getCepService();
-                if (null != cepService) {
-                    AxisConfiguration axisConfiguration =
-                            CEPServiceValueHolder.getConfigurationContextService()
-                                    .getServerConfigContext().getAxisConfiguration();
-
-                    CEPBucketBuilder.addNewBucketToRegistry(bucketElement);
-                    CEPBucketBuilder.loadBucketFromRegistry(cepService, axisConfiguration, bucketElement.getAttributeValue(new QName(CEPConstants.CEP_CONF_ELE_NAME)));
-                } else {
-                    CEPServiceValueHolder.getInstance().getUnDeployedBuckets().add(bucketElement);
-                }
-
+            CEPService cepService = CEPServiceValueHolder.getInstance().getCepService();
+            if (null != cepService) {
+                AxisConfiguration axisConfiguration = this.configurationContext.getAxisConfiguration();
+                CEPBucketBuilder.addNewBucketToRegistry(bucketElement);
+                CEPBucketBuilder.loadBucketFromRegistry(cepService, axisConfiguration, bucketName);
+            } else {
+                CEPServiceValueHolder.getInstance().getUnDeployedBuckets().add(bucketElement);
             }
-
-            super.deploy(deploymentFileData);
 
         } catch (CEPConfigurationException e) {
             String errorMessage = "wrong configuration provided for adding " + bucketFile.getName();
@@ -139,8 +104,42 @@ public class BucketDeployer extends AbstractDeployer {
         }
     }
 
+    private OMElement getBucketOMElement(String path,
+                                         File bucketFile) throws DeploymentException {
+        OMElement bucketElement;
+        BufferedInputStream inputStream = null;
+        try {
+            //read  and build the bucket from file
+            inputStream = new BufferedInputStream(new FileInputStream(bucketFile));
+            XMLStreamReader parser = XMLInputFactory.newInstance().
+                    createXMLStreamReader(inputStream);
+            StAXOMBuilder builder = new StAXOMBuilder(parser);
+            bucketElement = builder.getDocumentElement();
+            bucketElement.build();
+
+        } catch (FileNotFoundException e) {
+            String errorMessage = " .xml file cannot be found in the path : " + path;
+            log.error(errorMessage, e);
+            throw new DeploymentException(errorMessage, e);
+        } catch (XMLStreamException e) {
+            String errorMessage = "Invalid XML for " + bucketFile.getName() + " located in the path : " + path;
+            log.error(errorMessage, e);
+            throw new DeploymentException(errorMessage, e);
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                String errorMessage = "Can not close the input stream";
+                log.error(errorMessage, e);
+            }
+        }
+        return bucketElement;
+    }
+
     public void setExtension(String extension) {
-        this.extension = extension;
+
     }
 
     /**
@@ -152,11 +151,19 @@ public class BucketDeployer extends AbstractDeployer {
      */
     public void undeploy(String fileName) throws DeploymentException {
         // do nothing
-        super.undeploy(fileName);
+        CEPService cepService = CEPServiceValueHolder.getInstance().getCepService();
+        try {
+            cepService.removeBucket(this.fileNameToBucketNameMap.get(fileName));
+        } catch (CEPConfigurationException e) {
+            e.printStackTrace();
+            throw new DeploymentException("Can not undeploy the cep bucket with file name " + fileName);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void setDirectory(String directory) {
-        this.repositoryDirectory = directory;
+
     }
 
 

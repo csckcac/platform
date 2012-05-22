@@ -55,7 +55,7 @@ public class CEPServiceBuilder {
     public static CEPServiceInterface createCEPService() throws CEPConfigurationException {
 
         CEPService cepService = new CEPService();
-        CEPServiceValueHolder.setCepService(cepService);
+        CEPServiceValueHolder.getInstance().setCepService(cepService);
         OMElement cepConfig = loadConfigXML();
 
         if (cepConfig != null) {
@@ -80,7 +80,7 @@ public class CEPServiceBuilder {
         deployAllCEPBuckets();
 
         AxisConfiguration axisConfiguration =
-                CEPServiceValueHolder.getConfigurationContextService().getServerConfigContext().getAxisConfiguration();
+                CEPServiceValueHolder.getInstance().getConfigurationContextService().getServerConfigContext().getAxisConfiguration();
         loadBucketsFromRegistry(axisConfiguration);
         return cepService;
     }
@@ -144,7 +144,7 @@ public class CEPServiceBuilder {
 
     public static void loadBucketsFromRegistry(AxisConfiguration axisConfiguration) {
         try {
-            CEPService cepService = CEPServiceValueHolder.getCepService();
+            CEPService cepService = CEPServiceValueHolder.getInstance().getCepService();
             CEPBucketBuilder.loadBucketsFromRegistry(cepService, axisConfiguration);
         } catch (CEPConfigurationException e) {
             log.error("Unable to load buckets from registry" + e);

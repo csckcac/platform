@@ -33,20 +33,23 @@ import java.util.List;
  */
 public class CEPServiceValueHolder {
 
-    private static BrokerService brokerService;
+    private static CEPServiceValueHolder cepServiceValueHolder = new CEPServiceValueHolder();
 
-    private static BrokerManagerService brokerManagerService;
+    private BrokerService brokerService;
 
-    private static RegistryService registryService;
+    private BrokerManagerService brokerManagerService;
 
-    private static CEPServiceValueHolder cepServiceValueHolder;
+    private RegistryService registryService;
 
-    private static ConfigurationContextService configurationContextService;
+    private ConfigurationContextService configurationContextService;
 
-    private static CEPService cepService;
+    private CEPService cepService;
 
     private List<OMElement> unDeployedBuckets = new ArrayList<OMElement>();
 
+    private CEPServiceValueHolder() {
+
+    }
 
     public static CEPServiceValueHolder getInstance() {
         if (cepServiceValueHolder == null) {
@@ -60,19 +63,19 @@ public class CEPServiceValueHolder {
     }
 
     public void registerBrokerService(BrokerService brokerService) {
-        CEPServiceValueHolder.brokerService = brokerService;
+        this.brokerService = brokerService;
     }
 
     public void unsetBrokerService() {
-        CEPServiceValueHolder.brokerService = null;
+        this.brokerService = null;
     }
 
     public void setBrokerManagerService(BrokerManagerService brokerManagerService) {
-        CEPServiceValueHolder.brokerManagerService = brokerManagerService;
+        this.brokerManagerService = brokerManagerService;
     }
 
     public void unsetBrokerManagerService() {
-        CEPServiceValueHolder.brokerManagerService = null;
+        this.brokerManagerService = null;
     }
 
     public BrokerManagerService getBrokerManagerService() {
@@ -84,31 +87,31 @@ public class CEPServiceValueHolder {
     }
 
     public void setRegistryService(RegistryService registryService) {
-        CEPServiceValueHolder.registryService = registryService;
+        this.registryService = registryService;
     }
 
     public void unsetRegistryService() {
-        CEPServiceValueHolder.registryService = null;
+        this.registryService = null;
     }
 
     public void registerConfigurationContextService(ConfigurationContextService configurationContextService) {
-        CEPServiceValueHolder.configurationContextService = configurationContextService;
+        this.configurationContextService = configurationContextService;
     }
 
-    public static ConfigurationContextService getConfigurationContextService() {
-        return configurationContextService;
+    public ConfigurationContextService getConfigurationContextService() {
+        return this.configurationContextService;
     }
 
-    public static CEPService getCepService() {
-        return cepService;
+    public CEPService getCepService() {
+        return this.cepService;
     }
 
-    public static void setCepService(CEPService cepService) {
-        CEPServiceValueHolder.cepService = cepService;
+    public void setCepService(CEPService cepService) {
+        this.cepService = cepService;
     }
 
     public List<OMElement> getUnDeployedBuckets() {
-        return unDeployedBuckets;
+        return this.unDeployedBuckets;
     }
 
     public void setUnDeployedBuckets(List<OMElement> unDeployedBuckets) {

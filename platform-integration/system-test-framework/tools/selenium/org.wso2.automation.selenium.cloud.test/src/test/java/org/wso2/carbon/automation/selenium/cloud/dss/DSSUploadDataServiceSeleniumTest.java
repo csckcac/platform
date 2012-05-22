@@ -169,15 +169,10 @@ public class DSSUploadDataServiceSeleniumTest {
     @Test(priority = 7, dependsOnMethods = {"serviceInvocation"})
     public void editAdvanceQueryProperties() throws InterruptedException {
         updateAdvanceQueryProperties();
+        Thread.sleep(5000);
     }
 
-    @Test(priority = 8, dependsOnMethods = {"editAdvanceQueryProperties"})
-    public void verifyAdvanceQueryProperties() throws InterruptedException {
-        viewAdvanceQueryProperties();
-        Thread.sleep(2000);
-    }
-
-    @Test(priority = 9, dependsOnMethods = {"verifyAdvanceQueryProperties"}, timeOut = 1000 * 60 * 2)
+    @Test(priority = 8, dependsOnMethods = {"editAdvanceQueryProperties"}, timeOut = 1000 * 60 * 2)
     public void serviceDeploymentAfterEditingAdvanceQueryProp() throws InterruptedException {
         for (int i = 0; i < 5; i++) {
             driver.findElement(By.linkText("List")).click();
@@ -190,6 +185,13 @@ public class DSSUploadDataServiceSeleniumTest {
 
         }
         assertTrue(driver.findElement(By.id("sgTable")).getText().contains(dataServiceName), "Service Name not fount in service list");
+        Thread.sleep(10000);
+    }
+
+    @Test(priority = 9, dependsOnMethods = {"serviceDeploymentAfterEditingAdvanceQueryProp"})
+    public void verifyAdvanceQueryProperties() throws InterruptedException {
+        viewAdvanceQueryProperties();
+        Thread.sleep(2000);
     }
 
     @Test(priority = 10, dependsOnMethods = {"serviceDeploymentAfterEditingAdvanceQueryProp"})

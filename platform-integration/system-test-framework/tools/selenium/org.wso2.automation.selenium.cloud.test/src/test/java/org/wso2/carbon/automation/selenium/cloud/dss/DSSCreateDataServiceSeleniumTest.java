@@ -196,11 +196,46 @@ public class DSSCreateDataServiceSeleniumTest {
     @Test(priority = 7, dependsOnMethods = {"serviceDeployment"})
     public void editAdvanceQueryProperties() throws InterruptedException {
         updateAdvanceQueryProperties();
+        Thread.sleep(5000);
     }
 
-    @Test(priority = 8, dependsOnMethods = {"editAdvanceQueryProperties"})
+
+    @Test(priority = 8, dependsOnMethods = {"editAdvanceQueryProperties"}, timeOut = 1000 * 60 * 2)
+    public void serviceDeploymentAfterEditingAdvanceQueryProp() throws InterruptedException {
+        for (int i = 0; i < 5; i++) {
+            driver.findElement(By.linkText("List")).click();
+            if (driver.findElements(By.id("sgTable")).size() > 0) {
+                if (driver.findElement(By.id("sgTable")).getText().contains(dataServiceName)) {
+                    break;
+                }
+            }
+            Thread.sleep(3000);
+
+        }
+        assertTrue(driver.findElement(By.id("sgTable")).getText().contains(dataServiceName), "Service Name not fount in service list");
+        Thread.sleep(10000);
+    }
+
+    @Test(priority = 9, dependsOnMethods = {"serviceDeploymentAfterEditingAdvanceQueryProp"})
     public void verifyAdvanceQueryProperties() throws InterruptedException {
         viewAdvanceQueryProperties();
+    }
+
+    @Test(priority = 10, dependsOnMethods = {"serviceDeploymentAfterEditingAdvanceQueryProp"})
+    public void serviceInvocationAfterEditingAdvanceQueryProp()
+            throws AxisFault, InterruptedException {
+        String serviceEndPoint = dssProperties.getProductVariables().getBackendUrl()
+                                 + "t/" + domain + "/" + dataServiceName;
+        AxisServiceClient serviceClient = new AxisServiceClient();
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
+        OMElement payload = fac.createOMElement("getEmployee", omNs);
+        for (int i = 0; i < 5; i++) {
+            OMElement response = serviceClient.sendReceive(payload, serviceEndPoint, "getEmployee");
+            Assert.assertNotNull(response, "Response Message is null");
+            Assert.assertTrue(response.toString().contains("<employeeID>"), "EmployeeID record Not Found");
+            Assert.assertTrue(response.toString().contains("<lastName>"), "LastName Record Not Found");
+        }
     }
 
     @AfterClass(alwaysRun = true)

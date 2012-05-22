@@ -111,8 +111,6 @@ public class ServerGroupManager {
             throw new XMLStreamException("Exception while reading  commonConfig.xml in deployment framework " + e);
         }
 
-        //create users in each server
-        new UserPopulator().populateUsers(productList);
 
 //            Runtime.getRuntime().addShutdownHook(new Thread() {
 //                public void run() {

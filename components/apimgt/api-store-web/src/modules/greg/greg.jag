@@ -25,7 +25,7 @@ var getAPIStoreObj = function() {
         return new store.APIStore();
     } else {
         store = require('apistore');
-        return new store.APIStore(user);
+        return new store.APIStore(user.username);
     }
 };
 

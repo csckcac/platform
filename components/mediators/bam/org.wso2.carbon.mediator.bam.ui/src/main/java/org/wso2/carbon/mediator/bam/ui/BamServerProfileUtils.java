@@ -46,16 +46,25 @@ public class BamServerProfileUtils {
         System.setProperty("carbon.repo.write.mode","true");
     }
 
-    private RemoteRegistryService initialize() throws Exception {
+    private RemoteRegistryService initialize(){
         String remoteRegistryUrl = "https://localhost:9443/registry";
         String username = "admin";
         String password = "admin";
-        return new RemoteRegistryService(remoteRegistryUrl, username, password);
+        try {
+            return new RemoteRegistryService(remoteRegistryUrl, username, password);
+        } catch (RegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return null;
     }
 
-    private void createRegistry (RemoteRegistryService registryServiceRef) throws Exception{
-        registry = registryServiceRef.getSystemRegistry();
-        itsGovernanceRegistry = registryServiceRef.getGovernanceSystemRegistry();
+    private void createRegistry (RemoteRegistryService registryServiceRef){
+        try {
+            registry = registryServiceRef.getSystemRegistry();
+            itsGovernanceRegistry = registryServiceRef.getGovernanceSystemRegistry();
+        } catch (RegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     public static void main(String[] args) throws Exception{

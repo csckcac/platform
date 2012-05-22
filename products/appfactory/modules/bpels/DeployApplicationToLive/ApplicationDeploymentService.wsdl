@@ -99,13 +99,13 @@
     </wsdl:binding>
     <wsdl:service name="ApplicationDeploymentService">
         <wsdl:port name="ApplicationDeploymentServiceHttpsSoap11Endpoint" binding="ns:ApplicationDeploymentServiceSoap11Binding">
-            <soap:address location="https://localhost:9448/services/ApplicationDeploymentService.ApplicationDeploymentServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://localhost:9443/services/ApplicationDeploymentService.ApplicationDeploymentServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ApplicationDeploymentServiceHttpsSoap12Endpoint" binding="ns:ApplicationDeploymentServiceSoap12Binding">
-            <soap12:address location="https://172.16.208.1:9443/services/ApplicationDeploymentService.ApplicationDeploymentServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://localhost:9443/services/ApplicationDeploymentService.ApplicationDeploymentServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ApplicationDeploymentServiceHttpsEndpoint" binding="ns:ApplicationDeploymentServiceHttpBinding">
-            <http:address location="https://172.16.208.1:9443/services/ApplicationDeploymentService.ApplicationDeploymentServiceHttpsEndpoint/" />
+            <http:address location="https://localhost:9443/services/ApplicationDeploymentService.ApplicationDeploymentServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

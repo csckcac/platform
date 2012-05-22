@@ -64,7 +64,6 @@
                <module>ejb-services</module>
                <module>email-verification</module>
                <module>endpoint</module>
-                <module>rule-cep-commons</module>
                <!--Removing eventing component since we are now using event component>
                 <module>eventing</module-->
                 <module>event</module>

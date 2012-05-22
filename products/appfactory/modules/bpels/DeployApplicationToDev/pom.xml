@@ -8,10 +8,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>DeployApplicationToDev</artifactId>
+	 <artifactId>DeployApplicationToDev</artifactId>
 	<packaging>bpel/workflow</packaging>
 	<name>DeployApplicationToDev</name>
-	<description>DeployApplicationToDev</description>
+  <description>DeployApplicationToDev</description>
 	<properties>
 	  <CApp.type>bpel/workflow</CApp.type>
 	</properties>

@@ -10,7 +10,7 @@
     <plnk:partnerLinkType name="ArtifactDeploymentPLType">
     <plnk:role name="DeployerRole" portType="wsdl:ArtifactDeploymentServicePortType"/>
   </plnk:partnerLinkType>
-    <import location="ArtifactDeploymentService.wsdl" namespace="http://service.deployment.artifact.carbon.wso2.org"/>
+    <import location="ApplicationDeploymentService.wsdl" namespace="http://service.deployment.artifact.carbon.wso2.org"/>
     <types>
         <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://wso2.org">
 

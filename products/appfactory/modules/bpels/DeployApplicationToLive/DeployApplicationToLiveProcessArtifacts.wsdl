@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://wso2.org" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:wsdl="http://service.deployment.artifact.carbon.wso2.org" name="DeployApplicationToLiveProcess" targetNamespace="http://wso2.org">
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://wso2.org/carbon/appfactory/applicaiton/deployment" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:wsdl="http://service.deployment.application.appfactory.carbon.wso2.org" name="DeployApplicationToLive" targetNamespace="http://wso2.org/carbon/appfactory/applicaiton/deployment" xmlns:p="http://www.w3.org/2001/XMLSchema">
 
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      TYPE DEFINITION - List of types participating in this BPEL process 
@@ -7,31 +7,30 @@
      but you can define or import any XML Schema type and use them as part 
      of the message types.
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
-    <plnk:partnerLinkType name="ArtifactDeploymentPLType">
-    <plnk:role name="DeployerRole" portType="wsdl:ArtifactDeploymentServicePortType"/>
+    <plnk:partnerLinkType name="ApplicationDeploymentServicePLT">
+    <plnk:role name="ApplicationDeploymentServiceRole" portType="wsdl:ApplicationDeploymentServicePortType"/>
   </plnk:partnerLinkType>
-    <import location="ArtifactDeploymentService.wsdl" namespace="http://service.deployment.artifact.carbon.wso2.org"/>
+    <import location="ApplicationDeploymentService.wsdl" namespace="http://service.deployment.application.appfactory.carbon.wso2.org"/>
     <types>
-        <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://wso2.org">
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://wso2.org/carbon/appfactory/applicaiton/deployment">
 
-            <element name="DeployApplicationToLiveProcessRequest">
+            <element name="DeployApplicationToLiveRequest">
                 <complexType>
                     <sequence>
-                    	<element name="projectID" type="string" />
-                    	<element name="artifactType" type="string"></element>
-                    	<element name="stage" type="string"></element>
+                    	<element name="applicationSvnLocation" type="string"/>
+                    	<element name="applicationName" type="string"/>
                     </sequence>
                 </complexType>
             </element>
 
-            <element name="DeployApplicationToLiveProcessResponse">
+            <element name="DeployApplicationToLiveResponse">
                 <complexType>
                     <sequence>
-                    	<element name="name" type="string" />
-                    	<element name="size" type="long"></element>
+                        <element name="result" type="string"/>
                     </sequence>
                 </complexType>
             </element>
+
         </schema>
     </types>
 
@@ -40,11 +39,11 @@
      MESSAGE TYPE DEFINITION - Definition of the message types used as 
      part of the port type defintions
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
-    <message name="DeployApplicationToLiveProcessRequestMessage">
-        <part element="tns:DeployApplicationToLiveProcessRequest" name="payload"/>
+    <message name="DeployApplicationToLiveRequestMessage">
+        <part element="tns:DeployApplicationToLiveRequest" name="payload"/>
     </message>
-    <message name="DeployApplicationToLiveProcessResponseMessage">
-        <part element="tns:DeployApplicationToLiveProcessResponse" name="payload"/>
+    <message name="DeployApplicationToLiveResponseMessage">
+        <part element="tns:DeployApplicationToLiveResponse" name="payload"/>
     </message>
 
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,18 +51,19 @@
      a logical service unit.
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
 
-    <!-- portType implemented by the DeployApplicationToLiveProcess BPEL process -->
-    <portType name="DeployApplicationToLiveProcess">
+    <!-- portType implemented by the DeployApplicationToLive BPEL process -->
+
+    <portType name="DeployApplicationToLive">
         <operation name="process">
-            <input message="tns:DeployApplicationToLiveProcessRequestMessage"/>
-            <output message="tns:DeployApplicationToLiveProcessResponseMessage"/>
+            <input message="tns:DeployApplicationToLiveRequestMessage"/>
+            <output message="tns:DeployApplicationToLiveResponseMessage"/>
         </operation>
     </portType>   
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      PARTNER LINK TYPE DEFINITION
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
-    <plnk:partnerLinkType name="DeployApplicationToLiveProcess">
-        <plnk:role name="DeployApplicationToLiveProcessProvider" portType="tns:DeployApplicationToLiveProcess"/>
+    <plnk:partnerLinkType name="DeployApplicationToLive">
+        <plnk:role name="DeployApplicationToLiveProvider" portType="tns:DeployApplicationToLive"/>
     </plnk:partnerLinkType>
     
 
@@ -71,10 +71,10 @@
      BINDING DEFINITION - Defines the message format and protocol details
      for a web service.
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <binding name="DeployApplicationToLiveProcessBinding" type="tns:DeployApplicationToLiveProcess">
+    <binding name="DeployApplicationToLiveBinding" type="tns:DeployApplicationToLive">
     	<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     	<operation name="process">
-    		<soap:operation soapAction="http://wso2.org/process"/>
+    		<soap:operation soapAction="http://wso2.org/carbon/appfactory/applicaiton/deployment/process"/>
     		<input>
     			<soap:body use="literal"/>
     		</input>
@@ -88,9 +88,9 @@
      SERVICE DEFINITION - A service groups a set of ports into
      a service unit.
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <service name="DeployApplicationToLiveProcess">
-    	<port binding="tns:DeployApplicationToLiveProcessBinding" name="DeployApplicationToLiveProcessPort">
-    		<soap:address location="http://localhost:8080/DeployApplicationToLiveProcess"/>
+    <service name="DeployApplicationToLive">
+    	<port binding="tns:DeployApplicationToLiveBinding" name="DeployApplicationToLivePort">
+    		<soap:address location="http://localhost:8080/DeployApplicationToLive"/>
     	</port>
     </service>
 </definitions>

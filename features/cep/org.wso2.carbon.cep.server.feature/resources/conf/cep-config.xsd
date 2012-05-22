@@ -19,6 +19,8 @@
         </sequence>
     </complexType>
 
+    <element name="bucket" type="tns:bucketType"/>
+
     <complexType name="bucketType">
         <sequence>
             <element name="description" type="string" minOccurs="0"/>
@@ -39,21 +41,30 @@
     </simpleType>
 
     <complexType name="inputType">
-        <sequence>
-            <element name="mapping" type="tns:mappingType"/>
-        </sequence>
+        <choice>
+            <element name="xmlMapping" type="tns:xmlInputMappingType"/>
+            <element name="tupleMapping" type="tns:tupleInputMappingType"/>
+        </choice>
         <attribute name="topic" type="string" use="required"/>
         <attribute name="brokerName" type="string" use="required"/>
     </complexType>
 
-    <complexType name="mappingType">
+    <complexType name="xmlInputMappingType">
         <sequence>
             <element name="xpathDefinition" type="tns:xpathDefinitionType" minOccurs="0"
                      maxOccurs="unbounded"/>
             <element name="property" type="tns:propertyType" minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
         <attribute name="stream" type="string" use="required"/>
-        <attribute name="class" type="string" use="optional"/>
+        <attribute name="eventClass" type="string" use="optional"/>
+    </complexType>
+
+    <complexType name="tupleInputMappingType">
+        <sequence>
+            <element name="property" type="tns:propertyType" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="stream" type="string" use="required"/>
+        <attribute name="eventClass" type="string" use="optional"/>
     </complexType>
 
     <complexType name="xpathDefinitionType">
@@ -67,6 +78,7 @@
         <attribute name="type" type="string" use="optional"/>
         <attribute name="xmlFieldName" type="string" use="optional"/>
         <attribute name="xmlFieldType" type="string" use="optional"/>
+        <attribute name="dataType" type="string" use="optional"/>
     </complexType>
 
     <complexType name="queryType">
@@ -95,8 +107,9 @@
 
     <complexType name="outputType">
         <choice>
-            <element name="elementmapping" type="tns:elementmappingType"/>
-            <element name="xmlmapping" type="tns:xmlmappingType"/>
+            <element name="elementMapping" type="tns:elementmappingType"/>
+            <element name="xmlMapping" type="tns:xmlOutputMappingType"/>
+            <element name="tupleMapping" type="tns:tupleOutputMappingType"/>
         </choice>
         <attribute name="topic" type="string" use="required"/>
         <attribute name="brokerName" type="string" use="required"/>
@@ -110,10 +123,24 @@
         <attribute name="namespace" type="string"/>
     </complexType>
 
-    <complexType name="xmlmappingType">
+    <complexType name="xmlOutputMappingType">
         <sequence>
             <any processContents="lax"/>
         </sequence>
+    </complexType>
+
+    <complexType name="tupleOutputMappingType">
+        <sequence>
+            <element name="metaData" type="tns:propertyListType" minOccurs="0" maxOccurs="1"/>
+            <element name="correlationData" type="tns:propertyListType" minOccurs="0" maxOccurs="1"/>
+            <element name="payloadData" type="tns:propertyListType" minOccurs="0" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="propertyListType">
+         <sequence>
+             <element name="property" type="tns:propertyType" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
     </complexType>
 </schema>
         

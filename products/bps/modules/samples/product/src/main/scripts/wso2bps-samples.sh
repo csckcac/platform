@@ -15,11 +15,11 @@
 #  limitations under the License.
 
 # ----------------------------------------------------------------------------
-# Script for runnig the WSO2 ESB Server samples
+# Script for running the WSO2 BPS Server samples
 #
-# Environment Variable Prequisites
+# Environment Variable Prerequisites
 #
-#   CARBON_HOME   Home of WSO2 Carbon installation. If not set I will  try
+#   CARBON_HOME     Home of WSO2 Carbon installation. If not set I will  try
 #                   to figure it out.
 #
 #   JAVA_HOME       Must point at your Java Development Kit installation.

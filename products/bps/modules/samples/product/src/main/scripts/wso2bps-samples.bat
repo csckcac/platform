@@ -18,9 +18,9 @@ REM  limitations under the License.
 rem ---------------------------------------------------------------------------
 rem  Samples Script for deploying WSO2 BPS samples
 rem
-rem Environment Variable Prequisites
+rem Environment Variable Prerequisites
 rem
-rem   CARBON_HOME   Home of CARBON installation. If not set I will  try
+rem   CARBON_HOME     Home of CARBON installation. If not set I will  try
 rem                   to figure it out.
 rem
 rem   JAVA_HOME       Must point at your Java Development Kit installation.
@@ -44,14 +44,19 @@ shift
 set cn=%1
 if "%1"=="" goto invalid_sample_name
 echo .\..\repository\samples\bpel\%cn%
-IF EXIST .\..\repository\samples\bpel\%cn% goto copy_samples
-goto missing_sample 
+IF EXIST .\..\repository\samples\bpel\%cn% goto copy_bpel_samples
+IF EXIST .\..\repository\samples\humantask%cn% goto copy copy_ht_samples
+goto missing_sample
 
 :lreturn
 shift
 goto initial
 
-:copy_samples
+:copy_ht_samples
+xcopy /I /E /Y .\..\repository\samples\humantask\%cn% .\..\repository\deployment\server\humantask\
+goto run
+
+:copy_bpel_samples
 xcopy /I /E /Y .\..\repository\samples\bpel\%cn% .\..\repository\deployment\server\bpel\
 goto run
 

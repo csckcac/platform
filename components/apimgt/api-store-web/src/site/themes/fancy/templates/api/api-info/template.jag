@@ -10,7 +10,7 @@
     <h5><%=api.provider%></h5>
     <div class="col_12 no-padding">
         <div class="col_3">
-            <img src="<%=thumbURL%>">
+            <img src="<%=thumbURL%>" width="100">
         </div>
         <div class="col_9">
             <table cellspacing="0" cellpadding="0" class="info-table">

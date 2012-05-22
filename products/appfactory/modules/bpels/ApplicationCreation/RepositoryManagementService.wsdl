@@ -333,17 +333,17 @@
 		<wsdl:port name="RepositoryManagementServiceHttpsSoap11Endpoint"
 			binding="ns:RepositoryManagementServiceSoap11Binding">
 			<soap:address
-				location="https://175.157.114.103:9443/services/RepositoryManagementService.RepositoryManagementServiceHttpsSoap11Endpoint/" />
+				location="https://localhost:9443/services/RepositoryManagementService.RepositoryManagementServiceHttpsSoap11Endpoint/" />
 		</wsdl:port>
 		<wsdl:port name="RepositoryManagementServiceHttpsSoap12Endpoint"
 			binding="ns:RepositoryManagementServiceSoap12Binding">
 			<soap12:address
-				location="https://175.157.114.103:9443/services/RepositoryManagementService.RepositoryManagementServiceHttpsSoap12Endpoint/" />
+				location="https://localhost:9443/services/RepositoryManagementService.RepositoryManagementServiceHttpsSoap12Endpoint/" />
 		</wsdl:port>
 		<wsdl:port name="RepositoryManagementServiceHttpsEndpoint"
 			binding="ns:RepositoryManagementServiceHttpBinding">
 			<http:address
-				location="https://175.157.114.103:9443/services/RepositoryManagementService.RepositoryManagementServiceHttpsEndpoint/" />
+				location="https://localhost:9443/services/RepositoryManagementService.RepositoryManagementServiceHttpsEndpoint/" />
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>

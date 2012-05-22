@@ -152,7 +152,6 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.activation</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.sample.installer</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.dispatcher</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.reg.agent.service</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.agent</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.agent.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.usage.agent</bundleDef>

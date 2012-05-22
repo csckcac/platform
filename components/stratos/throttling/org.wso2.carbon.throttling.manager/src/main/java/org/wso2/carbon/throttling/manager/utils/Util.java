@@ -451,7 +451,7 @@ public class Util {
             return;
         }
         String throttlingRuleFile = CarbonUtils.getCarbonConfigDirPath() +
-                File.pathSeparator + THROTTLING_RULE_FILE;
+                File.separator + THROTTLING_RULE_FILE;
         byte[] content = CarbonUtils.getBytesFromFile(new File(throttlingRuleFile));
         Resource ruleResource = systemRegistry.newResource();
         ruleResource.setContent(content);

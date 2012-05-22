@@ -20,6 +20,8 @@ import org.wso2.carbon.cep.core.mapping.input.Input;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * this class is used to send the buck data to front end
@@ -44,9 +46,7 @@ public class Bucket {
     /**
      * query list of this bucket.
      */
-    private HashMap<Integer,Query> queries;
-//    private List<Query> queries;
-
+    private Map<Integer,Query> queries;
 
     /**
      * Inputs for this bucket
@@ -66,8 +66,8 @@ public class Bucket {
 
 
     public Bucket() {
-        this.queries = new HashMap<Integer,Query>();
-        this.inputs = new ArrayList();
+        this.queries = new ConcurrentHashMap<Integer,Query>();
+        this.inputs = new ArrayList<Input>();
     }
 
     public void addQuery(Query query){
@@ -103,7 +103,7 @@ public class Bucket {
          return new ArrayList (queries.values());
     }
 
-    public HashMap<Integer,Query> getQueriesMap(){
+    public Map<Integer,Query> getQueriesMap(){
         return queries;
     }
 

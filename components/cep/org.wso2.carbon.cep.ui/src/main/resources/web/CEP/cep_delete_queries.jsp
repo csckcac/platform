@@ -1,5 +1,7 @@
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO" %>
 <%@ page import="java.util.LinkedList" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="java.util.HashSet" %>
 <%
     String[] queries = request.getParameterValues("queries");
     String pageNumber = request.getParameter("pageNumber");
@@ -17,13 +19,20 @@
         message = "Successfully removed all queries";
 
     } else {
+        Set<QueryDTO> queriesToRemove = new HashSet<QueryDTO>();
         if (queries != null) {
             LinkedList<QueryDTO> currentQueries = (LinkedList<QueryDTO>) session.getAttribute("queries");
             if (currentQueries != null) {
-                int i = queries.length - 1;
-                while (i >= 0) {
-                    currentQueries.remove(Integer.parseInt(queries[i]));
-                    i--;
+                for (QueryDTO query : currentQueries){
+                    for (String removeQuery : queries){
+                        if (query.getName().equals(removeQuery)){
+                            queriesToRemove.add(query);
+                        }
+                    }
+                }
+
+                for (QueryDTO queryToRemove : queriesToRemove) {
+                    currentQueries.remove(queryToRemove);
                 }
                 message = "Successfully removed specified queries";
             }

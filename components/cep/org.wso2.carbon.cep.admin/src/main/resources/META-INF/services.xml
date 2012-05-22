@@ -18,6 +18,58 @@
         <parameter name="ServiceClass">
             org.wso2.carbon.cep.admin.internal.CEPAdminService
         </parameter>
+        <parameter name="AuthorizationAction" locked="false">/permission/admin/manage/cep</parameter>
+        <operation name="addBucket">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="editBucket">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="getAllBucketNames">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="getBucket">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="removeBucket">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="removeAllBuckets">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="getEngineProviders">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="getBrokerNames">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="removeQuery">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="removeAllQueries">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="editQuery">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="getAllQueries">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="getAllQueryCount">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="getAllInputs">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="getAllInputCount">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="removeInput">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
+        <operation name="removeAllInputs">
+            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/cep</parameter>
+        </operation>
     </service>
 
     <parameter name="adminService" locked="true">true</parameter>

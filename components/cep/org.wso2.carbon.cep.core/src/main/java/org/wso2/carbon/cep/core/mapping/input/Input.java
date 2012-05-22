@@ -22,6 +22,27 @@ public class Input {
      */
     private InputMapping inputMapping;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Input input = (Input) o;
+
+        if (brokerName != null ? !brokerName.equals(input.brokerName) : input.brokerName != null) return false;
+        if (topic != null ? !topic.equals(input.topic) : input.topic != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = topic != null ? topic.hashCode() : 0;
+        result = 31 * result + (brokerName != null ? brokerName.hashCode() : 0);
+        result = 31 * result + (inputMapping != null ? inputMapping.hashCode() : 0);
+        return result;
+    }
+
     public String getTopic() {
         return topic;
     }

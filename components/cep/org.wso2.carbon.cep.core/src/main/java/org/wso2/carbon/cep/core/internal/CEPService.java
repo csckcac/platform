@@ -143,46 +143,52 @@ public class CEPService implements CEPServiceInterface {
     }
 
 
-    public void editBucket(Bucket bucket) throws CEPConfigurationException {
+    public void editBucket(Bucket newBucket) throws CEPConfigurationException {
         try {
             int tenantId = CarbonContext.getCurrentContext().getTenantId();
-            Map<String, CEPBucket> buckets = this.tenantSpecificCEPBuckets.get(tenantId);
-            CEPBucket cepBucket = buckets.get(bucket.getName());
-            List<Input> oldInputs=cepBucket.getBucket().getInputs();
+            Map<String, CEPBucket> existingBuckets = this.tenantSpecificCEPBuckets.get(tenantId);
+            CEPBucket existingBucket = existingBuckets.get(newBucket.getName());
 
             //adding new inputs
-            for (Input input : bucket.getInputs()) {
-                if(cepBucket.getBucket().getInput(input.getTopic())==null){
-                    cepBucket.processInput(input);
+            for (Input input : newBucket.getInputs()) {
+                if (!existingBucket.getBucket().getInputs().contains(input)) {
+                    existingBucket.processInput(input);
+                    existingBucket.getBucket().addInput(input);
                 }
             }
             //removing old inputs
-            for (Input input : cepBucket.getBucket().getInputs()) {
-                if(bucket.getInput(input.getTopic())==null){
-                    cepBucket.unSubscribeFromInput(input);
+            List<Input> inputsToRemove = new ArrayList<Input>();
+            for (Input input : existingBucket.getBucket().getInputs()) {
+                if (!newBucket.getInputs().contains(input)) {
+                    existingBucket.unSubscribeFromInput(input);
+                    inputsToRemove.add(input);
                 }
             }
-            cepBucket.getBucket().setInputs(bucket.getInputs());
+
+            // remove the non existing inputs
+            for (Input inputToRemove : inputsToRemove){
+                existingBucket.getBucket().getInputs().remove(inputToRemove);
+            }
 
             //adding new queries
-            for (Query query : bucket.getQueries()) {
-                if(cepBucket.getBucket().getQuery(query.getName())==null){
-                    cepBucket.processQuery(query);
+            for (Query query : newBucket.getQueries()) {
+                if(!existingBucket.getBucket().getQueries().contains(query)){
+                    existingBucket.processQuery(query);
+                    existingBucket.getBucket().addQuery(query);
                 }
             }
+            
             //removing old queries
-            for (Query query  : cepBucket.getBucket().getQueries()) {
-                if(bucket.getQuery(query.getName())==null){
-                    cepBucket.removeQuery(query);
+            Map<Integer, Query> existingQueries = existingBucket.getBucket().getQueriesMap();
+            for (Map.Entry<Integer, Query> existingEntry : existingQueries.entrySet()) {
+
+                if(!newBucket.getQueries().contains(existingEntry.getValue())){
+                    existingBucket.removeQuery(existingEntry.getValue());
+                    existingQueries.remove(existingEntry.getKey());
                 }
             }
-            cepBucket.getBucket().setQueries(bucket.getQueries());
 
-            for (Query query : bucket.getQueries()) {
-                cepBucket.processQuery(query);
-                cepBucket.getBucket().addQuery(query);
-            }
-            CEPRegistryInvoker.modifyBucketInRegistry(bucket, tenantId);
+            CEPRegistryInvoker.modifyBucketInRegistry(existingBucket.getBucket(), tenantId);
         } catch (CEPConfigurationException e) {
             String errorMessage = "Can not edit the existing bucket";
             log.error(errorMessage, e);

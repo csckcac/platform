@@ -43,6 +43,22 @@ public class Query {
 
     private int queryIndex;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Query query = (Query) o;
+
+        if (!name.equals(query.name)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 
     public Expression getExpression() {
         return expression;

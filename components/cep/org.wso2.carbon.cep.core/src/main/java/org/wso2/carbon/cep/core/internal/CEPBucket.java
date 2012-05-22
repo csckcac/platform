@@ -37,6 +37,7 @@ import org.wso2.carbon.cep.core.listener.TopicEventListener;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * this class is used to keep the Bucket related details. In cep point of view
@@ -84,7 +85,7 @@ public class CEPBucket {
         }
         // register the queries
         if (bucket.getQueries() != null) {
-            HashMap<Integer,Query> queries = bucket.getQueriesMap();
+            Map<Integer,Query> queries = bucket.getQueriesMap();
             for(int i=0 ; i <  queries.size(); i ++){
                 processQuery(queries.get(i));
             }

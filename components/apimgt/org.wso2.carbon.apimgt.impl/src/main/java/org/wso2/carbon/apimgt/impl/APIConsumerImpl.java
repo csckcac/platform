@@ -78,11 +78,12 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
                 String artifactPath = artifact.getPath();
                 org.wso2.carbon.registry.core.Tag[] tags = registry.getTags(artifactPath);
                 if (tags == null || tags.length == 0) {
-                    break;
+                    continue;
                 }
                 for (org.wso2.carbon.registry.core.Tag tag1 : tags) {
                     if (tag.equals(tag1.getTagName())) {
                         apiSet.add(APIUtil.getAPI(artifact, registry));
+                        break;
                     }
                 }
             }

@@ -19,24 +19,28 @@
     });
 </script>
 
-<tr>
-    <td>JDBC URL<font color="red">*</font>
-    </td>
-    <td><input type="text" name="jdbcurl" value="<%=jdbcurl%>" style="width:150px"/></td>
-</tr>
-<tr>
-    <td>Driver Class Name<font color="red">*</font></td>
-    <td><input type="text" name="driver" value="<%=driver%>" style="width:150px"/></td>
-</tr>
-<tr>
-    <td>User Name<font color="red">*</font></td>
-    <td><input type="text" name="username" value="<%=username%>" style="width:150px"/></td>
-</tr>
-<tr>
-    <td>Password<font color="red">*</font></td>
-    <td><input type="password" name="password" value="<%=password%>" style="width:150px"></td>
-</tr>
-<tr>
-    <td><input type="button" class="button" value="Validate Connection" id="validate"/></td>
-</tr>
-<input type="hidden" name="page" id="page" value="1">
+<table class="normal">
+    <tbody>
+    <tr>
+        <td>JDBC URL<font color="red">*</font>
+        </td>
+        <td><input type="text" name="jdbcurl" value="<%=jdbcurl%>" style="width:150px"/></td>
+    </tr>
+    <tr>
+        <td>Driver Class Name<font color="red">*</font></td>
+        <td><input type="text" name="driver" value="<%=driver%>" style="width:150px"/></td>
+    </tr>
+    <tr>
+        <td>User Name<font color="red">*</font></td>
+        <td><input type="text" name="username" value="<%=username%>" style="width:150px"/></td>
+    </tr>
+    <tr>
+        <td>Password<font color="red">*</font></td>
+        <td><input type="password" name="password" value="<%=password%>" style="width:150px"></td>
+    </tr>
+    <tr>
+        <td><input type="button" class="button" value="Validate Connection" id="validate"/></td>
+    </tr>
+    <input type="hidden" name="page" id="page" value="1">
+    </tbody>
+</table>

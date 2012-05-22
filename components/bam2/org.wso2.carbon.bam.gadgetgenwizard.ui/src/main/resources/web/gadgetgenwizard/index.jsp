@@ -28,24 +28,35 @@
 
 <link type="text/css" href="../dialog/js/jqueryui/tabs/ui.all.css" rel="stylesheet"/>
 <link type="text/css" href="../gadgetgenwizard/css/jquery.dataTables.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="../gadgetgenwizard/css/jquery.jqplot.min.css" />
+
 
 <script type="text/javascript" src="../admin/js/jquery-1.5.2.min.js"></script>
 <script type="text/javascript"
         src="../dialog/js/jqueryui/tabs/jquery-ui-1.6.custom.min.js"></script>
 <script type="text/javascript" src="../dialog/js/jqueryui/tabs/jquery.cookie.js"></script>
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="../gadgetgenwizard/js/excanvas.min.js"></script><![endif]-->
+
 <script type="text/javascript">
 
 
     $(document).ready(function () {
 
         if ($("#page").val() == "1") {
-            $("#back").attr("disabled", "disabled");
+            $("#back").attr("disabled", true);
         }
 
         $("#generate").hide();
 
         $("#generate").click(function() {
-            sendAjaxRequest("generate_gadget_ajaxprocessor.jsp");
+            $.post("generate_gadget_ajaxprocessor.jsp", $("form").serialize(), function(html) {
+                var success = !(html.toLowerCase().match(/error/));
+                if (success) {
+                    sendAjaxRequest("goto_dashboard_ajaxprocessor.jsp", "gadgetXMLPath=" + html);
+                } else {
+                    CARBON.showErrorDialog(html);
+                }
+            });
         });
 
         $("#back").click(function() {
@@ -57,10 +68,29 @@
             } else if ($("#page").val() == "4") {
                 backURL = "pickuielement_ajaxprocessor.jsp";
             } else if ($("#page").val() == "5") {
-                backURL = "preview_ajaxprocessor.jsp";
+                backURL = "gadget_details_ajaxprocessor.jsp";
             }
 
             sendAjaxRequest(backURL);
+
+        });
+
+        $("#next").click(function() {
+            var jdbcurl = $("[name=jdbcurl]").val();
+            var username = $("[name=username]").val();
+            var password = $("[name=password]").val();
+            var driver = $("[name=driver]").val();
+
+            var nextURL = "";
+            if ($("#page").val() == "1") {
+               nextURL = "sqlinput_ajaxprocessor.jsp";
+            } else if ($("#page").val() == "2") {
+               nextURL = "pickuielement_ajaxprocessor.jsp";
+            } else if ($("#page").val() == "3") {
+               nextURL = "gadget_details_ajaxprocessor.jsp";
+            }
+
+           sendAjaxRequest(nextURL);
 
         });
 
@@ -78,7 +108,7 @@
 
         function changeBackBtnState() {
             if ($("#page").val() == "1") {
-                $("#back").attr("disabled", "disabled");
+                $("#back").attr("disabled", true);
             } else {
                 $("#back").removeAttr('disabled');
             }
@@ -149,25 +179,7 @@
 
         }
 
-        $("#next").click(function() {
-            var jdbcurl = $("[name=jdbcurl]").val();
-            var username = $("[name=username]").val();
-            var password = $("[name=password]").val();
-            var driver = $("[name=driver]").val();
 
-            var nextURL = "";
-            if ($("#page").val() == "1") {
-               nextURL = "sqlinput_ajaxprocessor.jsp";
-            } else if ($("#page").val() == "2") {
-               nextURL = "pickuielement_ajaxprocessor.jsp";
-            } else if ($("#page").val() == "3") {
-               nextURL = "preview_ajaxprocessor.jsp";
-            }
-
-
-           sendAjaxRequest(nextURL);
-
-        });
     });
 </script>
 
@@ -202,8 +214,10 @@
                     <tbody>
                     <tr>
                         <td class="formRaw">
-                            <table class="normal">
-                                <tbody id="change-area">
+                            <div id="change-area">
+
+                                <table class="normal">
+                                    <tbody>
                                     <tr>
                                         <td>JDBC URL<font color="red">*</font>
                                         </td>
@@ -225,15 +239,17 @@
                                         <td><input type="button" class="button" value="Validate Connection" id="validate"/></td>
                                     </tr>
                                     <input type="hidden" name="page" id="page" value="1">
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </td>
                     </tr>
                     <tr>
                         <td class="buttonRow">
-                            <input type="button" class="button" id="back" value="Back">
-                            <input type="button" class="button" id="next" value="Next">
-                            <input type="button" class="button" id="generate" value="Generate">
+                            <input type="button" class="button" id="back" value="< Back">
+                            <input type="button" class="button" id="next" value="Next >">
+                            <input type="button" class="button" id="generate" value="Generate!">
 
                         </td>
                     </tr>

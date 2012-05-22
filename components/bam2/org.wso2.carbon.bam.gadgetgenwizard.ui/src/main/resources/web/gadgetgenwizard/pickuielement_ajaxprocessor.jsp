@@ -9,12 +9,10 @@
     }
 
 %>
-<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="../gadgetgenwizard/js/excanvas.min.js"></script><![endif]-->
 <script type="text/javascript" src="../gadgetgenwizard/js/jquery.jqplot.min.js"></script>
 <script type="text/javascript" src="../gadgetgenwizard/js/plugins/jqplot.barRenderer.js"></script>
 <script type="text/javascript" src="../gadgetgenwizard/js/plugins/jqplot.categoryAxisRenderer.js"></script>
 
-<link rel="stylesheet" type="text/css" href="../gadgetgenwizard/css/jquery.jqplot.min.css" />
 
 <script type="text/javascript">
 
@@ -28,23 +26,23 @@
         if ($("#uielement").val() == "bar") {
             $("#bar-chart-options").show('fast', function() {
                 if (!sqlResultJSON) {
-                $.post("execute_sql_ajaxprocessor.jsp", null, function(html) {
-                    var success = !(html.toLowerCase().match(/error/));
-                    if (success) {
-                        sqlResultJSON = JSON.parse(html);
-                        var optionHTML = "";
-                        $.each(sqlResultJSON.ColumnNames, function(i, val) {
-                            optionHTML += "<option value=\"" + val + "\">" + val + "</option>"
-                        });
-                        $("#bar-chart-options [name$=\"column\"]").html(optionHTML);
-                        $("#bar-chart-options .bar").change(genPreview);
-                    } else {
-                        CARBON.showErrorDialog(html);
-                    }
-                });
+                    $.post("execute_sql_ajaxprocessor.jsp", null, function(html) {
+                        var success = !(html.toLowerCase().match(/error/));
+                        if (success) {
+                            sqlResultJSON = JSON.parse(html);
+                            var optionHTML = "";
+                            $.each(sqlResultJSON.ColumnNames, function(i, val) {
+                                optionHTML += "<option value=\"" + val + "\">" + val + "</option>"
+                            });
+                            $("#bar-chart-options [name$=\"column\"]").html(optionHTML);
+                            $("#bar-chart-options .bar").change(genPreview);
+                        } else {
+                            CARBON.showErrorDialog(html);
+                        }
+                    });
 
 
-            }
+                }
             });
 
         } else {
@@ -79,6 +77,9 @@
             $.each(sqlResultJSON.Rows, function (i, val) {
                 plotArray.push([val[yColIndex], parseInt(val[xColIndex])]);
             });
+
+            // clear div
+            $("#preview-area").html("");
 
             $.jqplot('preview-area', [plotArray], {
                 title: $("[name=bar-title]").val(),
@@ -120,52 +121,63 @@
     })
 
 </script>
-<tr>
-    <td>Pick UI Element<font color="red">*</font>
-    </td>
-    <td><select name="uielement" id="uielement" style="width:200px">
-        <option value="bar">Bar Chart</option>
-        <option value="table">Table</option>
-    </select>
-    </td>
-    <td><input id="preview" type="button" value="Preview"></td>
+<table class="normal">
+    <tbody>
+    <tr>
+        <td>
+            <table>
+                <tbody>
+                <tr>
+                    <td>Pick UI Element
+                    </td>
+                    <td><select name="uielement" id="uielement" style="width:200px">
+                        <option value="bar">Bar Chart</option>
+                        <option value="table">Table</option>
+                    </select>
+                    </td>
+                    <td><input id="preview" type="button" value="Preview"></td>
 
-</tr>
-<tr>
-    <div id="bar-chart-options">
-        <table class="normal">
-            <tbody>
-            <tr>
-                <td>Chart Title<font color="red">*</font>
-                </td>
-                <td><input type="text" class="bar" name="bar-title" value="Product vs Total Amount" style="width:150px"/></td>
-            </tr>
-            <tr>
-                <td>Y-Axis Label<font color="red">*</font></td>
-                <td><input class="bar" type="text" name="bar-ylabel" value="Total Amount (Rs.)" style="width:150px"/></td>
-            </tr>
-            <tr>
-                <td>Y-Axis Column<font color="red">*</font></td>
-                <td><select class="bar" name="bar-ycolumn" style="width:150px"/></td>
-            </tr>
-            <tr>
-                <td>X-Axis Label<font color="red">*</font></td>
-                <td><input type="text" class="bar" name="bar-xlabel" value="Product Name" style="width:150px"/></td>
-            </tr>
-            <tr>
-                <td>X-Axis Column<font color="red">*</font></td>
-                <td><select class="bar" name="bar-xcolumn" style="width:150px"/></td>
-            </tr>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <div id="bar-chart-options">
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td>Chart Title<span style="color: red; ">*</span>
+                                    </td>
+                                    <td><input type="text" class="bar" name="bar-title" value="Product vs Total Amount" style="width:150px"></td>
+                                </tr>
+                                <tr>
+                                    <td>Y-Axis Label<span style="color: red; ">*</span></td>
+                                    <td><input class="bar" type="text" name="bar-ylabel" value="Total Amount (Rs.)" style="width:150px"></td>
+                                </tr>
+                                <tr>
+                                    <td>Y-Axis Column<span style="color: red; ">*</span></td>
+                                    <td><select class="bar" name="bar-ycolumn" style="width:150px"></select></td>
+                                </tr>
+                                <tr>
+                                    <td>X-Axis Label<span style="color: red; ">*</span></td>
+                                    <td><input type="text" class="bar" name="bar-xlabel" value="Product Name" style="width:150px"></td>
+                                </tr>
+                                <tr>
+                                    <td>X-Axis Column<span style="color: red; ">*</span></td>
+                                    <td><select class="bar" name="bar-xcolumn" style="width:150px"></select></td>
+                                </tr>
 
 
-            </tbody>
-        </table>
-    </div>
-
-</tr>
-
-<tr rowspan="2">
-    <div id="preview-area" style="width:600px;height:400px"></div>
-</tr>
-
-<input type="hidden" name="page" id="page" value="3"/>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+        <td align="center" style="border:1px solid #000 !important">
+            <div id="preview-area" style="text-align:center;width:325px;height:250px">Preview Area</div>
+        </td>
+        <input type="hidden" name="page" id="page" value="3"/>
+    </tr>
+    </tbody>
+</table>

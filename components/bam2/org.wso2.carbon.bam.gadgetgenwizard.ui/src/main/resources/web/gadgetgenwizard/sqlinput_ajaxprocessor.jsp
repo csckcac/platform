@@ -45,6 +45,8 @@
         });
     });
 </script>
+<table class="normal">
+    <tbody>
     <tr>
         <td>SQL Statement<font color="red">*</font>
         </td>
@@ -52,9 +54,10 @@
         <td><input type="button" id="execute-sql" value="Preview SQL Results"/></td>
     </tr>
     <tr>
-        <td>
+        <td colspan="3">
             <div id="query-results-holder" style="padding-top:25px"></div>
         </td>
     </tr>
     <input type="hidden" name="page" id="page" value="2">
-
+    </tbody>
+</table>

@@ -8,8 +8,8 @@
 <%@ page import="java.util.*" %>
 <%
     Map parameterMap = request.getParameterMap();
-    for (Iterator iterator = parameterMap.keySet().iterator(); iterator.hasNext();) {
-        String param = (String) iterator.next();
+    for (Object o : parameterMap.keySet()) {
+        String param = (String) o;
         Object value = parameterMap.get(param);
         session.setAttribute(param, value);
     }
@@ -37,22 +37,11 @@
 
     WSMap wsMap = GGWUIUtils.constructWSMap(session, attrKeys);
 
-    String gadgetXMLPath = null;
-    String errorMsg = null;
+    String responseHTML;
     try {
-        gadgetXMLPath = gadgetGenAdminClient.generateGraph(wsMap);
+        responseHTML = gadgetGenAdminClient.generateGraph(wsMap);
     } catch (Exception e) {
-        errorMsg = "Error trying to generate graph. " + e.getMessage();
+        responseHTML = "Error trying to generate graph. Please try again. " + e.getMessage();
     }
-    if (errorMsg == null) {
 %>
-<p>
-    <label>Gadget Generated at : <input type="text" name="gadget-path" disabled="disabled" value="<%=gadgetXMLPath%>"/></label>
-    <a href="../dashboard/index.jsp">Go to Dashboard</a> </p>
-<p><i>Copy the path to so that it can be added to the dashboard</i></p>
-<%  } else { %>
-
-<%=errorMsg%>
-<%  } %>
-<input type="hidden" name="page" id="page" value="05">
-
+<%=responseHTML%>

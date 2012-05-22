@@ -24,7 +24,7 @@
         <ServiceProvider>
             <Issuer>WSO2 AppFactory Project Management</Issuer>
 			<AssertionConsumerService>https://localhost:9443/appmgt/sso/jaggery-acs.jag</AssertionConsumerService>
-			<!--<CustomLoginPage>stratos-is/login_ajaxprocessor.jsp</CustomLoginPage>-->
+            <CustomLoginPage>appfactory/login_ajaxprocessor.jsp</CustomLoginPage>
         </ServiceProvider>
     </ServiceProviders>
 </SSOIdentityProviderConfig>

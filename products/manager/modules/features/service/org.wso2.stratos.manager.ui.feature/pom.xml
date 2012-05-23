@@ -33,19 +33,9 @@
     <description>This feature contains the bundles required for Front-end Cloud Manager functionality</description>
 
         <dependencies>
-            <!--<dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.billing.mgt.ui</artifactId>
-		<version>${stratos.version}</version>
-            </dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.account.mgt.ui</artifactId>
-		<version>${stratos.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.announcement.ui</artifactId>
 		<version>${stratos.version}</version>
             </dependency>
             <dependency>

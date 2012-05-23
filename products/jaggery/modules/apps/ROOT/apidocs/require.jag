@@ -89,7 +89,7 @@ function myFunc() {
                         </p>
 
                     <pre class="prettyprint">var module = require("module_name");</pre>
-                    <pre class="prettyprint">var foo = require("module_name");</pre>
+                    <pre class="prettyprint">var foo = require("foo.js");</pre>
                 </section>
 
                 <section id="parameters">

@@ -184,3 +184,6 @@ tr.application-api td.api-key-cell{
 .application-provider{
     width:100px;
 }
+.application-add{
+    padding:5px;
+}

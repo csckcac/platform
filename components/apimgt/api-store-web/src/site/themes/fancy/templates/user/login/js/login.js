@@ -12,7 +12,7 @@ var login = login || {};
                              window.location.reload();
                          }
                      } else {
-                         $('#login-form').modal('hide');
+                         $('#messageModal').modal('hide');
                          jagg.message(result.message);
                      }
                  }, "json");
@@ -34,38 +34,50 @@ var login = login || {};
 
 
 $(document).ready(function () {
+    var registerEventsForLogin = function(){
+        $('#mainLoginForm input').die();
+         $('#mainLoginForm input').keydown(function(event) {
+         if (event.which == 13) {
+                var goto_url = $('#loginBtn').data("goto_url");
+                event.preventDefault();
+                login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
+
+            }
+        });
+
+        $('#loginBtn').die();
+         $('#loginBtn').click(
+            function() {
+                var goto_url = $('#messageModal').data("goto_url");
+                login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
+            }
+         );
+    };
     var showLoginForm = function(){
-        $('#login-form').modal('show').data("goto_url", null);
+        $('#messageModal').html($('#login-data').html());
+        $('#messageModal').modal('show').data("goto_url", null);
         $('#username').focus();
+
+         registerEventsForLogin();
     };
 
-    $('#mainLoginForm input').keydown(function(event) {
-        if (event.which == 13) {
-            var goto_url = $('#loginBtn').data("goto_url");
-            event.preventDefault();
-            login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
 
-        }
-    });
+
     $("#logout-link").click(function () {
         login.loginbox.logout();
     });
 
     $(".need-login").click(function() {
-        $('#login-form').modal('show').data("goto_url", $(this).attr("href"));
+        $('#messageModal').html($('#login-data').html());
+        $('#messageModal').modal('show').data("goto_url", $(this).attr("href"));
         $('#username').focus();
+
+        registerEventsForLogin();
         return false;
     });
 
-    $('#loginBtn').click(
-        function() {
-            var goto_url = $('#login-form').data("goto_url");
-            login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
-        }
-    );
-    $('#login-link').click(showLoginForm);
 
-    $('#subscribe-button').click(showLoginForm);
+    $('#login-link').click(showLoginForm);
 
 
 });

@@ -28,24 +28,4 @@
       </div>
     </div>
 
-
-<div class="modal fade" id="login-form">
-    <form id="mainLoginForm">
-        <div class="modal-header">
-            <button class="close" data-dismiss="modal">×</button>
-            <h3>Login</h3>
-        </div>
-        <div class="modal-body">
-            <label>Username:</label>
-            <input type="text" id="username" name="name" class="span3" placeholder="Enter your user name."/>
-            <label>Password:</label>
-            <input type="password" id="password" name="pass" class="span3"/>
-
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-            <a href="#" class="btn btn-primary" id="loginBtn">Login</a>
-        </div>
-    </form>
-</div>
 <% }); %>

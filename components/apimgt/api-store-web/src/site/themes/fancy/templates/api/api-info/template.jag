@@ -61,7 +61,7 @@
 
                         </select>
                      <% } %>
-                         <div class="simple-space-maker"><button id="subscribe-button" class="btn btn-primary">Subscribe</button></div>
+                         <div class="simple-space-maker"><button id="subscribe-button" class="btn btn-primary <% if(!user) { %>need-login<% } %>">Subscribe</button></div>
              <% } %>
 
         </div>

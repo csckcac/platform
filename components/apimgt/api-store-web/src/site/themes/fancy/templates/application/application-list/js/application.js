@@ -2,10 +2,12 @@ function changeAppNameMode(linkObj){
     var theTr = $(linkObj).parent().parent();
     var appName = $(theTr).attr('data-value');
     $('td:first',theTr).html('<div class="row-fluid"><div class="span6"> <input class="app_name_new" value="'+theTr.attr('data-value')+'" type="text" /> </div><div class="span6"><button class="btn btn-primary" onclick="updateApplication(this)">Save</button> <button class="btn" onclick="updateApplication_reset(this)">Cancel</button></div></div> ');
+    $('input.app_name_new',theTr).focus();
 }
 function updateApplication_reset(linkObj){
-      var appNameCell = $(linkObj).parent();
-        appNameCell.html(appNameCell.val());
+    var theTr = $(linkObj).parent().parent().parent().parent();
+    var appName = $(theTr).attr('data-value');
+    $('td:first',theTr).html(appName);
 }
 function updateApplication(linkObj){
     var theTr = $(linkObj).parent().parent().parent().parent();

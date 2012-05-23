@@ -20,7 +20,6 @@ package org.wso2.carbon.tenant.mgt.email.sender.internal;
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tenant.mgt.email.sender.listener.EmailSenderListener;
-import org.wso2.carbon.tenant.mgt.email.sender.util.DataHolder;
 import org.wso2.carbon.tenant.mgt.email.sender.util.TenantMgtEmailSenderUtil;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;

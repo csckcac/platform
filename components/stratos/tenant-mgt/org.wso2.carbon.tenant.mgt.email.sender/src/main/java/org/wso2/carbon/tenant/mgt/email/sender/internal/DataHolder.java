@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.tenant.mgt.email.sender.util;
+package org.wso2.carbon.tenant.mgt.email.sender.internal;
 
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;

@@ -27,10 +27,10 @@
     </head>
     <body>
         <div id="main-content">
-            <h1>The WSO2 API Manager 1.0.0-M4 Released!</h1>
+            <h1>The WSO2 API Manager 1.0.0-M5 Released!</h1>
 
             <p>
-                The WSO2 API Manager team is pleased to announce the release of version 1.0.0-M4 of
+                The WSO2 API Manager team is pleased to announce the release of version 1.0.0-M5 of
                 the Open Source API Manager.
             </p>
 
@@ -83,7 +83,7 @@
                 </li>                
             </ol>
 
-            <h2>New Features of WSO2 API Manager 1.0.0-M4</h2>
+            <h2>New Features of WSO2 API Manager 1.0.0-M5</h2>
             <p>
                 This release of API Manager comes with a horde of new features and bug fixes.
             </p>

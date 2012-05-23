@@ -2,8 +2,8 @@
 var rowNums = new Array();
 rowNums.push(0);
 var addResourcesToApi = function () {
-    var isChecked=$('#resource-get').is(":checked")&&$('#resource-put').is(":checked")&&$('#resource-post').is(":checked")
-    &&$('#resource-delete').is(":checked");
+    var isChecked=$('#resource-get').is(":checked")||$('#resource-put').is(":checked")||$('#resource-post').is(":checked")
+    ||$('#resource-delete').is(":checked");
 
     if ($('#uriTemplate').val() == "" || !isChecked) {
         $('#resourceTableError').show('fast');

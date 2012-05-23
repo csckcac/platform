@@ -29,6 +29,7 @@ public class GRegGovernanceTestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
+
         suiteVariablesList.add(new SuiteVariables("EndpointTest", EndpointServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("GarFileImportTest", GarFileImportServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("LifeCycleTest", LifeCycleServiceTestClient.class));
@@ -38,6 +39,11 @@ public class GRegGovernanceTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("WSDLImportTest", WSDLImportServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLContentUpdateTest", WsdlUpadateContentServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLWithSpecialCharTest", WSDLWithSpecialCharTest.class));
+        suiteVariablesList.add(new SuiteVariables("EndpointTestCaseClient", EndpointTestCaseClient.class));
+        suiteVariablesList.add(new SuiteVariables("PolicyTestCaseClient", PolicyTestCaseClient.class));
+        suiteVariablesList.add(new SuiteVariables("ServiceTestCaseClient", ServiceTestCaseClient.class));
+        suiteVariablesList.add(new SuiteVariables("WSDLTestCaseClient", WSDLTestCaseClient.class));
+
         setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("GovernanceTestSuite", suiteVariablesList).run();
     }

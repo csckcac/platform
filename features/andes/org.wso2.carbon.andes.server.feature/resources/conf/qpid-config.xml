@@ -104,7 +104,7 @@
 
         <enabled>false</enabled>       
         <OnceInOrderSupportEnabled>false</OnceInOrderSupportEnabled>
-
+        <externalCassandraServerRequired>false</externalCassandraServerRequired>
 
         <coordination>
             <!-- Apache Zookeeper Address -->

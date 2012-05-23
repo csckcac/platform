@@ -18,32 +18,31 @@ package org.wso2.carbon.andes.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.ComponentContext;
 import org.wso2.andes.server.BrokerOptions;
 import org.wso2.andes.server.Main;
 import org.wso2.andes.server.registry.ApplicationRegistry;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.ComponentContext;
 import org.wso2.andes.wso2.service.QpidNotificationService;
-import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.base.api.ServerConfigurationService;
+import org.wso2.carbon.andes.authentication.service.AuthenticationService;
 import org.wso2.carbon.andes.service.QpidService;
 import org.wso2.carbon.andes.service.QpidServiceImpl;
-import org.wso2.carbon.andes.authentication.service.AuthenticationService;
+import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.cassandra.server.service.CassandraServerService;
-import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.event.core.EventBundleNotificationService;
 import org.wso2.carbon.event.core.qpid.QpidServerDetails;
+import org.wso2.carbon.utils.ServerConstants;
 
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.net.ServerSocket;
-import java.net.UnknownHostException;
-import java.util.Set;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Set;
 
 /**
  * @scr.component  name="org.wso2.carbon.andes.internal.QpidServiceComponent"
@@ -114,7 +113,7 @@ public class QpidServiceComponent {
         CassandraServerService cassandraServerService = QpidServiceDataHolder.getInstance().getCassandraServerService();
 
         if(cassandraServerService != null) {
-            if(!qpidServiceImpl.isClusterEnabled()) {
+            if(!qpidServiceImpl.isExternalCassandraServerRequired()) {
                 cassandraServerService.startServer();
                 int count = 0;
                 while (!isCassandraStarted()) {

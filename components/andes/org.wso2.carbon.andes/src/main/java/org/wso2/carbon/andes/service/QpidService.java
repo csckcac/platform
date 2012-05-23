@@ -170,4 +170,10 @@ public interface QpidService {
      * @return  clustering enabled disabled status
      */
     public boolean isClusterEnabled();
+
+
+    /**
+     * Returns whether external cassandra server required
+     * @return required status of external cassandra server*/
+    public boolean isExternalCassandraServerRequired();
 }

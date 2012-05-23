@@ -46,10 +46,10 @@ public class ServiceAPITests {
         cleanService();
     }
 
-     //ToDo need remove specified services
+    //ToDo need remove specified services
     private void cleanService() throws GovernanceException {
         String[] serviceID = serviceManager.getAllServiceIds();
-        for(String s:serviceID){
+        for (String s : serviceID) {
             serviceManager.removeService(s);
         }
     }
@@ -74,7 +74,7 @@ public class ServiceAPITests {
         boolean isServicePathFound = false;
         String[] servicePath = serviceManager.getAllServicePaths();
         for (String s : servicePath) {
-            if (s.contains("/Services/" + service_name)) {
+            if (s.contains("/services/" + service_name)) {
                 isServicePathFound = true;
             }
         }
@@ -104,6 +104,22 @@ public class ServiceAPITests {
                 isServiceFound = true;
             }
         }
-      assertTrue(isServiceFound,"Error occured while adding a service with inline service content");
+        assertTrue(isServiceFound, "Error occured while adding a service with inline service content");
+    }
+
+    @Test(enabled = false,groups = {"wso2.governance.api"}, description = "Testing updateService", priority = 4)
+    public void testUpdateService() throws GovernanceException {
+        Service[] service = serviceManager.getAllServices();
+        for (int serviceID = 0; serviceID <= service.length - 1; serviceID++) {
+            if (service[serviceID].getQName().getLocalPart().equalsIgnoreCase(service_name)) {
+                service[serviceID].activate();
+                serviceManager.updateService(service[serviceID]);
+            }
+        }
+        for (int serviceID = 0; serviceID <= service.length - 1; serviceID++) {
+            if (service[serviceID].getQName().getLocalPart().equalsIgnoreCase(service_name)) {
+                assertTrue(service[serviceID].isActive(), "Error occurred while executing updateService API method");
+            }
+        }
     }
 }

@@ -42,11 +42,6 @@
                 <exclude>**/axis2/axis2.xml</exclude>
             </excludes>
         </fileSet>
-        <fileSet>
-            <directory>target/wso2carbon-core-${carbon.version}</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
-            <fileMode>755</fileMode>
-        </fileSet>
 
         <!--  copying samples -->
         <fileSet>

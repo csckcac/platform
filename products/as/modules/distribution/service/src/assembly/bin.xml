@@ -27,8 +27,6 @@
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <excludes>
-                <exclude>**/*.sh</exclude>
-                <exclude>**/wso2server.bat</exclude>
                 <exclude>**/axis2services/sample01.aar</exclude>
                 <exclude>**/axis2services/echo/**</exclude>
                 <exclude>**/axis2services/version/**</exclude>

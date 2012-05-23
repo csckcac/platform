@@ -161,7 +161,8 @@ tr.application-api td.api-key-cell{
 .api-key{
     padding:15px;
     background: #e0e0e0;
-    height:30px;
+    height:35px;
+    border-bottom:solid 1px #ccc;
 }
 .api-key a{
 }
@@ -174,6 +175,10 @@ tr.application-api td.api-key-cell{
 }
 .application-api img{
     width:60px;
+    margin-top:5px;
+}
+.application-api td{
+    padding:0 20px;
 }
 .subscription-list table td{
     vertical-align:middle;

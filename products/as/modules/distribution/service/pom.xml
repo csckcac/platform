@@ -80,7 +80,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.carbon</groupId>
                                     <artifactId>wso2carbon-core</artifactId>
-                                    <version>${carbon.version}</version>
+                                    <version>${carbon.platform.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
@@ -110,13 +110,13 @@
 		</dependencies>
                 <executions>
                     <execution>
-                        <id>post-assembly-tasks</id>
+                        <id>3-extract-docs-from-components</id>
                         <phase>package</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <property name="tempdir" value="target/docs-temp"/>
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
@@ -124,7 +124,7 @@
                                         <include name="${project.artifactId}-${project.version}.zip"/>
                                     </fileset>
                                 </unzip>
-                                <copy todir="target/wso2carbon-core-${carbon.version}/repository/components"
+                                <copy todir="target/wso2carbon-core-${carbon.platform.version}/repository/components"
                                       overwrite="true">
                                     <fileset
                                             dir="${tempdir}/${project.artifactId}-${project.version}/repository/components">
@@ -135,7 +135,7 @@
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset
-                                            dir="target/wso2carbon-core-${carbon.version}/repository/components/plugins/">
+                                            dir="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/">
                                         <include name="*.ui*.jar"/>
                                     </fileset>
                                 </unzip>
@@ -143,6 +143,8 @@
                                     <fileset dir="${tempdir}/web/">
                                         <exclude name="**/yui/**"/>
                                         <exclude name="**/ajax/**"/>
+                                        <exclude name="**/editarea/**"/>
+                                        <exclude name="**/codepress/**"/>
                                         <exclude name="**/WEB-INF/**"/>
                                         <include name="**/*.html"/>
                                     </fileset>
@@ -188,50 +190,50 @@
 				<equals arg1="${profile}" arg2="signJar"/>
 				<then>
                                 <signjar alias="wso2carbon"
-                                         keystore="target/wso2carbon-core-${carbon.version}/repository/resources/security/wso2carbon.jks"
+                                         keystore="target/wso2carbon-core-${carbon.platform.version}/repository/resources/security/wso2carbon.jks"
                                          storepass="wso2carbon" lazy="true">
                                     <fileset
-                                            dir="target/wso2carbon-core-${carbon.version}/repository/components/plugins"
+                                            dir="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins"
                                             includes="**/*.jar"/>
                                     <fileset
-                                            dir="target/wso2carbon-core-${carbon.version}/lib"
+                                            dir="target/wso2carbon-core-${carbon.platform.version}/lib"
                                             includes="**/*.jar"/>
                                     <!--fileset
-                                            dir="target/wso2carbon-core-${carbon.version}/lib/api"
+                                            dir="target/wso2carbon-core-${carbon.platform.version}/lib/api"
                                             includes="**/*.jar"/-->
                                     <fileset
-                                            dir="target/wso2carbon-core-${carbon.version}/bin"
+                                            dir="target/wso2carbon-core-${carbon.platform.version}/bin"
                                             includes="**/*.jar"/>
                                     <fileset
-                                            dir="target/wso2carbon-core-${carbon.version}/lib/xboot"
+                                            dir="target/wso2carbon-core-${carbon.platform.version}/lib/xboot"
                                             includes="**/*.jar"/>
                                     <fileset
-                                            dir="target/wso2carbon-core-${carbon.version}/lib/endorsed"
+                                            dir="target/wso2carbon-core-${carbon.platform.version}/lib/endorsed"
                                             includes="**/*.jar"/>
                                     <!--fileset
-                                            dir="target/wso2carbon-core-${carbon.version}/lib/core/WEB-INF/lib"
+                                            dir="target/wso2carbon-core-${carbon.platform.version}/lib/core/WEB-INF/lib"
                                             includes="**/*.jar"/-->
                                 </signjar>
 				</then>
 				</if>
                                 <delete dir="${tempdir}"/>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                     <execution>
                         <id>clean_target</id>
                         <phase>install</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <delete dir="target/archive-tmp"/>
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>
-                                <delete dir="target/wso2carbon-core-${carbon.version}"/>
+                                <delete dir="target/wso2carbon-core-${carbon.platform.version}"/>
                                 <delete file="target/${project.artifactId}-${project.version}.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
                                 <delete dir="src/site"/>
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
@@ -246,7 +248,7 @@
                 <version>3.0</version>
                 <executions>
                     <execution>
-                        <phase>5-package</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>site</goal>
                         </goals>
@@ -286,6 +288,7 @@
                             <descriptors>
                                 <descriptor>${basedir}/src/assembly/bin.xml</descriptor>
                                 <descriptor>${basedir}/src/assembly/docs.xml</descriptor>
+                                <!--<descriptor>${basedir}/src/assembly/src.xml</descriptor>-->
                             </descriptors>
                         </configuration>
                     </execution>

@@ -1,5 +1,13 @@
 //var rowNums=new Array();
 var updateResourcesToApi = function (rowNums) {
+    var isChecked = $('#resource-get').is(":checked") && $('#resource-put').is(":checked") && $('#resource-post').is(":checked")
+                    && $('#resource-delete').is(":checked");
+
+    if ($('#uriTemplate').val() == "" || !isChecked) {
+        $('#resourceTableError').show('fast');
+        $('#resourceTableError').html('Sorry. The new row can not be added.Please enter a value for URI Template and Resource Method.<br />');
+        return;
+    }
     var resourcesCount=$('#resource-table tr').length-2;
     $('#resourceTableError').hide('fast');
 
@@ -71,8 +79,9 @@ var updateResourcesToApi = function (rowNums) {
 var deleteResource = function (id,rowNums) {
     var count=$('#resource-table tr').length;
     //Check whether only one defined resource remains before delete operation
-    if(count==3){
+    if (count == 3) {
         $('#resourceTableError').show('fast');
+        $('#resourceTableError').html('Sorry. This row can not be deleted. Atleast one resource entry has to be available.<br />');
         return;
     }
     $('#resourceTableError').hide('fast');

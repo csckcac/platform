@@ -145,7 +145,7 @@
                             </table>
                         </div>
                         <div class="alert alert-error" id="resourceTableError" style="display:none">
-                            <span>Sorry. This row can not be deleted. Atleast one resource entry has to be available.</span>
+                            <span></span>
                         </div>
                     </div>
                     <br/>

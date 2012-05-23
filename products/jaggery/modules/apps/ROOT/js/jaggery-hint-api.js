@@ -6,6 +6,7 @@ request.getContent = function() {};
 request.getContentType = function() {};
 request.getContentLength = function() {};
 request.getRequestURI = function() {};
+request.getRequestURL = function() {};
 request.getPathInfo = function() {};
 request.getContextPath = function() {};
 request.getLocalPort = function() {};

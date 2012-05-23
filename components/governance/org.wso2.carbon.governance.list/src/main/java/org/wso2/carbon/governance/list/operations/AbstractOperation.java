@@ -45,15 +45,15 @@ import java.util.Arrays;
 public abstract class AbstractOperation extends InOutAxisOperation implements MessageProcessor {
     private Log log = LogFactory.getLog(AbstractOperation.class);
     protected String rxtKey;
-    protected Registry systemRegistry;
+    protected Registry governanceSystemRegistry;
     protected String name;
     protected String mediatype;
     protected String namespace;
     protected MessageContext messageContext;
 
-    protected AbstractOperation(QName name, Registry systemRegistry, String mediatype, String namespace) {
+    protected AbstractOperation(QName name, Registry governanceSystemRegistry, String mediatype, String namespace) {
         super(name);
-        this.systemRegistry = systemRegistry;
+        this.governanceSystemRegistry = governanceSystemRegistry;
         this.name = name.getLocalPart();
         this.mediatype = mediatype;
         this.namespace = namespace;
@@ -114,7 +114,6 @@ public abstract class AbstractOperation extends InOutAxisOperation implements Me
         AxisService service = requestMessageContext.getAxisService();
 
         OMElement bodyContent;
-
         AxisMessage outMessage = operation.getMessage("Out");
 
         bodyContent = factory.createOMElement(outMessage.getName(),

@@ -18,6 +18,7 @@ package org.wso2.carbon.governance.list.internal;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -244,6 +245,8 @@ public class GovernanceMgtUIListMetadataServiceComponent {
         GovernanceUtils.loadGovernanceArtifacts((UserRegistry)systemRegistry);
         List<GovernanceArtifactConfiguration> configurations =
                 GovernanceUtils.findGovernanceArtifactConfigurations(systemRegistry);
+        Registry governanceSystemRegistry = GovernanceUtils.getGovernanceSystemRegistry(systemRegistry);
+
         for (GovernanceArtifactConfiguration configuration : configurations) {
             for (ManagementPermission uiPermission : configuration.getUIPermissions()) {
                 String resourceId = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
@@ -265,22 +268,47 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                     String mediatype = configuration.getMediaType();
 
                     AxisService service = new AxisService(singularLabel);
+
+                    Parameter param1 = new Parameter("AuthorizationAction", "/permission/admin/login");
+                    param1.setLocked(true);
+                    service.addParameter(param1);
+
+                    Parameter param2 = new Parameter("adminService", "true");
+                    param2.setLocked(true);
+                    service.addParameter(param2);
+
+                    Parameter param3 = new Parameter("hiddenService", "true");
+                    param3.setLocked(true);
+                    service.addParameter(param3);
+
                     XmlSchemaCollection schemaCol = new XmlSchemaCollection();
                     List<XmlSchema> schemaList = new ArrayList<XmlSchema>();
 
-                    AbstractOperation create = new CreateOperation(new QName("add" + singularLabel), systemRegistry, mediatype, "http://services.add" + singularLabel + ".governance.carbon.wso2.org").init(key, receiver);
+                    AbstractOperation create = new CreateOperation(new QName("add" + singularLabel),
+                            governanceSystemRegistry, mediatype,
+                            "http://services.add" + singularLabel + ".governance.carbon.wso2.org").
+                            init(key, receiver);
                     service.addOperation(create);
                     schemaList.addAll(Arrays.asList(create.getSchemas(schemaCol)));
 
-                    AbstractOperation read = new ReadOperation(new QName("get" + singularLabel), systemRegistry, mediatype, "http://services.get" + singularLabel + ".governance.carbon.wso2.org").init(key, receiver);
+                    AbstractOperation read = new ReadOperation(new QName("get" + singularLabel),
+                            governanceSystemRegistry, mediatype,
+                            "http://services.get" + singularLabel + ".governance.carbon.wso2.org").
+                            init(key, receiver);
                     service.addOperation(read);
                     schemaList.addAll(Arrays.asList(read.getSchemas(schemaCol)));
 
-                    AbstractOperation update = new UpdateOperation(new QName("update" + singularLabel), systemRegistry, mediatype, "http://services.update" + singularLabel + ".governance.carbon.wso2.org").init(key, receiver);
+                    AbstractOperation update = new UpdateOperation(new QName("update" + singularLabel),
+                            governanceSystemRegistry, mediatype,
+                            "http://services.update" + singularLabel + ".governance.carbon.wso2.org").
+                            init(key, receiver);
                     service.addOperation(update);
                     schemaList.addAll(Arrays.asList(update.getSchemas(schemaCol)));
 
-                    AbstractOperation delete = new DeleteOperation(new QName("delete" + singularLabel), systemRegistry, mediatype, "http://services.delete" + singularLabel + ".governance.carbon.wso2.org").init(key, receiver);
+                    AbstractOperation delete = new DeleteOperation(new QName("delete" + singularLabel),
+                            governanceSystemRegistry, mediatype,
+                            "http://services.delete" + singularLabel + ".governance.carbon.wso2.org").
+                            init(key, receiver);
                     service.addOperation(delete);
                     schemaList.addAll(Arrays.asList(delete.getSchemas(schemaCol)));
 

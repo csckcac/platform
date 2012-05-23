@@ -35,8 +35,8 @@ public class ReadOperation extends AbstractOperation{
     private Log log = LogFactory.getLog(ReadOperation.class);
     private String content;
 
-    public ReadOperation(QName name, Registry systemRegistry, String mediatype, String namespace) {
-        super(name, systemRegistry, mediatype, namespace);
+    public ReadOperation(QName name, Registry governanceSystemRegistry, String mediatype, String namespace) {
+        super(name, governanceSystemRegistry, mediatype, namespace);
     }
 
     @Override
@@ -58,20 +58,26 @@ public class ReadOperation extends AbstractOperation{
         String artifactId;
         AXIOMXPath expression;
         try {
-            String operation = requestMessageContext.getOperationContext().getAxisOperation().getName().getLocalPart();
+            String operation = requestMessageContext.
+                    getOperationContext().getAxisOperation().getName().getLocalPart();
             expression = new AXIOMXPath("//ns:" + operation + "/ns:artifactId");
             expression.addNamespace("ns", namespace);
-            artifactId = ((OMElement) expression.selectNodes(requestMessageContext.getEnvelope().getBody()).get(0)).getText();
+            artifactId = ((OMElement) expression.
+                    selectNodes(requestMessageContext.getEnvelope().getBody()).get(0)).getText().trim();
         } catch (JaxenException e) {
             String msg = "Error occured while reading the content of the SOAP message";
+            log.error(msg);
+            throw new AxisFault(msg, e);
+        } catch (IndexOutOfBoundsException e) {
+            String msg = "Content of the resource should be in correct format";
             log.error(msg);
             throw new AxisFault(msg, e);
         }
 
         try {
-            GenericArtifactManager artifactManager = new GenericArtifactManager(systemRegistry, rxtKey);
+            GenericArtifactManager artifactManager = new GenericArtifactManager(governanceSystemRegistry, rxtKey);
             String path = artifactManager.getGenericArtifact(artifactId).getPath();
-            content = new String((byte [])systemRegistry.get(path).getContent());
+            content = new String((byte []) governanceSystemRegistry.get(path).getContent());
         } catch (RegistryException e) {
             String msg = "Error occured while deleting the resource at " + artifactId;
             log.error(msg);

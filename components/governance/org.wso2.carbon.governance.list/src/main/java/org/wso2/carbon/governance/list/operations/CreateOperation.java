@@ -36,8 +36,8 @@ public class CreateOperation extends AbstractOperation {
     private Log log = LogFactory.getLog(CreateOperation.class);
     private String artifactId;
 
-    public CreateOperation(QName name, Registry systemRegistry, String mediatype, String namespace) throws RegistryException {
-        super(name, systemRegistry, mediatype, namespace);
+    public CreateOperation(QName name, Registry governanceSystemRegistry, String mediatype, String namespace) {
+        super(name, governanceSystemRegistry, mediatype, namespace);
     }
 
     @Override
@@ -69,13 +69,13 @@ public class CreateOperation extends AbstractOperation {
             log.error(msg);
             throw new AxisFault(msg, e);
         } catch (IndexOutOfBoundsException e) {
-            String msg = "Content root element should be metadata";
+            String msg = "Content of the resource should be in correct format";
             log.error(msg);
             throw new AxisFault(msg, e);
         }
 
         try {
-            GenericArtifactManager artifactManager = new GenericArtifactManager(systemRegistry, rxtKey);
+            GenericArtifactManager artifactManager = new GenericArtifactManager(governanceSystemRegistry, rxtKey);
             GenericArtifact artifact = artifactManager.newGovernanceArtifact(content);
             artifactManager.addGenericArtifact(artifact);
             artifactId = artifact.getId();

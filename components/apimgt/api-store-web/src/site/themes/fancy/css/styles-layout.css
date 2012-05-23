@@ -227,7 +227,7 @@ div.navbar-inner {
     display:none;
 }
 .thumbnail-custom div.thumbnail{
-    width:120px;
+    width:150px;
 }
 .clouds a {
     color: #777;
@@ -494,4 +494,7 @@ footer{
 }
 .padding-from-right{
     padding:10px;
+}
+.thumbnails > li{
+    margin-left:10px;
 }

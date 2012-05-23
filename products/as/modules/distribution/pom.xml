@@ -165,7 +165,7 @@
                                     </fileset>
                                 </copy>
                                 <copy todir="src/site" overwrite="false" includeemptydirs="false">
-                                    <fileset dir="../../../docs">
+                                    <fileset dir="../../docs">
                                         <exclude name="**/images/**/*.*"/>
                                     </fileset>
                                     <filterset>
@@ -173,7 +173,7 @@
                                     </filterset>
                                 </copy>
                                 <copy todir="src/site" overwrite="false" includeemptydirs="false">
-                                    <fileset dir="../../../docs">
+                                    <fileset dir="../../docs">
                                         <include name="**/images/**/*.*"/>
                                     </fileset>
                                 </copy>

@@ -113,9 +113,9 @@
                                     org.wso2.carbon:org.wso2.carbon.mediation.initializer.feature:${carbon.version}
                                 </featureArtifactDef>
 
-                                <featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.localentry.server.feature:${carbon.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef-->
 
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.endpoint.server.feature:${carbon.version}
@@ -204,10 +204,10 @@ org.wso2.carbon:org.wso2.carbon.lb.endpoint.server.feature:${carbon.version}
                                     <id>org.wso2.carbon.transport.nhttp.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.localentry.server.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.endpoint.server.feature.group</id>
                                     <version>${carbon.version}</version>

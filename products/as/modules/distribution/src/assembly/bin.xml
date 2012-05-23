@@ -64,7 +64,7 @@
         <!--copying qpid config files -->
         <fileSet>
             <directory>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/
+                ../../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced
             </outputDirectory>
@@ -78,7 +78,7 @@
         <!--copying multitenancy-packages.xml file-->
         <fileSet>
             <directory>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/repository/conf/
+                ../../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/
             </directory>
             <outputDirectory>wso2stratos-as-${pom.version}/repository/conf</outputDirectory>
             <includes>
@@ -92,7 +92,7 @@
        <!--copying Kerberos conf files and multitenancy-packages.xml file-->
         <fileSet>
             <directory>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/repository/conf/security
+                ../../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/security
             </directory>
             <outputDirectory>wso2stratos-as-${pom.version}/repository/conf/security</outputDirectory>
             <includes>
@@ -132,7 +132,7 @@
 			<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/</directory>
+            <directory>../../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/identity</outputDirectory>
             <includes>
                 <include>**/**.sql</include>
@@ -177,14 +177,14 @@
         <!-- copying event broker config file -->
         <file>
             <source>
-                ../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
         </file>
         <!-- Including syslog-config.xml file -->
         <file>
             <source>
-                ../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced
             </outputDirectory>
@@ -255,7 +255,7 @@
         </file>
         <file>
             <source>
-                ../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/claim-config.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/claim-config.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
@@ -271,7 +271,7 @@
         </file-->
         <file>
             <source>
-                ../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
@@ -279,7 +279,7 @@
         </file>
         <file>
             <source>
-                ../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/security/
             </outputDirectory>

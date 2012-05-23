@@ -33,7 +33,7 @@
     var userHasAccess = false;
     try {
         // userName variable is taken from template_header.jag
-        userHasAccess = isUserInProject(projectKey, userName);
+        userHasAccess = isUserInProject(projectKey, userName,request.getRemoteAddr());
     } catch (e) {
         log (e);
     }
@@ -41,8 +41,8 @@
         var userIsOwner = false;
         var isADevOp = false;
         try {
-            userIsOwner = isOwner(projectKey, userName);
-            isADevOp = isUserADevOp(projectKey, userName);
+            userIsOwner = isOwner(projectKey, userName,request.getRemoteAddr());
+            isADevOp = isUserADevOp(projectKey, userName,request.getRemoteAddr());
             print("isDevOp "+isADevOp);
 
             // TODO remove this assignment when the devOp UI is ready ********

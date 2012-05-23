@@ -42,9 +42,9 @@
         }
     }
 
-    function getUserRolesForProject(projectKey, userName) {
+    function getUserRolesForProject(projectKey, userName,address) {
         try {
-            var result = getRoles(projectKey, userName);
+            var result = getRoles(projectKey, userName,address);
             if( result != null) {
                 var roleArray = result.*::["return"].text();
                 return roleArray;
@@ -84,9 +84,9 @@
     }
 
     // check whether the logged in user plays any role in the given project
-    function isUserInProject(projectKey, userName) {
+    function isUserInProject(projectKey, userName,address) {
         try {
-            var roleArray = getUserRolesForProject(projectKey, userName);
+            var roleArray = getUserRolesForProject(projectKey, userName,address);
             if(roleArray.length() > 0) {
                 return true;
             } else {
@@ -98,9 +98,9 @@
     }
 
     // checks whether the logged in user is the owner of the given project
-    function isOwner(projectKey, userName) {
+    function isOwner(projectKey, userName,address) {
         try {
-            var roleArray = getUserRolesForProject(projectKey, userName);
+            var roleArray = getUserRolesForProject(projectKey, userName,address);
             log("roleArray :"+roleArray);
             log("roleArray length : "+roleArray.length());
             var isOwner = false;
@@ -116,9 +116,9 @@
         }
     }
 
-    function isUserADevOp(projectKey, userName) {
+    function isUserADevOp(projectKey, userName,address) {
         try {
-            var roleArray = getUserRolesForProject(projectKey, userName);
+            var roleArray = getUserRolesForProject(projectKey, userName,address);
             log("roleArray :"+roleArray);
             log("roleArray length : "+roleArray.length());
             var isADevOp = false;

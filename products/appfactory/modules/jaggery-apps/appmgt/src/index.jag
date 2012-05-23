@@ -6,11 +6,11 @@
 
     <div id="workArea">
         <%
-            include('mgt/registryAccessManager.jag');
-            var projectList = getProjectsOfUser(userName);
-            for (var i = 0; i <= projectList.length - 1; ++i) {
-                var projectKey = projectList[i].props.projectKey;
-                var projectName = projectList[i].props.projectName;
+            include('process/webServiceUtil.jag');
+            var projectList = getAllApps(request.getRemoteAddr());
+            for (var s in projectList) {
+                var projectKey = projectList[s];
+                var projectName =projectList[s];
         %>
         <a href="project.jag?projectName=<%=projectName%>&projectKey=<%=projectKey%>"><%=projectName%></a>
         </br>

@@ -135,7 +135,7 @@ public class SchemaManager {
             } else {
                 resource = registry.get(registry.importResource(tmpPath, url, schemaResource));
             }
-            schema.setId(resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
+            schema.setId(resource.getUUID());
             schema.updatePath();
             schema.loadSchemaDetails();
             succeeded = true;
@@ -203,8 +203,9 @@ public class SchemaManager {
 
             // setting the schema content
             setContent(schema, schemaResource);
-
+            schemaResource.setUUID(schema.getId());
             registry.put(oldSchema.getPath(), schemaResource);
+            schema.setId(schemaResource.getUUID());
             schema.updatePath();
             schema.loadSchemaDetails();
 
@@ -328,7 +329,7 @@ public class SchemaManager {
             }
             schemaResource.setProperties(properties);
         }
-        schemaResource.addProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY, schema.getId());
+        schemaResource.setUUID(schema.getId());
     }
 
     /**

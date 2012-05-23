@@ -108,11 +108,11 @@ public class ProcessMediaTypeHandler extends Handler {
             String processVersionPath = CommonUtil.computeProcessPathWithVersion(
                     processPath, processVersion);
             // saving the artifact id.
-            String processId = resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+            String processId = resource.getUUID();
             if (processId == null) {
                 // generate a process id
                 processId = UUID.randomUUID().toString();
-                resource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, processId);
+                resource.setUUID(processId);
             }
             if (registry.resourceExists(processVersionPath)) {
                 Resource oldResource = registry.get(processVersionPath);
@@ -123,9 +123,9 @@ public class ProcessMediaTypeHandler extends Handler {
                     return;
                 }
             }
-            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
-                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
-                    processId, processVersionPath);
+//            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
+//                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
+//                    processId, processVersionPath);
 
             boolean alreadyAdded = false;
             String workflowURL = CommonUtil.getWorkflowURL(processInfoElement);

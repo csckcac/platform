@@ -135,7 +135,7 @@ public class WsdlManager {
             } else {
                 resource = registry.get(registry.importResource(tmpPath, url, wsdlResource));
             }
-            wsdl.setId(resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
+            wsdl.setId(resource.getUUID());
             wsdl.updatePath();
             wsdl.loadWsdlDetails();
             succeeded = true;
@@ -206,8 +206,9 @@ public class WsdlManager {
 
             // remove the old wsdl resource.
             String tmpPath = oldWsdl.getPath();
-
+            wsdlResource.setUUID(wsdl.getId());
             registry.put(tmpPath, wsdlResource);
+            wsdl.setId(wsdlResource.getUUID());
             wsdl.updatePath();
             wsdl.loadWsdlDetails();
             
@@ -344,7 +345,7 @@ public class WsdlManager {
             }
             wsdlResource.setProperties(properties);
         }
-        wsdlResource.addProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY, wsdl.getId());
+        wsdlResource.setUUID(wsdl.getId());
     }
 
     /**

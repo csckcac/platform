@@ -530,16 +530,16 @@ public class SchemaUriProcessor {
     private void saveToRepositorySafely(RequestContext context, String url, String path,
                                         Resource resource) throws RegistryException {
 
-        String schemaId = resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+        String schemaId = resource.getUUID();
 
         if (schemaId == null) {
             // generate a service id
             schemaId = UUID.randomUUID().toString();
-            resource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, schemaId);
+            resource.setUUID(schemaId);
         }
-        if (systemRegistry != null) {
-            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(systemRegistry, schemaId, path);
-        }
+//        if (systemRegistry != null) {
+//            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(systemRegistry, schemaId, path);
+//        }
 
         if (registry.resourceExists(path)) {
             log.debug("A Resource already exists at given location. Overwriting resource content.");
@@ -578,12 +578,12 @@ public class SchemaUriProcessor {
         xsd.setAttribute("overview_uri", url);
         xsd.setAttribute("overview_type", HandlerConstants.XSD);
         genericArtifactManager.addGenericArtifact(xsd);
-        Resource artifactResource = registry.get(
-                RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
-        artifactResource.setProperty(
-                xsd.getId(), HandlerConstants.XSD_LOCATION + source);
-        registry.put(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
-                GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, artifactResource); //TODO
+//        Resource artifactResource = registry.get(
+//                RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
+//        artifactResource.setProperty(
+//                xsd.getId(), HandlerConstants.XSD_LOCATION + source);
+//        registry.put(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
+//                GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, artifactResource); //TODO
     }
 
     private String extractResourceFromURL(String wsdlURL, String suffix) {

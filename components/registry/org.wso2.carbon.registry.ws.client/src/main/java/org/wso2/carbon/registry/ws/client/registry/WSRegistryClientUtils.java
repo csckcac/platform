@@ -75,6 +75,7 @@ public class WSRegistryClientUtils {
 		if (wsResource.getLastUpdaterUserName() != null) resource.setLastUpdaterUserName(wsResource.getLastUpdaterUserName());
 		if (wsResource.getParentPath() != null) resource.setParentPath(wsResource.getParentPath());
 		if (wsResource.getPath() != null) resource.setPath(wsResource.getPath());
+        if (wsResource.getUUID() != null) resource.setUUID(wsResource.getUUID());
 		resource.setMatchingSnapshotID(wsResource.getMatchingSnapshotID());
 		return resource;
 	}
@@ -120,6 +121,7 @@ public class WSRegistryClientUtils {
 		wsResource.setPermanentPath(resource.getPermanentPath());
 		if (!resource.getProperties().isEmpty()) wsResource.setProperties(getPropertiesForWSResource(resource.getProperties()));
 		wsResource.setState(resource.getState());
+        wsResource.setUUID(resource.getUUID());
 		//         resource.get
 		return wsResource;
 	}

@@ -109,7 +109,7 @@ public class SLAManager {
             Resource slaResource = registry.newResource();
             slaResource.setMediaType(GovernanceConstants.SLA_MEDIA_TYPE);
             setContent(sla, slaResource);
-            slaResource.setProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY, slaId);
+            slaResource.setUUID(slaId);
             // the sla will not actually stored in the tmp path.
             String tmpPath = "/" + slaName;
             registry.put(tmpPath, slaResource);

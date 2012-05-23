@@ -323,6 +323,11 @@ public class ServiceVersionExecutor implements Execution {
         return true;
     }
 
+    /*
+    * This method returns the target path. The target path is calculated from the given expression
+    * When calculating the target path, we split the current path using the given current expression and then map the
+    * path segments to the corresponding ones in the target path expression
+    * */
     private String reformatPath(String path, String currentExpression, String targetExpression,String newResourceVersion) {
         TreeMap<Integer,String> indexMap = new TreeMap<Integer, String>();
         
@@ -367,7 +372,7 @@ public class ServiceVersionExecutor implements Execution {
                 String pathValue = path;
 
                 for (int i = 0; i < indexMap.size(); i++) {
-                     pathValue = formatPath(pathValue.substring(path.indexOf(RegistryConstants.PATH_SEPARATOR)));
+                     pathValue = formatPath(pathValue.substring(pathValue.indexOf(RegistryConstants.PATH_SEPARATOR)));
                 }
 
                 returnPath = returnPath.replace(RESOURCE_PATH,formatPath(pathValue));
@@ -390,6 +395,9 @@ public class ServiceVersionExecutor implements Execution {
         return returnPath;
     }
 
+    /*
+    * This method creates the associations between the new resource and its new dependant resource.
+    * */
     private void makeAssociations(RequestContext requestContext, Map<String, String> parameterMap
             , Map<String, String> oldPathNewPathMap) throws RegistryException {
 

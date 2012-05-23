@@ -203,17 +203,13 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                 org.wso2.carbon.registry.extensions.utils.CommonUtil
                                         .acquireUpdateLock();
                                 try {
-                                    String id = requestContext.getResource().getProperty(
-                                            CommonConstants.ARTIFACT_ID_PROP_KEY);
+                                    String id = requestContext.getResource().getUUID();
                                     if (id != null) {
                                         String path = requestContext.getResourcePath().getPath();
                                         Registry unchrootedSystemRegistry =
                                                 org.wso2.carbon.registry.extensions.utils.CommonUtil
                                                         .getUnchrootedSystemRegistry(
                                                                 requestContext);
-                                        org.wso2.carbon.registry.extensions.utils.CommonUtil
-                                                .addGovernanceArtifactEntryWithAbsoluteValues(
-                                                        unchrootedSystemRegistry, id, path);
                                     }
                                 } finally {
                                     org.wso2.carbon.registry.extensions.utils.CommonUtil

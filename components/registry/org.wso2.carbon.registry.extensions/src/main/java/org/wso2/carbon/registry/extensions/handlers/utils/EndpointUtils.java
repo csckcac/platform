@@ -500,7 +500,7 @@ public class EndpointUtils {
         String endpointId = null;
         if (registry.resourceExists(endpointAbsolutePath)) {
             resource = registry.get(endpointAbsolutePath);
-            endpointId = resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+            endpointId = resource.getUUID();
         } else {
             resource = registry.newResource();
             resource.setContent(url.getBytes());
@@ -509,11 +509,11 @@ public class EndpointUtils {
         if (endpointId == null) {
             endpointIdCreated = true;
             endpointId = UUID.randomUUID().toString();
-            resource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, endpointId);
+            resource.setUUID(endpointId);
         }
 
-        CommonUtil.addGovernanceArtifactEntryWithRelativeValues(
-                systemRegistry, endpointId, relativePath);
+//        CommonUtil.addGovernanceArtifactEntryWithRelativeValues(
+//                systemRegistry, endpointId, relativePath);
 
         boolean propertiesChanged = false;
         if (properties != null) {

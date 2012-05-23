@@ -706,12 +706,15 @@ public class WSDLProcessor {
                     wsdlResource.setDescription(metaDataResource.getDescription());
                 }
                 boolean newWSDLUpload = !registry.resourceExists(wsdlPath);
+
+                deleteOldResource(context, metaDataResource, wsdlInfo, wsdlPath, wsdlResource);
                 saveResource(context, wsdlInfo.getOriginalURL(), wsdlPath, wsdlResource, true);
                 if (systemRegistry != null) {
                     EndpointUtils.saveEndpointsFromWSDL(wsdlPath, wsdlResource, registry,
                             systemRegistry);
                 }
 
+//                TODO symlink
                 symlinkLocation = createLinks(symlinkLocation, wsdlInfo, wsdlPath, newWSDLUpload);
 
                 identifyAssociationsNew(wsdlInfo);
@@ -723,6 +726,7 @@ public class WSDLProcessor {
         return masterWSDLPath;
     }
 
+//    TODO symlink
     private String createLinks(String symlinkLocation, WSDLInfo wsdlInfo, String wsdlPath, boolean newWSDLUpload) throws RegistryException {
         if (wsdlInfo.isMasterWSDL() && symlinkLocation != null) {
             if (!symlinkLocation.endsWith(RegistryConstants.PATH_SEPARATOR)) {
@@ -914,7 +918,7 @@ public class WSDLProcessor {
                 }
 
                 if(registry.resourceExists(wsdlPath)){
-                    // we are copying all the properties, rather than using the exisint pointer
+                    // we are copying all the properties, rather than using the existing pointer
                     Resource oldWsdlResource = registry.get(wsdlPath);
                     Properties properties = oldWsdlResource.getProperties();
                     for (Map.Entry<Object, Object> e : properties.entrySet()) {
@@ -932,6 +936,9 @@ public class WSDLProcessor {
                     wsdlResource.setDescription(metaDataResource.getDescription());
                 }
                 boolean newWSDLUpload = !registry.resourceExists(wsdlPath);
+
+                deleteOldResource(context, metaDataResource, wsdlInfo, wsdlPath, wsdlResource);
+
                 saveResource(context, wsdlInfo.getOriginalURL(), wsdlPath, wsdlResource, true);
                 if (systemRegistry != null) {
                     EndpointUtils.saveEndpointsFromWSDL(wsdlPath, wsdlResource, registry,
@@ -947,6 +954,18 @@ public class WSDLProcessor {
             throw new RegistryException("Invalid WSDL file");
         }
         return masterWSDLPath;
+    }
+
+    private void deleteOldResource(RequestContext context, Resource metaDataResource, WSDLInfo wsdlInfo, String wsdlPath, Resource wsdlResource) throws RegistryException {
+        if(wsdlInfo.isMasterWSDL()){
+            if (metaDataResource != null) {
+                wsdlResource.setUUID(metaDataResource.getUUID());
+            }
+            if(!wsdlPath.equals(context.getResourcePath().getPath())
+                    && registry.resourceExists(context.getResourcePath().getPath())){
+                registry.delete(context.getResourcePath().getPath());
+            }
+        }
     }
 
     private List<OMElement> createServiceContent(String wsdlURL, Resource metadata)
@@ -1030,16 +1049,16 @@ public class WSDLProcessor {
             throws RegistryException {
         log.trace("Started saving resource");
 
-        String artifactId = resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+        String artifactId = resource.getUUID();
 
         if (artifactId == null) {
             // generate a service id
             artifactId = UUID.randomUUID().toString();
-            resource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, artifactId);
+            resource.setUUID(artifactId);
         }
-        if (systemRegistry != null) {
-            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(systemRegistry, artifactId, path);
-        }
+//        if (systemRegistry != null) {
+//            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(systemRegistry, artifactId, path);
+//        }
 
         String relativeArtifactPath = RegistryUtils.getRelativePath(registry.getRegistryContext(), path);
         // adn then get the relative path to the GOVERNANCE_BASE_PATH
@@ -1118,6 +1137,11 @@ public class WSDLProcessor {
         boolean lockAlreadyAcquired = !CommonUtil.isUpdateLockAvailable();
         CommonUtil.releaseUpdateLock();
         try {
+//            We check for an existing resource and add its UUID here.
+            if(registry.resourceExists(path)){
+                Resource existingResource = registry.get(path);
+                resource.setUUID(existingResource.getUUID());
+            }
             saveResource(context, CommonUtil.getWSDLURL(service), path, resource, false);
         } finally {
             if (lockAlreadyAcquired) {

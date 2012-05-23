@@ -70,7 +70,6 @@ public class ConflictResolutionReader extends Reader {
             List lastModifiedTimes = xpathQuery.selectNodes(restoreElement);
 
             Collections.sort(lastModifiedTimes, new Comparator<OMElement>() {
-                @Override
                 public int compare(OMElement o1, OMElement o2) {
                     long o1Value = Long.parseLong(o1.getText());
                     long o2Value = Long.parseLong(o2.getText());

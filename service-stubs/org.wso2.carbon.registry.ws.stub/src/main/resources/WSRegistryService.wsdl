@@ -32,6 +32,7 @@
             </xs:complexType>
             <xs:complexType name="WSResource">
                 <xs:sequence>
+                    <xs:element minOccurs="0" name="UUID" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="authorUserName" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="collection" type="xs:boolean" />
                     <xs:element minOccurs="0" name="contentFile" nillable="true" type="xs:base64Binary" />

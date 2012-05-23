@@ -772,7 +772,6 @@ public class WSRegistryServiceClient implements Registry {
      * @see org.wso2.carbon.registry.core.Registry#removeVersionHistory(java.lang.String, java.lang.String)
      */
     
-    @Override
     public boolean removeVersionHistory(String path, long regVersion)
     		throws RegistryException {
     	throw new UnsupportedOperationException("Unsupported Operation");

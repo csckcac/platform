@@ -465,7 +465,7 @@ public class GovernanceUtils {
             throws GovernanceException {
 
         try {
-            Resource resource;
+            /*Resource resource;
             Registry governanceSystemRegistry = getGovernanceSystemRegistry(registry);
             if (governanceSystemRegistry == null) {
                 governanceSystemRegistry = registry;
@@ -479,14 +479,12 @@ public class GovernanceUtils {
                         GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH + ".";
                 log.error(msg);
                 throw new GovernanceException(msg);
-            }
-            String path = resource.getProperty(artifactId);
+            }*/
+//            String path = resource.getProperty(artifactId)
+            String path = getArtifactPath(registry,artifactId);
             if (registry.resourceExists(path)) {
                 registry.delete(path);
             }
-            resource.removeProperty(artifactId);
-            governanceSystemRegistry.put(
-                    GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, resource);
         } catch (RegistryException e) {
             String msg = "Error in deleting the the artifact id:" + artifactId + ".";
             log.error(msg, e);
@@ -506,26 +504,21 @@ public class GovernanceUtils {
             throws GovernanceException {
 
         try {
-            Registry governanceSystemRegistry = getGovernanceSystemRegistry(registry);
-            if (governanceSystemRegistry == null) {
-                governanceSystemRegistry = registry;
+            String sql = "SELECT REG_PATH_ID, REG_NAME FROM REG_RESOURCE WHERE REG_UUID = ?";
+
+            String[] result;
+            Map<String, String> parameter = new HashMap<String, String>();
+            parameter.put("1", artifactId);
+            parameter.put("query", sql);
+            result = (String[]) registry.executeQuery(null, parameter).getContent();
+
+            if (result != null && result.length == 1) {
+                return result[0];
             }
-            if (!governanceSystemRegistry.resourceExists(
-                    GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH)) {
-                String msg = "The artifact index doesn't exist. artifact index path: " +
-                        GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH + ".";
-                if (log.isDebugEnabled()) {
-                    log.debug(msg);
-                }
-                return null;
-            }
-            Resource resource = governanceSystemRegistry.get(
-                    GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
-            return resource.getProperty(artifactId);
+            return null;
         } catch (RegistryException e) {
-            String msg = "Error in getting the artifact id to path map: " +
-                    GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH +
-                    ", artifact id:" + artifactId + ".";
+            String msg = "Error in getting the path from the registry. Execute query failed with message : "
+                    + e.getMessage();
             log.error(msg, e);
             throw new GovernanceException(msg, e);
         }
@@ -655,7 +648,7 @@ public class GovernanceUtils {
                 return null;
             }
             String artifactId =
-                    artifactResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
+                    artifactResource.getUUID();
             String mediaType = artifactResource.getMediaType();
             String lcName = artifactResource.getProperty("registry.LC.name");
             String lcState = artifactResource.getProperty("registry.lifecycle." + lcName + ".state");
@@ -804,6 +797,7 @@ public class GovernanceUtils {
      * @param artifactPath the path of the artifact.
      * @throws GovernanceException if the operation failed.
      */
+/*
     public static void addGovernanceArtifactEntry(Registry registry,
                                                   String artifactId,
                                                   String artifactPath) throws GovernanceException {
@@ -832,6 +826,7 @@ public class GovernanceUtils {
             throw new GovernanceException(msg, e);
         }
     }
+*/
 
     /**
      * Method to build an AXIOM element from a byte stream.

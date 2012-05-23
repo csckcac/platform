@@ -558,7 +558,6 @@ public class WSDLMediaTypeHandler extends Handler {
                 throw new RegistryException("The resource path is not available.");
             }
             Resource resource = registry.get(resourcePath.getPath());
-            CommonUtil.removeArtifactEntry(requestContext.getSystemRegistry(),resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY));
         } finally {
             CommonUtil.releaseUpdateLock();
         }

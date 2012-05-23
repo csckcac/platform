@@ -57,7 +57,7 @@ public class CopyExecutor implements Execution {
             requestContext.getRegistry().copy(resourcePath,newPath);
             Resource newResource = requestContext.getRegistry().get(newPath);
 
-            if(newResource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY) != null){
+            if(newResource.getUUID() != null){
                 addNewId(requestContext.getRegistry(), newResource, newPath);
             }
 

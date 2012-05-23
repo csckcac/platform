@@ -107,6 +107,7 @@ public class CommonUtil {
         if (wsResource.getLastUpdaterUserName() != null) resource.setLastUpdaterUserName(wsResource.getLastUpdaterUserName());
         if (wsResource.getParentPath() != null) resource.setParentPath(wsResource.getParentPath());
         if (wsResource.getPath() != null) resource.setPath(wsResource.getPath());
+        if (wsResource.getUUID() != null) resource.setUUID(wsResource.getUUID());
         return resource;
     }
     
@@ -169,6 +170,7 @@ public class CommonUtil {
         wsResource.setPermanentPath(resource.getPermanentPath());
         if (resource.getProperties() != null) wsResource.setProperties(getPropertiesForWSResource(resource.getProperties()));
         wsResource.setState(resource.getState());
+        wsResource.setUUID(resource.getUUID());
         //         resource.get
         return wsResource;
     }

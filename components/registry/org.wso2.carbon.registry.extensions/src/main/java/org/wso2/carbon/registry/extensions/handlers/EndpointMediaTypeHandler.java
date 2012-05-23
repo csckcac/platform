@@ -115,7 +115,7 @@ public class EndpointMediaTypeHandler extends Handler {
                     EndpointUtils.getEndpointLocation());
             String path = basePath + urlToPath;
 
-            String endpointId = resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+            String endpointId = resource.getUUID();
             if (registry.resourceExists(path)) {
                 Resource oldResource = registry.get(path);
                 byte[] oldContent = (byte[])oldResource.getContent();
@@ -128,12 +128,12 @@ public class EndpointMediaTypeHandler extends Handler {
                 }
             } else if (endpointId == null) {
                 endpointId = UUID.randomUUID().toString();
-                resource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, endpointId);
+                resource.setUUID(endpointId);
             }
 
-            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
-                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
-                    endpointId, path);
+//            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
+//                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
+//                    endpointId, path);
 
             String relativeArtifactPath = RegistryUtils.getRelativePath(registry.getRegistryContext(), path);
             // adn then get the relative path to the GOVERNANCE_BASE_PATH
@@ -182,7 +182,6 @@ public class EndpointMediaTypeHandler extends Handler {
             }
             checkEndpointDependency(registry, path);
             Resource resource = registry.get(path);
-            CommonUtil.removeArtifactEntry(requestContext.getSystemRegistry(),resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY));
         } finally {
             CommonUtil.releaseDeleteLock();
         }

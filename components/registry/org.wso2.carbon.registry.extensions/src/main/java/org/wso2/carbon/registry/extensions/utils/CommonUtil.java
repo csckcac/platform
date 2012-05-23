@@ -407,6 +407,7 @@ public class CommonUtil {
     }
 
 
+/*
     public static void removeArtifactEntry(Registry registry, String artifactId) throws RegistryException {
         Resource resource;
 
@@ -433,6 +434,7 @@ public class CommonUtil {
         }
 
     }
+*/
 
     /**
      * Adding a governance artifact entry with relative values
@@ -442,6 +444,7 @@ public class CommonUtil {
      * @param artifactPath relative path
      * @throws RegistryException throws if the operation failed
      */
+/*
     public static void addGovernanceArtifactEntryWithRelativeValues(Registry registry,
                                                                     String artifactId,
                                                                     String artifactPath) throws RegistryException {
@@ -452,7 +455,9 @@ public class CommonUtil {
         addGovernanceArtifactEntriesWithRelativeValues(registry,
                 Collections.singletonMap(artifactId, artifactPath));
     }
+*/
 
+/*
     public static void addGovernanceArtifactEntriesWithRelativeValues(
             Registry registry,
             Map<String, String> artifactMap) throws RegistryException {
@@ -498,6 +503,7 @@ public class CommonUtil {
             throw new RegistryException(msg, e);
         }
     }
+*/
 
     /**
      * Adding a governance artifact entry with absolute values
@@ -507,6 +513,7 @@ public class CommonUtil {
      * @param artifactPath absolute path
      * @throws RegistryException throws if the operation failed
      */
+/*
     public static void addGovernanceArtifactEntryWithAbsoluteValues(Registry registry,
                                                                     String artifactId,
                                                                     String artifactPath) throws RegistryException {
@@ -517,6 +524,7 @@ public class CommonUtil {
                 RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH);
         addGovernanceArtifactEntryWithRelativeValues(registry, artifactId, relativeArtifactPath);
     }
+*/
 
     // handling the possibility that handlers are not called within each other.
     private static InheritableThreadLocal<Map<String, String>> artifactIndexMap =

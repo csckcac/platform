@@ -163,7 +163,7 @@ public class ServiceTestCase {
         // first put a WSDL
         WsdlManager wsdlManager = new WsdlManager(registry);
 
-        Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
+        Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/carbon/platform/trunk/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
         wsdlManager.addWsdl(wsdl);
 
         ServiceManager serviceManager = new ServiceManager(registry);
@@ -245,17 +245,17 @@ public class ServiceTestCase {
 
         OMElement contentElement = GovernanceUtils.buildOMElement(fileContents);
 
-        service = serviceManager.newService(contentElement);
-        serviceManager.addService(service);
+        Service newService = serviceManager.newService(contentElement);
+        serviceManager.addService(newService);
 
-        service.setQName(new QName("http://doc.x.ge/yong", "almdo"));
-        serviceManager.updateService(service);
+        newService.setQName(new QName("http://doc.x.ge/yong", "almdo1"));
+        serviceManager.updateService(newService);
 
-        exactServiceCopy = serviceManager.getService(service.getId());
+        exactServiceCopy = serviceManager.getService(newService.getId());
         qname = exactServiceCopy.getQName();
 
-        Assert.assertEquals(qname, new QName("http://doc.x.ge/yong", "almdo"));
-        Assert.assertEquals(exactServiceCopy.getPath(), "/trunk/services/ge/x/doc/yong/almdo");
+        Assert.assertEquals(qname, new QName("http://doc.x.ge/yong", "almdo1"));
+        Assert.assertEquals(exactServiceCopy.getPath(), "/trunk/services/ge/x/doc/yong/almdo1");
 
     }
 

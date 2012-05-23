@@ -160,15 +160,16 @@ public class GovernanceArtifactManager {
                     newContent = new String((byte[]) content);
                 }
                 if (newContent.equals(oldContent)) {
-                    artifact.setId(oldResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
+                    artifact.setId(oldResource.getUUID());
                     addRelationships(path, artifact);
                     succeeded = true;
                     return;
                 }
             }
             String artifactId = artifact.getId();
-            resource.setProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY, artifactId);
+            resource.setUUID(artifactId);
             registry.put(path, resource);
+            artifact.setId(resource.getUUID()); //This is done to get the UUID of a existing resource.
             addRelationships(path, artifact);
 
             succeeded = true;

@@ -82,7 +82,9 @@ public class EndpointManager {
             endpointResource.setMediaType(GovernanceConstants.ENDPOINT_MEDIA_TYPE);
             setContent(endpoint, endpointResource);
             String tmpPath = "/" + GovernanceUtils.getNameFromUrl(endpoint.getUrl());
+            endpointResource.setUUID(endpoint.getId());
             registry.put(tmpPath, endpointResource);
+            endpoint.setId(endpointResource.getUUID());
             endpoint.updatePath();
             succeeded = true;
         } catch (RegistryException e) {
@@ -247,7 +249,7 @@ public class EndpointManager {
             }
             endpointResource.setProperties(properties);
         }
-        endpointResource.addProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY, endpoint.getId());
+        endpointResource.setUUID(endpoint.getId());
     }
 
     /**
@@ -274,7 +276,7 @@ public class EndpointManager {
             log.error(msg, e);
             throw new GovernanceException(msg, e);
         }
-        String artifactId = r.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
+        String artifactId = r.getUUID();
         if (artifactId != null) {
             return getEndpoint(artifactId);
         }

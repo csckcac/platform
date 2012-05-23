@@ -320,11 +320,11 @@ public class WsdlUriProcessor {
                             policy.setAttribute("overview_uri", policyURL);
                             policy.setAttribute("overview_type", HandlerConstants.POLICY);
                             genericArtifactManager.addGenericArtifact(policy);
-                            Resource artifactResource = registry.get(
-                                    RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
-                            artifactResource.setProperty(policy.getId(), HandlerConstants.POLICY_LOCATION + source);
-                            registry.put(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
-                                    GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, artifactResource); //TODO
+//                            Resource artifactResource = registry.get(
+//                                    RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
+//                            artifactResource.setProperty(policy.getId(), HandlerConstants.POLICY_LOCATION + source);
+//                            registry.put(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
+//                                    GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, artifactResource); //TODO
                             registry.addAssociation(getChrootedPolicyLocation(context.getRegistryContext()) + path,
                                 wsdlInfo.getProposedRegistryURL(), CommonConstants.USED_BY);
                             registry.addAssociation(wsdlInfo.getProposedRegistryURL(),
@@ -930,16 +930,16 @@ public class WsdlUriProcessor {
             throws RegistryException {
         log.trace("Started saving resource");
 
-        String artifactId = resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+        String artifactId = resource.getUUID();
 
         if (artifactId == null) {
             // generate a service id
             artifactId = UUID.randomUUID().toString();
-            resource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, artifactId);
+            resource.setUUID( artifactId);
         }
-        if (systemRegistry != null) {
-            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(systemRegistry, artifactId, path);
-        }
+//        if (systemRegistry != null) {
+//            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(systemRegistry, artifactId, path);
+//        }
 
         String relativeArtifactPath = RegistryUtils.getRelativePath(registry.getRegistryContext(), path);
         // adn then get the relative path to the GOVERNANCE_BASE_PATH

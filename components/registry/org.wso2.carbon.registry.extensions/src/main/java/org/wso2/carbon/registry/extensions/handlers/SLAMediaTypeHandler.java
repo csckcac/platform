@@ -104,11 +104,11 @@ public class SLAMediaTypeHandler extends Handler {
             String slaVersionPath = CommonUtil.computeSLAPathWithVersion(
                     slaPath, slaVersion);
             // saving the artifact id.
-            String slaId = resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+            String slaId = resource.getUUID();
             if (slaId == null) {
                 // generate a sla id
                 slaId = UUID.randomUUID().toString();
-                resource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, slaId);
+                resource.setUUID(slaId);
             }
             if (registry.resourceExists(slaVersionPath)) {
                 Resource oldResource = registry.get(slaVersionPath);
@@ -119,9 +119,9 @@ public class SLAMediaTypeHandler extends Handler {
                     return;
                 }
             }
-            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
-                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
-                    slaId, slaVersionPath);
+//            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
+//                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
+//                    slaId, slaVersionPath);
 
             boolean alreadyAdded = false;
             String workflowURL = CommonUtil.getWorkflowURL(slaInfoElement);

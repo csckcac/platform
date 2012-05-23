@@ -111,15 +111,15 @@ public class PolicyUriHandler extends Handler {
         String policyPath = commonLocation + extractResourceFromURL(policyFileName, ".xml");
 
 
-        String policyId = policyResource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+        String policyId = policyResource.getUUID();
         if (policyId == null) {
             // generate a service id
             policyId = UUID.randomUUID().toString();
-            policyResource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, policyId);
+            policyResource.setUUID(policyId);
         }
-        CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
-                CommonUtil.getUnchrootedSystemRegistry(requestContext),
-                policyId, policyPath);
+//        CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
+//                CommonUtil.getUnchrootedSystemRegistry(requestContext),
+//                policyId, policyPath);
 
         String relativeArtifactPath = RegistryUtils.getRelativePath(registry.getRegistryContext(), policyPath);
         // adn then get the relative path to the GOVERNANCE_BASE_PATH
@@ -152,11 +152,11 @@ public class PolicyUriHandler extends Handler {
         policy.setAttribute("overview_uri", url);
         policy.setAttribute("overview_type", HandlerConstants.POLICY);
         genericArtifactManager.addGenericArtifact(policy);
-        Resource artifactResource = registry.get(
-                RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
-        artifactResource.setProperty(policy.getId(), HandlerConstants.POLICY_LOCATION + source);
-        registry.put(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
-                GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, artifactResource); //TODO
+//        Resource artifactResource = registry.get(
+//                RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
+//        artifactResource.setProperty(policy.getId(), HandlerConstants.POLICY_LOCATION + source);
+//        registry.put(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
+//                GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, artifactResource); //TODO
     }
 
     private String extractResourceFromURL(String policyURL, String suffix) {

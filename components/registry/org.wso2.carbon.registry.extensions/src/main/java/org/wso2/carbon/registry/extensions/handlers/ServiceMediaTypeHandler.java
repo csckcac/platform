@@ -137,11 +137,11 @@ public class ServiceMediaTypeHandler extends Handler {
                 resource.setContent(serviceInfoElement.toString());
             }
             // saving the artifact id.
-            String serviceId = resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+            String serviceId = resource.getUUID();
             if (serviceId == null) {
                 // generate a service id
                 serviceId = UUID.randomUUID().toString();
-                resource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, serviceId);
+                resource.setUUID(serviceId);
             }
 
             if (registry.resourceExists(servicePath)) {
@@ -209,9 +209,9 @@ public class ServiceMediaTypeHandler extends Handler {
                     throw new RegistryException(msg, e);
                 }
             }
-            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
-                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
-                    serviceId, servicePath);
+//            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
+//                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
+//                    serviceId, servicePath);
 
                 boolean alreadyAdded = false;
                 String wsdlURL = CommonUtil.getWSDLURL(serviceInfoElement);
@@ -402,7 +402,6 @@ public class ServiceMediaTypeHandler extends Handler {
                 throw new RegistryException("The resource path is not available.");
             }
             Resource resource = registry.get(resourcePath.getPath());
-            CommonUtil.removeArtifactEntry(requestContext.getSystemRegistry(),resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY));
         } finally {
             CommonUtil.releaseUpdateLock();
         }

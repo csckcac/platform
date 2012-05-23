@@ -52,7 +52,26 @@ public class WSResource {
     private String userName;
     private boolean versionableChange;
     private long versionNumber;
-    
+    private String uuid;
+
+    /**
+     * get the UUID of the resource
+     *
+     * @return the uuid of the resource
+     */
+    public String getUUID() {
+        return uuid;
+    }
+
+    /**
+     * set the UUID of the resource
+     *
+     * @param uuid the uuid of the resource
+     */
+    public void setUUID(String uuid) {
+        this.uuid = uuid;
+    }
+
     /**
      * Returns a data handler that contains the content. Used to deliver content through web services.
      * 

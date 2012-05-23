@@ -42,7 +42,6 @@ public class Endpoint extends GovernanceArtifact {
      * Constructor accepting resource path, identifier and a registry instance.
      * This constructor should be used only when the endpoint already saved in the registry.
      *
-     * @param path     the resource path.
      * @param id       the resource identifier.
      * @param registry the registry instance.
      *

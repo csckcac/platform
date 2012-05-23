@@ -556,6 +556,20 @@ public class SchemaProcessor {
                     i++;
                 }
             }
+            if(schemaInfo.isMasterSchema()){
+//                persisting the UUID for master schema
+                xsdResource.setUUID(metaResource.getUUID());
+
+//                if there is a change in the path, we delete the old resource
+                if(!schemaPath.equals(path) && registry.resourceExists(path)){
+                    Resource oldResource = registry.get(path);
+                    if(oldResource.getProperty("registry.resource.symlink.path") != null){
+                        registry.delete(oldResource.getProperty("registry.resource.symlink.path"));
+                    }
+                    registry.delete(path);
+                }
+            }
+
             boolean newSchemaUpload = !registry.resourceExists(schemaPath);
             saveToRepositorySafely(requestContext, schemaInfo.getOriginalURL(), schemaPath,
                     xsdResource);
@@ -679,16 +693,16 @@ public class SchemaProcessor {
     private void saveToRepositorySafely(RequestContext context, String url, String path,
                                         Resource resource) throws RegistryException {
 
-        String schemaId = resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+        String schemaId = resource.getUUID();
 
         if (schemaId == null) {
             // generate a service id
             schemaId = UUID.randomUUID().toString();
-            resource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, schemaId);
+            resource.setUUID(schemaId);
         }
-        if (systemRegistry != null) {
-            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(systemRegistry, schemaId, path);
-        }
+//        if (systemRegistry != null) {
+//            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(systemRegistry, schemaId, path);
+//        }
         
         if (!registry.resourceExists(path)) {
             addSchemaToRegistry(context, path, url, resource, registry);

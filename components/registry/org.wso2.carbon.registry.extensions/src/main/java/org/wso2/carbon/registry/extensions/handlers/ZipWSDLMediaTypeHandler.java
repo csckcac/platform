@@ -554,8 +554,8 @@ public class ZipWSDLMediaTypeHandler extends WSDLMediaTypeHandler {
                     }
                 }
 
-                CommonUtil.addGovernanceArtifactEntriesWithRelativeValues(
-                        CommonUtil.getUnchrootedSystemRegistry(requestContext), artifactIndexMap);
+//                CommonUtil.addGovernanceArtifactEntriesWithRelativeValues(
+//                        CommonUtil.getUnchrootedSystemRegistry(requestContext), artifactIndexMap);
             }
             Registry registry = requestContext.getRegistry();
             if (!isDisableSymlinkCreation() && CommonUtil.isSymbolicLinkMapExisting()) {

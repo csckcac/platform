@@ -90,7 +90,7 @@ public class PolicyManager {
             // OK this is a hack to get the UUID of the newly added artifact. This needs to be fixed
             // properly with the fix for UUID support at Kernel-level - Janaka.
             Resource resource = registry.get(registry.importResource(tmpPath, url, policyResource));
-            policy.setId(resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));;
+            policy.setId(resource.getUUID());
             policy.updatePath();
             policy.loadPolicyDetails();
             succeeded = true;
@@ -173,7 +173,9 @@ public class PolicyManager {
                 log.error(msg);
                 throw new GovernanceException(msg);
             }
+            policyResource.setUUID(policy.getId());
             registry.put(tmpPath, policyResource);
+            policy.setId(policyResource.getUUID());
             policy.updatePath();
 
             succeeded = true;
@@ -281,7 +283,7 @@ public class PolicyManager {
             }
             policyResource.setProperties(properties);
         }
-        policyResource.addProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY, policy.getId());
+        policyResource.setUUID(policy.getId());
     }
 
     /**

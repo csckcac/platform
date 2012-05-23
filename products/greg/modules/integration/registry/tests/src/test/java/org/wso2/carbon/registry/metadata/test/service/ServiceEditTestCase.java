@@ -26,6 +26,7 @@ import org.wso2.carbon.governance.services.stub.AddServicesServiceStub;
 import org.wso2.carbon.integration.core.TestTemplate;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.metadata.test.util.TestUtils;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
 
@@ -113,14 +114,28 @@ public class ServiceEditTestCase {
             resourceAdminServiceStub.delete(servicePath +
                     wsdlNamespacePath + serviceName);
 
-            //check if the deleted file exists in registry
-            if (!isResourceExist(loggedInSessionCookie, servicePath +
-                    wsdlNamespacePath, serviceName, resourceAdminServiceStub)) {
-                log.info("Resource successfully deleted from the registry");
-
-            } else {
-                log.error("Resource not deleted from the registry");
-                fail("Resource not deleted from the registry");
+//            check if the deleted file exists in registry
+//            TODO fix
+            try{
+//                This is for a normal delete operation.
+                if(isResourceExist(loggedInSessionCookie, servicePath +
+                        wsdlNamespacePath, serviceName, resourceAdminServiceStub)){
+                    log.error("Resource not deleted from the registry");
+                    fail("Resource not deleted from the registry");
+                }else{
+                    log.info("Resource successfully deleted from the registry");
+                }
+            }catch(Exception re){
+//                If the delete service handler has been engaged, then the collection hierarchy is deleted too.
+//                We test that scenario from this code segment.
+                if(re.getMessage().contains("Resource does not exist at path")){
+                    if(isResourceExist(loggedInSessionCookie,servicePath,"samples",resourceAdminServiceStub)){
+                        log.error("Collection hierarchy not deleted from the registry");
+                        fail("Collection hierarchy not deleted from the registry");
+                    }else{
+                        log.info("Collection hierarchy successfully deleted from the registry");
+                    }
+                }
             }
         } catch (Exception e) {
             fail("Unable to get text content " + e);

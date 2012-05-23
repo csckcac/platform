@@ -56,7 +56,7 @@ public class WSDLTestCase {
         log.info("############## testAddWSDL started ...###################");
         WsdlManager wsdlManager = new WsdlManager(registry);
 
-        Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
+        Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/carbon/platform/trunk/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
         wsdl.addAttribute("creator", "it is me");
         wsdl.addAttribute("version", "0.01");
         wsdlManager.addWsdl(wsdl);
@@ -100,7 +100,7 @@ public class WSDLTestCase {
         OMElement importElement = factory.createOMElement(
                 new QName("http://www.w3.org/2001/XMLSchema", "import"));
         importElement.addAttribute("schemaLocation",
-                "http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/xsd/purchasing_dup.xsd", null);
+                "http://svn.wso2.org/repos/wso2/carbon/platform/trunk/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/xsd/purchasing_dup.xsd", null);
         schemaElement.addChild(importElement);
         importElement.addAttribute("namespace", "http://bar.org/purchasing_dup", null);
 
@@ -141,7 +141,7 @@ public class WSDLTestCase {
         Assert.assertNull(deletedWsdl);
 
         // add again
-        Wsdl anotherWsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
+        Wsdl anotherWsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/carbon/platform/trunk/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
         anotherWsdl.addAttribute("creator", "it is not me");
         anotherWsdl.addAttribute("version", "0.02");
         wsdlManager.addWsdl(anotherWsdl);
@@ -154,9 +154,11 @@ public class WSDLTestCase {
 
     @Test(groups = {"wso2.greg"} , dependsOnMethods = {"testAddWSDL"})
     public void testEditWSDL() throws Exception {
+        initTest();
+
         WsdlManager wsdlManager = new WsdlManager(registry);
 
-        Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
+        Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/carbon/platform/trunk/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
         wsdl.addAttribute("creator2", "it is me");
         wsdl.addAttribute("version2", "0.01");
         wsdlManager.addWsdl(wsdl);

@@ -182,15 +182,15 @@ public class PolicyMediaTypeHandler extends Handler {
         String policyPath = commonLocation + extractResourceFromURL(policyFileName, ".xml");
 
 
-        String policyId = policyResource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+        String policyId = policyResource.getUUID();
         if (policyId == null) {
             // generate a service id
             policyId = UUID.randomUUID().toString();
-            policyResource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, policyId);
+            policyResource.setUUID(policyId);
         }
-        CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
-                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
-                    policyId, policyPath);
+//        CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
+//                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
+//                    policyId, policyPath);
 
         String relativeArtifactPath = RegistryUtils.getRelativePath(registry.getRegistryContext(), policyPath);
         // adn then get the relative path to the GOVERNANCE_BASE_PATH
@@ -199,7 +199,7 @@ public class PolicyMediaTypeHandler extends Handler {
         addPolicyToRegistry(requestContext, policyPath, requestContext.getSourceURL(),
                 policyResource, registry);
         ((ResourceImpl)policyResource).setPath(relativeArtifactPath);
-        
+
         String symlinkLocation = RegistryUtils.getAbsolutePath(requestContext.getRegistryContext(),
                 policyResource.getProperty(RegistryConstants.SYMLINK_PROPERTY_NAME));
         if (symlinkLocation != null) {

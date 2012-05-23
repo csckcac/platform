@@ -65,11 +65,11 @@ public class PeopleMediaTypeHandler extends Handler {
                             RegistryConstants.GOVERNANCE_PEOPLE_PATH + "/" +
                             peopleGroup + "/" + peopleType + "/" + personName);
             // saving the artifact id.
-            String peopleArtifactId = resource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
+            String peopleArtifactId = resource.getUUID();
             if (peopleArtifactId == null) {
                 // generate a consumer id
                 peopleArtifactId = UUID.randomUUID().toString();
-                resource.setProperty(CommonConstants.ARTIFACT_ID_PROP_KEY, peopleArtifactId);
+                resource.setUUID(peopleArtifactId);
             }
             if (registry.resourceExists(artifactStorePath)) {
                 Resource oldResource = registry.get(artifactStorePath);
@@ -80,9 +80,9 @@ public class PeopleMediaTypeHandler extends Handler {
                     return;
                 }
             }
-            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
-                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
-                    peopleArtifactId, artifactStorePath);
+//            CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(
+//                    CommonUtil.getUnchrootedSystemRegistry(requestContext),
+//                    peopleArtifactId, artifactStorePath);
 
             resource.setContent(artifactInfoElement.toString().getBytes());
             // updating the wsdl url

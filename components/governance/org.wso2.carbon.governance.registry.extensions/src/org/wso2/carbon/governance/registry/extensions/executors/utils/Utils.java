@@ -33,9 +33,8 @@ public class Utils {
     }
     public static void addNewId(Registry registry, Resource newResource, String newPath) throws RegistryException {
         String artifactID = UUID.randomUUID().toString();
-        newResource.removeProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
-        newResource.addProperty(CommonConstants.ARTIFACT_ID_PROP_KEY,artifactID);
-        CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(registry, artifactID, newPath);
+        newResource.setUUID(artifactID);
+//        CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(registry, artifactID, newPath);
     }
 
     public static String getResourceContent(Resource tempResource) throws RegistryException {

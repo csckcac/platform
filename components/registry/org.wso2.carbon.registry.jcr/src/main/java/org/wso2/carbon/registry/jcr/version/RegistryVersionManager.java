@@ -95,11 +95,12 @@ public class RegistryVersionManager implements VersionManager {
         Version version = null;
         String latestVersionPath = "";
 
-        if(!isNodeTypeVersionable(s)) {
-         throw new UnsupportedRepositoryOperationException("Cannot apply checkin for non versionalbe nodes .!!!");
+        if (!isNodeTypeVersionable(s)) {
+            throw new UnsupportedRepositoryOperationException("Cannot apply checkin for non versionalbe nodes .!!!");
         }
 
         try {
+            RegistryJCRItemOperationUtil.validateSessionSaved((RegistrySession) session);
             Value propVal = ((Node) session.getItem(s)).getProperty("jcr:checkedOut").getValue();
             if ((propVal != null) && (propVal.getString().equals("true"))) {
                 CollectionImpl vnode = ((CollectionImpl) ((RegistrySession) session).getUserRegistry().get(s));
@@ -134,8 +135,11 @@ public class RegistryVersionManager implements VersionManager {
         } catch (PathNotFoundException e) {
             version = getBaseVersion(s);
         } catch (RegistryException e) {
-            e.printStackTrace();
+            throw new RepositoryException("Exception occurred at registry level..!!" + e.getMessage());
+        } catch (InvalidItemStateException e) {
+            throw new InvalidItemStateException("Cannot do checkin to unsaved nodes..!!!");
         }
+
 
         return version;
     }
@@ -169,24 +173,24 @@ public class RegistryVersionManager implements VersionManager {
     }
 
     private boolean isNodeTypeVersionable(String s) throws RepositoryException {
-      if(  session.getNode(s).isNodeType("mix:versionable") ||
-           session.getNode(s).isNodeType("mix:simpleVersionable")){
-         return true;
-      } else {
-          return false;
-      }
+        if (session.getNode(s).isNodeType("mix:versionable") ||
+                session.getNode(s).isNodeType("mix:simpleVersionable")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void checkout(String s) throws UnsupportedRepositoryOperationException, LockException, RepositoryException {
 
-        if(!isNodeTypeVersionable(s)) {
-         throw new UnsupportedRepositoryOperationException("Cannot apply checkout for non versionalbe nodes .!!!");
+        if (!isNodeTypeVersionable(s)) {
+            throw new UnsupportedRepositoryOperationException("Cannot apply checkout for non versionalbe nodes .!!!");
         }
         try {
-                Resource resource = ((RegistrySession) session).getUserRegistry().get(s);
-                resource.setProperty("jcr:checkedOut", "true");   // no need both.But as in JCR spec there are two properties to set
-                resource.setProperty("jcr:isCheckedOut", "true");
-                ((RegistrySession) session).getUserRegistry().put(s, resource);
+            Resource resource = ((RegistrySession) session).getUserRegistry().get(s);
+            resource.setProperty("jcr:checkedOut", "true");   // no need both.But as in JCR spec there are two properties to set
+            resource.setProperty("jcr:isCheckedOut", "true");
+            ((RegistrySession) session).getUserRegistry().put(s, resource);
 
         } catch (RegistryException e) {
             throw new RepositoryException("Exception occurred at Registry level");
@@ -218,17 +222,20 @@ public class RegistryVersionManager implements VersionManager {
     }
 
     public VersionHistory getVersionHistory(String s) throws UnsupportedRepositoryOperationException, RepositoryException {
+        if (versionHistories.get(s) == null) {
+           versionHistories.put(s, new RegistryVersionHistory(session));
+        }
 
         return versionHistories.get(s);
+
     }
 
     public Version getBaseVersion(String s) throws UnsupportedRepositoryOperationException, RepositoryException {
 
         if (((RegistryVersionHistory) versionHistories.get(s) != null) &&
-                (((RegistryVersionHistory) versionHistories.get(s)).getVersionList().iterator().hasNext())) {
-
-            return (Version) ((RegistryVersionHistory) versionHistories.get(s)).getVersionList().iterator().next();
-
+                (((RegistryVersionHistory) versionHistories.get(s)).getVersionList().size() > 0)) {
+            List<Version> list = ((RegistryVersionHistory) versionHistories.get(s)).getVersionList();
+            return list.get(list.size() - 1);
         } else {
             return null;
         }
@@ -253,7 +260,7 @@ public class RegistryVersionManager implements VersionManager {
     private boolean isValidVersionName(String nodePath) throws UnsupportedRepositoryOperationException {
 
         try {
-              session.getItem(nodePath);
+            session.getItem(nodePath);
         } catch (PathNotFoundException e) {
             throw new UnsupportedRepositoryOperationException("Unsupported : non versionable node " + nodePath);
         } catch (RepositoryException e) {
@@ -264,6 +271,14 @@ public class RegistryVersionManager implements VersionManager {
 
     public void restore(String s, String s1, boolean b) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
 
+        // Check node is versionable
+        if (!isNodeTypeVersionable(s)) {
+            throw new UnsupportedRepositoryOperationException("Cannot do restore on non versionable nodes");
+        }
+
+        if (s1 != null && s1.equals(getVersionHistory(s).getRootVersion().getName())) {
+            throw new VersionException("Cannot do restore opeartion on jcr:rootVersion ..!!!");
+        }
 
         try {
             RegistryJCRItemOperationUtil.validateSessionSaved((RegistrySession) session);
@@ -303,6 +318,18 @@ public class RegistryVersionManager implements VersionManager {
 
     public void restore(Version version, boolean b) throws VersionException, ItemExistsException, InvalidItemStateException, UnsupportedRepositoryOperationException, LockException, RepositoryException {
 
+        // Check node is versionable
+        if (!isNodeTypeVersionable(getNodePathFromVersionName(version.getName()))) {
+            throw new UnsupportedRepositoryOperationException("Cannot do restore on non versionable nodes");
+        }
+
+        if (version != null && version.getName().equals(getVersionHistory(
+                getNodePathFromVersionName(version.getName())).
+                getRootVersion().getName())) {
+            throw new VersionException("Cannot do restore opeartion on jcr:rootVersion ..!!!");
+        }
+
+
         try {
             RegistryJCRItemOperationUtil.validateSessionSaved((RegistrySession) session);
             if ((version != null)
@@ -336,6 +363,17 @@ public class RegistryVersionManager implements VersionManager {
     }
 
     public void restore(String s, Version version, boolean b) throws PathNotFoundException, ItemExistsException, VersionException, ConstraintViolationException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
+
+        if (version != null && version.getName().equals(getVersionHistory(s).getRootVersion().getName())) {
+            throw new VersionException("Cannot do restore opeartion on jcr:rootVersion ..!!!");
+        }
+
+        // Check node is versionable
+        if (!isNodeTypeVersionable(s)) {
+            throw new UnsupportedRepositoryOperationException("Cannot do restore on non versionable nodes");
+        }
+
+
         try {
             RegistryJCRItemOperationUtil.validateSessionSaved((RegistrySession) session);
             Item i = session.getItem(s);
@@ -358,7 +396,7 @@ public class RegistryVersionManager implements VersionManager {
                 resource.setProperty("jcr:isCheckedOut", "false");
                 resource.setProperty("jcr:checkedOut", "false");
                 ((RegistrySession) session).getUserRegistry().put(
-                        getNodePathFromVersionName(version.getName()),resource);
+                        getNodePathFromVersionName(version.getName()), resource);
                 createVersionOnNode(getNodePathFromVersionName(version.getName()));
 
             }

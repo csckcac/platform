@@ -81,7 +81,7 @@ public class RegistrySession implements Session {
         SESSION_SAVED = true;
     }
 
-    public boolean isSessionSaved(){
+    public boolean isSessionSaved() {
      return SESSION_SAVED;
     }
 

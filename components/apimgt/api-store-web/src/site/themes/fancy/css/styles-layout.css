@@ -11,7 +11,11 @@ h3{
     padding:5px 0 10px;
 }
 div.navbar-inner {
-    /*background: transparent url(../images/whiteBack.png) repeat center top;*/
+   height:45px;
+    min-width:450px;
+}
+.nav-collapse .nav, div.navbar-inner {
+  /*background: transparent url(../images/whiteBack.png) repeat center top;*/
     background: -moz-linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(35, 78, 133, 1)), color-stop(100%, rgba(0, 136, 182, 1))); /* Chrome,Safari4+ */
     background: -webkit-linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* Chrome10+,Safari5.1+ */
@@ -20,8 +24,7 @@ div.navbar-inner {
     background: linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* W3C */
     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#234e85',EndColorStr='#0088b6'); /* IE8 */
     -ms-filter: progid: DXImageTransform.Microsoft.gradient(gradientType = 0, startColor = '#234e85', endColoStr = '#0088b6'); /*Transparent back */
-    height:45px;
-    min-width:450px;
+
 }
 .navbar .nav > li > a{
     color:#fff;
@@ -404,7 +407,7 @@ footer{
     margin-top:10px;
 }
 .login-sign-up{
-    width:190px;
+    /*width:190px;*/
 }
 .api-info-table div.form-horizontal .control-label{
     width:20px;

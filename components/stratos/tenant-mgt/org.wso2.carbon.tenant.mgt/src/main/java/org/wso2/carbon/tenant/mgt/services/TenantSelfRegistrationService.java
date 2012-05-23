@@ -100,7 +100,9 @@ public class TenantSelfRegistrationService {
         // persists the tenant.
         Tenant tenant = TenantMgtUtil.initializeTenant(tenantInfoBean);
         TenantPersistor persistor = TenantMgtServiceComponent.getTenantPersistor();
-        persistor.persistTenant(tenant, true, tenantInfoBean.getSuccessKey(), tenantInfoBean.getOriginatedService());
+        int tenantId = persistor.persistTenant(tenant, true, tenantInfoBean.getSuccessKey(), 
+                tenantInfoBean.getOriginatedService());
+        tenantInfoBean.setTenantId(tenantId);
         TenantMgtUtil.addClaimsToUserStoreManager(tenant);
         
         //Notify tenant addition
@@ -112,26 +114,20 @@ public class TenantSelfRegistrationService {
             throw new Exception(msg, e);
         }
 
-        // For the registration validation - mail for the tenant email address
-        TenantMgtUtil.sendEmail(tenant, tenantInfoBean.getOriginatedService());
-
-        // Notifies the super admin about the new tenant creation
-        TenantMgtUtil.notifyTenantCreationToSuperAdmin(
-                tenantInfoBean.getTenantDomain(), tenantInfoBean.getAdmin(),
-                tenantInfoBean.getEmail());
-
         //adding the subscription entry
         try {
             if (TenantMgtServiceComponent.getBillingService() != null) {
                 TenantMgtServiceComponent.getBillingService().addUsagePlan(tenant,
-                                                                           tenantInfoBean.getUsagePlan());
+                        tenantInfoBean.getUsagePlan());
                 if (log.isDebugEnabled()) {
-                    log.debug("Subscription added successfully for the tenant: " + tenantInfoBean.getTenantDomain());
+                    log.debug("Subscription added successfully for the tenant: " +
+                              tenantInfoBean.getTenantDomain());
                 }
             }
         } catch (Exception e) {
-            log.error("Error occurred while adding the subscription for tenant: " +
-                      tenantInfoBean.getTenantDomain() + " " + e.getMessage(), e);
+            log.error(
+                    "Error occurred while adding the subscription for tenant: " +
+                            tenantInfoBean.getTenantDomain() + " " + e.getMessage(), e);
         }
 
         return TenantMgtUtil.prepareStringToShowThemeMgtPage(tenant.getId());

@@ -50,9 +50,8 @@ public class ClaimsMgtUtil {
      * @throws Exception
      *             if error in getting the first name
      */
-    public static String getFirstName(RealmService realmService, Tenant tenant, int tenantId)
-            throws Exception {
-        String names[] = getNames(realmService, tenant, tenantId);
+    public static String getFirstName(RealmService realmService, int tenantId)throws Exception {
+        String names[] = getNames(realmService, tenantId);
         return names[0];
     }
 
@@ -67,9 +66,8 @@ public class ClaimsMgtUtil {
      * @throws Exception
      *             if error in getting the last name
      */
-    public static String getLastName(RealmService realmService, Tenant tenant, int tenantId)
-            throws Exception {
-        String names[] = getNames(realmService, tenant, tenantId);
+    public static String getLastName(RealmService realmService, int tenantId) throws Exception {
+        String names[] = getNames(realmService, tenantId);
         return names[1];
     }
 
@@ -85,19 +83,20 @@ public class ClaimsMgtUtil {
      * @throws Exception
      *             if unable to retrieve the admin name
      */
-    public static String[] getNames(RealmService realmService, Tenant tenant, int tenantId)
-                                                                                           throws Exception {
+    public static String[] getNames(RealmService realmService, int tenantId) throws Exception {
         String[] names = new String[2];
         String firstname = "", lastname = "";
         try {
-            firstname = getFirstNamefromUserStoreManager(realmService, tenant, tenantId);
-        } catch (Exception e) {
-            String msg = "Unable to get the firstname from the user store manager";
-            log.info(msg, e);
-            // Not exceptions,due to the existance of tenants with no full name.
+            firstname = getFirstNamefromUserStoreManager(realmService, tenantId);
+        } catch (Exception ignore) {
+            if (log.isDebugEnabled()) {
+                // Not exceptions,due to the existence of tenants with no full name.
+                String msg = "Unable to get the firstname from the user store manager";
+                log.debug(msg, ignore);
+            }
         }
         if (firstname != null && !firstname.trim().equals("")) {
-            lastname = getLastNamefromUserStoreManager(realmService, tenant, tenantId);
+            lastname = getLastNamefromUserStoreManager(realmService, tenantId);
             if ((lastname != null) && (!lastname.trim().equals(""))) {
                 names[0] = firstname;
                 names[1] = lastname;
@@ -105,11 +104,13 @@ public class ClaimsMgtUtil {
                 // no last name - fullname was considered givenname;
                 names = getNamesfromFullName(realmService, firstname);
             }
-        } else { // Work around for old tenants - where even full name is not
-                 // input.
-            log.info("First name is not available");
+        } else { 
+            // Work around for old tenants - where even full name is not input.
+            if (log.isDebugEnabled()) {
+                log.debug("First name is not available");
+            }
             try {
-                firstname = getAdminUserNameFromTenantId(realmService, tenant.getId());
+                firstname = getAdminUserNameFromTenantId(realmService, tenantId);
                 names[0] = firstname;
                 names[1] = lastname;
             } catch (Exception e) {
@@ -178,31 +179,29 @@ public class ClaimsMgtUtil {
      * @throws org.wso2.carbon.user.core.UserStoreException
      *             exception in getting the user store manager
      */
-    public static String getClaimfromUserStoreManager(RealmService realmService, Tenant tenant,
-                                                      int tenantId, String claim)
-                                                                                 throws UserStoreException {
+    public static String getClaimfromUserStoreManager(RealmService realmService, int tenantId,
+                                                      String claim) throws UserStoreException {
         UserStoreManager userStoreManager = null;
         String claimValue = "";
         try {
-        	if (realmService.getTenantUserRealm(tenantId) != null) {
-        		 userStoreManager = (UserStoreManager) realmService.getTenantUserRealm(tenantId)
-                 .getUserStoreManager();
-        	}
-           
+            if (realmService.getTenantUserRealm(tenantId) != null) {
+                userStoreManager =
+                        (UserStoreManager) realmService.getTenantUserRealm(tenantId)
+                                .getUserStoreManager();
+            }
+
         } catch (Exception e) {
             String msg = "Error retrieving the user store manager for the tenant";
             log.error(msg, e);
             throw new UserStoreException(msg, e);
         }
         try {
-        	if(userStoreManager != null) {
-        		 claimValue =
-                     userStoreManager.getUserClaimValue(
-                                                        getAdminUserNameFromTenantId(realmService,
-                                                                                     tenantId),
-                                                        claim,
-                                                        UserCoreConstants.DEFAULT_PROFILE);
-        	}
+            if (userStoreManager != null) {
+                claimValue =
+                        userStoreManager.getUserClaimValue(
+                                getAdminUserNameFromTenantId(realmService, tenantId), claim,
+                                UserCoreConstants.DEFAULT_PROFILE);
+            }
             return claimValue;
         } catch (Exception e) {
             String msg = "Unable to retrieve the claim for the given tenant";
@@ -222,10 +221,10 @@ public class ClaimsMgtUtil {
      * @throws UserStoreException
      *             , if error in getting the claim GIVEN_NAME
      */
-    public static String getFirstNamefromUserStoreManager(RealmService realmService, Tenant tenant,
+    public static String getFirstNamefromUserStoreManager(RealmService realmService,
                                                           int tenantId) throws UserStoreException {
         try {
-            return getClaimfromUserStoreManager(realmService, tenant, tenantId,
+            return getClaimfromUserStoreManager(realmService, tenantId,
                                                 UserCoreConstants.ClaimTypeURIs.GIVEN_NAME);
         } catch (Exception e) {
             String msg = "First Name not found for the tenant";
@@ -245,11 +244,11 @@ public class ClaimsMgtUtil {
      * @throws UserStoreException
      *             , if error in getting the claim SURNAME
      */
-    public static String getLastNamefromUserStoreManager(RealmService realmService, Tenant tenant,
+    public static String getLastNamefromUserStoreManager(RealmService realmService,
                                                          int tenantId) throws UserStoreException {
         String lastname = "";
         try {
-            lastname = getClaimfromUserStoreManager(realmService, tenant, tenantId,
+            lastname = getClaimfromUserStoreManager(realmService, tenantId,
                                                     UserCoreConstants.ClaimTypeURIs.SURNAME);
         } catch (Exception e) {
             String msg = "Last Name not found for the tenant";

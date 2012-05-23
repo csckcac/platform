@@ -26,7 +26,6 @@ import org.wso2.carbon.core.multitenancy.persistence.TenantPersistor;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.tenant.mgt.beans.PaginatedTenantInfoBean;
 import org.wso2.carbon.tenant.mgt.internal.TenantMgtServiceComponent;
-import org.wso2.carbon.tenant.mgt.internal.util.PasswordUtil;
 import org.wso2.carbon.tenant.mgt.util.TenantMgtUtil;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserRealm;
@@ -77,10 +76,19 @@ public class TenantMgtAdminService extends AbstractAdmin {
         Tenant tenant = TenantMgtUtil.initializeTenant(tenantInfoBean);
         TenantPersistor persistor = TenantMgtServiceComponent.getTenantPersistor();
         // not validating the domain ownership, since created by super tenant
-        persistor.persistTenant(tenant, false, tenantInfoBean.getSuccessKey(),
+        int tenantId = persistor.persistTenant(tenant, false, tenantInfoBean.getSuccessKey(),
                                 tenantInfoBean.getOriginatedService());
+        tenantInfoBean.setTenantId(tenantId);
         
         TenantMgtUtil.addClaimsToUserStoreManager(tenant);
+        
+        // If Email Validation is made optional, tenant will be activated now.
+        if (!CommonUtil.isEmailValidationMandatory()) {
+            TenantMgtServiceComponent.getTenantManager().activateTenant(tenant.getId());
+            if (log.isDebugEnabled()) {
+                log.debug("Activated the tenant during the tenant creation: " + tenant.getId());
+            }
+        }
       
         //Notify tenant addition
         try {
@@ -91,14 +99,6 @@ public class TenantMgtAdminService extends AbstractAdmin {
             throw new Exception(msg, e);
         }
         
-        // For the registration validation - mail for the tenant email address
-        TenantMgtUtil.sendEmail(tenant, tenantInfoBean.getOriginatedService());
-
-        // Notifies the super admin about the new tenant creation
-        TenantMgtUtil.notifyTenantCreationToSuperAdmin(
-                tenantInfoBean.getTenantDomain(),tenantInfoBean.getAdmin(),
-                tenantInfoBean.getEmail());
-
         //adding the subscription entry
         try{
             if(TenantMgtServiceComponent.getBillingService() != null){
@@ -202,9 +202,9 @@ public class TenantMgtAdminService extends AbstractAdmin {
 
         // retrieve first and last names from the UserStoreManager
         bean.setFirstname(ClaimsMgtUtil.getFirstNamefromUserStoreManager(
-                TenantMgtServiceComponent.getRealmService(), tenant, tenantId));
+                TenantMgtServiceComponent.getRealmService(), tenantId));
         bean.setLastname(ClaimsMgtUtil.getLastNamefromUserStoreManager(
-                TenantMgtServiceComponent.getRealmService(), tenant, tenantId));
+                TenantMgtServiceComponent.getRealmService(), tenantId));
 
         //getting the subscription plan
         String activePlan = "";
@@ -246,13 +246,6 @@ public class TenantMgtAdminService extends AbstractAdmin {
                          + ".";
             log.error(msg, e);
             throw new Exception(msg, e);
-        }
-
-        boolean updatePassword = false;
-        boolean isPasswordChanged = false;
-        if (tenantInfoBean.getAdminPassword() != null
-            && !tenantInfoBean.getAdminPassword().equals("")) {
-            updatePassword = true;
         }
 
         Tenant tenant;
@@ -317,13 +310,17 @@ public class TenantMgtAdminService extends AbstractAdmin {
             throw new Exception(msg, e);
         }
 
+        boolean updatePassword = false;
+        if (tenantInfoBean.getAdminPassword() != null
+            && !tenantInfoBean.getAdminPassword().equals("")) {
+            updatePassword = true;
+        }
         if (!userStoreManager.isReadOnly() && updatePassword) {
             // now we will update the tenant admin with the admin given
             // password.
             try {
                 userStoreManager.updateCredentialByAdmin(tenantInfoBean.getAdmin(),
                                                          tenantInfoBean.getAdminPassword());
-                isPasswordChanged = true;
             } catch (UserStoreException e) {
                 String msg = "Error in changing the tenant admin password, tenant domain: " +
                              tenantInfoBean.getTenantDomain() + ". " + e.getMessage() + " for: " +
@@ -331,6 +328,9 @@ public class TenantMgtAdminService extends AbstractAdmin {
                 log.error(msg, e);
                 throw new Exception(msg, e);
             }
+        } else {
+            //Password should be empty since no password update done
+            tenantInfoBean.setAdminPassword("");
         }
 
         try {
@@ -346,9 +346,6 @@ public class TenantMgtAdminService extends AbstractAdmin {
             String msg = "Error in calling the callbacks for the add tenant.";
             log.error(msg, e);
             throw new Exception(msg, e);
-        }
-        if (isPasswordChanged) { // email the tenant admin the new password.
-            PasswordUtil.notifyResetPassword(tenantInfoBean);
         }
 
         //updating the usage plan

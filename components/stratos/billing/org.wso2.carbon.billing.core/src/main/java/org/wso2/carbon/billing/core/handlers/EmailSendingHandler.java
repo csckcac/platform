@@ -160,7 +160,7 @@ public class EmailSendingHandler implements BillingHandler {
             Tenant tenant = (Tenant) tenantManager.getTenant(customer.getId());
             mailParameters.put("tenant-domain", tenant.getDomain());
             String customerName =
-                    ClaimsMgtUtil.getFirstName(Util.getRealmService(), tenant, customer.getId());
+                    ClaimsMgtUtil.getFirstName(Util.getRealmService(), customer.getId());
             if(customerName!=null){
                 mailParameters.put("customer-name", customerName);
             }else{

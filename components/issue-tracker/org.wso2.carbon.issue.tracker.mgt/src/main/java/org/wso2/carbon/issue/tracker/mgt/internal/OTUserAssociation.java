@@ -82,15 +82,11 @@ public class OTUserAssociation {
                     String lastName = null;
                     try {
                         firstName =
-                                ClaimsMgtUtil.getFirstName(realmService,
-                                        (org.wso2.carbon.user.core.tenant.Tenant) tenant,
-                                        tenantId);
+                                ClaimsMgtUtil.getFirstName(realmService, tenantId);
 
 
                         lastName =
-                                ClaimsMgtUtil.getLastName(realmService,
-                                        (org.wso2.carbon.user.core.tenant.Tenant) tenant,
-                                        tenantId);
+                                ClaimsMgtUtil.getLastName(realmService, tenantId);
 
 
                     } catch (Exception e) {

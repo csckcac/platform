@@ -24,10 +24,9 @@ public class GAppTenantRegistrationService {
     
     
     public boolean isRegisteredAsGoogleAppDomain(String domain) throws TenantManagementException {
-        
-        TenantManager tenantManager =
-                                      TenantMgtServiceComponent.getRealmService()
-                                                               .getTenantManager();
+
+        TenantManager tenantManager = 
+            TenantMgtServiceComponent.getRealmService().getTenantManager();
         try {
             int tenantId = tenantManager.getTenantId(domain);
 
@@ -37,59 +36,53 @@ public class GAppTenantRegistrationService {
 
             Tenant tenant = (Tenant) tenantManager.getTenant(tenantId);
             RealmConfiguration realmConfig = tenant.getRealmConfig();
-            String value =
-                           realmConfig.getUserStoreProperties()
-                                      .get(UserCoreConstants.RealmConfig.PROPERTY_EXTERNAL_IDP);
+            String value = realmConfig.getUserStoreProperties().get(
+                            UserCoreConstants.RealmConfig.PROPERTY_EXTERNAL_IDP);
 
             if (value == null) {
                 throw new TenantManagementException(
-                                                    "This domain has been already registered as a non-Google App domain");
-            } else {
-                if (value.equals(GOOGLE_APPS_IDP_NAME)) {
-                    return true;
-                } else {
-                    throw new TenantManagementException(
-                                                        "This domain has been already registered with a different External IdP");
-                }
+                        "This domain has been already registered as a non-Google App domain");
             }
+
+            if (value.equals(GOOGLE_APPS_IDP_NAME)) {
+                return true;
+            }
+            
+            throw new TenantManagementException(
+                    "This domain has been already registered with a different External IdP");
         } catch (UserStoreException e) {
             log.error(e.getMessage(), e);
             throw new TenantManagementException("System error occured while connecting user store");
         }
     }
     
-    public boolean registerGoogleAppsTenant(TenantInfoBean tenantInfoBean)
-                                                                          throws TenantManagementException {
+    public boolean registerGoogleAppsTenant(
+                                TenantInfoBean tenantInfoBean)throws TenantManagementException {
         try {
             int tenantId = -1;
             Tenant tenant = TenantMgtUtil.initializeTenant(tenantInfoBean);
             TenantPersistor tenantPersistor = TenantMgtServiceComponent.getTenantPersistor();
 
             MultiTenantRealmConfigBuilder builder =
-                                                    TenantMgtServiceComponent.getRealmService()
-                                                                             .getMultiTenantRealmConfigBuilder();
+                    TenantMgtServiceComponent.getRealmService().getMultiTenantRealmConfigBuilder();
             TenantMgtConfiguration tenantMgtConfiguration =
-                                                            TenantMgtServiceComponent.getRealmService()
-                                                                                     .getTenantMgtConfiguration();
+                    TenantMgtServiceComponent.getRealmService().getTenantMgtConfiguration();
             RealmConfiguration bootStrapRealmConfig =
-                                                      TenantMgtServiceComponent.getRealmService()
-                                                                               .getBootstrapRealmConfiguration();
+                    TenantMgtServiceComponent.getRealmService().getBootstrapRealmConfiguration();
             RealmConfiguration realmConfigToPersist =
-                                                      builder.getRealmConfigForTenantToPersist(bootStrapRealmConfig,
-                                                                                               tenantMgtConfiguration,
-                                                                                               tenant,
-                                                                                               -1);
-            realmConfigToPersist.getUserStoreProperties()
-                                .put(UserCoreConstants.RealmConfig.PROPERTY_EXTERNAL_IDP,
-                                     GOOGLE_APPS_IDP_NAME);
+                    builder.getRealmConfigForTenantToPersist(bootStrapRealmConfig,
+                            tenantMgtConfiguration, tenant, -1);
+            realmConfigToPersist.getUserStoreProperties().put(
+                    UserCoreConstants.RealmConfig.PROPERTY_EXTERNAL_IDP, GOOGLE_APPS_IDP_NAME);
             tenant.setRealmConfig(realmConfigToPersist);
             tenant.setAdminPassword(UUIDGenerator.getUUID());
-            
+
             tenantId = tenantPersistor.persistTenant(tenant);
+            tenantInfoBean.setTenantId(tenantId);
 
             TenantMgtUtil.addClaimsToUserStoreManager(tenant);
-            
-            //Notify tenant addition
+
+            // Notify tenant addition
             try {
                 TenantMgtUtil.triggerAddTenant(tenantInfoBean);
             } catch (UserStoreException e) {
@@ -98,16 +91,12 @@ public class GAppTenantRegistrationService {
                 throw new Exception(msg, e);
             }
 
-            TenantMgtUtil.notifyTenantCreationToSuperAdmin(tenantInfoBean.getTenantDomain(),
-                                                           tenantInfoBean.getAdmin(),
-                                                           tenantInfoBean.getEmail());
-
             // adding the subscription entry
             try {
                 if (TenantMgtServiceComponent.getBillingService() != null) {
-                    tenantInfoBean.setTenantId(tenantId); //required for the following method
-                    TenantMgtServiceComponent.getBillingService().addUsagePlan(tenant, 
-                                                                               tenantInfoBean.getUsagePlan());
+                    tenantInfoBean.setTenantId(tenantId); // required for the following method
+                    TenantMgtServiceComponent.getBillingService().addUsagePlan(tenant,
+                            tenantInfoBean.getUsagePlan());
                     if (log.isDebugEnabled()) {
                         log.debug("Subscription added successfully for the tenant: " +
                                   tenantInfoBean.getTenantDomain());
@@ -123,8 +112,7 @@ public class GAppTenantRegistrationService {
         } catch (Exception e) {
             log.error("Error creating tenant for GooogleApp market place implementation", e);
             throw new TenantManagementException(
-                                                "Error creating tenant for GooogleApp market place implementation",
-                                                e);
+                    "Error creating tenant for GooogleApp market place implementation", e);
         }
     }
 }

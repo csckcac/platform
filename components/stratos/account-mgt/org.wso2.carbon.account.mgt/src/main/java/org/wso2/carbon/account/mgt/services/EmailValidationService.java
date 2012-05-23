@@ -25,7 +25,7 @@ import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.tenant.mgt.util.TenantMgtUtil;
+import org.wso2.carbon.tenant.mgt.email.sender.util.TenantMgtEmailSenderUtil;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -127,12 +127,12 @@ public class EmailValidationService {
             }
 
             // send the notification message to the tenant admin
-            TenantMgtUtil.notifyTenantCreation(tenant.getDomain(),
+            TenantMgtEmailSenderUtil.notifyTenantCreation(tenant.getDomain(),
                                                resource.getProperty(StratosConstants.TENANT_ADMIN),
                                                tenant.getEmail());
 
             // send the notification message to the super tenant
-            TenantMgtUtil.notifyTenantActivationToSuperAdmin(tenant.getDomain(),
+            TenantMgtEmailSenderUtil.notifyTenantActivationToSuperAdmin(tenant.getDomain(),
                                                resource.getProperty(StratosConstants.TENANT_ADMIN),
                                                tenant.getEmail());
 

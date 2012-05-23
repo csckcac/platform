@@ -413,7 +413,7 @@ public class BillingService extends AbstractAdmin {
                         TenantManager tenantManager = Util.getRealmService().getTenantManager();
                         Tenant tenant = (Tenant) tenantManager.getTenant(customer.getId());
                         String customerName =
-                                ClaimsMgtUtil.getFirstName(Util.getRealmService(), tenant, customer.getId());
+                                ClaimsMgtUtil.getFirstName(Util.getRealmService(), customer.getId());
                         if(customerName!=null){
                             mailParameters.put("customer-name", customerName);
                         }else{

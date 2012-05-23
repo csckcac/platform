@@ -95,7 +95,7 @@ public class AccountMgtService extends AbstractAdmin {
         try {
             Map<String, String> datatostore = new HashMap<String, String>();
             datatostore.put("first-name",
-                    ClaimsMgtUtil.getFirstName(Util.getRealmService(), tenant, tenantId));
+                    ClaimsMgtUtil.getFirstName(Util.getRealmService(), tenantId));
             datatostore.put("email", contactEmail);
             datatostore.put("admin", tenant.getAdminName());
             datatostore.put("tenantDomain", tenant.getDomain());
@@ -225,7 +225,7 @@ public class AccountMgtService extends AbstractAdmin {
 
         // getting the other parameters from the claims.
         try {
-            firstname = ClaimsMgtUtil.getFirstName(Util.getRealmService(), tenant, tenantId);
+            firstname = ClaimsMgtUtil.getFirstName(Util.getRealmService(), tenantId);
 
         } catch (Exception e) {
             String msg = "Error in retrieving the firstname for the admin of the domain " +
@@ -233,7 +233,7 @@ public class AccountMgtService extends AbstractAdmin {
             log.info(msg);
         }
         try {
-            lastname = ClaimsMgtUtil.getLastName(Util.getRealmService(), tenant, tenantId);
+            lastname = ClaimsMgtUtil.getLastName(Util.getRealmService(), tenantId);
         } catch (Exception e) {
             // this is expected, as many users haven't given their lastnames
             // during their registration.

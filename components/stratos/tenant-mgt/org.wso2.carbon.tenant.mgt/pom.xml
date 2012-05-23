@@ -50,7 +50,6 @@
                         <Import-Package>
                             org.wso2.carbon.stratos.common.*,
                             org.wso2.carbon.registry.core.*;version=1.0.1,
-                            org.wso2.carbon.email.sender.api,
                             org.wso2.carbon.captcha.mgt.*,
                             !javax.xml.namespace,
                             javax.xml.namespace; version=0.0.0,
@@ -92,16 +91,8 @@
             <version>${wso2carbon.version}</version>
         </dependency>
         <dependency>
-           <groupId>org.wso2.carbon</groupId>
-           <artifactId>org.wso2.carbon.email.verification</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.stratos.common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.email.sender</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>

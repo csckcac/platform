@@ -15,22 +15,16 @@
  */
 package org.wso2.carbon.tenant.mgt.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
-
-import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
-import org.wso2.carbon.stratos.common.constants.StratosConstants;
-import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
-import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
-import org.wso2.carbon.stratos.common.util.CommonUtil;
-import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
+import org.wso2.carbon.stratos.common.constants.StratosConstants;
+import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
+import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
+import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.tenant.mgt.internal.TenantMgtServiceComponent;
 import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.api.TenantMgtConfiguration;
@@ -41,8 +35,10 @@ import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.config.multitenancy.MultiTenantRealmConfigBuilder;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
-import org.wso2.carbon.utils.AuthenticationObserver;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -57,8 +53,6 @@ public class TenantMgtUtil {
     private static final Log log = LogFactory.getLog(TenantMgtUtil.class);
     private static final String ILLEGAL_CHARACTERS_FOR_TENANT_DOMAIN = ".*[^a-zA-Z0-9\\._\\-].*";
     
-    
-
     /**
      * Activates the tenant
      *
@@ -270,144 +264,13 @@ public class TenantMgtUtil {
         }
     }
 
-    /**
-     * Emails the tenant admin notifying the account creation.
-     *
-     * @param domainName tenant domain
-     * @param adminName  tenant admin
-     * @param email      associated tenant email address
-     */
-    public static void notifyTenantCreation(String domainName, String adminName, String email) {
-        TenantManager tenantManager = TenantMgtServiceComponent.getTenantManager();
-        String firstName = "";
-        try {
-            int tenantId = tenantManager.getTenantId(domainName);
-            Tenant tenant = (Tenant) tenantManager.getTenant(tenantId);
-            firstName = ClaimsMgtUtil.getFirstName(TenantMgtServiceComponent.getRealmService(),
-                                                   tenant, tenantId);
-        } catch (Exception e) {
-            String msg = "Unable to get the tenant with the tenant domain";
-            log.error(msg, e);
-            // just catch from here.
-        }
-
-        // load the mail configuration
-        Map<String, String> userParams = new HashMap<String, String>();
-        userParams.put("first-name", firstName);
-        userParams.put("admin-name", adminName);
-        userParams.put("domain-name", domainName);
-
-        try {
-            TenantMgtServiceComponent.getSuccessMsgSender().sendEmail(email, userParams);
-        } catch (Exception e) {
-            // just catch from here..
-            String msg = "Error in sending the notification email.";
-            log.error(msg, e);
-        }
-    }
+    
 
 
-    /**
-     * Emails the super admin notifying the account creation for a new tenant.
-     *
-     * @param domainName tenant domain
-     * @param adminName  tenant admin
-     * @param email      tenant's email address
-     */
-    public static void notifyTenantCreationToSuperAdmin(
-            String domainName, String adminName, String email) {
-        String notificationEmailAddress = CommonUtil.getNotificationEmailAddress();
-
-        if (notificationEmailAddress.trim().equals("")) {
-            if (log.isDebugEnabled()) {
-                log.debug("No super-admin notification email address is set to notify upon a" +
-                          " tenant registration");
-            }
-            return;
-        }
-
-        Map<String, String> userParams = initializeSuperTenantNotificationParams(
-                domainName, adminName, email);
-
-        try {
-            TenantMgtServiceComponent.getTenantCreationNotifier().
-                    sendEmail(notificationEmailAddress, userParams);
-        } catch (Exception e) {
-            // just catch from here..
-            String msg = "Error in sending the notification email.";
-            log.error(msg, e);
-        }
-    }
+    
 
 
-    /**
-     * Emails the super admin notifying the account activation for an unactivated tenant.
-     *
-     * @param domainName tenant domain
-     * @param adminName  tenant admin
-     * @param email      tenant's email address
-     */
-    public static void notifyTenantActivationToSuperAdmin(
-            String domainName, String adminName, String email) {
-        String notificationEmailAddress = CommonUtil.getNotificationEmailAddress();
-
-        if (notificationEmailAddress.trim().equals("")) {
-            if (log.isDebugEnabled()) {
-                log.debug("No super-admin notification email address is set to notify upon a" +
-                          " tenant activation");
-            }
-            return;
-        }
-
-        Map<String, String> userParams = initializeSuperTenantNotificationParams(
-                domainName, adminName, email);
-
-        try {
-            TenantMgtServiceComponent.getTenantActivationNotifier().
-                    sendEmail(notificationEmailAddress, userParams);
-        } catch (Exception e) {
-            // just catch from here..
-            String msg = "Error in sending the notification email.";
-            log.error(msg, e);
-        }
-    }
-
-    /**
-     * Initializes the super tenant notification parameters
-     *
-     * @param domainName - tenant domain
-     * @param adminName  - tenant admin
-     * @param email      - tenant email
-     * @return the parameters
-     */
-    private static Map<String, String> initializeSuperTenantNotificationParams(
-            String domainName, String adminName, String email) {
-        TenantManager tenantManager = TenantMgtServiceComponent.getTenantManager();
-        String firstName = "";
-        String lastName = "";
-        try {
-            int tenantId = tenantManager.getTenantId(domainName);
-            Tenant tenant = (Tenant) tenantManager.getTenant(tenantId);
-            firstName = ClaimsMgtUtil.getFirstName(TenantMgtServiceComponent.getRealmService(),
-                                                   tenant, tenantId);
-            lastName = ClaimsMgtUtil.getLastName(TenantMgtServiceComponent.getRealmService(),
-                                                 tenant, tenantId);
-
-        } catch (Exception e) {
-            String msg = "Unable to get the tenant with the tenant domain";
-            log.error(msg, e);
-            // just catch from here.
-        }
-
-        // load the mail configuration
-        Map<String, String> userParams = new HashMap<String, String>();
-        userParams.put("admin-name", adminName);
-        userParams.put("domain-name", domainName);
-        userParams.put("email-address", email);
-        userParams.put("first-name", firstName);
-        userParams.put("last-name", lastName);
-        return userParams;
-    }
+    
 
 
     /**
@@ -492,215 +355,6 @@ public class TenantMgtUtil {
             }
         }
         return bean;
-    }
-
-    /**
-     * Sends validation mail to the tenant admin upon the tenant creation
-     *
-     * @param tenant            - the registered tenant
-     * @param originatedService - originated service of the registration request
-     * @throws Exception, if the sending mail failed
-     */
-    public static void sendEmail(Tenant tenant, String originatedService) throws Exception {
-        String firstname = ClaimsMgtUtil.getFirstName(TenantMgtServiceComponent.getRealmService(),
-                                                      tenant, tenant.getId());
-        String adminName = ClaimsMgtUtil.getAdminUserNameFromTenantId(
-                TenantMgtServiceComponent.getRealmService(), tenant.getId());
-
-        String confirmationKey = generateConfirmationKey(
-                tenant, originatedService, TenantMgtServiceComponent.getConfigSystemRegistry(
-                MultitenantConstants.SUPER_TENANT_ID), tenant.getId());
-
-        if (CommonUtil.isTenantActivationModerated()) {
-            requestSuperTenantModification(tenant, confirmationKey, firstname, adminName);
-        } else {
-            //request for verification
-            requestUserVerification(tenant, confirmationKey, firstname, adminName);
-        }
-
-        // If Email Validation is made optional, tenant will be activated now.
-        if (!CommonUtil.isEmailValidationMandatory()) {
-            TenantMgtServiceComponent.getTenantManager().activateTenant(tenant.getId());
-            if (log.isDebugEnabled()) {
-                log.debug("Activated the tenant during the tenant creation: " + tenant.getId());
-            }
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("Tenant Successfully added and persisted.");
-        }
-    }
-
-    /**
-     * generates the confirmation key for the tenant
-     *
-     * @param tenant            - a tenant
-     * @param originatedService - originated service of the registration
-     * @param superTenantConfigSystemRegistry
-     *                          - super tenant config system registry.
-     * @param tenantId          tenantId
-     * @return confirmation key
-     * @throws RegistryException if generation of the confirmation key failed.
-     */
-    private static String generateConfirmationKey(Tenant tenant, String originatedService,
-                                                  UserRegistry superTenantConfigSystemRegistry,
-                                                  int tenantId) throws RegistryException {
-        // generating the confirmation key
-        String confirmationKey = UUIDGenerator.generateUUID();
-        UserRegistry superTenantGovernanceSystemRegistry;
-        try {
-            superTenantGovernanceSystemRegistry =
-                    TenantMgtServiceComponent.
-                            getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
-        } catch (RegistryException e) {
-            String msg = "Exception in getting the governance system registry for the super tenant";
-            log.error(msg, e);
-            throw new RegistryException(msg, e);
-        }
-        Resource resource;
-        String emailVerificationPath = StratosConstants.ADMIN_EMAIL_VERIFICATION_FLAG_PATH +
-                                       RegistryConstants.PATH_SEPARATOR + tenantId;
-        try {
-            if (superTenantGovernanceSystemRegistry.resourceExists(emailVerificationPath)) {
-                resource = superTenantGovernanceSystemRegistry.get(emailVerificationPath);
-            } else {
-                resource = superTenantGovernanceSystemRegistry.newResource();
-            }
-            resource.setContent(confirmationKey);
-        } catch (RegistryException e) {
-            String msg = "Error in creating the resource or getting the resource" +
-                         "from the email verification path";
-            log.error(msg, e);
-            throw new RegistryException(msg, e);
-        }
-        // email is not validated yet, this prop is used to activate the tenant
-        // later.
-        resource.addProperty(StratosConstants.IS_EMAIL_VALIDATED, "false");
-        resource.addProperty(StratosConstants.TENANT_ADMIN, tenant.getAdminName());
-        try {
-            superTenantGovernanceSystemRegistry.put(emailVerificationPath, resource);
-        } catch (RegistryException e) {
-            String msg = "Error in putting the resource to the super tenant registry" +
-                         " for the email verification path";
-            log.error(msg, e);
-            throw new RegistryException(msg, e);
-        }
-
-        // Used for * as a Service impl.
-        // Store the cloud service from which the register req. is originated.
-        if (originatedService != null) {
-            String originatedServicePath =
-                    StratosConstants.ORIGINATED_SERVICE_PATH +
-                    StratosConstants.PATH_SEPARATOR +
-                    StratosConstants.ORIGINATED_SERVICE +
-                    StratosConstants.PATH_SEPARATOR + tenantId;
-            try {
-                Resource origServiceRes = superTenantConfigSystemRegistry.newResource();
-                origServiceRes.setContent(originatedService);
-                superTenantGovernanceSystemRegistry.put(originatedServicePath, origServiceRes);
-            } catch (RegistryException e) {
-                String msg = "Error in putting the originated service resource "
-                             + "to the governance registry";
-                log.error(msg, e);
-                throw new RegistryException(msg, e);
-            }
-        }
-        initializeRegistry(tenant.getId());
-        if (log.isDebugEnabled()) {
-            log.debug("Successfully generated the confirmation key.");
-        }
-        return confirmationKey;
-    }
-
-    /**
-     * Initializes the registry for the tenant.
-     *
-     * @param tenantId tenant id.
-     */
-    private static void initializeRegistry(int tenantId) {
-        BundleContext bundleContext = TenantMgtServiceComponent.getBundleContext();
-        if (bundleContext != null) {
-            ServiceTracker tracker =
-                    new ServiceTracker(bundleContext,
-                                       AuthenticationObserver.class.getName(),
-                                       null);
-            tracker.open();
-            Object[] services = tracker.getServices();
-            if (services != null) {
-                for (Object service : services) {
-                    ((AuthenticationObserver) service).startedAuthentication(tenantId);
-                }
-            }
-            tracker.close();
-        }
-    }
-
-    /**
-     * request email verification from the user.
-     *
-     * @param tenant          a tenant
-     * @param confirmationKey confirmation key.
-     * @param firstname       calling name
-     * @throws Exception if an exception is thrown from EmailVerificationSubscriber.
-     */
-    private static void requestUserVerification(Tenant tenant, String confirmationKey,
-                                                String firstname, String adminName) throws Exception {
-        try {
-            Map<String, String> dataToStore = new HashMap<String, String>();
-            dataToStore.put("email", tenant.getEmail());
-            dataToStore.put("first-name", firstname);
-            dataToStore.put("admin", adminName);
-            dataToStore.put("tenantDomain", tenant.getDomain());
-            dataToStore.put("confirmationKey", confirmationKey);
-
-            EmailVerifcationSubscriber emailVerifier =
-                    TenantMgtServiceComponent.getEmailVerificationService();
-            emailVerifier.requestUserVerification(
-                    dataToStore, TenantMgtServiceComponent.getEmailVerifierConfig());
-            if (log.isDebugEnabled()) {
-                log.debug("Email verification for the tenant registration.");
-            }
-        } catch (Exception e) {
-            String msg = "Error in notifying tenant of domain: " + tenant.getDomain();
-            log.error(msg);
-            throw new Exception(msg, e);
-        }
-    }
-
-    /**
-     * Sends mail for the super tenant for the account moderation. Once super tenant clicks the
-     * link provided in the email, the tenant will be activated.
-     *
-     * @param tenant          the tenant who registered an account
-     * @param confirmationKey confirmation key.
-     * @param firstname       calling name of the tenant
-     * @param adminName       the tenant admin name
-     * @throws Exception if an exception is thrown from EmailVerificationSubscriber.
-     */
-    private static void requestSuperTenantModification(Tenant tenant, String confirmationKey,
-                                                String firstname,
-                                                String adminName) throws Exception {
-        try {
-            Map<String, String> dataToStore = new HashMap<String, String>();
-            dataToStore.put("email", CommonUtil.getSuperAdminEmail());
-            dataToStore.put("first-name", firstname);
-            dataToStore.put("admin", adminName);
-            dataToStore.put("tenantDomain", tenant.getDomain());
-            dataToStore.put("confirmationKey", confirmationKey);
-
-            EmailVerifcationSubscriber emailVerifier =
-                    TenantMgtServiceComponent.getEmailVerificationService();
-            emailVerifier.requestUserVerification(
-                    dataToStore, TenantMgtServiceComponent.getSuperTenantEmailVerifierConfig());
-            if (log.isDebugEnabled()) {
-                log.debug("Email verification for the tenant registration.");
-            }
-        } catch (Exception e) {
-            String msg = "Error in notifying the super tenant on the account creation for " +
-                         "the domain: " + tenant.getDomain();
-            log.error(msg);
-            throw new Exception(msg, e);
-        }
     }
 
     /**

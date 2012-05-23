@@ -862,7 +862,7 @@ public class ApiMgtDAO {
                 Subscriber subscriber =
                         new Subscriber(result.getString(APIConstants.SUBSCRIBER_FIELD_USER_ID));
                 subscriber.setSubscribedDate(
-                        result.getDate(APIConstants.SUBSCRIBER_FIELD_DATE_SUBSCRIBED));
+                        result.getTimestamp(APIConstants.SUBSCRIBER_FIELD_DATE_SUBSCRIBED));
                 subscribers.add(subscriber);
             }
 

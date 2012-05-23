@@ -1,7 +1,11 @@
 <% jagg.template("listing", function(inputs, outputs, jagg) { %>
 <div id="listing">
     <h2>My APIs</h2>
-    <% jagg.includeBlock("search/api-search", null); %>
+    <%
+    if (outputs.apis != null && outputs.apis.length > 0) {
+    jagg.includeBlock("search/api-search", null);
+    }
+    %>
     <ul class="thumbnails">
         <span class="loading"></span>
         <%
@@ -49,6 +53,16 @@
         </li>
         <% }}} %>
     </ul>
+    <%
+    if (apis.length == 0) {
+    %>
+    <div class="alert alert-info">
+        <div style="padding-bottom:10px">You haven't created any APIs yet. Click the button below to get started.</div>
+        <div><button class="btn btn-primary" onclick="javascript:location.href='<%=jagg.getMappedUrl("/site/pages/add.jag")%>'">New API...</button></div>
+    </div>
+    <%
+    }
+    %>
      <% jagg.includeBlock("paginator", {currentPage:currentPage,numberOfPages:numberOfPages}); %>
 </div>
 <% }); %>

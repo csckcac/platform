@@ -36,7 +36,6 @@ var inlineUrl=jagg.getAbsoluteUrl("/site/pages/inline-editor.jag"); %>
 <body <% if(reqUrl.indexOf(inlineUrl)>=0){%> onload="loadDefaultTinyMCEContent('<%=name%>','<%=version%>','<%=docName%>')"<%}%> >
     <div id="header"><% jagg.includeBlocks(outputs.header); %></div>
     <div id="body"><% jagg.includeBlocks(outputs.body); %></div>
-    <hr>
     <div id="footer"><% jagg.includeBlocks(outputs.footer); %></div>
     <%
     if(data.footer) {
@@ -46,22 +45,14 @@ var inlineUrl=jagg.getAbsoluteUrl("/site/pages/inline-editor.jag"); %>
     }
     %>
 
-        <div class="container content-section">
-            <div class="row">
-                <div class="span5 offset3">
-
-                    <ul class="copy-msg">
-                        <li>Copyright &copy; 2012 wso2.org</li>
-                        <li>|</li>
-                        <li><a>Terms of Usage</a></li>
-                        <li>|</li>
-                        <li><a>Support/Help</a></li>
-                    </ul>
-                    <div style="clear:both"></div>
-
+        <footer>
+             <div class="container-fluid">
+                <div class="row">
+                    <div class="span6">&copy; Copyright 2011–2012 All Rights Reserved.</div>
+                    <div class="pull-right"><a class="powered-by-logo"></a></div>
                 </div>
-            </div>
-        </div>
+             </div>
+        </footer>
         <div class="modal" id="apiModal" style="display:none;">
             <div class="modal-header">
                 <button class="close" data-dismiss="modal">×</button>

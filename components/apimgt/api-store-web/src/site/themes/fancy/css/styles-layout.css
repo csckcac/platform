@@ -426,11 +426,12 @@ footer{
     border-right:none;
     border-top:none;
 }
-.cat_and_charts a.title{
+.cat_and_charts a.title, .more-from-provider a.title{
      display: block;
     max-width: 147px;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-left:0;
 }
 .main-heading{
     display:none;

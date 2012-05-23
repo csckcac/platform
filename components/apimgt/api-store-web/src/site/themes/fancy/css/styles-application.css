@@ -144,8 +144,9 @@ div div.accordion-inner {
 .application-api-listing div{
     padding-top:10px;
 }
-.api-key-cell{
-    padding:0;border-left:solid  1px #ccc;
+tr.application-api td.api-key-cell{
+    padding:0;
+    border-left:solid  1px #ccc;
     width:320px;
 }
 .api-key-listing {
@@ -173,4 +174,13 @@ div div.accordion-inner {
 }
 .application-api img{
     width:60px;
+}
+.subscription-list table td{
+    vertical-align:middle;
+}
+.application-thumb{
+    width:100px;
+}
+.application-provider{
+    width:100px;
 }

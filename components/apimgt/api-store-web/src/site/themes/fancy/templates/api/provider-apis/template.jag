@@ -20,7 +20,7 @@
                <img src="<%=thumbURL%>" width="70px"/>
            </div>
            <div class="span8">
-               <a href="<%=path%>" class="title"><%=api.name%></a>
+               <a href="<%=path%>" class="title" title="<%=api.name%>"><%=api.name%></a>
                <div class="star-ratings"><%=stars.getStaticStars(site.context, api.rating)%></div>
            </div>
        </div>

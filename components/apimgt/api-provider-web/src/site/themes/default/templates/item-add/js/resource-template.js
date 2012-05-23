@@ -7,7 +7,7 @@ var addResourcesToApi = function () {
 
     if ($('#uriTemplate').val() == "" || !isChecked) {
         $('#resourceTableError').show('fast');
-        $('#resourceTableError').html('Sorry. The new row can not be added.Please enter a value for URI Template and Resource Method.<br />');
+        $('#resourceTableError').html('The new row can not be added. Please enter a value for URI Template and Resource Method.<br />');
         return;
     }
     var resourcesCount=$('#resourceTable tr').length-2;

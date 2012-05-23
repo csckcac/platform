@@ -10,12 +10,12 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.stratos.appserver</groupId>
-    <artifactId>wso2stratos-as</artifactId>
+    <groupId>org.wso2.carbon.appserver</groupId>
+    <artifactId>wso2-as</artifactId>
     <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>WSO2 Stratos AppServer - Distribution</name>
-    <description>WSO2 Stratos Application Server Distribution</description>
+    <name>WSO2 AppServer - Distribution</name>
+    <description>WSO2 Application Server Distribution</description>
 
     <dependencies>
 

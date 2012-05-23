@@ -28,10 +28,17 @@ var login = login || {};
         }, "json");
     };
 
+
+
 }());
 
 
 $(document).ready(function () {
+    var showLoginForm = function(){
+        $('#login-form').modal('show').data("goto_url", null);
+        $('#username').focus();
+    };
+
     $('#mainLoginForm input').keydown(function(event) {
         if (event.which == 13) {
             var goto_url = $('#loginBtn').data("goto_url");
@@ -46,6 +53,7 @@ $(document).ready(function () {
 
     $(".need-login").click(function() {
         $('#login-form').modal('show').data("goto_url", $(this).attr("href"));
+        $('#username').focus();
         return false;
     });
 
@@ -55,4 +63,9 @@ $(document).ready(function () {
             login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
         }
     );
+    $('#login-link').click(showLoginForm);
+
+    $('#subscribe-button').click(showLoginForm);
+
+
 });

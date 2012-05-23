@@ -31,7 +31,9 @@ div.navbar-inner {
     /*box-shadow: 0 1px 10px rgba(0, 0, 0, 0.25);*/
     min-height: 500px;
     border:solid 2px #e6e7e8;
-    margin-top:-15px;
+    margin:-15px 5% 0 5%;
+    padding-left:0;
+    padding-right:0;
 }
 
 .navbar .navbar-inner .nav.actions a {
@@ -423,6 +425,12 @@ footer{
     border-left:none;
     border-right:none;
     border-top:none;
+}
+.cat_and_charts a.title{
+     display: block;
+    max-width: 147px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .main-heading{
     display:none;

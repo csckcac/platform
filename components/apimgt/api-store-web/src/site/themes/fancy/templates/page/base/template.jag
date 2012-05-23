@@ -5,11 +5,7 @@
 
 
     <!-- Le styles -->
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    </style>
+
 
     <title><%=outputs.title%></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,7 +44,7 @@
 
 <% jagg.includeBlock("menu/primary", {"pagePath":outputs.pagePath}); %>
 
-<div class="container page-header-back">
+<div class="container-fluid page-header-back">
     <% jagg.includeBlocks(outputs.body); %>
     <div class="clear"></div>
 </div>

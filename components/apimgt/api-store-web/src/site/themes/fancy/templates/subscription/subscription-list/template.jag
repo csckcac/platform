@@ -31,9 +31,7 @@
                         </td>
                         <td>
                             <a href="<%=path%>" class="service-name"><%=api.name%>-<%=api.version%></a>
-                        </td>
-                        <td class="application-provider">
-                            <%=api.provider%>
+                            <div class="item-provider"><%=api.provider%></div>
                         </td>
                         <td class="api-key-cell">
                         <div class="api-key-listing">

@@ -114,7 +114,6 @@ div.navbar-inner {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding-left: 10px;
     color: #555;
     margin-bottom:5px;
 }

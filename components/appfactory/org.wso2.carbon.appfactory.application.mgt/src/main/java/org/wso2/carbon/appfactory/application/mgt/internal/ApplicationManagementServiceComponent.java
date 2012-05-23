@@ -14,13 +14,13 @@
  *    limitations under the License.
  */
 
-package org.wso2.carbon.appfactory.project.mgt.internal;
+package org.wso2.carbon.appfactory.application.mgt.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
-import org.wso2.carbon.appfactory.project.mgt.util.Util;
+import org.wso2.carbon.appfactory.application.mgt.util.Util;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -46,20 +46,20 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  *               bind="setAppFactoryConfiguration"
  *               unbind="unsetAppFactoryConfiguration"
  */
-public class ProjectManagementServiceComponent {
-    private static Log log = LogFactory.getLog(ProjectManagementServiceComponent.class);
+public class ApplicationManagementServiceComponent {
+    private static Log log = LogFactory.getLog(ApplicationManagementServiceComponent.class);
     private static ConfigurationContextService configContextService = null;
 
     protected void activate(ComponentContext context) {
 
 
-            log.debug("*******ProjectManagement Service  bundle is activated ******* ");
+            log.debug("*******Application Management Service  bundle is activated ******* ");
 
     }
 
     protected void deactivate(ComponentContext context) {
 
-        log.debug("*******ProjectManagement Service  bundle is deactivated ******* ");
+        log.debug("*******Application Management Service  bundle is deactivated ******* ");
     }
 
     protected void setRegistryService(RegistryService registryService) {

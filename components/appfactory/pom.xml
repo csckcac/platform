@@ -33,7 +33,7 @@
         <module>org.wso2.carbon.hostobjects.sysprop</module>
         <module>org.wso2.carbon.appfactory.user.registration</module>
         <module>org.wso2.carbon.appfactory.userstore</module>
-        <module>org.wso2.carbon.appfactory.project.mgt</module>
+        <module>org.wso2.carbon.appfactory.application.mgt</module>
         <module>org.wso2.carbon.appfactory.common</module>
         <module>org.wso2.carbon.appfactory.application.deployment.service</module>
         <module>org.wso2.carbon.appfactory.svn.repository.mgt.service</module>

@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.wso2.carbon.appfactory.project.mgt.service;
+package org.wso2.carbon.appfactory.application.mgt.service;
 
 /**
  *

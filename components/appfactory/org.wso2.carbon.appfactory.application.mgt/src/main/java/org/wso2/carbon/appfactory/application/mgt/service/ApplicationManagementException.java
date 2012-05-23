@@ -14,25 +14,25 @@
  *    limitations under the License.
  */
 
-package org.wso2.carbon.appfactory.project.mgt.service;
+package org.wso2.carbon.appfactory.application.mgt.service;
 
 /**
  *
  *
  */
-public class ProjectManagementException extends Exception{
-    public ProjectManagementException() {
+public class ApplicationManagementException extends Exception{
+    public ApplicationManagementException() {
     }
 
-    public ProjectManagementException(String s) {
+    public ApplicationManagementException(String s) {
         super(s);
     }
 
-    public ProjectManagementException(String s, Throwable throwable) {
+    public ApplicationManagementException(String s, Throwable throwable) {
         super(s, throwable);
     }
 
-    public ProjectManagementException(Throwable throwable) {
+    public ApplicationManagementException(Throwable throwable) {
         super(throwable);
     }
 }

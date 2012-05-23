@@ -15,13 +15,15 @@
   ~    limitations under the License.
   -->
 <serviceGroup>
-    <service name="ProjectManagementService" scope="transportsession">
+    <service name="ApplicationManagementService" scope="transportsession">
         <transports>
             <transport>https</transport>
         </transports>
         <parameter name="ServiceClass" locked="false">
-            org.wso2.carbon.appfactory.project.mgt.service.ProjectManagementService
+            org.wso2.carbon.appfactory.application.mgt.service.ApplicationManagementService
         </parameter>
+        <parameter name="adminService" locked="ture">true</parameter>
+        <parameter name="AuthorizationAction" locked="true">/permission/admin/</parameter>
     </service>
 
 </serviceGroup>

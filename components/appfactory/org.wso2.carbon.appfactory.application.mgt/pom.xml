@@ -25,10 +25,10 @@
     </parent>
 	
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.appfactory.project.mgt</artifactId>
+    <artifactId>org.wso2.carbon.appfactory.application.mgt</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 AppFactory - Project management  Service</name>
-    <description>Project management component for WSO2 AppFactory</description>
+    <name>WSO2 AppFactory - Application management  Service</name>
+    <description>Application management component for WSO2 AppFactory</description>
     <url>http://www.wso2.com</url>
 
     <dependencies>
@@ -86,7 +86,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.appfactory.project.mgt.*,
+                            org.wso2.carbon.appfactory.application.mgt.*,
 
                         </Export-Package>
 

@@ -34,7 +34,9 @@
 
 	<transport type="http">                
 		<Transfer-Encoding>chunked</Transfer-Encoding>                    
-		<property-key>property-value</property-key>                    
+		<property-key>property-value</property-key>
+        <authorization-username>admin</authorization-username>
+        <authorization-password>admin</authorization-password>                   
 	</transport>
 
         <messageOutput format="soap11" optimize="mtom">

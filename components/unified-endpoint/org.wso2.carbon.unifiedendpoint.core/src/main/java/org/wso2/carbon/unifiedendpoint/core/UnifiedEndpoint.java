@@ -44,6 +44,8 @@ public class UnifiedEndpoint extends EndpointReference {
 
     /** Transport */
     private UnifiedEndpointTransport transport;
+    private String authorizationUserName;
+    private String authorizationPassword;
 
     /** Timeout */
     UnifiedEndpointTimeout timeout;
@@ -349,6 +351,22 @@ public class UnifiedEndpoint extends EndpointReference {
     public void addSuspendErrorCode(int suspendErrorCode) {
         suspendErrorCodes.add(suspendErrorCode);
 
+    }
+
+    public String getAuthorizationUserName() {
+        return authorizationUserName;
+    }
+
+    public void setAuthorizationUserName(String authorizationUserName) {
+        this.authorizationUserName = authorizationUserName;
+    }
+
+    public String getAuthorizationPassword() {
+        return authorizationPassword;
+    }
+
+    public void setAuthorizationPassword(String authorizationPassword) {
+        this.authorizationPassword = authorizationPassword;
     }
 
 }

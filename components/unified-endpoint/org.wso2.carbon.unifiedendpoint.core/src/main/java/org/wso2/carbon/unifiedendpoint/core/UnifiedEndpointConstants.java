@@ -49,7 +49,9 @@ public final class UnifiedEndpointConstants {
     public static final String MESSAGE_OUTPUT_CHARSET = "charset";
 
 
-    public static final String TRANSPORT = "transport";    
+    public static final String TRANSPORT = "transport";
+    public static final String TRANSPORT_AUTHORIZATION_USERNAME = "authorization-username";
+    public static final String TRANSPORT_AUTHORIZATION_PASSWORD = "authorization-password";
 
     public static final String TRANSPORT_OPTIONS = "transportOptions";
     public static final String TRANSPORT_OPTIONS_TYPE = "type";
@@ -151,8 +153,8 @@ public final class UnifiedEndpointConstants {
     public static final QName TRANSPORT_OPTIONS_PROXY_DOMAIN_Q = new QName(null, TRANSPORT_OPTIONS_PROXY_DOMAIN);
     public static final QName TRANSPORT_OPTIONS_PROXY_USER_Q = new QName(null, TRANSPORT_OPTIONS_PROXY_USER);
     public static final QName TRANSPORT_OPTIONS_PROXY_PWD_Q = new QName(null, TRANSPORT_OPTIONS_PROXY_PWD);
-    
-
+    public static final QName TRANSPORT_AUTHORIZATION_USERNAME_Q = new QName(null, TRANSPORT_AUTHORIZATION_USERNAME);
+    public static final QName TRANSPORT_AUTHORIZATION_PASSWORD_Q = new QName(null, TRANSPORT_AUTHORIZATION_PASSWORD);
     public static final QName TIMEOUT_Q = new QName(null, TIMEOUT);
     public static final QName TIMEOUT_DURATION_Q = new QName(null, TIMEOUT_DURATION);
     public static final QName TIMEOUT_ACTION_Q = new QName(null, TIMEOUT_ACTION);

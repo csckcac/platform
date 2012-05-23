@@ -18,7 +18,6 @@ package org.wso2.carbon.unifiedendpoint.core;
 
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.AddressingConstants;
@@ -26,11 +25,10 @@ import org.apache.axis2.addressing.EndpointReferenceHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
 
@@ -155,6 +153,22 @@ public class UnifiedEndpointFactory {
             if (metadataElem.getFirstChildWithName(UnifiedEndpointConstants.TRANSPORT_Q) != null) {
                 extractTransportConfig(unifiedEndpoint, metadataElem.getFirstChildWithName(
                         UnifiedEndpointConstants.TRANSPORT_Q));
+
+                if (metadataElem.getFirstChildWithName(UnifiedEndpointConstants.TRANSPORT_Q).getFirstChildWithName(
+                        UnifiedEndpointConstants.TRANSPORT_AUTHORIZATION_USERNAME_Q) != null) {
+
+                    unifiedEndpoint.setAuthorizationUserName(metadataElem.getFirstChildWithName(UnifiedEndpointConstants.TRANSPORT_Q).getFirstChildWithName(
+                            UnifiedEndpointConstants.TRANSPORT_AUTHORIZATION_USERNAME_Q).getText());
+
+            }
+
+                if (metadataElem.getFirstChildWithName(UnifiedEndpointConstants.TRANSPORT_Q).getFirstChildWithName(
+                        UnifiedEndpointConstants.TRANSPORT_AUTHORIZATION_PASSWORD_Q) != null) {
+
+                    unifiedEndpoint.setAuthorizationPassword(metadataElem.getFirstChildWithName(UnifiedEndpointConstants.TRANSPORT_Q).getFirstChildWithName(
+                            UnifiedEndpointConstants.TRANSPORT_AUTHORIZATION_PASSWORD_Q).getText());
+
+                }
             }
 
             /** Monitoring */

@@ -36,6 +36,7 @@ import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.api.Registry;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -221,6 +222,11 @@ public class UnifiedEndpointHandler extends AbstractHandler {
                     }
                 }
 
+                try {
+                    CarbonUtils.setBasicAccessSecurityHeaders(uep.getAuthorizationUserName(), uep.getAuthorizationPassword(), false, msgContext);
+                } catch (AxisFault e) {
+                    log.error("Error while authorizing the user ", e);
+                }
             }
         }
         /*TODO Add other transports*/

@@ -38,7 +38,9 @@ div.navbar-inner {
     padding-left:0;
     padding-right:0;
 }
-
+.menu-content{
+    margin: 0 5% 0;
+}
 .navbar .navbar-inner .nav.actions a {
     color: #fff;
     font-size: 11px;

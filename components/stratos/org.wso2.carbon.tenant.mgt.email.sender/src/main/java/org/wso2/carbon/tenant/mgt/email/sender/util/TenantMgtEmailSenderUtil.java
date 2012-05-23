@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.tenant.registration.email.sender.util;
+package org.wso2.carbon.tenant.mgt.email.sender.util;
 
 import org.wso2.carbon.email.sender.api.EmailSender;
 import org.wso2.carbon.email.sender.api.EmailSenderConfiguration;
@@ -46,9 +46,9 @@ import org.osgi.util.tracker.ServiceTracker;
 /**
  * Utility methods for the email sender component
  */
-public class TenantRegistrationEmailSenderUtil {
+public class TenantMgtEmailSenderUtil {
 
-    private static final Log log = LogFactory.getLog(TenantRegistrationEmailSenderUtil.class);
+    private static final Log log = LogFactory.getLog(TenantMgtEmailSenderUtil.class);
     
     private static EmailSender successMsgSender;
     private static EmailSender tenantCreationNotifier;

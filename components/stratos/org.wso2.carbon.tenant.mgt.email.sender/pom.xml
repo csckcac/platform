@@ -23,9 +23,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.tenant.registration.email.sender</artifactId>
+    <artifactId>org.wso2.carbon.tenant.mgt.email.sender</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Stratos - Tenant Registration Email Sender Component</name>
+    <name>WSO2 Stratos - Tenant Management Email Sender Component</name>
 
     <build>
 
@@ -44,11 +44,11 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.tenant.registration.email.sender.internal.*,
-                            org.wso2.carbon.tenant.registration.email.sender.util.*,
+                            org.wso2.carbon.tenant.mgt.email.sender.internal.*,
+                            org.wso2.carbon.tenant.mgt.email.sender.util.*,
                         </Private-Package>
                         <Export-Package>
-                            org.wso2.carbon.tenant.registration.email.sender.listener.*
+                            org.wso2.carbon.tenant.mgt.email.sender.listener.*
                         </Export-Package>
                         <Import-Package>
                             !javax.xml.namespace,

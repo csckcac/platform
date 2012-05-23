@@ -15,12 +15,12 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.tenant.registration.email.sender.internal;
+package org.wso2.carbon.tenant.mgt.email.sender.internal;
 
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.tenant.registration.email.sender.util.DataHolder;
-import org.wso2.carbon.tenant.registration.email.sender.util.TenantRegistrationEmailSenderUtil;
+import org.wso2.carbon.tenant.mgt.email.sender.util.DataHolder;
+import org.wso2.carbon.tenant.mgt.email.sender.util.TenantMgtEmailSenderUtil;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -30,14 +30,14 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 
 /**
- * @scr.component name="org.wso2.carbon.tenant.registration.email.sender"
+ * @scr.component name="org.wso2.carbon.tenant.mgt.email.sender"
  * immediate="true"
  * @scr.reference name="registry.service"
  * interface="org.wso2.carbon.registry.core.service.RegistryService" cardinality="1..1"
  * policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
- * @scr.reference name="user.realmservice.default" interface="org.wso2.carbon.user.core.service.RealmService"
- * cardinality="1..1" policy="dynamic" bind="setRealmService"
- * unbind="unsetRealmService"
+ * @scr.reference name="user.realmservice.default" 
+ * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1" 
+ * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
  * @scr.reference name="configuration.context.service"
  * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
  * policy="dynamic" bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
@@ -46,13 +46,13 @@ import org.osgi.service.component.ComponentContext;
  * cardinality="1..1" policy="dynamic"
  * bind="setEmailVerificationService" unbind="unsetEmailVerificationService"
  */
-public class TenantRegistrationEmailSenderServiceComponent {
-    private static Log log = LogFactory.getLog(TenantRegistrationEmailSenderServiceComponent.class);
+public class TenantMgtEmailSenderServiceComponent {
+    private static Log log = LogFactory.getLog(TenantMgtEmailSenderServiceComponent.class);
 
     protected void activate(ComponentContext context) {
         try {
             DataHolder.setBundleContext(context.getBundleContext());
-            TenantRegistrationEmailSenderUtil.init();
+            TenantMgtEmailSenderUtil.init();
             log.debug("******* Tenant Registration Email Sender bundle is activated ******* ");
         } catch (Throwable e) {
             log.error("******* Tenant Registration Email Sender bundle failed activating ****", e);

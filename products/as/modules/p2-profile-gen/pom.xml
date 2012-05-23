@@ -21,17 +21,15 @@
 
     <parent>
     	<groupId>org.wso2.appserver</groupId>
-    	<artifactId>wso2appserver-p2-profile-gen-parent</artifactId>
+    	<artifactId>wso2appserver-parent</artifactId>
         <version>4.5.0-SNAPSHOT</version>
-	<relativePath>../pom.xml</relativePath>
+	<relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.stratos.appserver</groupId>
-    <artifactId>wso2stratos-as-profile-gen</artifactId>
-    <version>4.5.0-SNAPSHOT</version>
+    <artifactId>wso2appserver-profile-gen</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Stratos  AppServer - Profile Generation</name>
+    <name>WSO2 AppServer - AppServer Profile Generation</name>
     <url>http://wso2.org</url>
 
     <build>

@@ -178,7 +178,11 @@ public class APIProviderHostObject extends ScriptableObject {
                 for (int i = 0; i < uriTemplateArr.getLength(); i++) {
                     URITemplate templates = new URITemplate();
                     templates.setUriTemplate((String) uriTemplateArr.get(i, uriTemplateArr));
-                    templates.addMethod((String) uriMethodArr.get(i, uriMethodArr));
+                    String uriMethods = (String) uriMethodArr.get(i, uriMethodArr);
+                    String[] uriMethodArray = uriMethods.split(",");
+                    for (String anUriMethod : uriMethodArray) {
+                        templates.addMethod(anUriMethod);
+                    }
                     uriTemplates.add(templates);
                 }
                 api.setUriTemplates(uriTemplates);
@@ -269,7 +273,11 @@ public class APIProviderHostObject extends ScriptableObject {
                     String templateVal = (String) uriTemplateArr.get(i, uriTemplateArr);
                     String template = templateVal.startsWith("/") ? templateVal : ("/" + templateVal);
                     templates.setUriTemplate(template);
-                    templates.addMethod((String) uriMethodArr.get(i, uriMethodArr));
+                    String uriMethods=(String) uriMethodArr.get(i, uriMethodArr);
+                    String[] uriMethodArray = uriMethods.split(",");
+                    for (String anUriMethod : uriMethodArray) {
+                        templates.addMethod(anUriMethod);
+                    }
                     templates.setResourceURI(endpoint);
                     templates.setResourceSandboxURI(sandboxUrl);
                     uriTemplates.add(templates);
@@ -374,7 +382,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     List<String> utArr = new ArrayList<String>();
                     URITemplate ut = (URITemplate) i.next();
                     utArr.add(ut.getUriTemplate());
-                    utArr.add(ut.getMethodsAsString());
+                    utArr.add(ut.getMethodsAsString().replaceAll("\\s",","));
 
                     NativeArray utNArr = new NativeArray(utArr.size());
                     for (int p = 0; p < utArr.size(); p++) {

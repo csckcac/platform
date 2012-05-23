@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.appfactory.application.mgt.service;
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.appfactory.application.mgt.util.Util;
@@ -140,5 +141,23 @@ public class ApplicationManagementService extends AbstractAdmin {
 
         }
         return apps;
+    }
+
+    public String[] getRolesOfUserPerApplication(String appId, String userName)
+            throws ApplicationManagementException {
+        TenantManager tenantManager = Util.getRealmService().getTenantManager();
+        org.wso2.carbon.user.api.UserStoreManager userStoreManager;
+        userStoreManager = null;
+        String roles[];
+        try {
+            UserRealm realm = Util.getRealmService().getTenantUserRealm(tenantManager.getTenantId(appId));
+            userStoreManager = realm.getUserStoreManager();
+            roles = userStoreManager.getRoleListOfUser(userName);
+        } catch (UserStoreException e) {
+            String msg = "Error while getting role of the user " + userName;
+            log.error(msg, e);
+            throw new ApplicationManagementException(msg, e);
+        }
+        return roles;
     }
 }

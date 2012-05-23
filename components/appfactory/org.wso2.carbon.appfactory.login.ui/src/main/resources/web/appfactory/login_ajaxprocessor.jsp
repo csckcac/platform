@@ -142,7 +142,7 @@
             The WSO2 AppFactory
         </h2>
 
-                        <form action="../project-mgt/signUp.jag" id="registrationForm">
+                        <form action="../appmgt/signUp.jag" id="registrationForm">
 
                             <a  onclick="doRegister()" class="registerClass">Get Started Now for FREE!</a>
                         </form>

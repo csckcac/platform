@@ -147,6 +147,11 @@
             <outputDirectory>wso2lb-${pom.version}/repository/conf/axis2</outputDirectory>
             <destName>axis2.xml</destName>
         </file>
+	<file>
+            <source>src/main/conf/loadbalancer.conf</source>
+            <outputDirectory>wso2lb-${pom.version}/repository/conf</outputDirectory>
+            <destName>loadbalancer.conf</destName>
+        </file>
         <file>
             <source>src/main/conf/log4j.properties</source>
             <outputDirectory>wso2lb-${pom.version}/repository/conf</outputDirectory>

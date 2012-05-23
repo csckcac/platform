@@ -115,13 +115,11 @@
 
                                 </td>
                                 <td>
-                                    <select class="input-small" id="resourceMethod" name="resourceMethod">
-                                        <option value="GET" selected="true">GET</option>
-                                        <option value="PUT">PUT</option>
-                                        <option value="POST">POST</option>
-                                        <option value="DELETE">DELETE</option>
-                                        <option value="HEAD">HEAD</option>
-                                    </select>
+                              <input type="checkbox" id="resource-get" name="resource-get" value="GET"> GET
+                                       <input type="checkbox" id="resource-put" name="resource-put" value="PUT"> PUT
+                                       <input type="checkbox" id="resource-post" name="resource-post" value="POST"> POST
+                                       <input type="checkbox" id="resource-delete" name="resource-delete" value="DELETE"> DELETE
+
                                 </td>
                              <% var rowsNums=[];
                             if (api.templates!=null && api.templates.length > 0) {
@@ -141,16 +139,28 @@
                                     <input type="text" class="input" id="uriTemplate" disabled="disabled" name="resourceTemplate" value="<%=api.templates[i][0]%>"/>
                                 </td>
                                 <td>
-                                    <select class="input-small" id="resourceMethod" name="resourceMethod" disabled="disabled" value="<%=api.templates[i][1]%>">
-                                        <option value="GET" selected="true">GET</option>
-                                        <option value="PUT">PUT</option>
-                                        <option value="POST">POST</option>
-                                        <option value="DELETE">DELETE</option>
-                                        <option value="HEAD">HEAD</option>
-                                    </select>
+                            <%
+
+                            var methods = api.templates[i][1].split(",");
+                            var getVal,putVal,postVal,deleteVal,method;
+                            for(var n=0;n<methods.length;n++) {
+                            method=methods[n];
+                            if(method=="GET"){getVal=true;}
+                            if(method=="PUT"){putVal=true;}
+                            if(method=="POST"){postVal=true;}
+                            if(method=="DELETE"){deleteVal=true;}
+                            }%>
+                            <input type="checkbox" id="resource-get" name="resource-get" disabled="disabled" value="GET" <%if(getVal){%>checked="true"<%}%> >GET
+                            <input type="checkbox" id="resource-put" name="resource-put" disabled="disabled" value="PUT" <%if(putVal){%>checked="true"<%}%>> PUT
+                            <input type="checkbox" id="resource-post" name="resource-post" disabled="disabled" value="POST" <%if(postVal){%>checked="true"<%}%>>POST
+                            <input type="checkbox" id="resource-delete" name="resource-delete" disabled="disabled" value="DELETE" <%if(deleteVal){%>checked="true"<%}%>> DELETE
+
+                            <%
+                            getVal=putVal=postVal=deleteVal=""; %>
+
                                 </td>
                                 <td id="buttons">
-                                    <a class="btn btn-danger" id="resourceDelBtn" onClick="deleteResource('<%=String(i)%>')"><i class="icon-trash icon-white"></i> Delete</a>
+                                    <a class="btn btn-danger" id="resourceDelBtn" onClick="deleteResource(<%=String(i)%>,<%=rowsNums%>)"><i class="icon-trash icon-white"></i> Delete</a>
                                 </td>
                             </tr>
                             <input type="hidden" name="resourceMethod-<%=String(i)%>" value="<%=api.templates[i][1]%>">
@@ -189,7 +199,12 @@ $(document).ready(function() {
             $(form).ajaxSubmit({
                 success:function(responseText, statusText, xhr, $form)  {
                   if(!responseText.error){
+                      var current = window.location.pathname;
+                      if (current.indexOf(".jag") >= 0) {
+                      location.href = "item-info.jag?name=<%=api.name%>&version=<%=api.version%>";
+                      }else{
                       location.href = "site/pages/item-info.jag?name=<%=api.name%>&version=<%=api.version%>";
+                      }
                       $("#editAPIForm")[0].reset();
                   }else{
                         $('#editAPIError').show('fast');

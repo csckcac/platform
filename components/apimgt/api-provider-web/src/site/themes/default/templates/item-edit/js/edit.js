@@ -1,7 +1,7 @@
 //var rowNums=new Array();
 var updateResourcesToApi = function (rowNums) {
-    var isChecked = $('#resource-get').is(":checked") && $('#resource-put').is(":checked") && $('#resource-post').is(":checked")
-                    && $('#resource-delete').is(":checked");
+    var isChecked = $('#resource-get').is(":checked") || $('#resource-put').is(":checked") || $('#resource-post').is(":checked")
+                    || $('#resource-delete').is(":checked");
 
     if ($('#uriTemplate').val() == "" || !isChecked) {
         $('#resourceTableError').show('fast');

@@ -1,4 +1,4 @@
-package org.wso2.carbon.stratos.common.beans;
+package org.wso2.carbon.stratos.common;
 
 import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.user.api.Tenant;

@@ -203,10 +203,10 @@ elif [ "$CMD" = "version" ]; then
   exit 0
 fi
 
-jdk_16=`$JAVA_HOME/bin/java -version 2>&1 | grep 1.6`
+jdk_16=`$JAVA_HOME/bin/java -version 2>&1 | grep "1.[6|7]"`
 
 if [ "$jdk_16" = "" ]; then
-   echo " [ERROR] CARBON is supported only on JDK 1.6 and higher"
+   echo " [ERROR] CARBON is supported only on JDK 1.6 and 1.7"
    exit 1
 fi
 

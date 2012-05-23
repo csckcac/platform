@@ -119,7 +119,7 @@ public class EnterpriseBeanstalk {
 
         // Initialize the JNDI context.
         try {
-            initialCtx = new InitialContext(props);
+            initialCtx = new EnterpriseIntitalContext(props);
         } catch (NamingException e) {
             log.error("Could not initialize the JNDI context for the Enterprise Beanstalk " +
                     "named '" + name + "'.", e);

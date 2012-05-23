@@ -487,18 +487,49 @@ public class CassandraMessageStore implements MessageStore {
 
     public void recover(ConfigurationRecoveryHandler recoveryHandler) throws AMQException {
 
-        try {
-            ConfigurationRecoveryHandler.QueueRecoveryHandler qrh = recoveryHandler.begin(this);
-            loadQueues(qrh);
 
-            ConfigurationRecoveryHandler.ExchangeRecoveryHandler erh = qrh.completeQueueRecovery();
-            List<String> exchanges = loadExchanges(erh);
-            ConfigurationRecoveryHandler.BindingRecoveryHandler brh = erh.completeExchangeRecovery();
-            recoverBindings(brh, exchanges);
-            brh.completeBindingRecovery();
-        } catch (Exception e) {
+        boolean readyOrTimeOut = false;
+        boolean error = false;
 
-            throw new AMQStoreException("Error recovering persistent state: " + e.getMessage(), e);
+        int initTimeOut = 10;
+        int count = 0;
+        int maxTries = 10;
+
+        while (!readyOrTimeOut) {
+            try {
+                ConfigurationRecoveryHandler.QueueRecoveryHandler qrh = recoveryHandler.begin(this);
+                loadQueues(qrh);
+
+                ConfigurationRecoveryHandler.ExchangeRecoveryHandler erh = qrh.completeQueueRecovery();
+                List<String> exchanges = loadExchanges(erh);
+                ConfigurationRecoveryHandler.BindingRecoveryHandler brh = erh.completeExchangeRecovery();
+                recoverBindings(brh, exchanges);
+                brh.completeBindingRecovery();
+            } catch (Exception e) {
+                error = true;
+                log.error("Error recovering persistent state: " + e.getMessage(), e);
+            } finally {
+                if(!error) {
+                    readyOrTimeOut = true;
+                    continue;
+                } else {
+                    long waitTime = initTimeOut*1000*(long)Math.pow(2,count);
+                    log.warn("Waiting for Cluster data to be synced Please ,start the other nodes soon, wait time: "
+                            + waitTime + "ms");
+                    try {
+                        Thread.sleep(waitTime);
+                    } catch (InterruptedException e) {
+
+                    }
+                    if(count > maxTries)
+                    {
+                        readyOrTimeOut = true;
+                        throw new AMQStoreException("Max Backoff attempts expired for data recovery");
+                    }
+                    count++;
+                }
+            }
+
         }
 
 

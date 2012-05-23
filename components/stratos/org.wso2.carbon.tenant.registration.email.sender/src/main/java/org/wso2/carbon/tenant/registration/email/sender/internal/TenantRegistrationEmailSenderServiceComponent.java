@@ -17,20 +17,20 @@
 */
 package org.wso2.carbon.tenant.registration.email.sender.internal;
 
-import org.wso2.carbon.email.sender.util.Util;
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
+import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.tenant.registration.email.sender.util.DataHolder;
+import org.wso2.carbon.tenant.registration.email.sender.util.TenantRegistrationEmailSenderUtil;
+import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.ConfigurationContextService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.tenant.mgt.internal.TenantMgtServiceComponent;
-import org.wso2.carbon.user.core.service.RealmService;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
- * @scr.component name="org.wso2.carbon.email.sender"
+ * @scr.component name="org.wso2.carbon.tenant.registration.email.sender"
  * immediate="true"
  * @scr.reference name="registry.service"
  * interface="org.wso2.carbon.registry.core.service.RegistryService" cardinality="1..1"
@@ -47,51 +47,51 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * bind="setEmailVerificationService" unbind="unsetEmailVerificationService"
  */
 public class TenantRegistrationEmailSenderServiceComponent {
-    private static Log log = LogFactory.getLog(EmailSenderServiceComponent.class);
+    private static Log log = LogFactory.getLog(TenantRegistrationEmailSenderServiceComponent.class);
 
     protected void activate(ComponentContext context) {
         try {
-            log.debug("******* Email Sender bundle is activated ******* ");
-        } catch (Exception e) {
-            log.error("******* Email Sender bundle failed activating ****", e);
+            DataHolder.setBundleContext(context.getBundleContext());
+            TenantRegistrationEmailSenderUtil.init();
+            log.debug("******* Tenant Registration Email Sender bundle is activated ******* ");
+        } catch (Throwable e) {
+            log.error("******* Tenant Registration Email Sender bundle failed activating ****", e);
         }
     }
 
     protected void deactivate(ComponentContext context) {
         log.debug("******* Email Sender bundle is deactivated ******* ");
     }
+
     protected void setRegistryService(RegistryService registryService) {
-        Util.setRegistryService(registryService);
+        DataHolder.setRegistryService(registryService);
     }
 
     protected void unsetRegistryService(RegistryService registryService) {
-        Util.setRegistryService(null);
+        DataHolder.setRegistryService(null);
     }
 
     protected void setRealmService(RealmService realmService) {
-        Util.setRealmService(realmService);
+        DataHolder.setRealmService(realmService);
     }
 
     protected void unsetRealmService(RealmService realmService) {
-        Util.setRealmService(null);
+        DataHolder.setRealmService(null);
     }
 
-    protected void setConfigurationContextService(ConfigurationContextService configurationContextService){
-        log.debug("Receiving ConfigurationContext Service");
-        Util.setConfigurationContextService(configurationContextService);
-
+    protected void setConfigurationContextService(ConfigurationContextService service) {
+        DataHolder.setConfigurationContextService(service);
     }
 
-    protected void unsetConfigurationContextService(ConfigurationContextService configurationContextService){
-        log.debug("Unsetting ConfigurationContext Service");
-        Util.setConfigurationContextService(null);
+    protected void unsetConfigurationContextService(ConfigurationContextService service) {
+        DataHolder.setConfigurationContextService(null);
     }
-    
+
     protected void setEmailVerificationService(EmailVerifcationSubscriber emailService) {
-        Util.setEmailVerificationService(emailService);
+        DataHolder.setEmailVerificationService(emailService);
     }
 
     protected void unsetEmailVerificationService(EmailVerifcationSubscriber emailService) {
-        Util.setEmailVerificationService(null);
+        DataHolder.setEmailVerificationService(null);
     }
 }

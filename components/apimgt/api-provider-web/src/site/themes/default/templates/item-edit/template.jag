@@ -37,7 +37,7 @@
                 </div>
                 <div class="controls">
                     <input type="file" class="input-xlarge" id="imageUrl" style="display:none;" name="apiThumb"/>
-                    <p class="help-block">Max 1 MB</p>
+                    <p class="help-block">Max Size 1 MB</p>
                 </div>
             </div>
 
@@ -53,7 +53,7 @@
                 <label class="control-label" for="editEndpoint">Sandbox URL:</label>
                 <div class="controls">
                     <input type="text" class="input-xlarge" id="editSandbox" name="sandbox" value="<%=api.sandbox%>"/>
-                    <p class="help-block">Ex:http://cs1.foo.com</p>
+                    <p class="help-block">Ex:http://test-appserver/services/echo</p>
                 </div>
             </div>
 

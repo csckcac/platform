@@ -141,7 +141,6 @@
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.deployment.feature:${stratos.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.appserver:org.wso2.stratos.appserver.sample.installer.ui.feature:${stratos.version}</featureArtifactDef>
                                 
-                                <featureArtifactDef>org.wso2.appserver:org.wso2.stratos.appserver.login.ui.feature:${stratos.version}</featureArtifactDef>
  				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bam.lwevent.feature:${carbon.version}</featureArtifactDef> 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bam.data.publisher.servicestats.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.ui.feature:${carbon.version}</featureArtifactDef>
@@ -451,10 +450,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.issue.tracker.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                   <id>org.wso2.stratos.appserver.login.ui.feature.group</id>
-                                   <version>${stratos.version}</version>
                                 </feature>
                                 <!-- GApp SSO features --> 
                                 <feature>

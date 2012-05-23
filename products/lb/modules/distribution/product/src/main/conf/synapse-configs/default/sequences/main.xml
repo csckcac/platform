@@ -42,6 +42,13 @@
                                            algorithm="org.apache.synapse.endpoints.algorithms.RoundRobin"
                                            configuration="$system:loadbalancer.xml"/>
             </endpoint>
+	<!--endpoint name="tenantAwareLBEndpoint">
+              <class name ="org.wso2.carbon.lb.endpoint.endpoint.TenantAwareLoadBalanceEndpoint">
+                     <parameter name="algorithm"> org.apache.synapse.endpoints.algorithms.RoundRobin</parameter>
+                     <parameter name="configuration">$system:loadbalancer.xml</parameter>
+                     <parameter name="failover">true</parameter>          
+  	      </class>
+ 	</endpoint-->
         </send>
         <drop/>
     </in>

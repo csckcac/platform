@@ -5,6 +5,7 @@
             <a class="brand" href="/index.jag"><img src="/images/topbar_logo.png" alt=""/></a>
             <ul class="nav">
                 <li id="home"><a href="/index.jag">Home</a></li>
+                <li id="about"><a href="/about.jag">About</a></li>
                 <li id="howto"><a href="/howto.jag">Quick Start</a></li>
                 <li id="docs"><a href="/documentation.jag">Documentation</a></li>
                 <li id="samples"><a href="/samples.jag">Samples</a></li>

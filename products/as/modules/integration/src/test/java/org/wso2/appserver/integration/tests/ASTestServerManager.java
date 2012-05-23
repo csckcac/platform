@@ -50,10 +50,17 @@ public class ASTestServerManager extends TestServerManager {
 
     protected void copyArtifacts(String carbonHome) throws IOException {
 
-        // CommodityQuote sample
-        String fileName = "CommodityQuoteService.aar";
-        String sourcePath = computeSourcePath("CommodityQuote", fileName);
+        // HelloWorld sample
+        String fileName = "HelloWorld.aar";
+        String sourcePath = computeSourcePath("HelloWorld", fileName);
         String destPath = computeDestPath(carbonHome, "axis2services", fileName);
+        copySampleFile(sourcePath, destPath);
+        log.info("Copying "+ sourcePath + " to " + destPath);
+
+        // CommodityQuote sample
+        fileName = "CommodityQuoteService.aar";
+        sourcePath = computeSourcePath("CommodityQuote", fileName);
+        destPath = computeDestPath(carbonHome, "axis2services", fileName);
         copySampleFile(sourcePath, destPath);
         log.info("Copying "+ sourcePath + " to " + destPath);
 

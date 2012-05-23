@@ -395,7 +395,7 @@ public class HelloWorldSampleTestCase {
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
 
-        log.info(" 1. UsernameToken\n" +
+        log.info("\n 1. UsernameToken\n" +
                 " 2. Non-repudiation\n" +
                 " 3. Integrity \t\n" +
                 " 4. Confidentiality \n" +

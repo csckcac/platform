@@ -1,7 +1,7 @@
 <% jagg.template("menu/primary", function(inputs, outputs, jagg) { %>
    <div class="navbar">
       <div class="navbar-inner">
-        <div class="container-fluid">
+        <div class="container-fluid menu-content">
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>

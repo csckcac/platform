@@ -32,7 +32,7 @@ We need to modify this file since this copied from branch
     <version>4.0.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon</groupId>
-    <artifactId>org.wso2.carbon.mediator.lb-autoscale</artifactId>
+    <artifactId>org.wso2.carbon.mediator.autoscale</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Autoscale Mediator BE</name>
     <url>http://wso2.org</url>

@@ -26,9 +26,12 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.base.api.ServerConfigurationService;
+import org.wso2.carbon.core.deployment.CarbonDeploymentSchedulerExtender;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.statistics.StatisticsAxis2ConfigurationContextObserver;
 import org.wso2.carbon.statistics.StatisticsConstants;
+import org.wso2.carbon.statistics.persistance.StatisticsPersistenceScheduler;
 import org.wso2.carbon.statistics.services.StatisticsAdmin;
 import org.wso2.carbon.statistics.services.SystemStatisticsUtil;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -82,6 +85,16 @@ public class StatisticsServiceComponent {
             axisConfigCtxObserverServiceRegistration =
                     bundleCtx.registerService(Axis2ConfigurationContextObserver.class.getName(),
                             new StatisticsAxis2ConfigurationContextObserver(), null);
+
+            if(log.isDebugEnabled()){
+                log.debug("initializing StatisticsPersistenceScheduler..");
+            }
+            int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
+            bundleCtx.registerService(CarbonDeploymentSchedulerExtender.class.getName(),
+                                      new StatisticsPersistenceScheduler(
+                                              registryService.getLocalRepository(tenantId)),
+                                      null);
+
             log.debug("Statistics bundle is activated");
         } catch (Throwable e) {
             log.error("Failed to activate Statistics bundle", e);

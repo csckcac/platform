@@ -20,6 +20,12 @@ package org.wso2.carbon.statistics;
  *
  */
 public final class StatisticsConstants {
+    public static  final String ROOT_REG_PATH = "/repository/components/org.wso2.carbon.system" +
+                                                ".statistics";
+    public static  final String SYSTEM_REG_PATH = ROOT_REG_PATH + "/system";
+    public static  final String SERVICES_REG_PATH = ROOT_REG_PATH + "/services";
+    public static  final String OPERATIONS_REG_PATH = ROOT_REG_PATH + "/operations";
+
     public static final String GLOBAL_REQUEST_COUNTER = "wso2statistics.GlobalRequestCounter";
     public static final String GLOBAL_RESPONSE_COUNTER = "wso2statistics.GlobalResponseCounter";
     public static final String GLOBAL_CURRENT_REQUEST_COUNTER = "wso2statistics.GlobalCurrentRequestCounter";

@@ -121,6 +121,9 @@ public class SystemStatisticsDeploymentInterceptor implements AxisObserver {
             } catch (AxisFault axisFault) { // will not occur
             }
         }
+        else if(axisEvent.getEventType() == AxisEvent.SERVICE_REMOVE) {
+            //TODO remove persisted stats for service
+        }
     }
 
     public void serviceGroupUpdate(AxisEvent axisEvent, AxisServiceGroup axisServiceGroup) {

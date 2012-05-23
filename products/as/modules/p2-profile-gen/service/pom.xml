@@ -486,11 +486,11 @@
                                 </feature>
 				<feature>
                                     <id>org.wso2.carbon.stratos.usage.agent.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <version>${stratos.version}</version>
                                 </feature>
  				<feature>
                                     <id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <version>${stratos.version}</version>
                                 </feature>
                             </features>
                         </configuration>

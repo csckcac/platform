@@ -41,8 +41,8 @@
     </licenses>
 
     <modules>
-        <module>product</module>
-        <module>service</module>
+       <module>product</module>
+       <module>service</module>
     </modules>
 
     <organization>

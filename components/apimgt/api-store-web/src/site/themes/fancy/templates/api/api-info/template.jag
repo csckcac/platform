@@ -1,9 +1,9 @@
 <% jagg.template("api/api-info", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/fancy-new/utils/ratings/star-generator.js"); %>
+<% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
 <% var i, length, app, thumbURL, api = outputs.api, apps = outputs.applications, user = outputs.user;
    thumbURL = api.thumbURL;
    if(thumbURL && thumbURL.indexOf("images/") == 0) {
-        thumbURL = site.context + "/site/themes/fancy-new/" + thumbURL;
+        thumbURL = site.context + "/site/themes/fancy/" + thumbURL;
    }
 %>
 <h2><%=api.name%> - <%=api.version%></h2>

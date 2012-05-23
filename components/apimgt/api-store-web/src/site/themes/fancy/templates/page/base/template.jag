@@ -25,15 +25,15 @@
     <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]><script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/html5/html5.js")%>"></script><![endif]-->
-    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/jquery.js")%>"></script>
+    <!--[if lt IE 9]><script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/html5/html5.js")%>"></script><![endif]-->
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/jquery.js")%>"></script>
 
 
-    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/css/bootstrap.css")%>" />
-    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/css/bootstrap-responsive.css")%>" />
-    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/css/styles-layout.css")%>" media="all"/>
-    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/css/styles-application.css")%>" media="all"/>
-    <!--[if IE 7]><link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/css/style-ie7.css")%>" media="all"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/css/bootstrap.css")%>" />
+    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/css/bootstrap-responsive.css")%>" />
+    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy/css/styles-layout.css")%>" media="all"/>
+    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy/css/styles-application.css")%>" media="all"/>
+    <!--[if IE 7]><link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy/css/style-ie7.css")%>" media="all"/><![endif]-->
     <%
     var data = jagg.data();
     if(data.header) {
@@ -71,19 +71,19 @@ if(data.footer) {
 <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-alert.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-modal.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-dropdown.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-scrollspy.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-tab.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-tooltip.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-popover.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-button.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-collapse.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-carousel.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/bootstrap/js/bootstrap-typeahead.js")%>"></script>
-<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy-new/js/lib/jquery.corner.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-alert.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-modal.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-dropdown.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-scrollspy.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-tab.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-tooltip.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-popover.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-button.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-collapse.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-carousel.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-typeahead.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery.corner.js")%>"></script>
 </body>
 </html>
 <% }); %>

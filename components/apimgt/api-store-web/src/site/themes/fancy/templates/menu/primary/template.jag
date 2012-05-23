@@ -2,7 +2,7 @@
    <div class="navbar">
       <div class="navbar-inner">
         <div class="container-fluid">
-            <a href="/" class="brand"><img src="<%=site.context%>/site/themes/fancy-new/images/logo.png" alt="API Store"></a>
+            <a href="/" class="brand"><img src="<%=site.context%>/site/themes/fancy/images/logo.png" alt="API Store"></a>
           <div class="span9 offset3">
               <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                 <span class="icon-bar"></span>

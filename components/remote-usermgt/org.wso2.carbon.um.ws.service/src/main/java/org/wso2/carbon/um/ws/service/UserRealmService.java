@@ -35,6 +35,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.core.service.RealmService;
 
+//TODO super tenant service
 public class UserRealmService extends AbstractAdmin {
 
     public RealmConfigurationDTO getRealmConfiguration() throws UserStoreException {

@@ -25,8 +25,12 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.context.MessageContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.core.util.AnonymousSessionUtil;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -38,13 +42,19 @@ import org.wso2.carbon.user.core.service.RealmService;
 
 public class AuthorizationManagerService extends AbstractAdmin {
 
+    private static Log log = LogFactory.getLog(AuthorizationManagerService.class.getClass());
+
     public void authorizeRole(String roleName, String resourceId, String action)
             throws UserStoreException {
+
+        Util.checkAccess(resourceId);
         getAuthorizationManager().authorizeRole(roleName, resourceId, action);
     }
 
     public void authorizeUser(String userName, String resourceId, String action)
             throws UserStoreException {
+
+        Util.checkAccess(resourceId);
         getAuthorizationManager().authorizeUser(userName, resourceId, action);
     }
 
@@ -132,7 +142,7 @@ public class AuthorizationManagerService extends AbstractAdmin {
         try {
             UserRealm realm = super.getUserRealm();
             if (realm == null) {
-                // TODO log
+                log.error("User realm is null");
                 throw new UserStoreException("UserRealm is null");
             }
             return realm.getAuthorizationManager();
@@ -140,5 +150,7 @@ public class AuthorizationManagerService extends AbstractAdmin {
             throw new UserStoreException(e);
         }
     }
+
+
 
 }

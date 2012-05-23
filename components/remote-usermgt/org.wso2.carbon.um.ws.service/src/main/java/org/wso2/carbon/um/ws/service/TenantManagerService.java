@@ -25,6 +25,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 
+// TODO super tenant service
 public class TenantManagerService extends AbstractAdmin {
 
     public void activateTenant(int tenantId) throws UserStoreException {

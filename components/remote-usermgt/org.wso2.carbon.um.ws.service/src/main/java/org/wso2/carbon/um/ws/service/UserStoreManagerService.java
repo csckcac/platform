@@ -27,6 +27,9 @@ import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.context.MessageContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.um.ws.service.internal.UMRemoteServicesDSComponent;
@@ -40,6 +43,8 @@ import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.mgt.common.ClaimValue;
 
 public class UserStoreManagerService extends AbstractAdmin {
+
+    private static Log log = LogFactory.getLog(UserStoreManagerService.class.getClass());
 
     public void addUser(String userName, String credential, String[] roleList, ClaimValue[] claims,
             String profileName, boolean requirePasswordChange) throws UserStoreException {
@@ -139,8 +144,22 @@ public class UserStoreManagerService extends AbstractAdmin {
         return getUserStoreManager().getTenantId();
     }
 
+
     public int getTenantIdofUser(String username) throws UserStoreException {
-        return getUserStoreManager().getTenantId(username);
+
+        if (Util.isSuperTenant()) {
+            return getUserStoreManager().getTenantId(username);
+        } else {
+            StringBuilder stringBuilder
+                    = new StringBuilder("Unauthorized attempt to execute super tenant operation by tenant domain - ");
+            stringBuilder.append(CarbonContext.getCurrentContext().getTenantDomain()).append(" tenant id - ")
+                    .append(CarbonContext.getCurrentContext().getTenantId()).append(" user - ")
+                    .append(CarbonContext.getCurrentContext().getUsername());
+            log.warn(stringBuilder.toString());
+
+            throw new UserStoreException("Access Denied");
+        }
+
     }
 
     public String getUserClaimValue(String userName, String claim, String profileName)
@@ -228,7 +247,21 @@ public class UserStoreManagerService extends AbstractAdmin {
     }
 
     public String[][] getProperties(Tenant tenant) throws UserStoreException {
-        // TODO Auto-generated method stub
+        // TODO This method should only called by super tenant
+        // Logic is not implemented yet
+
+        if (!Util.isSuperTenant()) {
+            StringBuilder stringBuilder
+                    = new StringBuilder("Unauthorized attempt to execute super tenant operation by tenant domain - ");
+            stringBuilder.append(CarbonContext.getCurrentContext().getTenantDomain()).append(" tenant id - ")
+                    .append(CarbonContext.getCurrentContext().getTenantId()).append(" user - ")
+                    .append(CarbonContext.getCurrentContext().getUsername());
+            log.warn(stringBuilder.toString());
+
+            throw new UserStoreException("Access Denied");
+        }
+
+        // TODO implement the logic
         return null;
     }
 

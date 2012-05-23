@@ -214,6 +214,15 @@
             <directory>lib/home</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/dbscripts/identity/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/identity</outputDirectory>
+            <includes>
+                <include>**/**.sql</include>
+            </includes>
+        </fileSet>
     </fileSets>
 
     <dependencySets>
@@ -427,6 +436,10 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-	
+        <file>
+            <source>../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/identity.xml</source>
+            <outputDirectory>${pom.artifactId}-${build.version}/repository/conf</outputDirectory>
+                <fileMode>644</fileMode>
+        </file>	
     </files>
 </assembly>

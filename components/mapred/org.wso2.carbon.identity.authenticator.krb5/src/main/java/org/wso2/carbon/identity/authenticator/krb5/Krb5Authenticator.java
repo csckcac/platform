@@ -19,17 +19,13 @@ package org.wso2.carbon.identity.authenticator.krb5;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.context.SessionContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import javax.servlet.http.HttpServletRequest;
 
-import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.common.AuthenticationException;
 import org.wso2.carbon.core.security.AuthenticatorsConfiguration;
-import org.wso2.carbon.core.services.authentication.AuthenticationAdmin;
 import org.wso2.carbon.core.services.authentication.CarbonServerAuthenticator;
 import org.wso2.carbon.utils.ServerConstants;
 

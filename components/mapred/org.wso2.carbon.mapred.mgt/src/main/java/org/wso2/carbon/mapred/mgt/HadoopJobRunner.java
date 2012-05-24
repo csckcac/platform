@@ -4,77 +4,62 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.regexp.RE;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.context.*;
-import org.wso2.carbon.registry.api.Collection;
 import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.api.RegistryException;
-import org.wso2.carbon.registry.api.Tag;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.identity.authenticator.krb5.stub.types.Krb5AuthenticatorStub;
+import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
 
 public class HadoopJobRunner extends AbstractAdmin {
 	private Log log = LogFactory.getLog(HadoopJobRunner.class);
-	public static final String HADOOP_CONFIG = System.getProperty(ServerConstants.CARBON_HOME)+File.separator+"repository"+File.separator+"conf"+File.separator+"advanced"+File.separator+"hadoop.properties";
+	public static final String HADOOP_CONFIG = System.getProperty(ServerConstants.CARBON_HOME)+File.separator+"repository"+File.separator+"conf"+File.separator+"etc"+File.separator+"hadoop.properties";
 	public static final String REG_JAR_PATH = "/job/jar/";
 	public static final String DEFAULT_HADOOP_JAR_PATH = ".";
 	public static int DEFAULT_READ_LENGTH = 1024;
 	
-	private String getCurrentTGTCache() throws AxisFault, RemoteException, Exception {
-		MessageContext msgCtx = MessageContext.getCurrentMessageContext();
-		ConfigurationContext configCtx = msgCtx.getConfigurationContext();
-		HttpServletRequest request = (HttpServletRequest) msgCtx.getProperty(HTTPConstants.MC_HTTP_SERVLETREQUEST);
-        String cookie = request.getHeader(HTTPConstants.COOKIE_STRING);
-		String serviceEPR = "https://localhost:9443/services/" + "Krb5Authenticator";
-		Krb5AuthenticatorStub stub = new Krb5AuthenticatorStub(configCtx, serviceEPR);
-        ServiceClient client = stub._getServiceClient();
-        Options options = client.getOptions();
-        options.setManageSession(true);
-        if (cookie != null) {
-            options.setProperty(HTTPConstants.COOKIE_STRING, cookie);
-        }
-        return stub.getTicketCache();
+	private static final String MAPRED_SITE = "mapred-site.xml";
+	private static final String CORE_SITE = "core-site.xml";
+	private static final String HDFS_SITE = "hdfs-site.xml";
+	private static final String HADOOP_POLICY = "hadoop-policy.xml";
+	private static final String CAPACITY_SCHED = "cacpacity-scheduler.xml";
+	private static final String MAPRED_QUEUE_ACLS = "mapred-queue-acls.xml";
+	private static Configuration conf;
+	
+	static {
+		conf = new Configuration();
+		conf.addResource(new Path(HADOOP_CONFIG+File.separator+CORE_SITE));
+        conf.addResource(new Path(HADOOP_CONFIG+File.separator+MAPRED_SITE));
+        conf.addResource(new Path(HADOOP_CONFIG+File.separator+HDFS_SITE));
+        conf.addResource(new Path(HADOOP_CONFIG+File.separator+HADOOP_POLICY));
+        conf.addResource(new Path(HADOOP_CONFIG+File.separator+CAPACITY_SCHED));
+        conf.addResource(new Path(HADOOP_CONFIG+File.separator+MAPRED_QUEUE_ACLS));
 	}
 	
-	public void runJob(String jarName, String className, String args) /*throws Throwable*/ {
-		String currentTGT = null;
-		try {
-			currentTGT = getCurrentTGTCache();
-		} catch (AxisFault e) {
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (Exception e ) {
-			e.printStackTrace();
-		}
-		HadoopJobRunnerThread hadoopJobThread = new HadoopJobRunnerThread(jarName, className, args, currentTGT);
+	public void runJob(String jarName, String className, String args) {
+		MessageContext msgCtx = MessageContext.getCurrentMessageContext();
+		HttpServletRequest request = (HttpServletRequest) msgCtx.getProperty(HTTPConstants.MC_HTTP_SERVLETREQUEST);
+		String cookie = request.getHeader(HTTPConstants.COOKIE_STRING);
+		ConfigurationContext cfgCtx = msgCtx.getConfigurationContext();
+		HadoopCarbonMessageContext hadoopMsgCtx = new HadoopCarbonMessageContext(cfgCtx, cookie);
+		HadoopCarbonMessageContext.set(hadoopMsgCtx);
+		HadoopJobRunnerThread hadoopJobThread = new HadoopJobRunnerThread(jarName, className, args);
 		hadoopJobThread.start();
 	}
 	
@@ -156,5 +141,9 @@ public class HadoopJobRunner extends AbstractAdmin {
 			e.printStackTrace();
 		}
 		return paths;
+	}
+	
+	public static org.apache.hadoop.conf.Configuration getConf() {
+		return conf;
 	}
 }

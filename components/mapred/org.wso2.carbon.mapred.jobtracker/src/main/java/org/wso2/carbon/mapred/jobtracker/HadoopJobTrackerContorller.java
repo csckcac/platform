@@ -39,7 +39,7 @@ public class HadoopJobTrackerContorller implements BundleActivator{
     private JobConf jconf;
     private Properties hadoopConfiguration;
     private Properties taskController;
-    public static final String TASK_CONTROLLER_CFG = "taskcontroller.cfg" ;
+    //public static final String TASK_CONTROLLER_CFG = "taskcontroller.cfg" ;
     public static final String MAPRED_SITE = "mapred-site.xml";
     public static final String CORE_SITE = "core-site.xml";
     public static final String HDFS_SITE = "hdfs-site.xml";
@@ -48,7 +48,7 @@ public class HadoopJobTrackerContorller implements BundleActivator{
     public static final String CAPACITY_SCHED = "cacpacity-scheduler.xml";
     public static final String MAPRED_QUEUE_ACLS = "mapred-queue-acls.xml";
     private static String HADOOP_CONFIG_DIR;
-    private static String[] TASKCONTROLLER_DEPENDS_DIRS;
+    //private static String[] TASKCONTROLLER_DEPENDS_DIRS;
 
     public HadoopJobTrackerContorller() {
         jconf = new JobConf();
@@ -59,7 +59,7 @@ public class HadoopJobTrackerContorller implements BundleActivator{
             hadoopConfiguration.load(new FileReader(carbonHome+File.separator+"repository"+
                     File.separator+"conf"+File.separator+"etc"+File.separator+HADOOP_CONFIG));
             HADOOP_CONFIG_DIR = hadoopConfiguration.getProperty("hadoop.config.dir");
-            TASKCONTROLLER_DEPENDS_DIRS = hadoopConfiguration.getProperty("taskcontroller.depends.dir").split(":");
+            //TASKCONTROLLER_DEPENDS_DIRS = hadoopConfiguration.getProperty("taskcontroller.depends.dir").split(":");
             //taskController.load(new FileReader(HADOOP_CONFIG_DIR+File.separator+TASK_CONTROLLER_CFG));
         }
         catch (Exception e) {
@@ -67,7 +67,7 @@ public class HadoopJobTrackerContorller implements BundleActivator{
         }
         String classPath = "";
         //Add jar files needed by the task controller to system classpath
-        for (int i=0; TASKCONTROLLER_DEPENDS_DIRS.length>i; i++) {
+        /*for (int i=0; TASKCONTROLLER_DEPENDS_DIRS.length>i; i++) {
         	FilenameFilter jarFilter = new JarFilter();
         	File dependsDir = new File(TASKCONTROLLER_DEPENDS_DIRS[i]);
         	String s[] = dependsDir.list(jarFilter);
@@ -76,7 +76,7 @@ public class HadoopJobTrackerContorller implements BundleActivator{
         			classPath += TASKCONTROLLER_DEPENDS_DIRS[i]+"/"+s[j]+":";
         		}
 		}
-        }
+        }*/
         classPath += HADOOP_CONFIG_DIR;
         String sysClassPath = System.getProperty("java.class.path");
         sysClassPath += ":"+classPath;

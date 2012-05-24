@@ -222,7 +222,7 @@ public class APIUsageStatisticsClient {
         Map<String,APIAccessTime> lastAccessTimes = new TreeMap<String,APIAccessTime>();
         for (APIAccessTime accessTime : accessTimes) {
             APIIdentifier api = getAPIByConsumerKey(accessTime.apiKey);
-            if (api.getProviderName().equals(providerName)) {
+            if (api != null && api.getProviderName().equals(providerName)) {
                 APIAccessTime lastAccessTime = lastAccessTimes.get(accessTime.apiName);
                 if (lastAccessTime == null || lastAccessTime.accessTime < accessTime.accessTime) {
                     lastAccessTimes.put(accessTime.apiName, accessTime);

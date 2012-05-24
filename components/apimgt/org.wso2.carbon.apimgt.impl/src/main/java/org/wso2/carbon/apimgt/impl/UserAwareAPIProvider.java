@@ -138,7 +138,7 @@ public class UserAwareAPIProvider extends APIProviderImpl {
         }
 
         if (!authorized) {
-            throw new APIManagementException("User: " + username + " does not have the " +
+            throw new APIManagementException("User '" + username + "' does not have the " +
                     "required permission: " + permission);
         }
     }

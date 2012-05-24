@@ -363,6 +363,7 @@ public final class APIUtil {
      * Crate an WSDL from given wsdl url.
      *
      * @param wsdlUrl  wsdl url
+     * @return Path of the created resource
      * @throws APIManagementException  if failed to create WSDL in registry.
      */
     public  static String  createWSDL(String wsdlUrl) throws APIManagementException {
@@ -382,7 +383,7 @@ public final class APIUtil {
             String msg = "Failed to add wsdl " + wsdlUrl + " to registry ";
             log.error(msg, e);
         } catch (RegistryException e) {
-            String msg = "Faild to initialize gov registry for wsdl import";
+            String msg = "Failed to initialize gov registry for wsdl import";
             log.error(msg, e);
         }
         return path;
@@ -392,6 +393,7 @@ public final class APIUtil {
      * Create an Endpoint
      *
      * @param endpointUrl Endpoint url
+     * @return Path of the created resource
      * @throws org.wso2.carbon.apimgt.api.APIManagementException failed to add endpoint
      */
     public static String createEndpoint(String endpointUrl) throws APIManagementException{

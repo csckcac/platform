@@ -959,11 +959,11 @@ public class WsdlUriProcessor {
             wsdl.setAttribute("overview_uri", url);
             wsdl.setAttribute("overview_type", HandlerConstants.WSDL);
             genericArtifactManager.addGenericArtifact(wsdl);
-            Resource artifactResource = registry.get(
-                    RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
-            artifactResource.setProperty(wsdl.getId(), HandlerConstants.WSDL_LOCATION + source);
-            registry.put(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
-                    GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, artifactResource); //TODO
+//            Resource artifactResource = registry.get(
+//                    RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
+//            artifactResource.setProperty(wsdl.getId(), HandlerConstants.WSDL_LOCATION + source);
+//            registry.put(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
+//                    GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, artifactResource); //TODO
         }
 
         ((ResourceImpl)resource).setPath(relativeArtifactPath);

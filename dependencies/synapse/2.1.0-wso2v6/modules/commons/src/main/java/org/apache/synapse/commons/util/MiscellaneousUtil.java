@@ -33,7 +33,7 @@ public class MiscellaneousUtil {
 	
 	private static Log log = LogFactory.getLog(MiscellaneousUtil.class);
 	
-	private static final String PROPERTIES_HOSTED_LOCATION = "properties.hosted.location";
+	private static final String CONF_LOCATION = "conf.location";
 
 	private MiscellaneousUtil() {
 	}
@@ -132,9 +132,9 @@ public class MiscellaneousUtil {
         
         //if we reach to this assume that the we may have to looking to the customer provided external location for the 
         //given properties
-		if (System.getProperty(PROPERTIES_HOSTED_LOCATION) != null) {
+		if (System.getProperty(CONF_LOCATION) != null) {
 			try {
-				in = new FileInputStream(System.getProperty(PROPERTIES_HOSTED_LOCATION) + File.separator + filePath);
+				in = new FileInputStream(System.getProperty(CONF_LOCATION) + File.separator + filePath);
 			} catch (FileNotFoundException e) {
 				String msg = "Error loading properties from a file at from the System defined location: " + filePath;
 				log.warn(msg);

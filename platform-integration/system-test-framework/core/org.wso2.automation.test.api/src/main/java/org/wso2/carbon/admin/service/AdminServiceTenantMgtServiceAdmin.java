@@ -46,7 +46,8 @@ public class AdminServiceTenantMgtServiceAdmin {
         }
     }
 
-    public void addTenant(String sessionCookie, String domainName, String password, String firstName, String usagePlan) {
+    public void addTenant(String sessionCookie, String domainName, String password, String firstName, String usagePlan)
+            throws TenantMgtAdminServiceExceptionException {
 
         AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
 
@@ -84,15 +85,9 @@ public class AdminServiceTenantMgtServiceAdmin {
         } catch (RemoteException e) {
             log.error("RemoteException thrown while adding user/tenants : " + e);
             Assert.fail("RemoteException thrown while adding user/tenants : " + e);
-        } catch (GetTenantExceptionException e) {
+        } catch (TenantMgtAdminServiceExceptionException e) {
             log.error("GetTenantExceptionException thrown when getting user list : " + e);
             Assert.fail("GetTenantExceptionException thrown when getting user list : " + e);
-        } catch (ActivateTenantExceptionException e) {
-            log.error("Tenant activation was unsucessfull : " + e);
-            Assert.fail("Tenant activation was unsucessfull : " + e);
-        } catch (AddTenantExceptionException e) {
-            log.error("Add new tenants fail : " + e);
-            Assert.fail("Add new tenants fail : " + e);
         }
     }
 
@@ -105,7 +100,7 @@ public class AdminServiceTenantMgtServiceAdmin {
         } catch (RemoteException e) {
             log.error("RemoteException thrown while retrieving user/tenants : " + e);
             Assert.fail("RemoteException thrown while retrieving user/tenants : " + e);
-        } catch (GetTenantExceptionException e) {
+        } catch (TenantMgtAdminServiceExceptionException e) {
             log.error("GetTenantExceptionException thrown when getting user/tenant list : " + e);
             Assert.fail("GetTenantExceptionException thrown when getting user/tenant list : " + e);
         }
@@ -119,7 +114,7 @@ public class AdminServiceTenantMgtServiceAdmin {
         } catch (RemoteException e) {
             log.error("RemoteException thrown while retrieving user/tenants : " + e);
             Assert.fail("RemoteException thrown while retrieving user/tenants : " + e);
-        } catch (UpdateTenantExceptionException e) {
+        } catch (TenantMgtAdminServiceExceptionException e) {
             log.error("UpdateTenantExceptionException thrown while updating tenant info : " + e);
             Assert.fail("UpdateTenantExceptionException thrown while updating tenant info : " + e);
         }
@@ -132,7 +127,7 @@ public class AdminServiceTenantMgtServiceAdmin {
         } catch (RemoteException e) {
             log.error("RemoteException thrown while retrieving user/tenants : " + e);
             Assert.fail("RemoteException thrown while retrieving user/tenants : " + e);
-        } catch (ActivateTenantExceptionException e) {
+        } catch (TenantMgtAdminServiceExceptionException e) {
             log.error("Tenant domain" + domainName + " activation fail" + e);
             Assert.fail("Tenant domain" + domainName + " activation fail" + e);
 

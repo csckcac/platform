@@ -255,7 +255,6 @@ public class APIProviderHostObject extends ScriptableObject {
             HttpServletRequest req = ((RequestHostObject) apiData.get("request", apiData)).getHttpServletRequest();
 
             String tier = (String) apiData.get("tier", apiData);
-            String status = ((String) apiData.get("status", apiData)).toUpperCase();
             String contextVal = (String) apiData.get("context", apiData);
             String context = contextVal.startsWith("/") ? contextVal : ("/" + contextVal);
 
@@ -294,7 +293,7 @@ public class APIProviderHostObject extends ScriptableObject {
             Set<Tier> availableTier = new HashSet<Tier>();
             availableTier.add(new Tier(tier));
             api.addAvailableTiers(availableTier);
-            api.setStatus(getApiStatus(status));
+            api.setStatus(oldApi.getStatus());
             api.setWsdlUrl(wsdl);
             api.setLastUpdated(new Date());
             checkFileSize(fileHostObject);
@@ -312,6 +311,33 @@ public class APIProviderHostObject extends ScriptableObject {
             log.error("Error while updating the API: " + name + "-" + version, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+        }
+        return success;
+    }
+
+    public static boolean jsFunction_updateAPIStatus(Context cx, Scriptable thisObj,
+                                               Object[] args,
+                                               Function funObj) throws ScriptException {
+        if (args.length == 0) {
+            throw new ScriptException("Invalid number of input parameters.");
+        }
+
+        NativeObject apiData = (NativeObject) args[0];
+        boolean success = false;
+        String provider = (String) apiData.get("provider", apiData);
+        String name = (String) apiData.get("apiName", apiData);
+        String version = (String) apiData.get("version", apiData);
+        String status = (String) apiData.get("status", apiData);
+        boolean publishToGateway = Boolean.parseBoolean((String) apiData.get("publishToGateway", apiData));
+
+        try {
+            APIProvider apiProvider = getAPIProvider(thisObj);
+            APIIdentifier apiId = new APIIdentifier(provider, name, version);
+            API api = apiProvider.getAPI(apiId);
+            apiProvider.changeAPIStatus(api, getApiStatus(status), publishToGateway);
+            success = true;
+        } catch (APIManagementException e) {
+            log.error("Error while updating API status", e);
         }
         return success;
     }

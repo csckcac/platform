@@ -277,12 +277,15 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
      */
     public void updateAPI(API api) throws APIManagementException {
         API oldApi = getAPI(api.getId());
-        createAPI(api);
-        if (oldApi.getStatus().equals(APIStatus.CREATED) && 
-                api.getStatus().equals(APIStatus.PUBLISHED)) {
-            publishToGateway(api);
-        } else if (api.getStatus().equals(APIStatus.PUBLISHED)) {
-            updateGatewayConfiguration(api);
+        if (oldApi.getStatus().equals(api.getStatus())) {
+            createAPI(api);
+            if (isAPIPublished(api)) {
+                updateGatewayConfiguration(api);
+            }
+        } else {
+            // We don't allow API status updates via this method.
+            // Use changeAPIStatus for that kind of updates.
+            throw new APIManagementException("Invalid API update operation involving API status changes");
         }
     }
 
@@ -315,6 +318,16 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         } catch (AxisFault axisFault) {
             handleException("Error while updating API in the API gateway", axisFault);
         }
+    }
+    
+    private boolean isAPIPublished(API api) throws APIManagementException {
+        try {
+            RESTAPIAdminClient client = new RESTAPIAdminClient(getTemplateBuilder(api));
+            return client.getApi() != null;
+        } catch (AxisFault axisFault) {
+            handleException("Error while checking API status", axisFault);
+        }
+        return false;
     }
     
     private APITemplateBuilder getTemplateBuilder(API api) {

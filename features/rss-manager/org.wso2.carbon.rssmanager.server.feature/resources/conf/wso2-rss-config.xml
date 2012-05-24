@@ -23,10 +23,10 @@
 
   <!-- RSS database used to store database servers, database instance information, users etc.. -->
   <rss-database>
-      <driver>com.mysql.jdbc.Driver</driver>
-      <url>jdbc:mysql://localhost:3306/rss_database</url>
-      <username>root</username>
-      <password>root</password>
+      <driver>org.h2.Driver</driver>
+      <url>jdbc:h2:repository/database/RSS_DATABASE;DB_CLOSE_ON_EXIT=FALSE</url>
+      <username>wso2carbon</username>
+      <password>wso2carbon</password>
   </rss-database>
 
   <!-- WSO2 RSS instances are predefined constant server instances to be used by users,

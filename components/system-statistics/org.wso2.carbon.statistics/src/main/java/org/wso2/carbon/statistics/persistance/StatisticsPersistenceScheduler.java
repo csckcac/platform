@@ -165,7 +165,7 @@ public class StatisticsPersistenceScheduler implements CarbonDeploymentScheduler
                 while (axisOperationIterator.hasNext()){
                     AxisOperation axisOperation = axisOperationIterator.next();
                     String operationRegPath = serviceRegPath.concat("/").concat(
-                            axisOperation.getName().toString());
+                            axisOperation.getName().getLocalPart());
 
                     if(localRegistry.resourceExists(operationRegPath)){
                         resource = localRegistry.get(operationRegPath);

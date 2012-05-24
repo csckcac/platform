@@ -62,7 +62,7 @@ public class HDFSNameNode {
         conf.addResource(new Path(hdfsCoreSiteConf));
         conf.addResource(new Path(hadoopPolicyConf));
         conf.addResource(new Path(mapredSiteConf));
-        conf.addResource(new Path(hadoopMetrics2Properties));
+        //conf.addResource(new Path(hadoopMetrics2Properties));
 
         try {
             DefaultMetricsSystem.initialize("namenode");

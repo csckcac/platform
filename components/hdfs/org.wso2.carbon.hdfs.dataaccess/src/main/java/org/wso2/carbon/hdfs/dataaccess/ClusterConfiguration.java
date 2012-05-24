@@ -43,8 +43,8 @@ public class ClusterConfiguration {
     public static void setDefaultConfiguration() {
 
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        String hadoopConf = carbonHome + File.separator + "repository" + File.separator +
-                "conf" + File.separator + "etc" + File.separator + "hadoop";
+        //String hadoopConf = carbonHome + File.separator + "repository" + File.separator +
+                //"conf" + File.separator + "etc" + File.separator + "hadoop";
         String hadoopCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
                 "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + CORE_SITE_XML;
         String hdfsCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
@@ -53,12 +53,13 @@ public class ClusterConfiguration {
                 "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + HADOOP_POLICY_XML;
         String mapredSiteConf = carbonHome + File.separator + "repository" + File.separator +
                 "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + MAPRED_SITE_XML;
-        String hadoopMetrics2Properties = carbonHome + File.separator + "repository" + File.separator +
-                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + METRICS2_PROPERTIES;
-        configuration.addResource(new Path(hadoopConf));
+        //String hadoopMetrics2Properties = carbonHome + File.separator + "repository" + File.separator +
+                //"conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + METRICS2_PROPERTIES;
         configuration.addResource(new Path(hdfsCoreSiteConf));
-        configuration.addResource(new Path(hadoopPolicyConf));
-        configuration.addResource(new Path(hadoopMetrics2Properties));
+        configuration.addResource(new Path(hadoopCoreSiteConf));
+        //configuration.addResource(new Path(hadoopPolicyConf));
+        configuration.addResource(new Path(mapredSiteConf));
+        //configuration.addResource(new Path(hadoopMetrics2Properties));
     }
 
     public static Configuration getDefaultConfiguration() {

@@ -17,6 +17,10 @@
 */
 package org.wso2.carbon.hdfs.mgt;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
@@ -24,6 +28,8 @@ import org.wso2.carbon.hdfs.dataaccess.DataAccessService;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
+import org.wso2.carbon.hadoop.security.HadoopCarbonSecurity;
 
 /**
  * Todo Doc
@@ -63,6 +69,14 @@ public class HDFSAdminComponentManager {
 
     public DataAccessService getDataAccessService() throws HDFSServerManagementException {
        // assertInitialized();
+    	//Clean current thread's security extensions.
+    	HadoopCarbonSecurity.clean();
+    	//Set the HadoopCarbonMessageContext for this invocation.
+    	MessageContext msgCtx = MessageContext.getCurrentMessageContext();
+    	HttpServletRequest request = (HttpServletRequest) msgCtx.getProperty(HTTPConstants.MC_HTTP_SERVLETREQUEST);
+		String cookie = request.getHeader(HTTPConstants.COOKIE_STRING);
+    	HadoopCarbonMessageContext hcMsgCtx = new HadoopCarbonMessageContext(msgCtx.getConfigurationContext(), cookie);
+    	HadoopCarbonMessageContext.set(hcMsgCtx);
         return dataAccessService;
     }
 

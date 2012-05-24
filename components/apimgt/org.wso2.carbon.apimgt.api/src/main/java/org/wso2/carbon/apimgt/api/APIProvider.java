@@ -126,8 +126,15 @@ public interface APIProvider extends APIManager {
      * Returns a list of pre-defined # {@link org.wso2.carbon.apimgt.api.model.Tier} in the system.
      *
      * @return Set<Tier>
+     * @throws APIManagementException if failed to get the predefined tiers
      */
-    public Set<Tier> getTiers();
+    public Set<Tier> getTiers() throws APIManagementException;
+    
+    public void addTier(Tier tier) throws APIManagementException;
+    
+    public void updateTier(Tier tier) throws APIManagementException;
+    
+    public void removeTier(Tier tier) throws APIManagementException;
 
     /**
      * Adds a new API to the Store

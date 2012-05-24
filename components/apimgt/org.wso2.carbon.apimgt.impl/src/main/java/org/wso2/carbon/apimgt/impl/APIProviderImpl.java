@@ -13,13 +13,11 @@ import org.wso2.carbon.apimgt.impl.utils.RESTAPIAdminClient;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
-import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.registry.common.CommonConstants;
-import org.wso2.carbon.registry.core.Association;
-import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.namespace.QName;
 import java.util.*;
@@ -253,8 +251,67 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
      *
      * @return Set<Tier>
      */
-    public Set<Tier> getTiers() {
-        return null;
+    public Set<Tier> getTiers() throws APIManagementException {
+        Set<Tier> tiers = new HashSet<Tier>();
+        try {
+            if (registry.resourceExists(APIConstants.API_TIER_LOCATION)) {
+                org.wso2.carbon.registry.core.Collection tiersCollection = 
+                        (org.wso2.carbon.registry.core.Collection) registry.get(APIConstants.API_TIER_LOCATION);
+                String[] children = tiersCollection.getChildren();                
+                for (String child : children) {
+                    Resource resource = registry.get(child);
+                    if (!(resource instanceof org.wso2.carbon.registry.core.Collection)) {
+                        Tier tier = new Tier(RegistryUtils.getResourceName(child));
+                        tier.setPolicyContent((byte[])resource.getContent());
+                        tiers.add(tier);
+                    }
+                }
+            }
+        } catch (RegistryException e) {
+            handleException("Error while retrieving API tiers from registry", e);
+        }
+        return tiers;
+    }
+
+    public void addTier(Tier tier) throws APIManagementException {
+        addOrUpdateTier(tier);
+    }
+
+    public void updateTier(Tier tier) throws APIManagementException {
+        String path = APIConstants.API_TIER_LOCATION + RegistryConstants.PATH_SEPARATOR + tier.getName();
+        try {
+            if (registry.resourceExists(path)) {
+                addOrUpdateTier(tier);
+            } else {
+                throw new APIManagementException("No tier exists by the name: " + tier.getName());
+            }
+        } catch (RegistryException e) {
+            handleException("Error while updating tier: " + tier.getName(), e);
+        }
+    }
+    
+    private void addOrUpdateTier(Tier tier) throws APIManagementException {
+        try {
+            Resource resource = registry.newResource();
+            resource.setContent(new String(tier.getPolicyContent()));
+            registry.put(APIConstants.API_TIER_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                    tier.getName(), resource);
+        } catch (RegistryException e) {
+            handleException("Error while saving the tier information to the registry", e);
+        }    
+    }
+
+    public void removeTier(Tier tier) throws APIManagementException {
+        String path = APIConstants.API_TIER_LOCATION + RegistryConstants.PATH_SEPARATOR + tier.getName();
+        try {
+            if (registry.resourceExists(path)) {
+                registry.delete(path);
+            } else {
+                throw new APIManagementException("No tier exists by the name: " + tier.getName());
+            }
+        } catch (RegistryException e) {
+            handleException("Error while removing tier: " + tier.getName(), e);
+        }
     }
 
     /**

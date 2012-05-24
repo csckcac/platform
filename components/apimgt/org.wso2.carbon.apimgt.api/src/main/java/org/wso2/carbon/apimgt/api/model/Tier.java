@@ -24,7 +24,7 @@ package org.wso2.carbon.apimgt.api.model;
 public class Tier {
 
     private String name;
-    private ThrottlingPolicy throttlingPolicy;
+    private byte[] policyContent;
 
     public Tier(String name) {
         this.name = name;
@@ -34,12 +34,12 @@ public class Tier {
         return name;
     }
 
-    public ThrottlingPolicy getThrottlingPolicy() {
-        return throttlingPolicy;
+    public byte[] getPolicyContent() {
+        return policyContent;
     }
 
-    public void setThrottlingPolicy(ThrottlingPolicy throttlingPolicy) {
-        this.throttlingPolicy = throttlingPolicy;
+    public void setPolicyContent(byte[] policyContent) {
+        this.policyContent = policyContent;
     }
 
     @Override

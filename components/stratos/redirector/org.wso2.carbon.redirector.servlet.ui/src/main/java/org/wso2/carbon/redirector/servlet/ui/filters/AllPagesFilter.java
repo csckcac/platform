@@ -128,12 +128,12 @@ public class AllPagesFilter implements Filter {
                 return;
             }
             request.setAttribute(MultitenantConstants.TENANT_DOMAIN, tenantDomain);
-            if (path.indexOf("admin/login.jsp") >= 0) {
-                // we are going to apply the login.jsp filter + tenant specif filter both in here
-                path = path.replaceAll("admin/login.jsp",
-                        "tenant-login/login_ajaxprocessor.jsp");
-                request.setAttribute(StratosConstants.TENANT_SPECIFIC_URL_RESOLVED, "1");
-            }
+//            if (path.indexOf("admin/login.jsp") >= 0) {
+//                // we are going to apply the login.jsp filter + tenant specif filter both in here
+//                path = path.replaceAll("admin/login.jsp",
+//                        "tenant-login/login_ajaxprocessor.jsp");
+//                request.setAttribute(StratosConstants.TENANT_SPECIFIC_URL_RESOLVED, "1");
+//            }
             if (path.indexOf("/admin/index.jsp") >= 0) {
                 // we are going to apply the login.jsp filter + tenant specif filter both in here
                 path = path.replaceAll("/admin/index.jsp", "/tenant-dashboard/index.jsp");

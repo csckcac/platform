@@ -32,9 +32,6 @@ public class RedirectorServletUIComponent {
     protected void activate(ComponentContext context) {
         try {
             Util.domainRegisterServlet(context.getBundleContext());
-            //Util.loginJspRegisterServlet(context.getBundleContext());
-            //Util.indexJspRegisterServlet(context.getBundleContext());
-            Util.adminDocsRegisterServlet(context.getBundleContext());
             log.debug("******* Multitenancy Redirector Servlet UI bundle is activated ******* ");
         } catch (Exception e) {
             log.error("******* Multitenancy Redirector Servlet UI bundle failed activating ****", e);

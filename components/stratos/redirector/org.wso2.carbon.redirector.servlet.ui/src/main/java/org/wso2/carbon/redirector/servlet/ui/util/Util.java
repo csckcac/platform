@@ -19,12 +19,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.wso2.carbon.redirector.servlet.ui.filters.AllPagesFilter;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.carbon.redirector.servlet.ui.filters.AllPagesFilter;
-import org.wso2.carbon.redirector.servlet.ui.filters.DocPageFilter;
-import org.wso2.carbon.redirector.servlet.ui.filters.IndexPageFilter;
-import org.wso2.carbon.redirector.servlet.ui.filters.LoginPageFilter;
 
 import javax.servlet.Filter;
 import javax.servlet.Servlet;
@@ -56,75 +53,6 @@ public class Util {
             Dictionary redirectorServletAttributes = new Hashtable(2);
             Dictionary redirectorParams = new Hashtable(2);
             redirectorParams.put("url-pattern", "/" + MultitenantConstants.TENANT_AWARE_URL_PREFIX);
-            redirectorParams.put("associated-filter", redirectorFilter);
-            redirectorParams.put("servlet-attributes", redirectorServletAttributes);
-
-            redirectorServiceRegistration = bundleContext.registerService(Servlet.class.getName(),
-                    reirectorServlet, redirectorParams);
-
-        }
-    }
-
-    public static void loginJspRegisterServlet(BundleContext bundleContext) throws Exception {
-        if (!CarbonUtils.isRemoteRegistry()) {
-            HttpServlet reirectorServlet = new HttpServlet() {
-                // the redirector filter will forward the request before this servlet is hit
-                protected void doGet(HttpServletRequest request, HttpServletResponse response)
-                        throws ServletException, IOException {
-                }
-            };
-
-            Filter redirectorFilter = new LoginPageFilter();
-
-            Dictionary redirectorServletAttributes = new Hashtable(2);
-            Dictionary redirectorParams = new Hashtable(2);
-            redirectorParams.put("url-pattern", "/carbon/admin/login.jsp");
-            redirectorParams.put("associated-filter", redirectorFilter);
-            redirectorParams.put("servlet-attributes", redirectorServletAttributes);
-
-            redirectorServiceRegistration = bundleContext.registerService(Servlet.class.getName(),
-                    reirectorServlet, redirectorParams);
-
-        }
-    }
-
-    public static void indexJspRegisterServlet(BundleContext bundleContext) throws Exception {
-
-        if (!CarbonUtils.isRemoteRegistry()) {
-            HttpServlet reirectorServlet = new HttpServlet() {
-                // the redirector filter will forward the request before this servlet is hit
-                protected void doGet(HttpServletRequest request, HttpServletResponse response)
-                        throws ServletException, IOException {
-                }
-            };
-
-            Filter redirectorFilter = new IndexPageFilter();
-
-            Dictionary redirectorServletAttributes = new Hashtable(2);
-            Dictionary redirectorParams = new Hashtable(2);
-            redirectorParams.put("url-pattern", "/carbon/admin/index.jsp");
-            redirectorParams.put("associated-filter", redirectorFilter);
-            redirectorParams.put("servlet-attributes", redirectorServletAttributes);
-
-            redirectorServiceRegistration = bundleContext.registerService(Servlet.class.getName(), reirectorServlet, redirectorParams);
-
-        }
-    }
-
-    public static void adminDocsRegisterServlet(BundleContext bundleContext) throws Exception {
-        if (!CarbonUtils.isRemoteRegistry()) {
-            HttpServlet reirectorServlet = new HttpServlet() {
-                // the redirector filter will forward the request before this servlet is hit
-                protected void doGet(HttpServletRequest request, HttpServletResponse response)
-                        throws ServletException, IOException {
-                }
-            };
-
-            Filter redirectorFilter = new DocPageFilter();
-
-            Dictionary redirectorServletAttributes = new Hashtable(2);
-            Dictionary redirectorParams = new Hashtable(2);
-            redirectorParams.put("url-pattern", "/carbon/admin/docs/userguide.html");
             redirectorParams.put("associated-filter", redirectorFilter);
             redirectorParams.put("servlet-attributes", redirectorServletAttributes);
 

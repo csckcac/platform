@@ -17,6 +17,7 @@
 */
 package org.wso2.carbon.application.deployer.webapp;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +27,8 @@ import org.wso2.carbon.application.deployer.config.Artifact;
 import org.wso2.carbon.application.deployer.config.CappFile;
 import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.carbon.application.deployer.webapp.internal.WARCappDeployerDSComponent;
+import org.wso2.carbon.jaxws.webapp.mgt.JaxwsWebappAdmin;
+import org.wso2.carbon.webapp.mgt.WebappAdmin;
 
 import java.io.File;
 import java.util.List;
@@ -49,7 +52,6 @@ public class WARCappDeployer implements AppDeploymentHandler {
      * @param axisConfig - axisConfig of the current tenant
      */
     public void deployArtifacts(CarbonApplication carbonApp, AxisConfiguration axisConfig) {
-
         List<Artifact.Dependency> artifacts = carbonApp.getAppConfig().getApplicationArtifact()
                 .getDependencies();
 
@@ -61,10 +63,10 @@ public class WARCappDeployer implements AppDeploymentHandler {
             if (artifact == null) {
                 continue;
             }
-
+            // check whether the needed features are installed
             if (!isAccepted(artifact.getType())) {
                 log.warn("Can't deploy artifact : " + artifact.getName() + " of type : " +
-                         artifact.getType() + ". Required features are not installed in the system");
+                        artifact.getType() + ". Required features are not installed in the system");
                 continue;
             }
 
@@ -86,6 +88,54 @@ public class WARCappDeployer implements AppDeploymentHandler {
             artifactPath = artifact.getExtractedPath() + File.separator + fileName;
             AppDeployerUtils.createDir(destPath);
             AppDeployerUtils.copyFile(artifactPath, destPath + File.separator + fileName);
+        }
+    }
+
+    /**
+     * Check the artifact type and if it is a WAR, delete the file from the WAR
+     * deployment hot folder
+     *
+     * @param carbonApp - CarbonApplication instance to check for WAR artifacts
+     * @param axisConfig - AxisConfiguration of the current tenant
+     */
+    public void undeployArtifacts(CarbonApplication carbonApp, AxisConfiguration axisConfig) {
+
+        List<Artifact.Dependency> artifacts = carbonApp.getAppConfig().getApplicationArtifact()
+                .getDependencies();
+
+        for (Artifact.Dependency dep : artifacts) {
+            Artifact artifact = dep.getArtifact();
+            if (artifact == null) {
+                continue;
+            }
+            if (!WARCappDeployer.WAR_TYPE.equals(artifact.getType()) &&
+                    !WARCappDeployer.JAX_WAR_TYPE.equals(artifact.getType())) {
+                continue;
+            }
+
+            List<CappFile> files = artifact.getFiles();
+            if (files.size() != 1) {
+                log.error("Web Applications must have a single WAR file. But " +
+                        files.size() + " files found.");
+                continue;
+            }
+            String fileName = artifact.getFiles().get(0).getName();
+            if (WARCappDeployer.JAX_WAR_TYPE.equals(artifact.getType())) {
+                JaxwsWebappAdmin jaxwsWebappAdmin = new JaxwsWebappAdmin();
+                try {
+                    jaxwsWebappAdmin.deleteWebapp(fileName);
+                } catch (AxisFault axisFault) {
+                    log.error("Error while deleting webapp artifact " + fileName, axisFault);
+                }
+                continue;
+            }
+
+            WebappAdmin webappAdmin = new WebappAdmin();
+            try {
+                webappAdmin.deleteWebapp(fileName);
+            } catch (AxisFault axisFault) {
+                log.error("Error while deleting webapp artifact " + fileName, axisFault);
+            }
         }
     }
 

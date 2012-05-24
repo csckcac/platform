@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.registry.governance.api.test;
 
+import org.apache.commons.io.IOUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -24,6 +25,10 @@ import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class PolicyTestCase {
 
@@ -90,5 +95,65 @@ public class PolicyTestCase {
         policyManager.removePolicy(newPolicy.getId());
         Policy deletedPolicy = policyManager.getPolicy(newPolicy.getId());
         Assert.assertNull(deletedPolicy);
+    }
+
+    @Test(groups = {"wso2.greg"})
+    public void testAddPolicyFromContent() throws Exception {
+        PolicyManager policyManager = new PolicyManager(registry);
+        byte[] bytes = null;
+        try {
+            InputStream inputStream = new URL("http://svn.wso2.org/repos/wso2/carbon/platform/trunk/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/policy/policy.xml").openStream();
+            try {
+                bytes = IOUtils.toByteArray(inputStream);
+            } finally {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            Assert.fail("Unable to read WSDL content");
+        }
+        Policy policy = policyManager.newPolicy(bytes, "newPolicy.xml");
+        policy.addAttribute("creator", "it is me");
+        policy.addAttribute("version", "0.01");
+        policyManager.addPolicy(policy);
+
+        Policy newPolicy = policyManager.getPolicy(policy.getId());
+        Assert.assertEquals(policy.getPolicyContent(), newPolicy.getPolicyContent());
+        Assert.assertEquals("it is me", newPolicy.getAttribute("creator"));
+        Assert.assertEquals("0.01", newPolicy.getAttribute("version"));
+
+        // change the target namespace and check
+        String oldPolicyPath = newPolicy.getPath();
+        Assert.assertEquals(oldPolicyPath, "/trunk/policies/newPolicy.xml");
+        Assert.assertTrue(registry.resourceExists("/trunk/policies/newPolicy.xml"));
+    }
+
+    @Test(groups = {"wso2.greg"})
+    public void testAddPolicyFromContentNoName() throws Exception {
+        PolicyManager policyManager = new PolicyManager(registry);
+        byte[] bytes = null;
+        try {
+            InputStream inputStream = new URL("http://svn.wso2.org/repos/wso2/carbon/platform/trunk/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/policy/policy.xml").openStream();
+            try {
+                bytes = IOUtils.toByteArray(inputStream);
+            } finally {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            Assert.fail("Unable to read WSDL content");
+        }
+        Policy policy = policyManager.newPolicy(bytes);
+        policy.addAttribute("creator", "it is me");
+        policy.addAttribute("version", "0.01");
+        policyManager.addPolicy(policy);
+
+        Policy newPolicy = policyManager.getPolicy(policy.getId());
+        Assert.assertEquals(policy.getPolicyContent(), newPolicy.getPolicyContent());
+        Assert.assertEquals("it is me", newPolicy.getAttribute("creator"));
+        Assert.assertEquals("0.01", newPolicy.getAttribute("version"));
+
+        // change the target namespace and check
+        String oldPolicyPath = newPolicy.getPath();
+        Assert.assertEquals(oldPolicyPath, "/trunk/policies/"+ policy.getId() + ".xml");
+        Assert.assertTrue(registry.resourceExists("/trunk/policies/"+ policy.getId() + ".xml"));
     }
 }

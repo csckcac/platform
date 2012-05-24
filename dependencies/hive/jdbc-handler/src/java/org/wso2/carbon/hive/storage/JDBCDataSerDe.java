@@ -5,13 +5,10 @@ import org.apache.hadoop.hive.serde.Constants;
 import org.apache.hadoop.hive.serde2.SerDe;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.SerDeStats;
-import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory;
-import org.apache.hadoop.hive.serde2.objectinspector.StructField;
-import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector;
+import org.apache.hadoop.hive.serde2.objectinspector.*;
+import org.apache.hadoop.hive.serde2.objectinspector.primitive.AbstractPrimitiveObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
-import org.apache.hadoop.io.MapWritable;
-import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,10 +86,10 @@ public class JDBCDataSerDe implements SerDe {
     }
 
     public Class<? extends Writable> getSerializedClass() {
-        return null;
+        return MapWritable.class;
     }
 
-    public Writable serialize(Object o, ObjectInspector objectInspector) throws SerDeException {
+    public Writable serialize(Object obj, ObjectInspector objectInspector) throws SerDeException {
         if (objectInspector.getCategory() != ObjectInspector.Category.STRUCT) {
             throw new SerDeException(getClass().toString()
                     + " can only serialize struct types, but we got: "
@@ -106,9 +103,33 @@ public class JDBCDataSerDe implements SerDe {
         if (fields.size() != columnNames.size()) {
             throw new SerDeException(String.format("Required %d columns, received %d.", columnNames.size(), fields.size()));
         }
-        //Work in progress
 
-        return null;
+        cachedWritable.clear();
+
+        for (int c = 0; c < fieldCount; c++) {
+            StructField structField = fields.get(c);
+            if (structField != null) {
+                final Object field = structObjectInspector.getStructFieldData(obj,
+                        fields.get(c));
+                //TODO:currently only support hive primitive type
+                final AbstractPrimitiveObjectInspector fieldOI = (AbstractPrimitiveObjectInspector)fields.get(c)
+                        .getFieldObjectInspector();
+
+                Writable value = (Writable)fieldOI.getPrimitiveWritableObject(field);
+
+                if (value == null) {
+                    if(PrimitiveObjectInspector.PrimitiveCategory.STRING.equals(fieldOI.getPrimitiveCategory())){
+                        value = NullWritable.get();
+                        //value = new Text("");
+                    }else{
+                        //TODO: now all treat as number
+                        value = new IntWritable(0);
+                    }
+                }
+                cachedWritable.put(new Text(columnNames.get(c)), value);
+            }
+        }
+        return cachedWritable;
     }
 
     public Object deserialize(Writable writable) throws SerDeException {
@@ -122,4 +143,5 @@ public class JDBCDataSerDe implements SerDe {
     public SerDeStats getSerDeStats() {
         return null;
     }
+
 }

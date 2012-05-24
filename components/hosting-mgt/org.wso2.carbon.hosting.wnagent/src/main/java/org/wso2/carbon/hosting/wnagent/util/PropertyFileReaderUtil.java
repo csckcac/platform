@@ -81,4 +81,8 @@ public class PropertyFileReaderUtil {
 	public static String readDefaultContainerUser() {
 	    return agentConfig.getDefaultContainerUser();
     }
+
+	public static String readAgentServicePort() {
+		return agentConfig.getAgentServicePort();
+	}
 }

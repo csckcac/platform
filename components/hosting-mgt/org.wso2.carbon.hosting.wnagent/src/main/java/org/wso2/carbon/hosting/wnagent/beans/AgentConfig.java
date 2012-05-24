@@ -35,7 +35,7 @@ public class AgentConfig {
 	private static final Log log = LogFactory.getLog(AgentConfig.class);
 	
 	private static final String CONFIG_FILENAME = CarbonUtils.getCarbonConfigDirPath() + File.separator + "agent-config.xml";
-	//private static final String CONFIG_FILENAME = "/home/wso2/work/projects/source/platform/trunk/components/hosting-mgt/org.wso2.carbon.hosting.wnagent/conf/agent-config.xml";
+	
 	private static AgentConfig singletonAgentConfig = null;
 		
 	private HostMachine hostMachine;
@@ -53,6 +53,8 @@ public class AgentConfig {
 	private List<String> domainsList;
 	
 	private Document rootNode = null;
+	
+	private String agentServicePort;
 	
 	private AgentConfig() throws Exception {
 	    init();
@@ -159,12 +161,16 @@ public class AgentConfig {
 		hostMachine.setIp(getValueForElement(workerNodeElement, AgentServiceConstants.IP_ELEMENT_NAME));	
 		hostMachine.setBridges(getBridges(workerNodeElement));
 		
-		
+		setAgentServicePort(workerNodeElement);
 		setDomainsList(workerNodeElement);		
 		setTemplateMap(workerNodeElement);		    
     }
 
 	
+	private void setAgentServicePort(Element workerNodeElement) {
+		agentServicePort = getValueForElement(workerNodeElement, AgentServiceConstants.AGENT_SERVICE_PORT);		
+	}
+
 	private void setDomainsList(Element workerNodeElement) {
 	   
 		domainsList = new ArrayList<String>();
@@ -298,5 +304,9 @@ public class AgentConfig {
 	public String getDefaultContainerUser() {
 	   return defaultContainerUser;
     }
+
+	public String getAgentServicePort() {
+		return agentServicePort;
+	}
 	
 }

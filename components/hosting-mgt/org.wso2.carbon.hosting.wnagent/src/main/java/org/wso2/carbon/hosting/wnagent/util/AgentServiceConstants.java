@@ -29,6 +29,8 @@ public class AgentServiceConstants {
 	
 	public static String IP_ELEMENT_NAME = "ip";
 	
+	public static String AGENT_SERVICE_PORT = "port";
+	
 	public static String DOMAINS_ELEMENT_NAME = "domains";
 	
 	public static String DOMAIN_ELEMENT_NAME = "domain";

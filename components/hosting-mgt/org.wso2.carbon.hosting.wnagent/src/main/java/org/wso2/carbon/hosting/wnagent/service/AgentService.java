@@ -643,10 +643,11 @@ public class AgentService {
 
 	public String getServiceUrl() { 
 		String hostmachineIp = PropertyFileReaderUtil.readHostMachineIp();
+		String agentServicePort = PropertyFileReaderUtil.readAgentServicePort();
 		StringBuilder epr = new StringBuilder().append("https://")
 											   .append(hostmachineIp)
 											   .append(":")
-											   .append("9443")
+											   .append(agentServicePort)
 											   .append("/services/AgentService/");
 		log.debug("Service url is : " + epr.toString());
 		return epr.toString();

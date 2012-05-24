@@ -2,7 +2,8 @@
 	<hostMachine>
 		<isAvailable>true</isAvailable>
 		<name>Worker-node-1</name>
-		<ip>10.100.3.84</ip> 
+		<ip>10.100.3.84</ip>
+		<port>9443</port>
 		<zone>srilanka</zone>
 		<templatePath>/mnt/lxc</templatePath> <!-- same as ContainerRoot -->
 		<template name="template-wso2-carbon-server-as" domain="wso2.as.domain" />

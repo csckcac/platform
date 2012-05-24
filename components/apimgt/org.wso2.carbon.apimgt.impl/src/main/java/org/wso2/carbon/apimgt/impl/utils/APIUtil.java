@@ -105,6 +105,8 @@ public final class APIUtil {
                             uriTemplate.addMethod(method);
                         }
                         uriTemplate.setUriTemplate(s[1]);
+                        uriTemplate.setResourceURI(api.getUrl());
+                        uriTemplate.setResourceSandboxURI(api.getSandboxUrl());
                         uriTemplates.add(uriTemplate);
                     }
                 }

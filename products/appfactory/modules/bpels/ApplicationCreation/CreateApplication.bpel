@@ -92,7 +92,7 @@
 			</bpel:copy>
 
 			<bpel:copy>
-				<bpel:from><![CDATA[concat($input.payload/tns:projectName, '.apps')]]>
+				<bpel:from><![CDATA[concat($input.payload/tns:applicationName, '.apps')]]>
 
 				</bpel:from>
 				<bpel:to part="parameters" variable="TenantMgtPLRequest">
@@ -206,7 +206,7 @@
 				<bpel:copy>
 					<bpel:from>
 						<bpel:literal xml:space="preserve"><ns0:createRepository>
-<ns0:projectKey></ns0:projectKey>
+<ns0:applicationKey></ns0:applicationKey>
 </ns0:createRepository></bpel:literal>
 					</bpel:from>
 					<bpel:to part="parameters" variable="RepoMgtPLRequest"></bpel:to>
@@ -214,11 +214,11 @@
 				</bpel:copy>
 				<bpel:copy>
 					<bpel:from part="payload" variable="input">
-						<bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:projectName]]></bpel:query>
+						<bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[tns:applicationName]]></bpel:query>
 					</bpel:from>
 					<bpel:to part="parameters" variable="RepoMgtPLRequest">
                         <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-                            <![CDATA[ns0:projectKey]]>
+                            <![CDATA[ns0:applicationKey]]>
                         </bpel:query>
                     </bpel:to>
                 

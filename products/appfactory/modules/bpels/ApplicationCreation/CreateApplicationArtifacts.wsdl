@@ -21,7 +21,7 @@
             <element name="CreateApplicationRequest">
                 <complexType>
                     <sequence>
-                    	<element name="projectName" type="string"/>
+                    	<element name="applicationName" type="string"/>
                     	<element name="userName" type="string"/>
                     </sequence>
                 </complexType>

@@ -97,7 +97,7 @@
 			<xs:element name="getURL">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element minOccurs="0" name="projectKey" nillable="true"
+						<xs:element minOccurs="0" name="applicationKey" nillable="true"
 							type="xs:string" />
 					</xs:sequence>
 				</xs:complexType>
@@ -126,7 +126,7 @@
 			<xs:element name="createRepository">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element minOccurs="0" name="projectKey" nillable="true"
+						<xs:element minOccurs="0" name="applicationKey" nillable="true"
 							type="xs:string" />
 					</xs:sequence>
 				</xs:complexType>

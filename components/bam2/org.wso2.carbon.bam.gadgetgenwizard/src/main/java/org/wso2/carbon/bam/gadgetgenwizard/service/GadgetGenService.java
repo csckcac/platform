@@ -33,6 +33,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -56,14 +57,36 @@ public class GadgetGenService extends RegistryAbstractAdmin {
 
     public static final String GADGET_GENERATOR_XSLT = "gadget-generator.xsl";
 
+    // CSS Files
     private static final String JQPLOT_CSS = "gadgetgen/css/jquery.jqplot.min.css";
+    private static final String DATA_TABLES_CSS = "gadgetgen/css/jquery.dataTables.css";
+
+    // JS Files
     private static final String JQUERY_JS = "gadgetgen/js/jquery.min.js";
     private static final String JQPLOT_JS = "gadgetgen/js/jquery.jqplot.min.js";
     private static final String EXCANVAS_JS = "gadgetgen/js/excanvas.min.js";
     private static final String BARGRAPH_JS = "gadgetgen/js/plugins/jqplot.barRenderer.js";
     private static final String CATEGORY_AXIS_JS = "gadgetgen/js/plugins/jqplot.categoryAxisRenderer.js";
-    private static final String[] GADGET_RESOURCES = {EXCANVAS_JS, JQPLOT_JS, JQUERY_JS, JQPLOT_CSS, BARGRAPH_JS, CATEGORY_AXIS_JS};
+    private static final String DATA_TABLES_JS = "gadgetgen/js/jquery.dataTables.min.js";
 
+    // Image Files
+    private static final String BACK_DISABLED_PNG = "gadgetgen/images/back_disabled.png";
+    private static final String BACK_ENABLED_PNG = "gadgetgen/images/back_enabled.png";
+    private static final String BACK_ENABLED_HOVER_PNG = "gadgetgen/images/back_enabled_hover.png";
+    private static final String FORWARD_DISABLED_PNG = "gadgetgen/images/forward_disabled.png";
+    private static final String FORWARD_ENABLED_PNG = "gadgetgen/images/forward_enabled.png";
+    private static final String FORWARD_ENABLED_HOVER_PNG = "gadgetgen/images/forward_enabled_hover.png";
+    private static final String SORT_ASC_PNG = "gadgetgen/images/sort_asc.png";
+    private static final String SORT_ASC_DISABLED_PNG = "gadgetgen/images/sort_asc_disabled.png";
+    private static final String SORT_BOTH_PNG = "gadgetgen/images/sort_both.png";
+    private static final String SORT_DESC_PNG = "gadgetgen/images/sort_desc.png";
+    private static final String SORT_DESC__DISABLED_PNG = "gadgetgen/images/sort_desc_disabled.png";
+
+    private static final String[] GADGET_RESOURCES_JS = {EXCANVAS_JS, JQPLOT_JS, JQUERY_JS, BARGRAPH_JS, CATEGORY_AXIS_JS, DATA_TABLES_JS};
+    private static final String[] GADGET_RESOURCES_CSS = {JQPLOT_CSS, DATA_TABLES_CSS};
+    private static final String[] GADGET_RESOURCES_IMAGES = {BACK_DISABLED_PNG, BACK_ENABLED_PNG, BACK_ENABLED_HOVER_PNG,
+            FORWARD_DISABLED_PNG, FORWARD_ENABLED_PNG, FORWARD_ENABLED_HOVER_PNG, SORT_ASC_PNG, SORT_ASC_DISABLED_PNG,
+            SORT_BOTH_PNG, SORT_DESC_PNG, SORT_DESC__DISABLED_PNG};
 
     private static final Log log = LogFactory.getLog(GadgetGenService.class);
     private static final String JAGGERY_APP_DIR = CarbonUtils.getCarbonRepository()  + "jaggeryapps";
@@ -86,6 +109,8 @@ public class GadgetGenService extends RegistryAbstractAdmin {
             List<CarbonDataSource> allDataSources = GGWUtils.getDataSourceService().getAllDataSources();
             List<String> dataSourceNames = new ArrayList<String>();
             for (CarbonDataSource carbonDataSource : allDataSources) {
+                DBConnInfo dbConnInfo;
+//                dbConnInfo.setJdbcURL(carbonDataSource.getDSMInfo().getDefinition().getDsXMLConfiguration());
                 dataSourceNames.add(carbonDataSource.getDSMInfo().getName());
             }
             return dataSourceNames.toArray(new String[dataSourceNames.size()]);
@@ -212,23 +237,29 @@ public class GadgetGenService extends RegistryAbstractAdmin {
     }
 
     private void copyGadgetResourcesToRegistry(String gadgetRegistryPath) throws GadgetGenException {
-        for (String gadgetResource : GADGET_RESOURCES) {
+        List<String> gadgetResources = new ArrayList<String>();
+        gadgetResources.addAll(Arrays.asList(GADGET_RESOURCES_JS));
+        gadgetResources.addAll(Arrays.asList(GADGET_RESOURCES_CSS));
+        gadgetResources.addAll(Arrays.asList(GADGET_RESOURCES_IMAGES));
+        for (String gadgetResource : gadgetResources) {
             Resource resource = convertInputStreamToResource(this.getClass().getClassLoader().getResourceAsStream(gadgetResource));
             String gadgetResourcePath = gadgetRegistryPath + gadgetResource;
             copyResourceWithAnonymousPermission(resource, gadgetResourcePath);
         }
     }
 
-    private void copyResourceWithAnonymousPermission( Resource resource, String gadgetResourcePath) throws GadgetGenException {
+    private void copyResourceWithAnonymousPermission(Resource resource, String gadgetResourcePath) throws GadgetGenException {
         try {
             Registry registry = getConfigSystemRegistry();
+
             if (!registry.resourceExists(gadgetResourcePath)) {
+
                 registry.put(gadgetResourcePath, resource);
                 AuthorizationManager authorizationManager = ((UserRegistry) getRootRegistry()).getUserRealm().getAuthorizationManager();
                 authorizationManager.authorizeRole(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME,
                         RegistryConstants.CONFIG_REGISTRY_BASE_PATH + "/" + gadgetResourcePath, ActionConstants.GET);
+                // bug with permission update
                 setPermissionUpdateTimestamp();
-                //                    resourceAdminServiceStub.addRolePermission(gadgetResourcePath, CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME, ActionConstants.GET, ALLOW_PERMISSION_TYPE);
             }
         } catch (RegistryException e) {
             String msg = "Error inserting resource to registry. " + e.getMessage();
@@ -339,11 +370,18 @@ public class GadgetGenService extends RegistryAbstractAdmin {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             applyXSLT(intermediateXML, byteArrayOutputStream, GADGET_GENERATOR_XSLT);
-            resource = getConfigSystemRegistry().newResource();
+            Registry configSystemRegistry = getConfigSystemRegistry();
+            resource = configSystemRegistry.newResource();
             resource.setContent(byteArrayOutputStream.toByteArray());
             String gadgetXMLPath = GADGETGEN_COMP_REG_PATH + "gadgetgen/" + getGadgetFileName(intermediateXML) + ".xml";
+            String completeGadgetPath = RegistryConstants.CONFIG_REGISTRY_BASE_PATH + "/" + gadgetXMLPath;
+            // if resource exists, send an error and do not continue
+            if (configSystemRegistry.resourceExists(gadgetXMLPath)) {
+                throw new GadgetGenException("Choose a different gadget name. Gadget already exists at " +
+                        completeGadgetPath);
+            }
             copyResourceWithAnonymousPermission(resource, gadgetXMLPath);
-            return RegistryConstants.CONFIG_REGISTRY_BASE_PATH + "/" + gadgetXMLPath;
+            return completeGadgetPath;
         } catch (RegistryException e) {
             String error = "Error creating resource. " + e.getMessage();
             log.error(error, e);
@@ -358,7 +396,10 @@ public class GadgetGenService extends RegistryAbstractAdmin {
         OMElement rootElement = factory.createOMElement("gadgetgen", gadgetgenNamespace);
         WSMapElement[] wsMapElements = map.getWsMapElements();
         boolean barChartFound = false;
+        boolean tableFound = false;
         OMElement barChart = factory.createOMElement("BarChart", gadgetgenNamespace);
+        OMElement table = factory.createOMElement("Table", gadgetgenNamespace);
+
         for (WSMapElement wsMapElement : wsMapElements) {
             // check for bar graph properties
             if (wsMapElement.getKey().startsWith("bar")) {
@@ -366,6 +407,11 @@ public class GadgetGenService extends RegistryAbstractAdmin {
                 OMElement omElement = factory.createOMElement(wsMapElement.getKey(), gadgetgenNamespace);
                 omElement.setText(wsMapElement.getValue());
                 barChart.addChild(omElement);
+            } else if (wsMapElement.getKey().startsWith("table")) {
+                tableFound = true;
+                OMElement omElement = factory.createOMElement(wsMapElement.getKey(), gadgetgenNamespace);
+                omElement.setText(wsMapElement.getValue());
+                table.addChild(omElement);
             }
 
             OMElement omElement = factory.createOMElement(wsMapElement.getKey(), gadgetgenNamespace);
@@ -375,7 +421,10 @@ public class GadgetGenService extends RegistryAbstractAdmin {
         if (barChartFound) {
             rootElement.addChild(barChart);
         }
+        if (tableFound) {
+            rootElement.addChild(table);
+        }
         omDocument.addChild(rootElement);
-        return omDocument;  //To change body of created methods use File | Settings | File Templates.
+        return omDocument;
     }
 }

@@ -21,6 +21,47 @@ function convertDBResult(result, colx, coly) {
 };
 var plotarray = convertDBResult(result, colx, coly);
 
+// output result from a db query
+// [{"ADDRESS" : "WSO2", "NAME" : "1"}, {"ADDRESS" : "59 Flower Rd", "NAME" : "2"}, {"ADDRESS" : "59 Flower Rd", "NAME" : "WSO2"}, {"ADDRESS" : "WSO2", "NAME" : "1"}, {"ADDRESS" : "59 Flower Rd", "NAME" : "2"}]
+
+function createTableJSON(result) {
+    var len = result.length;
+    var rows = [];
+    var columnNames = []
+    for (var i = 0; i < len; i++) {
+        var obj = result[i];
+        var row = []
+        for(var k in obj) {
+            if ({}.hasOwnProperty.call(obj, k)) {
+                if (i == 0) {
+                    columnNames.push(k);
+                }
+                row.push(obj[k]);
+            }
+        }
+        rows.push(row);
+    }
+    return {Rows: rows, ColumnNames : columnNames};
+}
+
+function getaoColumns(columnNames) {
+    var json = [];
+    for (var i = 0; i < columnNames.length; i++) {
+        var columnName = columnNames[i];
+        json.push({ sTitle : columnName});
+    }
+    return json;
+}
+
+var respJson = createTableJSON(html);
+
+$("#query-results-holder").html("<table id=\"query-results\"></table>");
+$("#query-results").dataTable({
+    "aaData" : respJson.Rows,
+    "aoColumns" : getaoColumns(respJson.ColumnNames)
+});
+$("#query-results-holder").show()
+
 
 %>
 </script>

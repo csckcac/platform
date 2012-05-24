@@ -15,109 +15,153 @@
 
 
 <script type="text/javascript">
+    $(document).ready(function () {
 
-    var sqlResultJSON = null;
+        var sqlResultJSON = null;
 
-    $("#preview").click(function () {
-        genPreview();
-    });
+        var supportedUIElements = {"Bar Graph" : "bar", "Table" : "table"};
 
-    function uiElementChange() {
-        if ($("#uielement").val() == "bar") {
-            $("#bar-chart-options").show('fast', function() {
-                if (!sqlResultJSON) {
-                    $.post("execute_sql_ajaxprocessor.jsp", null, function(html) {
-                        var success = !(html.toLowerCase().match(/error/));
-                        if (success) {
-                            sqlResultJSON = JSON.parse(html);
-                            var optionHTML = "";
-                            $.each(sqlResultJSON.ColumnNames, function(i, val) {
-                                optionHTML += "<option value=\"" + val + "\">" + val + "</option>"
-                            });
-                            $("#bar-chart-options [name$=\"column\"]").html(optionHTML);
-                            $("#bar-chart-options .bar").change(genPreview);
-                        } else {
-                            CARBON.showErrorDialog(html);
-                        }
+        //get sql results
+
+        $.post("execute_sql_ajaxprocessor.jsp", null, function(html) {
+            var success = !(html.toLowerCase().match(/error/));
+            if (success) {
+                sqlResultJSON = JSON.parse(html);
+            } else {
+                CARBON.showErrorDialog(html);
+            }
+        });
+
+        $("#select-uielement").html(function() {
+            var html = "";
+            $.each(supportedUIElements, function(key, val) {
+                html += "<option value=\"" + val +"\">"+ key + "</option>";
+            });
+            return html;
+        });
+
+        $("#preview").click(function () {
+            if ($("#select-uielement").val() == "bar") {
+                genBarGraphPreview();
+            } else if ($("#select-uielement").val() == "table") {
+                genTablePreview();
+            }
+        });
+
+        uiElementChange();
+
+        $("#select-uielement").change(function() {
+            uiElementChange();
+        });
+
+
+
+        function uiElementChange() {
+            // hiding all ui element divs
+            $(".uielements").hide();
+
+
+
+            if ($("#select-uielement").val() == "bar") {
+                $("#bar-chart-options").show('fast', function() {
+                    var optionHTML = "";
+                    $.each(sqlResultJSON.ColumnNames, function(i, val) {
+                        optionHTML += "<option value=\"" + val + "\">" + val + "</option>"
                     });
+                    $("#bar-chart-options [name$=\"column\"]").html(optionHTML);
+                    $("#bar-chart-options .bar").change(genBarGraphPreview);
+                });
 
-
-                }
-            });
-
-        } else {
-            $("#bar-chart-options").hide();
+            } else if ($("#select-uielement").val() == "table"){
+                $("#table-options").show();
+                $("#table-options .table").change(genTablePreview);
+                genTablePreview();
+            }
         }
-    }
 
-
-
-    function genPreview() {
-
-        var allValsComplete = $("#bar-chart-options .bar").map(function(i, e) {
-            return $(e).val();
-        }).get().join(",");
-        var matchVals = allValsComplete.match(/,/g);
-
-        if (sqlResultJSON && matchVals.length >= 3) {
-
-            var xColIndex;
-            var yColIndex;
-
-            $.each(sqlResultJSON.ColumnNames, function(i, val) {
-                if ($("[name=\"bar-xcolumn\"]").val() == val) {
-                    xColIndex = i;
+        function genTablePreview() {
+            function getaoColumns(columnNames) {
+                var json = [];
+                for (var i = 0; i < columnNames.length; i++) {
+                    var columnName = columnNames[i];
+                    json.push({ sTitle : columnName});
                 }
-                if ($("[name=\"bar-ycolumn\"]").val() == val) {
-                    yColIndex = i;
-                }
+                return json;
+            }
+
+            $("#preview-area").html("<div style=\"text-align: center;\"><b>" + $("[name=table-title]").val() + "</b></div><br/>" +
+                    "<table id=\"query-results\"></table>");
+            $("#query-results").dataTable({
+                "aaData" : sqlResultJSON.Rows,
+                "aoColumns" : getaoColumns(sqlResultJSON.ColumnNames)
             });
+            $("#preview-area").height(Math.max(250, $("#query-results").height()));
+            $("#preview-area").width(Math.max(325, $("#query-results").width()));
+        }
 
-            var plotArray = [];
-            $.each(sqlResultJSON.Rows, function (i, val) {
-                plotArray.push([val[yColIndex], parseInt(val[xColIndex])]);
-            });
+        function genBarGraphPreview() {
 
-            // clear div
-            $("#preview-area").html("");
+            var allValsComplete = $("#bar-chart-options .bar").map(function(i, e) {
+                return $(e).val();
+            }).get().join(",");
+            var matchVals = allValsComplete.match(/,/g);
 
-            $.jqplot('preview-area', [plotArray], {
-                title: $("[name=bar-title]").val(),
-                series:[{renderer:$.jqplot.BarRenderer}],
-                axes: {
-                    xaxis: {
-                        renderer: $.jqplot.CategoryAxisRenderer,
-                        label: $("[name=bar-xlabel]").val(),
-                        // labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                        tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-                        tickOptions: {
-                            enableFontSupport: true,
-                            angle: -30
-                        }
+            if (sqlResultJSON && matchVals.length >= 3) {
 
-                    },
-                    yaxis: {
-                        autoscale:true,
-                        label: $("[name=bar-ylabel]").val(),
-                        // labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                        tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-                        tickOptions: {
-                            enableFontSupport: true,
-                            angle: -30
+                var xColIndex;
+                var yColIndex;
+
+                $.each(sqlResultJSON.ColumnNames, function(i, val) {
+                    if ($("[name=\"bar-xcolumn\"]").val() == val) {
+                        xColIndex = i;
+                    }
+                    if ($("[name=\"bar-ycolumn\"]").val() == val) {
+                        yColIndex = i;
+                    }
+                });
+
+                var plotArray = [];
+                $.each(sqlResultJSON.Rows, function (i, val) {
+                    plotArray.push([val[xColIndex], parseInt(val[yColIndex])]);
+                });
+
+                // clear div
+                $("#preview-area").html("");
+
+                $.jqplot('preview-area', [plotArray], {
+                    title: $("[name=bar-title]").val(),
+                    series:[{renderer:$.jqplot.BarRenderer}],
+                    axes: {
+                        xaxis: {
+                            renderer: $.jqplot.CategoryAxisRenderer,
+                            label: $("[name=bar-xlabel]").val(),
+                            // labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                            tickOptions: {
+                                enableFontSupport: true,
+                                angle: -30
+                            }
+
+                        },
+                        yaxis: {
+                            autoscale:true,
+                            label: $("[name=bar-ylabel]").val(),
+                            // labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                            tickOptions: {
+                                enableFontSupport: true,
+                                angle: -30
+                            }
                         }
                     }
-                }
-            });
+                });
 
 
+            }
         }
-    }
 
-    $(document).ready(function () {
-        uiElementChange();
-        $("#uielement").change(function() {
-            uiElementChange();
-        })
+
+
     })
 
 </script>
@@ -130,9 +174,7 @@
                 <tr>
                     <td>Pick UI Element
                     </td>
-                    <td><select name="uielement" id="uielement" style="width:200px">
-                        <option value="bar">Bar Chart</option>
-                        <option value="table">Table</option>
+                    <td><select name="uielement" id="select-uielement" style="width:200px">
                     </select>
                     </td>
                     <td><input id="preview" type="button" value="Preview"></td>
@@ -140,7 +182,7 @@
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <div id="bar-chart-options">
+                        <div class="uielements" id="bar-chart-options">
                             <table>
                                 <tbody>
                                 <tr>
@@ -164,8 +206,17 @@
                                     <td>X-Axis Column<span style="color: red; ">*</span></td>
                                     <td><select class="bar" name="bar-xcolumn" style="width:150px"></select></td>
                                 </tr>
-
-
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="uielements" id="table-options">
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td>Table Title<span style="color: red; ">*</span>
+                                    </td>
+                                    <td><input type="text" class="table" name="table-title" value="Product vs Total Amount" style="width:150px"></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>

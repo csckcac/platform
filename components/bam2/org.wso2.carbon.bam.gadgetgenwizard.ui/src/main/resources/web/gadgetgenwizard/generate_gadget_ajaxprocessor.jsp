@@ -35,13 +35,18 @@
         attrKeys.addAll(Arrays.asList(barChartKeys));
     }
 
+    if ((session.getAttribute("uielement") != null) && (((String[]) session.getAttribute("uielement"))[0].equals("table")))                     {
+        String[] barChartKeys = new String[] {"table-title"};
+        attrKeys.addAll(Arrays.asList(barChartKeys));
+    }
+
     WSMap wsMap = GGWUIUtils.constructWSMap(session, attrKeys);
 
     String responseHTML;
     try {
         responseHTML = gadgetGenAdminClient.generateGraph(wsMap);
     } catch (Exception e) {
-        responseHTML = "Error trying to generate graph. Please try again. " + e.getMessage();
+        responseHTML = "Error trying to generate gadget. Please try again. " + e.getMessage();
     }
 %>
 <%=responseHTML%>

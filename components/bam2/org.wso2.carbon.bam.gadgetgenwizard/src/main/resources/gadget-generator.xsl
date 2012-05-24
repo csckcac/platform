@@ -19,13 +19,16 @@
       <!-- CDATA -->
   <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
     <xsl:text>&#10;</xsl:text>
-    <xsl:text disable-output-escaping="yes">
-    &lt;link href="css/jquery.jqplot.min.css" type="text/css" rel="stylesheet"/&gt;
-    &lt;script src="js/jquery.min.js" type="text/javascript">&lt;/script&gt;
-    &lt;script src="js/jquery.jqplot.min.js" type="text/javascript">&lt;/script&gt;
-    &lt;script type="text/javascript" src="js/plugins/jqplot.categoryAxisRenderer.js"&gt;&lt;/script&gt;
-    &lt;script type="text/javascript" src="js/plugins/jqplot.barRenderer.js"&gt;&lt;/script&gt;
-    </xsl:text>
+
+      <xsl:choose>
+          <xsl:when test="gg:BarChart">
+              <xsl:call-template name="BarChartResources"/>
+          </xsl:when>
+          <xsl:when test="gg:Table">
+              <xsl:call-template name="TableResources"/>
+          </xsl:when>
+      </xsl:choose>
+
       <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="../src/excanvas.min.js"></script><![endif]-->
     <xsl:text>&#10;</xsl:text>
     <xsl:text disable-output-escaping="yes">&lt;!--[if lt IE 9]&gt;&lt;script language="javascript" type="text/javascript" src="js/excanvas.min.js"&gt;&lt;/script&gt;&lt;![endif]--&gt;</xsl:text>
@@ -38,8 +41,8 @@
             var width = gadgets.window.getViewportDimensions()["width"];
             var height = (width/widthToHeightRatio);
 
-            $("#chart1").width(width);
-            $("#chart1").height(height);
+            $("#ui-element").width(width);
+            $("#ui-element").height(height);
 
             var plot = null;
 
@@ -47,7 +50,7 @@
             setInterval(update, <xsl:value-of select="gg:refresh-rate" /> * 1000 );
 
             function update() {
-                var plotarray = null;
+                var respJson = null;
                 $.ajax({
                     url: "../../gadgetgen/<xsl:value-of select="gg:gadget-filename" />.jag",
 
@@ -66,23 +69,26 @@
                     //success
                     success: function (html) {
 
-                        plotarray = html;
+                        respJson = html;
                     }
                 });
 
-                if (plot != null) {
-                //    plot.destroy();
-                }
-
         <!--<xsl:if test="gg:BarChart">-->
-                <xsl:call-template name="BarChart"></xsl:call-template>
+        <xsl:choose>
+            <xsl:when test="gg:BarChart">
+                <xsl:call-template name="BarChart"/>
+            </xsl:when>
+            <xsl:when test="gg:Table">
+                <xsl:call-template name="Table"/>
+            </xsl:when>
+        </xsl:choose>
         <!--</xsl:if>-->
                 gadgets.window.adjustHeight();
             };
         });
     </script>
 
-<div style="width: 325px; height: 250px;" id="chart1"/>
+<div style="width: 325px; height: 250px;" id="ui-element"/>
 <div id="text1"/>
          <xsl:text>&#10;</xsl:text>
   <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
@@ -91,8 +97,9 @@
 </Module>
     </xsl:template>
 
-    <xsl:template name="BarChart" match="gg:BarChart">
-        plot = $.jqplot('chart1', [plotarray], {
+    <xsl:template name="BarChart">
+        $("#ui-element").html('');
+        plot = $.jqplot('ui-element', [respJson], {
                     title: 'Product vs Total Amount',
                     series:[{renderer:$.jqplot.BarRenderer}],
                     axes: {
@@ -120,6 +127,43 @@
                     }
                 });
                 plot.replot();
+    </xsl:template>
+    <xsl:template name="Table">
+        function getaoColumns(columnNames) {
+            var json = [];
+            for (var i = 0; i <xsl:text disable-output-escaping="yes">&#60;</xsl:text> columnNames.length; i++) {
+                var columnName = columnNames[i];
+                json.push({ sTitle : columnName});
+            }
+            return json;
+        }
+
+        $("#ui-element").html("<xsl:text disable-output-escaping="yes">&lt;div style=\"text-align: center;\"&gt;&lt;b&gt;</xsl:text>" + "<xsl:value-of select="gg:table-title" />" +
+        "<xsl:text disable-output-escaping="yes">&lt;/b&gt;&lt;/div&gt;&lt;br/&gt;" +
+                "&lt;table id=\"query-results\" style=\"width:100%\"&gt;&lt;/table&gt;</xsl:text>");
+        $("#query-results").dataTable({
+            "aaData" : respJson.Rows,
+            "aoColumns" : getaoColumns(respJson.ColumnNames)
+        });
+    </xsl:template>
+
+    <xsl:template name="TableResources">
+        <xsl:text disable-output-escaping="yes">
+        &lt;link href="css/jquery.dataTables.css" type="text/css" rel="stylesheet"/&gt;
+        &lt;script src="js/jquery.min.js" type="text/javascript">&lt;/script&gt;
+        &lt;script src="js/jquery.dataTables.min.js" type="text/javascript">&lt;/script&gt;
+        </xsl:text>
+    </xsl:template>
+
+
+    <xsl:template name="BarChartResources">
+        <xsl:text disable-output-escaping="yes">
+    &lt;link href="css/jquery.jqplot.min.css" type="text/css" rel="stylesheet"/&gt;
+    &lt;script src="js/jquery.min.js" type="text/javascript">&lt;/script&gt;
+    &lt;script src="js/jquery.jqplot.min.js" type="text/javascript">&lt;/script&gt;
+    &lt;script type="text/javascript" src="js/plugins/jqplot.categoryAxisRenderer.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="js/plugins/jqplot.barRenderer.js"&gt;&lt;/script&gt;
+    </xsl:text>
     </xsl:template>
 
 </xsl:stylesheet>

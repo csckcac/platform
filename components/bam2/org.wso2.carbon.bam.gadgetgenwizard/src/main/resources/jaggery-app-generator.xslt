@@ -31,24 +31,28 @@
 
         <xsl:text disable-output-escaping="yes">&#60;</xsl:text><xsl:text>&#37;</xsl:text>
         var config = {};
-        var db = new
-        Database("jdbc:h2:/Users/mackie/tmp/jaggery-1.0.0-SNAPSHOT_M4/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE",
-        "org.h2.Driver", "wso2carbon", "wso2carbon", config);
 
         var db = new Database("<xsl:value-of select="gg:jdbcurl" />", "<xsl:value-of select="gg:driver"/>",
         "<xsl:value-of select="gg:username"/>", "<xsl:value-of select="gg:password"/>", config);
     	var result = db.query("<xsl:value-of select="gg:sql"/>");
 
-        var plotarray = null;
+        var respJson = null;
 
-        <xsl:call-template name="BarGraph"/>
+        <xsl:choose>
+            <xsl:when test="gg:BarChart">
+                <xsl:call-template name="BarChart"/>
+            </xsl:when>
+            <xsl:when test="gg:Table">
+                <xsl:call-template name="Table"/>
+            </xsl:when>
+        </xsl:choose>
 
-        print(plotarray);
+        print(respJson);
    		 <xsl:text>&#37;</xsl:text><xsl:text disable-output-escaping="yes">&#62;</xsl:text>
 
         </xsl:template>
 
-    <xsl:template name="BarGraph" match="gg:BarGraph">
+    <xsl:template name="BarChart">
         var colx = "<xsl:value-of select="gg:bar-xcolumn" />".toUpperCase();
     	var coly = "<xsl:value-of select="gg:bar-ycolumn" />".toUpperCase();
 
@@ -61,6 +65,31 @@
 
 			return array;
         };
-        plotarray = convertDBResult(result, colx, coly);
+        respJson = convertDBResult(result, colx, coly);
     </xsl:template>
+
+    <xsl:template name="Table">
+        function createTableJSON(result) {
+            var len = result.length;
+            var rows = [];
+            var columnNames = []
+            for (var i = 0; i <xsl:text disable-output-escaping="yes">&#60;</xsl:text> len; i++) {
+                var obj = result[i];
+                var row = []
+                for(var k in obj) {
+                    if ({}.hasOwnProperty.call(obj, k)) {
+                        if (i == 0) {
+                            columnNames.push(k);
+                        }
+                        row.push(obj[k]);
+                    }
+                }
+                rows.push(row);
+            }
+            return {Rows: rows, ColumnNames : columnNames};
+        }
+
+        respJson = createTableJSON(result);
+    </xsl:template>
+
 </xsl:stylesheet>

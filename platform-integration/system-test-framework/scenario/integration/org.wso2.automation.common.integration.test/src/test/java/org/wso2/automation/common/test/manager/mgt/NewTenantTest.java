@@ -21,11 +21,8 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceTenantMgtServiceAdmin;
-
-import java.rmi.RemoteException;
-import java.util.Random;
-
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceExceptionException;
 import org.wso2.carbon.tenant.mgt.stub.beans.xsd.TenantInfoBean;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -33,14 +30,20 @@ import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
-import static org.testng.Assert.*;
+import java.rmi.RemoteException;
+import java.util.Random;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 public class NewTenantTest {
     private static final Log log = LogFactory.getLog(NewTenantTest.class);
 
     @Test(groups = "stratos.manager", description = "add new tenant to cloud as super user")
     public void testAddNewTenantTest()
-            throws LoginAuthenticationExceptionException, RemoteException {
+            throws LoginAuthenticationExceptionException, RemoteException,
+                   TenantMgtAdminServiceExceptionException {
         log.info("Running Add new tenant test");
         Random rand = new Random();
         int tenantID = 0;

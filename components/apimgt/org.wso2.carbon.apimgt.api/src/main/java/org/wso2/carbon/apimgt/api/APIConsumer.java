@@ -182,6 +182,8 @@ public interface APIConsumer extends APIManager {
      */
     public void updateApplication(Application application) throws APIManagementException;
 
+    public void removeApplication(Application application) throws APIManagementException;
+
     /**
      * Returns a list of applications for a given subscriber
      *

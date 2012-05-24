@@ -1427,6 +1427,61 @@ public class ApiMgtDAO {
             APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
         }
     }
+    
+    public void deleteApplication(Application application) throws APIManagementException {
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        
+        String getSubscriptionsQuery = "SELECT" +
+                " SUBSCRIPTION_ID " +
+                "FROM" +
+                " AM_SUBSCRIPTION " +
+                "WHERE" +
+                " APPLICATION_ID = ?";
+        
+        String deleteKeyMappingQuery = "DELETE FROM AM_SUBSCRIPTION_KEY_MAPPING WHERE SUBSCRIPTION_ID = ?";
+        String deleteSubscriptionsQuery = "DELETE FROM AM_SUBSCRIPTION WHERE APPLICATION_ID = ?";
+        String deleteApplicationQuery = "DELETE FROM AM_APPLICATION WHERE APPLICATION_ID = ?";
+
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            prepStmt = connection.prepareStatement(getSubscriptionsQuery);
+            prepStmt.setInt(1, application.getId());
+            rs = prepStmt.executeQuery();
+            
+            List<Integer> subscriptions = new ArrayList<Integer>();
+            while (rs.next()) {
+                subscriptions.add(rs.getInt("SUBSCRIPTION_ID"));  
+            }
+            prepStmt.close();
+            rs.close();
+            
+            prepStmt = connection.prepareStatement(deleteKeyMappingQuery);
+            for (Integer subscriptionId : subscriptions) {
+                prepStmt.setInt(1, subscriptionId);
+                prepStmt.execute();
+            }
+            prepStmt.close();
+            
+            prepStmt = connection.prepareStatement(deleteSubscriptionsQuery);
+            prepStmt.setInt(1, application.getId());
+            prepStmt.execute();
+            prepStmt.close();
+
+            prepStmt = connection.prepareStatement(deleteApplicationQuery);
+            prepStmt.setInt(1, application.getId());
+            prepStmt.execute();
+            
+            connection.commit();            
+        } catch (SQLException e) {
+            String msg = "Error while removing application details from the database";
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
+        }
+    }
 
 
     /**

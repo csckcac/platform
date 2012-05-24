@@ -18,39 +18,58 @@ package org.wso2.automation.common.test.greg.governance;
 */
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axis2.AxisFault;
+import org.apache.xmlbeans.impl.piccolo.xml.XMLStreamReader;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.governance.api.common.GovernanceArtifactFilter;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
+import org.wso2.carbon.governance.api.services.ServiceFilter;
 import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
+import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.platform.test.core.utils.gregutils.GregRemoteRegistryProvider;
+import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
+import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
+import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import java.net.MalformedURLException;
 
+import java.io.StringReader;
+
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class ServiceAPITests {
 
     String service_namespace = "http://example.com/demo/services";
-    String service_name = "GovernanceAPITestService";
+    String service_name = "GovernanceAPIAutomatedTestService";
     public static ServiceManager serviceManager;
+    private Service referenceService;
 
     @BeforeClass(alwaysRun = true)
-    public void initializeAPIObject() throws MalformedURLException, RegistryException {
-        GregRemoteRegistryProvider gregRemoteRegistryProvider = new GregRemoteRegistryProvider();
-        serviceManager = new ServiceManager(gregRemoteRegistryProvider.getRegistry(0));
+    public void initializeAPIObject() throws RegistryException, AxisFault {
+        int userId = new GregUserIDEvaluator().getTenantID();
+        WSRegistryServiceClient registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
+        Registry governance = new RegistryProvider().getGovernance(registryWS, userId);
+        serviceManager = new ServiceManager(governance);
         cleanService();
     }
 
     //ToDo need remove specified services
     private void cleanService() throws GovernanceException {
-        String[] serviceID = serviceManager.getAllServiceIds();
-        for (String s : serviceID) {
-            serviceManager.removeService(s);
+        Service[] service = serviceManager.getAllServices();
+        for (int i = 0; i <= service.length - 1; i++) {
+            if (service[i].getQName().getLocalPart().contains(service_name)) {
+                System.out.println(service[i].getId());
+                serviceManager.removeService(service[i].getId());
+            }
         }
     }
 
@@ -107,18 +126,73 @@ public class ServiceAPITests {
         assertTrue(isServiceFound, "Error occured while adding a service with inline service content");
     }
 
-    @Test(enabled = false,groups = {"wso2.governance.api"}, description = "Testing updateService", priority = 4)
+
+    //https://wso2.org/jira/browse/CARBON-13194
+    @Test(groups = {"wso2.governance.api"}, description = "Testing updateService", priority = 4)
     public void testUpdateService() throws GovernanceException {
         Service[] service = serviceManager.getAllServices();
         for (int serviceID = 0; serviceID <= service.length - 1; serviceID++) {
             if (service[serviceID].getQName().getLocalPart().equalsIgnoreCase(service_name)) {
-                service[serviceID].activate();
+                service[serviceID].setQName(new QName(service_namespace, "GovernanceAPIAutomatedTestService2"));
                 serviceManager.updateService(service[serviceID]);
             }
         }
+        service = serviceManager.getAllServices();
         for (int serviceID = 0; serviceID <= service.length - 1; serviceID++) {
+            System.out.println(service[serviceID].getQName().getLocalPart());
             if (service[serviceID].getQName().getLocalPart().equalsIgnoreCase(service_name)) {
-                assertTrue(service[serviceID].isActive(), "Error occurred while executing updateService API method");
+                assertFalse(service[serviceID].getQName().getLocalPart().equalsIgnoreCase(service_name),
+                        "Old service QName not updated.");
+            }
+        }
+    }
+
+    @Test(groups = {"wso2.governance.api"}, description = "Testing getService", priority = 5)
+    public void testGetService() throws GovernanceException {
+        Service service;
+        boolean isServiceFound = false;
+        String[] serviceId = serviceManager.getAllServiceIds();
+        for (String s : serviceId) {
+             service = serviceManager.getService(s);
+            if(service.getQName().getLocalPart().contains(service_name)){
+                isServiceFound = true;
+            }
+        }
+        assertTrue(isServiceFound,"getService governance API method does not work.");
+    }
+
+//    @Test(groups = {"wso2.governance.api"}, description = "Testing removeService", priority = 6)
+//    public void testFindService() throws GovernanceException, XMLStreamException {
+//
+//        javax.xml.stream.XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(service_name));
+//        StAXOMBuilder builder = new StAXOMBuilder(reader);
+//        OMElement referenceServiceElement = builder.getDocumentElement();
+//        referenceService = serviceManager.newService(referenceServiceElement);
+//
+//        //ListServiceFilter listServiceFilter = new ListServiceFilter(referenceService);
+//        ServiceFilter listServiceFilter = new ServiceFilter() {
+//            GovernanceArtifactFilter filter = new GovernanceArtifactFilter(referenceService);
+//            public boolean matches(Service service) throws GovernanceException {
+//                return filter.matches(service);
+//            }
+//        };
+//
+//        serviceManager.findServices(listServiceFilter) ;
+//    }
+
+
+    @Test(groups = {"wso2.governance.api"}, description = "Testing removeService", priority = 7)
+    public void testRemoveService() throws GovernanceException {
+        Service[] service = serviceManager.getAllServices();
+        for (int i = 0; i <= service.length - 1; i++) {
+            if (service[i].getQName().getLocalPart().contains(service_name)) {
+                serviceManager.removeService(service[i].getId());
+            }
+        }
+        service = serviceManager.getAllServices();
+        for (int i = 0; i <= service.length - 1; i++) {
+            if (service[i].getQName().getLocalPart().contains(service_name)) {
+                Assert.fail("removeService API method does not work");
             }
         }
     }

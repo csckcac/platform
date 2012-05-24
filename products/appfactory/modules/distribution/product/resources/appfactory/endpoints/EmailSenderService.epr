@@ -7,8 +7,8 @@
         <wsa:Metadata>
                 <id>SInvokeEPR</id>
                 <transport type="http">
-                    <Transfer-Encoding>chunked</Transfer-Encoding>
-                    <Content-Encoding>gzip</Content-Encoding>
+		<authorization-username>admin</authorization-username> 
+    		<authorization-password>admin</authorization-password>
                 </transport>
          </wsa:Metadata>
 </wsa:EndpointReference>

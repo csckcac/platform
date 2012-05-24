@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.common.AuthenticationException;
 import org.wso2.carbon.core.security.AuthenticatorsConfiguration;
+import org.wso2.carbon.core.services.authentication.AuthenticationAdmin;
 import org.wso2.carbon.core.services.authentication.CarbonServerAuthenticator;
 import org.wso2.carbon.utils.ServerConstants;
 

@@ -227,7 +227,9 @@ public class ProxyServiceAdmin extends AbstractServiceBusAdmin {
             if (proxyServiceElement.getQName().getLocalPart()
                     .equals(XMLConfigConstants.PROXY_ELT.getLocalPart())) {
                 String proxyName = proxyServiceElement.getAttributeValue(new QName("name"));
-                if (getSynapseConfiguration().getAxisConfiguration().getService(
+
+                if (getSynapseConfiguration().getProxyService(proxyName) != null ||
+                    getSynapseConfiguration().getAxisConfiguration().getService(
                         proxyName) != null) {
                     handleException(log, "A service named " + proxyName + " already exists", null);
                 } else {

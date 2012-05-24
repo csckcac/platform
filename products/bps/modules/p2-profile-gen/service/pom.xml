@@ -110,7 +110,7 @@
 
                                 <featureArtifactDef>org.wso2.bps:org.wso2.stratos.bps.styles.feature:${project.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.bps:org.wso2.stratos.bps.dashboard.ui.feature:${project.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.bps:org.wso2.stratos.bps.login.ui.feature:${project.version}</featureArtifactDef>
+                                <!--<featureArtifactDef>org.wso2.bps:org.wso2.stratos.bps.login.ui.feature:${project.version}</featureArtifactDef>-->
 
                                 <featureArtifactDef>org.wso2.bps:org.wso2.bps.samples.utils.feature:${bps.version}</featureArtifactDef>
 
@@ -266,10 +266,10 @@
                                     <id>org.wso2.stratos.bps.dashboard.ui.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.stratos.bps.login.ui.feature.group</id>
-                                    <version>${project.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.stratos.bps.login.ui.feature.group</id>-->
+                                    <!--<version>${project.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.bps.samples.utils.feature.group</id>
                                     <version>${bps.version}</version>

@@ -70,7 +70,7 @@
         <tns:maxConnectionsPerHost value="20"/>
         <tns:maxTotalConnections value="100"/>
     </tns:MultithreadedHttpConnectionManagerConfig>-->
-    
+
     <!-- Process instance cleanup feature in WSO2 Business Process Server
          allows you to configure periodic process instance cleanup tasks based
          on various process instance properties to remove process instance data
@@ -93,6 +93,14 @@
     timestamp of the BPEL packages in the file system against the BPEL packages in the registry. If
     they do not match then the BPEL package in the registry is copied to the file system. -->
     <!--<tns:SyncWithRegistry>false</tns:SyncWithRegistry>-->
+
+    <!-- The property InMemoryInstanceTimeToLive may be used to limit the time-to-live of in-memory instances.
+     This setting can be useful to avoid memory leaks related to in-memory processes that may get
+      'stuck' during execution and never terminate (time should be specified in milliseconds) -->
+    <!--tns:InMemoryInstanceTimeToLive>600000</tns:InMemoryInstanceTimeToLive-->
+
+    <!-- This property  can be used to configure ode scheduler thread pool size  -->
+    <!--tns:ODESchedulerThreadPoolSize>0</tns:ODESchedulerThreadPoolSize-->
      
 
 </tns:WSO2BPS>

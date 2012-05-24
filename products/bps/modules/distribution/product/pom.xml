@@ -1,31 +1,31 @@
-    <!--
- ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- ~
- ~ WSO2 Inc. licenses this file to you under the Apache License,
- ~ Version 2.0 (the "License"); you may not use this file except
- ~ in compliance with the License.
- ~ You may obtain a copy of the License at
- ~
- ~    http://www.apache.org/licenses/LICENSE-2.0
- ~
- ~ Unless required by applicable law or agreed to in writing,
- ~ software distributed under the License is distributed on an
- ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- ~ KIND, either express or implied.  See the License for the
- ~ specific language governing permissions and limitations
- ~ under the License.
- -->
+<!--
+~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied.  See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <properties>
         <maven.build.timestamp.format>dd MMM yyyy</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
-	    <product.version>${project.parent.version}</product.version>
+        <product.version>${project.parent.version}</product.version>
     </properties>
     <parent>
         <groupId>org.wso2.bps</groupId>
-    	<artifactId>wso2bps-distribution-parent</artifactId>
+        <artifactId>wso2bps-distribution-parent</artifactId>
         <version>3.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
-			<artifactId>axis2</artifactId>
+            <artifactId>axis2</artifactId>
             <version>${axis2.osgi.version}</version>
         </dependency>
         <dependency>
@@ -122,7 +122,8 @@
                                 <echo message="######## Creating BPEL / HumanTask Archives. #########"/>
                                 <property name="tempdir" value="target/samples"/>
                                 <property name="bpelSampleDir" value="target/samples/bpel"/>
-                                <property name="humantaskSampleDir" value="target/samples/humantask"/>
+                                <property name="humantaskSampleDir"
+                                          value="target/samples/humantask"/>
                                 <mkdir dir="${tempdir}"/>
                                 <mkdir dir="${bpelSampleDir}"/>
                                 <mkdir dir="${humantaskSampleDir}"/>
@@ -165,7 +166,7 @@
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/SecurePartnerBPEL"/>
                                 <zip destfile="target/samples/bpel/TestAlarm.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestAlarm"/>
-				                <zip destfile="target/samples/bpel/TestAssignActivity1.zip"
+                                <zip destfile="target/samples/bpel/TestAssignActivity1.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestAssignActivity1"/>
                                 <zip destfile="target/samples/bpel/TestAssignDate.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestAssignDate"/>
@@ -181,23 +182,23 @@
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestE4XDirect"/>
                                 <zip destfile="target/samples/bpel/TestExpandTemplate.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestExpandTemplate"/>
-                                 <zip destfile="target/samples/bpel/TestFlowLinks.zip"
+                                <zip destfile="target/samples/bpel/TestFlowLinks.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestFlowLinks"/>
-                                 <zip destfile="target/samples/bpel/TestForEach.zip"
+                                <zip destfile="target/samples/bpel/TestForEach.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestForEach"/>
-                                 <zip destfile="target/samples/bpel/TestIf.zip"
+                                <zip destfile="target/samples/bpel/TestIf.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestIf"/>
-                                 <zip destfile="target/samples/bpel/TestIgnoreMissingFromData.zip"
+                                <zip destfile="target/samples/bpel/TestIgnoreMissingFromData.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestIgnoreMissingFromData"/>
-                                 <zip destfile="target/samples/bpel/TestPickOneWay.zip"
+                                <zip destfile="target/samples/bpel/TestPickOneWay.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestPickOneWay"/>
-                                 <zip destfile="target/samples/bpel/TestProcessProperties.zip"
+                                <zip destfile="target/samples/bpel/TestProcessProperties.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestProcessProperties"/>
-                                 <zip destfile="target/samples/bpel/TestPubSubInProc.zip"
+                                <zip destfile="target/samples/bpel/TestPubSubInProc.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestPubSubInProc"/>
-                                 <zip destfile="target/samples/bpel/TestRepeatUntil.zip"
+                                <zip destfile="target/samples/bpel/TestRepeatUntil.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestRepeatUntil"/>
-                                 <zip destfile="target/samples/bpel/TestRESTProcess.zip"
+                                <zip destfile="target/samples/bpel/TestRESTProcess.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestRESTProcess"/>
                                 <zip destfile="target/samples/bpel/TestSplit.zip"
                                      basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestSplit"/>
@@ -310,8 +311,10 @@
                                         <include name="wso2bps-${project.version}.zip"/>
                                     </fileset>
                                 </unzip>
-                                <copy todir="target/wso2carbon-core-${carbon.version}/repository/components" overwrite="true">
-                                    <fileset dir="${tempdir}/wso2bps-${project.version}/repository/components">
+                                <copy todir="target/wso2carbon-core-${carbon.version}/repository/components"
+                                      overwrite="true">
+                                    <fileset
+                                            dir="${tempdir}/wso2bps-${project.version}/repository/components">
                                     </fileset>
                                 </copy>
                                 <delete file="target/wso2bps-${project.version}.zip"/>
@@ -333,7 +336,8 @@
                                     <mapper type="glob" from="*.html" to="*.xml"/>
                                 </move>
                                 <mkdir dir="src/site/xdoc"/>
-                                <copy todir="src/site/xdoc" overwrite="false" includeemptydirs="false">
+                                <copy todir="src/site/xdoc" overwrite="false"
+                                      includeemptydirs="false">
                                     <fileset dir="${tempdir}/web">
                                         <exclude name="**/yui/**"/>
                                         <exclude name="**/ajax/**"/>
@@ -349,12 +353,13 @@
                                 </copy>
                                 <copy todir="src/site" overwrite="false" includeemptydirs="false">
                                     <fileset dir="../../../docs">
- 					<exclude name="**/user-mgt-actdir.xml"/>
+                                        <exclude name="**/user-mgt-actdir.xml"/>
                                         <exclude name="**/user-mgt-jdbc.xml"/>
                                         <exclude name="**/user-mgt-ldap.xml"/>
-                                    </fileset>       
+                                    </fileset>
                                 </copy>
-                                <copy todir="target/site/" overwrite="false" includeemptydirs="false">
+                                <copy todir="target/site/" overwrite="false"
+                                      includeemptydirs="false">
                                     <fileset dir="src/site/xdoc/">
                                         <include name="**/images/*.*"/>
                                     </fileset>
@@ -365,51 +370,51 @@
                         </configuration>
                     </execution>
                     <!--<execution>-->
-                        <!--<id>prepare-product-for-testing</id>-->
-                        <!--<phase>pre-integration-test</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>run</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<tasks unless="maven.test.skip">-->
-                                <!--<property name="tempdir" value="target/test"/>-->
-                                <!--<mkdir dir="${tempdir}"/>-->
-                                <!--&lt;!&ndash; unzip cannot be used since it does not restore file permissions &ndash;&gt;-->
-                                <!--&lt;!&ndash;unzip dest="${tempdir}">-->
-                                    <!--<fileset dir="target">-->
-                                        <!--<include name="wso2bps-${project.version}.zip"/>-->
-                                    <!--</fileset>-->
-                                <!--</unzip&ndash;&gt;-->
-                                <!--<exec dir="${tempdir}/" executable="unzip" os="Linux">-->
-                                    <!--<arg line="../wso2bps-${project.version}.zip"/>-->
-                                <!--</exec>-->
-                                <!--<copy todir="${tempdir}/wso2bps-${project.version}/repository/deployment/server/bpel/" overwrite="false">-->
-                                    <!--<fileset dir="../../samples/product/src/main/resources/bpel/2.0/">-->
-                                    <!--</fileset>-->
-                                <!--</copy>-->
-                                <!--<echo message="Starting BPS Server for testing..."/>-->
-                                <!--<exec dir="${tempdir}/" executable="sh" spawn="false" os="Linux">-->
-                                    <!--<arg line="wso2bps-${project.version}/bin/wso2server.sh start"/>-->
-                                <!--</exec>-->
-                            <!--</tasks>-->
-                        <!--</configuration>-->
+                    <!--<id>prepare-product-for-testing</id>-->
+                    <!--<phase>pre-integration-test</phase>-->
+                    <!--<goals>-->
+                    <!--<goal>run</goal>-->
+                    <!--</goals>-->
+                    <!--<configuration>-->
+                    <!--<tasks unless="maven.test.skip">-->
+                    <!--<property name="tempdir" value="target/test"/>-->
+                    <!--<mkdir dir="${tempdir}"/>-->
+                    <!--&lt;!&ndash; unzip cannot be used since it does not restore file permissions &ndash;&gt;-->
+                    <!--&lt;!&ndash;unzip dest="${tempdir}">-->
+                    <!--<fileset dir="target">-->
+                    <!--<include name="wso2bps-${project.version}.zip"/>-->
+                    <!--</fileset>-->
+                    <!--</unzip&ndash;&gt;-->
+                    <!--<exec dir="${tempdir}/" executable="unzip" os="Linux">-->
+                    <!--<arg line="../wso2bps-${project.version}.zip"/>-->
+                    <!--</exec>-->
+                    <!--<copy todir="${tempdir}/wso2bps-${project.version}/repository/deployment/server/bpel/" overwrite="false">-->
+                    <!--<fileset dir="../../samples/product/src/main/resources/bpel/2.0/">-->
+                    <!--</fileset>-->
+                    <!--</copy>-->
+                    <!--<echo message="Starting BPS Server for testing..."/>-->
+                    <!--<exec dir="${tempdir}/" executable="sh" spawn="false" os="Linux">-->
+                    <!--<arg line="wso2bps-${project.version}/bin/wso2server.sh start"/>-->
+                    <!--</exec>-->
+                    <!--</tasks>-->
+                    <!--</configuration>-->
                     <!--</execution>-->
                     <!--<execution>-->
-                        <!--<id>clean-up</id>-->
-                        <!--<phase>post-integration-test</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>run</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<tasks unless="maven.test.skip">-->
-                                <!--<property name="tempdir" value="target/test"/>-->
-                                <!--<echo message="Shutdown BPS Server..."/>-->
-                                <!--<exec dir="${tempdir}/" executable="sh" spawn="false">-->
-                                    <!--<arg line="wso2bps-${project.version}/bin/wso2server.sh stop"/>-->
-                                <!--</exec>-->
-                                <!--<delete dir="${tempdir}"/>-->
-                            <!--</tasks>-->
-                        <!--</configuration>-->
+                    <!--<id>clean-up</id>-->
+                    <!--<phase>post-integration-test</phase>-->
+                    <!--<goals>-->
+                    <!--<goal>run</goal>-->
+                    <!--</goals>-->
+                    <!--<configuration>-->
+                    <!--<tasks unless="maven.test.skip">-->
+                    <!--<property name="tempdir" value="target/test"/>-->
+                    <!--<echo message="Shutdown BPS Server..."/>-->
+                    <!--<exec dir="${tempdir}/" executable="sh" spawn="false">-->
+                    <!--<arg line="wso2bps-${project.version}/bin/wso2server.sh stop"/>-->
+                    <!--</exec>-->
+                    <!--<delete dir="${tempdir}"/>-->
+                    <!--</tasks>-->
+                    <!--</configuration>-->
                     <!--</execution>-->
                     <execution>
                         <id>clean_target</id>
@@ -423,8 +428,8 @@
                                 <delete file="target/wso2bps-${project.version}.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
-				<delete dir="target/database"/>
-				<delete dir="target/samples"/>
+                                <delete dir="target/database"/>
+                                <delete dir="target/samples"/>
                                 <delete dir="src/site"/>
                             </tasks>
                         </configuration>
@@ -439,22 +444,22 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.0</version>
-		<configuration>
-		<reportPlugin>
-		            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-		<version>2.4</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>index</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-		</reportPlugin>
-		</configuration>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.4</version>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>index</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -500,32 +505,6 @@
                                 <descriptor>${basedir}/src/assembly/docs.xml</descriptor>
                             </descriptors>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <!-- skip unit tests in the test phase, since it is required to run integration tests -->
-                    <skip>true</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>surefire-it</id>
-                        <phase>integration-test</phase>
-                        <configuration>
-                            <skip>true</skip>
-                            <!--forkMode>pertest</forkMode-->
-                            <argLine>-enableassertions</argLine>
-                            <testFailureIgnore>true</testFailureIgnore>
-                            <excludes>
-                                <exclude>**/BPSTestCase.java</exclude>
-                            </excludes>
-                        </configuration>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

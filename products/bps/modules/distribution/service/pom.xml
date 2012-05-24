@@ -18,10 +18,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+    <properties>
+        <maven.build.timestamp.format>dd MMM yyyy</maven.build.timestamp.format>
+        <buildNumber>${maven.build.timestamp}</buildNumber>
+	    <product.version>${project.parent.version}</product.version>
+    </properties>
     <parent>
         <groupId>org.wso2.bps</groupId>
-    	<artifactId>wso2bps-distribution-parent</artifactId>
+        <artifactId>wso2bps-distribution-parent</artifactId>
         <version>3.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -46,17 +50,17 @@
             <version>${wso2.h2.orbit.version}</version>
         </dependency>
 
-         <dependency>
-             <groupId>org.apache.rampart</groupId>
-             <artifactId>rampart</artifactId>
-             <version>${rampart.mar.version}</version>
-             <type>mar</type>
-         </dependency>
+        <dependency>
+            <groupId>org.apache.rampart</groupId>
+            <artifactId>rampart</artifactId>
+            <version>${rampart.mar.version}</version>
+            <type>mar</type>
+        </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>groovy</groupId>-->
-            <!--<artifactId>groovy-all-1.0-jsr</artifactId>-->
-            <!--<version>05</version>-->
+        <!--<groupId>groovy</groupId>-->
+        <!--<artifactId>groovy-all-1.0-jsr</artifactId>-->
+        <!--<version>05</version>-->
         <!--</dependency>-->
     </dependencies>
 
@@ -120,41 +124,43 @@
                                 import org.w3c.dom.Document
                                 import org.w3c.dom.Element
 
-                                def axis2XML = new File("$pom.basedir/target/wso2carbon-core-${carbon.version}/repository/conf/axis2.xml");
+                                def axis2XML = new
+                                File("$pom.basedir/target/wso2carbon-core-${carbon.version}/repository/conf/axis2.xml");
                                 if (axis2XML.exists()) {
-                                    println "###### Editing axis2.xml of root tenant. ######";
-                                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                                    DocumentBuilder db = dbf.newDocumentBuilder();
-                                    Document doc = db.parse(axis2XML);
+                                println "###### Editing axis2.xml of root tenant. ######";
+                                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                                DocumentBuilder db = dbf.newDocumentBuilder();
+                                Document doc = db.parse(axis2XML);
 
-                                    Element soapRoleEle = doc.createElement("SOAPRoleConfiguration");
-                                    soapRoleEle.setAttribute("isUltimateReceiver", "false");
-                                    Element roleEle = doc.createElement("role");
-                                    roleEle.setTextContent("superTenant");
-                                    soapRoleEle.appendChild(roleEle);
-                                    doc.getDocumentElement().appendChild(soapRoleEle);
+                                Element soapRoleEle = doc.createElement("SOAPRoleConfiguration");
+                                soapRoleEle.setAttribute("isUltimateReceiver", "false");
+                                Element roleEle = doc.createElement("role");
+                                roleEle.setTextContent("superTenant");
+                                soapRoleEle.appendChild(roleEle);
+                                doc.getDocumentElement().appendChild(soapRoleEle);
 
-                                    //set up a transformer
-                                    TransformerFactory transfac = TransformerFactory.newInstance();
-                                    Transformer trans = transfac.newTransformer();
+                                //set up a transformer
+                                TransformerFactory transfac = TransformerFactory.newInstance();
+                                Transformer trans = transfac.newTransformer();
 
-                                    //create string from xml tree
-                                    StringWriter sw = new StringWriter();
-                                    StreamResult result = new StreamResult(sw);
-                                    DOMSource source = new DOMSource(doc);
-                                    trans.transform(source, result);
-                                    String outputXML = sw.toString();
+                                //create string from xml tree
+                                StringWriter sw = new StringWriter();
+                                StreamResult result = new StreamResult(sw);
+                                DOMSource source = new DOMSource(doc);
+                                trans.transform(source, result);
+                                String outputXML = sw.toString();
 
-                                    OutputStream f0;
-                                    def buf = outputXML.getBytes();
-                                    f0 = new FileOutputStream("$pom.basedir/target/wso2carbon-core-${carbon.version}/repository/conf/axis2.xml");
-                                    for (int i = 0; i &lt; buf.length; i++) {
-                                        f0.write(buf[i]);
-                                    }
-                                    f0.close();
-                                    buf = null;
+                                OutputStream f0;
+                                def buf = outputXML.getBytes();
+                                f0 = new
+                                FileOutputStream("$pom.basedir/target/wso2carbon-core-${carbon.version}/repository/conf/axis2.xml");
+                                for (int i = 0; i &lt; buf.length; i++) {
+                                f0.write(buf[i]);
+                                }
+                                f0.close();
+                                buf = null;
                                 } else {
-                                    println "###### axis2.xml is not found. ######";
+                                println "###### axis2.xml is not found. ######";
                                 }
 
                             </source>
@@ -177,22 +183,104 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <!--<echo message="######## Creating BPEL Archives. #########"/>-->
-                                <!--<property name="tempdir" value="target/samples"/>-->
-                                <!--<mkdir dir="${tempdir}"/>-->
-                                <!--&lt;!&ndash;zip destfile="target/samples/CreditRating.zip"-->
-                                     <!--basedir="${basedir}/../samples/src/main/resources/bpel/2.0/CreditRating"/&ndash;&gt;-->
-                                <!--<zip destfile="target/samples/CustomerInfo.zip"-->
-                                     <!--basedir="${basedir}/../samples/src/main/resources/bpel/2.0/CustomerInfo"/>-->
-                                <!--<zip destfile="target/samples/LoanProcess.zip"-->
-                                     <!--basedir="${basedir}/../samples/src/main/resources/bpel/2.0/LoanProcess"/>-->
-                                <!--<zip destfile="target/samples/LoanService.zip"-->
-                                     <!--basedir="${basedir}/../samples/src/main/resources/bpel/2.0/LoanService"/>-->
-                                <!--zip destfile="target/samples/TestE4XDirect.zip"
-                                     basedir="${basedir}/../samples/src/main/resources/bpel/2.0/TestE4XDirect"/-->
+                                <echo message="######## Creating BPEL / HumanTask Archives. #########"/>
+                                <property name="tempdir" value="target/samples"/>
+                                <property name="bpelSampleDir" value="target/samples/bpel"/>
+                                <property name="humantaskSampleDir" value="target/samples/humantask"/>
+                                <mkdir dir="${tempdir}"/>
+                                <mkdir dir="${bpelSampleDir}"/>
+                                <mkdir dir="${humantaskSampleDir}"/>
+
+                                <!--zip destfile="target/samples/CreditRating.zip"
+                                     basedir="${basedir}/../samples/src/main/resources/bpel/2.0/CreditRating"/-->
+                                <zip destfile="target/samples/bpel/CustomerInfo.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/CustomerInfo"/>
+                                <zip destfile="target/samples/bpel/LoanProcess.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/LoanProcess"/>
+                                <zip destfile="target/samples/bpel/LoanService.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/LoanService"/>
+                                <zip destfile="target/samples/bpel/TestE4XDirect.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestE4XDirect"/>
+                                <zip destfile="target/samples/bpel/AttachmentHandlingProcess.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/AttachmentHandlingProcess"/>
+                                <zip destfile="target/samples/bpel/CreditRating.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/CreditRating"/>
+                                <zip destfile="target/samples/bpel/CleanUpTest1.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/CleanUpTest1"/>
+                                <zip destfile="target/samples/bpel/FlexibleAssign.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/FlexibleAssign"/>
+                                <zip destfile="target/samples/bpel/helloHeaderTest.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/helloHeaderTest"/>
+                                <zip destfile="target/samples/bpel/HelloWorld2.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/HelloWorld2"/>
+                                <zip destfile="target/samples/bpel/MyRoleMexTestProcess.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/MyRoleMexTestProcess"/>
+                                <zip destfile="target/samples/bpel/RPCClientProcess.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/RPCClientProcess"/>
+                                <zip destfile="target/samples/bpel/RPCServiceProcess.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/RPCServiceProcess"/>
+                                <zip destfile="target/samples/bpel/SampleCompensationHandlers.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/SampleCompensationHandlers"/>
+                                <zip destfile="target/samples/bpel/SampleEventHandlers.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/SampleEventHandlers"/>
+                                <zip destfile="target/samples/bpel/SampleFaultHandler.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/SampleFaultHandler"/>
+                                <zip destfile="target/samples/bpel/SecurePartnerBPEL.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/SecurePartnerBPEL"/>
+                                <zip destfile="target/samples/bpel/TestAlarm.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestAlarm"/>
+				                <zip destfile="target/samples/bpel/TestAssignActivity1.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestAssignActivity1"/>
+                                <zip destfile="target/samples/bpel/TestAssignDate.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestAssignDate"/>
+                                <zip destfile="target/samples/bpel/TestCombineUrl.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestCombineUrl"/>
+                                <zip destfile="target/samples/bpel/TestComposeUrl.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestComposeUrl"/>
+                                <zip destfile="target/samples/bpel/TestCorrelationUnique.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestCorrelationUnique"/>
+                                <zip destfile="target/samples/bpel/TestCounter.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestCounter"/>
+                                <zip destfile="target/samples/bpel/TestE4XDirect.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestE4XDirect"/>
+                                <zip destfile="target/samples/bpel/TestExpandTemplate.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestExpandTemplate"/>
+                                 <zip destfile="target/samples/bpel/TestFlowLinks.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestFlowLinks"/>
+                                 <zip destfile="target/samples/bpel/TestForEach.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestForEach"/>
+                                 <zip destfile="target/samples/bpel/TestIf.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestIf"/>
+                                 <zip destfile="target/samples/bpel/TestIgnoreMissingFromData.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestIgnoreMissingFromData"/>
+                                 <zip destfile="target/samples/bpel/TestPickOneWay.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestPickOneWay"/>
+                                 <zip destfile="target/samples/bpel/TestProcessProperties.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestProcessProperties"/>
+                                 <zip destfile="target/samples/bpel/TestPubSubInProc.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestPubSubInProc"/>
+                                 <zip destfile="target/samples/bpel/TestRepeatUntil.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestRepeatUntil"/>
+                                 <zip destfile="target/samples/bpel/TestRESTProcess.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestRESTProcess"/>
+                                <zip destfile="target/samples/bpel/TestSplit.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestSplit"/>
+                                <zip destfile="target/samples/bpel/TestThrowCatchFaultHandling.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestThrowCatchFaultHandling"/>
+                                <zip destfile="target/samples/bpel/TestWhile.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestWhile"/>
+                                <zip destfile="target/samples/bpel/TestXslTransform.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/bpel/2.0/TestXslTransform"/>
+
+                                <!--  Copying Human Tasks Sample -->
+
+                                <zip destfile="target/samples/humantask/ClaimsApprovalTask.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/humantask/ClaimsApprovalTask"/>
+                                <!--zip destfile="target/samples/humantask/TranslationTask.zip"
+                                     basedir="${basedir}/../../samples/product/src/main/resources/humantask/TranslationTask"/-->
                                 <!--delete dir="${tempdir}"/-->
 
-                                <!--<echo message="######### Copying Samples Services are temporary skipped###########"/>-->
+                                <echo message="######### Copying Samples Services are temporary skipped###########"/>
                                 <!--echo message="######### Copying Samples Services ###########"/-->
                                 <!--copy file="${basedir}/../services/CreditRatingService/target/CreditRatingService-${project.version}.aar"
                                       tofile="target/services/CreditRatingService.aar"/-->
@@ -252,8 +340,7 @@
                                 </sql>
                                 <echo
                                         message="##################### END ############################"/>
-
-				<echo
+                                <echo
                                         message="########### Create ATTACHMENT H2 Database ##############"/>
                                 <sql
                                         driver="org.h2.Driver"
@@ -287,8 +374,10 @@
                                         <include name="wso2stratos-bps-${project.version}.zip"/>
                                     </fileset>
                                 </unzip>
-                                <copy todir="target/wso2carbon-core-${carbon.version}/repository/components" overwrite="true">
-                                    <fileset dir="${tempdir}/wso2stratos-bps-${project.version}/repository/components">
+                                <copy todir="target/wso2carbon-core-${carbon.version}/repository/components"
+                                      overwrite="true">
+                                    <fileset
+                                            dir="${tempdir}/wso2stratos-bps-${project.version}/repository/components">
                                     </fileset>
                                 </copy>
                                 <delete file="target/wso2stratos-bps-${project.version}.zip"/>
@@ -310,7 +399,8 @@
                                     <mapper type="glob" from="*.html" to="*.xml"/>
                                 </move>
                                 <mkdir dir="src/site/xdoc"/>
-                                <copy todir="src/site/xdoc" overwrite="false" includeemptydirs="false">
+                                <copy todir="src/site/xdoc" overwrite="false"
+                                      includeemptydirs="false">
                                     <fileset dir="${tempdir}/web">
                                         <exclude name="**/yui/**"/>
                                         <exclude name="**/ajax/**"/>
@@ -319,19 +409,20 @@
                                         <exclude name="**/*.js"/>
                                         <exclude name="**/*.jsp"/>
                                         <exclude name="**/*.xsl"/>
-					                    <exclude name="**/codepress.xml"/>
+                                        <exclude name="**/codepress.xml"/>
                                         <exclude name="**/template.xml"/>
                                         <exclude name="*.*"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="src/site" overwrite="false" includeemptydirs="false">
                                     <fileset dir="../../../docs">
-					<exclude name="**/user-mgt-actdir.xml"/>
+                                        <exclude name="**/user-mgt-actdir.xml"/>
                                         <exclude name="**/user-mgt-jdbc.xml"/>
                                         <exclude name="**/user-mgt-ldap.xml"/>
                                     </fileset>
                                 </copy>
-                                <copy todir="target/site/" overwrite="false" includeemptydirs="false">
+                                <copy todir="target/site/" overwrite="false"
+                                      includeemptydirs="false">
                                     <fileset dir="src/site/xdoc/">
                                         <include name="**/images/*.*"/>
                                     </fileset>
@@ -341,7 +432,7 @@
                             </tasks>
                         </configuration>
                     </execution>
-		    <execution>
+                    <execution>
                         <id>clean_target</id>
                         <phase>install</phase>
                         <configuration>
@@ -353,7 +444,8 @@
                                 <delete file="target/wso2stratos-bps-${project.version}.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
-				<delete dir="target/database"/>
+                                <delete dir="target/database"/>
+							 	<delete dir="target/samples"/>
                                 <delete dir="src/site"/>
                             </tasks>
                         </configuration>
@@ -361,29 +453,29 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
-              </executions>
+                </executions>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.0</version>
-		<configuration>
-		<reportPlugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-		<version>2.4</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>index</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-		</reportPlugins>
-		</configuration>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.4</version>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>index</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -432,7 +524,7 @@
                     </execution>
                 </executions>
             </plugin>
-	   </plugins>
+        </plugins>
     </build>
 
     <!--reporting>

@@ -277,6 +277,7 @@ exec "$JAVACMD" \
         -Dcarbon.registry.root=/ \
         -Dcarbon.home="$CARBON_HOME" \
         -Dloadbalancer.xml=file:repository/conf/loadbalancer.xml \
+        -Dloadbalancer.conf=file:repository/conf/loadbalancer.conf \
         -Djava.util.logging.config.file="$CARBON_HOME/lib/log4j.properties" \
         -Dcarbon.config.dir.path="$CARBON_HOME/repository/conf" \
         -Dcomponents.repo="$CARBON_HOME/repository/components/plugins" \

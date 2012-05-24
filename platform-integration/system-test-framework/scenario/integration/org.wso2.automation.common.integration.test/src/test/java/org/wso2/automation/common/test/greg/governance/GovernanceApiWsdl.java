@@ -25,7 +25,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.wso2.automation.common.test.greg.governanceapi.GovApiUpdateservice;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.services.ServiceManager;
@@ -49,7 +48,7 @@ import java.rmi.RemoteException;
 
 public class GovernanceApiWsdl {
     String sessionCookie = null;
-    private static final Log log = LogFactory.getLog(GovApiUpdateservice.class);
+    private static final Log log = LogFactory.getLog(GovernanceApiWsdl.class);
     String backEndUrl = null;
     String serviceUrl = null;
     RequestSender requestSender;

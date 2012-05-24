@@ -18,6 +18,7 @@
 
 package org.wso2.automation.common.test.greg.governance;
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
@@ -33,6 +34,7 @@ import org.wso2.carbon.governance.api.services.dataobjects.Service;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
+import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
@@ -49,9 +51,10 @@ import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertTrue;
 
-public class GovernanceApiServiceCreation {
+public class GovApiGetChildren {
     String sessionCookie = null;
-    private static final Log log = LogFactory.getLog(GovernanceApiServiceCreation.class);
+    private static final Log log = LogFactory.getLog(GovApiGetChildren.class);
+
     String service_namespace = "http://example.com/demo/services";
     String service_name = "GovernanceAPITestService";
     String backEndUrl = null;
@@ -93,7 +96,7 @@ public class GovernanceApiServiceCreation {
     }
 
     @Test(groups = {"wso2.greg", "wso2.greg.GovernanceServiceCreation"}, priority = 1)
-    public void testUpdateSevice() throws Exception, RemoteException {
+    public void testCheckChildList() throws Exception, RemoteException {
 
         service.addAttribute("Owner", "Financial Department");
         serviceManager.updateService(service);
@@ -108,49 +111,17 @@ public class GovernanceApiServiceCreation {
 
         assertTrue(registryWS.resourceExists(service_path), "Service Exists");
 
-
-    }
-
-    @Test(groups = {"wso2.greg", "wso2.greg.GovernanceServiceCreation"}, priority = 2)
-    public void testAddWsdlToService() throws Exception {
-
-        service.attachWSDL(wsdl);
-        serviceManager.updateService(service);
-        serviceManager.addService(service);
-        service.getId();
-        boolean wsdlfound = false;
-        for (Service gregService : serviceManager.getAllServices()) {
-            if (gregService.getId().equals(service.getId())) {
-                for (Wsdl serviceWsdl : gregService.getAttachedWsdls()) {
-                    if (serviceWsdl.getId().equals(wsdl.getId())) {
-                        log.info("Wsdl is attached to the service");
-                        wsdlfound = true;
-                    }
-                }
-            }
+        Collection collection = registryWS.get("/", 0,
+                                               Integer.MAX_VALUE);
+        String[] children = collection.getChildren();
+        if(children.length==0)
+        {
+            Assert.assertFalse(true,"child list is null");
         }
-        Assert.assertTrue(wsdlfound, "Wsdl is not listed in Registry");
+
+
     }
 
-    @Test(groups = {"wso2.greg", "wso2.greg.GovernanceServiceCreation"}, priority = 2)
-    public void testRemoveWsdlFromService() throws Exception {
-
-
-        service.detachWSDL(wsdl.getId());
-        serviceManager.updateService(service);
-        boolean wsdlfound = true;
-        for (Service gregService : serviceManager.getAllServices()) {
-            if (gregService.getId().equals(service.getId())) {
-                for (Wsdl serviceWsdl : gregService.getAttachedWsdls()) {
-                    if (serviceWsdl.getId().equals(wsdl.getId())) {
-                        log.info("Wsdl is attached to the service");
-                        wsdlfound = false;
-                    }
-                }
-            }
-        }
-        Assert.assertFalse(wsdlfound, "Wsdl is not listed in Registry");
-    }
 
     @AfterClass(alwaysRun = true, groups = {"wso2.bps", "wso2.bps.bpelactivities"})
     public void removeArtifacts() throws GovernanceException {

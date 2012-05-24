@@ -103,7 +103,6 @@
                             <tr>
                                 <th>Resource URI Template</th>
                                 <th>Resource Method</th>
-                                <th>Resource URI</th>
                                 <th></th>
                             </tr>
                             </thead>

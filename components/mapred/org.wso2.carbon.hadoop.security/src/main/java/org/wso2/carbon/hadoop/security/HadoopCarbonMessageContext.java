@@ -21,6 +21,10 @@ public class HadoopCarbonMessageContext {
 		currentMessageContext.set(ctx);
 	}
 	
+	public static void remove() {
+		currentMessageContext.remove();
+	}
+	
 	public String getCookie() {
 		return this.cookie;
 	}

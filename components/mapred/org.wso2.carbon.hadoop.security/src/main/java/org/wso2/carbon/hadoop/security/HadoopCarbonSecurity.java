@@ -5,5 +5,6 @@ import org.apache.hadoop.security.UserGroupInformationThreadLocal;
 public class HadoopCarbonSecurity {
 	public static void clean() {
 		UserGroupInformationThreadLocal.remove();
+		HadoopCarbonMessageContext.remove();
 	}
 }

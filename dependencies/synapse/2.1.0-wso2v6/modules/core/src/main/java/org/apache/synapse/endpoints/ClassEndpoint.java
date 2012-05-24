@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
-
+import org.apache.synapse.core.SynapseEnvironment;
 /**
  * Class which defines  custom  user defined endpoints. Custom Endpoint implementations must extend
  * the  <code>AbstractEndpoint</code> class.
@@ -59,6 +59,17 @@ public class ClassEndpoint extends AbstractEndpoint  {
 	/**
 	 * Override the <code>AbstractEndpoint.send()</code> to have a custom message send out logic.
 	 */
+	public void init(SynapseEnvironment synapseEnvironment){
+		if (log.isDebugEnabled()) {
+			log.debug("Initiate : Class Endpoint");		
+		}
+		try {
+			classEndpoint.init(synapseEnvironment);
+		} catch (Exception e) {
+			throw new SynapseException("Error occured when initiate the class endpoint", e);
+		}
+	}
+
 	public void send(MessageContext synMessageContext) {
 
 		if (log.isDebugEnabled()) {

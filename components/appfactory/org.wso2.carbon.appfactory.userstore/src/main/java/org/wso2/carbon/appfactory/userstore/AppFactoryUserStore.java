@@ -75,7 +75,7 @@ public class AppFactoryUserStore extends ApacheDSUserStoreManager {
 
     @Override
     public void updateCredentialByAdmin(String userName, Object newCredential) throws UserStoreException {
-        // TODO - This is a hack to prevent password being updated each time the project is added
+        // TODO - This is a hack to prevent password being updated each time the application is added
         String passwordValue = (String) newCredential;
         if (passwordValue != null && passwordValue.trim().length() > 0) {
             super.updateCredentialByAdmin(userName, newCredential);

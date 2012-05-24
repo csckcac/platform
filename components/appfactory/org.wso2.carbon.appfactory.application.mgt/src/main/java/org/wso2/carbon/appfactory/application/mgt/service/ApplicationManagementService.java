@@ -38,8 +38,8 @@ public class ApplicationManagementService extends AbstractAdmin {
     public static String LAST_NAME_CLAIM_URI = "http://wso2.org/claims/lastname";
 
 
-    public String createProject(ApplicationInfoBean application) {
-        return application.getProjectKey();
+    public String createApplication(ApplicationInfoBean application) {
+        return application.getApplicationKey();
     }
 
 
@@ -67,7 +67,7 @@ public class ApplicationManagementService extends AbstractAdmin {
             realm.getUserStoreManager().deleteUser(userName);
             return true;
         } catch (UserStoreException e) {
-            String msg = "Error while removing user " + userName + " from project " + applicationId;
+            String msg = "Error while removing user " + userName + " from application " + applicationId;
             log.error(msg, e);
             throw new ApplicationManagementException(msg, e);
         }
@@ -80,21 +80,21 @@ public class ApplicationManagementService extends AbstractAdmin {
             tenantManager.deleteTenant(tenantManager.getTenantId(applicationId));
             return true;
         } catch (UserStoreException e) {
-            String msg = "Error while revoking project " + applicationId;
+            String msg = "Error while revoking application " + applicationId;
             log.error(msg, e);
             throw new ApplicationManagementException(msg, e);
         }
     }
 
 
-    public boolean isApplicationIdAvailable(String projectKey)
+    public boolean isApplicationIdAvailable(String applicationKey)
             throws ApplicationManagementException {
         TenantManager tenantManager = Util.getRealmService().getTenantManager();
         int tenantID;
         try {
-            tenantID = tenantManager.getTenantId(projectKey);
+            tenantID = tenantManager.getTenantId(applicationKey);
         } catch (UserStoreException e) {
-            String msg = "Error while getting projectKey " + projectKey;
+            String msg = "Error while getting applicationKey " + applicationKey;
             log.error(msg, e);
             throw new ApplicationManagementException(msg, e);
         }

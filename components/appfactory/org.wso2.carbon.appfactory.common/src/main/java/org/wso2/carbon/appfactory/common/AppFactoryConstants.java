@@ -28,8 +28,8 @@ public class AppFactoryConstants {
     public static final String APPFACTORY_CONFIG_ADMIN_USER = "AdminUserName";
     public static final String APPFACTORY_CONFIG_ADMIN_PASSWORD = "AdminPassword";
 
-    public static final String APPFACTORY_CONFIG_PROJECT_MGT = "ProjectMgt";
-    public static final String APPFACTORY_CONFIG_PROJECT_USER_ROLES = "DefaultProjectUserRoles";
+    public static final String APPFACTORY_CONFIG_PROJECT_MGT = "ApplicationMgt";
+    public static final String APPFACTORY_CONFIG_PROJECT_USER_ROLES = "DefaultApplicationUserRoles";
 
     public static final String SSO_CONFIG_ROOT_ELEMENT = "SSORelyingParty";
     public static final String SSO_CONFIG_NAME = "Name";
@@ -39,13 +39,13 @@ public class AppFactoryConstants {
     public static final String SSO_CONFIG_KEY_STORE_NAME = "KeyStoreName";
 
     public static final String WEB_SERVICE_CONFIG_ROOT_ELEMENT = "WebServiceEndPoints";
-    public static final String WEB_SERVICE_CONFIG_ADD_USER_TO_PROJECT = "AddUserToProject";
+    public static final String WEB_SERVICE_CONFIG_ADD_USER_TO_PROJECT = "AddUserToApplication";
     public static final String WEB_SERVICE_CONFIG_CREATE_USER = "CreateUser";
     public static final String WEB_SERVICE_CONFIG_ACTIVATE_USER = "ActivateUser";
     public static final String WEB_SERVICE_CONFIG_CREATE_REPO = "CreateRepo";
-    public static final String WEB_SERVICE_CONFIG_CREATE_PROJECT = "CreateProject";
-    public static final String WEB_SERVICE_CONFIG_GET_ROLES_OF_USER_FOR_PROJECT = "GetRolesOfUserForProject";
-    public static final String WEB_SERVICE_CONFIG_GET_USERS_OF_PROJECT = "GetUsersOfProject";
+    public static final String WEB_SERVICE_CONFIG_CREATE_PROJECT = "CreateApplication";
+    public static final String WEB_SERVICE_CONFIG_GET_ROLES_OF_USER_FOR_PROJECT = "GetRolesOfUserForApplication";
+    public static final String WEB_SERVICE_CONFIG_GET_USERS_OF_PROJECT = "GetUsersOfApplication";
     public static final String WEB_SERVICE_CONFIG_EMAIL_VERIFICATION_SERVICE = "EmailVerificationService";
 
 
@@ -57,7 +57,7 @@ public class AppFactoryConstants {
     public static final String SCM_SERVER_ADMIN_PASSWORD = "SCMServerAdminPassword";
     public static final String SCM_READ_WRITE_PERMISSION_NAME = "ReadWritePermissionName";
 
-    public static final String PROJECT_DEPLOYMENT_ROOT_ELEMENT = "ProjectDeployment";
+    public static final String PROJECT_DEPLOYMENT_ROOT_ELEMENT = "ApplicationDeployment";
     public static final String PROJECT_DEPLOYMENT_STAGE = "DeploymentStage";
     public static final String PROJECT_DEPLOYMENT_SERVER_URL = "DeploymentServerURL";
 

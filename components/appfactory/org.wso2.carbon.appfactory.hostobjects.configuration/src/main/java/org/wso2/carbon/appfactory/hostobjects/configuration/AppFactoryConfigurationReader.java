@@ -50,8 +50,8 @@ public class AppFactoryConfigurationReader extends ScriptableObject {
         return appFactoryConfiguration.getWebServiceEPRActivateUser();
     }
 
-    public String jsFunction_getWebServiceEPRCreateProject() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRCreateProject();
+    public String jsFunction_getWebServiceEPRCreateApplication() throws Exception {
+        return appFactoryConfiguration.getWebServiceEPRCreateApplication();
     }
 
     public String jsFunction_getWebServiceEPRCreateRepo() throws Exception {
@@ -66,16 +66,16 @@ public class AppFactoryConfigurationReader extends ScriptableObject {
         return appFactoryConfiguration.getWebServiceEPREmailVerificationService();
     }
 
-    public String jsFunction_getWebServiceEPRAddUserToProject() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRAddUserToProject();
+    public String jsFunction_getWebServiceEPRAddUserToApplication() throws Exception {
+        return appFactoryConfiguration.getWebServiceEPRAddUserToApplication();
     }
 
-    public String jsFunction_getWebServiceEPRGetRolesOfUserForProject() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRGetRolesOfUserForProject();
+    public String jsFunction_getWebServiceEPRGetRolesOfUserForApplication() throws Exception {
+        return appFactoryConfiguration.getWebServiceEPRGetRolesOfUserForApplication();
     }
 
-    public String jsFunction_getWebServiceEPRGetUsersOfProject() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRGetUsersOfProject();
+    public String jsFunction_getWebServiceEPRGetUsersOfApplication() throws Exception {
+        return appFactoryConfiguration.getWebServiceEPRGetUsersOfApplication();
     }
     public String jsFunction_getAdminUserName() throws Exception {
         return appFactoryConfiguration.getAdminUserName();

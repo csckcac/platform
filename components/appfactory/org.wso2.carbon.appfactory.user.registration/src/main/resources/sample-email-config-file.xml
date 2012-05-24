@@ -27,8 +27,8 @@
 
         This is your user name :{userName}
         This is your first name :{firstName}
-        This is your project name :{projectName}
-        This is your projectkey: {projectKey}
+        This is your application name :{applicationName}
+        This is your applicationkey: {applicationKey}
 
         thanks
     </body>

@@ -26,18 +26,18 @@ import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryMgtException;
 public interface RepositoryManager {
     /**
      *
-     * @param projectKey
+     * @param applicationKey
      * @return  URL of the created repository
      */
-    public String createRepository(String projectKey)throws RepositoryMgtException;
+    public String createRepository(String applicationKey)throws RepositoryMgtException;
 
     /**
      *
-     * @param projectKey
+     * @param applicationKey
      * @return
      * @throws RepositoryMgtException
      */
-    public String getURL(String projectKey) throws RepositoryMgtException;
+    public String getURL(String applicationKey) throws RepositoryMgtException;
 
     public void setConfig(AppFactoryConfiguration configuration);
 

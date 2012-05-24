@@ -41,12 +41,12 @@ public class RepositoryManagementService extends AbstractAdmin{
         this.repositoryManager=holder.getRepositoryManager();
     }
 
-    public String createRepository(String projectKey) throws RepositoryMgtException {
-        return repositoryManager.createRepository(projectKey);
+    public String createRepository(String applicationKey) throws RepositoryMgtException {
+        return repositoryManager.createRepository(applicationKey);
     }
 
 
-    public String getURL(String projectKey) throws RepositoryMgtException {
-        return repositoryManager.getURL(projectKey);
+    public String getURL(String applicationKey) throws RepositoryMgtException {
+        return repositoryManager.getURL(applicationKey);
     }
 }

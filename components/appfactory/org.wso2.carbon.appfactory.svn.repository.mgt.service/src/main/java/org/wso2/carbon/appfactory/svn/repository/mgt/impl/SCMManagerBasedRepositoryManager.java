@@ -68,18 +68,18 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
     private AppFactoryConfiguration configuration;
 
     @Override
-    public String createRepository(String projectKey) throws RepositoryMgtException {
+    public String createRepository(String applicationKey) throws RepositoryMgtException {
 
         HttpClient client = getClient(configuration);
         PostMethod post = new PostMethod(getServerURL(configuration) + REST_BASE_URI +
                                          REST_CREATE_REPOSITORY_URI);
         Repository repository = new Repository();
-        repository.setName(projectKey);
+        repository.setName(applicationKey);
         repository.setType("svn");
 
         Permission permission = new Permission();
         permission.setGroupPermission(true);
-        permission.setName(projectKey);
+        permission.setName(applicationKey);
         permission.setType(PermissionType.WRITE);
         ArrayList<Permission> permissions = new ArrayList<Permission>();
         permissions.add(permission);
@@ -105,9 +105,9 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
             }
         }
         if (post.getStatusCode() == HttpStatus.SC_CREATED) {
-            url = getURL(projectKey);
+            url = getURL(applicationKey);
         } else {
-            String msg = "Repository creation is failed for " + projectKey + " server returned status " +
+            String msg = "Repository creation is failed for " + applicationKey + " server returned status " +
                          post.getStatusText();
             log.error(msg);
             throw new RepositoryMgtException(msg);
@@ -167,11 +167,11 @@ public class SCMManagerBasedRepositoryManager extends AbstractRepositoryManager 
     }
 
     @Override
-    public String getURL(String projectKey) throws RepositoryMgtException {
+    public String getURL(String applicationKey) throws RepositoryMgtException {
 
         HttpClient client = getClient(configuration);
         GetMethod get = new GetMethod(getServerURL(configuration) + REST_BASE_URI + REST_GET_REPOSITORY_URI
-                                      + projectKey);
+                                      + applicationKey);
         get.setDoAuthentication(true);
         get.addRequestHeader("Content-Type", "application/xml;charset=UTF-8");
         String repository = null;

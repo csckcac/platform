@@ -72,8 +72,8 @@ public class AppFactoryUtil {
             config.setAdminPassword(adminPassword.getText().trim());
         }
 
-        // set project management configuration
-        setProjectMgtConfig(appFactory, config);
+        // set application management configuration
+        setApplicationMgtConfig(appFactory, config);
 
         // set SSO relying party configuration
         setSSOConfigs(appFactory, config);
@@ -81,31 +81,31 @@ public class AppFactoryUtil {
         // set web service end point configuration
         setWebServiceConfigs(appFactory, config);
 
-        //set project repository configuration
+        //set application repository configuration
         setRepositoryMGTConfig(appFactory, config);
 
-        // set project deployment configuration
-        setProjectDeploymentConfig(appFactory, config);
+        // set application deployment configuration
+        setApplicationDeploymentConfig(appFactory, config);
 
         return config;
     }
 
 
-    private static void setProjectMgtConfig(OMElement element,
+    private static void setApplicationMgtConfig(OMElement element,
                                             AppFactoryConfiguration config)
             throws AppFactoryException {
-        OMElement projectMgt = element.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+        OMElement applicationMgt = element.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
                                                                        AppFactoryConstants.APPFACTORY_CONFIG_PROJECT_MGT));
-        if (projectMgt == null) {
-            handleError("Project Management is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+        if (applicationMgt == null) {
+            handleError("Application Management is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
         } else {
-            OMElement defaultProjectUserRoles = projectMgt.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+            OMElement defaultApplicationUserRoles = applicationMgt.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
                                                                                            AppFactoryConstants.APPFACTORY_CONFIG_PROJECT_USER_ROLES));
-            if (defaultProjectUserRoles == null) {
-                handleError("DefaultProjectUserRoles is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            if (defaultApplicationUserRoles == null) {
+                handleError("DefaultApplicationUserRoles is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
             } else {
-                String[] roles = defaultProjectUserRoles.getText().trim().split(",");
-                config.addDefaultProjectUserRole(roles);
+                String[] roles = defaultApplicationUserRoles.getText().trim().split(",");
+                config.addDefaultApplicationUserRole(roles);
             }
         }
 
@@ -166,18 +166,18 @@ public class AppFactoryUtil {
         }
     }
 
-    private static void setProjectDeploymentConfig(OMElement element,
+    private static void setApplicationDeploymentConfig(OMElement element,
                                                    AppFactoryConfiguration config)
             throws AppFactoryException {
-        OMElement projectDeployment = element.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+        OMElement applicationDeployment = element.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
                                                                               AppFactoryConstants.PROJECT_DEPLOYMENT_ROOT_ELEMENT));
-        if (projectDeployment == null) {
+        if (applicationDeployment == null) {
             handleError("Repository Management is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
         } else {
-            Iterator stagesItr = projectDeployment.getChildrenWithName(new QName(
+            Iterator stagesItr = applicationDeployment.getChildrenWithName(new QName(
                     AppFactoryConstants.PROJECT_DEPLOYMENT_STAGE));
             if (!stagesItr.hasNext()) {
-                handleError("Project Deployment stages are not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+                handleError("Application Deployment stages are not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
             }
             while (stagesItr.hasNext()) {
                 OMElement stageElement = (OMElement) stagesItr.next();
@@ -204,12 +204,12 @@ public class AppFactoryUtil {
         if (webServiceEndPoints == null) {
             handleError("Web service endpoint is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
         } else {
-            OMElement getRolesOfUserProject = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+            OMElement getRolesOfUserApplication = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
                                                                                                   AppFactoryConstants.WEB_SERVICE_CONFIG_GET_ROLES_OF_USER_FOR_PROJECT));
-            if (getRolesOfUserProject == null) {
-                handleError("GetRolesOfUserProject web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            if (getRolesOfUserApplication == null) {
+                handleError("GetRolesOfUserApplication web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
             } else {
-                config.setWebServiceEPRGetRolesOfUserForProject(getRolesOfUserProject.getText().trim());
+                config.setWebServiceEPRGetRolesOfUserForApplication(getRolesOfUserApplication.getText().trim());
             }
 
             OMElement createRepo = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
@@ -220,12 +220,12 @@ public class AppFactoryUtil {
                 config.setWebServiceEPRCreateRepo(createRepo.getText().trim());
             }
 
-            OMElement getUsersOfProject = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+            OMElement getUsersOfApplication = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
                                                                                               AppFactoryConstants.WEB_SERVICE_CONFIG_GET_USERS_OF_PROJECT));
-            if (getUsersOfProject == null) {
-                handleError("getUsersOfProject web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            if (getUsersOfApplication == null) {
+                handleError("getUsersOfApplication web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
             } else {
-                config.setWebServiceEPRGetUsersOfProject(getUsersOfProject.getText().trim());
+                config.setWebServiceEPRGetUsersOfApplication(getUsersOfApplication.getText().trim());
             }
             OMElement emailVerification = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
                                                                                               AppFactoryConstants.WEB_SERVICE_CONFIG_EMAIL_VERIFICATION_SERVICE));
@@ -234,24 +234,24 @@ public class AppFactoryUtil {
             } else {
                 config.setWebServiceEPREmailVerificationService(emailVerification.getText().trim());
             }
-            OMElement addUserToProject = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+            OMElement addUserToApplication = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
                                                                                              AppFactoryConstants.WEB_SERVICE_CONFIG_ADD_USER_TO_PROJECT));
-            if (addUserToProject == null) {
-                handleError("addUserToProject web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            if (addUserToApplication == null) {
+                handleError("addUserToApplication web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
             } else {
-                config.setWebServiceEPRAddUserToProject(addUserToProject.getText().trim());
+                config.setWebServiceEPRAddUserToApplication(addUserToApplication.getText().trim());
             }
-            OMElement createProject = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+            OMElement createApplication = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
                                                                                           AppFactoryConstants.WEB_SERVICE_CONFIG_CREATE_PROJECT));
-            if (createProject == null) {
-                handleError("addUserToProject web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            if (createApplication == null) {
+                handleError("addUserToApplication web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
             } else {
-                config.setWebServiceEPRCreateProject(createProject.getText().trim());
+                config.setWebServiceEPRCreateApplication(createApplication.getText().trim());
             }
             OMElement createUser = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
                                                                                        AppFactoryConstants.WEB_SERVICE_CONFIG_CREATE_USER));
             if (createUser == null) {
-                handleError("addUserToProject web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+                handleError("addUserToApplication web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
             } else {
                 config.setWebServiceEPRCreateUser(createUser.getText().trim());
             }

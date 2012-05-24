@@ -63,14 +63,14 @@ public class EmailSenderService extends AbstractAdmin {
 
     }
 
-    public boolean sendMail(String userName, String firstName, String email, String projectName,
-                            String projectKey, String config) throws UserRegistrationException {
+    public boolean sendMail(String userName, String firstName, String email, String applicationName,
+                            String applicationKey, String config) throws UserRegistrationException {
         EmailSender sender = new EmailSender(loadEmailSenderConfiguration(config));
         Map<String, String> userParams = new HashMap<String, String>();
         userParams.put("userName", userName);
         userParams.put("firstName", firstName);
-        userParams.put("projectName", projectName);
-        userParams.put("projectKey", projectKey);
+        userParams.put("applicationName", applicationName);
+        userParams.put("applicationKey", applicationKey);
         try {
             sender.sendEmail(email, userParams);
         } catch (Exception e) {

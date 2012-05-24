@@ -31,11 +31,11 @@ public class AppFactoryConfiguration {
     private String ssoKeyStorePassword;
     private String ssoIdentityAlias;
     private String ssoKeyStoreName;
-    private String webServiceEPRAddUserToProject;
-    private String webServiceEPRCreateProject;
+    private String webServiceEPRAddUserToApplication;
+    private String webServiceEPRCreateApplication;
     private String webServiceEPRCreateRepo;
-    private String webServiceEPRGetRolesOfUserForProject;
-    private String webServiceEPRGetUsersOfProject;
+    private String webServiceEPRGetRolesOfUserForApplication;
+    private String webServiceEPRGetUsersOfApplication;
     private String webServiceEPREmailVerificationService;
     private String webServiceEPRCreateUser;
     private String webServiceEPRActivateUser;
@@ -48,11 +48,11 @@ public class AppFactoryConfiguration {
     private String scmServerAdminPassword;
     private String scmReadWritePermissionName;
     private Map<String, List<String>> deploymentServerUrls;
-    private Set<String> defaultProjectUserRoles;
+    private Set<String> defaultApplicationUserRoles;
 
     public AppFactoryConfiguration() {
         deploymentServerUrls = new HashMap<String, List<String>>();
-        defaultProjectUserRoles = new HashSet<String>();
+        defaultApplicationUserRoles = new HashSet<String>();
     }
 
     public String getSsoRelyingPartyName() {
@@ -95,20 +95,20 @@ public class AppFactoryConfiguration {
         this.ssoKeyStoreName = ssoKeyStoreName;
     }
 
-    public String getWebServiceEPRAddUserToProject() {
-        return webServiceEPRAddUserToProject;
+    public String getWebServiceEPRAddUserToApplication() {
+        return webServiceEPRAddUserToApplication;
     }
 
-    public void setWebServiceEPRAddUserToProject(String webServiceEPRAddUserToProject) {
-        this.webServiceEPRAddUserToProject = webServiceEPRAddUserToProject;
+    public void setWebServiceEPRAddUserToApplication(String webServiceEPRAddUserToApplication) {
+        this.webServiceEPRAddUserToApplication = webServiceEPRAddUserToApplication;
     }
 
-    public String getWebServiceEPRCreateProject() {
-        return webServiceEPRCreateProject;
+    public String getWebServiceEPRCreateApplication() {
+        return webServiceEPRCreateApplication;
     }
 
-    public void setWebServiceEPRCreateProject(String webServiceEPRCreateProject) {
-        this.webServiceEPRCreateProject = webServiceEPRCreateProject;
+    public void setWebServiceEPRCreateApplication(String webServiceEPRCreateApplication) {
+        this.webServiceEPRCreateApplication = webServiceEPRCreateApplication;
     }
 
     public String getWebServiceEPRCreateRepo() {
@@ -119,21 +119,21 @@ public class AppFactoryConfiguration {
         this.webServiceEPRCreateRepo = webServiceEPRCreateRepo;
     }
 
-    public String getWebServiceEPRGetRolesOfUserForProject() {
-        return webServiceEPRGetRolesOfUserForProject;
+    public String getWebServiceEPRGetRolesOfUserForApplication() {
+        return webServiceEPRGetRolesOfUserForApplication;
     }
 
-    public void setWebServiceEPRGetRolesOfUserForProject(
-            String webServiceEPRGetRolesOfUserForProject) {
-        this.webServiceEPRGetRolesOfUserForProject = webServiceEPRGetRolesOfUserForProject;
+    public void setWebServiceEPRGetRolesOfUserForApplication(
+            String webServiceEPRGetRolesOfUserForApplication) {
+        this.webServiceEPRGetRolesOfUserForApplication = webServiceEPRGetRolesOfUserForApplication;
     }
 
-    public String getWebServiceEPRGetUsersOfProject() {
-        return webServiceEPRGetUsersOfProject;
+    public String getWebServiceEPRGetUsersOfApplication() {
+        return webServiceEPRGetUsersOfApplication;
     }
 
-    public void setWebServiceEPRGetUsersOfProject(String webServiceEPRGetUsersOfProject) {
-        this.webServiceEPRGetUsersOfProject = webServiceEPRGetUsersOfProject;
+    public void setWebServiceEPRGetUsersOfApplication(String webServiceEPRGetUsersOfApplication) {
+        this.webServiceEPRGetUsersOfApplication = webServiceEPRGetUsersOfApplication;
     }
 
     public String getWebServiceEPREmailVerificationService() {
@@ -233,14 +233,14 @@ public class AppFactoryConfiguration {
         return deploymentServerUrls.get(stage);
     }
 
-    public Set<String> getDefaultProjectUserRoles() {
-        return defaultProjectUserRoles;
+    public Set<String> getDefaultApplicationUserRoles() {
+        return defaultApplicationUserRoles;
     }
 
-    public void addDefaultProjectUserRole(String[] roles) {
+    public void addDefaultApplicationUserRole(String[] roles) {
         for (String role : roles) {
             if (role != null && !("".equals(role.trim()))) {
-                defaultProjectUserRoles.add(role);
+                defaultApplicationUserRoles.add(role);
             }
         }
     }

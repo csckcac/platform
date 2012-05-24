@@ -22,7 +22,7 @@ package org.wso2.carbon.appfactory.application.mgt.service;
 public class ApplicationInfoBean {
     private String name;
     private String description;
-    private String projectKey;
+    private String applicationKey;
     private String ownerUserName;
 
     public String getOwnerUserName() {
@@ -43,10 +43,10 @@ public class ApplicationInfoBean {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getProjectKey() {
-        return projectKey;
+    public String getApplicationKey() {
+        return applicationKey;
     }
-    public void setProjectKey(String projectKey) {
-        this.projectKey = projectKey;
+    public void setApplicationKey(String applicationKey) {
+        this.applicationKey = applicationKey;
     }
 }

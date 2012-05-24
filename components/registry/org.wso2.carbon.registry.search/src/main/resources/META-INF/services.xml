@@ -27,11 +27,9 @@
         <operation name="getSearchResults">
             <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/search/resources</parameter>
         </operation>
-        <operation name="getAdvancedSearchResults">
-            <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/search/advanced-search</parameter>
-        </operation>
     </service>
 
+    <parameter name="AuthorizationAction" locked="false">/permission/admin/manage/search/advanced-search</parameter>
     <parameter name="adminService" locked="true">true</parameter>
     <parameter name="hiddenService" locked="true">true</parameter>
 </serviceGroup>

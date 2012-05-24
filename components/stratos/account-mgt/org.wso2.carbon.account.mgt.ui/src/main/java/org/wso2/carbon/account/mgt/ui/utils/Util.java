@@ -99,14 +99,15 @@ public class Util {
     public static boolean updateUsagePlan( HttpServletRequest request, ServletConfig config,
                                            HttpSession session) throws Exception {
         boolean updated = false;
+        String tenantDomain="";
         try{
-            String tenantDomain=(String)session.getAttribute("tenantDomain");
+            tenantDomain=(String)session.getAttribute("tenantDomain");
             String usagePlanName=(String)request.getParameter("usage-plan-name");
             UsagePlanClient client=new UsagePlanClient(config, session);
-            updated = client.updateUsagePlan(tenantDomain,usagePlanName);
+            updated = client.updateUsagePlan(usagePlanName);
         }
        catch (Exception e){
-            String msg = "Failed to get update usage plan for tenant";
+            String msg = "Failed to update the usage plan for tenant: " + tenantDomain;
             log.error(msg, e);
             throw new Exception(msg, e);
         }

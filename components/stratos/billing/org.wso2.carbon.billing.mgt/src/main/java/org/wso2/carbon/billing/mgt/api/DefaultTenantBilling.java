@@ -33,16 +33,13 @@ public class DefaultTenantBilling implements TenantBillingService {
         subscription.setActiveSince(Calendar.getInstance().getTime());
         Item item = new Item();
         subscription.setItem(item);
-        String planName = usagePlan;
-        subscription.setSubscriptionPlan(planName);
-        int subscriptionId = 0;
+        subscription.setSubscriptionPlan(usagePlan);
         try {
             BillingDataAccessService dataAccessService = new BillingDataAccessService();
-            subscriptionId = dataAccessService.addSubscription(subscription);
+            dataAccessService.addSubscription(subscription);
         } catch (Exception e) {
             log.error("Could not add new subscription for tenant: " +
                       tenant.getDomain() + " " + e.getMessage(), e);
-            return;
         }
     }
 
@@ -52,7 +49,7 @@ public class DefaultTenantBilling implements TenantBillingService {
             TenantManager tenantMan = CloudCommonServiceComponent.getRealmService().getTenantManager();
             int tenantId = tenantMan.getTenantId(tenantDomain);
             BillingDataAccessService billingDataAccessService = new BillingDataAccessService();
-            subscription = billingDataAccessService.getActiveSubscriptionOfCustomer(tenantId);
+            subscription = billingDataAccessService.getActiveSubscriptionOfCustomerBySuperTenant(tenantId);
         } catch (Exception e) {
             String msg = "Error occurred while getting the usage plan for tenant: " + 
                          tenantDomain + " " + e.getMessage();
@@ -65,13 +62,16 @@ public class DefaultTenantBilling implements TenantBillingService {
 
     public void updateUsagePlan(String tenantDomain, String usagePlan) throws StratosException {
         try {
-            TenantManager tenantMan = CloudCommonServiceComponent.getRealmService().getTenantManager();
-            int tenantId = tenantMan.getTenantId(tenantDomain);
+            TenantManager tenantManager = CloudCommonServiceComponent.getRealmService().getTenantManager();
+            int tenantId = tenantManager.getTenantId(tenantDomain);
+
             BillingDataAccessService billingDataAccessService = new BillingDataAccessService();
-            Subscription currentSubscription = billingDataAccessService.getActiveSubscriptionOfCustomer(tenantId);
+            Subscription currentSubscription = billingDataAccessService.
+                    getActiveSubscriptionOfCustomerBySuperTenant(tenantId);
+
             if (currentSubscription != null && currentSubscription.getSubscriptionPlan() != null) {
                 if (!currentSubscription.getSubscriptionPlan().equals(usagePlan)) {
-                    boolean updated = billingDataAccessService.changeSubscription(tenantId, usagePlan);
+                    boolean updated = billingDataAccessService.changeSubscriptionBySuperTenant(tenantId, usagePlan);
                     if (updated) {
                         log.debug("Usage plan was changed successfully from " + currentSubscription.getSubscriptionPlan() +
                                   " to " + usagePlan);
@@ -80,10 +80,10 @@ public class DefaultTenantBilling implements TenantBillingService {
                     }
                 }
             }else{
-                //tenant doesnot have an active subscription. First we have to check whether the tenant
+                //tenant does not have an active subscription. First we have to check whether the tenant
                 //is active. If he is active only we will add a new usage plan. Otherwise it is useless
                 //to add a usage plan to an inactive tenant
-                Tenant tenant = tenantMan.getTenant(tenantId);
+                Tenant tenant = tenantManager.getTenant(tenantId);
                 if(tenant.isActive()){
                     //we add a new subscription
                     Subscription subscription = new Subscription();
@@ -112,10 +112,10 @@ public class DefaultTenantBilling implements TenantBillingService {
 
     public void activateUsagePlan(String tenantDomain) throws StratosException {
         try {
-            TenantManager tenantMan = CloudCommonServiceComponent.getRealmService().getTenantManager();
-            int tenantId = tenantMan.getTenantId(tenantDomain);
+            TenantManager tenantManager = CloudCommonServiceComponent.getRealmService().getTenantManager();
+            int tenantId = tenantManager.getTenantId(tenantDomain);
             BillingDataAccessService dataAccessService = new BillingDataAccessService();
-            Subscription subscription = dataAccessService.getActiveSubscriptionOfCustomer(tenantId);
+            Subscription subscription = dataAccessService.getActiveSubscriptionOfCustomerBySuperTenant(tenantId);
             if (subscription != null) {
                 String msg = "Cant activate subscription for tenant: " + tenantId +
                              ". An active subscription already exists";
@@ -160,7 +160,7 @@ public class DefaultTenantBilling implements TenantBillingService {
             TenantManager tenantMan = CloudCommonServiceComponent.getRealmService().getTenantManager();
             int tenantId = tenantMan.getTenantId(tenantDomain);
             BillingDataAccessService dataAccessService = new BillingDataAccessService();
-            boolean deactivated = dataAccessService.deactivateActiveSubscription(tenantId);
+            boolean deactivated = dataAccessService.deactivateActiveSubscriptionBySuperTenant(tenantId);
             if(deactivated){
                 log.info("Active subscription of tenant " + tenantId + " was deactivated");
             }

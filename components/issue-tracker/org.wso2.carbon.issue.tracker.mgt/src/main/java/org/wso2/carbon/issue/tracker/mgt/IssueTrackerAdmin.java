@@ -1042,7 +1042,7 @@ public class IssueTrackerAdmin extends RegistryAbstractAdmin {
         Subscription subscription = null;
         try {
             if (stub != null) {
-                subscription = stub.getActiveSubscriptionOfCustomer(tenantId);
+                subscription = stub.getActiveSubscriptionOfCustomerByTenant();
             }
         } catch (RemoteException e) {
             ExceptionHandler.handleException("Error reading subscription for tenant tid = " + tenantId, e, log);

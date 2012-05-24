@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.account.mgt.stub.services.BillingDataAccessServiceStub;
-import org.wso2.carbon.account.mgt.stub.services.beans.xsd.Customer;
 import org.wso2.carbon.account.mgt.stub.services.beans.xsd.Subscription;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.ui.CarbonUIUtil;
@@ -36,7 +35,6 @@ import javax.servlet.http.HttpSession;
 
 public class UsagePlanClient {
     private BillingDataAccessServiceStub stub;
-    private String epr;
     private static final Log log = LogFactory.getLog(UsagePlanClient.class);
 
     public UsagePlanClient(ServletConfig config, HttpSession session)
@@ -46,7 +44,7 @@ public class UsagePlanClient {
         String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
         ConfigurationContext configContext = (ConfigurationContext) config.
                 getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
-        epr = backendServerURL + "BillingDataAccessService";
+        String epr = backendServerURL + "BillingDataAccessService";
 
         try {
             stub = new BillingDataAccessServiceStub(configContext, epr);
@@ -63,49 +61,38 @@ public class UsagePlanClient {
     }
 
 
-    public boolean updateUsagePlan(String tenantDomainName,String usagePlanName) {
-        Customer customer;
+    public boolean updateUsagePlan(String usagePlanName) {
         try {
-            customer = stub.getCustomerWithName(tenantDomainName);
-            stub.changeSubscription(customer.getId(), usagePlanName);
+            stub.changeSubscriptionByTenant(usagePlanName);
         } catch (Exception e) {
             return false;
         }
         return true;
     }
 
-    public String getUsagePlanName(String tenantName) throws Exception{
-        Customer customer;
+    public String getUsagePlanName(String tenantDomain) throws Exception{
         Subscription subscription;
         try {
-            customer = stub.getCustomerWithName(tenantName);
-            if(customer!=null){
-                subscription=stub.getActiveSubscriptionOfCustomer(customer.getId());
-                if(subscription!=null){
-                    return subscription.getSubscriptionPlan();
-                } else {
-                    return "";
-                }
+            subscription=stub.getActiveSubscriptionOfCustomerByTenant();
+            if(subscription!=null){
+                return subscription.getSubscriptionPlan();
+            } else {
+                return "";
             }
         } catch (Exception e) {
-            String msg = "Error occurred while getting the usage place for tenant: " + tenantName;
+            String msg = "Error occurred while getting the usage plan for tenant: " + tenantDomain;
             log.error(msg, e);
             throw new Exception(msg, e);
         }
-        return "";
     }
 
     public boolean deactivateActiveUsagePlan(String tenantDomain){
         log.info("Deactivating tenant domain: " + tenantDomain);
-        Customer customer;
         boolean deactivated = false;
         try{
-            customer = stub.getCustomerWithName(tenantDomain);
-            if(customer!=null){
-                deactivated = stub.deactivateActiveSubscription(customer.getId());
-                if(deactivated){
-                    log.info("Active subscription deactivated after deactivating the tenant: " + tenantDomain);
-                }
+            deactivated = stub.deactivateActiveSubscriptionByTenant();
+            if(deactivated){
+                log.info("Active subscription deactivated after deactivating the tenant: " + tenantDomain);
             }
         }catch (Exception e){
             log.error("Error occurred while deactivating active subscription of: " +

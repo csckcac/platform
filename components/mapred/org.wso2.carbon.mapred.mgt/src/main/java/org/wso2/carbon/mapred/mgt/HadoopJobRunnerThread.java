@@ -37,8 +37,6 @@ public class HadoopJobRunnerThread extends Thread {
 	
 	@Override
 	public void run() {
-		HadoopCarbonSecurity.clean();
-		HadoopCarbonMessageContext msgCtx = HadoopCarbonMessageContext.get();
 		JarFile jarFile = null;
 		String mainClassName = null;
 		File file = new File(jarName);
@@ -95,7 +93,7 @@ public class HadoopJobRunnerThread extends Thread {
 			carbonMapRedJob.setConfiguration(HadoopJobRunner.getConf());
 			String[] newArgs = args.split(" ");
 			carbonMapRedJob.run(newArgs);
-			
+			HadoopCarbonSecurity.clean();
 		} catch (IOException io) {
 			log.error("Error opening job jar: " + jarName);
 			io.printStackTrace();

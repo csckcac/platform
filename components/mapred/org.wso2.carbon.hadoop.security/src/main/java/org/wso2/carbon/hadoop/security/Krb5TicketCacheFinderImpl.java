@@ -23,6 +23,8 @@ public class Krb5TicketCacheFinderImpl implements Krb5TicketCacheFinder {
 		String ticketCachePath = null;
 		try {
 			HadoopCarbonMessageContext msgCtx = HadoopCarbonMessageContext.get();
+			if (msgCtx == null)
+				return null;
 			String cookie = msgCtx.getCookie();
 			ConfigurationContext configCtx = msgCtx.getConfigurationContext();
 			String serviceEPR = "https://localhost:9443/services/" + "Krb5Authenticator";

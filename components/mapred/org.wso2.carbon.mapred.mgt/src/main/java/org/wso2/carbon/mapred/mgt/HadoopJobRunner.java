@@ -26,6 +26,7 @@ import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
+import org.wso2.carbon.hadoop.security.HadoopCarbonSecurity;
 
 public class HadoopJobRunner extends AbstractAdmin {
 	private Log log = LogFactory.getLog(HadoopJobRunner.class);
@@ -59,6 +60,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 		ConfigurationContext cfgCtx = msgCtx.getConfigurationContext();
 		HadoopCarbonMessageContext hadoopMsgCtx = new HadoopCarbonMessageContext(cfgCtx, cookie);
 		HadoopCarbonMessageContext.set(hadoopMsgCtx);
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+ hadoopMsgCtx.getCookie());
 		HadoopJobRunnerThread hadoopJobThread = new HadoopJobRunnerThread(jarName, className, args);
 		hadoopJobThread.start();
 	}

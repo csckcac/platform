@@ -22,7 +22,7 @@
 	-->
     <ServiceProviders>
         <ServiceProvider>
-            <Issuer>WSO2 AppFactory Project Management</Issuer>
+            <Issuer>WSO2 AppFactory Application Management</Issuer>
 			<AssertionConsumerService>https://localhost:9443/appmgt/sso/jaggery-acs.jag</AssertionConsumerService>
             <CustomLoginPage>appfactory/login_ajaxprocessor.jsp</CustomLoginPage>
         </ServiceProvider>

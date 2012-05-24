@@ -286,7 +286,7 @@ do
     -Dcom.atomikos.icatch.file="$CARBON_HOME/lib/transactions.properties" \
     -Dcom.atomikos.icatch.hide_init_file_path=true \
     -Dorg.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER=true \
-    -Dproperties.hosted.location="$CARBON_HOME/lib"\
+    -Dconf.location="$CARBON_HOME/repository/conf"\
     org.wso2.carbon.bootstrap.Bootstrap $*
 
     status=$?

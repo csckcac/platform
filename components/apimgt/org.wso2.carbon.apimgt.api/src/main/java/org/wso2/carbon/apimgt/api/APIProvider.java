@@ -138,7 +138,9 @@ public interface APIProvider extends APIManager {
     public void addAPI(API api) throws APIManagementException;
 
     /**
-     * Updates an existing API
+     * Updates an existing API. This method must not be used to change API status. Implementations
+     * should throw an exceptions when such attempts are made. All life cycle state changes
+     * should be carried out using the changeAPIStatus method of this interface.
      *
      * @param api API
      * @throws APIManagementException if failed to update API

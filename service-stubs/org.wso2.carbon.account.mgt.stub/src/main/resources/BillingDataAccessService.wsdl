@@ -1,7 +1,7 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax233="http://dataobjects.core.billing.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.mgt.billing.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.mgt.billing.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax235="http://dataobjects.core.billing.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
     <wsdl:documentation>BillingDataAccessService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax234="http://dataobjects.core.billing.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
+        <xs:schema xmlns:ax236="http://dataobjects.core.billing.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.mgt.billing.carbon.wso2.org">
             <xs:import namespace="http://dataobjects.core.billing.carbon.wso2.org/xsd" />
             <xs:element name="BillingDataAccessServiceException">
                 <xs:complexType>
@@ -25,7 +25,7 @@
             <xs:element name="getSubscriptionResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax233:Subscription" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax236:Subscription" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -54,7 +54,7 @@
             <xs:element name="getInactiveSubscriptionsOfCustomerResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax233:Subscription" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax236:Subscription" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -68,39 +68,77 @@
             <xs:element name="getCustomerWithNameResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax233:Customer" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax236:Customer" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getActiveSubscriptionOfCustomer">
+            <xs:element name="getActiveSubscriptionOfCustomerByTenant">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getActiveSubscriptionOfCustomerByTenantResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="customerId" type="xs:int" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax236:Subscription" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getActiveSubscriptionOfCustomerResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax233:Subscription" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deactivateActiveSubscription">
+            <xs:element name="getActiveSubscriptionOfCustomerBySuperTenant">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="tenantId" type="xs:int" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="deactivateActiveSubscriptionResponse">
+            <xs:element name="getActiveSubscriptionOfCustomerBySuperTenantResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax236:Subscription" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deactivateActiveSubscriptionByTenant">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deactivateActiveSubscriptionByTenantResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="changeSubscription">
+            <xs:element name="deactivateActiveSubscriptionBySuperTenant">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="tenantId" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deactivateActiveSubscriptionBySuperTenantResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="changeSubscriptionByTenant">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="subscriptionPlan" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="changeSubscriptionByTenantResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="changeSubscriptionBySuperTenant">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="customerId" type="xs:int" />
@@ -108,7 +146,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="changeSubscriptionResponse">
+            <xs:element name="changeSubscriptionBySuperTenantResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:boolean" />
@@ -118,7 +156,7 @@
             <xs:element name="addSubscription">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="subscription" nillable="true" type="ax233:Subscription" />
+                        <xs:element minOccurs="0" name="subscription" nillable="true" type="ax236:Subscription" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -150,17 +188,17 @@
                     <xs:element minOccurs="0" name="active" type="xs:boolean" />
                     <xs:element minOccurs="0" name="activeSince" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="activeUntil" nillable="true" type="xs:date" />
-                    <xs:element minOccurs="0" name="customer" nillable="true" type="ax233:Customer" />
+                    <xs:element minOccurs="0" name="customer" nillable="true" type="ax235:Customer" />
                     <xs:element minOccurs="0" name="id" type="xs:int" />
                     <xs:element minOccurs="0" name="invoiceSubscriptionId" type="xs:int" />
-                    <xs:element minOccurs="0" name="item" nillable="true" type="ax233:Item" />
+                    <xs:element minOccurs="0" name="item" nillable="true" type="ax235:Item" />
                     <xs:element minOccurs="0" name="payments" nillable="true" type="xs:anyType" />
                     <xs:element minOccurs="0" name="subscriptionPlan" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Customer">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="activeInvoice" nillable="true" type="ax233:Invoice" />
+                    <xs:element minOccurs="0" name="activeInvoice" nillable="true" type="ax235:Invoice" />
                     <xs:element minOccurs="0" name="address" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="context" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
@@ -174,24 +212,24 @@
             </xs:complexType>
             <xs:complexType name="Invoice">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="boughtForward" nillable="true" type="ax233:Cash" />
-                    <xs:element minOccurs="0" name="carriedForward" nillable="true" type="ax233:Cash" />
-                    <xs:element minOccurs="0" name="customer" nillable="true" type="ax233:Customer" />
+                    <xs:element minOccurs="0" name="boughtForward" nillable="true" type="ax235:Cash" />
+                    <xs:element minOccurs="0" name="carriedForward" nillable="true" type="ax235:Cash" />
+                    <xs:element minOccurs="0" name="customer" nillable="true" type="ax235:Customer" />
                     <xs:element minOccurs="0" name="date" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="endDate" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="id" type="xs:int" />
                     <xs:element minOccurs="0" name="payments" nillable="true" type="xs:anyType" />
                     <xs:element minOccurs="0" name="startDate" nillable="true" type="xs:date" />
                     <xs:element minOccurs="0" name="subscriptions" nillable="true" type="xs:anyType" />
-                    <xs:element minOccurs="0" name="totalCost" nillable="true" type="ax233:Cash" />
-                    <xs:element minOccurs="0" name="totalPayment" nillable="true" type="ax233:Cash" />
+                    <xs:element minOccurs="0" name="totalCost" nillable="true" type="ax235:Cash" />
+                    <xs:element minOccurs="0" name="totalPayment" nillable="true" type="ax235:Cash" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Cash">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="currency" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="decimalNumber" type="xs:int" />
-                    <xs:element minOccurs="0" name="sign" nillable="true" type="ax233:Cash_Sign" />
+                    <xs:element minOccurs="0" name="sign" nillable="true" type="ax235:Cash_Sign" />
                     <xs:element minOccurs="0" name="wholeNumber" type="xs:int" />
                 </xs:sequence>
             </xs:complexType>
@@ -205,28 +243,34 @@
             <xs:complexType name="Item">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="bandwidthLimit" type="xs:int" />
-                    <xs:element minOccurs="0" name="bandwidthOveruseCharge" nillable="true" type="ax233:Cash" />
+                    <xs:element minOccurs="0" name="bandwidthOveruseCharge" nillable="true" type="ax235:Cash" />
                     <xs:element minOccurs="0" name="children" nillable="true" type="xs:anyType" />
-                    <xs:element minOccurs="0" name="cost" nillable="true" type="ax233:Cash" />
-                    <xs:element minOccurs="0" name="creditLimit" nillable="true" type="ax233:Cash" />
+                    <xs:element minOccurs="0" name="cost" nillable="true" type="ax235:Cash" />
+                    <xs:element minOccurs="0" name="creditLimit" nillable="true" type="ax235:Cash" />
                     <xs:element minOccurs="0" name="description" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="id" type="xs:int" />
                     <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="parent" nillable="true" type="ax233:Item" />
+                    <xs:element minOccurs="0" name="parent" nillable="true" type="ax235:Item" />
                     <xs:element minOccurs="0" name="resourceVolumeLimit" type="xs:int" />
-                    <xs:element minOccurs="0" name="resourceVolumeOveruseCharge" nillable="true" type="ax233:Cash" />
+                    <xs:element minOccurs="0" name="resourceVolumeOveruseCharge" nillable="true" type="ax235:Cash" />
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
     </wsdl:types>
+    <wsdl:message name="changeSubscriptionByTenantRequest">
+        <wsdl:part name="parameters" element="ns:changeSubscriptionByTenant" />
+    </wsdl:message>
+    <wsdl:message name="changeSubscriptionByTenantResponse">
+        <wsdl:part name="parameters" element="ns:changeSubscriptionByTenantResponse" />
+    </wsdl:message>
+    <wsdl:message name="BillingDataAccessServiceException">
+        <wsdl:part name="parameters" element="ns:BillingDataAccessServiceException" />
+    </wsdl:message>
     <wsdl:message name="activateSubscriptionRequest">
         <wsdl:part name="parameters" element="ns:activateSubscription" />
     </wsdl:message>
     <wsdl:message name="activateSubscriptionResponse">
         <wsdl:part name="parameters" element="ns:activateSubscriptionResponse" />
-    </wsdl:message>
-    <wsdl:message name="BillingDataAccessServiceException">
-        <wsdl:part name="parameters" element="ns:BillingDataAccessServiceException" />
     </wsdl:message>
     <wsdl:message name="getInactiveSubscriptionsOfCustomerRequest">
         <wsdl:part name="parameters" element="ns:getInactiveSubscriptionsOfCustomer" />
@@ -234,17 +278,17 @@
     <wsdl:message name="getInactiveSubscriptionsOfCustomerResponse">
         <wsdl:part name="parameters" element="ns:getInactiveSubscriptionsOfCustomerResponse" />
     </wsdl:message>
-    <wsdl:message name="changeSubscriptionRequest">
-        <wsdl:part name="parameters" element="ns:changeSubscription" />
-    </wsdl:message>
-    <wsdl:message name="changeSubscriptionResponse">
-        <wsdl:part name="parameters" element="ns:changeSubscriptionResponse" />
-    </wsdl:message>
     <wsdl:message name="getItemIdWithNameRequest">
         <wsdl:part name="parameters" element="ns:getItemIdWithName" />
     </wsdl:message>
     <wsdl:message name="getItemIdWithNameResponse">
         <wsdl:part name="parameters" element="ns:getItemIdWithNameResponse" />
+    </wsdl:message>
+    <wsdl:message name="deactivateActiveSubscriptionBySuperTenantRequest">
+        <wsdl:part name="parameters" element="ns:deactivateActiveSubscriptionBySuperTenant" />
+    </wsdl:message>
+    <wsdl:message name="deactivateActiveSubscriptionBySuperTenantResponse">
+        <wsdl:part name="parameters" element="ns:deactivateActiveSubscriptionBySuperTenantResponse" />
     </wsdl:message>
     <wsdl:message name="addSubscriptionRequest">
         <wsdl:part name="parameters" element="ns:addSubscription" />
@@ -252,11 +296,11 @@
     <wsdl:message name="addSubscriptionResponse">
         <wsdl:part name="parameters" element="ns:addSubscriptionResponse" />
     </wsdl:message>
-    <wsdl:message name="deactivateActiveSubscriptionRequest">
-        <wsdl:part name="parameters" element="ns:deactivateActiveSubscription" />
+    <wsdl:message name="deactivateActiveSubscriptionByTenantRequest">
+        <wsdl:part name="parameters" element="ns:deactivateActiveSubscriptionByTenant" />
     </wsdl:message>
-    <wsdl:message name="deactivateActiveSubscriptionResponse">
-        <wsdl:part name="parameters" element="ns:deactivateActiveSubscriptionResponse" />
+    <wsdl:message name="deactivateActiveSubscriptionByTenantResponse">
+        <wsdl:part name="parameters" element="ns:deactivateActiveSubscriptionByTenantResponse" />
     </wsdl:message>
     <wsdl:message name="getSubscriptionRequest">
         <wsdl:part name="parameters" element="ns:getSubscription" />
@@ -270,13 +314,30 @@
     <wsdl:message name="getCustomerWithNameResponse">
         <wsdl:part name="parameters" element="ns:getCustomerWithNameResponse" />
     </wsdl:message>
-    <wsdl:message name="getActiveSubscriptionOfCustomerRequest">
-        <wsdl:part name="parameters" element="ns:getActiveSubscriptionOfCustomer" />
+    <wsdl:message name="getActiveSubscriptionOfCustomerByTenantRequest">
+        <wsdl:part name="parameters" element="ns:getActiveSubscriptionOfCustomerByTenant" />
     </wsdl:message>
-    <wsdl:message name="getActiveSubscriptionOfCustomerResponse">
-        <wsdl:part name="parameters" element="ns:getActiveSubscriptionOfCustomerResponse" />
+    <wsdl:message name="getActiveSubscriptionOfCustomerByTenantResponse">
+        <wsdl:part name="parameters" element="ns:getActiveSubscriptionOfCustomerByTenantResponse" />
+    </wsdl:message>
+    <wsdl:message name="getActiveSubscriptionOfCustomerBySuperTenantRequest">
+        <wsdl:part name="parameters" element="ns:getActiveSubscriptionOfCustomerBySuperTenant" />
+    </wsdl:message>
+    <wsdl:message name="getActiveSubscriptionOfCustomerBySuperTenantResponse">
+        <wsdl:part name="parameters" element="ns:getActiveSubscriptionOfCustomerBySuperTenantResponse" />
+    </wsdl:message>
+    <wsdl:message name="changeSubscriptionBySuperTenantRequest">
+        <wsdl:part name="parameters" element="ns:changeSubscriptionBySuperTenant" />
+    </wsdl:message>
+    <wsdl:message name="changeSubscriptionBySuperTenantResponse">
+        <wsdl:part name="parameters" element="ns:changeSubscriptionBySuperTenantResponse" />
     </wsdl:message>
     <wsdl:portType name="BillingDataAccessServicePortType">
+        <wsdl:operation name="changeSubscriptionByTenant">
+            <wsdl:input message="ns:changeSubscriptionByTenantRequest" wsaw:Action="urn:changeSubscriptionByTenant" />
+            <wsdl:output message="ns:changeSubscriptionByTenantResponse" wsaw:Action="urn:changeSubscriptionByTenantResponse" />
+            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:changeSubscriptionByTenantBillingDataAccessServiceException" />
+        </wsdl:operation>
         <wsdl:operation name="activateSubscription">
             <wsdl:input message="ns:activateSubscriptionRequest" wsaw:Action="urn:activateSubscription" />
             <wsdl:output message="ns:activateSubscriptionResponse" wsaw:Action="urn:activateSubscriptionResponse" />
@@ -287,25 +348,25 @@
             <wsdl:output message="ns:getInactiveSubscriptionsOfCustomerResponse" wsaw:Action="urn:getInactiveSubscriptionsOfCustomerResponse" />
             <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:getInactiveSubscriptionsOfCustomerBillingDataAccessServiceException" />
         </wsdl:operation>
-        <wsdl:operation name="changeSubscription">
-            <wsdl:input message="ns:changeSubscriptionRequest" wsaw:Action="urn:changeSubscription" />
-            <wsdl:output message="ns:changeSubscriptionResponse" wsaw:Action="urn:changeSubscriptionResponse" />
-            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:changeSubscriptionBillingDataAccessServiceException" />
-        </wsdl:operation>
         <wsdl:operation name="getItemIdWithName">
             <wsdl:input message="ns:getItemIdWithNameRequest" wsaw:Action="urn:getItemIdWithName" />
             <wsdl:output message="ns:getItemIdWithNameResponse" wsaw:Action="urn:getItemIdWithNameResponse" />
             <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:getItemIdWithNameBillingDataAccessServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="deactivateActiveSubscriptionBySuperTenant">
+            <wsdl:input message="ns:deactivateActiveSubscriptionBySuperTenantRequest" wsaw:Action="urn:deactivateActiveSubscriptionBySuperTenant" />
+            <wsdl:output message="ns:deactivateActiveSubscriptionBySuperTenantResponse" wsaw:Action="urn:deactivateActiveSubscriptionBySuperTenantResponse" />
+            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:deactivateActiveSubscriptionBySuperTenantBillingDataAccessServiceException" />
         </wsdl:operation>
         <wsdl:operation name="addSubscription">
             <wsdl:input message="ns:addSubscriptionRequest" wsaw:Action="urn:addSubscription" />
             <wsdl:output message="ns:addSubscriptionResponse" wsaw:Action="urn:addSubscriptionResponse" />
             <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:addSubscriptionBillingDataAccessServiceException" />
         </wsdl:operation>
-        <wsdl:operation name="deactivateActiveSubscription">
-            <wsdl:input message="ns:deactivateActiveSubscriptionRequest" wsaw:Action="urn:deactivateActiveSubscription" />
-            <wsdl:output message="ns:deactivateActiveSubscriptionResponse" wsaw:Action="urn:deactivateActiveSubscriptionResponse" />
-            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:deactivateActiveSubscriptionBillingDataAccessServiceException" />
+        <wsdl:operation name="deactivateActiveSubscriptionByTenant">
+            <wsdl:input message="ns:deactivateActiveSubscriptionByTenantRequest" wsaw:Action="urn:deactivateActiveSubscriptionByTenant" />
+            <wsdl:output message="ns:deactivateActiveSubscriptionByTenantResponse" wsaw:Action="urn:deactivateActiveSubscriptionByTenantResponse" />
+            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:deactivateActiveSubscriptionByTenantBillingDataAccessServiceException" />
         </wsdl:operation>
         <wsdl:operation name="getSubscription">
             <wsdl:input message="ns:getSubscriptionRequest" wsaw:Action="urn:getSubscription" />
@@ -317,14 +378,36 @@
             <wsdl:output message="ns:getCustomerWithNameResponse" wsaw:Action="urn:getCustomerWithNameResponse" />
             <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:getCustomerWithNameBillingDataAccessServiceException" />
         </wsdl:operation>
-        <wsdl:operation name="getActiveSubscriptionOfCustomer">
-            <wsdl:input message="ns:getActiveSubscriptionOfCustomerRequest" wsaw:Action="urn:getActiveSubscriptionOfCustomer" />
-            <wsdl:output message="ns:getActiveSubscriptionOfCustomerResponse" wsaw:Action="urn:getActiveSubscriptionOfCustomerResponse" />
-            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:getActiveSubscriptionOfCustomerBillingDataAccessServiceException" />
+        <wsdl:operation name="getActiveSubscriptionOfCustomerByTenant">
+            <wsdl:input message="ns:getActiveSubscriptionOfCustomerByTenantRequest" wsaw:Action="urn:getActiveSubscriptionOfCustomerByTenant" />
+            <wsdl:output message="ns:getActiveSubscriptionOfCustomerByTenantResponse" wsaw:Action="urn:getActiveSubscriptionOfCustomerByTenantResponse" />
+            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:getActiveSubscriptionOfCustomerByTenantBillingDataAccessServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="getActiveSubscriptionOfCustomerBySuperTenant">
+            <wsdl:input message="ns:getActiveSubscriptionOfCustomerBySuperTenantRequest" wsaw:Action="urn:getActiveSubscriptionOfCustomerBySuperTenant" />
+            <wsdl:output message="ns:getActiveSubscriptionOfCustomerBySuperTenantResponse" wsaw:Action="urn:getActiveSubscriptionOfCustomerBySuperTenantResponse" />
+            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:getActiveSubscriptionOfCustomerBySuperTenantBillingDataAccessServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="changeSubscriptionBySuperTenant">
+            <wsdl:input message="ns:changeSubscriptionBySuperTenantRequest" wsaw:Action="urn:changeSubscriptionBySuperTenant" />
+            <wsdl:output message="ns:changeSubscriptionBySuperTenantResponse" wsaw:Action="urn:changeSubscriptionBySuperTenantResponse" />
+            <wsdl:fault message="ns:BillingDataAccessServiceException" name="BillingDataAccessServiceException" wsaw:Action="urn:changeSubscriptionBySuperTenantBillingDataAccessServiceException" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="BillingDataAccessServiceSoap11Binding" type="ns:BillingDataAccessServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="changeSubscriptionByTenant">
+            <soap:operation soapAction="urn:changeSubscriptionByTenant" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BillingDataAccessServiceException">
+                <soap:fault use="literal" name="BillingDataAccessServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="activateSubscription">
             <soap:operation soapAction="urn:activateSubscription" style="document" />
             <wsdl:input>
@@ -349,8 +432,8 @@
                 <soap:fault use="literal" name="BillingDataAccessServiceException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="changeSubscription">
-            <soap:operation soapAction="urn:changeSubscription" style="document" />
+        <wsdl:operation name="deactivateActiveSubscriptionBySuperTenant">
+            <soap:operation soapAction="urn:deactivateActiveSubscriptionBySuperTenant" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -385,8 +468,8 @@
                 <soap:fault use="literal" name="BillingDataAccessServiceException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="deactivateActiveSubscription">
-            <soap:operation soapAction="urn:deactivateActiveSubscription" style="document" />
+        <wsdl:operation name="deactivateActiveSubscriptionByTenant">
+            <soap:operation soapAction="urn:deactivateActiveSubscriptionByTenant" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -421,8 +504,32 @@
                 <soap:fault use="literal" name="BillingDataAccessServiceException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="getActiveSubscriptionOfCustomer">
-            <soap:operation soapAction="urn:getActiveSubscriptionOfCustomer" style="document" />
+        <wsdl:operation name="getActiveSubscriptionOfCustomerBySuperTenant">
+            <soap:operation soapAction="urn:getActiveSubscriptionOfCustomerBySuperTenant" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BillingDataAccessServiceException">
+                <soap:fault use="literal" name="BillingDataAccessServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getActiveSubscriptionOfCustomerByTenant">
+            <soap:operation soapAction="urn:getActiveSubscriptionOfCustomerByTenant" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BillingDataAccessServiceException">
+                <soap:fault use="literal" name="BillingDataAccessServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="changeSubscriptionBySuperTenant">
+            <soap:operation soapAction="urn:changeSubscriptionBySuperTenant" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -436,6 +543,18 @@
     </wsdl:binding>
     <wsdl:binding name="BillingDataAccessServiceSoap12Binding" type="ns:BillingDataAccessServicePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="changeSubscriptionByTenant">
+            <soap12:operation soapAction="urn:changeSubscriptionByTenant" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BillingDataAccessServiceException">
+                <soap12:fault use="literal" name="BillingDataAccessServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="activateSubscription">
             <soap12:operation soapAction="urn:activateSubscription" style="document" />
             <wsdl:input>
@@ -460,8 +579,8 @@
                 <soap12:fault use="literal" name="BillingDataAccessServiceException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="changeSubscription">
-            <soap12:operation soapAction="urn:changeSubscription" style="document" />
+        <wsdl:operation name="deactivateActiveSubscriptionBySuperTenant">
+            <soap12:operation soapAction="urn:deactivateActiveSubscriptionBySuperTenant" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -496,8 +615,8 @@
                 <soap12:fault use="literal" name="BillingDataAccessServiceException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="deactivateActiveSubscription">
-            <soap12:operation soapAction="urn:deactivateActiveSubscription" style="document" />
+        <wsdl:operation name="deactivateActiveSubscriptionByTenant">
+            <soap12:operation soapAction="urn:deactivateActiveSubscriptionByTenant" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -532,8 +651,32 @@
                 <soap12:fault use="literal" name="BillingDataAccessServiceException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="getActiveSubscriptionOfCustomer">
-            <soap12:operation soapAction="urn:getActiveSubscriptionOfCustomer" style="document" />
+        <wsdl:operation name="getActiveSubscriptionOfCustomerBySuperTenant">
+            <soap12:operation soapAction="urn:getActiveSubscriptionOfCustomerBySuperTenant" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BillingDataAccessServiceException">
+                <soap12:fault use="literal" name="BillingDataAccessServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getActiveSubscriptionOfCustomerByTenant">
+            <soap12:operation soapAction="urn:getActiveSubscriptionOfCustomerByTenant" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BillingDataAccessServiceException">
+                <soap12:fault use="literal" name="BillingDataAccessServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="changeSubscriptionBySuperTenant">
+            <soap12:operation soapAction="urn:changeSubscriptionBySuperTenant" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -547,6 +690,15 @@
     </wsdl:binding>
     <wsdl:binding name="BillingDataAccessServiceHttpBinding" type="ns:BillingDataAccessServicePortType">
         <http:binding verb="POST" />
+        <wsdl:operation name="changeSubscriptionByTenant">
+            <http:operation location="changeSubscriptionByTenant" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="activateSubscription">
             <http:operation location="activateSubscription" />
             <wsdl:input>
@@ -565,8 +717,8 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="changeSubscription">
-            <http:operation location="changeSubscription" />
+        <wsdl:operation name="deactivateActiveSubscriptionBySuperTenant">
+            <http:operation location="deactivateActiveSubscriptionBySuperTenant" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
@@ -592,8 +744,8 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="deactivateActiveSubscription">
-            <http:operation location="deactivateActiveSubscription" />
+        <wsdl:operation name="deactivateActiveSubscriptionByTenant">
+            <http:operation location="deactivateActiveSubscriptionByTenant" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
@@ -619,8 +771,26 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getActiveSubscriptionOfCustomer">
-            <http:operation location="getActiveSubscriptionOfCustomer" />
+        <wsdl:operation name="getActiveSubscriptionOfCustomerBySuperTenant">
+            <http:operation location="getActiveSubscriptionOfCustomerBySuperTenant" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getActiveSubscriptionOfCustomerByTenant">
+            <http:operation location="getActiveSubscriptionOfCustomerByTenant" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="changeSubscriptionBySuperTenant">
+            <http:operation location="changeSubscriptionBySuperTenant" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
@@ -631,13 +801,13 @@
     </wsdl:binding>
     <wsdl:service name="BillingDataAccessService">
         <wsdl:port name="BillingDataAccessServiceHttpsSoap11Endpoint" binding="ns:BillingDataAccessServiceSoap11Binding">
-            <soap:address location="https://cloud-test.wso2.com:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://10.100.2.91:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="BillingDataAccessServiceHttpsSoap12Endpoint" binding="ns:BillingDataAccessServiceSoap12Binding">
-            <soap12:address location="https://cloud-test.wso2.com:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://10.100.2.91:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="BillingDataAccessServiceHttpsEndpoint" binding="ns:BillingDataAccessServiceHttpBinding">
-            <http:address location="https://cloud-test.wso2.com:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsEndpoint/" />
+            <http:address location="https://10.100.2.91:9443/services/BillingDataAccessService.BillingDataAccessServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

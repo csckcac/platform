@@ -192,7 +192,7 @@
         </file>
         <file>
             <source>src/main/conf/synapse.properties</source>
-            <outputDirectory>wso2esb-${pom.version}/lib</outputDirectory>
+            <outputDirectory>wso2esb-${pom.version}/repository/conf</outputDirectory>
             <destName>synapse.properties</destName>
             <filtered>true</filtered>
         </file>
@@ -210,13 +210,13 @@
         </file>
         <file>
             <source>src/main/conf/nhttp.properties</source>
-            <outputDirectory>wso2esb-${pom.version}/lib</outputDirectory>
+            <outputDirectory>wso2esb-${pom.version}/repository/conf</outputDirectory>
             <destName>nhttp.properties</destName>
             <filtered>true</filtered>
         </file>
         <file>
             <source>src/main/conf/passthru-http.properties</source>
-            <outputDirectory>wso2esb-${pom.version}/lib</outputDirectory>
+            <outputDirectory>wso2esb-${pom.version}/repository/conf</outputDirectory>
             <destName>passthru-http.properties</destName>
             <filtered>true</filtered>
         </file>

@@ -19,10 +19,13 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.statistics.services.util.OperationStatistics;
 import org.wso2.carbon.statistics.services.util.ServiceStatistics;
 import org.wso2.carbon.statistics.services.util.SystemStatistics;
+import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 
 import javax.xml.namespace.QName;
 
@@ -31,6 +34,7 @@ import javax.xml.namespace.QName;
  */
 public class StatisticsAdmin extends AbstractAdmin implements StatisticsAdminMBean {
     private SystemStatisticsUtil sysStatsUtil = new SystemStatisticsUtil();
+    private static Log log = LogFactory.getLog(StatisticsAdmin.class);
 
     public StatisticsAdmin() {
     }
@@ -141,7 +145,17 @@ public class StatisticsAdmin extends AbstractAdmin implements StatisticsAdminMBe
     }
 
     private AxisService getAxisService(String serviceName) {
-        return getAxisConfig().getServiceForActivation(serviceName);
+        AxisService axisService = getAxisConfig().getServiceForActivation(serviceName);
+        if (axisService == null) {
+            try {
+                GhostDeployerUtils.waitForServiceToLeaveTransit(serviceName, getAxisConfig());
+                return getAxisService(serviceName);
+            } catch (AxisFault axisFault) {
+                log.error("Error occurred while service : " +serviceName+ " is " +
+                          "trying to leave transit", axisFault);
+            }
+        }
+        return axisService;
     }
 
     private AxisOperation getAxisOperation(String serviceName,

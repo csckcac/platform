@@ -3919,7 +3919,9 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
     // we are about to copy job.xml from HDFS
     JobInProgress job = null;
     try {
-      job = new JobInProgress(this, this.conf, jobInfo, 0, ts);
+      //WSO2 Fix:
+      job = new JobInProgress(this, this.conf, jobInfo, 0, ts, getMROwner());
+      //job = new JobInProgress(this, this.conf, jobInfo, 0, ts);
     } catch (Exception e) {
       throw new IOException(e);
     }

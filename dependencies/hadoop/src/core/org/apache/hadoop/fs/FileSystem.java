@@ -223,7 +223,6 @@ public abstract class FileSystem extends Configured implements Closeable {
       FileSystem fs = createFileSystem(uri, conf);
       return fs;
     }
- 
     return CACHE.get(uri, conf);
   }
 

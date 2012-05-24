@@ -30,6 +30,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.JobStatusChangeEvent.EventType;
 import org.apache.hadoop.util.StringUtils;
+import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.UserGroupInformationThreadLocal;
 
 /**
  * A {@link JobInProgressListener} which initializes the tasks for a job as soon
@@ -70,12 +72,21 @@ class EagerTaskInitializationListener extends JobInProgressListener {
   class InitJob implements Runnable {
   
     private JobInProgress job;
-    
+    //WSO2 Fix:
+    //private UserGroupInformation ugi; 
     public InitJob(JobInProgress job) {
       this.job = job;
+      //WSO2 Fix:
+      /*try {
+        this.ugi = UserGroupInformation.getCurrentUser();
+      } catch (IOException ioe) {
+        ioe.printStackTrace();
+      }*/
     }
     
     public void run() {
+      //WSO2 Fix:
+      //UserGroupInformationThreadLocal.set(ugi);
       ttm.initJob(job);
     }
   }

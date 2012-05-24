@@ -320,27 +320,23 @@ public abstract class Server {
     private class Reader implements Runnable {
       private volatile boolean adding = false;
       private Selector readSelector = null;
+      //WSO2 Fix:
       //current is the UserGroupInformation object of the current thread. 
       //This variable will be set as a thread local variable in the new thread that will be created.
       //This is required by the WSO2 Carbon environment where job clients, namenodes and jobtrackers 
       //will run on a single JVM.
-      //WSO2 Carbon change.
-      private UserGroupInformation current;
+      //private UserGroupInformation current;
       Reader(Selector readSelector) {
-        try {
-	  //Get the current user local to this thread.
-          //WSO2 Carbon change.
-          current = UserGroupInformation.getCurrentUser();
-        }catch (IOException ioe) {
-          LOG.warn(ioe.getMessage());
-        }
+        //try {
+          //current = UserGroupInformation.getCurrentUser();
+        //}catch (IOException ioe) {
+          //LOG.warn(ioe.getMessage());
+        //}
         this.readSelector = readSelector;
       }
       public void run() {
         LOG.info("Starting SocketReader");
-        //Set the current user local to the thread which spawned this thread as a thread local variable.
-	//WSO2 Carbon change.
-        UserGroupInformationThreadLocal.set(current);
+        //UserGroupInformationThreadLocal.set(current);
         synchronized (this) {
           while (running) {
             SelectionKey key = null;
@@ -1377,10 +1373,8 @@ public abstract class Server {
           if (LOG.isDebugEnabled())
             LOG.debug(getName() + ": has #" + call.id + " from " +
                       call.connection+" by user "+call.connection.user.getUserName()+ ". Current Thread ID is "+Thread.currentThread().getId());
-            //LOG.info(getName() + ": has #" + call.id + " from " +
-             //         call.connection+" by user "+call.connection.user.getUserName()+ ". Current Thread ID is "+Thread.currentThread().getId());
-          // Set connection user as the thread local user.
-	  // WSO2 Carbon related change...
+            
+	      //WSO2 Fix:
           UserGroupInformationThreadLocal.set(call.connection.user); 
           String errorClass = null;
           String error = null;
@@ -1408,7 +1402,7 @@ public abstract class Server {
                   );
             }
           } catch (Throwable e) {
-            LOG.info(getName()+", call "+call+": error: " + e +" Othear useful information: "+call.connection.user+" "+Thread.currentThread().getId());
+            LOG.info(getName()+", call "+call+": error: " + e +" Other useful information: "+call.connection.user+" "+Thread.currentThread().getId());
             errorClass = e.getClass().getName();
             error = StringUtils.stringifyException(e);
           }
@@ -1438,6 +1432,8 @@ public abstract class Server {
         } catch (Exception e) {
           LOG.info(getName() + " caught: " +
                    StringUtils.stringifyException(e));
+        } finally {
+            UserGroupInformationThreadLocal.remove();
         }
       }
       LOG.info(getName() + ": exiting");

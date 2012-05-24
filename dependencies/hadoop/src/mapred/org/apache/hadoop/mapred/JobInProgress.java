@@ -68,6 +68,7 @@ import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.util.StringUtils;
 
+
 /*************************************************************
  * JobInProgress maintains all the info for keeping
  * a Job on the straight and narrow.  It keeps its JobProfile
@@ -315,6 +316,141 @@ public class JobInProgress {
   private Path jobSubmitDir = null;
 
   final private UserGroupInformation userUGI;
+  private UserGroupInformation mrOwnerUGI = null;
+ 
+  //WSO2 Fix: Construct JobInProgress with MapReduce owner principal.
+  public JobInProgress(JobTracker jobtracker, final JobConf default_conf, 
+      JobInfo jobInfo, int rCount, Credentials ts, UserGroupInformation mrOwner) 
+  throws IOException, InterruptedException {
+    this.mrOwnerUGI = mrOwner;
+    UserGroupInformation currentUGI = null;
+    try {
+      this.restartCount = rCount;
+      this.jobId = JobID.downgrade(jobInfo.getJobID());
+      String url = "http://" + jobtracker.getJobTrackerMachine() + ":" 
+      + jobtracker.getInfoPort() + "/jobdetails.jsp?jobid=" + jobId;
+      this.jobtracker = jobtracker;
+      this.status = new JobStatus(jobId, 0.0f, 0.0f, JobStatus.PREP);
+      this.status.setUsername(jobInfo.getUser().toString());
+      this.jobtracker.getInstrumentation().addPrepJob(conf, jobId);
+      this.startTime = jobtracker.getClock().getTime();
+      status.setStartTime(startTime);
+      this.localFs = jobtracker.getLocalFileSystem();
+
+      this.tokenStorage = ts;
+      // use the user supplied token to add user credentials to the conf
+      jobSubmitDir = jobInfo.getJobSubmitDir();
+      user = jobInfo.getUser().toString();
+      
+      //A WSO2 Fix: Here the JobInProgress will try to invoke an RPC call with a UserGroupInformation instance created
+      //for the remote user but will fail eventually as UserGroupInformationThreadLocal returns callers UserGroupInformation
+      //instance which is local to this thread resulting the exception 
+      //GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt).
+      //Solution is to store thread local UserGroupInformation object in a temporary variable and set calling user's 
+      //UserGroupInformation instance as the thread local varibale before invoking the RPC call. Once the the RPC
+      //invocation is done thread local variable has to be reverted back to it's original value.
+      userUGI = UserGroupInformation.createRemoteUser(user);
+      currentUGI = UserGroupInformation.getCurrentUser();
+      UserGroupInformationThreadLocal.set(userUGI);
+      if (ts != null) {
+        for (Token<? extends TokenIdentifier> token : ts.getAllTokens()) {
+          userUGI.addToken(token);
+        }
+      }
+
+      fs = userUGI.doAs(new PrivilegedExceptionAction<FileSystem>() {
+        public FileSystem run() throws IOException {
+          return jobSubmitDir.getFileSystem(default_conf);
+        }});
+      
+      //Restore the thread local UserGroupInformation object
+      UserGroupInformationThreadLocal.set(currentUGI);
+      
+      Path submitJobFile = JobSubmissionFiles.getJobConfPath(jobSubmitDir);
+      FileStatus fstatus = fs.getFileStatus(submitJobFile);
+      if (fstatus.getLen() > jobtracker.MAX_JOBCONF_SIZE) {
+        throw new IOException("Exceeded max jobconf size: " 
+            + fstatus.getLen() + " limit: " + jobtracker.MAX_JOBCONF_SIZE);
+      }
+      this.localJobFile = default_conf.getLocalPath(JobTracker.SUBDIR
+          +"/"+jobId + ".xml");
+      Path jobFilePath = JobSubmissionFiles.getJobConfPath(jobSubmitDir);
+      jobFile = jobFilePath.toString();
+      fs.copyToLocalFile(jobFilePath, localJobFile);
+      conf = new JobConf(localJobFile);
+      if (conf.getUser() == null) {
+        this.conf.setUser(user);
+      }
+      if (!conf.getUser().equals(user)) {
+        String desc = "The username " + conf.getUser() + " obtained from the " +
+        "conf doesn't match the username " + user + " the user " +
+        "authenticated as";
+        AuditLogger.logFailure(user, Operation.SUBMIT_JOB.name(), conf.getUser(), 
+            jobId.toString(), desc);
+        throw new IOException(desc);
+      }
+      
+      this.priority = conf.getJobPriority();
+      this.status.setJobPriority(this.priority);
+      this.profile = new JobProfile(user, jobId, 
+          jobFile, url, conf.getJobName(),
+          conf.getQueueName());
+
+      this.submitHostName = conf.getJobSubmitHostName();
+      this.submitHostAddress = conf.getJobSubmitHostAddress();
+      this.numMapTasks = conf.getNumMapTasks();
+      this.numReduceTasks = conf.getNumReduceTasks();
+
+      this.memoryPerMap = conf.getMemoryForMapTask();
+      this.memoryPerReduce = conf.getMemoryForReduceTask();
+
+      this.taskCompletionEvents = new ArrayList<TaskCompletionEvent>
+      (numMapTasks + numReduceTasks + 10);
+
+      // Construct the jobACLs
+      status.setJobACLs(jobtracker.getJobACLsManager().constructJobACLs(conf));
+
+      this.mapFailuresPercent = conf.getMaxMapTaskFailuresPercent();
+      this.reduceFailuresPercent = conf.getMaxReduceTaskFailuresPercent();
+
+      this.maxTaskFailuresPerTracker = conf.getMaxTaskFailuresPerTracker();
+
+      hasSpeculativeMaps = conf.getMapSpeculativeExecution();
+      hasSpeculativeReduces = conf.getReduceSpeculativeExecution();
+      // a limit on the input size of the reduce.
+      // we check to see if the estimated input size of 
+      // of each reduce is less than this value. If not
+      // we fail the job. A value of -1 just means there is no
+      // limit set.
+      reduce_input_limit = -1L;
+      this.maxLevel = jobtracker.getNumTaskCacheLevels();
+      this.anyCacheLevel = this.maxLevel+1;
+      this.nonLocalMaps = new LinkedList<TaskInProgress>();
+      this.failedMaps = new TreeSet<TaskInProgress>(failComparator);
+      this.nonLocalRunningMaps = new LinkedHashSet<TaskInProgress>();
+      this.runningMapCache = new IdentityHashMap<Node, Set<TaskInProgress>>();
+      this.nonRunningReduces = new TreeSet<TaskInProgress>(failComparator);
+      this.runningReduces = new LinkedHashSet<TaskInProgress>();
+      this.resourceEstimator = new ResourceEstimator(this);
+      this.reduce_input_limit = conf.getLong("mapreduce.reduce.input.limit", 
+          DEFAULT_REDUCE_INPUT_LIMIT);
+      // register job's tokens for renewal
+      DelegationTokenRenewal.registerDelegationTokensForRenewal(
+          jobInfo.getJobID(), ts, jobtracker.getConf(), mrOwnerUGI);
+      
+      // Check task limits
+      checkTaskLimits();
+    } finally {
+      //Restore the thread local UserGroupInformation object
+      UserGroupInformationThreadLocal.set(currentUGI);
+      
+      //close all FileSystems that was created above for the current user
+      //At this point, this constructor is called in the context of an RPC, and
+      //hence the "current user" is actually referring to the kerberos
+      //authenticated user (if security is ON).
+      FileSystem.closeAllForUGI(UserGroupInformation.getCurrentUser());
+    }
+  } 
   
   /**
    * Create an almost empty JobInProgress, which can be used only for tests
@@ -476,9 +612,11 @@ public class JobInProgress {
       this.reduce_input_limit = conf.getLong("mapreduce.reduce.input.limit", 
           DEFAULT_REDUCE_INPUT_LIMIT);
       // register job's tokens for renewal
+      //WSO2 Fix:
+      //DelegationTokenRenewal.registerDelegationTokensForRenewal(
+       //   jobInfo.getJobID(), ts, jobtracker.getConf(), mrOwnerUGI);
       DelegationTokenRenewal.registerDelegationTokensForRenewal(
           jobInfo.getJobID(), ts, jobtracker.getConf());
-      
       // Check task limits
       checkTaskLimits();
     } finally {

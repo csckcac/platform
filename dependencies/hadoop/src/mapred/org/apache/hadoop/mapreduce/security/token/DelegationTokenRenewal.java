@@ -56,7 +56,8 @@ import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 public class DelegationTokenRenewal {
   private static final Log LOG = LogFactory.getLog(DelegationTokenRenewal.class);
   public static final String SCHEME = "hdfs";
-  
+  //WSO2 Fix:
+  public static UserGroupInformation mrOwnerUGI;
   /**
    * class that is used for keeping tracks of DT to renew
    *
@@ -67,7 +68,7 @@ public class DelegationTokenRenewal {
     public final Configuration conf;
     public long expirationDate;
     public TimerTask timerTask;
-    
+   
     public DelegationTokenToRenew(
         JobID jId, Token<DelegationTokenIdentifier> t, 
         Configuration newConf, long newExpirationDate) {
@@ -114,7 +115,15 @@ public class DelegationTokenRenewal {
   // kind of tokens we currently renew
   private static final Text kindHdfs = 
     DelegationTokenIdentifier.HDFS_DELEGATION_KIND;
-  
+ 
+  //WSO2 Fix: 
+  public static synchronized void registerDelegationTokensForRenewal(
+      JobID jobId, Credentials ts, Configuration conf, UserGroupInformation ugi) {
+      mrOwnerUGI = ugi;
+      LOG.info("SSSSSSSSSSSSSSSSSSSS "+ugi);
+      registerDelegationTokensForRenewal(jobId, ts, conf);
+  }
+
   @SuppressWarnings("unchecked")
   public static synchronized void registerDelegationTokensForRenewal(
       JobID jobId, Credentials ts, Configuration conf) {
@@ -180,11 +189,20 @@ public class DelegationTokenRenewal {
    */
   private static class RenewalTimerTask extends TimerTask {
     private DelegationTokenToRenew dttr;
-    
-    RenewalTimerTask(DelegationTokenToRenew t) {  dttr = t;  }
-    
+    private UserGroupInformation ugi;
+    RenewalTimerTask(DelegationTokenToRenew t) {  
+      dttr = t; 
+    }
+
+    //WSO2 Fix:
+    RenewalTimerTask(DelegationTokenToRenew t, UserGroupInformation ugi) {  
+      this(t); 
+      this.ugi = ugi;
+    }
     @Override
     public void run() {
+      //WSO2 Fix:
+      UserGroupInformationThreadLocal.set(ugi);
       Token<DelegationTokenIdentifier> token = dttr.token;
       long newExpirationDate=0;
       try {
@@ -218,6 +236,7 @@ public class DelegationTokenRenewal {
       InetAddress iaddr = InetAddress.getByName(ipaddr[0]);
       String dnsName = iaddr.getCanonicalHostName();
       final URI uri = new URI (SCHEME + "://" + dnsName+":"+ipaddr[1]);
+      LOG.info("XXXXXXXXXXXX------------------------------------>>> "+UserGroupInformation.getCurrentUser());
       dfs = (DistributedFileSystem)
       UserGroupInformation.getLoginUser().doAs(
           new PrivilegedExceptionAction<DistributedFileSystem>() {
@@ -251,7 +270,9 @@ public class DelegationTokenRenewal {
     
     try {
       // need to create new task every time
-      TimerTask tTask = new RenewalTimerTask(token);
+      //WSO2 Fix:
+      TimerTask tTask = new RenewalTimerTask(token, mrOwnerUGI);
+      //TimerTask tTask = new RenewalTimerTask(token);
       token.setTimerTask(tTask); // keep reference to the timer
 
       renewalTimer.schedule(token.timerTask, new Date(renewIn));

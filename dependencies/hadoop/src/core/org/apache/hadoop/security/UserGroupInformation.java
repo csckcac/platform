@@ -63,6 +63,8 @@ import com.sun.security.auth.UnixPrincipal;
 import com.sun.security.auth.module.Krb5LoginModule;
 import com.sun.security.auth.callback.TextCallbackHandler;
 
+//WSO2 Fix: UserGroupInformation is heavily modified to serve WSO2 carbon security purposes.
+
 /**
  * User and group information for Hadoop.
  * This class wraps around a JAAS Subject and provides methods to determine the

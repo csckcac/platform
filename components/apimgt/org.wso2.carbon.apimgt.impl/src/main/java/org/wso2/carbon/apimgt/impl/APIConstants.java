@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.apimgt.impl;
 
+import javax.xml.namespace.QName;
+
 /**
  * This class represents the constants that are used for APIManager implementation
  */
@@ -140,5 +142,12 @@ public final class APIConstants {
     public static final String API_KEY_TYPE_SANDBOX = "SANDBOX";
     
     public static final String DEFAULT_APPLICATION_NAME = "DefaultApplication";
+
+    public static final QName POLICY_ELEMENT = new QName("http://schemas.xmlsoap.org/ws/2004/09/policy",
+                      "Policy");
+    public static final QName ASSERTION_ELEMENT = new QName("http://www.wso2.org/products/wso2commons/throttle",
+            "MediatorThrottleAssertion");
+    public static final QName THROTTLE_ID_ELEMENT = new QName("http://www.wso2.org/products/wso2commons/throttle",
+            "ID");
 
 }

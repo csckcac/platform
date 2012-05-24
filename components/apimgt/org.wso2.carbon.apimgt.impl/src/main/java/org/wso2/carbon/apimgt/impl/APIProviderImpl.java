@@ -1,5 +1,9 @@
 package org.wso2.carbon.apimgt.impl;
 
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
@@ -17,10 +21,11 @@ import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.registry.common.CommonConstants;
 import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import java.util.*;
+import java.util.Collection;
 
 /**
  * This class provides the core API provider functionality. It is implemented in a very
@@ -255,62 +260,77 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         Set<Tier> tiers = new HashSet<Tier>();
         try {
             if (registry.resourceExists(APIConstants.API_TIER_LOCATION)) {
-                org.wso2.carbon.registry.core.Collection tiersCollection = 
-                        (org.wso2.carbon.registry.core.Collection) registry.get(APIConstants.API_TIER_LOCATION);
-                String[] children = tiersCollection.getChildren();                
-                for (String child : children) {
-                    Resource resource = registry.get(child);
-                    if (!(resource instanceof org.wso2.carbon.registry.core.Collection)) {
-                        Tier tier = new Tier(RegistryUtils.getResourceName(child));
-                        tier.setPolicyContent((byte[])resource.getContent());
-                        tiers.add(tier);
-                    }
+                Resource resource = registry.get(APIConstants.API_TIER_LOCATION);
+                String content = new String((byte[]) resource.getContent());
+                OMElement element = AXIOMUtil.stringToOM(content);
+                OMElement assertion = element.getFirstChildWithName(APIConstants.ASSERTION_ELEMENT);
+                Iterator policies = assertion.getChildrenWithName(APIConstants.POLICY_ELEMENT);
+                while (policies.hasNext()) {
+                    OMElement policy = (OMElement) policies.next();
+                    OMElement id = policy.getFirstChildWithName(APIConstants.THROTTLE_ID_ELEMENT);
+                    Tier tier = new Tier(id.getText());
+                    tier.setPolicyContent(policy.toString().getBytes());
+                    tiers.add(tier);
                 }
             }
         } catch (RegistryException e) {
             handleException("Error while retrieving API tiers from registry", e);
+        } catch (XMLStreamException e) {
+            handleException("Malformed XML found in the API tier policy resource", e);
         }
         return tiers;
     }
 
     public void addTier(Tier tier) throws APIManagementException {
-        addOrUpdateTier(tier);
+        addOrUpdateTier(tier, false);
     }
 
     public void updateTier(Tier tier) throws APIManagementException {
-        String path = APIConstants.API_TIER_LOCATION + RegistryConstants.PATH_SEPARATOR + tier.getName();
-        try {
-            if (registry.resourceExists(path)) {
-                addOrUpdateTier(tier);
-            } else {
-                throw new APIManagementException("No tier exists by the name: " + tier.getName());
-            }
-        } catch (RegistryException e) {
-            handleException("Error while updating tier: " + tier.getName(), e);
-        }
+        addOrUpdateTier(tier, true);
     }
     
-    private void addOrUpdateTier(Tier tier) throws APIManagementException {
+    private void addOrUpdateTier(Tier tier, boolean update) throws APIManagementException {
+        Set<Tier> tiers = getTiers();
+        if (update && !tiers.contains(tier)) {
+            throw new APIManagementException("No tier exists by the name: " + tier.getName());
+        }
+        
+        Set<Tier> finalTiers = new HashSet<Tier>();
+        for (Tier t : tiers) {
+            if (!t.getName().equals(tier.getName())) {
+                finalTiers.add(t);    
+            }
+        }
+        finalTiers.add(tier);
+        saveTiers(finalTiers);
+    }
+    
+    private void saveTiers(Collection<Tier> tiers) throws APIManagementException {        
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMElement root = fac.createOMElement(APIConstants.POLICY_ELEMENT);
+        OMElement assertion = fac.createOMElement(APIConstants.ASSERTION_ELEMENT);
         try {
+            for (Tier tier : tiers) {
+                String policy = new String(tier.getPolicyContent());
+                assertion.addChild(AXIOMUtil.stringToOM(policy));
+            }
+            root.addChild(assertion);
             Resource resource = registry.newResource();
-            resource.setContent(new String(tier.getPolicyContent()));
-            registry.put(APIConstants.API_TIER_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                    tier.getName(), resource);
+            resource.setContent(root.toString());
+            registry.put(APIConstants.API_TIER_LOCATION, resource);
+        } catch (XMLStreamException e) {
+            handleException("Error while constructing tier policy file", e);
         } catch (RegistryException e) {
-            handleException("Error while saving the tier information to the registry", e);
-        }    
+            handleException("Error while saving tier configurations to the registry", e);
+        }
     }
 
     public void removeTier(Tier tier) throws APIManagementException {
-        String path = APIConstants.API_TIER_LOCATION + RegistryConstants.PATH_SEPARATOR + tier.getName();
-        try {
-            if (registry.resourceExists(path)) {
-                registry.delete(path);
-            } else {
-                throw new APIManagementException("No tier exists by the name: " + tier.getName());
-            }
-        } catch (RegistryException e) {
-            handleException("Error while removing tier: " + tier.getName(), e);
+        Set<Tier> tiers = getTiers();
+        if (tiers.remove(tier)) {
+            saveTiers(tiers);
+        } else {
+            throw new APIManagementException("No tier exists by the name: " + tier.getName());
         }
     }
 

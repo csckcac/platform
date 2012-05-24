@@ -38,6 +38,8 @@ public class AppFactoryConfiguration {
     private String webServiceEPRGetUsersOfApplication;
     private String webServiceEPREmailVerificationService;
     private String webServiceEPRCreateUser;
+    private String webServiceEPRGetAllApps;
+    private String webServiceEPRGetAuthCookie;
     private String webServiceEPRActivateUser;
     private String adminUserName;
     private String adminPassword;
@@ -243,5 +245,21 @@ public class AppFactoryConfiguration {
                 defaultApplicationUserRoles.add(role);
             }
         }
+    }
+
+    public String getWebServiceEPRGetAllApps() {
+        return webServiceEPRGetAllApps;
+    }
+
+    public void setWebServiceEPRGetAllApps(String webServiceEPRGetAllApps) {
+        this.webServiceEPRGetAllApps = webServiceEPRGetAllApps;
+    }
+
+    public String getWebServiceEPRGetAuthCookie() {
+        return webServiceEPRGetAuthCookie;
+    }
+
+    public void setWebServiceEPRGetAuthCookie(String webServiceEPRGetAuthCookie) {
+        this.webServiceEPRGetAuthCookie = webServiceEPRGetAuthCookie;
     }
 }

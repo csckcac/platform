@@ -83,5 +83,11 @@ public class AppFactoryConfigurationReader extends ScriptableObject {
     public String jsFunction_getAdminPassword() throws Exception {
         return appFactoryConfiguration.getAdminPassword();
     }
+    public String jsFunction_getWebServiceEPRGetAllApps() throws Exception {
+        return appFactoryConfiguration.getWebServiceEPRGetAllApps();
+    }
+    public String jsFunction_getWebServiceEPRGetAuthCookie() throws Exception {
+        return appFactoryConfiguration.getWebServiceEPRGetAuthCookie();
+    }
 
 }

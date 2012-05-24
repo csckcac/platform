@@ -262,6 +262,20 @@ public class AppFactoryUtil {
             } else {
                 config.setWebServiceEPRActivateUser(activateUser.getText().trim());
             }
+            OMElement getAllApps = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                         AppFactoryConstants.WEB_SERVICE_CONFIG_GET_ALL_APPS));
+            if (getAllApps == null) {
+                handleError("getAllApp web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setWebServiceEPRGetAllApps(getAllApps.getText().trim());
+            }
+            OMElement getAuthCookie = webServiceEndPoints.getFirstChildWithName(new QName(AppFactoryConstants.APPFACTORY_CONFIG_NAMESPACE,
+                                                                                       AppFactoryConstants.WEB_SERVICE_CONFIG_GET_AUTH_COOKIE));
+            if (getAuthCookie == null) {
+                handleError("getAuthCookie web service end point is not configured in " + AppFactoryConstants.APPFACTORY_CONFIG_FILE_NAME);
+            } else {
+                config.setWebServiceEPRGetAuthCookie(getAuthCookie.getText().trim());
+            }
         }
     }
 

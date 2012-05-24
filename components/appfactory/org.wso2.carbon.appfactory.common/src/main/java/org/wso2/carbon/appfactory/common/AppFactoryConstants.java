@@ -47,6 +47,8 @@ public class AppFactoryConstants {
     public static final String WEB_SERVICE_CONFIG_GET_ROLES_OF_USER_FOR_PROJECT = "GetRolesOfUserForApplication";
     public static final String WEB_SERVICE_CONFIG_GET_USERS_OF_PROJECT = "GetUsersOfApplication";
     public static final String WEB_SERVICE_CONFIG_EMAIL_VERIFICATION_SERVICE = "EmailVerificationService";
+    public static final String WEB_SERVICE_CONFIG_GET_ALL_APPS = "GetAllApps";
+    public static final String WEB_SERVICE_CONFIG_GET_AUTH_COOKIE = "GetAuthCookie";
 
 
     public static final String REPO_MGT_CONFIG_ROOT_ELEMENT = "RepositoryMGTConfig";

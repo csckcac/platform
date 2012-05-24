@@ -34,7 +34,6 @@
         <KeyStoreName>
             E:\src\java\carbon_trunk\platform\products\appfactory\modules\distribution\product\target\wso2appfactory-1.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks
         </KeyStoreName>
-        adminPassword
     </SSORelyingParty>
 
     <!-- Web service end points including BPEL services-->
@@ -56,6 +55,8 @@
         <CreateApplication>http://localhost:9763/services/CreateApplicationService/process</CreateApplication>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
         <ActivateUser>http://localhost:9763/services/activateUserProcess</ActivateUser>
+        <GetAllApps>https://localhost:9443/services/ApplicationManagementService</GetAllApps>
+        <GetAuthCookie>https://localhost:9443/services/AuthenticationAdmin</GetAuthCookie>
     </WebServiceEndPoints>
 
     <!--Application repository related configurations-->

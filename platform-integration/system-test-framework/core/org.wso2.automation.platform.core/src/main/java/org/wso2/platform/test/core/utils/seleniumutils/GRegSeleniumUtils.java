@@ -47,7 +47,7 @@ public class GRegSeleniumUtils {
                 }
             }
             actualTime = System.currentTimeMillis();
-        } while (!(((actualTime - currentTime) / 1000) > 15));
+        } while (!(((actualTime - currentTime) / 1000) > 10));
 
         return id;
     }
@@ -55,14 +55,18 @@ public class GRegSeleniumUtils {
     public static void deleteResourceFromBrowser(WebDriver driver, String resourceName) {
         int resourceRowId = getResourceId(driver, resourceName);
         if (resourceRowId != 0) {
-            driver.findElement(By.id("actionLink" + resourceRowId)).click();
-            resourceRowId = ((resourceRowId - 1) * 7) + 2;
-            driver.findElement(By.xpath("//tr[2]/td[3]/table/tbody/tr[2]/td/div/div/table/tbody/tr/td" +
-                                        "/div[2]/div[3]/div[3]/div[9]/table/tbody/tr["
-                                        + resourceRowId + "]/td/div/a[3]")).click();
-            assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
-                       "Popup not found :");
-            driver.findElement(By.xpath("//button")).click();
+            try {
+                driver.findElement(By.id("actionLink" + resourceRowId)).click();
+                resourceRowId = ((resourceRowId - 1) * 7) + 2;
+                driver.findElement(By.xpath("//tr[2]/td[3]/table/tbody/tr[2]/td/div/div/table/tbody/tr/td" +
+                                            "/div[2]/div[3]/div[3]/div[9]/table/tbody/tr["
+                                            + resourceRowId + "]/td/div/a[3]")).click();
+                assertTrue(driver.findElement(By.id("ui-dialog-title-dialog")).getText().contains("WSO2 Carbon"),
+                           "Popup not found :");
+                driver.findElement(By.xpath("//button")).click();
+            } catch (WebDriverException ignored) {
+                log.info("Web element not found");
+            }
             gotoDetailViewTab(driver);
         }
     }

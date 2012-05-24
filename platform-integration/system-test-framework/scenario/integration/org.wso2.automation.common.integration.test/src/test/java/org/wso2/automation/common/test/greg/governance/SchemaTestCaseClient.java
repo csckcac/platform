@@ -39,7 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public class SchemaTestCaseClient {
+    public class SchemaTestCaseClient {
     private Registry governance;
     private static final Log log = LogFactory.getLog(SchemaTestCaseClient.class);
 

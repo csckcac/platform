@@ -597,6 +597,8 @@ public class GRegStratosResourceSeleniumTest {
         driver.findElement(By.id("stdView")).click();        //Go to Detail view Tab
         assertTrue(selenium.isTextPresent("Browse"), "Browse Detail View Page fail :");
         assertTrue(selenium.isTextPresent("Metadata"), "Browse Detail View Page fail Metadata:");
+        driver.findElement(By.id("actionLink1"));
+        GRegSeleniumUtils.waitForElement(driver, "id", "actionLink1");
     }
 
     private void userLogout() throws InterruptedException {

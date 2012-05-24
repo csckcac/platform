@@ -24,6 +24,7 @@ import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceTenantMgtServiceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+//import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceExceptionException;
 import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceExceptionException;
 import org.wso2.carbon.user.mgt.common.UserAdminException;
 import org.wso2.platform.test.core.utils.UserInfo;

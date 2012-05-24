@@ -85,13 +85,16 @@ public class AdminServiceTenantMgtServiceAdmin {
         } catch (RemoteException e) {
             log.error("RemoteException thrown while adding user/tenants : " + e);
             Assert.fail("RemoteException thrown while adding user/tenants : " + e);
-        } catch (TenantMgtAdminServiceExceptionException e) {
-            log.error("GetTenantExceptionException thrown when getting user list : " + e);
-            Assert.fail("GetTenantExceptionException thrown when getting user list : " + e);
         }
+
+//        catch (TenantMgtAdminServiceExceptionException e) {
+//            log.error("GetTenantExceptionException thrown when getting user list : " + e);
+//            Assert.fail("GetTenantExceptionException thrown when getting user list : " + e);
+//        }
     }
 
-    public TenantInfoBean getTenant(String sessionCookie, String tenantDomain) {
+    public TenantInfoBean getTenant(String sessionCookie, String tenantDomain)
+            throws TenantMgtAdminServiceExceptionException {
         AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
         TenantInfoBean getTenantBean = null;
         try {
@@ -100,38 +103,46 @@ public class AdminServiceTenantMgtServiceAdmin {
         } catch (RemoteException e) {
             log.error("RemoteException thrown while retrieving user/tenants : " + e);
             Assert.fail("RemoteException thrown while retrieving user/tenants : " + e);
-        } catch (TenantMgtAdminServiceExceptionException e) {
-            log.error("GetTenantExceptionException thrown when getting user/tenant list : " + e);
-            Assert.fail("GetTenantExceptionException thrown when getting user/tenant list : " + e);
         }
+
+//        catch (TenantMgtAdminServiceExceptionException e) {
+//            log.error("GetTenantExceptionException thrown when getting user/tenant list : " + e);
+//            Assert.fail("GetTenantExceptionException thrown when getting user/tenant list : " + e);
+//        }
         return getTenantBean;
     }
 
-    public void updateTenant(String sessionCookie, TenantInfoBean infoBean) {
+    public void updateTenant(String sessionCookie, TenantInfoBean infoBean)
+            throws TenantMgtAdminServiceExceptionException {
         AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
         try {
             tenantMgtAdminServiceStub.updateTenant(infoBean);
         } catch (RemoteException e) {
             log.error("RemoteException thrown while retrieving user/tenants : " + e);
             Assert.fail("RemoteException thrown while retrieving user/tenants : " + e);
-        } catch (TenantMgtAdminServiceExceptionException e) {
-            log.error("UpdateTenantExceptionException thrown while updating tenant info : " + e);
-            Assert.fail("UpdateTenantExceptionException thrown while updating tenant info : " + e);
         }
+
+//        catch (TenantMgtAdminServiceExceptionException e) {
+//            log.error("UpdateTenantExceptionException thrown while updating tenant info : " + e);
+//            Assert.fail("UpdateTenantExceptionException thrown while updating tenant info : " + e);
+//        }
     }
 
-    public void activateTenant(String sessionCookie, String domainName) {
+    public void activateTenant(String sessionCookie, String domainName)
+            throws TenantMgtAdminServiceExceptionException {
         AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
         try {
             tenantMgtAdminServiceStub.activateTenant(domainName);
         } catch (RemoteException e) {
             log.error("RemoteException thrown while retrieving user/tenants : " + e);
             Assert.fail("RemoteException thrown while retrieving user/tenants : " + e);
-        } catch (TenantMgtAdminServiceExceptionException e) {
-            log.error("Tenant domain" + domainName + " activation fail" + e);
-            Assert.fail("Tenant domain" + domainName + " activation fail" + e);
-
         }
+
+//        catch (TenantMgtAdminServiceExceptionException e) {
+//            log.error("Tenant domain" + domainName + " activation fail" + e);
+//            Assert.fail("Tenant domain" + domainName + " activation fail" + e);
+//
+//        }
 
     }
 

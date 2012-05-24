@@ -43,6 +43,8 @@ public class GRegGovernanceTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("PolicyTestCaseClient", PolicyTestCaseClient.class));
         suiteVariablesList.add(new SuiteVariables("ServiceTestCaseClient", ServiceTestCaseClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLTestCaseClient", WSDLTestCaseClient.class));
+        suiteVariablesList.add(new SuiteVariables("GovernanaceServiceCreation",GovernanceApiServiceCreation.class));
+        suiteVariablesList.add(new SuiteVariables("GovernanceWsdl",GovernanceApiWsdl.class));
 
         setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("GovernanceTestSuite", suiteVariablesList).run();

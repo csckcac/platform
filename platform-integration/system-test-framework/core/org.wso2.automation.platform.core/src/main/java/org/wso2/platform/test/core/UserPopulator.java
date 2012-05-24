@@ -24,6 +24,7 @@ import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceTenantMgtServiceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceExceptionException;
 import org.wso2.carbon.user.mgt.common.UserAdminException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
@@ -49,7 +50,8 @@ public class UserPopulator {
     }
 
     public void populateUsers(List<String> productList)
-            throws UserAdminException, RemoteException, LoginAuthenticationExceptionException {
+            throws UserAdminException, RemoteException, LoginAuthenticationExceptionException,
+                   TenantMgtAdminServiceExceptionException {
         FrameworkProperties manProperties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.MANAGER_SERVER_NAME);
         log.info("Populating Users....");
@@ -147,7 +149,8 @@ public class UserPopulator {
 
     private void createStratosUsers(AdminServiceTenantMgtServiceAdmin tenantStub,
                                     UserInfo superTenantDetails, int userCount)
-            throws LoginAuthenticationExceptionException, RemoteException {
+            throws LoginAuthenticationExceptionException, RemoteException,
+                   TenantMgtAdminServiceExceptionException {
         FrameworkProperties manProperties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.MANAGER_SERVER_NAME);
         String sessionCookie =

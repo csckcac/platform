@@ -25,14 +25,14 @@
     <fileSets>
         <fileSet>
             <directory>target/sources</directory>
-            <outputDirectory>wso2csg-${pom.version}-src</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}-src</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>../../..</directory>
-            <outputDirectory>wso2csg-${pom.version}-src</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}-src</outputDirectory>
             <includes>
                 <include>modules/**/*</include>
                 <include>**/pom.xml</include>
@@ -56,7 +56,7 @@
     <files>
         <file>
             <source>../../../LICENSE.txt</source>
-            <outputDirectory>wso2csg-${pom.version}-src</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>

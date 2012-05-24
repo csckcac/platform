@@ -29,10 +29,10 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2stratos-csg</artifactId>
+    <artifactId>wso2csg</artifactId>
     <version>1.0.0-alpha</version>
     <packaging>pom</packaging>
-    <name>WSO2 Stratos CSG - Distribution</name>
+    <name>WSO2 CSG - Distribution</name>
     <url>http://wso2.org/projects/esb/java</url>
     <description>WSO2 Stratos Enterprise Service Bus Distribution</description>
 

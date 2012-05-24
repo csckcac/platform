@@ -138,10 +138,10 @@
                                 <!--<featureArtifactDef>org.wso2.carbon:org.apache.axis2.transports.jms.feature:${axis2.transport.version}</featureArtifactDef>-->
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.server.feature:${carbon.version}</featureArtifactDef>
-				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.common.feature:${carbon.version}</featureArtifactDef>
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.common.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.ui.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.community.features.feature:${carbon.version}</featureArtifactDef>
+                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.feature:${carbon.version}</featureArtifactDef> -->
+                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.community.features.feature:${carbon.version}</featureArtifactDef> -->
 
                                 <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.dashboardpopulator.server.feature:${carbon.version}</featureArtifactDef-->
@@ -405,26 +405,26 @@
                                     <version>${carbon.version}</version>
                                 </feature>
                                 
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.event.server.feature.group</id>-->
-                                    <!--<version>${carbon.version}</version>-->
-                                <!--</feature>-->
-				                <!--<feature>-->
-                                    <!--<id>org.wso2.carbon.event.common.feature.group</id>-->
-                                    <!--<version>${carbon.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.event.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+				<feature>
+                                    <id>org.wso2.carbon.event.common.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.event.ui.feature.group</id>-->
                                     <!--<version>${carbon.version}</version>-->
                                 <!--</feature>-->
-                                <feature>
+                                <!--<feature> 
                                     <id>org.wso2.carbon.registry.associations.dependencies.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
+                                </feature> -->
+                                <!--<feature>
                                     <id>org.wso2.carbon.registry.community.features.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>
+                                </feature> -->
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.identity.oauth.mediator.feature.group</id>-->
                                     <!--<version>${carbon.version}</version>-->

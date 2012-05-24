@@ -22,8 +22,8 @@ import org.wso2.carbon.ui.CarbonUIMessage;
 import org.wso2.carbon.ui.transports.fileupload.AbstractFileUploadExecutor;
 import org.wso2.carbon.utils.FileItemData;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappUploadData;
 
+import org.wso2.carbon.hosting.mgt.stub.types.carbon.FileUploadData;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -59,18 +59,18 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
         String msg;
 
         List<FileItemData> tempDataList = fileItemsMap.get("warFileName");
-        List<WebappUploadData> webappUploadDataList = new ArrayList<WebappUploadData>();
+        List<FileUploadData> fileUploadDataList = new ArrayList<FileUploadData>();
 
         try {
             for (FileItemData filedata : tempDataList) {
-                WebappUploadData tempData = new WebappUploadData();
+                FileUploadData tempData = new FileUploadData();
                 checkServiceFileExtensionValidity(getFileName(filedata.getFileItem().getName()), ALLOWED_FILE_EXTENSIONS);
                 tempData.setFileName(getFileName(filedata.getFileItem().getName()));
                 tempData.setDataHandler(filedata.getDataHandler());
-                webappUploadDataList.add(tempData);
+                fileUploadDataList.add(tempData);
             }
 
-            client.uploadWebapp(webappUploadDataList.toArray(new WebappUploadData[webappUploadDataList.size()]));
+            client.uploadWebapp(fileUploadDataList.toArray(new FileUploadData[fileUploadDataList.size()]));
 
             response.setContentType("text/html; charset=utf-8");
             msg = "Web application has been uploaded "

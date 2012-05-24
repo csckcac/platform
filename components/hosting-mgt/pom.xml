@@ -35,6 +35,7 @@
     <modules>
         <module>org.wso2.carbon.hosting.mgt</module>
         <module>org.wso2.carbon.hosting.mgt.ui</module>
+        <module>org.wso2.carbon.hosting.wnagent</module>
     </modules>
 
     <dependencyManagement>

@@ -22,47 +22,109 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.regex.Pattern" %>
+<%@ page import="java.net.URLDecoder" %>
 <%
     try {
+        boolean isViewVersion = false;
+        boolean preserveOriginal = true;
+        String[] preserveOrigParam = null;
+        String[] viewVersion = null;
+        String[] parameters = request.getParameterValues("parameterMap");
 
-        String path = request.getParameter("path");
-        boolean preserveOriginal = !Boolean.toString(false).equals(
-                request.getParameter("preserveOriginal"));
-        String aspect = request.getParameter("aspect");
-        String action = request.getParameter("action");
-        String callBack = request.getParameter("callBack");
-        if (callBack == null || callBack.trim().length() == 0) {
-            callBack = "''";
-        }
-        String mediaType = request.getParameter("mediaType");
-
-        String[] parameterMap = request.getParameterValues("parameterMap");
-        String displayMediaType = "";
-        String currentEnvironment = "";
-        boolean viewDependencies = true;
-
-        if (parameterMap != null) {
-            for (String parameter : parameterMap) {
-                if (parameter.split("=")[0].equals("displayMediaType")) {
-                    displayMediaType = parameter.split("=")[1];
-                } else if (parameter.split("=")[0].equals("showDependencies")) {
-                    viewDependencies = Boolean.toString(true).equals(parameter.split("=")[1]);
-                } else if (parameter.split("=")[0].equals("currentEnvironment")) {
-                    currentEnvironment = parameter.split("=")[1];
+        if (parameters != null) {
+            for (String parameter : parameters) {
+                parameter = URLDecoder.decode(parameter, "utf-8");
+                if (parameter.contains("&")) {
+                    String[] joinedParams = parameter.split("&");
+                    for (String joinedParam : joinedParams) {
+                        if (joinedParam.split("=")[0].equals("preserveOriginal")) {
+                            preserveOrigParam = joinedParam.split("=");
+                        } else if (joinedParam.split("=")[0].equals("viewVersion")) {
+                            viewVersion = joinedParam.split("=");
+                            isViewVersion = Boolean.toString(false).equals(viewVersion[1]);
+                        }
+                    }
+                } else {
+                    if (parameter.split("=")[0].equals("preserveOriginal")) {
+                        preserveOrigParam = parameter.split("=");
+                    } else if (parameter.split("=")[0].equals("viewVersion")) {
+                        viewVersion = parameters[0].split("=");
+                        isViewVersion = Boolean.toString(false).equals(viewVersion[1]);
+                    }
                 }
             }
         }
+            if (isViewVersion) {
+                try {
+                    String path = request.getParameter("path");
+                    String aspect = request.getParameter("aspect");
+                    String action = request.getParameter("action");
+                    String callBack = request.getParameter("callBack");
+                    if (preserveOrigParam != null) {
+                        String preserveOrg = "";
+                        if (preserveOrigParam[0].equals("preserveOriginal")) {
+                            preserveOrg = preserveOrigParam[1];
+                        }
+                        preserveOriginal = !Boolean.toString(false).equals(preserveOrg);
+                    }
+                    String versionString = "preserveOriginal" + "^^" + preserveOriginal + "^|^";
+
+%>
+<script type="text/javascript">
+
+    invokeAspect('<%=path%>', '<%=aspect%>', '<%=action%>', <%=callBack%>, '<%=versionString%>');
+</script>
+<%
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        response.setStatus(500);
+        ex.getMessage();
+        return;
+
+    }
+%>
+<%
+} else {
+    String path = request.getParameter("path");
+    String aspect = request.getParameter("aspect");
+    String action = request.getParameter("action");
+    String callBack = request.getParameter("callBack");
+    if (callBack == null || callBack.trim().length() == 0) {
+        callBack = "''";
+    }
+    String mediaType = request.getParameter("mediaType");
+    if (preserveOrigParam != null && preserveOrigParam.length != 0) {
+        preserveOriginal = !Boolean.toString(false).equals(preserveOrigParam[1]);
+    }
+
+    String[] parameterMap = request.getParameterValues("parameterMap");
+    String displayMediaType = "";
+    String currentEnvironment = "";
+    boolean viewDependencies = true;
+
+    if (parameterMap != null) {
+        for (String parameter : parameterMap) {
+            if (parameter.split("=")[0].equals("displayMediaType")) {
+                displayMediaType = parameter.split("=")[1];
+            } else if (parameter.split("=")[0].equals("showDependencies")) {
+                viewDependencies = Boolean.toString(true).equals(parameter.split("=")[1]);
+            } else if (parameter.split("=")[0].equals("currentEnvironment")) {
+                currentEnvironment = parameter.split("=")[1];
+            }
+        }
+    }
 
         List<String> otherDependencies = new ArrayList<String>();
 
-        if(displayMediaType == null || displayMediaType == ""){
-             displayMediaType = CommonConstants.SERVICE_MEDIA_TYPE.replace(".","[.]").replace("+","[+]");
+        if (displayMediaType == null || displayMediaType == "") {
+            displayMediaType = CommonConstants.SERVICE_MEDIA_TYPE.replace(".", "[.]").replace("+", "[+]");
         }
 
         if (!(Pattern.compile(displayMediaType).matcher(mediaType).find())) {
 %>
 <script type="text/javascript">
-    invokeAspect('<%=path%>', '<%=aspect%>', '<%=action%>',<%=callBack%>,"");
+    invokeAspect('<%=path%>', '<%=aspect%>', '<%=action%>', <%=callBack%>, "");
 </script>
 <%
 } else {
@@ -79,7 +141,7 @@
     proceedAction = function (path, aspect, action, mediaType, callBack) {
         lifecyleOperationStarted = false;
 
-        document.getElementById(org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["proceed"]).disabled=true;
+        document.getElementById(org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["proceed"]).disabled = true;
 
         var versionString = "";
         var table = $('versionTable');
@@ -91,12 +153,12 @@
             var obj = rows[i];
             if ((obj.type == "text")) {
                 if (obj.value == null | obj.value.trim == "") {
-                    document.getElementById(org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["proceed"]).disabled=false;
+                    document.getElementById(org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["proceed"]).disabled = false;
                     showRegistryError(obj.getAttribute("id") + ' ' + org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["version.can.not.be.empty"]);
                     return;
                 }
                 else if (!jQuery.trim(obj.value).match(regexp)) {
-                    document.getElementById(org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["proceed"]).disabled=false;
+                    document.getElementById(org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["proceed"]).disabled = false;
                     showRegistryError(org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["version.error.1"]
                             + " " + obj.getAttribute("id") + " " + org_wso2_carbon_governance_custom_lifecycles_checklist_ui_jsi18n["version.error.2"]);
                     return;
@@ -104,7 +166,7 @@
                 versionString = versionString + obj.name + "^^" + jQuery.trim(obj.value) + "^|^";
             } else if ((obj.type == "checkbox")) {
                 versionString = versionString + obj.name + "^^" + obj.checked + "^|^";
-            }else if((obj.type == "hidden")){
+            } else if ((obj.type == "hidden")) {
                 versionString = versionString + obj.name + "^^" + "0.0.0" + "^|^";
             }
 
@@ -133,7 +195,7 @@
             <%
                 for (String association : associations) {
                     String assoName = association.substring(association.lastIndexOf("/") + 1);
-                    if(currentEnvironment == null || association.startsWith(currentEnvironment)){
+                    if (currentEnvironment == null || association.startsWith(currentEnvironment)) {
             %>
             <tr>
                 <td>
@@ -146,14 +208,14 @@
                 </td>
             </tr>
             <%
-                    }else{
+                    } else {
                         otherDependencies.add(association);
                     }
                 }
             %>
             <tr>
                 <td colspan="2"><fmt:message key="preserve.original"/>: <input type="checkbox" name="preserveOriginal"
-                                                                               <% if (preserveOriginal) {%> checked="checked" <%} %> value="true"
+                        <% if (preserveOriginal) {%> checked="checked" <%} %> value="true"
                                                                                id="preserveOriginal"/></td>
             </tr>
             <tr>
@@ -172,8 +234,8 @@
                 for (String otherDependency : otherDependencies) {
                     String assoName = otherDependency.substring(otherDependency.lastIndexOf("/") + 1);
             %>
-                    <input type="hidden" name="<%=otherDependency%>" id="<%=assoName %>"
-                           style="width:140px;"/>
+            <input type="hidden" name="<%=otherDependency%>" id="<%=assoName %>"
+                   style="width:140px;"/>
             <%
                 }
             %>
@@ -182,21 +244,15 @@
     </form>
 </fmt:bundle>
 <%
-        }
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        response.setStatus(500);
-    %><%=ex.getMessage()%><%
-            return;
+                }
+      }
+} catch (Exception ex) {
+    ex.printStackTrace();
+    response.setStatus(500);
+%><%=ex.getMessage()%><%
+        return;
 
-        }
-
-    %>
-
+    }
 
 
-
-
-
-
-
+%>

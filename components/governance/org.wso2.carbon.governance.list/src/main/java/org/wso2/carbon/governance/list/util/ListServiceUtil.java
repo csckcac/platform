@@ -264,8 +264,9 @@ public class ListServiceUtil {
                 int res = StringComparatorUtil.compare(se2.name, se1.name);
                 if (res != 0) return res;
 
-                return StringComparatorUtil.compare(RegistryUtils.getResourceName(RegistryUtils.getParentPath(se1.path)),
-                        (RegistryUtils.getResourceName(RegistryUtils.getParentPath(se2.path))));
+//                return StringComparatorUtil.compare(RegistryUtils.getResourceName(RegistryUtils.getParentPath(se1.path)),
+//                        (RegistryUtils.getResourceName(RegistryUtils.getParentPath(se2.path))));
+                return StringComparatorUtil.compare(se1.version, se2.version);
             }
         });
 

@@ -189,7 +189,7 @@
                     <%if (bean.getCanDelete()[i])  { %>
                         <a title="<fmt:message key='delete'/>"
                            onclick="deleteService('<%=completePath%>','/','../list/service.jsp?region=region3&item=governance_list_services_menu')"
-                           href="#" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);">
+                           class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);cursor:pointer">
                             <fmt:message key="delete"/></a>
                     <%} else { %>
                         <a class="icon-link registryWriteOperation"

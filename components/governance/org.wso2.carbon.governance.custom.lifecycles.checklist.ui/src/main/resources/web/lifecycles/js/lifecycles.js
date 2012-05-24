@@ -109,6 +109,7 @@ function loadCustomUI(path, aspect, action, mediaType, customUI, callBack) {
                 }
             }
             jQuery.ajax({
+                traditional: true,
                 url: customUI,
                 type:"POST",
                 success: function(data) {

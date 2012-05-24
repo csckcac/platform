@@ -1,0 +1,37 @@
+<%
+include("/jagg/jagg.jag");
+
+(function () {
+    var mod, obj, result, username,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json"),
+            msg = require("/site/conf/ui-messages.jag");
+    if (action === "updateStatus") {
+        mod = jagg.module("api");
+        var apiData = {};
+        apiData.provider= jagg.getUser().username;
+        apiData.apiName = request.getParameter("name");
+        apiData.version = request.getParameter("version");
+        apiData.status = request.getParameter("status");
+        apiData.publishToGateway = request.getParameter("publishToGateway");
+        result = mod.updateAPIStatus(apiData);
+        if (result.error==true) {
+            obj = {
+                error:true,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+        print(obj);
+
+    }else {
+        print({
+                  error:true,
+                  message:msg.error.invalidAction(action)
+              });
+    }
+}());
+%>

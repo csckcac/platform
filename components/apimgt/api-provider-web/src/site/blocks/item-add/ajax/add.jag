@@ -38,7 +38,6 @@ include("/jagg/jagg.jag");
         if(action === "addAPI"){
         result = mod.addAPI(apiData);
         }else{
-        apiData.status = request.getParameter("status");
         result = mod.updateAPI(apiData);
         }
         if (result.error==true) {

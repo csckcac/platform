@@ -5,6 +5,7 @@
     <ul id="tab" class="nav nav-tabs tabs">
         <li class="active"><a href="#view" data-toggle="tab" id="viewLink"><i class="icon-file"></i>Overview</a></li>
         <li><a href="#edit" data-toggle="tab" id="editLink"><i class="icon-edit"></i>Edit</a></li>
+        <li><a href="#lifecycles" data-toggle="tab" id="lifecycleLink"><i class="icon-edit"></i>Life Cycles</a></li>
         <li><a href="#versions" data-toggle="tab" id="versionsLink"><i class="icon-th-list"></i>Versions</a></li>
         <li><a href="#docs" data-toggle="tab" id="docsLink"><i class="icon-file"></i>Docs</a></li>
         <li><a href="#users" data-toggle="tab" id="usersLink"><i class="icon-user"></i>API Users</a></li>
@@ -12,6 +13,7 @@
     <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade active in" id="view"><% jagg.includeBlock("overview", {api:api}); %></div>
         <div class="tab-pane fade" id="edit"><% jagg.includeBlock("item-edit", {api:api}); %></div>
+        <div class="tab-pane fade" id="lifecycles"><% jagg.includeBlock("life-cycles", {api:api}); %></div>
         <div class="tab-pane fade" id="versions"><%jagg.includeBlock("usage",{api:api}); %></div>
         <div class="tab-pane fade" id="docs"><%jagg.includeBlock("documentation", {api:api}); %></div>
         <div class="tab-pane fade" id="users"><%jagg.includeBlock("users-api", {api:api}); %></div>

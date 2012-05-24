@@ -87,15 +87,7 @@
             </div>
 
             <div class="control-group">
-                <label class="control-label" for="editStatus" name="state">State:</label>
                 <div class="controls">
-                    <select id="editStatus" name="status">
-                        <option value="CREATED"<%=(api.status == "CREATED" ? ' selected="selected"' : '')%>>CREATED</option>
-                        <option value="PUBLISHED"<%=(api.status == "PUBLISHED" ? ' selected="selected"' : '')%>>PUBLISHED</option>
-                        <option value="DEPRECATED"<%=(api.status == "DEPRECATED" ? ' selected="selected"' : '')%>>DEPRECATED</option>
-                        <option value="RETIRED"<%=(api.status == "RETIRED" ? ' selected="selected"' : '')%>>RETIRED</option>
-                        <option value="BLOCKED"<%=(api.status == "BLOCKED" ? ' selected="selected"' : '')%>>BLOCKED</option>
-                    </select>
 
                     <div class="resourceTableDiv" id="resourceTableDiv">
                         <table class="table table-bordered table-striped" id="resource-table">
@@ -114,7 +106,7 @@
 
                                 </td>
                                 <td>
-                              <input type="checkbox" id="resource-get" name="resource-get" value="GET"> GET
+                                       <input type="checkbox" id="resource-get" name="resource-get" value="GET"> GET
                                        <input type="checkbox" id="resource-put" name="resource-put" value="PUT"> PUT
                                        <input type="checkbox" id="resource-post" name="resource-post" value="POST"> POST
                                        <input type="checkbox" id="resource-delete" name="resource-delete" value="DELETE"> DELETE

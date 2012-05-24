@@ -487,6 +487,28 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;        
     }
 
+    public static NativeArray jsFunction_getTiers(Context cx, Scriptable thisObj,
+                                                                         Object[] args,
+                                                                         Function funObj) throws ScriptException {
+        NativeArray myn = new NativeArray(0);
+        APIProvider apiProvider = getAPIProvider(thisObj);
+        try {
+            Set<Tier> tiers = apiProvider.getTiers();
+            int i = 0;
+            for (Tier tier : tiers) {
+                NativeObject row = new NativeObject();
+                row.put("tierName", row, tier.getName());
+                myn.put(i, myn, row);
+                i++;
+            }
+        } catch (APIManagementException e) {
+            log.error("Error from registry while getting available tiers", e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return myn;
+    }
+
     public static NativeArray jsFunction_getSubscriberCountByAPIVersions(Context cx, Scriptable thisObj,
                                                                   Object[] args,
                                                                   Function funObj) throws ScriptException {

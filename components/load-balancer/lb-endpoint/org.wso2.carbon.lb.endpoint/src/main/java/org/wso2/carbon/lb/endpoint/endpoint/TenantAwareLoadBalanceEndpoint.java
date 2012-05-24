@@ -96,6 +96,9 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
                     for (String domain : tenantDomainRangeContext.getTenantDomainRangeContextMap().keySet()) {
                         if (clusteringAgent.getGroupManagementAgent(domain) == null) {
                             clusteringAgent.addGroupManagementAgent(new DefaultGroupManagementAgent(), domain);
+                            if(log.isDebugEnabled()){
+                                log.debug("Group management agent added to cluster domain "+domain);
+                            }
                         }
                     }
                 }

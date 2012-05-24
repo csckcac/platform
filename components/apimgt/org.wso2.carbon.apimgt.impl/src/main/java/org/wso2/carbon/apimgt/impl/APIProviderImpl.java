@@ -408,11 +408,11 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
 
         Map<String, String> testHandlerMappings_1 = new HashMap<String, String>();
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER,
-                "org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler");
+                "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
 
         Map<String, String> testHandlerMappings_2 = new HashMap<String, String>();
         testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER,
-                "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
+                "org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler");
 
         Map<String, String> testHandlerMappings_3 = new HashMap<String, String>();
         testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER,

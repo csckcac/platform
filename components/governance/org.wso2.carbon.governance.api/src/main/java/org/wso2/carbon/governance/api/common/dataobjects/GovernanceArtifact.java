@@ -332,6 +332,9 @@ public abstract class GovernanceArtifact {
 
     /**
      * Adding an attribute to the artifact. The artifact should be saved to get effect the change.
+     * In the case of a single-valued attribute, this method will set or replace the existing
+     * attribute with the provided value. In the case of a multi-valued attribute, this method will
+     * append the provided value to the existing list.
      *
      * @param key   the key.
      * @param value the value.
@@ -364,7 +367,10 @@ public abstract class GovernanceArtifact {
 
     /**
      * Set/Update an attribute with a single value. The artifact should be saved to get effect the
-     * change.
+     * change. This method will replace the existing attribute with the provided value. In the case
+     * of a multi-valued attribute this will remove all existing values. If you want to append the
+     * provided value to a list values of a multi-valued attribute, use the addAttribute method
+     * instead.
      *
      * @param key      the key
      * @param newValue the value

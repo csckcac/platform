@@ -1,0 +1,340 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<assembly>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.version}</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <excludes>
+                <exclude>**/*.sh</exclude>
+                <exclude>**/wso2server.bat</exclude>
+                <exclude>**/repository/deployment/server/axis2services/echo/**</exclude>
+                <exclude>**/repository/deployment/server/axis2services/version/**</exclude>
+                <exclude>**/pom.xml</exclude>
+                <exclude>**/version.txt</exclude>
+                <exclude>**/README*</exclude>
+                <exclude>**/carbon.xml</exclude>
+                <exclude>**/axis2/axis2.xml</exclude>
+                <exclude>**/ciphertool.bat</exclude>
+                <exclude>**/INSTALL.txt</exclude>
+                <exclude>**/LICENSE.txt</exclude>
+                <exclude>**/release-notes.html</exclude>
+                <exclude>**/lib/tomcat/conf/context.xml</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.version}</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <excludes>
+                <exclude>**/wso2server.bat</exclude>
+                <exclude>**/ciphertool.sh</exclude>
+            </excludes>
+            <includes>
+                <include>**/*.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+	<!--copying multitenancy-packages.xml file-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <includes>
+                <include>**/identity.xml</include>
+                <!--include>**/eula.xml</include-->
+                <include>**/stratos.xml</include>
+                <include>**/multitenancy-packages.xml</include>
+            </includes>
+        </fileSet>
+
+
+        <!--  copying samples -->
+        <fileSet>
+            <directory>../samples</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/pom.xml</exclude>
+            </excludes>
+        </fileSet>
+
+        <!-- copy executables in samples with execute permissions -->
+        <fileSet>
+            <directory>../samples</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples</outputDirectory>
+            <includes>
+                <include>**/**.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+        <!-- copy documentation -->
+        <fileSet>
+            <directory>target/site</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/docs</outputDirectory>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+
+        <!-- copy sample database -->
+        <fileSet>
+            <directory>target/samples/database</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/database</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- deploying samples -->
+         <fileSet>
+            <directory>../samples/shopping_cart/dbs</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <includes>
+                <include>ShoppingCartDS.dbs</include>
+            </includes>
+        </fileSet>
+        <!--<fileSet>
+            <directory>../../samples/dbs/rdbms</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <includes>
+                <include>RDBMSSample.dbs</include>
+                <include>RDBMSSample_services.xml</include>
+                <include>ResourcesSample.dbs</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/dbs/excel</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <includes>
+                <include>ExcelSampleService.dbs</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/dbs/csv</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <includes>
+                <include>CSVSampleService.dbs</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/dbs/gspread</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <includes>
+                <include>GSpreadSample.dbs</include>
+            </includes>
+        </fileSet> -->
+
+        <!-- dashboard specific files -->
+        <!--fileSet>
+            <directory>src/resources/carbon-home/resources/dashboard</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/resources/dashboard</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet-->
+
+        <fileSet>
+           <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/</directory>
+           <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
+           <includes>
+               	<include>**/qpid-config.xml</include>
+                <include>**/qpid-jmxremote.access</include>
+                <include>**/qpid-virtualhosts.xml</include>
+                <include>**/wso2-rss-config.xml</include>
+                <include>**/coordination-client-config.xml</include>
+                <include>**/zoo.cfg</include>
+           </includes>
+        </fileSet>
+	
+	<!-- Copying Kerberos configurations -->
+        <fileSet>
+           <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/security/</directory>
+           <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security</outputDirectory>
+           <includes>
+               	<include>**/jaas.conf</include>
+               	<include>**/krb5.conf</include>
+           </includes>
+        </fileSet>
+
+
+	<!-- copy the landing page webapp -->
+        <fileSet>
+			<directory>lib/home</directory>
+			<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/identity</outputDirectory>
+            <includes>
+                <include>**/**.sql</include>
+            </includes>
+        </fileSet>
+	<fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/identity</outputDirectory>
+            <includes>
+                <include>**/**.sql</include>
+            </includes>
+        </fileSet>
+	<fileSet>
+            <directory>../../styles/service/src/main/resources/web/styles/css</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/admin</outputDirectory>
+            <includes>
+                <include>**/**.css</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../styles/service/src/main/resources/web/styles/images</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/images</outputDirectory>
+            <includes>
+                <include>**/**.gif</include>
+                <include>**/**.png</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+
+    <dependencySets>
+		<dependencySet>
+			<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/client/modules</outputDirectory>
+			<includes>
+				<include>org.apache.rampart:rampart:mar</include>
+			</includes>
+		</dependencySet>
+    </dependencySets>
+
+    <files>
+        <file>
+            <source>INSTALL.txt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>README.txt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>LICENSE.txt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>release-notes.html</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/bin/README.txt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/bin/version.txt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/repository/conf/carbon.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/repository/conf/axis2/axis2.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/axis2/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/bin/wso2server.bat</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+	<!-- Including event-broker.xml file -->
+	<file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+        </file>
+	<!-- sec.policy file -->
+        <file>
+            <source>src/conf/sec.policy</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+        </file>
+         <!-- Including syslog-config.xml file -->
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
+        </file>
+		<file>
+			<source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+        </file>
+
+	
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/security/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <!-- including cassandra-component.xml -->
+        <!--file>
+            <source>../../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/cassandra-component.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/conf/advanced</outputDirectory>
+        </file-->
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/cassandra-auth.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
+        </file>
+        <!--<file>
+            <source>target/sources/wso2-carbon-components-${carbon.version}-src/org.wso2.carbon.transport.jms-sources-java-source/src/main/resources/jms-transports.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/sources/wso2-carbon-components-${carbon.version}-src/org.wso2.carbon.transport.mail-sources-java-source/src/main/resources/mailto-transports.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>-->
+
+        <!--<file>
+            <source>src/conf/catalina-server.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/tomcat/conf</outputDirectory>
+            <destName>catalina-server.xml</destName>
+        </file>
+        <file>
+            <source>src/conf/context.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/lib/tomcat/conf</outputDirectory>
+            <destName>context.xml</destName> 
+        </file>-->
+    </files>
+</assembly>

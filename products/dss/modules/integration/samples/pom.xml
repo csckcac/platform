@@ -45,7 +45,7 @@
                         </property>
                         <property>
                             <name>carbon.zip</name>
-                            <value>${basedir}/../../distribution/product/target/wso2dataservices-${project.version}.zip</value>
+                            <value>${basedir}/../../distribution/target/wso2dataservices-${project.version}.zip</value>
                         </property>
                         <property>
                             <name>samples.dir</name>

@@ -73,7 +73,7 @@ public abstract class AbstractAPIManager implements APIManager {
             GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
                     APIConstants.API_KEY);
             Resource apiResource = registry.get(apiPath);
-            String artifactId = apiResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
+            String artifactId = apiResource.getUUID();
             if (artifactId == null) {
                 throw new APIManagementException("artifact id is null for : " + apiPath);
             }
@@ -177,7 +177,7 @@ public abstract class AbstractAPIManager implements APIManager {
                 GenericArtifactManager artifactManager = new GenericArtifactManager(registry,
                         APIConstants.DOCUMENTATION_KEY);
                 GenericArtifact docArtifact = artifactManager.getGenericArtifact(
-                        docResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
+                        docResource.getUUID());
                 Documentation doc = APIUtil.getDocumentation(docArtifact);
                 doc.setLastUpdated(docResource.getLastModified());
                 documentationList.add(doc);
@@ -287,7 +287,7 @@ public abstract class AbstractAPIManager implements APIManager {
                 resource = registry.get(apiPath);
                 GenericArtifactManager artifactManager = new GenericArtifactManager(registry, APIConstants.API_KEY);
                 GenericArtifact artifact = artifactManager.getGenericArtifact(
-                        resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
+                        resource.getUUID());
                 API api = APIUtil.getAPI(artifact, registry);
                 apiSortedSet.add(api);
             } catch (RegistryException e) {

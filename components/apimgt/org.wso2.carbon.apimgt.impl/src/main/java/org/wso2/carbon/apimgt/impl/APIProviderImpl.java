@@ -95,7 +95,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             for (Association association : associations) {
                 String apiPath = association.getDestinationPath();
                 Resource resource = registry.get(apiPath);
-                String apiArtifactId = resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
+                String apiArtifactId = resource.getUUID();
                 if (apiArtifactId != null) {
                     GenericArtifact apiArtifact = artifactManager.getGenericArtifact(apiArtifactId);
                     apiSortedList.add(APIUtil.getAPI(apiArtifact, registry));
@@ -151,7 +151,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                     APIConstants.PROVIDER_KEY);
             Resource providerResource = registry.get(providerPath);
             String artifactId =
-                    providerResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
+                    providerResource.getUUID();
             if (artifactId == null) {
                 throw new APIManagementException("artifact it is null");
             }
@@ -387,7 +387,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
                     APIConstants.API_KEY);
             GenericArtifact artifact = artifactManager.getGenericArtifact(
-                    apiSourceArtifact.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
+                    apiSourceArtifact.getUUID());
 
             //Create new API version
             artifact.setId(UUID.randomUUID().toString());
@@ -405,7 +405,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
 
             // Make sure to unset the isLatest flag on the old version
             GenericArtifact oldArtifact = artifactManager.getGenericArtifact(
-                    apiSourceArtifact.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
+                    apiSourceArtifact.getUUID());
             oldArtifact.setAttribute(APIConstants.API_OVERVIEW_IS_LATEST, "false");
             artifactManager.updateGenericArtifact(oldArtifact);
 

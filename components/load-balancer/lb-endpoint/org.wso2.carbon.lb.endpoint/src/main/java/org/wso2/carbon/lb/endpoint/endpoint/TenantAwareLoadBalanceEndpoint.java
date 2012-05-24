@@ -60,8 +60,6 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
 
     @Override
     public void init(SynapseEnvironment synapseEnvironment) {
-        //  super.init(synapseEnvironment);
-        //System.out.println("synapse - tenant aware LB initialized");
         try {
 
             String configURL = System.getProperty("loadbalancer.conf");
@@ -116,8 +114,9 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             setSessionAffinity(true);
             setDispatcher(new HttpSessionDispatcher());
             initialized = true;
-            log.info("ServiceDynamicLoadbalanceEndpoint initialized");
+            log.info("===== Tenant Aware Load Balance Endpoint initialized =====");
         }
+
     }
 
     /*  private Map<String, TenantDomainRangeContext> loadHostDomainMap() {
@@ -258,7 +257,6 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
      */
 
     /**
-     *
      * @param url to url for target
      * @return tenantID if tenant id available else 0
      */
@@ -284,7 +282,6 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
     }
 
     /**
-     *
      * @param synCtx synapse context from incoming message to be sent
      * @return target host address of mesaage
      */

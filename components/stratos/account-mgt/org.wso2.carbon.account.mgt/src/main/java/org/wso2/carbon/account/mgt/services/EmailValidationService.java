@@ -15,21 +15,22 @@
  */
 package org.wso2.carbon.account.mgt.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.account.mgt.internal.AccountMgtServiceComponent;
 import org.wso2.carbon.account.mgt.util.Util;
-import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.tenant.mgt.email.sender.util.TenantMgtEmailSenderUtil;
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
+import org.wso2.carbon.stratos.common.constants.StratosConstants;
+import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Email Validation Service
@@ -125,17 +126,9 @@ public class EmailValidationService {
                 log.debug("Tenant : " + tenantId + " is activated after validating the " +
                           "email of the tenant admin.");
             }
-
-            // send the notification message to the tenant admin
-            TenantMgtEmailSenderUtil.notifyTenantCreation(tenant.getDomain(),
-                                               resource.getProperty(StratosConstants.TENANT_ADMIN),
-                                               tenant.getEmail());
-
-            // send the notification message to the super tenant
-            TenantMgtEmailSenderUtil.notifyTenantActivationToSuperAdmin(tenant.getDomain(),
-                                               resource.getProperty(StratosConstants.TENANT_ADMIN),
-                                               tenant.getEmail());
-
+            
+            //Notify all the listeners that tenant has been activated for the first time
+            Util.alertTenantInitialActivation(tenantId);
 
             //Activating the usage plan
             try{
@@ -146,6 +139,13 @@ public class EmailValidationService {
             }
 
         }
+        
+        //This is considered an update. Hence notify the update to all listeners
+        TenantInfoBean tenantInfoBean = new TenantInfoBean();
+        tenantInfoBean.setTenantId(tenantId);
+        tenantInfoBean.setTenantDomain(domain);
+        tenantInfoBean.setEmail(email);
+        Util.alertTenantUpdate(tenantInfoBean);
 
         // update the registry
         superTenantSystemRegistry.put(emailVerificationPath, resource);

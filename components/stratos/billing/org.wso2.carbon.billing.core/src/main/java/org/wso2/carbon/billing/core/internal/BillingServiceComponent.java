@@ -17,18 +17,20 @@
 */
 package org.wso2.carbon.billing.core.internal;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.billing.core.BillingHandler;
 import org.wso2.carbon.billing.core.conf.BillingTaskConfiguration;
 import org.wso2.carbon.billing.core.scheduler.ScheduleHelper;
-import org.wso2.carbon.stratos.common.events.StratosEventListener;
+import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
+import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.stratos.common.util.StratosConfiguration;
-import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
-import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.osgi.service.component.ComponentContext;
 
 /**
  * @scr.component name="org.wso2.carbon.billing.core" immediate="true"
@@ -58,16 +60,14 @@ import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
  *                cardinality="1..1"
  *                policy="dynamic" bind="setRuleEngineConfigService"
  *                unbind="unsetRuleEngineConfigService"
- * @scr.reference name="stratos.event.listener"
- *                interface="org.wso2.carbon.stratos.common.events.StratosEventListener"
- *                cardinality="0..1" policy="dynamic"
- *                bind="setStratosEventListener"
- *                unbind="unsetStratosEventListener"
+ * @scr.reference name="org.wso2.carbon.tenant.mgt.listener.service"
+ *                interface="org.wso2.carbon.stratos.common.listeners.TenantMgtListener"
+ *                cardinality="0..n" policy="dynamic"
+ *                bind="setTenantMgtListenerService"
+ *                unbind="unsetTenantMgtListenerService"
  */
 public class BillingServiceComponent {
     private static Log log = LogFactory.getLog(BillingServiceComponent.class);
-    
-    private static StratosEventListener eventListener = null;
 
     protected void activate(ComponentContext context) {
         try {
@@ -135,15 +135,11 @@ public class BillingServiceComponent {
         Util.setRuleEngineConfigService(null);
     }
 
-    public static StratosEventListener getStratosEventListener() {
-        return eventListener;
+    protected void setTenantMgtListenerService(TenantMgtListener tenantMgtListener) {
+        Util.addTenantMgtListenerService(tenantMgtListener);
     }
 
-    protected void setStratosEventListener(StratosEventListener eventListener) {
-        BillingServiceComponent.eventListener = eventListener;
-    }
-    
-    protected void unsetStratosEventListener(StratosEventListener eventListener) {
-        BillingServiceComponent.eventListener = null;
+    protected void unsetTenantMgtListenerService(TenantMgtListener tenantMgtListener) {
+        Util.removeTenantMgtListenerService(tenantMgtListener);
     }
 }

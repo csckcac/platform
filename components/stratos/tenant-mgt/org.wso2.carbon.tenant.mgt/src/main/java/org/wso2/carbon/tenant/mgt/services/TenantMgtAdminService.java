@@ -15,15 +15,13 @@
  */
 package org.wso2.carbon.tenant.mgt.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
-import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
-import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.persistence.TenantPersistor;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
+import org.wso2.carbon.stratos.common.exception.StratosException;
+import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
+import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.tenant.mgt.beans.PaginatedTenantInfoBean;
 import org.wso2.carbon.tenant.mgt.internal.TenantMgtServiceComponent;
 import org.wso2.carbon.tenant.mgt.util.TenantMgtUtil;
@@ -34,6 +32,9 @@ import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.DataPaginator;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,21 +83,30 @@ public class TenantMgtAdminService extends AbstractAdmin {
         
         TenantMgtUtil.addClaimsToUserStoreManager(tenant);
         
+        //Notify tenant addition
+        try {
+            TenantMgtUtil.triggerAddTenant(tenantInfoBean);
+        } catch (StratosException e) {
+            String msg = "Error in notifying tenant addition.";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+        
         // If Email Validation is made optional, tenant will be activated now.
         if (!CommonUtil.isEmailValidationMandatory()) {
             TenantMgtServiceComponent.getTenantManager().activateTenant(tenant.getId());
             if (log.isDebugEnabled()) {
                 log.debug("Activated the tenant during the tenant creation: " + tenant.getId());
             }
-        }
-      
-        //Notify tenant addition
-        try {
-            TenantMgtUtil.triggerAddTenant(tenantInfoBean);
-        } catch (UserStoreException e) {
-            String msg = "Error in notifying tenant addition.";
-            log.error(msg, e);
-            throw new Exception(msg, e);
+            
+            //Notify tenant activation
+            try {
+                TenantMgtUtil.triggerTenantInitialActivation(tenantInfoBean);
+            } catch (StratosException e) {
+                String msg = "Error in notifying tenant initial activation.";
+                log.error(msg, e);
+                throw new Exception(msg, e);
+            }
         }
         
         //adding the subscription entry
@@ -340,10 +350,12 @@ public class TenantMgtAdminService extends AbstractAdmin {
             log.error(msg, e);
             throw new Exception(msg, e);
         }
+        
+        //Notify tenant update to all listeners
         try {
             TenantMgtUtil.triggerUpdateTenant(tenantInfoBean);
-        } catch (UserStoreException e) {
-            String msg = "Error in calling the callbacks for the add tenant.";
+        } catch (StratosException e) {
+            String msg = "Error in notifying tenant update.";
             log.error(msg, e);
             throw new Exception(msg, e);
         }
@@ -386,6 +398,16 @@ public class TenantMgtAdminService extends AbstractAdmin {
             log.error(msg, e);
             throw new Exception(msg, e);
         }
+        
+        //Notify tenant activation all listeners
+        try {
+            TenantMgtUtil.triggerTenantActivation(tenantId);
+        } catch (StratosException e) {
+            String msg = "Error in notifying tenant activate.";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+        
 
         //activating the subscription
         try{
@@ -421,9 +443,16 @@ public class TenantMgtAdminService extends AbstractAdmin {
         try {
             tenantManager.deactivateTenant(tenantId);
         } catch (UserStoreException e) {
-            String msg =
-                    "Error in deactivating the tenant for tenant domain: " + tenantDomain +
-                    ".";
+            String msg = "Error in deactivating tenant for tenant domain: " + tenantDomain + ".";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+        
+        //Notify tenant deactivation all listeners
+        try {
+            TenantMgtUtil.triggerTenantDeactivation(tenantId);
+        } catch (StratosException e) {
+            String msg = "Error in notifying tenant deactivate.";
             log.error(msg, e);
             throw new Exception(msg, e);
         }

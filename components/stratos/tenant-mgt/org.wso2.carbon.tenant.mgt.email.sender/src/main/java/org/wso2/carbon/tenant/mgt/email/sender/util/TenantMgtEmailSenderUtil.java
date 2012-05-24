@@ -29,7 +29,7 @@ import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.tenant.mgt.email.sender.internal.DataHolder;
-import org.wso2.carbon.user.core.tenant.Tenant;
+import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.AuthenticationObserver;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -59,6 +59,20 @@ public class TenantMgtEmailSenderUtil {
     private static EmailVerifierConfig emailVerifierConfig = null;
     private static EmailVerifierConfig superTenantEmailVerifierConfig = null;
     
+    public static void init() {
+        String confFilename =
+                CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                        StratosConstants.EMAIL_CONFIG + File.separator +
+                        "email-registration-complete.xml";
+        EmailSenderConfiguration successMsgConfig =
+                EmailSenderConfiguration.loadEmailSenderConfiguration(confFilename);
+        successMsgSender = new EmailSender(successMsgConfig);
+
+        initSuperTenantNotificationEmailSender();
+        initEmailVerificationSender();
+        initPasswordResetEmailSender();
+    }
+    
     /**
      * Sends validation mail to the tenant admin upon the tenant creation
      *
@@ -66,16 +80,142 @@ public class TenantMgtEmailSenderUtil {
      * @param tenantInfoBean    - registered tenant's details
      * @throws Exception, if the sending mail failed
      */
-    public static void sendEmail(TenantInfoBean tenantInfoBean) throws Exception {
+    public static void sendTenantCreationVerification(
+                                              TenantInfoBean tenantInfoBean) throws Exception {
         String confirmationKey = generateConfirmationKey(tenantInfoBean,
                 DataHolder.getRegistryService().getConfigSystemRegistry(
                         MultitenantConstants.SUPER_TENANT_ID));
 
         if (CommonUtil.isTenantActivationModerated()) {
-            requestSuperTenantModification(tenantInfoBean, confirmationKey);
+            requestSuperTenantModeration(tenantInfoBean, confirmationKey);
         } else {
             //request for verification
             requestUserVerification(tenantInfoBean, confirmationKey);
+        }
+    }
+    
+    /**
+     * Emails the tenant admin notifying the account creation.
+     *
+     * @param domainName tenant domain
+     * @param adminName  tenant admin
+     * @param email      associated tenant email address
+     */
+    public static void notifyTenantInitialActivation(int tenantId) {
+        TenantManager tenantManager = DataHolder.getTenantManager();
+        String firstName = "";
+        String domainName = "";
+        String adminName = "";
+        String email = "";
+        try {
+            Tenant tenant = tenantManager.getTenant(tenantId);
+            domainName = tenant.getDomain();
+            firstName = ClaimsMgtUtil.getFirstName(DataHolder.getRealmService(), tenantId);
+            adminName = tenant.getAdminName();
+            email = tenant.getEmail(); 
+        } catch (Exception e) {
+            String msg = "Unable to get the tenant with the tenant domain";
+            log.error(msg, e);
+            // just catch from here.
+        }
+
+        // load the mail configuration
+        Map<String, String> userParams = new HashMap<String, String>();
+        userParams.put("first-name", firstName);
+        userParams.put("admin-name", adminName);
+        userParams.put("domain-name", domainName);
+
+        try {
+            successMsgSender.sendEmail(email, userParams);
+        } catch (Exception e) {
+            // just catch from here..
+            String msg = "Error in sending the notification email.";
+            log.error(msg, e);
+        }
+        
+        // send the notification message to the super tenant
+        notifyTenantActivationToSuperAdmin(domainName, adminName, email);
+    }
+    
+    /**
+     * Emails the super admin notifying the account creation for a new tenant.
+     *
+     * @param domainName tenant domain
+     * @param adminName  tenant admin
+     * @param email      tenant's email address
+     */
+    public static void notifyTenantCreationToSuperAdmin(TenantInfoBean tenantInfoBean) {
+        String notificationEmailAddress = CommonUtil.getNotificationEmailAddress();
+
+        if (notificationEmailAddress.trim().equals("")) {
+            if (log.isDebugEnabled()) {
+                log.debug("No super-admin notification email address is set to notify upon a" +
+                          " tenant registration");
+            }
+            return;
+        }
+
+        Map<String, String> userParams = initializeSuperTenantNotificationParams(
+                tenantInfoBean.getTenantDomain(), tenantInfoBean.getAdmin(), 
+                tenantInfoBean.getEmail());
+
+        try {
+            tenantCreationNotifier.sendEmail(notificationEmailAddress, userParams);
+        } catch (Exception e) {
+            // just catch from here..
+            String msg = "Error in sending the notification email.";
+            log.error(msg, e);
+        }
+    }
+    
+    public static void notifyResetPassword(TenantInfoBean tenantInfoBean) throws Exception {
+        int tenantId = tenantInfoBean.getTenantId();
+        String firstName = ClaimsMgtUtil.getFirstName(DataHolder.getRealmService(), tenantId);
+
+        // load the mail configuration
+        Map<String, String> userParams = new HashMap<String, String>();
+        userParams.put("admin-name", tenantInfoBean.getAdmin());
+        userParams.put("first-name", firstName);
+        userParams.put("domain-name", tenantInfoBean.getTenantDomain());
+        userParams.put("password", tenantInfoBean.getAdminPassword());
+
+        try {
+            passwordResetMsgSender.sendEmail(tenantInfoBean.getEmail(), userParams);
+        } catch (Exception e) {
+            // just catch from here..
+            String msg = "Error in sending the notification email.";
+            log.error(msg, e);
+        }
+    }
+    
+    /**
+     * Emails the super admin notifying the account activation for an unactivated tenant.
+     *
+     * @param domainName tenant domain
+     * @param adminName  tenant admin
+     * @param email      tenant's email address
+     */
+    private static void notifyTenantActivationToSuperAdmin(String domainName, String adminName,
+                                                          String email) {
+        String notificationEmailAddress = CommonUtil.getNotificationEmailAddress();
+
+        if (notificationEmailAddress.trim().equals("")) {
+            if (log.isDebugEnabled()) {
+                log.debug("No super-admin notification email address is set to notify upon a"
+                          + " tenant activation");
+            }
+            return;
+        }
+
+        Map<String, String> userParams =
+                initializeSuperTenantNotificationParams(domainName, adminName, email);
+
+        try {
+            tenantActivationNotifier.sendEmail(notificationEmailAddress, userParams);
+        } catch (Exception e) {
+            // just catch from here..
+            String msg = "Error in sending the notification email.";
+            log.error(msg, e);
         }
     }
     
@@ -171,7 +311,7 @@ public class TenantMgtEmailSenderUtil {
      * @param adminName       the tenant admin name
      * @throws Exception if an exception is thrown from EmailVerificationSubscriber.
      */
-    private static void requestSuperTenantModification(TenantInfoBean tenantInfoBean, 
+    private static void requestSuperTenantModeration(TenantInfoBean tenantInfoBean, 
                                                        String confirmationKey) throws Exception {
         try {
             Map<String, String> dataToStore = new HashMap<String, String>();
@@ -247,71 +387,59 @@ public class TenantMgtEmailSenderUtil {
         }
     }
     
-    public static void init(){
-        
-        // setting the success message config
-        String confFilename = CarbonUtils.getCarbonConfigDirPath() + File.separator
-                              +StratosConstants.EMAIL_CONFIG+
-                              File.separator+"email-registration-complete.xml";
-        EmailSenderConfiguration successMsgConfig =
-                EmailSenderConfiguration.loadEmailSenderConfiguration(confFilename);
-        successMsgSender = new EmailSender(successMsgConfig);
-
-        loadSuperTenantNotificationEmailConfig();
-        loadEmailVerificationConfig();
-        initPasswordResetEmailSender();
-        
-    }
-    
     /**
      * loads the notification configurations for the mail to super tenant for account creations
      * and activations.
      */
-    private static void loadSuperTenantNotificationEmailConfig() {
+    private static void initSuperTenantNotificationEmailSender() {
         // Tenant Registration Email Configurations
-        String tenantRegistrationEmailConfFile = CarbonUtils.getCarbonConfigDirPath()+ File.separator
-                                                 + StratosConstants.EMAIL_CONFIG +
-                                                 File.separator+"email-new-tenant-registration.xml";
+        String tenantRegistrationEmailConfFile =
+                CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                        StratosConstants.EMAIL_CONFIG + File.separator +
+                        "email-new-tenant-registration.xml";
         EmailSenderConfiguration newTenantRegistrationEmailConf =
                 EmailSenderConfiguration.loadEmailSenderConfiguration(
                         tenantRegistrationEmailConfFile);
         tenantCreationNotifier = new EmailSender(newTenantRegistrationEmailConf);
 
         // Tenant Activation Email Configurations
-        String tenantActivationEmailConfFile = CarbonUtils.getCarbonConfigDirPath()+ File.separator
-                                               +StratosConstants.EMAIL_CONFIG +
-                                               File.separator+"email-new-tenant-activation.xml";
+        String tenantActivationEmailConfFile =
+                CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                        StratosConstants.EMAIL_CONFIG + File.separator +
+                        "email-new-tenant-activation.xml";
         EmailSenderConfiguration newTenantActivationEmailConf =
-                EmailSenderConfiguration.loadEmailSenderConfiguration(
-                        tenantActivationEmailConfFile);
+                EmailSenderConfiguration
+                        .loadEmailSenderConfiguration(tenantActivationEmailConfFile);
         tenantActivationNotifier = new EmailSender(newTenantActivationEmailConf);
     }
     
     /**
      * loads the Email configuration files to be sent on the tenant registrations.
      */
-    private static void loadEmailVerificationConfig() {
-        String confXml = CarbonUtils.getCarbonConfigDirPath()
-                         + File.separator
-                         +StratosConstants.EMAIL_CONFIG+File.separator+ "email-registration.xml";
+    private static void initEmailVerificationSender() {
+        String confXml =
+                CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                        StratosConstants.EMAIL_CONFIG + File.separator + "email-registration.xml";
         try {
-        emailVerifierConfig =
-                org.wso2.carbon.email.verification.util.Util.loadeMailVerificationConfig(confXml);
-        } catch(Exception e) {
-            String msg = "Email Registration Configuration file not found. " +
-                         "Pls check the repository/conf/email folder.";
+            emailVerifierConfig = org.wso2.carbon.email.verification.util.Util
+                            .loadeMailVerificationConfig(confXml);
+        } catch (Exception e) {
+            String msg =
+                    "Email Registration Configuration file not found. "
+                            + "Pls check the repository/conf/email folder.";
             log.error(msg);
         }
-        String superTenantConfXml = CarbonUtils.getCarbonConfigDirPath() + File.separator
-                                    +StratosConstants.EMAIL_CONFIG+File.separator+
-                                    "email-registration-moderation.xml";
+        String superTenantConfXml =
+                CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                        StratosConstants.EMAIL_CONFIG + File.separator +
+                        "email-registration-moderation.xml";
         try {
-        superTenantEmailVerifierConfig =
-                org.wso2.carbon.email.verification.util.Util.loadeMailVerificationConfig(
-                        superTenantConfXml);
-        } catch(Exception e) {
-            String msg = "Email Moderation Configuration file not found. " +
-                         "Pls check the repository/conf/email folder.";
+            superTenantEmailVerifierConfig = org.wso2.carbon.email.verification.util.Util
+                            .loadeMailVerificationConfig(superTenantConfXml);
+        } catch (Exception e) {
+            String msg =
+                    "Email Moderation Configuration file not found. "
+                            + "Pls check the repository/conf/email folder.";
             log.error(msg);
         }
     }
@@ -323,105 +451,6 @@ public class TenantMgtEmailSenderUtil {
             EmailSenderConfiguration.loadEmailSenderConfiguration(passwordResetConfigFileName);
         passwordResetMsgSender = new EmailSender(passwordResetMsgConfig);
     }
-    
-    /**
-     * Emails the tenant admin notifying the account creation.
-     *
-     * @param domainName tenant domain
-     * @param adminName  tenant admin
-     * @param email      associated tenant email address
-     */
-    public static void notifyTenantCreation(String domainName, String adminName, String email) {
-        TenantManager tenantManager = DataHolder.getTenantManager();
-        String firstName = "";
-        try {
-            int tenantId = tenantManager.getTenantId(domainName);
-            Tenant tenant = (Tenant) tenantManager.getTenant(tenantId);
-            firstName = ClaimsMgtUtil.getFirstName(DataHolder.getRealmService(), tenantId);
-        } catch (Exception e) {
-            String msg = "Unable to get the tenant with the tenant domain";
-            log.error(msg, e);
-            // just catch from here.
-        }
-
-        // load the mail configuration
-        Map<String, String> userParams = new HashMap<String, String>();
-        userParams.put("first-name", firstName);
-        userParams.put("admin-name", adminName);
-        userParams.put("domain-name", domainName);
-
-        try {
-            successMsgSender.sendEmail(email, userParams);
-        } catch (Exception e) {
-            // just catch from here..
-            String msg = "Error in sending the notification email.";
-            log.error(msg, e);
-        }
-    }
-    
-    /**
-     * Emails the super admin notifying the account creation for a new tenant.
-     *
-     * @param domainName tenant domain
-     * @param adminName  tenant admin
-     * @param email      tenant's email address
-     */
-    public static void notifyTenantCreationToSuperAdmin(TenantInfoBean tenantInfoBean) {
-        String notificationEmailAddress = CommonUtil.getNotificationEmailAddress();
-
-        if (notificationEmailAddress.trim().equals("")) {
-            if (log.isDebugEnabled()) {
-                log.debug("No super-admin notification email address is set to notify upon a" +
-                          " tenant registration");
-            }
-            return;
-        }
-
-        Map<String, String> userParams = initializeSuperTenantNotificationParams(
-                tenantInfoBean.getTenantDomain(), tenantInfoBean.getAdmin(), 
-                tenantInfoBean.getEmail());
-
-        try {
-            tenantCreationNotifier.sendEmail(notificationEmailAddress, userParams);
-        } catch (Exception e) {
-            // just catch from here..
-            String msg = "Error in sending the notification email.";
-            log.error(msg, e);
-        }
-    }
-    
-    /**
-     * Emails the super admin notifying the account activation for an unactivated tenant.
-     *
-     * @param domainName tenant domain
-     * @param adminName  tenant admin
-     * @param email      tenant's email address
-     */
-    public static void notifyTenantActivationToSuperAdmin(
-            String domainName, String adminName, String email) {
-        String notificationEmailAddress = CommonUtil.getNotificationEmailAddress();
-
-        if (notificationEmailAddress.trim().equals("")) {
-            if (log.isDebugEnabled()) {
-                log.debug("No super-admin notification email address is set to notify upon a" +
-                          " tenant activation");
-            }
-            return;
-        }
-
-        Map<String, String> userParams = initializeSuperTenantNotificationParams(
-                domainName, adminName, email);
-
-        try {
-            tenantActivationNotifier.sendEmail(notificationEmailAddress, userParams);
-        } catch (Exception e) {
-            // just catch from here..
-            String msg = "Error in sending the notification email.";
-            log.error(msg, e);
-        }
-    }
-    
-
 
     /**
      * Initializes the super tenant notification parameters
@@ -438,7 +467,6 @@ public class TenantMgtEmailSenderUtil {
         String lastName = "";
         try {
             int tenantId = tenantManager.getTenantId(domainName);
-            Tenant tenant = (Tenant) tenantManager.getTenant(tenantId);
             firstName = ClaimsMgtUtil.getFirstName(DataHolder.getRealmService(), tenantId);
             lastName = ClaimsMgtUtil.getLastName(DataHolder.getRealmService(), tenantId);
 
@@ -456,28 +484,5 @@ public class TenantMgtEmailSenderUtil {
         userParams.put("first-name", firstName);
         userParams.put("last-name", lastName);
         return userParams;
-    }
-    
-    public static void notifyResetPassword(TenantInfoBean tenantInfoBean) throws Exception {
-        TenantManager tenantManager = DataHolder.getTenantManager();
-
-        int tenantId = tenantInfoBean.getTenantId();
-        Tenant tenant = (Tenant) tenantManager.getTenant(tenantId);
-        String firstName = ClaimsMgtUtil.getFirstName(DataHolder.getRealmService(), tenantId);
-
-        // load the mail configuration
-        Map<String, String> userParams = new HashMap<String, String>();
-        userParams.put("admin-name", tenantInfoBean.getAdmin());
-        userParams.put("first-name", firstName);
-        userParams.put("domain-name", tenantInfoBean.getTenantDomain());
-        userParams.put("password", tenantInfoBean.getAdminPassword());
-
-        try {
-            passwordResetMsgSender.sendEmail(tenantInfoBean.getEmail(), userParams);
-        } catch (Exception e) {
-            // just catch from here..
-            String msg = "Error in sending the notification email.";
-            log.error(msg, e);
-        }
     }
 }

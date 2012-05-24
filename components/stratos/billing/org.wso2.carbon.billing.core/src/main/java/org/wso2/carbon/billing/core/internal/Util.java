@@ -27,13 +27,20 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
+import org.wso2.carbon.stratos.common.exception.StratosException;
+import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Util {
     private static RegistryService registryService;
     private static RealmService realmService;
     private static RuleEngineConfigService ruleEngineConfigService;
+    private static List<TenantMgtListener> tenantMgtListeners = new ArrayList<TenantMgtListener>();
 
     public static synchronized void setRegistryService(RegistryService service) {
         if (registryService == null) {
@@ -72,5 +79,32 @@ public class Util {
 
     public static void cleanBillingManager() {
         BillingManager.destroyInstance();
+    }
+    
+    public static void addTenantMgtListenerService(TenantMgtListener tenantMgtListener) {
+        tenantMgtListeners.add(tenantMgtListener);
+        sortTenantMgtListeners();
+    }
+
+    public static void removeTenantMgtListenerService(TenantMgtListener tenantMgtListener) {
+        tenantMgtListeners.remove(tenantMgtListener);
+        sortTenantMgtListeners();
+    }
+    
+    private static void sortTenantMgtListeners() {
+        Collections.sort(tenantMgtListeners, new Comparator<TenantMgtListener>() {
+            public int compare(TenantMgtListener o1, TenantMgtListener o2) {
+                return o1.getListenerOrder() - o2.getListenerOrder();
+            }
+        });
+    }
+
+    public static void alertTenantSubscriptionPlanChange(int tenantId, String oldSubscriptionPlan, 
+                                          String newSubscriptionPlan) throws StratosException {
+
+        for (TenantMgtListener tenantMgtLister : tenantMgtListeners) {
+            tenantMgtLister.onSubscriptionPlanChange(
+                    tenantId, oldSubscriptionPlan, newSubscriptionPlan);
+        }
     }
 }

@@ -15,37 +15,59 @@
  */
 package org.wso2.carbon.theme.mgt.util;
 
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
+import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.user.core.UserStoreException;
 
 public class ThemeLoadingListener implements TenantMgtListener {
     private static final Log log = LogFactory.getLog(ThemeLoadingListener.class);
     private static final int EXEC_ORDER = 10;
-    public void addTenant(TenantInfoBean tenantInfo) throws UserStoreException {
+    public void onTenantCreate(TenantInfoBean tenantInfo) throws StratosException {
         try {
             ThemeUtil.loadTheme(tenantInfo.getTenantId());
         } catch (RegistryException e) {
             String msg = "Error in loading the theme for the tenant: " 
                 + tenantInfo.getTenantDomain() + ".";
             log.error(msg, e);
-            throw new UserStoreException(msg, e);
+            throw new StratosException(msg, e);
         }
     }
     
-    public void updateTenant(TenantInfoBean tenantInfo) throws UserStoreException {
+    public void onTenantUpdate(TenantInfoBean tenantInfo) throws StratosException {
         // doing nothing
     }
     
-    public void renameTenant(int tenantId, String oldDomainName,
-                             String newDomainName) throws UserStoreException {
+    public void onTenantRename(int tenantId, String oldDomainName,
+                             String newDomainName) throws StratosException {
         // doing nothing
     }
 
     public int getListenerOrder() {
         return EXEC_ORDER;
+    }
+
+    public void onTenantInitialActivation(int tenantId) throws StratosException {
+        // doing nothing
+        
+    }
+
+    public void onTenantActivation(int tenantId) throws StratosException {
+        // doing nothing
+        
+    }
+
+    public void onTenantDeactivation(int tenantId) throws StratosException {
+        // doing nothing
+        
+    }
+
+    public void onSubscriptionPlanChange(int tenentId, String oldPlan, 
+                                         String newPlan) throws StratosException {
+        // doing nothing
+        
     }
 }

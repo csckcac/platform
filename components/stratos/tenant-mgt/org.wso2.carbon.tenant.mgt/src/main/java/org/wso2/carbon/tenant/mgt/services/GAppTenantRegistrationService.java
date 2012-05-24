@@ -1,10 +1,8 @@
 package org.wso2.carbon.tenant.mgt.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.ws.security.util.UUIDGenerator;
 import org.wso2.carbon.core.multitenancy.persistence.TenantPersistor;
 import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
+import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.tenant.mgt.exception.TenantManagementException;
 import org.wso2.carbon.tenant.mgt.internal.TenantMgtServiceComponent;
 import org.wso2.carbon.tenant.mgt.util.TenantMgtUtil;
@@ -15,6 +13,10 @@ import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.config.multitenancy.MultiTenantRealmConfigBuilder;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.ws.security.util.UUIDGenerator;
 
 public class GAppTenantRegistrationService {
 	
@@ -85,7 +87,7 @@ public class GAppTenantRegistrationService {
             // Notify tenant addition
             try {
                 TenantMgtUtil.triggerAddTenant(tenantInfoBean);
-            } catch (UserStoreException e) {
+            } catch (StratosException e) {
                 String msg = "Error in notifying tenant addition.";
                 log.error(msg, e);
                 throw new Exception(msg, e);

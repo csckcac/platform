@@ -161,12 +161,10 @@ public class DataAccessManager {
             throw new BillingException(msg, e);
         }
 
-        // change JIRA group of user upon subscription plan change
         try {
-
-            BillingServiceComponent.getStratosEventListener()
-                                    .onSubscriptionPlanChange(customerId,
-                                            oldSubscriptionPlan, subscriptionPlan);
+            // Notify Listeners about the subscription change
+            Util.alertTenantSubscriptionPlanChange(
+                    customerId, oldSubscriptionPlan, subscriptionPlan);
         } catch (StratosException e) {
             log.error(e.getMessage(), e);
             throw new BillingException(e.getMessage(), e);

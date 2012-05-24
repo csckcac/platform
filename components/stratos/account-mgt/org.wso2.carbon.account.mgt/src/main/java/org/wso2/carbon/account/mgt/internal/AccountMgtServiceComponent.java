@@ -17,16 +17,18 @@
 */
 package org.wso2.carbon.account.mgt.internal;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.account.mgt.util.Util;
+import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
+import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.stratos.common.TenantBillingService;
-import org.wso2.carbon.stratos.common.events.StratosEventListener;
+import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
-import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.osgi.service.component.ComponentContext;
 
 /**
  * @scr.component name="org.wso2.carbon.account.mgt" immediate="true"
@@ -48,11 +50,11 @@ import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
  *                cardinality="1..1" policy="dynamic"
  *                bind="setEmailVerificationService"
  *                unbind="unsetEmailVerificationService"
- * @scr.reference name="stratos.event.listener"
- *                interface="org.wso2.carbon.stratos.common.events.StratosEventListener"
- *                cardinality="0..1" policy="dynamic"
- *                bind="setStratosEventListener"
- *                unbind="unsetStratosEventListener"
+ * @scr.reference name="org.wso2.carbon.tenant.mgt.listener.service"
+ *                interface="org.wso2.carbon.stratos.common.listeners.TenantMgtListener"
+ *                cardinality="0..n" policy="dynamic"
+ *                bind="setTenantMgtListenerService"
+ *                unbind="unsetTenantMgtListenerService"
  * @scr.reference name="default.tenant.billing.service"
  *                interface="org.wso2.carbon.stratos.common.TenantBillingService"
  *                cardinality="1..1" policy="dynamic"
@@ -62,13 +64,11 @@ import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 public class AccountMgtServiceComponent {
     private static Log log = LogFactory.getLog(AccountMgtServiceComponent.class);
     private static ConfigurationContextService configContextService = null;
-    private static StratosEventListener eventListener = null;
     private static TenantBillingService billingService = null;
     
     protected void activate(ComponentContext context) {
         try {
             Util.loadEmailVerificationConfig();
-            Util.registerTenantMgtListenerServiceTrackers(context.getBundleContext());
             log.debug("******* Stratos account management bundle is activated ******* ");
         } catch (Exception e) {
             log.error("******* Stratos account management bundle failed activating ****", e);
@@ -76,7 +76,6 @@ public class AccountMgtServiceComponent {
     }
 
     protected void deactivate(ComponentContext context) {
-        Util.unregisterTenantMgtListenerServiceTrackers();
         log.debug("******* Stratos account managment bundle is deactivated ******* ");
     }
 
@@ -109,7 +108,6 @@ public class AccountMgtServiceComponent {
         }
     }
 
-
     protected void setEmailVerificationService(EmailVerifcationSubscriber emailService) {
         Util.setEmailVerificationService(emailService);
     }
@@ -118,18 +116,14 @@ public class AccountMgtServiceComponent {
         Util.setEmailVerificationService(null);
     }
 
-    public static StratosEventListener getStratosEventListener() {
-        return eventListener;
+    protected void setTenantMgtListenerService(TenantMgtListener tenantMgtListener) {
+        Util.addTenantMgtListenerService(tenantMgtListener);
     }
 
-    protected void setStratosEventListener(StratosEventListener eventListener) {
-        AccountMgtServiceComponent.eventListener = eventListener;
+    protected void unsetTenantMgtListenerService(TenantMgtListener tenantMgtListener) {
+        Util.removeTenantMgtListenerService(tenantMgtListener);
     }
-
-    protected void unsetStratosEventListener(StratosEventListener eventListener) {
-        AccountMgtServiceComponent.eventListener = null;
-    }
-
+    
     protected void setTenantBillingService(TenantBillingService tenantBillingService) {
         billingService = tenantBillingService;
     }

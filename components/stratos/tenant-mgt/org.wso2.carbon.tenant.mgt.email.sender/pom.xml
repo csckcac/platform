@@ -45,9 +45,9 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
                             org.wso2.carbon.tenant.mgt.email.sender.internal.*,
+                            org.wso2.carbon.tenant.mgt.email.sender.util.*,
                         </Private-Package>
                         <Export-Package>
-                            org.wso2.carbon.tenant.mgt.email.sender.util.*,
                             org.wso2.carbon.tenant.mgt.email.sender.listener.*
                         </Export-Package>
                         <Import-Package>

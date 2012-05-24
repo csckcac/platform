@@ -17,17 +17,19 @@
 */
 package org.wso2.carbon.issue.tracker.mgt.internal;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.issue.tracker.mgt.config.ManagerConfigurations;
-import org.wso2.carbon.stratos.common.events.StratosEventListener;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.issue.tracker.mgt.TenantActivityListener;
+import org.wso2.carbon.issue.tracker.mgt.config.ManagerConfigurations;
+import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
+import org.wso2.carbon.stratos.common.util.StratosConfiguration;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
-import org.wso2.carbon.stratos.common.util.StratosConfiguration;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
 
 
 /**
@@ -48,7 +50,6 @@ public class IssueTrackerAdminServiceComponent {
 
     private static ConfigurationContextService configCtxService;
     private static RealmService realmService;
-    private static StratosEventListener eventListener = null;
     private static StratosConfiguration stratosConfiguration;
 
     private static ManagerConfigurations managerConfigurations;
@@ -67,7 +68,8 @@ public class IssueTrackerAdminServiceComponent {
             managerConfigurations.setStratosConfiguration(stratosConfiguration);
             BundleContext bundleContext = context.getBundleContext();
             TenantActivityListener tenantActivityListener = new TenantActivityListener();
-            bundleContext.registerService(StratosEventListener.class.getName(), tenantActivityListener, null);
+            bundleContext.registerService(TenantMgtListener.class.getName(),
+                    tenantActivityListener, null);
         } catch (Exception e) {
             log.error("Error in setting tenant information", e);
         } finally {
@@ -104,18 +106,6 @@ public class IssueTrackerAdminServiceComponent {
 
     public static RealmService getRealmService() {
         return realmService;
-    }
-
-    public static StratosEventListener getStratosEventListener() {
-        return eventListener;
-    }
-
-    protected void setStratosEventListener(StratosEventListener eventListener) {
-        IssueTrackerAdminServiceComponent.eventListener = eventListener;
-    }
-
-    protected void unsetStratosEventListener(StratosEventListener eventListener) {
-        IssueTrackerAdminServiceComponent.eventListener = null;
     }
 
     protected void setStratosConfigurationService(StratosConfiguration stratosConfigService) {

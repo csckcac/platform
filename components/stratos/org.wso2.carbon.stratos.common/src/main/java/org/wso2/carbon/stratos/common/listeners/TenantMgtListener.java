@@ -16,15 +16,24 @@
 package org.wso2.carbon.stratos.common.listeners;
 
 import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
-import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.stratos.common.exception.StratosException;
 
 public interface TenantMgtListener {
-    public void addTenant(TenantInfoBean tenantInfo) throws UserStoreException;
+    public void onTenantCreate(TenantInfoBean tenantInfo) throws StratosException;
 
-    public void updateTenant(TenantInfoBean tenantInfo) throws UserStoreException;
+    public void onTenantUpdate(TenantInfoBean tenantInfo) throws StratosException;
 
-    public void renameTenant(int tenantId, String oldDomainName, 
-                             String newDomainName)throws UserStoreException;
+    public void onTenantRename(int tenantId, String oldDomainName, 
+                             String newDomainName)throws StratosException;
+    
+    public void onTenantInitialActivation(int tenantId) throws StratosException;
+    
+    public void onTenantActivation(int tenantId) throws StratosException;
+    
+    public void onTenantDeactivation(int tenantId) throws StratosException;
 
+    public void onSubscriptionPlanChange(int tenentId, String oldPlan, 
+                                         String newPlan) throws StratosException;
+    
     public int getListenerOrder();
 }

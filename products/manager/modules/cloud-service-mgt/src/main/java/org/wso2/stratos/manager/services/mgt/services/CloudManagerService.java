@@ -94,7 +94,6 @@ public class CloudManagerService extends AbstractAdmin {
         }
         Util.setCloudServiceActive(true, StratosConstants.CLOUD_IDENTITY_SERVICE, tenantId);
         Util.setCloudServiceActive(true, StratosConstants.CLOUD_GOVERNANCE_SERVICE, tenantId);
-        Util.updateTenantActivation(tenantId);
     }
 
     public void activate(String cloudServiceName) throws Exception {

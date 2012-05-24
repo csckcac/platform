@@ -79,10 +79,6 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.tenant.mgt.email.sender</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>atlassian-jira</artifactId>
             <version>1.0.0.wso2v1</version>
         </dependency>

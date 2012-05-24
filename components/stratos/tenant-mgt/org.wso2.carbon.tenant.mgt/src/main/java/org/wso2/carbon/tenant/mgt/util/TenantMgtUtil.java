@@ -22,6 +22,7 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
 import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
+import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
@@ -111,12 +112,13 @@ public class TenantMgtUtil {
      *
      * @param tenantInfo tenant
      * @throws UserStoreException - exception not handled here.
+     * @throws StratosException 
      */
-    public static void triggerAddTenant(TenantInfoBean tenantInfo) throws UserStoreException {
+    public static void triggerAddTenant(TenantInfoBean tenantInfo) throws StratosException {
         // initializeRegistry(tenantInfoBean.getTenantId());
         for (TenantMgtListener tenantMgtListener :
                 TenantMgtServiceComponent.getTenantMgtListeners()) {
-            tenantMgtListener.addTenant(tenantInfo);
+            tenantMgtListener.onTenantCreate(tenantInfo);
         }
     }
 
@@ -127,10 +129,32 @@ public class TenantMgtUtil {
      * @throws UserStoreException - exception not handled, throw as it is.
      */
     public static void triggerUpdateTenant(
-            TenantInfoBean tenantInfoBean) throws UserStoreException {
+            TenantInfoBean tenantInfoBean) throws StratosException {
         for (TenantMgtListener tenantMgtListener :
                 TenantMgtServiceComponent.getTenantMgtListeners()) {
-            tenantMgtListener.updateTenant(tenantInfoBean);
+            tenantMgtListener.onTenantUpdate(tenantInfoBean);
+        }
+    }
+    
+    public static void triggerTenantInitialActivation(
+                                  TenantInfoBean tenantInfoBean) throws StratosException {
+        for (TenantMgtListener tenantMgtListener :
+                TenantMgtServiceComponent.getTenantMgtListeners()) {
+            tenantMgtListener.onTenantInitialActivation(tenantInfoBean.getTenantId());
+        }
+    }
+    
+    public static void triggerTenantActivation(int tenantId) throws StratosException {
+        for (TenantMgtListener tenantMgtListener : 
+                TenantMgtServiceComponent.getTenantMgtListeners()) {
+            tenantMgtListener.onTenantActivation(tenantId);
+        }
+    }
+    
+    public static void triggerTenantDeactivation(int tenantId) throws StratosException {
+        for (TenantMgtListener tenantMgtListener : 
+                TenantMgtServiceComponent.getTenantMgtListeners()) {
+            tenantMgtListener.onTenantDeactivation(tenantId);
         }
     }
 

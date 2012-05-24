@@ -24,10 +24,8 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.stratos.common.config.CloudServiceConfig;
 import org.wso2.carbon.stratos.common.config.CloudServicesDescConfig;
 import org.wso2.carbon.stratos.common.config.PermissionConfig;
-import org.wso2.carbon.stratos.common.listeners.TenantActivationListener;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.user.api.RealmConfiguration;
-import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.user.mgt.UserMgtConstants;
@@ -41,10 +39,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.activation.MimetypesFileTypeMap;
 
@@ -57,9 +53,6 @@ public class Util {
     private static RegistryService registryService;
     private static RealmService realmService;
     private static CloudServicesDescConfig cloudServicesDescConfig = null;
-
-    private static Set<TenantActivationListener> tenantActivationListeners =
-            new HashSet<TenantActivationListener>();
 
     public static synchronized void setRegistryService(RegistryService service) {
         if ((registryService == null) || (service == null)) {
@@ -83,20 +76,6 @@ public class Util {
 
     public static TenantManager getTenantManager() {
         return realmService.getTenantManager();
-    }
-
-    public static void addTenantActivationListener(TenantActivationListener tenantActivationListener) {
-        tenantActivationListeners.add(tenantActivationListener);
-    }
-
-    public static void removeTenantActivationListener(TenantActivationListener tenantActivationListener) {
-        tenantActivationListeners.remove(tenantActivationListener);
-    }
-
-    public static void updateTenantActivation(int tenantId) throws UserStoreException {
-        for (TenantActivationListener listener : tenantActivationListeners) {
-            listener.updateTenantActivation(tenantId);
-        }
     }
 
     public static RealmConfiguration getBootstrapRealmConfiguration() {

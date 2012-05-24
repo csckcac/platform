@@ -18,26 +18,31 @@
  */
 package org.wso2.carbon.account.mgt.util;
 
-import org.apache.axis2.context.MessageContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 import org.wso2.carbon.email.verification.util.EmailVerifierConfig;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
-import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.stratos.common.exception.StratosException;
+import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
+
+import org.apache.axis2.context.MessageContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
 
 /**
  * Util methods for AccountMgt
@@ -50,7 +55,7 @@ public class Util {
     private static RealmService realmService;
     private static EmailVerifcationSubscriber emailVerificationService = null;
     private static EmailVerifierConfig emailVerfierConfig = null;
-    private static ServiceTracker tenantMgtListenerServiceTracker = null;
+    private static List<TenantMgtListener> tenantMgtListeners = new ArrayList<TenantMgtListener>();
 
     public static synchronized void setRegistryService(RegistryService service) {
         if (registryService == null) {
@@ -118,25 +123,51 @@ public class Util {
         return emailVerfierConfig;
     }
 
-    // related to service trackers on tenant renaming
-    public static void registerTenantMgtListenerServiceTrackers(BundleContext bundleContext) {
-        tenantMgtListenerServiceTracker = new ServiceTracker(bundleContext,
-                TenantMgtListener.class.getName(), null);
-        tenantMgtListenerServiceTracker.open();
-
+    public static void addTenantMgtListenerService(TenantMgtListener tenantMgtListener) {
+        tenantMgtListeners.add(tenantMgtListener);
+        sortTenantMgtListeners();
     }
 
-    public static void unregisterTenantMgtListenerServiceTrackers() {
-        tenantMgtListenerServiceTracker.close();
+    public static void removeTenantMgtListenerService(TenantMgtListener tenantMgtListener) {
+        tenantMgtListeners.remove(tenantMgtListener);
+        sortTenantMgtListeners();
     }
+    
+    private static void sortTenantMgtListeners() {
+        Collections.sort(tenantMgtListeners, new Comparator<TenantMgtListener>() {
+            public int compare(TenantMgtListener o1, TenantMgtListener o2) {
+                return o1.getListenerOrder() - o2.getListenerOrder();
+            }
+        });
+    }
+    
+    public static void alertTenantRenames(int tenantId, String oldName, 
+                                          String newName) throws StratosException {
 
-    public static void alertTenantRenames(int tenantId, String oldName, String newName)
-            throws UserStoreException {
-        Object[] tenantMgtListeners = tenantMgtListenerServiceTracker.getServices();
-
-        for (Object tenantMgtListenerObj : tenantMgtListeners) {
-            TenantMgtListener tenantMgtLister = (TenantMgtListener) tenantMgtListenerObj;
-            tenantMgtLister.renameTenant(tenantId, oldName, newName);
+        for (TenantMgtListener tenantMgtLister : tenantMgtListeners) {
+            tenantMgtLister.onTenantRename(tenantId, oldName, newName);
         }
     }
+    
+    public static void alertTenantDeactivation(int tenantId) throws StratosException {
+
+        for (TenantMgtListener tenantMgtLister : tenantMgtListeners) {
+            tenantMgtLister.onTenantDeactivation(tenantId);
+        }
+    }
+    
+    public static void alertTenantInitialActivation(int tenantId) throws StratosException {
+
+        for (TenantMgtListener tenantMgtLister : tenantMgtListeners) {
+            tenantMgtLister.onTenantInitialActivation(tenantId);
+        }
+    }
+    
+    public static void alertTenantUpdate(TenantInfoBean tenantInfoBean) throws StratosException {
+
+        for (TenantMgtListener tenantMgtLister : tenantMgtListeners) {
+            tenantMgtLister.onTenantUpdate(tenantInfoBean);
+        }
+    }
+    
 }

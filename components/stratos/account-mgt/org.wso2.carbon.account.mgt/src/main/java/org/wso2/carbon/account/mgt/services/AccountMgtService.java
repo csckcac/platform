@@ -17,15 +17,18 @@
  */
 package org.wso2.carbon.account.mgt.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.account.mgt.internal.AccountMgtServiceComponent;
+import org.wso2.carbon.account.mgt.beans.AccountInfoBean;
+import org.wso2.carbon.account.mgt.util.Util;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
+import org.wso2.carbon.stratos.common.constants.StratosConstants;
+import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
+import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
@@ -33,12 +36,10 @@ import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.carbon.account.mgt.beans.AccountInfoBean;
-import org.wso2.carbon.account.mgt.util.Util;
-import org.wso2.carbon.stratos.common.constants.StratosConstants;
-import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
-import org.wso2.carbon.stratos.common.util.CommonUtil;
-import org.wso2.carbon.stratos.common.events.StratosEventListener;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -180,6 +181,14 @@ public class AccountMgtService extends AbstractAdmin {
                     " has been updated to the tenant admin " +
                     ClaimsMgtUtil.getAdminUserNameFromTenantId(realmService, tenantId) + " of " +
                     tenant.getDomain());
+            
+            //Notify tenant update to all listeners
+            TenantInfoBean tenantInfoBean = new TenantInfoBean();
+            tenantInfoBean.setTenantId(tenantId);
+            tenantInfoBean.setFirstname(accountInfoBean.getFirstname());
+            tenantInfoBean.setLastname(accountInfoBean.getLastname());
+            Util.alertTenantUpdate(tenantInfoBean);
+            
             return true;
         } catch (Exception e) {
             // this is expected, as many users haven't given their fullnames
@@ -273,10 +282,8 @@ public class AccountMgtService extends AbstractAdmin {
             throw new Exception(msg, e);
         }
 
-        StratosEventListener eventListener = AccountMgtServiceComponent.getStratosEventListener();
-        if (eventListener != null) {
-            eventListener.onTenantDeactivation(tenantId);
-        }
+        //Notify tenant deactivation to Listeners
+        Util.alertTenantDeactivation(tenantId);
     }
 
     /**

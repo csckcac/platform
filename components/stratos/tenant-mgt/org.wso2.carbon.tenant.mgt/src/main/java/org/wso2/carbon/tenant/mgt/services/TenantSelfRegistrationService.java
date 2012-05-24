@@ -17,21 +17,22 @@
  */
 package org.wso2.carbon.tenant.mgt.services;
 
-import org.apache.axis2.AxisFault;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.captcha.mgt.beans.CaptchaInfoBean;
 import org.wso2.carbon.captcha.mgt.constants.CaptchaMgtConstants;
 import org.wso2.carbon.captcha.mgt.util.CaptchaUtil;
 import org.wso2.carbon.core.multitenancy.persistence.TenantPersistor;
 import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
+import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.tenant.mgt.internal.TenantMgtServiceComponent;
 import org.wso2.carbon.tenant.mgt.util.TenantMgtUtil;
-import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import org.apache.axis2.AxisFault;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -108,7 +109,7 @@ public class TenantSelfRegistrationService {
         //Notify tenant addition
         try {
             TenantMgtUtil.triggerAddTenant(tenantInfoBean);
-        } catch (UserStoreException e) {
+        } catch (StratosException e) {
             String msg = "Error in notifying tenant addition.";
             log.error(msg, e);
             throw new Exception(msg, e);

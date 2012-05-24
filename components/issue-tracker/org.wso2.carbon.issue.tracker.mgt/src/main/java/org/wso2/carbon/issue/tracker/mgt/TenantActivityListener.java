@@ -1,40 +1,27 @@
 package org.wso2.carbon.issue.tracker.mgt;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.issue.tracker.mgt.internal.LdapGroupManager;
-import org.wso2.carbon.stratos.common.events.StratosEventListener;
-import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.issue.tracker.adapter.api.GenericCredentials;
 import org.wso2.carbon.issue.tracker.adapter.exceptions.IssueTrackerException;
 import org.wso2.carbon.issue.tracker.core.AccountInfo;
+import org.wso2.carbon.issue.tracker.mgt.internal.LdapGroupManager;
 import org.wso2.carbon.issue.tracker.mgt.internal.OTUserAssociation;
-import org.wso2.carbon.jira.reporting.adapterImpl.SupportJiraUser;/*
-*  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+import org.wso2.carbon.jira.reporting.adapterImpl.SupportJiraUser;
+import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
+import org.wso2.carbon.stratos.common.exception.StratosException;
+import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *  this class implements methods to be called on tenant activities such as tenant registration, activation
  * and deactivation.
  */
-public class TenantActivityListener implements StratosEventListener {
+public class TenantActivityListener implements TenantMgtListener {
 
     private static Log log = LogFactory.getLog(TenantActivityListener.class);
+    private static final int EXEC_ORDER = 60;
 
     // user should be removed from JIRA user groups
     public void onTenantDeactivation(int i) {
@@ -145,5 +132,29 @@ public class TenantActivityListener implements StratosEventListener {
             }
 
         }
+    }
+
+    public void onTenantInitialActivation(int arg0) throws StratosException {
+        // Nothing to do
+        
+    }
+
+    public int getListenerOrder() {
+        return EXEC_ORDER;
+    }
+
+    public void onTenantCreate(TenantInfoBean arg0) throws StratosException {
+        // Nothing to do
+        
+    }
+
+    public void onTenantRename(int arg0, String arg1, String arg2) throws StratosException {
+        // Nothing to do
+        
+    }
+
+    public void onTenantUpdate(TenantInfoBean arg0) throws StratosException {
+        // Nothing to do
+        
     }
 }

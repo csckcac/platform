@@ -167,7 +167,21 @@ public class ServiceMediaTypeHandler extends Handler {
                     String tempPath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH
                             + RegistryConstants.PATH_SEPARATOR + resourceName;
 
-                    if(!originalServicePath.equals(tempPath)){
+                    if (!originalServicePath.equals(tempPath)) {
+                        String path = RegistryUtils.getRelativePathToOriginal(servicePath, RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH);
+                        if (ServiceUtils.getModifiedList().size() == 0) {
+                            ServiceUtils.addToModifiedList(path);
+                        } else {
+                            boolean flag = false;
+                            for (int i = 0; i < ServiceUtils.getModifiedList().size(); i++) {
+                                if (ServiceUtils.getModifiedList().get(i).equals(path)) {
+                                    flag = true;
+                                }
+                            }
+                            if (flag == false) {
+                                ServiceUtils.addToModifiedList(path);
+                            }
+                        }
                         return;
                     }
                     requestContext.setProcessingComplete(true);

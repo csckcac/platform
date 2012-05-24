@@ -19,10 +19,7 @@ package org.wso2.carbon.apimgt.impl;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.apimgt.api.APIManagementException;
-import org.wso2.carbon.apimgt.api.model.API;
-import org.wso2.carbon.apimgt.api.model.APIIdentifier;
-import org.wso2.carbon.apimgt.api.model.Documentation;
-import org.wso2.carbon.apimgt.api.model.DuplicateAPIException;
+import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.core.util.AnonymousSessionUtil;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -81,13 +78,15 @@ public class UserAwareAPIProvider extends APIProviderImpl {
 
     @Override
     public void updateAPI(API api) throws APIManagementException {
-        API oldApi = getAPI(api.getId());
-        String oldStatus = oldApi.getStatus().getStatus();
-        String newStatus = api.getStatus().getStatus();
-        if ("CREATED".equals(oldStatus) && "PUBLISHED".equals(newStatus)) {
-            checkPermission(APIConstants.Permissions.API_PUBLISH);
-        }
+        checkPermission(APIConstants.Permissions.API_CREATE);
         super.updateAPI(api);
+    }
+
+    @Override
+    public void changeAPIStatus(API api, APIStatus status,
+                                boolean updateGatewayConfig) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_PUBLISH);
+        super.changeAPIStatus(api, status, updateGatewayConfig);
     }
 
     @Override

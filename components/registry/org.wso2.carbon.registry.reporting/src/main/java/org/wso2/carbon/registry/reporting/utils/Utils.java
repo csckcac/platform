@@ -17,6 +17,7 @@
 package org.wso2.carbon.registry.reporting.utils;
 
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.reporting.AbstractReportGenerator;
 import org.wso2.carbon.registry.reporting.annotation.Property;
 
@@ -34,7 +35,7 @@ public class Utils {
                                                                Registry registry)
             throws Exception {
         AbstractReportGenerator reportGenerator =
-                (AbstractReportGenerator)Class.forName(reportClass).newInstance();
+                (AbstractReportGenerator) RegistryUtils.loadClass(reportClass).newInstance();
         reportGenerator.setRegistry(registry);
         Method[] declaredMethods = reportGenerator.getClass().getDeclaredMethods();
         for (Method method : declaredMethods) {

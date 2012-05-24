@@ -204,7 +204,7 @@ public class ReportingAdminService extends RegistryAbstractAdmin implements
 
     public String[] getAttributeNames(String className) throws Exception {
         List<String> output = new LinkedList<String>();
-        Method[] declaredMethods = Class.forName(className).getDeclaredMethods();
+        Method[] declaredMethods = RegistryUtils.loadClass(className).getDeclaredMethods();
         for (Method method : declaredMethods) {
             if (method.isAnnotationPresent(Property.class)) {
                 String name = method.getName();
@@ -219,7 +219,7 @@ public class ReportingAdminService extends RegistryAbstractAdmin implements
 
     public String[] getMandatoryAttributeNames(String className) throws Exception {
         List<String> output = new LinkedList<String>();
-        Method[] declaredMethods = Class.forName(className).getDeclaredMethods();
+        Method[] declaredMethods = RegistryUtils.loadClass(className).getDeclaredMethods();
         for (Method method : declaredMethods) {
             if (method.isAnnotationPresent(Property.class) &&
                     method.getAnnotation(Property.class).mandatory()) {

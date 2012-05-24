@@ -37,9 +37,11 @@
 
         <AddUserToProject>http://localhost:9763/services/AddUserToProjectService/process
         </AddUserToProject>
-        <CreateProject>http://localhost:9763/services/CreateProjectService/process</CreateProject>
+        <CreateProject>http://localhost:9763/services/CreateApplication</CreateProject>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
         <ActivateUser>http://localhost:9763/services/UserActivationProcess/process</ActivateUser>
+        <GetAllApps>https://localhost:9443/services/ApplicationManagementService</GetAllApps>
+        <GetAuthCookie>https://localhost:9443/services/AuthenticationAdmin</GetAuthCookie>
     </WebServiceEndPoints>
 
     <!--Project repository related configurations-->

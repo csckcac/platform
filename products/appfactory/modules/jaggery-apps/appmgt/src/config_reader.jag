@@ -34,6 +34,10 @@ function getPropertyTemp(expression) {
            return appFactoryConfigReader.getAdminUserName();
         case "adminPassword":
            return appFactoryConfigReader.getAdminPassword();
+        case "webService.getAllApps":
+           return appFactoryConfigReader.getWebServiceEPRGetAllApps();
+        case "webService.getAuthCookie":
+           return appFactoryConfigReader.getWebServiceEPRGetAuthCookie();
         default:
             return;
     }

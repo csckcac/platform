@@ -123,7 +123,7 @@
 			<bpel:copy>
 				<bpel:from>
                     
-                    <![CDATA['admin@apps.com']]>
+                    <![CDATA['']]>
                 </bpel:from>
 				<bpel:to part="parameters" variable="TenantMgtPLRequest">
 					<bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[ns:tenantInfoBean/xsd:adminPassword]]></bpel:query>

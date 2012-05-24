@@ -37,6 +37,7 @@ import org.wso2.carbon.ntask.common.TaskException.Code;
 import org.wso2.carbon.ntask.core.TaskInfo;
 import org.wso2.carbon.ntask.core.TaskRepository;
 import org.wso2.carbon.ntask.core.TaskUtils;
+import org.wso2.carbon.ntask.core.service.impl.RegistryTaskAvailabilityManager;
 
 /**
  * Registry based task repository implementation.
@@ -56,11 +57,14 @@ public class RegistryBasedTaskRepository implements TaskRepository {
 	private Unmarshaller taskUnmarshaller;
 	
 	private int tid;
+	
+	private RegistryTaskAvailabilityManager taskAvailabilityManager;
 		
-	public RegistryBasedTaskRepository(int tid, String taskType) throws TaskException {
+	public RegistryBasedTaskRepository(int tid, String taskType, RegistryTaskAvailabilityManager
+			taskAvailabilityManager) throws TaskException {
 		this.tid = tid;
 		this.taskType = taskType;
-		this.registry = TaskUtils.getGovRegistryForTenant(this.getTenantId());
+		this.taskAvailabilityManager = taskAvailabilityManager;
 		try {
 		    JAXBContext ctx = JAXBContext.newInstance(TaskInfo.class);
 		    this.taskMarshaller = ctx.createMarshaller();
@@ -69,6 +73,10 @@ public class RegistryBasedTaskRepository implements TaskRepository {
 			throw new TaskException("Error creating task marshaller/unmarshaller", 
 					Code.CONFIG_ERROR, e);
 		}
+	}
+	
+	public RegistryTaskAvailabilityManager getTaskAvailabilityManager() {
+		return taskAvailabilityManager;
 	}
 	
 	public int getTenantId() {
@@ -83,7 +91,13 @@ public class RegistryBasedTaskRepository implements TaskRepository {
 		return taskUnmarshaller;
 	}
 
-	public Registry getRegistry() {
+	public synchronized Registry getRegistry() throws TaskException {
+		if (this.registry == null) {
+		    this.registry = TaskUtils.getGovRegistryForTenant(this.getTenantId());
+		    if (log.isDebugEnabled()) {
+		        log.debug("Retrieving the governance registry for tenant: " + this.getTenantId());
+		    }
+		}
 		return registry;
 	}
 	
@@ -118,6 +132,21 @@ public class RegistryBasedTaskRepository implements TaskRepository {
 					Code.CONFIG_ERROR, e);
 		}
 	}
+	
+	private int getTaskCount() throws TaskException {
+		String tasksPath = this.getMyTasksPath();
+		try {
+			if (this.getRegistry().resourceExists(tasksPath)) {
+				Collection tasksCollection = (Collection) this.getRegistry().get(tasksPath);
+				return tasksCollection.getChildCount();
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {			
+			throw new TaskException("Error in getting task count from repository", 
+					Code.CONFIG_ERROR, e);
+		}
+	}
 
 	@Override
 	public TaskInfo getTask(String taskName) throws TaskException {
@@ -144,7 +173,7 @@ public class RegistryBasedTaskRepository implements TaskRepository {
 	}
 
 	@Override
-	public void addTask(TaskInfo taskInfo) throws TaskException {
+	public synchronized void addTask(TaskInfo taskInfo) throws TaskException {
 		String tasksPath = this.getMyTasksPath();
 		String currentTaskPath = tasksPath + "/" + taskInfo.getName();
 		try {
@@ -155,20 +184,28 @@ public class RegistryBasedTaskRepository implements TaskRepository {
 			Resource resource = this.getRegistry().newResource();
 			resource.setContentStream(in);
 			this.getRegistry().put(currentTaskPath, resource);
+			this.getTaskAvailabilityManager().setTasksAvailable(this.getTenantId(), true);
 			this.getRegistry().commitTransaction();
 		} catch (Exception e) {
 			try {
 				this.getRegistry().rollbackTransaction();
+				this.processTasksAvailable();
 			} catch (RegistryException e2) {
 				log.error(e2);
 			}
 			throw new TaskException("Error in adding task '" + taskInfo.getName()
-					+ "' to the repository", Code.CONFIG_ERROR, e);
+					+ "' to the repository: " + e.getMessage(), Code.CONFIG_ERROR, e);
 		}
 	}
 
+	private void processTasksAvailable() throws TaskException {
+		if (this.getTaskCount() == 0) {
+			this.getTaskAvailabilityManager().setTasksAvailable(this.getTenantId(), false);
+		}
+	}
+	
 	@Override
-	public void deleteTask(String taskName) throws TaskException {
+	public synchronized void deleteTask(String taskName) throws TaskException {
 		String tasksPath = this.getMyTasksPath();
 		String currentTaskPath = tasksPath + "/" + taskName;
 		try {
@@ -179,6 +216,7 @@ public class RegistryBasedTaskRepository implements TaskRepository {
 			}
 			this.getRegistry().delete(currentTaskPath);
 			this.getRegistry().commitTransaction();
+			this.processTasksAvailable();
 		} catch (RegistryException e) {
 			try {
 				this.getRegistry().rollbackTransaction();

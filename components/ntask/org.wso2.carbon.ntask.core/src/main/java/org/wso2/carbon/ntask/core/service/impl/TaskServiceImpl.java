@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.coordination.core.services.CoordinationService;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.api.Collection;
@@ -48,6 +50,8 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
  */
 public class TaskServiceImpl implements TaskService {
 
+	private static final Log log = LogFactory.getLog(TaskServiceImpl.class);
+	
 	/**
 	 * The map is used to keep a task manager for each tenant, 
 	 * keyed by the tenant id + task type, task types are for example,
@@ -57,9 +61,12 @@ public class TaskServiceImpl implements TaskService {
 	
 	private Set<String> registeredTaskTypes;
 	
+	private RegistryTaskAvailabilityManager taskAvailabilityManager;
+	
 	public TaskServiceImpl() throws TaskException {
 		this.registeredTaskTypes = new HashSet<String>();
 		this.taskManagerMap = new HashMap<TaskManagerId, TaskManager>();
+		this.taskAvailabilityManager = new RegistryTaskAvailabilityManager();
 		this.initTaskManagers();
 	}
 	
@@ -96,6 +103,10 @@ public class TaskServiceImpl implements TaskService {
 		} finally {
 			SuperTenantCarbonContext.endTenantFlow();
 		}
+	}
+	
+	private RegistryTaskAvailabilityManager getTaskAvailabilityManager() {
+		return taskAvailabilityManager;
 	}
 	
 	private List<String> getTaskTypesForTenant(int tid) throws TaskException {
@@ -140,7 +151,7 @@ public class TaskServiceImpl implements TaskService {
 	private TaskManager createTaskManager(TaskManagerId taskManagerId, boolean isStartup) 
 			throws TaskException {
 		TaskRepository taskRepo = new RegistryBasedTaskRepository(taskManagerId.getTenantId(), 
-				taskManagerId.getTaskType());
+				taskManagerId.getTaskType(), this.getTaskAvailabilityManager());
 		CoordinationService coordinationService = TasksDSComponent.getCoordinationService();
 		TaskManager taskManager;
 		/* if coordination service is enabled, we can handle distributed tasks in a cluster */
@@ -151,8 +162,19 @@ public class TaskServiceImpl implements TaskService {
 			 * fallback to standalone task implementation */
 			taskManager = new StandaloneTaskManager(taskRepo);
 		}
-		/* initially schedule all the tasks */
-		taskManager.scheduleAllTasks();
+		/* if only if this tenant has any tasks, schedule all the tasks */
+		if (this.getTaskAvailabilityManager().checkTasksAvailable(taskManagerId.getTenantId())) {
+		    taskManager.scheduleAllTasks();
+		    if (log.isDebugEnabled()) {
+		        log.debug("Scheduling all tasks in creating a task manager for tenant: " + 
+		                taskManagerId.getTenantId());
+		    }
+		} else {
+			if (log.isDebugEnabled()) {
+			    log.debug("No tasks available to schedule in creating a task manager for tenant: " + 
+			            taskManagerId.getTenantId());
+			}
+		}
 		return taskManager;
 	}
 

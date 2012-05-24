@@ -19,8 +19,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
-import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
 import org.wso2.carbon.url.mapper.internal.util.HostUtil;
+import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -35,44 +35,46 @@ public class UrlMapperValve implements CarbonTomcatValve {
 
     /**
      * This method is called when valve execute
-     * @param request
-     *         HttpServletRequest
-     * @param response
-     *         HttpServletResponse
+     *
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      */
     public void invoke(HttpServletRequest request, HttpServletResponse response) {
         try {
-			process(request, response);
-		} catch (Exception e) {
-			 log.error("error in forwarding the url", e);	
-		}
+            process(request, response);
+        } catch (Exception e) {
+            log.error("error in forwarding the url", e);
+        }
     }
 
     /**
      * @param request
      * @param response
-     * @throws Exception 
-     * @throws UrlMapperException 
+     * @throws Exception
+     * @throws UrlMapperException
      */
-    private void process(HttpServletRequest request, HttpServletResponse response) throws Exception  {
+    private void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
         //  URLMapperService urlMapperService = new URLMapperService();
         String serverName = request.getServerName();
         String queryString = request.getQueryString();
-    	String uri;
-		try {
-			uri = HostUtil.getServiceNameForHost(serverName);
-		} catch (UrlMapperException e1) {
-			 log.error("error in retriving  the service url", e1);
-			 throw e1;
-		}
+        String uri;
+        try {
+            uri = HostUtil.getServiceNameForHost(serverName);
+
+        } catch (UrlMapperException e1) {
+            log.error("error in retriving  the service url", e1);
+            throw e1;
+        }
         if (uri != null) {
             if (queryString != null) {
                 try {
+                    String filterUri;
                     // get the actual service url which is mapping with this
-                    String endUrl = UrlMapperConstants.HostProperties.SERVICE_IDENTIFIER+uri + "?" + queryString;
+                    filterUri = uri.substring(0, uri.length() - 1);
+                    String endUrl = UrlMapperConstants.HostProperties.SERVICE_IDENTIFIER + filterUri + "?" + queryString;
                     RequestDispatcher requestDispatcher = request.getRequestDispatcher(endUrl);
                     requestDispatcher.forward(request, response);
-                  
+
                 } catch (Exception e) {
                     log.error("error in forwarding the url", e);
                     throw e;
@@ -84,7 +86,7 @@ public class UrlMapperValve implements CarbonTomcatValve {
                 try {
 
                     patcher.forward(request, response);
-                   
+
                 } catch (Exception e) {
                     log.error("error in forwarding the url", e);
                     throw e;

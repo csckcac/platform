@@ -15,17 +15,7 @@
  */
 package org.wso2.carbon.url.mapper.internal.util;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.catalina.Container;
-import org.apache.catalina.Context;
-import org.apache.catalina.Engine;
-import org.apache.catalina.Host;
-import org.apache.catalina.LifecycleException;
+import org.apache.catalina.*;
 import org.apache.catalina.core.StandardHost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +28,12 @@ import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * util class which is doing add host to engine and getting resources from the
@@ -55,28 +51,28 @@ public class HostUtil {
      * @return list of mapped hosts.
      * @throws UrlMapperException throws it when failing to get resource from registry
      */
-	public static List<String> getMappingsPerWebApp(String webAppName) throws UrlMapperException {
-		List<String> hostNames = new ArrayList<String>();
-		try {
-			MappingData mappings[] = getAllMappingsFromRegistry();
-			if (mappings != null) {
-				for (MappingData mapping : mappings) {
-					String hostName = mapping.getMappingName();
-					if (!mapping.isServiceMapping() && webAppName.equals(mapping.getUrl())) {
-						hostNames.add(hostName);
-					}
-				}
-			}
-			return hostNames;
-		} catch (Exception e) {
-			log.error("Failed to get url mappings for the webapp ", e);
-			throw new UrlMapperException("Failed to get url mappings for the webapp " + webAppName,
-					e);
-		}
-	}
+    public static List<String> getMappingsPerWebApp(String webAppName) throws UrlMapperException {
+        List<String> hostNames = new ArrayList<String>();
+        try {
+            MappingData mappings[] = getAllMappingsFromRegistry();
+            if (mappings != null) {
+                for (MappingData mapping : mappings) {
+                    String hostName = mapping.getMappingName();
+                    if (!mapping.isServiceMapping() && webAppName.equals(mapping.getUrl())) {
+                        hostNames.add(hostName);
+                    }
+                }
+            }
+            return hostNames;
+        } catch (Exception e) {
+            log.error("Failed to get url mappings for the webapp ", e);
+            throw new UrlMapperException("Failed to get url mappings for the webapp " + webAppName,
+                    e);
+        }
+    }
 
     /**
-     *  Find out whether the hostname exists already
+     * Find out whether the hostname exists already
      *
      * @param mappingName the host name to be mapped
      * @return Whether the hostname is valid or not
@@ -96,8 +92,8 @@ public class HostUtil {
         }
         return isExist;
     }
-    
-    
+
+
     /**
      * retrieving all hosts from registry.
      *
@@ -110,12 +106,12 @@ public class HostUtil {
             // get all virtual host from the registry
             MappingData mappings[] = getAllMappingsFromRegistry();
             if (mappings != null) {
-               for (MappingData mapping : mappings) {
-                	String hostName = mapping.getMappingName().replace(UrlMapperConstants.HostProperties.FILE_SERPERATOR
-                	        + UrlMapperConstants.HostProperties.HOSTINFO , "");                	
-                	if (!mapping.isServiceMapping()) {
-                		  allHosts.add(hostName);
-                	}
+                for (MappingData mapping : mappings) {
+                    String hostName = mapping.getMappingName().replace(UrlMapperConstants.HostProperties.FILE_SERPERATOR
+                            + UrlMapperConstants.HostProperties.HOSTINFO, "");
+                    if (!mapping.isServiceMapping()) {
+                        allHosts.add(hostName);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -124,19 +120,18 @@ public class HostUtil {
         }
         return allHosts;
     }
-    
-    
-	public static MappingData[] getAllMappingsFromRegistry() throws UrlMapperException {
-		try {
-			// get all URL mapping information.
-			return registryManager.getAllMappingsFromRegistry();
-		} catch (Exception e) {
-			log.error("Failed to get all hosts ", e);
-			throw new UrlMapperException("Failed to get all url mappings from the registry ", e);
-		}
-	}
-   
-   
+
+
+    public static MappingData[] getAllMappingsFromRegistry() throws UrlMapperException {
+        try {
+            // get all URL mapping information.
+            return registryManager.getAllMappingsFromRegistry();
+        } catch (Exception e) {
+            log.error("Failed to get all hosts ", e);
+            throw new UrlMapperException("Failed to get all url mappings from the registry ", e);
+        }
+    }
+
 
     /**
      * This method is used to retrieve list of host names for a given
@@ -146,28 +141,27 @@ public class HostUtil {
      * @return list of mapped hosts.
      * @throws UrlMapperException
      */
-	public static List<String> getMappingsPerEppr(String url) throws UrlMapperException {
-		List<String> hostNames = new ArrayList<String>();
-		if (isServiceURLPattern(url)) {
-			url = getServiceEndpoint(url);
-			try {
-				MappingData mappings[] = getAllMappingsFromRegistry();
-				if (mappings != null) {
-					for (MappingData mapping : mappings) {
-						String hostName = mapping.getMappingName().substring(
-								UrlMapperConstants.HostProperties.HOSTINFO_DIR.length());
-						if (mapping.isServiceMapping() && url.equals(mapping.getUrl())) {
-							hostNames.add(hostName);
-						}
-					}
-				}
-			} catch (Exception e) {
-				log.error("Failed to get url mappings for the webapp " + url, e);
-				throw new UrlMapperException("Failed to get url mappings for the webapp " + url, e);
-			}
-		}
-		return hostNames;
-	}
+    public static List<String> getMappingsPerEppr(String url) throws UrlMapperException {
+        List<String> hostNames = new ArrayList<String>();
+        if (isServiceURLPattern(url)) {
+            url = getServiceEndpoint(url);
+            try {
+                MappingData mappings[] = getAllMappingsFromRegistry();
+                if (mappings != null) {
+                    for (MappingData mapping : mappings) {
+                        String hostName = mapping.getMappingName();
+                        if (mapping.isServiceMapping() && url.equals(mapping.getUrl())) {
+                            hostNames.add(hostName);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                log.error("Failed to get url mappings for the webapp " + url, e);
+                throw new UrlMapperException("Failed to get url mappings for the webapp " + url, e);
+            }
+        }
+        return hostNames;
+    }
 
     /**
      * retrieving host for a specific service
@@ -191,7 +185,7 @@ public class HostUtil {
      * /repository/../webapps and redeploy it within added virtual host.
      *
      * @param hostName The virtual host name
-     * @param uri The web app to be deployed in the virtual host
+     * @param uri      The web app to be deployed in the virtual host
      * @throws org.wso2.carbon.url.mapper.internal.exception.UrlMapperException
      *          When adding directory throws an Exception
      */
@@ -202,7 +196,7 @@ public class HostUtil {
         String webAppPath;
         // if the request if from tenant
         {
-			if (MultitenantUtils.getTenantDomainFromRequestURL(uri) != null) {
+            if (MultitenantUtils.getTenantDomainFromRequestURL(uri) != null) {
                 tenantDomain = MultitenantUtils.getTenantDomainFromRequestURL(uri);
                 TenantManager tenantManager = DataHolder.getInstance().getRealmService()
                         .getTenantManager();
@@ -220,7 +214,7 @@ public class HostUtil {
                         + UrlMapperConstants.HostProperties.WEB_APPS + "/" + webAppFile;
 
             } else {
-            	tenantDomain = "super-tenant";
+                tenantDomain = "super-tenant";
                 webAppFile = getContextFromUri(uri) + UrlMapperConstants.HostProperties.WAR;
                 webAppPath = CarbonUtils.getCarbonRepository()
                         + UrlMapperConstants.HostProperties.WEB_APPS + "/" + webAppFile;
@@ -228,12 +222,12 @@ public class HostUtil {
         }
         Host host = addHostToEngine(hostName);
         try {
-    
+
             // deploying the copied webapp as the root in our own host directory
             /* TODO add listeners once integrate with webapp-mgt */
             DataHolder.getInstance().getCarbonTomcatService().addWebApp(host, "/", webAppPath);
             // add entry to registry with the tenant domain if exist in the uri if adding virtual host is successful.
-            registryManager.addHostToRegistry(hostName, uri,tenantDomain);
+            registryManager.addHostToRegistry(hostName, uri, tenantDomain);
 
         } catch (Exception e) {
             log.error("error in adding the virtual host to tomcat engine", e);
@@ -284,8 +278,8 @@ public class HostUtil {
      * edit the existing host with the given name
      *
      * @param webAppName the associated webapp name of the host to be edited
-     * @param oldHost the existing hostname to be edited
-     * @param newHost the hostname given
+     * @param oldHost    the existing hostname to be edited
+     * @param newHost    the hostname given
      * @throws UrlMapperException throws when error while removing oldHost or adding newHost
      */
     public static void editHostInEngine(String webAppName, String newHost, String oldHost)
@@ -299,7 +293,7 @@ public class HostUtil {
      *
      * @param hostName name of the host to be removed
      * @throws UrlMapperException throws when error while removing
-     *                  context or host from engine and from registry
+     *                            context or host from engine and from registry
      */
     public static void removeHostFromEngine(String hostName)
             throws UrlMapperException {
@@ -352,19 +346,19 @@ public class HostUtil {
      * @throws UrlMapperException
      */
     public static void addDomainToServiceEpr(String hostName, String url) throws UrlMapperException {
-        
-    	// if the request if from tenant
-		String tenantDomain = "";
-		if (MultitenantConstants.TENANT_AWARE_URL_PREFIX.contains(url)) {
-			tenantDomain = MultitenantUtils.getTenantDomainFromRequestURL(url);
-		}
 
-    	if (isServiceURLPattern(url)) {
+        // if the request if from tenant
+        String tenantDomain = "";
+        if (MultitenantConstants.TENANT_AWARE_URL_PREFIX.contains(url)) {
+            tenantDomain = MultitenantUtils.getTenantDomainFromRequestURL(url);
+        }
+
+        if (isServiceURLPattern(url)) {
             url = getServiceEndpoint(url);
         }
         try {
             // add entry to registry with the tenant domain if exist in the uri
-            registryManager.addEprToRegistry(hostName, url,tenantDomain);
+            registryManager.addEprToRegistry(hostName, url, tenantDomain);
         } catch (Exception e) {
             log.error("error in adding the domain to the resitry", e);
             throw new UrlMapperException("error in adding the domain to the resitry");
@@ -456,13 +450,13 @@ public class HostUtil {
      */
     public static boolean isValidHost(String domain) throws UrlMapperException {
         try {
-        	MappingData mappings[] = getAllMappingsFromRegistry();
+            MappingData mappings[] = getAllMappingsFromRegistry();
             if (mappings != null) {
-            	for (MappingData mapping : mappings) {
+                for (MappingData mapping : mappings) {
                     String hostName = mapping.getMappingName().substring(UrlMapperConstants.HostProperties.HOSTINFO_DIR
                             .length());
                     if (hostName.equals(domain)) {
-                    	  return true;
+                        return true;
                     }
                 }
             }

@@ -13,7 +13,7 @@
                                            style="background-image: url(images/default-menu-icon.gif);">List</a>
                                     </li>
                                     <li>
-                                        <a href="createNewProject.jag" class="menu-default"
+                                        <a href="createNewApplication.jag" class="menu-default"
                                            style="background-image: url(images/default-menu-icon.gif);">Add</a>
                                     </li>
                                 </ul>

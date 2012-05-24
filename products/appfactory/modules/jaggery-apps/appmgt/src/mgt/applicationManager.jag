@@ -1,22 +1,22 @@
 <%
     include('../process/webServiceUtil.jag');
 
-    function createNewProject(projectKey, projectName, projectDescription, userName) {
+    function createNewApplication(applicationKey, applicationName, applicationDescription, userName) {
         try {
-            var result = createProject(projectKey, projectName, projectDescription);
+            var result = createApplication(applicationKey, applicationName, applicationDescription);
             if( result != null) {
                 return result;
             } else {
-                throw "Error while creating the project";
+                throw "Error while creating the application";
             }
         } catch(e) {
-            throw "Error while creating the project";
+            throw "Error while creating the application";
         }
     }
 
-    function createProjectRepository(projectKey){
+    function createApplicationRepository(applicationKey){
         try {
-            var result = createRepository(projectKey);
+            var result = createRepository(applicationKey);
             if( result != null) {
                 var repoLink = null;
                 repoLink = result.split("<ns:return>")[1].split("</ns:return>")[0];
@@ -29,9 +29,9 @@
         }
     }
 
-    function inviteUserToProject(projectKey, requestersUsername, newUsername, newUserRole) {
+    function inviteUserToApplication(applicationKey, requestersUsername, newUsername, newUserRole) {
         try {
-            var result = addUserToProject(projectKey, requestersUsername, newUsername, newUserRole);
+            var result = addUserToApplication(applicationKey, requestersUsername, newUsername, newUserRole);
             if( result != null) {
                 return result;
             } else {
@@ -42,9 +42,9 @@
         }
     }
 
-    function getUserRolesForProject(projectKey, userName,address) {
+    function getUserRolesForApplication(applicationKey, userName,address) {
         try {
-            var result = getRoles(projectKey, userName,address);
+            var result = getRoles(applicationKey, userName,address);
             if( result != null) {
                 var roleArray = result.*::["return"].text();
                 return roleArray;
@@ -56,16 +56,16 @@
         }
     }
 
-    function getUsersOfProject(projectKey) {
+    function getUsersOfApplication(applicationKey) {
         try {
-            var result = getUsers(projectKey);
+            var result = getUsers(applicationKey);
             if( result != null) {
                 return result;
             } else {
-                throw "Error while retrieving users of project";
+                throw "Error while retrieving users of application";
             }
         } catch(e) {
-            throw "Error while retrieving users of project";
+            throw "Error while retrieving users of application";
         }
     }
 
@@ -83,24 +83,24 @@
         }
     }
 
-    // check whether the logged in user plays any role in the given project
-    function isUserInProject(projectKey, userName,address) {
+    // check whether the logged in user plays any role in the given application
+    function isUserInApplication(applicationKey, userName,address) {
         try {
-            var roleArray = getUserRolesForProject(projectKey, userName,address);
+            var roleArray = getUserRolesForApplication(applicationKey, userName,address);
             if(roleArray.length() > 0) {
                 return true;
             } else {
                 return false;
             }
         } catch(e) {
-            throw "Error while checking user access to project";
+            throw "Error while checking user access to application";
         }
     }
 
-    // checks whether the logged in user is the owner of the given project
-    function isOwner(projectKey, userName,address) {
+    // checks whether the logged in user is the owner of the given application
+    function isOwner(applicationKey, userName,address) {
         try {
-            var roleArray = getUserRolesForProject(projectKey, userName,address);
+            var roleArray = getUserRolesForApplication(applicationKey, userName,address);
             log("roleArray :"+roleArray);
             log("roleArray length : "+roleArray.length());
             var isOwner = false;
@@ -112,13 +112,13 @@
             }
             return isOwner;
         } catch(e) {
-            throw "Error while checking ownership of project";
+            throw "Error while checking ownership of application";
         }
     }
 
-    function isUserADevOp(projectKey, userName,address) {
+    function isUserADevOp(applicationKey, userName,address) {
         try {
-            var roleArray = getUserRolesForProject(projectKey, userName,address);
+            var roleArray = getUserRolesForApplication(applicationKey, userName,address);
             log("roleArray :"+roleArray);
             log("roleArray length : "+roleArray.length());
             var isADevOp = false;
@@ -129,7 +129,7 @@
             }
             return isADevOp;
         } catch(e) {
-            throw "Error while checking ownership of project";
+            throw "Error while checking ownership of application";
         }
     }
 

@@ -14,7 +14,7 @@
     %>
     <h1>LogOut From current session</h1>
 
-    <form id='sampleform' method='post' action='createNewProjectSubmit.jag'>
+    <form id='sampleform' method='post' action='createNewApplicationSubmit.jag'>
         <table id="table1">
             <tr class="data" id="row5">
             <tr>

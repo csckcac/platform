@@ -1216,7 +1216,7 @@ function updateWaitAnimation() {
     }
 }
 /* History tracking code
-   Underline project has to implement handleHistoryChange function.
+   Underline application has to implement handleHistoryChange function.
 */
 /* private */
 function initialize() {

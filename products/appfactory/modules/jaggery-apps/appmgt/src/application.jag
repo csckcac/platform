@@ -26,14 +26,14 @@
     });
 </script>
 <%
-    var projectName = request.getParameter("projectName");
-    var projectKey = request.getParameter("projectKey");
+    var applicationName = request.getParameter("applicationName");
+    var applicationKey = request.getParameter("applicationKey");
 
-    include('mgt/projectManager.jag');
+    include('mgt/applicationManager.jag');
     var userHasAccess = false;
     try {
         // userName variable is taken from template_header.jag
-        userHasAccess = isUserInProject(projectKey, userName,request.getRemoteAddr());
+        userHasAccess = isUserInApplication(applicationKey, userName,request.getRemoteAddr());
     } catch (e) {
         log (e);
     }
@@ -41,8 +41,8 @@
         var userIsOwner = false;
         var isADevOp = false;
         try {
-            userIsOwner = isOwner(projectKey, userName,request.getRemoteAddr());
-            isADevOp = isUserADevOp(projectKey, userName,request.getRemoteAddr());
+            userIsOwner = isOwner(applicationKey, userName,request.getRemoteAddr());
+            isADevOp = isUserADevOp(applicationKey, userName,request.getRemoteAddr());
             print("isDevOp "+isADevOp);
 
             // TODO remove this assignment when the devOp UI is ready ********
@@ -57,18 +57,18 @@
         <div id="middle">
             <div id="workArea">
                 <%
-                    if (projectName != null && projectKey != null) {
+                    if (applicationName != null && applicationKey != null) {
                 %>
-                    <h2><%= projectName%>
+                    <h2><%= applicationName%>
                 </h2>
                 <%
         //                //temp code
         //                var registry = new Registry("SYSTEM_CONFIGURATION");
-        //                log("registry.get(projects/projectKey) ===> " + projectKey);
-        //                var resource = registry.get("projects/" + projectKey);
-        //                var projectSVN = resource.getProperty("repoLink");
+        //                log("registry.get(applications/applicationKey) ===> " + applicationKey);
+        //                var resource = registry.get("applications/" + applicationKey);
+        //                var applicationSVN = resource.getProperty("repoLink");
                         include('mgt/registryAccessManager.jag');
-                        var projectSVN = getRepositoryPath(projectKey);
+                        var applicationSVN = getRepositoryPath(applicationKey);
                 %>
                     <!-- Including the tabbed navigation -->
                     <div id="pageTabs" class="page-tabs">
@@ -90,15 +90,15 @@
                     </div>
                     <div style="clear:both"></div>
         
-                    <!-- information common to all project users -->
+                    <!-- information common to all application users -->
                     <div class="content-box" id="overview">
-                        <h3>Project overview</h3>
+                        <h3>Application overview</h3>
         
                         <div>
                             <table>
                                 <tr>
                                     <td>SVN location:</td>
-                                    <td><%= projectSVN%>
+                                    <td><%= applicationSVN%>
                                     </td>
                                 </tr>
                             </table>
@@ -118,8 +118,8 @@
                         <table class="styledLeft">
                             <tr>
                                 <td class="buttonRow">
-                                    <input type="button" onclick="location.href='inviteUser.jag?projectName=<%=projectName%>&projectKey=<%=projectKey%>'" value='Invite User' class='button'/>
-                                    <input type="button" onclick="location.href='approvals.jag?projectName=<%=projectName%>&projectKey=<%=projectKey%>'" value='Pending Approvals' class='button'/>
+                                    <input type="button" onclick="location.href='inviteUser.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Invite User' class='button'/>
+                                    <input type="button" onclick="location.href='approvals.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Pending Approvals' class='button'/>
                                 </td>
                             </tr>
                         </table>
@@ -151,7 +151,7 @@
 
     } else {
         %>
-            <p>Access denied for the project <%=projectName%></p>
+            <p>Access denied for the application <%=applicationName%></p>
         <%
     }
             %>

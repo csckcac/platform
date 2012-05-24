@@ -1,13 +1,13 @@
 <%
     include('includes/template_header.jag');
 
-    var projectKey = request.getParameter("projectKey");
-    var projectName = request.getParameter("projectName");
+    var applicationKey = request.getParameter("applicationKey");
+    var applicationName = request.getParameter("applicationName");
 %>
 <div id="middle">
     <h3>Pending Approvals</h3>
 
-    <h2><%= projectName%>
+    <h2><%= applicationName%>
     </h2>
 
     <div id="workArea">
@@ -31,10 +31,10 @@
                 <td><%=desc%>
                 </td>
                 <td><input type="button" class="button"
-                           onclick="location.href='approvalResultSubmit.jag?result=approved&taskKey=<%=taskKey%>&projectKey=<%=projectKey%>'"
+                           onclick="location.href='approvalResultSubmit.jag?result=approved&taskKey=<%=taskKey%>&applicationKey=<%=applicationKey%>'"
                            value="Approve"/>
                     <input type="button" class="button"
-                           onclick="location.href='approvalResultSubmit.jag?result=rejected&taskKey=<%=taskKey%>&projectKey=<%=projectKey%>'"
+                           onclick="location.href='approvalResultSubmit.jag?result=rejected&taskKey=<%=taskKey%>&applicationKey=<%=applicationKey%>'"
                            value="Reject"/>
                 </td>
             </tr>

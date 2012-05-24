@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>WSO2 Project Management Tool</title>
+    <title>WSO2 Application Management Tool</title>
 </head>
 <body>
 
@@ -48,11 +48,11 @@
                 body element is terminated appropriately in the template_footer.jag file-->
 
 <div id="middle">
-    <h2>SignUp for Project Management Tool</h2>
+    <h2>SignUp for Application Management Tool</h2>
 
     <div id="workArea">
         <form method='post' name="inputData">
-            <table class="styledLeft" id="projectInputTbl">
+            <table class="styledLeft" id="applicationInputTbl">
                 <thead>
                 <tr>
                     <th colspan="2">Please enter the following information.</th>

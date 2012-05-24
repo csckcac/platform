@@ -1,15 +1,15 @@
 <%
     // collection names
-    var PROJECTS = "projects/";
-    var USER_PROJECTS_MAPPING = "userProjectMapping/";
+    var PROJECTS = "applications/";
+    var USER_PROJECTS_MAPPING = "userApplicationMapping/";
 
-    // property keys of registry 'project' resource
-    var PROJECT_KEY = "projectKey";
-    var PROJECT_NAME = "projectName";
-    var PROJECT_DESC = "projectDescription";
+    // property keys of registry 'application' resource
+    var PROJECT_KEY = "applicationKey";
+    var PROJECT_NAME = "applicationName";
+    var PROJECT_DESC = "applicationDescription";
     var REPO_LINK = "repoLink";
 
-    // property keys of registry 'userProjectMapping' resource
-    var PROJECT_LIST = "projects";
+    // property keys of registry 'userApplicationMapping' resource
+    var PROJECT_LIST = "applications";
 
 %>

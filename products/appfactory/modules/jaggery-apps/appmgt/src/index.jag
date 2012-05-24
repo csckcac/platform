@@ -7,12 +7,12 @@
     <div id="workArea">
         <%
             include('process/webServiceUtil.jag');
-            var projectList = getAllApps(request.getRemoteAddr());
-            for (var s in projectList) {
-                var projectKey = projectList[s];
-                var projectName =projectList[s];
+            var applicationList = getAllApps(request.getRemoteAddr());
+            for (var s in applicationList) {
+                var applicationKey = applicationList[s];
+                var applicationName =applicationList[s];
         %>
-        <a href="project.jag?projectName=<%=projectName%>&projectKey=<%=projectKey%>"><%=projectName%></a>
+        <a href="application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>"><%=applicationName%></a>
         </br>
         <%
             }

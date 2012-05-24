@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>WSO2 Project Management Tool</title>
+    <title>WSO2 Application Management Tool</title>
 </head>
 <body>
  <%
@@ -48,7 +48,7 @@
        if(invokeUserActivationProcess(confirmationObject.admin,confirmationObject.email,confirmationObject.confirmationKey)){
        %>
         <div style="margin:20px">You have successfully validated your email address and the contact information associated with your WSO2
-            Cloud Services account is updated. Click <a href="../appmgt/index.jag">here</a> to access WSO2 Appfactory Project Manager.
+            Cloud Services account is updated. Click <a href="../appmgt/index.jag">here</a> to access WSO2 Appfactory Application Manager.
         </div>
        <%
        }else{

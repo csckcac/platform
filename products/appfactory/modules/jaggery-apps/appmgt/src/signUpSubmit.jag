@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>WSO2 Project Management Tool</title>
+    <title>WSO2 Application Management Tool</title>
 </head>
 <body>
 
@@ -46,7 +46,7 @@
     <div id="workArea">
         <%
             //print("--submitting signup request--");
-            include('mgt/projectManager.jag');
+            include('mgt/applicationManager.jag');
             try {
                 var result = createUserAccount(userID, password, email, firstName, lastName);
                 %>

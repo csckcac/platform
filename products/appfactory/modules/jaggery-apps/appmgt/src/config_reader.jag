@@ -14,16 +14,16 @@ function getPropertyTemp(expression) {
            return appFactoryConfigReader.getSsoIdentityAlias();
         case "sso.keyStoreName":
           return appFactoryConfigReader.getSsoKeyStoreName();
-        case "webService.addUserToProject":
-           return appFactoryConfigReader.getWebServiceEPRAddUserToProject();
-        case "webService.createProject":
-           return appFactoryConfigReader.getWebServiceEPRCreateProject();
+        case "webService.addUserToApplication":
+           return appFactoryConfigReader.getWebServiceEPRAddUserToApplication();
+        case "webService.createApplication":
+           return appFactoryConfigReader.getWebServiceEPRCreateApplication();
         case "webService.createRepo":
           return appFactoryConfigReader.getWebServiceEPRCreateRepo();
-        case "webService.getRolesOfUserForProject":
-           return appFactoryConfigReader.getWebServiceEPRGetRolesOfUserForProject();
-        case "webService.getUsersOfProject":
-           return appFactoryConfigReader.getWebServiceEPRGetUsersOfProject();
+        case "webService.getRolesOfUserForApplication":
+           return appFactoryConfigReader.getWebServiceEPRGetRolesOfUserForApplication();
+        case "webService.getUsersOfApplication":
+           return appFactoryConfigReader.getWebServiceEPRGetUsersOfApplication();
         case "bpel.createUser":
           return appFactoryConfigReader.getWebServiceEPRCreateUser();
         case "webService.emailVarificationService":

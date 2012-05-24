@@ -3,16 +3,16 @@
 
     var result = request.getParameter("result");
     var taskKey = request.getParameter("taskKey");
-    var projectKey = request.getParameter("projectKey");
+    var applicationKey = request.getParameter("applicationKey");
 %>
 <div id="middle">
     <h3>Pending Approvals</h3>
     <div id="workArea">
         <%
             if (result == "approved") {
-                print("task approved " + taskKey + " for project key " + projectKey);
+                print("task approved " + taskKey + " for application key " + applicationKey);
             } else {
-                print("task rejected" + taskKey + " for project key " + projectKey);
+                print("task rejected" + taskKey + " for application key " + applicationKey);
             }
         %>
     </div>

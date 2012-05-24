@@ -3,7 +3,7 @@
          xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
-    <display-name>project-mgt-tool</display-name>
+    <display-name>application-mgt-tool</display-name>
 
 
     <welcome-file-list>

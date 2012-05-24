@@ -62,7 +62,7 @@ public class StratosGSServiceTest {
         gsHostName = gsServer.getProductVariables().getHostName();
     }
 
-    @Test()
+    @Test(groups = "stratos.regression", description = "add a gadget")
     public void gadgetTest() throws MalformedURLException, RegistryException, RemoteException,
                                     ResourceAdminServiceExceptionException {
         String gsServerHostName = gsHostName;
@@ -79,7 +79,8 @@ public class StratosGSServiceTest {
         FileDataSource gadgetFileDataSource = new FileDataSource(gadgetFile);
         log.info(gadgetFile);
         DataHandler dataHandler = new DataHandler(gadgetFileDataSource);
-        AdminServiceGadgetDashbordService dashbordService = new AdminServiceGadgetDashbordService();
+        AdminServiceGadgetDashbordService dashboardService = new
+                                                                     AdminServiceGadgetDashbordService();
         AdminServiceGadgetRepositoryService repositoryService = new AdminServiceGadgetRepositoryService();
 
         //Define parameters
@@ -117,7 +118,7 @@ public class StratosGSServiceTest {
             log.info("Add gadget to user's portal test");
 
             String newtabTitle = "newTab";
-            int addtabID = dashbordService.addNewTab(dashboardServiceStub, userID, newtabTitle, dashboardName);
+            int addtabID = dashboardService.addNewTab(dashboardServiceStub, userID, newtabTitle, dashboardName);
             if (addtabID == 0) {
                 log.error("Failed to add new tab");
                 Assert.fail("Failed to add new tab");
@@ -125,9 +126,9 @@ public class StratosGSServiceTest {
 
                 String tabIdValue = "" + addtabID;
                 // Populate Default Three Column Layout(This need before delete)
-                dashbordService.populateDefaultThreeColumnLayout(dashboardServiceStub, userID, tabIdValue);
+                dashboardService.populateDefaultThreeColumnLayout(dashboardServiceStub, userID, tabIdValue);
                 // Get tab title test
-                String addedTab = dashbordService.getTabTitle(dashboardServiceStub, userID, tabIdValue, dashboardName, newtabTitle);
+                String addedTab = dashboardService.getTabTitle(dashboardServiceStub, userID, tabIdValue, dashboardName, newtabTitle);
                 // Add gadget to user test
                 repositoryService.addGadgetToPortal(gadgetRepoServiceStub, userID, addedTab, gadgetUrl, dashboardName, gadgetGroup,
                                                     gadgetPath);
@@ -139,9 +140,9 @@ public class StratosGSServiceTest {
                 repositoryService.getCommentCountForGadget(gadgetRepoServiceStub, gadgetPath);
                 log.info(" Get comment set on a gadget test ");
 
-                dashbordService.addGadgetToUser(dashboardServiceStub, userID, tabIdValue, gadgetUrl, dashboardName, gadgetGroup);
+                dashboardService.addGadgetToUser(dashboardServiceStub, userID, tabIdValue, gadgetUrl, dashboardName, gadgetGroup);
                 // Remove added tab test
-                dashbordService.removeTab(dashboardServiceStub, userID, tabIdValue, dashboardName);
+                dashboardService.removeTab(dashboardServiceStub, userID, tabIdValue, dashboardName);
             }
             log.info("Add rating on gadget test");
             repositoryService.addRatingForGadget(gadgetRepoServiceStub, gadgetPath, rating, String.valueOf(addtabID), gadgetGroup);
@@ -150,7 +151,7 @@ public class StratosGSServiceTest {
             log.info(" Delete the added gadget from repository test ");
             repositoryService.deleteGadgetFromRepo(gadgetRepoServiceStub, gadgetPath);
             log.info("Remove the added Tab");
-            dashbordService.removeTab(dashboardServiceStub, userID, newtabTitle, dashboardName);
+            dashboardService.removeTab(dashboardServiceStub, userID, newtabTitle, dashboardName);
         }
 
     }

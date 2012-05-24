@@ -21,6 +21,8 @@
         </li>
     <% } %>
     </ul>
+    <div class="corner-maker-left"></div>
+
     <div class="tab-content">
     <%
     for(i = 0; i < length; i++) {

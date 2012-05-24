@@ -1,5 +1,10 @@
 <% jagg.template("tag/tag-cloud", function(inputs, outputs, jagg) { %>
 <div id="tag-cloud">
+    <ul class="nav nav-tabs pull-right">
+        <li><a href="#tab1" class="bevel-from-right active">Tags</a><div class="corner-maker-right"></div></li>
+    </ul>
+    <div class="clear"></div>
+<div class="tag-content">
 <ul class="list-main">
     <li class="list-header">
         Tag Cloud
@@ -35,5 +40,6 @@
     </li>
 
     </ul>
+    </div>
 </div>
 <% }); %>

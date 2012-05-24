@@ -1,5 +1,5 @@
 <% jagg.template("subscription/subscription-list", function(inputs, outputs, jagg) { %>
-<div class="subscription-listing">
+<div class="subscription-listing" style="margin-top:22px;">
     <%
     var i, j, app, api, apis, key, lenI, clazz, lenJ, path, apps = outputs.applications, lenI = apps.length;
     for(i = 0; i < lenI; i++) {
@@ -26,14 +26,12 @@
                     %>
 
                     <tr class="application-api <%=clazz%>">
-                        <td>
+                        <td class="application-thumb">
                              <a href="<%=path%>"><img alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/modern/images/api-default.png<% }%>"/></a>
                         </td>
                         <td>
                             <a href="<%=path%>" class="service-name"><%=api.name%>-<%=api.version%></a>
-                        </td>
-                        <td>
-                            <%=api.provider%>
+                            <div class="item-provider"><%=api.provider%></div>
                         </td>
                         <td class="api-key-cell">
                         <div class="api-key-listing">

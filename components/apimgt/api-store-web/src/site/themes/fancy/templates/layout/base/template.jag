@@ -45,7 +45,7 @@
                 <% jagg.includeBlocks(outputs.middle); %>
            </div>
 
-           <div class="span3">
+           <div class="span3 section-shifter-left">
                <% jagg.includeBlocks(outputs.right); %>
            </div>
 

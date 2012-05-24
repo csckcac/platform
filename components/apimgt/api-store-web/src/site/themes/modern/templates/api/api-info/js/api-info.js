@@ -1,7 +1,6 @@
 $(document).ready(function () {
     $("#subscribe-button").click(function () {
         if (!jagg.loggedIn) {
-            $("#login-form").dialog("open");
             return;
         }
         var applicationId = $("#application-list").val();
@@ -10,6 +9,9 @@ $(document).ready(function () {
             return;
         }
         var api = jagg.api;
+
+        $(this).html('Please wait...').attr('disabled', 'disabled');
+
         jagg.post("/site/blocks/subscription/subscription-add/ajax/subscription-add.jag", {
             action:"addSubscription",
             applicationId:applicationId,
@@ -18,15 +20,40 @@ $(document).ready(function () {
             provider:api.provider,
             tier:api.tier
         }, function (result) {
+            $("#subscribe-button").html('Subscribe');
+            $("#subscribe-button").removeAttr('disabled');
             if (result.error == false) {
                 window.location.reload();
             } else {
-                $("#subscribe-button").html('Subscribe').addClass('green').removeClass('disabled').removeAttr('disabled');
                 jagg.message(result.message);
+
+
+                 //$('#messageModal').html($('#confirmation-data').html());
+                 /*$('#messageModal h3.modal-title').html('API Provider');
+                        $('#messageModal div.modal-body').html('\n\nSuccessfully subscribed to the API.\n Do you want to go to the subscription page?');
+                        $('#messageModal a.btn-primary').html('Yes');
+                        $('#messageModal a.btn-other').html('No');
+                        *//*$('#messageModal a.btn-other').click(function(){
+                            v.resetForm();
+                        });*//*
+                        $('#messageModal a.btn-primary').click(function() {
+                            var current = window.location.pathname;
+                            if (current.indexOf(".jag") >= 0) {
+                                location.href = "index.jag";
+                            } else {
+                                location.href = 'site/pages/index.jag';
+                            }
+                        });*/
+//                        $('#messageModal').modal();
+
+
+
+
+
+
             }
         }, "json");
 
-        $(this).html('Please wait...').removeClass('green').addClass('disabled').attr('disabled', 'disabled');
     });
     $('#application-list').change(
             function(){

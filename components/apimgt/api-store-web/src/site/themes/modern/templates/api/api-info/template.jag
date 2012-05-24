@@ -11,7 +11,7 @@
     <div class="row-fluid">
     <div class="span12">
         <div class="span2">
-            <img src="<%=thumbURL%>">
+            <img src="<%=thumbURL%>" width="100">
             <h5><%=api.provider%></h5>
         </div>
         <div class="span6">
@@ -47,21 +47,21 @@
                      if(user && apps) {
                          length = apps.length;
                      %>
-                     <select id="application-list" class="fancy">
-                         <option value="-">Select Application...</option>
-                         <option value="createNewApp">Create Application...</option>
-                         <optgroup label="______________________">
-                             <%
-                             for(i = 0; i < length; i++) {
-                             app = apps[i];
-                             %>
-                             <option value="<%=app.id%>"><%=app.name%></option>
-                             <% } %>
-                         </optgroup>
+                     <select id="application-list" class="modern">
+                            <option value="-">Select Application...</option>
+                            <option value="createNewApp">New Application...</option>
+                            <optgroup label="My Applications">
+                                <%
+                                for(i = 0; i < length; i++) {
+                                app = apps[i];
+                                %>
+                                <option value="<%=app.id%>"><%=app.name%></option>
+                                <% } %>
+                            </optgroup>
 
-                     </select>
+                        </select>
                      <% } %>
-                         <div class="simple-space-maker"><button id="subscribe-button" class="btn btn-primary">Subscribe</button></div>
+                         <div class="simple-space-maker"><button id="subscribe-button" class="btn btn-primary <% if(!user) { %>need-login<% } %>">Subscribe</button></div>
              <% } %>
 
         </div>

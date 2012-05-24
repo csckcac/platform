@@ -5,11 +5,7 @@
 
 
     <!-- Le styles -->
-    <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    </style>
+
 
     <title><%=outputs.title%></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,16 +41,15 @@
 </head>
 <body>
 <% jagg.includeJag("templates/page/base/dialog-box.jag"); %>
-<div id="header">
-    <% jagg.includeBlock("menu/primary", {"pagePath":outputs.pagePath}); %>
-</div>
 
-<div class="container page-header-back">
+<% jagg.includeBlock("menu/primary", {"pagePath":outputs.pagePath}); %>
+
+<div class="container-fluid page-header-back">
     <% jagg.includeBlocks(outputs.body); %>
     <div class="clear"></div>
 </div>
 <footer>
-     <div class="container">
+     <div class="container-fluid">
         <div class="row">
             <div class="span6">&copy; Copyright 2011–2012 All Rights Reserved.</div>
             <div class="pull-right"><a class="powered-by-logo"></a></div>
@@ -84,7 +79,7 @@ if(data.footer) {
 <script src="<%=jagg.getAbsoluteUrl("/site/themes/modern/js/lib/bootstrap/js/bootstrap-collapse.js")%>"></script>
 <script src="<%=jagg.getAbsoluteUrl("/site/themes/modern/js/lib/bootstrap/js/bootstrap-carousel.js")%>"></script>
 <script src="<%=jagg.getAbsoluteUrl("/site/themes/modern/js/lib/bootstrap/js/bootstrap-typeahead.js")%>"></script>
-
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/modern/js/lib/jquery.corner.js")%>"></script>
 </body>
 </html>
 <% }); %>

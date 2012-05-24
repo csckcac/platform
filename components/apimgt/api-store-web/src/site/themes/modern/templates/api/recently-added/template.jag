@@ -20,9 +20,9 @@
                                <img src="<%=thumbURL%>" width="70px"/>
                            </div>
                            <div class="span8">
-                               <a data-content="#tooltipcontentID1" href="<%=path%>" class="title">
+                               <a data-content="#tooltipcontentID1" href="<%=path%>" class="title" title="<%=api.name%>">
                                    <%=api.name%></a>
-                               <div><a data-content="#tooltipcontentID1" class="item-provider">Ondango API</a></div>
+                               <div><a class="item-provider"><%=api.provider%></a></div>
                            </div>
                        </div>
                    </li>

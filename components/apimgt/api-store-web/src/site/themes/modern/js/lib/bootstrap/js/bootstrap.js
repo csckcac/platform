@@ -25,7 +25,7 @@
     "use strict"; // jshint ;_;
 
 
-    /* CSS TRANSITION SUPPORT (http://www.modernizr.com/)
+    /* CSS TRANSITION SUPPORT (http://www.fancy-newizr.com/)
      * ======================================================= */
 
     $.support.transition = (function () {

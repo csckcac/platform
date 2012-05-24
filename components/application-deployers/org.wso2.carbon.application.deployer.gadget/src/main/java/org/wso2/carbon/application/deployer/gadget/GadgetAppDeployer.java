@@ -47,7 +47,6 @@ public class GadgetAppDeployer implements AppDeploymentHandler {
      * @param axisConfig - AxisConfiguration of the current tenant
      */
     public void deployArtifacts(CarbonApplication carbonApp, AxisConfiguration axisConfig) {
-
         List<Artifact.Dependency> artifacts = carbonApp.getAppConfig().getApplicationArtifact()
                 .getDependencies();
 
@@ -59,10 +58,9 @@ public class GadgetAppDeployer implements AppDeploymentHandler {
             if (artifact == null) {
                 continue;
             }
-
             if (!isAccepted(artifact.getType())) {
                 log.warn("Can't deploy artifact : " + artifact.getName() + " of type : " +
-                         artifact.getType() + ". Required features are not installed in the system");
+                        artifact.getType() + ". Required features are not installed in the system");
                 continue;
             }
 
@@ -86,6 +84,46 @@ public class GadgetAppDeployer implements AppDeploymentHandler {
     }
 
     /**
+     * Check the artifact type and if it is a Gadget, delete the file from the Gadget
+     * deployment hot folder
+     *
+     * @param carbonApp - CarbonApplication instance to check for Gadget artifacts
+     * @param axisConfig - AxisConfiguration of the current tenant
+     */
+    public void undeployArtifacts(CarbonApplication carbonApp, AxisConfiguration axisConfig) {
+
+        List<Artifact.Dependency> artifacts = carbonApp.getAppConfig().getApplicationArtifact()
+                .getDependencies();
+
+        String repo = axisConfig.getRepository().getPath();
+        String artifactPath, destPath;
+        for (Artifact.Dependency dep : artifacts) {
+            Artifact artifact = dep.getArtifact();
+            if (artifact == null) {
+                continue;
+            }
+            if (GadgetAppDeployer.GADGET_TYPE.equals(artifact.getType())) {
+                destPath = repo + File.separator + GadgetAppDeployer.GADGET_DIR;
+            } else {
+                continue;
+            }
+
+            List<CappFile> files = artifact.getFiles();
+            if (files.size() != 1) {
+                log.error("A Gadget must have a single .gar file. But " +
+                        files.size() + " files found.");
+                continue;
+            }
+            String fileName = artifact.getFiles().get(0).getName();
+            artifactPath = destPath + File.separator + fileName;
+            File artifactFile = new File(artifactPath);
+            if (artifactFile.exists() && !artifactFile.delete()) {
+                log.warn("Couldn't delete Gadget artifact file : " + artifactPath);
+            }
+        }
+    }
+
+    /**
      * Check whether a particular artifact type can be accepted for deployment. If the type doesn't
      * exist in the acceptance list, we assume that it doesn't require any special features to be
      * installed in the system. Therefore, that type is accepted.
@@ -97,7 +135,7 @@ public class GadgetAppDeployer implements AppDeploymentHandler {
     private boolean isAccepted(String serviceType) {
         if (acceptanceList == null) {
             acceptanceList = AppDeployerUtils.buildAcceptanceList(GadgetAppDeployerDSComponent
-                                                                          .getRequiredFeatures());
+                    .getRequiredFeatures());
         }
         Boolean acceptance = acceptanceList.get(serviceType);
         return (acceptance == null || acceptance);

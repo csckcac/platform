@@ -194,8 +194,12 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setUrl(endpoint);
             api.setSandboxUrl(sandboxUrl);
             api.addTags(tag);
+            
             Set<Tier> availableTier = new HashSet<Tier>();
-            availableTier.add(new Tier(tier));
+            String[] tierNames = tier.split(",");
+            for (String tierName : tierNames) {
+                availableTier.add(new Tier(tierName));
+            }
             api.addAvailableTiers(availableTier);
             api.setStatus(APIStatus.CREATED);
             api.setContext(context);
@@ -290,9 +294,14 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setSandboxUrl(sandboxUrl);
             api.addTags(tag);
             api.setContext(context);
+
             Set<Tier> availableTier = new HashSet<Tier>();
-            availableTier.add(new Tier(tier));
+            String[] tierNames = tier.split(",");
+            for (String tierName : tierNames) {
+                availableTier.add(new Tier(tierName));
+            }
             api.addAvailableTiers(availableTier);
+
             api.setStatus(oldApi.getStatus());
             api.setWsdlUrl(wsdl);
             api.setLastUpdated(new Date());

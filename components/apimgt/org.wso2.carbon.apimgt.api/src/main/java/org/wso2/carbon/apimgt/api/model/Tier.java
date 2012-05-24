@@ -22,6 +22,7 @@ package org.wso2.carbon.apimgt.api.model;
  */
 @SuppressWarnings("unused")
 public class Tier {
+
     private String name;
     private ThrottlingPolicy throttlingPolicy;
 

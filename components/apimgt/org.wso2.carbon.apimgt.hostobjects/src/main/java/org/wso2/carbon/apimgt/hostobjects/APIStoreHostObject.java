@@ -1324,6 +1324,54 @@ public class APIStoreHostObject extends ScriptableObject {
         return false;
     }
 
+    public static boolean jsFunction_removeApplication(Context cx,
+                                                    Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException, APIManagementException {
+        
+        if (isStringArray(args)) {
+            String name = (String) args[0];
+            String username = (String) args[1];
+            Subscriber subscriber = new Subscriber(username);
+            APIConsumer apiConsumer = getAPIConsumer(thisObj);
+            Application[] apps = apiConsumer.getApplications(subscriber);
+            if (apps == null || apps.length == 0) {
+                return false;
+            }
+            for (Application app : apps) {
+                if (app.getName().equals(name)) {
+                    apiConsumer.removeApplication(app);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static NativeArray jsFunction_getSubscriptionsByApplication(Context cx,
+                                                       Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException, APIManagementException {
+
+        NativeArray myn = new NativeArray(0);
+        if (isStringArray(args)) {
+            String name = (String) args[0];
+            String username = (String) args[1];
+            Subscriber subscriber = new Subscriber(username);
+            APIConsumer apiConsumer = getAPIConsumer(thisObj);
+            Set<SubscribedAPI> subscribedAPIs = apiConsumer.getSubscribedAPIs(subscriber);
+            int i = 0;
+            for (SubscribedAPI api : subscribedAPIs) {
+                if (api.getApplication().getName().equals(name)) {
+                    NativeObject row = new NativeObject();                    
+                    row.put("apiName", row, api.getApiId().getApiName());
+                    row.put("apiVersion", row, api.getApiId().getVersion());
+                    myn.put(i, myn, row);
+                    i++;
+                }
+            }
+        }
+        return myn;
+    }
+
     public static boolean jsFunction_updateApplication(Context cx,
                                                     Scriptable thisObj, Object[] args, Function funObj)
             throws ScriptException, APIManagementException {

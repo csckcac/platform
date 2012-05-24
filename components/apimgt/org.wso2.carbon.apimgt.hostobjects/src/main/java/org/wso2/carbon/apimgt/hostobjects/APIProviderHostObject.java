@@ -183,6 +183,8 @@ public class APIProviderHostObject extends ScriptableObject {
                     for (String anUriMethod : uriMethodArray) {
                         templates.addMethod(anUriMethod);
                     }
+                    templates.setResourceURI(endpoint);
+                    templates.setResourceSandboxURI(sandboxUrl);
                     uriTemplates.add(templates);
                 }
                 api.setUriTemplates(uriTemplates);

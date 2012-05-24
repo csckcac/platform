@@ -50,7 +50,6 @@ public class MashupAppDeployer implements AppDeploymentHandler {
      * @param axisConfig - AxisConfiguration of the current tenant
      */
     public void deployArtifacts(CarbonApplication carbonApp, AxisConfiguration axisConfig) {
-
         List<Artifact.Dependency> artifacts =
                 carbonApp.getAppConfig().getApplicationArtifact().getDependencies();
 
@@ -68,7 +67,7 @@ public class MashupAppDeployer implements AppDeploymentHandler {
             String artifactName = artifact.getName();
             if (!isAccepted(artifact.getType())) {
                 log.warn("Can't deploy artifact : " + artifactName + " of type : " +
-                         artifact.getType() + ". Required features are not installed in the system");
+                        artifact.getType() + ". Required features are not installed in the system");
                 continue;
             }
 
@@ -80,9 +79,8 @@ public class MashupAppDeployer implements AppDeploymentHandler {
 
             List<CappFile> files = artifact.getFiles();
             if (files.size() != 1) {
-                log.error(
-                        "Mashups must have a single file to " + "be deployed. But " + files.size() +
-                        " files found.");
+                log.error("A Mashup must have a single file. But " +
+                        files.size() + " files found.");
                 continue;
             }
             String fileName = artifact.getFiles().get(0).getName();
@@ -93,6 +91,70 @@ public class MashupAppDeployer implements AppDeploymentHandler {
                 log.error("Unable to copy the Mashup : " + artifactName, e);
             }
 
+        }
+    }
+
+    /**
+     * Check the artifact type and if it is a Gadget, delete the file from the Gadget deployment hot
+     * folder
+     *
+     * @param carbonApp  - CarbonApplication instance to check for Gadget artifacts
+     * @param axisConfig - AxisConfiguration of the current tenant
+     */
+    public void undeployArtifacts(CarbonApplication carbonApp, AxisConfiguration axisConfig) {
+
+        List<Artifact.Dependency> artifacts =
+                carbonApp.getAppConfig().getApplicationArtifact().getDependencies();
+        ArchiveManipulator archiveManipulator = new ArchiveManipulator();
+
+        String repo = axisConfig.getRepository().getPath();
+        String artifactPath, destPath;
+        for (Artifact.Dependency dep : artifacts) {
+            Artifact artifact = dep.getArtifact();
+            if (artifact == null) {
+                continue;
+            }
+            if (MashupAppDeployer.MASHUP_TYPE.equals(artifact.getType())) {
+                destPath = repo + File.separator + MashupAppDeployer.MASHUP_DIR + File.separator +
+                        MashupAppDeployer.MASHUP_CONTEXT;
+            } else {
+                continue;
+            }
+
+            List<CappFile> files = artifact.getFiles();
+            if (files.size() != 1) {
+                log.error(
+                        "A Mashup must have a single file. But " + files.size() + " files found.");
+                continue;
+            }
+            String fileName = artifact.getFiles().get(0).getName();
+            artifactPath = artifact.getExtractedPath() + File.separator + fileName;
+            File artifactInRepo;
+            if (new File(artifactPath).exists()) {
+                try {
+                    String[] filesInZip = archiveManipulator.check(artifactPath);
+                    File jsFile = null;
+                    for (String file : filesInZip) {
+                        String artifactRepoPath = destPath + File.separator + file;
+                        if (file.indexOf("/") == -1) {
+                            String extension = file.substring(file.indexOf(".") + 1);
+                            if ("js".equals(extension)) {
+                                jsFile = new File(destPath + File.separator + file);
+                            } else {
+                                artifactInRepo = new File(artifactRepoPath);
+                                if (artifactInRepo.exists() && artifactInRepo.delete()) {
+                                    log.warn("Couldn't delete Mashup artifact file : " + artifactPath);
+                                }
+                            }
+                        }
+                    }
+                    if (jsFile != null && jsFile.exists() && !jsFile.delete()) {
+                        log.warn("Couldn't delete Mashup artifact file : " + artifactPath);
+                    }
+                } catch (IOException e) {
+                    log.error("Error reading the content of the artifact : " + artifact.getName(), e);
+                }
+            }
         }
     }
 

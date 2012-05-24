@@ -20,13 +20,13 @@ package org.wso2.carbon.application.deployer.mashup.internal;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.application.deployer.AppDeployerConstants;
 import org.wso2.carbon.application.deployer.AppDeployerUtils;
 import org.wso2.carbon.application.deployer.Feature;
+import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.carbon.application.deployer.mashup.MashupAppDeployer;
-import org.wso2.carbon.application.deployer.mashup.MashupAppUndeployer;
-import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -35,26 +35,21 @@ import java.util.Map;
 
 /**
  * @scr.component name="application.deployer.mashup" immediate="true"
- * @scr.reference name="application.manager" interface="org.wso2.carbon.application.deployer.service.ApplicationManagerService"
- * cardinality="1..1" policy="dynamic" bind="setAppManager" unbind="unsetAppManager"
  */
 public class MashupAppDeployerDSComponent {
 
     private static Log log = LogFactory.getLog(MashupAppDeployerDSComponent.class);
 
-    private static ApplicationManagerService applicationManager;
     private static Map<String, List<Feature>> requiredFeatures;
 
-    private MashupAppDeployer mashupDeployer = null;
-    private MashupAppUndeployer mashupUndeployer = null;
+    private static ServiceRegistration appHandlerRegistration;
 
     protected void activate(ComponentContext ctxt) {
         try {
             //register mashup deployer and undeployer in the ApplicationManager
-            mashupDeployer = new MashupAppDeployer();
-            mashupUndeployer = new MashupAppUndeployer();
-            applicationManager.registerDeploymentHandler(mashupDeployer);
-            applicationManager.registerUndeploymentHandler(mashupUndeployer);
+            MashupAppDeployer mashupDeployer = new MashupAppDeployer();
+            appHandlerRegistration = ctxt.getBundleContext().registerService(
+                    AppDeploymentHandler.class.getName(), mashupDeployer, null);
 
             // read required-features.xml
             URL reqFeaturesResource = ctxt.getBundleContext().getBundle()
@@ -70,17 +65,10 @@ public class MashupAppDeployerDSComponent {
     }
 
     protected void deactivate(ComponentContext ctxt) {
-        //unregister deployer and undeployer in the ApplicationManager
-        applicationManager.unregisterDeploymentHandler(mashupDeployer);
-        applicationManager.unregisterUndeploymentHandler(mashupUndeployer);
-    }
-
-    protected void setAppManager(ApplicationManagerService appManager) {
-        applicationManager = appManager;
-    }
-
-    protected void unsetAppManager(ApplicationManagerService appManager) {
-        applicationManager = null;
+        // Unregister the OSGi service
+        if (appHandlerRegistration != null) {
+            appHandlerRegistration.unregister();
+        }
     }
 
     public static Map<String, List<Feature>> getRequiredFeatures() {

@@ -49,6 +49,11 @@
             <artifactId>org.wso2.carbon.apimgt.impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.apimgt.handlers</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

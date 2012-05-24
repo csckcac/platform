@@ -15,6 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.usage.publisher;
 
 import org.apache.axis2.Constants;
@@ -24,11 +25,11 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.AbstractHandler;
 import org.apache.synapse.rest.RESTConstants;
-import org.apache.synapse.transport.nhttp.NhttpConstants;
+import org.wso2.carbon.apimgt.handlers.security.APISecurityUtils;
+import org.wso2.carbon.apimgt.handlers.security.AuthenticationContext;
 import org.wso2.carbon.apimgt.usage.publisher.dto.RequestPublisherDTO;
 import org.wso2.carbon.apimgt.usage.publisher.dto.ResponsePublisherDTO;
 import org.wso2.carbon.apimgt.usage.publisher.internal.UsageComponent;
-import org.wso2.carbon.apimgt.usage.publisher.util.Utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,7 +59,11 @@ public class APIMgtUsageHandler extends AbstractHandler {
             }
         }
 
-        String consumerKey = Utils.extractCustomerKeyFromSynapseMessageContext(mc);
+        AuthenticationContext authContext = APISecurityUtils.getAuthenticationContext(mc);
+        String consumerKey = "";
+        if (authContext != null) {
+            consumerKey = authContext.getApiKey();
+        }
         String context = (String)mc.getProperty(RESTConstants.REST_API_CONTEXT);
         String api_version =  (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API);
         String api = api_version.split(":")[0];
@@ -78,14 +83,14 @@ public class APIMgtUsageHandler extends AbstractHandler {
         requestPublisherDTO.setRequestTime(currentTime);
         publisher.publishEvent(requestPublisherDTO);
 
-        mc.setProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY,consumerKey);
-        mc.setProperty(APIMgtUsagePublisherConstants.CONTEXT,context);
-        mc.setProperty(APIMgtUsagePublisherConstants.API_VERSION,api_version);
-        mc.setProperty(APIMgtUsagePublisherConstants.API,api);
-        mc.setProperty(APIMgtUsagePublisherConstants.VERSION,version);
-        mc.setProperty(APIMgtUsagePublisherConstants.RESOURCE,resource);
-        mc.setProperty(APIMgtUsagePublisherConstants.HTTP_METHOD,method);
-        mc.setProperty(APIMgtUsagePublisherConstants.REQUEST_TIME,currentTime);
+        mc.setProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY, consumerKey);
+        mc.setProperty(APIMgtUsagePublisherConstants.CONTEXT, context);
+        mc.setProperty(APIMgtUsagePublisherConstants.API_VERSION, api_version);
+        mc.setProperty(APIMgtUsagePublisherConstants.API, api);
+        mc.setProperty(APIMgtUsagePublisherConstants.VERSION, version);
+        mc.setProperty(APIMgtUsagePublisherConstants.RESOURCE, resource);
+        mc.setProperty(APIMgtUsagePublisherConstants.HTTP_METHOD, method);
+        mc.setProperty(APIMgtUsagePublisherConstants.REQUEST_TIME, currentTime);
 
         return true;
     }

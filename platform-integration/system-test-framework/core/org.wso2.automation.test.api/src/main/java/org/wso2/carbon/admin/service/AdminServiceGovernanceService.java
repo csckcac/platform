@@ -23,8 +23,9 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
+import org.wso2.carbon.governance.services.stub.AddServicesServiceRegistryExceptionException;
 import org.wso2.carbon.governance.services.stub.AddServicesServiceStub;
-//import org.wso2.carbon.governance.services.stub.RegistryExceptionException;
+
 
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLInputFactory;
@@ -44,16 +45,13 @@ public class AdminServiceGovernanceService {
         addServicesServiceStub = new AddServicesServiceStub(endPoint);
     }
 
-  /*  public void addService(String sessionCookie, DataHandler dh) throws RegistryExceptionException, IOException, XMLStreamException {
+    public void addService(String sessionCookie, OMElement service)
+            throws IOException, XMLStreamException, AddServicesServiceRegistryExceptionException {
         AuthenticateStub.authenticateStub(sessionCookie, addServicesServiceStub);
-        XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
-        //create the builder
-        StAXOMBuilder builder = new StAXOMBuilder(parser);
-        OMElement serviceElem = builder.getDocumentElement();
-        addServicesServiceStub.addService(serviceElem.toString());
+        addServicesServiceStub.addService(service.toString());
         log.info("Service Added");
 
-    }*/
+    }
 
 
 }

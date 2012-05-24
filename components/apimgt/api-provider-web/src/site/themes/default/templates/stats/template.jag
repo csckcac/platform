@@ -10,84 +10,84 @@
 <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/templates/utils/jqplot/plugins/jqplot.barRenderer.min.js")%>"></script>
 <link type="text/css" rel="stylesheet" href="<%=jagg.getAbsoluteUrl("/site/themes/default//templates/utils/jqplot/jquery.jqplot.min.css")%>"/>
 
-    <h2>Overall API Usage (Across All Versions)</h2>
+<h2>Overall API Usage (Across All Versions)</h2>
+<div class="row-fluid">
 
-        <div class="row-fluid well">
-        <div class="span5">
 
-            <div>
-                <div id="apiChart"></div>
-            </div>
-        </div>
-            <div class="span6">
+<div class="well">
+<div class="span5">
 
-                <table class="table" id="apiTable" style="display:none;">
-                      <tr>
-                        <th>API Name</th>
-                        <th>Number of API Calls</th>
-                      </tr>
-                  </table>
-            </div>
+    <div>
+        <div id="apiChart"></div>
+    </div>
+</div>
+<div class="span6">
+
+    <table class="table" id="apiTable" style="display:none;">
+        <tr>
+            <th>API Name</th>
+            <th>Number of API Calls</th>
+        </tr>
+    </table>
+</div>
 
 
 </div>
 
 <h2>Overall API Subscriptions (Across All Versions)</h2>
 
-        <div class="row-fluid well">
-        <div class="span5">
-            <div>
-                <div id="subsChart"></div>
-            </div>
-        </div>
-            <div class="span6">
+<div class="well">
+<div class="span5">
+    <div>
+        <div id="subsChart"></div>
+    </div>
+</div>
+<div class="span6">
 
-                <table class="table" id="subsTable" style="display:none;">
-                      <tr>
-                        <th>API Name</th>
-                        <th>Number of Subscribers</th>
-                      </tr>
-                  </table>
-            </div>
-         </div>
+    <table class="table" id="subsTable" style="display:none;">
+        <tr>
+            <th>API Name</th>
+            <th>Number of Subscribers</th>
+        </tr>
+    </table>
+</div>
+</div>
 
 <h2>API Response Times (Across All Versions)</h2>
 
-        <div class="row-fluid well">
-        <div class="span5">
-            <div id="serviceTimeChart"></div>
-        </div>
-        <div class="span6">
-             <table class="table" id="serviceTimeTable">
-                <tr>
-                    <th>API Name</th>
-                    <th>Average Response Time (ms)</th>
-                </tr>
-             </table>
-        </div>
+<div class="well">
+<div class="span5">
+    <div id="serviceTimeChart"></div>
+</div>
+<div class="span6">
+    <table class="table" id="serviceTimeTable">
+        <tr>
+            <th>API Name</th>
+            <th>Average Response Time (ms)</th>
+        </tr>
+    </table>
+</div>
 </div>
 
 <h2>API Last Access Times (Across All Versions)</h2>
 
-        <div class="row-fluid well">
-        <div class="span5">
-
-        </div>
-        <div class="span6">
-            <table class="table" id="lastAccessTable">
-                <tr>
-                    <th>API</th>
-                    <th>Last Accessed Version</th>
-                    <th>Subscriber</th>
-                    <th>Access Time</th>
-                </tr>
-            </table>
-        </div>
-
+<div class="well">
+<div class="span5">
 
 </div>
+<div class="span6">
+    <table class="table" id="lastAccessTable">
+        <tr>
+            <th>API</th>
+            <th>Last Accessed Version</th>
+            <th>Subscriber</th>
+            <th>Access Time</th>
+        </tr>
+    </table>
+</div>
+</div>
 
-
+</div>
 <% }); %>
 
 

@@ -50,6 +50,36 @@ public class PolicyManager {
     }
 
     /**
+     * Create a new Schema based on content either embedded or passed to a service.
+     *
+     * @param content  the schema content
+     *
+     * @return the artifact added.
+     * @throws GovernanceException if the operation failed.
+     */
+    public Policy newPolicy(byte[] content) throws GovernanceException {
+        return newPolicy(content, null);
+    }
+
+    /**
+     * Create a new Schema based on content either embedded or passed to a service.
+     *
+     * @param content  the schema content
+     * @param name     the schema name
+     *
+     * @return the artifact added.
+     * @throws GovernanceException if the operation failed.
+     */
+    public Policy newPolicy(byte[] content, String name)
+            throws GovernanceException {
+        String policyId = UUID.randomUUID().toString();
+        Policy policy = new Policy(policyId, name != null ? "name://" + name : null);
+        policy.associateRegistry(registry);
+        policy.setPolicyContent(new String(content));
+        return policy;
+    }
+
+    /**
      * Creates a new policy artifact from the given URL.
      * 
      * @param url the given URL.
@@ -84,12 +114,21 @@ public class PolicyManager {
             String tmpPath;
             if (policy.getQName() != null) {
                 tmpPath = "/" + policy.getQName().getLocalPart();
-            } else {
+            } else if (url != null && !url.startsWith("name://")) {
                 tmpPath = RegistryUtils.getResourceName(new URL(url).getFile().replace("~", ""));
+            } else if (url != null) {
+                tmpPath = url.substring("name://".length());
+            } else {
+                tmpPath = policy.getId() + ".xml";
             }
             // OK this is a hack to get the UUID of the newly added artifact. This needs to be fixed
             // properly with the fix for UUID support at Kernel-level - Janaka.
-            Resource resource = registry.get(registry.importResource(tmpPath, url, policyResource));
+            Resource resource;
+            if (url == null || url.startsWith("name://")) {
+                resource = registry.get(registry.put("/" + tmpPath, policyResource));
+            } else {
+                resource = registry.get(registry.importResource(tmpPath, url, policyResource));
+            }
             policy.setId(resource.getUUID());
             policy.updatePath();
             policy.loadPolicyDetails();

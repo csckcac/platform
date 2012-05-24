@@ -650,8 +650,6 @@ public class GovernanceUtils {
             String artifactId =
                     artifactResource.getUUID();
             String mediaType = artifactResource.getMediaType();
-            String lcName = artifactResource.getProperty("registry.LC.name");
-            String lcState = artifactResource.getProperty("registry.lifecycle." + lcName + ".state");
             if (GovernanceConstants.SERVICE_MEDIA_TYPE.equals(mediaType)) {
                 // it is a service
                 byte[] contentBytes = (byte[]) artifactResource.getContent();
@@ -662,7 +660,6 @@ public class GovernanceUtils {
                 OMElement contentElement = buildOMElement(contentBytes);
                 Service service = new Service(artifactId, contentElement);
                 service.associateRegistry(registry);
-                service.setLcState(lcState);
                 return service;
 //            }
             /*else if (GovernanceConstants.PROCESS_MEDIA_TYPE.equals(
@@ -690,24 +687,16 @@ public class GovernanceUtils {
                 return sla;*/
             } else if (GovernanceConstants.WSDL_MEDIA_TYPE
                     .equals(mediaType)) {
-                Wsdl wsdl = new Wsdl(artifactId, registry);
-                wsdl.setLcState(lcState);
-                return wsdl;
+                return new Wsdl(artifactId, registry);
             } else if (GovernanceConstants.SCHEMA_MEDIA_TYPE
                     .equals(mediaType)) {
-                Schema schema = new Schema(artifactId, registry);
-                schema.setLcState(lcState);
-                return schema;
+                return new Schema(artifactId, registry);
             } else if (GovernanceConstants.POLICY_XML_MEDIA_TYPE
                     .equals(mediaType)) {
-                Policy policy = new Policy(artifactId, registry);
-                policy.setLcState(lcState);
-                return policy;
+                return new Policy(artifactId, registry);
             } else if (GovernanceConstants.ENDPOINT_MEDIA_TYPE
                     .equals(mediaType)) {
-                Endpoint endpoint = new Endpoint(artifactId, registry);
-                endpoint.setLcState(lcState);
-                return endpoint;
+                return new Endpoint(artifactId, registry);
             } else if (mediaType != null && mediaType.matches(
                     "application/vnd\\.[a-zA-Z0-9.-]+\\+xml")) {
                 if (registry instanceof UserRegistry) {
@@ -730,7 +719,6 @@ public class GovernanceUtils {
                                         configuration.getArtifactNamespaceAttribute(),
                                         configuration.getArtifactElementNamespace());
                                 artifact.associateRegistry(registry);
-                                artifact.setLcState(lcState);
                                 return artifact;
                             }
                         }

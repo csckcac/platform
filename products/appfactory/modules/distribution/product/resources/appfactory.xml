@@ -1,25 +1,24 @@
-
 <AppFactory xmlns="http://www.wso2.org/appfactory/">
 
-    <!--Admin user in the app factory. This user is added to each and every project as the administrator-->
+    <!--Admin user in the app factory. This user is added to each and every application as the administrator-->
     <AdminUserName>admin</AdminUserName>
     <AdminPassword>admin</AdminPassword>
 
-    <!--Project Management configurations-->
-    <ProjectMgt>
-        <DefaultProjectUserRoles>Developer</DefaultProjectUserRoles>
-    </ProjectMgt>
+    <!--Application Management configurations-->
+    <ApplicationMgt>
+        <DefaultApplicationUserRoles>Developer</DefaultApplicationUserRoles>
+    </ApplicationMgt>
 
     <!--SSO relying party configuration.-->
     <SSORelyingParty>
         <Name>WSO2 AppFactory Project Management</Name>
-        <IdentityProviderURL>https://localhost:9443/samlsso</IdentityProviderURL>
+        <IdentityProviderURL>https://localhost:9444/samlsso</IdentityProviderURL>
         <KeyStorePassword>wso2carbon</KeyStorePassword>
         <IdentityKeyAlias>wso2carbon</IdentityKeyAlias>
         <KeyStoreName>
-            E:\src\java\carbon_trunk\platform\products\appfactory\modules\distribution\product\target\wso2appfactory-1.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks
+            /mnt/appfactory/wso2appfactory-1.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks
         </KeyStoreName>
-     </SSORelyingParty>
+    </SSORelyingParty>
 
     <!-- Web service end points including BPEL services-->
     <WebServiceEndPoints>
@@ -47,15 +46,15 @@
     <!--Project repository related configurations-->
     <RepositoryMGTConfig>
         <SCMServerIp>192.168.4.26</SCMServerIp>
-        <SCMServerPort>8081</SCMServerPort>
+        <SCMServerPort>8080</SCMServerPort>
         <SCMServerRealmName>SONIA :: SCM Manager</SCMServerRealmName>
         <SCMServerAdminUserName>scmadmin</SCMServerAdminUserName>
         <SCMServerAdminPassword>scmadmin</SCMServerAdminPassword>
         <ReadWritePermissionName>RW</ReadWritePermissionName>
     </RepositoryMGTConfig>
 
-    <!--This element defines the set of staging servers, where the project artifacts are deployed. -->
-    <ProjectDeployment>
+    <!--This element defines the set of staging servers, where the application applications are deployed. -->
+    <ApplicationDeployment>
         <DeploymentStage name="Development">
             <DeploymentServerURL>
                 https://localhost:9443/services/
@@ -69,5 +68,5 @@
                 https://localhost:9447/services/
             </DeploymentServerURL>
         </DeploymentStage>
-    </ProjectDeployment>
+    </ApplicationDeployment>
 </AppFactory>

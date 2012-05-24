@@ -50,7 +50,7 @@ public final class APIConstants {
     //registry location of API
     public static final String API_LOCATION = "/apimgt/applicationdata/provider";
     
-    public static final String API_TIER_LOCATION = "/apimgt/applicationdata/tiers";
+    public static final String API_TIER_LOCATION = "/apimgt/applicationdata/tiers.xml";
 
     //registry location for consumer
     public static final String API_ROOT_LOCATION = "/apimgt/applicationdata/provider";

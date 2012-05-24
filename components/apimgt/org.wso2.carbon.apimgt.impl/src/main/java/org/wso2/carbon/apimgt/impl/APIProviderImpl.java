@@ -418,7 +418,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER,
                 "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
         testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY,
-                "conf:/basic-throttle-policy.xml");
+                "gov:" + APIConstants.API_TIER_LOCATION);
 
         List<Map<String, String>> handlerMappings = new ArrayList<Map<String, String>>();
         handlerMappings.add(testHandlerMappings_1);

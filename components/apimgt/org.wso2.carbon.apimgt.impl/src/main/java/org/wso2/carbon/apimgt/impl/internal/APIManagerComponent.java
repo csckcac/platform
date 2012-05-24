@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.apimgt.impl.internal;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceRegistration;
@@ -26,6 +29,7 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.impl.*;
 import org.wso2.carbon.governance.api.util.GovernanceConstants;
+import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
@@ -39,6 +43,7 @@ import org.wso2.carbon.utils.FileUtil;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -63,6 +68,7 @@ public class APIManagerComponent {
         
         try {
             addRxtConfigs();
+            addTierPolicies();
             APIManagerConfiguration configuration = new APIManagerConfiguration();
             String filePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
                     File.separator + "conf" + File.separator + "api-manager.xml";
@@ -149,6 +155,28 @@ public class APIManagerComponent {
                 String msg = "Failed to add rxt to registry ";
                 throw new APIManagementException(msg, e);
             }
+        }
+    }
+    
+    protected static void addTierPolicies() throws APIManagementException {
+        RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
+        try {
+            UserRegistry registry = registryService.getGovernanceSystemRegistry();
+            if (registry.resourceExists(APIConstants.API_TIER_LOCATION)) {
+                log.debug("Tier policies already uploaded to the registry");
+                return;
+            }
+
+            log.debug("Adding API tier policies to the registry");
+            InputStream inputStream = APIManagerComponent.class.getResourceAsStream("/tiers/default-tiers.xml");
+            byte[] data = IOUtils.toByteArray(inputStream);
+            Resource resource = registry.newResource();
+            resource.setContent(data);
+            registry.put(APIConstants.API_TIER_LOCATION, resource);
+        } catch (RegistryException e) {
+            throw new APIManagementException("Error while saving policy information to the registry", e);
+        } catch (IOException e) {
+            throw new APIManagementException("Error while reading policy file content", e);
         }
     }
 }

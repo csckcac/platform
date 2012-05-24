@@ -55,7 +55,7 @@
             <directory>src/main/conf/synapse-configs</directory>
             <outputDirectory>wso2am-${pom.version}/repository/deployment/server/synapse-configs</outputDirectory>
         </fileSet>
-	<fileSet>
+	    <fileSet>
            <directory>../../p2-profile/product/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/</directory>
            <outputDirectory>wso2am-${pom.version}/repository/conf/advanced</outputDirectory>
            <includes>
@@ -82,14 +82,6 @@
             <directory>../../jaggery-apps/api-store-web/src</directory>
             <outputDirectory>wso2am-${pom.version}/repository/deployment/server/jaggeryapps/apistore</outputDirectory>
         </fileSet>
-        <!-- Copying throttling policy -->
-        <fileSet>
-            <directory>../../../config/throttle-policies/car/</directory>
-            <outputDirectory>wso2am-${pom.version}/repository/deployment/server/carbonapps</outputDirectory>
-            <includes>
-                <include>*.car</include>
-            </includes>
-        </fileSet>
   
         <!-- Copying BAM client -->
         <fileSet>
@@ -107,13 +99,12 @@
             </includes>
         </fileSet>
         <fileSet>
-                        <directory>../../../config/rxts</directory>
-                        <outputDirectory>wso2am-${pom.version}/repository/resources/rxts</outputDirectory>
-                        <includes>
-                            <include>**/**.rxt</include>
-                        </includes>
-                    </fileSet>
-
+            <directory>../../../config/rxts</directory>
+            <outputDirectory>wso2am-${pom.version}/repository/resources/rxts</outputDirectory>
+            <includes>
+                <include>**/**.rxt</include>
+            </includes>
+        </fileSet>
         <fileSet>
              <directory>../../samples</directory>
              <outputDirectory>wso2am-${pom.version}/samples</outputDirectory>

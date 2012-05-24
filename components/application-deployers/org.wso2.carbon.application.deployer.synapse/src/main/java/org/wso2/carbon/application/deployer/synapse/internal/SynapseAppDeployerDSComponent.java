@@ -20,13 +20,13 @@ package org.wso2.carbon.application.deployer.synapse.internal;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.application.deployer.AppDeployerConstants;
 import org.wso2.carbon.application.deployer.AppDeployerUtils;
 import org.wso2.carbon.application.deployer.Feature;
-import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
+import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.carbon.application.deployer.synapse.SynapseAppDeployer;
-import org.wso2.carbon.application.deployer.synapse.SynapseAppUndeployer;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -35,28 +35,22 @@ import java.util.Map;
 
 /**
  * @scr.component name="application.deployer.synapse" immediate="true"
- * @scr.reference name="application.manager"
- * interface="org.wso2.carbon.application.deployer.service.ApplicationManagerService"
- * cardinality="1..1" policy="dynamic" bind="setAppManager" unbind="unsetAppManager"
  */
 
 public class SynapseAppDeployerDSComponent {
 
     private static Log log = LogFactory.getLog(SynapseAppDeployerDSComponent.class);
 
-    private static ApplicationManagerService applicationManager;
     private static Map<String, List<Feature>> requiredFeatures;
 
-    private SynapseAppDeployer synapseDeployer = null;
-    private SynapseAppUndeployer synapseUndeployer = null;
+    private static ServiceRegistration appHandlerRegistration;
 
     protected void activate(ComponentContext ctxt) {
         try {
-            //register synapse deployer and undeployer in the ApplicationManager
-            synapseDeployer = new SynapseAppDeployer();
-            synapseUndeployer = new SynapseAppUndeployer();
-            applicationManager.registerDeploymentHandler(synapseDeployer);
-            applicationManager.registerUndeploymentHandler(synapseUndeployer);
+            // Register synapse deployer as an OSGi service
+            SynapseAppDeployer synapseDeployer = new SynapseAppDeployer();
+            appHandlerRegistration = ctxt.getBundleContext().registerService(
+                    AppDeploymentHandler.class.getName(), synapseDeployer, null);
 
             // read required-features.xml
             URL reqFeaturesResource = ctxt.getBundleContext().getBundle()
@@ -72,17 +66,10 @@ public class SynapseAppDeployerDSComponent {
     }
 
     protected void deactivate(ComponentContext ctxt) {
-        //unregister deployer and undeployer in the ApplicationManager
-        applicationManager.unregisterDeploymentHandler(synapseDeployer);
-        applicationManager.unregisterUndeploymentHandler(synapseUndeployer);
-    }
-
-    protected void setAppManager(ApplicationManagerService appManager) {
-        applicationManager = appManager;
-    }
-
-    protected void unsetAppManager(ApplicationManagerService appManager) {
-        applicationManager = null;
+        // Unregister the OSGi service
+        if (appHandlerRegistration != null) {
+            appHandlerRegistration.unregister();
+        }
     }
 
     public static Map<String, List<Feature>> getRequiredFeatures() {

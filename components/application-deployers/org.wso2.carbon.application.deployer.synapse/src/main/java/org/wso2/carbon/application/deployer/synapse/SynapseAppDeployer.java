@@ -45,23 +45,21 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
      * @param axisConfig - AxisConfiguration of the current tenant
      */
     public void deployArtifacts(CarbonApplication carbonApp, AxisConfiguration axisConfig) {
-
         List<Artifact.Dependency> artifacts = carbonApp.getAppConfig().getApplicationArtifact()
                 .getDependencies();
 
         String synapseRepo = axisConfig.getRepository().getPath() + File.separator +
-                             SynapseAppDeployerConstants.SYNAPSE_CONFIGS + File.separator +
-                             SynapseAppDeployerConstants.DEFAULT_DIR;
+                SynapseAppDeployerConstants.SYNAPSE_CONFIGS + File.separator +
+                SynapseAppDeployerConstants.DEFAULT_DIR;
         String artifactPath, destPath;
         for (Artifact.Dependency dep : artifacts) {
             Artifact artifact = dep.getArtifact();
             if (artifact == null) {
                 continue;
             }
-
             if (!isAccepted(artifact.getType())) {
                 log.warn("Can't deploy artifact : " + artifact.getName() + " of type : " +
-                         artifact.getType() + ". Required features are not installed in the system");
+                        artifact.getType() + ". Required features are not installed in the system");
                 continue;
             }
 
@@ -88,13 +86,69 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
             List<CappFile> files = artifact.getFiles();
             if (files.size() != 1) {
                 log.error("Synapse artifact types must have a single file to " +
-                          "be deployed. But " + files.size() + " files found.");
+                        "be deployed. But " + files.size() + " files found.");
                 continue;
             }
             String fileName = artifact.getFiles().get(0).getName();
             artifactPath = artifact.getExtractedPath() + File.separator + fileName;
             AppDeployerUtils.createDir(destPath);
             AppDeployerUtils.copyFile(artifactPath, destPath + File.separator + fileName);
+        }
+    }
+
+    /**
+     * Undeploys Synapse artifacts found in this application. Just delete the files from the
+     * hot folders. Synapse hot deployer will do the rest..
+     *
+     * @param carbonApplication - CarbonApplication instance
+     * @param axisConfig - AxisConfiguration of the current tenant
+     */
+    public void undeployArtifacts(CarbonApplication carbonApplication, AxisConfiguration axisConfig) {
+
+        List<Artifact.Dependency> artifacts = carbonApplication.getAppConfig()
+                .getApplicationArtifact().getDependencies();
+
+        String synapseRepo = axisConfig.getRepository().getPath() + File.separator +
+                SynapseAppDeployerConstants.SYNAPSE_CONFIGS + File.separator +
+                SynapseAppDeployerConstants.DEFAULT_DIR;
+        String artifactPath, destPath;
+        for (Artifact.Dependency dep : artifacts) {
+            Artifact artifact = dep.getArtifact();
+            if (artifact == null) {
+                continue;
+            }
+            if (SynapseAppDeployerConstants.SEQUENCE_TYPE.equals(artifact.getType())) {
+                destPath = synapseRepo + SynapseAppDeployerConstants.SEQUENCES_FOLDER;
+            } else if (SynapseAppDeployerConstants.ENDPOINT_TYPE.equals(artifact.getType())) {
+                destPath = synapseRepo + SynapseAppDeployerConstants.ENDPOINTS_FOLDER;
+            } else if (SynapseAppDeployerConstants.PROXY_SERVICE_TYPE.equals(artifact.getType())) {
+                destPath = synapseRepo + SynapseAppDeployerConstants.PROXY_SERVICES_FOLDER;
+            } else if (SynapseAppDeployerConstants.LOCAL_ENTRY_TYPE.equals(artifact.getType())) {
+                destPath = synapseRepo + SynapseAppDeployerConstants.LOCAL_ENTRIES_FOLDER;
+            } else if (SynapseAppDeployerConstants.EVENT_SOURCE_TYPE.equals(artifact.getType())) {
+                destPath = synapseRepo + SynapseAppDeployerConstants.EVENTS_FOLDER;
+            } else if (SynapseAppDeployerConstants.TASK_TYPE.equals(artifact.getType())) {
+                destPath = synapseRepo + SynapseAppDeployerConstants.TASKS_FOLDER;
+            } else if(SynapseAppDeployerConstants.MESSAGE_STORE_TYPE.equals(artifact.getType())) {
+                destPath = synapseRepo + SynapseAppDeployerConstants.MESSAGE_STORE_FOLDER;
+            } else if(SynapseAppDeployerConstants.MESSAGE_PROCESSOR_TYPE.equals(artifact.getType())){
+                destPath = synapseRepo + SynapseAppDeployerConstants.MESSAGE_PROCESSOR_FOLDER;
+            } else {
+                continue;
+            }
+
+            List<CappFile> files = artifact.getFiles();
+            if (files.size() != 1) {
+                log.error("Synapse artifact types must have a single file. But " +
+                        files.size() + " files found.");
+                continue;
+            }
+            String fileName = artifact.getFiles().get(0).getName();
+            artifactPath = destPath + File.separator + fileName;
+            File artifactFile = new File(artifactPath);
+            if (artifactFile.exists() && !artifactFile.delete()) {
+                log.warn("Couldn't delete App artifact file : " + artifactPath);
+            }
         }
     }
 
@@ -110,7 +164,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
     private boolean isAccepted(String serviceType) {
         if (acceptanceList == null) {
             acceptanceList = AppDeployerUtils.buildAcceptanceList(SynapseAppDeployerDSComponent
-                                                                          .getRequiredFeatures());
+                    .getRequiredFeatures());
         }
         Boolean acceptance = acceptanceList.get(serviceType);
         return (acceptance == null || acceptance);

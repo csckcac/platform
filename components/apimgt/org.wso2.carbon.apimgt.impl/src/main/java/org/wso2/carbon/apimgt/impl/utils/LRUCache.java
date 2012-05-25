@@ -57,6 +57,26 @@ public class LRUCache<K,V> extends LinkedHashMap<K,V> {
     }
 
     @Override
+    public V remove(Object key) {
+        lock.writeLock().lock();
+        try {
+            return super.remove(key);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void clear() {
+        lock.writeLock().lock();
+        try {
+            super.clear();
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    @Override
     protected boolean removeEldestEntry(Map.Entry eldest) {
         boolean remove = size() > maxEntries;
         if (remove) {

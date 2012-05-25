@@ -19,10 +19,7 @@ package org.wso2.carbon.apimgt.handlers.security;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.impl.utils.LRUCache;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * A simple in-memory cache for API keys and validation information related to API keys.
@@ -60,5 +57,15 @@ public class APIKeyCache {
             info = invalidKeys.get(key);
         }
         return info;
+    }
+    
+    public void invalidateEntry(String key) {
+        validKeys.remove(key);
+        invalidKeys.remove(key);
+    }
+
+    public void invalidateCache() {
+        validKeys.clear();
+        invalidKeys.clear();
     }
 }

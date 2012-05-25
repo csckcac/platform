@@ -37,6 +37,7 @@
         <parameter name="adminService" locked="true">true</parameter>
         <parameter locked="false" name="ServiceClass">org.wso2.carbon.dashboard.mgt.users.GadgetServerUserManagementService</parameter>
         <parameter name="DoAuthentication" locked="true">false</parameter>
+        <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/Dashboard</parameter>
     </service>
 
 </serviceGroup>

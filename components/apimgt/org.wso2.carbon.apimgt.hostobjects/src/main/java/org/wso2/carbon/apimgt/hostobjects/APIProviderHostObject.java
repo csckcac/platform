@@ -1244,6 +1244,63 @@ public class APIProviderHostObject extends ScriptableObject {
 
     }
 
+    public static NativeArray jsFunction_searchAllAPIs(Context cx, Scriptable thisObj,
+                                                    Object[] args,
+                                                    Function funObj) throws ScriptException {
+        NativeArray myn = new NativeArray(0);
+
+        if (args.length == 0) {
+            throw new ScriptException("Invalid number of parameters.");
+        }
+        String apiName = (String) args[0];
+
+        APIProvider apiProvider = getAPIProvider(thisObj);
+        try {
+            //TODO : this regex pattern matching has to be moved to APIManager API implementation
+            List<API> apiList = apiProvider.getAllAPIs();
+            List<API> searchedList = new ArrayList<API>();
+            String regex = "[a-zA-Z0-9_.-|]*" + apiName.toUpperCase()+ "[a-zA-Z0-9_.-|]*";
+            Pattern pattern;
+            Matcher matcher;
+            for (API api : apiList) {
+                APIIdentifier apiIdentifier = api.getId();
+                String name = apiIdentifier.getApiName().toUpperCase();
+                pattern = Pattern.compile(regex);
+                matcher = pattern.matcher(name);
+                if (matcher.matches()) {
+                    searchedList.add(apiProvider.getAPI(apiIdentifier));
+                }
+
+            }
+            Collections.sort(searchedList, new APINameComparator());
+
+            Iterator it = searchedList.iterator();
+            int i = 0;
+            while (it.hasNext()) {
+
+                NativeObject row = new NativeObject();
+                Object apiObject = it.next();
+                API api = (API) apiObject;
+                APIIdentifier apiIdentifier = api.getId();
+                row.put("apiName", row, apiIdentifier.getApiName());
+                row.put("provider", row, apiIdentifier.getProviderName());
+                row.put("version", row, apiIdentifier.getVersion());
+                row.put("status", row, checkValue(api.getStatus().toString()));
+                row.put("thumb", row, api.getThumbnailUrl());
+                row.put("subs", row, apiProvider.getSubscribersOfAPI(api.getId()).size());
+                myn.put(i, myn, row);
+                i++;
+
+            }
+        } catch (APIManagementException e) {
+            log.error("Error from registry while getting the APIs information for the searched API: " + apiName, e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        
+        return myn;
+    }
+
     public static NativeArray jsFunction_searchAPIs(Context cx, Scriptable thisObj,
                                                     Object[] args,
                                                     Function funObj) throws ScriptException {

@@ -2,8 +2,9 @@
 <div id="listing">
     <h2>All APIs</h2>
     <%
-    if (outputs.apis != null && outputs.apis.length > 0) {
-    jagg.includeBlock("search/api-search", null);
+    var query = request.getParameter('query');
+    if ((outputs.apis != null && outputs.apis.length > 0) || query != null) {
+        jagg.includeBlock("search/api-search", null);
     }
     %>
     <ul class="thumbnails">

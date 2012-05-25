@@ -17,7 +17,7 @@ var site = require("/site/conf/site.json");
 
     if(query) {
         mod = jagg.module("search");
-        result = mod.searchAPIs(user.username,query);
+        result = mod.searchAllAPIs(query);
         apis = result.apis;
     } else {
         mod = jagg.module("api");

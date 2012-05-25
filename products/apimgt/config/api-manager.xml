@@ -106,5 +106,16 @@
         -->
         <Password>admin</Password>
     </APIKeyManager>
+
+    <!--
+        Settings related to managing API access tiers.
+    -->
+    <TierManagement>
+        <!--
+            Enable the providers to expose their APIs over the special 'Unlimited' tier which
+            basically disables tier based throttling for the specified APIs.
+        -->
+        <EnableUnlimitedTier>true</EnableUnlimitedTier>
+    </TierManagement>
 </APIManager>
 

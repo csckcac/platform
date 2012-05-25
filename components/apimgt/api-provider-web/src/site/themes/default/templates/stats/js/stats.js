@@ -1,4 +1,27 @@
+var t_on = {
+            'apiChart':1,
+            'subsChart':1,
+            'serviceTimeChart':1,
+            'tempLoadingSpace':1
+            };
+function fillProgress(chartId)
+    {
+        if(t_on[chartId]){
+            var progressBar = $('#'+chartId+' div.progress-striped div.bar')[0];
+
+            var time = Math.floor((Math.random() * 400) + 800);
+            var divider = Math.floor((Math.random() * 2) + 2);
+            var currentWidth = parseInt(progressBar.style.width.split('%')[0]);
+            var newWidth = currentWidth + parseInt((100 - currentWidth) / divider);
+            newWidth += "%";
+            $(progressBar).css('width', newWidth);
+            var t = setTimeout('fillProgress("'+chartId+'")', time);
+        }
+    }
 $(document).ready(function() {
+
+    //Initiating the fake progress bar
+    fillProgress('apiChart');fillProgress('subsChart');fillProgress('serviceTimeChart');fillProgress('tempLoadingSpace');
 
     jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",server:"https://localhost:9444/" },
               function (json) {
@@ -39,13 +62,14 @@ $(document).ready(function() {
                       } else {
                           $('#serviceTimeTable').hide();
                           $('#serviceTimeChart').css("fontSize", 14);
-                          $('#serviceTimeChart').text('No Data Found ...');
+                          $('#serviceTimeChart').append($('<span class="label label-info">No Data Found ...</span>'));
                       }
 
 
                   } else {
                       jagg.message(json.message);
                   }
+                  t_on['serviceTimeChart'] = 0;
               }, "json");
 
 
@@ -78,13 +102,14 @@ $(document).ready(function() {
                       } else {
                           $('#subsTable').hide();
                           $('#subsChart').css("fontSize", 14);
-                          $('#subsChart').text('No Data Found ...');
+                          $('#subsChart').append($('<span class="label label-info">No Data Found ...</span>'));
                       }
 
 
                   } else {
                       jagg.message(json.message);
                   }
+                  t_on['subsChart'] = 0;
               }, "json");
 
 
@@ -116,13 +141,14 @@ $(document).ready(function() {
                       } else {
                           $('#apiTable').hide();
                           $('#apiChart').css("fontSize", 14);
-                          $('#apiChart').text('No Data Found ...');
+                          $('#apiChart').append($('<span class="label label-info">No Data Found ...</span>'));
                       }
 
 
                   } else {
                       jagg.message(json.message);
                   }
+                  t_on['apiChart'] = 0;
               }, "json");
 
 
@@ -131,18 +157,23 @@ $(document).ready(function() {
                   if (!json.error) {
                       $('#lastAccessTable').find("tr:gt(0)").remove();
                       var length = json.usage.length;
+                      $('#lastAccessTable').show();
                       for (var i = 0; i < json.usage.length; i++) {
                           $('#lastAccessTable').append($('<tr><td>' + json.usage[i].api_name + '</td><td>' + json.usage[i].api_version + '</td><td>' + json.usage[i].user + '</td><td>' + json.usage[i].lastAccess + '</td></tr>'));
                       }
-
                       if (length == 0) {
-                          $('#lastAccessTable').css("fontSize", 14);
-                          $('#lastAccessTable').text('No Data Found ...');
+                          $('#lastAccessTable').hide();
+                          $('#tempLoadingSpace').html('');
+                          $('#tempLoadingSpace').append($('<span class="label label-info">No Data Found ...</span>'));
+
+                      }else{
+                          $('#tempLoadingSpace').hide();
                       }
 
                   } else {
                       jagg.message(json.message);
                   }
+                  t_on['tempLoadingSpace'] = 0;
               }, "json");
 
 

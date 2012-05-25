@@ -11,14 +11,18 @@
 <link type="text/css" rel="stylesheet" href="<%=jagg.getAbsoluteUrl("/site/themes/default//templates/utils/jqplot/jquery.jqplot.min.css")%>"/>
 
 <h2>Overall API Usage (Across All Versions)</h2>
-<div class="row-fluid">
+<div class="row-fluid api-stats">
 
 
 <div class="well">
 <div class="span5">
 
     <div>
-        <div id="apiChart"></div>
+        <div id="apiChart">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 10%;"></div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="span6">
@@ -39,7 +43,11 @@
 <div class="well">
 <div class="span5">
     <div>
-        <div id="subsChart"></div>
+        <div id="subsChart">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 10%;"></div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="span6">
@@ -57,10 +65,14 @@
 
 <div class="well">
 <div class="span5">
-    <div id="serviceTimeChart"></div>
+    <div id="serviceTimeChart">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 10%;"></div>
+            </div>
+    </div>
 </div>
 <div class="span6">
-    <table class="table" id="serviceTimeTable">
+    <table class="table" id="serviceTimeTable" style="display:none;">
         <tr>
             <th>API Name</th>
             <th>Average Response Time (ms)</th>
@@ -73,10 +85,14 @@
 
 <div class="well">
 <div class="span5">
-
+    <div id="tempLoadingSpace">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 10%;"></div>
+            </div>
+    </div>
 </div>
 <div class="span6">
-    <table class="table" id="lastAccessTable">
+    <table class="table" id="lastAccessTable" style="display:none">
         <tr>
             <th>API</th>
             <th>Last Accessed Version</th>

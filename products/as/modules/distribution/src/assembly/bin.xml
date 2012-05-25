@@ -27,6 +27,8 @@
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <excludes>
+                <exclude>**/*.sh</exclude>
+                <exclude>**/wso2server.bat</exclude>
                 <exclude>**/axis2services/sample01.aar</exclude>
                 <exclude>**/axis2services/echo/**</exclude>
                 <exclude>**/axis2services/version/**</exclude>
@@ -40,6 +42,17 @@
                 <exclude>**/axis2/axis2.xml</exclude>
             </excludes>
         </fileSet>
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
+            <outputDirectory>wso2as-${pom.version}</outputDirectory>
+            <excludes>
+                <exclude>**/wso2server.bat</exclude>
+            </excludes>
+            <includes>
+                <include>**/*.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
 
         <!--  copying samples -->
         <fileSet>
@@ -52,14 +65,22 @@
         </fileSet>
 
         <fileSet>
-            <directory>../samples/service/target</directory>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/axis2services
-            </outputDirectory>
+            <directory>../samples/product/HelloWorld/target/repository/services</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/axis2services</outputDirectory>
             <includes>
-                <include>**/*.aar</include>
+                <include>**/**.aar</include>
             </includes>
         </fileSet>
+
+        <!--<fileSet>-->
+            <!--<directory>../samples/service/target</directory>-->
+            <!--<outputDirectory>-->
+                <!--${pom.artifactId}-${pom.version}/repository/deployment/server/axis2services-->
+            <!--</outputDirectory>-->
+            <!--<includes>-->
+                <!--<include>**/*.aar</include>-->
+            <!--</includes>-->
+        <!--</fileSet>-->
 
         <!--copying qpid config files -->
         <fileSet>
@@ -89,7 +110,7 @@
             </includes>
         </fileSet>   
 
-       <!--copying Kerberos conf files and multitenancy-packages.xml file-->
+       <!--copying Kerberos conf files-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/security
@@ -101,15 +122,6 @@
             </includes>
         </fileSet>   
           
-        <!--  copying default samples into repository-->
-        <!--<fileSet>
-            <directory>../samples/HelloWorld/target/repository/services</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/axis2services</outputDirectory>
-            <includes>
-                <include>**/**.aar</include>
-            </includes>
-        </fileSet>-->
-
         <!-- copy executables in samples with execute permissions -->
         <!--<fileSet>
             <directory>../samples</directory>

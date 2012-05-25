@@ -18,6 +18,7 @@
 package org.wso2.bps.integration.tests;
 
 import org.wso2.carbon.base.ServerConfigurationException;
+import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.utils.ServerConstants;
 
 import java.io.BufferedReader;
@@ -97,6 +98,9 @@ public class SimpleAxis2ServerManager {
         } catch (IOException e) {
             throw new RuntimeException("Unable to start server", e);
         }
+
+        ClientConnectionUtil.waitForPort(9000, 60*1000, true);
+
         process = tempProcess;
         System.out.println("Successfully started Axis2Server server. Returning...");
     }

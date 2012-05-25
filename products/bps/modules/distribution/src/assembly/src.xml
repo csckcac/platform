@@ -25,14 +25,14 @@
     <fileSets>
         <fileSet>
             <directory>target/sources</directory>
-            <outputDirectory>wso2bps-${pom.version}-src</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}-src</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../..</directory>
-            <outputDirectory>wso2bps-${pom.version}-src</outputDirectory>
+            <directory>../..</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}-src</outputDirectory>
             <includes>
                 <include>modules/**/*</include>
             </includes>
@@ -53,32 +53,32 @@
     </fileSets>
     <files>
         <file>
-            <source>../../../pom.xml</source>
-            <outputDirectory>wso2bps-${pom.version}-src</outputDirectory>
+            <source>../../pom.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../LICENSE.txt</source>
-            <outputDirectory>wso2bps-${pom.version}-src</outputDirectory>
+            <source>../../LICENSE.txt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../INSTALL.txt</source>
-            <outputDirectory>wso2bps-${pom.version}-src</outputDirectory>
+            <source>../../INSTALL.txt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../README.txt</source>
-            <outputDirectory>wso2bps-${pom.version}-src</outputDirectory>
+            <source>../../README.txt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../release-notes.html</source>
-            <outputDirectory>wso2bps-${pom.version}-src</outputDirectory>
+            <source>../../release-notes.html</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

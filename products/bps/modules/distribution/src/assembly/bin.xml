@@ -58,7 +58,7 @@
         </fileSet>
         <fileSet>
             <directory>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced
             </outputDirectory>
@@ -100,7 +100,7 @@
 
         <fileSet>
             <directory>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/repository/conf/
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <includes>
@@ -113,7 +113,7 @@
 
         <fileSet>
             <directory>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/repository/conf/security
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/security
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security
             </outputDirectory>
@@ -124,7 +124,7 @@
         </fileSet>
 
         <fileSet>
-            <directory>../../styles/service/src/main/resources/web/styles/css</directory>
+            <directory>../styles/service/src/main/resources/web/styles/css</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/admin
             </outputDirectory>
             <includes>
@@ -132,7 +132,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../styles/service/src/main/resources/web/styles/images</directory>
+            <directory>../styles/service/src/main/resources/web/styles/images</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/images
             </outputDirectory>
             <includes>
@@ -154,7 +154,7 @@
         </fileSet>
 
         <fileSet>
-            <directory>../../../modules/samples/product/sample-utils/src/main/scripts</directory>
+            <directory>../../modules/samples/product/sample-utils/src/main/scripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Server</outputDirectory>
             <includes>
                 <include>axis2server.sh</include>
@@ -162,7 +162,7 @@
             <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/samples/product/sample-utils/src/main/scripts</directory>
+            <directory>../../modules/samples/product/sample-utils/src/main/scripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Server</outputDirectory>
             <includes>
                 <include>axis2server.bat</include>
@@ -213,7 +213,7 @@
 
         <fileSet>
             <directory>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/identity</outputDirectory>
             <includes>
@@ -282,25 +282,25 @@
        </file-->
 
         <file>
-            <source>../../../INSTALL.txt</source>
+            <source>../../INSTALL.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../README.txt</source>
+            <source>../../README.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../LICENSE.txt</source>
+            <source>../../LICENSE.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../release-notes.html</source>
+            <source>../../release-notes.html</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -343,7 +343,7 @@
         </file>
         <file>
             <source>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/security/
             </outputDirectory>
@@ -377,48 +377,48 @@
         <!-- Including syslog-config.xml file -->
         <file>
             <source>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced
             </outputDirectory>
         </file>
         <file>
             <source>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
         </file>
         <!--broker config is copied at the very beginning from carbon-core. therefore it is commented here to stop copying it twice.-->
         <!--<file>
-            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/broker-config.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/broker-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
         </file>-->
         <file>
             <source>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
         </file>
 
-        <!--<file>-->
-        <!--<source>../../modules/samples/sample-utils/src/main/conf/server/axis2.xml</source>-->
-        <!--<outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Server/repository/conf</outputDirectory>-->
-        <!--<destName>axis2.xml</destName>-->
-        <!--</file>-->
-        <!--<file>-->
-        <!--<source>../../modules/samples/sample-utils/src/main/conf/server/sample-server-wrapper.conf</source>-->
-        <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>-->
-        <!--<destName>sample-server-wrapper.conf</destName>-->
-        <!--</file>-->
-        <!--<file>-->
-        <!--<source>../../modules/samples/sample-utils/src/main/conf/server/README.txt</source>-->
-        <!--<outputDirectory>${pom.artifactId}-${pom.version}/tmp/sampleServer</outputDirectory>-->
-        <!--<destName>README.txt</destName>-->
-        <!--</file>-->
-        <!--<file>-->
-        <!--<source>../../modules/services/CreditRatingService/target/CreditRatingService-${pom.version}.aar</source>-->
-        <!--<outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Server/repository/services</outputDirectory>-->
-        <!--</file>-->
+        <file>
+            <source>../../modules/samples/product/sample-utils/src/main/conf/server/axis2.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Server/repository/conf</outputDirectory>
+            <destName>axis2.xml</destName>
+        </file>
+        <file>
+            <source>../../modules/samples/product/sample-utils/src/main/conf/server/sample-server-wrapper.conf</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <destName>sample-server-wrapper.conf</destName>
+        </file>
+        <file>
+            <source>../../modules/samples/product/sample-utils/src/main/conf/server/README.txt</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/tmp/sampleServer</outputDirectory>
+            <destName>README.txt</destName>
+        </file>
+        <file>
+            <source>../../modules/services/CreditRatingService/target/CreditRatingService-${pom.version}.aar</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Server/repository/services</outputDirectory>
+        </file>
     </files>
 
 </assembly>

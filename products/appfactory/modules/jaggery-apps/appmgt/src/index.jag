@@ -7,20 +7,22 @@ include('includes/template_header.jag');
     <div id="workArea">
         <%
             include('process/webServiceUtil.jag');
-            var applicationList = getAllApps(request.getRemoteAddr());
-            if(applicationList==null){
-            %>
-                No Applications are created.
-            <%
-            }
+            try{
+                var applicationList = getAllApps(request.getRemoteAddr());
+                if(applicationList==null){
+                    print("No Applications are created.");
+                }
 
-            for (var s in applicationList) {
-                var applicationKey = applicationList[s];
-                var applicationName =applicationList[s];
-        %>
-        <a href="application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>"><%=applicationName%></a>
-        </br>
-        <%
+                for (var s in applicationList) {
+                    var applicationKey = applicationList[s];
+                    var applicationName =applicationList[s];
+            %>
+            <a href="application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>"><%=applicationName%></a>
+            </br>
+            <%
+                }
+            }catch(e){
+             print(e.message);
             }
         %>
     </div>

@@ -260,7 +260,7 @@
              return a;
              } catch (e) {
              log.error(e.toString());
-             return null;
+             throw new Error(e.message)
              }
              }
        function getAdminCookie(address){

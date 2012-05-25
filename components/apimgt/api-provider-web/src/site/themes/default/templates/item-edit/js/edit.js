@@ -12,9 +12,30 @@ function loadTiers() {
                           option = new Option(arr[j], arr[j]);
                           target.options[j] = option;
                       }
+                      addSelectedTiers(target);
 
                   }
               }, "json");
+}
+
+function setTiers() {
+    $("select[name='editTier']").change(function() {
+        // multipleValues will be an array
+        var multipleValues = $(this).val() || [];
+        var countLength = $('#tiersCollection').length;
+        if (countLength == 0) {
+
+            $('<input>').attr('type', 'hidden')
+                    .attr('name', 'tiersCollection')
+                    .attr('id', 'tiersCollection')
+                    .attr('value', multipleValues)
+                    .appendTo('#editAPIForm');
+        } else {
+            $('#tiersCollection').attr('value', multipleValues);
+
+        }
+
+    });
 }
 
 var updateResourcesToApi = function (rowNums) {

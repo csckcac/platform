@@ -3,6 +3,30 @@
  var result = mod.getTiers().tiers;
  var i,resCount,rowNums = [],api = outputs.api;%>
 
+<script type="text/javascript">
+    var addSelectedTiers;
+    $(document).ready(function() {
+    addSelectedTiers = function(target){
+    var tiersList,tiers=[];
+    tiersList="<%=api.availableTiers%>";
+    tiers=tiersList.split(",");  var tierArr = [];
+    for(var i=0;i<tiers.length;i++){
+    var tier=tiers[i];
+    for(var j=0;j<target.options.length;j++){
+    if(tier==target.options[j].value){
+    target.options[j].selected="selected";
+    tierArr.push(target.options[j].value);
+
+    }
+    }
+    }             ('<input>').attr('type', 'hidden')
+                .attr('name', 'tiersCollection')
+                .attr('id', 'tiersCollection')
+                .attr('value', tierArr)
+                .appendTo('#editAPIForm');
+    }
+    });
+</script>
 <div class="alert alert-error" id="editAPIError" style="display:none">
 <span id="editErrorSpan"></span>
 </div>
@@ -80,13 +104,8 @@
             <div class="control-group">
                     <label class="control-label" for="editTier">Tier Availability:</label>
                     <div class="controls">
-                        <select id="editTier" name="tier"  multiple="multiple" onChange="setTiers()">
-                         <%for(var j=0;j<result.length;j++){       %>
-                          <option value="<%=result[j].tierName%>"><%=result[j].tierName%></option>
-                       <%}%>
-
-                        </select>
-                    </div>
+                        <select id="editTier" name="editTier"  multiple="multiple" onChange="setTiers()"> 
+                       </select></div>
             </div>
 
             <div class="control-group">

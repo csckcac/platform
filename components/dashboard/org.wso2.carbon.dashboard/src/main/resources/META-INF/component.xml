@@ -16,7 +16,6 @@
  ~ under the License.
  -->
 <component xmlns="http://products.wso2.org/carbon">
-
     <deployers>
         <deployer>
             <directory>gadgets</directory>
@@ -24,4 +23,10 @@
             <class>org.wso2.carbon.dashboard.deployer.GadgetDeployer</class>
         </deployer>
     </deployers>
+    <ManagementPermissions>
+        <ManagementPermission>
+            <DisplayName>Dashboard</DisplayName>
+            <ResourceId>/permission/admin/manage/Dashboard</ResourceId>
+        </ManagementPermission>
+    </ManagementPermissions>
 </component>

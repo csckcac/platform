@@ -16,8 +16,11 @@
 
 package org.wso2.carbon.apimgt.impl;
 
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.apimgt.api.APIManagementException;
+import org.wso2.carbon.apimgt.api.model.APIIdentifier;
+import org.wso2.carbon.apimgt.api.model.Application;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.core.util.AnonymousSessionUtil;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -58,6 +61,57 @@ public class UserAwareAPIConsumer extends APIConsumerImpl {
             handleException("Error while loading user realm for user: " + username, e);
         } catch (UserStoreException e) {
             handleException("Error while loading the authorization manager", e);
+        }
+    }
+
+    @Override
+    public void addSubscription(APIIdentifier identifier,
+                                String userId, int applicationId) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        super.addSubscription(identifier, userId, applicationId);
+    }
+
+    @Override
+    public void addApplication(Application application, String userId) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        super.addApplication(application, userId);
+    }
+
+    @Override
+    public void updateApplication(Application application) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        super.updateApplication(application);
+    }
+
+    @Override
+    public void removeApplication(Application application) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        super.removeApplication(application);
+    }
+
+    @Override
+    public void addComment(APIIdentifier identifier, String s, String user) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+        super.addComment(identifier, s, user);
+    }
+
+    private void checkPermission(String permission) throws APIManagementException {
+        if (username == null) {
+            throw new APIManagementException("Attempt to execute privileged operation as" +
+                    " the anonymous user");
+        }
+
+        boolean authorized;
+        try {
+            authorized = authorizationManager.isUserAuthorized(username, permission,
+                    CarbonConstants.UI_PERMISSION_ACTION);
+        } catch (UserStoreException e) {
+            throw new APIManagementException("Error while checking user authorization", e);
+        }
+
+        if (!authorized) {
+            throw new APIManagementException("User '" + username + "' does not have the " +
+                    "required permission: " + permission);
         }
     }
 }

@@ -100,8 +100,8 @@
                             <table class="table table-bordered table-striped" id="resourceTable">
                                 <thead>
                                 <tr>
-                                    <th>Resource URI Template</th>
-                                    <th>Resource Method</th>
+                                    <th>URL Pattern</th>
+                                    <th>Resource Methods (HTTP Verbs)</th>
                                     <th></th>
                                 </tr>
                                 </thead>

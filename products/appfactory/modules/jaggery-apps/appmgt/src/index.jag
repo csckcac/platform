@@ -1,5 +1,5 @@
 <%
-    include('includes/template_header.jag');
+include('includes/template_header.jag');
 %>
 <div id="middle">
     <h2>Your Applications</h2>
@@ -8,6 +8,12 @@
         <%
             include('process/webServiceUtil.jag');
             var applicationList = getAllApps(request.getRemoteAddr());
+            if(!applicationList.value){
+            %>
+                No Applications are created.
+            <%
+            }
+
             for (var s in applicationList) {
                 var applicationKey = applicationList[s];
                 var applicationName =applicationList[s];

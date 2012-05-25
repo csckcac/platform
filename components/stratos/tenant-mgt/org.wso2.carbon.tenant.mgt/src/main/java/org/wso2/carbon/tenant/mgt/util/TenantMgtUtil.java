@@ -35,6 +35,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.config.multitenancy.MultiTenantRealmConfigBuilder;
 import org.wso2.carbon.user.core.tenant.Tenant;
+import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import org.apache.commons.logging.Log;
@@ -329,4 +330,33 @@ public class TenantMgtUtil {
         }
     }
 
+    /**
+     * Activate the given tenant, either at the time of tenant creation, or later by super admin.
+     *
+     * @param tenantDomain tenant domain
+     * @param tenantManager TenantManager object
+     * @param tenantId tenant Id
+     * @throws Exception UserStoreException.
+     */
+    public static void activateTenant(String tenantDomain, TenantManager tenantManager,
+                                      int tenantId) throws Exception {
+        try {
+            tenantManager.activateTenant(tenantId);
+        } catch (UserStoreException e) {
+            String msg = "Error in activating the tenant for tenant domain: " + tenantDomain + ".";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+
+        //activating the subscription
+        try {
+            if (TenantMgtServiceComponent.getBillingService() != null) {
+                TenantMgtServiceComponent.getBillingService().activateUsagePlan(tenantDomain);
+            }
+        } catch (Exception e) {
+            String msg = "Error while activating subscription for domain: " + tenantDomain + ".";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+    }
 }

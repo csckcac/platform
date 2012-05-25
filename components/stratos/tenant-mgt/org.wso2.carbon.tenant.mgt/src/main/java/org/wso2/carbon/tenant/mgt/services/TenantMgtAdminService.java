@@ -107,10 +107,12 @@ public class TenantMgtAdminService extends AbstractAdmin {
             log.error(msg, e);
         }
 
+        TenantManager tenantManager = TenantMgtServiceComponent.getTenantManager();
+
         // For the super tenant tenant creation, tenants are always activated as they are created.
-        TenantMgtServiceComponent.getTenantManager().activateTenant(tenant.getId());
+        TenantMgtUtil.activateTenant(tenantDomain, tenantManager, tenantId);
         if (log.isDebugEnabled()) {
-            log.debug("Activated the tenant during the tenant creation: " + tenant.getId());
+            log.debug("Activated the tenant " + tenantDomain + " created by the super tenant");
         }
 
         //Notify tenant activation
@@ -371,7 +373,7 @@ public class TenantMgtAdminService extends AbstractAdmin {
     }
 
     /**
-     * Activate the given tenant
+     * Activate a deactivated tenant, by the super tenant.
      *
      * @param tenantDomain tenant domain
      * @throws Exception UserStoreException.
@@ -388,14 +390,8 @@ public class TenantMgtAdminService extends AbstractAdmin {
             throw new Exception(msg, e);
         }
 
-        try {
-            tenantManager.activateTenant(tenantId);
-        } catch (UserStoreException e) {
-            String msg = "Error in activating the tenant for tenant domain: " + tenantDomain + ".";
-            log.error(msg, e);
-            throw new Exception(msg, e);
-        }
-        
+        TenantMgtUtil.activateTenant(tenantDomain, tenantManager, tenantId);
+
         //Notify tenant activation all listeners
         try {
             TenantMgtUtil.triggerTenantActivation(tenantId);
@@ -405,16 +401,6 @@ public class TenantMgtAdminService extends AbstractAdmin {
             throw new Exception(msg, e);
         }
 
-        //activating the subscription
-        try{
-            if (TenantMgtServiceComponent.getBillingService() != null) {
-                TenantMgtServiceComponent.getBillingService().activateUsagePlan(tenantDomain);
-            }
-        }catch(Exception e){
-            String msg = "Error while activating subscription for domain: " + tenantDomain + ".";
-            log.error(msg, e);
-            throw new Exception(msg, e);
-        }
     }
 
     /**

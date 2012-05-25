@@ -26,6 +26,9 @@ jagg.module("api", {
     },
     updateAPIStatus:function () {
         return jagg.require(jagg.getModulesDir() + "api/update.jag").updateAPIStatus.apply(this, arguments);
+    },
+    getTiers:function () {
+        return jagg.require(jagg.getModulesDir() + "api/add.jag").getTiers.apply(this, arguments);
     }
 
 

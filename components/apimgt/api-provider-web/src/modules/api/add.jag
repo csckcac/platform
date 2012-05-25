@@ -42,4 +42,32 @@ var isContextExist = function (context) {
         };
     }
 };
+
+var getTiers = function () {
+    var tier,tiers,list=[],log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
+    try {
+        tiers = provider.getTiers();
+        if (log.isDebugEnabled()) {
+            log.debug("getTiers " +  " : " + tiers);
+        }
+
+       for (var i = 0; i < tiers.length; i++) {
+            tier = tiers[i];
+            list.push({
+                tierName:tier.tierName
+            });
+        }
+        return {
+            error:false,
+            tiers:list
+        };
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            tiers:null
+        };
+    }
+};
 %>

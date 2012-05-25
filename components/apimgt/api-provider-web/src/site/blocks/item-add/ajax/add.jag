@@ -69,7 +69,25 @@ include("/jagg/jagg.jag");
 
         print(obj);
 
-    } else {
+    } else if (action === "getTiers") {
+        mod = jagg.module("api");
+        result = mod.getTiers();
+        if (result.error) {
+            obj = {
+                error:true,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false,
+                tiers:result.tiers
+            }
+        }
+
+        print(obj);
+
+    }
+    else {
         print({
                   error:true,
                   message:msg.error.invalidAction(action)

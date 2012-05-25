@@ -1,4 +1,5 @@
 <% jagg.template("item-add", function(inputs, outputs, jagg) { %>
+
 <div id="item-add">
     <h2>Add New API</h2>
     <div class="alert alert-error" id="addAPIError" style="display:none">
@@ -87,9 +88,7 @@
                 <div class="control-group">
                     <label class="control-label" for="tier">Tier Availability:</label>
                     <div class="controls">
-                        <select id="tier" name="tier">
-                            <option>Gold</option>
-                            <option>Silver</option>
+                        <select id="tier" name="tier"  multiple="multiple">
                         </select>
                     </div>
                 </div>

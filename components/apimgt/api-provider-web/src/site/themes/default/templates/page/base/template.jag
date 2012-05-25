@@ -32,8 +32,11 @@
 var name = request.getParameter("apiName");
 var version = request.getParameter("version")
 var docName = request.getParameter("docName");
-var inlineUrl=jagg.getAbsoluteUrl("/site/pages/inline-editor.jag"); %>
-<body <% if(reqUrl.indexOf(inlineUrl)>=0){%> onload="loadDefaultTinyMCEContent('<%=name%>','<%=version%>','<%=docName%>')"<%}%> >
+var inlineUrl="inline";
+var addUrl="add";%>
+<body <% if(reqUrl.indexOf(inlineUrl)>=0){%> onload="loadDefaultTinyMCEContent('<%=name%>','<%=version%>','<%=docName%>')"<%}%>
+<% if(reqUrl.indexOf(addUrl)>=0){%> onload="loadTiers()"<%}%>
+>
     <div id="header"><% jagg.includeBlocks(outputs.header); %></div>
     <div id="body"><% jagg.includeBlocks(outputs.body); %></div>
     <div id="footer"><% jagg.includeBlocks(outputs.footer); %></div>

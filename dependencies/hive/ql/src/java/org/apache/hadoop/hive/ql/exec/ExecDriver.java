@@ -19,12 +19,14 @@
 package org.apache.hadoop.hive.ql.exec;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -95,6 +97,8 @@ import org.apache.log4j.varia.NullAppender;
 public class ExecDriver extends Task<MapredWork> implements Serializable, HadoopJobExecHook {
 
   private static final long serialVersionUID = 1L;
+
+  protected static final String LOG4J_PROPERTY = "log4j.properties";
 
   protected transient JobConf job;
   public static MemoryMXBean memoryMXBean;
@@ -575,6 +579,15 @@ public class ExecDriver extends Task<MapredWork> implements Serializable, Hadoop
       hive_l4j = ExecDriver.class.getClassLoader().getResource(LogUtils.HIVE_L4J);
     }
 
+      String hive_l4j_str = System.getProperty(LOG4J_PROPERTY);
+      if (hive_l4j == null && hive_l4j_str != null) {
+          try {
+              hive_l4j = new URL("file:///" + hive_l4j_str);
+          } catch (MalformedURLException ignored) {
+              // Ignore
+          }
+      }
+
     if (hive_l4j != null) {
       // setting queryid so that log4j configuration can use it to generate
       // per query log file
@@ -640,14 +653,17 @@ public class ExecDriver extends Task<MapredWork> implements Serializable, Hadoop
     }
 
     boolean isSilent = HiveConf.getBoolVar(conf, HiveConf.ConfVars.HIVESESSIONSILENT);
-
+      
     if (noLog) {
       // If started from main(), and noLog is on, we should not output
       // any logs. To turn the log on, please set -Dtest.silent=false
       BasicConfigurator.resetConfiguration();
       BasicConfigurator.configure(new NullAppender());
     } else {
-      setupChildLog4j(conf);
+      boolean isTraceOn =  HiveConf.getBoolVar(conf, HiveConf.ConfVars.HADOOPEMBEDDEDLOCALMODETRACE);
+      if (!isTraceOn) {
+        setupChildLog4j(conf);
+      }
     }
 
     Log LOG = LogFactory.getLog(ExecDriver.class.getName());

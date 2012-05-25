@@ -66,7 +66,7 @@ public class HiveConf extends Configuration {
         // Look for hive-site.xml on the CLASSPATH and log its location if found.
         hiveSiteURL = classLoader.getResource("hive-site.xml");
 
-        String carbonHome = System.getProperty("CARBON_HOME");
+        String carbonHome = System.getProperty("carbon.home");
 
         if (hiveSiteURL == null && carbonHome != null) {
             try {
@@ -227,6 +227,8 @@ public class HiveConf extends Configuration {
     HADOOPMAPREDINPUTDIRRECURSIVE("mapred.input.dir.recursive", false),
     HADOOPJT("mapred.job.tracker", null),
     HADOOPEMBEDDEDLOCALMODE("hadoop.embedded.local.mode", true),
+    HADOOPEMBEDDEDLOCALMODEDEBUG("hadoop.embedded.local.mode.debug", false),
+    HADOOPEMBEDDEDLOCALMODETRACE("hadoop.embedded.local.mode.trace.enable", false),      
     MAPREDMAXSPLITSIZE("mapred.max.split.size", 256000000L),
     MAPREDMINSPLITSIZE("mapred.min.split.size", 1L),
     MAPREDMINSPLITSIZEPERNODE("mapred.min.split.size.per.rack", 1L),

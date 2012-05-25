@@ -194,16 +194,35 @@ public class MapRedTask extends ExecDriver implements Serializable {
 
         String cmdLine;
         String javaHome = System.getenv("JAVA_HOME");
-        String carbonHome = System.getProperty("CARBON_HOME");
+        String carbonHome = System.getProperty("carbon.home");
         String pluginsLocation = carbonHome + File.separator + "repository" + File.separator +
                                  "components" + File.separator + "plugins";
+        String dropinsLocation = carbonHome + File.separator + "repository" + File.separator +
+                                 "components" + File.separator + "dropins";
+        String libLocation = carbonHome + File.separator + "lib" + File.separator + "endorsed";
         String pluginsClasspath = pluginsLocation + "/*";
+        String dropinsClasspath = dropinsLocation + "/*";
+        String libClasspath= libLocation + "/*";
+
+        String classpath = pluginsClasspath + File.pathSeparator + dropinsClasspath +
+                           File.pathSeparator + libClasspath;
+
+        boolean isDebugOn = HiveConf.getBoolVar(job, HiveConf.ConfVars.HADOOPEMBEDDEDLOCALMODEDEBUG);
+
+        String debugString = "";
+        if (isDebugOn) {
+            debugString = "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8001";
+        }
 
         if (embeddedLocalMode != null && embeddedLocalMode.trim().equalsIgnoreCase("true")) {
+
+             String log4jProperties = System.getProperty(LOG4J_PROPERTY) != null ?
+                                      System.getProperty(LOG4J_PROPERTY) : "";
              cmdLine = javaHome + File.separator + "bin" + File.separator +"java" + " -classpath " +
-                       pluginsClasspath + " -Dproc_jar" + " -DCARBON_HOME=" + carbonHome + " " +
-                       jarCmd + " -plan " + planPath.toString() + " " + isSilent + " "  +
-                       " " + hiveConfArgs;
+                       classpath + " -Dproc_jar" + " -Dcarbon.home=" + carbonHome + " " +
+                       "-Dlog4j.properties=" + log4jProperties + " " + 
+                       debugString + " " + jarCmd + " -plan " + planPath.toString() + " " +
+                       isSilent + " " + hiveConfArgs;
         } else {
             cmdLine = hadoopExec + " jar " + jarCmd + " -plan "
           + planPath.toString() + " " + isSilent + " " + hiveConfArgs;

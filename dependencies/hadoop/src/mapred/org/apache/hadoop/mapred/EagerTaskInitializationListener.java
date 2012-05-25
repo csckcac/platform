@@ -72,21 +72,11 @@ class EagerTaskInitializationListener extends JobInProgressListener {
   class InitJob implements Runnable {
   
     private JobInProgress job;
-    //WSO2 Fix:
-    //private UserGroupInformation ugi; 
     public InitJob(JobInProgress job) {
       this.job = job;
-      //WSO2 Fix:
-      /*try {
-        this.ugi = UserGroupInformation.getCurrentUser();
-      } catch (IOException ioe) {
-        ioe.printStackTrace();
-      }*/
     }
     
     public void run() {
-      //WSO2 Fix:
-      //UserGroupInformationThreadLocal.set(ugi);
       ttm.initJob(job);
     }
   }

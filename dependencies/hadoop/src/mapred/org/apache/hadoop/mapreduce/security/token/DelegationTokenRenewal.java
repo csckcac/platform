@@ -120,7 +120,6 @@ public class DelegationTokenRenewal {
   public static synchronized void registerDelegationTokensForRenewal(
       JobID jobId, Credentials ts, Configuration conf, UserGroupInformation ugi) {
       mrOwnerUGI = ugi;
-      LOG.info("SSSSSSSSSSSSSSSSSSSS "+ugi);
       registerDelegationTokensForRenewal(jobId, ts, conf);
   }
 

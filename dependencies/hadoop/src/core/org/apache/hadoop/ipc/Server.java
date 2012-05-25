@@ -320,18 +320,7 @@ public abstract class Server {
     private class Reader implements Runnable {
       private volatile boolean adding = false;
       private Selector readSelector = null;
-      //WSO2 Fix:
-      //current is the UserGroupInformation object of the current thread. 
-      //This variable will be set as a thread local variable in the new thread that will be created.
-      //This is required by the WSO2 Carbon environment where job clients, namenodes and jobtrackers 
-      //will run on a single JVM.
-      //private UserGroupInformation current;
       Reader(Selector readSelector) {
-        //try {
-          //current = UserGroupInformation.getCurrentUser();
-        //}catch (IOException ioe) {
-          //LOG.warn(ioe.getMessage());
-        //}
         this.readSelector = readSelector;
       }
       public void run() {
@@ -1374,7 +1363,7 @@ public abstract class Server {
             LOG.debug(getName() + ": has #" + call.id + " from " +
                       call.connection+" by user "+call.connection.user.getUserName()+ ". Current Thread ID is "+Thread.currentThread().getId());
             
-	      //WSO2 Fix:
+	  //WSO2 Fix:
           UserGroupInformationThreadLocal.set(call.connection.user); 
           String errorClass = null;
           String error = null;

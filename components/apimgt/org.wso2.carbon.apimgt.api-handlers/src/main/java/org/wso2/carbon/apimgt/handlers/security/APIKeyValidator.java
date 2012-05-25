@@ -39,11 +39,6 @@ public class APIKeyValidator {
 
     private APIKeyCache infoCache;
 
-    public APIKeyValidator() {
-        infoCache = new APIKeyCache(APISecurityConstants.DEFAULT_MAX_VALID_KEYS,
-                APISecurityConstants.DEFAULT_MAX_INVALID_KEYS);
-    }
-
     private String getAuthSessionForAdminServices() throws Exception {
         return new AuthAdminServiceClient().login();
     }
@@ -59,9 +54,14 @@ public class APIKeyValidator {
      */
     public APIKeyValidationInfoDTO getKeyValidationInfo(String context, String apiKey,
                                                        String apiVersion) throws APISecurityException {
-        APIKeyValidationInfoDTO info = infoCache.getInfo(apiKey);
-        if (info != null) {
-            return info;
+        APIKeyValidationInfoDTO info;
+        if (infoCache == null) {
+            infoCache = APIKeyCacheFactory.getInstance().getAPIKeyCache(context, apiVersion);
+        } else {
+            info = infoCache.getInfo(apiKey);
+            if (info != null) {
+                return info;
+            }
         }
 
         synchronized (apiKey.intern()) {

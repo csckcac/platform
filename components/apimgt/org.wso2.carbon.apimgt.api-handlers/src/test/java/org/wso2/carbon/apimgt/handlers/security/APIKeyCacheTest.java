@@ -23,6 +23,7 @@ import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
 public class APIKeyCacheTest extends TestCase {
 
     public void testCaching() throws Exception {
+        APIKeyCacheFactory.getInstance().reset();
         TestAPIKeyValidator keyValidator = new TestAPIKeyValidator();
         APIKeyValidationInfoDTO goldUser = new APIKeyValidationInfoDTO();
         goldUser.setAuthorized(true);
@@ -61,6 +62,7 @@ public class APIKeyCacheTest extends TestCase {
     }
     
     public void testLRUBehavior() throws Exception {
+        APIKeyCacheFactory.getInstance().reset();
         TestAPIKeyValidator keyValidator = new TestAPIKeyValidator();
         TestAuthenticator authenticator = new TestAuthenticator(keyValidator);
 

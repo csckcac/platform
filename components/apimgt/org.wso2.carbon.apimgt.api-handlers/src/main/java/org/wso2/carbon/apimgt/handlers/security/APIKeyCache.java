@@ -38,7 +38,7 @@ public class APIKeyCache {
     private Map<String,APIKeyValidationInfoDTO> validKeys;
     private Map<String,APIKeyValidationInfoDTO> invalidKeys;
 
-    public APIKeyCache(int maxValidKeys, int maxInvalidKeys) {
+    APIKeyCache(int maxValidKeys, int maxInvalidKeys) {
         validKeys = new LRUCache<String, APIKeyValidationInfoDTO>(maxValidKeys);
         invalidKeys = new LRUCache<String, APIKeyValidationInfoDTO>(maxInvalidKeys);
     }

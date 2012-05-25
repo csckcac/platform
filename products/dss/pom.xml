@@ -48,7 +48,7 @@
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
-        <!--module>modules/integration</module-->
+        <module>modules/integration</module>
         <module>modules/org.wso2.stratos.dss.dashboard.ui</module>
         <module>modules/org.wso2.stratos.dss.login.ui</module>
     </modules>

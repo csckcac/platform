@@ -75,15 +75,15 @@ public class GovernanceApiWsdl {
         wsdlMgr = new WsdlManager(governanceRegistry);
     }
 
-    @BeforeClass(alwaysRun = true, groups = {"wso2.bps", "wso2.bps.bpelactivities"})
+    @BeforeClass(alwaysRun = true, groups = {"wso2.greg", "wso2.greg.GovernanceApiWsdl"})
     public void deployArtifact() throws InterruptedException, RemoteException,
                                         MalformedURLException, GovernanceException {
-        wsdl = wsdlMgr.newWsdl("http://appserver.stratosliveqa.private.wso2.com/services/t/manualQA0001.org/SessionService?wsdl");
+        wsdl = wsdlMgr.newWsdl("http://ws.strikeiron.com/donotcall2_5?WSDL");
         wsdlMgr.addWsdl(wsdl);
-        log.info("Add WSDL was successful");
+       // service = serviceManager.newService(new QName("http://my.service.ns1", "MyService"));
     }
 
-    @Test(groups = {"wso2.bps", "wso2.bps.bpelactivities"}, description = "Invike combine URL Bpel")
+    @Test(groups = {"wso2.greg", "wso2.greg.GovernanceApiWsdl"}, description = "Invike combine URL Bpel")
     public void testAddWsdl() throws Exception, RemoteException {
 
         boolean wsdlExists = false;
@@ -96,7 +96,7 @@ public class GovernanceApiWsdl {
         Assert.assertTrue(wsdlExists, "Wsdl is not listed in Registry");
     }
 
-    @AfterClass(alwaysRun = true, groups = {"wso2.bps", "wso2.bps.bpelactivities"})
+    @AfterClass(alwaysRun = true, groups = {"wso2.greg", "wso2.greg.GovernanceApiWsdl"})
     public void removeArtifacts() throws GovernanceException {
         wsdlMgr.removeWsdl(wsdl.getId().toString());
     }

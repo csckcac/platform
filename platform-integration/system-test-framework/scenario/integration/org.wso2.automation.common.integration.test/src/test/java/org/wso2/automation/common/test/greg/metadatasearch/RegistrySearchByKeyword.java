@@ -39,6 +39,9 @@ import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
 import java.rmi.RemoteException;
 
+/*
+Search Registry metadata by keyword(content)
+ */
 public class RegistrySearchByKeyword {
     private String gregBackEndUrl;
 
@@ -61,7 +64,7 @@ public class RegistrySearchByKeyword {
 
     }
 
-    @Test(priority = 1)
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available keyword")
     public void searchResourceByAvailableKeyword()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
@@ -73,6 +76,7 @@ public class RegistrySearchByKeyword {
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid keyword");
         for (ResourceData resource : result.getResourceDataList()) {
             Resource data = registry.get(resource.getResourcePath());
             String content = new String((byte[]) data.getContent());
@@ -86,7 +90,7 @@ public class RegistrySearchByKeyword {
     }
 
     //Pattern search not applicable for content search
-//    @Test(priority = 2)
+//    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by  keywords pattern matching")
     public void searchResourceByContentPattern()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
@@ -98,6 +102,7 @@ public class RegistrySearchByKeyword {
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid keyword pattern");
         for (ResourceData resource : result.getResourceDataList()) {
             Resource data = registry.get(resource.getResourcePath());
             String content = new String((byte[]) data.getContent());
@@ -109,18 +114,19 @@ public class RegistrySearchByKeyword {
 
     }
 
-    @Test(priority = 3)
+    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by available keywords")
     public void searchResourceByAvailableContents()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setContent("com,org");
+        paramBean.setContent("com org");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid keywords");
         for (ResourceData resource : result.getResourceDataList()) {
             Resource data = registry.get(resource.getResourcePath());
             String content = new String((byte[]) data.getContent());
@@ -132,7 +138,7 @@ public class RegistrySearchByKeyword {
 
     }
 
-    @Test(priority = 4)
+    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable keyword")
     public void searchResourceByUnAvailableContent()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
@@ -147,7 +153,8 @@ public class RegistrySearchByKeyword {
 
     }
 
-    @Test(priority = 4, dataProvider = "invalidCharacter")
+    @Test(priority = 4, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
+          description = "Metadata search by keywords with invalid characters")
     public void searchResourceByContentWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();

@@ -31,6 +31,9 @@ import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 
 import java.rmi.RemoteException;
 
+/*
+Save and Delete metadata search Filter test
+*/
 public class SaveDeleteFilterTest {
     private String gregBackEndUrl;
 
@@ -53,7 +56,7 @@ public class SaveDeleteFilterTest {
 
     }
 
-    @Test(priority = 1)
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Save Metadata search filter")
     public void saveFilter() throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean queryBean = new CustomSearchParameterBean();
         SearchParameterBean bean = new SearchParameterBean();
@@ -84,7 +87,7 @@ public class SaveDeleteFilterTest {
 
     }
 
-    @Test(priority = 2, dependsOnMethods = {"saveFilter"})
+    @Test(priority = 2, dependsOnMethods = {"saveFilter"}, groups = {"wso2.greg"}, description = "Edit Metadata search Filter")
     public void editFilter() throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean queryBean = new CustomSearchParameterBean();
         SearchParameterBean bean = new SearchParameterBean();
@@ -115,7 +118,7 @@ public class SaveDeleteFilterTest {
 
     }
 
-    @Test(priority = 3, dependsOnMethods = {"editFilter"})
+    @Test(priority = 3, dependsOnMethods = {"editFilter"}, groups = {"wso2.greg"}, description = "Delete Metadata search Filter")
     public void deleteFilter()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         boolean isFilterFound = false;

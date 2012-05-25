@@ -16,8 +16,8 @@
         <productPageURL>http://wso2.com/products/enterprise-service-bus/</productPageURL>
         <description>Enterprise Service Bus in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Application Server" default="true">
-        <label>Stratos Application Server</label>
+    <cloudService name="Application Server" default="true">
+        <label>Application Server</label>
         <link>https://appserver.cloud.wso2.com</link>
         <icon>
             https://localhost:9443/cloud-services-icons/appserver.gif

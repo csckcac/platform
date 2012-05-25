@@ -44,6 +44,9 @@ import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.usage.client.APIUsageStatisticsClient;
 import org.wso2.carbon.apimgt.usage.client.dto.*;
 import org.wso2.carbon.apimgt.usage.client.dto.APIUsageDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.APIVersionLastAccessTimeDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.APIVersionUsageDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.PerUserAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.hostobjects.file.FileHostObject;
 import org.wso2.carbon.hostobjects.web.RequestHostObject;
@@ -404,7 +407,21 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
             }
             myn.put(5, myn, checkValue(tagsSet.toString()));
-            myn.put(6, myn, checkValue(api.getAvailableTiers().iterator().next().getName()));
+            StringBuffer tiersSet = new StringBuffer("");
+            Set<Tier> tierSet = api.getAvailableTiers();
+            Iterator it = tierSet.iterator();
+            int j = 0;
+            while (it.hasNext()) {
+                Object tierObject = it.next();
+                Tier tier = (Tier) tierObject;
+                tiersSet.append(tier.getName());
+                if (j != tierSet.size() - 1) {
+                    tiersSet.append(",");
+                }
+                j++;
+            }
+
+            myn.put(6, myn, checkValue(tiersSet.toString()));
             myn.put(7, myn, checkValue(api.getStatus().toString()));
             myn.put(8, myn, api.getThumbnailUrl());
             myn.put(9, myn, api.getContext());
@@ -419,7 +436,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     List<String> utArr = new ArrayList<String>();
                     URITemplate ut = (URITemplate) i.next();
                     utArr.add(ut.getUriTemplate());
-                    utArr.add(ut.getMethodsAsString().replaceAll("\\s",","));
+                    utArr.add(ut.getMethodsAsString().replaceAll("\\s",","));;
 
                     NativeArray utNArr = new NativeArray(utArr.size());
                     for (int p = 0; p < utArr.size(); p++) {

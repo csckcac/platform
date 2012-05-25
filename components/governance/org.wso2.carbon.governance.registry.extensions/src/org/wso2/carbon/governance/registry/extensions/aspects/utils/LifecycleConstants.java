@@ -79,4 +79,9 @@ public class LifecycleConstants {
      * Defines name attribute
      */
     public static final String NAME = "name";
+
+    /**
+     * Defines the attribute name that is used to enable auditing
+     */
+    public static final String AUDIT = "audit";
 }

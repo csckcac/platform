@@ -83,10 +83,13 @@ public class DefaultLifeCycle extends Aspect {
     private Map<String, Map<String,String>> transitionUIs;
 
 
-    boolean isConfigurationFromResource;
+    private boolean isConfigurationFromResource;
     private String configurationResourcePath;
     private OMElement configurationElement;
     private String aspectName;
+
+//    Is there to check whether we need to audit the lifecycle actions.
+    private boolean isAuditEnabled;
 
     private SCXML scxml;
 
@@ -145,6 +148,9 @@ public class DefaultLifeCycle extends Aspect {
         stateEvents = new HashMap<String, List<String>>();
         scriptElements = new HashMap<String, List<ScriptBean>>();
         transitionUIs = new HashMap<String, Map<String, String>>();
+
+//        By default we enable auditing
+        isAuditEnabled = true;
     }
 
     @Override
@@ -208,6 +214,13 @@ public class DefaultLifeCycle extends Aspect {
         }
 
         try {
+//            We check if there is an attribute called "audit" and if it exists, what is the value of that attribute
+            if(configurationElement.getAttributeValue(new QName(LifecycleConstants.AUDIT)) != null){
+                isAuditEnabled = Boolean.parseBoolean(
+                        configurationElement.getAttributeValue(new QName(LifecycleConstants.AUDIT)));
+            }
+
+//            Here we are taking the scxml element from the configuration
             OMElement scxmlElement = configurationElement.getFirstElement();
             scxml = SCXMLParser.parse(new InputSource(
                     new CharArrayReader((scxmlElement.toString()).toCharArray())), null);
@@ -633,7 +646,10 @@ public class DefaultLifeCycle extends Aspect {
         requestContext.getRegistry().put(newResourcePath, resource);
         
 //        adding the logs to the registry
-        (new StatWriter()).writeHistory((StatCollection) requestContext.getProperty(LifecycleConstants.STAT_COLLECTION));
+        if (isAuditEnabled) {
+            (new StatWriter()).writeHistory((StatCollection) requestContext.getProperty(
+                    LifecycleConstants.STAT_COLLECTION));
+        }
     }
 
     private void clearCheckItems(Resource resource){

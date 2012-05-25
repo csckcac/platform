@@ -45,7 +45,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * Class will test Service manager specific governance API methods
  */
-public class ServiceAPITests {
+public class ServiceManagerAPITests {
 
     String service_namespace = "http://example.com/demo/services";
     String service_name = "GovernanceAPIAutomatedTestService";

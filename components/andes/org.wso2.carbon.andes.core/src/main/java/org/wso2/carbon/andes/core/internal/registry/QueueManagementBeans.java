@@ -36,6 +36,43 @@ public  class QueueManagementBeans {
         return self;
     }
 
+
+    public void createQueue(String queueName , String userName) throws QueueManagerException {
+        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        try {
+
+            ObjectName objectName =
+                       new ObjectName("org.wso2.andes:type=VirtualHost.VirtualHostManager,VirtualHost=\"carbon\"");
+            String operationName = "createNewQueue";
+
+            Object[] parameters = new Object[]{queueName,userName,true};
+            String[] signature = new String[]{String.class.getName(),String.class.getName(),
+                    boolean.class.getName()};
+
+            mBeanServer.invoke(
+                    objectName,
+                    operationName,
+                    parameters,
+                    signature);
+
+            ObjectName bindingMBeanObjectName =
+                    new ObjectName("org.wso2.andes:type=VirtualHost.Exchange,VirtualHost=\"carbon\",name=\"carbon.direct\",ExchangeType=direct");
+            String bindingOperationName = "createNewBinding";
+
+            Object[] bindingParams = new Object[]{queueName, queueName};
+            String[] bpSignatures = new String[]{String.class.getName(), String.class.getName()};
+
+            mBeanServer.invoke(
+                    bindingMBeanObjectName,
+                    bindingOperationName,
+                    bindingParams,
+                    bpSignatures);
+
+        } catch (Exception e) {
+            throw new QueueManagerException("Cannot create Queue : " + queueName,e);
+        }
+    }
+
     public ArrayList<Queue> getAllQueues() throws QueueManagerException {
         ArrayList<Queue> queueDetailsList = new ArrayList<Queue>();
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
@@ -109,12 +146,27 @@ public  class QueueManagementBeans {
     public void deleteQueue(String queueName) throws QueueManagerException {
         try {
             MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+
+            ObjectName bindingMBeanObjectName =
+                    new ObjectName("org.wso2.andes:type=VirtualHost.Exchange,VirtualHost=\"carbon\",name=\"carbon.direct\",ExchangeType=direct");
+            String bindingOperationName = "removeBinding";
+
+            Object[] bindingParams = new Object[]{queueName, queueName};
+            String[] bpSignatures = new String[]{String.class.getName(), String.class.getName()};
+
+            mBeanServer.invoke(
+                    bindingMBeanObjectName,
+                    bindingOperationName,
+                    bindingParams,
+                    bpSignatures);
             ObjectName objectName =
-                    new ObjectName("org.wso2.andes:type=QueueManagementInformation,name=QueueManagementInformation");
+                       new ObjectName("org.wso2.andes:type=VirtualHost.VirtualHostManager,VirtualHost=\"carbon\"");
             String operationName = "deleteQueue";
+
             Object[] parameters = new Object[]{queueName};
             String[] signature = new String[]{String.class.getName()};
-            Object result = mBeanServer.invoke(
+
+            mBeanServer.invoke(
                     objectName,
                     operationName,
                     parameters,

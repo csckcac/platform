@@ -26,6 +26,7 @@ import org.wso2.carbon.andes.core.internal.util.QueueManagementConstants;
 import org.wso2.carbon.andes.core.internal.util.Utils;
 import org.wso2.carbon.andes.core.types.Queue;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 
@@ -44,41 +45,15 @@ public class QueueManagerServiceImpl implements QueueManagerService {
 
 
     public void createQueue(String queueName) throws QueueManagerException {
-
-         Connection queueConnection = null;
         try {
-            System.setProperty(ClientProperties.AMQP_VERSION, "0-91");
-            Properties initialContextProperties = new Properties();
-            initialContextProperties.put("java.naming.factory.initial",
-                    "org.wso2.andes.jndi.PropertiesFileInitialContextFactory");
-            String jndiQueueName = "queue." + queueName;
-            initialContextProperties.put(jndiQueueName, queueName);
-            String connectionString = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:" +
-                    (DEFAULT_ANDES_PORT + readPortOffset())+ "'";
-            initialContextProperties.put("connectionfactory.qpidConnectionfactory", connectionString);
-            InitialContext initialContext = new InitialContext(initialContextProperties);
-            QueueConnectionFactory queueConnectionFactory
-                    = (QueueConnectionFactory) initialContext.lookup("qpidConnectionfactory");
-            queueConnection = queueConnectionFactory.createConnection();
-            queueConnection.start();
-            Session queueSession = queueConnection.createSession(false, QueueSession.AUTO_ACKNOWLEDGE);
-            Destination destination = (Destination) initialContext.lookup(queueName);
 
-            MessageConsumer messageConsumer = queueSession.createConsumer(destination);
-            messageConsumer.receiveNoWait();
-            messageConsumer.close();
-
-            queueSession.close();
-            queueConnection.stop();
-            queueConnection.close();
-
-
-        } catch (NamingException e) {
-            log.error("Error in creating queue connection", e);
-            throw new QueueManagerException("Error in creating queue connection", e);
-        } catch (JMSException e) {
-            log.error("Error in creating queue connection", e);
-            throw new QueueManagerException("Error in creating queue connection", e);
+            String userName = getLoggedInUserName();
+            if(!QueueManagementBeans.getInstance().queueExists(queueName)){
+                QueueManagementBeans.getInstance().createQueue(queueName,userName);
+            }
+        }catch (Exception e) {
+            log.error("Error in creating queue", e);
+            throw new QueueManagerException("Error in creating queue ", e);
         }
     }
 
@@ -112,6 +87,17 @@ public class QueueManagerServiceImpl implements QueueManagerService {
             return CARBON_DEFAULT_PORT_OFFSET;
         }
     }
+
+    private static String getLoggedInUserName() {
+       String userName = "";
+       if (CarbonContext.getCurrentContext().getTenantId() != 0) {
+           userName = CarbonContext.getCurrentContext().getUsername() + "!"
+                   + CarbonContext.getCurrentContext().getTenantDomain();
+       } else {
+           userName = CarbonContext.getCurrentContext().getUsername();
+       }
+       return userName.trim();
+   }
 
 
 }

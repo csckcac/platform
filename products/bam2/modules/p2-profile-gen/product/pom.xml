@@ -226,8 +226,10 @@
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}</featureArtifactDef>-->
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}</featureArtifactDef>-->
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>-->
+                                <!-- Gadget Gen Features -->
 
-
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.gadgetgenwizard.feature:${carbon.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -246,6 +248,14 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
+                                <!-- Gadget Gen -->
+
+                                <feature>
+                                    <id>org.wso2.carbon.gadgetgenwizard.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+
+
                                 <!-- Jaggery -->
 
                                 <feature>

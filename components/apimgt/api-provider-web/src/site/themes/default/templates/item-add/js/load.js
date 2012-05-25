@@ -16,6 +16,19 @@ function loadTiers() {
               }, "json");
 }
 
+function setTiers(){
+$("select[name='tier']").change(function() {
+        // multipleValues will be an array
+        var multipleValues = $(this).val() || [];
+        $('<input>').attr('type', 'hidden')
+            .attr('name', 'tiersCollection')
+            .attr('id', 'tiersCollection')
+            .attr('value', multipleValues)
+            .appendTo('#addAPIForm');
+
+});
+}
+
 $(document).ready(function() {
     var v = $("#addAPIForm").validate({
                                           submitHandler: function(form) {

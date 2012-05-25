@@ -18,7 +18,7 @@ include("/jagg/jagg.jag");
         apiData.sandbox = request.getParameter("sandbox");
         apiData.wsdl = request.getParameter("wsdl");
         apiData.tags = request.getParameter("tags");
-        apiData.tier = request.getParameter("tier");
+        apiData.tier = request.getParameter("tiersCollection");
         apiData.imageUrl = request.getFile("apiThumb");
         apiData.context = request.getParameter("context");
         var resCount = new Array();

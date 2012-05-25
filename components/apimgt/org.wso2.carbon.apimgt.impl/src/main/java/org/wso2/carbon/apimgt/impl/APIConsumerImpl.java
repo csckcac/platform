@@ -18,10 +18,13 @@
 
 package org.wso2.carbon.apimgt.impl;
 
+import org.apache.axis2.AxisFault;
 import org.wso2.carbon.apimgt.api.APIConsumer;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
+import org.wso2.carbon.apimgt.handlers.security.stub.types.APIKeyMapping;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
+import org.wso2.carbon.apimgt.impl.utils.APIAuthenticationAdminClient;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
@@ -409,7 +412,40 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
     }
 
     public void removeApplication(Application application) throws APIManagementException {
+        APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
+                getAPIManagerConfigurationService().getAPIManagerConfiguration();
+        boolean gatewayExists = config.getFirstProperty(APIConstants.API_GATEWAY_SERVER_URL) != null;
+        Set<SubscribedAPI> apiSet = null;
+        if (gatewayExists) {
+            apiSet = getSubscribedAPIs(application.getSubscriber());
+        }
         apiMgtDAO.deleteApplication(application);
+
+        if (gatewayExists && apiSet != null && apiSet.size() > 0) {
+            List<APIKeyMapping> mappings = new ArrayList<APIKeyMapping>();
+            for (SubscribedAPI api : apiSet) {
+                if (api.getApplication().getName().equals(application.getName())) {
+                    List<APIKey> keys = api.getKeys();
+                    for (APIKey key : keys) {
+                        APIKeyMapping mapping = new APIKeyMapping();
+                        API apiDefinition = getAPI(api.getApiId());
+                        mapping.setApiVersion(api.getApiId().getVersion());
+                        mapping.setContext(apiDefinition.getContext());
+                        mapping.setKey(key.getKey());
+                        mappings.add(mapping);
+                    }
+                }
+            }
+
+            if (mappings.size() > 0) {
+                try {
+                    APIAuthenticationAdminClient client = new APIAuthenticationAdminClient();
+                    client.invalidateKeys(mappings);
+                } catch (AxisFault axisFault) {
+                    handleException("Error while invalidating API keys at the gateway", axisFault);
+                }
+            }
+        }
     }
 
     public Application[] getApplications(Subscriber subscriber) throws APIManagementException {

@@ -17,42 +17,21 @@
 package org.wso2.carbon.apimgt.impl.utils;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
-import org.apache.axis2.context.ServiceContext;
-import org.apache.axis2.transport.http.HTTPConstants;
-import org.wso2.carbon.apimgt.impl.APIConstants;
-import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
-import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.template.APITemplateBuilder;
-import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.rest.api.stub.RestApiAdminStub;
 import org.wso2.carbon.rest.api.stub.types.carbon.APIData;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.rmi.RemoteException;
-
-public class RESTAPIAdminClient {
+public class RESTAPIAdminClient extends AbstractAPIGatewayAdminClient {
 
     private RestApiAdminStub restApiAdminStub;
     private APITemplateBuilder builder;
     
     public RESTAPIAdminClient(APITemplateBuilder builder) throws AxisFault {
         this.builder = builder;
-        APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
-                getAPIManagerConfigurationService().getAPIManagerConfiguration();
-        String url = config.getFirstProperty(APIConstants.API_GATEWAY_SERVER_URL);
-        String cookie = login(config, url);
+        String url = getServerURL();
+        String cookie = login(url);
         restApiAdminStub = new RestApiAdminStub(null, url + "RestApiAdmin");
-        ServiceClient client = restApiAdminStub._getServiceClient();
-        Options options = client.getOptions();
-        options.setTimeOutInMilliSeconds(15 * 60 * 1000);
-        options.setProperty(HTTPConstants.SO_TIMEOUT, 15 * 60 * 1000);
-        options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, 15 * 60 * 1000);
-        options.setManageSession(true);
-        options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
+        setup(restApiAdminStub, cookie);
     }
 
     public void addApi() throws AxisFault {
@@ -86,38 +65,6 @@ public class RESTAPIAdminClient {
             restApiAdminStub.deleteApi(builder.getAPIName());
         } catch (Exception e) {
             throw new AxisFault("Error while deleting API", e);
-        }
-    }
-    
-    private String login(APIManagerConfiguration config, String url) throws AxisFault {
-        String user = config.getFirstProperty(APIConstants.API_GATEWAY_USERNAME);
-        String password = config.getFirstProperty(APIConstants.API_GATEWAY_PASSWORD);
-
-        if (url == null || user == null || password == null) {
-            throw new AxisFault("Required API gateway admin configuration unspecified");
-        }
-
-        String host;
-        try {
-            host = new URL(url).getHost();
-        } catch (MalformedURLException e) {
-            throw new AxisFault("API gateway URL is malformed", e);
-        }
-
-        AuthenticationAdminStub authAdminStub = new AuthenticationAdminStub(null, url + "AuthenticationAdmin");
-        ServiceClient client = authAdminStub._getServiceClient();
-        Options options = client.getOptions();
-        options.setManageSession(true);
-        try {
-            authAdminStub.login(user, password, host);
-            ServiceContext serviceContext = authAdminStub.
-                    _getServiceClient().getLastOperationContext().getServiceContext();
-            String sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
-            return sessionCookie;
-        } catch (RemoteException e) {
-            throw new AxisFault("Error while contacting the authentication admin services", e);
-        } catch (LoginAuthenticationExceptionException e) {
-            throw new AxisFault("Error while authenticating against the API gateway admin", e);
         }
     }
 }

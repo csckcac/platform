@@ -169,18 +169,8 @@ public class ServiceMediaTypeHandler extends Handler {
 
                     if (!originalServicePath.equals(tempPath)) {
                         String path = RegistryUtils.getRelativePathToOriginal(servicePath, RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH);
-                        if (ServiceUtils.getModifiedList().size() == 0) {
+                        if(!ServiceUtils.getModifiedList().contains(path)){
                             ServiceUtils.addToModifiedList(path);
-                        } else {
-                            boolean flag = false;
-                            for (int i = 0; i < ServiceUtils.getModifiedList().size(); i++) {
-                                if (ServiceUtils.getModifiedList().get(i).equals(path)) {
-                                    flag = true;
-                                }
-                            }
-                            if (flag == false) {
-                                ServiceUtils.addToModifiedList(path);
-                            }
                         }
                         return;
                     }

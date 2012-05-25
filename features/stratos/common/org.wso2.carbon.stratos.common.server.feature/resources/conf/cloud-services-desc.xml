@@ -25,8 +25,8 @@
         <productPageURL>http://wso2.com/products/application-server/</productPageURL>
         <description>Application Server in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Data Services Server" default="true">
-        <label>Stratos Data Services Server</label>
+    <cloudService name="WSO2 Data Services Server" default="true">
+        <label>WSO2 Data Services Server</label>
         <link>https://dss.cloud.wso2.com</link>
         <icon>
             https://localhost:9443/cloud-services-icons/ds.gif

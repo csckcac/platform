@@ -1254,6 +1254,16 @@
   </property>
 
   <property>
+    <name>hadoop.embedded.local.mode.debug</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>hadoop.embedded.local.mode.trace.enable</name>
+    <value>true</value>
+  </property>
+
+  <property>
     <name>mapred.local.dir</name>
     <value>${CARBON_HOME}/tmp/hadoop/local</value>
   </property>

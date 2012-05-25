@@ -197,46 +197,6 @@ public class TenantMgtUtil {
     }
 
     /**
-     * Check whether a tenant exist with the givne tenantInfoBean and TenantManager.
-     *
-     * @param tenant tenant
-     * @return true, if the chosen name is available to register
-     * @throws Exception, if unable to get the tenant id or if a tenant with same domain exists.
-     */
-    public static boolean isDomainNameAvailable(Tenant tenant) throws Exception {
-        TenantManager tenantManager = TenantMgtServiceComponent.getTenantManager();
-        String tenantDomain = tenant.getDomain();
-
-        // The registry reserved words are checked first.
-        if (tenantDomain.equals("atom") || tenantDomain.equals("registry") ||
-            tenantDomain.equals("resource")) {
-            String msg = "You can not use a registry reserved word:" + tenantDomain +
-                         ":as a tenant domain. Please choose a different one.";
-            log.error(msg);
-            throw new Exception(msg);
-        }
-
-        int tenantId;
-        try {
-            tenantId = tenantManager.getTenantId(tenantDomain);
-        } catch (UserStoreException e) {
-            String msg = "Error in getting the tenant id for the given domain  " +
-                         tenant.getDomain() + ".";
-            log.error(msg);
-            throw new Exception(msg, e);
-        }
-
-        // check a tenant with same domain exist.
-        if (tenantId > 0 || tenant.getDomain().equals(MultitenantConstants.SUPER_TENANT_NAME)) {
-            String msg = "A tenant with same domain already exist. Please use a different domain." +
-                         " Chosen tenant domain: " + tenant.getDomain() + ".";
-            log.info(msg);
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * gets the UserStoreManager for a tenant
      *
      * @param tenant   - a tenant

@@ -35,7 +35,6 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.config.multitenancy.MultiTenantRealmConfigBuilder;
 import org.wso2.carbon.user.core.tenant.Tenant;
-import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import org.apache.commons.logging.Log;
@@ -53,34 +52,6 @@ public class TenantMgtUtil {
 
     private static final Log log = LogFactory.getLog(TenantMgtUtil.class);
     private static final String ILLEGAL_CHARACTERS_FOR_TENANT_DOMAIN = ".*[^a-zA-Z0-9\\._\\-].*";
-    
-    /**
-     * Activates the tenant
-     *
-     * @param tenantDomain tenant domain
-     * @throws Exception , UserStoreException in retrieving the tenant id or
-     *                   activating the tenant.
-     */
-    public static void activateTenant(String tenantDomain) throws Exception {
-        TenantManager tenantManager = TenantMgtServiceComponent.getTenantManager();
-        int tenantId;
-        try {
-            tenantId = tenantManager.getTenantId(tenantDomain);
-        } catch (UserStoreException e) {
-            String msg = "Error in retrieving the tenant id for the tenant domain: " + tenantDomain
-                         + ".";
-            log.error(msg);
-            throw new Exception(msg, e);
-        }
-
-        try {
-            tenantManager.activateTenant(tenantId);
-        } catch (UserStoreException e) {
-            String msg = "Error in activating the tenant for tenant domain: " + tenantDomain + ".";
-            log.error(msg);
-            throw new Exception(msg, e);
-        }
-    }
 
     /**
      * Prepares string to show theme management page.
@@ -111,8 +82,7 @@ public class TenantMgtUtil {
      * Triggers adding the tenant for TenantMgtListener
      *
      * @param tenantInfo tenant
-     * @throws UserStoreException - exception not handled here.
-     * @throws StratosException 
+     * @throws StratosException, trigger failed
      */
     public static void triggerAddTenant(TenantInfoBean tenantInfo) throws StratosException {
         // initializeRegistry(tenantInfoBean.getTenantId());
@@ -126,7 +96,7 @@ public class TenantMgtUtil {
      * Triggers an update for the tenant for TenantMgtListener
      *
      * @param tenantInfoBean tenantInfoBean
-     * @throws UserStoreException - exception not handled, throw as it is.
+     * @throws org.wso2.carbon.stratos.common.exception.StratosException, if update failed
      */
     public static void triggerUpdateTenant(
             TenantInfoBean tenantInfoBean) throws StratosException {
@@ -248,15 +218,6 @@ public class TenantMgtUtil {
         }
     }
 
-    
-
-
-    
-
-
-    
-
-
     /**
      * initializes tenant from the user input (tenant info bean)
      *
@@ -367,6 +328,5 @@ public class TenantMgtUtil {
             throw new Exception(msg, e);
         }
     }
-
 
 }

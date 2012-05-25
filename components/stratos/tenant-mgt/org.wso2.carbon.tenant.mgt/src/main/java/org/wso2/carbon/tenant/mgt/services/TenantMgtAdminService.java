@@ -407,7 +407,6 @@ public class TenantMgtAdminService extends AbstractAdmin {
             log.error(msg, e);
             throw new Exception(msg, e);
         }
-        
 
         //activating the subscription
         try{

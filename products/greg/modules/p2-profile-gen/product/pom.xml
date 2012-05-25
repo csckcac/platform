@@ -131,7 +131,7 @@
 
                                 <!-- Features related to Cloud governance -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.governance:org.wso2.stratos.governance.ui.feature:${stratos.version}</featureArtifactDef>
+                                <!--featureArtifactDef>org.wso2.governance:org.wso2.stratos.governance.ui.feature:${stratos.version}</featureArtifactDef-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}</featureArtifactDef>
                                 <!-- GApp SSO features -->
@@ -385,10 +385,10 @@
                                     <id>org.wso2.carbon.stratos.common.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.stratos.governance.ui.feature.group</id>
                                     <version>${stratos.version}</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.stratos.usage.agent.feature.group</id>
                                     <version>${stratos.version}</version>

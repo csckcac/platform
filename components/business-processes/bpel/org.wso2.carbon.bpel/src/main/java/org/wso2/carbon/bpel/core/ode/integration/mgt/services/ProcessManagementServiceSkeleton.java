@@ -28,6 +28,7 @@ import org.apache.ode.bpel.common.Filter;
 import org.apache.ode.bpel.common.InstanceFilter;
 import org.apache.ode.bpel.common.ProcessFilter;
 import org.apache.ode.bpel.dao.BpelDAOConnection;
+import org.apache.ode.bpel.dao.ProcessDAO;
 import org.apache.ode.bpel.dao.ProcessInstanceDAO;
 import org.apache.ode.bpel.dd.*;
 import org.apache.ode.bpel.engine.BpelDatabase;
@@ -62,6 +63,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -311,14 +313,16 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
 
     public void updateDeployInfo(ProcessDeployDetailsList_type0 processDeployDetailsListType)
             throws ProcessManagementException {
-        QName processId = processDeployDetailsListType.getProcessName();
+        final QName processId = processDeployDetailsListType.getProcessName();
         try {
 
             TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
             ProcessConfigurationImpl processConf =
                     (ProcessConfigurationImpl) tenantProcessStore.getProcessConfiguration(processId);
+            final boolean oldIsInmemory = processConf.isTransient();
+            final boolean newIsInmemory = processDeployDetailsListType.getIsInMemory();
             processConf.setState(getProcessState(processDeployDetailsListType));
-            processConf.setIsTransient(processDeployDetailsListType.getIsInMemory());
+            processConf.setIsTransient(newIsInmemory);
             processConf.setProcessEventsList(processDeployDetailsListType.getProcessEventsList());
             processConf.setGenerateType(processDeployDetailsListType.getProcessEventsList());
             processConf.setProcessCleanupConfImpl(processDeployDetailsListType.getCleanUpList());
@@ -326,6 +330,36 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
                 tenantProcessStore.getBPELPackageRepository().
                         createPropertiesForUpdatedDeploymentInfo(processConf);
             }
+
+            bpelServer.getODEBPELServer().getContexts().scheduler.execTransaction(new java.util.concurrent.Callable<Boolean>() {
+                public Boolean call() throws Exception {
+
+                    ProcessDAO processDAO;
+                    ProcessDAO newProcessDAO;
+
+                    if (oldIsInmemory & !newIsInmemory) {
+                        processDAO = bpelServer.getODEBPELServer().getContexts().getInMemDao().getConnection().getProcess(processId);
+                        newProcessDAO = bpelServer.getODEBPELServer().getContexts().dao.getConnection().createProcess(processDAO.getProcessId(), processDAO.getType(), processDAO.getGuid(), processDAO.getVersion());
+
+                        Set<String> correlatorsSet = processDAO.getCorrelatorsSet();
+                        for (String correlator : correlatorsSet) {
+                            newProcessDAO.addCorrelator(correlator);
+                        }
+                    } else if (!oldIsInmemory & newIsInmemory) {
+                        QName pId = processId;
+                        processDAO = bpelServer.getODEBPELServer().getContexts().dao.getConnection().getProcess(pId);
+                        newProcessDAO = bpelServer.getODEBPELServer().getContexts().getInMemDao().getConnection().createProcess(processDAO.getProcessId(), processDAO.getType(), processDAO.getGuid(), processDAO.getVersion());
+
+                        Set<String> correlatorsSet = processDAO.getCorrelatorsSet();
+                        for (String correlator : correlatorsSet) {
+                            newProcessDAO.addCorrelator(correlator);
+                        }
+                    }
+
+                    return null;
+                }
+            });
+
 
         } catch (Exception e) {
             String errMsg = "Error occurred while updating deployment info for: " + processId;

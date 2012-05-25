@@ -39,6 +39,7 @@ import org.apache.synapse.rest.AbstractHandler;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.carbon.apimgt.handlers.security.APISecurityUtils;
 import org.wso2.carbon.apimgt.handlers.security.AuthenticationContext;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.throttle.*;
 
 /**
@@ -383,6 +384,8 @@ public class APIThrottleHandler extends AbstractHandler {
                 if (consumerKey == null || roleID == null) {
                     log.warn("No consumer key or role information found on the request - " +
                             "Throttling not applied");
+                    return true;
+                } else if (APIConstants.UNLIMITED_TIER.equals(roleID)) {
                     return true;
                 }
             } else {

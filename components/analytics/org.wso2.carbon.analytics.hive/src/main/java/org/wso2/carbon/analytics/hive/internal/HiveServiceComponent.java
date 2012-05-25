@@ -41,6 +41,7 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -63,6 +64,11 @@ public class HiveServiceComponent {
 
     private static final String CARBON_HOME_ENV = "CARBON_HOME";
 
+    private static final String LOG4J_LOCATION="repository" + File.separator + "conf" +
+                                               File.separator + "log4j.properties";
+
+    private static final String LOG4J_PROPERTY = "log4j.properties";
+
     private ServiceRegistration hiveServiceRegistration;
 
     private ExecutorService hiveServerPool = Executors.newSingleThreadExecutor();
@@ -79,6 +85,12 @@ public class HiveServiceComponent {
             carbonHome = CarbonUtils.getCarbonHome();
             System.setProperty(CARBON_HOME_ENV, carbonHome);
         }
+
+        // Setting up log4j system property so that forked VM during local mode execution can obtain
+        // carbon log4j configurations
+        
+        String log4jFile = carbonHome + File.separator + LOG4J_LOCATION;
+        System.setProperty(LOG4J_PROPERTY, log4jFile);
 
         hiveServerPool.submit(new HiveRunnable());
 

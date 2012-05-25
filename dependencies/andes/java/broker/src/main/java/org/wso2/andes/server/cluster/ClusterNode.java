@@ -48,4 +48,9 @@ public class ClusterNode {
     public int getNumberOfQueueWorkers() {
         return this.globalQueueWokers.size();
     }
+
+
+    public void removeGlobalQueueWorker(String queueName) {
+        this.globalQueueWokers.remove(queueName);
+    }
 }

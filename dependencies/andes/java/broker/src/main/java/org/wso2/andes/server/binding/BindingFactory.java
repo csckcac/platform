@@ -287,6 +287,8 @@ public class BindingFactory
             getConfigStore().removeConfiguredObject(b);
         }
 
+
+
         return b;
     }
 

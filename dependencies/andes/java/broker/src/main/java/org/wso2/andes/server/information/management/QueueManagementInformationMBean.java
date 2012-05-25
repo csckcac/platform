@@ -20,7 +20,9 @@ package org.wso2.andes.server.information.management;
 import org.wso2.andes.management.common.mbeans.QueueManagementInformation;
 import org.wso2.andes.management.common.mbeans.annotations.MBeanOperationParameter;
 import org.wso2.andes.server.ClusterResourceHolder;
+import org.wso2.andes.server.cluster.ClusterManager;
 import org.wso2.andes.server.cluster.GlobalQueueManager;
+import org.wso2.andes.server.cluster.coordination.CoordinationException;
 import org.wso2.andes.server.management.AMQManagedObject;
 import org.wso2.andes.server.store.CassandraMessageStore;
 
@@ -66,7 +68,15 @@ public class QueueManagementInformationMBean extends AMQManagedObject implements
 
     public void deleteQueue(@MBeanOperationParameter(name = "queueName",
             description = "Name of the queue to be deleted") String queueName) {
-        throw new UnsupportedOperationException("Queue Deletion Operation is currently unsupported");
+        ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
+        CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
+        try {
+
+            messageStore.removeGlobalQueue(queueName);
+            clusterManager.handleQueueRemoval(queueName);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int getMessageCount(String queueName) {

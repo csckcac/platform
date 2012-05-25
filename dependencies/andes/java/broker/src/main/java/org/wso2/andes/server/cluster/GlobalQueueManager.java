@@ -19,6 +19,7 @@ package org.wso2.andes.server.cluster;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.store.CassandraMessageStore;
 
 import java.util.ArrayList;
@@ -55,7 +56,8 @@ public class GlobalQueueManager {
 
         if(!queueNameList.contains(queueName)) {
             queueNameList.add(queueName);
-            log.debug("Adding Global Queue worker for queue : " + queueName );
+              ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
+            log.debug("Adding Global Queue worker for queue : " + queueName);
             scheduleWork(queueName);
         }
     }
@@ -74,9 +76,12 @@ public class GlobalQueueManager {
     public void removeWorker(String queueName) {
 
         log.debug("Removing Queue worker for queue : " + queueName);
+        ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
         GlobalQueueWorker worker = queueWorkerMap.get(queueName);
-        worker.setRunning(false);
-        queueWorkerMap.remove(queueName);
+        if (worker != null) {
+            worker.setRunning(false);
+            queueWorkerMap.remove(queueName);
+        }
     }
 
     public int getMessageCount(String queueName){

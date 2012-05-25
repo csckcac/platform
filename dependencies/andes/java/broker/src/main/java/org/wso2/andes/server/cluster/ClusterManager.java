@@ -71,7 +71,7 @@ public class ClusterManager {
      * This is the group size of the nodes that will run the leader election in case of a leader
      * failure
      *
-     * TODO make this configurable after addding the cluster configuration
+     * TODO make this configurable after adding the cluster configuration
      */
     private int leaderBackNodeGroupSize = 3;
 
@@ -127,6 +127,7 @@ public class ClusterManager {
          * Just add the A Global Queue Worker
          */
         if(!config.isClusteringEnabled()) {
+          //   nodeMap.get(nodeId).addGlobalQueueWorker(queueName);
             globalQueueManager.addGlobalQueue(queueName);
             return;
         }
@@ -195,19 +196,17 @@ public class ClusterManager {
 
             log.debug("Node selected  to add queue worker node : " + currentCandidateNode +
                     " for queue : " + queueName);
-            System.out.println("Node selected  to add queue worker node : " + currentCandidateNode +
-                    " for queue : " + queueName);
             String[] candidateNodeDataParts = currentCandidateNodeData.split(":");
             String newData;
 
-            // Data formats
-            //1) id:q1,q2,q3,:node=q,node=q2
+            // Possible Data formats formats for currentCandidateNodeData
+            //1) id:q1,q2,q3,:node=q,node=q2 (candidateNodeDataParts.length = 3)
             //2)id:
-            //3)id:q1,q2,
-            //4)id::node=q,node=q2
+            //3)id:q1,q2, (candidateNodeDataParts.length =2)
+            //4)id::node=q,node=q2  (candidateNodeDataParts.length = 3)
             if (candidateNodeDataParts.length > 1) {
 
-                String replacePart = currentCandidateNodeData.split(":")[1];
+                String replacePart = candidateNodeDataParts[1];
 
 
                 //Handle id::node=q,node=q2
@@ -242,7 +241,111 @@ public class ClusterManager {
 
 
     public void handleQueueRemoval(String queueName) throws CoordinationException {
-        throw new UnsupportedOperationException();
+
+         //If we are using the OnceInOrder delivery mode we do not need to run the Queue Worker election Algorithm
+        ClusterConfiguration config = ClusterResourceHolder.getInstance().getClusterConfiguration();
+
+        if(config.isOnceInOrderSupportEnabled()) {
+
+            return;
+        }
+
+
+        /**
+         * In Non Cluster Mode  we do not need any zookeeper related Coordination.
+         * Just add the A Global Queue Worker
+         */
+        if(!config.isClusteringEnabled()) {
+            globalQueueManager.removeWorker(queueName);
+            return;
+        }
+
+
+        try {
+            log.debug("Removing Queue " + queueName + " From the cluster");
+
+            List<String> nodeList = zkAgent.getZooKeeper().
+                      getChildren(CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT, false);
+
+            for(String node : nodeList) {
+                // We need to remove workers and PMC Entries for the queues
+                String path = CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT +
+                        CoordinationConstants.NODE_SEPARATOR + node;
+                byte[] data = zkAgent.getZooKeeper().getData(path, false, null);
+
+                String dataStr = new String(data);
+
+                if(dataStr.contains(queueName)) {
+
+                    //Data formats
+                    //1)id:q1,q2,q3,:node=q,node=q2
+                    //2)id:q1,q2,
+                    //3)id::node=q,node=q2
+
+                    String[] dataParts = dataStr.split(":");
+                    String newDataString =null;
+                    switch (dataParts.length) {
+                        case 2 : {
+                            //id:q1,q2,
+                            newDataString = dataStr.replace(queueName+",","");
+                            zkAgent.getZooKeeper().setData(path,newDataString.getBytes(),-1);
+                            break;
+                        }
+                        case 3 : {
+
+                            // id:q1,q2,q3,:node=q,node=q2
+                            // id::node=q,node=q2
+
+                            String newDp1= dataParts[1];
+
+                            if(dataParts[1].contains(queueName)) {
+                                newDp1 = dataParts[1].replace(queueName + ",","");
+                            }
+
+                            String newDp2 = dataParts[2];
+                            if (dataParts[2].contains(queueName)) {
+                                String[] pmcParts = dataParts[2].split(",");
+                                List<String> newPmcParts = new ArrayList<String>();
+                                for(int i = 0;i < pmcParts.length ; i++) {
+
+                                    if(!pmcParts[i].contains(queueName)) {
+                                        newPmcParts.add(pmcParts[i]);
+                                    }
+                                }
+                                newDp2 = "";
+                                for(String newPart : newPmcParts) {
+                                    newDp2 +=newPart + ",";
+                                }
+                            }
+
+                            newDataString = dataParts[0]+ ":" + newDp1+ ":" + newDp2;
+                            zkAgent.getZooKeeper().setData(path,newDataString.getBytes(),-1);
+                            break;
+                        }
+
+                     default: {
+                         newDataString = dataStr;
+                         break;
+                     }
+
+                    }
+
+
+
+
+                }
+
+            }
+
+
+        } catch (KeeperException e) {
+            throw new CoordinationException("Error while removing Queue " ,e);
+        } catch (InterruptedException e) {
+            throw new CoordinationException("Error while removing Queue " ,e);
+        } finally {
+        }
+
+
     }
 
     /**
@@ -352,24 +455,6 @@ public class ClusterManager {
     }
 
 
-//    public void handleQueueRemoval() throws CoordinationException {
-//        //get all child from the QPid worker
-//        //Find the leader
-//        //Update the node with by removing the queue
-//
-//        //TODO Implement this
-//        try {
-//            List<String> nodeList = zkAgent.getZooKeeper().
-//                    getChildren(CoordinationConstants.QUEUE_WORKER_COORDINATION_PARENT, false);
-//        } catch (Exception e) {
-//
-//            String msg = "Error while handling Queue worker removal";
-//            log.error(msg, e);
-//            throw new CoordinationException(msg, e);
-//        }
-//
-//    }
-
 
     /**
      * Initialize the Cluster manager. This will create ZNodes related to nodes and assign node ids
@@ -419,7 +504,7 @@ public class ClusterManager {
                                        if((CoordinationConstants.NODE_SEPARATOR +node).contains(nodeName)) {
                                             zkNode = node;
 
-                                           System.out.println("Setting node id :" + nodeId + " From " + id);
+
                                            nodeId = Integer.parseInt(id);
 
                                             log.info("Initializing Cluster Manager , " +
@@ -471,6 +556,9 @@ public class ClusterManager {
         @Override
         public void process(WatchedEvent event) {
                 if(Event.EventType.NodeDataChanged == event.getType()) {
+
+
+                    //Date Change Event received. This can be Queue addition , Queue removal , PMC Change
                     try {
                        byte[] data = zkAgent.getZooKeeper().getData(CoordinationConstants.
                             QUEUE_WORKER_COORDINATION_PARENT +
@@ -479,6 +567,12 @@ public class ClusterManager {
 
 
                         String dataStr = new String(data);
+
+                        //Data formats
+                        //1)id:q1,q2,q3,:node=q,node=q2
+                        //2)id:q1,q2,
+                        //3)id::node=q,node=q2
+                        //4)id:
                         String[] parts = dataStr.split(":");
                         if (parts.length > 1 && parts[1].length() > 0) {
                             String[] queues = parts[1].split(",");
@@ -496,11 +590,36 @@ public class ClusterManager {
                                 for (String q : queuesToBescheduled) {
                                     log.debug("Adding Queue worker for queue : " + q + " from node :"
                                             + nodeId);
-                                    System.out.println("Adding Queue worker for queue : " + q + " from node :"
-                                            + nodeId);
+                                    node.addGlobalQueueWorker(q);
                                     globalQueueManager.addGlobalQueue(q);
                                 }
+                                String[] queuesToBeRemoved = getQueueWorkersToBeRemoved(node,queues);
+                                for(String q : queuesToBeRemoved) {
+                                    log.debug("Removing Queue Worker for queue : " + q + " from node :" + nodeId );
+                                    node.removeGlobalQueueWorker(q);
+                                    globalQueueManager.removeWorker(q);
+                                }
+
+
+
                             }
+
+                        } else {
+                            // This means This node does not have any queues or PMC scenarios to handle
+                            int nId = Integer.parseInt(parts[0]);
+                            ClusterNode node = nodeMap.get(nId);
+
+                            if(node != null) {
+                                for(String q : node.getGlobalQueueWokers()) {
+                                    globalQueueManager.removeWorker(q);
+                                    node.removeGlobalQueueWorker(q);
+                                }
+                            }
+
+
+                            //We clean up the Leader Backup List
+                            leaderBackUpList.clear();
+
 
                         }
 
@@ -532,7 +651,17 @@ public class ClusterManager {
                                         }
                                     }
                                 }
+
+                                syncLeaderBackUpList(leaderNodes);
+
+
+
+                            } else {
+                                leaderBackUpList.clear();
                             }
+
+
+
 
                         }
 
@@ -557,6 +686,60 @@ public class ClusterManager {
 
             return queueList.toArray(new String[queueList.size()]);
         }
+
+        private String[] getQueueWorkersToBeRemoved(ClusterNode node , String[] queues) {
+            ArrayList<String> queueList = new ArrayList<String>();
+            List<String> qs = Arrays.asList(queues);
+            for (String q :node.getGlobalQueueWokers()) {
+                if(!qs.contains(q)) {
+                    queueList.add(q);
+                }
+            }
+
+            return queueList.toArray(new String[queueList.size()]);
+        }
+
+
+        private void syncLeaderBackUpList(String[]  pmcData) {
+
+            List<String> nodesToRemove = new ArrayList<String>();
+
+            for(String node : leaderBackUpList.keySet()) {
+
+                boolean contains = false;
+                List<String> queuesToRemove = new ArrayList<String>();
+                for(String pmcElm : pmcData) {
+
+                    if(pmcElm.contains(node)) {
+                        contains = true;
+
+                        String[] parts = pmcElm.split("=");
+
+                        String q = parts[1].trim();
+                        if(!leaderBackUpList.get(node).contains(q)) {
+                            queuesToRemove.add(q);
+                        }
+                    }
+
+                }
+
+                String nodeData = leaderBackUpList.get(node);
+                for(String q : queuesToRemove) {
+                    if(nodeData.contains(q+":")) {
+                        nodeData.replace(q+":","");
+                    } else {
+                        nodeData.replace(q,"");
+                    }
+                }
+
+                if(!contains) {
+                    nodesToRemove.add(node);
+                }
+            }
+
+        }
+
+
     }
 
     private class NodeExistenceListener implements Watcher {

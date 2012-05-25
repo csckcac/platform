@@ -1326,16 +1326,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         return _messageId;
     }
 
-    public void createQueue(AMQQueue queue) {
-        try {
-            String owner = queue.getOwner() == null ? null : queue.getOwner().toString();
-            String value = queue.getNameShortString().toString() + "|" + owner + "|" + (queue.isExclusive() ? "true" : "false");
-            CassandraDataAccessHelper.addMappingToRaw(QUEUE_DETAILS_COLUMN_FAMILY, QUEUE_DETAILS_ROW,
-                    queue.getNameShortString().toString(), value, keyspace);
-        } catch (Exception e) {
-            log.error("Error in creating queue" ,e);
-        }
-    }
+
 
 
     public void synchQueues(VirtualHostConfigSynchronizer vhcs) throws Exception {
@@ -1641,9 +1632,57 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         createQueue(queue);
     }
 
+
+    public void createQueue(AMQQueue queue) {
+        try {
+            String owner = queue.getOwner() == null ? null : queue.getOwner().toString();
+            String value = queue.getNameShortString().toString() + "|" + owner + "|" + (queue.isExclusive() ? "true" : "false");
+            CassandraDataAccessHelper.addMappingToRaw(QUEUE_DETAILS_COLUMN_FAMILY, QUEUE_DETAILS_ROW,
+                    queue.getNameShortString().toString(), value, keyspace);
+
+
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error While creating a Queue creating queue" ,e);
+        }
+    }
     @Override
     public void removeQueue(AMQQueue queue) throws AMQStoreException {
-        throw new UnsupportedOperationException("removeQueue function is unsupported");
+
+        try {
+            String queueName = queue.getNameShortString().toString();
+            CassandraDataAccessHelper.deleteStringColumnFromRaw(QUEUE_DETAILS_COLUMN_FAMILY,QUEUE_DETAILS_ROW,
+                    queueName,keyspace);
+        } catch (CassandraDataAccessException e) {
+            throw new AMQStoreException("Error while deleting queue : " + queue ,e);
+        }
+
+    }
+
+
+    /**
+     * Removes a global queue from Cassandra Message Store
+     * This will remove the Global queue and associated User queues from the Stores
+     * With all the message entries and message content with it.
+     * @param queueName Global QueueName
+     * @throws AMQStoreException  If Error occurs while deleting the queues
+     */
+    public void removeGlobalQueue(String queueName) throws AMQStoreException{
+        try {
+
+            List<String> userQueues = getUserQueues(queueName);
+
+            for (String userQ : userQueues) {
+                CassandraDataAccessHelper.deleteStringColumnFromRaw(GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY,
+                        queueName, userQ, keyspace);
+            }
+
+            CassandraDataAccessHelper.deleteStringColumnFromRaw(GLOBAL_QUEUE_LIST_COLUMN_FAMILY,GLOBAL_QUEUE_LIST_ROW,
+                    queueName,keyspace);
+
+        } catch (Exception e) {
+            throw new AMQStoreException("Error while removing Global Queue  : " + queueName , e);
+        }
     }
 
     @Override

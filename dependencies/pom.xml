@@ -35,7 +35,7 @@
     </build>
 
             <modules>
-                <module>cassandra</module>
+                <!--module>cassandra</module-->
                 <module>cassandra-jdbc/1.0.5-wso2v1</module>
                 <module>commons-vfs/2.0-wso2v3</module>
                 <module>commons/balana</module>
@@ -49,7 +49,7 @@
                 <module>commons/xfer</module>
                 <module>commons/xkms</module>
                 <module>e4ximpl</module>
-                <module>hector</module>
+                <!--module>hector</module-->
                 <!--module>httpcore-nio/4.1.3-wso2v2/</module-->
                 <module>maven-scm-provider-svnexe</module>
                 <module>oauth</module>
@@ -67,13 +67,13 @@
 		<module>closure-js-plugin</module>
                 <module>snappy-java</module>
 		<!--<module>hive</module>-->
-		<module>hadoop</module>
+		<!--module>hadoop</module-->
 		<module>datanucleus</module>
 		<!-- orbit/modules -->
-                <module>orbit/cassandra</module>
+                <!--module>orbit/cassandra</module-->
                 <module>orbit/cassandra-jdbc</module>
                 <module>orbit/commons-vfs</module>
-                <module>orbit/hector</module>
+                <!--module>orbit/hector</module-->
                 <module>orbit/libthrift/0.5.wso2v1</module>
                 <module>orbit/libthrift/0.6.1.wso2v1</module>
 		<module>orbit/libthrift/0.7.wso2v1</module>
@@ -96,7 +96,7 @@
 		<module>orbit/snappy-java</module>
 		<!--<module>orbit/hive</module>-->
 		<module>orbit/datanucleus-core</module>
-		<module>orbit/hadoop-core</module>
+		<!--module>orbit/hadoop-core</module-->
 	     </modules>
    <dependencyManagement>
 	<dependencies>

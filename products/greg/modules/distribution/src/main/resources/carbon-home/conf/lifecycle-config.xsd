@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.w3.org/2005/07/scxml" xmlns:scxml="http://www.w3.org/2005/07/scxml">
+  <xs:import schemaLocation="local.xsd"/>
+  <xs:element name="scxml">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="scxml:state"/>
+      </xs:sequence>
+      <xs:attribute name="initialstate" use="required" type="xs:NCName"/>
+      <xs:attribute name="version" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="state">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="scxml:datamodel"/>
+        <xs:element maxOccurs="unbounded" ref="scxml:transition"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="datamodel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="scxml:data"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="data">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="scxml:permission"/>
+        <xs:element ref="scxml:validation"/>
+        <xs:element ref="scxml:js"/>
+        <xs:element ref="scxml:ui"/>
+        <xs:element maxOccurs="unbounded" ref="scxml:item"/>
+        <xs:element maxOccurs="unbounded" ref="scxml:execution"/>
+      </xs:choice>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="js">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="scxml:console"/>
+        <xs:element ref="scxml:server"/>
+      </xs:sequence>
+      <xs:attribute name="forEvent" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="console">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="scxml:script">
+          <xs:attribute name="function" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="server">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="scxml:script">
+          <xs:attribute name="function" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ui">
+    <xs:complexType>
+      <xs:attribute name="forEvent" use="required" type="xs:NCName"/>
+      <xs:attribute name="href" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="item">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element ref="scxml:permissions"/>
+        <xs:element ref="scxml:validations"/>
+      </xs:sequence>
+      <xs:attribute name="forEvent" use="required"/>
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="permissions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="scxml:permission"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="validations">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="scxml:validation"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="execution">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="scxml:parameter"/>
+      </xs:sequence>
+      <xs:attribute name="class" use="required"/>
+      <xs:attribute name="forEvent" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="transition">
+    <xs:complexType>
+      <xs:attribute name="event" use="required" type="xs:NCName"/>
+      <xs:attribute name="target" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="permission">
+    <xs:complexType>
+      <xs:attribute name="forEvent"/>
+      <xs:attribute name="roles" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="script">
+    <xs:sequence>
+      <xs:element ref="scxml:script"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="script">
+    <xs:complexType>
+      <xs:attribute name="type" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="validation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="scxml:parameter"/>
+      </xs:sequence>
+      <xs:attribute name="class" use="required"/>
+      <xs:attribute name="forEvent" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="parameter">
+    <xs:complexType>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

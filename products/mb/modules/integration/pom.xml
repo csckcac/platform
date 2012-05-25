@@ -142,7 +142,7 @@
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../distribution/product/target/wso2mb-${project.version}.zip
+                            ${basedir}/../distribution/target/wso2mb-${project.version}.zip
                         </carbon.zip>
                         <sec.verifier.dir>
                             ${basedir}/target/security-verifier/

@@ -26,18 +26,7 @@
         <fileSet>
             <directory>target/site</directory>
             <outputDirectory>wso2mb-${pom.version}-docs</outputDirectory>
-            <excludes>
-                <exclude>release-notes.html</exclude>
-            </excludes>
             <fileMode>755</fileMode>
         </fileSet>
     </fileSets>
-    <files>
-        <file>
-            <source>target/site/release-notes.html</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}-docs/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-    </files>
 </assembly>

@@ -2,8 +2,7 @@
 <div id="listing">
     <h2>All APIs</h2>
     <%
-    var query = request.getParameter('query');
-    if ((outputs.apis != null && outputs.apis.length > 0) || query != null) {
+    if ((outputs.apis != null && outputs.apis.length > 0) || request.getParameter('query') != null) {
         jagg.includeBlock("search/api-search", null);
     }
     %>

@@ -35,7 +35,7 @@
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
-            <directory>../../../docs/xdoc/user.core</directory>
+            <directory>../../docs/xdoc/user.core</directory>
             <outputDirectory>${pom.artifactId}-${build.version}-docs/user.core</outputDirectory>
             <includes>
                 <include>user-mgt-*.xml</include>
@@ -69,13 +69,13 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../LICENSE.txt</source>
+            <source>../../LICENSE.txt</source>
             <outputDirectory>${pom.artifactId}-${build.version}-docs/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../README.txt</source>
+            <source>../../README.txt</source>
             <outputDirectory>${pom.artifactId}-${build.version}-docs/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>

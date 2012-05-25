@@ -74,16 +74,12 @@
                     <input type="text" class="input-xlarge" id="editTags" name="tags" value="<%=api.tags%>"/>
                 </div>
             </div>
-
-
             <div class="control-group">
-                <label class="control-label" for="editTier">Tier Availability:</label>
-                <div class="controls">
-                    <select id="editTier" name="tier">
-                        <option value="Gold"<%=(api.availableTiers == "Gold" ? ' selected="selected"' : '')%>>Gold</option>
-                        <option value="Silver"<%=(api.availableTiers == "Silver" ? ' selected="selected"' : '')%>>Silver</option>
-                    </select>
-                </div>
+                    <label class="control-label" for="editTier">Tier Availability:</label>
+                    <div class="controls">
+                        <select id="editTier" name="tier"  multiple="multiple" onChange="setTiers()">
+                        </select>
+                    </div>
             </div>
 
             <div class="control-group">

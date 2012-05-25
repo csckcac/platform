@@ -1,4 +1,22 @@
 //var rowNums=new Array();
+function loadTiers() {
+    var target = document.getElementById("editTier");
+    jagg.post("/site/blocks/item-add/ajax/add.jag", { action:"getTiers" },
+              function (result) {
+                  if (!result.error) {
+                      var arr = [];
+                      for (var i = 0; i < result.tiers.length; i++) {
+                          arr.push(result.tiers[i].tierName);
+                      }
+                      for (var j = 0; j < arr.length; j++) {
+                          option = new Option(arr[j], arr[j]);
+                          target.options[j] = option;
+                      }
+
+                  }
+              }, "json");
+}
+
 var updateResourcesToApi = function (rowNums) {
     var isChecked = $('#resource-get').is(":checked") || $('#resource-put').is(":checked") || $('#resource-post').is(":checked")
                     || $('#resource-delete').is(":checked");

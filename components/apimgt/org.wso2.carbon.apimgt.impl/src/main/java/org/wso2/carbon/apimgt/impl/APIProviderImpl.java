@@ -364,6 +364,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
      */
     public void addAPI(API api) throws APIManagementException {
         createAPI(api);
+        apiMgtDAO.recordAPILifeCycleEvent(api.getId(), null, APIStatus.CREATED, api.getId().getProviderName());
     }
 
     /**
@@ -387,7 +388,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         }
     }
 
-    public void changeAPIStatus(API api, APIStatus status, 
+    public void changeAPIStatus(API api, APIStatus status, String userId, 
                                 boolean updateGatewayConfig) throws APIManagementException {
         APIStatus currentStatus = api.getStatus();
         if (!currentStatus.equals(status)) {
@@ -397,6 +398,8 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                     status.equals(APIStatus.PUBLISHED)) {
                 publishToGateway(api);
             }
+
+            apiMgtDAO.recordAPILifeCycleEvent(api.getId(), currentStatus, status, userId);
         }        
     }
 

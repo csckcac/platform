@@ -83,10 +83,10 @@ public class UserAwareAPIProvider extends APIProviderImpl {
     }
 
     @Override
-    public void changeAPIStatus(API api, APIStatus status,
+    public void changeAPIStatus(API api, APIStatus status, String userId,
                                 boolean updateGatewayConfig) throws APIManagementException {
         checkPermission(APIConstants.Permissions.API_PUBLISH);
-        super.changeAPIStatus(api, status, updateGatewayConfig);
+        super.changeAPIStatus(api, status, userId, updateGatewayConfig);
     }
 
     @Override

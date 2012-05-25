@@ -20,10 +20,7 @@ package org.wso2.carbon.apimgt.impl.dao.test;
 
 import junit.framework.TestCase;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
-import org.wso2.carbon.apimgt.api.model.APIIdentifier;
-import org.wso2.carbon.apimgt.api.model.Application;
-import org.wso2.carbon.apimgt.api.model.SubscribedAPI;
-import org.wso2.carbon.apimgt.api.model.Subscriber;
+import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.APIManagerConfigurationServiceImpl;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
@@ -33,6 +30,7 @@ import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public class APIMgtDAOTest extends TestCase {
@@ -218,6 +216,23 @@ public class APIMgtDAOTest extends TestCase {
     	apiMgtDAO.updateSubscriber(subscriber1);
     	Subscriber subscriber2 = apiMgtDAO.getSubscriber(subscriber1.getId());
     	this.checkSubscribersEqual(subscriber1, subscriber2);
+    }
+    
+    public void testLifeCycleEvents() throws Exception {
+        APIIdentifier apiId = new APIIdentifier("hiranya", "WSO2Earth", "1.0.0");
+        apiMgtDAO.recordAPILifeCycleEvent(apiId, null, APIStatus.CREATED, "admin");
+        List<LifeCycleEvent> events = apiMgtDAO.getLifeCycleEvents(apiId);
+        assertEquals(1, events.size());
+        LifeCycleEvent event = events.get(0);
+        assertEquals(apiId, event.getApi());
+        assertNull(event.getOldStatus());
+        assertEquals(APIStatus.CREATED, event.getNewStatus());
+        assertEquals("admin", event.getUserId());
+
+        apiMgtDAO.recordAPILifeCycleEvent(apiId, APIStatus.CREATED, APIStatus.PUBLISHED, "admin");
+        apiMgtDAO.recordAPILifeCycleEvent(apiId, APIStatus.PUBLISHED, APIStatus.DEPRECATED, "admin");
+        events = apiMgtDAO.getLifeCycleEvents(apiId);
+        assertEquals(3, events.size());
     }
 
 }

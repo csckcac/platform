@@ -159,10 +159,11 @@ public interface APIProvider extends APIManager {
      *
      * @param api The API whose status to be updated
      * @param status New status of the API
+     * @param userId User performing the API state change
      * @param updateGatewayConfig Whether the changes should be pushed to the API gateway or not
      * @throws APIManagementException on error
      */
-    public void changeAPIStatus(API api, APIStatus status,
+    public void changeAPIStatus(API api, APIStatus status, String userId,
                                 boolean updateGatewayConfig) throws APIManagementException;
 
     /**

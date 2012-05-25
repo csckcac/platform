@@ -65,6 +65,7 @@ public class APIProviderHostObject extends ScriptableObject {
     
     private static final Log log = LogFactory.getLog(APIProviderHostObject.class);
 
+    private String username;
     
     private APIProvider apiProvider;
 
@@ -79,7 +80,12 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public APIProviderHostObject(String loggedUser) throws APIManagementException {
+        username = loggedUser;
         apiProvider = APIManagerFactory.getInstance().getAPIProvider(loggedUser);
+    }
+    
+    public String getUsername() {
+        return username;
     }
 
     public static Scriptable jsConstructor(Context cx, Object[] args, Function Obj,
@@ -348,7 +354,8 @@ public class APIProviderHostObject extends ScriptableObject {
             APIProvider apiProvider = getAPIProvider(thisObj);
             APIIdentifier apiId = new APIIdentifier(provider, name, version);
             API api = apiProvider.getAPI(apiId);
-            apiProvider.changeAPIStatus(api, getApiStatus(status), publishToGateway);
+            apiProvider.changeAPIStatus(api, getApiStatus(status),
+                    ((APIProviderHostObject) thisObj).getUsername(), publishToGateway);
             success = true;
         } catch (APIManagementException e) {
             log.error("Error while updating API status", e);

@@ -617,7 +617,6 @@ public class ApiMgtDAO {
                 " AND KCM.KEY_CONTEXT_MAPPING_ID=SKM.KEY_CONTEXT_MAPPING_ID" +
                 " AND SKM.SUBSCRIPTION_ID=SUB.SUBSCRIPTION_ID";
 
-        Set<APIKey> apiKeys = new HashSet<APIKey>();
         try {
             connection = APIMgtDBUtil.getConnection();
             PreparedStatement nestedPS = connection.prepareStatement(getAPISql);
@@ -1532,5 +1531,118 @@ public class ApiMgtDAO {
             APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
         }
         return subscriber;
+    }
+
+    public void recordAPILifeCycleEvent(APIIdentifier identifier, APIStatus oldStatus,
+                                        APIStatus newStatus, String userId) throws APIManagementException {
+        Connection conn = null;
+        ResultSet resultSet = null;
+        PreparedStatement ps = null;
+
+        int tenantId;
+        try {
+            tenantId = IdentityUtil.getTenantIdOFUser(userId);
+        } catch (IdentityException e) {
+            String msg = "Failed to get tenant id of user : " + userId;
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
+        }
+        
+        if (oldStatus == null && !newStatus.equals(APIStatus.CREATED)) {
+            throw new APIManagementException("Invalid old and new state combination");
+        } else if (oldStatus != null && oldStatus.equals(newStatus)) {
+            throw new APIManagementException("No measurable differences in API state");
+        }
+
+        String apiId = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
+                identifier.getVersion();
+        String sqlQuery = "INSERT " +
+                "INTO AM_API_LC_EVENT (API_ID, PREVIOUS_STATE, NEW_STATE, USER_ID, TENANT_ID, EVENT_DATE)" +
+                " VALUES (?,?,?,?,?,?)";
+
+        try {
+            conn = APIMgtDBUtil.getConnection();
+            ps = conn.prepareStatement(sqlQuery);
+            ps.setString(1, apiId);
+            if (oldStatus != null) {
+                ps.setString(2, oldStatus.getStatus());
+            } else {
+                ps.setNull(2, Types.VARCHAR);
+            }
+            ps.setString(3, newStatus.getStatus());
+            ps.setString(4, userId);
+            ps.setInt(5, tenantId);
+            ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+
+            ps.executeUpdate();
+            ps.close();
+            // finally commit transaction
+            conn.commit();
+
+        } catch (SQLException e) {
+            String msg = "Failed to record API state change";
+            log.error(msg, e);
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    log.error("Failed to rollback the API state change record", e);
+                }
+            }
+            throw new APIManagementException(msg, e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(ps, conn, resultSet);
+        }
+    }
+    
+    public List<LifeCycleEvent> getLifeCycleEvents(APIIdentifier apiId) throws APIManagementException {
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        String sqlQuery = "SELECT" +
+                " LC.API_ID AS API_ID," +
+                " LC.PREVIOUS_STATE AS PREVIOUS_STATE," +
+                " LC.NEW_STATE AS NEW_STATE," +
+                " LC.USER_ID AS USER_ID," +
+                " LC.EVENT_DATE AS EVENT_DATE " +                
+                "FROM" +
+                " AM_API_LC_EVENT LC " +
+                "WHERE" +
+                " LC.API_ID = ?";
+
+        String apiIdString = apiId.getProviderName() + "_" + apiId.getApiName() + "_" +
+                apiId.getVersion();
+        List<LifeCycleEvent> events = new ArrayList<LifeCycleEvent>();
+        
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            prepStmt = connection.prepareStatement(sqlQuery);
+            prepStmt.setString(1, apiIdString);
+            rs = prepStmt.executeQuery();
+
+            while (rs.next()) {
+                LifeCycleEvent event = new LifeCycleEvent();
+                event.setApi(apiId);
+                String oldState = rs.getString("PREVIOUS_STATE");
+                event.setOldStatus(oldState != null ? APIStatus.valueOf(oldState) : null);
+                event.setNewStatus(APIStatus.valueOf(rs.getString("NEW_STATE")));
+                event.setUserId(rs.getString("USER_ID"));
+                event.setDate(rs.getTimestamp("EVENT_DATE"));
+                events.add(event);
+            }
+
+            Collections.sort(events, new Comparator<LifeCycleEvent>() {
+                public int compare(LifeCycleEvent o1, LifeCycleEvent o2) {
+                    return o1.getDate().compareTo(o2.getDate());
+                }
+            });
+        } catch (SQLException e) {
+            log.error("Error when executing the SQL : " + sqlQuery);
+            throw new APIManagementException("Error when reading the application information from" +
+                    " the persistence store.", e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
+        }
+        return events;    
     }
 }

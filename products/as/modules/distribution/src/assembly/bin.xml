@@ -35,8 +35,8 @@
                 <exclude>**/pom.xml</exclude>
                 <exclude>**/version.txt</exclude>
                 <exclude>**/README*</exclude>
-                <exclude>**/INSTALL*</exclude>
                 <exclude>**/LICENSE*</exclude>
+                <exclude>**/INSTALL*</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
@@ -44,7 +44,7 @@
         </fileSet>
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
-            <outputDirectory>wso2as-${pom.version}</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <excludes>
                 <exclude>**/wso2server.bat</exclude>
             </excludes>
@@ -56,14 +56,36 @@
 
         <!--  copying samples -->
         <fileSet>
-            <directory>../samples/common/webapp/target</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps
-            </outputDirectory>
-            <includes>
-                <include>**/*.war</include>
-            </includes>
+            <directory>../samples/product</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/pom.xml</exclude>
+                <exclude>**/target/**</exclude>
+                <exclude>**/Jaxws-Jaxrs/**</exclude>
+                <exclude>**/Axis2Module/**</exclude>
+            </excludes>
         </fileSet>
 
+        <!--  copying JAX-WS/JAX-RS samples and Axis2Module with pom.xml files-->
+        <fileSet>
+            <directory>../samples/product/Jaxws-Jaxrs</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/Jaxws-Jaxrs</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/target/**</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../samples/product/Axis2Module</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/Axis2Module</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/target/**</exclude>
+            </excludes>
+        </fileSet>
+
+        <!--  copying default samples into repository-->
         <fileSet>
             <directory>../samples/product/HelloWorld/target/repository/services</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/axis2services</outputDirectory>
@@ -71,16 +93,45 @@
                 <include>**/**.aar</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>../samples/common/webapp/target</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps
+            </outputDirectory>
+            <includes>
+                <include>**/**.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../samples/product/HelloWorldWebapp/target</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/HelloWorldWebapp</outputDirectory>
+            <includes>
+                <include>*.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../samples/product/TomcatWebApps/GenericJavaBeanResource/target</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/TomcatWebApps/GenericJavaBeanResource</outputDirectory>
+            <includes>
+                <include>*.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../samples/product/TomcatWebApps/JDBCDataSource/target</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/TomcatWebApps/JDBCDataSource</outputDirectory>
+            <includes>
+                <include>*.war</include>
+            </includes>
+        </fileSet>
 
-        <!--<fileSet>-->
-            <!--<directory>../samples/service/target</directory>-->
-            <!--<outputDirectory>-->
-                <!--${pom.artifactId}-${pom.version}/repository/deployment/server/axis2services-->
-            <!--</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>**/*.aar</include>-->
-            <!--</includes>-->
-        <!--</fileSet>-->
+        <!-- copy executables in samples with execute permissions -->
+        <fileSet>
+            <directory>../samples/product</directory>
+            <outputDirectory>${pom.artifactId}-${project.version}/samples</outputDirectory>
+            <includes>
+                <include>**/**.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
 
         <!--copying qpid config files -->
         <fileSet>
@@ -105,7 +156,7 @@
             <includes>
 	        <include>**/identity.xml</include>
                 <!--include>**/eula.xml</include-->
-		<include>**/stratos.xml</include>
+		        <include>**/stratos.xml</include>
                 <include>**/multitenancy-packages.xml</include>
             </includes>
         </fileSet>   
@@ -121,22 +172,21 @@
                 <include>**/jaas.conf</include>
             </includes>
         </fileSet>   
-          
-        <!-- copy executables in samples with execute permissions -->
-        <!--<fileSet>
-            <directory>../samples</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/samples</outputDirectory>
-            <includes>
-                <include>**/**.sh</include>
-            </includes>
+
+        <!-- copying WS RM DB Scripts -->
+        <fileSet>
+            <directory>wsrm-dbscripts</directory>
+            <outputDirectory>wso2as-${pom.version}/dbscripts/wsrm-dbscripts</outputDirectory>
             <fileMode>755</fileMode>
-        </fileSet>-->
-        <!-- copy documentation -->
+        </fileSet>          
+
+        <!-- copy documentation
         <fileSet>
             <directory>target/site</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/docs</outputDirectory>
             <fileMode>755</fileMode>
         </fileSet>
+	-->
 
 		<!-- copy the landing page webapp -->
         <fileSet>
@@ -275,7 +325,7 @@
         </file>
         <!--file>
             <source>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml
+                ../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>

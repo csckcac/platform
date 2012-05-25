@@ -1,5 +1,5 @@
 function loadTiers() {
-    var slc_target = document.getElementById("tier");
+    var target = document.getElementById("tier");
     jagg.post("/site/blocks/item-add/ajax/add.jag", { action:"getTiers" },
               function (result) {
                   if (!result.error) {
@@ -7,14 +7,11 @@ function loadTiers() {
                       for (var i = 0; i < result.tiers.length; i++) {
                           arr.push(result.tiers[i].tierName);
                       }
-                      for (var i = 0; i < arr.length; i++) {
-                          option = new Option(arr[i], arr[i]);
-                          slc_target.options[i] = option;
+                      for (var j = 0; j < arr.length; j++) {
+                          option = new Option(arr[j], arr[j]);
+                          target.options[j] = option;
                       }
 
-                  } else {
-                      $('#loginError').show('fast');
-                      $('#loginErrorSpan').html('<strong>Unable to log you in!</strong><br />' + result.message);
                   }
               }, "json");
 }

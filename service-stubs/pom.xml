@@ -194,7 +194,8 @@
                                 <module>org.wso2.carbon.status.monitor.stub</module>
                                 <module>org.wso2.carbon.rest.api.stub</module>
                                 <module>org.wso2.carbon.apimgt.keymgt.stub</module>
- <module> org.wso2.carbon.url.mapper.stub</module>
+				<module>org.wso2.carbon.apimgt.handlers.security.stub</module>
+				<module> org.wso2.carbon.url.mapper.stub</module>
 				<module>org.wso2.carbon.jaggery.app.mgt.stub</module>
 			        <module>org.wso2.carbon.reporting.template.stub</module>
 			        <module>org.wso2.carbon.bam.presentation.stub</module>

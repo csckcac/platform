@@ -1,0 +1,71 @@
+
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax27="http://service.security.handlers.apimgt.carbon.wso2.org/xsd" xmlns:ns="http://service.security.handlers.apimgt.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.security.handlers.apimgt.carbon.wso2.org">
+    <wsdl:documentation>APIAuthenticationService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax28="http://service.security.handlers.apimgt.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.security.handlers.apimgt.carbon.wso2.org">
+            <xs:import namespace="http://service.security.handlers.apimgt.carbon.wso2.org/xsd" />
+            <xs:element name="invalidateKeys">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="mappings" nillable="true" type="ax27:APIKeyMapping" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.security.handlers.apimgt.carbon.wso2.org/xsd">
+            <xs:complexType name="APIKeyMapping">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="apiVersion" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="context" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="invalidateKeysRequest">
+        <wsdl:part name="parameters" element="ns:invalidateKeys" />
+    </wsdl:message>
+    <wsdl:portType name="APIAuthenticationServicePortType">
+        <wsdl:operation name="invalidateKeys">
+            <wsdl:input message="ns:invalidateKeysRequest" wsaw:Action="urn:invalidateKeys" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="APIAuthenticationServiceSoap11Binding" type="ns:APIAuthenticationServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="invalidateKeys">
+            <soap:operation soapAction="urn:invalidateKeys" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="APIAuthenticationServiceSoap12Binding" type="ns:APIAuthenticationServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="invalidateKeys">
+            <soap12:operation soapAction="urn:invalidateKeys" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="APIAuthenticationServiceHttpBinding" type="ns:APIAuthenticationServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="invalidateKeys">
+            <http:operation location="invalidateKeys" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="APIAuthenticationService">
+        <wsdl:port name="APIAuthenticationServiceHttpsSoap11Endpoint" binding="ns:APIAuthenticationServiceSoap11Binding">
+            <soap:address location="https://mjolnir:8243/services/APIAuthenticationService.APIAuthenticationServiceHttpsSoap11Endpoint" />
+        </wsdl:port>
+        <wsdl:port name="APIAuthenticationServiceHttpsSoap12Endpoint" binding="ns:APIAuthenticationServiceSoap12Binding">
+            <soap12:address location="https://mjolnir:8243/services/APIAuthenticationService.APIAuthenticationServiceHttpsSoap12Endpoint" />
+        </wsdl:port>
+        <wsdl:port name="APIAuthenticationServiceHttpsEndpoint" binding="ns:APIAuthenticationServiceHttpBinding">
+            <http:address location="https://mjolnir:8243/services/APIAuthenticationService.APIAuthenticationServiceHttpsEndpoint" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

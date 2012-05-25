@@ -190,7 +190,7 @@
               log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
           }
       } catch (e) {
-      log.error("Email varification failed","error");
+      log.error("Email varification failed");
       return null;
       }
 
@@ -226,7 +226,7 @@
             log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
         }
        } catch (e) {
-        log.error(e.toString(),"error");
+        log.error(e.toString());
         return result;
 
        }
@@ -259,7 +259,7 @@
             }
              return a;
              } catch (e) {
-             log.error(e.toString(),"error");
+             log.error(e.toString());
              return null;
              }
              }

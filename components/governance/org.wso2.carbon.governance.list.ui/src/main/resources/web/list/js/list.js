@@ -50,4 +50,13 @@ function clearAll(){
         SelectAreas[i].selectedIndex = 0;
     }
 }
+
+function loadPagedList(page, filter, pageName, itemName) {
+    if (filter == true) {
+        window.location = "../list/" + pageName + ".jsp?filter=filter&region=region3&item=governance_list_" + itemName + "menu&page=" + page;
+    } else {
+        window.location = "../list/" + pageName + ".jsp?region=region3&item=governance_list_" + itemName + "_menu&page=" + page;
+
+    }
+}
     

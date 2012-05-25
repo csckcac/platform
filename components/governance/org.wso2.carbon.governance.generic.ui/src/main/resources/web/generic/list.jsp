@@ -28,6 +28,9 @@
 <%@ page import="org.wso2.carbon.governance.generic.stub.beans.xsd.ArtifactsBean" %>
 <%@ page import="org.wso2.carbon.governance.generic.stub.beans.xsd.ArtifactBean" %>
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
+<link type="text/css" rel="stylesheet" href="css/menu.css"/>
+<link type="text/css" rel="stylesheet" href="css/style.css"/>
+<link type="text/css" rel="stylesheet" href="../resources/css/registry.css"/>
 <jsp:include page="../dialog/display_messages.jsp"/>
 <jsp:include page="../registry_common/registry_common-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../registry_common/js/registry_validation.js"></script>
@@ -70,7 +73,8 @@
         queryTrailer += "&pluralLabel=" + pluralLabel;
     }
     String criteria = null;
-    if (request.getParameter("filter") != null) {
+    boolean filter = request.getParameter("filter") != null;
+    if (filter) {
         criteria = (String)session.getAttribute("criteria");
     }
     ArtifactsBean bean = null;
@@ -80,7 +84,7 @@
         ManageGenericArtifactServiceClient client = new ManageGenericArtifactServiceClient(config, session);
         bean = client.listArtifacts(key, criteria);
     } catch (Exception e) {
-        if (request.getParameter("filter") != null) {
+        if (filter) {
 %>
 <script type="text/javascript">
       CARBON.showErrorDialog("<%=e.getMessage()%>",function(){
@@ -120,7 +124,7 @@
                 <thead>
                     <tr>
                         <%
-                        if (request.getParameter("filter") != null) {
+                        if (filter) {
                         %>
                         <th><fmt:message key="no.artifact.matches.filter"><fmt:param value="<%=singularLabel.toLowerCase()%>"/></fmt:message></th>
                         <% } else { %>
@@ -128,8 +132,22 @@
                         <% } %>
                     </tr>
                 </thead>
-        <%}
-        else{%>
+        <%} else{
+            int pageNumber;
+            String pageStr = request.getParameter("page");
+            if (pageStr != null) {
+                pageNumber = Integer.parseInt(pageStr);
+            } else {
+                pageNumber = 1;
+            }
+            int itemsPerPage = (int)(RegistryConstants.ITEMS_PER_PAGE * 1.5);
+            int numberOfPages;
+            if (bean.getNames().length % itemsPerPage == 0) {
+                numberOfPages = bean.getNames().length / itemsPerPage;
+            } else {
+                numberOfPages = bean.getNames().length / itemsPerPage + 1;
+            }
+        %>
         <thead>
         <tr>
                 <%
@@ -145,7 +163,9 @@
         </thead>
         <tbody>
                 <%
-                for (ArtifactBean artifact : bean.getArtifacts()) {
+                    for (int j = (pageNumber - 1) * itemsPerPage;
+                         j < pageNumber * itemsPerPage && j < bean.getArtifacts().length; j++) {
+                        ArtifactBean artifact = bean.getArtifacts()[j];
 
                 %>
             <tr>
@@ -175,6 +195,12 @@
                 }
                 %>
         </tbody>
+    </table>
+    <table width="100%" style="text-align:center; padding-top: 10px; margin-bottom: -10px">
+        <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                                  resourceBundle="org.wso2.carbon.governance.list.ui.i18n.Resources"
+                                  nextKey="next" prevKey="prev"
+                                  paginationFunction="loadPagedList({0})" />
     <%}%>
     </table>
 </form>
@@ -182,5 +208,9 @@
 </div>
     <script type="text/javascript">
     alternateTableRows('customTable','tableEvenRow','tableOddRow');
+
+    function loadPagedList(page) {
+        window.location = '<%="../generic/list.jsp?region=" + request.getParameter("region") + "&item=" + request.getParameter("item") + "&dataName=" + request.getParameter("dataName") + "&singularLabel=" + request.getParameter("singularLabel") + "&pluralLabel=" + request.getParameter("pluralLabel") + "&dataNamespace=" + request.getParameter("dataNamespace") + "&key=" + request.getParameter("key") + "&breadcrumb=" + request.getParameter("breadcrumb") + (filter ? "&filter=filter" : "")%>';
+    }
 </script>
 </fmt:bundle>

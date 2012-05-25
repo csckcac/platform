@@ -25,6 +25,9 @@
 <%@ page import="org.wso2.carbon.registry.core.utils.RegistryUtils" %>
 <%@ page import="org.wso2.carbon.registry.extensions.utils.CommonConstants" %>
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
+<link type="text/css" rel="stylesheet" href="css/menu.css"/>
+<link type="text/css" rel="stylesheet" href="css/style.css"/>
+<link type="text/css" rel="stylesheet" href="../resources/css/registry.css"/>
 <jsp:include page="../registry_common/registry_common-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../registry_common/js/registry_validation.js"></script>
 <script type="text/javascript" src="../registry_common/js/registry_common.js"></script>
@@ -69,8 +72,22 @@
                         <th><fmt:message key="no.policies"/></th>
                     </tr>
                 </thead>
-        <%}
-        else{%>
+        <%} else{
+            int pageNumber;
+            String pageStr = request.getParameter("page");
+            if (pageStr != null) {
+                pageNumber = Integer.parseInt(pageStr);
+            } else {
+                pageNumber = 1;
+            }
+            int itemsPerPage = (int)(RegistryConstants.ITEMS_PER_PAGE * 1.5);
+            int numberOfPages;
+            if (bean.getName().length % itemsPerPage == 0) {
+                numberOfPages = bean.getName().length / itemsPerPage;
+            } else {
+                numberOfPages = bean.getName().length / itemsPerPage + 1;
+            }
+        %>
             <thead>
             <tr>
                     <th><fmt:message key="policy.name"/></th>
@@ -81,7 +98,7 @@
             </thead>
             <tbody>
                     <%
-              for(int i=0;i<bean.getName().length;i++) {
+              for(int i=(pageNumber - 1) * itemsPerPage;i<pageNumber * itemsPerPage && i<bean.getName().length;i++) {
                   String tempPath = bean.getPath()[i];
                   String completePath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + tempPath;
                   try {
@@ -117,6 +134,12 @@
              }
              %>
             </tbody>
+        </table>
+        <table width="100%" style="text-align:center; padding-top: 10px; margin-bottom: -10px">
+            <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                                      resourceBundle="org.wso2.carbon.governance.list.ui.i18n.Resources"
+                                      nextKey="next" prevKey="prev"
+                                      paginationFunction="loadPagedList({0}, false, 'policy', 'policy')" />
         <%}%>
         </table>
     </form>

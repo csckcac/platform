@@ -25,6 +25,9 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.registry.extensions.utils.CommonConstants" %>
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
+<link type="text/css" rel="stylesheet" href="css/menu.css"/>
+<link type="text/css" rel="stylesheet" href="css/style.css"/>
+<link type="text/css" rel="stylesheet" href="../resources/css/registry.css"/>
 <jsp:include page="../dialog/display_messages.jsp"/>
 <jsp:include page="../registry_common/registry_common-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../registry_common/js/registry_validation.js"></script>
@@ -41,7 +44,8 @@
 <script type="text/javascript" src="js/list.js"></script>
 <%
     String criteria = null;
-    if (request.getParameter("filter") != null) {
+    boolean filter = request.getParameter("filter") != null;
+    if (filter) {
         criteria = (String)session.getAttribute("criteria");
     }
     ServiceBean bean = null;
@@ -49,7 +53,7 @@
         ListMetadataServiceClient listservice = new ListMetadataServiceClient(config, session);
         bean = listservice.listservices(criteria);
     } catch (Exception e) {
-        if (request.getParameter("filter") != null) {
+        if (filter) {
 %>
 <script type="text/javascript">
       CARBON.showErrorDialog("<%=e.getMessage()%>",function(){
@@ -89,7 +93,7 @@
 <div id="middle">
 <h2><fmt:message key="service.list"/></h2>
 <div id="workArea">
- <%if(bean.getSize() != 0 || request.getParameter("filter") != null){%>
+ <%if(bean.getSize() != 0 || filter){%>
     <p style="padding:5px">
     <form id="filterByNameForm" action="service_name_filter_ajaxprocessor.jsp"
           onsubmit="return submitFilterByNameForm();" method="post">
@@ -138,7 +142,7 @@
                 <thead>
                     <tr>
                         <%
-                        if (request.getParameter("filter") != null) {
+                        if (filter) {
                         %>
                         <th><fmt:message key="no.services.matches.filter"/></th>
                         <% } else { %>
@@ -146,8 +150,22 @@
                         <% } %>
                     </tr>
                 </thead>
-        <%}
-        else{%>
+        <%} else{
+            int pageNumber;
+            String pageStr = request.getParameter("page");
+            if (pageStr != null) {
+                pageNumber = Integer.parseInt(pageStr);
+            } else {
+                pageNumber = 1;
+            }
+            int itemsPerPage = (int)(RegistryConstants.ITEMS_PER_PAGE * 1.5);
+            int numberOfPages;
+            if (bean.getNames().length % itemsPerPage == 0) {
+                numberOfPages = bean.getNames().length / itemsPerPage;
+            } else {
+                numberOfPages = bean.getNames().length / itemsPerPage + 1;
+            }
+        %>
         <thead>
         <tr>
                 <th><fmt:message key="service.name"/></th>
@@ -160,7 +178,7 @@
         </thead>
         <tbody>
                 <%
-          for(int i=0;i<bean.getNames().length;i++) {
+          for(int i=(pageNumber - 1) * itemsPerPage;i<pageNumber * itemsPerPage && i<bean.getNames().length;i++) {
               String tempPath = bean.getPath()[i];
                   String completePath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + tempPath;
               try {
@@ -219,10 +237,16 @@
          }
          %>
         </tbody>
+    </table>
+    <table width="100%" style="text-align:center; padding-top: 10px; margin-bottom: -10px">
+        <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                                  resourceBundle="org.wso2.carbon.governance.list.ui.i18n.Resources"
+                                  nextKey="next" prevKey="prev"
+                                  paginationFunction="<%="loadPagedList({0}, " + Boolean.toString(filter) + ", 'service', 'services')"%>" />
     <%}%>
     </table>
 </form>
-</div>    
+</div>
 </div>
     <script type="text/javascript">
     alternateTableRows('customTable','tableEvenRow','tableOddRow');

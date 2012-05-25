@@ -1,5 +1,8 @@
-<% jagg.template("item-edit", function(inputs, outputs, jagg) { %>
-<% var i,resCount,rowNums = [],api = outputs.api;%>
+<% jagg.template("item-edit", function(inputs, outputs, jagg) {
+ var mod = jagg.module("api");
+ var result = mod.getTiers().tiers;
+ var i,resCount,rowNums = [],api = outputs.api;%>
+
 <div class="alert alert-error" id="editAPIError" style="display:none">
 <span id="editErrorSpan"></span>
 </div>
@@ -78,6 +81,10 @@
                     <label class="control-label" for="editTier">Tier Availability:</label>
                     <div class="controls">
                         <select id="editTier" name="tier"  multiple="multiple" onChange="setTiers()">
+                         <%for(var j=0;j<result.length;j++){       %>
+                          <option value="<%=result[j].tierName%>"><%=result[j].tierName%></option>
+                       <%}%>
+
                         </select>
                     </div>
             </div>

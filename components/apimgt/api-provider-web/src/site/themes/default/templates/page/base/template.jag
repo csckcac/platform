@@ -34,9 +34,8 @@ var version = request.getParameter("version")
 var docName = request.getParameter("docName");
 var inlineUrl="inline";
 var addUrl="add";
-var editUrl="info";%>
 <body <% if(reqUrl.indexOf(inlineUrl)>=0){%> onload="loadDefaultTinyMCEContent('<%=name%>','<%=version%>','<%=docName%>')"<%}%>
-<% if(reqUrl.indexOf(addUrl)>=0||reqUrl.indexOf(editUrl)>=0){%> onload="loadTiers()"<%}%>
+<% if(reqUrl.indexOf(addUrl)>=0){%> onload="loadTiers()"<%}%>
 >
     <div id="header"><% jagg.includeBlocks(outputs.header); %></div>
     <div id="body"><% jagg.includeBlocks(outputs.body); %></div>

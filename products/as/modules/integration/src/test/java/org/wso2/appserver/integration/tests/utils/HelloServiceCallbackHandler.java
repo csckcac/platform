@@ -33,13 +33,11 @@ public class HelloServiceCallbackHandler implements AxisCallback {
 
     }
 
-    @Override
     public void onMessage(MessageContext msgContext) {
         log.info("asynchronous response received.");
         this.messageContext = msgContext;
     }
 
-    @Override
     public void onFault(MessageContext msgContext) {
         Exception e = msgContext.getFailureReason();
         String exMessage = "";
@@ -48,20 +46,18 @@ public class HelloServiceCallbackHandler implements AxisCallback {
             exMessage = e.getMessage();
         }
 
-        log.info("Fault in asynchronous request -" + exMessage);
+        log.error("Fault in asynchronous request -" + exMessage, e);
     }
 
-    @Override
     public void onError(Exception e) {
         String exMessage = "";
         if (e != null) {
             exMessage = e.getMessage();
         }
 
-        log.info("Fault in asynchronous request -" + exMessage);
+        log.error("Fault in asynchronous request -" + exMessage, e);
     }
 
-    @Override
     public void onComplete() {
         log.info("Asynchronous Message request+response completed");
         isComplete = true;

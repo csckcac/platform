@@ -117,7 +117,6 @@ public class HelloWorldSampleTestCase {
         HTTP_SERVICE_URL = "http://" + FrameworkSettings.HOST_NAME +
                 ":" + FrameworkSettings.HTTP_PORT + "/services/" + SERVICE_NAME;
 
-//        RMADMINSERVICE_URL = "https://localhost:9444/services/" + "RMAdminService.RMAdminServiceHttpsSoap12Endpoint";
         RMADMINSERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
                 ":" + FrameworkSettings.HTTPS_PORT + "/services/" + "RMAdminService.RMAdminServiceHttpsSoap12Endpoint";
 

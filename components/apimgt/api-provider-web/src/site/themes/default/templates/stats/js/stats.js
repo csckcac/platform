@@ -62,7 +62,7 @@ $(document).ready(function() {
                       } else {
                           $('#serviceTimeTable').hide();
                           $('#serviceTimeChart').css("fontSize", 14);
-                          $('#serviceTimeChart').append($('<span class="label label-info">No Data Found ...</span>'));
+                          $('#serviceTimeChart').append($('<span class="label label-info">No data found. Check BAM server connectivity...</span>'));
                       }
 
 
@@ -102,7 +102,7 @@ $(document).ready(function() {
                       } else {
                           $('#subsTable').hide();
                           $('#subsChart').css("fontSize", 14);
-                          $('#subsChart').append($('<span class="label label-info">No Data Found ...</span>'));
+                          $('#subsChart').append($('<span class="label label-info">No data found. Check BAM server connectivity...</span>'));
                       }
 
 
@@ -141,7 +141,7 @@ $(document).ready(function() {
                       } else {
                           $('#apiTable').hide();
                           $('#apiChart').css("fontSize", 14);
-                          $('#apiChart').append($('<span class="label label-info">No Data Found ...</span>'));
+                          $('#apiChart').append($('<span class="label label-info">No data found. Check BAM server connectivity...</span>'));
                       }
 
 
@@ -164,7 +164,7 @@ $(document).ready(function() {
                       if (length == 0) {
                           $('#lastAccessTable').hide();
                           $('#tempLoadingSpace').html('');
-                          $('#tempLoadingSpace').append($('<span class="label label-info">No Data Found ...</span>'));
+                          $('#tempLoadingSpace').append($('<span class="label label-info">No data found. Check BAM server connectivity...</span>'));
 
                       }else{
                           $('#tempLoadingSpace').hide();

@@ -18,6 +18,11 @@
         var i, path,apiPath,subscriber, subscribers = outputs.subscribers;
         if(subscribers!=null){
         var length = subscribers.length;
+        if (length == 0) {
+        %>
+        <tr><td colspan="3">No subscriptions yet.</td></tr>
+        <%
+        }
         for(i = 0; i < length; i++) {
         subscriber = subscribers[i];
         path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + subscriber.username;

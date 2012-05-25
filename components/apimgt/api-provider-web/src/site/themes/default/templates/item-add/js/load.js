@@ -10,24 +10,41 @@ function loadTiers() {
                       for (var j = 0; j < arr.length; j++) {
                           option = new Option(arr[j], arr[j]);
                           target.options[j] = option;
+                          if (j == 0) {
+                              target.options[j].selected = 'selected';
+                              var tierArr = [];
+                              tierArr.push(target.options[j].value);
+                              $('<input>').attr('type', 'hidden')
+                                      .attr('name', 'tiersCollection')
+                                      .attr('id', 'tiersCollection')
+                                      .attr('value', tierArr)
+                                      .appendTo('#addAPIForm');
+                          }
                       }
-
                   }
               }, "json");
 }
 
-function setTiers(){
-$("select[name='tier']").change(function() {
+function setTiers() {
+    $("select[name='tier']").change(function() {
         // multipleValues will be an array
         var multipleValues = $(this).val() || [];
-        $('<input>').attr('type', 'hidden')
-            .attr('name', 'tiersCollection')
-            .attr('id', 'tiersCollection')
-            .attr('value', multipleValues)
-            .appendTo('#addAPIForm');
+        var countLength = $('#tiersCollection').length;
+        if (countLength == 0) {
 
-});
+            $('<input>').attr('type', 'hidden')
+                    .attr('name', 'tiersCollection')
+                    .attr('id', 'tiersCollection')
+                    .attr('value', multipleValues)
+                    .appendTo('#addAPIForm');
+        } else {
+            $('#tiersCollection').attr('value', multipleValues);
+
+        }
+
+    });
 }
+
 
 $(document).ready(function() {
     var v = $("#addAPIForm").validate({

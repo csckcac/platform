@@ -293,12 +293,6 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../samples/product/asset-models/Populator/build.xml</source>
-            <outputDirectory>${pom.artifactId}-${build.version}/samples/asset-models/Populator</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
             <source>../../samples/product/distributed-LCM/src/org.wso2.carbon.governance.samples.lcm/README.txt</source>
             <outputDirectory>${pom.artifactId}-${build.version}/samples/distributed-LCM/bin</outputDirectory>
             <filtered>true</filtered>

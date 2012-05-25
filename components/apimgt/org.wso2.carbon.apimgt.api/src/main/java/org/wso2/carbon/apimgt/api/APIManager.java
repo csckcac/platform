@@ -31,6 +31,14 @@ import java.util.Set;
 public interface APIManager {
 
     /**
+     * Returns a list of all existing APIs by all providers
+     *
+     * @return a List of API objects, possibly empty
+     * @throws APIManagementException on error
+     */
+    public List<API> getAllAPIs() throws APIManagementException;
+
+    /**
      * Returns details of an API
      *
      * @param identifier APIIdentifier

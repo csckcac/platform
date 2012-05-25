@@ -258,7 +258,11 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
      * @return Set<Tier>
      */
     public Set<Tier> getTiers() throws APIManagementException {
-        Set<Tier> tiers = new HashSet<Tier>();
+        Set<Tier> tiers = new TreeSet<Tier>(new Comparator<Tier>() {
+            public int compare(Tier o1, Tier o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
         try {
             if (registry.resourceExists(APIConstants.API_TIER_LOCATION)) {
                 Resource resource = registry.get(APIConstants.API_TIER_LOCATION);

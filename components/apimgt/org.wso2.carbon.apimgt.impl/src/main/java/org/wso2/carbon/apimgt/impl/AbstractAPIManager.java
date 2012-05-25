@@ -30,7 +30,6 @@ import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
-import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.registry.core.*;
@@ -65,7 +64,26 @@ public abstract class AbstractAPIManager implements APIManager {
 
     public void cleanup() {
 
-    }    
+    }
+
+    public List<API> getAllAPIs() throws APIManagementException {
+        List<API> apiSortedList = new ArrayList<API>();
+
+        try {
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                    APIConstants.API_KEY);
+            GenericArtifact[] artifacts = artifactManager.getAllGenericArtifacts();
+            for (GenericArtifact artifact : artifacts) {
+                apiSortedList.add(APIUtil.getAPI(artifact, registry));
+            }
+
+        } catch (RegistryException e) {
+            handleException("Failed to get APIs from the registry", e);
+        }
+
+        Collections.sort(apiSortedList, new APINameComparator());
+        return apiSortedList;
+    }
 
     public API getAPI(APIIdentifier identifier) throws APIManagementException {
         String apiPath = APIUtil.getAPIPath(identifier);

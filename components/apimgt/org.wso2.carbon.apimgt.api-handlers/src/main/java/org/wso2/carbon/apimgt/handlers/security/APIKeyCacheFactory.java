@@ -19,6 +19,12 @@ package org.wso2.carbon.apimgt.handlers.security;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Use this factory implementation to construct the required API key caches. This class
+ * will index all constructed cache instances by a unique identifier (context + version).
+ * Therefore the same implementation can be later queried for accessing already existing
+ * cache instances and to invalidate entries.
+ */
 public class APIKeyCacheFactory {
     
     private static final APIKeyCacheFactory instance = new APIKeyCacheFactory();
@@ -32,7 +38,17 @@ public class APIKeyCacheFactory {
     public static APIKeyCacheFactory getInstance() {
         return instance;
     }
-    
+
+    /**
+     * This method checks whether an APIKeyCache instance exists for the specified API
+     * context and version. If a cache exists, it will be returned. If not this method
+     * will construct a new APIKeyCache instance and return it. Subsequent invocations
+     * of this method with the same parameters will return that APIKeyCache object.
+     *
+     * @param context An API context
+     * @param version Version of the API
+     * @return an APIKeyCache object
+     */
     public APIKeyCache getAPIKeyCache(String context, String version) {
         String identifier = context + ":" + version;
         APIKeyCache cache = cacheMap.get(identifier);
@@ -48,12 +64,25 @@ public class APIKeyCacheFactory {
         }
         return cache;
     }
-    
+
+    /**
+     * This method returns an existing APIKeyCache instance for the given API context, version
+     * combination. If such a cache instance does not exist, this method will simply return
+     * null.
+     *
+     * @param context An API context
+     * @param version Version of the API
+     * @return an APIKeyCache object or null
+     */
     public APIKeyCache getExistingAPIKeyCache(String context, String version) {
         String identifier = context + ":" + version;
         return cacheMap.get(identifier);
     }
 
+    /**
+     * Cleanup all the cache instances created previously. Used for internal purposes
+     * only.
+     */
     void reset() {
         cacheMap.clear();
     }

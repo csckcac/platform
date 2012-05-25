@@ -34,6 +34,7 @@ var version = request.getParameter("version")
 var docName = request.getParameter("docName");
 var inlineUrl="inline";
 var addUrl="add";
+%>
 <body <% if(reqUrl.indexOf(inlineUrl)>=0){%> onload="loadDefaultTinyMCEContent('<%=name%>','<%=version%>','<%=docName%>')"<%}%>
 <% if(reqUrl.indexOf(addUrl)>=0){%> onload="loadTiers()"<%}%>
 >

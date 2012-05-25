@@ -126,9 +126,8 @@ public class TenantSelfRegistrationService {
                 }
             }
         } catch (Exception e) {
-            log.error(
-                    "Error occurred while adding the subscription for tenant: " +
-                            tenantInfoBean.getTenantDomain() + " " + e.getMessage(), e);
+            String msg = "Error occurred while adding the subscription for tenant: " + domainName;
+            log.error(msg, e);
         }
 
         return TenantMgtUtil.prepareStringToShowThemeMgtPage(tenant.getId());

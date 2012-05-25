@@ -42,7 +42,7 @@
 
             <!--Hector-->
             <dependency>
-                <groupId>me.prettyprint.wso2</groupId>
+                <groupId>org.hectorclient</groupId>
                 <artifactId>hector-core</artifactId>
                 <version>${hector-core.version}</version>
                 <exclusions>
@@ -167,7 +167,7 @@
     <properties>
         <cassandra.version>1.1.0-wso2v1</cassandra.version>
         <!--libthrift.version>0.8.0</libthrift.version-->
-        <hector-core.version>1.0-3</hector-core.version>
+        <hector-core.version>1.1-0</hector-core.version>
         <axis2.osgi.version.range.cassandra>${axis2.osgi.version.range}
         </axis2.osgi.version.range.cassandra>
         <axiom.osgi.version.range.cassandra>${axiom.osgi.version.range}

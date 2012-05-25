@@ -394,7 +394,7 @@
                                 <importBundleDef>org.apache.ws.commons.axiom.wso2:axiom</importBundleDef>
 
                                 <importBundleDef>commons-io:commons-io</importBundleDef>
-                                <importBundleDef>me.prettyprint:hector-core</importBundleDef>
+                                <importBundleDef>org.hectorclient:hector-core</importBundleDef>
                                 <importBundleDef>org.eclipse.equinox:javax.servlet.jsp</importBundleDef>
 
                                 <importBundleDef>org.apache.axis2.wso2:axis2</importBundleDef>

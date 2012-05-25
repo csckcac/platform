@@ -43,7 +43,7 @@
 
             <!--Hector-->
             <dependency>
-                <groupId>me.prettyprint.wso2</groupId>
+                <groupId>org.hectorclient</groupId>
                 <artifactId>hector-core</artifactId>
                 <version>${hector-core.version}</version>
             </dependency>
@@ -104,7 +104,7 @@
         <wso2carbon.version.logging.mgt>${wso2carbon.version}</wso2carbon.version.logging.mgt>
         <spring.framework.wso2.version>${orbit.version.spring}</spring.framework.wso2.version>
         
-        <hector-core.version>1.0-3</hector-core.version>
+        <hector-core.version>1.1-0</hector-core.version>
         <libthrift.version>0.7.wso2v1</libthrift.version>
         <perf4j.version>0.9.12.wso2v1</perf4j.version>
         <highscale.version>1.1.2.wso2v1</highscale.version>

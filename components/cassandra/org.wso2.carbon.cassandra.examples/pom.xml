@@ -70,7 +70,7 @@
             <version>${wso2carbon.version.cassandra}</version>
         </dependency>
         <dependency>
-            <groupId>me.prettyprint.wso2</groupId>
+            <groupId>org.hectorclient</groupId>
             <artifactId>hector-core</artifactId>
         </dependency>
         <dependency>

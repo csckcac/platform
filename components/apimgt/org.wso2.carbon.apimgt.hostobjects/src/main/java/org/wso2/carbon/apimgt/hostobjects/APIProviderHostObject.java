@@ -579,6 +579,47 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     /**
+     * This method is to functionality of getting all the APIs stored
+     *
+     * @param cx      Rhino context
+     * @param thisObj Scriptable object
+     * @param args    Passing arguments
+     * @param funObj  Function object
+     * @return a native array
+     * @throws ScriptException Wrapped exception by org.wso2.carbon.scriptengine.exceptions.ScriptException
+     */
+    public static NativeArray jsFunction_getAllAPIs(Context cx, Scriptable thisObj,
+                                                           Object[] args,
+                                                           Function funObj) throws ScriptException {
+        NativeArray myn = new NativeArray(0);
+        APIProvider apiProvider = getAPIProvider(thisObj);
+        try {
+            List<API> apiList = apiProvider.getAllAPIs();
+            Iterator it = apiList.iterator();
+            int i = 0;
+            while (it.hasNext()) {
+                NativeObject row = new NativeObject();
+                Object apiObject = it.next();
+                API api = (API) apiObject;
+                APIIdentifier apiIdentifier = api.getId();
+                row.put("apiName", row, apiIdentifier.getApiName());
+                row.put("version", row, apiIdentifier.getVersion());
+                row.put("provider", row, apiIdentifier.getProviderName());
+                row.put("status", row, checkValue(api.getStatus().toString()));
+                row.put("thumb", row, api.getThumbnailUrl());
+                row.put("subs", row, getSubscriberCount(apiIdentifier, thisObj));
+                myn.put(i, myn, row);
+                i++;
+            }
+        } catch (APIManagementException e) {
+            log.error("Error from registry while getting the APIs", e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }        
+        return myn;
+    }
+
+    /**
      * This method is to functionality of getting all the APIs stored per provider
      *
      * @param cx      Rhino context

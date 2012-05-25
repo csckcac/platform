@@ -9,6 +9,7 @@ import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.*;
+import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.template.APITemplateBuilder;
 import org.wso2.carbon.apimgt.impl.template.BasicTemplateBuilder;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
@@ -273,6 +274,12 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                     tiers.add(tier);
                 }
             }
+            
+            APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
+                    getAPIManagerConfigurationService().getAPIManagerConfiguration();
+            if (Boolean.parseBoolean(config.getFirstProperty(APIConstants.ENABLE_UNLIMITED_TIER))) {
+                tiers.add(new Tier(APIConstants.UNLIMITED_TIER));
+            }
         } catch (RegistryException e) {
             handleException("Error while retrieving API tiers from registry", e);
         } catch (XMLStreamException e) {
@@ -290,6 +297,11 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     }
     
     private void addOrUpdateTier(Tier tier, boolean update) throws APIManagementException {
+        if (APIConstants.UNLIMITED_TIER.equals(tier.getName())) {
+            throw new APIManagementException("Changes on the '" + APIConstants.UNLIMITED_TIER + "' " +
+                    "tier are not allowed");
+        }
+
         Set<Tier> tiers = getTiers();
         if (update && !tiers.contains(tier)) {
             throw new APIManagementException("No tier exists by the name: " + tier.getName());
@@ -326,6 +338,11 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     }
 
     public void removeTier(Tier tier) throws APIManagementException {
+        if (APIConstants.UNLIMITED_TIER.equals(tier.getName())) {
+            throw new APIManagementException("Changes on the '" + APIConstants.UNLIMITED_TIER + "' " +
+                    "tier are not allowed");
+        }
+
         Set<Tier> tiers = getTiers();
         if (tiers.remove(tier)) {
             saveTiers(tiers);

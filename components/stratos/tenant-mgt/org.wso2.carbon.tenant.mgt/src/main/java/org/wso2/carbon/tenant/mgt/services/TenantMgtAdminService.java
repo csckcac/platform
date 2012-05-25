@@ -62,7 +62,8 @@ public class TenantMgtAdminService extends AbstractAdmin {
             log.error(msg, e);
             throw new Exception(msg, e);
         }
-        TenantMgtUtil.validateDomain(tenantInfoBean.getTenantDomain());
+        String tenantDomain = tenantInfoBean.getTenantDomain();
+        TenantMgtUtil.validateDomain(tenantDomain);
         UserRegistry userRegistry = (UserRegistry) getGovernanceRegistry();
         if (userRegistry == null) {
             log.error("Security Alert! User registry is null. A user is trying create a tenant "
@@ -91,38 +92,34 @@ public class TenantMgtAdminService extends AbstractAdmin {
             log.error(msg, e);
             throw new Exception(msg, e);
         }
-        
-        // If Email Validation is made optional, tenant will be activated now.
-        if (!CommonUtil.isEmailValidationMandatory()) {
-            TenantMgtServiceComponent.getTenantManager().activateTenant(tenant.getId());
-            if (log.isDebugEnabled()) {
-                log.debug("Activated the tenant during the tenant creation: " + tenant.getId());
-            }
-            
-            //Notify tenant activation
-            try {
-                TenantMgtUtil.triggerTenantInitialActivation(tenantInfoBean);
-            } catch (StratosException e) {
-                String msg = "Error in notifying tenant initial activation.";
-                log.error(msg, e);
-                throw new Exception(msg, e);
-            }
-        }
-        
         //adding the subscription entry
-        try{
-            if(TenantMgtServiceComponent.getBillingService() != null){
+        try {
+            if (TenantMgtServiceComponent.getBillingService() != null) {
                 TenantMgtServiceComponent.getBillingService().
                         addUsagePlan(tenant, tenantInfoBean.getUsagePlan());
                 if (log.isDebugEnabled()) {
                     log.debug("Subscription added successfully for the tenant: " +
-                              tenantInfoBean.getTenantDomain());
+                            tenantInfoBean.getTenantDomain());
                 }
             }
+        } catch (Exception e) {
+            String msg = "Error occurred while adding the subscription for tenant: " + tenantDomain;
+            log.error(msg, e);
+        }
 
-        }catch(Exception e){
-            log.error("Error occurred while adding the subscription for tenant: " +
-                    tenantInfoBean.getTenantDomain() + " " + e.getMessage(), e);    
+        // For the super tenant tenant creation, tenants are always activated as they are created.
+        TenantMgtServiceComponent.getTenantManager().activateTenant(tenant.getId());
+        if (log.isDebugEnabled()) {
+            log.debug("Activated the tenant during the tenant creation: " + tenant.getId());
+        }
+
+        //Notify tenant activation
+        try {
+            TenantMgtUtil.triggerTenantInitialActivation(tenantInfoBean);
+        } catch (StratosException e) {
+            String msg = "Error in notifying tenant initial activation.";
+            log.error(msg, e);
+            throw new Exception(msg, e);
         }
 
         return TenantMgtUtil.prepareStringToShowThemeMgtPage(tenant.getId());

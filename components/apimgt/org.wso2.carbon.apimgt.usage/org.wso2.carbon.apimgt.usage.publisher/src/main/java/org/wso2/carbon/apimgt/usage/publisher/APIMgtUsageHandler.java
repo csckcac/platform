@@ -67,6 +67,9 @@ public class APIMgtUsageHandler extends AbstractHandler {
         String context = (String)mc.getProperty(RESTConstants.REST_API_CONTEXT);
         String api_version =  (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API);
         String api = api_version.split(":")[0];
+        if (api.contains("--")) {
+            api = api.split("--")[0];
+        }
         String version = (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION);
         String resource = extractResource(mc);
         String method =  (String)((Axis2MessageContext) mc).getAxis2MessageContext().getProperty(

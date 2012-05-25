@@ -431,7 +431,8 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     private APITemplateBuilder getTemplateBuilder(API api) {
         Map<String, String> testAPIMappings = new HashMap<String, String>();
 
-        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, api.getId().getApiName());
+        testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, api.getId().getProviderName() +
+                "--" + api.getId().getApiName());
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, api.getContext());
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, api.getId().getVersion());
 

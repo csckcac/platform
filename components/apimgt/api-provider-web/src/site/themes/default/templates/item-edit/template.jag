@@ -214,9 +214,9 @@ $(document).ready(function() {
                   if(!responseText.error){
                       var current = window.location.pathname;
                       if (current.indexOf(".jag") >= 0) {
-                      location.href = "item-info.jag?name=<%=api.name%>&version=<%=api.version%>";
+                      location.href = "item-info.jag?name=<%=api.name%>&version=<%=api.version%>&provider=<%=api.provider%>";
                       }else{
-                      location.href = "site/pages/item-info.jag?name=<%=api.name%>&version=<%=api.version%>";
+                      location.href = "site/pages/item-info.jag?name=<%=api.name%>&version=<%=api.version%>&provider=<%=api.provider%>";
                       }
                       $("#editAPIForm")[0].reset();
                   }else{

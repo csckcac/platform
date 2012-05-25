@@ -18,7 +18,7 @@
 					<xs:element minOccurs="0" name="adminUserName" nillable="true"
 						type="xs:string" />
 					<xs:element maxOccurs="unbounded" minOccurs="0"
-						name="defaultProjectUserRoles" nillable="true" type="xs:string" />
+						name="defaultApplicationUserRoles" nillable="true" type="xs:string" />
 					<xs:element minOccurs="0" name="scmReadWritePermissionName"
 						nillable="true" type="xs:string" />
 					<xs:element minOccurs="0" name="scmServerAdminPassword"
@@ -43,9 +43,9 @@
 						nillable="true" type="xs:string" />
 					<xs:element minOccurs="0" name="webServiceEPRActivateUser"
 						nillable="true" type="xs:string" />
-					<xs:element minOccurs="0" name="webServiceEPRAddUserToProject"
+					<xs:element minOccurs="0" name="webServiceEPRAddUserToApplication"
 						nillable="true" type="xs:string" />
-					<xs:element minOccurs="0" name="webServiceEPRCreateProject"
+					<xs:element minOccurs="0" name="webServiceEPRCreateApplication"
 						nillable="true" type="xs:string" />
 					<xs:element minOccurs="0" name="webServiceEPRCreateRepo"
 						nillable="true" type="xs:string" />
@@ -54,8 +54,8 @@
 					<xs:element minOccurs="0"
 						name="webServiceEPREmailVerificationService" nillable="true" type="xs:string" />
 					<xs:element minOccurs="0"
-						name="webServiceEPRGetRolesOfUserForProject" nillable="true" type="xs:string" />
-					<xs:element minOccurs="0" name="webServiceEPRGetUsersOfProject"
+						name="webServiceEPRGetRolesOfUserForApplication" nillable="true" type="xs:string" />
+					<xs:element minOccurs="0" name="webServiceEPRGetUsersOfApplication"
 						nillable="true" type="xs:string" />
 				</xs:sequence>
 			</xs:complexType>

@@ -24,6 +24,14 @@
         <parameter name="adminService" locked="true">true</parameter>
 
         <parameter name="AuthorizationAction" locked="true">/permission/admin/billing/invoice</parameter>
+
+        <operation name="getPaginatedBalances">
+            <parameter name="superTenantService" locked="true">true</parameter>
+        </operation>
+
+        <operation name="getOutstandingBalance">
+            <parameter name="superTenantService" locked="true">true</parameter>
+        </operation>
   	</service>
 
     <service name="BillingDataAccessService" scope="transportsession">

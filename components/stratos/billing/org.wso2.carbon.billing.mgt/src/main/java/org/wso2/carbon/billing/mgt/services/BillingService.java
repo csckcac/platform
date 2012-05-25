@@ -50,7 +50,7 @@ public class BillingService extends AbstractAdmin {
      * Gets the available billing periods of the available invoices for the
      * current customer. Tenant id is taken from registry
      * @return  an array of BillingPeriod objects
-     * @throws Exception
+     * @throws Exception Exception
      */
     public BillingPeriod[] getAvailableBillingPeriods() throws Exception {
         UserRegistry registry = (UserRegistry) getGovernanceUserRegistry();
@@ -61,7 +61,7 @@ public class BillingService extends AbstractAdmin {
      * Gets the invoice with a given invoice id
      * @param invoiceId is the id of the invoice expected
      * @return  a MultitenancyInvoice object
-     * @throws Exception
+     * @throws Exception Exception
      */
     public MultitenancyInvoice getPastInvoice(int invoiceId) throws Exception {
         UserRegistry registry = (UserRegistry) getGovernanceUserRegistry();
@@ -72,7 +72,7 @@ public class BillingService extends AbstractAdmin {
      * Gets the current invoice (interim invoice) of the current customer.
      * Tenant id is taken from the registry
      * @return a MultitenancyInvoice object
-     * @throws Exception
+     * @throws Exception Exception
      */
     public MultitenancyInvoice getCurrentInvoice() throws Exception {
         UserRegistry registry = (UserRegistry) getGovernanceUserRegistry();
@@ -85,7 +85,7 @@ public class BillingService extends AbstractAdmin {
      * @param payment is the Payment object which contains the payment record details
      * @param amount is the paid amount (had to pass this as a string)
      * @return  the payment id for the added record
-     * @throws Exception
+     * @throws Exception Exception
      */
     public int addPayment(Payment payment, String amount) throws Exception {
         BillingManager billingManager = Util.getBillingManager();
@@ -108,7 +108,7 @@ public class BillingService extends AbstractAdmin {
      * Gets the paginated BalanceInfoBean to be shown for the super tenant in the paginated mode
      * @param pageNumber is the expected page number
      * @return a PaginatedBalanceInfoBean object
-     * @throws Exception
+     * @throws Exception Exception
      */
     public PaginatedBalanceInfoBean getPaginatedBalances(int pageNumber) throws Exception {
         BillingManager billingManager = Util.getBillingManager();
@@ -126,7 +126,7 @@ public class BillingService extends AbstractAdmin {
      * @param tenantDomain  is the domain of the expected tenant which the super-tenant
      * wants to view the balance. If this is null, balance info of all the tenants will be shown
      * @return  an array of OutstandingBalanceInfoBeans
-     * @throws Exception
+     * @throws Exception Exception
      */
     public OutstandingBalanceInfoBean[] getOutstandingBalance(String tenantDomain) throws Exception {
         BillingManager billingManager = Util.getBillingManager();
@@ -141,7 +141,7 @@ public class BillingService extends AbstractAdmin {
      * @param registry  is the GovernanceUserRegistry
      * @param invoiceId is the expected invoice id
      * @return  a MultitenancyInvoice object
-     * @throws Exception
+     * @throws Exception Exception
      */
     private MultitenancyInvoice getPastInvoiceById(UserRegistry registry,
                                                int invoiceId) throws Exception {
@@ -230,8 +230,8 @@ public class BillingService extends AbstractAdmin {
     /**
      * Gets the interim invoice of the current customer
      * @param registry is the GovernanceUserRegistry
-     * @return
-     * @throws Exception
+     * @return an MultiTenancyInvoice object
+     * @throws Exception Exception
      */
     private MultitenancyInvoice getCurrentInvoiceOfCustomer(UserRegistry registry) throws Exception {
         // we have to generate the invoice for this.
@@ -345,7 +345,7 @@ public class BillingService extends AbstractAdmin {
      * @param userRegistry to get the tenant id
      * @param billingEngine to fill the customer details
      * @return   a customer object
-     * @throws Exception
+     * @throws Exception Exception
      */
     private Customer getCurrentCustomer(UserRegistry userRegistry,
                                         BillingEngine billingEngine) throws Exception {
@@ -391,7 +391,7 @@ public class BillingService extends AbstractAdmin {
     /**
      * Sends the payment received email to the customer
      * @param payment is the payment object with the payment details 
-     * @throws Exception
+     * @throws Exception Exception
      */
     private void sendPaymentReceivedEmail(Payment payment) throws Exception{
         BillingManager billingManager = Util.getBillingManager();
@@ -410,8 +410,6 @@ public class BillingService extends AbstractAdmin {
                     mailParameters.put("invoice-id", String.valueOf(payment.getInvoice().getId()));
 
                     try{
-                        TenantManager tenantManager = Util.getRealmService().getTenantManager();
-                        Tenant tenant = (Tenant) tenantManager.getTenant(customer.getId());
                         String customerName =
                                 ClaimsMgtUtil.getFirstName(Util.getRealmService(), customer.getId());
                         if(customerName!=null){

@@ -929,6 +929,17 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
     }
 
 
+    public void removeBinding(Exchange exchange, AMQQueue amqQueue, String routingKey)
+            throws CassandraDataAccessException {
+
+        if(keyspace == null) {
+            return;
+        }
+        CassandraDataAccessHelper.deleteStringColumnFromRaw(BINDING_COLUMN_FAMILY,exchange.getName(),routingKey,keyspace);
+
+    }
+
+
     /**
      * When a new message arrived for a topic
      * it searches for the registered subscribers for that topic
@@ -1671,7 +1682,11 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
     @Override
     public void unbindQueue(Exchange exchange, AMQShortString routingKey, AMQQueue queue, FieldTable args) throws AMQStoreException {
-
+        try {
+            removeBinding(exchange,queue,routingKey.asString());
+        } catch (CassandraDataAccessException e) {
+            throw  new AMQStoreException("Error removing binding details from cassandra store" ,e);
+        }
     }
 
     @Override

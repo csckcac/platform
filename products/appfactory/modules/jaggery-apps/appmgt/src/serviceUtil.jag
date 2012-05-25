@@ -1,7 +1,7 @@
 <%
 
 var gregUrl = "https://192.168.4.26:9443/";
-
+var log = new Log();
 function loginFunc(username, password, remoteAddress) {
     var url = gregUrl + "services/AuthenticationAdmin";
     var payload =
@@ -13,7 +13,7 @@ function loginFunc(username, password, remoteAddress) {
     var result = invokeService(url, payload, "urn:login");
 	
     if (result.error) {
-        log("Error authenticating user : " + username + " at " + remoteAddress, "error");
+        log.error("Error authenticating user : " + username + " at " + remoteAddress, "error");
         return {
             error:result.error,
             cookie:null
@@ -21,13 +21,10 @@ function loginFunc(username, password, remoteAddress) {
     }
 
 	var responseText = result.client.responseText;
-	log(responseText);
 	var loginSuccess = responseText.split("<ns:return>")[1].split("</ns:return>")[0];
-	log("========"+loginSuccess+"=========");
+	log.debug("========"+loginSuccess+"=========");
 	
 	var cookie = result.client.getResponseHeader("Set-Cookie");
-	log("RRRRRRRRRRRRRRRRRRRRRRRRR" + result);
-	log("################################################## " + cookie);
 	cookie = cookie.split(';')[0];
 	if(loginSuccess == "true")
 	{
@@ -65,8 +62,6 @@ function getUserFunc() {
         username:session.get("username"),
         cookie:session.get("cookie"),
 		loginInvalid:session.get("loginInvalid")
-	//username:"testUser",
-        //cookie:"testcookie"
     };
 }
 
@@ -75,7 +70,7 @@ function getServicesFunc() {
     var payload = <ser:listservices xmlns:ser="http://services.list.governance.carbon.wso2.org"></ser:listservices>;
     var result = invokeService(url, payload, "urn:listservices", null);
     if (result.error) {
-        log("Error getting services", "error");
+        log.error("Error getting services");
         return {
             error:result.error,
             services:null
@@ -108,7 +103,7 @@ function getServicesFunc() {
         } else {
             rating = rs.rating;
             var content = getResourceContentFunc('/_system/governance' + getPath(paths[i].text().toString()));
-            log('the path :: /_system/governance' + getPath(paths[i].text().toString()));
+            log.debug('the path :: /_system/governance' + getPath(paths[i].text().toString()));
             var elem = {
                 name:names[i].text().toString(),
                 canDelete:canDeletes[i].text().toString(),
@@ -194,7 +189,7 @@ function getRatingFunc(path) {
         </api:getRating>;
     var result = invokeService(url, payload, "urn:getRating", null);
     if (result.error) {
-        log("Error getting rating for the resource at " + path, "error");
+        log.error("Error getting rating for the resource at " + path);
         return {
             error:result.error,
             rating:null
@@ -216,7 +211,7 @@ function getDescriptionFunc(path, type) {
         </api:WSgetMetaData>;
     var result = invokeService(url, payload, "urn:WSgetMetaData", null);
     if (result.error) {
-        log("Error getting description for resource at " + path, "error");
+        log.error("Error getting description for resource at " + path);
         return {
             error:result.error,
             description:null
@@ -259,7 +254,7 @@ function getTagsFunc(path) {
         </api:WSgetTags>;
     var result = invokeService(url, payload, "urn:WSgetTags", null);
     if (result.error) {
-        log("Error getting tags for the resource at " + path, "error");
+        log.error("Error getting tags for the resource at " + path);
         return {
             error:result.error,
             tags:null
@@ -330,7 +325,7 @@ function purchaseServiceFunc(serviceName, servicePath, username) {
     }
     result = createAssociationFunc(assocPath, servicePath);
     if (result.error) {
-        log(msg, "error");
+        log.error(msg);
         return {
             error:result.error,
             purchased:false
@@ -351,7 +346,7 @@ function createResourceFunc(path) {
         </ser:addResource>;
     var result = invokeService(url, payload, "urn:addResource", null);
     if (result.error) {
-        log("Error while creating resource at " + path, "error");
+        log.error("Error while creating resource at " + path);
         return {
             error:true
         };
@@ -393,7 +388,7 @@ function getPurchasesFunc(username) {
         </api:getCollectionContent>;
     var result = invokeService(url, payload, "urn:getCollectionContent", null);
     if (result.error) {
-        log("Error getting purchases for user : " + username, "error");
+        log.error("Error getting purchases for user : " + username);
         return {
             error:result.error,
             purchases:null
@@ -432,7 +427,7 @@ function searchServiceFunc(key, name) {
 
     var result = invokeService(url, payload, "urn:getAdvancedSearchResults", null);
     if (result.error) {
-        log("Error searching services key : " + key + ", name : " + name, "error");
+        log.error("Error searching services key : " + key + ", name : " + name);
         return {
             error:result.error,
             services:null
@@ -486,7 +481,7 @@ function getSearchKeysFunc() {
 
 function getResourceNamesInCollectionFunc(path) {
     var url = gregUrl + "services/ResourceAdminService.ResourceAdminServiceHttpsSoap11Endpoint/";
-    log(path);
+    log.debug(path);
 
     if (path.charAt(path.length - 1) == "/") {
         path = path.substring(0, path.length - 1);
@@ -499,7 +494,7 @@ function getResourceNamesInCollectionFunc(path) {
 
     var result = invokeService(url, payload, "urn:getCollectionContent", null);
     if (result.error) {
-        log("Error while getting resources at " + path, "error");
+        log.debug("Error while getting resources at " + path);
         return {
             error:true
         };
@@ -550,7 +545,7 @@ function invokeService(url, payload, action, opts) {
             error:false
         };
     } catch (e) {
-        log("Error invoking service " + url + ", action : " + options.action + ", " + e.toString());
+        log.debug("Error invoking service " + url + ", action : " + options.action + ", " + e.toString());
         return {
             client:client,
             error:e
@@ -582,7 +577,7 @@ function rateResourceFunc(path, rating) {
     };
     var result = invokeService(url, payload, "urn:rateResource", options);
     if (result.error) {
-        log("Error rating the resource " + path, "error");
+        log.debug("Error rating the resource " + path);
         return {
             error:result.error,
             services:null
@@ -607,7 +602,7 @@ function addCommentFunc(path, comment) {
             </api:WSaddComment>;
         var result = invokeService(url, payload, "urn:WSaddComment", null);
         if (result.error) {
-            log("Error adding the comment for resource " + path, "error");
+            log.error("Error adding the comment for resource " + path);
             return {
                 error:result.error,
                 comment:null
@@ -620,7 +615,7 @@ function addCommentFunc(path, comment) {
             comment:xml.ns::["return"].text().toString()
         };
     } else {
-        log("Logged in user cannot be found");
+        log.debug("Logged in user cannot be found");
         return {
             error:true,
             comment:null
@@ -636,7 +631,7 @@ function getCommentsFunc(path) {
         </api:WSgetComments>;
     var result = invokeService(url, payload, "urn:WSgetComments", null);
     if (result.error) {
-        log("Error getting the comments for resource " + path, "error");
+        log.error("Error getting the comments for resource " + path);
         return {
             error:result.error,
             comments:null
@@ -696,7 +691,7 @@ function getReviewsFunc(path) {
 
 function getResourceContentFunc(path) {
     var url = gregUrl + "services/ResourceAdminService.ResourceAdminServiceHttpsSoap11Endpoint/";
-    log(path);
+    log.debug(path);
 
     if (path.charAt(path.length - 1) == "/") {
         path = path.substring(0, path.length - 1);
@@ -709,7 +704,7 @@ function getResourceContentFunc(path) {
 
     var result = invokeService(url, payload, "urn:getTextContent", null);
     if (result.error) {
-        log("Error while creating resource at " + path, "error");
+        log.error("Error while creating resource at " + path);
         return {
             error:true
         };

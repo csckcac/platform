@@ -39,46 +39,6 @@
                 </tr>
             </table>
         </form>
-        <!--form id='sampleform' method='post'
-                                  action="inviteUserSubmit.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>">
-                                <table id="table1">
-                                    <tr class="data" id="row5">
-                                    <tr><p>
-                                        <td>email:</td>
-                                        <td><input type='text' name='newUserEmalAddress'/></td>
-                                        </p>
-                                    </tr>
-                                    <tr><p>
-                                        <td>
-                                            Role:
-                                        </td>
-                                        </p>
-                                    </tr>
-                                    <tr><p>
-                                        <td><input type="checkbox" name="developer" value="dev">Developer
-                                        </td>
-                                        </p></tr>
-                                    <tr><p>
-                                        <td><input type="checkbox" name="manager" value="manager">Manager
-                                        </td>
-                                        </p></tr>
-                                    <tr><p>
-                                        <td><input type="checkbox" name="devops" value="devops">DevOps
-                                        </td>
-                                        </p></tr>
-
-                                    <tr><p>
-                                        <td class="buttonRow"><input type='submit' name='Submit' value='Invite'
-                                                   class="btn primary"/>
-                                            <input type="button" class="button"
-                                                   onclick="location.href='application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'"
-                                                   value="Cancel"/>
-                                        </td>
-                                        </p>
-                                    </tr>
-                                </table>
-                            </form-->
-
     </div>
 </div>
 <%

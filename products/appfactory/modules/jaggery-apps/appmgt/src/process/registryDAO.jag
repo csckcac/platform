@@ -1,7 +1,8 @@
 <%
      include('../config_reader.jag');
-    //var registry = new Registry("SYSTEM_CONFIGURATION");
-	var registry = new MetadataStore(getProperty('adminUserName'),getProperty('adminPassword'));
+     var log = new Log();
+
+    var registry = new MetadataStore(getProperty('adminUserName'),getProperty('adminPassword'));
 
     // checks whether any resource exists in the given path
     function resourceExists(path) {
@@ -12,8 +13,8 @@
                 return "false";
             }
         } catch (e) {
-            log("Error while accessing registry resource \n"+e.message);
-            //throw "Error while accessing registry resource";
+            log.error("Error while accessing registry resource \n"+e.message);
+            throw "Error while accessing registry resource";
         }
     }
 
@@ -21,8 +22,8 @@
         try {
             registry.put(path, resource);
         } catch (e) {
-            log("Error while storing registry resource \n"+e.message);
-            //throw "Error while storing registry resource";
+            log.error("Error while storing registry resource \n"+e.message);
+            throw "Error while storing registry resource";
         }
     }
 
@@ -30,9 +31,8 @@
         try {
             return registry.get(path);
         } catch (e) {
-            log("Error while retrieving registry resource \n"+e.message);
-            log("Error ---------: "+e);
-            //throw "Error while retrieving registry resource";
+            log.error("Error while retrieving registry resource \n"+e.message);
+            throw "Error while retrieving registry resource";
         }
     }
 
@@ -40,8 +40,8 @@
         try {
             return registry.newResource();
         } catch (e) {
-            log("Error while creating registry resource \n"+e.message);
-            //throw "Error while creating registry resource";
+            log.error("Error while creating registry resource \n"+e.message);
+            throw "Error while creating registry resource";
         }
     }
 %>

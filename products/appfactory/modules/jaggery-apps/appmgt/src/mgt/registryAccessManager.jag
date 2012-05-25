@@ -1,85 +1,84 @@
 <%
-    //var registry = new Registry("SYSTEM_CONFIGURATION");
-
+    var log = new Log();
     include('../constants.jag');
     include('../process/registryDAO.jag');
 
     //check whether the key given for the new application already exist
     function isApplicationKeyAlreadyTaken(newKey) {
-        var path = PROJECTS + newKey;
+        var path = APPLICATIONS + newKey;
         try {
             return resourceExists(path);
         } catch (e) {
-            log("Error while accessing registry resource \n"+e.message);
-            //throw "Error while storing registry resource";
+            log.error("Error while accessing registry resource \n"+e.message);
+            throw "Error while storing registry resource";
         }
     }
 
     //add application details to registry
     function addApplicationToApp(applicationKey, applicationName, applicationDescription, repoLink) {
-        //var resource = registry.newResource();
         try {
             var resource = createResource();
         } catch (e) {
-            log("Error while creating registry resource \n"+e.message);
+            log.error("Error while creating registry resource \n"+e.message);
             throw "Error while creating registry resource";
         }
 
-        resource.addProperty(PROJECT_KEY, applicationKey);
-        resource.addProperty(PROJECT_NAME, applicationName);
-        resource.addProperty(PROJECT_DESC, applicationDescription);
+        resource.addProperty(APPLICATION_KEY, applicationKey);
+        resource.addProperty(APPLICATION_NAME, applicationName);
+        resource.addProperty(APPLICATION_DESC, applicationDescription);
         resource.addProperty(REPO_LINK, repoLink);
 
-        ////temp code
+        ////temp code Todo:
         var task = request.getParameter("task");
         resource.addProperty("task", task);
 
-        var path = PROJECTS + applicationKey;
-        //registry.put(path, resource);
+        var path = APPLICATIONS + applicationKey;
         try {
             putResource(path, resource);
         } catch (e) {
-            log("Error while creating storing resource \n"+e.message);
-            //throw "Error while creating registry resource";
+            log.error("Error while creating storing resource \n"+e.message);
+            throw "Error while creating registry resource";
         }
     }
 
     // add the application key to the users' applications list in registry
     function addApplicationToUser(newUser, applicationKey) {
 
-        var path = USER_PROJECTS_MAPPING + newUser;
-
-        // if the user already have any application, append the new one
-        //if (registry.resourceExists(path)) {
-        //if (resourceExists(path)) {
+        var path = USER_APPLICATIONS_MAPPING + newUser;
             var result = resourceExists(path);
-            log("in addApplicationToUser, user mapping exists "+result);
+        if(log.isDebugEnabled()){
+             log.debug("in addApplicationToUser, user mapping exists "+result);
+        }
+
         if(result =="true") {
-            log("create proj- user already exist");
-            log("add application to User "+ resourceExists(path));
-            //var resource = registry.get(path);
+            if(log.isDebugEnabled()){
+                log.debug("create application- user already exist");
+                log.debug("add application to User "+ resourceExists(path));
+            }
             var resource = getResource(path);
-            var existingApplicationsList = resource.getProperty(PROJECT_LIST);
-            log("applications list "+existingApplicationsList);
+            var existingApplicationsList = resource.getProperty(APPLICATION_LIST);
+            if(log.isDebugEnabled(){
+                log.debug("applications list "+existingApplicationsList);
+            }
 
             if(!containsApplication(existingApplicationsList, applicationKey)) {
                 var newApplicationsList = existingApplicationsList + "," + applicationKey;
-                log("new application list "+newApplicationsList);
-                resource.setProperty(PROJECT_LIST, newApplicationsList);
-                //registry.put(path, resource);
+                if(log.isDebugEnabled(){
+                    log.debug("new application list "+newApplicationsList);
+                }
+                resource.setProperty(APPLICATION_LIST, newApplicationsList);
                 putResource(path, resource);
             }
 
         }
         // add the new application to user to user-applications mapping in registry
         else {
-            log("create proj- user doesn't exist");
-            //var resource = registry.newResource();
+            if(log.isDebugEnabled(){
+                log.debug("create application- user doesn't exist");
+            }
             var resource = createResource();
             var applicationsList = applicationKey;
-            log("new application list "+applicationsList);
-            resource.setProperty(PROJECT_LIST, applicationsList);
-            //registry.put(path, resource);
+            resource.setProperty(APPLICATION_LIST, applicationsList);
             putResource(path, resource);
         }
     }
@@ -88,10 +87,10 @@
         var applicationAlreadyExist = false;
         var applicationArray = existingApplications.split(",");
         for (var i = 0; i <= applicationArray.length - 1; ++i) {
-            log("existing application : new application "+ applicationArray[i] +" "+newApplication)
+            log.debug("existing application : new application "+ applicationArray[i] +" "+newApplication)
             if(applicationArray[i] == newApplication) {
                 applicationAlreadyExist = true;
-                log("new application already exist in existing application list");
+                log.debu("new application already exist in existing application list");
                 break;
             }
         }
@@ -99,38 +98,33 @@
     }
 
     function getApplicationsOfUser(userName) {
-        //log("USER EXISTS " + registry.resourceExists(USER_PROJECTS_MAPPING + userName));
-        log("USER EXISTS " + resourceExists(USER_PROJECTS_MAPPING + userName));
+        log.debug("USER EXISTS " + resourceExists(USER_APPLICATIONS_MAPPING + userName));
         var applicationList = [];
-        //if (registry.resourceExists(USER_PROJECTS_MAPPING + userName)) {
-        //if (resourceExists(USER_PROJECTS_MAPPING + userName)) {
 
-        var result = resourceExists(USER_PROJECTS_MAPPING + userName);
-        log("get user applications "+result);
+        var result = resourceExists(USER_APPLICATIONS_MAPPING + userName);
+        log.debug("get user applications "+result);
         if(result == "true") {
-            log("get applications of user - resource exists "+ resourceExists(USER_PROJECTS_MAPPING + userName));
+            log.debug("get applications of user - resource exists "+ resourceExists(USER_APPLICATIONS_MAPPING + userName));
             //get the comma separated application keys that the user can access
-            //var mapResource = registry.get(USER_PROJECTS_MAPPING + userName);
-            var mapResource = getResource(USER_PROJECTS_MAPPING + userName);
+            var mapResource = getResource(USER_APPLICATIONS_MAPPING + userName);
 
             if (mapResource != null) {
-                var applicationArray = mapResource.getProperty(PROJECT_LIST).split(",");
-                log("getting user applications "+applicationArray);
+                var applicationArray = mapResource.getProperty(APPLICATION_LIST).split(",");
+                log.debug("getting user applications "+applicationArray);
 
                 // read the application details from applications/ collection and display link to application
                 for (var i = 0; i <= applicationArray.length - 1; ++i) {
                     var resource = {};
                     var key = applicationArray[i];
-                    var path = PROJECTS + key;
+                    var path = APPLICATIONS + key;
 
                     //if (registry.resourceExists(path)) {
                     if (resourceExists(path)) {
-                        //var application = registry.get(path);
                         var application = getResource(path);
-                        log("resource exist for key "+key+" : "+application);
+                        log.debug("resource exist for key "+key+" : "+application);
                         resource.props = {};
                         resource.props.applicationKey = key;
-                        resource.props.applicationName = application.getProperty(PROJECT_NAME);
+                        resource.props.applicationName = application.getProperty(APPLICATION_NAME);
                     }
                     applicationList.push(resource)
                 }
@@ -140,10 +134,8 @@
     }
 
     function getRepositoryPath(applicationKey){
-        path = PROJECTS + applicationKey;
-        //if(registry.resourceExists(path)) {
+        path = APPLICATIONS + applicationKey;
         if(resourceExists(path)) {
-            //return registry.get(path).getProperty(REPO_LINK);
             return getResource(path).getProperty(REPO_LINK);
         }
     }

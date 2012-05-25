@@ -26,6 +26,7 @@
     });
 </script>
 <%
+    var log = new Log();
     var applicationName = request.getParameter("applicationName");
     var applicationKey = request.getParameter("applicationKey");
 
@@ -35,7 +36,7 @@
         // userName variable is taken from template_header.jag
         userHasAccess = isUserInApplication(applicationKey, userName,request.getRemoteAddr());
     } catch (e) {
-        log (e);
+        log.error(e);
     }
     if(userHasAccess) {
         var userIsOwner = false;
@@ -43,15 +44,11 @@
         try {
             userIsOwner = isOwner(applicationKey, userName,request.getRemoteAddr());
             isADevOp = isUserADevOp(applicationKey, userName,request.getRemoteAddr());
-            print("isDevOp "+isADevOp);
-
-            // TODO remove this assignment when the devOp UI is ready ********
-            isADevOp = false;
         } catch (e) {
-            log (e);
+            log.error(e);
         }
 
-        log("user is an Owner "+userIsOwner);
+        log.debug("user is an Owner "+userIsOwner);
         
         %>
         <div id="middle">
@@ -62,11 +59,6 @@
                     <h2><%= applicationName%>
                 </h2>
                 <%
-        //                //temp code
-        //                var registry = new Registry("SYSTEM_CONFIGURATION");
-        //                log("registry.get(applications/applicationKey) ===> " + applicationKey);
-        //                var resource = registry.get("applications/" + applicationKey);
-        //                var applicationSVN = resource.getProperty("repoLink");
                         include('mgt/registryAccessManager.jag');
                         var applicationSVN = getRepositoryPath(applicationKey);
                 %>

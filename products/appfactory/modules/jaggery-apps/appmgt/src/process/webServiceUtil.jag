@@ -1,6 +1,9 @@
 <%
     include('../config_reader.jag');
 
+    // used for logging
+    var log = new Log();
+
     // creates application in stratos
     function createApplication(applicationName,userName) {
 
@@ -21,8 +24,11 @@
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
+            if(log.isDebugEnabled()){
+                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+            }
         } catch (e) {
-            log("Error while creating application \n"+e.message);
+            log.error("Error while creating application \n"+e.message);
             throw "Error while creating application";
         }
         return result;
@@ -41,21 +47,16 @@
         var result;
         try {
             var endPoint = getProperty('webService.createRepo');
-            log("repo end point " + endPoint + "---");
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseText;
-            log("reuslt........." + result);
+            if(log.isDebugEnabled()){
+                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+            }
         } catch (e) {
-            log("Error while creating repository \n"+e.message);
+            log.error("Error while creating repository \n"+e.message);
             throw "Error while creating repository";
         }
-
-//        var repoLink = null;
-//        if (result != null) {
-//            repoLink = result.split("<ns:return>")[1].split("</ns:return>")[0];
-//        }
-//        return repoLink;
         return result;
     }
 
@@ -77,8 +78,11 @@
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
+            if(log.isDebugEnabled()){
+                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+            }
         } catch (e) {
-            log("Error while adding user to application \n"+e.message);
+            log.error("Error while adding user to application \n"+e.message);
             throw "Error while adding user to application";
         }
         return result;
@@ -102,12 +106,13 @@
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
+            if(log.isDebugEnabled()){
+                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+            }
         } catch (e) {
-            log("Error while retrieving roles \n"+e.message);
+            log.error("Error while retrieving roles \n"+e.message);
             throw "Error while retrieving roles";
         }
-        /*var roleArray = result.*::["return"].text();
-        return roleArray;*/
         return result;
     }
 
@@ -127,8 +132,11 @@
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
+            if(log.isDebugEnabled()){
+                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+            }
         } catch (e) {
-            log("Error while retrieving users of application \n"+e.message);
+            log.error("Error while retrieving users of application \n"+e.message);
             throw "Error while retrieving users of application";
         }
         return result;
@@ -147,12 +155,14 @@
         var result;
         try {
             var endPoint = getProperty('bpel.createUser');
-            //var endPoint = "http://192.168.4.26:9765/services/UserCreationProcess/";
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
+            if(log.isDebugEnabled()){
+                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+            }
         } catch (e) {
-            log("Error while creating the user account \n"+e.message);
+            log.error("Error while creating the user account \n"+e.message);
             throw "Error while creating the user account";
         }
         return result;
@@ -162,27 +172,27 @@
 
       var EmailVerificationService = new ws.WSRequest();
       var options = new Array();
-
-       options.useSOAP = 1.2;
-       options.action = "urn:ConfirmationBean";
-       options.username=getProperty('adminUserName');
-       options.password=getProperty('adminPassword');
+      options.useSOAP = 1.2;
+      options.action = "urn:ConfirmationBean";
+      options.username=getProperty('adminUserName');
+      options.password=getProperty('adminPassword');
       var payload =<ser:confirmUser xmlns:ser="http://services.verification.email.carbon.wso2.org"></ser:confirmUser>;
       var ser=new Namespace("http://services.verification.email.carbon.wso2.org");
       payload.ser::secretKey=secreteKey;
       var result;
 
-
       try {
-      var endPoint = getProperty('webService.emailVarificationService');
-      EmailVerificationService.open(options, endPoint, false);
-      EmailVerificationService.send(payload);
-      result = EmailVerificationService.responseE4X;
+          var endPoint = getProperty('webService.emailVarificationService');
+          EmailVerificationService.open(options, endPoint, false);
+          EmailVerificationService.send(payload);
+          result = EmailVerificationService.responseE4X;
+          if(log.isDebugEnabled()){
+              log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+          }
       } catch (e) {
-      log("Email varification failed","error");
+      log.error("Email varification failed","error");
       return null;
       }
-
 
      var ax2342=new Namespace("http://util.verification.email.carbon.wso2.org/xsd");
      var ns=new Namespace("http://services.verification.email.carbon.wso2.org");
@@ -194,8 +204,9 @@
      confirmationObject.confirmationKey=data.confirmationKey.text();
 
 
-      return confirmationObject;
-      }
+     return confirmationObject;
+    }
+
        function invokeUserActivationProcess(userName,email,confirmationKey){
        var ws = require('ws');
 
@@ -204,9 +215,6 @@
        options.useSOAP = 1.1;      
        options.action = "urn:process";
        var payload = '<UserActivationProcessRequest xmlns="http://wso2.org"><userName xmlns="http://wso2.org">'+userName+'</userName><email xmlns="http://wso2.org">'+email+'</email><confirmationKey xmlns="http://wso2.org">'+confirmationKey+'</confirmationKey></UserActivationProcessRequest>';
-       
-       
-log(payload);
        var result;
 
        try {
@@ -214,14 +222,18 @@ log(payload);
         UserActivationProcess.open(options,endPoint, false);
         UserActivationProcess.send(payload);
         result = UserActivationProcess.responseE4X;
+        if(log.isDebugEnabled()){
+            log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+        }
        } catch (e) {
-        log(e.toString(),"error");
+        log.error(e.toString(),"error");
         return result;
 
        }
        var wso2=new Namespace("http://wso2.org");
        return result.wso2::success;
        }
+
        function getAllApps(address){
              var ws = require("ws");
 
@@ -234,7 +246,6 @@ log(payload);
               var payload=null;
               var result;
 
-
              try {
              var endPoint = getProperty('webService.getAllApps');
 
@@ -243,10 +254,12 @@ log(payload);
              result = applicationMgtService.responseE4X;
              var ns=new Namespace("http://service.mgt.application.appfactory.carbon.wso2.org");
              var a=result.ns::["return"].text()
-
+            if(log.isDebugEnabled()){
+                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+            }
              return a;
              } catch (e) {
-             log(e.toString(),"error");
+             log.error(e.toString(),"error");
              return null;
              }
              }

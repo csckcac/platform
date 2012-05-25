@@ -1,9 +1,0 @@
-<%
-    include('../test2.jag');
- var module =require("carbon");
-    var carbon = new module.CarbonObject();
-    var CARBON_HOME=carbon.getCarbonHome();
-    print(CARBON_HOME);
-
-%>
-<h3>test page..........</h3>

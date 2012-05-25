@@ -18,7 +18,6 @@
         <%
             var action = "application.jag?applicationName=" + applicationName + "&applicationKey=" + applicationKey + " ";
             var form = '<FORM ACTION=' + action + ' METHOD=POST></a><button class="btn primary">Cancel</button></FORM>';
-            print(form);
         %>
     </div>
 </div>

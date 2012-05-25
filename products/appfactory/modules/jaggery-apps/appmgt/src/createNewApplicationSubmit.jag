@@ -11,25 +11,9 @@
 <div id="middle">
     <div id="workArea">
         <%
-            //include('mgt/registryAccessManager.jag');
-            //include('mgt/applicationManager.jag');
              include('process/webServiceUtil.jag');
             try {
-             //   var keyTaken = isApplicationKeyAlreadyTaken(applicationKey);
-
-               // if (keyTaken == "false") {
-                    //if application key is not already taken, proceed with creating the application
-                    ////print(createApplication(applicationKey, applicationName, applicationDescription));
-                   // print(createNewApplication(applicationKey, applicationName, applicationDescription, userName));
-                    ////var repoLink = createRepository(applicationKey);
-                    //var repoLink = createApplicationRepository(applicationKey);
-                   // log("&&&&&&&&&&&&&&&&&& ropo got created " + repoLink);
-                   // addApplicationToApp(applicationKey, applicationName, applicationDescription, repoLink);
-                   // addApplicationToUser(userName, applicationKey);
                     createApplication(applicationName,userName)
-              //  } else {
-                  //  print("<h5>Application key is already taken</h5>");
-               // }
             } catch (e) {
                 print(e);
             }

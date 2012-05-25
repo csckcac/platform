@@ -23,11 +23,6 @@
     </form>
 </body>
 <script type="text/javascript">
-<!--
-function delayer(){
-    window.location = "index.jag"
-}
-//-->
 </script>
 </html>
 

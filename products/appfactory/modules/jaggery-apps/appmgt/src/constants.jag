@@ -1,15 +1,15 @@
 <%
     // collection names
-    var PROJECTS = "applications/";
-    var USER_PROJECTS_MAPPING = "userApplicationMapping/";
+    var APPLICATIONS = "applications/";
+    var USER_APPLICATIONS_MAPPING = "userApplicationMapping/";
 
     // property keys of registry 'application' resource
-    var PROJECT_KEY = "applicationKey";
-    var PROJECT_NAME = "applicationName";
-    var PROJECT_DESC = "applicationDescription";
+    var APPLICATION_KEY = "applicationKey";
+    var APPLICATION_NAME = "applicationName";
+    var APPLICATION_DESC = "applicationDescription";
     var REPO_LINK = "repoLink";
 
     // property keys of registry 'userApplicationMapping' resource
-    var PROJECT_LIST = "applications";
+    var APPLICATION_LIST = "applications";
 
 %>

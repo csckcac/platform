@@ -21,9 +21,6 @@
 
             include('mgt/applicationManager.jag');
             try {
-                //print(addUserToApplication(applicationKey, newUsername));
-                print(inviteUserToApplication(applicationKey, requestersUsername, newUsername, newUserRole));
-
                 include('mgt/registryAccessManager.jag');
                 addApplicationToUser(newUsername ,applicationKey);
             } catch (e) {

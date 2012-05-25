@@ -9,21 +9,17 @@
     addSelectedTiers = function(target){
     var tiersList,tiers=[];
     tiersList="<%=api.availableTiers%>";
-    tiers=tiersList.split(",");  var tierArr = [];
+    tiers=tiersList.split(",");  
     for(var i=0;i<tiers.length;i++){
     var tier=tiers[i];
     for(var j=0;j<target.options.length;j++){
     if(tier==target.options[j].value){
     target.options[j].selected="selected";
-    tierArr.push(target.options[j].value);
+   
 
     }
     }
-    }             ('<input>').attr('type', 'hidden')
-                .attr('name', 'tiersCollection')
-                .attr('id', 'tiersCollection')
-                .attr('value', tierArr)
-                .appendTo('#editAPIForm');
+    }            
     }
     });
 </script>
@@ -37,6 +33,7 @@
             <input type="hidden" name="action" id="action" value="updateAPI"/>
             <input type="hidden" name="name" id="name" value="<%=api.name%>"/>
             <input type="hidden" name="version" id="version" value="<%=api.version%>"/>
+            <input type="hidden" name="tiersCollection" id="tiersCollection" value="<%=api.availableTiers%>"/>
 
             <div class="control-group">
                 <label class="control-label" for="editDescription">Description:</label>

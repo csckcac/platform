@@ -43,6 +43,7 @@
         </menu>
         <menu name="Documentation">
             <item name="Installation Guide" href="installation_guide.html"/>
+            <item name="Deployment Guide" href="deployment_guide.html"/>
             <item name="User Guide" href="user_guide.html"/>
             <item name="Administrator Guide" href="admin_guide.html"/>
         </menu>

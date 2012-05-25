@@ -23,7 +23,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
-        <title>WSO2 MB v1.0.0-SNAPSHOT Released</title>
+        <title>WSO2 MB v2.0.0-SNAPSHOT Released</title>
         <link href="css/mb-docs.css" rel="stylesheet"/>
         <link href="styles/dist-docs.css" rel="stylesheet" type="text/css"
               media="all"/>
@@ -33,24 +33,24 @@
         </div>
 
         <div id="main-content">
-            <h1>The WSO2 Message Broker (MB) 1.0.0-SNAPSHOT Released!</h1>
+            <h1>The WSO2 Message Broker (MB) 2.0.0-SNAPSHOT Released!</h1>
 
             <p>
-                The WSO2 MB team is pleased to announce the release of version 1.0.0-SNAPSHOT of
+                The WSO2 Integration Development team is pleased to announce the release of version 2.0.0-SNAPSHOT of
                 the Open Source Message Broker (MB).
             </p>
             <p>WSO2 Message Broker (WSO2 MB) is to be your Message Broker System. Our ultimate
                 goal is to provide you a reliable message brokering system with security.
             </p>
 
-            <p>MB 1.0.0-SNAPSHOT supports both pubslish/subscribe feature which publish messages to
+            <p>MB 2.0.0-SNAPSHOT supports both pubslish/subscribe feature which publish messages to
                 topics
                 and subscribe to topics and Message box feature which store messages in a
                 intermediate
                 location to be consumed by the owner of the messagebox.
             </p>
 
-            <p>WSO2 MB 1.0.0 is developed on top of the revolutionary
+            <p>WSO2 MB 2.0.0 is developed on top of the revolutionary
                 <a
                         href="http://wso2.org/projects/carbon">Carbon platform
                 </a>

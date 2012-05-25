@@ -8,7 +8,7 @@ include('includes/template_header.jag');
         <%
             include('process/webServiceUtil.jag');
             var applicationList = getAllApps(request.getRemoteAddr());
-            if(!applicationList.value){
+            if(applicationList==null){
             %>
                 No Applications are created.
             <%

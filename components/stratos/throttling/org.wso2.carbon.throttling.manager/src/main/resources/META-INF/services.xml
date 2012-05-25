@@ -31,6 +31,14 @@
 		<parameter name="adminService" locked="true">true</parameter>
 		<parameter name="AuthorizationAction" locked="true">/permission/protected/configure/throttling-rules
 		</parameter>
+
+        <operation name="retrieveThrottlingRules">
+            <parameter name="superTenantService" locked="true">true</parameter>
+        </operation>
+
+        <operation name="updateThrottlingRules">
+            <parameter name="superTenantService" locked="true">true</parameter>
+        </operation>
 	</service>
 	
 	<parameter name="hiddenService" locked="true">true</parameter>

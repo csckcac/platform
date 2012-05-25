@@ -131,8 +131,12 @@ public class ThrottlingAgent {
         return configurationContextService;
     }
 
-    public void updateThrottlingCacheForTenant(Integer tenantId) {
+    public void updateThrottlingCacheForTenant() throws Exception {
         // TODO: Need to refactor this and updater task
+
+        UserRegistry registry = registryService.getGovernanceUserRegistry();
+        int tenantId = registry.getTenantId();
+
         String tenantValidationInfoResourcePath =
                 StratosConstants.TENANT_USER_VALIDATION_STORE_PATH +
                         RegistryConstants.PATH_SEPARATOR + tenantId;
@@ -205,9 +209,9 @@ public class ThrottlingAgent {
         return new MultitenancyThrottlingServiceClient(serverUrl, userName, password);
     }
 
-    public void executeManagerThrottlingRules(int tenantId) throws Exception {
+    public void executeManagerThrottlingRules() throws Exception {
         ThrottlingRuleInvoker client = getThrottlingRuleInvoker();
-        client.executeThrottlingRules(tenantId);
+        client.executeThrottlingRules();
     }
 
 
@@ -221,8 +225,8 @@ public class ThrottlingAgent {
 
     public void executeThrottlingRules(int tenantId) {
         try {
-            executeManagerThrottlingRules(tenantId);
-            updateThrottlingCacheForTenant(tenantId);
+            executeManagerThrottlingRules();
+            updateThrottlingCacheForTenant();
         } catch (Exception e) {
             log.error("Error in executing throttling rules");
         }

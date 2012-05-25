@@ -16,5 +16,5 @@
 package org.wso2.carbon.throttling.agent.client;
 
 public interface ThrottlingRuleInvoker {
-    public void executeThrottlingRules(int tenantId) throws Exception;
+    public void executeThrottlingRules() throws Exception;
 }

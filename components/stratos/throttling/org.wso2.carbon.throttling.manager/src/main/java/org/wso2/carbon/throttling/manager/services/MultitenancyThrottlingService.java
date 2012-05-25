@@ -20,6 +20,11 @@ package org.wso2.carbon.throttling.manager.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.core.util.AdminServicesUtil;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.throttling.agent.client.ThrottlingRuleInvoker;
 import org.wso2.carbon.throttling.manager.dataobjects.ThrottlingDataContext;
 import org.wso2.carbon.throttling.manager.rules.KnowledgeBaseManager;
@@ -28,18 +33,27 @@ import org.wso2.carbon.throttling.manager.tasks.Task;
 import org.wso2.carbon.throttling.manager.utils.Util;
 import org.wso2.carbon.throttling.manager.validation.ValidationInfoManager;
 
-public class MultitenancyThrottlingService implements ThrottlingRuleInvoker {
-    public void executeThrottlingRules(int tenantId) throws Exception {
+public class MultitenancyThrottlingService extends AbstractAdmin implements ThrottlingRuleInvoker {
+    
+    private static Log log = LogFactory.getLog(MultitenancyThrottlingService.class);
+
+    public void executeThrottlingRules() throws Exception {
+
+        UserRegistry registry = (UserRegistry) getGovernanceUserRegistry();
+        int currentTenantId = registry.getTenantId();
+        
         List<Task> tasks = Util.getTasks();
         for (Task task: tasks) {
             // initialize the knowledge base
             List<Object> knowledgeBase = new ArrayList<Object>();
             ThrottlingDataContext throttlingDataContext =
-                    KnowledgeBaseManager.feedKnowledgeBase(tenantId, task, knowledgeBase);
+                    KnowledgeBaseManager.feedKnowledgeBase(currentTenantId, task, knowledgeBase);
 
             RuleInvoker ruleInvoker = task.getRuleInvoker();
             ruleInvoker.invoke(knowledgeBase);
 
+            log.info("Throttling rules executed for tenant id: " + currentTenantId);
+            
             ValidationInfoManager.persistValidationDetails(throttlingDataContext);
         }
     }

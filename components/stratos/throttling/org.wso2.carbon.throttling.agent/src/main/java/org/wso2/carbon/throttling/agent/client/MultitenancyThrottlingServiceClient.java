@@ -54,7 +54,9 @@ public class MultitenancyThrottlingServiceClient implements ThrottlingRuleInvoke
         return sessionCookie;
     }
 
-    public void executeThrottlingRules(int tenantId) throws Exception {
-        stub.executeThrottlingRules(tenantId);
+
+    public void executeThrottlingRules() throws Exception {
+        stub.executeThrottlingRules();
     }
+
 }

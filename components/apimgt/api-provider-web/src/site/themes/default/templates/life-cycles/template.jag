@@ -33,14 +33,14 @@ $('#publishToGateway').attr('value','true');
                     </select>
                  </div> <br/>
                  <div class="controls">
-                  <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue()" checked="true" value="true"> Publish To Gateway
+                  <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue()" checked="true" value="true"> Push To Gateway
                  </div>
 
 
       </div>
        <div class="form-actions">
                 <input type="submit" id="updateButton" class="btn btn-primary" value="Update"/>
-                <input type="reset" id="cancelEdit" class="btn btn-primary" value="Cancel">
+                <input type="reset" id="cancelEdit" class="btn btn-primary" value="Reset">
             </div>
 </form>
 

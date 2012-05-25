@@ -74,4 +74,38 @@ var getAPIsByProvider = function (username) {
         };
     }
 };
+
+var getAllAPIs = function () {
+    var i, length, api, apis,
+    list = [],
+    log = new Log(),
+    provider = jagg.module("greg").getAPIProviderObj();
+
+    try {
+        apis = provider.getAllAPIs();
+        length = apis.length;
+        for (i = 0; i < length; i++) {
+            api = apis[i];
+            list.push({
+                name:api.apiName,
+                provider:api.provider,
+                version:api.version,
+                status:api.status,
+                thumb:api.thumb,
+                subs:api.subs
+            });
+        }
+        return {
+            error:false,
+            apis:list
+        };
+
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            apis:null
+        };
+    }
+};
 %>

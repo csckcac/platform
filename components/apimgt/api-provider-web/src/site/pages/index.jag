@@ -21,7 +21,7 @@ var site = require("/site/conf/site.json");
         apis = result.apis;
     } else {
         mod = jagg.module("api");
-        result = mod.getAPIsByProvider(user.username);
+        result = mod.getAllAPIs();
         apis = result.apis;
     }
     var itemCount;

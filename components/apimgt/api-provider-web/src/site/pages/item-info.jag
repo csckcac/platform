@@ -11,9 +11,10 @@ var site = require("/site/conf/site.json");
 
     name = request.getParameter("name");
     version = request.getParameter("version");
+    provider = request.getParameter("provider");
 
     mod = jagg.module("api");
-    result = mod.getAPI({name:name, version:version, provider:user.username});
+    result = mod.getAPI({name:name, version:version, provider:provider});
     api = result.api;
     jagg.render({
         "name":"page/base",

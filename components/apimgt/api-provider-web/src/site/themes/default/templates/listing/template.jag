@@ -1,6 +1,6 @@
 <% jagg.template("listing", function(inputs, outputs, jagg) { %>
 <div id="listing">
-    <h2>My APIs</h2>
+    <h2>All APIs</h2>
     <%
     if (outputs.apis != null && outputs.apis.length > 0) {
     jagg.includeBlock("search/api-search", null);
@@ -25,7 +25,7 @@
         var length = apis.length;
         for(i = from; i < to; i++) {
             api = apis[i];
-            path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version;
+            path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
         %>
         <li class="span2">
             <div class="thumbnail">
@@ -38,7 +38,7 @@
                 </a>
                 <h5>
                     <a href="<%=path%>" class="label label-info">
-                        <%=api.name%>-v<%=api.version%>
+                        <%=api.name%>-v<%=api.version%> (<%=api.provider%>)
                     </a>
                 </h5>
                 <div>

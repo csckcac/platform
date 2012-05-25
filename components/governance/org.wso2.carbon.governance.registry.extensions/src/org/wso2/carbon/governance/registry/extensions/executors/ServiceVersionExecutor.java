@@ -210,17 +210,6 @@ public class ServiceVersionExecutor implements Execution {
                 registry.put(newPathMappings.get(resourcePath), newResource);
                 historyOperation.addChild(getHistoryInfoElement(newPathMappings.get(resourcePath) + " created"));
 
-//                Here we are coping the comments,tags,rating and associations of the original resource
-//                            Copying comments
-                copyComments(registry, newPathMappings.get(resourcePath), resourcePath);
-//                            Copying tags
-                copyTags(registry, newPathMappings.get(resourcePath), resourcePath);
-//                            Copying ratings. We only copy the average ratings
-                copyRatings(requestContext.getSystemRegistry(), newPathMappings.get(resourcePath), resourcePath);
-//                            Copying all the associations.
-//                            We avoid copying dependencies here because they are added to the new resources
-                copyAllAssociations(registry, newPathMappings.get(resourcePath), resourcePath);
-
             }finally {
                     CommonUtil.releaseUpdateLock();
                 }
@@ -231,6 +220,22 @@ public class ServiceVersionExecutor implements Execution {
 
                 makeDependencies(requestContext, currentParameterMap, newPathMappings);
                 makeOtherDependencies(requestContext, newPathMappings, otherDependencyList);
+
+
+//           Here we are coping the comments,tags,rating and associations of the original resource
+
+//           Copying comments
+            copyComments(registry, newPathMappings.get(resourcePath), resourcePath);
+
+//           Copying tags
+            copyTags(registry, newPathMappings.get(resourcePath), resourcePath);
+
+//           Copying ratings. We only copy the average ratings
+            copyRatings(requestContext.getSystemRegistry(), newPathMappings.get(resourcePath), resourcePath);
+
+//           Copying all the associations.
+//           We avoid copying dependencies here because they are added to the new resources
+            copyAllAssociations(registry, newPathMappings.get(resourcePath), resourcePath);
 
 //            keeping the old path due to logging purposes
                 newResource.setProperty(LifecycleConstants.REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH,

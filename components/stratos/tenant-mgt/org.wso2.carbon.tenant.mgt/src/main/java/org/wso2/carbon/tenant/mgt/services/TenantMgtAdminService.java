@@ -107,22 +107,8 @@ public class TenantMgtAdminService extends AbstractAdmin {
             log.error(msg, e);
         }
 
-        TenantManager tenantManager = TenantMgtServiceComponent.getTenantManager();
-
         // For the super tenant tenant creation, tenants are always activated as they are created.
-        TenantMgtUtil.activateTenant(tenantDomain, tenantManager, tenantId);
-        if (log.isDebugEnabled()) {
-            log.debug("Activated the tenant " + tenantDomain + " created by the super tenant");
-        }
-
-        //Notify tenant activation
-        try {
-            TenantMgtUtil.triggerTenantInitialActivation(tenantInfoBean);
-        } catch (StratosException e) {
-            String msg = "Error in notifying tenant initial activation.";
-            log.error(msg, e);
-            throw new Exception(msg, e);
-        }
+        TenantMgtUtil.activateTenantInitially(tenantInfoBean, tenantId);
 
         return TenantMgtUtil.prepareStringToShowThemeMgtPage(tenant.getId());
     }

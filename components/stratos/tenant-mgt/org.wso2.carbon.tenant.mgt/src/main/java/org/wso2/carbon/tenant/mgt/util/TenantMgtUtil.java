@@ -331,6 +331,33 @@ public class TenantMgtUtil {
     }
 
     /**
+     * Activate a tenant during the time of the tenant creation.
+     *
+     * @param tenantInfoBean tenant information
+     * @param tenantId tenant Id
+     * @throws Exception UserStoreException.
+     */
+    public static void activateTenantInitially(TenantInfoBean tenantInfoBean,
+                                               int tenantId) throws Exception {
+        TenantManager tenantManager = TenantMgtServiceComponent.getTenantManager();
+        String tenantDomain = tenantInfoBean.getTenantDomain();
+
+        TenantMgtUtil.activateTenant(tenantDomain, tenantManager, tenantId);
+        if (log.isDebugEnabled()) {
+            log.debug("Activated the tenant " + tenantDomain + " at the time of tenant creation");
+        }
+
+        //Notify tenant activation
+        try {
+            TenantMgtUtil.triggerTenantInitialActivation(tenantInfoBean);
+        } catch (StratosException e) {
+            String msg = "Error in notifying tenant initial activation.";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+    }
+
+    /**
      * Activate the given tenant, either at the time of tenant creation, or later by super admin.
      *
      * @param tenantDomain tenant domain

@@ -72,8 +72,7 @@ public class Broker
     private static Log log =
             org.apache.commons.logging.LogFactory.getLog(Broker.class);
 
-    private ClusterManagementInformationMBean clusterManagementMBean;
-    private QueueManagementInformationMBean queueManagementMBean;
+
 
     protected static class InitException extends RuntimeException
     {
@@ -135,6 +134,10 @@ public class Broker
 
         ClusterConfiguration clusterConfiguration = new ClusterConfiguration(serverConfig);
         ClusterResourceHolder.getInstance().setClusterConfiguration(clusterConfiguration);
+
+        String refTime = serverConfig.getReferenceTime();
+        ReferenceTime referenceTime = new ReferenceTime(refTime);
+        ClusterResourceHolder.getInstance().setReferenceTime(referenceTime);
 
         ApplicationRegistry.initialise(config);
 
@@ -236,7 +239,7 @@ public class Broker
                         supported.remove(AmqpProtocolVersion.v0_8);
                     }
 
-                    NetworkTransportConfiguration settings = 
+                    NetworkTransportConfiguration settings =
                         new ServerNetworkTransportConfiguration(serverConfig, port, bindAddress.getHostName(), Transport.TCP);
 
                     IncomingNetworkTransport transport = Transport.getIncomingTransportInstance();
@@ -255,12 +258,12 @@ public class Broker
                 String keystorePath = serverConfig.getKeystorePath();
                 String keystorePassword = serverConfig.getKeystorePassword();
                 String certType = serverConfig.getCertType();
-                SSLContextFactory sslFactory = 
+                SSLContextFactory sslFactory =
                     new SSLContextFactory(keystorePath, keystorePassword, certType);
 
                 for(int sslPort : sslPorts)
                 {
-                    NetworkTransportConfiguration settings = 
+                    NetworkTransportConfiguration settings =
                         new ServerNetworkTransportConfiguration(serverConfig, sslPort, bindAddress.getHostName(), Transport.TCP);
 
                     IncomingNetworkTransport transport = new MinaNetworkTransport();
@@ -275,52 +278,8 @@ public class Broker
 
 
 
-            String refTime = serverConfig.getReferenceTime();
-
-            ReferenceTime referenceTime = new ReferenceTime(refTime);
-            ClusterResourceHolder.getInstance().setReferenceTime(referenceTime);
 
 
-            if(ClusterResourceHolder.getInstance().getSubscriptionCoordinationManager() == null) {
-
-                SubscriptionCoordinationManager subscriptionCoordinationManager =
-                        new SubscriptionCoordinationManagerImpl();
-                subscriptionCoordinationManager.init();
-                ClusterResourceHolder.getInstance().setSubscriptionCoordinationManager(subscriptionCoordinationManager);
-            }
-
-            ClusterManager clusterManager = null;
-
-            if (clusterConfiguration.isClusteringEnabled()) {
-                clusterManager = new ClusterManager(ClusterResourceHolder.getInstance().
-                        getCassandraMessageStore(), clusterConfiguration.getZookeeperConnection());
-            } else {
-                clusterManager = new ClusterManager(ClusterResourceHolder.getInstance().getCassandraMessageStore());
-            }
-
-
-            ClusterResourceHolder.getInstance().setClusterManager(clusterManager);
-            clusterManager.init();
-
-            clusterManagementMBean = new ClusterManagementInformationMBean(clusterManager);
-            clusterManagementMBean.register();
-            queueManagementMBean = new QueueManagementInformationMBean();
-            queueManagementMBean.register();
-
-
-            if (ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()) {
-                ClusteringEnabledSubscriptionManager subscriptionManager =
-                        new OnceInOrderEnabledSubscriptionManager();
-                ClusterResourceHolder.getInstance().setSubscriptionManager(subscriptionManager);
-                subscriptionManager.init();
-
-            } else {
-                ClusteringEnabledSubscriptionManager subscriptionManager =
-                        new DefaultClusteringEnabledSubscriptionManager();
-                ClusterResourceHolder.getInstance().setSubscriptionManager(subscriptionManager);
-                subscriptionManager.init();
-
-            }
             CurrentActor.get().message(BrokerMessages.READY());
         }
         finally

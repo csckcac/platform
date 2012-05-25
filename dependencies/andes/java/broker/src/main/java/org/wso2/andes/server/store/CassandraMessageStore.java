@@ -38,14 +38,13 @@ import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.framing.AMQShortString;
 import org.wso2.andes.framing.FieldTable;
 import org.wso2.andes.server.ClusterResourceHolder;
-import org.wso2.andes.server.cassandra.AndesConsistantLevelPolicy;
-import org.wso2.andes.server.cassandra.CassandraQueueMessage;
-import org.wso2.andes.server.cassandra.CassandraTopicPublisherManager;
+import org.wso2.andes.server.cassandra.*;
+import org.wso2.andes.server.cluster.ClusterManagementInformationMBean;
 import org.wso2.andes.server.cluster.ClusterManager;
-import org.wso2.andes.server.cluster.coordination.MessageIdGenerator;
-import org.wso2.andes.server.cluster.coordination.TimeStampBasedMessageIdGenerator;
+import org.wso2.andes.server.cluster.coordination.*;
 import org.wso2.andes.server.configuration.ClusterConfiguration;
 import org.wso2.andes.server.exchange.Exchange;
+import org.wso2.andes.server.information.management.QueueManagementInformationMBean;
 import org.wso2.andes.server.logging.LogSubject;
 import org.wso2.andes.server.message.AMQMessage;
 import org.wso2.andes.server.message.MessageMetaData;
@@ -131,6 +130,9 @@ public class CassandraMessageStore implements MessageStore {
 
     private ContentRemoverTask messageContentRemovalTask = null;
     private PubSubMessageContentRemoverTask pubSubMessageContentRemoverTask = null;
+    private ClusterManagementInformationMBean clusterManagementMBean;
+    private QueueManagementInformationMBean queueManagementMBean;
+
     private boolean configured = false;
 
 
@@ -1486,6 +1488,51 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
         keyspace.setConsistencyLevelPolicy(consistencyLevel);
 
+
+
+
+            if(ClusterResourceHolder.getInstance().getSubscriptionCoordinationManager() == null) {
+
+                SubscriptionCoordinationManager subscriptionCoordinationManager =
+                        new SubscriptionCoordinationManagerImpl();
+                subscriptionCoordinationManager.init();
+                ClusterResourceHolder.getInstance().setSubscriptionCoordinationManager(subscriptionCoordinationManager);
+            }
+         ClusterManager clusterManager = null;
+
+            if (clusterConfiguration.isClusteringEnabled()) {
+                clusterManager = new ClusterManager(ClusterResourceHolder.getInstance().
+                        getCassandraMessageStore(), clusterConfiguration.getZookeeperConnection());
+            } else {
+                clusterManager = new ClusterManager(ClusterResourceHolder.getInstance().getCassandraMessageStore());
+            }
+
+
+            ClusterResourceHolder.getInstance().setClusterManager(clusterManager);
+            clusterManager.init();
+
+
+        clusterManagementMBean = new ClusterManagementInformationMBean(clusterManager);
+        clusterManagementMBean.register();
+
+        queueManagementMBean = new QueueManagementInformationMBean();
+        queueManagementMBean.register();
+
+
+        if (ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()) {
+            ClusteringEnabledSubscriptionManager subscriptionManager =
+                    new OnceInOrderEnabledSubscriptionManager();
+            ClusterResourceHolder.getInstance().setSubscriptionManager(subscriptionManager);
+            subscriptionManager.init();
+
+        } else {
+            ClusteringEnabledSubscriptionManager subscriptionManager =
+                    new DefaultClusteringEnabledSubscriptionManager();
+            ClusterResourceHolder.getInstance().setSubscriptionManager(subscriptionManager);
+            subscriptionManager.init();
+
+        }
+
         configured = true;
 
     }
@@ -1645,6 +1692,21 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         } catch (Exception e) {
             throw new RuntimeException("Error While creating a Queue creating queue" ,e);
         }
+    }
+
+    /**
+     * Create a Global Queue in Cassandra MessageStore
+     * @param queueName
+     */
+    public void createGlobalQueue(String queueName) throws AMQStoreException{
+
+        try {
+            CassandraDataAccessHelper.addMappingToRaw(GLOBAL_QUEUE_LIST_COLUMN_FAMILY, GLOBAL_QUEUE_LIST_ROW, queueName,
+                      queueName, keyspace);
+        } catch (CassandraDataAccessException e) {
+            throw new AMQStoreException("Error while adding Global Queue to Cassandra message store",e);
+        }
+
     }
     @Override
     public void removeQueue(AMQQueue queue) throws AMQStoreException {

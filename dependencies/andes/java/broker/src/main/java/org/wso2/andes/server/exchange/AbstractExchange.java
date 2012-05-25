@@ -23,8 +23,11 @@ package org.wso2.andes.server.exchange;
 import org.apache.log4j.Logger;
 
 import org.wso2.andes.AMQException;
+import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.framing.AMQShortString;
+import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.binding.Binding;
+import org.wso2.andes.server.cluster.ClusterManager;
 import org.wso2.andes.server.configuration.ConfigStore;
 import org.wso2.andes.server.configuration.ConfiguredObject;
 import org.wso2.andes.server.configuration.ExchangeConfigType;
@@ -38,6 +41,7 @@ import org.wso2.andes.server.message.InboundMessage;
 import org.wso2.andes.server.queue.AMQQueue;
 import org.wso2.andes.server.queue.BaseQueue;
 import org.wso2.andes.server.queue.QueueRegistry;
+import org.wso2.andes.server.store.CassandraMessageStore;
 import org.wso2.andes.server.virtualhost.VirtualHost;
 
 import javax.management.JMException;
@@ -285,6 +289,18 @@ public abstract class AbstractExchange implements Exchange, Managable
         {
             listener.bindingAdded(this, binding);
         }
+
+        if (this instanceof DirectExchange) {
+            CassandraMessageStore cassandraMessageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
+            ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
+
+            try {
+                cassandraMessageStore.createGlobalQueue(binding.getQueue().getResourceName());
+                clusterManager.handleQueueAddition(binding.getQueue().getResourceName());
+            } catch (Exception e) {
+                throw new RuntimeException("Error while adding a queue to direct exchange ", e);
+            }
+        }
         onBind(binding);
     }
 
@@ -301,6 +317,20 @@ public abstract class AbstractExchange implements Exchange, Managable
             listener.bindingRemoved(this, binding);
         }
         _bindings.remove(binding);
+
+
+        if(this instanceof DirectExchange) {
+            CassandraMessageStore cassandraMessageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
+            ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
+
+            try {
+                cassandraMessageStore.removeGlobalQueue(binding.getQueue().getResourceName());
+                clusterManager.handleQueueRemoval(binding.getQueue().getResourceName());
+            } catch (Exception e) {
+                throw new RuntimeException("Error while removing queue from direct exchange",e);
+            }
+
+        }
     }
 
     public final Collection<Binding> getBindings()

@@ -67,8 +67,9 @@ public class GlobalQueueManager {
     private void scheduleWork(String queueName) {
         GlobalQueueWorker worker = new GlobalQueueWorker(queueName,cassandraMessageStore,20);
         worker.setRunning(true);
-        queueWorkerMap.put(queueName,worker);
+        queueWorkerMap.put(queueName, worker);
         log.debug("Starting Global Queue worker for queue : " + queueName);
+        System.out.println("Starting Global Queue worker for queue : " + queueName);
         executorService.execute(worker);
     }
 

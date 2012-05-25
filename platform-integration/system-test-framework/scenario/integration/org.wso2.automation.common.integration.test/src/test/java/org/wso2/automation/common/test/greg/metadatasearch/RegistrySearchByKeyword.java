@@ -24,99 +24,120 @@ import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
 import org.wso2.carbon.registry.search.stub.beans.xsd.CustomSearchParameterBean;
 import org.wso2.carbon.registry.search.stub.common.xsd.ResourceData;
+import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
+import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
 import java.rmi.RemoteException;
 
-public class RegistrySearchByResourceNameTest {
+public class RegistrySearchByKeyword {
     private String gregBackEndUrl;
 
     private String sessionCookie;
     private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
+    WSRegistryServiceClient registry;
 
     @BeforeClass
-    public void init() throws LoginAuthenticationExceptionException, RemoteException {
+    public void init()
+            throws LoginAuthenticationExceptionException, RemoteException, RegistryException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
         gregServer = builder.build().getGreg();
-
 
         sessionCookie = gregServer.getSessionCookie();
         gregBackEndUrl = gregServer.getBackEndUrl();
         searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
+        registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
 
     }
 
     @Test(priority = 1)
-    public void searchResourceByAvailableName()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+    public void searchResourceByAvailableKeyword()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setResourceName("org");
+        paramBean.setContent("org");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(resource.getName().contains("org"),
+            Resource data = registry.get(resource.getResourcePath());
+            String content = new String((byte[]) data.getContent());
+
+            Assert.assertTrue(content.contains("org"),
                               "search keyword not contain on Resource Name :" + resource.getName());
+
         }
 
 
     }
 
-    @Test(priority = 2)
-    public void searchResourceByNamePattern()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+    //Pattern search not applicable for content search
+//    @Test(priority = 2)
+    public void searchResourceByContentPattern()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setResourceName("org%mgt");
+        paramBean.setContent("carbon%org");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue((resource.getName().contains("org") && resource.getName().contains("mgt")),
-                              "search keyword not contain on Resource Name :" + resource.getName());
-        }
+            Resource data = registry.get(resource.getResourcePath());
+            String content = new String((byte[]) data.getContent());
 
+            Assert.assertTrue((content.contains("org") && content.contains("carbon")),
+                              "search keyword not contain on Resource Name :" + resource.getName());
+
+        }
 
     }
 
-    //    @Test(priority = 3)
-    public void searchResourceByAvailableNames()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+    @Test(priority = 3)
+    public void searchResourceByAvailableContents()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setResourceName("org,com");
+        paramBean.setContent("com,org");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(resource.getName().contains("org") || resource.getName().contains("com"),
-                              "search keyword not contain on Resource Name :" + resource.getName());
-        }
+            Resource data = registry.get(resource.getResourcePath());
+            String content = new String((byte[]) data.getContent());
 
+            Assert.assertTrue((content.contains("org") || content.contains("com")),
+                              "search keyword not contain on Resource Name :" + resource.getName());
+
+        }
 
     }
 
     @Test(priority = 4)
-    public void searchResourceByUnAvailableName()
+    public void searchResourceByUnAvailableContent()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setResourceName("xyz123");
+        paramBean.setContent("com,org");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -127,12 +148,12 @@ public class RegistrySearchByResourceNameTest {
     }
 
     @Test(priority = 4, dataProvider = "invalidCharacter")
-    public void searchResourceByNameWithInvalidCharacter(String invalidInput)
+    public void searchResourceByContentWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
 
-        paramBean.setResourceName(invalidInput);
+        paramBean.setContent(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
@@ -153,10 +174,10 @@ public class RegistrySearchByResourceNameTest {
                 {"^"},
                 {"abc^"},
                 {"/"},
-                {"\\"}
+                {"\\"},
+                {","}
         };
 
 
     }
-
 }

@@ -28,19 +28,19 @@ import java.util.List;
 public class GRegMetadataSearchTestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
-        EnvironmentBuilder env = new EnvironmentBuilder();
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
         suiteVariablesList.add(new SuiteVariables("SaveDeleteFilterTest",
                                                   SaveDeleteFilterTest.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByResourceNameTest",
                                                   RegistrySearchByResourceNameTest.class));
+        suiteVariablesList.add(new SuiteVariables("RegistrySearchByKeyword",
+                                                  RegistrySearchByKeyword.class));
 
         superSuite("GRegMetadataSearchTestSuite", suiteVariablesList).run();
 
     }
 
     public static void main(String[] args) {
-        EnvironmentBuilder env = new EnvironmentBuilder();
         new GRegMetadataSearchTestSuite().suiteRunner();
 
     }

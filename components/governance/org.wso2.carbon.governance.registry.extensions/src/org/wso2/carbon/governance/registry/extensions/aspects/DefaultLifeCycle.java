@@ -31,6 +31,7 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.w3c.dom.Element;
+import org.wso2.carbon.governance.registry.extensions.aspects.utils.LifecycleConstants;
 import org.wso2.carbon.governance.registry.extensions.aspects.utils.StatCollection;
 import org.wso2.carbon.governance.registry.extensions.aspects.utils.StatWriter;
 import org.wso2.carbon.governance.registry.extensions.beans.CheckItemBean;
@@ -62,21 +63,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
+import static org.wso2.carbon.governance.registry.extensions.aspects.utils.Utils.getHistoryInfoElement;
+
 
 public class DefaultLifeCycle extends Aspect {
     private static final Log log = LogFactory.getLog(DefaultLifeCycle.class);
-
-//    Property names that are used to track licecycle operations
-    private static final String REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION =
-            "registry.custom_lifecycle.checklist.option.";
-    private static final String REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_JS_SCRIPT_CONSOLE =
-            "registry.custom_lifecycle.checklist.js.script.console.";
-    private static final String REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_TRANSITION_UI =
-            "registry.custom_lifecycle.checklist.transition.ui.";
-    private static final String EXECUTION = "execution";
-    private static final String VALIDATION = "validation";
-    public static final String STAT_COLLECTION = "statCollection";
-    public static final String REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH = "registry.lifecycle_history.originalPath";
 
     private String lifecycleProperty = "registry.LC.name";
     private String stateProperty = "registry.lifecycle.SoftwareProjectLifecycle.state";
@@ -103,17 +94,17 @@ public class DefaultLifeCycle extends Aspect {
 
         initialize();
 
-        String currentAspectName = config.getAttributeValue(new QName("name"));
+        String currentAspectName = config.getAttributeValue(new QName(LifecycleConstants.NAME));
         aspectName = currentAspectName;
         currentAspectName = currentAspectName.replaceAll("\\s", "");
-        stateProperty = "registry.lifecycle." + currentAspectName + ".state";
+        stateProperty = LifecycleConstants.REGISTRY_LIFECYCLE + currentAspectName + ".state";
 
         Iterator stateElements = config.getChildElements();
         while (stateElements.hasNext()) {
             OMElement stateEl = (OMElement) stateElements.next();
 
-            if (stateEl.getAttribute(new QName("type")) != null) {
-                String type = stateEl.getAttributeValue(new QName("type"));
+            if (stateEl.getAttribute(new QName(LifecycleConstants.TYPE)) != null) {
+                String type = stateEl.getAttributeValue(new QName(LifecycleConstants.TYPE));
                 if (type.equalsIgnoreCase("resource")) {
                     isConfigurationFromResource = true;
                     configurationResourcePath = RegistryUtils.getAbsolutePath(
@@ -127,7 +118,7 @@ public class DefaultLifeCycle extends Aspect {
                     break;
                 }
             }
-            String name = stateEl.getAttributeValue(new QName("name"));
+            String name = stateEl.getAttributeValue(new QName(LifecycleConstants.NAME));
             if (name == null) {
                 throw new IllegalArgumentException(
                         "Must have a name attribute for each state");
@@ -162,7 +153,7 @@ public class DefaultLifeCycle extends Aspect {
 
         clearAll();
         try {
-            setScxmlConfiguration(registry);
+            setSCXMLConfiguration(registry);
 
             if(configurationElement == null){
                 return;
@@ -194,7 +185,7 @@ public class DefaultLifeCycle extends Aspect {
 
     }
 
-    private void setScxmlConfiguration(Registry registry) throws RegistryException, XMLStreamException, IOException,
+    private void setSCXMLConfiguration(Registry registry) throws RegistryException, XMLStreamException, IOException,
             SAXException, ModelException {
         String xmlContent;
         if (isConfigurationFromResource) {
@@ -209,7 +200,8 @@ public class DefaultLifeCycle extends Aspect {
                     throw new RegistryException(msg);
                 }
             }else{
-                String msg = "Unable to find the lifecycle configuration from the given path: " + configurationResourcePath;
+                String msg = "Unable to find the lifecycle configuration from the given path: "
+                        + configurationResourcePath;
                 log.error(msg);
                 throw new RegistryException(msg);
             }
@@ -217,7 +209,8 @@ public class DefaultLifeCycle extends Aspect {
 
         try {
             OMElement scxmlElement = configurationElement.getFirstElement();
-            scxml = SCXMLParser.parse(new InputSource(new CharArrayReader((scxmlElement.toString()).toCharArray())), null);
+            scxml = SCXMLParser.parse(new InputSource(
+                    new CharArrayReader((scxmlElement.toString()).toCharArray())), null);
         } catch (Exception e) {
             String msg = "Invalid SCXML configuration found";
             log.error(msg);
@@ -231,7 +224,7 @@ public class DefaultLifeCycle extends Aspect {
         List<String> tobeRemoved = new ArrayList<String>();
         Properties properties = resource.getProperties();
         for (Object key : properties.keySet()) {
-            if(key.toString().startsWith(REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_TRANSITION_UI)){
+            if(key.toString().startsWith(LifecycleConstants.REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_TRANSITION_UI)){
                 tobeRemoved.add(key.toString());
             }
         }
@@ -241,7 +234,8 @@ public class DefaultLifeCycle extends Aspect {
 
         if (currentStateTransitionUI != null) {
             for (Map.Entry<String, String> entry : currentStateTransitionUI.entrySet()) {
-                resource.setProperty(REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_TRANSITION_UI+entry.getKey()
+                resource.setProperty(
+                        LifecycleConstants.REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_TRANSITION_UI +entry.getKey()
                         ,entry.getValue());
             }
         }
@@ -264,10 +258,12 @@ public class DefaultLifeCycle extends Aspect {
                 items.add("name:" + currentStateCheckItem.getName());
                 items.add("value:false");
                 items.add("order:" + order);
-                String resourcePropertyNameForItem = REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION +
-                        + order + ".item";
-                String resourcePropertyNameForItemPermission = REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION +
-                        +order + ".item.permission";
+                String resourcePropertyNameForItem =
+                        LifecycleConstants.REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION + order
+                                + LifecycleConstants.ITEM;
+                String resourcePropertyNameForItemPermission =
+                        LifecycleConstants.REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION + order
+                                + LifecycleConstants.ITEM_PERMISSION;
 
                 resource.setProperty(resourcePropertyNameForItem, items);
                 if(allowedRoles.isEmpty()){
@@ -290,8 +286,9 @@ public class DefaultLifeCycle extends Aspect {
                     items.add(scriptBean.getScript());
                     items.add(scriptBean.getFunctionName());
 
-                    String resourcePropertyNameForScript = REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_JS_SCRIPT_CONSOLE
-                            + state + "." + scriptBean.getEventName();
+                    String resourcePropertyNameForScript =
+                            LifecycleConstants.REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_JS_SCRIPT_CONSOLE + state
+                                    + "." + scriptBean.getEventName();
                     resource.setProperty(resourcePropertyNameForScript, items);
                 }
             }
@@ -312,7 +309,7 @@ public class DefaultLifeCycle extends Aspect {
             if (states.size() == 0 || !states.contains(currentState)) {
                 clearAll();
                 Registry registry = context.getRegistry();
-                setScxmlConfiguration(registry);
+                setSCXMLConfiguration(registry);
                 populateItems();
             }
 
@@ -390,12 +387,12 @@ public class DefaultLifeCycle extends Aspect {
                 CustomValidations customValidations = (CustomValidations) customCodeBean.getClassObeject();
 
 //                logging
-                ((StatCollection)context.getProperty(STAT_COLLECTION))
-                        .addValidations(customCodeBean.getClass().getName(),"");
+                ((StatCollection)context.getProperty(LifecycleConstants.STAT_COLLECTION))
+                        .addValidations(customCodeBean.getClass().getName(),null);
 
                 if (!customValidations.validate(context)) {
-                    ((StatCollection)context.getProperty(STAT_COLLECTION))
-                            .addValidations(customCodeBean.getClass().getName(),"validation failed");
+                    ((StatCollection)context.getProperty(LifecycleConstants.STAT_COLLECTION))
+                            .addValidations(customCodeBean.getClass().getName(),getHistoryInfoElement("validation failed"));
                     throw new RegistryException("Validation : " + customCodeBean.getClassObeject().getClass().getName()
                             + " failed for action : " + customCodeBean.getEventName());
                 }
@@ -414,12 +411,12 @@ public class DefaultLifeCycle extends Aspect {
                     Execution customExecutor = (Execution) customCodeBean.getClassObeject();
 
 //                    logging
-                    ((StatCollection)context.getProperty(STAT_COLLECTION))
-                            .addExecutors(customExecutor.getClass().getName(),"");
+                    ((StatCollection)context.getProperty(LifecycleConstants.STAT_COLLECTION))
+                            .addExecutors(customExecutor.getClass().getName(),null);
 
                     if (!customExecutor.execute(context,currentState,nextState)) {
-                        ((StatCollection)context.getProperty(STAT_COLLECTION))
-                                .addExecutors(customExecutor.getClass().getName(),"executor failed");
+                        ((StatCollection)context.getProperty(LifecycleConstants.STAT_COLLECTION))
+                                .addExecutors(customExecutor.getClass().getName(),getHistoryInfoElement("executor failed"));
                         throw new RegistryException("Execution failed for action : " + customCodeBean.getEventName());
                     }
                 }
@@ -461,10 +458,11 @@ public class DefaultLifeCycle extends Aspect {
         return customExecutors;
     }
 
-    private void handleItemClick(Resource resource,Map<String,String> itemParameterMap,RequestContext context) throws RegistryException{
+    private void handleItemClick(Resource resource,Map<String,String> itemParameterMap,RequestContext context)
+            throws RegistryException{
         for (Map.Entry<String, String> entry : itemParameterMap.entrySet()) {
-            List<String> propertyValues = resource.getPropertyValues(REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION
-                    + entry.getKey());
+            List<String> propertyValues = resource.getPropertyValues(
+                    LifecycleConstants.REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION + entry.getKey());
             if (propertyValues != null) {
                 for (String propertyValue : propertyValues) {
                     if(propertyValue.startsWith("value:") && !propertyValue.contains(entry.getValue())){
@@ -473,19 +471,21 @@ public class DefaultLifeCycle extends Aspect {
                         String replace = propertyValue.replace(Boolean.toString(!Boolean.valueOf(entry.getValue()))
                                 , entry.getValue());
                         newProps.add(replace);
-                        resource.removeProperty(REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION
+                        resource.removeProperty(LifecycleConstants.REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION
                                 + entry.getKey());
-                        resource.setProperty(REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION
+                        resource.setProperty(LifecycleConstants.REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION
                                 + entry.getKey(),newProps);
 
     //                    logging
-                        StatCollection statCollection = ((StatCollection)context.getProperty(STAT_COLLECTION));
+                        StatCollection statCollection =
+                                ((StatCollection)context.getProperty(LifecycleConstants.STAT_COLLECTION));
                         statCollection.setAction(getCheckItemName(propertyValues));
-                        statCollection.setActionType("itemClick");
+                        statCollection.setActionType(LifecycleConstants.ITEM_CLICK);
                         statCollection.setActionValue(replace);
 
-                        if(resource.getProperty(REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH) != null){
-                            statCollection.setOriginalPath(resource.getProperty(REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH));
+                        if(resource.getProperty(LifecycleConstants.REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH) != null){
+                            statCollection.setOriginalPath(
+                                    resource.getProperty(LifecycleConstants.REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH));
                         }
                     }
                 }
@@ -509,7 +509,7 @@ public class DefaultLifeCycle extends Aspect {
         Map<String,String> checkItems = new HashMap<String, String>();
 
         for (Map.Entry<String, String> entry : parameterMap.entrySet()) {
-            if(entry.getKey().endsWith(".item")){
+            if(entry.getKey().endsWith(LifecycleConstants.ITEM)){
                 checkItems.put(entry.getKey(),entry.getValue());
             }
         }
@@ -543,7 +543,7 @@ public class DefaultLifeCycle extends Aspect {
         statCollection.setResourcePath(resourcePath);
         statCollection.setUserName(user);
         statCollection.setOriginalPath(resourcePath);
-        requestContext.setProperty(STAT_COLLECTION,statCollection);
+        requestContext.setProperty(LifecycleConstants.STAT_COLLECTION,statCollection);
 
 //        Here we are doing the checkitem related operations.
         handleItemClick(resource,extractCheckItemValues(parameterMap),requestContext);
@@ -562,9 +562,11 @@ public class DefaultLifeCycle extends Aspect {
                         if (getTransitionPermission(roles, transitionPermission.get(currentState), eventName)) {
                             if (doAllCustomValidations(requestContext, currentState)) {
 //                              adding log
-                                statCollection.setActionType("transition");
-                                if (resource.getProperty(REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH) != null) {
-                                    statCollection.setOriginalPath(resource.getProperty(REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH));
+                                statCollection.setActionType(LifecycleConstants.TRANSITION);
+                                if (resource.getProperty(
+                                        LifecycleConstants.REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH) != null) {
+                                    statCollection.setOriginalPath(resource.getProperty(
+                                                    LifecycleConstants.REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH));
                                 }
 //                              The transition happens here.
                                 nextState = ((Transition) o).getNext();
@@ -631,14 +633,14 @@ public class DefaultLifeCycle extends Aspect {
         requestContext.getRegistry().put(newResourcePath, resource);
         
 //        adding the logs to the registry
-        (new StatWriter()).writeHistory((StatCollection) requestContext.getProperty(STAT_COLLECTION));
+        (new StatWriter()).writeHistory((StatCollection) requestContext.getProperty(LifecycleConstants.STAT_COLLECTION));
     }
 
     private void clearCheckItems(Resource resource){
         Properties properties = (Properties) resource.getProperties().clone();
         for (Object o : properties.keySet()) {
             String key = (String) o;
-            if(key.startsWith(REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION)){
+            if(key.startsWith(LifecycleConstants.REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION)){
                 resource.removeProperty(key);
             }
         }
@@ -685,12 +687,12 @@ public class DefaultLifeCycle extends Aspect {
 
     private void populateTransitionExecutors(String currentStateName, OMElement node) throws Exception {
         if (!transitionExecution.containsKey(currentStateName)
-                && (node.getAttributeValue(new QName("name")).equals("transitionExecution"))) {
+                && (node.getAttributeValue(new QName(LifecycleConstants.NAME)).equals("transitionExecution"))) {
             List<CustomCodeBean> customCodeBeanList = new ArrayList<CustomCodeBean>();
             Iterator executorsIterator = node.getChildElements();
             while (executorsIterator.hasNext()) {
                 OMElement executorChild = (OMElement) executorsIterator.next();
-                customCodeBeanList.add(createCustomCodeBean(executorChild, EXECUTION));
+                customCodeBeanList.add(createCustomCodeBean(executorChild, LifecycleConstants.EXECUTION));
             }
             transitionExecution.put(currentStateName, customCodeBeanList);
         }
@@ -699,13 +701,13 @@ public class DefaultLifeCycle extends Aspect {
     private void populateTransitionUIs(String currentStateName, OMElement node) {
         //                    Adding the transition UIs
         if (!transitionUIs.containsKey(currentStateName)
-                && (node.getAttributeValue(new QName("name")).equals("transitionUI"))) {
+                && (node.getAttributeValue(new QName(LifecycleConstants.NAME)).equals("transitionUI"))) {
             Map<String,String> uiEventMap = new HashMap<String, String>();
             Iterator uiIterator = node.getChildElements();
 
             while (uiIterator.hasNext()) {
                 OMElement uiElement = (OMElement) uiIterator.next();
-                uiEventMap.put(uiElement.getAttributeValue(new QName("forEvent"))
+                uiEventMap.put(uiElement.getAttributeValue(new QName(LifecycleConstants.FOR_EVENT))
                             ,uiElement.getAttributeValue(new QName("href")));
             }
             transitionUIs.put(currentStateName, uiEventMap);
@@ -715,7 +717,7 @@ public class DefaultLifeCycle extends Aspect {
     private void populateTransitionScripts(String currentStateName, OMElement node) {
         //                  Adding the script elements
         if (!scriptElements.containsKey(currentStateName)
-                && (node.getAttributeValue(new QName("name")).equals("transitionScripts"))) {
+                && (node.getAttributeValue(new QName(LifecycleConstants.NAME)).equals("transitionScripts"))) {
             List<ScriptBean> scriptBeans = new ArrayList<ScriptBean>();
             Iterator scriptIterator = node.getChildElements();
 
@@ -726,7 +728,7 @@ public class DefaultLifeCycle extends Aspect {
                     OMElement scriptChild = (OMElement) scriptChildIterator.next();
                     scriptBeans.add(new ScriptBean(scriptChild.getQName().getLocalPart().equals("console"),
                             scriptChild.getAttributeValue(new QName("function")),
-                            script.getAttributeValue(new QName("forEvent")),
+                            script.getAttributeValue(new QName(LifecycleConstants.FOR_EVENT)),
                             scriptChild.getFirstElement().toString()));
                 }
             }
@@ -737,7 +739,7 @@ public class DefaultLifeCycle extends Aspect {
     private void populateTransitionPermissions(String currentStateName, OMElement node) {
         //                  Adding the transition permissions
         if (!transitionPermission.containsKey(currentStateName)
-                && (node.getAttributeValue(new QName("name")).equals("transitionPermission"))) {
+                && (node.getAttributeValue(new QName(LifecycleConstants.NAME)).equals("transitionPermission"))) {
             List<PermissionsBean> permissionsBeanList = new ArrayList<PermissionsBean>();
             Iterator permissionIterator = node.getChildElements();
             while (permissionIterator.hasNext()) {
@@ -751,12 +753,12 @@ public class DefaultLifeCycle extends Aspect {
     private void populateTransitionValidations(String currentStateName, OMElement node) throws Exception {
         //                  Adding the state validations
         if (!transitionValidations.containsKey(currentStateName)
-                && (node.getAttributeValue(new QName("name")).equals("transitionValidation"))) {
+                && (node.getAttributeValue(new QName(LifecycleConstants.NAME)).equals("transitionValidation"))) {
             List<CustomCodeBean> customCodeBeanList = new ArrayList<CustomCodeBean>();
             Iterator validationsIterator = node.getChildElements();
             while (validationsIterator.hasNext()) {
                 OMElement validationChild = (OMElement) validationsIterator.next();
-                customCodeBeanList.add(createCustomCodeBean(validationChild,VALIDATION));
+                customCodeBeanList.add(createCustomCodeBean(validationChild, LifecycleConstants.VALIDATION));
             }
             transitionValidations.put(currentStateName, customCodeBeanList);
         }
@@ -765,7 +767,7 @@ public class DefaultLifeCycle extends Aspect {
     private void populateCheckItems(String currentStateName, OMElement node) throws Exception {
         //                    adding the checkItems
         if (!checkListItems.containsKey(currentStateName)
-               && (node.getAttributeValue(new QName("name")).equals("checkItems"))) {
+               && (node.getAttributeValue(new QName(LifecycleConstants.NAME)).equals("checkItems"))) {
 
            List<CheckItemBean> checkItems = new ArrayList<CheckItemBean>();
 
@@ -775,12 +777,12 @@ public class DefaultLifeCycle extends Aspect {
                OMElement childElement = (OMElement) checkItemIterator.next();
 
                //setting the check item name
-               checkItemBean.setName(childElement.getAttributeValue(new QName("name")));
+               checkItemBean.setName(childElement.getAttributeValue(new QName(LifecycleConstants.NAME)));
 
                //setting the transactionList
-               if ((childElement.getAttributeValue(new QName("forEvent"))) != null) {
+               if ((childElement.getAttributeValue(new QName(LifecycleConstants.FOR_EVENT))) != null) {
                    checkItemBean.setEvents(Arrays.asList((childElement
-                           .getAttributeValue(new QName("forEvent"))).split(",")));
+                           .getAttributeValue(new QName(LifecycleConstants.FOR_EVENT))).split(",")));
                }
 
                Iterator permissionElementIterator = childElement
@@ -811,7 +813,7 @@ public class DefaultLifeCycle extends Aspect {
 //                             this loop is to iterate the validation elements
                    while (validations.hasNext()) {
                        OMElement validationChild = (OMElement) validations.next();
-                       customCodeBeanList.add(createCustomCodeBean(validationChild, VALIDATION));
+                       customCodeBeanList.add(createCustomCodeBean(validationChild, LifecycleConstants.VALIDATION));
                    }
                    checkItemBean.setValidationBeans(customCodeBeanList);
                }
@@ -826,7 +828,7 @@ public class DefaultLifeCycle extends Aspect {
 
     private PermissionsBean createPermissionBean(OMElement permChild) {
         PermissionsBean permBean = new PermissionsBean();
-        permBean.setForEvent(permChild.getAttributeValue(new QName("forEvent")));
+        permBean.setForEvent(permChild.getAttributeValue(new QName(LifecycleConstants.FOR_EVENT)));
         if (permChild.getAttributeValue(new QName("roles")) != null)
             permBean.setRoles(Arrays.asList(permChild.getAttributeValue(new QName("roles"))
                     .split(",")));
@@ -841,17 +843,17 @@ public class DefaultLifeCycle extends Aspect {
         while (parameters.hasNext()) {
             // this loop is for the parameter name and values
             OMElement paramChild = (OMElement) parameters.next();
-            paramNameValues.put(paramChild.getAttributeValue(new QName("name")),
+            paramNameValues.put(paramChild.getAttributeValue(new QName(LifecycleConstants.NAME)),
                     paramChild.getAttributeValue(new QName("value")));
         }
-        if (type.equals(VALIDATION)) {
+        if (type.equals(LifecycleConstants.VALIDATION)) {
             customCodeBean.setClassObeject(loadCustomValidators(
                     customCodeChild.getAttributeValue(new QName("class")), paramNameValues));
-        } else if(type.equals(EXECUTION)) {
+        } else if(type.equals(LifecycleConstants.EXECUTION)) {
             customCodeBean.setClassObeject(loadCustomExecutors(
                     customCodeChild.getAttributeValue(new QName("class")), paramNameValues));
         }
-        customCodeBean.setEventName(customCodeChild.getAttributeValue(new QName("forEvent")));
+        customCodeBean.setEventName(customCodeChild.getAttributeValue(new QName(LifecycleConstants.FOR_EVENT)));
         return customCodeBean;
     }
 
@@ -867,7 +869,7 @@ public class DefaultLifeCycle extends Aspect {
                 Map.Entry entry = (Map.Entry) propIterator.next();
                 String propertyName = (String) entry.getKey();
 
-                if (propertyName.startsWith(REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION)) {
+                if (propertyName.startsWith(LifecycleConstants.REGISTRY_CUSTOM_LIFECYCLE_CHECKLIST_OPTION)) {
                     List<String> propValues = (List<String>) entry.getValue();
                     for (String propValue : propValues)
                         if (propValue.startsWith("name:"))

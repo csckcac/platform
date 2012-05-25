@@ -1,5 +1,6 @@
 package org.wso2.carbon.governance.registry.extensions.aspects.utils;
 
+import org.apache.axiom.om.OMElement;
 import org.wso2.carbon.registry.core.Registry;
 
 import java.util.HashMap;
@@ -14,8 +15,8 @@ public class StatCollection {
     private String state;
     private String action;
     private String actionType;
-    private Map<String,String> validations;
-    private Map<String,String> executors;
+    private Map<String,OMElement> validations;
+    private Map<String,OMElement> executors;
     private String actionValue;
 
     public String getOriginalPath() {
@@ -34,31 +35,31 @@ public class StatCollection {
         this.actionValue = comment;
     }
 
-    public void addValidations(String validationName,String info){
+    public void addValidations(String validationName,OMElement info){
         if(validations == null){
-            validations = new HashMap<String, String> ();
+            validations = new HashMap<String, OMElement> ();
         }
         validations.put(validationName,info);
     }
 
-    public void addExecutors(String executorName,String info){
+    public void addExecutors(String executorName,OMElement info){
         if(executors == null){
-            executors =  new HashMap<String, String>();
+            executors =  new HashMap<String, OMElement>();
         }
         executors.put(executorName,info);
     }
-    public Map<String,String> getValidations() {
+    public Map<String,OMElement> getValidations() {
         return validations;
     }
 
-    public void setValidations(Map<String,String> validations) {
+    public void setValidations(Map<String,OMElement> validations) {
         this.validations = validations;
     }
 
-    public Map<String,String> getExecutors() {
+    public Map<String,OMElement> getExecutors() {
         return executors;
     }
-    public void setExecutors(Map<String,String> executors) {
+    public void setExecutors(Map<String,OMElement> executors) {
         this.executors = executors;
     }
 

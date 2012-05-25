@@ -4,6 +4,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.core.Registry;
@@ -121,34 +122,34 @@ public class StatWriter {
 //          Adding the sub elements under action element
             OMElement actionValidationsElement = factory.createOMElement("validations", actionElement.getNamespace(), actionElement);
 
-            Map<String,String> validations = currentCollection.getValidations();
+            Map<String,OMElement> validations = currentCollection.getValidations();
 
-            for (Map.Entry<String, String> validation : validations.entrySet()) {
+            for (Map.Entry<String, OMElement> validation : validations.entrySet()) {
                 OMElement validationElement = factory.createOMElement("validation"
                         , actionValidationsElement.getNamespace(), actionValidationsElement);
                 validationElement.addAttribute("name",validation.getKey(),null);
 
-                if (validation.getValue() != null && !validation.getValue().equals("")) {
-                    OMElement validationsInfoElement = factory.createOMElement("info"
+                if (validation.getValue() != null) {
+                    OMElement validationsInfoElement = factory.createOMElement("operations"
                             ,validationElement.getNamespace(),validationElement);
-                    validationsInfoElement.setText(validation.getValue());
+                    validationsInfoElement.addChild(validation.getValue());
                 }
             }
         }
         if (currentCollection.getExecutors() != null) {
             OMElement actionExecutors = factory.createOMElement("executors", actionElement.getNamespace(), actionElement);
 
-            Map<String,String> executors = currentCollection.getExecutors();
+            Map<String,OMElement> executors = currentCollection.getExecutors();
 
-            for (Map.Entry<String, String> executor : executors.entrySet()) {
+            for (Map.Entry<String, OMElement> executor : executors.entrySet()) {
                 OMElement executorElement = factory.createOMElement("executor"
                         , actionExecutors.getNamespace(), actionExecutors);
                 executorElement.addAttribute("name", executor.getKey(), null);
 
-                if (executor.getValue() != null && !executor.getValue().equals("")) {
-                    OMElement executorInfoElement =factory.createOMElement("info"
+                if (executor.getValue() != null) {
+                    OMElement executorInfoElement =factory.createOMElement("operations"
                             ,executorElement.getNamespace(),executorElement);
-                    executorInfoElement.setText(executor.getValue());
+                    executorInfoElement.addChild(executor.getValue());
                 }
             }
         }

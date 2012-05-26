@@ -36,7 +36,6 @@
         <parameter name="adminService" locked="true">true</parameter>
         <parameter locked="false" name="ServiceClass">org.wso2.carbon.dashboard.DashboardService
         </parameter>
-        <parameter name="DoAuthentication" locked="true">true</parameter>
         <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/Dashboard</parameter>
     </service>
 
@@ -52,7 +51,6 @@
         <parameter name="adminService" locked="true">true</parameter>
         <parameter locked="false" name="ServiceClass">org.wso2.carbon.dashboard.DashboardUtilService
         </parameter>
-        <parameter name="DoAuthentication" locked="true">false</parameter>
         <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/Dashboard</parameter>
     </service>
 
@@ -69,7 +67,6 @@
         <parameter locked="false" name="ServiceClass">
             org.wso2.carbon.dashboard.GadgetContentDownloadService
         </parameter>
-        <parameter name="DoAuthentication" locked="true">false</parameter>
         <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/Dashboard</parameter>
     </service>
 

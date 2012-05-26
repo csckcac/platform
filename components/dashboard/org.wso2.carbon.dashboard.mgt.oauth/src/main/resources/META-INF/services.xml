@@ -36,7 +36,6 @@
         </messageReceivers>
         <parameter name="adminService" locked="true">true</parameter>
         <parameter locked="false" name="ServiceClass">org.wso2.carbon.dashboard.mgt.oauth.OAuthMgtService</parameter>
-        <parameter name="DoAuthentication" locked="true">false</parameter>
         <!--<parameter name="AuthorizationAction" locked="true">/permission/admin/login</parameter>-->
         <parameter name="AuthorizationAction" locked="true">/permission/admin/gadget-server/oauth-management</parameter>
     </service>

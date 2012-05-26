@@ -27,10 +27,5 @@
         </description>
         <parameter name="ServiceClass">org.wso2.carbon.identity.sts.passive.PassiveSTSService</parameter>
     </service>  
-
-        
-    <parameter name="adminService" locked="true">true</parameter>
     <parameter name="hiddenService" locked="true">true</parameter>
-    <parameter name="DoAuthentication" locked="true">false</parameter>
-    
 </serviceGroup>

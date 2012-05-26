@@ -45,14 +45,6 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.search.ui</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.search.stub</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -80,8 +72,6 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.registry.common.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.registry.resource.ui</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.registry.resource.stub</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.registry.search.ui</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.registry.search.stub</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>

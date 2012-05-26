@@ -23,43 +23,29 @@
 
     <in>
         <property name="SERVICE_PREFIX" expression="$axis2:SERVICE_PREFIX"/>
-        <!--
-           The LB services are declared in the loadbalancer.xml file. This file is used by both
-           the serviceDynamicLoadbalanceEndpoint & AutoscaleIn mediators
-
-           Uncomment to enable autoscaling
-        -->
-        <!--
-        <autoscaleIn configuration="$system:loadbalancer.xml"/>
-        -->
         <send>
-            <endpoint name="sdlbEndpoint">
-                <session type="http">
+            <!--endpoint name="sdlbEndpoint">
+                <session type="http">-->
                     <!-- Session timout is 15mins-->
-                    <sessionTimeout>900000</sessionTimeout>
+                    <!--sessionTimeout>900000</sessionTimeout>
                 </session>
                 <serviceDynamicLoadbalance failover="true"
                                            algorithm="org.apache.synapse.endpoints.algorithms.RoundRobin"
                                            configuration="$system:loadbalancer.xml"/>
             </endpoint>
-	<!--endpoint name="tenantAwareLBEndpoint">
-              <class name ="org.wso2.carbon.lb.endpoint.endpoint.TenantAwareLoadBalanceEndpoint">
+            -->
+	          <endpoint name="tenantAwareLBEndpoint">
+                <class name ="org.wso2.carbon.lb.endpoint.endpoint.TenantAwareLoadBalanceEndpoint">
                      <parameter name="algorithm"> org.apache.synapse.endpoints.algorithms.RoundRobin</parameter>
-                     <parameter name="configuration">$system:loadbalancer.xml</parameter>
+                     <parameter name="configuration">$system:loadbalancer.conf</parameter>
                      <parameter name="failover">true</parameter>          
-  	      </class>
- 	</endpoint-->
+  	            </class>
+ 	          </endpoint>
         </send>
         <drop/>
     </in>
 
     <out>
-        <!--
-            Uncomment to enable autoscaling
-        -->
-        <!--
-        <autoscaleOut/>
-        -->
         <!-- Handling status codes: 301, 302 Redirection -->
         <filter source="$trp:Location" regex=".+">
             <property name="LB_SP_Host" expression="$ctx:SERVICE_PREFIX"

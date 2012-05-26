@@ -267,24 +267,24 @@
             </activation>
              <modules>
             <module>integration/security-verifier</module>
-            <module>greg</module>
+            <module>as</module>
             <module>is</module>
+            <module>esb</module>
+            <module>greg</module>
+            <module>manager</module>	
             <module>ms</module>
             <module>dss</module>
             <module>bam2</module>
-            <module>esb</module>
-			<module>cep</module>
+            <module>cep</module>
             <module>bps</module>
             <module>brs</module>
-            <module>as</module>
             <module>mb</module>	
-            <module>manager</module>	
             <module>lb</module>	
             <module>wsf</module>
             <module>csg</module>
             <!--module>apimgt</module-->
-			<module>jaggery</module>
-			<module>gs</module>
+            <module>jaggery</module>
+            <module>gs</module>
         </modules>
 	    <build>
 	        <plugins>

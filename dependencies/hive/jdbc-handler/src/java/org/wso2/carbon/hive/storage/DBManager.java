@@ -45,12 +45,15 @@ public class DBManager {
     }
 
     public boolean isTableExist(String tableName, Connection connection) throws SQLException {
-        ResultSet tables = connection.getMetaData().getTables(null, null, tableName.toString(), null);
-        if (tables.next()) {
-            return true;
-        } else {
-            return false;
+        //This return all tables, we use this because it is not db specific, Passing table name doesn't
+        //work with every database
+        ResultSet tables = connection.getMetaData().getTables(null, null, "%" , null);
+        while (tables.next()) {
+            if(tables.getString(3).equalsIgnoreCase(tableName)){
+                return true;
+            }
         }
+        return false;
     }
 
 

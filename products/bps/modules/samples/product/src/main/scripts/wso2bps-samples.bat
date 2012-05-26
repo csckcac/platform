@@ -70,12 +70,12 @@ goto done
 
 :invalid_sample_name
 echo "*** Specified sample is not present *** Please specify a valid sample with the -s option"
-echo "Example, to run sample HelloWorld1.zip : wso2esb-samples.sh -s HelloWorld1.zip"
+echo "Example, to run sample HelloWorld1.zip : wso2bps-samples.sh -s HelloWorld1.zip"
 goto done
 
 :no_sample
 echo "*** Sample to be started is not specified *** Please specify a sample to be started with the -s option"
-echo "Example, to run sample HelloWorld1.zip : wso2esb-samples.sh -sn HelloWorld1.zip"
+echo "Example, to run sample HelloWorld1.zip : wso2bps-samples.sh -sn HelloWorld1.zip"
 goto done
 
 :done

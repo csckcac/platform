@@ -64,13 +64,13 @@ if [ "$1" = "-s" ] || [ "$1" = "s" ]; then
       	    echo "sample copied to " $HT_DEP_DIR/$SAMPLE
 	else
 	    echo "*** Specified sample cannot be found  *** Please specify a valid sample with the -s option"
-      	    echo "Example, to run sample 0: wso2esb-samples.sh -s HelloWorld2.zip"
+      	    echo "Example, to run sample 0: wso2bps-samples.sh -s HelloWorld2.zip"
      	    exit
 	fi
     fi
 else
     echo "Sample to be started is not specified. Please specify a sample to run"
-    echo "Example, to run sample 0: wso2esb-samples.sh -s HelloWorld2.zip" 
+    echo "Example, to run sample 0: wso2bps-samples.sh -s HelloWorld2.zip"
     exit
 fi
 

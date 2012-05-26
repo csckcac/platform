@@ -33,6 +33,7 @@
 
     <modules>
         <module>sample-utils</module>
+        <module>sample-client</module>
         <!--module>bpel-extension</module-->
         <module>bpel-eventlistener</module>
         <!--module>BPSManagementClient</module-->

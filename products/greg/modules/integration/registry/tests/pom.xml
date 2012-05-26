@@ -46,7 +46,7 @@
                         </property>
                         <property>
                             <name>carbon.zip</name>
-                            <value>${basedir}/../../../distribution/product/target/wso2greg-${project.version}.zip
+                            <value>${basedir}/../../../distribution/target/wso2greg-${project.version}.zip
                             </value>
                         </property>
                         <property>

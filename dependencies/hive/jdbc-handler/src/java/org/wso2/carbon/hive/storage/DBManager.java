@@ -15,7 +15,8 @@ public class DBManager {
 
     private Map<String, String> conf = new HashMap<String, String>();
 
-    public void configureDB(String connectionUrl, String username, String password, String driverClass) {
+    public void configureDB(String connectionUrl, String username, String password,
+                            String driverClass) {
 
         conf.put(DBConfiguration.DRIVER_CLASS_PROPERTY, driverClass);
         conf.put(DBConfiguration.URL_PROPERTY, connectionUrl);
@@ -61,7 +62,7 @@ public class DBManager {
         StringBuilder query = new StringBuilder();
         query.append("INSERT INTO ").append(table);
 
-        if (fieldNames[0] != null ||fieldNames.length > 0) {
+        if (fieldNames[0] != null || fieldNames.length > 0) {
             query.append(" (");
             for (int i = 0; i < fieldNames.length; i++) {
                 query.append(fieldNames[i]);
@@ -79,13 +80,14 @@ public class DBManager {
                 query.append(",");
             }
         }
-        query.append(");");
+        query.append(")");
 
         return query.toString();
     }
 
 
-    public String constructSelectQuery(String tableName, List<String> fieldNames, String[] primaryFields) {
+    public String constructSelectQuery(String tableName, List<String> fieldNames,
+                                       String[] primaryFields) {
         if (fieldNames == null) {
             throw new IllegalArgumentException("Field names may not be null");
         }
@@ -103,13 +105,13 @@ public class DBManager {
         } else {
             query.append(fieldNames.get(0)).append("=").append("?");
         }
-        query.append(" ;");
         return query.toString();
     }
 
 
     //When constructing the query we try to preserve the order
-    public String constructUpdateQuery(String tableName, List<String> fieldNames, String[] primaryFields) {
+    public String constructUpdateQuery(String tableName, List<String> fieldNames,
+                                       String[] primaryFields) {
         if (fieldNames == null) {
             throw new IllegalArgumentException("Field names may not be null");
         }
@@ -117,7 +119,7 @@ public class DBManager {
         query.append("UPDATE ").append(tableName).append(" SET ");
 
         //If primary key fields are null, then we treat 1 field as the primary key
-        if(primaryFields==null || primaryFields.length ==0){
+        if (primaryFields == null || primaryFields.length == 0) {
             primaryFields = new String[1];
             primaryFields[0] = fieldNames.get(0);
         }
@@ -142,14 +144,13 @@ public class DBManager {
             }
         }
         query.append(" WHERE ");
-        for(int primaryKeyCount =0 ; primaryKeyCount < primaryFields.length; primaryKeyCount++){
-            if(primaryKeyCount==0){
+        for (int primaryKeyCount = 0; primaryKeyCount < primaryFields.length; primaryKeyCount++) {
+            if (primaryKeyCount == 0) {
                 query.append(primaryFields[primaryKeyCount]).append("=").append("?");
-            }else {
+            } else {
                 query.append(" AND ").append(primaryFields[primaryKeyCount]).append("=").append("?");
             }
         }
-        query.append(" ;");
         return query.toString();
     }
 }

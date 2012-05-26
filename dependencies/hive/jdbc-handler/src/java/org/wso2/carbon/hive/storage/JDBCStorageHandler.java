@@ -14,9 +14,10 @@ import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Map;
+import java.util.Properties;
 
-public class JDBCStorageHandler implements HiveStorageHandler , HiveMetaHook {
+public class JDBCStorageHandler implements HiveStorageHandler, HiveMetaHook {
 
     private Configuration conf;
 
@@ -36,9 +37,10 @@ public class JDBCStorageHandler implements HiveStorageHandler , HiveMetaHook {
         return this;
     }
 
-    public void configureTableJobProperties(final TableDesc tableDesc, final Map<String, String> jobProperties) {
+    public void configureTableJobProperties(final TableDesc tableDesc,
+                                            final Map<String, String> jobProperties) {
         Properties properties = tableDesc.getProperties();
-        ConfigurationUtils.copyJDBCProperties(properties,jobProperties);
+        ConfigurationUtils.copyJDBCProperties(properties, jobProperties);
     }
 
     public void setConf(Configuration conf) {
@@ -56,7 +58,7 @@ public class JDBCStorageHandler implements HiveStorageHandler , HiveMetaHook {
             throw new MetaException("Tables must be external.");
         }
 
-        Map<String,String> tableParameters = table.getParameters();
+        Map<String, String> tableParameters = table.getParameters();
 
         String tableName = tableParameters.get(DBConfiguration.OUTPUT_TABLE_NAME_PROPERTY);
         String databaseUserName = tableParameters.get(DBConfiguration.USERNAME_PROPERTY);
@@ -65,16 +67,16 @@ public class JDBCStorageHandler implements HiveStorageHandler , HiveMetaHook {
         String driverClass = tableParameters.get(DBConfiguration.DRIVER_CLASS_PROPERTY);
         String createTableQuery = tableParameters.get(ConfigurationUtils.HIVE_JDBC_TABLE_CREATE_QUERY);
 
-        if(tableName == null){
+        if (tableName == null) {
             tableName = ConfigurationUtils.extractingTableNameFromQuery(tableName, createTableQuery);
         }
 
         DBManager dbManager = new DBManager();
-        dbManager.configureDB(connectionUrl,databaseUserName,databasePassword,driverClass);
+        dbManager.configureDB(connectionUrl, databaseUserName, databasePassword, driverClass);
         Connection connection = null;
         try {
             connection = dbManager.getConnection();
-            if(!dbManager.isTableExist(tableName, connection)){
+            if (!dbManager.isTableExist(tableName, connection)) {
                 Statement statement = connection.createStatement();
                 statement.executeUpdate(createTableQuery);
                 statement.close();
@@ -86,7 +88,6 @@ public class JDBCStorageHandler implements HiveStorageHandler , HiveMetaHook {
             e.printStackTrace();
         }
     }
-
 
 
     public void rollbackCreateTable(Table table) throws MetaException {

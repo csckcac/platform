@@ -2,16 +2,34 @@ package org.wso2.carbon.hive.storage;
 
 
 public class DatabaseProperties {
-    
+
     private String connectionUrl;
     private String userName;
     private String password;
     private String driverClass;
     private String tableName;
+    private String dbSpecificUpsertQuery;
+    private String[] upsertQueryValuesOrder;
     private String[] fieldsNames;
     private String[] primaryFields;
     private String[] columnMappingFields;
     private boolean updateOnDuplicate;
+
+    public String getDbSpecificUpsertQuery() {
+        return dbSpecificUpsertQuery;
+    }
+
+    public void setDbSpecificUpsertQuery(String dbSpecificUpsertQuery) {
+        this.dbSpecificUpsertQuery = dbSpecificUpsertQuery;
+    }
+
+    public String[] getUpsertQueryValuesOrder() {
+        return upsertQueryValuesOrder;
+    }
+
+    public void setUpsertQueryValuesOrder(String[] upsertQueryValuesOrder) {
+        this.upsertQueryValuesOrder = upsertQueryValuesOrder;
+    }
 
     public String[] getColumnMappingFields() {
         return columnMappingFields;

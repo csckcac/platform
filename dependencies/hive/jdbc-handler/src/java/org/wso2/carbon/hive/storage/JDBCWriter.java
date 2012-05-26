@@ -4,7 +4,13 @@ package org.wso2.carbon.hive.storage;
 import org.apache.hadoop.hive.ql.exec.FileSinkOperator.RecordWriter;
 import org.apache.hadoop.hive.serde2.io.ByteWritable;
 import org.apache.hadoop.hive.serde2.io.ShortWritable;
-import org.apache.hadoop.io.*;
+import org.apache.hadoop.io.BooleanWritable;
+import org.apache.hadoop.io.FloatWritable;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.MapWritable;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Writable;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,12 +30,14 @@ public class JDBCWriter implements RecordWriter {
     DBManager dbManager;
     List<String> fieldNames;
     List<Object> values;
+    Map<String,Object> fieldNamesAndValuesMap = new HashMap<String,Object>();
 
-    public JDBCWriter(DatabaseProperties databaseProperties) throws ClassNotFoundException, SQLException {
+    public JDBCWriter(DatabaseProperties databaseProperties)
+            throws ClassNotFoundException, SQLException {
         dbProperties = databaseProperties;
         dbManager = new DBManager();
         dbManager.configureDB(databaseProperties.getConnectionUrl(), databaseProperties.getUserName(),
-                databaseProperties.getPassword(), databaseProperties.getDriverClass());
+                              databaseProperties.getPassword(), databaseProperties.getDriverClass());
         connection = dbManager.getConnection();
     }
 
@@ -48,6 +57,9 @@ public class JDBCWriter implements RecordWriter {
         if (dbProperties.getColumnMappingFields() != null) {
             fieldNames.addAll(Arrays.asList(dbProperties.getColumnMappingFields()));
         }
+        for (int i=0; i<fieldNames.size();i++){
+            fieldNamesAndValuesMap.put(fieldNames.get(i),values.get(i));
+        }
         try {
             writeToDB();
         } catch (SQLException e) {
@@ -63,11 +75,18 @@ public class JDBCWriter implements RecordWriter {
             if (!dbProperties.isUpdateOnDuplicate()) { //Insert every record
                 statement = insertData(statement);
             } else { //upsert
-                ResultSet resultSet = selectData(statement);
-                if (resultSet.next()) {     // If result is zero, then update
-                    statement = updateData(statement);
+                if (dbProperties.getDbSpecificUpsertQuery() == null) {   //User haven't given the db specific upsert query
+                    ResultSet resultSet = selectData(statement);
+                    if (resultSet.next()) {     // If result is zero, then update
+                        statement = updateData(statement);
+                    } else {
+                        statement = insertData(statement);
+                    }
                 } else {
-                    statement = insertData(statement);
+                    String upsertQuery = dbProperties.getDbSpecificUpsertQuery();
+                    statement = connection.prepareStatement(upsertQuery);
+                    statement = setValuesForUpsertStatement(statement);
+                    statement.executeUpdate();
                 }
             }
         } catch (SQLException e) {
@@ -77,9 +96,10 @@ public class JDBCWriter implements RecordWriter {
         }
     }
 
+
     private PreparedStatement updateData(PreparedStatement statement) throws SQLException {
         statement = connection.prepareStatement(dbManager.constructUpdateQuery(dbProperties.getTableName(),
-                fieldNames, dbProperties.getPrimaryFields()));
+                                                                               fieldNames, dbProperties.getPrimaryFields()));
         statement = setValuesForUpdateStatement(statement);
         statement.executeUpdate();
         return statement;
@@ -87,7 +107,7 @@ public class JDBCWriter implements RecordWriter {
 
     private ResultSet selectData(PreparedStatement statement) throws SQLException {
         statement = connection.prepareStatement(dbManager.constructSelectQuery(dbProperties.getTableName(),
-                fieldNames, dbProperties.getPrimaryFields()));
+                                                                               fieldNames, dbProperties.getPrimaryFields()));
         statement = setValuesForWhereClause(statement);
         ResultSet resultSet = statement.executeQuery();
         return resultSet;
@@ -95,12 +115,27 @@ public class JDBCWriter implements RecordWriter {
 
     private PreparedStatement insertData(PreparedStatement statement) throws SQLException {
         statement = connection.prepareStatement(dbManager.constructInsertQuery(dbProperties.getTableName(),
-                fieldNames.toArray(new String[fieldNames.size()])));
+                                                                               fieldNames.toArray(new String[fieldNames.size()])));
         statement = setValues(statement);
         statement.executeUpdate();
         return statement;
     }
 
+
+    private PreparedStatement setValuesForUpsertStatement(PreparedStatement statement) {
+        String[] valuesOrder = dbProperties.getUpsertQueryValuesOrder();
+        if(valuesOrder==null){
+            throw new IllegalArgumentException("You must supply both " +
+                                               ConfigurationUtils.HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER +
+            " and " + ConfigurationUtils.HIVE_JDBC_OUTPUT_UPSERT_QUERY);
+        }
+
+        for (int valuesOrderCount = 0; valuesOrderCount < valuesOrder.length; valuesOrderCount++) {
+            Object value=fieldNamesAndValuesMap.get(valuesOrder[valuesOrderCount].toLowerCase()); //Hive use lower case
+            statement = assignCorrectObjectType(value,valuesOrderCount+1,statement);
+        }
+        return statement;
+    }
 
     private PreparedStatement setValuesForWhereClause(PreparedStatement statement) {
 
@@ -112,7 +147,7 @@ public class JDBCWriter implements RecordWriter {
         for (int fieldsCount = 0; fieldsCount < fieldNames.size(); fieldsCount++) {
             for (int primaryFieldsCount = 0; primaryFieldsCount < primaryFields.length; primaryFieldsCount++) {
                 if (fieldNames.get(fieldsCount).equals(primaryFields[primaryFieldsCount])) {
-                    statement = assignCorrectObjectType(fieldsCount, primaryFieldsCount + 1, statement);
+                    statement = assignCorrectObjectType(values.get(fieldsCount), primaryFieldsCount + 1, statement);
                 }
             }
         }
@@ -130,15 +165,15 @@ public class JDBCWriter implements RecordWriter {
             boolean isPrimaryField = false;
             for (int primaryFieldCount = 0; primaryFieldCount < primaryKeyFields.length; primaryFieldCount++) {
                 if (fieldNames.get(fieldCount).equals(primaryKeyFields[primaryFieldCount])) {
-                    statement = assignCorrectObjectType(fieldCount, fieldNames.size() - (primaryKeyFields.length - primaryFieldCount - 1),
-                            statement);  //Primary key fields add in the where clause.
+                    statement = assignCorrectObjectType(values.get(fieldCount), fieldNames.size() - (primaryKeyFields.length - primaryFieldCount - 1),
+                                                        statement);  //Primary key fields add in the where clause.
                     isPrimaryField = true;
                     break;
                 }
             }
             if (!isPrimaryField) {
                 counter++;
-                statement = assignCorrectObjectType(fieldCount, counter, statement);
+                statement = assignCorrectObjectType(values.get(fieldCount), counter, statement);
             }
         }
         return statement;
@@ -146,7 +181,7 @@ public class JDBCWriter implements RecordWriter {
 
     private PreparedStatement setValues(PreparedStatement statement) {
         for (int i = 0; i < values.size(); i++) {
-            statement = assignCorrectObjectType(i, i + 1, statement);
+            statement = assignCorrectObjectType(values.get(i), i + 1, statement);
         }
         return statement;
     }
@@ -154,13 +189,13 @@ public class JDBCWriter implements RecordWriter {
     /**
      * Set values for the prepared statement
      *
-     * @param index     value index
+     * @param value     value
      * @param position
      * @param statement prepared statement
      * @return
      */
-    private PreparedStatement assignCorrectObjectType(int index, int position, PreparedStatement statement) {
-        Object value = values.get(index);
+    private PreparedStatement assignCorrectObjectType(Object value, int position,
+                                                      PreparedStatement statement) {
         try {
             if (value instanceof Integer) {
                 statement.setInt(position, (Integer) value);

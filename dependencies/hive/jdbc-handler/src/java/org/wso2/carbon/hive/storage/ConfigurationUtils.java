@@ -3,6 +3,7 @@ package org.wso2.carbon.hive.storage;
 
 import com.google.common.collect.ImmutableSet;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 
 import java.util.*;
@@ -14,6 +15,8 @@ public class ConfigurationUtils {
     public static final String HIVE_JDBC_COLUMNS_MAPPING = "hive.jdbc.columns.mapping";
 
     public static final String HIVE_JDBC_TABLE_CREATE_QUERY = "hive.jdbc.table.create.query";
+    public static final String HIVE_JDBC_OUTPUT_UPSERT_QUERY = "hive.jdbc.output.upsert.query";
+    public static final String HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER = "hive.jdbc.upsert.query.values.order";
 
 
     public static final Set<String> ALL_PROPERTIES = ImmutableSet.of(
@@ -26,7 +29,9 @@ public class ConfigurationUtils {
             HIVE_JDBC_UPDATE_ON_DUPLICATE,
             HIVE_JDBC_PRIMARY_KEY_FIELDS,
             HIVE_JDBC_COLUMNS_MAPPING,
-            HIVE_JDBC_TABLE_CREATE_QUERY
+            HIVE_JDBC_TABLE_CREATE_QUERY,
+            HIVE_JDBC_OUTPUT_UPSERT_QUERY,
+            HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER
     );
 
 
@@ -95,7 +100,8 @@ public class ConfigurationUtils {
 
 
     //If user has given the query for creating table, we don't need to ask the table name again. Get the table name from the query
-    public final static String extractingTableNameFromQuery(String tableName, String createTableQuery) {
+    public final static String extractingTableNameFromQuery(String tableName,
+                                                            String createTableQuery) {
         if (createTableQuery != null) {
             List<String> queryList = Arrays.asList(createTableQuery.split(" "));
             Iterator<String> iterator = queryList.iterator();
@@ -117,10 +123,23 @@ public class ConfigurationUtils {
             }
         } else {
             throw new IllegalArgumentException("You should provide at least " +
-                    DBConfiguration.OUTPUT_TABLE_NAME_PROPERTY + " or " +
-                    ConfigurationUtils.HIVE_JDBC_TABLE_CREATE_QUERY + " property.");
+                                               DBConfiguration.OUTPUT_TABLE_NAME_PROPERTY + " or " +
+                                               ConfigurationUtils.HIVE_JDBC_TABLE_CREATE_QUERY + " property.");
         }
         return tableName;
     }
 
+    public static String getDbSpecificUpdateQuery(JobConf conf) {
+        return conf.get(ConfigurationUtils.HIVE_JDBC_OUTPUT_UPSERT_QUERY);
+    }
+
+    public static String[] getUpsertQueryValuesOrder(JobConf conf) {
+        String valuesOrder = conf.get(ConfigurationUtils.HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER);
+        String[] order = null;
+        if (valuesOrder != null) {
+            valuesOrder= valuesOrder.trim();
+            order = valuesOrder.split(",");
+        }
+        return order;
+    }
 }

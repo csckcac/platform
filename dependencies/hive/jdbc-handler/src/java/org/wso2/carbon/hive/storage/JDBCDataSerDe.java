@@ -33,13 +33,13 @@ public class JDBCDataSerDe implements SerDe {
     private int fieldCount;
     private List<String> columnNames;
     String[] columnTypesArray;
-    
+
     public void initialize(Configuration entries, Properties properties) throws SerDeException {
 
         String tableColumnNamesString = properties.getProperty(Constants.LIST_COLUMNS);
 
         if (tableColumnNamesString != null) {
-            
+
             String[] columnNamesArray = tableColumnNamesString.split(",");
 
 /*            if (log.isDebugEnabled()) {
@@ -48,16 +48,16 @@ public class JDBCDataSerDe implements SerDe {
             fieldCount = columnNamesArray.length;
             columnNames = new ArrayList<String>(columnNamesArray.length);
             columnNames.addAll(Arrays.asList(columnNamesArray));
-            
-            String columnTypesString= properties.getProperty(Constants.LIST_COLUMN_TYPES);
-            
+
+            String columnTypesString = properties.getProperty(Constants.LIST_COLUMN_TYPES);
+
             columnTypesArray = columnTypesString.split(":");
 
             final List<ObjectInspector> fieldObjectInspectors = new ArrayList<ObjectInspector>(columnNamesArray.length);
-            
-            for (int i=0; i < columnNamesArray.length; i++){
 
-                if(HIVE_TYPE_INT.equalsIgnoreCase(columnTypesArray[i])){
+            for (int i = 0; i < columnNamesArray.length; i++) {
+
+                if (HIVE_TYPE_INT.equalsIgnoreCase(columnTypesArray[i])) {
                     fieldObjectInspectors.add(PrimitiveObjectInspectorFactory.javaIntObjectInspector);
                 } else if (HIVE_TYPE_SMALLINT.equalsIgnoreCase(columnTypesArray[i])) {
                     fieldObjectInspectors.add(PrimitiveObjectInspectorFactory.javaShortObjectInspector);
@@ -92,8 +92,8 @@ public class JDBCDataSerDe implements SerDe {
     public Writable serialize(Object obj, ObjectInspector objectInspector) throws SerDeException {
         if (objectInspector.getCategory() != ObjectInspector.Category.STRUCT) {
             throw new SerDeException(getClass().toString()
-                    + " can only serialize struct types, but we got: "
-                    + objectInspector.getTypeName());
+                                     + " can only serialize struct types, but we got: "
+                                     + objectInspector.getTypeName());
         }
 
         // Prepare the field ObjectInspectors
@@ -110,18 +110,18 @@ public class JDBCDataSerDe implements SerDe {
             StructField structField = fields.get(c);
             if (structField != null) {
                 final Object field = structObjectInspector.getStructFieldData(obj,
-                        fields.get(c));
+                                                                              fields.get(c));
                 //TODO:currently only support hive primitive type
-                final AbstractPrimitiveObjectInspector fieldOI = (AbstractPrimitiveObjectInspector)fields.get(c)
+                final AbstractPrimitiveObjectInspector fieldOI = (AbstractPrimitiveObjectInspector) fields.get(c)
                         .getFieldObjectInspector();
 
-                Writable value = (Writable)fieldOI.getPrimitiveWritableObject(field);
+                Writable value = (Writable) fieldOI.getPrimitiveWritableObject(field);
 
                 if (value == null) {
-                    if(PrimitiveObjectInspector.PrimitiveCategory.STRING.equals(fieldOI.getPrimitiveCategory())){
+                    if (PrimitiveObjectInspector.PrimitiveCategory.STRING.equals(fieldOI.getPrimitiveCategory())) {
                         value = NullWritable.get();
                         //value = new Text("");
-                    }else{
+                    } else {
                         //TODO: now all treat as number
                         value = new IntWritable(0);
                     }

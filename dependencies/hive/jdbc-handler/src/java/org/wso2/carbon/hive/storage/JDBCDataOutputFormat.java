@@ -34,6 +34,8 @@ public class JDBCDataOutputFormat implements OutputFormat<NullWritable, MapWrita
             dbProperties.setUpdateOnDuplicate(ConfigurationUtils.isUpdateOnDuplicate(conf));
             dbProperties.setPrimaryFields(ConfigurationUtils.getPrimaryKeyFields(conf));
             dbProperties.setColumnMappingFields(ConfigurationUtils.getColumnMappingFields(conf));
+            dbProperties.setDbSpecificUpsertQuery(ConfigurationUtils.getDbSpecificUpdateQuery(conf));
+            dbProperties.setUpsertQueryValuesOrder(ConfigurationUtils.getUpsertQueryValuesOrder(conf));
 
             return new JDBCWriter(dbProperties);
 

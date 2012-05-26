@@ -27,6 +27,7 @@ import org.wso2.carbon.agent.internal.utils.AgentConstants;
 public class AgentServerConfiguration {
     private int secureEventReceiverPort = AgentConstants.DEFAULT_RECEIVER_PORT + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET;
     private int eventReceiverPort = AgentConstants.DEFAULT_RECEIVER_PORT;
+    private String streamDefinitionStore = AgentConstants.DEFAUT_DEFINITION_STORE;
 
     public AgentServerConfiguration(int defaultSslPort, int defaultPort) {
         secureEventReceiverPort = defaultSslPort;
@@ -47,5 +48,13 @@ public class AgentServerConfiguration {
 
     public void setSecureEventReceiverPort(int secureEventReceiverPort) {
         this.secureEventReceiverPort = secureEventReceiverPort;
+    }
+
+    public void setStreamDefinitionStore(String eventDefStoreName){
+        streamDefinitionStore = eventDefStoreName;
+    }
+
+    public String getStreamDefinitionStore(){
+        return streamDefinitionStore;
     }
 }

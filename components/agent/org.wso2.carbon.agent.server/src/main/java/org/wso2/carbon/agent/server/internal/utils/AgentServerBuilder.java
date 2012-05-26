@@ -123,6 +123,17 @@ public final class AgentServerBuilder {
         }
     }
 
+    private static void populateStreamDefinitionStore(OMElement agentServerConfig,
+                                                      AgentServerConfiguration agentServerConfiguration){
+        OMElement streamDefinitionStore = agentServerConfig.getFirstChildWithName(
+                new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE,
+                        AgentServerConstants.STREAM_DEFINITION_STORE));
+        if (streamDefinitionStore != null) {
+            agentServerConfiguration.setStreamDefinitionStore(streamDefinitionStore.getText());
+        }
+
+    }
+
     private static int readPortOffset(ServerConfigurationService serverConfiguration) {
 
         String portOffset = serverConfiguration.getFirstProperty(AgentServerConstants.CARBON_CONFIG_PORT_OFFSET_NODE);
@@ -147,6 +158,7 @@ public final class AgentServerBuilder {
             }
             populatePorts(agentServerConfig, serverConfiguration, agentServerConfiguration);
             populateEventStreamDefinitions(agentServerConfig, eventStreamDefinitions);
+            populateStreamDefinitionStore(agentServerConfig,agentServerConfiguration);
         }
     }
 }

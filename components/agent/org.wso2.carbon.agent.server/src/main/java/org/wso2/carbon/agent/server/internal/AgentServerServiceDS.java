@@ -16,17 +16,15 @@
 
 package org.wso2.carbon.agent.server.internal;
 
-import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.internal.utils.AgentConstants;
-import org.wso2.carbon.agent.server.AgentServerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.server.AgentServer;
+import org.wso2.carbon.agent.server.AgentServerFactory;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
-import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
+import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerConfigurationException;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
 import org.wso2.carbon.agent.server.internal.authentication.CarbonAuthenticationHandler;
@@ -66,21 +64,36 @@ public class AgentServerServiceDS {
             AgentServerBuilder.populateConfigurations(serverConfiguration, agentServerConfiguration, eventStreamDefinitions);
 
             if (agentServer == null) {
+                String eventDefinitionClassName = agentServerConfiguration.getStreamDefinitionStore();
+                StreamDefinitionStore streamDefinitionStore = null;
+                try {
+                    streamDefinitionStore =
+                            (StreamDefinitionStore) Class.forName(eventDefinitionClassName)
+                                    .newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 agentServer = new AgentServerFactory().createAgentServer(
                         agentServerConfiguration,
-                        new CarbonAuthenticationHandler(authenticationService), new InMemoryStreamDefinitionStore());
+                        new CarbonAuthenticationHandler(authenticationService), streamDefinitionStore);
+
                 agentServer.start();
-                for (String[] streamDefinition : eventStreamDefinitions) {
-                    try {
-                        agentServer.saveEventStreamDefinition(streamDefinition[0], streamDefinition[1]);
-                    } catch (MalformedStreamDefinitionException e) {
-                        log.error("Malformed Stream Definition for " + streamDefinition[0] + ": " + streamDefinition[1], e);
-                    } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
-                        log.warn("Redefining event stream of " + streamDefinition[0] + ": " + streamDefinition[1], e);
-                    } catch (RuntimeException e) {
-                        log.error("Error in defining event stream " + streamDefinition[0] + ": " + streamDefinition[1], e);
-                    }
-                }
+
+//                for (String[] streamDefinition : eventStreamDefinitions) {
+//                    try {
+//                        agentServer.saveEventStreamDefinition(streamDefinition[0], streamDefinition[1]);
+//                    } catch (MalformedStreamDefinitionException e) {
+//                        log.error("Malformed Stream Definition for " + streamDefinition[0] + ": " + streamDefinition[1], e);
+//                    } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
+//                        log.warn("Redefining event stream of " + streamDefinition[0] + ": " + streamDefinition[1], e);
+//                    } catch (RuntimeException e) {
+//                        log.error("Error in defining event stream " + streamDefinition[0] + ": " + streamDefinition[1], e);
+//                    }
+//                }
                 agentServerService = context.getBundleContext().
                         registerService(AgentServer.class.getName(), agentServer, null);
                 log.info("Successfully deployed Agent Server ");
@@ -89,10 +102,11 @@ public class AgentServerServiceDS {
             log.error("Agent Server Configuration is not correct hence can not create and start Agent Server ", e);
         } catch (AgentServerException e) {
             log.error("Can not create and start Agent Server ", e);
-        }  catch (RuntimeException e){
+        } catch (RuntimeException e) {
             log.error("Error in starting Agent Server ", e);
         }
     }
+
 
 
     protected void deactivate(ComponentContext context) {

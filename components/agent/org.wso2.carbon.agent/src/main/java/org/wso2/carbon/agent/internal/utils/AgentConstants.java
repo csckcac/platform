@@ -54,6 +54,8 @@ public final class AgentConstants {
     public static final String THRUST_STORE = "trustStore";
     public static final String THRUST_STORE_PASSWORD = "trustStorePassword";
 
+    //public static final String DEFAUT_DEFINITION_STORE = "org.wso2.carbon.bam.eventreceiver.datastore.InMemoryStreamDefinitionStroe";
+    public static final String DEFAUT_DEFINITION_STORE = "org.wso2.carbon.bam.eventreceiver.datastore.CassandraStreamDefinitionStore";
     public static final int AGENT_RECONNECTION_TIMES = 3;
     public static final int SECURE_EVENT_RECEIVER_PORT_OFFSET = 100;
     public static final int DEFAULT_RECEIVER_PORT = 7611;

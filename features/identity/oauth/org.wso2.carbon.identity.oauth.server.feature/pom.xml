@@ -43,6 +43,10 @@
 			<groupId>com.google.guava.wso2</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.amber.wso2</groupId>
+			<artifactId>amber</artifactId>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -69,7 +73,8 @@
 							<bundles>
 							    <bundleDef>com.google.gdata.wso2:gdata-core</bundleDef>
 							    <bundleDef>com.google.guava.wso2:guava</bundleDef>
-								<bundleDef>org.wso2.carbon:org.wso2.carbon.identity.oauth</bundleDef>								
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.identity.oauth</bundleDef>
+							    <bundleDef>org.apache.amber.wso2:amber</bundleDef>
 							</bundles>
 							<importFeatures>
 								<importFeatureDef>org.wso2.carbon.identity.core.server:${identity.core.feature.version}</importFeatureDef>

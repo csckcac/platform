@@ -328,15 +328,20 @@
                 <artifactId>httpcore</artifactId>
                 <version>${httpcomponents-httpcore.wso2.version}</version>
             </dependency>
-	    <dependency>
-		<groupId>org.wso2.balana</groupId>
-		<artifactId>org.wso2.balana</artifactId>
-		<version>${balana.version}</version>		
+			<dependency>
+				<groupId>org.wso2.balana</groupId>
+				<artifactId>org.wso2.balana</artifactId>
+				<version>${balana.version}</version>		
             </dependency>
             <dependency>
-		<groupId>libthrift.wso2</groupId>
-		<artifactId>libthrift</artifactId>
-		<version>${libthrift.wso2.version}</version>
+				<groupId>libthrift.wso2</groupId>
+				<artifactId>libthrift</artifactId>
+				<version>${libthrift.wso2.version}</version>
+            </dependency>
+			<dependency>
+				<groupId>org.apache.amber.wso2</groupId>
+				<artifactId>amber</artifactId>
+				<version>0.22.0.incubating-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

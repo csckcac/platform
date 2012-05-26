@@ -36,13 +36,13 @@
                 <exclude>**/README*</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
-		        <exclude>**/LICENSE.txt</exclude>
+                <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/claim-config.xml</exclude>
                 <exclude>**/userRP.jks</exclude>
                 <exclude>**/wso2is-user-certs.jks</exclude>
-           </excludes>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>target/wso2carbon-core-${wso2carbon.version}</directory>
@@ -55,17 +55,17 @@
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
-        <fileSet>
-            <directory>
-                ../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/advanced/
-            </directory>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/advanced</outputDirectory>
-            <includes>
-                <include>**/qpid-config.xml</include>
-                <include>**/qpid-jmxremote.access</include>
-                <include>**/qpid-virtualhosts.xml</include>
-            </includes>
-        </fileSet>
+        <!--<fileSet>-->
+        <!--<directory>-->
+        <!--../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/advanced/-->
+        <!--</directory>-->
+        <!--<outputDirectory>wso2is-${pom.version}/repository/conf/advanced</outputDirectory>-->
+        <!--<includes>-->
+        <!--<include>**/qpid-config.xml</include>-->
+        <!--<include>**/qpid-jmxremote.access</include>-->
+        <!--<include>**/qpid-virtualhosts.xml</include>-->
+        <!--</includes>-->
+        <!--</fileSet>-->
 
         <fileSet>
             <directory>
@@ -109,6 +109,42 @@
             <fileMode>755</fileMode>
         </fileSet>
 
+        <!-- copy the landing page webapp -->
+        <fileSet>
+            <directory>lib/home</directory>
+            <outputDirectory>
+                ${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT
+            </outputDirectory>
+        </fileSet>
+
+        <!--copying multitenancy-packages.xml file-->
+        <fileSet>
+            <directory>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <includes>
+                <include>**/stratos.xml</include>
+                <include>**/multitenancy-packages.xml</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>../../styles/service/src/main/resources/web/styles/css</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/admin</outputDirectory>
+            <includes>
+                <include>**/**.css</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../styles/service/src/main/resources/web/styles/images</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/images</outputDirectory>
+            <includes>
+                <include>**/**.gif</include>
+                <include>**/**.png</include>
+            </includes>
+        </fileSet>
+
     </fileSets>
 
     <files>
@@ -129,7 +165,7 @@
             <outputDirectory>wso2is-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>			
+        </file>
         <file>
             <source>../../../release-notes.html</source>
             <outputDirectory>wso2is-${pom.version}</outputDirectory>
@@ -154,7 +190,8 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>target/wso2carbon-core-${wso2carbon.version}/repository/conf/axis2/axis2.xml</source>
+            <source>target/wso2carbon-core-${wso2carbon.version}/repository/conf/axis2/axis2.xml
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/axis2/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -177,7 +214,7 @@
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-	<!--claim-config.xml is now copied from the feature installation.>
+        <!--claim-config.xml is now copied from the feature installation.>
         <file>
             <source>conf/claim-config.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
@@ -189,7 +226,7 @@
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-	<!--identity.xml is now copied from the feature installation.>
+        <!--identity.xml is now copied from the feature installation.>
         <file>
             <source>conf/identity.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
@@ -200,7 +237,7 @@
             <source>conf/entitlement-config.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
-        </file>	
+        </file>
 
         <file>
             <source>conf/wso2is-user-certs.jks</source>
@@ -215,26 +252,59 @@
         </file>
 
 
-	<file>
-            <source>../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/claim-config.xml</source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
-        </file>
-	<file>
-            <source>../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/identity.xml</source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
-		<fileMode>644</fileMode>
-        </file>
         <file>
-            <source>../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/event-broker.xml</source>
+            <source>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/claim-config.xml
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
         </file>
         <file>
-            <source>../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/data/is-default-schema.zip</source>
+            <source>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/identity.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/data/is-default-schema.zip
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/data</outputDirectory>
         </file>
-	 <file>
-            <source>../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/embedded-ldap.xml</source>
+        <file>
+            <source>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/embedded-ldap.xml
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
         </file>
+
+        <!-- Stratos specific files -->
+        <file>
+            <source>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced/
+            </outputDirectory>
+        </file>
+
+        <file>
+            <source>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/sso-idp-config.xml
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+
     </files>
 </assembly>

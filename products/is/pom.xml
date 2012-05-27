@@ -40,7 +40,6 @@
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
         <module>modules/styles</module>
-        <module>modules/login</module>
         <module>modules/dashboard</module>
         <module>modules/integration</module>
         <module>modules/samples</module>

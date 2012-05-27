@@ -38,7 +38,28 @@
 	<modules>
 		<module>org.wso2.identity.styles.feature</module>
 		<module>org.wso2.identity.utils.feature</module>
+		<module>org.wso2.identity.ui.feature</module>
 	</modules>
+	
+	<dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.wso2.identity</groupId>
+                <artifactId>org.wso2.identity.styles</artifactId>
+                <version>${identity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.identity</groupId>
+                <artifactId>org.wso2.stratos.identity.dashboard.ui</artifactId>
+                <version>${stratos.identity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.ui.menu.stratos</artifactId>
+                <version>${stratos.identity.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
 

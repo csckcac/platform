@@ -112,8 +112,8 @@
 								
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.um.ws.service.feature:${wso2carbon.version}</featureArtifactDef>
 
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.styles.feature:${project.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.identity:org.wso2.identity.utils.feature:${project.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.identity:org.wso2.identity.styles.feature:${identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.identity:org.wso2.identity.utils.feature:${identity.version}</featureArtifactDef>
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.oauth.feature:${wso2carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.sts.passive.feature:${wso2carbon.version}</featureArtifactDef>
@@ -121,7 +121,7 @@
 
                                 <!-- Features related to Cloud Identity -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.identity:org.wso2.stratos.identity.ui.feature:${stratos.identity.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.identity:org.wso2.identity.ui.feature:${identity.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.feature:${stratos.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}</featureArtifactDef>
@@ -308,8 +308,8 @@
                                     <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.stratos.identity.ui.feature.group</id>
-                                    <version>${stratos.identity.version}</version>
+                                    <id>org.wso2.identity.ui.feature.group</id>
+                                    <version>${identity.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.stratos.identity.saml2.sso.mgt.feature.group</id>

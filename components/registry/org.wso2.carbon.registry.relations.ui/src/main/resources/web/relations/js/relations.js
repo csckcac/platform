@@ -37,6 +37,55 @@ function processAddAssociation(resourcePath, assoType, associationPaths, filling
     }, org_wso2_carbon_registry_relations_ui_jsi18n["session.timed.out"]);
 }
 
+function loadAssociationDiv(resourcePath, assoType, page) {
+    var fillingDiv = "associationsDiv";
+    if (assoType == "depends") {
+        fillingDiv = "dependenciesDiv";
+    }
+    var reason = "";
+    if ($('updateFix')) {
+        $('updateFix').parentNode.removeChild($('updateFix'));
+    }
+    var tempSpan = document.createElement('span');
+    tempSpan.id = "updateFix";
+    sessionAwareFunction(function() {
+        new Ajax.Request('../relations/association-list-ajaxprocessor.jsp',
+                {
+                    method:'post',
+                    parameters:{path:resourcePath,type:assoType,page:page},
+                    onSuccess: function(transport) {
+                        $(fillingDiv).innerHTML = transport.responseText;
+                        $(fillingDiv).appendChild(tempSpan);
+                        $(fillingDiv).style.display = "";
+                        if (fillingDiv == "associationsDiv") {
+                            $('associationsIconExpanded').style.display = "";
+                            $('associationsIconMinimized').style.display = "none";
+
+                            YAHOO.util.Event.onAvailable('updateFix', function() {
+                                $('associationsSum').style.display = "none";
+                                $('associationsList').style.display = "";
+
+                            });
+
+
+                        } else {
+                            $('dependenciesIconExpanded').style.display = "";
+                            $('dependenciesIconMinimized').style.display = "none";
+                            YAHOO.util.Event.onAvailable('updateFix', function() {
+                                $('dependenciesSum').style.display = "none";
+                                $('dependenciesList').style.display = "";
+                            });
+                        }
+                        dependencyTreeExpansionPath = associationPaths;
+
+                    },
+                    onFailure: function(transport) {
+                        CARBON.showErrorDialog(transport.responseText);
+                    }
+                });
+    }, org_wso2_carbon_registry_relations_ui_jsi18n["session.timed.out"]);
+}
+
 function addAssociation(mainType) {
     var typeForm = document.forms[mainType];
     var addDivId = 'associationsAddDiv';

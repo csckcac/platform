@@ -17,6 +17,7 @@
  -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="carbon" uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" %>
 <%@ page import="org.wso2.carbon.registry.relations.ui.clients.RelationServiceClient" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
@@ -24,6 +25,9 @@
 <%@ page import="org.wso2.carbon.registry.relations.stub.beans.xsd.AssociationBean" %>
 <%@ page import="org.wso2.carbon.registry.common.ui.utils.UIUtil" %>
 <%@ page import="org.wso2.carbon.registry.core.utils.RegistryUtils" %>
+<%@ page import="org.wso2.carbon.registry.core.RegistryConstants" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.LinkedList" %>
 
 <jsp:include page="../registry_common/registry_common-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../registry_common/js/registry_validation.js"></script>
@@ -69,13 +73,16 @@
     }
 
     if (type != null && type.equals("depends")) {
-        count = 0;
+        List<AssociationBean> beansList = new LinkedList<AssociationBean>();
         for (int i = 0; i < depList.length; i++) {
             AssociationBean association = depList[i];
             if (association.getSourcePath().equals(bean.getPathWithVersion()) && association.getAssociationType().equals("depends")) {
-                count++;
+                beansList.add(association);
             }
         }
+        count = beansList.size();
+        depList = beansList.toArray(new AssociationBean[count]);
+
 %>
 <div id="dependenciesSum" class="summeryStyle">
     <% if (count > 1) { %>
@@ -112,10 +119,22 @@
         <tbody>
 
             <%
-                for (int i = 0; i < depList.length; i++) {
+                int pageNumber;
+                String pageStr = request.getParameter("page");
+                if (pageStr != null) {
+                    pageNumber = Integer.parseInt(pageStr);
+                } else {
+                    pageNumber = 1;
+                }
+                int itemsPerPage = (int)(RegistryConstants.ITEMS_PER_PAGE * 0.7);
+                int numberOfPages;
+                if (depList.length % itemsPerPage == 0) {
+                    numberOfPages = depList.length / itemsPerPage;
+                } else {
+                    numberOfPages = depList.length / itemsPerPage + 1;
+                }
+                for(int i=(pageNumber - 1) * itemsPerPage;i<pageNumber * itemsPerPage && i<depList.length;i++) {
                     AssociationBean association = depList[i];
-                    if (association.getSourcePath().equals(bean.getPathWithVersion()) && association.getAssociationType().equals("depends")) {
-                        count++;
             %>
             <tr>
                 <td>
@@ -155,7 +174,6 @@
             </tr>
 
             <%
-                    }
                 }
 
 
@@ -166,6 +184,12 @@
                 </td>
             </tr>
         </tbody>
+    </table>
+    <table width="100%" style="text-align:center; padding-top: 10px; margin-bottom: -10px">
+        <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                                  resourceBundle="org.wso2.carbon.governance.list.ui.i18n.Resources"
+                                  nextKey="next" prevKey="prev"
+                                  paginationFunction="<%="loadAssociationDiv('" + request.getParameter("path").replaceAll("&","%26") + "', '" + request.getParameter("type") + "', {0})"%>" />
     </table>
 
     <div style="height:30px;">
@@ -182,14 +206,15 @@
 
 
     if (type == null || !type.equals("depends")) {
-        count = 0;
-
+        List<AssociationBean> beansList = new LinkedList<AssociationBean>();
         for (int i = 0; i < assoList.length; i++) {
             AssociationBean association = assoList[i];
             if (association.getSourcePath().equals(bean.getPathWithVersion()) && !association.getAssociationType().equals("depends")) {
-                count++;
+                beansList.add(association);
             }
         }
+        count = beansList.size();
+        assoList = beansList.toArray(new AssociationBean[count]);
 %>
 <div id="associationsSum" class="summeryStyle">
     <% if (count > 1) { %>
@@ -227,7 +252,21 @@
         </thead>
         <tbody>
             <%
-                for (int i = 0; i < assoList.length; i++) {
+                int pageNumber;
+                String pageStr = request.getParameter("page");
+                if (pageStr != null) {
+                    pageNumber = Integer.parseInt(pageStr);
+                } else {
+                    pageNumber = 1;
+                }
+                int itemsPerPage = (int)(RegistryConstants.ITEMS_PER_PAGE * 0.7);
+                int numberOfPages;
+                if (assoList.length % itemsPerPage == 0) {
+                    numberOfPages = assoList.length / itemsPerPage;
+                } else {
+                    numberOfPages = assoList.length / itemsPerPage + 1;
+                }
+                for(int i=(pageNumber - 1) * itemsPerPage;i<pageNumber * itemsPerPage && i<assoList.length;i++) {
                     AssociationBean association = assoList[i];
                     if (association.getSourcePath().equals(bean.getPathWithVersion()) && !association.getAssociationType().equals("depends")) {
                         count++;
@@ -281,6 +320,12 @@
                 </td>
             </tr>
         </tbody>
+    </table>
+    <table width="100%" style="text-align:center; padding-top: 10px; margin-bottom: -10px">
+        <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                                  resourceBundle="org.wso2.carbon.governance.list.ui.i18n.Resources"
+                                  nextKey="next" prevKey="prev"
+                                  paginationFunction="<%="loadAssociationDiv('" + request.getParameter("path").replaceAll("&","%26") + "', '" + request.getParameter("type") + "', {0})"%>" />
     </table>
 
     <div style="height:30px;">

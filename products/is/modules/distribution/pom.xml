@@ -212,11 +212,11 @@
                                     </fileset>
                                 </copy>
                                 <copy todir="src/site" overwrite="false" includeemptydirs="false">
-                                    <fileset dir="../../../modules/documentation/product/src/site">
+                                    <fileset dir="../../modules/documentation/product/src/site">
                                     </fileset>
                                 </copy>
                                 <copy todir="src/site" overwrite="true" includeemptydirs="false">
-                                    <fileset dir="../../../modules/documentation/product/src/site">
+                                    <fileset dir="../../modules/documentation/product/src/site">
                                         <exclude name="**/images/*.*"/>
                                         <exclude name="**/user-mgt-actdir.xml"/>
                                         <exclude name="**/user-mgt-jdbc.xml"/>

@@ -29,6 +29,8 @@ public  class QueueManagementBeans {
 
     public static QueueManagementBeans self;
 
+    public static final String DIRECT_EXCHANGE = "amq.direct";
+
     public static QueueManagementBeans getInstance(){
         if(self == null){
             self = new QueueManagementBeans();
@@ -56,7 +58,8 @@ public  class QueueManagementBeans {
                     signature);
 
             ObjectName bindingMBeanObjectName =
-                    new ObjectName("org.wso2.andes:type=VirtualHost.Exchange,VirtualHost=\"carbon\",name=\"carbon.direct\",ExchangeType=direct");
+                    new ObjectName("org.wso2.andes:type=VirtualHost.Exchange,VirtualHost=\"carbon\",name=\"" +
+                            DIRECT_EXCHANGE+"\",ExchangeType=direct");
             String bindingOperationName = "createNewBinding";
 
             Object[] bindingParams = new Object[]{queueName, queueName};
@@ -111,7 +114,6 @@ public  class QueueManagementBeans {
     public int getMessageCount(String queueName) throws QueueManagerException
     {
         int messageCount =0;
-        ArrayList<Queue> queueDetailsList = new ArrayList<Queue>();
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         try
         {

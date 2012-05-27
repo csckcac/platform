@@ -705,7 +705,7 @@ public class AdvancedResourceQuery {
 				}
 			}
 		}
-        if ((bool || leftPropertyValue != null || rightPropertyValue != null) && propertyName != null) {
+        if (bool || (leftPropertyValue != null && leftOp.equals("=")) || propertyName != null) {
             tables.add(", REG_PROPERTY PP");
             tables.add(", REG_RESOURCE_PROPERTY RP");
             // StringBuffer propertyClause = new StringBuffer();
@@ -720,27 +720,26 @@ public class AdvancedResourceQuery {
 
         }
 
-        if ((leftPropertyValue != null || rightPropertyValue != null) && propertyName != null) {
-            // StringBuffer propertyClause = new StringBuffer();
-            if (propertyName != null) {
-                conditions.add(" lower(PP.REG_NAME) LIKE ? ");
+        if (propertyName != null) {
+            conditions.add(" lower(PP.REG_NAME) LIKE ? ");
 
-                if (propertyRange) {
-                    conditions.add(" PP.REG_VALUE " + leftOp
-                            + " ? AND PP.REG_VALUE " + rightOp + " ? ");
+            if (propertyRange) {
+                conditions.add(" PP.REG_VALUE " + leftOp
+                        + " ? AND PP.REG_VALUE " + rightOp + " ? ");
 
-                } else if(leftPropertyValue != null){
+            } else if(leftPropertyValue != null){
 
-                    if(leftOp.equals("=")) {
-                        conditions.add(" PP.REG_VALUE LIKE ? ");
-                    }else{
-                        conditions.add(" PP.REG_VALUE " + leftOp + " ? ");
-                    }
-
-                } else if(rightPropertyValue != null){
-                    conditions.add(" PP.REG_VALUE " + rightOp + " ? ");
+                if(leftOp.equals("=")) {
+                    conditions.add(" PP.REG_VALUE LIKE ? ");
+                }else{
+                    conditions.add(" PP.REG_VALUE " + leftOp + " ? ");
                 }
+
+            } else if(rightPropertyValue != null){
+                conditions.add(" PP.REG_VALUE " + rightOp + " ? ");
             }
+        } else if(leftPropertyValue != null && leftOp.equals("=")){
+            conditions.add(" PP.REG_VALUE LIKE ? ");
         }
 
 		if (mediaType != null) {
@@ -939,7 +938,7 @@ public class AdvancedResourceQuery {
 				}
 			}
 		}
-        if ((bool || leftPropertyValue != null || rightPropertyValue != null) && propertyName != null) {
+        if (bool || (leftPropertyValue != null && leftOp.equals("=")) || propertyName != null) {
             tables.add(", REG_PROPERTY PP");
             tables.add(", REG_RESOURCE_PROPERTY RP");
             if (StaticConfiguration.isVersioningProperties()) {
@@ -953,27 +952,26 @@ public class AdvancedResourceQuery {
             }
         }
 
-        if ((leftPropertyValue != null || rightPropertyValue != null) && propertyName != null) {
-            // StringBuffer propertyClause = new StringBuffer();
-            if (propertyName != null) {
-                conditions.add(" lower(PP.REG_NAME) LIKE ? ");
+        if (propertyName != null) {
+            conditions.add(" lower(PP.REG_NAME) LIKE ? ");
 
-                if (propertyRange) {
-                    conditions.add(" PP.REG_VALUE " + leftOp
-                            + " ? AND PP.REG_VALUE " + rightOp + " ? ");
+            if (propertyRange) {
+                conditions.add(" PP.REG_VALUE " + leftOp
+                        + " ? AND PP.REG_VALUE " + rightOp + " ? ");
 
-                } else if(leftPropertyValue != null){
+            } else if(leftPropertyValue != null){
 
-                    if(leftOp.equals("=")) {
-                        conditions.add(" PP.REG_VALUE LIKE ? ");
-                    }else{
-                        conditions.add(" PP.REG_VALUE " + leftOp + " ? ");
-                    }
-
-                } else if(rightPropertyValue != null){
-                    conditions.add(" PP.REG_VALUE " + rightOp + " ? ");
+                if(leftOp.equals("=")) {
+                    conditions.add(" PP.REG_VALUE LIKE ? ");
+                }else{
+                    conditions.add(" PP.REG_VALUE " + leftOp + " ? ");
                 }
+
+            } else if(rightPropertyValue != null){
+                conditions.add(" PP.REG_VALUE " + rightOp + " ? ");
             }
+        } else if(leftPropertyValue != null && leftOp.equals("=")){
+            conditions.add(" PP.REG_VALUE LIKE ? ");
         }
 
 		if (mediaType != null) {

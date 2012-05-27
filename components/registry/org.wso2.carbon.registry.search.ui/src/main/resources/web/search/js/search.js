@@ -184,11 +184,14 @@ function validateTagsInput(fld,fldName){
     return  validateForInput(fld,fldName);
 }
 
-function isNumberKey(evt){	
-   var charCode = (evt.which) ? evt.which : event.keyCode;
-   if (charCode > 31 && (charCode < 48 || charCode > 57))
-      return false;
-   
+function isNumberKey(evt){
+   var opLeft = document.getElementById('opLeft').value;
+
+   if(opLeft != 'eq'){
+    var charCode = (evt.which) ? evt.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+          return false;
+   }
    return true;
 }	
 
@@ -296,28 +299,25 @@ function submitAdvSearchForm(pageNumber) {
                     customParamterList = customParamterList + "|";
                 }           	
             }           
+
+            var validateValue = validateEmptyPropertyValues();
+                if(validateValue > 0 ) {
+                   searchResuts.innerHTML = "";
+                   	   if(validateValue == 1) {
+                         CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["property.name.required"]);
+                       }
+                       document.getElementById('advancedSearchFormDiv').style.display = "";
+                         return false;
+
+                }
             
-            
-            if(!validatePropertyValues()){            
+            if(validatePropertyValues() == 0){
             	searchResuts.innerHTML = "";			
             	CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["left.needs.larger.than.right.property.value"]);
             	document.getElementById('advancedSearchFormDiv').style.display = "";            	
             	return false;
             }
 
-            var validateValue = validateEmptyPropertyValues();
-               	if(validateValue > 0 ) {
-               	   searchResuts.innerHTML = "";
-               	   if(validateValue == 1) {
-               	    CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["property.name.required"]);
-               	   } else if(validateValue == 2){
-               	    CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["either.or.both.property.value.required"]);
-               	   }
-               	   document.getElementById('advancedSearchFormDiv').style.display = "";
-               	   return false;
-            }
-
-            
             if (emptyFields == 0) {
                 searchResuts.innerHTML = "";
                 CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["please.fill.at.least.one"]);
@@ -356,47 +356,47 @@ function submitAdvSearchForm(pageNumber) {
 }
 
 function adjustPropertyOp(){	
-	var x = document.getElementById('opLeft');
-	var y = document.getElementById('opRight');
-	var txtRight = document.getElementById('valueRight');	
-	y.disabled=false;
+	var opLeft = document.getElementById('opLeft');
+	var opRight = document.getElementById('opRight');
+	var txtRight = document.getElementById('valueRight');
+	var txtLeft = document.getElementById('valueLeft');
+
+	opRight.disabled=false;
 	txtRight.disabled=false;
-	if(x.options[x.selectedIndex].value == "eq"){
-	  y.disabled=true;
+
+	if(opLeft.options[opLeft.selectedIndex].value == "eq"){
+	  opRight.disabled=true;
 	  txtRight.disabled=true;
 	  txtRight.value = "";
-	}	
+	}
+	txtLeft.value = "";
 }
+
 function validatePropertyValues(){
-	
     var leftVal = document.getElementById('valueLeft').value;
     var rightVal = document.getElementById('valueRight').value;
-	
+
 	if(leftVal != "" && rightVal != ""){
-		if((leftVal <= rightVal)){			
-			return false;
+		if(leftVal <= rightVal){
+			return 0;
 		}
 	}
-	return true;
+	return 1;
 }
 
 function validateEmptyPropertyValues(){
 
     var leftVal = document.getElementById('valueLeft').value;
     var rightVal = document.getElementById('valueRight').value;
+    var opLeft = document.getElementById('opLeft');
     var propertyName = document.getElementById('#_propertyName').value;
 
     if(leftVal != "" || rightVal != "") {
-    	   if(propertyName == ""){
+    	   if(propertyName == "" && (opLeft.options[opLeft.selectedIndex].value != "eq")){
     	        return 1;
     	   }
     }
 
-    if(propertyName != "") {
-            if(leftVal == "" && rightVal == "") {
-        	    return 2;
-            }
-    }
     return 0;
 }
 

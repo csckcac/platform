@@ -181,7 +181,7 @@ public class AdvancedSearchResultsBeanPopulator {
             } else if (propertyNameValues[i][0].equals("mediaType")) {
                 query.setMediaType(propertyNameValues[i][1]);
             } else if (propertyNameValues[i][0].equals("mediaTypeNegate")) {
-                query.setMediaType(propertyNameValues[i][1]);
+                query.setMediaTypeNegate(propertyNameValues[i][1]);
             } else {
 
                 customValues.put(propertyNameValues[i][0], propertyNameValues[i][1]);

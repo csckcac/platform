@@ -444,7 +444,7 @@ public abstract class GovernanceArtifact {
     /**
      * Get dependencies of an artifacts. The artifacts should be saved, before calling this method.
      *
-     * @return the array of depending artifacts.
+     * @return an array of dependencies of this artifact.
      * @throws GovernanceException throws if the operation failed.
      */
     public GovernanceArtifact[] getDependencies() throws GovernanceException {
@@ -473,7 +473,7 @@ public abstract class GovernanceArtifact {
     /**
      * Get dependents of an artifact. The artifacts should be saved, before calling this method.
      *
-     * @return the array of dependents.
+     * @return an array of artifacts that is dependent on this artifact.
      * @throws GovernanceException throws if the operation failed.
      */
     public GovernanceArtifact[] getDependents() throws GovernanceException {

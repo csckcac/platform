@@ -98,8 +98,7 @@ public class ApiStoreExecutor implements Execution {
 
             ServiceManager serviceManager = new ServiceManager(RegistryCoreServiceComponent.
                     getRegistryService().getGovernanceUserRegistry(user));
-            Service service = serviceManager.getService(context.getResource().
-                    getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
+            Service service = serviceManager.getService(context.getResource().getUUID());
 
             genericArtifact.setAttribute(API_OVERVIEW_NAME, serviceName);
             genericArtifact.setAttribute(API_OVERVIEW_CONTEXT, serviceName);

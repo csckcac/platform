@@ -259,10 +259,10 @@ public class Wsdl extends GovernanceArtifact {
             if (keySet != null) {
                 for (Object keyObj : keySet) {
                     String key = (String) keyObj;
-                    if (key.equals(GovernanceConstants.ARTIFACT_ID_PROP_KEY)) {
+//                    if (key.equals(GovernanceConstants.ARTIFACT_ID_PROP_KEY)) {
                         // it is not a property.
-                        continue;
-                    }
+//                        continue;
+//                    }
                     List values = (List) properties.get(key);
                     if (values != null) {
                         for (Object valueObj : values) {

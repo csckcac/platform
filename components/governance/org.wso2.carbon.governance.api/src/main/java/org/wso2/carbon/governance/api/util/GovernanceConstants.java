@@ -78,8 +78,8 @@ public class GovernanceConstants {
     /**
      * The key of the artifact id property.
      */
-    public static final String ARTIFACT_ID_PROP_KEY =
-            CommonConstants.ARTIFACT_ID_PROP_KEY;
+//    public static final String ARTIFACT_ID_PROP_KEY =
+//            CommonConstants.ARTIFACT_ID_PROP_KEY;
 
     ////////////////////////////////////////////////////////
     // Media types

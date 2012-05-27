@@ -429,6 +429,32 @@ public class CassandraMessageStore implements MessageStore {
 
     }
 
+    /**
+     * Remove List of Message From Cassandra Message Store. Use this to Delete set of messages in  CassandraMessageStore
+     * In one DB Call
+     * @param queueName User Queue name
+     * @param msgList  Message List
+     * @throws AMQStoreException  If Error occurs while removing data.
+     */
+    public void removeMessageBatchFromUserQueue(String queueName, List<CassandraQueueMessage> msgList)
+            throws AMQStoreException {
+
+        Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+        try {
+
+
+            for (CassandraQueueMessage msg : msgList) {
+                CassandraDataAccessHelper.deleteLongColumnFromRaw(USER_QUEUES_COLUMN_FAMILY, queueName,
+                        msg.getMessageId(), mutator, false);
+            }
+        } catch (CassandraDataAccessException e) {
+            throw new AMQStoreException("Error while removing messages from User queue", e);
+        } finally {
+            mutator.execute();
+        }
+
+    }
+
 
     /**
      * Remove a message from Global queue

@@ -27,6 +27,7 @@ import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.framing.AMQShortString;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.binding.Binding;
+import org.wso2.andes.server.cassandra.CassandraQueueMessage;
 import org.wso2.andes.server.cluster.ClusterManager;
 import org.wso2.andes.server.configuration.ConfigStore;
 import org.wso2.andes.server.configuration.ConfiguredObject;
@@ -41,16 +42,12 @@ import org.wso2.andes.server.message.InboundMessage;
 import org.wso2.andes.server.queue.AMQQueue;
 import org.wso2.andes.server.queue.BaseQueue;
 import org.wso2.andes.server.queue.QueueRegistry;
+import org.wso2.andes.server.store.CassandraMessage;
 import org.wso2.andes.server.store.CassandraMessageStore;
 import org.wso2.andes.server.virtualhost.VirtualHost;
 
 import javax.management.JMException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -320,15 +317,70 @@ public abstract class AbstractExchange implements Exchange, Managable
 
 
         if(this instanceof DirectExchange) {
-            CassandraMessageStore cassandraMessageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
+            final CassandraMessageStore cassandraMessageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
             ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
-
+            final String queueName = binding.getQueue().getResourceName();
+            final List<String> userQueues;
             try {
-                cassandraMessageStore.removeGlobalQueue(binding.getQueue().getResourceName());
-                clusterManager.handleQueueRemoval(binding.getQueue().getResourceName());
+                userQueues = cassandraMessageStore.getUserQueues(queueName);
+                cassandraMessageStore.removeGlobalQueue(queueName);
+                clusterManager.handleQueueRemoval(queueName);
             } catch (Exception e) {
                 throw new RuntimeException("Error while removing queue from direct exchange",e);
             }
+
+
+            // Here after we remove the Queue from the system we remove the MessageMetadata and
+            // Message Content that is in this queue
+
+
+            Runnable deleteTask = new Runnable() {
+                @Override
+                public void run() {
+                    int msgCount  = 50;
+                        try {
+
+                            while (msgCount <= 0) {
+                                Queue<CassandraQueueMessage> msgs =
+                                        cassandraMessageStore.getMessagesFromGlobalQueue(queueName, msgCount);
+                                msgCount = msgs.size();
+                                cassandraMessageStore.removeMessageBatchFromGlobalQueue((List<CassandraQueueMessage>) msgs,
+                                        queueName);
+                                for (CassandraQueueMessage msg : msgs) {
+                                    cassandraMessageStore.addContentDeletionTask(msg.getMessageId());
+                                }
+
+                            }
+                            for (String userQ : userQueues) {
+
+                                int count = 50;
+                                while (count <= 0) {
+                                    List<CassandraQueueMessage> mlist = cassandraMessageStore.
+                                            getMessagesFromUserQueue(userQ, queueName, msgCount);
+                                    count = mlist.size();
+
+                                    cassandraMessageStore.removeMessageBatchFromUserQueue(userQ, mlist);
+                                    for (CassandraQueueMessage msg : mlist) {
+                                        cassandraMessageStore.addContentDeletionTask(msg.getMessageId());
+                                    }
+                                }
+
+
+                            }
+
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+
+                        }
+
+                }
+            };
+
+            Thread t = new Thread(deleteTask);
+            t.setName("QueueDelete-worker");
+            t.start();
 
         }
     }

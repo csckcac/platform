@@ -28,6 +28,7 @@
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.registry.common.ui.utils.UIUtil" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.wso2.carbon.registry.core.RegistryConstants" %>
 <link rel="stylesheet" type="text/css"
       href="../resources/css/registry.css"/>
     <carbon:breadcrumb label="search.results"
@@ -93,7 +94,21 @@
 
             <table cellpadding="0" cellspacing="0" border="0" class="styledLeft" style="width:100%">
                 <%
+                    int pageNumber;
+                    int numberOfPages;
+                    int itemsPerPage = (int)(RegistryConstants.ITEMS_PER_PAGE * 0.7);
                     if (searchResults.length != 0) {
+                        String pageStr = request.getParameter("page");
+                        if (pageStr != null) {
+                            pageNumber = Integer.parseInt(pageStr);
+                        } else {
+                            pageNumber = 1;
+                        }
+                        if (searchResults.length % itemsPerPage == 0) {
+                            numberOfPages = searchResults.length / itemsPerPage;
+                        } else {
+                            numberOfPages = searchResults.length / itemsPerPage + 1;
+                        }
                 %>
                 <thead>
                 <tr>
@@ -105,16 +120,9 @@
                 </tr>
                 </thead>
                 <%
-                } else {
-                %>
-                <tr>
-                    <td colspan="4" style="border:none;"></td>
 
-                </tr>
-
-                <%
-                    }
-                    for (int i = 0; i < searchResults.length; i++) {
+                    for (int i = (pageNumber - 1) * itemsPerPage;
+                         i < pageNumber * itemsPerPage && i < searchResults.length; i++) {
                         ResourceData resourceData = searchResults[i];
                         String resourcePath = resourceData.getResourcePath();
                         try {
@@ -164,8 +172,23 @@
                     </td>
                 </tr>
 
-                <% } %>
+                <% }  %>
+            </table>
+            <table width="100%" style="text-align:center; padding-top: 10px; margin-bottom: -10px">
+                <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                                          resourceBundle="org.wso2.carbon.governance.list.ui.i18n.Resources"
+                                          nextKey="next" prevKey="prev"
+                                          paginationFunction="loadPagedList({0})" />
+                <% } else {
+                %>
+                <tr>
+                    <td colspan="4" style="border:none;"></td>
 
+                </tr>
+
+                <%
+                    }
+                %>
             </table>
             <% if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/search/advanced-search")) { %>
             <div style="margin-top:10px;">
@@ -180,3 +203,12 @@
 </fmt:bundle>
         </div>
     </div>
+<script type="text/javascript">
+    alternateTableRows('customTable','tableEvenRow','tableOddRow');
+
+    function loadPagedList(page) {
+        window.location = '<%="../search/search.jsp?region=region3&item=registry_search_menu&searchType=tag&criteria=" + request.getParameter("criteria")%>';
+    }
+</script
+
+

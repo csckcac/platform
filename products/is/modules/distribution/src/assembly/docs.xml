@@ -29,7 +29,7 @@
             <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/documentation/product/src/site/xdoc/user-core</directory>
+            <directory>../../modules/documentation/product/src/site/xdoc/user-core</directory>
             <outputDirectory>wso2is-${pom.version}-docs/user-core</outputDirectory>
             <fileMode>755</fileMode>
             <includes>

@@ -33,7 +33,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../..</directory>
+            <directory>../..</directory>
             <outputDirectory>wso2is-${pom.version}-src</outputDirectory>
             <includes>
                 <include>modules/**/*</include>
@@ -55,25 +55,25 @@
     </fileSets>
     <files>
         <file>
-            <source>../../../pom.xml</source>
+            <source>../../pom.xml</source>
             <outputDirectory>wso2is-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../LICENSE.txt</source>
+            <source>../../LICENSE.txt</source>
             <outputDirectory>wso2is-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../NOTICE.txt</source>
+            <source>../../NOTICE.txt</source>
             <outputDirectory>wso2is-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../README.txt</source>
+            <source>../../README.txt</source>
             <outputDirectory>wso2is-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>

@@ -39,7 +39,9 @@
             </housekeeping>
 
             <exchanges>
-                <exchange>
+                
+		<!-- Here you can add remove exchange to this virtualhost-->
+		<!--exchange>
                     <type>direct</type>
                     <name>carbon.direct</name>
                     <durable>true</durable>
@@ -47,7 +49,7 @@
                 <exchange>
                     <type>topic</type>
                     <name>carbon.topic</name>
-                </exchange>
+                </exchange-->
             </exchanges>
 
             <queues>

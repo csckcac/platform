@@ -63,6 +63,9 @@ public class ThrottlingInfoCache {
     }
 
     public TenantThrottlingInfo getTenantThrottlingInfo(Integer tenantId){
+        if(!tenantThrottlingInfoMap.containsKey(tenantId)){
+            tenantThrottlingInfoMap.put(tenantId, new TenantThrottlingInfo());
+        }
         return tenantThrottlingInfoMap.get(tenantId);
     }
 }

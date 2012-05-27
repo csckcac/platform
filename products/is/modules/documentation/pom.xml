@@ -15,10 +15,10 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
     	<groupId>org.wso2.identity</groupId>
     	<artifactId>identity-server-parent</artifactId>
@@ -27,20 +27,33 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>identity-server-documentation-parent</artifactId>
+    <artifactId>documentation</artifactId>
+    <name>Identity Server : Documentation</name>
+    <description>This is the documentation module of the project.</description>
     <packaging>pom</packaging>
-    <description>WSO2 Identity Server Documentation Parent</description>
-    <name>WSO2 Identity Server Documentation Parent</name>
-    <url>http://wso2.org/projects/identity</url>
 
-    <licenses>
+	<licenses>
         <license>
             <name>Apache License Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
-    <modules>
-        <module>product</module>
-        <module>service</module>
-    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>2.0-beta-5</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

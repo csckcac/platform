@@ -12,10 +12,14 @@ EJB Services feature in WSO2 Application Server to expose an externally deployed
  exposed as a SOA web service and this service will also be eligible for the fill advantages of
  WSO2 carbon features such as security, throttling, caching, etc.
 
- In the sample EJB library system is implemented. Its build as a java enterprise archive (ear)
+ In the sample EJB library system is demonstrated. Its build as a java enterprise archive (ear)
  ans needs to be deployed in an external j2ee compliant application server. Then the library
- system cam be exposed as a WS via WSO2 Application Server.  The sample is based on EJB 3.x.
+ system can be exposed as a WebService via WSO2 Application Server.  The sample is based on EJB 3.x.
 
+Prerequisites
+===============
+
+This sample is tested with 'jboss-6.1.0.Final'.
 
 Building the Sample
 ====================
@@ -63,7 +67,7 @@ This needs to be configured via the WSO2 Application Server's ejb-services UI.
      * glassfish application server -> copy the gf-client.jar into,
      [carbon_home]/repository/components/lib
 
-     Also add ejb/target/library.jar into [carbon_home]/lib
+     Also add ejb/target/library.jar into [carbon_home]/lib/endorsed
 
     Phase 2
     --------
@@ -72,12 +76,14 @@ This needs to be configured via the WSO2 Application Server's ejb-services UI.
      * go to Manage > WebServices > EJB Service
      * Add a new application server type or use an existing if you have already defined.
      * Click next
-     * upload the library.jar and click next
+     * Upload the library.jar and click next
      * Provide the EJB details.
-        - Remote Interface : org.wso2.appserver.samples.ejb.LibraryManager
-        - Bean JNDI Name : LibraryManager (Please use the correct JNDI name is its different from
-          given)
-     * Click "Deploy Service"
+       - Select EJB remote interface from the drop down list of classes,
+            Remote Interface : org.wso2.appserver.samples.ejb.LibraryManager
+       - Enter bean JNDI name for sample,
+            Bean JNDI Name : LibraryManager 
+            (Please use the correct JNDI name is its different from above)
+     * Click "Finish"
 
      Now the ejb-service would be created and deployed. For more information on the steps above
      please refer to context sensitive help page in WSO2 Application Server ejb-services UI or

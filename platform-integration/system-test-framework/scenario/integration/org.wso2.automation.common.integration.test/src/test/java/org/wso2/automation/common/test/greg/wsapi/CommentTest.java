@@ -19,6 +19,8 @@ package org.wso2.automation.common.test.greg.wsapi;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.Resource;
@@ -31,13 +33,13 @@ import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
-import static org.testng.Assert.*;
-
-import org.testng.annotations.*;
-
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class CommentTest {
     private static final Log log = LogFactory.getLog(CommentTest.class);
@@ -71,23 +73,17 @@ public class CommentTest {
             byte[] r1content = "R1 content".getBytes();
             r1.setContent(r1content);
             registry.put(path, r1);
-
             String comment1 = "this is qa comment 4";
             String comment2 = "this is qa comment 5";
             Comment c1 = new Comment();
             c1.setResourcePath(path);
             c1.setText("This is default comment");
-
             c1.setUser(username);
-
             registry.addComment(path, c1);
             registry.addComment(path, new Comment(comment1));
             registry.addComment(path, new Comment(comment2));
-
             Comment[] comments = registry.getComments(path);
-
             boolean commentFound = false;
-
             for (Comment comment : comments) {
                 if (comment.getText().equals(comment1)) {
                     commentFound = true;

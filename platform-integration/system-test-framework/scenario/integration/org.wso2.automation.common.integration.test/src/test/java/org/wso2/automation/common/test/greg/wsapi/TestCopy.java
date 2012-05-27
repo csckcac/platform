@@ -55,6 +55,87 @@ public class TestCopy {
         }
     }
 
+    @Test(groups = {"wso2.greg"}, description = "Resource Copy", priority = 1)
+    private void testCopyResourceToRoot() throws RegistryException {
+        Resource r1 = registry.newResource();
+        r1.setProperty("test", "copy");
+        try {
+            r1.setContent("c");
+
+            registry.put("/test1/copy/c1/copy1", r1);
+            Collection c1 = registry.newCollection();
+            registry.put("/test1/move", c1);
+            registry.copy("/test1/copy/c1/copy1", "/copy1");
+            Resource newR1 = registry.get("/copy1");
+            assertEquals(newR1.getProperty("test"), "copy", "Copied resource should have a property named 'test' with value 'copy'.");
+
+            Resource oldR1 = registry.get("/test1/copy/c1/copy1");
+            assertEquals(oldR1.getProperty("test"), "copy", "Original resource should have a property named 'test' with value 'copy'.");
+
+            String newContent = new String((byte[]) newR1.getContent());
+            String oldContent = new String((byte[]) oldR1.getContent());
+            assertEquals(newContent, oldContent, "Contents are not equal in copied resources");
+            deleteResources("/test1");
+            deleteResources("/copy1");
+        } catch (RegistryException e) {
+            log.error("WS-API Resource Copy test-Fail :" + e);
+            throw new RegistryException("WS-API Resource Copy test-Fail:" + e);
+        }
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Resource Copy", priority = 1)
+    private void testCopyResourceFromRoot() throws RegistryException {
+        Resource r1 = registry.newResource();
+        r1.setProperty("test", "copy");
+        try {
+            r1.setContent("c2");
+
+            registry.put("/copy3", r1);
+            registry.copy("copy3","/test1/copy/c1/copy3");
+            Resource newR1 = registry.get("/copy3");
+            assertEquals(newR1.getProperty("test"), "copy", "Copied resource should have a property named 'test' with value 'copy'.");
+
+            Resource oldR1 = registry.get("/test1/copy/c1/copy3");
+            assertEquals(oldR1.getProperty("test"), "copy", "Original resource should have a property named 'test' with value 'copy'.");
+
+            String newContent = new String((byte[]) newR1.getContent());
+            String oldContent = new String((byte[]) oldR1.getContent());
+            assertEquals(newContent, oldContent, "Contents are not equal in copied resources");
+            deleteResources("/test1");
+            deleteResources("/copy3");
+        } catch (RegistryException e) {
+            log.error("WS-API Resource Copy test-Fail :" + e);
+            throw new RegistryException("WS-API Resource Copy test-Fail:" + e);
+        }
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Resource Copy", priority = 1)
+    private void testCopyResourceFromRootToRoot() throws RegistryException {
+        Resource r1 = registry.newResource();
+        r1.setProperty("test", "copy");
+        try {
+            r1.setContent("c2");
+
+            registry.put("/copy3", r1);
+            registry.copy("copy3","copy4");
+            Resource newR1 = registry.get("/copy3");
+            assertEquals(newR1.getProperty("test"), "copy", "Copied resource should have a property named 'test' with value 'copy'.");
+
+            Resource oldR1 = registry.get("/copy4");
+            assertEquals(oldR1.getProperty("test"), "copy", "Original resource should have a property named 'test' with value 'copy'.");
+
+            String newContent = new String((byte[]) newR1.getContent());
+            String oldContent = new String((byte[]) oldR1.getContent());
+            assertEquals(newContent, oldContent, "Contents are not equal in copied resources");
+            deleteResources("/copy4");
+            deleteResources("/copy3");
+        } catch (RegistryException e) {
+            log.error("WS-API Resource Copy test-Fail :" + e);
+            throw new RegistryException("WS-API Resource Copy test-Fail:" + e);
+        }
+    }
+
+
     @Test(groups = {"wso2.greg"}, description = "Collection Copy", priority = 2)
     private void testCollectionCopy() throws RegistryException {
         Resource r1 = registry.newResource();

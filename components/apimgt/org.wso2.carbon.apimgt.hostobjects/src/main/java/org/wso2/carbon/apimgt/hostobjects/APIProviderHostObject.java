@@ -415,6 +415,7 @@ public class APIProviderHostObject extends ScriptableObject {
             }
             myn.put(5, myn, checkValue(tagsSet.toString()));
             StringBuffer tiersSet = new StringBuffer("");
+            StringBuffer tiersDescSet = new StringBuffer("");
             Set<Tier> tierSet = api.getAvailableTiers();
             Iterator it = tierSet.iterator();
             int j = 0;
@@ -422,8 +423,10 @@ public class APIProviderHostObject extends ScriptableObject {
                 Object tierObject = it.next();
                 Tier tier = (Tier) tierObject;
                 tiersSet.append(tier.getName());
+                tiersDescSet.append(tier.getDescription());
                 if (j != tierSet.size() - 1) {
                     tiersSet.append(",");
+                    tiersDescSet.append(",");
                 }
                 j++;
             }
@@ -458,6 +461,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
                 myn.put(12, myn, uriTempArr);
                 myn.put(13, myn, checkValue(api.getSandboxUrl()));
+                myn.put(14, myn, checkValue(tiersDescSet.toString()));
             }
         } catch (APIManagementException e) {
             log.error("Error from registry while getting API information for the api: " + apiName + "-" + version, e);

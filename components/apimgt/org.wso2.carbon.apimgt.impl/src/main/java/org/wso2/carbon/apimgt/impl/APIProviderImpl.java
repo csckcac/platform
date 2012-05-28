@@ -275,6 +275,8 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                     OMElement id = policy.getFirstChildWithName(APIConstants.THROTTLE_ID_ELEMENT);
                     Tier tier = new Tier(id.getText());
                     tier.setPolicyContent(policy.toString().getBytes());
+                    String desc = resource.getProperty(APIConstants.TIER_DESCRIPTION_PREFIX + id.getText());
+                    tier.setDescription(desc);
                     tiers.add(tier);
                 }
             }
@@ -326,12 +328,18 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         OMElement root = fac.createOMElement(APIConstants.POLICY_ELEMENT);
         OMElement assertion = fac.createOMElement(APIConstants.ASSERTION_ELEMENT);
         try {
+            Resource resource = registry.newResource();
             for (Tier tier : tiers) {
                 String policy = new String(tier.getPolicyContent());
                 assertion.addChild(AXIOMUtil.stringToOM(policy));
+                if (tier.getDescription() != null && !"".equals(tier.getDescription())) {
+                    resource.setProperty(APIConstants.TIER_DESCRIPTION_PREFIX + tier.getName(),
+                            tier.getDescription());
+                }
             }
-            root.addChild(assertion);
-            Resource resource = registry.newResource();
+            resource.setProperty(APIConstants.TIER_DESCRIPTION_PREFIX + APIConstants.UNLIMITED_TIER,
+                    APIConstants.UNLIMITED_TIER_DESC);
+            root.addChild(assertion);            
             resource.setContent(root.toString());
             registry.put(APIConstants.API_TIER_LOCATION, resource);
         } catch (XMLStreamException e) {

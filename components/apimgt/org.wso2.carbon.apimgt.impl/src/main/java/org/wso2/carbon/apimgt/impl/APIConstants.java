@@ -149,10 +149,12 @@ public final class APIConstants {
             "MediatorThrottleAssertion");
     public static final QName THROTTLE_ID_ELEMENT = new QName("http://www.wso2.org/products/wso2commons/throttle",
             "ID");
+    public static final String TIER_DESCRIPTION_PREFIX = "tier.desc.";
     
     public static final String TIER_MANAGEMENT = "TierManagement.";
     public static final String ENABLE_UNLIMITED_TIER = TIER_MANAGEMENT + "EnableUnlimitedTier";
     
     public static final String UNLIMITED_TIER = "Unlimited";
+    public static final String UNLIMITED_TIER_DESC = "Allows unlimited requests";
 
 }

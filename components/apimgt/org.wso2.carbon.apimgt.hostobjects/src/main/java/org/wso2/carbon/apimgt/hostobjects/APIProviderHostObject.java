@@ -522,6 +522,8 @@ public class APIProviderHostObject extends ScriptableObject {
             for (Tier tier : tiers) {
                 NativeObject row = new NativeObject();
                 row.put("tierName", row, tier.getName());
+                row.put("tierDescription", row,
+                        tier.getDescription() != null ? tier.getDescription() : "");
                 myn.put(i, myn, row);
                 i++;
             }

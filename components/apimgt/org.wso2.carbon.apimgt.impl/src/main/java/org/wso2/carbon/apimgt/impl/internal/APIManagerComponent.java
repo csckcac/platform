@@ -41,7 +41,9 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @scr.component name="org.wso2.apimgt.impl.services" immediate="true"
@@ -169,6 +171,17 @@ public class APIManagerComponent {
             byte[] data = IOUtils.toByteArray(inputStream);
             Resource resource = registry.newResource();
             resource.setContent(data);
+            
+            Properties descriptions = new Properties();
+            descriptions.load(APIManagerComponent.class.getResourceAsStream(
+                    "/tiers/default-tier-info.properties"));
+            Set<String> names = descriptions.stringPropertyNames();
+            for (String name : names) {
+                resource.setProperty(APIConstants.TIER_DESCRIPTION_PREFIX + name,
+                        descriptions.getProperty(name));
+            }
+            resource.setProperty(APIConstants.TIER_DESCRIPTION_PREFIX + APIConstants.UNLIMITED_TIER,
+                    APIConstants.UNLIMITED_TIER_DESC);
             registry.put(APIConstants.API_TIER_LOCATION, resource);
         } catch (RegistryException e) {
             throw new APIManagementException("Error while saving policy information to the registry", e);

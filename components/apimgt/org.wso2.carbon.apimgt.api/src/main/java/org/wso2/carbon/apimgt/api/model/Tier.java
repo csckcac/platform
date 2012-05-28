@@ -24,6 +24,7 @@ package org.wso2.carbon.apimgt.api.model;
 public class Tier {
 
     private String name;
+    private String description;
     private byte[] policyContent;
 
     public Tier(String name) {
@@ -32,6 +33,14 @@ public class Tier {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public byte[] getPolicyContent() {

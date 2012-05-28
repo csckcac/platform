@@ -15,12 +15,17 @@
  */
 package org.wso2.carbon.coordination.server.internal;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.coordination.common.CoordinationConstants;
 import org.wso2.carbon.coordination.server.CoordinationServer;
+import org.wso2.carbon.coordination.server.service.CoordinationServerService;
+import org.wso2.carbon.coordination.server.service.CoordinationServerServiceImpl;
 import org.wso2.carbon.utils.CarbonUtils;
 
 /**
@@ -32,7 +37,9 @@ public class CoordinationServerDSComponent {
 	private Log log = LogFactory.getLog(CoordinationServerDSComponent.class);
 	
 	private CoordinationServer server;
-	
+
+    public  static String START_ZOOKEEPER_SERVER = "start_zk_server";
+
 	public CoordinationServer getServer() {
 		return server;
 	}
@@ -45,12 +52,28 @@ public class CoordinationServerDSComponent {
 			if (this.getServer() == null) {
 				String configPath = CarbonUtils.getCarbonConfigDirPath() + 
 						File.separator + "etc" + File.separator + "zoo.cfg";
+
+                Properties properties  = new Properties();
+                byte[] configFileData =CarbonUtils.getBytesFromFile(new File(configPath));
+                properties.load(new ByteArrayInputStream(configFileData));
+
 				this.server = new CoordinationServer(new String(
-						CarbonUtils.getBytesFromFile(new File(configPath))));
-				this.server.start();
+						configFileData));
+                CoordinationServerConfigHolder.getCoordinationServerConfigHolder().setCoordinationServer(server);
+                CoordinationServerConfigHolder.getCoordinationServerConfigHolder().setConfigProperties(properties);
+
+                // Register OSGI service
+                CoordinationServerService coordinationServerService = new CoordinationServerServiceImpl();
+                ctx.getBundleContext().registerService(
+                    CoordinationServerService.class.getName(), coordinationServerService, null);
+
+                if(properties.get(START_ZOOKEEPER_SERVER) == null ||
+                        "true".equals(properties.get(START_ZOOKEEPER_SERVER))) {
+                    this.server.start();
+                }
 			}
 		} catch (Exception e) {
-			log.error("Eror in initializing Coordination component: " + e.getMessage(), e);
+			log.error("Error while initializing Coordination component: " + e.getMessage(), e);
 		}
 	}
 	

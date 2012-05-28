@@ -125,7 +125,7 @@ public class QpidServiceComponent {
                 getCoordinationServerService();
 
         if(coordinationServerService != null) {
-            if(!qpidServiceImpl.isExternalZookeeperServerRequired()) {
+            if(qpidServiceImpl.isClusterEnabled() && !qpidServiceImpl.isExternalZookeeperServerRequired()) {
                 coordinationServerService.startServer();
                 try {
                     Thread.sleep(2*1000);

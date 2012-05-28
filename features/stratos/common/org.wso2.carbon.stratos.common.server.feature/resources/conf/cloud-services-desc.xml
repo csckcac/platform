@@ -97,13 +97,13 @@
         <description>Gadgets in the cloud.</description>
         <productPageURL>http://wso2.com/products/gadget-server/</productPageURL>
     </cloudService>
-    <cloudService name="WSO2 Stratos Cloud Services Gateway" default="true">
+    <cloudService name="Cloud Services Gateway" default="true">
         <label>Cloud Services Gateway</label>
         <link>https://csg.stratoslive.wso2.com</link>
         <icon>
             https://localhost:9443/cloud-services-icons/csg.gif
         </icon>
-        <description>WSO2 Cloud Services Gateway in the cloud.</description>
+        <description>Cloud Services Gateway in the cloud.</description>
 	<productPageURL>http://wso2.com/products/cloud-services-gateway/</productPageURL>
     </cloudService>
 </cloudServices>

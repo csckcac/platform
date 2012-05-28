@@ -98,8 +98,8 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.wsdl.tools.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.rule.service.feature:${carbon.version}</featureArtifactDef> 
                                			 <!-- cloud brs features -->
- 				<featureArtifactDef>org.wso2.brs:org.wso2.stratos.brs.styles.feature:${project.version}</featureArtifactDef>
-				<featureArtifactDef>org.wso2.brs:org.wso2.stratos.brs.dashboard.ui.feature:${project.version}</featureArtifactDef>
+ 				<featureArtifactDef>org.wso2.brs:org.wso2.brs.styles.feature:${project.version}</featureArtifactDef>
+				<featureArtifactDef>org.wso2.brs:org.wso2.brs.dashboard.ui.feature:${project.version}</featureArtifactDef>
 
                                 <!-- Features related to Cloud -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
@@ -222,11 +222,11 @@
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.stratos.brs.styles.feature.group</id>
+                                    <id>org.wso2.brs.styles.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
 				<feature>
-                                    <id>org.wso2.stratos.brs.dashboard.ui.feature.group</id>
+                                    <id>org.wso2.brs.dashboard.ui.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
 

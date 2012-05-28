@@ -24,7 +24,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.stratos.brs.dashboard.ui</artifactId>
+    <artifactId>org.wso2.brs.dashboard.ui</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Stratos BRS - Dashboard UI</name>
 

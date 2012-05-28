@@ -116,6 +116,16 @@
                 <include>**/**.sql</include>
             </includes> 
         </fileSet>
+        
+        <fileSet>
+            <directory>../integration/org.wso2.carbon.brs.integration.services</directory>
+            <outputDirectory>wso2brs-${pom.version}/samples</outputDirectory>
+            <excludes>
+                <exclude>**/*.iml</exclude>
+                <exclude>**/target/**</exclude>
+                <exclude>**/pom.xml</exclude>
+            </excludes>
+        </fileSet>
 	
     </fileSets>
 

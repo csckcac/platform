@@ -517,7 +517,9 @@
 				<featureArtifactDef>
 				    org.wso2.dss:org.wso2.dataservices.styles.feature:${dss.version}
 				</featureArtifactDef>
-
+                <featureArtifactDef>
+                    org.wso2.carbon:org.wso2.carbon.gadgetgenwizard.feature:${carbon.version}
+                </featureArtifactDef>
                             </featureArtifacts>
 							<categories>
 								<category>
@@ -695,7 +697,7 @@
 										</catFeature>
 									</features>
 								</category>
-							
+
 								<category>
 									<id>org.wso2.carbon.dss.category</id>
 									<label>Data Services Server</label>
@@ -847,7 +849,7 @@
 										</catFeature>
 									</features>
 								</category>
-							
+
 								<category>
 									<id>org.wso2.styles.category</id>
 									<label>Product Styles</label>
@@ -863,7 +865,7 @@
 										</catFeature>
 									</features>
 								</category>
-							</categories>				
+							</categories>
                         </configuration>
                     </execution>
                 </executions>

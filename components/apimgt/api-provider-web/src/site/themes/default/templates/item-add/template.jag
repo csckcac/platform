@@ -90,6 +90,7 @@
                     <div class="controls">
                         <select id="tier" name="tier"  multiple="multiple">
                         </select>
+                         <p class="help-block" id="tiersHelp"></p>
                     </div>
                 </div>
 

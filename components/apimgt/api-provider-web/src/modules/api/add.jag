@@ -55,7 +55,8 @@ var getTiers = function () {
        for (var i = 0; i < tiers.length; i++) {
             tier = tiers[i];
             list.push({
-                tierName:tier.tierName
+                tierName:tier.tierName,
+                tierDescription:tier.tierDescription
             });
         }
         return {

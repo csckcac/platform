@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.apimgt.impl.internal;
 
+import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,6 +54,9 @@ import java.util.Set;
  * @scr.reference name="user.realm.service"
  * interface="org.wso2.carbon.user.core.service.RealmService"
  * cardinality="1..1" policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
+ * @scr.reference name="listener.manager.service"
+ * interface="org.apache.axis2.engine.ListenerManager" cardinality="1..1" policy="dynamic"
+ * bind="setListenerManager" unbind="unsetListenerManager"
  */
 public class APIManagerComponent {
 
@@ -111,6 +115,16 @@ public class APIManagerComponent {
 
     protected void unsetRealmService(RealmService realmService) {
         ServiceReferenceHolder.getInstance().setRealmService(null);
+    }
+
+    protected void setListenerManager(ListenerManager listenerManager) {
+        // We bind to the listener manager so that we can read the local IP
+        // address and port numbers properly.
+        log.debug("Listener manager bound to the API manager component");
+    }
+
+    protected void unsetListenerManager(ListenerManager listenerManager) {
+        log.debug("Listener manager unbound from the API manager component");
     }
 
     private static void addRxtConfigs() throws APIManagementException {

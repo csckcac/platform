@@ -88,7 +88,7 @@ public class APIManagerConfiguration {
             if (elementHasText(element)) {
                 String key = getKey(nameStack);
                 String value = element.getText();
-                addToConfiguration(key, value);
+                addToConfiguration(key, replaceSystemProperty(value));
             }
             readChildElements(element, nameStack);
             nameStack.pop();
@@ -122,6 +122,35 @@ public class APIManagerConfiguration {
                 list.add(value);
             }
         }
+    }
+
+    private String replaceSystemProperty(String text) {
+        int indexOfStartingChars = -1;
+        int indexOfClosingBrace;
+
+        // The following condition deals with properties.
+        // Properties are specified as ${system.property},
+        // and are assumed to be System properties
+        while (indexOfStartingChars < text.indexOf("${")
+                && (indexOfStartingChars = text.indexOf("${")) != -1
+                && (indexOfClosingBrace = text.indexOf('}')) != -1) { // Is a
+            // property
+            // used?
+            String sysProp = text.substring(indexOfStartingChars + 2,
+                    indexOfClosingBrace);
+            String propValue = System.getProperty(sysProp);
+            if (propValue != null) {
+                text = text.substring(0, indexOfStartingChars) + propValue
+                        + text.substring(indexOfClosingBrace + 1);
+            }
+            if (sysProp.equals("carbon.home") && propValue != null
+                    && propValue.equals(".")) {
+
+                text = new File(".").getAbsolutePath() + File.separator + text;
+
+            }
+        }
+        return text;
     }
 
 }

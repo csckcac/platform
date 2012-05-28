@@ -5,12 +5,12 @@
       <groupBy>
          <field name="api_version"/>
          <field name="consumerKey"/>
+          <field name="context"/>
       </groupBy>
       <drop type="column">
         <fieldSet>
          <field name="api"/>
          <field name="version"/>
-         <field name="context"/>
          <field name="resource"/>
          <field name="method"/>
          <field name="userId"/>

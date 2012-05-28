@@ -219,13 +219,18 @@ public class APIUsageStatisticsClient {
                 APIUsageStatisticsClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE_INDEX,
                 null);
         Collection<APIAccessTime> accessTimes = getAccessTimeData(omElement);
+        List<API> providerAPIs = getAPIsByProvider(providerName);
         Map<String,APIAccessTime> lastAccessTimes = new TreeMap<String,APIAccessTime>();
         for (APIAccessTime accessTime : accessTimes) {
-            APIIdentifier api = getAPIByConsumerKey(accessTime.apiKey);
-            if (api != null && api.getProviderName().equals(providerName)) {
-                APIAccessTime lastAccessTime = lastAccessTimes.get(accessTime.apiName);
-                if (lastAccessTime == null || lastAccessTime.accessTime < accessTime.accessTime) {
-                    lastAccessTimes.put(accessTime.apiName, accessTime);
+            for (API providerAPI : providerAPIs) {
+                if (providerAPI.getId().getApiName().equals(accessTime.apiName) &&
+                        providerAPI.getId().getVersion().equals(accessTime.apiVersion) &&
+                        providerAPI.getContext().equals(accessTime.context)) {
+
+                    APIAccessTime lastAccessTime = lastAccessTimes.get(accessTime.apiName);
+                    if (lastAccessTime == null || lastAccessTime.accessTime < accessTime.accessTime) {
+                        lastAccessTimes.put(accessTime.apiName, accessTime);
+                    }
                 }
             }
         }
@@ -493,6 +498,7 @@ public class APIUsageStatisticsClient {
         
         private String apiName;
         private String apiVersion;
+        private String context;
         private double accessTime;
         private String apiKey;
 
@@ -502,6 +508,8 @@ public class APIUsageStatisticsClient {
             int index = nameVersion.lastIndexOf(":v");
             apiName = nameVersion.substring(0, index);
             apiVersion = nameVersion.substring(index + 2);
+            context = row.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.CONTEXT)).getText();
             accessTime = Double.parseDouble(row.getFirstChildWithName(new QName(
                     APIUsageStatisticsClientConstants.REQUEST_TIME)).getText());
             apiKey = row.getFirstChildWithName(new QName(

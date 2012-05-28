@@ -27,7 +27,7 @@
    }
 %>
 <%
-    if (responseTime != null || lastAccessTime != null) {
+    if (responseTime != null && lastAccessTime != null) {
 %>
     <div class="row-fluid">
         <div class="span6">
@@ -52,7 +52,7 @@
     <div class="row-fluid">
 
             <div class="span12">
-                <h3>Subscriptions</h3>
+                <h3>Active Subscriptions</h3>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
@@ -82,7 +82,7 @@
         <%
         if (length == 0) {
         %>
-        <tr><td colspan="3">No subscribers yet</td></tr>
+        <tr><td colspan="3">No active subscribers</td></tr>
         <%
         }
         %>
@@ -97,7 +97,7 @@
 
 <div class="row-fluid well">
     <div class="span5">
-            <h3 class="left-spaced">Usage by Subscribers (v-<%=request.getParameter("version")%>)</h3>
+            <h3 class="left-spaced">Usage by Current Subscribers (v-<%=request.getParameter("version")%>)</h3>
             <div id="userVersionChart" class="left-spaced"></div>
             </div>
                 <div class="span6 top-spaced">
@@ -114,7 +114,7 @@
 
 <div class="row-fluid well">
     <div class="span5">
-            <h3 class="left-spaced">Usage by Subscribers (Across All Versions)</h3>
+            <h3 class="left-spaced">Usage by Current Subscribers (Across All Versions)</h3>
             <div id="userChart" class="left-spaced"></div>
             </div>
                 <div class="span6 top-spaced">

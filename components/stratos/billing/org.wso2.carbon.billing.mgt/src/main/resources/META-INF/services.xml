@@ -35,6 +35,8 @@
   	</service>
 
     <service name="BillingDataAccessService" scope="transportsession">
+        <parameter name="AuthorizationAction" locked="true">/permission/admin/billing/invoice</parameter>
+
 		<transports>
 			<transport>https</transport>
 		</transports>

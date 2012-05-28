@@ -72,7 +72,7 @@
             Server URL of the remote BAM server used to collect statistics. Must
             be specified in protocol://hostname:port/ format.
         -->
-        <BAMServerURL>https://${carbon.local.ip}:9444/</BAMServerURL>
+        <BAMServerURL>https://localhost:9444/</BAMServerURL>
 
         <!--
             Administrator username to login to the remote BAM server.

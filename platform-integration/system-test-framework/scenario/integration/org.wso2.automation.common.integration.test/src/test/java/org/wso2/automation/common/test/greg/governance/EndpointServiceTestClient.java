@@ -201,7 +201,8 @@ public class EndpointServiceTestClient {
         return endpointManager;
     }
 
-    private Endpoint[] testVerifyEndpoints(String endpoint_path, Wsdl wsdl) throws GovernanceException {
+    private Endpoint[] testVerifyEndpoints(String endpoint_path, Wsdl wsdl)
+            throws GovernanceException {
         Endpoint[] endpoints = wsdl.getAttachedEndpoints();
         assertEquals(1, endpoints.length, "Endpoint length does not match :");
         assertEquals(endpoints[0].getUrl(), endpoint_path, "Endpoint Path does not exsits");
@@ -237,7 +238,8 @@ public class EndpointServiceTestClient {
         }
     }
 
-    private void propertyAssertion(String endpoint_path, String property1, String property2) throws RegistryException {
+    private void propertyAssertion(String endpoint_path, String property1, String property2)
+            throws RegistryException {
         Resource resource;
         try {
             resource = registry.get(endpoint_path);

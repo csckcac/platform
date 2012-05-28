@@ -117,12 +117,14 @@ public class SchemaManagerAPITest {
             Schema[] schemaArray = schemaManager.findSchemas(new SchemaFilter() {
                 public boolean matches(Schema schema) throws GovernanceException {
                     String name = schema.getQName().getLocalPart();
-                    assertTrue(name.contains(schemaName), "Error occured while executing findSchema API method");
+                    assertTrue(name.contains(schemaName), "Error occurred while executing " +
+                                                          "findSchema API method");
                     return name.contains(schemaName);
                 }
             }
             );
-            assertTrue(schemaArray.length > 0, "Error occured while executing findSchema API method");
+            assertTrue(schemaArray.length > 0, "Error occurred while executing findSchema API " +
+                                               "method");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WsdlManager:findSchemas method" + e);
         }

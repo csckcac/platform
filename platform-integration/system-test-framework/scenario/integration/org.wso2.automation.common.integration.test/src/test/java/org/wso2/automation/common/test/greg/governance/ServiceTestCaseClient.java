@@ -21,9 +21,12 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
+import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.wso2.carbon.governance.api.endpoints.EndpointManager;
+import org.wso2.carbon.governance.api.endpoints.dataobjects.Endpoint;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
@@ -46,6 +49,8 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
 
 public class ServiceTestCaseClient {
@@ -166,7 +171,10 @@ public class ServiceTestCaseClient {
         // first put a WSDL
         WsdlManager wsdlManager = new WsdlManager(governance);
 
-        Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
+        Wsdl wsdl = wsdlManager.newWsdl("https://svn.wso2.org/repos/wso2/carbon/platform/trunk/" +
+                                        "platform-integration/system-test-framework/core/" +
+                                        "org.wso2.automation.platform.core/src/main/resources/" +
+                                        "artifacts/GREG/wsdl/BizService.wsdl");
         wsdlManager.addWsdl(wsdl);
 
         ServiceManager serviceManager = new ServiceManager(governance);
@@ -426,6 +434,187 @@ public class ServiceTestCaseClient {
                 assertTrue(serviceManager.findServices(filter).length == numberOfServices);
             }
         }
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Service activate and deactivate")
+    public void testServiceStatus() throws Exception {
+        ServiceManager serviceManager = new ServiceManager(governance);
+
+        Service service = serviceManager.newService(new QName("http://bang.boom.com/mnm/beep",
+                                                              "WSO2AutomationActiveService"));
+        service.addAttribute("testAttribute", "serviceAttr");
+        serviceManager.addService(service);
+        String serviceId = service.getId();
+        assertTrue(service.isActive());
+        service.activate();
+        assertTrue(service.isActive());
+        service.deactivate();
+        assertFalse(service.isActive());
+
+        Service newService = serviceManager.getService(serviceId);
+        assertTrue(newService.getQName().toString().contains("WSO2AutomationActiveService"));
+        assertEquals(newService.getAttribute("testAttribute"), "serviceAttr");
+
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Attache 100 endpoints to a service")
+    public void testAttachLargeNumberOfEndpoints() throws RegistryException {
+        String service_namespace = "http://wso2.org/atomation/test";
+        String service_name = "ServiceForLargeNumberOfEndpoints";
+        int numberOfEndPoints = 100;
+
+        ServiceManager serviceManager = new ServiceManager(governance);
+        Service service;
+        service = serviceManager.newService(new QName(service_namespace, service_name));
+        serviceManager.addService(service);
+        EndpointManager endpointManager = new EndpointManager(governance);
+
+        for (int i = 1; i <= numberOfEndPoints; i++) {
+            Endpoint ep1 = endpointManager.newEndpoint("http://wso2.automation" +
+                                                       ".endpoint" + i);
+            endpointManager.addEndpoint(ep1);
+            service.attachEndpoint(ep1);
+        }
+
+        Endpoint[] endpoints = service.getAttachedEndpoints();
+        assertEquals(numberOfEndPoints, endpoints.length);
+
+        //Detach Endpoint one
+        for (Endpoint endpoint : endpoints) {
+            service.detachEndpoint(endpoint.getId());
+            numberOfEndPoints--;
+            Assert.assertTrue(numberOfEndPoints == service.getAttachedEndpoints().length);
+        }
+
+        //remove the service
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Attache 100 policies to a service")
+    public void testAttachLargeNumberOfPolicies() throws RegistryException {
+        String service_namespace = "http://wso2.org/atomation/test";
+        String service_name = "ServiceForLargeNumberOfPolicies1";
+        int numberOfPolicies = 10;
+
+        ServiceManager serviceManager = new ServiceManager(governance);
+        Service service;
+        service = serviceManager.newService(new QName(service_namespace, service_name));
+        serviceManager.addService(service);
+        PolicyManager policyManager = new PolicyManager(governance);
+
+        for (int i = 1; i <= numberOfPolicies; i++) {
+            Policy policy = policyManager.newPolicy("https://svn.wso2.org/repos/wso2/carbon/platform" +
+                                                    "/trunk/platform-integration/system-test-framework" +
+                                                    "/core/org.wso2.automation.platform.core/src/main" +
+                                                    "/resources/artifacts/GREG/policy/UTPolicy.xml");
+            policy.setName("testPolicy" + i);
+            policyManager.addPolicy(policy);
+            service.attachPolicy(policy);
+        }
+
+        Policy[] policies = service.getAttachedPolicies();
+        assertEquals(numberOfPolicies, policies.length);
+
+        //Detach Endpoint one
+        for (Policy policy : policies) {
+            service.detachPolicy(policy.getId());
+            numberOfPolicies--;
+            Assert.assertTrue(numberOfPolicies == service.getAttachedPolicies().length);
+        }
+
+        //remove the service
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to servcie with schema imports")
+    public void testAttacheWsdlWithSchemaImports() throws Exception {
+        // first put a WSDL
+        WsdlManager wsdlManager = new WsdlManager(governance);
+
+        Wsdl wsdl = wsdlManager.newWsdl("https://svn.wso2.org/repos/wso2/carbon/platform/trunk/" +
+                                        "platform-integration/system-test-framework/core/" +
+                                        "org.wso2.automation.platform.core/src/main/resources/" +
+                                        "artifacts/GREG/wsdl/BizService.wsdl");
+        wsdlManager.addWsdl(wsdl);
+
+        ServiceManager serviceManager = new ServiceManager(governance);
+        Service service = serviceManager.newService(new QName("http://test/org/bang", "BizService"));
+        serviceManager.addService(service);
+
+        service.attachWSDL(wsdl);
+        Wsdl[] wsdls = service.getAttachedWsdls();
+
+        Assert.assertEquals(wsdls.length, 1);
+        Assert.assertEquals(wsdls[0].getQName(), new QName("http://foo.com", "BizService.wsdl"));
+        Schema[] schemas = wsdls[0].getAttachedSchemas();
+
+        Assert.assertEquals(schemas.length, 1);
+        Assert.assertEquals(schemas[0].getQName(),
+                            new QName("http://bar.org/purchasing", "purchasing.xsd"));
+        Assert.assertNotNull(schemas[0].getId());
+
+        service.detachWSDL(wsdls[0].getId());
+        assertTrue("WSDL still exits ", service.getAttachedWsdls().length == 0);
+
+        service.detachSchema(schemas[0].getId());
+        assertTrue("Schema still exits ", service.getAttachedSchemas().length == 0);
+
+        //remove the service
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
+
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Attach LC to a service")
+    public void testAttachLifeCycleToService() throws Exception {
+        ServiceManager serviceManager = new ServiceManager(governance);
+
+        Service service = serviceManager.newService(new QName("http://bang.boom.com/mnm/beep",
+                                                              "LCService"));
+        service.addAttribute("testAttribute", "serviceAttr");
+        serviceManager.addService(service);
+        String serviceId = service.getId();
+        service.attachLifecycle("ServiceLifeCycle");
+        assertEquals(service.getLifecycleName(), "ServiceLifeCycle");
+        assertEquals(service.getLifecycleState(), "Development");
+
+        Service newService = serviceManager.getService(serviceId);
+        assertTrue(newService.getQName().toString().contains("WSO2AutomationActiveService"));
+        assertEquals(newService.getAttribute("testAttribute"), "serviceAttr");
+
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Attach Not existing LC to a service")
+    public void testAttachNonExistingLCToService() throws Exception {
+        ServiceManager serviceManager = new ServiceManager(governance);
+        boolean status = false;
+        Service service = serviceManager.newService(new QName("http://wso2.org/automation/test",
+                                                              "NonLCService"));
+        service.addAttribute("testAttribute", "serviceAttr");
+        serviceManager.addService(service);
+        String serviceId = service.getId();
+        try {
+            service.attachLifecycle("ServiceLifeCycleNonExisting");
+        } catch (GovernanceException ignored) {
+            status = true;
+            log.info("Cannot add invalid LC to service");
+        }
+        assertTrue("LC not get added", status);
+        assertNull(service.getLifecycleName());
+        assertNull(service.getLifecycleState());
+
+        Service newService = serviceManager.getService(serviceId);
+        assertTrue(newService.getQName().toString().contains("NonLCService"));
+        assertEquals(newService.getAttribute("testAttribute"), "serviceAttr");
+
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
     }
 
 

@@ -69,7 +69,7 @@ public class LifeCycleServiceTestClient {
             log.info("LifeCycleServiceTestClient -WSDL added successfully");
         } catch (GovernanceException e) {
             log.error("Failed to add WSDL:" + e);
-            throw new GovernanceException("Failed to add WSDL :" + e);
+            throw new GovernanceException("FailServiceLifeCycleed to add WSDL :" + e);
         }
     }
 

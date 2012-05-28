@@ -44,6 +44,10 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
 /**
  * contain test cases for governance API Endpoints
  */
@@ -381,6 +385,52 @@ public class EndpointTestCaseClient {
         Assert.assertEquals(endpointValues.length, 2);
     }
 
+    @Test(groups = {"wso2.greg"}, description = "Create a service and set ERP environment")
+    public void testSetEndpointEnvironment() throws RegistryException {
+        String service_namespace = "http://wso2.org/atomation/test";
+        String service_name = "myServiceExample";
+
+        ServiceManager serviceManager = new ServiceManager(governance);
+        Service service;
+        service = serviceManager.newService(new QName(service_namespace, service_name));
+        serviceManager.addService(service);
+
+        EndpointManager endpointManager = new EndpointManager(governance);
+        Endpoint ep1 = endpointManager.newEndpoint("http://endpoint1xx");
+        ep1.addAttribute("environment", "Dev");
+        ep1.addAttribute("URL", "http://endpoint1xx");
+        endpointManager.addEndpoint(ep1);
+
+        Endpoint ep2 = endpointManager.newEndpoint("http://endpoint2xx");
+        ep2.addAttribute("environment", "QA");
+        ep2.addAttribute("URL", "http://endpoint2xx");
+        endpointManager.addEndpoint(ep2);
+
+        service.attachEndpoint(ep1);
+        service.attachEndpoint(ep2);
+
+        service.getAttributes("environment");
+        service.getAttributes("URL");
+
+        Endpoint[] endpoints = service.getAttachedEndpoints();
+        assertEquals(2, endpoints.length);
+        assertEquals(endpoints[0].getAttribute("URL"), "http://endpoint1xx");
+        assertEquals(endpoints[1].getAttribute("URL"), "http://endpoint2xx");
+        assertEquals(endpoints[0].getAttribute("environment"), "Dev");
+        assertEquals(endpoints[1].getAttribute("environment"), "QA");
+        assertEquals("http://endpoint1xx", endpoints[0].getUrl());
+        assertEquals("http://endpoint2xx", endpoints[1].getUrl());
+
+        //Detach Endpoint one
+        service.detachEndpoint(ep1.getId());
+        service.detachEndpoint(ep2.getId());
+        endpoints = service.getAttachedEndpoints();
+        assertEquals(0, endpoints.length);
+
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
+    }
+
     private Endpoint[] getAttachedEndpointsFromService(Service service) throws
                                                                         GovernanceException {
         List<Endpoint> endpoints = new ArrayList<Endpoint>();
@@ -391,7 +441,7 @@ public class EndpointTestCaseClient {
                 endpoints.add(endpointManager.getEndpointByUrl(getFilteredEPURL(ep)));
             }
         } catch (GovernanceException e) {
-            throw new GovernanceException("Exception occurred while geting endpoints ");
+            throw new GovernanceException("Exception occurred while getting endpoints ");
         }
         return endpoints.toArray(new Endpoint[endpoints.size()]);
     }

@@ -117,7 +117,7 @@ public class RegistrySearchByCratedData {
         }
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search from valid date range")
+    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search from valid date range")
     public void searchResourceByValidDateRange()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
@@ -145,7 +145,7 @@ public class RegistrySearchByCratedData {
         }
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search from valid date range")
+    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search from valid date range")
     public void searchResourceWithInvalidDateFormat()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
@@ -167,7 +167,7 @@ public class RegistrySearchByCratedData {
         Assert.assertNull(result.getResourceDataList(), "Record Found for invalid data format");
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search records not in valid date range ")
+    @Test(priority = 5, groups = {"wso2.greg"}, description = "Metadata search records not in valid date range ")
     public void searchResourceByValidDateRangeNot()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
@@ -201,7 +201,7 @@ public class RegistrySearchByCratedData {
         }
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search from valid date range having no resource")
+    @Test(priority = 6, groups = {"wso2.greg"}, description = "Metadata search from valid date range having no resource")
     public void searchResourceByValidDateRangeHavingNoRecords()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
@@ -223,7 +223,7 @@ public class RegistrySearchByCratedData {
         Assert.assertNull(result.getResourceDataList(), "Record Found");
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search from invalid date range")
+    @Test(priority = 7, groups = {"wso2.greg"}, description = "Metadata search from invalid date range")
     public void searchResourceByInValidDateRange()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
@@ -244,7 +244,7 @@ public class RegistrySearchByCratedData {
         Assert.assertNull(result.getResourceDataList(), "Record Found");
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, dataProvider = "invalidCharacter",
+    @Test(priority = 8, groups = {"wso2.greg"}, dataProvider = "invalidCharacter",
           description = "Metadata search by invalid String for date")
     public void searchResourceByInvalidValueForDate(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {

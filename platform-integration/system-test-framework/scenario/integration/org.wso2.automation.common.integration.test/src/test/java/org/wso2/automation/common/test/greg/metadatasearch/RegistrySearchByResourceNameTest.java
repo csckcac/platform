@@ -132,7 +132,7 @@ public class RegistrySearchByResourceNameTest {
 
     }
 
-    @Test(priority = 4, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
+    @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
           description = "Metadata search by Resource Name with invalid characters")
     public void searchResourceByNameWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {

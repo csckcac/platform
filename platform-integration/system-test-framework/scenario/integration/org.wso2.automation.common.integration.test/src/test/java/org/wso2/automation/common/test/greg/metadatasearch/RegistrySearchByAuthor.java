@@ -35,7 +35,7 @@ import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 import java.rmi.RemoteException;
 
 /*
-Search Registry metadata by Resource Name
+Search Registry metadata by Author Name
  */
 public class RegistrySearchByAuthor {
     private String gregBackEndUrl;
@@ -77,7 +77,7 @@ public class RegistrySearchByAuthor {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Author Name not")
+    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Author Name not")
     public void searchResourceByAuthorNot()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
@@ -104,7 +104,7 @@ public class RegistrySearchByAuthor {
 
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by Author Name pattern matching")
+    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Author Name pattern matching")
     public void searchResourceByAuthorNamePattern()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
@@ -140,7 +140,7 @@ public class RegistrySearchByAuthor {
 
     }
 
-    @Test(priority = 4, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
+    @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
           description = "Metadata search by Author Name with invalid characters")
     public void searchResourceByAuthorNameWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {

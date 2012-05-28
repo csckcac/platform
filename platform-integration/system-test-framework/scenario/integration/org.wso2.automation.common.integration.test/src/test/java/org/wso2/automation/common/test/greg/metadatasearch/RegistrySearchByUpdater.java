@@ -24,7 +24,6 @@ import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
@@ -40,9 +39,9 @@ import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 import java.rmi.RemoteException;
 
 /*
-Search Registry metadata by keyword(content)
- */
-public class RegistrySearchByKeyword {
+Search Registry metadata by last updater Name
+*/
+public class RegistrySearchByUpdater {
     private String gregBackEndUrl;
 
     private String sessionCookie;
@@ -57,90 +56,94 @@ public class RegistrySearchByKeyword {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
         gregServer = builder.build().getGreg();
 
+
         sessionCookie = gregServer.getSessionCookie();
         gregBackEndUrl = gregServer.getBackEndUrl();
         searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
         registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
+        registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
+
 
     }
 
-   @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available keyword")
-    public void searchResourceByAvailableKeyword()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException, RegistryException {
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Updater Name")
+    public void searchResourceByUpdater()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setContent("org");
+        paramBean.setUpdater("admin");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid keyword");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid updater name");
         for (ResourceData resource : result.getResourceDataList()) {
-            Resource data = registry.get(resource.getResourcePath());
-            String content = new String((byte[]) data.getContent());
-
-            Assert.assertTrue(content.contains("org"),
-                              "search keyword not contain on Resource Name :" + resource.getName());
-
+            Assert.assertTrue(registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains("admin"),
+                              "search word not contain on Updater Name :" + resource.getName());
         }
 
 
     }
 
-    //Pattern search not applicable for content search
-//    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by  keywords pattern matching")
-    public void searchResourceByContentPattern()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException, RegistryException {
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Updater Name not")
+    public void searchResourceByUpdaterNot()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setContent("carbon%org");
+        paramBean.setUpdater("admin");
+        ArrayOfString[] paramList = paramBean.getParameterList();
+
+        searchQuery.setParameterValues(paramList);
+
+        // to set updatedRangeNegate
+        ArrayOfString updaterNameNegate = new ArrayOfString();
+        updaterNameNegate.setArray(new String[]{"updaterNameNegate", "on"});
+
+        searchQuery.addParameterValues(updaterNameNegate);
+
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Updater name");
+        for (ResourceData resource : result.getResourceDataList()) {
+            Assert.assertFalse(registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains("admin"),
+                               "search word contain on Updater Name :" + resource.getName());
+        }
+
+
+    }
+
+    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by Updater Name pattern matching")
+    public void searchResourceByUpdaterNamePattern()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
+        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
+        SearchParameterBean paramBean = new SearchParameterBean();
+        paramBean.setUpdater("wso2%user");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid keyword pattern");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Updater name pattern");
         for (ResourceData resource : result.getResourceDataList()) {
-            Resource data = registry.get(resource.getResourcePath());
-            String content = new String((byte[]) data.getContent());
-
-            Assert.assertTrue((content.contains("org") && content.contains("carbon")),
-                              "search keyword not contain on Resource Name :" + resource.getName());
-
+            Assert.assertTrue((registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains("wso2")
+                               && registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains("user")),
+                              "search word pattern not contain on Updater Name :" + resource.getName());
         }
+
 
     }
 
-    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by available keywords")
-    public void searchResourceByAvailableContents()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException, RegistryException {
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setContent("com org");
-        ArrayOfString[] paramList = paramBean.getParameterList();
 
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid keywords");
-        for (ResourceData resource : result.getResourceDataList()) {
-            Resource data = registry.get(resource.getResourcePath());
-            String content = new String((byte[]) data.getContent());
-
-            Assert.assertTrue((content.contains("org") || content.contains("com")),
-                              "search keyword not contain on Resource Name :" + resource.getName());
-
-        }
-
-    }
-
-    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable keyword")
-    public void searchResourceByUnAvailableContent()
+    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable Updater Name")
+    public void searchResourceByUnAvailableUpdaterName()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setContent("com,org");
+        paramBean.setUpdater("xyz1234");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -151,13 +154,13 @@ public class RegistrySearchByKeyword {
     }
 
     @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by keywords with invalid characters")
-    public void searchResourceByContentWithInvalidCharacter(String invalidInput)
+          description = "Metadata search by Updater Name with invalid characters")
+    public void searchResourceByUpdaterNameWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
 
-        paramBean.setContent(invalidInput);
+        paramBean.setUpdater(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
@@ -182,7 +185,6 @@ public class RegistrySearchByKeyword {
                 {"\""},
                 {"~"},
                 {"!"},
-                {"%"},
                 {"*"},
                 {"{"},
                 {"}"},
@@ -191,7 +193,6 @@ public class RegistrySearchByKeyword {
                 {"-"},
                 {"("},
                 {")"}
-
         };
 
 

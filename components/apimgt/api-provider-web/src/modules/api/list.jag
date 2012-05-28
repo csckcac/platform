@@ -23,7 +23,8 @@ var getAPI = function (api) {
             lastUpdated:result[10],
             subs:result[11],
             templates:result[12],
-            sandbox:result[13]
+            sandbox:result[13],
+            tierDescs:result[14]
         };
 
         return {

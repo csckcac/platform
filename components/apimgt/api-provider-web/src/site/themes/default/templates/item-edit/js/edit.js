@@ -2,6 +2,7 @@ $(document).ready(function() {
     $("select[name='editTier']").change(function() {
         // multipleValues will be an array
         var multipleValues = $(this).val() || [];
+        setTierDescription($("select option:selected").attr("title"));
         var countLength = $('#tiersCollection').length;
         if (countLength == 0) {
 
@@ -18,6 +19,9 @@ $(document).ready(function() {
     });
 });
 
+var setTierDescription= function(option) {
+    $("#editTiersHelp").html(option);
+};
 
 //var rowNums=new Array();
 function loadTiers() {
@@ -32,6 +36,7 @@ function loadTiers() {
                       for (var j = 0; j < arr.length; j++) {
                           option = new Option(arr[j], arr[j]);
                           target.options[j] = option;
+                          target.options[j].title = result.tiers[j].tierDescription;
                       }
                       addSelectedTiers(target);
 

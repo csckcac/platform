@@ -7,16 +7,20 @@
     var addSelectedTiers;
     $(document).ready(function() {
     addSelectedTiers = function(target){
-    var tiersList,tiers=[];
+    var tierDescs,tiersList,tiersDescList,tiers=[];
     tiersList="<%=api.availableTiers%>";
-    tiers=tiersList.split(",");  
+    tiersDescList="<%=api.tierDescs%>";
+    tiers=tiersList.split(",");
+    tierDescs=tiersDescList.split(",");
     for(var i=0;i<tiers.length;i++){
     var tier=tiers[i];
+    var tierDesc=tierDescs[i];
     for(var j=0;j<target.options.length;j++){
     if(tier==target.options[j].value){
     target.options[j].selected="selected";
-   
-
+    if(tierDesc!="null"){
+    $("#editTiersHelp").html(tierDesc);
+    }
     }
     }
     }            
@@ -102,7 +106,9 @@
                     <label class="control-label" for="editTier">Tier Availability:</label>
                     <div class="controls">
                         <select id="editTier" name="editTier"  multiple="multiple">
-                       </select></div>
+                       </select>
+                     <p class="help-block" id="editTiersHelp"></p>
+                    </div>
             </div>
 
             <div class="control-group">

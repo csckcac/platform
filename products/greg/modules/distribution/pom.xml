@@ -467,6 +467,26 @@
             <version>3.2.4</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.juddi.scout</groupId>
+            <artifactId>scout</artifactId>
+            <version>1.2.6</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>javax.xml</groupId>-->
+            <!--<artifactId>jaxr-api</artifactId>-->
+            <!--<version>1.0.0</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>juddi-client</artifactId>
+            <version>3.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-ws</artifactId>
+            <version>3.1.3</version>
+        </dependency>
 
     </dependencies>
 

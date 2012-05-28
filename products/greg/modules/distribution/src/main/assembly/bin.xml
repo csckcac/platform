@@ -283,6 +283,15 @@
                                 <include>org.wso2.carbon:org.wso2.carbon.governance.samples.lcm.notifications:jar</include>
             </includes>
         </dependencySet>
+        <!-- Those jar files are required to be in lib dir in jaxr sample -->
+        <dependencySet>
+            <outputDirectory>${pom.artifactId}-${build.version}/samples/jaxr/lib</outputDirectory>
+            <includes>
+                <include>org.apache.juddi:juddi-client:jar</include>
+                <include>org.apache.juddi.scout:scout:jar</include>
+                <include>org.apache.juddi:uddi-ws:jar</include>
+            </includes>
+        </dependencySet>
     </dependencySets>
     
     <files>

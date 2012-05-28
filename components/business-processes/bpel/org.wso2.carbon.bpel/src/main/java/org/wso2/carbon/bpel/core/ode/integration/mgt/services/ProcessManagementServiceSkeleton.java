@@ -334,25 +334,29 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
             bpelServer.getODEBPELServer().getContexts().scheduler.execTransaction(new java.util.concurrent.Callable<Boolean>() {
                 public Boolean call() throws Exception {
 
-                    ProcessDAO processDAO;
-                    ProcessDAO newProcessDAO;
+                    ProcessDAO processDAO = null;
+                    ProcessDAO newProcessDAO = null;
 
                     if (oldIsInmemory & !newIsInmemory) {
                         processDAO = bpelServer.getODEBPELServer().getContexts().getInMemDao().getConnection().getProcess(processId);
-                        newProcessDAO = bpelServer.getODEBPELServer().getContexts().dao.getConnection().createProcess(processDAO.getProcessId(), processDAO.getType(), processDAO.getGuid(), processDAO.getVersion());
+                        if (bpelServer.getODEBPELServer().getContexts().dao.getConnection().getProcess(processId) == null) {
+                            newProcessDAO = bpelServer.getODEBPELServer().getContexts().dao.getConnection().createProcess(processDAO.getProcessId(), processDAO.getType(), processDAO.getGuid(), processDAO.getVersion());
 
-                        Set<String> correlatorsSet = processDAO.getCorrelatorsSet();
-                        for (String correlator : correlatorsSet) {
-                            newProcessDAO.addCorrelator(correlator);
+                            Set<String> correlatorsSet = processDAO.getCorrelatorsSet();
+                            for (String correlator : correlatorsSet) {
+                                newProcessDAO.addCorrelator(correlator);
+                            }
                         }
                     } else if (!oldIsInmemory & newIsInmemory) {
                         QName pId = processId;
                         processDAO = bpelServer.getODEBPELServer().getContexts().dao.getConnection().getProcess(pId);
-                        newProcessDAO = bpelServer.getODEBPELServer().getContexts().getInMemDao().getConnection().createProcess(processDAO.getProcessId(), processDAO.getType(), processDAO.getGuid(), processDAO.getVersion());
+                        if (bpelServer.getODEBPELServer().getContexts().getInMemDao().getConnection().getProcess(pId) == null) {
+                            newProcessDAO = bpelServer.getODEBPELServer().getContexts().getInMemDao().getConnection().createProcess(processDAO.getProcessId(), processDAO.getType(), processDAO.getGuid(), processDAO.getVersion());
 
-                        Set<String> correlatorsSet = processDAO.getCorrelatorsSet();
-                        for (String correlator : correlatorsSet) {
-                            newProcessDAO.addCorrelator(correlator);
+                            Set<String> correlatorsSet = processDAO.getCorrelatorsSet();
+                            for (String correlator : correlatorsSet) {
+                                newProcessDAO.addCorrelator(correlator);
+                            }
                         }
                     }
 

@@ -18,7 +18,7 @@ public class ReportStream {
         try {
             try {
 
-                if (reportType.equals("pdf")) {
+                if (reportType.equalsIgnoreCase("pdf")) {
                     // used PdfReport to generate PDF report
                     PdfReport pdfReport = new PdfReport();
                     try {
@@ -26,11 +26,11 @@ public class ReportStream {
                     } catch (JRException e) {
                         throw new JRException("Failed to generate PDF format report ", e);
                     }
-                } else if (reportType.equals("excel") |reportType.equals("xls")) {
+                } else if (reportType.equalsIgnoreCase("excel") |reportType.equals("xls")) {
                     //use  ExcelReport to generate Excel report
                     ExcelReport excelReport = new ExcelReport();
                     outputStream = excelReport.generateExcelReport(jasperPrint);
-                } else if (reportType.equals("html")) {
+                } else if (reportType.equalsIgnoreCase("html")) {
                     // used HtmlReport to generate HTML report
                     HtmlReport htmlReport = new HtmlReport();
                     outputStream = htmlReport.generateHtmlReport(jasperPrint);

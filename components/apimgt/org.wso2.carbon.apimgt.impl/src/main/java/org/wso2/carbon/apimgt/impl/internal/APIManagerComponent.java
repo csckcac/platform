@@ -55,7 +55,7 @@ import java.util.Set;
  * interface="org.wso2.carbon.user.core.service.RealmService"
  * cardinality="1..1" policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
  * @scr.reference name="listener.manager.service"
- * interface="org.apache.axis2.engine.ListenerManager" cardinality="1..1" policy="dynamic"
+ * interface="org.apache.axis2.engine.ListenerManager" cardinality="0..1" policy="dynamic"
  * bind="setListenerManager" unbind="unsetListenerManager"
  */
 public class APIManagerComponent {
@@ -121,6 +121,11 @@ public class APIManagerComponent {
         // We bind to the listener manager so that we can read the local IP
         // address and port numbers properly.
         log.debug("Listener manager bound to the API manager component");
+        APIManagerConfigurationService service = ServiceReferenceHolder.getInstance().
+                getAPIManagerConfigurationService();
+        if (service != null) {
+            service.getAPIManagerConfiguration().reloadSystemProperties();
+        }
     }
 
     protected void unsetListenerManager(ListenerManager listenerManager) {

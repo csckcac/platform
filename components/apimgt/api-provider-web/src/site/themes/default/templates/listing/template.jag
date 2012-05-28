@@ -57,7 +57,7 @@
     if (apis.length == 0) {
     %>
     <div class="alert alert-info">
-        <div style="padding-bottom:10px">You haven't created any APIs yet. Click the button below to get started.</div>
+        <div style="padding-bottom:10px">No APIs created yet. Click the button below to get started.</div>
         <div><button class="btn btn-primary" onclick="javascript:location.href='<%=jagg.getMappedUrl("/site/pages/add.jag")%>'">New API...</button></div>
     </div>
     <%

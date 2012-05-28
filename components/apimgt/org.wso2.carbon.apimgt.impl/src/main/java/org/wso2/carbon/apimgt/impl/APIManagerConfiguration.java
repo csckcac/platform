@@ -78,6 +78,16 @@ public class APIManagerConfiguration {
         }
         return value.get(0);
     }
+    
+    public void reloadSystemProperties() {
+        for (Map.Entry<String,List<String>> entry : configuration.entrySet()) {
+            List<String> list = entry.getValue();
+            for (int i = 0; i < list.size(); i++) {
+                String text = list.remove(i);
+                list.add(i, replaceSystemProperty(text));
+            }
+        }
+    }
 
     private void readChildElements(OMElement serverConfig,
                                    Stack<String> nameStack) {

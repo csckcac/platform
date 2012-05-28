@@ -21,6 +21,7 @@ $('#publishToGateway').attr('value','true');
      <input type="hidden" name="action" id="action" value="updateStatus"/>
      <input type="hidden" name="name" id="name" value="<%=api.name%>"/>
      <input type="hidden" name="version" id="version" value="<%=api.version%>"/>
+     <input type="hidden" name="provider" id="provider" value="<%=api.provider%>"/>
      <div class="control-group">
                 <label class="control-label" for="editStatus" name="state">State:</label>
                 <div class="controls">

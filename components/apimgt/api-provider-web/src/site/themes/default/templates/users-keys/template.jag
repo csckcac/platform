@@ -1,7 +1,6 @@
 <% jagg.template("users-keys", function(inputs, outputs, jagg) { %>
 
         <div id="userKey"><h2>Users/Keys</h2>
-         <% jagg.includeBlock("search/api-search", null); %>
         <div class="row">
         <div class="span12">
         <table class="table table-bordered">
@@ -40,7 +39,7 @@
         api=apis[n].split("-");
         apiName=api[0];
         version=api[1];
-        apiPath=jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + apiName + "&version=" + version;
+        apiPath=jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + apiName + "&version=" + version + "&provider=" + jagg.getUser().username;
         %>
         <a href="<%= apiPath%>"><%=apis[n]%></a>
 
@@ -49,7 +48,7 @@
         api= apiList.split("-");
         apiName = api[0];
         version = api[1];
-        apiPath=jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + apiName + "&version=" + version;
+        apiPath=jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + apiName + "&version=" + version + "&provider=" + jagg.getUser().username;
         %>
         <a href="<%= apiPath%>"><%=apiList%></a>
         <%}%>

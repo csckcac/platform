@@ -9,7 +9,7 @@ include("/jagg/jagg.jag");
     if (action === "updateStatus") {
         mod = jagg.module("api");
         var apiData = {};
-        apiData.provider= jagg.getUser().username;
+        apiData.provider= request.getParameter("provider");
         apiData.apiName = request.getParameter("name");
         apiData.version = request.getParameter("version");
         apiData.status = request.getParameter("status");

@@ -145,7 +145,6 @@ public class WSDLManagerAPITest {
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WsdlManager:findWsdls method" + e);
         }
-
     }
 
     @Test(groups = {"wso2.greg.api"}, description = "Testing AddWSDL with Inline content", priority = 7)

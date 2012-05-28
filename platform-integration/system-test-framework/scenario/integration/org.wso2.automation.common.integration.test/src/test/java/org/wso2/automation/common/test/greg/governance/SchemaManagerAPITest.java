@@ -20,6 +20,7 @@ import org.apache.axis2.AxisFault;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
+import org.wso2.carbon.governance.api.schema.SchemaFilter;
 import org.wso2.carbon.governance.api.schema.SchemaManager;
 import org.wso2.carbon.governance.api.schema.dataobjects.Schema;
 import org.wso2.carbon.registry.core.Registry;
@@ -39,6 +40,7 @@ public class SchemaManagerAPITest {
     public static SchemaManager schemaManager;
     public static Schema schemaObj;
     public static Schema[] schemaArray;
+    public String schemaName = "calculator.xsd";
 
     @BeforeClass(alwaysRun = true)
     public void initializeAPIObject() throws RegistryException, AxisFault {
@@ -58,7 +60,6 @@ public class SchemaManagerAPITest {
             throw new GovernanceException("Error occurred while executing SchemaManager:newSchema with " +
                     "URL method" + e);
         }
-
     }
 
     @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testNewSchemaUrl"}, description = "Testing " +
@@ -88,7 +89,7 @@ public class SchemaManagerAPITest {
     public void testGetSchema() throws GovernanceException {
         try {
             schemaObj = schemaManager.getSchema(schemaArray[0].getId());
-            assertTrue(schemaObj.getQName().getLocalPart().equalsIgnoreCase("calculator.xsd"), "SchemaManager:" +
+            assertTrue(schemaObj.getQName().getLocalPart().equalsIgnoreCase(schemaName), "SchemaManager:" +
                     "getSchema API method not contain expected schema name");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing SchemaManager:getSchema method" + e);
@@ -110,8 +111,24 @@ public class SchemaManagerAPITest {
         }
     }
 
-    @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testUpdateSchema"}, description = "Testing " +
-            "removeSchema API method", priority = 6)
+    @Test(groups = {"wso2.greg.api"}, description = "Testing FindSchema", priority = 6)
+    public void testFindService() throws GovernanceException {
+        try {
+            Schema[] schemaArray = schemaManager.findSchemas(new SchemaFilter() {
+                public boolean matches(Schema schema) throws GovernanceException {
+                    String name = schema.getQName().getLocalPart();
+                    assertTrue(name.contains(schemaName), "Error occured while executing findSchema API method");
+                    return name.contains(schemaName);
+                }
+            }
+            );
+            assertTrue(schemaArray.length > 0, "Error occured while executing findSchema API method");
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error occurred while executing WsdlManager:findSchemas method" + e);
+        }
+    }
+
+    @Test(groups = {"wso2.greg.api"}, description = "Testing removeSchema API method", priority = 7)
     public void testRemoveSchema() throws GovernanceException {
         try {
             schemaManager.removeSchema(schemaObj.getId());

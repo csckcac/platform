@@ -20,6 +20,7 @@ import org.apache.axis2.AxisFault;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
+import org.wso2.carbon.governance.api.policies.PolicyFilter;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.registry.core.Registry;
@@ -38,6 +39,7 @@ public class PolicyManagerAPITest {
     public static PolicyManager policyManager;
     public static Policy policyObj;
     public static Policy[] policies;
+    private String policyName = "UTPolicy.xml";
 
     @BeforeClass(alwaysRun = true)
     public void initializeAPIObject() throws RegistryException, AxisFault {
@@ -88,16 +90,32 @@ public class PolicyManagerAPITest {
     public void testGetPolicy() throws GovernanceException {
         try {
             policyObj = policyManager.getPolicy(policies[0].getId());
-            assertTrue(policyObj.getQName().getLocalPart().equalsIgnoreCase("UTPolicy.xml"), "PolicyManager:" +
+            assertTrue(policyObj.getQName().getLocalPart().equalsIgnoreCase(policyName), "PolicyManager:" +
                     "getPolicy API method not contain expected policy name");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing PolicyManager:getPolicy method" + e);
         }
     }
 
+    @Test(groups = {"wso2.greg.api"}, description = "Testing FindPolicy", priority = 5)
+    public void testFindService() throws GovernanceException {
+        try {
+            Policy[] policyArray = policyManager.findPolicies(new PolicyFilter() {
+                public boolean matches(Policy policy) throws GovernanceException {
+                    String name = policy.getQName().getLocalPart();
+                    assertTrue(name.contains(policyName), "Error occured while executing findPolicy API method");
+                    return name.contains(policyName);
+                }
+            }
+            );
+            assertTrue(policyArray.length > 0, "Error occured while executing findPolicies API method");
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error occurred while executing WsdlManager:findPolicies method" + e);
+        }
+    }
 
-    @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testGetPolicy"}, description = "Testing " +
-            "updatePolicy API method", priority = 5)
+    @Test(groups = {"wso2.greg.api"}, description = "Testing " +
+            "updatePolicy API method", priority = 6)
     public void testUpdatePolicy() throws GovernanceException {
         try {
             policyObj.setName("SamplePolicy");
@@ -111,7 +129,7 @@ public class PolicyManagerAPITest {
     }
 
     @Test(groups = {"wso2.greg.api"}, description = "Testing " +
-            "removePolicy API method", priority = 6)
+            "removePolicy API method", priority = 7)
     public void testRemovePolicy() throws GovernanceException {
         try {
             policyManager.removePolicy(policyObj.getId());

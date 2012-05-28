@@ -140,9 +140,14 @@ public class MiscellaneousUtil {
 				log.warn(msg);
 			}
 		}
+		
+		if(in ==null){
+			//if can not find with system path definition looking to the class path for the given property file
+			in = cl.getResourceAsStream(filePath);
+		}
        
         if (in == null) {
-        	in = cl.getResourceAsStream(filePath);
+        	
             if (log.isDebugEnabled()) {
                 log.debug("Unable to load file  '" + filePath + "'");
             }

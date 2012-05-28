@@ -163,16 +163,16 @@ public class ServiceManagerAPITests {
         assertTrue(isServiceFound, "getService governance API method does not work.");
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing removeService", priority = 6)
+    @Test(groups = {"wso2.greg.api"}, description = "Testing FindService", priority = 6)
     public void testFindService() throws GovernanceException, XMLStreamException {
-        serviceManager.findServices(new ServiceFilter() {
+        Service[] service = serviceManager.findServices(new ServiceFilter() {
             public boolean matches(Service service) throws GovernanceException {
-                String name = service.getAttribute("overview_name");
-                assertTrue(name.contains(service_name), "Error occured while executing findService API method");
-                return true;
+                String name = service.getQName().getLocalPart();
+                return name.contains(service_name);
             }
         }
         );
+        assertTrue(service.length > 0, "Error occured while executing findService API method");
     }
 
     @Test(groups = {"wso2.greg.api"}, description = "Testing lifecycle methods of a service", priority = 7)
@@ -311,14 +311,14 @@ public class ServiceManagerAPITests {
         for (int i = 0; i <= serviceList.length - 1; i++) {
             if (serviceList[i].getQName().getLocalPart().contains(service_name)) {
                 endPoint = serviceList[i].getAttachedEndpoints();
-                for(Endpoint e:endPoint){
-                    if(e.getUrl().contains("http://localhost:9763/services/SAMPLESERVICE2")){
+                for (Endpoint e : endPoint) {
+                    if (e.getUrl().contains("http://localhost:9763/services/SAMPLESERVICE2")) {
                         isEndpointFound = true;
                     }
                 }
             }
         }
-        assertTrue(isEndpointFound,"addAttribute API not execute with Service types");
+        assertTrue(isEndpointFound, "addAttribute API not execute with Service types");
     }
 
 }

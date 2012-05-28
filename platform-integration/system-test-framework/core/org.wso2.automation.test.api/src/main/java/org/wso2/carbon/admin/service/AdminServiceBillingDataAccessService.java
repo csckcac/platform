@@ -54,8 +54,7 @@ public class AdminServiceBillingDataAccessService {
         Boolean updateStatus;
         AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
         try {
-            customer = billingDataAccessServiceStub.getCustomerWithName(tenantDomainName);
-            updateStatus = billingDataAccessServiceStub.changeSubscription(customer.getId(), usagePlanName);
+            updateStatus = billingDataAccessServiceStub.changeSubscriptionByTenant(usagePlanName);
         } catch (Exception e) {
             updateStatus = false;
             log.error("Unable to update usage plan : " + e);
@@ -68,7 +67,7 @@ public class AdminServiceBillingDataAccessService {
             throws RemoteException, BillingDataAccessServiceExceptionException {
         AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
         try {
-            billingDataAccessServiceStub.getActiveSubscriptionOfCustomer(customerId);
+            billingDataAccessServiceStub.getActiveSubscriptionOfCustomerByTenant();
         } catch (RemoteException e) {
             log.error("Subscription update failed:" + e);
             throw new RemoteException("Subscription update failed:" + e);
@@ -120,7 +119,7 @@ public class AdminServiceBillingDataAccessService {
         try {
             customer = billingDataAccessServiceStub.getCustomerWithName(tenantName);
             if (customer != null) {
-                subscription = billingDataAccessServiceStub.getActiveSubscriptionOfCustomer(customer.getId());
+                subscription = billingDataAccessServiceStub.getActiveSubscriptionOfCustomerByTenant();
                 if (subscription != null) {
                     return subscription.getSubscriptionPlan();
                 } else {

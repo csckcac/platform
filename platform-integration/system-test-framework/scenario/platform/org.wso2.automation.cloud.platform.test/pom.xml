@@ -35,9 +35,9 @@
             <version>3.8.1</version>
         </dependency>
         <dependency>
-            <groupId>org.hectorclient</groupId>
+            <groupId>me.prettyprint</groupId>
             <artifactId>hector-core</artifactId>
-            <version>${hector-core.version}</version>
+            <version>0.7.0-23-wso2v1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cassandra</groupId>
@@ -113,7 +113,7 @@
     <properties>
         <commans-lang.version>2.4</commans-lang.version>
         <cassandra.version>0.7.0-wso2v2</cassandra.version>
-        <hector-core.version>1.1-0</hector-core.version>
+        <hector-core.version>0.7.0-23</hector-core.version>
         <libthrift.version>0.5.wso2v1</libthrift.version>
         <perf4j.version>0.9.12.wso2v1</perf4j.version>
         <highscale.version>1.0.wso2v1</highscale.version>

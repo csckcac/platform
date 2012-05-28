@@ -42,6 +42,9 @@ import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileInputStream;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
+
 public class ServiceTestCaseClient {
     private Registry governance;
     private String configPath;
@@ -285,5 +288,38 @@ public class ServiceTestCaseClient {
         governance.delete(newService.getPath());
         newService = serviceManager.getService(service.getId());
         Assert.assertNull(newService);
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "add a duplicate service again with same " +
+                                                "namespace")
+
+    public void testDuplicateService() throws Exception {
+        ServiceManager serviceManager = new ServiceManager(governance);
+
+        Service service = serviceManager.newService(new QName("http://bang.boom.com/mnm/beep",
+                                                              "DuplicateService1"));
+        service.addAttribute("testAttribute", "duplicate1");
+        serviceManager.addService(service);
+        String serviceId = service.getId();
+
+
+        Service newService = serviceManager.getService(serviceId);
+        assertTrue(newService.getQName().toString().contains("DuplicateService1"));
+        assertEquals(newService.getAttribute("testAttribute"), "duplicate1");
+
+        //try to add same service again
+        Service duplicateService = serviceManager.newService(new QName("http://bang.boom" +
+                                                                       ".com/mnm/beep",
+                                                                       "DuplicateService1"));
+        duplicateService.addAttribute("testAttributeDuplicate", "duplicate2");
+        serviceManager.addService(service);
+        String serviceIdDuplicated = duplicateService.getId();
+
+        Service newServiceDuplicate = serviceManager.getService(serviceIdDuplicated);
+        assertTrue(newServiceDuplicate.getQName().toString().contains("DuplicateService1"));
+        assertEquals(newServiceDuplicate.getAttribute("testAttribute"), "duplicate1");
+        assertEquals(newServiceDuplicate.getAttribute("testAttributeDuplicate"), "duplicate2");
+
+
     }
 }

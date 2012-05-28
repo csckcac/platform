@@ -27,7 +27,7 @@ public class PlatformSuiteManager implements ISuiteListener {
                     environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos();
             if (startosEnabled) {
                 //stratos user populate on manager. there for product lis set to null
-                new UserPopulator().populateUsers(null);
+            //    new UserPopulator().populateUsers(null);
             } else {
                 if (suite.getParameter("server.list") != null) {
                     List<String> productList = Arrays.asList(suite.getParameter("server.list").split(","));
@@ -35,7 +35,7 @@ public class PlatformSuiteManager implements ISuiteListener {
                         log.info("Starting all servers");
                         ServerGroupManager.startServers(productList);
                     }
-                    new UserPopulator().populateUsers(productList);
+                   // new UserPopulator().populateUsers(productList);
                 }
             }
 

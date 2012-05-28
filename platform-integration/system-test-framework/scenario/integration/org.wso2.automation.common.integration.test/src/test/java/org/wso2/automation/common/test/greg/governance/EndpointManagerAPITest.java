@@ -1,4 +1,4 @@
-package org.wso2.automation.common.test.greg.governance;/*
+/*
 *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *WSO2 Inc. licenses this file to you under the Apache License,
@@ -15,6 +15,8 @@ package org.wso2.automation.common.test.greg.governance;/*
 *specific language governing permissions and limitations
 *under the License.
 */
+
+package org.wso2.automation.common.test.greg.governance;
 
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.BeforeClass;

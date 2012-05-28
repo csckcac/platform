@@ -88,7 +88,7 @@ public class GovernanceApiServiceListing {
     }
 
     @BeforeClass(alwaysRun = true, groups = {"wso2.greg", "wso2.greg.GovernanceApiServiceListing"})
-    public void addsService() throws InterruptedException, RemoteException,
+    public void addService() throws InterruptedException, RemoteException,
                                      MalformedURLException, GovernanceException {
         service = serviceManager.newService(new QName("http://my.service.ns1", "MyService1"));
         serviceManager.addService(service);

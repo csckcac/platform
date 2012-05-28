@@ -22,6 +22,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceTenantMgtServiceAdmin;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceExceptionException;
 import org.wso2.carbon.tenant.mgt.stub.beans.xsd.TenantInfoBean;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
@@ -61,7 +62,8 @@ public class UpdateTenantInfoTest {
 
     @Test(groups = "wso2.stratos", description = "update tenant info test", priority = 1)
     public void testTenantInfoUpdate()
-            throws LoginAuthenticationExceptionException, RemoteException {
+            throws LoginAuthenticationExceptionException, RemoteException,
+                   TenantMgtAdminServiceExceptionException {
         log.info("Running update tenant info test");
         //get user credentials
         tenantInfoBeanGet = tenantStub.getTenant(sessionCookie, userInfo.getDomain());
@@ -134,7 +136,8 @@ public class UpdateTenantInfoTest {
 
     @Test(groups = "wso2.stratos", description = "Reset tenant info", priority = 2)
     public void testResetTenantInfo()
-            throws LoginAuthenticationExceptionException, RemoteException {
+            throws LoginAuthenticationExceptionException, RemoteException,
+                   TenantMgtAdminServiceExceptionException {
         //Reset tenant info to older values
         TenantInfoBean setTenantInfoBean = new TenantInfoBean();
         setTenantInfoBean.setActive(true);

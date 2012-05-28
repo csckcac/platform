@@ -26,6 +26,7 @@ import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceStratosAccountMgt;
 import org.wso2.carbon.admin.service.AdminServiceTenantMgtServiceAdmin;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceExceptionException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -67,7 +68,8 @@ public class TenantDeactivationTest {
 
     @Test(groups = "wso2.stratos", description = "Reactivate tenants by super user", priority = 2)
     public void testReactivateTenant()
-            throws LoginAuthenticationExceptionException, RemoteException {
+            throws LoginAuthenticationExceptionException, RemoteException,
+                   TenantMgtAdminServiceExceptionException {
         int superTenantId = 0;
         EnvironmentBuilder builder = new EnvironmentBuilder().manager(superTenantId);
         ManageEnvironment environment = builder.build();

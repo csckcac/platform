@@ -28,15 +28,26 @@ function updateApplication(linkObj){
 function deleteApp(linkObj) {
     var theTr = $(linkObj).parent().parent();
     var appName = $(theTr).attr('data-value');
-    jagg.post("/site/blocks/application/application-remove/ajax/application-remove.jag", {
-        action:"removeApplication",
-        application:appName
-    }, function (result) {
-        if (!result.error) {
-            window.location.reload();
-        } else {
-            jagg.message(result.message);
-        }
-    }, "json");
+    $('#messageModal').html($('#confirmation-data').html());
+    $('#messageModal h3.modal-title').html('API Provider');
+    $('#messageModal div.modal-body').html('\n\nDo you want to remove the application "' + appName + '"?');
+    $('#messageModal a.btn-primary').html('Yes');
+    $('#messageModal a.btn-other').html('No');
+    $('#messageModal a.btn-primary').click(function() {
+        jagg.post("/site/blocks/application/application-remove/ajax/application-remove.jag", {
+            action:"removeApplication",
+            application:appName
+        }, function (result) {
+            if (!result.error) {
+                window.location.reload();
+            } else {
+                jagg.message(result.message);
+            }
+        }, "json");
+    });
+    $('#messageModal a.btn-other').click(function() {
+        window.location.reload();
+    });
+    $('#messageModal').modal();
 
 }

@@ -143,7 +143,7 @@
             <waitTimes>
 
                 <!-- Max wait time(in seconds)  for a acknowledgement for a given message from the client  -->
-                <maxAckWaitTime>1</maxAckWaitTime>
+                <maxAckWaitTime>10</maxAckWaitTime>
                 <!-- Max wait time(in seconds)  for a acknowledgement for Batch of messages that that is sent from
                 subscribers -->
                 <maxAckWaitTimeForBatch>120</maxAckWaitTimeForBatch>

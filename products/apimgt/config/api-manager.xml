@@ -35,7 +35,7 @@
         <!--
             Server URL of the API gateway.
         -->
-        <ServerURL>https://localhost:9443/services/</ServerURL>
+        <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}/services/</ServerURL>
 
         <!--
             Admin username for the API gateway.
@@ -50,7 +50,7 @@
         <!--
             Endpoint URLs for the APIs hosted in this API gateway.
         -->
-        <APIEndpointURL>http://localhost:8280,https://localhost:8243</APIEndpointURL>
+        <APIEndpointURL>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</APIEndpointURL>
     </APIGateway>
 
     <!--
@@ -72,7 +72,7 @@
             Server URL of the remote BAM server used to collect statistics. Must
             be specified in protocol://hostname:port/ format.
         -->
-        <BAMServerURL>https://localhost:9444/</BAMServerURL>
+        <BAMServerURL>https://${carbon.local.ip}:9444/</BAMServerURL>
 
         <!--
             Administrator username to login to the remote BAM server.
@@ -94,7 +94,7 @@
         <!--
             Server URL of the API key manager
         -->
-        <ServerURL>https://localhost:9443/services/</ServerURL>
+        <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}/services/</ServerURL>
 
         <!--
             Admin username for API gateway.

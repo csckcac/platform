@@ -54,8 +54,25 @@
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
+		<!--samples set of product-->
         <fileSet>
-            <directory>../../modules/samples/services</directory>
+            <directory>../../modules/samples/product/jmsclient</directory>
+            <outputDirectory>wso2mb-${pom.version}/samples/jmsclient</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../../modules/samples/product/jmstransport</directory>
+            <outputDirectory>wso2mb-${pom.version}/samples/jmstransport</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../../modules/samples/product/wsclient</directory>
+            <outputDirectory>wso2mb-${pom.version}/samples/wsclient</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../../modules/samples/product/sqsclient</directory>
+            <outputDirectory>wso2mb-${pom.version}/samples/sqsclient</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../../modules/samples/product/services</directory>
             <outputDirectory>wso2mb-${pom.version}/samples/services</outputDirectory>
         </fileSet>
         <fileSet>
@@ -116,6 +133,16 @@
             </outputDirectory>
             <includes>
                 <include>org.apache.rampart:rampart:mar</include>
+            </includes>
+        </dependencySet>
+	<dependencySet>
+            <outputDirectory>wso2mb-${pom.version}/client-lib</outputDirectory>
+            <includes>
+                <include>org.wso2.andes.wso2:andes-client:jar</include>
+                <include>org.apache.geronimo.specs.wso2:geronimo-jms_1.1_spec:jar</include>
+                <include>org.wso2.carbon:org.wso2.carbon.event.client.stub:jar</include>
+                <include>org.wso2.carbon:org.wso2.carbon.event.client:jar</include>
+		<include>slf4j.wso2:slf4j:jar</include>
             </includes>
         </dependencySet>
     </dependencySets>

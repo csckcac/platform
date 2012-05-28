@@ -460,6 +460,12 @@ public class WSUserStoreManager implements UserStoreManager {
         return false;
     }
 
-    
+    @Override
+    public String[] getUserList(String claim, String claimValue, String profileName)
+                                                                        throws UserStoreException {
+        // TODO
+        return new String[0];
+    }
+
 
 }

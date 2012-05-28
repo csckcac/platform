@@ -214,8 +214,8 @@ public class DataAccessManager {
             commitTransaction();
         }catch(Exception e){
             rollbackTransaction();
-            String msg = "Error occurred while decativating the active subscription of customer: " +
-                            tenantId + " " + e.getMessage();
+            String msg = "Error occurred while deactivating the active subscription of customer: " +
+                            tenantId;
             log.error(msg, e);
             throw new BillingException(msg, e);
         }

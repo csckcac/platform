@@ -148,27 +148,39 @@ public class DefaultTenantBilling implements TenantBillingService {
                 }
             }
         } catch (Exception e) {
-            String msg = "Error occurred while activating the subscription for tenant: " + tenantDomain +
-                         " " + e.getMessage();
-            log.error(msg);
+            String msg = "Error occurred while activating the subscription for tenant: " +
+                    tenantDomain;
+            log.error(msg, e);
             throw new StratosException(msg, e);
         }
     }
 
-    public void deactivateActiveUsagePlan(String tenantDomain) throws StratosException{
-        try{
-            TenantManager tenantMan = CloudCommonServiceComponent.getRealmService().getTenantManager();
+    public void deactivateActiveUsagePlan(String tenantDomain) throws StratosException {
+        try {
+            TenantManager tenantMan = 
+                    CloudCommonServiceComponent.getRealmService().getTenantManager();
             int tenantId = tenantMan.getTenantId(tenantDomain);
             BillingDataAccessService dataAccessService = new BillingDataAccessService();
-            boolean deactivated = dataAccessService.deactivateActiveSubscriptionBySuperTenant(tenantId);
-            if(deactivated){
-                log.info("Active subscription of tenant " + tenantId + " was deactivated");
+
+            Subscription subscription = 
+                    dataAccessService.getActiveSubscriptionOfCustomerBySuperTenant(tenantId);
+
+            if (subscription == null) {
+                String msg = "Unable to deactivate the subscription for tenant: " + tenantId +
+                        ". An active subscription doesn't exist";
+                log.info(msg);
+            } else {
+                boolean deactivated = 
+                        dataAccessService.deactivateActiveSubscriptionBySuperTenant(tenantId);
+                if (deactivated) {
+                    log.info("Active subscription of tenant " + tenantId + " was deactivated");
+                }
             }
-        }catch (Exception e){
-            log.error("Error occurred while deactivating the active subscription of tenant: " + tenantDomain +
-                        " " + e.getMessage(), e);
+        } catch (Exception e) {
+            String msg = "Error occurred while deactivating the active subscription of tenant: " +
+                    tenantDomain;
+            log.error(msg, e);
+            throw new StratosException(msg, e);
         }
     }
-
-
 }

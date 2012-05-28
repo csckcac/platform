@@ -106,11 +106,11 @@
                         <data name="transitionExecution">
                             <execution forEvent="Demote" class="org.wso2.carbon.governance.registry.extensions.executors.DemoteActionExecutor">
                             </execution>
-                            <execution forEvent="Promote" class="org.wso2.carbon.governance.registry.extensions.executors.apistore.ApiStoreExecutor">
+                            <execution forEvent="Publish" class="org.wso2.carbon.governance.registry.extensions.executors.apistore.ApiStoreExecutor">
                             </execution>
                         </data>
                     </datamodel>
-                    <transition event="Promote" target="Published.to.APIStore"/>
+                    <transition event="Publish" target="Published.to.APIStore"/>
                     <transition event="Demote" target="Testing"/>
                 </state>
                 <state id="Published.to.APIStore">

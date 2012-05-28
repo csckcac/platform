@@ -1,5 +1,6 @@
 <%
     include('includes/template_header.jag');
+    include('constants.jag');
 %>
 <script>
     $(document).ready(function() {
@@ -28,7 +29,7 @@
 <%
     var log = new Log();
     var applicationName = request.getParameter("applicationName");
-    var applicationKey = request.getParameter("applicationKey");
+    var applicationKey = request.getParameter("applicationKey")+APPLICATION_SUFFIX;
 
     include('mgt/applicationManager.jag');
     var userHasAccess = false;

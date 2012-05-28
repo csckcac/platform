@@ -99,7 +99,7 @@
         options.useSOAP = 1.1;
         options.timeout = 1000000;
         options.action = "urn:getRolesOfUserPerApplication";
-         options["HTTPHeaders"] = [ { name : "Cookie", value :getAdminCookie(address) }];
+        options["HTTPHeaders"] = [ { name : "Cookie", value :getAdminCookie(address) }];
         var payload =  '<p:getRolesOfUserPerApplication xmlns:p="http://service.mgt.application.appfactory.carbon.wso2.org"><xs:appId xmlns:xs="http://service.mgt.application.appfactory.carbon.wso2.org">'+applicationKey+'</xs:appId><xs:userName xmlns:xs="http://service.mgt.application.appfactory.carbon.wso2.org">'+userName+'</xs:userName></p:getRolesOfUserPerApplication>';
         var result;
 

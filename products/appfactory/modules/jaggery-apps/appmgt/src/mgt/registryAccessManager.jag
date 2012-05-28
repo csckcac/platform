@@ -26,7 +26,7 @@
         resource.addProperty(APPLICATION_KEY, applicationKey);
         resource.addProperty(APPLICATION_NAME, applicationName);
         resource.addProperty(APPLICATION_DESC, applicationName);
-        resource.addProperty(REPO_LINK, repoLink);
+//        resource.addProperty(REPO_LINK, repoLink);
 
 
         var path = APPLICATIONS + applicationKey;

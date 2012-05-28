@@ -23,7 +23,7 @@
     <!-- Web service end points including BPEL services-->
     <WebServiceEndPoints>
         <GetRolesOfUserForApplication>
-            http://localhost:9763/services/UserRoleService/getRolesOfUserPerApplication
+             https://localhost:9443/services/ApplicationManagementService
         </GetRolesOfUserForApplication>
 
         <CreateRepo>http://localhost:9763/services/IDTMESVNService/createRepository</CreateRepo>

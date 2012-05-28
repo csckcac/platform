@@ -68,7 +68,7 @@
                         <property>
                             <name>carbon.zip</name>
                             <value>
-                                ${basedir}/../../distribution/product/target/wso2esb-${project.version}.zip
+                                ${basedir}/../../distribution/target/wso2esb-${project.version}.zip
                             </value>
                         </property>
                     </systemProperties>

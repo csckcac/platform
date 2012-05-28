@@ -25,7 +25,7 @@
                     <systemProperties>
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
-                        <carbon.zip>${basedir}/../../distribution/product/target/wso2esb-${project.version}.zip</carbon.zip>
+                        <carbon.zip>${basedir}/../../distribution/target/wso2esb-${project.version}.zip</carbon.zip>
                         <emma.home>${basedir}/target/emma</emma.home>
                         <emma.output>${basedir}/target/emma</emma.output>
                     </systemProperties>

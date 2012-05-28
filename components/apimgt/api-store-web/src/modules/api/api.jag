@@ -20,7 +20,8 @@ var getAPIDescription = function (api, username) {
                 rating:api.rates,
                 subscribed:api.subscribed,
                 thumbURL:api.thumbnailurl,
-                tier:api.tier,
+                tierName:api.tierName,
+                tierDescription:api.tierDescription,
                 context:api.context,
                 serverURL:api.serverURL,
                 status:api.status

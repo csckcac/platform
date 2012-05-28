@@ -117,7 +117,7 @@ public class DefaultTenantBilling implements TenantBillingService {
             BillingDataAccessService dataAccessService = new BillingDataAccessService();
             Subscription subscription = dataAccessService.getActiveSubscriptionOfCustomerBySuperTenant(tenantId);
             if (subscription != null) {
-                String msg = "Cant activate subscription for tenant: " + tenantId +
+                String msg = "Unable to activate the subscription for tenant: " + tenantId +
                              ". An active subscription already exists";
                 log.info(msg);
             } else {

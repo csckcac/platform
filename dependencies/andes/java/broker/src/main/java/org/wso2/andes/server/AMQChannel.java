@@ -72,6 +72,7 @@ import org.wso2.andes.server.virtualhost.VirtualHost;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -816,10 +817,21 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
 
 
             try {
-                QueueSubscriptionAcknowledgementHandler acknowledgementHandler = ClusterResourceHolder.getInstance().
-                        getSubscriptionManager().getAcknowledgementHandlerMap().get(this);
-                acknowledgementHandler.handleAcknowledgement(deliveryTag);
+                if (ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()) {
 
+                    if(ClusterResourceHolder.getInstance().getSubscriptionManager().getUnAcknowledgedMessageLocks().containsKey(this)) {
+                        Map<Long,Semaphore> locks = ClusterResourceHolder.getInstance().getSubscriptionManager().
+                                getUnAcknowledgedMessageLocks().get(this);
+                        if(locks.containsKey(deliveryTag)) {
+                            locks.get(deliveryTag).release();
+                            locks.remove(deliveryTag);
+                        }
+                    }
+                } else {
+                    QueueSubscriptionAcknowledgementHandler acknowledgementHandler = ClusterResourceHolder.getInstance().
+                            getSubscriptionManager().getAcknowledgementHandlerMap().get(this);
+                    acknowledgementHandler.handleAcknowledgement(deliveryTag);
+                }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 throw new AMQException(e.getMessage());

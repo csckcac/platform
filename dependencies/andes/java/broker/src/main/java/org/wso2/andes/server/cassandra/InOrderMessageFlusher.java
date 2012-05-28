@@ -20,6 +20,7 @@ package org.wso2.andes.server.cassandra;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.AMQStoreException;
+import org.wso2.andes.server.AMQChannel;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.protocol.AMQProtocolSession;
 import org.wso2.andes.server.queue.AMQQueue;
@@ -29,6 +30,10 @@ import org.wso2.andes.server.subscription.Subscription;
 import org.wso2.andes.server.subscription.SubscriptionImpl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <Code>InOrderMessageFlusher</Code>
@@ -43,7 +48,7 @@ public class InOrderMessageFlusher {
     private String id;
     private int defaultMessageCount = 1;
     private int messageCount;
-
+    private ClusteringEnabledSubscriptionManager subscriptionManager;
 
 
     private long maxWaitTimePerMessage = 2*60*1000;
@@ -57,8 +62,7 @@ public class InOrderMessageFlusher {
         this.session = session;
         this.id = ""+ subscription.getSubscriptionID();
         this.messageCount = defaultMessageCount;
-
-
+        this.subscriptionManager = ClusterResourceHolder.getInstance().getSubscriptionManager();
     }
 
 
@@ -77,8 +81,21 @@ public class InOrderMessageFlusher {
                             //proper order in deliveryTagId
                             synchronized (((SubscriptionImpl.AckSubscription) subscription).
                                     getChannel()) {
-                                subscription.send(message);
 
+                                AMQChannel channel = ((SubscriptionImpl)subscription).getChannel();
+
+                                if(!subscriptionManager.getUnAcknowledgedMessageLocks().containsKey(channel)) {
+                                    Map<Long,Semaphore> messageLocks = new ConcurrentHashMap<Long,Semaphore>();
+                                    subscriptionManager.getUnAcknowledgedMessageLocks().put(channel, messageLocks);
+                                }
+
+                                Semaphore lock = new Semaphore(1);
+                                lock.acquire();
+                                subscriptionManager.getUnAcknowledgedMessageLocks().get(channel).
+                                        put(channel.getCurrentDeliveryTag() + 1, lock);
+                                subscription.send(message);
+                                lock.tryAcquire(ClusterResourceHolder.getInstance().
+                                        getClusterConfiguration().getMaxAckWaitTime(), TimeUnit.SECONDS);
                                 messageStore.removeMessageFromGlobalQueue(queue.getName(),
                                         message.getMessage().getMessageNumber());
                             }

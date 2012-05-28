@@ -266,27 +266,32 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
             try {
                 recordMessageDelivery(entry, deliveryTag);
 
-                QueueSubscriptionAcknowledgementHandler ackHandler = ClusterResourceHolder.getInstance().
-                        getSubscriptionManager().getAcknowledgementHandlerMap().get(getChannel());
 
-                if (ackHandler == null) {
-                    QueueSubscriptionAcknowledgementHandler handler =
-                            new QueueSubscriptionAcknowledgementHandler(ClusterResourceHolder.getInstance().
-                                    getCassandraMessageStore(), entry.getQueue().getResourceName());
-                    ClusterResourceHolder.getInstance().
-                            getSubscriptionManager().getAcknowledgementHandlerMap().put(getChannel(), handler);
-                    ackHandler = handler;
-                }
-
-                if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(),
-                        entry.getQueue().getResourceName()+"_" + ClusterResourceHolder.getInstance().
-                                getClusterManager().getNodeId())) {
-
-                    sendToClient(entry, deliveryTag);
-
+                if (ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()) {
+                    sendToClient(entry,deliveryTag);
                 } else {
-                    if(log.isDebugEnabled()) {
-                        log.debug("Message Send attempt stopped. This can be an already delivered message");
+                    QueueSubscriptionAcknowledgementHandler ackHandler = ClusterResourceHolder.getInstance().
+                            getSubscriptionManager().getAcknowledgementHandlerMap().get(getChannel());
+
+                    if (ackHandler == null) {
+                        QueueSubscriptionAcknowledgementHandler handler =
+                                new QueueSubscriptionAcknowledgementHandler(ClusterResourceHolder.getInstance().
+                                        getCassandraMessageStore(), entry.getQueue().getResourceName());
+                        ClusterResourceHolder.getInstance().
+                                getSubscriptionManager().getAcknowledgementHandlerMap().put(getChannel(), handler);
+                        ackHandler = handler;
+                    }
+
+                    if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(),
+                            entry.getQueue().getResourceName() + "_" + ClusterResourceHolder.getInstance().
+                                    getClusterManager().getNodeId())) {
+
+                        sendToClient(entry, deliveryTag);
+
+                    } else {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Message Send attempt stopped. This can be an already delivered message");
+                        }
                     }
                 }
 

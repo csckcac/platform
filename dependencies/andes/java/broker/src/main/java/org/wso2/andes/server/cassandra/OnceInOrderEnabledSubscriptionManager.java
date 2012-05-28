@@ -45,7 +45,7 @@ public class OnceInOrderEnabledSubscriptionManager implements ClusteringEnabledS
 
     private boolean active = true;
 
-/**
+    /**
      * Hash map that keeps the unacked messages.
      */
     private Map<AMQChannel, Map<Long, Semaphore>> unAckedMessagelocks =

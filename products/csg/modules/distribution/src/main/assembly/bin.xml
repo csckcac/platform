@@ -51,11 +51,11 @@
             <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/samples/service/services</directory>
+            <directory>../../modules/samples/service/services</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Server/src</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/samples/service/src/main/java</directory>
+            <directory>../../modules/samples/service/src/main/java</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Client/src</outputDirectory>
             <excludes>
                 <exclude>**/target</exclude>
@@ -63,14 +63,14 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/samples/service/src/main/scripts</directory>
+            <directory>../../modules/samples/service/src/main/scripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Client</outputDirectory>
             <includes>
                 <include>build.xml</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/samples/service/src/main/scripts</directory>
+            <directory>../../modules/samples/service/src/main/scripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/bin</outputDirectory>
             <includes>
                 <include>wso2esb-samples.sh</include>
@@ -78,14 +78,14 @@
             <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/samples/service/src/main/scripts</directory>
+            <directory>../../modules/samples/service/src/main/scripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/bin</outputDirectory>
             <includes>
                 <include>wso2esb-samples.bat</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/samples/service/src/main/scripts</directory>
+            <directory>../../modules/samples/service/src/main/scripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Server</outputDirectory>
             <includes>
                 <include>axis2server.sh</include>
@@ -93,14 +93,14 @@
             <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/samples/service/src/main/scripts</directory>
+            <directory>../../modules/samples/service/src/main/scripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/axis2Server</outputDirectory>
             <includes>
                 <include>axis2server.bat</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/samples/service/src/main/conf/synapse</directory>
+            <directory>../../modules/samples/service/src/main/conf/synapse</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/samples</outputDirectory>
         </fileSet>
         <fileSet>
@@ -113,21 +113,21 @@
 			<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
         </fileSet>
        <fileSet>
-           <directory>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/dbscripts/identity/</directory>
+           <directory>../p2-profile/target/wso2carbon-core-${carbon.version}/dbscripts/identity/</directory>
            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/identity</outputDirectory>
            <includes>
                <include>**/**.sql</include>
            </includes>
        </fileSet>
        <fileSet>
-           <directory>../../styles/service/src/main/resources/web/styles/css</directory>
+           <directory>../styles/service/src/main/resources/web/styles/css</directory>
            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/admin</outputDirectory>
            <includes>
                <include>**/**.css</include>
            </includes>
        </fileSet>
        <fileSet>
-           <directory>../../styles/service/src/main/resources/web/styles/images</directory>
+           <directory>../styles/service/src/main/resources/web/styles/images</directory>
            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/images</outputDirectory>
            <includes>
                <include>**/**.gif</include>
@@ -149,21 +149,21 @@
 	<!-- copying event broker config file -->
         <file>
             <source>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
         </file>
         <!-- Including syslog-config.xml file -->
 	 <file>
-            <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml</source>
+            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
         </file>
         <file>
-	        <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml</source>
+	        <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml</source>
 	        <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
     	</file>
         <file>
-	        <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml</source>
+	        <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml</source>
 	        <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
     	</file>
 
@@ -185,25 +185,25 @@
         </file>
         <file>
             <source>src/main/conf/synapse.properties</source>
-			<outputDirectory>${pom.artifactId}-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
+	    <outputDirectory>${pom.artifactId}-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
             <destName>synapse.properties</destName>
             <filtered>true</filtered>
         </file>
         <file>
             <source>src/main/conf/datasources.properties</source>
-			<outputDirectory>${pom.artifactId}-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
             <destName>datasources.properties</destName>
             <filtered>true</filtered>
         </file>
         <file>
             <source>src/main/conf/cipher-text.properties</source>
-			<outputDirectory>${pom.artifactId}-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
             <destName>cipher-text.properties</destName>
             <filtered>true</filtered>
         </file>
         <file>
             <source>src/main/conf/nhttp.properties</source>
-			<outputDirectory>${pom.artifactId}-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
             <destName>nhttp.properties</destName>
             <filtered>true</filtered>
         </file>
@@ -220,25 +220,25 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>../../../LICENSE.txt</source>
+            <source>../../LICENSE.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../README.txt</source>
+            <source>../../README.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../INSTALL.txt</source>
+            <source>../../INSTALL.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../docs/xdoc/release-notes.xml</source>
+            <source>../../docs/xdoc/release-notes.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <destName>release-notes.html</destName>
             <fileMode>644</fileMode>
@@ -266,16 +266,16 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/identity.xml</source>
+            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/identity.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
-               <filtered>true</filtered>
-               <fileMode>644</fileMode>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
         </file>	
         <file>
-            <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/stratos.xml</source>
+            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/stratos.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
-               <filtered>true</filtered>
-               <fileMode>644</fileMode>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
         </file>
 
     </files>

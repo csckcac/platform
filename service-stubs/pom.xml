@@ -61,7 +61,7 @@
 				<module>org.wso2.carbon.cloud.csg.agent.stub</module>
 				<module>org.wso2.carbon.cloud.csg.stub</module>
 				<module>org.wso2.carbon.cluster.mgt.admin.stub</module>
-				<module>org.wso2.carbon.dashboard.mgt.gadgetrepo.stub</module>				
+				<module>org.wso2.carbon.dashboard.mgt.gadgetrepo.stub</module>
 				<module>org.wso2.carbon.dashboard.mgt.theme.stub</module>
 				<module>org.wso2.carbon.dashboard.mgt.users.stub</module>
                                <module>org.wso2.carbon.dashboard.mgt.oauth.stub</module>
@@ -211,6 +211,7 @@
 				<module>org.wso2.carbon.hosting.wnregistration.stub</module>
 				<module>org.wso2.carbon.load.balance.autoscaler.service.stub</module>
 				<module>org.wso2.carbon.autoscaler.service.jvm.agentmgt.stub</module>
+				<module>org.wso2.carbon.bam.gadgetgenwizard.stub</module>
 			</modules>
 
     <build>
@@ -218,7 +219,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version> 
+                <version>1.7</version>
             </plugin>
         </plugins>
     </build>

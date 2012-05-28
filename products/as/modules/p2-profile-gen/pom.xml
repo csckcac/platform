@@ -136,9 +136,13 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.deployment.feature:${stratos.version}</featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.appserver:org.wso2.stratos.appserver.dashboard.ui.feature:${stratos.version}
+                                </featureArtifactDef>
+
                                 <featureArtifactDef>org.wso2.appserver:org.wso2.stratos.appserver.sample.installer.ui.feature:${stratos.version}</featureArtifactDef>
-                                
- 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bam.lwevent.feature:${carbon.version}</featureArtifactDef> 
+
+ 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bam.lwevent.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bam.data.publisher.servicestats.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.ui.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>
@@ -147,9 +151,9 @@
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.subversion.feature:${carbon.version}</featureArtifactDef>
    				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.issue.tracker.feature:${carbon.version}</featureArtifactDef>
 
-                                <!-- GApp SSO features --> 
+                                <!-- GApp SSO features -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.gapp.feature:${stratos.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.relying.party.feature:${carbon.version}</featureArtifactDef>                            
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.relying.party.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.core.feature:${carbon.version}</featureArtifactDef>
                                 <!-- End GApp SSO features -->
                             </featureArtifacts>
@@ -216,12 +220,12 @@
                                     <id>org.wso2.carbon.jarservices.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                          
+
                                 <feature>
                                     <id>org.wso2.carbon.springservices.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                              
+
                                 <feature>
                                     <id>org.wso2.carbon.service.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
@@ -236,17 +240,17 @@
                                     <id>org.wso2.carbon.jaxws.webapp.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                 
+
                                 <feature>
                                     <id>org.wso2.carbon.discovery.core.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-    
+
                                 <feature>
                                     <id>org.wso2.carbon.tryit.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                             
+
                                 <feature>
                                     <id>org.wso2.carbon.transport.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
@@ -261,17 +265,17 @@
                                     <id>org.wso2.carbon.transport.mail.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                               
+
                                 <feature>
                                     <id>org.wso2.carbon.message.flows.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                             
+
                                 <feature>
                                     <id>org.wso2.carbon.sts.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                            
+
                                 <feature>
                                     <id>org.wso2.carbon.xfer.feature.group</id>
                                     <version>${carbon.platform.version}</version>
@@ -297,12 +301,12 @@
                                     <id>org.wso2.carbon.event.server.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                            
+
                                 <feature>
                                     <id>org.wso2.carbon.registry.core.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                             
+
                                 <feature>
                                     <id>org.wso2.carbon.registry.ui.menu.feature.group</id>
                                     <version>${carbon.platform.version}</version>
@@ -312,7 +316,7 @@
                                     <id>org.wso2.carbon.registry.resource.properties.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-                         
+
                                 <feature>
                                     <id>org.wso2.appserver.styles.feature.group</id>
                                     <version>${project.version}</version>
@@ -327,7 +331,7 @@
                                     <id>org.wso2.carbon.identity.authenticator.token.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-				
+
                                 <feature>
                                     <id>org.wso2.carbon.application.mgt.feature.group</id>
                                     <version>${carbon.platform.version}</version>
@@ -408,6 +412,10 @@
                                     <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.stratos.appserver.dashboard.ui.feature.group</id>
+                                    <version>${stratos.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.stratos.appserver.sample.installer.ui.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
@@ -443,7 +451,7 @@
                                     <id>org.wso2.carbon.issue.tracker.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <!-- GApp SSO features --> 
+                                <!-- GApp SSO features -->
                                 <feature>
                                     <id>org.wso2.carbon.stratos.gapp.feature.group</id>
                                     <version>${stratos.version}</version>

@@ -84,6 +84,10 @@ public final class APIUtil {
             api.setStatus(getApiStatus(artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS)));
             api.setThumbnailUrl(artifact.getAttribute(APIConstants.API_OVERVIEW_THUMBNAIL_URL));
             api.setWsdlUrl(artifact.getAttribute(APIConstants.API_OVERVIEW_WSDL));
+            api.setTechnicalOwner(artifact.getAttribute(APIConstants.API_OVERVIEW_BUSS_OWNER_EMAIL));
+            api.setTechnicalOwnerEmail(artifact.getAttribute(APIConstants.API_OVERVIEW_TEC_OWNER_EMAIL));
+            api.setBusinessOwner(artifact.getAttribute(APIConstants.API_OVERVIEW_BUSS_OWNER));
+            api.setBusinessOwnerEmail(artifact.getAttribute(APIConstants.API_OVERVIEW_BUSS_OWNER_EMAIL));
 
             Set<Tier> availableTier = new HashSet<Tier>();
             String tiers = artifact.getAttribute(APIConstants.API_OVERVIEW_TIER);
@@ -187,6 +191,10 @@ public final class APIUtil {
             artifact.setAttribute(APIConstants.API_OVERVIEW_WSDL, api.getWsdlUrl());
             artifact.setAttribute(APIConstants.API_OVERVIEW_THUMBNAIL_URL, api.getThumbnailUrl());
             artifact.setAttribute(APIConstants.API_OVERVIEW_STATUS, apiStatus);
+            artifact.setAttribute(APIConstants.API_OVERVIEW_TEC_OWNER,api.getTechnicalOwner());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_TEC_OWNER_EMAIL ,api.getTechnicalOwnerEmail());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_BUSS_OWNER ,api.getBusinessOwner());
+            artifact.setAttribute(APIConstants.API_OVERVIEW_BUSS_OWNER_EMAIL,api.getBusinessOwnerEmail());
             String tiers = "";
             for (Tier tier : api.getAvailableTiers()) {
                 tiers += tier.getName() + "||";

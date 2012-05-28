@@ -73,6 +73,12 @@ public final class APIConstants {
     public static final String API_OVERVIEW_TIER="overview_tier";
     public static final String API_OVERVIEW_IS_LATEST ="overview_isLatest";
     public static final String API_URI_TEMPLATES ="uriTemplates_entry";
+    public static final String API_OVERVIEW_TEC_OWNER ="overview_technicalOwner";
+    public static final String API_OVERVIEW_TEC_OWNER_EMAIL ="overview_technicalOwnerEmail";
+    public static final String API_OVERVIEW_BUSS_OWNER ="overview_businessOwner";
+    public static final String API_OVERVIEW_BUSS_OWNER_EMAIL ="overview_BusinessOwnerEmail";
+
+
 
 
     //Those constance are used in Provider artifact.

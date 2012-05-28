@@ -151,16 +151,27 @@ public class RegistrySearchByResourceNameTest {
     @DataProvider(name = "invalidCharacter")
     public Object[][] invalidCharacter() {
         return new Object[][]{
-                {"<a>"},
+                {"<"},
+                {">"},
                 {"#"},
-                {"a|b"},
                 {"   "},
                 {"@"},
                 {"|"},
                 {"^"},
-                {"abc^"},
                 {"/"},
-                {"\\"}
+                {"\\"},
+                {","},
+                {"\""},
+                {"~"},
+                {"!"},
+                {"*"},
+                {"{"},
+                {"}"},
+                {"["},
+                {"]"},
+                {"-"},
+                {"("},
+                {")"}
         };
 
 

@@ -20,7 +20,7 @@ package org.wso2.automation.common.test.greg.metadatasearch.bean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
 
 public class SearchParameterBean {
-    private ArrayOfString[] paramList = new ArrayOfString[17];
+    private ArrayOfString[] paramList = new ArrayOfString[16];
 
     public SearchParameterBean() {
         paramList[0] = new ArrayOfString();
@@ -71,8 +71,6 @@ public class SearchParameterBean {
         paramList[15] = new ArrayOfString();
         paramList[15].setArray(new String[]{"mediaType", ""});
 
-        paramList[16] = new ArrayOfString();
-        paramList[16].setArray(new String[]{"createdRangeNegate", ""});
     }
 
     public ArrayOfString[] getParameterList() {
@@ -144,10 +142,4 @@ public class SearchParameterBean {
         paramList[15].setArray(new String[]{"mediaType", mediaType});
     }
 
-    public void setCreatedDateRangeNot(boolean not) {
-        if (not) {
-            paramList[16].setArray(new String[]{"createdRangeNegate", "on"});
-        }
-
-    }
 }

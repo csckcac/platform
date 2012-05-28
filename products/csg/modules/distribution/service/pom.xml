@@ -34,7 +34,7 @@
     <packaging>pom</packaging>
     <name>WSO2 CSG - Distribution</name>
     <url>http://wso2.org/projects/esb/java</url>
-    <description>WSO2 Stratos Enterprise Service Bus Distribution</description>
+    <description>WSO2 Cloud Services Gateway Distribution</description>
 
     <build>
         <plugins>

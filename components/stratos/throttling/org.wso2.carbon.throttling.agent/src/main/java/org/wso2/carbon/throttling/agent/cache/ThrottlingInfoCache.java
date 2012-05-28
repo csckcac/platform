@@ -34,11 +34,11 @@ public class ThrottlingInfoCache {
     private Map<Integer, TenantThrottlingInfo> tenantThrottlingInfoMap =
             new ConcurrentHashMap<Integer, TenantThrottlingInfo>();
 
-    public void addTenant(Integer tenantId){
+    public void addTenant(int tenantId){
         tenantThrottlingInfoMap.put(tenantId, new TenantThrottlingInfo());
     }
 
-    public void deleteTenant(Integer tenantId){
+    public void deleteTenant(int tenantId){
         tenantThrottlingInfoMap.remove(tenantId);
     }
 
@@ -46,13 +46,13 @@ public class ThrottlingInfoCache {
         return tenantThrottlingInfoMap.keySet();
     }
 
-    public void updateThrottlingActionInfo(Integer tenantId, String action, ThrottlingActionInfo throttlingActionInfo){
+    public void updateThrottlingActionInfo(int tenantId, String action, ThrottlingActionInfo throttlingActionInfo){
         // throttlingInfo could never be null if the update and lazy loading logic are correct.
         TenantThrottlingInfo throttlingInfo = tenantThrottlingInfoMap.get(tenantId);
         throttlingInfo.updateThrottlingActionInfo(action, throttlingActionInfo);
     }
 
-    public ThrottlingActionInfo getThrottlingActionInfo(Integer tenantId, String action){
+    public ThrottlingActionInfo getThrottlingActionInfo(int tenantId, String action){
         if(tenantThrottlingInfoMap.get(tenantId) != null){
             return tenantThrottlingInfoMap.get(tenantId).getThrottlingActionInfo(action);
         }
@@ -62,7 +62,7 @@ public class ThrottlingInfoCache {
         return null;
     }
 
-    public TenantThrottlingInfo getTenantThrottlingInfo(Integer tenantId){
+    public TenantThrottlingInfo getTenantThrottlingInfo(int tenantId){
         if(!tenantThrottlingInfoMap.containsKey(tenantId)){
             tenantThrottlingInfoMap.put(tenantId, new TenantThrottlingInfo());
         }

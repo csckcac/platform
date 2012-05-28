@@ -26,7 +26,7 @@
         resource.addProperty(APPLICATION_KEY, applicationKey);
         resource.addProperty(APPLICATION_NAME, applicationName);
         resource.addProperty(APPLICATION_DESC, applicationName);
-//        resource.addProperty(REPO_LINK, repoLink);
+        resource.addProperty(APPLICATION_REPO_LINK, repoLink);
 
 
         var path = APPLICATIONS + applicationKey;
@@ -133,7 +133,7 @@
     function getRepositoryPath(applicationKey){
         path = APPLICATIONS + applicationKey;
         if(resourceExists(path)) {
-            return getResource(path).getProperty(REPO_LINK);
+            return getResource(path).getProperty(APPLICATION_REPO_LINK);
         }
     }
 %>

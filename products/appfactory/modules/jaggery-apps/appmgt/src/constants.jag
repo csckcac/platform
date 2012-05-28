@@ -7,7 +7,7 @@
     var APPLICATION_KEY = "applicationKey";
     var APPLICATION_NAME = "applicationName";
     var APPLICATION_DESC = "applicationDescription";
-    var REPO_LINK = "repoLink";
+    var APPLICATION_REPO_LINK = "applicationRepoLink";
     var APPLICATION_SUFFIX = ".apps";
 
     // property keys of registry 'userApplicationMapping' resource

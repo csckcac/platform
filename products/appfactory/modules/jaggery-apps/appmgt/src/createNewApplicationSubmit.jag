@@ -19,8 +19,9 @@
                     }else{
                        var repositoryPath=createApplication(applicationName,userName);
                        if(repositoryPath!=undefined){
+                            repositoryPath=repositoryPath.toString();
                             addApplicationToApp(applicationName, applicationName, applicationName, repositoryPath);
-                             print('Application is created with svn repository path:<br><a href="'+repositoryPath+'">'+repositoryPath+'</a>');
+                            print('Application is created with svn repository path:<br><a href="'+repositoryPath+'">'+repositoryPath+'</a>');
                        }
                     }
 

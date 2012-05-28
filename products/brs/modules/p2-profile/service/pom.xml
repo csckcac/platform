@@ -100,7 +100,6 @@
                                			 <!-- cloud brs features -->
  				<featureArtifactDef>org.wso2.brs:org.wso2.stratos.brs.styles.feature:${project.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.brs:org.wso2.stratos.brs.dashboard.ui.feature:${project.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.brs:org.wso2.stratos.brs.login.ui.feature:${project.version}</featureArtifactDef>
 
                                 <!-- Features related to Cloud -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
@@ -125,9 +124,9 @@
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}</featureArtifactDef>
 									
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.server.feature:${carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.core.feature:${carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.admin.ui.feature:${carbon.version}</featureArtifactDef>
+   			        <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.server.feature:${carbon.version}</featureArtifactDef>
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.core.feature:${carbon.version}</featureArtifactDef>
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.admin.ui.feature:${carbon.version}</featureArtifactDef>
    				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.issue.tracker.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}</featureArtifactDef>
@@ -228,10 +227,6 @@
                                 </feature>
 				<feature>
                                     <id>org.wso2.stratos.brs.dashboard.ui.feature.group</id>
-                                    <version>${project.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.stratos.brs.login.ui.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
 

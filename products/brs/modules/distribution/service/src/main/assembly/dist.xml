@@ -24,7 +24,7 @@
         <!-- Copying p2 profile and osgi bundles-->
         <fileSet>
             <directory>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/components</directory>
-            <outputDirectory>wso2stratos-brs-${pom.version}/repository/components</outputDirectory>
+            <outputDirectory>wso2brs-${pom.version}/repository/components</outputDirectory>
             <excludes>
                 <exclude>**/eclipse.ini</exclude>
                 <exclude>**/*.lock</exclude>

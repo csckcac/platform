@@ -29,7 +29,7 @@
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../../distribution/product/target/wso2brs-${project.version}.zip
+                            ${basedir}/../../distribution/service/target/wso2brs-${project.version}.zip
                         </carbon.zip>
                         <samples.dir>${basedir}/../org.wso2.carbon.brs.integration.services
                         </samples.dir>

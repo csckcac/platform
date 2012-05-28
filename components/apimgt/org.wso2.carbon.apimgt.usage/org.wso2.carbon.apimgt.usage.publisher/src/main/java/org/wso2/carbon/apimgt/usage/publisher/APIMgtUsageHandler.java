@@ -66,8 +66,13 @@ public class APIMgtUsageHandler extends AbstractHandler {
         }
         String context = (String)mc.getProperty(RESTConstants.REST_API_CONTEXT);
         String api_version =  (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API);
+        int index = api_version.indexOf("--");
+        if (index != -1) {
+            api_version = api_version.substring(index + 2);
+        }
+
         String api = api_version.split(":")[0];
-        int index = api.indexOf("--");
+        index = api.indexOf("--");
         if (index != -1) {
             api = api.substring(index + 2);
         }

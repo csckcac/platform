@@ -8,7 +8,7 @@
         <li><a href="#lifecycles" data-toggle="tab" id="lifecycleLink"><i class="icon-edit"></i>Life Cycle</a></li>
         <li><a href="#versions" data-toggle="tab" id="versionsLink"><i class="icon-th-list"></i>Versions</a></li>
         <li><a href="#docs" data-toggle="tab" id="docsLink"><i class="icon-file"></i>Docs</a></li>
-        <li><a href="#users" data-toggle="tab" id="usersLink"><i class="icon-user"></i>API Users</a></li>
+        <li><a href="#users" data-toggle="tab" id="usersLink"><i class="icon-user"></i>Users</a></li>
     </ul>
     <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade active in" id="view"><% jagg.includeBlock("overview", {api:api}); %></div>

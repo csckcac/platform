@@ -176,4 +176,11 @@ public interface QpidService {
      * Returns whether external cassandra server required
      * @return required status of external cassandra server*/
     public boolean isExternalCassandraServerRequired();
+
+
+    /**
+     * Returns weather external zookeeper server required
+     * @return required status of external
+     */
+    public boolean isExternalZookeeperServerRequired();
 }

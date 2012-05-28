@@ -18,6 +18,7 @@ package org.wso2.carbon.andes.internal;
 
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.cassandra.server.service.CassandraServerService;
+import org.wso2.carbon.coordination.server.service.CoordinationServerService;
 import org.wso2.carbon.event.core.EventBundleNotificationService;
 
 /**
@@ -31,7 +32,7 @@ public class QpidServiceDataHolder {
     private ServerConfigurationService carbonConfiguration = null;
     private EventBundleNotificationService eventBundleNotificationService;
     private CassandraServerService cassandraServerService = null;
-
+    private CoordinationServerService coordinationServerService;
 
     private QpidServiceDataHolder() {
     }
@@ -92,5 +93,13 @@ public class QpidServiceDataHolder {
 
     public void registerCassandraServerService(CassandraServerService cassandraServerService) {
         this.cassandraServerService = cassandraServerService;
+    }
+
+    public CoordinationServerService getCoordinationServerService() {
+        return coordinationServerService;
+    }
+
+    public void setCoordinationServerService(CoordinationServerService coordinationServerService) {
+        this.coordinationServerService = coordinationServerService;
     }
 }

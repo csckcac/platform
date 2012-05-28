@@ -55,6 +55,7 @@ public class QpidServiceImpl implements QpidService {
     private static final String QPID_CONF_CLUSTER_NODE="clustering";
     private static final String QPID_CONF_CLUSTER_ENABLE_NODE="enabled";
     private static final String QPID_CONF_EXTERNAL_CASSANDRA_SERVER="externalCassandraServerRequired";
+    private static final String QPID_CONF_EXTERNAL_ZOOKEEPER_SERVER="externalZookeeperServerRequired";
 
     private static String CARBON_CONFIG_QPID_PORT_NODE = "Ports.EmbeddedQpid.BrokerPort";
     private static String CARBON_CONFIG_QPID_SSL_PORT_NODE = "Ports.EmbeddedQpid.BrokerSSLPort";
@@ -71,6 +72,7 @@ public class QpidServiceImpl implements QpidService {
 
     private Boolean clsuterEnabled;
     private Boolean externalCassandraRequired;
+    private Boolean externalZookeeperRequired;
 
     public QpidServiceImpl(String accessKey) {
         this.accessKey = accessKey;
@@ -217,6 +219,14 @@ public class QpidServiceImpl implements QpidService {
         return externalCassandraRequired;
     }
 
+    @Override
+    public boolean isExternalZookeeperServerRequired() {
+        if(externalZookeeperRequired == null) {
+            externalZookeeperRequired = readExternalZookeeperServerRequiredStatusFromQpidConfig();
+        }
+        return externalZookeeperRequired;
+    }
+
     private int readPortOffset() {
         ServerConfigurationService carbonConfig = QpidServiceDataHolder.getInstance().getCarbonConfiguration();
         String portOffset = carbonConfig.getFirstProperty(CARBON_CONFIG_PORT_OFFSET_NODE);
@@ -300,6 +310,36 @@ public class QpidServiceImpl implements QpidService {
      *
      * @return
      */
+    private boolean readExternalZookeeperServerRequiredStatusFromQpidConfig() {
+        String required = "";
+
+        try {
+            File confFile = new File(getQpidHome() + QPID_CONF_FILE);
+
+            OMElement docRootNode = new StAXOMBuilder(new FileInputStream(confFile)).
+                    getDocumentElement();
+            OMElement clusteringNode = docRootNode.getFirstChildWithName(
+                    new QName(QPID_CONF_CLUSTER_NODE));
+            OMElement statusNode = clusteringNode.getFirstChildWithName(
+                    new QName(QPID_CONF_EXTERNAL_ZOOKEEPER_SERVER));
+
+            required = statusNode.getText();
+        } catch (FileNotFoundException e) {
+            log.error(getQpidHome() + QPID_CONF_FILE + " not found");
+        } catch (XMLStreamException e) {
+            log.error("Error while reading " + getQpidHome() +
+                      QPID_CONF_FILE + " : " + e.getMessage());
+        } catch (NullPointerException e) {
+            log.error("Invalid configuration : " + getQpidHome() + QPID_CONF_FILE);
+        }
+
+        if("true".equals(required)) {
+            return true;
+        }
+
+        return false;
+    }
+
     private boolean readClusterEnabledDisabledStatusFromQpidConfig() {
         String required = "";
 
@@ -329,6 +369,8 @@ public class QpidServiceImpl implements QpidService {
 
         return false;
     }
+
+
 
     private boolean readCassandraServerRequirementStatusFromQpidConfig() {
         String enabled = "";

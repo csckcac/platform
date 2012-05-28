@@ -30,6 +30,7 @@ import org.wso2.carbon.andes.service.QpidServiceImpl;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.cassandra.server.service.CassandraServerService;
+import org.wso2.carbon.coordination.server.service.CoordinationServerService;
 import org.wso2.carbon.event.core.EventBundleNotificationService;
 import org.wso2.carbon.event.core.qpid.QpidServerDetails;
 import org.wso2.carbon.utils.ServerConstants;
@@ -77,6 +78,12 @@ import java.util.Set;
  *                              policy="dynamic"
  *                              bind="setCassandraServerService"
  *                              unbind="unsetCassandraServerService"
+ * @scr.reference    name="coordination.service"
+ *                              interface="org.wso2.carbon.coordination.server.service.CoordinationServerService"
+ *                              cardinality="1..1"
+ *                              policy="dynamic"
+ *                              bind="setCoordinationServerService"
+ *                              unbind="unsetCoordinationServerService"
  */
 public class QpidServiceComponent {
 
@@ -87,7 +94,9 @@ public class QpidServiceComponent {
     private static final String QPID_DERBY_LOG_FILE = "/repository/logs/qpid-derby-store.log";
     private static final int CASSANDRA_THRIFT_PORT= 9160;
     private static String CARBON_CONFIG_PORT_OFFSET = "Ports.Offset";
+    private static String CARBON_CONFIG_HOST_NAME = "HostName";
     private static int CARBON_DEFAULT_PORT_OFFSET = 0;
+
 
     private ServiceRegistration qpidService = null;
 
@@ -112,6 +121,37 @@ public class QpidServiceComponent {
 
         CassandraServerService cassandraServerService = QpidServiceDataHolder.getInstance().getCassandraServerService();
 
+        CoordinationServerService coordinationServerService = QpidServiceDataHolder.getInstance().
+                getCoordinationServerService();
+
+        if(coordinationServerService != null) {
+            if(!qpidServiceImpl.isExternalZookeeperServerRequired()) {
+                coordinationServerService.startServer();
+                try {
+                    Thread.sleep(2*1000);
+                } catch (InterruptedException e) {
+
+                }
+
+                int count = 0;
+
+                while (!isCoordinationServerStarted()) {
+                    count++;
+                    if(count > 60) {
+                        break;
+                    }
+                    try {
+                        Thread.sleep(10*1000);
+                    } catch (InterruptedException e) {
+
+                    }
+                }
+            }
+        } else {
+            log.error("Coordination Server service not set properly server will not start properly");
+            throw new RuntimeException("Coordination Server service not set properly server will not start properly");
+        }
+
         if(cassandraServerService != null) {
             if(!qpidServiceImpl.isExternalCassandraServerRequired()) {
                 cassandraServerService.startServer();
@@ -131,6 +171,7 @@ public class QpidServiceComponent {
             }
         } else {
             log.error("Cassandra Server service not set properly server will not start properly");
+            throw new RuntimeException("Cassandra Server service not set properly server will not start properly");
         }
 
         // Start andes broker
@@ -159,7 +200,7 @@ public class QpidServiceComponent {
             while (!isServerStarted) {
                 Socket socket = null;
                 try {
-                    InetAddress address = InetAddress.getByName("localhost");
+                    InetAddress address = InetAddress.getByName(getCarbonHostName());
                     socket = new Socket(address, port);
                     isServerStarted = socket.isConnected();
                     if (isServerStarted) {
@@ -252,6 +293,17 @@ public class QpidServiceComponent {
 
     }
 
+    protected void setCoordinationServerService(CoordinationServerService coordinationServerService) {
+        if (QpidServiceDataHolder.getInstance().getCoordinationServerService() == null) {
+            QpidServiceDataHolder.getInstance().setCoordinationServerService(coordinationServerService);
+        }
+    }
+
+    protected void unsetCoordinationServerService(CoordinationServerService coordinationServerService) {
+
+
+    }
+
     /**
         * Check if the broker is up and running
         *
@@ -281,8 +333,39 @@ public class QpidServiceComponent {
         boolean status = false;
         try {
             int listenPort =  CASSANDRA_THRIFT_PORT + readPortOffset();
-            socket = new Socket(InetAddress.getByName("localhost"),listenPort);
+            socket = new Socket(InetAddress.getByName(getCarbonHostName()),listenPort);
         } catch (UnknownHostException e) {
+            throw new RuntimeException("Unexpected Error while Checking for Cassandra Startup",e);
+        } catch (IOException e) {
+        } finally {
+            if(socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+
+                }
+                status = true;
+            }
+        }
+        log.debug("Checking for Cassandra server started status - status :" + status);
+        return status;
+    }
+
+
+    private boolean isCoordinationServerStarted() {
+         Socket socket = null;
+        boolean status = false;
+        try {
+
+            CoordinationServerService coordinationServerService = QpidServiceDataHolder.getInstance().
+                    getCoordinationServerService();
+
+            String clientPortStr = coordinationServerService.getZKServerConfigurationProperties().
+                    getProperty(CoordinationServerService.CLIENT_PORT);
+            int listenPort =  clientPortStr!= null? Integer.parseInt(clientPortStr) : 2181 + readPortOffset();
+            socket = new Socket(InetAddress.getByName(getCarbonHostName()),listenPort);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException("Unexpected Error while Checking for Cassandra Startup",e);
         } catch (IOException e) {
         } finally {
             if(socket != null) {
@@ -307,5 +390,15 @@ public class QpidServiceComponent {
         } catch (NumberFormatException e) {
             return CARBON_DEFAULT_PORT_OFFSET;
         }
+    }
+
+
+    private String getCarbonHostName() {
+        ServerConfiguration carbonConfig = ServerConfiguration.getInstance();
+
+        String hostName = carbonConfig.getFirstProperty(CARBON_CONFIG_HOST_NAME);
+
+        return hostName != null ? hostName : "localhost";
+
     }
 }

@@ -139,6 +139,10 @@
             <outputDirectory>wso2mb-${pom.version}/repository/conf</outputDirectory>
         </file>
          <file>
+            <source>src/main/conf/zoo.cfg</source>
+            <outputDirectory>wso2mb-${pom.version}/repository/conf/etc</outputDirectory>
+        </file>
+         <file>
             <source>src/main/resources/wso2server.sh</source>
             <outputDirectory>wso2mb-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>

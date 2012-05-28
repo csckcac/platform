@@ -25,14 +25,14 @@
     <fileSets>
         <fileSet>
             <directory>target/sources</directory>
-            <outputDirectory>wso2stratos-brs-${pom.version}-src</outputDirectory>
+            <outputDirectory>wso2-brs-${pom.version}-src</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../..</directory>
-            <outputDirectory>wso2stratos-brs-${pom.version}-src</outputDirectory>
+            <directory>../..</directory>
+            <outputDirectory>wso2-brs-${pom.version}-src</outputDirectory>
             <includes>
                 <include>modules/**/*</include>
                 <include>**/pom.xml</include>
@@ -55,18 +55,18 @@
     </fileSets>
     <files>
         <file>
-            <source>../../../LICENSE.txt</source>
-            <outputDirectory>wso2stratos-brs-${pom.version}-src</outputDirectory>
+            <source>../../LICENSE.txt</source>
+            <outputDirectory>wso2-brs-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>../../../README.txt</source>
-            <outputDirectory>wso2stratos-brs-${pom.version}-src</outputDirectory>
+            <source>../../README.txt</source>
+            <outputDirectory>wso2-brs-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>../../../INSTALL.txt</source>
-            <outputDirectory>wso2stratos-brs-${pom.version}-src</outputDirectory>
+            <source>../../INSTALL.txt</source>
+            <outputDirectory>wso2-brs-${pom.version}-src</outputDirectory>
             <filtered>true</filtered>
         </file>
     </files>

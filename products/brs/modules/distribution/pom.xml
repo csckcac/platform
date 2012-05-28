@@ -37,7 +37,16 @@
     <url>http://wso2.org/projects/brs/java</url>
     <description>WSO2 Business Rule Server Distribution</description>
 
-    <dependencies>                 
+    <dependencies>     
+
+        <!-- Carbon distribution -->
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>wso2carbon-core</artifactId>
+            <version>${carbon.version}</version>
+            <type>zip</type>
+        </dependency>
+            
         <!--Bouncycastle dependency for clients and servers-->
         <dependency>
             <groupId>bouncycastle</groupId>
@@ -256,6 +265,49 @@
             </plugin>
 
             <plugin>
+                <groupId>com.google.code.maven-svn-revision-number-plugin</groupId>
+                <artifactId>maven-svn-revision-number-plugin</artifactId>
+                <version>1.1</version>
+                <configuration>
+                    <reportMixedRevisions>false</reportMixedRevisions>
+                    <reportStatus>false</reportStatus>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.0-beta-3</version>
+                <configuration>
+                    <buildNumberPropertyName>copyright.year</buildNumberPropertyName>
+                    <format>{0, date, yyyy}</format>
+                    <timestampFormat>{0, date, dd MMMM yyyy}</timestampFormat>
+                    <items>
+                        <item>timestamp</item>
+                    </items>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
@@ -286,7 +338,7 @@
                             </filters>
                             <descriptors>
                                 <descriptor>src/main/assembly/bin.xml</descriptor>
-                                <!--<descriptor>src/main/assembly/src.xml</descriptor>-->
+                                <descriptor>src/main/assembly/src.xml</descriptor>
                                 <descriptor>src/main/assembly/docs.xml</descriptor>
                             </descriptors>
                         </configuration>
@@ -295,22 +347,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <!--reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.1.2</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>index</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting-->
-
 </project>

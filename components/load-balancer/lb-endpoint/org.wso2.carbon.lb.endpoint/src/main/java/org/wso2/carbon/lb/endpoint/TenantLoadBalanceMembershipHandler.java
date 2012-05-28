@@ -77,7 +77,7 @@ public class TenantLoadBalanceMembershipHandler implements LoadBalanceMembership
      *
      * @param context The AlgorithmContext
      * @return The current member
-     * @deprecated Use {@link #getNextApplicationMember(String)}
+     * @deprecated Use {@link #getNextApplicationMember(AlgorithmContext)}
      */
     public Member getNextApplicationMember(AlgorithmContext context) {
         throw new UnsupportedOperationException("This operation is invalid. " +

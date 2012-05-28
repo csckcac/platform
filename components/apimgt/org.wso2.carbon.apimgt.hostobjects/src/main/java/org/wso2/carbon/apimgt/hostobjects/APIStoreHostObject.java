@@ -659,6 +659,7 @@ public class APIStoreHostObject extends ScriptableObject {
 
         //TODO : need to pass in the full available tier list to front end
         StringBuffer tiersSet = new StringBuffer("");
+        StringBuffer tiersDescSet = new StringBuffer("");
         Set<Tier> tierSet = api.getAvailableTiers();
         Iterator it = tierSet.iterator();
         int j = 0;
@@ -666,12 +667,15 @@ public class APIStoreHostObject extends ScriptableObject {
             Object tierObject = it.next();
             Tier tier = (Tier) tierObject;
             tiersSet.append(tier.getName());
+            tiersDescSet.append(tier.getDescription());
             if (j != tierSet.size() - 1) {
                 tiersSet.append(",");
+                tiersDescSet.append(",");
             }
             j++;
         }
-        row.put("tier", row, tiersSet.toString());
+        row.put("tierName", row, tiersSet.toString());
+        row.put("tierDescription", row, tiersDescSet.toString());
         // row.put("status", row, "Deployed"); // api.getStatus().toString()
         // row.put("status", row, "Deployed"); // api.getStatus().toString()
         row.put("subscribed", row, isSubscribed);

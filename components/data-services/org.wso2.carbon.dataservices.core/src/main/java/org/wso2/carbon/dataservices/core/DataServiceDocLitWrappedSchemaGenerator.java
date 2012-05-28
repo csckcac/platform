@@ -112,7 +112,6 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 		Query query = defCallQuery.getQuery();
 		AxisMessage inMessage = axisOp.getMessage(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
 		if (inMessage != null) {
-            if (defCallQuery.getWithParams().size() > 0) {
                 inMessage.setName(requestName + Java2WSDLConstants.MESSAGE_SUFFIX);
                 /* create input message element */
                 XmlSchemaElement inputElement = createElement(cparams, query.getInputNamespace(),
@@ -130,7 +129,8 @@ public class DataServiceDocLitWrappedSchemaGenerator {
                         nestedEl.setRefName(cparams.getRequestInputElementMap().get(
                                 parentOp.getRequestName()));
                         nestedEl.setMaxOccurs(Long.MAX_VALUE);
-                        addElementToComplexTypeSequence(cparams, inputComplexType, query.getInputNamespace(),
+                        addElementToComplexTypeSequence(cparams, inputComplexType,
+                                query.getInputNamespace(),
                                 nestedEl, false, false);
                     } else {
                         throw new DataServiceFault("No parent operation for batch request: "
@@ -142,20 +142,29 @@ public class DataServiceDocLitWrappedSchemaGenerator {
                     Map<String, WithParam> withParams = defCallQuery.getWithParams();
                     WithParam tmpWithParam;
                     /* create elements for individual parameters */
-                    for (QueryParam queryParam : query.getQueryParams()) {
-                        if (DBConstants.QueryTypes.IN.equals(queryParam.getType())
-                                || DBConstants.QueryTypes.INOUT.equals(queryParam.getType())) {
-                            tmpWithParam = withParams.get(queryParam.getName());
-                            if (tmpWithParam == null) {
-                                /* this query param's value must be coming from an export, not from the
-                                 * operation's parameter */
-                                continue;
+                    if (defCallQuery.getWithParams().size() > 0) {
+                        for (QueryParam queryParam : query.getQueryParams()) {
+                            if (DBConstants.QueryTypes.IN.equals(queryParam.getType())
+                                    || DBConstants.QueryTypes.INOUT.equals(queryParam.getType())) {
+                                tmpWithParam = withParams.get(queryParam.getName());
+                                if (tmpWithParam == null) {
+                                    /* this query param's value must be coming from an export, not
+                                     * from the operation's parameter */
+                                    continue;
+                                }
+                                tmpEl = createInputEntryElement(cparams, query, queryParam,
+                                        tmpWithParam);
+                                /* add to input element complex type */
+                                addElementToComplexTypeSequence(cparams, inputComplexType,
+                                        query.getInputNamespace(), tmpEl, false, false);
                             }
-                            tmpEl = createInputEntryElement(cparams, query, queryParam, tmpWithParam);
-                            /* add to input element complex type */
-                            addElementToComplexTypeSequence(cparams, inputComplexType, query.getInputNamespace(),
-                                    tmpEl, false, false);
                         }
+                    } else {
+                        /* Adds the operation name to the SOAP body when used with OUT_ONLY requests
+                         * and further creates a complex type corresponds to the IN-MESSAGE with
+                         * an empty sequence */
+                        XmlSchemaSequence emptySeq = new XmlSchemaSequence();
+                        inputComplexType.setParticle(emptySeq);
                     }
                 }
                 /* set the input element qname in message */
@@ -165,12 +174,6 @@ public class DataServiceDocLitWrappedSchemaGenerator {
                         inMessage.getElementQName());
 
             }
-//            else if (defCallQuery.getWithParams().size() == 0) {
-//                 /* Adding the operation name as the payload for OUT_ONLY requests */
-//                    inMessage.setName(requestName + Java2WSDLConstants.MESSAGE_SUFFIX);
-//                    inMessage.setElementQName(new QName(query.getNamespace(), requestName));
-//            }
-        }
 	}
 	
 	/**

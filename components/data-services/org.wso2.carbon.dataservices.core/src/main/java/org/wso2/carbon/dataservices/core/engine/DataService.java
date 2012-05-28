@@ -238,7 +238,7 @@ public class DataService implements EventBrokerServiceListener {
     private void initBoxcarring() throws DataServiceFault {
         /* add empty query, begin_boxcar, abort_boxcar */
         this.addQuery(new Query(this, DBConstants.EMPTY_QUERY_ID,
-                new ArrayList<QueryParam>(), null, null, null, null, null, null) {
+                new ArrayList<QueryParam>(), null, null, null, null, null, this.getDefaultNamespace()) {
             public void runQuery(XMLStreamWriter xmlWriter,
                                              InternalParamCollection params, int queryLevel) {
             }
@@ -249,7 +249,8 @@ public class DataService implements EventBrokerServiceListener {
         endBoxcarResult.setXsAny(true);
         endBoxcarResult.setDefaultElementGroup(new OutputElementGroup(null, null, null, null));
         this.addQuery(new Query(this, DBConstants.EMPTY_END_BOXCAR_QUERY_ID,
-                new ArrayList<QueryParam>(), endBoxcarResult, null, null, null, null, null) {
+                new ArrayList<QueryParam>(), endBoxcarResult, null, null, null, null,
+                this.getDefaultNamespace()) {
             public void runQuery(XMLStreamWriter xmlWriter,
                                              InternalParamCollection params, int queryLevel) {
             }

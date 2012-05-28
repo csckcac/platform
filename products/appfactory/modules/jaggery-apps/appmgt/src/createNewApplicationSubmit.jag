@@ -20,6 +20,7 @@
                        var repositoryPath=createApplication(applicationName,userName);
                        if(repositoryPath!=undefined){
                             addApplicationToApp(applicationName, applicationName, applicationName, repositoryPath);
+                             print('Application is created with svn repository path:<br><a href="'+repositoryPath+'">'+repositoryPath+'</a>');
                        }
                     }
 

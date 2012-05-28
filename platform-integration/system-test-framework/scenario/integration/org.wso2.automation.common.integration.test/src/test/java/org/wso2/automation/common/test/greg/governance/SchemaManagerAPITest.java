@@ -48,12 +48,12 @@ public class SchemaManagerAPITest {
         schemaManager = new SchemaManager(governance);
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing newEndpoint API method", priority = 1)
+    @Test(groups = {"wso2.greg.api"}, description = "Testing newSchema API method", priority = 1)
     public void testNewSchemaUrl() throws GovernanceException {
         try {
-            schemaObj = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                    "governance/org.wso2.carbon.governance.api/src/test/resources/" +
-                    "test-resources/xsd/purchasing.xsd");
+            schemaObj = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/carbon" +
+                    "/platform/trunk/platform-integration/system-test-framework/core/org.wso2." +
+                    "automation.platform.core/src/main/resources/artifacts/GREG/schema/calculator.xsd");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing SchemaManager:newSchema with " +
                     "URL method" + e);
@@ -88,7 +88,7 @@ public class SchemaManagerAPITest {
     public void testGetSchema() throws GovernanceException {
         try {
             schemaObj = schemaManager.getSchema(schemaArray[0].getId());
-            assertTrue(schemaObj.getQName().getLocalPart().equalsIgnoreCase("purchasing.xsd"), "SchemaManager:" +
+            assertTrue(schemaObj.getQName().getLocalPart().equalsIgnoreCase("calculator.xsd"), "SchemaManager:" +
                     "getSchema API method not contain expected schema name");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing SchemaManager:getSchema method" + e);

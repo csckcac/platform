@@ -109,6 +109,27 @@ public class WSDLManagerAPITest {
         }
     }
 
+    @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testAddWsdl"}, description = "Testing " +
+            "getWsdl API method", priority = 5)
+    public void testUpdateWsdl() throws GovernanceException {
+        String lcName = "ServiceLifeCycle";
+        boolean isLCFound = false;
+        try {
+            wsdlObj.attachLifecycle(lcName);
+            wsdlManager.updateWsdl(wsdlObj);
+            wsdlArray = wsdlManager.getAllWsdls();
+            for (Wsdl w : wsdlArray) {
+                if (w.getLifecycleName().equalsIgnoreCase(lcName)) {
+                    isLCFound = true;
+                }
+            }
+            assertTrue(isLCFound, "Error occurred while executing WsdlManager:updateWsdl method");
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error occurred while executing WsdlManager:updateWsdl method" + e);
+        }
+
+    }
+
     @Test(groups = {"wso2.greg.api"}, description = "Testing FindWSDL", priority = 6)
     public void testFindService() throws GovernanceException {
         try {

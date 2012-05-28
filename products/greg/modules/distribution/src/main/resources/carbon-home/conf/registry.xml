@@ -267,6 +267,40 @@
 
     <!-- This enables auto-versioning of resources (non-collection). Whenever a resource is updated a new version will be created -->
   
-    <versionResourcesOnChange>true</versionResourcesOnChange>
+    <versionResourcesOnChange>false</versionResourcesOnChange>
+    
+    <!-- This enables JMX management for G-Reg -->
+    
+    <jmx enabled="false">
+        <service name="InvocationStatistics" enabled="true"/>
+        <service name="Activities" enabled="true"/>
+        <service name="Properties" enabled="true"/>
+        <service name="Subscriptions" enabled="true"/>
+        <service name="Events" enabled="true"/>
+    </jmx>
+    
+    <!-- If you need to use a remote Human Task to provide the Work List functionality instead of the Embedded Human Task
+         Uncomment the following configuration. Please note that you need to provide the credentials and URL to connect to the
+         remote instance (ex:- remote BPS server). -->
+    
+    <!--workList username="admin" password="admin" serverURL="https://localhost:9443/services/"/-->
+    
+    <!-- Sample SCM configuration. Please note that checkOutURL, workingDir, and mountPoint are mandatory for each connection. 
+         The update frequency is in minutes. Setting readOnly would disable checkIn even if the checkInURL is set. The credentials
+         are to connect to the corresponding repository and must be provided if required. -->
+    
+    <!--scm>
+        <connection checkOutURL="scm:svn:http://svn.wso2.org/repos/wso2" workingDir="/valid/filesystem/path" mountPoint="/_system/foo" username="" password="" checkInURL="" readOnly="" updateFrequency=""/>
+    </scm-->
+    
+    <!-- This defines the list of scheduled tasks for the registry -->
+    
+    <!--tasks>
+        <task name="TaskName" class="com.foo.TaskClass">
+            <trigger cron="cronExpr"/>
+            <property key="foo" bar="FooVal" />
+            <property key="bar" bar="BarVal" />
+        </task>
+    </tasks-->
 
 </wso2registry>

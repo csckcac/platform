@@ -66,7 +66,7 @@
             </div>
 
             <div class="control-group">
-                <label class="control-label" for="editEndpoint">Endpoint URL:</label>
+                <label class="control-label" for="editEndpoint">Endpoint URL:<span class="requiredAstrix">*</span></label>
                 <div class="controls">
                     <input type="text" class="input-xlarge" id="editEndpoint" name="endpoint" value="<%=api.endpoint%>"/>
                     <p class="help-block">Ex:http://appserver/services/echo</p>

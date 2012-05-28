@@ -51,9 +51,9 @@
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="endpoint">Endpoint URL:</label>
+                    <label class="control-label" for="endpoint">Endpoint URL:<span class="requiredAstrix">*</span></label>
                     <div class="controls">
-                        <input type="text" class="input-xlarge" id="endpoint" name="endpoint"/>
+                        <input type="text" class="input-xlarge required" id="endpoint" name="endpoint"/>
                         <p class="help-block">Ex:http://appserver/services/echo</p>
                     </div>
                 </div>

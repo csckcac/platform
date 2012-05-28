@@ -1,4 +1,19 @@
 $(document).ready(function () {
+    $("select[name='tiers-list']").change(function() {
+        var selectedIndex = document.getElementById('tiers-list').selectedIndex;
+        var api = jagg.api;
+        var tierDescription = api.tierDescription;
+        var tierDescList = tierDescription.split(",");
+        for (var i = 0; i < tierDescList.length; i++) {
+            var tierDesc = tierDescList[i];
+            if (selectedIndex == i) {
+                if (tierDesc != "null") {
+                    $("#tierDesc").text(tierDesc);
+                }
+            }
+        }
+
+    });
     $("#subscribe-button").click(function () {
         if (!jagg.loggedIn) {
             return;

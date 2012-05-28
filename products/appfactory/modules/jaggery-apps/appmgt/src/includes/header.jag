@@ -28,8 +28,6 @@
                         </li>
                         <%
                             }
-                            ////////temp code
-                            userName = "usr1";
                         %>
                         <li class="middle">|</li>
                         <li class="middle">

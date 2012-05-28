@@ -101,12 +101,9 @@
     function isOwner(applicationKey, userName,address) {
         try {
             var roleArray = getUserRolesForApplication(applicationKey, userName,address);
-            log("roleArray :"+roleArray);
-            log("roleArray length : "+roleArray.length());
             var isOwner = false;
             for(var i =0; i < roleArray.length(); ++i) {
-                print(roleArray[i]);
-                if(roleArray[i] == "Owner") {
+                if(roleArray[i] == "admin") {
                     isOwner = true;
                 }
             }

@@ -20,24 +20,21 @@
             var resource = createResource();
         } catch (e) {
             log.error("Error while creating registry resource \n"+e.message);
-            throw "Error while creating registry resource";
+            throw new Error("Error while creating registry resource");
         }
 
         resource.addProperty(APPLICATION_KEY, applicationKey);
         resource.addProperty(APPLICATION_NAME, applicationName);
-        resource.addProperty(APPLICATION_DESC, applicationDescription);
+        resource.addProperty(APPLICATION_DESC, applicationName);
         resource.addProperty(REPO_LINK, repoLink);
 
-        ////temp code Todo:
-        var task = request.getParameter("task");
-        resource.addProperty("task", task);
 
         var path = APPLICATIONS + applicationKey;
         try {
             putResource(path, resource);
         } catch (e) {
             log.error("Error while creating storing resource \n"+e.message);
-            throw "Error while creating registry resource";
+            throw new Error("Error while creating registry resource");
         }
     }
 
@@ -57,13 +54,13 @@
             }
             var resource = getResource(path);
             var existingApplicationsList = resource.getProperty(APPLICATION_LIST);
-            if(log.isDebugEnabled(){
+            if(log.isDebugEnabled()){
                 log.debug("applications list "+existingApplicationsList);
             }
 
             if(!containsApplication(existingApplicationsList, applicationKey)) {
                 var newApplicationsList = existingApplicationsList + "," + applicationKey;
-                if(log.isDebugEnabled(){
+                if(log.isDebugEnabled()){
                     log.debug("new application list "+newApplicationsList);
                 }
                 resource.setProperty(APPLICATION_LIST, newApplicationsList);
@@ -73,7 +70,7 @@
         }
         // add the new application to user to user-applications mapping in registry
         else {
-            if(log.isDebugEnabled(){
+            if(log.isDebugEnabled()){
                 log.debug("create application- user doesn't exist");
             }
             var resource = createResource();

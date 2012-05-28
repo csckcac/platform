@@ -1,19 +1,28 @@
 <%
     include('includes/template_header.jag');
+    include('constants.jag');
 
     var applicationKey = request.getParameter("applicationKey");
-    var applicationName = request.getParameter("applicationName");
+    var applicationName = request.getParameter("applicationName")+APPLICATION_SUFFIX;
     var applicationDescription = request.getParameter("applicationDescription");
      var userName = session.get("LOGGED_IN_USER");
-
 
 %>
 <div id="middle">
     <div id="workArea">
         <%
              include('process/webServiceUtil.jag');
+             include('mgt/registryAccessManager.jag');
             try {
-                    createApplication(applicationName,userName)
+                    if(isApplicationKeyAlreadyTaken(applicationName)=="true"){
+                          print("Application id:"+applicationName+" is already taken, please try another applicaiton name");
+                    }else{
+                       var repositoryPath=createApplication(applicationName,userName);
+                       if(repositoryPath!=undefined){
+                            addApplicationToApp(applicationName, applicationName, applicationName, repositoryPath);
+                       }
+                    }
+
             } catch (e) {
                 print(e);
             }

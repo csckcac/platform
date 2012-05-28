@@ -9,7 +9,6 @@ import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.*;
-import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.template.APITemplateBuilder;
 import org.wso2.carbon.apimgt.impl.template.BasicTemplateBuilder;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
@@ -263,34 +262,8 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                 return o1.getName().compareTo(o2.getName());
             }
         });
-        try {
-            if (registry.resourceExists(APIConstants.API_TIER_LOCATION)) {
-                Resource resource = registry.get(APIConstants.API_TIER_LOCATION);
-                String content = new String((byte[]) resource.getContent());
-                OMElement element = AXIOMUtil.stringToOM(content);
-                OMElement assertion = element.getFirstChildWithName(APIConstants.ASSERTION_ELEMENT);
-                Iterator policies = assertion.getChildrenWithName(APIConstants.POLICY_ELEMENT);
-                while (policies.hasNext()) {
-                    OMElement policy = (OMElement) policies.next();
-                    OMElement id = policy.getFirstChildWithName(APIConstants.THROTTLE_ID_ELEMENT);
-                    Tier tier = new Tier(id.getText());
-                    tier.setPolicyContent(policy.toString().getBytes());
-                    String desc = resource.getProperty(APIConstants.TIER_DESCRIPTION_PREFIX + id.getText());
-                    tier.setDescription(desc);
-                    tiers.add(tier);
-                }
-            }
-            
-            APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
-                    getAPIManagerConfigurationService().getAPIManagerConfiguration();
-            if (Boolean.parseBoolean(config.getFirstProperty(APIConstants.ENABLE_UNLIMITED_TIER))) {
-                tiers.add(new Tier(APIConstants.UNLIMITED_TIER));
-            }
-        } catch (RegistryException e) {
-            handleException("Error while retrieving API tiers from registry", e);
-        } catch (XMLStreamException e) {
-            handleException("Malformed XML found in the API tier policy resource", e);
-        }
+        Map<String,Tier> tierMap = APIUtil.getTiers();
+        tiers.addAll(tierMap.values());
         return tiers;
     }
 

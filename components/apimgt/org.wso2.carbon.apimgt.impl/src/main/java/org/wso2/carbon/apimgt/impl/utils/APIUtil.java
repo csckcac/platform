@@ -18,11 +18,14 @@
 
 package org.wso2.carbon.apimgt.impl.utils;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
@@ -36,11 +39,12 @@ import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.xml.stream.XMLStreamException;
+import java.util.*;
 
 /**
  * This class contains the utility methods used by the implementations of APIManager, APIProvider
@@ -83,10 +87,16 @@ public final class APIUtil {
 
             Set<Tier> availableTier = new HashSet<Tier>();
             String tiers = artifact.getAttribute(APIConstants.API_OVERVIEW_TIER);
+            Map<String,Tier> definedTiers = getTiers();
             if (tiers != null && !"".equals(tiers)) {
                 String[] tierNames = tiers.split("\\|\\|");
                 for (String tierName : tierNames) {
-                    availableTier.add(new Tier(tierName));
+                    Tier definedTier = definedTiers.get(tierName);
+                    if (definedTier != null) {
+                        availableTier.add(definedTier);
+                    } else {
+                        log.warn("Unknown tier: " + tierName + " found on API: " + apiName);
+                    }
                 }
             }
             api.addAvailableTiers(availableTier);
@@ -371,7 +381,7 @@ public final class APIUtil {
         String path = null;
         try {
             String user = CarbonContext.getCurrentContext().getUsername();
-            //TODO should be remove, currently apiprovider is not a part of carbon therefore user is null.
+            //TODO should be remove, currently api provider is not a part of carbon therefore user is null.
             user = "admin";
             Registry registry1 = ServiceReferenceHolder.getInstance().getRegistryService().
                     getGovernanceUserRegistry(user);
@@ -413,5 +423,46 @@ public final class APIUtil {
             log.error(msg ,e);
         }
         return path;
+    }
+
+    public static Map<String,Tier> getTiers() throws APIManagementException {
+        Map<String,Tier> tiers = new TreeMap<String,Tier>();
+        try {
+            Registry registry = ServiceReferenceHolder.getInstance().getRegistryService().
+                    getGovernanceSystemRegistry();
+            if (registry.resourceExists(APIConstants.API_TIER_LOCATION)) {
+                Resource resource = registry.get(APIConstants.API_TIER_LOCATION);
+                String content = new String((byte[]) resource.getContent());
+                OMElement element = AXIOMUtil.stringToOM(content);
+                OMElement assertion = element.getFirstChildWithName(APIConstants.ASSERTION_ELEMENT);
+                Iterator policies = assertion.getChildrenWithName(APIConstants.POLICY_ELEMENT);
+                while (policies.hasNext()) {
+                    OMElement policy = (OMElement) policies.next();
+                    OMElement id = policy.getFirstChildWithName(APIConstants.THROTTLE_ID_ELEMENT);
+                    Tier tier = new Tier(id.getText());
+                    tier.setPolicyContent(policy.toString().getBytes());
+                    String desc = resource.getProperty(APIConstants.TIER_DESCRIPTION_PREFIX + id.getText());
+                    tier.setDescription(desc);
+                    tiers.put(tier.getName(), tier);
+                }
+            }
+
+            APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
+                    getAPIManagerConfigurationService().getAPIManagerConfiguration();
+            if (Boolean.parseBoolean(config.getFirstProperty(APIConstants.ENABLE_UNLIMITED_TIER))) {
+                Tier tier = new Tier(APIConstants.UNLIMITED_TIER);
+                tier.setDescription(APIConstants.UNLIMITED_TIER_DESC);
+                tiers.put(tier.getName(), tier);
+            }
+        } catch (RegistryException e) {
+            String msg = "Error while retrieving API tiers from registry";
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
+        } catch (XMLStreamException e) {
+            String msg = "Malformed XML found in the API tier policy resource";
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
+        }
+        return tiers;
     }
 }

@@ -86,7 +86,7 @@ public class StreamDefinitionTest extends TestCase {
 
         Assert.assertEquals(id1, id2);
         //In this case correlation data is null
-        dataPublisher.publish("StockQuart", new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
+        dataPublisher.publish(id1, new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
         Thread.sleep(3000);
         dataPublisher.stop();
         testServer.stop();
@@ -107,7 +107,7 @@ public class StreamDefinitionTest extends TestCase {
 
         //according to the convention the authentication port will be 7611+100= 7711 and its host will be the same
         DataPublisher dataPublisher = new DataPublisher("tcp://localhost:7615", "admin", "admin");
-        dataPublisher.defineEventStream("{" +
+       String streamDef= dataPublisher.defineEventStream("{" +
                                         "  'name':'org.wso2.esb.MediatorStatistics1'," +
 //                                                  "  'version':'1.0.0'," +
                                         "  'nickName': 'Stock Quote Information'," +
@@ -143,7 +143,7 @@ public class StreamDefinitionTest extends TestCase {
                                         "}");
 
         //In this case correlation data is null
-        dataPublisher.publish("StockQuart", new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
+        dataPublisher.publish(streamDef, new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
         Thread.sleep(3000);
         dataPublisher.stop();
         testServer.stop();
@@ -164,7 +164,7 @@ public class StreamDefinitionTest extends TestCase {
 
         //according to the convention the authentication port will be 7611+100= 7711 and its host will be the same
         DataPublisher dataPublisher = new DataPublisher("tcp://localhost:7616", "admin", "admin");
-        dataPublisher.defineEventStream("{" +
+        String streamDef=  dataPublisher.defineEventStream("{" +
                                         "  'name':'org.wso2.esb.MediatorStatistics2'," +
                                         "  'version':'1.0.0'," +
                                         "  'nickName': 'Stock Quote Information'," +
@@ -200,7 +200,7 @@ public class StreamDefinitionTest extends TestCase {
                                         "}");
 
         //In this case correlation data is null
-        dataPublisher.publish("StockQuart", new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
+        dataPublisher.publish(streamDef, new Object[]{"127.0.0.1"}, null, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
         Thread.sleep(3000);
         dataPublisher.stop();
         testServer.stop();

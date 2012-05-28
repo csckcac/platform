@@ -18,102 +18,62 @@
 package org.wso2.carbon.agent.server.datastore;
 
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
-import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * The in memory implementation of the Event Stream definition Store
  */
-public class InMemoryStreamDefinitionStore implements StreamDefinitionStore {
+public class InMemoryStreamDefinitionStore extends StreamDefinitionStore {
 
-    private Map<String, HashMap<String, String>> streamIdMap = new HashMap<String, HashMap<String, String>>();
-    private Map<String, HashMap<String, EventStreamDefinition>> streamDefinitionMap = new HashMap<String, HashMap<String, EventStreamDefinition>>();
+    private Map<String, HashMap<String, EventStreamDefinition>> streamDefinitionStore = new HashMap<String, HashMap<String, EventStreamDefinition>>();
+    private Map<String, HashMap<String, String>> streamIdStore = new HashMap<String, HashMap<String, String>>();
 
-    private String constructNameVersionKey(String name, String version) {
-        return name + "::" + version;
+    @Override
+    protected void saveStreamIdToStore(String domainName, String streamIdKey, String streamId) {
+        if (!streamIdStore.containsKey(domainName)) {
+            streamIdStore.put(domainName, new HashMap<String, String>());
+        }
+        streamIdStore.get(domainName).put(streamIdKey, streamId);
     }
 
     @Override
-    public boolean containsStreamDefinition(String domainName, String name,
-                                            String version) {
-        return streamIdMap.containsKey(domainName) && streamIdMap.get(domainName).containsKey(constructNameVersionKey(name, version));
-    }
-
-    public EventStreamDefinition getStreamDefinition(String domainName, String name,
-                                                     String version)
-            throws StreamDefinitionNotFoundException {
-        String streamId = getStreamId(domainName, name, version);
-        return getStreamDefinition(domainName, streamId);
+    protected void saveStreamDefinitionToStore(String domainName,
+                                               String streamId,
+                                               EventStreamDefinition streamDefinition) {
+        if (!streamDefinitionStore.containsKey(domainName)) {
+            streamDefinitionStore.put(domainName, new HashMap<String, EventStreamDefinition>());
+        }
+        streamDefinitionStore.get(domainName).put(streamId, streamDefinition);
     }
 
     @Override
-    public void saveStreamDefinition(String domainName,
-                                     EventStreamDefinition eventStreamDefinition)
-            throws DifferentStreamDefinitionAlreadyDefinedException {
-        if (!streamIdMap.containsKey(domainName)) {
-            streamIdMap.put(domainName, new HashMap<String, String>());
-            streamDefinitionMap.put(domainName, new HashMap<String, EventStreamDefinition>());
+    protected String getStreamIdFromStore(String domainName, String streamIdKey) {
+        if (streamIdStore.get(domainName) != null) {
+            return streamIdStore.get(domainName).get(streamIdKey);
         }
-        String key = constructNameVersionKey(eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
-        EventStreamDefinition existingDefinition = streamDefinitionMap.get(domainName).get(key);
-        if (existingDefinition != null) {
-            if (!existingDefinition.equals(eventStreamDefinition)) {
-                throw new DifferentStreamDefinitionAlreadyDefinedException("Another Stream with same name and version exist :" + EventConverter.convertToJson(existingDefinition));
-            }
-        } else {
-            streamIdMap.get(domainName).put(key, eventStreamDefinition.getStreamId());
-        }
-        streamDefinitionMap.get(domainName).put(eventStreamDefinition.getStreamId(), eventStreamDefinition);
+        return null;
     }
 
-    public EventStreamDefinition getStreamDefinition(String domainName, String streamId)
-            throws StreamDefinitionNotFoundException {
-        EventStreamDefinition eventStreamDefinition = streamDefinitionMap.get(domainName).get(streamId);
-        if (eventStreamDefinition == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist on " + domainName + " for " + streamId);
-        }
-        return eventStreamDefinition;
-    }
 
-    public Collection<EventStreamDefinition> getAllStreamDefinitions(String domainName)
-            throws StreamDefinitionNotFoundException {
-        HashMap<String, EventStreamDefinition> map = streamDefinitionMap.get(domainName);
-        if (map == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist for " + domainName);
+    public EventStreamDefinition getStreamDefinitionFromStore(String domainName,
+                                                              String streamId) {
+        if (streamDefinitionStore.get(domainName) != null) {
+            return streamDefinitionStore.get(domainName).get(streamId);
         }
-        return map.values();
-    }
-
-    @Override
-    public String getStreamId(String domainName, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException {
-        HashMap<String, String> map = streamIdMap.get(domainName);
-        if (map == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist for " + domainName);
-        }
-        String streamId = map.get(constructNameVersionKey(streamName, streamVersion));
-        if (streamId == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist on " + domainName + " for " + streamName + " " + streamVersion);
-        }
-        return streamId;
+        return null;
 
     }
 
-    @Override
-    public List<EventStreamDefinition> getStreamDefinition(String domainName)
-            throws StreamDefinitionNotFoundException {
-        HashMap<String, EventStreamDefinition> map = streamDefinitionMap.get(domainName);
-        if (map == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist for " + domainName);
+    public Collection<EventStreamDefinition> getAllStreamDefinitionsFromStore(String domainName) {
+        HashMap<String, EventStreamDefinition> map = streamDefinitionStore.get(domainName);
+        if (map != null) {
+            return map.values();
         }
-        return new ArrayList<EventStreamDefinition>(map.values());
+        return null;
+
     }
 
 }

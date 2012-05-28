@@ -20,35 +20,79 @@ package org.wso2.carbon.agent.server.datastore;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
+import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * The Event Stream Definition Store interface
  * Used to persist Event Stream Definitions at the Agent Server
  */
-public interface StreamDefinitionStore {
+public abstract class StreamDefinitionStore {
 
-    boolean containsStreamDefinition(String domainName, String name, String version);
+    private String constructNameVersionKey(String name, String version) {
+        return name + "::" + version;
+    }
 
-    EventStreamDefinition getStreamDefinition(String domainName, String name,
-                                              String version)
-            throws StreamDefinitionNotFoundException;
+    public EventStreamDefinition getStreamDefinition(String domainName, String name, String version)
+            throws StreamDefinitionNotFoundException {
+        String streamId = getStreamIdFromStore(domainName, constructNameVersionKey(name, version));
+        if (streamId == null) {
+            throw new StreamDefinitionNotFoundException("No definitions exist on " + domainName + " for " + constructNameVersionKey(name, version));
+        }
+        return getStreamDefinition(domainName, streamId);
+    }
 
-    void saveStreamDefinition(String domainName,
-                              EventStreamDefinition eventStreamDefinition)
-            throws DifferentStreamDefinitionAlreadyDefinedException;
+    public EventStreamDefinition getStreamDefinition(String domainName, String streamId)
+            throws StreamDefinitionNotFoundException {
+        EventStreamDefinition eventStreamDefinition = getStreamDefinitionFromStore(domainName, streamId);
+        if (eventStreamDefinition == null) {
+            throw new StreamDefinitionNotFoundException("No definitions exist on " + domainName + " for " + streamId);
+        }
+        return eventStreamDefinition;
+    }
 
-    EventStreamDefinition getStreamDefinition(String domainName, String streamId)
-            throws StreamDefinitionNotFoundException;
+    public void saveStreamDefinition(String domainName,
+                                     EventStreamDefinition eventStreamDefinition)
+            throws DifferentStreamDefinitionAlreadyDefinedException {
+        EventStreamDefinition existingDefinition = null;
+        try {
+            existingDefinition = getStreamDefinition(domainName, eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
+        } catch (StreamDefinitionNotFoundException e) {
+            saveStreamIdToStore(domainName, constructNameVersionKey(eventStreamDefinition.getName(), eventStreamDefinition.getVersion()), eventStreamDefinition.getStreamId());
+            saveStreamDefinitionToStore(domainName, eventStreamDefinition.getStreamId(), eventStreamDefinition);
+            return;
+        }
+        if (!existingDefinition.equals(eventStreamDefinition)) {
+            throw new DifferentStreamDefinitionAlreadyDefinedException("Another Stream with same name and version exist :" + EventConverter.convertToJson(existingDefinition));
+        }
+    }
 
-    Collection<EventStreamDefinition> getAllStreamDefinitions(String domainName)
-            throws StreamDefinitionNotFoundException;
+    public Collection<EventStreamDefinition> getAllStreamDefinitions(String domainName) {
+        return getAllStreamDefinitionsFromStore(domainName);
+    }
 
-    String getStreamId(String domainName, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException;
+    public String getStreamId(String domainName, String streamName, String streamVersion)
+            throws StreamDefinitionNotFoundException {
+        String streamId = getStreamIdFromStore(domainName, constructNameVersionKey(streamName, streamVersion));
+        if (streamId == null) {
+            throw new StreamDefinitionNotFoundException("No stream id found for " + streamId + " " + streamVersion);
+        }
+        return streamId;
+    }
 
-    List<EventStreamDefinition> getStreamDefinition(String domainName)
-            throws StreamDefinitionNotFoundException;
+    protected abstract void saveStreamIdToStore(String domainName, String streamIdKey,
+                                                String streamId);
+
+    protected abstract void saveStreamDefinitionToStore(String domainName, String streamId,
+                                                        EventStreamDefinition streamDefinition);
+
+
+    protected abstract String getStreamIdFromStore(String domainName, String streamIdKey);
+
+    public abstract EventStreamDefinition getStreamDefinitionFromStore(String domainName,
+                                                                       String streamId);
+
+    protected abstract Collection<EventStreamDefinition> getAllStreamDefinitionsFromStore(
+            String domainName);
 }

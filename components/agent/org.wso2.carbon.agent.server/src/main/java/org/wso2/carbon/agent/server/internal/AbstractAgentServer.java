@@ -36,6 +36,7 @@ import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 import org.wso2.carbon.base.ServerConfiguration;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -120,7 +121,7 @@ public abstract class AbstractAgentServer implements AgentServer {
     @Override
     public List<EventStreamDefinition> getAllStreamDefinition(String domainName)
             throws StreamDefinitionNotFoundException {
-        return streamDefinitionStore.getStreamDefinition(domainName);
+        return new ArrayList<EventStreamDefinition>(streamDefinitionStore.getAllStreamDefinitions(domainName));
     }
 
     @Override

@@ -42,7 +42,7 @@ public class EventStreamDefinition {
         this.name = name;
         String versionPattern = "^\\d+\\.\\d+\\.\\d+$";
         if (!version.matches(versionPattern)) {
-            throw new MalformedStreamDefinitionException("version " + version + " does not adhire to the format x.x.x ");
+            throw new MalformedStreamDefinitionException("version " + version + " does not adhere to the format x.x.x ");
         }
         this.version = version;
         generateSteamId();

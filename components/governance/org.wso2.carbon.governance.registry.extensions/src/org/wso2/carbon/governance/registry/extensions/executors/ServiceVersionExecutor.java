@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.governance.registry.extensions.aspects.utils.LifecycleConstants;
 import org.wso2.carbon.governance.registry.extensions.aspects.utils.StatCollection;
 import org.wso2.carbon.governance.registry.extensions.executors.utils.ExecutorConstants;
+import org.wso2.carbon.governance.registry.extensions.executors.utils.Utils;
 import org.wso2.carbon.governance.registry.extensions.interfaces.Execution;
 import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.Collection;
@@ -103,11 +104,9 @@ public class ServiceVersionExecutor implements Execution {
         if ((targetEnvironment == null || currentEnvironment == null) || (currentEnvironment.isEmpty()
                 || targetEnvironment.isEmpty())) {
             log.warn("Current environment and the Target environment has not been defined to the state");
-            /*
-             *  Here we are returning true because the executor has been configured incorrectly
-             *  We do NOT consider that as a execution failure
-             *  Hence returning true here
-             */
+//             Here we are returning true because the executor has been configured incorrectly
+//             We do NOT consider that as a execution failure
+//             Hence returning true here
             return true;
         }
 
@@ -191,7 +190,7 @@ public class ServiceVersionExecutor implements Execution {
 
 //                            Here we move all the comments,tags,ratings and all associations based on the configuration
 //                            These operations are done for the dependent resources here.
-//                              Original resources comments,tags,ratings and associations are copied later.
+//                            Original resources comments,tags,ratings and associations are copied later.
 
 //                            Copying comments
                             copyComments(registry, newTempResourcePath, tempResource.getPath());
@@ -254,48 +253,29 @@ public class ServiceVersionExecutor implements Execution {
         }
 
     private void copyAllAssociations(Registry registry, String newPath, String path) throws RegistryException {
-        if(copyAllAssociations){
-            Association[] associations = registry.getAllAssociations(path);
-            for (Association association : associations) {
-                if(!association.getAssociationType().equals(CommonConstants.DEPENDS)){
-                    if(association.getSourcePath().equals(path)){
-                        registry.addAssociation(newPath,
-                                association.getDestinationPath(),association.getAssociationType());
-                    }else{
-                        registry.addAssociation(association.getSourcePath(),newPath,
-                                association.getAssociationType());
-                    }
-                }
-            }
+        if (copyAllAssociations) {
+            Utils.copyAssociations(registry, newPath, path);
             historyOperation.addChild(getHistoryInfoElement("All associations copied"));
         }
     }
 
     private void copyRatings(Registry registry, String newPath, String path) throws RegistryException {
-        if(copyRatings){
-            float averageRating = registry.getAverageRating(path);
-            registry.rateResource(newPath,
-                    new Float(averageRating).intValue());
+        if (copyRatings) {
+            Utils.copyRatings(registry, newPath, path);
             historyOperation.addChild(getHistoryInfoElement("Average rating copied"));
         }
     }
 
     private void copyTags(Registry registry, String newPath, String path) throws RegistryException {
-        if(copyTags){
-            Tag[] tags = registry.getTags(path);
-            for (Tag tag : tags) {
-                registry.applyTag(newPath,tag.getTagName());
-            }
+        if (copyTags) {
+            Utils.copyTags(registry, newPath, path);
             historyOperation.addChild(getHistoryInfoElement("Tags copied"));
         }
     }
 
     private void copyComments(Registry registry, String newPath, String path) throws RegistryException {
-        if(copyComments){
-            Comment[] comments = registry.getComments(path);
-            for (Comment comment : comments) {
-                registry.addComment(newPath,comment);
-            }
+        if (copyComments) {
+            Utils.copyComments(registry, newPath, path);
             historyOperation.addChild(getHistoryInfoElement("Comments copied"));
         }
     }

@@ -2,7 +2,10 @@ package org.wso2.carbon.governance.registry.extensions.executors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.governance.registry.extensions.executors.utils.ExecutorConstants;
+import org.wso2.carbon.governance.registry.extensions.executors.utils.Utils;
 import org.wso2.carbon.governance.registry.extensions.interfaces.Execution;
+import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourcePath;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -12,18 +15,36 @@ import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.wso2.carbon.governance.registry.extensions.aspects.utils.Utils.getHistoryInfoElement;
 import static org.wso2.carbon.governance.registry.extensions.executors.utils.Utils.addNewId;
 import static org.wso2.carbon.governance.registry.extensions.executors.utils.Utils.populateParameterMap;
 
 public class CopyExecutor implements Execution {
     private static final Log log = LogFactory.getLog(ServiceVersionExecutor.class);
-    private static final String CURRENT_ENVIRONMENT = "currentEnvironment";
-    private static final String TARGET_ENVIRONMENT = "targetEnvironment";
-    private static final String KEY = "{@version}";
+    private static final String KEY = ExecutorConstants.RESOURCE_VERSION;
     private Map parameterMap;
+
+    //    To track whether we need to move comments,tags,ratings and all the associations.
+    private boolean copyComments = false;
+    private boolean copyTags = false;
+    private boolean copyRatings = false;
+    private boolean copyAllAssociations = false;
 
     public void init(Map map) {
         parameterMap = map;
+
+        if(parameterMap.get(ExecutorConstants.COPY_COMMENTS) != null){
+            copyComments = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_COMMENTS));
+        }
+        if(parameterMap.get(ExecutorConstants.COPY_TAGS) != null){
+            copyTags = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_TAGS));
+        }
+        if(parameterMap.get(ExecutorConstants.COPY_RATINGS) != null){
+            copyRatings = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_RATINGS));
+        }
+        if(parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS) != null){
+            copyAllAssociations = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS));
+        }
     }
 
     public boolean execute(RequestContext requestContext, String currentState, String targetState) {
@@ -40,9 +61,13 @@ public class CopyExecutor implements Execution {
             return false;
         }
 
-        String currentEnvironment = getReformattedPath((String) parameterMap.get(CURRENT_ENVIRONMENT),
+//        This section is there to add a version to the path if needed.
+//        This is all based on the lifecycle configuration and the configuration should be as follows.
+//        path = /_system/governance/environment/{@version}
+//        Also for this the user has to have a transition UI where he can give the version
+        String currentEnvironment = getReformattedPath((String) parameterMap.get(ExecutorConstants.CURRENT_ENVIRONMENT),
                 KEY, currentParameterMap.get(resourcePath));
-        String targetEnvironment = getReformattedPath((String) parameterMap.get(TARGET_ENVIRONMENT),
+        String targetEnvironment = getReformattedPath((String) parameterMap.get(ExecutorConstants.TARGET_ENVIRONMENT),
                 KEY, currentParameterMap.get(resourcePath));
 
         if(resourcePath.startsWith(currentEnvironment)){
@@ -64,6 +89,19 @@ public class CopyExecutor implements Execution {
             requestContext.setResource(newResource);
             requestContext.setResourcePath(new ResourcePath(newPath));
 
+//            Copying comments
+            copyComments(requestContext.getRegistry(), newPath, resourcePath);
+
+//           Copying tags
+            copyTags(requestContext.getRegistry(), newPath, resourcePath);
+
+//           Copying ratings. We only copy the average ratings
+            copyRatings(requestContext.getSystemRegistry(), newPath, resourcePath);
+
+//           Copying all the associations.
+//           We avoid copying dependencies here
+            copyAllAssociations(requestContext.getRegistry(), newPath, resourcePath);
+
             return true;
         } catch (RegistryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -77,5 +115,30 @@ public class CopyExecutor implements Execution {
         }
         return originalPath.replace(key,value);
     }
+
+    private void copyAllAssociations(Registry registry, String newPath, String path) throws RegistryException {
+        if (copyAllAssociations) {
+            Utils.copyAssociations(registry, newPath, path);
+        }
+    }
+
+    private void copyRatings(Registry registry, String newPath, String path) throws RegistryException {
+        if (copyRatings) {
+            Utils.copyRatings(registry, newPath, path);
+        }
+    }
+
+    private void copyTags(Registry registry, String newPath, String path) throws RegistryException {
+        if (copyTags) {
+            Utils.copyTags(registry, newPath, path);
+        }
+    }
+
+    private void copyComments(Registry registry, String newPath, String path) throws RegistryException {
+        if (copyComments) {
+            Utils.copyComments(registry, newPath, path);
+        }
+    }
+
 }
 

@@ -4,9 +4,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 import org.wso2.carbon.registry.extensions.utils.CommonConstants;
@@ -75,4 +73,40 @@ public class Utils {
         }
         return true;
     }
+
+    public static void copyAssociations(Registry registry, String newPath, String path) throws RegistryException {
+        Association[] associations = registry.getAllAssociations(path);
+        for (Association association : associations) {
+            if (!association.getAssociationType().equals(CommonConstants.DEPENDS)) {
+                if (association.getSourcePath().equals(path)) {
+                    registry.addAssociation(newPath,
+                            association.getDestinationPath(), association.getAssociationType());
+                } else {
+                    registry.addAssociation(association.getSourcePath(), newPath,
+                            association.getAssociationType());
+                }
+            }
+        }
+    }
+
+    public static void copyRatings(Registry registry, String newPath, String path) throws RegistryException {
+        float averageRating = registry.getAverageRating(path);
+        registry.rateResource(newPath,
+                new Float(averageRating).intValue());
+    }
+
+    public static void copyTags(Registry registry, String newPath, String path) throws RegistryException {
+        Tag[] tags = registry.getTags(path);
+        for (Tag tag : tags) {
+            registry.applyTag(newPath, tag.getTagName());
+        }
+    }
+
+    public static void copyComments(Registry registry, String newPath, String path) throws RegistryException {
+        Comment[] comments = registry.getComments(path);
+        for (Comment comment : comments) {
+            registry.addComment(newPath, comment);
+        }
+    }
+
 }

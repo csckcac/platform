@@ -82,4 +82,46 @@ public class SchemaManagerAPITest {
             throw new GovernanceException("Error occurred while executing SchemaManager:getAllSchemas method" + e);
         }
     }
+
+    @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testGetAllSchema"}, description = "Testing " +
+            "getSchema API method", priority = 4)
+    public void testGetSchema() throws GovernanceException {
+        try {
+            schemaObj = schemaManager.getSchema(schemaArray[0].getId());
+            assertTrue(schemaObj.getQName().getLocalPart().equalsIgnoreCase("purchasing.xsd"), "SchemaManager:" +
+                    "getSchema API method not contain expected schema name");
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error occurred while executing SchemaManager:getSchema method" + e);
+        }
+    }
+
+    @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testGetSchema"}, description = "Testing " +
+            "updateSchema API method", priority = 5)
+    public void testUpdateSchema() throws GovernanceException {
+        String lcName = "ServiceLifeCycle";
+        try {
+            schemaObj.attachLifecycle(lcName);
+            schemaManager.updateSchema(schemaObj);
+            Schema localSchema = schemaManager.getSchema(schemaObj.getId());
+            assertTrue(localSchema.getLifecycleName().equalsIgnoreCase(lcName), "Updated schema doesn't " +
+                    "have lifecycle Information.SchemaManager:updateSchema didn't work");
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error occurred while executing SchemaManager:updateSchema method" + e);
+        }
+    }
+
+    @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testUpdateSchema"}, description = "Testing " +
+            "removeSchema API method", priority = 6)
+    public void testRemoveSchema() throws GovernanceException {
+        try {
+            schemaManager.removeSchema(schemaObj.getId());
+            schemaArray = schemaManager.getAllSchemas();
+            for (Schema s : schemaArray) {
+                assertTrue(s.getId().equalsIgnoreCase(schemaObj.getId()), "SchemaManager:removeSchema API method having error");
+            }
+
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error occurred while executing SchemaManager:removeSchema method" + e);
+        }
+    }
 }

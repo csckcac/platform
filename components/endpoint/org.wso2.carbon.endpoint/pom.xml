@@ -54,7 +54,7 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
                             org.wso2.carbon.endpoint.service; version=1.0.0,
-                            org.wso2.carbon.endpoint.util; version=1.0.0,
+                            org.wso2.carbon.endpoint.*; version=1.0.0,
                             org.wso2.carbon.endpoint; version=1.0.0,
                         </Export-Package>
                         <Import-Package>

@@ -9,7 +9,7 @@ $(document).ready(function () {
             return;
         }
         var api = jagg.api;
-
+        var tier=$("#tiers-list").val();
         $(this).html('Please wait...').attr('disabled', 'disabled');
 
         jagg.post("/site/blocks/subscription/subscription-add/ajax/subscription-add.jag", {
@@ -18,7 +18,7 @@ $(document).ready(function () {
             name:api.name,
             version:api.version,
             provider:api.provider,
-            tier:api.tier
+            tier:tier
         }, function (result) {
             $("#subscribe-button").html('Subscribe');
             $("#subscribe-button").removeAttr('disabled');

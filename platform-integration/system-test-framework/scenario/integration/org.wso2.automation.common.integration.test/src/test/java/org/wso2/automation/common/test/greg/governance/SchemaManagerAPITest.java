@@ -1,0 +1,85 @@
+package org.wso2.automation.common.test.greg.governance;/*
+*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+*WSO2 Inc. licenses this file to you under the Apache License,
+*Version 2.0 (the "License"); you may not use this file except
+*in compliance with the License.
+*You may obtain a copy of the License at
+*
+*http://www.apache.org/licenses/LICENSE-2.0
+*
+*Unless required by applicable law or agreed to in writing,
+*software distributed under the License is distributed on an
+*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+*KIND, either express or implied.  See the License for the
+*specific language governing permissions and limitations
+*under the License.
+*/
+
+import org.apache.axis2.AxisFault;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.wso2.carbon.governance.api.exception.GovernanceException;
+import org.wso2.carbon.governance.api.schema.SchemaManager;
+import org.wso2.carbon.governance.api.schema.dataobjects.Schema;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
+import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
+import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
+
+import static org.testng.Assert.assertTrue;
+
+/**
+ * This class will test Schema Manager related Governance API methods
+ */
+
+public class SchemaManagerAPITest {
+    public static SchemaManager schemaManager;
+    public static Schema schemaObj;
+    public static Schema[] schemaArray;
+
+    @BeforeClass(alwaysRun = true)
+    public void initializeAPIObject() throws RegistryException, AxisFault {
+        int userId = new GregUserIDEvaluator().getTenantID();
+        WSRegistryServiceClient registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
+        Registry governance = new RegistryProvider().getGovernance(registryWS, userId);
+        schemaManager = new SchemaManager(governance);
+    }
+
+    @Test(groups = {"wso2.greg.api"}, description = "Testing newEndpoint API method", priority = 1)
+    public void testNewSchemaUrl() throws GovernanceException {
+        try {
+            schemaObj = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
+                    "governance/org.wso2.carbon.governance.api/src/test/resources/" +
+                    "test-resources/xsd/purchasing.xsd");
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error occurred while executing SchemaManager:newSchema with " +
+                    "URL method" + e);
+        }
+
+    }
+
+    @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testNewSchemaUrl"}, description = "Testing " +
+            "addSchema API method", priority = 2)
+    public void testAddSchema() throws GovernanceException {
+        try {
+            schemaManager.addSchema(schemaObj);
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error occurred while executing SchemaManager:addSchema method" + e);
+        }
+    }
+
+    @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testAddSchema"}, description = "Testing " +
+            "getAllSchemas API method", priority = 3)
+    public void testGetAllSchema() throws GovernanceException {
+        try {
+            schemaArray = schemaManager.getAllSchemas();
+            assertTrue(schemaArray.length > 0, "Error occurred while executing SchemaManager:" +
+                    "getAllSchemas method");
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error occurred while executing SchemaManager:getAllSchemas method" + e);
+        }
+    }
+}

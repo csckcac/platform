@@ -47,10 +47,10 @@ done
 PRGDIR=`dirname "$PRG"`
 
 # ----- Process the input command ----------------------------------------------
-BPEL_DEP_DIR=./../repository/deployment/server/bpel
-HT_DEP_DIR=./../repository/deployment/server/humantask
-BPEL_SAM_DIR=./../repository/samples/bpel
-HT_SAM_DIR=./../repository/samples/humantask
+BPEL_DEP_DIR=$PRGDIR/../repository/deployment/server/bpel
+HT_DEP_DIR=$PRGDIR/../repository/deployment/server/humantask
+BPEL_SAM_DIR=$PRGDIR/../repository/samples/bpel
+HT_SAM_DIR=$PRGDIR/../repository/samples/humantask
 SAMPLE=""
 
 if [ "$1" = "-s" ] || [ "$1" = "s" ]; then

@@ -57,11 +57,12 @@ public class ClassEndpoint extends AbstractEndpoint  {
 	}
 	
 	/**
-	 * Override the <code>AbstractEndpoint.send()</code> to have a custom message send out logic.
+	 * Override the <code>AbstractEndpoint.init()</code> to load a custom synapse
+	 * environment.
 	 */
 	public void init(SynapseEnvironment synapseEnvironment){
 		if (log.isDebugEnabled()) {
-			log.debug("Initiate : Class Endpoint");		
+			log.debug("Initiate the synapse environment of the class endpoint");		
 		}
 		try {
 			classEndpoint.init(synapseEnvironment);
@@ -70,10 +71,14 @@ public class ClassEndpoint extends AbstractEndpoint  {
 		}
 	}
 
+	/**
+	 * Override the <code>AbstractEndpoint.send()</code> to have a custom
+	 * message send out logic.
+	 */
 	public void send(MessageContext synMessageContext) {
 
 		if (log.isDebugEnabled()) {
-			log.debug("Start : Class Endpoint");
+			log.debug("Start sending message");
 			if (log.isTraceEnabled()) {
 				log.trace("Message : " + synMessageContext.getEnvelope());
 			}
@@ -84,8 +89,5 @@ public class ClassEndpoint extends AbstractEndpoint  {
 			throw new SynapseException("Error occured when execute the class endpoint", e);
 		}
 		
-		if (log.isDebugEnabled()) {
-			log.debug("End : Class Endpoint");
-		}
 	}
 }

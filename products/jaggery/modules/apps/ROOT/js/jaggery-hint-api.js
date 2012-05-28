@@ -1,4 +1,5 @@
 var request = {};
+request.isSecure = function() {};
 request.getMethod = function() {};
 request.getProtocol = function() {};
 request.getQueryString = function() {};

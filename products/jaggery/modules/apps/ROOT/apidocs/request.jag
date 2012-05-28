@@ -200,6 +200,17 @@ include('/includes/topnavi.jag');
                         </td>
 
                     </tr>
+					<tr>
+
+                        <td><code>isSecure()</code>
+                        </td>
+                        <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.isSecure()</pre>
+                            Returns a boolean indicating whether this request was made using a secure channel, such as HTTPS.
+                        </td>
+
+                    </tr>
                     <tr>
 
                         <td><code>getRemoteAddr()</code>

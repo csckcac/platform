@@ -27,7 +27,7 @@
                     <a onclick="changeAppNameMode(this)"><i class="icon-edit"></i> Edit</a>
                 </td>
                 <td>
-                    <a><i class="icon-trash"></i> Delete</a>
+                    <a onclick="deleteApp(this)"><i class="icon-trash"></i> Delete</a>
                 </td>
             </tr>
             <% } %>

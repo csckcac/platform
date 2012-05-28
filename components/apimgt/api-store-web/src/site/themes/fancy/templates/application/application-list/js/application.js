@@ -25,3 +25,19 @@ function updateApplication(linkObj){
             }
         }, "json");
 }
+
+function deleteApp(linkObj) {
+    var theTr = $(linkObj).parent().parent();
+    var appName = $(theTr).attr('data-value');
+    jagg.post("/site/blocks/application/application-remove/ajax/application-remove.jag", {
+        action:"removeApplication",
+        application:appName
+    }, function (result) {
+        if (!result.error) {
+            window.location.reload();
+        } else {
+            jagg.message(result.message);
+        }
+    }, "json");
+
+}

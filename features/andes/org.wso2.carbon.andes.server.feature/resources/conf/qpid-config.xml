@@ -104,8 +104,10 @@
 
         <enabled>false</enabled>       
         <OnceInOrderSupportEnabled>false</OnceInOrderSupportEnabled>
-        <externalCassandraServerRequired>false</externalCassandraServerRequired>
-
+         <!--Are we running an External Cassandra server ? true|false-->
+        <!--externalCassandraServerRequired>false</externalCassandraServerRequired-->
+        <!--Are we running an External Zookeeper server ? true|false -->
+         <!--externalZookeeperServerRequired>false</externalZookeeperServerRequired-->
         <coordination>
             <!-- Apache Zookeeper Address -->
             <ZooKeeperConnection>127.0.0.1:2181</ZooKeeperConnection>
@@ -166,7 +168,7 @@
 
                 <!-- Virtual host sync interval seconds in for the Virtual host syncing Task which will sync the
                 Virtual host details across the cluster -->
-                <virtualHostSyncTaskInterval>10</virtualHostSyncTaskInterval>
+                <virtualHostSyncTaskInterval>3600</virtualHostSyncTaskInterval>
             </waitTimes>
         </tuning>
 

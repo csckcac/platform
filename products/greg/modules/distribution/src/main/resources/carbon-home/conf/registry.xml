@@ -279,9 +279,10 @@
         <service name="Events" enabled="true"/>
     </jmx>
     
-    <!-- If you need to use a remote Human Task to provide the Work List functionality instead of the Embedded Human Task
-         Uncomment the following configuration. Please note that you need to provide the credentials and URL to connect to the
-         remote instance (ex:- remote BPS server). -->
+    <!-- If you need to use a Remote Human Task to provide the Work List functionality instead of the Embedded Human Task or if you want
+         to use Work List notifications, uncomment the following configuration. Please note that you need to provide the credentials 
+         and URL to connect to the remote instance (ex:- remote BPS server) if you are planning to use a Remote Human Task. You should
+         provide credentials and URL to connect to the local instance if you simply want to use Work List notifications. -->
     
     <!--workList username="admin" password="admin" serverURL="https://localhost:9443/services/"/-->
     

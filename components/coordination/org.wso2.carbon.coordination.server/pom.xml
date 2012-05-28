@@ -68,7 +68,8 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.coordination.server.*
+                            org.wso2.carbon.coordination.server.*,
+                            org.wso2.carbon.coordination.server.service.*
                         </Export-Package>
                         <Import-Package />
                         <DynamicImport-Package>*</DynamicImport-Package>

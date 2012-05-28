@@ -1,44 +1,56 @@
-WSO2 WSAS 3.1.1
-----------------
+WSO2 AppServer ${appserver.version}
+---------------
 
 ${buildNumber}
 
-Welcome to the WSO2 WSAS 3.1.1 release
+Welcome to the WSO2 AppServer ${appserver.version} release
 
-WSO2 WSAS is an enterprise ready Web services engine powered by Apache Axis2 and
-which offers a complete middleware solution. It is a lightweight, high
-performing platform for Service Oriented Architecture, enabling business logic
-and applications. Bringing together a number of Apache Web services projects,
-WSO2 WSAS provides a secure, transactional and reliable runtime for deploying
-and managing Web services.
+WSO2 AppServer is an Enterprise ready application server based on the award-winning WSO2 Carbon framework. Being the
+successor of the WSO2 Web Services Application Server(WSAS), WSO2 Application Server(AS) now supports
+web application deployment and management in addition to its award winning web services management capabilities.
+Coupled with WSO2 Carbon Authentication/Authorization feature, now users can manage their applications that ranges
+from web services, business processes to web applications in a unified manner within the AppServer management console
+itself. WSO2 AppServer uses Apache Tomcat, the widely used servlet container as its underlying web application contaner.
 
-This is based on the revolutionary WSO2 Carbon framework. All the major features
-have been developed as pluggable Carbon components.
-
-Key Features
-------------
-
-* Data services support - Expose you enterprise data as a services in a jiffy
-* WSAS IDE - Eclipse IDE integration
-* Clustering support for High Availability & High Scalability
-* Full support for WS-Security, WS-Trust, WS-Policy and WS-Secure Conversation
-  and XKMS
-* EJB service provider support - Expose your EJBs as services
-* Axis1 backward compatibility - Deploy Axis1 services on WSAS & Engage advanced
-  WS-* protocols in front of legacy services
-* JMX & Web interface based monitoring and management
-* WS-* & REST support
-* GUI, command line & IDE based tools for Web service development
+AppServer provides a comprehensive Web services server platform, using Axis2 as its Web services framework
+and provide many value additions on top of Axis2. It can expose services using both SOAP and REST models and supports
+a comprehensive set of WS-* specifications such as WS-Security, WS-Trust, WS-SecureConversation, WS-Reliable Messaging,
+WS-Addressing, WS-Policy, WS-SecurityPolicy, etc.
 
 New Features In This Release
 ----------------------------
 
-1. Various bug fixes &amp; enhancements including architectural improvements
-   to Apache Axis2, Apache Rampart, Apache Sandesha2 , WSO2 Carbon &amp;
-    other projects.
-2. Equinox P2 based provisioning support -
-   extend your WSAS instance by installin new P2 features. See
-   https://wso2.org/wiki/display/carbon/p2-based-provisioning-support
+1. Inbuilt Data Services support
+2. Server Roles Management feature
+3. Improved JAX-WS Support
+4. Improved SOAP Tracer
+5. Improvements in Service listing page
+    -- Two lists for Services and Service Groups
+    -- Security Indicators within service list
+6. Improved Samples and documentation
+7. Improved Class loading for Web apps and Web Services
+8. Embedded Tomcat 7.0.14 support
+9. Servlet API 3.0 support
+
+Key Features
+------------
+* Web Application deployment and management within the App Server
+* AppServer tooling - AppServer related artifacts can be easily generated using WSO2 Carbon Studio
+* JAX-WS support - Deploy any JAX-WS annotated service and engage WS-* protocols through the management console.
+* JMX & Web interface based monitoring and management
+* WS-* & REST support
+* Full support for WS-Security, WS-Trust, WS-Policy and WS-Secure Conversation
+* Data services support - Expose you enterprise data as a services in a jiffy
+* Clustering support for High Availability & High Scalability
+* GUI, command line & IDE based tools for Web service development
+* Equinox P2 based provisioning support
+* WSDL2Java/Java2WSDL/WSDL 1.1 & Try it(invoke any remote Web service)
+
+Issues Fixed in This Release
+----------------------------
+
+* AppServer related components of the WSO2 Carbon Platform -
+       https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=${fixed.isssues.filter.id}
 
 Installation & Running
 ----------------------
@@ -59,109 +71,126 @@ System Requirements
      On Windows Server 2003, it is not allowed to go below the medium security
      level in Internet Explorer 6.x.
 
-For more details see
+For more details see the Installation guide or,
 http://wso2.org/wiki/display/carbon/System+Requirements
 
-Known Issues
-------------
+Known Issues in This Release
+----------------------------
 
-All known issues have been recorded at https://wso2.org/jira/browse/CARBON
+* AppServer related components of the WSO2 Carbon Platform -
+       https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&requestId=${known.isssues.filter.id}
 
-WSAS Binary Distribution Directory Structure
+Including External Dependencies
+--------------------------------
+For a complete guide on adding external dependencies to WSO2 AppServer & other carbon related products refer to the article:
+http://wso2.org/library/knowledgebase/add-external-jar-libraries-wso2-carbon-based-products
+
+AppServer Binary Distribution Directory Structure
 --------------------------------------------
 
     CARBON_HOME
-        |- bin <folder>
-        |- dbscripts <folder>
-        |- lib <folder>
-        |- logs <folder>
-        |- repository <folder>
-        |--- conf <folder>
-        |--- database <folder>
-        |- resources <folder>
-        |- samples <folder>
-        |- tmp <folder>
-        |- webapps <folder>
+        |-- bin <folder>
+        |-- dbscripts <folder>
+        |-- lib <folder>
+        |-- repository <folder>
+        |   |-- components <folder>
+        |   |-- conf <folder>
+        |   |-- data <folder>
+        |   |-- database <folder>
+        |   |-- deployment <folder>
+        |   |-- lib <folder>
+        |   |-- logs <folder>
+        |   |-- resources <folder>
+        |       `-- security <folder>
+        |   `-- tenants <folder>
+        |-- samples <folder>
+        |-- tmp <folder>
         |-- LICENSE.txt <file>
         |-- README.txt <file>
         |-- INSTALL.txt <file>
-        |-- release-notes.html <file>
+        `-- release-notes.html <file>
+
 
     - bin
-      Contains various scripts .sh & .bat scripts
-
-    - conf
-      Contains configuration files
-
-    - database
-      Contains the WSO2 Registry & User Manager database
+      Contains various .sh scripts and .bat scripts
 
     - dbscripts
       Contains the database creation & seed data population SQL scripts for
       various supported databases
 
     - lib
-      Contains the basic set of libraries required to startup WSAS
+      Contains the basic set of libraries required to startup AppServer
       in standalone mode
 
-    - logs
-      Contains all log files created during execution
-
     - repository
-      The repository where Carbon artifacts &
-      Axis2 services and modules deployed in WSO2 WSAS
-      are stored. In addition to this other custom deployers such as
-      dataservices, axis1services and pojoservices are also stored.
 
-    - resources
-      Contains additional resources that may be required
+        - components
+          Contains all OSGi related libraries and configurations
+
+        - conf
+          Contains server configuration files. Ex: axis2.xml, carbon.xml
+
+        - data
+          Contains internal LDAP related data
+
+        - database
+          Contains the WSO2 Registry & User Manager database
+
+        - deployment
+          Contains server side and client side Axis2 repositories. All deployment artifacts should
+          go into this directory
+
+        - lib
+          Used as the client class path for all samples
+
+        - logs
+          Contains all log files created during execution
+
+        - resources
+          Contains additional resources that may be required
 
     - samples
       Contains some sample applications that demonstrate the functionality
-      and capabilities of WSO2 WSAS
+      and capabilities of WSO2 AppServer
 
     - tmp
       Used for storing temporary files, and is pointed to by the
       java.io.tmpdir System property
 
-    - webapps
-      Contains the WSO2 WSAS webapp. Any other webapp also can be deployed
-      in this directory
-
     - LICENSE.txt
-      Apache License 2.0 under which WSO2 WSAS is distributed.
+      Apache License 2.0 under which WSO2 AppServer is distributed.
 
     - README.txt
       This document.
 
     - INSTALL.txt
-          This document will contain information on installing WSO2 WSAS
+      This document will contain information on installing WSO2 AppServer
 
     - release-notes.html
-      Release information for WSO2 WSAS 3.1
+      Release information for WSO2 AppServer ${appserver.version}
 
 
 Training
 --------
 
 WSO2 Inc. offers a variety of professional Training Programs, including
-training on general Web services as well as WSO2 WSAS, Apache Axis2,
+training on general Web services as well as WSO2 AppServer, Apache Axis2,
 Data Services and a number of other products.
 
 For additional support information please refer to
-http://wso2.com/training/course-catalog/
+http://wso2.com/training/
 
 
 Support
 -------
 
-WSO2 Inc. offers a variety of development and production support
-programs, ranging from Web-based support up through normal business
-hours, to premium 24x7 phone support.
+We are committed to ensuring that your enterprise middleware deployment is completely supported
+from evaluation to production. Our unique approach ensures that all support leverages our open
+development methodology and is provided by the very same engineers who build the technology.
 
 For additional support information please refer to http://wso2.com/support/
 
-For more information on WSO2 WSAS, visit the WSO2 Oxygen Tank (http://wso2.org)
+For more information on WSO2 AppServer, visit the WSO2 Oxygen Tank (http://wso2.org)
 
 Crypto Notice
 -------------
@@ -195,7 +224,7 @@ Bouncycastle     : http://www.bouncycastle.org/
 
 
 For further details, see the WSO2 Carbon documentation at
-http://wso2.org/wiki/display/carbon/1.0
+http://wso2.com/products/carbon/
 
 ---------------------------------------------------------------------------
-(c) Copyright 2009 WSO2 Inc.
+(c) Copyright 2012 WSO2 Inc.

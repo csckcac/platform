@@ -54,7 +54,7 @@
             <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
-            <directory>../../samples/</directory>
+            <directory>../samples/</directory>
             <outputDirectory>${pom.artifactId}-${build.version}/samples</outputDirectory>
             <excludes>
                 <exclude>**/**.sh</exclude>

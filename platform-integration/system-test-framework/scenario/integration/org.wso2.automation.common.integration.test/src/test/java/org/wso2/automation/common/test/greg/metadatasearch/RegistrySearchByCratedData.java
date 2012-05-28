@@ -274,8 +274,6 @@ public class RegistrySearchByCratedData {
                 {"/"},
                 {"\\"}
         };
-
-
     }
 
     private String formatDate(Date date) {

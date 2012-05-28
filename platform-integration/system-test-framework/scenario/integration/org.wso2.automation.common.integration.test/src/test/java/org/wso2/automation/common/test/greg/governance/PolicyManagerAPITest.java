@@ -31,6 +31,9 @@ import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
 import static org.testng.Assert.assertTrue;
 
+/**
+ * Class will test policy manager related API methods
+ */
 public class PolicyManagerAPITest {
     public static PolicyManager policyManager;
     public static Policy policyObj;

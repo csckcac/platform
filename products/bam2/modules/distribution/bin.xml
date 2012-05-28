@@ -80,6 +80,27 @@
                 <include>**/*</include>
             </includes>
 	</fileSet>
+
+	<!-- Files needed for stratos -->
+	<fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/identity</outputDirectory>
+            <includes>
+                <include>**/**.sql</include>
+            </includes>
+        </fileSet>
+	 <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+            <includes>
+                <include>**/identity.xml</include>
+                <!--include>**/eula.xml</include-->
+                        <include>**/stratos.xml</include>
+                <include>**/multitenancy-packages.xml</include>
+            </includes>
+        </fileSet>
 	<!--<fileSet>
             <directory>carbon-home/resources/theme</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/resources/theme</outputDirectory>
@@ -92,14 +113,14 @@
         This datasource configuration is used by BAM data services.
         -->
         <fileSet>
-            <directory>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf</directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <includes>
                 <include>datasources.properties</include>
             </includes>
          </fileSet>
   	<fileSet>
-           <directory>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/</directory>
+           <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/</directory>
            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
            <includes>
                <include>**/qpid-config.xml</include>
@@ -110,7 +131,7 @@
 
         <!--  copying samples -->
         <fileSet>
-            <directory>../../samples</directory>
+            <directory>../samples</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples</outputDirectory>
             <excludes>
                 <exclude>**/**.sh</exclude>
@@ -120,7 +141,7 @@
 
         <!-- copy executables in samples with execute permissions -->
         <fileSet>
-            <directory>../../samples</directory>
+            <directory>../samples</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples</outputDirectory>
             <includes>
                 <include>**/**.sh</include>
@@ -142,15 +163,15 @@
     <files>
 	
 	<file>
-            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
         </file>
 	<file>
-            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/etc/cassandra-auth.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/cassandra-auth.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
         </file>
         <file>
-            <source>../../../README.txt</source>
+            <source>../../README.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -162,13 +183,13 @@
             <fileMode>644</fileMode>
         </file-->
         <file>
-            <source>../../../release-notes.html</source>
+            <source>../../release-notes.html</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../INSTALL.txt</source>
+            <source>../../INSTALL.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -186,19 +207,19 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/bam.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/bam.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/hive-site.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/hive-site.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../LICENSE.txt</source>
+            <source>../../LICENSE.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>

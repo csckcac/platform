@@ -131,7 +131,8 @@ public class TenantSelfRegistrationService {
         }
 
         // If Email Validation is made optional, tenant will be activated now.
-        if (!CommonUtil.isEmailValidationMandatory()) {
+        if (CommonUtil.isTenantManagementEmailsDisabled() ||
+                !CommonUtil.isEmailValidationMandatory()) {
             TenantMgtUtil.activateTenantInitially(tenantInfoBean, tenantId);
         }
         return TenantMgtUtil.prepareStringToShowThemeMgtPage(tenant.getId());

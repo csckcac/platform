@@ -22,13 +22,20 @@
 
 <stratosConfig xmlns="http://wso2.com/cloud/stratos">
 
+    <!--DisableTenantManagementEmails is set to true by default. 
+    No Tenant Management mails will be sent, and the tenants will be
+    activated as they are created.-->
+    <DisableTenantManagementEmails>true</DisableTenantManagementEmails>
+
     <!--Set the email validation mandatory if you want to have the tenants 
-    verify the registration before letting them logging in-->
-    <EmailValidationMandatoryForLogin>true</EmailValidationMandatoryForLogin>
+    verify the registration before letting them logging in. This will be 
+    overridden by DisableTenantManagementEmails, if that is set to true.-->
+    <EmailValidationMandatoryForLogin>false</EmailValidationMandatoryForLogin>
 
     <!--Moderate the tenant activation by sending the activation mail to the
     AdminEmail address given below, instead of the tenant email address
-    Default is false - Tenant Registration Not moderated.-->
+    Default is false - Tenant Registration Not moderated. This will be 
+    overridden by DisableTenantManagementEmails, if that is set to true.-->
     <TenantActivationModerated>false</TenantActivationModerated>
 
     <!--Super Admin Email Address to moderate the tenant registrations-->

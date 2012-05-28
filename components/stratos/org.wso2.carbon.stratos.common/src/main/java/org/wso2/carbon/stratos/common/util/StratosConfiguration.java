@@ -27,8 +27,10 @@ import java.util.Map;
  */
 public class StratosConfiguration {
 
-    // By default email validation is made mandatory. Changed according to the configuration file.
-    private boolean emailValidationRequired = true;
+    // By default email sending is disabled. Changed according to the configuration file.
+    private boolean emailsDisabled = true;
+
+    private boolean emailValidationRequired = false;
     private boolean isPublicCloudSetup = true;
     private boolean isTenantActivationModerated = false;
     private String SuperAdminEmail = "";
@@ -286,5 +288,14 @@ public class StratosConfiguration {
     public void setGoogleAnalyticsURL(String googleAnalyticsURL) {
         this.googleAnalyticsURL = googleAnalyticsURL;
     }
+
+    public boolean isEmailsDisabled() {
+        return emailsDisabled;
+    }
+
+    public void setEmailsDisabled(boolean emailsDisabled) {
+        this.emailsDisabled = emailsDisabled;
+    }
+
 }
 

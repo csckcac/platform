@@ -19,6 +19,7 @@ package org.wso2.carbon.tenant.mgt.email.sender.internal;
 
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.tenant.mgt.email.sender.listener.EmailSenderListener;
 import org.wso2.carbon.tenant.mgt.email.sender.util.TenantMgtEmailSenderUtil;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -52,11 +53,14 @@ public class TenantMgtEmailSenderServiceComponent {
     protected void activate(ComponentContext context) {
         try {
             DataHolder.setBundleContext(context.getBundleContext());
-            TenantMgtEmailSenderUtil.init();
-            EmailSenderListener emailSenderListener = new EmailSenderListener();
-            context.getBundleContext().registerService(
-                    org.wso2.carbon.stratos.common.listeners.TenantMgtListener.class.getName(),
-                    emailSenderListener, null);
+            if (!CommonUtil.isTenantManagementEmailsDisabled()) {
+                TenantMgtEmailSenderUtil.init();
+                EmailSenderListener emailSenderListener = new EmailSenderListener();
+                context.getBundleContext().registerService(
+                        org.wso2.carbon.stratos.common.listeners.TenantMgtListener.class.getName(),
+                        emailSenderListener, null);
+                log.debug("******* Tenant Management Emails are enabled ******* ");
+            }
             log.debug("******* Tenant Registration Email Sender bundle is activated ******* ");
         } catch (Throwable e) {
             log.error("******* Tenant Registration Email Sender bundle failed activating ****", e);

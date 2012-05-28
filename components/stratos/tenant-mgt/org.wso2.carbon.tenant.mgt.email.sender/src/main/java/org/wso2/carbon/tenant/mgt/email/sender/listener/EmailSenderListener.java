@@ -1,7 +1,6 @@
 package org.wso2.carbon.tenant.mgt.email.sender.listener;
 
 import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
-import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
 import org.wso2.carbon.tenant.mgt.email.sender.util.TenantMgtEmailSenderUtil;

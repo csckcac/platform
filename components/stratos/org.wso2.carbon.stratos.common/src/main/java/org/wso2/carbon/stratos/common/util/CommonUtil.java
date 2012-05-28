@@ -89,14 +89,28 @@ public class CommonUtil {
     /**
      * Checks whether the email validation is mandatory from the configuration file.
      *
-     * @return true, if the email validation is mandatory to login. Default is true.
+     * @return true, if the email validation is mandatory to login. Default is false.
      */
     public static boolean isEmailValidationMandatory() {
-        boolean isEmailValidationMandatory = true; //true by default.
+        boolean isEmailValidationMandatory = false; //false by default.
         if (stratosConfig != null) {   //make sure the configuration exists.
             isEmailValidationMandatory = stratosConfig.getEmailValidationRequired();
         }
         return isEmailValidationMandatory;
+    }
+
+    /**
+     * Checks whether the email sending is enabled from the configuration file.
+     *
+     * @return true, if the email sending is disabled. By default, this is disabled, and tenant
+     * activation is done without any email sending.
+     */
+    public static boolean isTenantManagementEmailsDisabled() {
+        boolean isEmailsDisabled = true; //true by default.
+        if (stratosConfig != null) {   //make sure the configuration exists.
+            isEmailsDisabled = stratosConfig.isEmailsDisabled();
+        }
+        return isEmailsDisabled;
     }
 
     public static String getSuperAdminEmail() {
@@ -355,13 +369,23 @@ public class CommonUtil {
                 while (it.hasNext()) {
                     OMElement element = (OMElement) it.next();
 
-                    //Checks whether Email Validation is mandatory for tenant registration complete.
-                    if ("EmailValidationMandatoryForLogin".equals(element.getLocalName())) {
+                    if ("DisableTenantManagementEmails".equals(element.getLocalName())) {
+                        String disableEmails = element.getText();
+                        // by default, make the email validation mandatory.
+                        boolean isEmailsDisabled = true;
+                        if (disableEmails.trim().equalsIgnoreCase("false")) {
+                            isEmailsDisabled = false;
+                        }
+                        config.setEmailsDisabled(isEmailsDisabled);
+                    }
+                    // Checks whether Email Validation is mandatory to log in and use the registered
+                    // tenants.
+                    else if ("EmailValidationMandatoryForLogin".equals(element.getLocalName())) {
                         String emailValidation = element.getText();
-                        //by default, make the email validation mandatory.
-                        boolean isEmailValidationRequired = true;
-                        if (emailValidation.trim().equalsIgnoreCase("false")) {
-                            isEmailValidationRequired = false;
+                        //by default, make the email validation not mandatory.
+                        boolean isEmailValidationRequired = false;
+                        if (emailValidation.trim().equalsIgnoreCase("true")) {
+                            isEmailValidationRequired = true;
                         }
                         config.setEmailValidationRequired(isEmailValidationRequired);
                     } else if ("NotificationEmail".equals(element.getLocalName())) {
@@ -568,7 +592,6 @@ public class CommonUtil {
           }
           return true;
       }
-
 }
 
 

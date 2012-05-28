@@ -56,18 +56,11 @@ public class TenantMgtEmailSenderUtil {
     private static EmailSender tenantCreationNotifier;
     private static EmailSender tenantActivationNotifier;
     private static EmailSender passwordResetMsgSender;
-    private static EmailVerifierConfig emailVerifierConfig = null;
+    private static EmailVerifierConfig emailVerifierConfig;
     private static EmailVerifierConfig superTenantEmailVerifierConfig = null;
     
     public static void init() {
-        String confFilename =
-                CarbonUtils.getCarbonConfigDirPath() + File.separator +
-                        StratosConstants.EMAIL_CONFIG + File.separator +
-                        "email-registration-complete.xml";
-        EmailSenderConfiguration successMsgConfig =
-                EmailSenderConfiguration.loadEmailSenderConfiguration(confFilename);
-        successMsgSender = new EmailSender(successMsgConfig);
-
+        initTenantActivatedEmailSender();
         initSuperTenantNotificationEmailSender();
         initEmailVerificationSender();
         initPasswordResetEmailSender();
@@ -76,7 +69,6 @@ public class TenantMgtEmailSenderUtil {
     /**
      * Sends validation mail to the tenant admin upon the tenant creation
      *
-     * @param tenant            - the registered tenant
      * @param tenantInfoBean    - registered tenant's details
      * @throws Exception, if the sending mail failed
      */
@@ -97,9 +89,7 @@ public class TenantMgtEmailSenderUtil {
     /**
      * Emails the tenant admin notifying the account creation.
      *
-     * @param domainName tenant domain
-     * @param adminName  tenant admin
-     * @param email      associated tenant email address
+     * @param tenantId tenant Id
      */
     public static void notifyTenantInitialActivation(int tenantId) {
         TenantManager tenantManager = DataHolder.getTenantManager();
@@ -140,9 +130,7 @@ public class TenantMgtEmailSenderUtil {
     /**
      * Emails the super admin notifying the account creation for a new tenant.
      *
-     * @param domainName tenant domain
-     * @param adminName  tenant admin
-     * @param email      tenant's email address
+     * @param tenantInfoBean - tenant details
      */
     public static void notifyTenantCreationToSuperAdmin(TenantInfoBean tenantInfoBean) {
         String notificationEmailAddress = CommonUtil.getNotificationEmailAddress();
@@ -222,11 +210,9 @@ public class TenantMgtEmailSenderUtil {
     /**
      * generates the confirmation key for the tenant
      *
-     * @param tenant            - a tenant
-     * @param originatedService - originated service of the registration
+     * @param tenantInfoBean            - tenant details
      * @param superTenantConfigSystemRegistry
      *                          - super tenant config system registry.
-     * @param tenantId          tenantId
      * @return confirmation key
      * @throws RegistryException if generation of the confirmation key failed.
      */
@@ -262,8 +248,7 @@ public class TenantMgtEmailSenderUtil {
             log.error(msg, e);
             throw new RegistryException(msg, e);
         }
-        // email is not validated yet, this prop is used to activate the tenant
-        // later.
+        // email is not validated yet, this prop is used to activate the tenant later.
         resource.addProperty(StratosConstants.IS_EMAIL_VALIDATED, "false");
         resource.addProperty(StratosConstants.TENANT_ADMIN, tenantInfoBean.getAdmin());
         try {
@@ -305,10 +290,8 @@ public class TenantMgtEmailSenderUtil {
      * Sends mail for the super tenant for the account moderation. Once super tenant clicks the
      * link provided in the email, the tenant will be activated.
      *
-     * @param tenant          the tenant who registered an account
+     * @param tenantInfoBean      - the tenant who registered an account
      * @param confirmationKey confirmation key.
-     * @param firstname       calling name of the tenant
-     * @param adminName       the tenant admin name
      * @throws Exception if an exception is thrown from EmailVerificationSubscriber.
      */
     private static void requestSuperTenantModeration(TenantInfoBean tenantInfoBean, 
@@ -337,9 +320,8 @@ public class TenantMgtEmailSenderUtil {
     /**
      * request email verification from the user.
      *
-     * @param tenant          a tenant
+     * @param tenantInfoBean - Tenant information
      * @param confirmationKey confirmation key.
-     * @param firstname       calling name
      * @throws Exception if an exception is thrown from EmailVerificationSubscriber.
      */
     private static void requestUserVerification(TenantInfoBean tenantInfoBean, 
@@ -424,8 +406,7 @@ public class TenantMgtEmailSenderUtil {
             emailVerifierConfig = org.wso2.carbon.email.verification.util.Util
                             .loadeMailVerificationConfig(confXml);
         } catch (Exception e) {
-            String msg =
-                    "Email Registration Configuration file not found. "
+            String msg = "Email Registration Configuration file not found. "
                             + "Pls check the repository/conf/email folder.";
             log.error(msg);
         }
@@ -443,7 +424,20 @@ public class TenantMgtEmailSenderUtil {
             log.error(msg);
         }
     }
-    
+
+    /**
+     * loads the Email configuration files to be sent on the tenant activations.
+     */
+    private static void initTenantActivatedEmailSender() {
+        String confFilename =
+                CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                        StratosConstants.EMAIL_CONFIG + File.separator +
+                        "email-registration-complete.xml";
+        EmailSenderConfiguration successMsgConfig =
+                EmailSenderConfiguration.loadEmailSenderConfiguration(confFilename);
+        successMsgSender = new EmailSender(successMsgConfig);
+    }
+
     private static void initPasswordResetEmailSender() {
         String passwordResetConfigFileName = CarbonUtils.getCarbonConfigDirPath()+ File.separator + 
                 StratosConstants.EMAIL_CONFIG + File.separator + "email-password-reset.xml";

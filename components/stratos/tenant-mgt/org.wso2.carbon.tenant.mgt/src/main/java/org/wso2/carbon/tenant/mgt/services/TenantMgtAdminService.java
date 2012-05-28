@@ -408,14 +408,8 @@ public class TenantMgtAdminService extends AbstractAdmin {
             throw new Exception(msg, e);
         }
 
-        try {
-            tenantManager.deactivateTenant(tenantId);
-        } catch (UserStoreException e) {
-            String msg = "Error in deactivating tenant for tenant domain: " + tenantDomain + ".";
-            log.error(msg, e);
-            throw new Exception(msg, e);
-        }
-        
+        TenantMgtUtil.deactivateTenant(tenantDomain, tenantManager, tenantId);
+
         //Notify tenant deactivation all listeners
         try {
             TenantMgtUtil.triggerTenantDeactivation(tenantId);

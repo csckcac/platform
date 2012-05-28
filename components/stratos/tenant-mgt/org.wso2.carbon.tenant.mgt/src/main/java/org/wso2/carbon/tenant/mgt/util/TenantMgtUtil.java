@@ -184,22 +184,16 @@ public class TenantMgtUtil {
                 TenantMgtServiceComponent.getRealmService().getTenantMgtConfiguration();
         UserRealm userRealm;
         try {
-            MultiTenantRealmConfigBuilder builder =
-                    TenantMgtServiceComponent.getRealmService().
-                            getMultiTenantRealmConfigBuilder();
-            RealmConfiguration realmConfigToPersist =
-                    builder.getRealmConfigForTenantToPersist(realmConfig, tenantMgtConfiguration,
-                                                             tenant,
-                                                             tenantId);
-
+            MultiTenantRealmConfigBuilder builder = TenantMgtServiceComponent.getRealmService().
+                    getMultiTenantRealmConfigBuilder();
+            RealmConfiguration realmConfigToPersist = builder.
+                    getRealmConfigForTenantToPersist(realmConfig, tenantMgtConfiguration,
+                                                             tenant, tenantId);
             RealmConfiguration realmConfigToCreate =
-                    builder.
-                            getRealmConfigForTenantToCreateRealmOnTenantCreation(realmConfig,
-                                                                                 realmConfigToPersist,
-                                                                                 tenantId);
-            userRealm =
-                    TenantMgtServiceComponent.getRealmService().
-                            getUserRealm(realmConfigToCreate);
+                    builder.getRealmConfigForTenantToCreateRealmOnTenantCreation(
+                            realmConfig, realmConfigToPersist, tenantId);
+            userRealm = TenantMgtServiceComponent.getRealmService().
+                    getUserRealm(realmConfigToCreate);
         } catch (UserStoreException e) {
             String msg = "Error in creating Realm for tenant, tenant domain: " + tenant.getDomain();
             log.error(msg, e);
@@ -382,6 +376,36 @@ public class TenantMgtUtil {
             }
         } catch (Exception e) {
             String msg = "Error while activating subscription for domain: " + tenantDomain + ".";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+    }
+
+    /**
+     * Deactivate the given tenant, by super admin.
+     *
+     * @param tenantDomain tenant domain
+     * @param tenantManager TenantManager object
+     * @param tenantId tenant Id
+     * @throws Exception UserStoreException.
+     */
+    public static void deactivateTenant(String tenantDomain, TenantManager tenantManager,
+                                        int tenantId) throws Exception {
+        try {
+            tenantManager.deactivateTenant(tenantId);
+        } catch (UserStoreException e) {
+            String msg = "Error in deactivating tenant for tenant domain: " + tenantDomain + ".";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+
+        //deactivating the subscription
+        try {
+            if (TenantMgtServiceComponent.getBillingService() != null) {
+                TenantMgtServiceComponent.getBillingService().deactivateActiveUsagePlan(tenantDomain);
+            }
+        } catch (Exception e) {
+            String msg = "Error while deactivating subscription for domain: " + tenantDomain + ".";
             log.error(msg, e);
             throw new Exception(msg, e);
         }

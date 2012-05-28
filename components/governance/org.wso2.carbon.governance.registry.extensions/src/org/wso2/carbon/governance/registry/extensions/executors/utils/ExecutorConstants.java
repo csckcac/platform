@@ -38,6 +38,11 @@ public class ExecutorConstants {
     public static final String COPY_RATINGS = "copyRatings";
 
     /**
+     * Defines the copy  dependencies key
+     */
+    public static final String COPY_DEPENDENCIES = "copyDependencies";
+
+    /**
      * Defines the copy all associations key
      */
     public static final String COPY_ASSOCIATIONS = "copyAssociations";

@@ -36,6 +36,7 @@ public class ServiceVersionExecutor implements Execution {
     private boolean copyTags = false;
     private boolean copyRatings = false;
     private boolean copyAllAssociations = false;
+    private boolean copyDependencies = false;
 
     private Map parameterMap = new HashMap();
     private List<String> otherDependencyList =  new ArrayList<String>();
@@ -60,6 +61,9 @@ public class ServiceVersionExecutor implements Execution {
         }
         if(parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS) != null){
             copyAllAssociations = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS));
+        }
+        if(parameterMap.get(ExecutorConstants.COPY_DEPENDENCIES) != null){
+            copyDependencies = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_DEPENDENCIES));
         }
 
     }
@@ -399,24 +403,26 @@ public class ServiceVersionExecutor implements Execution {
                                     getServiceOMElement(requestContext.getResource())));
 
 //                    add if any dependencies are available for this resource under the version of the service
-                    try {
-                        Association[] associations=
-                                requestContext.getRegistry().getAllAssociations(requestContext.getResource().getPath());
-                        if(associations!=null && associations.length!=0){
-                            for (Association association:associations){
-                                if(association.getAssociationType().equals(CommonConstants.DEPENDS)){
-                                    if(requestContext.getResource().getPath().equals(association.getSourcePath())){
-                                        currentParameterMap.put(association.getDestinationPath(),
-                                                org.wso2.carbon.registry.common.utils.CommonUtil
-                                                        .getServiceVersion(getServiceOMElement(
-                                                                requestContext.getResource())));
+                    if(copyDependencies){
+                        try {
+                            Association[] associations=
+                                    requestContext.getRegistry().getAllAssociations(requestContext.getResource().getPath());
+                            if(associations!=null && associations.length!=0){
+                                for (Association association:associations){
+                                    if(association.getAssociationType().equals(CommonConstants.DEPENDS)){
+                                        if(requestContext.getResource().getPath().equals(association.getSourcePath())){
+                                            currentParameterMap.put(association.getDestinationPath(),
+                                                    org.wso2.carbon.registry.common.utils.CommonUtil
+                                                            .getServiceVersion(getServiceOMElement(
+                                                                    requestContext.getResource())));
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                    } catch (RegistryException e) {
-                        log.error(e);
+                        } catch (RegistryException e) {
+                            log.error(e);
+                        }
                     }
                 }
             }

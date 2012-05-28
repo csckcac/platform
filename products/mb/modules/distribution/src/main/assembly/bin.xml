@@ -27,6 +27,7 @@
             <outputDirectory>wso2mb-${pom.version}</outputDirectory>
             <excludes>
                 <exclude>**/*.sh</exclude>
+                <exclude>**/*.bat</exclude>
                 <exclude>**/conf/axis2/axis2.xml</exclude>
                 <exclude>**/services/sample01.aar</exclude>
                 <exclude>**/repository/services/version/**</exclude>
@@ -44,9 +45,10 @@
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>wso2mb-${pom.version}</outputDirectory>
             <excludes>
-                <exclude>**/wso2server.sh</exclude>     
+                <exclude>**/wso2server.sh</exclude>
+                <exclude>**/wso2server.bat</exclude>     
             </excludes>
-			<includes>
+	    <includes>
                 <include>**/*.sh</include>
                 <include>**/native/*</include>
             </includes>
@@ -77,8 +79,7 @@
            </includes>
         </fileSet>
 
-		<!-- copy the landing page webapp -->
-	<!-- consider change-->	
+	<!-- copy the landing page webapp -->
         <fileSet>
 		<directory>lib/home</directory>
 		<outputDirectory>wso2mb-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
@@ -177,11 +178,6 @@
             <outputDirectory>wso2mb-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/bin/wso2server.bat</source>
-            <outputDirectory>wso2mb-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
         </file>
         <file>
             <source>target/wso2carbon-core-${carbon.version}/repository/conf/carbon.xml</source>

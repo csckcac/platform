@@ -322,6 +322,7 @@ public class ApiMgtDAO {
         String status;
         String tier;
         String type;
+        String username;
         
         // First check whether the token is valid, active and not expired.
         Connection conn = null;
@@ -333,10 +334,14 @@ public class ApiMgtDAO {
                 "   IAT.TIME_CREATED ," +
                 "   IAT.TOKEN_STATE," +
                 "   SUB.TIER_ID," +
+                "   SUBS.USER_ID," +
+                "   APP.APPLICATION_ID," +
                 "   SKM.KEY_TYPE" +
                 " FROM " +
                 "   IDENTITY_OAUTH2_ACCESS_TOKEN IAT," +
                 "   AM_SUBSCRIPTION SUB," +
+                "   AM_SUBSCRIBER SUBS," +
+                "   AM_APPLICATION APP," +
                 "   AM_KEY_CONTEXT_MAPPING KCM," +
                 "   AM_SUBSCRIPTION_KEY_MAPPING SKM" +
                 " WHERE " +
@@ -345,7 +350,9 @@ public class ApiMgtDAO {
                 "   AND KCM.VERSION = ? " +
                 "   AND IAT.ACCESS_TOKEN=KCM.ACCESS_TOKEN " +
                 "   AND KCM.KEY_CONTEXT_MAPPING_ID = SKM.KEY_CONTEXT_MAPPING_ID" +
-                "   AND SUB.SUBSCRIPTION_ID = SKM.SUBSCRIPTION_ID";
+                "   AND SUB.SUBSCRIPTION_ID = SKM.SUBSCRIPTION_ID" +
+                "   AND SUB.APPLICATION_ID = APP.APPLICATION_ID" +
+                "   AND APP.SUBSCRIBER_ID = SUBS.SUBSCRIBER_ID";
         try {
             conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
@@ -360,6 +367,7 @@ public class ApiMgtDAO {
                 status = rs.getString(APIConstants.IDENTITY_OAUTH2_FIELD_TOKEN_STATE);
                 tier = rs.getString(APIConstants.SUBSCRIPTION_FIELD_TIER_ID);
                 type = rs.getString(APIConstants.SUBSCRIPTION_KEY_TYPE);
+                username = rs.getString(APIConstants.SUBSCRIBER_FIELD_USER_ID);
             } else { // invalid token.
                 if (log.isDebugEnabled()) {
                     log.debug("Invalid Access Token is provided : " + accessToken);
@@ -377,6 +385,7 @@ public class ApiMgtDAO {
                 keyValidationInfoDTO.setAuthorized(true);
                 keyValidationInfoDTO.setTier(tier);
                 keyValidationInfoDTO.setType(type);
+                keyValidationInfoDTO.setUsername(username);
                 return keyValidationInfoDTO;
             }
 

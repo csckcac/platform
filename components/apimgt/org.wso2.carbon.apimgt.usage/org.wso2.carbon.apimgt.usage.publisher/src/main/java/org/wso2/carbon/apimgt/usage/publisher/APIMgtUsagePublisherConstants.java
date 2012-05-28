@@ -33,6 +33,7 @@ public final class APIMgtUsagePublisherConstants {
     public static final String API_USAGE_BAM_SERVER_PASSWORD = API_USAGE_TRACKING + "BAMPassword";
 
     public static final String CONSUMER_KEY = "api.ut.consumerKey";
+    public static final String USER_ID = "api.ut.userId";
     public static final String CONTEXT = "api.ut.context";
     public static final String API_VERSION = "api.ut.api_version";
     public static final String API = "api.ut.api";

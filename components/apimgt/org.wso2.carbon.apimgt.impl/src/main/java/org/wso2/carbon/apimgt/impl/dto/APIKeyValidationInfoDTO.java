@@ -24,6 +24,7 @@ package org.wso2.carbon.apimgt.impl.dto;
 public class APIKeyValidationInfoDTO {
 
     private boolean authorized;
+    private String username;
     private String tier;
     private String type;
 
@@ -41,6 +42,14 @@ public class APIKeyValidationInfoDTO {
 
     public void setTier(String tier) {
         this.tier = tier;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getType() {

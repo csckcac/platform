@@ -23,12 +23,17 @@ package org.wso2.carbon.apimgt.handlers.security;
 public class AuthenticationContext {
 
     private boolean authenticated;
+    private String username;
     private String tier;
     private String apiKey;
     private String keyType;
 
     public boolean isAuthenticated() {
         return authenticated;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getTier() {
@@ -46,7 +51,11 @@ public class AuthenticationContext {
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
     }
-    
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public void setTier(String tier) {
         this.tier = tier;
     }

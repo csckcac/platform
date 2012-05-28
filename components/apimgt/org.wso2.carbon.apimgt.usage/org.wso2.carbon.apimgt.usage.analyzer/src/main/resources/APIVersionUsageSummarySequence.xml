@@ -1,5 +1,5 @@
 <analyzerSequence name="APIVersionUsageSummarySequence">
-    <trigger cron="1 * * * * ? *"/>
+    <trigger cron="0/10 * * * * ? *"/>
     <analyzers>
         <get name="BASEEnriched" batchSize="1000">
         </get>

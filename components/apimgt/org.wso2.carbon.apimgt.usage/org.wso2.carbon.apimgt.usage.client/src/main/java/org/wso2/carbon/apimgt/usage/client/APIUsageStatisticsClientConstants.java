@@ -61,5 +61,7 @@ public final class APIUsageStatisticsClientConstants {
     public static final String REQUEST_TIME = "requestTime";
 
     public static final String CONSUMER_KEY = "consumerKey";
+    
+    public static final String USER_ID = "userId";
 
 }

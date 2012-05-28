@@ -20,7 +20,6 @@ package org.wso2.carbon.apimgt.usage.client;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.apimgt.api.APIConsumer;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.model.*;
@@ -46,7 +45,6 @@ public class APIUsageStatisticsClient {
     private QueryServiceStub qss;
 
     private APIProvider apiProviderImpl;
-    private APIConsumer apiConsumerImpl;
 
     public APIUsageStatisticsClient() throws APIMgtUsageQueryServiceClientException {
         APIManagerConfiguration config = APIUsageClientServiceComponent.getAPIManagerConfiguration();
@@ -58,7 +56,6 @@ public class APIUsageStatisticsClient {
         try {
             qss = new QueryServiceStub(targetEndpoint + "services/QueryService");
             apiProviderImpl = APIManagerFactory.getInstance().getAPIProvider();
-            apiConsumerImpl = APIManagerFactory.getInstance().getAPIConsumer();
         } catch (AxisFault e) {
             throw new APIMgtUsageQueryServiceClientException("Error while instantiating QueryServiceStub", e);
         } catch (APIManagementException e) {
@@ -242,7 +239,7 @@ public class APIUsageStatisticsClient {
             accessTimeDTO.setApiName(lastAccessTime.apiName);
             accessTimeDTO.setApiVersion(lastAccessTime.apiVersion);
             accessTimeDTO.setLastAccessTime(dateFormat.format(lastAccessTime.accessTime));
-            accessTimeDTO.setUser(getUserByAPIKey(lastAccessTime.apiKey).getName());
+            accessTimeDTO.setUser(lastAccessTime.username);
             accessTimeDTOs.add(accessTimeDTO);
         }
         return accessTimeDTOs;
@@ -266,25 +263,24 @@ public class APIUsageStatisticsClient {
                 APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE,
                 APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
                 null);
-        Map<String,Long> usageData = getUsageBySubscriber(omElement);
+        Collection<APIUsageByUser> usageData = getUsageBySubscriber(omElement);
         Map<String,PerUserAPIUsageDTO> usageByUsername = new TreeMap<String, PerUserAPIUsageDTO>();
-        for (Map.Entry<String,Long> entry : usageData.entrySet()) {
-            Subscriber subscriber = getUserByAPIKey(entry.getKey());
-            if (subscriber != null) {
-                APIIdentifier apiId = getAPIByConsumerKey(entry.getKey());
-                if (apiId.getApiName().equals(apiName) &&
-                        apiId.getProviderName().equals(providerName)) {
-                    PerUserAPIUsageDTO usageDTO = usageByUsername.get(subscriber.getName());
+        List<API> apiList = getAPIsByProvider(providerName);
+        for (APIUsageByUser usageEntry : usageData) {
+            for (API api : apiList) {
+                if (api.getContext().equals(usageEntry.context) &&
+                        api.getId().getApiName().equals(apiName)) {
+                    PerUserAPIUsageDTO usageDTO = usageByUsername.get(usageEntry.username);
                     if (usageDTO != null) {
-                        usageDTO.setCount(usageDTO.getCount() + entry.getValue());
+                        usageDTO.setCount(usageDTO.getCount() + usageEntry.requestCount);
                     } else {
                         usageDTO = new PerUserAPIUsageDTO();
-                        usageDTO.setUsername(subscriber.getName());
-                        usageDTO.setCount(entry.getValue());
-                        usageByUsername.put(subscriber.getName(), usageDTO);
+                        usageDTO.setUsername(usageEntry.username);
+                        usageDTO.setCount(usageEntry.requestCount);
+                        usageByUsername.put(usageEntry.username, usageDTO);
                     }
                 }
-            }
+            }                        
         }
         return getTopEntries(new ArrayList<PerUserAPIUsageDTO>(usageByUsername.values()), limit);
     }
@@ -296,37 +292,29 @@ public class APIUsageStatisticsClient {
                 APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE,
                 APIUsageStatisticsClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX,
                 null);
-        Map<String,Long> usageData = getUsageBySubscriber(omElement);
+
+        Collection<APIUsageByUser> usageData = getUsageBySubscriber(omElement);
         Map<String,PerUserAPIUsageDTO> usageByUsername = new TreeMap<String, PerUserAPIUsageDTO>();
-        for (Map.Entry<String,Long> entry : usageData.entrySet()) {
-            Subscriber subscriber = getUserByAPIKey(entry.getKey());
-            if (subscriber != null) {
-                APIIdentifier apiId = getAPIByConsumerKey(entry.getKey());
-                if (apiId.getApiName().equals(apiName) &&
-                        apiId.getProviderName().equals(providerName) &&
-                        apiId.getVersion().equals(apiVersion)) {
-                    PerUserAPIUsageDTO usageDTO = usageByUsername.get(subscriber.getName());
+        List<API> apiList = getAPIsByProvider(providerName);
+        for (APIUsageByUser usageEntry : usageData) {
+            for (API api : apiList) {
+                if (api.getContext().equals(usageEntry.context) &&
+                        api.getId().getApiName().equals(apiName) &&
+                        api.getId().getVersion().equals(apiVersion)) {
+                    PerUserAPIUsageDTO usageDTO = usageByUsername.get(usageEntry.username);
                     if (usageDTO != null) {
-                        usageDTO.setCount(usageDTO.getCount() + entry.getValue());
+                        usageDTO.setCount(usageDTO.getCount() + usageEntry.requestCount);
                     } else {
                         usageDTO = new PerUserAPIUsageDTO();
-                        usageDTO.setUsername(subscriber.getName());
-                        usageDTO.setCount(entry.getValue());
-                        usageByUsername.put(subscriber.getName(), usageDTO);
+                        usageDTO.setUsername(usageEntry.username);
+                        usageDTO.setCount(usageEntry.requestCount);
+                        usageByUsername.put(usageEntry.username, usageDTO);
                     }
                 }
             }
         }
+        
         return getTopEntries(new ArrayList<PerUserAPIUsageDTO>(usageByUsername.values()), limit);
-    }
-    
-    private Subscriber getUserByAPIKey(String apiKey) throws APIMgtUsageQueryServiceClientException {
-        try {
-            return apiProviderImpl.getSubscriberById(apiKey);
-        } catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while retrieving subscriber " +
-                    "from API key", e);
-        }
     }
     
     private List<PerUserAPIUsageDTO> getTopEntries(List<PerUserAPIUsageDTO> usageData, int limit) {
@@ -382,15 +370,6 @@ public class APIUsageStatisticsClient {
             throw new APIMgtUsageQueryServiceClientException("Error while retrieving APIs by " + providerId, e);
         }
     }
-    
-    private APIIdentifier getAPIByConsumerKey(String apiKey) throws APIMgtUsageQueryServiceClientException {
-        try {
-            return apiConsumerImpl.getAPIByConsumerKey(apiKey);
-        } catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Error while retrieving subscribed API " +
-                    "for: " + apiKey);
-        }
-    }
 
     private Collection<APIUsage> getUsageData(OMElement data) {
         OMElement rowsElement = data.getFirstChildWithName(new QName(
@@ -431,23 +410,15 @@ public class APIUsageStatisticsClient {
         return accessTimeData;
     }
     
-    private Map<String,Long> getUsageBySubscriber(OMElement data) {
+    private Collection<APIUsageByUser> getUsageBySubscriber(OMElement data) {
         OMElement rowsElement = data.getFirstChildWithName(new QName(
                 APIUsageStatisticsClientConstants.ROWS));
         Iterator rowIterator = rowsElement.getChildrenWithName(new QName(
                 APIUsageStatisticsClientConstants.ROW));
-        Map<String,Long> usageData = new HashMap<String,Long>(); 
+        List<APIUsageByUser> usageData = new ArrayList<APIUsageByUser>();
         while (rowIterator.hasNext()) {
             OMElement rowElement = (OMElement) rowIterator.next();
-            String apiKey = rowElement.getFirstChildWithName(new QName(
-                    APIUsageStatisticsClientConstants.CONSUMER_KEY)).getText();
-            long count = (long) Double.parseDouble(rowElement.getFirstChildWithName(new QName(
-                    APIUsageStatisticsClientConstants.REQUEST)).getText());
-            if (usageData.containsKey(apiKey)) {
-                usageData.put(apiKey, usageData.get(apiKey) + count);
-            } else {
-                usageData.put(apiKey, count);
-            }
+            usageData.add(new APIUsageByUser(rowElement));
         }
         return usageData;
     }
@@ -466,6 +437,22 @@ public class APIUsageStatisticsClient {
                     APIUsageStatisticsClientConstants.VERSION)).getText();
             context = row.getFirstChildWithName(new QName(
                     APIUsageStatisticsClientConstants.CONTEXT)).getText();
+            requestCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.REQUEST)).getText());
+        }
+    }
+    
+    private static class APIUsageByUser {
+        
+        private String context;
+        private String username;
+        private long requestCount;
+
+        public APIUsageByUser(OMElement row) {
+            context = row.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.CONTEXT)).getText();
+            username = row.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.USER_ID)).getText();
             requestCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(
                     APIUsageStatisticsClientConstants.REQUEST)).getText());
         }
@@ -500,7 +487,7 @@ public class APIUsageStatisticsClient {
         private String apiVersion;
         private String context;
         private double accessTime;
-        private String apiKey;
+        private String username; 
 
         public APIAccessTime(OMElement row) {
             String nameVersion = row.getFirstChildWithName(new QName(
@@ -512,8 +499,8 @@ public class APIUsageStatisticsClient {
                     APIUsageStatisticsClientConstants.CONTEXT)).getText();
             accessTime = Double.parseDouble(row.getFirstChildWithName(new QName(
                     APIUsageStatisticsClientConstants.REQUEST_TIME)).getText());
-            apiKey = row.getFirstChildWithName(new QName(
-                    APIUsageStatisticsClientConstants.CONSUMER_KEY)).getText();
+            username = row.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.USER_ID)).getText();
         }
     }
 

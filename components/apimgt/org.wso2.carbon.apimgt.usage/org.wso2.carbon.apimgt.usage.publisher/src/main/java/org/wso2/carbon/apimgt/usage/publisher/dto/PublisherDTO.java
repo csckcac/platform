@@ -24,6 +24,8 @@ import java.util.Map;
 public class PublisherDTO {
 
     private String consumerKey;
+    
+    private String username;
 
     private String context;
 
@@ -43,6 +45,14 @@ public class PublisherDTO {
 
     public String getConsumerKey() {
         return consumerKey;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getContext() {
@@ -106,6 +116,7 @@ public class PublisherDTO {
         eventMap.put("resource", ByteBuffer.wrap(getResource().getBytes()));
         eventMap.put("method", ByteBuffer.wrap(getMethod().getBytes()));
         eventMap.put("version", ByteBuffer.wrap(getVersion().getBytes()));
+        eventMap.put("userId", ByteBuffer.wrap(getUsername().getBytes()));
         return eventMap;
     }
 

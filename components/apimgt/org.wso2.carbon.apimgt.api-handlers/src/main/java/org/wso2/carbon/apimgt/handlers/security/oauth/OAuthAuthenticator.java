@@ -69,6 +69,7 @@ public class OAuthAuthenticator implements Authenticator {
             authContext.setTier(info.getTier());
             authContext.setApiKey(apiKey);
             authContext.setKeyType(info.getType());
+            authContext.setUsername(info.getUsername());
             APISecurityUtils.setAuthenticationContext(synCtx, authContext);
             return true;
         } else {

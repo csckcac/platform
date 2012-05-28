@@ -46,6 +46,7 @@ public class RequestPublisherDTO extends PublisherDTO {
         eventMap.put("version", ByteBuffer.wrap(getVersion().getBytes()));
         eventMap.put("request", ByteBuffer.wrap(request.getBytes()));
         eventMap.put("requestTime", ByteBuffer.wrap(getRequestTime().getBytes()));
+        eventMap.put("userId", ByteBuffer.wrap(getUsername().getBytes()));
         return eventMap;
     }
 }

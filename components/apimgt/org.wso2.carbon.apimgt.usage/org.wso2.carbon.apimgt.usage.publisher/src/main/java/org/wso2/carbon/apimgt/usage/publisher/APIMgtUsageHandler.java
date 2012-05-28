@@ -61,8 +61,10 @@ public class APIMgtUsageHandler extends AbstractHandler {
 
         AuthenticationContext authContext = APISecurityUtils.getAuthenticationContext(mc);
         String consumerKey = "";
+        String username = "";
         if (authContext != null) {
             consumerKey = authContext.getApiKey();
+            username = authContext.getUsername();
         }
         String context = (String)mc.getProperty(RESTConstants.REST_API_CONTEXT);
         String api_version =  (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API);
@@ -90,9 +92,11 @@ public class APIMgtUsageHandler extends AbstractHandler {
         requestPublisherDTO.setResource(resource);
         requestPublisherDTO.setMethod(method);
         requestPublisherDTO.setRequestTime(currentTime);
+        requestPublisherDTO.setUsername(username);
         publisher.publishEvent(requestPublisherDTO);
 
         mc.setProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY, consumerKey);
+        mc.setProperty(APIMgtUsagePublisherConstants.USER_ID, username);
         mc.setProperty(APIMgtUsagePublisherConstants.CONTEXT, context);
         mc.setProperty(APIMgtUsagePublisherConstants.API_VERSION, api_version);
         mc.setProperty(APIMgtUsagePublisherConstants.API, api);
@@ -116,6 +120,7 @@ public class APIMgtUsageHandler extends AbstractHandler {
 
         ResponsePublisherDTO responsePublisherDTO = new ResponsePublisherDTO();
         responsePublisherDTO.setConsumerKey((String)mc.getProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY));
+        responsePublisherDTO.setUsername((String)mc.getProperty(APIMgtUsagePublisherConstants.USER_ID));
         responsePublisherDTO.setContext((String) mc.getProperty(APIMgtUsagePublisherConstants.CONTEXT));
         responsePublisherDTO.setApi_version((String) mc.getProperty(APIMgtUsagePublisherConstants.API_VERSION));
         responsePublisherDTO.setApi((String) mc.getProperty(APIMgtUsagePublisherConstants.API));

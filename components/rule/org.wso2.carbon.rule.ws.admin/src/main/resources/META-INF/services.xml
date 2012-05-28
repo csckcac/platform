@@ -30,6 +30,7 @@
         <description>
             This service will help to create/modify a rule service.
         </description>
+        <parameter name="AuthorizationAction" locked="false">/permission/admin/manage/rule</parameter>
         <parameter name="ServiceClass">org.wso2.carbon.rule.ws.admin.RuleServiceAdmin</parameter>
         <parameter name="enableMTOM" locked="false">false</parameter>
     </service>
@@ -50,6 +51,7 @@
         <parameter name="ServiceClass" locked="false">
             org.wso2.carbon.rule.ws.admin.RuleServiceFileUploadAdmin
         </parameter>
+        <parameter name="AuthorizationAction" locked="false">/permission/admin/manage/rule</parameter>
         <parameter name="enableMTOM" locked="false">true</parameter>
         <operation name="uploadService"></operation>
     </service>

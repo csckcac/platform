@@ -27,6 +27,9 @@
     try {
         boolean isViewVersion = false;
         boolean preserveOriginal = true;
+        boolean viewDependencies = true;
+        String displayMediaType = "";
+        String currentEnvironment = "";
         String[] preserveOrigParam = null;
         String[] viewVersion = null;
         String[] parameters = request.getParameterValues("parameterMap");
@@ -42,6 +45,12 @@
                         } else if (joinedParam.split("=")[0].equals("viewVersion")) {
                             viewVersion = joinedParam.split("=");
                             isViewVersion = Boolean.toString(false).equals(viewVersion[1]);
+                        } else if(joinedParam.split("=")[0].equals("displayMediaType")){
+                            displayMediaType = joinedParam.split("=")[1];
+                        } else if(joinedParam.split("=")[0].equals("showDependencies")){
+                            viewDependencies = Boolean.toString(true).equals(joinedParam.split("=")[1]);
+                        }else if(joinedParam.split("=")[0].equals("currentEnvironment")){
+                            currentEnvironment = joinedParam.split("=")[1];
                         }
                     }
                 } else {
@@ -50,6 +59,12 @@
                     } else if (parameter.split("=")[0].equals("viewVersion")) {
                         viewVersion = parameters[0].split("=");
                         isViewVersion = Boolean.toString(false).equals(viewVersion[1]);
+                    }else if(parameter.split("=")[0].equals("displayMediaType")){
+                        displayMediaType = parameter.split("=")[1];
+                    } else if(parameter.split("=")[0].equals("showDependencies")){
+                        viewDependencies = Boolean.toString(true).equals(parameter.split("=")[1]);
+                    }else if(parameter.split("=")[0].equals("currentEnvironment")){
+                        currentEnvironment = parameter.split("=")[1];
                     }
                 }
             }
@@ -97,24 +112,6 @@
     if (preserveOrigParam != null && preserveOrigParam.length != 0) {
         preserveOriginal = !Boolean.toString(false).equals(preserveOrigParam[1]);
     }
-
-    String[] parameterMap = request.getParameterValues("parameterMap");
-    String displayMediaType = "";
-    String currentEnvironment = "";
-    boolean viewDependencies = true;
-
-    if (parameterMap != null) {
-        for (String parameter : parameterMap) {
-            if (parameter.split("=")[0].equals("displayMediaType")) {
-                displayMediaType = parameter.split("=")[1];
-            } else if (parameter.split("=")[0].equals("showDependencies")) {
-                viewDependencies = Boolean.toString(true).equals(parameter.split("=")[1]);
-            } else if (parameter.split("=")[0].equals("currentEnvironment")) {
-                currentEnvironment = parameter.split("=")[1];
-            }
-        }
-    }
-
         List<String> otherDependencies = new ArrayList<String>();
 
         if (displayMediaType == null || displayMediaType == "") {

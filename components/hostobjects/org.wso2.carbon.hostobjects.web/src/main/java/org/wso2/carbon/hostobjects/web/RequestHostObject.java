@@ -205,6 +205,29 @@ public class RequestHostObject extends ScriptableObject {
         RequestHostObject rho = (RequestHostObject) thisObj;
         return rho.request.getRequestURI();
     }
+    
+    public static String jsFunction_getRequestURL(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getRequestURL";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        String strURL =  rho.request.getRequestURL().toString();
+        return strURL;
+    }
+    
+    public static boolean jsFunction_isSecure(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getRequestURL";
+        int argsCount = args.length;       
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;  
+        return rho.request.isSecure();
+    }
 
     public static String jsFunction_getHeader(Context cx, Scriptable thisObj, Object[] args, Function funObj)
             throws ScriptException {

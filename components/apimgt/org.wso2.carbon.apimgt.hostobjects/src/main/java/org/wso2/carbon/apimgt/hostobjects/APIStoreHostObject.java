@@ -658,12 +658,20 @@ public class APIStoreHostObject extends ScriptableObject {
         row.put("serverURL", row, config.getFirstProperty(APIConstants.API_GATEWAY_API_ENDPOINT));
 
         //TODO : need to pass in the full available tier list to front end
-        Set<Tier> tiers = api.getAvailableTiers();
-        if (tiers.size() > 0) {
-            Tier tier = tiers.iterator().next();
-            row.put("tier", row, tier.getName());
+        StringBuffer tiersSet = new StringBuffer("");
+        Set<Tier> tierSet = api.getAvailableTiers();
+        Iterator it = tierSet.iterator();
+        int j = 0;
+        while (it.hasNext()) {
+            Object tierObject = it.next();
+            Tier tier = (Tier) tierObject;
+            tiersSet.append(tier.getName());
+            if (j != tierSet.size() - 1) {
+                tiersSet.append(",");
+            }
+            j++;
         }
-
+        row.put("tier", row, tiersSet.toString());
         // row.put("status", row, "Deployed"); // api.getStatus().toString()
         // row.put("status", row, "Deployed"); // api.getStatus().toString()
         row.put("subscribed", row, isSubscribed);

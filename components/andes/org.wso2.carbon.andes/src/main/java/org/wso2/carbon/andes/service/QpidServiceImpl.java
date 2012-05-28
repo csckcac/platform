@@ -322,7 +322,9 @@ public class QpidServiceImpl implements QpidService {
                     new QName(QPID_CONF_CLUSTER_NODE));
             OMElement statusNode = clusteringNode.getFirstChildWithName(
                     new QName(QPID_CONF_EXTERNAL_ZOOKEEPER_SERVER));
-
+            if(statusNode == null) {
+                return false;
+            }
             required = statusNode.getText();
         } catch (FileNotFoundException e) {
             log.error(getQpidHome() + QPID_CONF_FILE + " not found");
@@ -352,7 +354,9 @@ public class QpidServiceImpl implements QpidService {
                     new QName(QPID_CONF_CLUSTER_NODE));
             OMElement statusNode = clusteringNode.getFirstChildWithName(
                     new QName(QPID_CONF_EXTERNAL_CASSANDRA_SERVER));
-
+            if(statusNode == null) {
+                return false;
+            }
             required = statusNode.getText();
         } catch (FileNotFoundException e) {
             log.error(getQpidHome() + QPID_CONF_FILE + " not found");
@@ -385,6 +389,9 @@ public class QpidServiceImpl implements QpidService {
             OMElement enabledNode = clusteringNode.getFirstChildWithName(
                     new QName(QPID_CONF_CLUSTER_ENABLE_NODE));
 
+            if(enabledNode == null) {
+                return false;
+            }
             enabled = enabledNode.getText();
         } catch (FileNotFoundException e) {
             log.error(getQpidHome() + QPID_CONF_FILE + " not found");

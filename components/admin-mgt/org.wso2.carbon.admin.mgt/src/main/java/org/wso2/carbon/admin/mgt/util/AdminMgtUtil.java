@@ -23,15 +23,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.mgt.beans.ConfirmationBean;
 import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
+import org.wso2.carbon.admin.mgt.exception.AdminManagementException;
 import org.wso2.carbon.admin.mgt.internal.AdminManagementServiceComponent;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.ResourceImpl;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -115,10 +115,12 @@ public class AdminMgtUtil {
      * Confirms that the password reset request has been sent by the user.
      * @param secretKey the secret key that was sent in the email
      * @return ConfirmationBean, the bean with the data and redirect path.
-     * @throws Exception if the attempt failed - mostly due to the password reset link always being
-     * used or expired..
+     * @throws AdminManagementException if the attempt failed - 
+     * mostly due to the password reset link already been used or expired.
+     * @throws org.wso2.carbon.registry.api.RegistryException Registry exception.
      */
-    public static ConfirmationBean confirmUser(String secretKey) throws Exception {
+    public static ConfirmationBean confirmUser(String secretKey) throws RegistryException,
+            AdminManagementException {
         ConfirmationBean confirmationBean = new ConfirmationBean();
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMElement data = fac.createOMElement("configuration", null);
@@ -136,7 +138,7 @@ public class AdminMgtUtil {
             if (!registry.resourceExists(secretKeyPath)) {
                 String msg = "Password reset attempt failed, since the link was already clicked.";
                 log.error(msg);
-                throw new Exception(msg);
+                throw new AdminManagementException(msg);
             }
             Resource resource = registry.get(secretKeyPath);
 
@@ -171,9 +173,10 @@ public class AdminMgtUtil {
      * verifying the admin management request from the user
      *
      * @param data - data to include in the mail
-     * @throws Exception if loading config or sending verification fail.
+     * @throws AdminManagementException if loading config or sending verification fail.
      */
-    public static void requestUserVerification(Map<String, String> data) throws Exception {
+    public static void requestUserVerification(Map<String, String> data) throws 
+            AdminManagementException {
         String emailAddress = data.get("email");
 
         Map<String, String> userParams = new HashMap<String, String>();
@@ -197,7 +200,7 @@ public class AdminMgtUtil {
                 resource.setProperty(s, data.get(s));
             }
 
-            ((ResourceImpl) resource).setVersionableChange(false);
+            resource.setVersionableChange(false);
             String secretKeyPath = AdminMgtConstants.ADMIN_MANAGEMENT_COLLECTION +
                     RegistryConstants.PATH_SEPARATOR + secretKey;
             // resource put into the registry, with the secretKeyPath
@@ -206,10 +209,10 @@ public class AdminMgtUtil {
             EmailSender sender = new EmailSender(adminMgtConfig, emailAddress, secretKey,
                     SuperTenantCarbonContext.getCurrentContext().getTenantDomain(true), userParams);
             sender.sendEmail();
-        } catch (Exception e) {
-            String msg = "Error in sending the email.";
+        } catch (RegistryException e) {
+            String msg = "Error in sending the password reset verification email.";
             log.error(msg, e);
-            throw new Exception(msg, e);
+            throw new AdminManagementException(msg, e);
         }
     }
 
@@ -217,20 +220,20 @@ public class AdminMgtUtil {
      * Is the given tenant domain valid
      *
      * @param domainName tenant domain
-     * @throws Exception , if invalid tenant domain name is given
+     * @throws AdminManagementException , if invalid tenant domain name is given
      */
-    public static void checkIsDomainValid(String domainName) throws Exception {
+    public static void checkIsDomainValid(String domainName) throws AdminManagementException {
         if (domainName == null || domainName.equals("")) {
             String msg = "Provided domain name is empty.";
             log.error(msg);
-            throw new Exception(msg);
+            throw new AdminManagementException(msg);
         }
         int indexOfDot = domainName.indexOf(".");
         if (indexOfDot == 0) {
             // can't start a domain starting with ".";
             String msg = "Invalid domain, starting with '.'";
             log.error(msg);
-            throw new Exception(msg);
+            throw new AdminManagementException(msg);
         }
         // check the tenant domain contains any illegal characters
         if (domainName.matches(AdminMgtConstants.ILLEGAL_CHARACTERS_FOR_TENANT_DOMAIN)) {
@@ -238,7 +241,7 @@ public class AdminMgtUtil {
                          " ' contains one or more illegal characters. the valid characters are " +
                          "letters, numbers, '.', '-' and '_'";
             log.error(msg);
-            throw new Exception(msg);
+            throw new AdminManagementException(msg);
         }
     }
 
@@ -246,9 +249,9 @@ public class AdminMgtUtil {
      * Gets the tenant id from the tenant domain
      * @param domain - tenant domain
      * @return - tenantId
-     * @throws org.wso2.carbon.user.api.UserStoreException, catches this if the tenant doesn't exist
+     * @throws AdminManagementException, if getting tenant id failed.
      */
-    public static int getTenantIdFromDomain(String domain) throws Exception {
+    public static int getTenantIdFromDomain(String domain) throws AdminManagementException {
         TenantManager tenantManager = AdminManagementServiceComponent.getTenantManager();
         int tenantId;
         if (domain.trim().equals("")) {
@@ -263,62 +266,72 @@ public class AdminMgtUtil {
                 if (tenantId < 1) {
                     String msg = "Only the existing tenants can update the password";
                     log.error(msg);
-                    throw new Exception(msg);
+                    throw new AdminManagementException(msg);
                 }
             } catch (UserStoreException e) {
                 String msg = "Error in retrieving tenant id of tenant domain: " + domain + ".";
                 log.error(msg);
-                throw new Exception(msg, e);
-            }
+                throw new AdminManagementException(msg, e);
+             }
         }
         return tenantId;
     }
 
     /**
      *  Gets the admin management path of the tenant
+     * @param adminName, adminName
      * @param domain, the tenant domain.
      * @return  admin management path
-     * @throws Exception, if getting the admin management path failed.
+     * @throws AdminManagementException, if the user doesn't exist, or couldn't retrieve the path.
      */
-    public static String getAdminManagementPath(String domain) throws Exception {
+    public static String getAdminManagementPath(String adminName, String domain) throws 
+            AdminManagementException {
         int tenantId;
+        String adminManagementPath;
         try {
             tenantId = getTenantIdFromDomain(domain);
-        } catch (UserStoreException e) {
+        } catch (AdminManagementException e) {
             String msg = "Error in getting tenant, tenant domain: " + domain + ".";
-            log.error(msg);
-            throw new RegistryException(msg, e);
+            log.error(msg, e);
+            throw new AdminManagementException(msg, e);
         }
-        return AdminMgtConstants.ADMIN_MANAGEMENT_FLAG_PATH +
-                RegistryConstants.PATH_SEPARATOR + tenantId;
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+            adminManagementPath = AdminMgtConstants.ADMIN_MANAGEMENT_FLAG_PATH +
+                    RegistryConstants.PATH_SEPARATOR + adminName;
+        } else {
+            adminManagementPath = AdminMgtConstants.ADMIN_MANAGEMENT_FLAG_PATH +
+                    RegistryConstants.PATH_SEPARATOR + domain + RegistryConstants.PATH_SEPARATOR +
+                    adminName;
+        }
+        return adminManagementPath;
     }
 
     /**
      * Cleanup the used resources
-     * @param domain, The tenant domain
-     * @throws Exception, if the cleanup failed.
+     *
+     * @param adminName, admin name
+     * @param domain,    The tenant domain
+     * @throws AdminManagementException, if the cleanup failed.
      */
-    public static void cleanupResources(String domain) throws Exception {
-        String adminManagementPath = getAdminManagementPath(domain);
-
-        UserRegistry superTenantSystemRegistry = AdminManagementServiceComponent.
-                getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
-        Resource resource = null;
-        if (superTenantSystemRegistry.resourceExists(adminManagementPath)) {
-            resource = superTenantSystemRegistry.get(adminManagementPath);
-        }
-        if (resource == null) {
-            String msg = "Resource doesn't exist";
-            log.error(msg);
-            throw new Exception(msg);
-        } else if ((superTenantSystemRegistry.get(resource.getPath()) != null)) {
-            try {
-                superTenantSystemRegistry.delete(resource.getPath());
-            } catch (Exception e) {
-                String msg = "Unable to delete the resource";
-                log.error(msg, e);
-                throw new Exception(msg, e);
+    public static void cleanupResources(
+            String adminName, String domain) throws AdminManagementException {
+        String adminManagementPath = getAdminManagementPath(adminName, domain);
+        UserRegistry superTenantSystemRegistry;
+        Resource resource;
+        try {
+            superTenantSystemRegistry = AdminManagementServiceComponent.
+                    getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
+            if (superTenantSystemRegistry.resourceExists(adminManagementPath)) {
+                resource = superTenantSystemRegistry.get(adminManagementPath);
+                Resource tempResource = superTenantSystemRegistry.get(resource.getPath());
+                if (tempResource != null) {
+                    superTenantSystemRegistry.delete(resource.getPath());
+                }
             }
+        } catch (RegistryException e) {
+            String msg = "Registry resource doesn't exist at the path, " + adminManagementPath;
+            log.error(msg, e);
+            throw new AdminManagementException(msg, e);
         }
     }
 

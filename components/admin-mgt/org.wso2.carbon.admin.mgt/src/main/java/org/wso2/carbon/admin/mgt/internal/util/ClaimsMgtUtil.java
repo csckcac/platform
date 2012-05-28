@@ -20,8 +20,9 @@ package org.wso2.carbon.admin.mgt.internal.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.admin.mgt.exception.AdminManagementException;
 import org.wso2.carbon.user.core.UserCoreConstants;
-import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.Tenant;
@@ -48,13 +49,13 @@ public class ClaimsMgtUtil {
      * @param tenant tenant
      * @param tenantId tenant Id
      * @return first name / calling name
-     * @throws Exception if unable to retrieve the admin name
+     * @throws AdminManagementException, if unable to retrieve the admin name
      */
     public static String getFirstName(RealmService realmService, Tenant tenant,
-                                      int tenantId) throws Exception {
+                                      int tenantId) throws AdminManagementException {
         String firstName = "";
         try {
-            firstName = getFirstNameFromUserStoreManager(realmService, tenant, tenantId);
+            firstName = getFirstNameFromUserStoreManager(realmService, tenantId);
         } catch (Exception e) {
             String msg = "Unable to get the first name from the user store manager";
             log.info(msg, e);
@@ -66,10 +67,10 @@ public class ClaimsMgtUtil {
             }
             try {
                 firstName = getAdminUserNameFromTenantId(realmService, tenant.getId());
-            } catch (Exception e) {
+            } catch (AdminManagementException e) {
                 String msg = "Unable to get the admin Name from the user store manager";
                 log.error(msg, e);
-                throw new Exception(msg, e);
+                throw new AdminManagementException(msg, e);
             }
         }
         return firstName;
@@ -82,21 +83,20 @@ public class ClaimsMgtUtil {
      * @param tenantId tenantId
      * @param claim claim name
      * @return claim value
-     * @throws org.wso2.carbon.user.core.UserStoreException
-     *          exception in getting the user store manager
+     * @throws AdminManagementException, exception in getting the tenant admin claim
      */
     public static String getTenantAdminClaim(RealmService realmService,
                                              int tenantId, String claim)
-            throws UserStoreException {
-        String userName = "";
+            throws AdminManagementException {
+        String userName;
 
         try {
             userName = getAdminUserNameFromTenantId(realmService, tenantId);
-        } catch (Exception e) {
+        } catch (AdminManagementException e) {
             String msg = "Couldn't find the admin user name for the tenant with tenant id: " +
                          tenantId;
             log.warn(msg);
-            throw new UserStoreException(msg, e);
+            throw new AdminManagementException(msg, e);
         }
         return getClaimFromUserStoreManager(realmService, userName, tenantId, claim);
     }
@@ -109,11 +109,10 @@ public class ClaimsMgtUtil {
      * @param tenantId tenantId
      * @param claim claim name
      * @return claim value
-     * @throws org.wso2.carbon.user.core.UserStoreException
-     *          exception in getting the user store manager
+     * @throws AdminManagementException, exception in getting the user store manager
      */
     public static String getClaimFromUserStoreManager(RealmService realmService, String userName,
-                                             int tenantId, String claim) throws UserStoreException {
+                                             int tenantId, String claim) throws AdminManagementException {
         UserStoreManager userStoreManager = null;
         String claimValue = "";
         try {
@@ -121,11 +120,10 @@ public class ClaimsMgtUtil {
                 userStoreManager = (UserStoreManager) realmService.getTenantUserRealm(tenantId).
                         getUserStoreManager();
             }
-
-        } catch (Exception e) {
+        } catch (UserStoreException e) {
             String msg = "Error retrieving the user store manager for the tenant";
             log.error(msg, e);
-            throw new UserStoreException(msg, e);
+            throw new AdminManagementException(msg, e);
         }
         try {
             if (userStoreManager != null) {
@@ -133,10 +131,10 @@ public class ClaimsMgtUtil {
                                                                 UserCoreConstants.DEFAULT_PROFILE);
             }
             return claimValue;
-        } catch (Exception e) {
+        } catch (UserStoreException e) {
             String msg = "Unable to retrieve the claim for the given tenant";
             log.error(msg, e);
-            throw new UserStoreException(msg, e);
+            throw new AdminManagementException(msg, e);
         }
     }
 
@@ -144,47 +142,31 @@ public class ClaimsMgtUtil {
      * Gets first name from the user store manager
      *
      * @param realmService RealmService
-     * @param tenant   tenant
      * @param tenantId tenant id
      * @return first name
-     * @throws UserStoreException , if error in getting the claim GIVEN_NAME
+     * @throws AdminManagementException, if getting the given name failed
      */
-    public static String getFirstNameFromUserStoreManager(RealmService realmService, Tenant tenant,
-                                                          int tenantId) throws UserStoreException {
-        try {
-            return getTenantAdminClaim(realmService, tenantId,
-                                       UserCoreConstants.ClaimTypeURIs.GIVEN_NAME);
-        } catch (Exception e) {
-            String msg = "First Name not found for the user";
-            log.debug(msg, e);
-            return ""; // returns empty string
-        }
+    public static String getFirstNameFromUserStoreManager(RealmService realmService,
+                                                          int tenantId) throws
+            AdminManagementException {
+        return getTenantAdminClaim(realmService, tenantId,
+                                   UserCoreConstants.ClaimTypeURIs.GIVEN_NAME);
     }
 
     /**
      * Gets email address from the user store manager
      *
      * @param realmService RealmService
-     * @param tenant   tenant
      * @param userName user name
      * @param tenantId tenant id
      * @return email email
-     * @throws UserStoreException , if error in getting the claim GIVEN_NAME
+     * @throws AdminManagementException, if getting the claim email address failed.
      */
     public static String getEmailAddressFromUserProfile(RealmService realmService,
-                                                        String userName, Tenant tenant,
-                                                        int tenantId) throws UserStoreException {
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Email address from the user profile.");
-            }
+                                                        String userName, int tenantId)
+            throws AdminManagementException {
             return  getClaimFromUserStoreManager(realmService, userName, tenantId,
                                        UserCoreConstants.ClaimTypeURIs.EMAIL_ADDRESS);
-        } catch (Exception e) {
-            String msg = "No associated email address found for the user";
-            log.debug(msg, e);
-            return ""; // returns empty string
-        }
     }
 
     /**
@@ -193,10 +175,10 @@ public class ClaimsMgtUtil {
      * @param realmService RealmService
      * @param tenantId tenant id
      * @return admin user name
-     * @throws Exception UserStoreException
+     * @throws AdminManagementException, if unable to get the admin username from the tenant id.
      */
     public static String getAdminUserNameFromTenantId(RealmService realmService,
-                                                      int tenantId) throws Exception {
+                                                      int tenantId) throws AdminManagementException {
         String tenantAdminName = "";
         if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
             return realmService.getBootstrapRealmConfiguration().getAdminUserName();
@@ -205,11 +187,11 @@ public class ClaimsMgtUtil {
             if (realmService.getTenantManager().getTenant(tenantId) != null) {
                 tenantAdminName = realmService.getTenantManager().getTenant(tenantId).getAdminName();
             }
-        } catch (org.wso2.carbon.user.api.UserStoreException e) {
+        } catch (UserStoreException e) {
             String msg = "Unable to retrieve the admin name for the tenant with the tenant Id: " +
                     tenantId;
             log.error(msg, e);
-            throw new Exception(msg, e);
+            throw new AdminManagementException(msg, e);
         }
         return tenantAdminName;
     }

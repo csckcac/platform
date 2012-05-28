@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.mgt.beans.AdminMgtInfoBean;
 import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
+import org.wso2.carbon.admin.mgt.exception.AdminManagementException;
 import org.wso2.carbon.admin.mgt.internal.AdminManagementServiceComponent;
 import org.wso2.carbon.admin.mgt.util.AdminMgtUtil;
 import org.wso2.carbon.registry.core.RegistryConstants;
@@ -49,8 +50,8 @@ public class PasswordUtil {
      * @param adminInfoBean tenant details
      * @return true if the reset request is processed successfully.
      * @throws Exception if reset password failed.
-     */
-    public static boolean resetPassword(AdminMgtInfoBean adminInfoBean) throws Exception {
+     */                             //initiatePasswordReset
+    public static boolean initiateResetPassword(AdminMgtInfoBean adminInfoBean) throws Exception {
         String adminName = adminInfoBean.getAdmin();
         String domainName = adminInfoBean.getTenantDomain();
         String email;
@@ -68,8 +69,8 @@ public class PasswordUtil {
 
         try {
             email = getEmailAddressForUser(adminName, userName, tenantId, tenant);
-        } catch (Exception e) {
-            log.debug(AdminMgtConstants.NO_EMAIL_ADDRESS_SET_ERROR, e);
+        } catch (AdminManagementException e) {
+            log.error(AdminMgtConstants.NO_EMAIL_ADDRESS_SET_ERROR, e);
             return false;
         }
 
@@ -82,7 +83,7 @@ public class PasswordUtil {
 
         // generates the confirmationKey to include in the email, and to set the resource under the
         // adminMgtPath of the tenant.
-        String confirmationKey = generateConfirmationKey(tenantId);
+        String confirmationKey = generateConfirmationKey(adminName, domainName);
         Map<String, String> dataToStore =
                 populateDataMap(adminInfoBean, adminName, email, tenantId, tenant, confirmationKey);
 
@@ -105,7 +106,8 @@ public class PasswordUtil {
         return false;
     }
 
-    private static String generateConfirmationKey(int tenantId) throws RegistryException {
+    private static String generateConfirmationKey(
+            String adminName, String domain) throws RegistryException, AdminManagementException {
         // generating the confirmation key as a random UUID.
         String confirmationKey = UUIDGenerator.generateUUID();
         // resources are stored in the superTenant registry space, since no user is initially
@@ -116,8 +118,7 @@ public class PasswordUtil {
 
         Resource resource;
         // adminManagementPath is associated with the tenantId, by appending it.
-        String adminManagementPath = AdminMgtConstants.ADMIN_MANAGEMENT_FLAG_PATH +
-                RegistryConstants.PATH_SEPARATOR + tenantId;
+        String adminManagementPath = AdminMgtUtil.getAdminManagementPath(adminName, domain);
 
         if (superTenantGovernanceSystemRegistry.resourceExists(adminManagementPath)) {
             resource = superTenantGovernanceSystemRegistry.get(adminManagementPath);
@@ -135,7 +136,8 @@ public class PasswordUtil {
     private static Map<String, String> populateDataMap(AdminMgtInfoBean adminInfoBean,
                                                        String adminName, String email, int tenantId,
                                                        Tenant tenant,
-                                                       String confirmationKey) throws Exception {
+                                                       String confirmationKey) throws
+            AdminManagementException {
         Map<String, String> dataToStore = new HashMap<String, String>();
         dataToStore.put("email", email);
         dataToStore.put("first-name", ClaimsMgtUtil.getFirstName(
@@ -147,27 +149,26 @@ public class PasswordUtil {
     }
 
     private static String getEmailAddressForUser(String adminName, String userName,
-                                                 int tenantId, Tenant tenant) throws Exception {
+                                                 int tenantId,
+                                                 Tenant tenant) throws AdminManagementException {
         String email = "";
         try {
-        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
-            if (log.isDebugEnabled()) {
-                // Admin Name is included in the email, in case if the user has forgotten that.
-                log.debug("Getting email address for the super tenant user password reset");
+            if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Getting email address for the super tenant user password reset");
+                }
+                email = ClaimsMgtUtil.getEmailAddressFromUserProfile(
+                        AdminManagementServiceComponent.getRealmService(), userName, tenantId);
+            } else if (tenantId > 0) {
+                String adminNameFromUserStore = ClaimsMgtUtil.getAdminUserNameFromTenantId(
+                        AdminManagementServiceComponent.getRealmService(), tenantId);
+                email = getEmailAddressForTenants(
+                        userName, adminName, tenantId, tenant, adminNameFromUserStore);
             }
-            email = ClaimsMgtUtil.getEmailAddressFromUserProfile(
-                    AdminManagementServiceComponent.getRealmService(), userName, tenant, tenantId);
-        } else if (tenantId > 0) {
-            String adminNameFromUserStore = ClaimsMgtUtil.getAdminUserNameFromTenantId(
-                    AdminManagementServiceComponent.getRealmService(), tenantId);
-
-            email = getEmailAddressForTenants(
-                    userName, adminName, tenantId, tenant, adminNameFromUserStore);
-        }
-        } catch (Exception e) {
+        } catch (AdminManagementException e) {     //AdminManagementException AUDIT_LOGS //id-info
             String msg = "Unable to retrieve an email address associated with the given user.";
             log.info(msg, e);   // It is common to have users with no email address defined.
-            throw new Exception (msg, e);
+            throw new AdminManagementException(msg, e);
         }
         return email;
     }
@@ -175,7 +176,7 @@ public class PasswordUtil {
     private static String getEmailAddressForTenants(String userName, String adminName, int tenantId,
                                                     Tenant tenant,
                                                     String adminNameFromUserStore)
-            throws UserStoreException {
+            throws AdminManagementException {
         String email = "";
         if (adminNameFromUserStore.equalsIgnoreCase(adminName)) {
             if (log.isDebugEnabled()) {
@@ -187,32 +188,27 @@ public class PasswordUtil {
                 log.debug("A tenant user password reset");
             }
             email = ClaimsMgtUtil.getEmailAddressFromUserProfile(
-                    AdminManagementServiceComponent.getRealmService(), userName, tenant, tenantId);
+                    AdminManagementServiceComponent.getRealmService(), userName, tenantId);
         }
         return email;
     }
 
     /**
      * Update Password with the user input
-     * @param adminInfoBean, Admin Info Bean object
+     *
+     * @param adminInfoBean,    Admin Info Bean object
      * @param userStoreManager, UserStoreManager
      * @return true - if password was successfully reset
-     * @throws Exception, if password reset failed.
+     * @throws AdminManagementException, if password reset failed.
      */
     public static boolean updatePassword(AdminMgtInfoBean adminInfoBean,
-                                         UserStoreManager userStoreManager) throws Exception {
+                                         UserStoreManager userStoreManager) throws
+            AdminManagementException {
         String adminName, tenantDomain, password, userName;
-        try {
-            adminName = adminInfoBean.getAdmin();
-            tenantDomain = adminInfoBean.getTenantDomain();
-            password = adminInfoBean.getAdminPassword();
-            userName = AdminMgtUtil.getUserNameWithDomain(adminName, tenantDomain);
-        } catch (Exception e) {
-            String msg = "Unable to find the required information for the password reset, " +
-                    "from the adminInfoBean object";
-            log.error(msg, e);
-            throw new Exception(msg, e);
-        }
+        adminName = adminInfoBean.getAdmin();
+        tenantDomain = adminInfoBean.getTenantDomain();
+        password = adminInfoBean.getAdminPassword();
+        userName = AdminMgtUtil.getUserNameWithDomain(adminName, tenantDomain);
         try {
             userStoreManager.updateCredentialByAdmin(adminName, password);
             String msg = "Password reset for the user: " + userName;
@@ -221,7 +217,7 @@ public class PasswordUtil {
         } catch (UserStoreException e) {
             String msg = "Error in changing the password for user: " + userName;
             log.error(msg, e);
-            throw new Exception(msg, e);
+            throw new AdminManagementException(msg, e);
         }
     }
 
@@ -231,9 +227,12 @@ public class PasswordUtil {
      *
      * @param adminInfoBean tenant domain details
      * @return true if successfully reset
-     * @throws Exception if failed due to userStore or registry exceptions.
+     * @throws AdminManagementException, update password failed due to AdminManagementException
+     * @throws UserStoreException, exception in getting the user store.
+     * @throws RegistryException, exception in getting the config system registry.
      */
-    public static boolean updateTenantPassword(AdminMgtInfoBean adminInfoBean) throws Exception {
+    public static boolean updateTenantPassword(AdminMgtInfoBean adminInfoBean)
+            throws AdminManagementException, UserStoreException, RegistryException {
         String tenantDomain = adminInfoBean.getTenantDomain();
         int tenantId = AdminMgtUtil.getTenantIdFromDomain(tenantDomain);
         UserStoreManager userStoreManager;
@@ -254,7 +253,7 @@ public class PasswordUtil {
         } catch (UserStoreException e) {
             String msg = "Error in getting the user store manager for the user.";
             log.error(msg, e);
-            throw new Exception(msg, e);
+            throw new AdminManagementException(msg, e);
         }
 
         if (!userStoreManager.isReadOnly() && updatePassword) {
@@ -267,14 +266,17 @@ public class PasswordUtil {
      * To proceed updating credentials
      *
      * @param domain          domain name to update the credentials
+     * @param adminName       adminName
      * @param confirmationKey confirmation key to verify the request.
      * @return True, if successful in verifying and hence updating the credentials.
-     * @throws Exception, if confirmation key doesn't exist in the registry.
+     * @throws RegistryException, confirmation key doesn't exist in the registry.
+     * @throws AdminManagementException, getting the admin Management path failed.
      */
-    public static boolean proceedUpdateCredentials(String domain,
-                                                   String confirmationKey) throws Exception {
+    public static boolean proceedUpdateCredentials(String domain, String adminName,
+                                                   String confirmationKey)
+            throws RegistryException, AdminManagementException {
 
-        String adminManagementPath = AdminMgtUtil.getAdminManagementPath(domain);
+        String adminManagementPath = AdminMgtUtil.getAdminManagementPath(adminName, domain);
 
         UserRegistry superTenantSystemRegistry = AdminManagementServiceComponent.
                 getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);

@@ -22,16 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.mgt.beans.AdminMgtInfoBean;
 import org.wso2.carbon.admin.mgt.beans.ConfirmationBean;
-import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
-import org.wso2.carbon.admin.mgt.internal.AdminManagementServiceComponent;
 import org.wso2.carbon.admin.mgt.internal.util.PasswordUtil;
 import org.wso2.carbon.admin.mgt.util.AdminMgtUtil;
 import org.wso2.carbon.captcha.mgt.beans.CaptchaInfoBean;
 import org.wso2.carbon.captcha.mgt.util.CaptchaUtil;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-
 
 /**
  * The service that is responsible for the password reset functionality of carbon.
@@ -45,19 +39,19 @@ public class AdminManagementService {
      * @return ConfirmationBean, that has the data and redirect path.
      * @throws Exception, if the key provided in the link is expired, already clicked, or invalid.
      */
-    public static ConfirmationBean confirmUser(String secretKey) throws Exception {
+    public ConfirmationBean confirmUser(String secretKey) throws Exception {
         return AdminMgtUtil.confirmUser(secretKey);
     }
 
     /**
-     * Handling the User Request for a password reset
+     * Initiating the password reset, as of the user request.
      *
      * @param adminInfoBean   AdminMgtInfobean
      * @param captchaInfoBean captcha info bean
      * @return true if successful
      * @throws Exception, if exception occurred in validating the domain.
      */
-    public boolean resetPassword(
+    public boolean resetPassword(    //initiatePasswordReset
             AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean) throws Exception {
 
         //processes the captchaInfoBean
@@ -69,23 +63,24 @@ public class AdminManagementService {
             try {
                 AdminMgtUtil.checkIsDomainValid(adminInfoBean.getTenantDomain());
             } catch (Exception e) {
-                String msg = "Attempt to validate the given domain for the password reset failed.";
+                String msg = "Attempt to validate the given domain for the password reset, failed.";
                 log.error(msg, e);
                 // Password Reset Failed. Not passing the error details to client.
                 return false;
             }
         }
-        return PasswordUtil.resetPassword(adminInfoBean);
+        return PasswordUtil.initiateResetPassword(adminInfoBean);
     }
 
     /**
      * Update the password with the new password provided by the user
      *
-     * @param adminInfoBean   tenantInfo
+     * @param adminInfoBean   userInfo
      * @param captchaInfoBean captcha
      * @param confirmationKey  key that confirms the password reset
      * @return true, if password is changed successfully. Final call in password reset.
-     * @throws Exception, if password reset failed, due to captcha validation or the wrong attempt of password reset.
+     * @throws Exception, if password reset failed, due to captcha validation or the wrong attempt
+     * of password reset.
      */
     public boolean updateAdminPasswordWithUserInput(
             AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean,
@@ -95,7 +90,8 @@ public class AdminManagementService {
         String adminName = adminInfoBean.getAdmin();
         String userName = AdminMgtUtil.getUserNameWithDomain(adminName, domain);
         
-        boolean isValidRequest = PasswordUtil.proceedUpdateCredentials(domain, confirmationKey);
+        boolean isValidRequest = PasswordUtil.proceedUpdateCredentials(domain, adminName,
+                confirmationKey);
         boolean isPasswordUpdated = false;
         
         if (isValidRequest) {
@@ -108,7 +104,7 @@ public class AdminManagementService {
             isPasswordUpdated = PasswordUtil.updateTenantPassword(adminInfoBean);
         }
         log.info("Password reset status of user " + userName + " is: " + isPasswordUpdated);
-        AdminMgtUtil.cleanupResources(domain);
+        AdminMgtUtil.cleanupResources(adminName, domain);
         return isPasswordUpdated;
     }
 

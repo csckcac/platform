@@ -38,6 +38,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -50,6 +53,7 @@ public class RegistryJMXServiceComponent {
 
     private static Log log = LogFactory.getLog(RegistryJMXServiceComponent.class);
     private boolean isJMXEnabled = false;
+    private Map<String, Boolean> jmxServices = new HashMap<String, Boolean>();
     private Stack<ServiceRegistration> serviceRegistrations = new Stack<ServiceRegistration>();
     private Stack<ObjectName> mBeans = new Stack<ObjectName>();
     private RegistryService registryService;
@@ -79,8 +83,13 @@ public class RegistryJMXServiceComponent {
     private void registerMBean(ComponentContext context, Object object, String serviceClass)
             throws MalformedObjectNameException, InstanceAlreadyExistsException,
             MBeanRegistrationException, NotCompliantMBeanException {
+        String simpleName = object.getClass().getSimpleName();
+        // It is required to do a != Boolean.TRUE to avoid the NPE here.
+        if (jmxServices.get(simpleName.toLowerCase()) != Boolean.TRUE) {
+            return;
+        }
         mBeans.push(new ObjectName("org.wso2.carbon:Type=Registry,ConnectorName=" +
-                object.getClass().getSimpleName()));
+                simpleName));
         ManagementFactory.getPlatformMBeanServer().registerMBean(object, mBeans.peek());
         serviceRegistrations.push(context.getBundleContext().registerService(
                 serviceClass, object, null));
@@ -120,9 +129,19 @@ public class RegistryJMXServiceComponent {
                     FileInputStream fileInputStream = new FileInputStream(registryXML);
                     StAXOMBuilder builder = new StAXOMBuilder(fileInputStream);
                     OMElement configElement = builder.getDocumentElement();
-                    OMElement jmx = configElement.getFirstChildWithName(new QName("enableJMX"));
-                    isJMXEnabled = jmx != null &&
-                            Boolean.toString(true).equalsIgnoreCase(jmx.getText());
+                    OMElement jmx = configElement.getFirstChildWithName(new QName("jmx"));
+                    if (jmx != null) {
+                        isJMXEnabled = Boolean.toString(true).equalsIgnoreCase(
+                                jmx.getAttributeValue(new QName("enabled")));
+                        Iterator services = jmx.getChildrenWithName(new QName("service"));
+                        while (services.hasNext()) {
+                            OMElement service = (OMElement) services.next();
+                            jmxServices.put(service.getAttributeValue(
+                                    new QName("name")).toLowerCase(),
+                                    Boolean.toString(true).equalsIgnoreCase(
+                                            service.getAttributeValue(new QName("enabled"))));
+                        }
+                    }
                     return isJMXEnabled;
                 } catch (XMLStreamException e) {
                     log.error("Unable to parse registry.xml", e);

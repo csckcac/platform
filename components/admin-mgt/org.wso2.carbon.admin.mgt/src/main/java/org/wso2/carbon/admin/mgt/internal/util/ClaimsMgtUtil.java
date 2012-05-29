@@ -25,7 +25,6 @@ import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.service.RealmService;
-import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /*
@@ -41,40 +40,6 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 public class ClaimsMgtUtil {
 
     private static final Log log = LogFactory.getLog(ClaimsMgtUtil.class);
-
-    /**
-     * Gets the first name of a tenant admin to address him/her in the notifications
-     *
-     * @param realmService RealmService
-     * @param tenant       tenant
-     * @param tenantId     tenant Id
-     * @return first name / calling name
-     * @throws AdminManagementException, if unable to retrieve the admin name
-     */
-    public static String getFirstName(RealmService realmService, Tenant tenant,
-                                      int tenantId) throws AdminManagementException {
-        String firstName = "";
-        try {
-            firstName = getFirstNameFromUserStoreManager(realmService, tenantId);
-        } catch (Exception e) {
-            String msg = "Unable to get the first name from the user store manager";
-            log.info(msg, e);
-            // Not exceptions, due to the existence of tenants with no full name.
-        }
-        if (firstName == null || firstName.trim().equals("")) {
-            if (log.isDebugEnabled()) {
-                log.debug("First name is not available");
-            }
-            try {
-                firstName = getAdminUserNameFromTenantId(realmService, tenant.getId());
-            } catch (AdminManagementException e) {
-                String msg = "Unable to get the admin Name from the user store manager";
-                log.error(msg, e);
-                throw new AdminManagementException(msg, e);
-            }
-        }
-        return firstName;
-    }
 
     /**
      * Get the claims of the admin from the user store manager
@@ -147,11 +112,18 @@ public class ClaimsMgtUtil {
      * @return first name
      * @throws AdminManagementException, if getting the given name failed
      */
-    public static String getFirstNameFromUserStoreManager(RealmService realmService,
-                                                          int tenantId) throws
+    public static String getFirstName(RealmService realmService, int tenantId) throws
             AdminManagementException {
-        return getTenantAdminClaim(realmService, tenantId,
-                UserCoreConstants.ClaimTypeURIs.GIVEN_NAME);
+        String firstName;
+        try {
+            firstName = getTenantAdminClaim(realmService, tenantId,
+                    UserCoreConstants.ClaimTypeURIs.GIVEN_NAME);
+        } catch (Exception e) {
+            String msg = "Unable to get the first name from the user store manager";
+            log.warn(msg, e);
+            throw new AdminManagementException(msg, e);
+        }
+        return firstName;
     }
 
     /**

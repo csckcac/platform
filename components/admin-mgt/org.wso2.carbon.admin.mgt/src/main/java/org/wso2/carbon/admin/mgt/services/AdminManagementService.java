@@ -88,10 +88,10 @@ public class AdminManagementService {
             String confirmationKey) throws Exception {
 
         String domain = adminInfoBean.getTenantDomain();
-        String adminName = adminInfoBean.getAdmin();
-        String userName = AdminMgtUtil.getUserNameWithDomain(adminName, domain);
+        String tenantLessUserName = adminInfoBean.getTenantLessUserName();
+        String userName = AdminMgtUtil.getUserNameWithDomain(tenantLessUserName, domain);
 
-        boolean isValidRequest = PasswordUtil.proceedUpdateCredentials(domain, adminName,
+        boolean isValidRequest = PasswordUtil.proceedUpdateCredentials(domain, tenantLessUserName,
                 confirmationKey);
         boolean isPasswordUpdated = false;
 
@@ -102,10 +102,10 @@ public class AdminManagementService {
             if (log.isDebugEnabled()) {
                 log.debug("Calling the password update method for the user: " + userName);
             }
-            isPasswordUpdated = PasswordUtil.updateTenantPassword(adminInfoBean);
+            isPasswordUpdated = PasswordUtil.updateCredentials(adminInfoBean);
         }
         log.info("Password reset status of user " + userName + " is: " + isPasswordUpdated);
-        AdminMgtUtil.cleanupResources(adminName, domain);
+        AdminMgtUtil.cleanupResources(tenantLessUserName, domain);
         return isPasswordUpdated;
     }
 

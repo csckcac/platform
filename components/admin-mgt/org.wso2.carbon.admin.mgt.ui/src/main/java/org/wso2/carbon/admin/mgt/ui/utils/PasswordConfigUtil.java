@@ -56,20 +56,20 @@ public class PasswordConfigUtil {
      */
     public static boolean initiatePasswordReset(HttpServletRequest request, ServletConfig config,
                                         HttpSession session) throws UIException {
-        String admin = "";
+        String tenantLessUserName = "";
         String domain = "";
         try {
             // filling tenant info.
-            admin = request.getParameter("admin");
+            tenantLessUserName = request.getParameter("admin");
             domain = resolveDomainName(request.getParameter("domain"));
-            if (admin.trim().equals("")) {
+            if (tenantLessUserName.trim().equals("")) {
                 String msg = "Provided user name is empty";
                 log.error(msg);
                 return false;
             }
 
             AdminMgtInfoBean adminInfoBean = new AdminMgtInfoBean();
-            adminInfoBean.setAdmin(admin);
+            adminInfoBean.setTenantLessUserName(tenantLessUserName);
             adminInfoBean.setTenantDomain(domain);
             CaptchaInfoBean captchaInfoBean = new CaptchaInfoBean();
 
@@ -83,7 +83,7 @@ public class PasswordConfigUtil {
         } catch (Exception e) {
             AxisFault fault = new AxisFault(e.getMessage());
             String msg = fault.getReason() + " Failed to reset password. tenant-domain: " + domain +
-                         " admin: " + admin;
+                         " user: " + tenantLessUserName;
             log.error(msg, e);
             // we are preventing more details going ahead further to user.
             throw new UIException(e.getMessage(), e);
@@ -103,14 +103,14 @@ public class PasswordConfigUtil {
                                                            ServletConfig config,
                                                            HttpSession session) throws UIException {
         String domain = request.getParameter("domain");
-        String adminName = request.getParameter("admin");
+        String tenantLessUserName = request.getParameter("admin");
         String password = request.getParameter("admin-password");
         String confirmationKey = request.getParameter("confirmationKey");
         AdminMgtInfoBean adminInfoBean = new AdminMgtInfoBean();
 
         adminInfoBean.setTenantDomain(domain);
-        adminInfoBean.setAdmin(adminName);
-        adminInfoBean.setAdminPassword(password);
+        adminInfoBean.setTenantLessUserName(tenantLessUserName);
+        adminInfoBean.setPassword(password);
         CaptchaInfoBean captchaInfoBean = new CaptchaInfoBean();
 
         try {

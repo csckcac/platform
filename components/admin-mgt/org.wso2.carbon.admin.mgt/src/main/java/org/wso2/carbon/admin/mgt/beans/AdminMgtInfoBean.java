@@ -23,9 +23,9 @@ package org.wso2.carbon.admin.mgt.beans;
  */
 public class AdminMgtInfoBean {
 
-    private String admin; //admin's user name
+    private String tenantLessUserName;
     private String firstname;
-    private String adminPassword;
+    private String password;
     private String tenantDomain;
     private int tenantId;
     private String email;
@@ -64,20 +64,20 @@ public class AdminMgtInfoBean {
         this.tenantDomain = tenantDomain;
     }
 
-    public String getAdmin() {
-        return admin;
+    public String getTenantLessUserName() {
+        return tenantLessUserName;
     }
 
-    public void setAdmin(String admin) {
-        this.admin = admin;
+    public void setTenantLessUserName(String tenantLessUserName) {
+        this.tenantLessUserName = tenantLessUserName;
     }
 
-    public String getAdminPassword() {
-        return adminPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setAdminPassword(String adminPassword) {
-        this.adminPassword = adminPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isActive() {

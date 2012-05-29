@@ -104,8 +104,8 @@
             <xs:complexType name="AdminMgtInfoBean">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="active" type="xs:boolean" />
-                    <xs:element minOccurs="0" name="admin" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="adminPassword" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="tenantLessUserName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="firstname" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />

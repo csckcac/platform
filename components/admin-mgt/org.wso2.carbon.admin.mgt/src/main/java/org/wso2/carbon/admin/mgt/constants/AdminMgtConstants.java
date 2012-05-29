@@ -41,7 +41,7 @@ public class AdminMgtConstants {
     
     public static final String EMAIL_ADMIN_CONF_FILE = "email-admin-config.xml";
 
-    public static final String DEFAULT_VALUE_SUBJECT = "Configure Admin Account";
+    public static final String DEFAULT_VALUE_SUBJECT = "Configure Account Credentials";
     public static final String DEFAULT_VALUE_MESSAGE = "Please point your browser to : ";
 
 }

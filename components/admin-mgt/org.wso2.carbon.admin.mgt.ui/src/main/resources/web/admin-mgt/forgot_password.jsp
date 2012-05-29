@@ -133,7 +133,7 @@
                 <input type="hidden" name="captcha-secret-key"
                            value="<%=captchaSecretKey%>"/>
                 <input type="button" tabindex="2" value="Reset Password"
-                           onclick="getDomainFromUserName(); getTenantAwareUserName(); resetPassword();">
+                           onclick="getDomainFromUserName(); getTenantAwareUserName(); initiatePasswordReset();">
                 </td>
             </tr>
             <tr id="waitMessage" style="display:none">

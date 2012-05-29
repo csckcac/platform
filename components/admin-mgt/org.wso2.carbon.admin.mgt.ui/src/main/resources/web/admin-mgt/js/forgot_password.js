@@ -1,4 +1,4 @@
-function resetPassword() {
+function initiatePasswordReset() {
     var resetPasswordForm = document.getElementById('resetPasswordForm');
     resetPasswordForm.submit();
 }

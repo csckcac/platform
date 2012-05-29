@@ -1,0 +1,55 @@
+<%
+var hasCreatePermission = function () {
+    var success, log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
+    try {
+        success = provider.hasCreatePermission();
+        if (log.isDebugEnabled()) {
+            log.debug("hasCreatePermission method ");
+        }
+        if(success){
+        return {
+            error:false,
+            permitted:success
+        };
+        }else{
+        return {
+            error:true,
+            permitted:success
+        }; }
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:true,
+            permitted:false
+        };
+    }
+};
+
+var hasPublishPermission = function () {
+    var success, log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
+    try {
+        success = provider.hasPublishPermission();
+        if (log.isDebugEnabled()) {
+            log.debug("hasPublishPermission method " );
+        }
+        if(success){
+        return {
+            error:false,
+            permitted:success
+        };
+        }else{
+        return {
+            error:true,
+            permitted:success
+        }; }
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:true,
+            permitted:false
+        };
+    }
+};
+%>

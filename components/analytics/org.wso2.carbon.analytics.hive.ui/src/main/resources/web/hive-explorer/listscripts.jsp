@@ -52,7 +52,7 @@
         }
     %>
     <div id="middle">
-        <h2>Available Hive Scripts</h2>
+        <h2>Available Scripts</h2>
 
         <div id="workArea">
 
@@ -61,7 +61,7 @@
                     <thead>
                     <tr>
                         <th colspan="4"><span style="float: left; position: relative; margin-top: 2px;">
-                            <fmt:message key="hive.scripts"/></span>
+                            <fmt:message key="analytic.scripts"/></span>
                         </th>
                     </tr>
                     </thead>

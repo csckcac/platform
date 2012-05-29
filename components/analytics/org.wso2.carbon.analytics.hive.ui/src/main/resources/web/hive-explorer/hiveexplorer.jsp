@@ -34,10 +34,10 @@
 
     YAHOO.util.Event.onDOMReady(function() {
         editAreaLoader.init({
-                    id : "allcommands"
-                    ,syntax: "sql"
-                    ,start_highlight: true
-                });
+            id : "allcommands"
+            ,syntax: "sql"
+            ,start_highlight: true
+        });
     });
 </script>
 
@@ -92,7 +92,9 @@
             scriptContent = "";
             for (String aquery : queries) {
                 aquery = aquery.trim();
-                if (!aquery.equals("")) scriptContent = scriptContent + aquery + ";" + "\n";
+                if (!aquery.equals("")) {
+                    scriptContent = scriptContent + aquery + ";" + "\n";
+                }
             }
         }
     }
@@ -105,22 +107,22 @@
         var allQueries = editAreaLoader.getValue("allcommands");
         if (allQueries != "") {
             new Ajax.Request('../hive-explorer/queryresults.jsp', {
-                        method: 'post',
-                        parameters: {queries:allQueries},
-                        onSuccess: function(transport) {
-                            var allPage = transport.responseText;
-                            var divText = '<div id="returnedResults">';
-                            var closeDivText = '</div>';
-                            var temp = allPage.indexOf(divText, 0);
-                            var startIndex = temp + divText.length;
-                            var endIndex = allPage.indexOf(closeDivText, temp);
-                            var queryResults = allPage.substring(startIndex, endIndex);
-                            document.getElementById('hiveResult').innerHTML = queryResults;
-                        },
-                        onFailure: function(transport) {
-                            CARBON.showErrorDialog(transport.responseText);
-                        }
-                    });
+                method: 'post',
+                parameters: {queries:allQueries},
+                onSuccess: function(transport) {
+                    var allPage = transport.responseText;
+                    var divText = '<div id="returnedResults">';
+                    var closeDivText = '</div>';
+                    var temp = allPage.indexOf(divText, 0);
+                    var startIndex = temp + divText.length;
+                    var endIndex = allPage.indexOf(closeDivText, temp);
+                    var queryResults = allPage.substring(startIndex, endIndex);
+                    document.getElementById('hiveResult').innerHTML = queryResults;
+                },
+                onFailure: function(transport) {
+                    CARBON.showErrorDialog(transport.responseText);
+                }
+            });
 
         } else {
             var message = "Empty query can not be executed";
@@ -171,21 +173,21 @@
         var mode = '<%=mode%>';
         if (mode != 'edit') {
             new Ajax.Request('../hive-explorer/ScriptNameChecker', {
-                        method: 'post',
-                        parameters: {scriptName:scriptName},
-                        onSuccess: function(transport) {
-                            var result = transport.responseText;
-                            if (result.indexOf('true') != -1) {
-                                var message = "The script name: " + scriptName + 'already exists in the database. Please enter a different script name.';
-                                CARBON.showErrorDialog(message);
-                            } else {
-                                     sendRequestToSaveScript();
-                            }
-                        },
-                        onFailure: function(transport) {
-                            return true;
-                        }
-                    });
+                method: 'post',
+                parameters: {scriptName:scriptName},
+                onSuccess: function(transport) {
+                    var result = transport.responseText;
+                    if (result.indexOf('true') != -1) {
+                        var message = "The script name: " + scriptName + 'already exists in the database. Please enter a different script name.';
+                        CARBON.showErrorDialog(message);
+                    } else {
+                        sendRequestToSaveScript();
+                    }
+                },
+                onFailure: function(transport) {
+                    return true;
+                }
+            });
         } else {
             sendRequestToSaveScript();
         }
@@ -193,26 +195,26 @@
 
     function sendRequestToSaveScript() {
         new Ajax.Request('../hive-explorer/SaveScriptProcessor', {
-                    method: 'post',
-                    parameters: {queries:allQueries, scriptName:scriptName,
-                        cronExp:cron},
-                    onSuccess: function(transport) {
-                        var result = transport.responseText;
-                        if (result.indexOf('Success') != -1) {
-                            CARBON.showInfoDialog(result, function() {
-                                location.href = "../hive-explorer/listscripts.jsp";
-                            }, function() {
-                                location.href = "../hive-explorer/listscripts.jsp";
-                            });
+            method: 'post',
+            parameters: {queries:allQueries, scriptName:scriptName,
+                cronExp:cron},
+            onSuccess: function(transport) {
+                var result = transport.responseText;
+                if (result.indexOf('Success') != -1) {
+                    CARBON.showInfoDialog(result, function() {
+                        location.href = "../hive-explorer/listscripts.jsp";
+                    }, function() {
+                        location.href = "../hive-explorer/listscripts.jsp";
+                    });
 
-                        } else {
-                            CARBON.showErrorDialog(result);
-                        }
-                    },
-                    onFailure: function(transport) {
-                        CARBON.showErrorDialog(result);
-                    }
-                });
+                } else {
+                    CARBON.showErrorDialog(result);
+                }
+            },
+            onFailure: function(transport) {
+                CARBON.showErrorDialog(result);
+            }
+        });
     }
 
 </script>
@@ -223,8 +225,7 @@
         width: 85%;
         height: 300px;
         overflow-y: scroll;
-        overflow-x: auto;
-        /*clip-rect:(20px, 500px, 600px, 20px );*/
+        overflow-x: auto; /*clip-rect:(20px, 500px, 600px, 20px );*/
     }
 
     table.result {
@@ -249,11 +250,11 @@
     <%
         if (scriptNameExists) {
     %>
-    <h2>Hive Explorer<%=" - " + scriptName%>
+    <h2>Script Editor<%=" - " + scriptName%>
         <%
         } else {
         %>
-        <h2>Hive Explorer</h2>
+        <h2>Script Editor</h2>
         <%
             }
         %>
@@ -262,11 +263,11 @@
     <div id="workArea">
 
         <form id="commandForm" name="commandForm" action="" method="POST">
-            <table class="styledLeft">
+            <table class="styledLeft noBorders">
                 <thead>
                 <tr>
                     <th><span style="float: left; position: relative; margin-top: 2px;">
-                            <fmt:message key="hive.commands"/></span>
+                            <fmt:message key="script"/></span>
                     </th>
                 </tr>
                 </thead>
@@ -279,8 +280,8 @@
                         <table class="normal-nopadding">
                             <tbody>
                             <tr>
-                                <td>
-                                    <fmt:message key="hive.script.name"/>
+                                <td class="leftCol-small">
+                                    <fmt:message key="script.name"/>
                                 </td>
                                 <td>
                                     <input type="text" id="scriptName" name="scriptName" size="60"
@@ -301,9 +302,27 @@
                         <table class="normal-nopadding">
                             <tbody>
                             <tr>
+                                <td class="leftCol-small">
+                                    <fmt:message key="script.type"/>
+                                </td>
                                 <td>
-                                    <textarea id="allcommands" name="allcommands" cols="150"
-                                              rows="15"><%=scriptContent%>
+                                    <select style="width:100px">
+                                        <option value="hive">Hive</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="normal-nopadding">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <textarea id="allcommands" name="allcommands" rows="15"
+                                              style="width:99%"><%=scriptContent%>
                                     </textarea>
                                 </td>
                                     <%--<td>--%>
@@ -340,8 +359,9 @@
                                             <td></td>
                                             <td valign="top">
                                                 <a href="javascript: scheduleTask();"><label><img
-                                                        src="images/schedule_icon.png" alt="schedule_icon">Schedule
-                                                    Script</label></a>
+                                                        src="images/schedule_icon.png"
+                                                        alt="schedule_icon">Schedule
+                                                                            Script</label></a>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -351,8 +371,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input class="button" type="button" onclick="executeQuery()" value="Run>"/>
-                                    <input class="button" type="button" onclick="saveScript()" value="Save"/>
+                                    <input class="button" type="button" onclick="executeQuery()"
+                                           value="Run>"/>
+                                    <input class="button" type="button" onclick="saveScript()"
+                                           value="Save"/>
                                     <input type="button" value="Cancel" onclick="cancelScript()"
                                            class="button"/>
                                 </td>
@@ -378,7 +400,7 @@
                 </tr>
                 <tr>
                     <td class="middle-header">
-                        <fmt:message key="hive.query.results"/>
+                        <fmt:message key="script.results"/>
                     </td>
                 </tr>
                 <tr>
@@ -388,7 +410,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <div id="hiveResult" class="scrollable">
+                        <div id="hiveResult" class="scrollable" style="width:99%">
                                 <%--the results goes here...--%>
                         </div>
                     </td>

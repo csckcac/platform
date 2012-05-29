@@ -71,8 +71,8 @@
             <require-permission>/permission/protected/manage</require-permission>
         </menu>
         <menu>
-            <id>hive_explorer_configure</id>
-            <i18n-key>hive_explorer_configure.menu</i18n-key>
+            <id>analytics_configure</id>
+            <i18n-key>analytics.configure</i18n-key>
             <i18n-bundle>org.wso2.carbon.analytics.hive.ui.i18n.Resources</i18n-bundle>
             <parent-menu>configure_menu</parent-menu>
             <link>../hive-explorer/index.jsp</link>

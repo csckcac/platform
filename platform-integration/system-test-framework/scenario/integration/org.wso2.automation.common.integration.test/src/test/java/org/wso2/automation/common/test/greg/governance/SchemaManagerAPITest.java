@@ -16,6 +16,7 @@ package org.wso2.automation.common.test.greg.governance;/*
 *under the License.
 */
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -118,19 +119,73 @@ public class SchemaManagerAPITest {
                 public boolean matches(Schema schema) throws GovernanceException {
                     String name = schema.getQName().getLocalPart();
                     assertTrue(name.contains(schemaName), "Error occurred while executing " +
-                                                          "findSchema API method");
+                            "findSchema API method");
                     return name.contains(schemaName);
                 }
             }
             );
             assertTrue(schemaArray.length > 0, "Error occurred while executing findSchema API " +
-                                               "method");
+                    "method");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WsdlManager:findSchemas method" + e);
         }
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing removeSchema API method", priority = 7)
+
+//    Schema data object specific test cases
+
+    @Test(groups = {"wso2.greg.api"}, description = "Testing getQName API method with schema object", priority = 7)
+    public void testGetQName() throws Exception {
+        boolean isSchemaFound = false;
+        Schema[] schema = schemaManager.getAllSchemas();
+        try {
+            for (Schema s : schema) {
+                if (s.getQName().getLocalPart().equalsIgnoreCase(schemaName)) {
+                    isSchemaFound = true;
+                }
+            }
+            assertTrue(isSchemaFound, "getQName method prompt error while executing with schema object");
+        } catch (Exception e) {
+            throw new Exception("Error occurred while executing WsdlManager:getQName method" + e);
+        }
+    }
+
+    @Test(groups = {"wso2.greg.api"}, description = "Testing getUrl API method with schema object", priority = 8)
+    public void testGetUrl() throws Exception {
+        boolean isSchemaFound = false;
+        Schema[] schema = schemaManager.getAllSchemas();
+        try {
+            for (Schema s : schema) {
+                if (!(s.getUrl() == null)) {
+                    isSchemaFound = true;
+                }
+            }
+            assertTrue(isSchemaFound, "getUrl method prompt error while executing with schema object");
+        } catch (Exception e) {
+            throw new Exception("Error occurred while executing WsdlManager:getUrl method" + e);
+        }
+    }
+
+    @Test(groups = {"wso2.greg.api"}, description = "Testing getSchemaElement API method with schema object", priority = 9)
+    public void testGetSchemaElement() throws Exception {
+        boolean isSchemaFound = false;
+        Schema[] schema = schemaManager.getAllSchemas();
+        try {
+            for (Schema s : schema) {
+                if (s.getQName().getLocalPart().equalsIgnoreCase(schemaName)) {
+                    OMElement omElement = s.getSchemaElement();
+                    if (omElement.toString().contains("http://charitha.org/")) {
+                        isSchemaFound = true;
+                    }
+                }
+            }
+            assertTrue(isSchemaFound, "getSchemaElement method prompt error while executing with schema object");
+        } catch (Exception e) {
+            throw new Exception("Error occurred while executing getSchemaElement method" + e);
+        }
+    }
+
+    @Test(groups = {"wso2.greg.api"}, description = "Testing removeSchema API method", priority = 10)
     public void testRemoveSchema() throws GovernanceException {
         try {
             schemaManager.removeSchema(schemaObj.getId());

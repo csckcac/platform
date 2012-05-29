@@ -43,8 +43,8 @@
         </icon>
         <productPageURL>http://wso2.com/products/governance-registry/</productPageURL>
     </cloudService>
-    <cloudService name="WSO2 Stratos Identity" default="true">
-        <label>Stratos Identity</label>
+    <cloudService name="WSO2 Identity Server" default="true">
+        <label>WSO2 Identity Server</label>
         <link>https://identity.cloud.wso2.com</link>
         <icon>
             https://localhost:9443/cloud-services-icons/identity.gif

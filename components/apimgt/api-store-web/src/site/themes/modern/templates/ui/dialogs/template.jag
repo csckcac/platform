@@ -38,7 +38,7 @@
         </div>
     </form>
     <% } else { %>
-    <form id="loginRedirectForm" method="post" action="<%=outputs.https_url%><%=site.context%>/site/themes/fancy/templates/user/login/redirector.jag">
+    <form id="loginRedirectForm" method="post" action="<%=outputs.https_url%><%=site.context%>/site/themes/modern/templates/user/login/redirector.jag">
         <input type="hidden" name="redirectToHTTPS" id="redirectToHTTPS" value="<%=httpsURL%>" />
         <input type="hidden" name="redirectToHTTP" id="redirectToHTTP" value="<%=httpURL%>" />
     </form>

@@ -7,7 +7,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-            <a href="/" class="brand"><img src="<%=site.context%>/site/themes/fancy/images/logo.png" alt="API Store"></a>
+            <a href="/" class="brand"><img src="<%=site.context%>/site/themes/modern/images/logo.png" alt="API Store"></a>
           <div class="pull-right">
             <% jagg.includeBlock("user/login", null); %>
           </div>

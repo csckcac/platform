@@ -1,5 +1,5 @@
 <% jagg.template("api/listing", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
+<% var stars = require("/site/themes/modern/utils/ratings/star-generator.js"); %>
  <div class="thumbnail-custom">
                     <div class="navbar">
                         <div class="navbar-inner">
@@ -34,7 +34,7 @@
                             api = apis[i];
                             thumbURL = api.thumbURL;
                             if(thumbURL && thumbURL.indexOf("images/") == 0) {
-                                thumbURL = site.context + "/site/themes/fancy/" + thumbURL;
+                                thumbURL = site.context + "/site/themes/modern/" + thumbURL;
                             }
                             path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
                         %>

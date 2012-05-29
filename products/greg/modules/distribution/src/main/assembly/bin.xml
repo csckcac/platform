@@ -290,6 +290,7 @@
                 <include>org.apache.juddi:juddi-client:jar</include>
                 <include>org.apache.juddi.scout:scout:jar</include>
                 <include>org.apache.juddi:uddi-ws:jar</include>
+                <include>javax.xml:jaxr-api:jar</include>
             </includes>
         </dependencySet>
     </dependencySets>

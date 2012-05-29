@@ -46,6 +46,7 @@ import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+
 /**
  * Covers the public JIRA https://wso2.org/jira/browse/CARBON-12871 , https://wso2.org/jira/browse/REGISTRY-723
  */
@@ -86,27 +87,14 @@ public class GovernanceApiServiceListing {
 
     @BeforeClass(alwaysRun = true, groups = {"wso2.greg", "wso2.greg.GovernanceApiServiceListing"})
     public void addService() throws InterruptedException, RemoteException,
-                                     MalformedURLException, GovernanceException {
+                                    MalformedURLException, GovernanceException {
         service = serviceManager.newService(new QName("http://my.service.ns1", "MyService1"));
         serviceManager.addService(service);
-        Service service2 = serviceManager.newService(new QName("http://my.service.ns2", "MyService2"));
-        Service service4 = serviceManager.newService(new QName("http://my.service.ns4", "MyService4"));
-        Service service3 = serviceManager.newService(new QName("http://my.service.ns3", "MyService3"));
-        Service service5 = serviceManager.newService(new QName("http://my.service.ns5", "MyService5"));
-        Service service6 = serviceManager.newService(new QName("http://my.service.ns6", "MyService6"));
-        Service service8 = serviceManager.newService(new QName("http://my.service.ns8", "MyService8"));
-        Service service7 = serviceManager.newService(new QName("http://my.service.ns7", "MyService7"));
-        Service service9 = serviceManager.newService(new QName("http://my.service.ns9", "MyService9"));
-        Service service1 = serviceManager.newService(new QName("http://my.service.ns0", "MyService0"));
-        serviceManager.addService(service1);
-        serviceManager.addService(service2);
-        serviceManager.addService(service7);
-        serviceManager.addService(service4);
-        serviceManager.addService(service5);
-        serviceManager.addService(service6);
-        serviceManager.addService(service8);
-        serviceManager.addService(service3);
-        serviceManager.addService(service9);
+        for (int serviceNo = 0; serviceNo <= 9; serviceNo++) {
+            Service service2 = serviceManager.newService(new QName("http://my.service.ns" + serviceNo, "MyService" + serviceNo));
+            serviceManager.addService(service2);
+            log.info("Added service" + service2.getPath());
+        }
     }
 
     @Test(groups = {"wso2.greg", "wso2.greg.GovernanceApiServiceListing"}, priority = 1)
@@ -122,7 +110,7 @@ public class GovernanceApiServiceListing {
                 if (serviceList[index - 1].getQName().toString().contains("MyService")) {
                     String qnameprevious = serviceList[index - 1].getQName().toString();
                     String qnamenext = serviceList[index].getQName().toString();
-                    if (qnameprevious.length() >= qnameprevious.indexOf("MyService") + 9 && qnamenext.length() >= qnamenext.indexOf("MyService") +9) {
+                    if (qnameprevious.length() >= qnameprevious.indexOf("MyService") + 9 && qnamenext.length() >= qnamenext.indexOf("MyService") + 9) {
                         int previousindex = Integer.valueOf(qnameprevious.substring(qnameprevious.indexOf("MyService") + 9));
                         int nextIndexindex = Integer.valueOf(qnamenext.substring(qnamenext.indexOf("MyService") + 9));
                         if (previousindex >= nextIndexindex) {

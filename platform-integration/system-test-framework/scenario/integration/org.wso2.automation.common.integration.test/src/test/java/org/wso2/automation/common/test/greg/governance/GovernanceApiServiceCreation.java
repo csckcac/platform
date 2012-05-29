@@ -49,6 +49,11 @@ import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertTrue;
 
+/**
+ * covers https://wso2.org/jira/browse/CARBON-11573
+ * https://wso2.org/jira/browse/CARBON-11256
+ */
+
 public class GovernanceApiServiceCreation {
     String sessionCookie = null;
     private static final Log log = LogFactory.getLog(GovernanceApiServiceCreation.class);

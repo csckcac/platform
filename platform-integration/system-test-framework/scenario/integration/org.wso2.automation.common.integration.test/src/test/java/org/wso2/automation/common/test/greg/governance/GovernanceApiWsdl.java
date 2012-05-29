@@ -45,6 +45,11 @@ import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+/**
+ * Test case for govenence registry adding wsdl to service https://wso2.org/jira/browse/CARBON-11997
+ * https://wso2.org/jira/browse/CARBON-11012
+ */
+
 
 public class GovernanceApiWsdl {
     String sessionCookie = null;

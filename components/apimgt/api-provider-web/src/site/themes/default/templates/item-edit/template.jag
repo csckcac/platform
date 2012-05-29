@@ -143,7 +143,7 @@
                             rowsNums.push(k); }}
                             %>
                                 <td id="buttons">
-                                    <a class="btn btn-primary" id="resourceAddBtn" onClick="updateResourcesToApi(<%=rowsNums%>)"><i class="icon-plus icon-white"></i> Add</a>
+                                    <a class="btn btn-primary even-width-button" id="resourceAddBtn" onClick="updateResourcesToApi(<%=rowsNums%>)"><i class="icon-plus icon-white"></i> Add</a>
                                 </td>
                             </tr>
 
@@ -176,7 +176,7 @@
 
                                 </td>
                                 <td id="buttons">
-                                    <a class="btn btn-danger" id="resourceDelBtn" onClick="deleteResource(<%=String(i)%>,<%=rowsNums%>)"><i class="icon-trash icon-white"></i> Delete</a>
+                                    <a class="btn btn-danger even-width-button" id="resourceDelBtn" onClick="deleteResource(<%=String(i)%>,<%=rowsNums%>)"><i class="icon-trash icon-white"></i> Delete</a>
                                 </td>
                             </tr>
                             <input type="hidden" name="resourceMethod-<%=String(i)%>" value="<%=api.templates[i][1]%>">

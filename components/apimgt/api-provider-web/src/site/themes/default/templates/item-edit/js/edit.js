@@ -85,7 +85,7 @@ var updateResourcesToApi = function (rowNums) {
 
     $('#item-' + resourcesCount + ' #uriTemplate').attr('disabled', 'disabled');
     $('#item-' + resourcesCount + ' td#buttons a#resourceAddBtn').remove();
-    $('#item-' + resourcesCount + ' td#buttons').append("<a class=\"btn btn-danger\" onclick=\"deleteResource(" + resourcesCount + ")\"><i class=\"icon-trash icon-white\"></i> Delete</a>");
+    $('#item-' + resourcesCount + ' td#buttons').append("<a class=\"even-width-button btn btn-danger\" onclick=\"deleteResource(" + resourcesCount + ")\"><i class=\"icon-trash icon-white\"></i> Delete</a>");
 
     var resourceMethodValues=new Array();
     if(resourceGet!=null){

@@ -35,6 +35,8 @@ public class GRegMetadataSearchTestSuite extends MasterTestSuite {
                                                   SaveDeleteFilterTest.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByTags",
                                                   RegistrySearchByTags.class));
+        suiteVariablesList.add(new SuiteVariables("RegistrySearchByComments",
+                                                  RegistrySearchByComments.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByResourceNameTest",
                                                   RegistrySearchByResourceNameTest.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByKeyword",

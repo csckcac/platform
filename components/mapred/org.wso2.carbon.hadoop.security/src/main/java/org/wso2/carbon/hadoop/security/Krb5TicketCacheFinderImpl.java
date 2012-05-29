@@ -46,12 +46,12 @@ public class Krb5TicketCacheFinderImpl implements Krb5TicketCacheFinder {
 		}
 		return ticketCachePath;
 	}
-	@Override
+	/*@Override
 	public Configuration getConf() {
 		return this.conf;
 	}
 	@Override
 	public void setConf(Configuration conf) {
 		this.conf = conf;
-	}
+	}*/
 }

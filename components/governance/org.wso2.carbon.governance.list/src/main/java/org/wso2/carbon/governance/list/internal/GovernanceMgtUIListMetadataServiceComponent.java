@@ -108,6 +108,10 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                 org.wso2.carbon.registry.extensions.utils.CommonUtil
                                         .acquireUpdateLock();
                                 try {
+                                    if(!CommonUtil.validateXMLConfigOnSchema(new String((byte[]) requestContext.getResource().getContent()),"service-ui-config")) {
+                                     throw new RegistryException("Violation of RXT definition in configuration file, follow the schema correctly..!!");
+                                    }
+
                                     Registry systemRegistry = requestContext.getSystemRegistry();
 
                                     String layoutStoragePath =

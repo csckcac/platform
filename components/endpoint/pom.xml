@@ -88,12 +88,7 @@
                 <artifactId>org.wso2.carbon.mediation.templates.ui</artifactId>
                 <version>${wso2carbon.version.endpoint}</version>
             </dependency>
-			<dependency>
-				<groupId>org.wso2.carbon</groupId>
-				<artifactId>org.wso2.carbon.unifiedendpoint.core</artifactId>
-				<version>${wso2carbon.version.endpoint}</version>			
-			</dependency>
-        </dependencies>
+		 </dependencies>
     </dependencyManagement>
 
     <properties>

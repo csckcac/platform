@@ -30,11 +30,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.unifiedendpoint.core</artifactId>			
-		 </dependency>
+        </dependency>       
     </dependencies>
 
     <build>

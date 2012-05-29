@@ -67,6 +67,19 @@
 
       <p><font color="red">Note that 192.168.0.101 server is common to both rings !</font> </p>
 
+      <p>First we need to configure the HostName in carbon.xml file which is located in "wso2mb-2.0.0/repository/conf/" directory.
+      Specify the ip of the host as follows</p>
+      <pre>
+          &lt;!--
+                 Host name or IP address of the machine hosting this server
+                 e.g. www.wso2.org, 192.168.1.10
+                 This is will become part of the End Point Reference of the
+                 services deployed on this server instance.
+              -->
+              &lt;HostName>192.168.0.101&lt;/HostName>
+
+      </pre>
+
       <p> We need to configure cassandra servers in these MB servers to form a cassandra ring. For that we need to change the following
           entries in the "Cassandra.yaml" file which is located in the "wso2mb-2.0.0/repository/conf/etc" directory.</p>
 

@@ -56,7 +56,21 @@
           <li>MB Server 03 - 192.168.0.103</li>
       </ul>
 
-      <p> We need to configure cassandra server to listen to all the broker nodes.For that we need to change the following entries
+      <p>First we need to configure the HostName in carbon.xml file which is located in "wso2mb-2.0.0/repository/conf/" directory.
+           Specify the ip of the host as follows. <font color="red">You need to configure this for all the three servers.</font></p>
+           <pre>
+               &lt;!--
+                      Host name or IP address of the machine hosting this server
+                      e.g. www.wso2.org, 192.168.1.10
+                      This is will become part of the End Point Reference of the
+                      services deployed on this server instance.
+                   -->
+                   &lt;HostName>192.168.0.101&lt;/HostName>
+
+           </pre>
+
+
+      <p> Then we need to configure cassandra server to listen to all the broker nodes.For that we need to change the following entries
       in the "Cassandra.yaml" file which is located in the "apache-cassandra-1.0.1/conf/" directory.</p>
 
       <ul>

@@ -133,12 +133,12 @@
 		<module>broker</module>
 		<module>broker-manager</module>
 		<module>cep</module>
-		<module>cassandra</module>                
+		<module>cassandra</module>
                 <module>stratos</module>
 				<module>csg</module>
                 <module>dbconsole</module>
-                <module>rss-manager</module> 
-                <module>coordination</module> 
+                <module>rss-manager</module>
+                <module>coordination</module>
                 <module>ntask</module>
                 <module>transaction-manager</module>
                 <module>rest-api</module>
@@ -159,22 +159,22 @@
 	            <plugin>
 	                <groupId>org.codehaus.mojo</groupId>
 	                <artifactId>build-helper-maven-plugin</artifactId>
-	                <version>1.7</version> 
+	                <version>1.7</version>
 	            </plugin>
 	            <plugin>
 	               <groupId>org.apache.maven.plugins</groupId>
 	               <artifactId>maven-compiler-plugin</artifactId>
-	               <version>2.3.2</version> 
+	               <version>2.3.2</version>
 	            </plugin>
 	            <plugin>
 	               <groupId>org.apache.maven.plugins</groupId>
 	               <artifactId>maven-surefire-plugin</artifactId>
-	               <version>2.12</version> 
+	               <version>2.12</version>
 	            </plugin>
 	            <plugin>
 	               <groupId>org.apache.maven.plugins</groupId>
 	               <artifactId>maven-resources-plugin</artifactId>
-	               <version>2.5</version> 
+	               <version>2.5</version>
 	            </plugin>
 	        </plugins>
 	    </build>
@@ -516,7 +516,7 @@
                 <artifactId>h2-database-engine</artifactId>
                 <version>${orbit.version.h2.engine}</version>
                 <exclusions>
-                    <exclusion> 
+                    <exclusion>
                         <groupId>org.eclipse.osgi</groupId>
                         <artifactId>org.eclipse.osgi</artifactId>
                     </exclusion>
@@ -586,23 +586,23 @@
                 <artifactId>abdera</artifactId>
                 <version>${orbit.version.abdera}</version>
                 <exclusions>
-                    <exclusion> 
+                    <exclusion>
                         <groupId>org.apache.abdera</groupId>
-                        <artifactId>abdera-client</artifactId>	
+                        <artifactId>abdera-client</artifactId>
                     </exclusion>
-                    <exclusion> 
+                    <exclusion>
                         <groupId>org.apache.abdera</groupId>
                         <artifactId>abdera-core</artifactId>
                     </exclusion>
-                    <exclusion> 
+                    <exclusion>
                         <groupId>org.apache.abdera</groupId>
                         <artifactId>abdera-parser</artifactId>
                     </exclusion>
-                    <exclusion> 
+                    <exclusion>
                         <groupId>org.apache.abdera</groupId>
                         <artifactId>abdera-server</artifactId>
                     </exclusion>
-                    <exclusion> 
+                    <exclusion>
                         <groupId>org.apache.abdera</groupId>
                         <artifactId>abdera-i18n</artifactId>
                     </exclusion>
@@ -773,7 +773,7 @@
 		<artifactId>opensaml2</artifactId>
     		<version>${opensaml2.wso2.version}</version>
 	</dependency>
-	
+
 		<!-- Service Stubs -->
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -814,7 +814,7 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.attachment.mgt.skeleton</artifactId>
                 <version>${carbon.platform.version}</version>
-            </dependency>	
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
@@ -1360,7 +1360,7 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.xkms.mgt.stub</artifactId>
                 <version>${carbon.platform.version}</version>
-            </dependency>	 
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.identity.entitlement.stub</artifactId>
@@ -1570,6 +1570,7 @@
         <mvel2.orbit.version>2.0.19.wso2v1</mvel2.orbit.version>
         <antlr-runtime.orbit.version>3.2.0.wso2v1</antlr-runtime.orbit.version>
         <siddhi.orbit.version>0.5.1-SNAPSHOT.wso2v1</siddhi.orbit.version>
+        <cxf.orbit.version>2.5.2.wso2v1</cxf.orbit.version>
     </properties>
 
 </project>

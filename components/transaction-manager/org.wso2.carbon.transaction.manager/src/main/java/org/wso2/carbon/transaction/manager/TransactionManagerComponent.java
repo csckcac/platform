@@ -162,8 +162,24 @@ public class TransactionManagerComponent {
             if (javaCtx == null) {
                 currentCtx = currentCtx.createSubcontext("java:comp");
             }
-            currentCtx.bind("TransactionManager", getTransactionManager());
-            currentCtx.bind("UserTransaction", getUserTransaction());
+
+            Object txManager = null, userTx = null;
+            try {
+             txManager = currentCtx.lookup("java:comp/TransactionManager");
+            } catch (NameNotFoundException ignore) {
+                //ignore
+            }
+            try {
+             userTx = currentCtx.lookup("java:comp/UserTransaction");
+            } catch (NameNotFoundException ignore) {
+                //ignore
+            }
+            if(txManager == null) {
+                currentCtx.bind("TransactionManager", getTransactionManager());
+            }
+            if(userTx == null) {
+                currentCtx.bind("UserTransaction", getUserTransaction());
+            }
         } catch (Exception e) {
            log.error("Error in binding transaction manager for tenant: " + tid, e);
         } finally {

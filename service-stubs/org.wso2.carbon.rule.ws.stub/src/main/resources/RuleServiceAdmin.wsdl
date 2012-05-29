@@ -1,4 +1,4 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http//wso2.org/carbon/rule/ws/admin/types" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http//wso2.org/carbon/rule/ws/admin" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2232="http//wso2.org/carbon/rule/ws/admin/exception" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http//wso2.org/carbon/rule/ws/admin">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http//wso2.org/carbon/rule/ws/admin/types" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http//wso2.org/carbon/rule/ws/admin" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2236="http//wso2.org/carbon/rule/ws/admin/exception" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http//wso2.org/carbon/rule/ws/admin">
     <wsdl:documentation>RuleServiceAdmin</wsdl:documentation>
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http//wso2.org/carbon/rule/ws/admin/exception">
@@ -6,12 +6,12 @@
                 <xs:sequence/>
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax2233="http//wso2.org/carbon/rule/ws/admin/exception" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http//wso2.org/carbon/rule/ws/admin/types">
+        <xs:schema xmlns:ax2237="http//wso2.org/carbon/rule/ws/admin/exception" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http//wso2.org/carbon/rule/ws/admin/types">
             <xs:import namespace="http//wso2.org/carbon/rule/ws/admin/exception"/>
             <xs:element name="RuleServiceAdminRuleServiceAdminException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="RuleServiceAdminException" nillable="true" type="ax2233:RuleServiceAdminException"/>
+                        <xs:element minOccurs="0" name="RuleServiceAdminException" nillable="true" type="ax2237:RuleServiceAdminException"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -51,6 +51,21 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" nillable="true" type="ns:omElementType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRuleFileList">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRuleFileListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -101,6 +116,14 @@
                         <xs:element minOccurs="0" name="fileExtension" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
                         <xs:any/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteRuleFile">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -162,6 +185,15 @@
     <wsdl:message name="getFactArchiveListResponse">
         <wsdl:part name="parameters" element="ns:getFactArchiveListResponse"/>
     </wsdl:message>
+    <wsdl:message name="deleteRuleFileRequest">
+        <wsdl:part name="parameters" element="ns:deleteRuleFile"/>
+    </wsdl:message>
+    <wsdl:message name="getRuleFileListRequest">
+        <wsdl:part name="parameters" element="ns:getRuleFileList"/>
+    </wsdl:message>
+    <wsdl:message name="getRuleFileListResponse">
+        <wsdl:part name="parameters" element="ns:getRuleFileListResponse"/>
+    </wsdl:message>
     <wsdl:message name="getRuleServiceRequest">
         <wsdl:part name="parameters" element="ns:getRuleService"/>
     </wsdl:message>
@@ -202,6 +234,15 @@
             <wsdl:input message="tns:getFactArchiveListRequest" wsaw:Action="urn:getFactArchiveList"/>
             <wsdl:output message="tns:getFactArchiveListResponse" wsaw:Action="urn:getFactArchiveListResponse"/>
             <wsdl:fault message="tns:RuleServiceAdminRuleServiceAdminException" name="RuleServiceAdminRuleServiceAdminException" wsaw:Action="urn:getFactArchiveListRuleServiceAdminRuleServiceAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteRuleFile">
+            <wsdl:input message="tns:deleteRuleFileRequest" wsaw:Action="urn:deleteRuleFile"/>
+            <wsdl:fault message="tns:RuleServiceAdminRuleServiceAdminException" name="RuleServiceAdminRuleServiceAdminException" wsaw:Action="urn:deleteRuleFileRuleServiceAdminRuleServiceAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getRuleFileList">
+            <wsdl:input message="tns:getRuleFileListRequest" wsaw:Action="urn:getRuleFileList"/>
+            <wsdl:output message="tns:getRuleFileListResponse" wsaw:Action="urn:getRuleFileListResponse"/>
+            <wsdl:fault message="tns:RuleServiceAdminRuleServiceAdminException" name="RuleServiceAdminRuleServiceAdminException" wsaw:Action="urn:getRuleFileListRuleServiceAdminRuleServiceAdminException"/>
         </wsdl:operation>
         <wsdl:operation name="getRuleService">
             <wsdl:input message="tns:getRuleServiceRequest" wsaw:Action="urn:getRuleService"/>
@@ -273,6 +314,15 @@
                 <soap:fault use="literal" name="RuleServiceAdminRuleServiceAdminException"/>
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="deleteRuleFile">
+            <soap:operation soapAction="urn:deleteRuleFile" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RuleServiceAdminRuleServiceAdminException">
+                <soap:fault use="literal" name="RuleServiceAdminRuleServiceAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="getFactArchiveList">
             <soap:operation soapAction="urn:getFactArchiveList" style="document"/>
             <wsdl:input>
@@ -287,6 +337,18 @@
         </wsdl:operation>
         <wsdl:operation name="getRuleService">
             <soap:operation soapAction="urn:getRuleService" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RuleServiceAdminRuleServiceAdminException">
+                <soap:fault use="literal" name="RuleServiceAdminRuleServiceAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRuleFileList">
+            <soap:operation soapAction="urn:getRuleFileList" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -372,6 +434,15 @@
                 <soap12:fault use="literal" name="RuleServiceAdminRuleServiceAdminException"/>
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="deleteRuleFile">
+            <soap12:operation soapAction="urn:deleteRuleFile" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RuleServiceAdminRuleServiceAdminException">
+                <soap12:fault use="literal" name="RuleServiceAdminRuleServiceAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="getFactArchiveList">
             <soap12:operation soapAction="urn:getFactArchiveList" style="document"/>
             <wsdl:input>
@@ -386,6 +457,18 @@
         </wsdl:operation>
         <wsdl:operation name="getRuleService">
             <soap12:operation soapAction="urn:getRuleService" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RuleServiceAdminRuleServiceAdminException">
+                <soap12:fault use="literal" name="RuleServiceAdminRuleServiceAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRuleFileList">
+            <soap12:operation soapAction="urn:getRuleFileList" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
@@ -456,6 +539,12 @@
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
         </wsdl:operation>
+        <wsdl:operation name="deleteRuleFile">
+            <http:operation location="deleteRuleFile"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
         <wsdl:operation name="getFactArchiveList">
             <http:operation location="getFactArchiveList"/>
             <wsdl:input>
@@ -467,6 +556,15 @@
         </wsdl:operation>
         <wsdl:operation name="getRuleService">
             <http:operation location="getRuleService"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getRuleFileList">
+            <http:operation location="getRuleFileList"/>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
@@ -489,13 +587,13 @@
     </wsdl:binding>
     <wsdl:service name="RuleServiceAdmin">
         <wsdl:port name="RuleServiceAdminHttpsSoap11Endpoint" binding="tns:RuleServiceAdminSoap11Binding">
-            <soap:address location="https://10.216.133.90:9443/services/RuleServiceAdmin.RuleServiceAdminHttpsSoap11Endpoint/"/>
+            <soap:address location="https://10.100.3.76:9443/services/RuleServiceAdmin.RuleServiceAdminHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="RuleServiceAdminHttpsSoap12Endpoint" binding="tns:RuleServiceAdminSoap12Binding">
-            <soap12:address location="https://10.216.133.90:9443/services/RuleServiceAdmin.RuleServiceAdminHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://10.100.3.76:9443/services/RuleServiceAdmin.RuleServiceAdminHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="RuleServiceAdminHttpsEndpoint" binding="tns:RuleServiceAdminHttpBinding">
-            <http:address location="https://10.216.133.90:9443/services/RuleServiceAdmin.RuleServiceAdminHttpsEndpoint/"/>
+            <http:address location="https://10.100.3.76:9443/services/RuleServiceAdmin.RuleServiceAdminHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

@@ -91,13 +91,13 @@
     </wsdl:binding>
     <wsdl:service name="RuleServiceFileUploadAdmin">
         <wsdl:port name="RuleServiceFileUploadAdminHttpsSoap11Endpoint" binding="tns:RuleServiceFileUploadAdminSoap11Binding">
-            <soap:address location="https://10.216.133.90:9443/services/RuleServiceFileUploadAdmin.RuleServiceFileUploadAdminHttpsSoap11Endpoint/"/>
+            <soap:address location="https://10.100.3.76:9443/services/RuleServiceFileUploadAdmin.RuleServiceFileUploadAdminHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="RuleServiceFileUploadAdminHttpsSoap12Endpoint" binding="tns:RuleServiceFileUploadAdminSoap12Binding">
-            <soap12:address location="https://10.216.133.90:9443/services/RuleServiceFileUploadAdmin.RuleServiceFileUploadAdminHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://10.100.3.76:9443/services/RuleServiceFileUploadAdmin.RuleServiceFileUploadAdminHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="RuleServiceFileUploadAdminHttpsEndpoint" binding="tns:RuleServiceFileUploadAdminHttpBinding">
-            <http:address location="https://10.216.133.90:9443/services/RuleServiceFileUploadAdmin.RuleServiceFileUploadAdminHttpsEndpoint/"/>
+            <http:address location="https://10.100.3.76:9443/services/RuleServiceFileUploadAdmin.RuleServiceFileUploadAdminHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

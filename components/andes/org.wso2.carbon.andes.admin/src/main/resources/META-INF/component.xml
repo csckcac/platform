@@ -21,41 +21,17 @@
             <DisplayName>Manage</DisplayName>
             <ResourceId>/permission/admin/manage</ResourceId>
         </ManagementPermission>
-        <ManagementPermission>
-            <DisplayName>CEP</DisplayName>
-            <ResourceId>/permission/admin/manage/cep</ResourceId>
+       <ManagementPermission>
+            <DisplayName>MB</DisplayName>
+            <ResourceId>/permission/admin/manage/mb</ResourceId>
         </ManagementPermission>
         <ManagementPermission>
-            <DisplayName>View Bucket</DisplayName>
-            <ResourceId>/permission/admin/manage/cep/viewBucket</ResourceId>
+            <DisplayName>Add Queue</DisplayName>
+            <ResourceId>/permission/admin/manage/mb/addQueue</ResourceId>
         </ManagementPermission>
         <ManagementPermission>
-            <DisplayName>Add Bucket</DisplayName>
-            <ResourceId>/permission/admin/manage/cep/addBucket</ResourceId>
-        </ManagementPermission>
-        <ManagementPermission>
-            <DisplayName>Add Input</DisplayName>
-            <ResourceId>/permission/admin/manage/cep/addInput</ResourceId>
-        </ManagementPermission>
-        <ManagementPermission>
-            <DisplayName>Add Query</DisplayName>
-            <ResourceId>/permission/admin/manage/cep/addQuery</ResourceId>
-        </ManagementPermission>
-        <ManagementPermission>
-            <DisplayName>Delete Bucket</DisplayName>
-            <ResourceId>/permission/admin/manage/cep/deleteBucket</ResourceId>
-        </ManagementPermission>
-        <ManagementPermission>
-            <DisplayName>Delete Input</DisplayName>
-            <ResourceId>/permission/admin/manage/cep/deleteInput</ResourceId>
-        </ManagementPermission>
-        <ManagementPermission>
-            <DisplayName>Delete Query</DisplayName>
-            <ResourceId>/permission/admin/manage/cep/deleteQuery</ResourceId>
-        </ManagementPermission>
-        <ManagementPermission>
-            <DisplayName>Edit Bucket</DisplayName>
-            <ResourceId>/permission/admin/manage/cep/editBucket</ResourceId>
+            <DisplayName>Queue Details</DisplayName>
+            <ResourceId>/permission/admin/manage/mb/queueDetails</ResourceId>
         </ManagementPermission>
     </ManagementPermissions>
 </component>

@@ -15,6 +15,9 @@ jagg.module("subscription", {
 
     generateAPIKey:function () {
         return jagg.require(jagg.getModulesDir() + "subscription/key.jag").generateAPIKey.apply(this, arguments);
+    },
+    hasSubscribePermission:function () {
+        return jagg.require(jagg.getModulesDir() + "subscription/check-permissions.jag").hasSubscribePermission.apply(this, arguments);
     }
 });
 %>

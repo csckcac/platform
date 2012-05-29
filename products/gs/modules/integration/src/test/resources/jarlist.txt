@@ -1,8 +1,0 @@
-repository/components/plugins/org.wso2.carbon.dashboard-3.2.0.SNAPSHOT.jar
-repository/components/plugins/org.wso2.carbon.dashboard.gadgetrepopopulator-3.2.0.SNAPSHOT.jar
-repository/components/plugins/org.wso2.carbon.dashboard.mgt.gadgetrepo-3.2.0.SNAPSHOT.jar
-repository/components/plugins/org.wso2.carbon.dashboard.mgt.oauth-3.2.0.SNAPSHOT.jar
-repository/components/plugins/org.wso2.carbon.dashboard.mgt.theme-3.2.0.SNAPSHOT.jar
-repository/components/plugins/org.wso2.carbon.dashboard.mgt.users-3.2.0.SNAPSHOT.jar
-repository/components/plugins/org.wso2.carbon.dashboard.social-3.2.0.SNAPSHOT.jar
-repository/components/plugins/org.wso2.carbon.dashboard.themepopulator-3.2.0.SNAPSHOT.jar

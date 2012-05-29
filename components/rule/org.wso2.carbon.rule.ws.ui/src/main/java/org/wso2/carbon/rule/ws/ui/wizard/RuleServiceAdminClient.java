@@ -178,6 +178,31 @@ public class RuleServiceAdminClient {
 
     }
 
+       public String[] getRuleFileList(RuleService ruleService,
+                                javax.servlet.http.HttpSession session){
+           String serviceName = ruleService.getName();
+           String fname = "temp";
+           try {
+               String[] ruleFileList = ruleServiceAdminStub.getRuleFileList(serviceName,fname);
+               return ruleFileList;
+           } catch (Exception e) {
+           throw new RuleServiceClientException("Error getting all rule files for rule service : " +
+                        serviceName);
+
+           }
+       }
+
+    public void deleteRuleFile(RuleService ruleService, String fileName, javax.servlet.http.HttpSession session){
+        String serviceName = ruleService.getName();
+           try {
+               ruleServiceAdminStub.deleteRuleFile(serviceName,fileName);
+           } catch (Exception e) {
+           throw new RuleServiceClientException("Error getting all rule files for rule service : " +
+                        serviceName);
+
+           }
+    }
+
     /**
      * Gets all facts belong to the service with the given name
      *

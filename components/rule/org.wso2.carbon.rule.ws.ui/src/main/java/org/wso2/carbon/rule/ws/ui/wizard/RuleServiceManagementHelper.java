@@ -24,7 +24,9 @@ import org.wso2.carbon.rule.ws.ui.ns.NameSpacesInformation;
 import org.wso2.carbon.rule.ws.ui.ns.NameSpacesInformationRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Helper class to use various requirements such as saving each step of the rule service creation wizard
@@ -72,7 +74,7 @@ public class RuleServiceManagementHelper {
         }
 
         String serviceScope = request.getParameter("ruleServiceScope");
-        if(serviceScope != null && !"".equals(serviceScope)){
+        if (serviceScope != null && !"".equals(serviceScope)) {
             ruleService.setScope(serviceScope.trim());
 
         }
@@ -98,7 +100,7 @@ public class RuleServiceManagementHelper {
     public static void saveStep2(RuleService ruleService,
                                  HttpServletRequest request) {
 
-        String stepID = request.getParameter("stepID");
+            String stepID = request.getParameter("stepID");
         if (!"step2".equals(stepID)) {
             return;
         }
@@ -109,11 +111,43 @@ public class RuleServiceManagementHelper {
             ruleService.setRuleSet(ruleSet);
         }
 
+        List<String> scriptNameList = new ArrayList<String>();
         String ruleScriptType = request.getParameter("ruleSourceType");
-
         String ruleResourceType = request.getParameter("ruleResouceType");
+        Map<String, String> scriptList = (Map<String, String>) request.getSession().getAttribute("ruleScript");
+        //TODO add method ruleset.clear() to clear all existing rules
 
-        if ("key".equals(ruleScriptType)) {
+        String inlinedSource = request.getParameter("ruleSourceInlined");
+        if (inlinedSource != null && !"".equals(inlinedSource.trim())) {
+
+            Rule rule = new Rule();
+            ruleSet.addRule(rule);               http://www.lankaphones.com/samsung-phone-prices-in-sri-lanka.htm
+            rule.setSourceType(Constants.RULE_SOURCE_TYPE_INLINE);
+            rule.setResourceType(ruleResourceType);
+            rule.setValue(inlinedSource.trim());
+        } else if ("key".equals(ruleScriptType) || "url".equals(ruleScriptType) || "upload".equals(ruleResourceType)) {
+            ruleSet.clearRules();
+
+            List<String> paths = null;//= new ArrayList<String>();
+            if (scriptList != null && !scriptList.isEmpty()) {
+                paths = new ArrayList<String>(scriptList.keySet());
+            }
+
+            if (paths != null && !paths.isEmpty()) {
+                for (String scriptName : paths) {
+                    String sourceType = scriptList.get(scriptName);
+                    Rule rule = new Rule();
+                    rule.setSourceType(sourceType);
+                    rule.setResourceType(ruleResourceType);
+                    rule.setValue(scriptName.trim());
+                    ruleSet.addRule(rule);
+
+
+                }
+            }
+        }
+
+/*        if ("key".equals(ruleScriptType)) {
             String registryType = request.getParameter("registryResourcePath");
             int index = registryType.indexOf("/_system/governance/");
             int configIndex = registryType.indexOf("/_system/config/");
@@ -121,14 +155,13 @@ public class RuleServiceManagementHelper {
             if (registryType != null && !"".equals(registryType.trim())) {
 
                 List<Rule> rules = ruleSet.getRules();
-                //Todo : add more than 1 rule
+
+
                 Rule rule;
-                if(rules.size() == 0){
+                if (rules.size() == 0) {
                     rule = new Rule();
                     ruleSet.addRule(rule);
-                }
-                else
-                {
+                } else {
                     rule = rules.get(0);
                 }
                 rule.setSourceType(Constants.RULE_SOURCE_TYPE_REGISTRY);
@@ -143,19 +176,16 @@ public class RuleServiceManagementHelper {
                 rule.setValue(value);
 
             }
-        }
-        else if("url".equals(ruleScriptType)){      // ruleSourceURL
-             String ruleSourceURL = request.getParameter("ruleSourceURL");
+        } else if ("url".equals(ruleScriptType)) {      // ruleSourceURL
+            String ruleSourceURL = request.getParameter("ruleSourceURL");
             if (ruleSourceURL != null && !"".equals(ruleSourceURL.trim())) {
-               List<Rule> rules = ruleSet.getRules();
-                //Todo : add more than 1 rule
-                Rule rule ;
-                if(rules.size() == 0){
+                List<Rule> rules = ruleSet.getRules();
+
+                Rule rule;
+                if (rules.size() == 0) {
                     rule = new Rule();
                     ruleSet.addRule(rule);
-                }
-                else
-                {
+                } else {
                     rule = rules.get(0);
                 }
                 rule.setSourceType(Constants.RULE_SOURCE_TYPE_URL);
@@ -163,10 +193,23 @@ public class RuleServiceManagementHelper {
                 rule.setValue(ruleSourceURL.trim());
             }
 
-        }
-        else if ("upload".equals(ruleScriptType)) {
-            String filePath = (String) request.getSession().getAttribute("ruleScript");
-            if (filePath != null && !"".equals(filePath.trim())) {
+        } else if ("upload".equals(ruleScriptType)) {
+            //String filePath = (String) request.getSession().getAttribute("ruleScript");
+            ArrayList<String> filePaths = (ArrayList<String>) request.getSession().getAttribute("ruleScript");
+            if (filePaths != null && filePaths.size() > 0) {
+                List<Rule> rules = ruleSet.getRules();
+                rules.clear();
+                for (String filePath : filePaths) {
+                    Rule rule = new Rule();
+                    rule.setSourceType(Constants.RULE_SOURCE_TYPE_FILE);
+                    rule.setResourceType(ruleResourceType);
+                    rule.setValue(filePath.trim());
+                    rules.add(rule);
+
+                }
+
+            }
+            *//* if (filePath != null && !"".equals(filePath.trim())) {
               List<Rule> rules = ruleSet.getRules();
                 //Todo : add more than 1 rule
                 Rule rule;
@@ -181,27 +224,26 @@ public class RuleServiceManagementHelper {
                 rule.setSourceType(Constants.RULE_SOURCE_TYPE_FILE);
                 rule.setResourceType(ruleResourceType);
                 rule.setValue(filePath.trim());
-            }
+            }*//*
 
-        } else {
+        }
+        else {
             String inlinedSource = request.getParameter("ruleSourceInlined");
             if (inlinedSource != null && !"".equals(inlinedSource.trim())) {
-               List<Rule> rules = ruleSet.getRules();
+                List<Rule> rules = ruleSet.getRules();
                 //Todo : add more than 1 rule
-                Rule rule ;
-                if(rules.size() == 0){
+                Rule rule;
+                if (rules.size() == 0) {
                     rule = new Rule();
                     ruleSet.addRule(rule);
-                }
-                else
-                {
+                } else {
                     rule = rules.get(0);
                 }
                 rule.setSourceType(Constants.RULE_SOURCE_TYPE_INLINE);
                 rule.setResourceType(ruleResourceType);
                 rule.setValue(inlinedSource.trim());
             }
-        }
+        }*/
     }
 
     /**
@@ -221,7 +263,7 @@ public class RuleServiceManagementHelper {
 
         String stepID = request.getParameter("stepID");
         if (!"step5".equals(stepID)) {
-                        return;
+            return;
         }
 
         String operationName = request.getParameter("operationName");

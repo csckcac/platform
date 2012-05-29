@@ -22,6 +22,9 @@
 <%@ page import="org.wso2.carbon.rule.ws.ui.wizard.RuleServiceAdminClient" %>
 <%@ page import="org.wso2.carbon.rule.ws.ui.wizard.RuleServiceManagementHelper" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <script type="text/javascript" src="js/rule-services.js"></script>
@@ -42,94 +45,68 @@
     RuleService serviceDescription =
             ruleServiceAdminClient.getRuleServiceDescription(request);
     RuleServiceManagementHelper.saveStep1(serviceDescription, request);
-    Object ruleSourceAsObject = null;
+    String ruleValueZero = "";
 
 
-    boolean isSource = true;
-    boolean isRegistry = false;
+    boolean isInLined = true;
     boolean isPath = false;
+    boolean isRegistry = false;
     boolean isURL = false;
 
-    String path = (String) request.getSession().getAttribute("ruleScript");     // To get the uploaded file name
-    String key = null;
-    String url = null;
 
+    Map<String, String> scriptList = (Map<String, String>) request.getSession().getAttribute("ruleScript");
 
     if (serviceDescription != null) {
         RuleSet ruleSet = serviceDescription.getRuleSet();
         if (ruleSet != null) {
+            scriptList = new HashMap<String, String>();
+            if (ruleSet == null) {
+                ruleSet = new RuleSet();
+                serviceDescription.setRuleSet(ruleSet);
+            }
+
+
             List<Rule> ruleList = ruleSet.getRules();
-            int i = 1;
+            String sourceType = ruleList.get(0).getSourceType();
+            ruleValueZero = ruleList.get(0).getValue();
             for (Rule rule : ruleList) {
-                if (i == 1) {
-                    ruleSourceAsObject = rule.getValue();
-
-                    if (rule.getSourceType().equals("registry")) {
-                        isSource = false;
-                        isRegistry = true;
-                        isPath = false;
-                        isURL = false;
-                        String[] vale = ruleSourceAsObject.toString().split(":");
-                        String type = vale[0];
-                        String keyValue = vale[1];
-                        if (type.equals("conf")) {
-                            key = "/_system/config/" + keyValue;
-
-                        } else if (type.equals("gov")) {
-                            key = "/_system/governance/" + keyValue;
-
-                        }
-                    } else if (rule.getSourceType().equals("file")) {
-                        isSource = false;
-                        isRegistry = false;
-                        isPath = true;
-                        isURL = false;
-                        path = ruleSourceAsObject.toString();
-
-                    } else if (rule.getSourceType().equals("url")) {
-                        isSource = false;
-                        isRegistry = false;
-                        isPath = false;
-                        isURL = true;
-                        url = ruleSourceAsObject.toString();
-
-                    }
-
-                }
-            }
-
-        }
-
-
-    }
-
-    if(path != null && !"".equals(path)) {
-            isSource = false;
-            isPath = true;
-
-    }
-
-    if (ruleSourceAsObject == null || "".equals(ruleSourceAsObject)) {
-        if (key != null && !"".equals(key.trim())) {
-            isSource = false;
-            isRegistry = true;
-        }  else {
-            if (url != null && !"".equals(url)) {
-                isSource = false;
-                isURL = true;
+                String scriptValue = rule.getValue().toString();
+                String scriptType = rule.getSourceType().toString();
+                scriptList.put(scriptValue, scriptType);
 
             }
+            if (!sourceType.equals("inline")) {
+                isInLined = false;
+                request.getSession().setAttribute("ruleScript", scriptList);
+
+                if (sourceType.equals("file"))
+                    isPath = true;
+                else if (sourceType.equals("registry"))
+                    isRegistry = true;
+                else if (sourceType.equals("url"))
+                    isURL = true;
+                else
+                    isInLined = true;
+            }
         }
+
+
     }
 
-    key = key == null ? "" : key;
-    path = path == null ? "" : path;
-    url = url == null ? "" : url;
-    ruleSourceAsObject = ruleSourceAsObject == null ? "" : ruleSourceAsObject;
 
-    String ruleSourceDisplay = isSource ? "" : "display:none;";
-    String ruleKeyDisplay = isRegistry ? "" : "display:none;";
+
+    String ruleScriptListDisplay = "display:none;";
+    if (scriptList != null && !scriptList.isEmpty()) {
+        isInLined = false;
+        isPath = true;
+        ruleScriptListDisplay = "";
+        //TODO check the scriptlist 0 val and select the type
+
+    }
+    ruleValueZero = isInLined ? ruleValueZero : "";
+    String ruleSourceDisplay = isInLined ? "" : "display:none;";
     String ruleUploadDisplay = isPath ? "" : "display:none;";
+    String ruleKeyDisplay = isRegistry ? "" : "display:none;";
     String ruleURLDisplay = isURL ? "" : "display:none;";
     String rulesetCreationDisplay = "";
 
@@ -179,28 +156,20 @@
                 CARBON.showErrorDialog('<fmt:message key="inlined.script.empty"/>');
                 return false;
             }
-        } else if (document.getElementById('ruleScriptTypekey').checked) {
-            document.getElementById('ruleSourceType').value = "key";
-            value = document.getElementById("ruleSourceKey").value;
-            if (value == '') {
-                CARBON.showErrorDialog('<fmt:message key="key.script.empty"/>');
-                return false;
-            }
-        }
-        else if (document.getElementById('ruleScriptTypeurl').checked) {
-            document.getElementById('ruleSourceType').value = "url";
-            value = document.getElementById("ruleSourceURL").value;
-            if (value == '') {
-                CARBON.showErrorDialog('<fmt:message key="url.script.empty"/>');
-                return false;
-            }
         } else {
-            document.getElementById('ruleSourceType').value = "upload";
-            value = document.getElementById("uploadedFileName").value;
-            if (value == '') {
+            document.getElementById('ruleSourceType').value = "key";
+            var ruleScriptCount = document.getElementById("ruleScriptCount");
+            var ruleScriptHiddenCount = document.getElementById("ruleScriptHiddenCount");
+            var j = ruleScriptHiddenCount.value;
+            var i = ruleScriptCount.value;
+            if (i == 0 || j >= i) {
                 CARBON.showErrorDialog('<fmt:message key="upload.script.empty"/>');
                 return false;
+                //TODO add proper message
+
             }
+
+
         }
         document.dataForm.submit();
         return true;
@@ -213,10 +182,10 @@
             var index = ruleSourceKey.indexOf("/_system/governance/");
             var configIndex = ruleSourceKey.indexOf("/_system/config/");
             if (index >= 0) {
-                document.getElementById("ruleSourceKey").value =
+                document.getElementById("ruleSourceKey").value = "gov:" +
                         ruleSourceKey.substring("/_system/governance/".length);
             } else if (configIndex >= 0) {
-                document.getElementById("ruleSourceKey").value =
+                document.getElementById("ruleSourceKey").value = "conf:" +
                         ruleSourceKey.substring("/_system/config/".length);
             }
 
@@ -246,7 +215,7 @@
                     </td>
                     <td>
                         <%
-                            if (isSource) {
+                            if (isInLined) {
                         %>
                         <input type="radio" name="ruleScriptType"
                                id="ruleScriptTypeinlined"
@@ -370,30 +339,20 @@
                             <input type="hidden"
                                    value="<%=serviceDescription.getName()%>"
                                    name="ruleServiceName"/>
-                            <input id="uploadedFileName" type="hidden" value="<%=path%>"/>
+                                <%--<input id="uploadedFileName" type="hidden" value="<%=path%>"/>--%>
                             <input name="upload" type="button"
                                    class="button"
                                    value="<fmt:message key="upload"/> "
                                    onclick="validateRuleFileUpload();"/>
                         </td>
                     </tr>
-                    <% if (isPath) {%>
-                    <tr>
-                        <td><%if (!"".equals(path)) {%>
-                            <label><fmt:message
-                                    key="uploaded.script"/></label>
-                            : <%=path%>
-                            <%} else { %><label><fmt:message
-                                    key="not.yet.uploaded.script"/></label>
-                            <%} %></td>
-                    </tr>
-                    <%} %>
+
+
                 </table>
             </form>
         </td>
     </tr>
 </table>
-
 
 
 <table class="styledLeft">
@@ -405,8 +364,7 @@
                         <td><fmt:message key="rule.source.key"/></td>
                         <td>
                             <input class="longInput" type="text" name="ruleSourceKey"
-                                   id="ruleSourceKey"
-                                   value="<%=isRegistry?key.trim():""%>"/>
+                                   id="ruleSourceKey"/>
                         </td>
                         <td>
                             <a href="#registryBrowserLink"
@@ -420,22 +378,34 @@
                                onclick="showResourceTree('ruleSourceKey',onRegistryResourceSelect,'/_system/governance')"><fmt:message
                                     key="registry.governance"/></a>
                         </td>
+                        <td class="buttonRow">
+                            <input name="upload" type="button"
+                                   class="button"
+                                   value="<fmt:message key="add"/> "
+                                   onclick="addRuleScript('ruleSourceKey', 'registry');"/>
+                        </td>
                     </tr>
 
                     <tr id="ruleScriptURLTR" style="<%=ruleURLDisplay%>">
                         <td><fmt:message key="rule.source.url"/></td>
                         <td>
-                            <input  type="text" name="ruleSourceURL"
-                                   id="ruleSourceURL"  size="75"
-                                   value="<%=isURL?url.trim():""%>"/>
+                            <input type="text" name="ruleSourceURL"
+                                   id="ruleSourceURL" size="75"/>
+                        </td>
+                        <td class="buttonRow">
+                            <input name="upload" type="button"
+                                   class="button"
+                                   value="<fmt:message key="add"/> "
+                                   onclick="addRuleScript('ruleSourceURL','url');"/>
                         </td>
                     </tr>
+
 
                     <tr id="ruleScriptSourceTR" style="<%=ruleSourceDisplay%>">
                         <td><fmt:message key="rule.source.inlined"/></td>
                         <td><textarea cols="80" rows="15"
                                       name="ruleSourceInlined"
-                                      id="ruleSourceInlined"><%=ruleSourceAsObject.toString()%>
+                                      id="ruleSourceInlined"><%=ruleValueZero%>
                         </textarea></td>
                     </tr>
 
@@ -456,10 +426,62 @@
                 </table>
             </td>
         </tr>
+
+         <tr id="ruleScriptList" style="<%=ruleScriptListDisplay%>">
+                        <td>
+                            <table id="ruleScriptListTable" class="styledInner">
+                                <thead>
+                                <tbody id="ruleScriptListTBody">
+                                <%
+                                    int i = 0;
+                                    List<String> paths = null;
+                                    if (scriptList != null && !scriptList.isEmpty()) {
+                                        paths = new ArrayList<String>(scriptList.keySet());
+                                    }
+
+                                    if (paths != null && !paths.isEmpty()) {
+                                        for (String scriptName : paths) {
+                                            String sourceType = scriptList.get(scriptName);
+
+
+                                %>
+                                <tr id="ruleScriptListRaw<%=i%>">
+                                    <td>
+                                        <%=sourceType%>
+                                    </td>
+                                    <td>
+                                        <label><%=scriptName%>
+                                        </label>
+                                        <input type="hidden" name="ruleScriptName<%=i%>" id="ruleScriptName<%=i%>"
+                                               value="<%=scriptName%>"/>
+                                        <input type="hidden" name="ruleScriptSource<%=i%>" id="ruleScriptSource<%=i%>"
+                                               value="<%=sourceType%>"/>
+                                    </td>
+
+                                    <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
+                                           onclick="deleteScript('ruleScriptList','<%=i%>','<%=sourceType%>','<%=scriptName%>')"><fmt:message
+                                            key="delete"/></a></td>
+                                </tr>
+                                <%
+                                            i++;
+                                        }
+
+                                    } %>
+                                <input type="hidden" name="ruleScriptCount" id="ruleScriptCount"
+                                       value="<%=i%>"/>
+                                <input type="hidden" name="ruleScriptHiddenCount" id="ruleScriptHiddenCount"
+                                       value="<%=0%>"/>
+                                </tbody>
+                                </thead>
+                            </table>
+                        </td>
+
+
+                    </tr>
         <tr>
             <td class="buttonRow">
                 <input type="hidden" id="stepID" name="stepID" value="step2"/>
-                <input type="hidden" id="ruleSourceType" name="ruleSourceType"  value="inline"/>
+                <input type="hidden" id="ruleSourceType" name="ruleSourceType" value="inline"/>
                 <input type="hidden" id="registryResourcePath" name="registryResourcePath" value="">
                 <input type="hidden" id="ruleResourceURL" name="ruleResourceURL" value="">
                 <input class="button" type="button" value="< <fmt:message key="back"/>"

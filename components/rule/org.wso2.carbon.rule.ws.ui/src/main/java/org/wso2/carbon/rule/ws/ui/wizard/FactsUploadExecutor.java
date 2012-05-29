@@ -103,7 +103,19 @@ public class FactsUploadExecutor extends AbstractFileUploadExecutor {
                     String fileName = getFileName(fileItemData.getFileItem().getName());
                     adminClient.uploadRuleFile(ruleServiceName,
                             fileName, fileItemData.getDataHandler(), request);
-                    request.getSession().setAttribute("ruleScript", fileName);
+                    String[] ruleFileNames = adminClient.getRuleFileList(adminClient.getRuleServiceDescription(request),request.getSession());
+                    List<String> fileNames = new ArrayList<String>();
+                    fileNames = Arrays.asList(ruleFileNames);//(ArrayList<String>) request.getSession().getAttribute("ruleScript"); // String filePath = (String) request.getSession().getAttribute("ruleScript");
+                    Map<String, String>  scriptList = (Map<String, String>) request.getSession().getAttribute("ruleScript");
+                    if(scriptList == null){
+
+                        scriptList = new HashMap<String, String>();
+                    }
+                    for(String filename : fileNames){
+                        scriptList.put(filename, "file");
+
+                    }
+                    request.getSession().setAttribute("ruleScript", scriptList);
                     msg = "Rule Script file uploaded successfully.";
                     fileToRedirect = "/ruleservices/rule_service_wizard_step2.jsp";
                 }

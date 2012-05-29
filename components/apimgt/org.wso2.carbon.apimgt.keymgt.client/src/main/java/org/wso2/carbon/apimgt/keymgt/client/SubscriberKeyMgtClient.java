@@ -32,9 +32,7 @@ import java.net.URL;
 
 public class SubscriberKeyMgtClient {
 
-    private static Log log = LogFactory.getLog(SubscriberKeyMgtClient.class);
-    
-    private String authenticatedCookie;
+    private static Log log = LogFactory.getLog(SubscriberKeyMgtClient.class);       
 
     private APIKeyMgtSubscriberServiceStub subscriberServiceStub;
 
@@ -46,10 +44,11 @@ public class SubscriberKeyMgtClient {
             authenticationAdminStub.login(username, password, new URL(backendServerURL).getHost());
             ServiceContext serviceContext = authenticationAdminStub.
                     _getServiceClient().getLastOperationContext().getServiceContext();
-            authenticatedCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
+            String authenticatedCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
 
             if (log.isDebugEnabled()) {
-                log.debug("Authentication Successful with AuthenticationAdmin. Authenticated Cookie ID : " + authenticatedCookie);
+                log.debug("Authentication Successful with AuthenticationAdmin. " +
+                        "Authenticated Cookie ID : " + authenticatedCookie);
             }
 
             subscriberServiceStub = new APIKeyMgtSubscriberServiceStub(
@@ -57,7 +56,8 @@ public class SubscriberKeyMgtClient {
             ServiceClient client = subscriberServiceStub._getServiceClient();
             Options options = client.getOptions();
             options.setManageSession(true);
-            options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, authenticatedCookie);
+            options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
+                    authenticatedCookie);
         } catch (Exception e){
             String errorMsg = "Error when instantiating SubscriberKeyMgtClient.";
             log.error(errorMsg, e);

@@ -40,9 +40,9 @@ $(document).ready(function () {
             if (result.error == false) {
                 $('#messageModal').html($('#confirmation-data').html());
                 $('#messageModal h3.modal-title').html('API Provider');
-                $('#messageModal div.modal-body').html('\n\nSuccessfully subscribed to the API.\n Do you want to go to the subscription page?');
-                $('#messageModal a.btn-primary').html('Yes');
-                $('#messageModal a.btn-other').html('No');
+                $('#messageModal div.modal-body').html('\n\nCongratulations! You have successfully subscribed to the API. Please go to \'My Subscriptions\' page to review your subscription and generate API keys.');
+                $('#messageModal a.btn-primary').html('Go to My Subscriptions');
+                $('#messageModal a.btn-other').html('Stay on this page');
                 $('#messageModal a.btn-other').click(function() {
                     window.location.reload();
                 });

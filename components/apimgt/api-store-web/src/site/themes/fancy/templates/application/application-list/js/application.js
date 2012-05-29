@@ -31,7 +31,7 @@ function deleteApp(linkObj) {
     var appName = $(theTr).attr('data-value');
     $('#messageModal').html($('#confirmation-data').html());
     $('#messageModal h3.modal-title').html('API Provider');
-    $('#messageModal div.modal-body').html('\n\nDo you want to remove the application "' + appName + '"?');
+    $('#messageModal div.modal-body').html('\n\nAre you sure you want to remove the application "' + appName + '"? This will cancel all the existing subscriptions and keys associated with the application.');
     $('#messageModal a.btn-primary').html('Yes');
     $('#messageModal a.btn-other').html('No');
     $('#messageModal a.btn-primary').click(function() {

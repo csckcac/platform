@@ -307,4 +307,16 @@ public class RuleServiceAdmin extends AbstractAdmin {
                 Constants.RULE_SERVICE_ARCHIVE_EXTENSION);
         adminHandler.deleteFactArchive(axisConfig, serviceName, fileName);
     }
+
+    public String[] getRuleFileList(String serviceName, String fileName) throws RuleServiceAdminException {
+        AxisConfiguration axisConfig = getAxisConfig();
+        RuleServiceAdminHandler adminHandler = getRuleServiceAdminHandler(Constants.RULE_SERVICE_ARCHIVE_EXTENSION);
+        return adminHandler.getRuleFileList(axisConfig, serviceName, fileName);
+    }
+
+    public void deleteRuleFile(String serviceName, String fileName) throws RuleServiceAdminException {
+        AxisConfiguration axisConfig = getAxisConfig();
+        RuleServiceAdminHandler adminHandler = getRuleServiceAdminHandler(Constants.RULE_SERVICE_ARCHIVE_EXTENSION);
+        adminHandler.deleteRuleFile(axisConfig, serviceName, fileName);
+    }
 }

@@ -107,6 +107,27 @@ public interface RuleServiceAdminHandler {
     public void deleteFactArchive(AxisConfiguration axisConfiguration,
                                 String serviceName,
                                 String fileName) throws RuleServiceAdminException;
+    /**
+     * Uploads the rule script for a rule service
+     *
+     * @param axisConfiguration Axis2 Environment configuration
+     * @param serviceName       the name of the rule service
+     * @param fileName          the rule script file name
+     */
+    public String[] getRuleFileList(AxisConfiguration axisConfiguration,
+                               String serviceName,
+                               String fileName) throws RuleServiceAdminException;
+
+    /**
+     * Delete the rule script in a rule service
+     *
+     * @param axisConfiguration Axis2 Environment configuration
+     * @param serviceName       the name of the rule service
+     * @param fileName          the rule script file name
+     */
+    public void deleteRuleFile(AxisConfiguration axisConfiguration,
+                               String serviceName,
+                               String fileName) throws RuleServiceAdminException;
 }
 
 

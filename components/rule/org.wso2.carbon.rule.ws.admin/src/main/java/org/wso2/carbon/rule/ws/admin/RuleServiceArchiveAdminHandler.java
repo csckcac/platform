@@ -78,9 +78,9 @@ public class RuleServiceArchiveAdminHandler extends AbstractRuleServiceAdminHand
 //            }
 //
 //        } else {
-            if (serviceXMLFile.exists()) {
-                serviceXMLFile.delete();
-            }
+        if (serviceXMLFile.exists()) {
+            serviceXMLFile.delete();
+        }
 //        }
 
         File ruleFile = new File(paths.getWorkingDirPath() + File.separator + "META-INF" +
@@ -105,7 +105,7 @@ public class RuleServiceArchiveAdminHandler extends AbstractRuleServiceAdminHand
             throw new RuleServiceAdminException("Cannot write to the rule service file : " +
                     ruleFile, e);
         } finally {
-            if (os != null){
+            if (os != null) {
                 try {
                     os.close();
                 } catch (IOException e) {
@@ -243,13 +243,13 @@ public class RuleServiceArchiveAdminHandler extends AbstractRuleServiceAdminHand
     }
 
     public String[] getFactArchiveList(AxisConfiguration axisConfiguration, String serviceName) throws RuleServiceAdminException {
-         final List<String> factArchives = new ArrayList<String>();
+        final List<String> factArchives = new ArrayList<String>();
         Paths paths = createTempRuleServiceFile(axisConfiguration, serviceName);
         File lib = new File(paths.getWorkingDirPath() + File.separator + "lib");
         if (lib.exists()) {
             File[] jars = FileManipulator.getMatchingFiles(
                     lib.getAbsolutePath(), null, ".jar");
-            for(File file : jars){
+            for (File file : jars) {
                 factArchives.add(file.getName());
 
             }
@@ -258,8 +258,8 @@ public class RuleServiceArchiveAdminHandler extends AbstractRuleServiceAdminHand
     }
 
     public void deleteFactArchive(AxisConfiguration axisConfiguration, String serviceName, String fileName) throws RuleServiceAdminException {
-       Paths paths = createTempRuleServiceFile(axisConfiguration, serviceName);
-       File lib = new File(paths.getWorkingDirPath() + File.separator + "lib");
+        Paths paths = createTempRuleServiceFile(axisConfiguration, serviceName);
+        File lib = new File(paths.getWorkingDirPath() + File.separator + "lib");
 
         File factFile = new File(lib, fileName);
         File absoluteFile = factFile.getAbsoluteFile();
@@ -267,6 +267,33 @@ public class RuleServiceArchiveAdminHandler extends AbstractRuleServiceAdminHand
         if (absoluteFile.exists()) {
             absoluteFile.delete();
         }
+    }
+
+    @Override
+    public String[] getRuleFileList(AxisConfiguration axisConfiguration, String serviceName, String fileName) throws RuleServiceAdminException {
+        final List<String> ruleFiles = new ArrayList<String>();
+        Paths paths = createTempRuleServiceFile(axisConfiguration, serviceName);
+        File conf = new File(paths.getWorkingDirPath() + File.separator + "conf");
+        if (conf.exists()) {
+            File[] drls = FileManipulator.getMatchingFiles(
+                    conf.getAbsolutePath(), null, ".drl");
+            for (File file : drls) {
+                ruleFiles.add(file.getName());
+
+            }
+        }
+        return ruleFiles.toArray(new String[ruleFiles.size()]);
+    }
+
+    @Override
+    public void deleteRuleFile(AxisConfiguration axisConfiguration, String serviceName, String fileName) throws RuleServiceAdminException {
+        Paths paths = createTempRuleServiceFile(axisConfiguration, serviceName);
+
+        File conf = new File(paths.getWorkingDirPath() + File.separator + "conf");
+        File factFile = new File(conf, fileName);
+        File absoluteFile = factFile.getAbsoluteFile();
+
+        absoluteFile.delete();
     }
 
     private Paths createTempRuleServiceFile(AxisConfiguration axisConfig,

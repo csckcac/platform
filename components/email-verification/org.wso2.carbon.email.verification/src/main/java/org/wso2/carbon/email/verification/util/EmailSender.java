@@ -75,6 +75,7 @@ public class EmailSender extends Thread {
         Map<String, String> headerMap = new HashMap<String, String>();
         Map<String, String> userParams = new HashMap<String, String>();
         userParams.put("admin-name", userParameters.get("admin"));
+        userParams.put("user-name", userParameters.get("userName"));
         userParams.put("domain-name", userParameters.get("tenantDomain"));
         userParams.put("first-name", userParameters.get("first-name"));
         try {

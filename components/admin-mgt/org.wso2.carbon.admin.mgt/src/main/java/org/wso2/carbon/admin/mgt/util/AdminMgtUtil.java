@@ -129,13 +129,13 @@ public class AdminMgtUtil {
     /**
      * Cleanup the used resources
      *
-     * @param adminName, admin name
+     * @param tenantLessUserName, userName without tenant
      * @param domain,    The tenant domain
      * @throws AdminManagementException, if the cleanup failed.
      */
     public static void cleanupResources(
-            String adminName, String domain) throws AdminManagementException {
-        String adminManagementPath = getAdminManagementPath(adminName, domain);
+            String tenantLessUserName, String domain) throws AdminManagementException {
+        String adminManagementPath = getAdminManagementPath(tenantLessUserName, domain);
         UserRegistry superTenantSystemRegistry;
         Resource resource;
         try {
@@ -158,15 +158,15 @@ public class AdminMgtUtil {
     /**
      * Gets the userName from the tenantLess userName and Domain
      *
-     * @param adminName, userName without domain
+     * @param tenantLessUserName, userName without domain
      * @param domain,    domainName
      * @return complete userName
      */
-    public static String getUserNameWithDomain(String adminName, String domain) {
-        String userName = adminName;
+    public static String getUserNameWithDomain(String tenantLessUserName, String domain) {
+        String userName = tenantLessUserName;
         if (!domain.trim().equals("")) {
             // get the userName with tenant domain.
-            userName = adminName + "@" + domain;
+            userName = tenantLessUserName + "@" + domain;
         }
         return userName;
     }

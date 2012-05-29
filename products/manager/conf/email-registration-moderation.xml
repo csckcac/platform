@@ -29,10 +29,10 @@ Hi,
 
 A new tenant has registered an account in WSO2 StratosLive.
 
-Admin Name: {admin-name}
+Admin Name: {user-name}
 Domain: {domain-name}
 
-User Name: {admin-name}@{domain-name}
+User Name: {user-name}@{domain-name}
 
 Please click the following link to complete the registration request. The registered tenant will not be able to 
 log in or use their account till then.

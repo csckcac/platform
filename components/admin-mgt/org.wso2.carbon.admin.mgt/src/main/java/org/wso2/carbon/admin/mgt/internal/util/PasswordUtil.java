@@ -91,7 +91,8 @@ public class PasswordUtil {
         // adminMgtPath of the tenant.
         String confirmationKey = generateConfirmationKey(tenantLessUserName, domainName);
         Map<String, String> dataToStore =
-                populateDataMap(adminInfoBean, tenantLessUserName, email, tenantId, confirmationKey);
+                populateDataMap(adminInfoBean, tenantLessUserName, userName, email, 
+                        tenantId, confirmationKey);
 
         return verifyPasswordResetRequest(userName, dataToStore);
     }
@@ -146,6 +147,7 @@ public class PasswordUtil {
 
     private static Map<String, String> populateDataMap(AdminMgtInfoBean adminInfoBean,
                                                        String tenantLessUserName,
+                                                       String userName,
                                                        String email, int tenantId,
                                                        String confirmationKey) throws
             AdminManagementException {
@@ -154,6 +156,7 @@ public class PasswordUtil {
         dataToStore.put("first-name", ClaimsMgtUtil.getFirstName(
                 AdminManagementServiceComponent.getRealmService(), tenantId));
         dataToStore.put("admin", tenantLessUserName);
+        dataToStore.put("userName", userName);
         dataToStore.put("tenantDomain", adminInfoBean.getTenantDomain());
         dataToStore.put("confirmationKey", confirmationKey);
         return dataToStore;

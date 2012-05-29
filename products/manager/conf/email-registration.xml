@@ -29,10 +29,10 @@ Hi {first-name},
 
 Thank you for registering an account in WSO2 Cloud Services.
 
-Your Admin Name: {admin-name}
+Your Admin Name: {user-name}
 Your Domain: {domain-name}
 
-Your User Name: {admin-name}@{domain-name}
+Your User Name: {user-name}@{domain-name}
 
 Please click the following link to verify your email address.
     </body>

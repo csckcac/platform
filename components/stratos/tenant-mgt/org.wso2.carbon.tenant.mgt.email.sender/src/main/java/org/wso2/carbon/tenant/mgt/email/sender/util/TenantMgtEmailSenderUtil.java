@@ -112,7 +112,7 @@ public class TenantMgtEmailSenderUtil {
         // load the mail configuration
         Map<String, String> userParams = new HashMap<String, String>();
         userParams.put("first-name", firstName);
-        userParams.put("admin-name", adminName);
+        userParams.put("user-name", adminName);
         userParams.put("domain-name", domainName);
 
         try {
@@ -162,7 +162,7 @@ public class TenantMgtEmailSenderUtil {
 
         // load the mail configuration
         Map<String, String> userParams = new HashMap<String, String>();
-        userParams.put("admin-name", tenantInfoBean.getAdmin());
+        userParams.put("user-name", tenantInfoBean.getAdmin());
         userParams.put("first-name", firstName);
         userParams.put("domain-name", tenantInfoBean.getTenantDomain());
         userParams.put("password", tenantInfoBean.getAdminPassword());
@@ -300,7 +300,7 @@ public class TenantMgtEmailSenderUtil {
             Map<String, String> dataToStore = new HashMap<String, String>();
             dataToStore.put("email", CommonUtil.getSuperAdminEmail());
             dataToStore.put("first-name", tenantInfoBean.getFirstname());
-            dataToStore.put("admin", tenantInfoBean.getAdmin());
+            dataToStore.put("userName", tenantInfoBean.getAdmin());
             dataToStore.put("tenantDomain", tenantInfoBean.getTenantDomain());
             dataToStore.put("confirmationKey", confirmationKey);
 
@@ -330,7 +330,7 @@ public class TenantMgtEmailSenderUtil {
             Map<String, String> dataToStore = new HashMap<String, String>();
             dataToStore.put("email", tenantInfoBean.getEmail());
             dataToStore.put("first-name", tenantInfoBean.getFirstname());
-            dataToStore.put("admin", tenantInfoBean.getAdmin());
+            dataToStore.put("userName", tenantInfoBean.getAdmin());
             dataToStore.put("tenantDomain", tenantInfoBean.getTenantDomain());
             dataToStore.put("confirmationKey", confirmationKey);
 
@@ -472,7 +472,7 @@ public class TenantMgtEmailSenderUtil {
 
         // load the mail configuration
         Map<String, String> userParams = new HashMap<String, String>();
-        userParams.put("admin-name", adminName);
+        userParams.put("user-name", adminName);
         userParams.put("domain-name", domainName);
         userParams.put("email-address", email);
         userParams.put("first-name", firstName);

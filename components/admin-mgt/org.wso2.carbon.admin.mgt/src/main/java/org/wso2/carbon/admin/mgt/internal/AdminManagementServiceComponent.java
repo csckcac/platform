@@ -82,8 +82,8 @@ public class AdminManagementServiceComponent {
                     org.wso2.carbon.email.verification.util.Util.
                             loadeMailVerificationConfig(confXml);
         } catch(Exception e) {
-            String msg = "Email Registration Configuration file not found. " +
-                    "Pls check the repository/conf folder.";
+            String msg = "Email Configuration file for the password reset feature not found. " +
+                    "Pls check the repository/conf/email folder for email-admin-config.xml.";
             log.error(msg);
         }
     }

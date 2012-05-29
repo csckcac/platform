@@ -20,7 +20,7 @@
                     APIs <span class="divider">/</span>
                     </li>
                     <li>
-                        <a href="<%=listMappedUrl%>">My APIs</a>
+                        <a href="<%=listMappedUrl%>">All</a>
                     </li>
                 <% } %>
                 <% if(reqUrl.indexOf(infoUrl)>=0||reqUrl.indexOf(infoMappedUrl)>=0){%>
@@ -28,7 +28,7 @@
                     APIs <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=listMappedUrl%>">My APIs</a>
+                    <a href="<%=listMappedUrl%>">All</a>
                 </li>
                 <li>
                     <span class="divider">/</span>

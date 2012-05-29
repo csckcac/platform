@@ -3,7 +3,7 @@ include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
-    var name, version, api, result, mod,isPermitted,user = jagg.getUser();
+    var name, version, api, result, mod,isPermitted,isCreatePermitted,user = jagg.getUser();
     if (!user) {
         response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/login.jag"));
         return;
@@ -15,6 +15,7 @@ var site = require("/site/conf/site.json");
 
     mod = jagg.module("api");
     isPermitted = mod.hasPublishPermission();
+    isCreatePermitted = mod.hasCreatePermission();
     result = mod.getAPI({name:name, version:version, provider:provider});
     api = result.api;
     jagg.render({
@@ -32,7 +33,8 @@ var site = require("/site/conf/site.json");
                             "name":"item-info",
                             "inputs":{
                                 "api":api,
-                                "isPermitted":isPermitted.permitted
+                                "isPermitted":isPermitted.permitted,
+                                "isCreatePermitted":isCreatePermitted.permitted
                             }
                         }
                     }

@@ -1,5 +1,5 @@
 <% jagg.template("overview", function(inputs, outputs, jagg) { %>
-<% var api=outputs.api; %>
+<% var api=outputs.api; var createPermitted=outputs.isCreatePermitted;%>
 <div class="row-fluid">
     <div class="span2">
          <% jagg.includeBlock("item-nav-list",{api:api}); %>
@@ -33,7 +33,7 @@
 </div>
 
 <!-- Row -->
-
+<%if(createPermitted){%>
 <div class="row-fluid">
     <div class="well" id="copy-api">
         <label>To Version</label>
@@ -47,6 +47,6 @@
         <button type="submit" class="btn" onclick="javascript:$('#copy-api').toggle('slow');$('#show-copy-api').toggle()">Copy</button>
     </div>
 </div>
-
+<%}%>
 
 <% }); %>

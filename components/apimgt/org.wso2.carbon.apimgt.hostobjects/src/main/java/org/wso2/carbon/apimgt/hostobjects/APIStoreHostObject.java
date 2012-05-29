@@ -28,6 +28,7 @@ import org.wso2.carbon.apimgt.hostobjects.internal.HostObjectComponent;
 import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
+import org.wso2.carbon.apimgt.impl.UserAwareAPIConsumer;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIInfoDTO;
 import org.wso2.carbon.apimgt.keymgt.client.SubscriberKeyMgtClient;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
@@ -1467,4 +1468,20 @@ public class APIStoreHostObject extends ScriptableObject {
 		return true;
 
 	}
+
+    public static boolean jsFunction_hasSubscribePermission(Context cx, Scriptable thisObj,
+                                                            Object[] args,
+                                                            Function funObj)
+            throws ScriptException {
+        APIConsumer consumer = getAPIConsumer(thisObj);
+        if (consumer instanceof UserAwareAPIConsumer) {
+            try {
+                ((UserAwareAPIConsumer) consumer).checkPermission(APIConstants.Permissions.API_SUBSCRIBE);
+                return true;
+            } catch (APIManagementException e) {
+                return false;
+            }
+        }
+        return false;
+    }
 }

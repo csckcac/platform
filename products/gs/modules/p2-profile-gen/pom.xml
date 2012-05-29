@@ -21,11 +21,11 @@
 
 
     <parent>
-    	<groupId>org.wso2.gs</groupId>
-    	<artifactId>wso2gs-parent</artifactId>
+        <groupId>org.wso2.gs</groupId>
+        <artifactId>wso2gs-parent</artifactId>
         <version>1.3.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
-    </parent> 
+    </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>gadget-profile-gen</artifactId>
     <version>1.3.1-SNAPSHOT</version>
@@ -84,8 +84,12 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
-				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}</featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}
+                                </featureArtifactDef>
                                 <!-- END MT -->
                                 <!--Dashboard Features-->
                                 <featureArtifactDef>
@@ -100,7 +104,7 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.dashboard.mgt.users.feature:${carbon.version}
                                 </featureArtifactDef>
-<featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.dashboard.mgt.theme.feature:${carbon.version}
                                 </featureArtifactDef>
 
@@ -112,11 +116,11 @@
                                     org.wso2.carbon:org.wso2.carbon.dashboard.social.feature:${carbon.version}
                                 </featureArtifactDef-->
                                 <!--END Dashboard Features-->
- <featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.dashboard.themepopulator.server.feature:${carbon.version}
                                 </featureArtifactDef>
 
-                                 <!--  Gadget editor -->
+                                <!--  Gadget editor -->
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.gadget.editor.ui.feature:${carbon.version}
                                 </featureArtifactDef>
@@ -124,7 +128,7 @@
                                     org.wso2.carbon:org.wso2.carbon.gadget.editor.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <!-- End Gadget editor -->
- 				<!--featureArtifactDef>
+                                <!--featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.gadget.initializer.feature:${carbon.version}
                                 </featureArtifactDef-->
 
@@ -174,7 +178,7 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.registry.social.feature:${carbon.version}
                                 </featureArtifactDef>
-<featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.gs:org.wso2.gs.styles.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -187,7 +191,7 @@
                                 <featureArtifactDef>
                                     org.wso2.gs:org.wso2.stratos.gadget.menu.feature:${stratos.version}
                                 </featureArtifactDef>
-                                
+
 
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.authenticator.token.feature:${carbon.version}
@@ -200,24 +204,38 @@
                                     org.wso2.carbon:org.wso2.carbon.application.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
 
-                                 <featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.application.deployer.gadget.feature:${carbon.version}
                                 </featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}
+                                </featureArtifactDef>
 
 
-                                <!-- GApp SSO features --> 
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.gapp.feature:${stratos.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.relying.party.feature:${carbon.version}
-                                </featureArtifactDef>                            
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.core.feature:${carbon.version}
+                                <!-- GApp SSO features -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.stratos.gapp.feature:${stratos.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.relying.party.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.identity.core.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <!-- End GApp SSO features -->
 
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}</featureArtifactDef>
-    				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.issue.tracker.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.issue.tracker.feature:${carbon.version}
+                                </featureArtifactDef>
 
                             </featureArtifacts>
                         </configuration>
@@ -261,7 +279,7 @@
                                     <id>org.wso2.carbon.dashboard.mgt.users.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-<feature>
+                                <feature>
                                     <id>org.wso2.carbon.dashboard.mgt.theme.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
@@ -271,7 +289,7 @@
                                     </id>
                                     <version>${carbon.version}</version>
                                 </feature>
-<feature>
+                                <feature>
                                     <id>
                                         org.wso2.carbon.dashboard.themepopulator.server.feature.group
                                     </id>
@@ -290,7 +308,7 @@
                                     <version>${carbon.version}</version>
                                 </feature>
 
-                                 <feature>
+                                <feature>
                                     <id>org.wso2.carbon.admin.mgt.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
@@ -304,7 +322,7 @@
                                 </feature>
                                 <!-- END Dashboard-->
 
-				<feature>
+                                <feature>
                                     <id>
                                         org.wso2.carbon.gadget.editor.ui.feature.group
                                     </id>
@@ -316,7 +334,7 @@
                                     </id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                      <!--feature>
+                                <!--feature>
                                     <id>
                                         org.wso2.carbon.gadget.initializer.feature.group
                                     </id>
@@ -381,7 +399,7 @@
                                     <id>org.wso2.carbon.registry.social.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
- <feature>
+                                <feature>
                                     <id>org.wso2.gs.styles.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
@@ -397,7 +415,7 @@
                                     <id>org.wso2.stratos.gadget.menu.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
-                               
+
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.token.feature.group
                                     </id>
@@ -420,7 +438,7 @@
                                 </feature>
 
 
-                                <!-- GApp SSO features --> 
+                                <!-- GApp SSO features -->
                                 <feature>
                                     <id>org.wso2.carbon.stratos.gapp.feature.group</id>
                                     <version>${stratos.version}</version>
@@ -443,11 +461,11 @@
                                     <id>org.wso2.carbon.issue.tracker.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-				<feature>
+                                <feature>
                                     <id>org.wso2.carbon.stratos.usage.agent.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
- 				<feature>
+                                <feature>
                                     <id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
@@ -456,27 +474,27 @@
                     </execution>
                 </executions>
             </plugin>
-	<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-antrun-plugin</artifactId>
-<version>1.1</version>
-<executions>
-    <execution>
-        <phase>package</phase>
-        <configuration>
-            <tasks>
-                <replace token="false" value="true"
-                         dir="target/wso2carbon-core-4.0.0-SNAPSHOT/repository/components/configuration/org.eclipse.equinox.simpleconfigurator">
-                    <include name="**/bundles.info"/>
-                </replace>
-            </tasks>
-        </configuration>
-        <goals>
-            <goal>run</goal>
-        </goals>
-    </execution>
-</executions>
-</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks>
+                                <replace token="false" value="true"
+                                         dir="target/wso2carbon-core-4.0.0-SNAPSHOT/repository/components/configuration/org.eclipse.equinox.simpleconfigurator">
+                                    <include name="**/bundles.info"/>
+                                </replace>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

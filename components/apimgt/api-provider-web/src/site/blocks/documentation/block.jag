@@ -5,7 +5,8 @@ jagg.block("documentation", {
     },
    getInputs:function () {
         return {
-            "api":null
+            "api":null,
+            "isCreatePermitted":null
         }
     }
 

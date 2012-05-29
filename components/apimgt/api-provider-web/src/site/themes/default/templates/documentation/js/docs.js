@@ -1,4 +1,4 @@
-var addNewDoc = function () {
+var addNewDoc = function (provider) {
     var apiName = $("#item-info h2")[0].innerHTML.split("-v")[0];
     var version = $("#item-info h2")[0].innerHTML.split("-v")[1];
     var docName = $("#docName").val();
@@ -8,7 +8,7 @@ var addNewDoc = function () {
     var docUrl = $("#docUrl").val();
 
     jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"addDocumentation",
-        apiName:apiName, version:version,docName:docName,docType:docType,summary:summary,sourceType:sourceType,
+        provider:provider,apiName:apiName, version:version,docName:docName,docType:docType,summary:summary,sourceType:sourceType,
         docUrl:docUrl},
               function (result) {
                   if (!result.error) {
@@ -24,9 +24,9 @@ var addNewDoc = function () {
 };
 
 
-var removeDocumentation = function (apiName, version, docName, docType) {
+var removeDocumentation = function (provider,apiName, version, docName, docType) {
 
-    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"removeDocumentation",
+    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"removeDocumentation",provider:provider,
         apiName:apiName, version:version,docName:docName,docType:docType},
               function (result) {
                   if (!result.error) {
@@ -39,7 +39,7 @@ var removeDocumentation = function (apiName, version, docName, docType) {
 
 };
 
-var copyDocumentation = function (apiName, version, docName, docType, summary) {
+var copyDocumentation = function (docName, docType, summary) {
     $('#newDoc .btn-primary').text('update');
     $('#newDoc').show('slow');
     $('#newDoc #docName').val(docName + '-copy');
@@ -52,7 +52,7 @@ var copyDocumentation = function (apiName, version, docName, docType, summary) {
     }
 };
 
-var updateDocumentation = function (apiName, version, docName, docType, summary, docUrl) {
+var updateDocumentation = function (docName, docType, summary, docUrl) {
     $('#newDoc .btn-primary').text('update');
     $('#newDoc').show('slow');
     $('#newDoc #docName').val(docName);
@@ -70,12 +70,12 @@ var updateDocumentation = function (apiName, version, docName, docType, summary,
     }
 };
 
-var editInlineContent = function (apiName, version, docName) {
+var editInlineContent = function (provider,apiName, version, docName) {
     var current = window.location.pathname;
     if (current.indexOf("item-info.jag") >= 0) {
-        window.open("inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version);
+        window.open("inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version+"&provider=" + provider);
     } else {
-        window.open("site/pages/inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version);
+        window.open("site/pages/inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version+"&provider=" + provider);
     }
 
 };

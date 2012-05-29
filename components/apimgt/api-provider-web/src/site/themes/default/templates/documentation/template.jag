@@ -4,7 +4,7 @@
         var user = jagg.getUser();
         var mod = jagg.module("documentation");
         var apiData={};
-        apiData.provider= user.username;
+        apiData.provider= api.provider;
         apiData.name= api.name;
         apiData.version= api.version;
         var result = mod.getAllDocumentation(apiData);
@@ -91,7 +91,7 @@
 
             <div class="span12">
                 <div class="control-group">
-                    <button type="button" class="btn btn-primary" onclick="addNewDoc()">Add Document</button>
+                    <button type="button" class="btn btn-primary" onclick="addNewDoc('<%=api.provider%>')">Add Document</button>
                     <button class="btn" onclick='clearDocs()'>Cancel</button>
                 </div>
             </div>
@@ -131,11 +131,11 @@
                     <td><a href="#"><%=user.username%></a></td>
                     <td><%=doc.lastUpdated%></td>
                     <td> <% if(doc.sourceType == "INLINE") { %>
-                        <a href="javascript:editInlineContent('<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Edit Content | </a>
+                        <a href="javascript:editInlineContent('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Edit Content | </a>
                         <% } %>
-                        <a href="javascript:updateDocumentation('<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Update | </a>
-                        <a href="javascript:removeDocumentation('<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>')">Delete | </a>
-                        <a href="javascript:copyDocumentation('<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>')">Copy</a>
+                        <a href="javascript:updateDocumentation('<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Update | </a>
+                        <a href="javascript:removeDocumentation('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>')">Delete | </a>
+                        <a href="javascript:copyDocumentation('<%=doc.name%>','<%=doc.type%>')">Copy</a>
                     </td>
                 </tr>
                 <% } %>

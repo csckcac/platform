@@ -49,7 +49,7 @@
                         </property>
                         <property>
                             <name>samples.dir</name>
-                            <value>${basedir}/../../samples/product/dbs</value>
+                            <value>${basedir}/../../samples/dbs</value>
                         </property>
                         <property>
                             <name>extracted.dir</name>

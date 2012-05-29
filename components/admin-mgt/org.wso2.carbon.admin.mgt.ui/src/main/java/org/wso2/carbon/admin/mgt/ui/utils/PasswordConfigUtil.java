@@ -54,7 +54,7 @@ public class PasswordConfigUtil {
      * @return true if reset password
      * @throws UIException if failed to reset the password
      */
-    public static boolean sendResetPasswordLink(HttpServletRequest request, ServletConfig config,
+    public static boolean initiatePasswordReset(HttpServletRequest request, ServletConfig config,
                                         HttpSession session) throws UIException {
         String admin = "";
         String domain = "";
@@ -79,7 +79,7 @@ public class PasswordConfigUtil {
 
             AdminManagementClient adminManagementClient =
                     new AdminManagementClient(config, session);
-            return adminManagementClient.sendResetPasswordLink(adminInfoBean, captchaInfoBean);
+            return adminManagementClient.initiatePasswordReset(adminInfoBean, captchaInfoBean);
         } catch (Exception e) {
             AxisFault fault = new AxisFault(e.getMessage());
             String msg = fault.getReason() + " Failed to reset password. tenant-domain: " + domain +

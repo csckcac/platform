@@ -115,9 +115,9 @@ public class AdminManagementClient {
      * @return true/false
      * @throws Exception, if sending the link failed
      */
-    public boolean sendResetPasswordLink(
+    public boolean initiatePasswordReset(
             AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean) throws Exception {
-        return stub.resetPassword(adminInfoBean, captchaInfoBean);
+        return stub.initiatePasswordReset(adminInfoBean, captchaInfoBean);
     }
 
     /**

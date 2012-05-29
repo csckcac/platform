@@ -51,7 +51,7 @@ public class AdminManagementService {
      * @return true if successful
      * @throws Exception, if exception occurred in validating the domain.
      */
-    public boolean resetPassword(    //initiatePasswordReset
+    public boolean initiatePasswordReset(
             AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean) throws Exception {
 
         //processes the captchaInfoBean
@@ -69,7 +69,7 @@ public class AdminManagementService {
                 return false;
             }
         }
-        return PasswordUtil.initiateResetPassword(adminInfoBean);
+        return PasswordUtil.initiatePasswordReset(adminInfoBean);
     }
 
     /**

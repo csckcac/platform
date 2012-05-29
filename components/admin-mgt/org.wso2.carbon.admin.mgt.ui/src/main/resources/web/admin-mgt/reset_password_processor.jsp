@@ -32,7 +32,7 @@
 <%
 
     try {
-        boolean success = PasswordConfigUtil.sendResetPasswordLink(request, config, session);
+        boolean success = PasswordConfigUtil.initiatePasswordReset(request, config, session);
 
         if (success) { %>
 

@@ -58,7 +58,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="resetPassword">
+            <xs:element name="initiatePasswordReset">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="adminInfoBean" nillable="true" type="ax2379:AdminMgtInfoBean" />
@@ -66,7 +66,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="resetPasswordResponse">
+            <xs:element name="initiatePasswordResetResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:boolean" />
@@ -135,11 +135,11 @@
     <wsdl:message name="confirmUserResponse">
         <wsdl:part name="parameters" element="ns:confirmUserResponse" />
     </wsdl:message>
-    <wsdl:message name="resetPasswordRequest">
-        <wsdl:part name="parameters" element="ns:resetPassword" />
+    <wsdl:message name="initiatePasswordResetRequest">
+        <wsdl:part name="parameters" element="ns:initiatePasswordReset" />
     </wsdl:message>
-    <wsdl:message name="resetPasswordResponse">
-        <wsdl:part name="parameters" element="ns:resetPasswordResponse" />
+    <wsdl:message name="initiatePasswordResetResponse">
+        <wsdl:part name="parameters" element="ns:initiatePasswordResetResponse" />
     </wsdl:message>
     <wsdl:message name="generateRandomCaptchaRequest">
         <wsdl:part name="parameters" element="ns:generateRandomCaptcha" />
@@ -158,10 +158,10 @@
             <wsdl:output message="ns:confirmUserResponse" wsaw:Action="urn:confirmUserResponse" />
             <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:confirmUserAdminManagementServiceException" />
         </wsdl:operation>
-        <wsdl:operation name="resetPassword">
-            <wsdl:input message="ns:resetPasswordRequest" wsaw:Action="urn:resetPassword" />
-            <wsdl:output message="ns:resetPasswordResponse" wsaw:Action="urn:resetPasswordResponse" />
-            <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:resetPasswordAdminManagementServiceException" />
+        <wsdl:operation name="initiatePasswordReset">
+            <wsdl:input message="ns:initiatePasswordResetRequest" wsaw:Action="urn:initiatePasswordReset" />
+            <wsdl:output message="ns:initiatePasswordResetResponse" wsaw:Action="urn:initiatePasswordResetResponse" />
+            <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:initiatePasswordResetAdminManagementServiceException" />
         </wsdl:operation>
         <wsdl:operation name="generateRandomCaptcha">
             <wsdl:input message="ns:generateRandomCaptchaRequest" wsaw:Action="urn:generateRandomCaptcha" />
@@ -195,8 +195,8 @@
                 <soap:fault use="literal" name="AdminManagementServiceException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="resetPassword">
-            <soap:operation soapAction="urn:resetPassword" style="document" />
+        <wsdl:operation name="initiatePasswordReset">
+            <soap:operation soapAction="urn:initiatePasswordReset" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -246,8 +246,8 @@
                 <soap12:fault use="literal" name="AdminManagementServiceException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="resetPassword">
-            <soap12:operation soapAction="urn:resetPassword" style="document" />
+        <wsdl:operation name="initiatePasswordReset">
+            <soap12:operation soapAction="urn:initiatePasswordReset" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -291,8 +291,8 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="resetPassword">
-            <http:operation location="resetPassword" />
+        <wsdl:operation name="initiatePasswordReset">
+            <http:operation location="initiatePasswordReset" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>

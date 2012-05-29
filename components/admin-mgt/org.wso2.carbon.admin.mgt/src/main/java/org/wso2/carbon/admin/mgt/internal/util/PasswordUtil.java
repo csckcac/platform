@@ -23,7 +23,6 @@ import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
 import org.wso2.carbon.admin.mgt.exception.AdminManagementException;
 import org.wso2.carbon.admin.mgt.internal.AdminManagementServiceComponent;
 import org.wso2.carbon.admin.mgt.util.AdminMgtUtil;
-import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -50,8 +49,8 @@ public class PasswordUtil {
      * @param adminInfoBean tenant details
      * @return true if the reset request is processed successfully.
      * @throws Exception if reset password failed.
-     */                             //initiatePasswordReset
-    public static boolean initiateResetPassword(AdminMgtInfoBean adminInfoBean) throws Exception {
+     */
+    public static boolean initiatePasswordReset(AdminMgtInfoBean adminInfoBean) throws Exception {
         String adminName = adminInfoBean.getAdmin();
         String domainName = adminInfoBean.getTenantDomain();
         String email;
@@ -165,7 +164,7 @@ public class PasswordUtil {
                 email = getEmailAddressForTenants(
                         userName, adminName, tenantId, tenant, adminNameFromUserStore);
             }
-        } catch (AdminManagementException e) {     //AdminManagementException AUDIT_LOGS //id-info
+        } catch (AdminManagementException e) {
             String msg = "Unable to retrieve an email address associated with the given user.";
             log.info(msg, e);   // It is common to have users with no email address defined.
             throw new AdminManagementException(msg, e);

@@ -105,9 +105,10 @@
                     <th>Name</th>
                     <th>Type</th>
                     <th>Content</th>
-                    <th>Modified By</th>
                     <th>Modified On</th>
+                    <%if(createPermitted){%>
                     <th>Actions</th>
+                    <%}%>
                 </tr>
                 </thead>
                 <tbody id="listDocs">
@@ -128,16 +129,16 @@
                         </a>
                         </td>
 
-                    <td><a href="#"><%=user.username%></a></td>
                     <td><%=doc.lastUpdated%></td>
-                    <td><%if(createPermitted){%>
-                        <% if(doc.sourceType == "INLINE") { %>
+                    <%if(createPermitted){%>
+                    <td><% if(doc.sourceType == "INLINE") { %>
                         <a href="javascript:editInlineContent('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','edit')">Edit Content | </a>
-                        <% }}else{ %>Edit Content | <%}%>
-                        <%if(createPermitted){%> <a href="javascript:updateDocumentation('<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Update | </a> <% }else{ %>Update |  <%}%>
+                        <% }%>
+                        <a href="javascript:updateDocumentation('<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Update | </a>
                         <a href="javascript:removeDocumentation('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>')">Delete | </a>
-                        <%if(createPermitted){%><a href="javascript:copyDocumentation('<%=doc.name%>','<%=doc.type%>')">Copy</a><% }else{ %>Copy <%}%>
+                        <a href="javascript:copyDocumentation('<%=doc.name%>','<%=doc.type%>')">Copy</a>
                     </td>
+                    <%}%>
                 </tr>
                 <% } %>
                 <%

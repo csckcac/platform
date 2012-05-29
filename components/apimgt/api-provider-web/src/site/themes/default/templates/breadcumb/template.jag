@@ -41,10 +41,7 @@
 
                 <% if(reqUrl.indexOf(addUrl)>=0||reqUrl.indexOf(addMappedUrl)>=0){%>
                 <li>
-                    APIs <span class="divider">/</span>
-                </li>
-                <li>
-                    <a href="<%=listMappedUrl%>">My APIs</a>
+                    APIs
                 </li>
                 <li>
                     <span class="divider">/</span>
@@ -58,7 +55,7 @@
 
                 <% if(reqUrl.indexOf(userUrl)>=0||reqUrl.indexOf(userMappedUrl)>=0){%>
                 <li>
-                    Manage <span class="divider">/</span>
+                    My APIs <span class="divider">/</span>
                 </li>
                 <li>
                     <a href="<%=subsMappedUrl%>">Users-Keys</a>
@@ -74,7 +71,7 @@
 
                 <% if(reqUrl.indexOf(subsUrl)>=0||reqUrl.indexOf(subsMappedUrl)>=0){%>
                 <li>
-                    Manage <span class="divider">/</span>
+                    My APIs <span class="divider">/</span>
                 </li>
                 <li>
                     <a href="<%=subsMappedUrl%>">Users-Keys</a>
@@ -84,10 +81,10 @@
 
                 <% if(reqUrl.indexOf(statsUrl)>=0||reqUrl.indexOf(statsMappedUrl)>=0){%>
                 <li>
-                    Statistics <span class="divider">/</span>
+                    My APIs<span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=statsMappedUrl%>">All</a>
+                    <a href="<%=statsMappedUrl%>">Statistics</a>
                 </li>
                 <% } %>
             </ul>

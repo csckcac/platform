@@ -9,7 +9,7 @@
     </provide>
     <invoke partnerLink="ApplicationDeploymentServicePL">
       <service name="service.deployment.application.appfactory.carbon.wso2.org:ApplicationDeploymentService" port="ApplicationDeploymentServiceHttpsSoap11Endpoint">
-         <endpoint endpointReference="./../../../../repository/conf/appfactory/endpoints/ApplicationDeploymentService.epr"/>
+         <endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/ApplicationDeploymentService.epr"/>
       </service>
     </invoke>
   </process>

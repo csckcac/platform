@@ -26,10 +26,12 @@ public class SendConsumeClient {
     public void sendMessage() {
 
         Properties initialContextProperties = new Properties();
+        String queueName ="myQueue";
         initialContextProperties.put("java.naming.factory.initial",
-                "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
+                "org.wso2.andes.jndi.PropertiesFileInitialContextFactory");
         String connectionString = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5672'";
         initialContextProperties.put("connectionfactory.qpidConnectionfactory", connectionString);
+        initialContextProperties.put("queue."+queueName, queueName);
 
         try {
             InitialContext initialContext = new InitialContext(initialContextProperties);
@@ -45,8 +47,8 @@ public class SendConsumeClient {
             TextMessage textMessage = queueSession.createTextMessage("My test message");
 
             // Send message
-            Queue queue = queueSession.createQueue("myQueue;{create:always, node:{durable: true}}");
-            QueueSender queueSender = queueSession.createSender(queue);
+            Queue queue = (Queue)initialContext.lookup(queueName);
+            javax.jms.QueueSender queueSender = queueSession.createSender(queue);
             queueSender.send(textMessage);
 
             // Housekeeping
@@ -66,10 +68,12 @@ public class SendConsumeClient {
     public void consumeMessage() {
 
         Properties initialContextProperties = new Properties();
+        String queueName = "myQueue";
         initialContextProperties.put("java.naming.factory.initial",
-                "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
+                "org.wso2.andes.jndi.PropertiesFileInitialContextFactory");
         String connectionString = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5672'";
         initialContextProperties.put("connectionfactory.qpidConnectionfactory", connectionString);
+        initialContextProperties.put("queue."+queueName, queueName);
 
 
         try {
@@ -82,8 +86,8 @@ public class SendConsumeClient {
             QueueSession queueSession = queueConnection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
 
             // Receive message
-            Queue queue = queueSession.createQueue("myQueue");
-            QueueReceiver queueReceiver = queueSession.createReceiver(queue);
+            Queue queue = (Queue)initialContext.lookup(queueName);
+            MessageConsumer queueReceiver = queueSession.createConsumer(queue);
 
             TextMessage textMessage = (TextMessage) queueReceiver.receive(1000);
             System.out.println("Got message ==> " + textMessage.getText());

@@ -27,7 +27,7 @@ public class PubsubClient {
 
         Properties initialContextProperties = new Properties();
         initialContextProperties.put("java.naming.factory.initial",
-                "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
+                "org.wso2.andes.jndi.PropertiesFileInitialContextFactory");
         String connectionString = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5672'";
         initialContextProperties.put("connectionfactory.qpidConnectionfactory", connectionString);
 
@@ -57,7 +57,7 @@ public class PubsubClient {
     public void publish(String topicName, String message) {
         Properties initialContextProperties = new Properties();
         initialContextProperties.put("java.naming.factory.initial",
-                "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
+                "org.wso2.andes.jndi.PropertiesFileInitialContextFactory");
         String connectionString = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5672'";
         initialContextProperties.put("connectionfactory.qpidConnectionfactory", connectionString);
 

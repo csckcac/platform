@@ -58,6 +58,32 @@
         topPage="false"
         request="<%=request%>"/>
 <script type="text/javascript">
+
+     function validateAndSaveConfiguration() {
+
+        var xmlURL = editAreaLoader.getValue("payloadEditor");
+        var _schema="service-ui-config";
+
+           new Ajax.Request('../services/xmlconfig_validator_ajaxprocessor.jsp',
+            {
+                method:'post',
+                parameters: { target_xml: xmlURL,schema: _schema},
+                onSuccess: function(transport) {
+                 var returnValue = transport.responseText;
+                 if (returnValue.search(/---XMLSchemaValidated----/) != -1) {
+                   SaveConfiguration();
+                 } else {
+                     CARBON.showErrorDialog(transport.responseText);
+                 }
+                },
+
+                onFailure: function(transport) {
+                    CARBON.showErrorDialog(transport.responseText);
+                    return;
+                }
+            });
+    }
+
     function SaveConfiguration() {
         sessionAwareFunction(function() {
             var CustomUIForm = document.getElementById('generic.config.form');
@@ -125,7 +151,7 @@
                 </tr>
                 <tr>
                     <td class="buttonRow">
-                        <input class="button registryWriteOperation" type="button" onclick="SaveConfiguration()" value="<fmt:message key="save"/>"/>
+                        <input class="button registryWriteOperation" type="button" onclick="validateAndSaveConfiguration()" value="<fmt:message key="save"/>"/>
                         <input class="button registryNonWriteOperation" type="button" disabled="disabled" value="<fmt:message key="save"/>"/>
                         <input class="button" type="button" value="<fmt:message key="reset"/>" onclick="javascript: cancelSequence(); return false;"/>
                     </td>

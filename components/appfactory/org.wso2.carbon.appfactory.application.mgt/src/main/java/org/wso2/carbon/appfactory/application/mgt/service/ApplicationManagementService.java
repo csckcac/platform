@@ -120,7 +120,7 @@ public class ApplicationManagementService extends AbstractAdmin {
         }
     }
 
-    public String[] getAllApplications() throws ApplicationManagementException {
+    public String[] getAllApplications(String userName) throws ApplicationManagementException {
         String apps[] = new String[0];
         List<String> list = new ArrayList<String>();
         TenantManager manager = Util.getRealmService().getTenantManager();
@@ -128,7 +128,11 @@ public class ApplicationManagementService extends AbstractAdmin {
             Tenant[] tenants = manager.getAllTenants();
 
             for (Tenant tenant : tenants) {
-                list.add(tenant.getDomain());
+                UserRealm realm = Util.getRealmService().getTenantUserRealm(tenant.getId());
+                // every user in everyone role
+                if (realm != null && realm.getUserStoreManager().getRoleListOfUser(userName).length > 1) {
+                    list.add(tenant.getDomain());
+                }
             }
 
         } catch (UserStoreException e) {

@@ -8,8 +8,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 
 /**
- * This is a host object used to get app factory configuration.
- * This will not expose all the configuration details as it is available in java script code.
+ * This is a host object used to get app factory configuration
  */
 public class AppFactoryConfigurationReader extends ScriptableObject {
     private static final String hostObjectName = "AppFactoryConfigurationReader";

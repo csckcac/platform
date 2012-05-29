@@ -171,3 +171,6 @@ a.powered-by-logo {
 .navbar .divider-vertical{
      background-color: #fff;
 }
+.even-width-button{
+    width:60px;
+}

@@ -126,7 +126,7 @@
 
                                     </td>
                                     <td id="buttons">
-                                        <a class="btn btn-primary" id="resourceAddBtn" onClick="addResourcesToApi()">
+                                        <a class="btn btn-primary even-width-button" id="resourceAddBtn" onClick="addResourcesToApi()">
                                             <i class="icon-plus icon-white"></i> Add
                                         </a>
                                     </td>
@@ -152,7 +152,7 @@
 
                                     </td>
                                     <td id="buttons">
-                                        <a class="btn btn-danger" id="resourceDelBtn" onclick="deleteResource(0)">
+                                        <a class="btn btn-danger even-width-button" id="resourceDelBtn" onclick="deleteResource(0)">
                                             <i class="icon-trash icon-white"></i> Delete
                                         </a>
                                     </td>

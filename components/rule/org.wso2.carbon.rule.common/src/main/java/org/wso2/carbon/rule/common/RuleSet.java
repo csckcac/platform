@@ -88,6 +88,10 @@ public class RuleSet {
         this.rules = rules;
     }
 
+    public void clearRules(){
+        this.rules.clear();
+    }
+
     public String getBindURI() {
         return bindURI;
     }

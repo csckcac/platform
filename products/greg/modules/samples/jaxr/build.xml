@@ -16,6 +16,7 @@
 -->
 <project name="org.wso2.registry.jaxr.sample" default="run" basedir=".">
     <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="greg.home" value="${basedir}../../../"/>
     <property name="class.dir" value="target/classes"/>
     <target name="clean">
         <delete dir="target" quiet="true"/>
@@ -29,7 +30,9 @@
             <fileset dir="${lib.dir}">
                 <include name="*.jar"/>
             </fileset>
-
+            <fileset dir="${greg.home}/repository/components/plugins">
+                <include name="*.jar"/>
+            </fileset>
         </path>
     </target>
     <target name="compile" depends="init" description="Compile all Java">

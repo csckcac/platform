@@ -2,9 +2,12 @@
         include('process/webServiceUtil.jag');
         var applicationName = request.getParameter("applicationName");
         var applicationSvnLocation = request.getParameter("applicationSvnLocation");
-
-        invokeDeployToDevProcess(applicationSvnLocation,applicationName)
-
+        try{
+            var deployedArtifact = invokeDeployToDevProcess(applicationSvnLocation,applicationName);
+            print(deployedArtifact +" was successfully deployed");
+	    }catch(e){
+	        print(e.message);
+	    }
 
 
 %>

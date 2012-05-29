@@ -70,12 +70,12 @@ var updateDocumentation = function (docName, docType, summary, docUrl) {
     }
 };
 
-var editInlineContent = function (provider,apiName, version, docName) {
+var editInlineContent = function (provider,apiName, version, docName,mode) {
     var current = window.location.pathname;
     if (current.indexOf("item-info.jag") >= 0) {
-        window.open("inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version+"&provider=" + provider);
+        window.open("inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version+"&provider=" + provider+"&mode=" + mode);
     } else {
-        window.open("site/pages/inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version+"&provider=" + provider);
+        window.open("site/pages/inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version+"&provider=" + provider+"&mode=" + mode);
     }
 
 };

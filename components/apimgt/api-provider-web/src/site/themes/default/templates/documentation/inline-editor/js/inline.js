@@ -14,8 +14,8 @@ $(document).ready(function() {
 });
 
 
-function loadDefaultTinyMCEContent(apiName, version, docName) {
-    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"getInlineContent", apiName:apiName,version:version,docName:docName },
+function loadDefaultTinyMCEContent(provider,apiName, version, docName) {
+    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"getInlineContent", provider:provider,apiName:apiName,version:version,docName:docName },
               function (json) {
                   if (!json.error) {
                       var docName = json.doc.provider.docName;

@@ -1,4 +1,6 @@
-<% jagg.template("documentation/inline-editor", function(inputs, outputs, jagg) { %>
+<% jagg.template("documentation/inline-editor", function(inputs, outputs, jagg) {
+var mode = request.getParameter("mode");
+%>
 <script type="text/javascript">
 var apiName = '<%=request.getParameter("apiName")%>';
 var apiVersion = '<%=request.getParameter("version")%>';
@@ -34,6 +36,7 @@ var docName = '<%=request.getParameter("docName")%>';
         </tbody>
       </table>
         </div>
+        <% if(mode=="edit"){%>
         <div class="span11">
             <div class="form-actions">
                 <button type="button" class="btn btn-primary" id="inline-save-button">Save</button>
@@ -41,7 +44,7 @@ var docName = '<%=request.getParameter("docName")%>';
 
             </div>
         </div>
-
+        <%}%>
 
     <script type="text/javascript">
     $("#inline-save-button").click(function() {
@@ -53,9 +56,9 @@ var docName = '<%=request.getParameter("docName")%>';
             }else{
             var current = window.location.pathname;
             if (current.indexOf(".jag") >= 0) {
-            location.href="item-info.jag?name="+apiName+"&version="+apiVersion;
+            location.href="item-info.jag?name="+apiName+"&version="+apiVersion+"&provider="+provider;
             }else{
-            location.href="site/pages/item-info.jag?name="+apiName+"&version="+apiVersion;
+            location.href="site/pages/item-info.jag?name="+apiName+"&version="+apiVersion+"&provider="+provider;
             }
             }
     }, "json");

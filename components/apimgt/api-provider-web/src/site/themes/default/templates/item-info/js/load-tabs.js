@@ -183,8 +183,6 @@ $(document).ready(function() {
                                       break;
                                   }
                               }
-
-
                           } else {
                               jagg.message(json.message);
                           }
@@ -199,8 +197,6 @@ $(document).ready(function() {
                                       break;
                                   }
                               }
-
-
                           } else {
                               jagg.message(json.message);
                           }

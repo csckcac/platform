@@ -21,7 +21,6 @@ package org.wso2.carbon.admin.mgt.services;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.mgt.beans.AdminMgtInfoBean;
-import org.wso2.carbon.admin.mgt.beans.ConfirmationBean;
 import org.wso2.carbon.admin.mgt.internal.util.PasswordUtil;
 import org.wso2.carbon.admin.mgt.util.AdminMgtUtil;
 import org.wso2.carbon.captcha.mgt.beans.CaptchaInfoBean;
@@ -32,17 +31,6 @@ import org.wso2.carbon.captcha.mgt.util.CaptchaUtil;
  */
 public class AdminManagementService {
     private static final Log log = LogFactory.getLog(AdminManagementService.class);
-
-    /**
-     * Confirms that the link shared in the email is used only once in password reset.
-     *
-     * @param secretKey - the key given in the password reset email.
-     * @return ConfirmationBean, that has the data and redirect path.
-     * @throws Exception, if the key provided in the link is expired, already clicked, or invalid.
-     */
-    public ConfirmationBean confirmUser(String secretKey) throws Exception {
-        return AdminMgtUtil.confirmUser(secretKey);
-    }
 
     /**
      * Initiating the password reset, as of the user request.

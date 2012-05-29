@@ -50,6 +50,10 @@
            <artifactId>org.wso2.carbon.captcha.mgt</artifactId>
             <version>${wso2carbon.version}</version>
         </dependency>
+        <dependency>
+           <groupId>org.wso2.carbon</groupId>
+           <artifactId>org.wso2.carbon.email.verification</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

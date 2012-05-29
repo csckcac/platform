@@ -24,6 +24,7 @@ import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
 import org.wso2.carbon.admin.mgt.exception.AdminManagementException;
 import org.wso2.carbon.admin.mgt.internal.AdminManagementServiceComponent;
 import org.wso2.carbon.admin.mgt.util.AdminMgtUtil;
+import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -48,11 +49,15 @@ public class PasswordUtil {
     /**
      * Processing the password reset request by the user
      *
-     * @param adminInfoBean tenant details
+     * @param adminInfoBean user details
      * @return true if the reset request is processed successfully.
-     * @throws Exception if reset password failed.
+     * @throws AdminManagementException if reset password failed.
+     * @throws RegistryException,       if generating the confirmationKey failed
+     * @throws UserStoreException,      if getting the tenant from the TenantManager failed.
      */
-    public static boolean initiatePasswordReset(AdminMgtInfoBean adminInfoBean) throws Exception {
+    public static boolean initiatePasswordReset(
+            AdminMgtInfoBean adminInfoBean) throws AdminManagementException,
+            org.wso2.carbon.user.api.UserStoreException, RegistryException {
         String tenantLessUserName = adminInfoBean.getTenantLessUserName();
         String domainName = adminInfoBean.getTenantDomain();
         String email;
@@ -92,19 +97,24 @@ public class PasswordUtil {
     }
 
     private static boolean verifyPasswordResetRequest(String userName,
-                                                      Map<String, String> dataToStore) {
+                                                      Map<String, String> dataToStore)
+            throws AdminManagementException {
+        boolean passwordReset;
         try {
-            AdminMgtUtil.requestUserVerification(dataToStore);
+            EmailVerifcationSubscriber emailVerifier =
+                    AdminManagementServiceComponent.getEmailVerificationService();
+            emailVerifier.requestUserVerification(
+                    dataToStore, AdminManagementServiceComponent.getEmailVerifierConfig());
             if (log.isDebugEnabled()) {
-                log.debug("Credentials Configurations mail has been sent for: " + userName);
+                log.debug("Email verification for the password reset.");
             }
-            return true;
+            passwordReset = true;
         } catch (Exception e) {
-            String msg = "Error in verifying the user for the configuration of the admin " +
-                    "management for " + userName + ".";
+            String msg = "Error in notifying the user " + userName;
             log.error(msg);
+            throw new AdminManagementException(msg, e);
         }
-        return false;
+        return passwordReset;
     }
 
     private static String generateConfirmationKey(
@@ -135,14 +145,15 @@ public class PasswordUtil {
     }
 
     private static Map<String, String> populateDataMap(AdminMgtInfoBean adminInfoBean,
-                                                       String adminName, String email, int tenantId,
+                                                       String tenantLessUserName,
+                                                       String email, int tenantId,
                                                        String confirmationKey) throws
             AdminManagementException {
         Map<String, String> dataToStore = new HashMap<String, String>();
         dataToStore.put("email", email);
         dataToStore.put("first-name", ClaimsMgtUtil.getFirstName(
                 AdminManagementServiceComponent.getRealmService(), tenantId));
-        dataToStore.put("admin", adminName);
+        dataToStore.put("admin", tenantLessUserName);
         dataToStore.put("tenantDomain", adminInfoBean.getTenantDomain());
         dataToStore.put("confirmationKey", confirmationKey);
         return dataToStore;

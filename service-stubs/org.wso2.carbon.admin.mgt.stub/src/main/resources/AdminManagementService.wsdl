@@ -85,20 +85,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="confirmUser">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="secretKey" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="confirmUserResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2379:ConfirmationBean" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
         </xs:schema>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.mgt.admin.carbon.wso2.org/xsd">
             <xs:complexType name="AdminMgtInfoBean">
@@ -112,12 +98,6 @@
                     <xs:element minOccurs="0" name="tenantId" type="xs:int" />
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="ConfirmationBean">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="data" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="redirectPath" nillable="true" type="xs:string" />
-                </xs:sequence>
-            </xs:complexType>
         </xs:schema>
     </wsdl:types>
     <wsdl:message name="AdminManagementServiceException">
@@ -128,12 +108,6 @@
     </wsdl:message>
     <wsdl:message name="updateAdminPasswordWithUserInputResponse">
         <wsdl:part name="parameters" element="ns:updateAdminPasswordWithUserInputResponse" />
-    </wsdl:message>
-    <wsdl:message name="confirmUserRequest">
-        <wsdl:part name="parameters" element="ns:confirmUser" />
-    </wsdl:message>
-    <wsdl:message name="confirmUserResponse">
-        <wsdl:part name="parameters" element="ns:confirmUserResponse" />
     </wsdl:message>
     <wsdl:message name="initiatePasswordResetRequest">
         <wsdl:part name="parameters" element="ns:initiatePasswordReset" />
@@ -153,11 +127,6 @@
             <wsdl:output message="ns:updateAdminPasswordWithUserInputResponse" wsaw:Action="urn:updateAdminPasswordWithUserInputResponse" />
             <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:updateAdminPasswordWithUserInputAdminManagementServiceException" />
         </wsdl:operation>
-        <wsdl:operation name="confirmUser">
-            <wsdl:input message="ns:confirmUserRequest" wsaw:Action="urn:confirmUser" />
-            <wsdl:output message="ns:confirmUserResponse" wsaw:Action="urn:confirmUserResponse" />
-            <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:confirmUserAdminManagementServiceException" />
-        </wsdl:operation>
         <wsdl:operation name="initiatePasswordReset">
             <wsdl:input message="ns:initiatePasswordResetRequest" wsaw:Action="urn:initiatePasswordReset" />
             <wsdl:output message="ns:initiatePasswordResetResponse" wsaw:Action="urn:initiatePasswordResetResponse" />
@@ -173,18 +142,6 @@
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
         <wsdl:operation name="updateAdminPasswordWithUserInput">
             <soap:operation soapAction="urn:updateAdminPasswordWithUserInput" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-            <wsdl:fault name="AdminManagementServiceException">
-                <soap:fault use="literal" name="AdminManagementServiceException" />
-            </wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="confirmUser">
-            <soap:operation soapAction="urn:confirmUser" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -234,18 +191,6 @@
                 <soap12:fault use="literal" name="AdminManagementServiceException" />
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="confirmUser">
-            <soap12:operation soapAction="urn:confirmUser" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
-            <wsdl:fault name="AdminManagementServiceException">
-                <soap12:fault use="literal" name="AdminManagementServiceException" />
-            </wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="initiatePasswordReset">
             <soap12:operation soapAction="urn:initiatePasswordReset" style="document" />
             <wsdl:input>
@@ -275,15 +220,6 @@
         <http:binding verb="POST" />
         <wsdl:operation name="updateAdminPasswordWithUserInput">
             <http:operation location="updateAdminPasswordWithUserInput" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="confirmUser">
-            <http:operation location="confirmUser" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>

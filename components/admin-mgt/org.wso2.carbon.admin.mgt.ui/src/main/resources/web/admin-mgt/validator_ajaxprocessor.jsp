@@ -15,8 +15,8 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<%@ page import="org.wso2.carbon.admin.mgt.ui.clients.AdminManagementClient" %>
-<%@ page import="org.wso2.carbon.admin.mgt.stub.beans.xsd.ConfirmationBean" %>
+<%@ page import="org.wso2.carbon.email.verification.ui.clients.EmailVerificationServiceClient" %>
+<%@ page import="org.wso2.carbon.email.verification.stub.beans.xsd.ConfirmationBean" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -24,9 +24,9 @@
         String data = null;
         String redirect = null;
         try {
-            AdminManagementClient client = new AdminManagementClient(config,session);
+            EmailVerificationServiceClient client = new EmailVerificationServiceClient(config,session);
             String confirm = request.getParameter("confirmation");
-            
+
             ConfirmationBean confirmationBean = client.confirmUser(confirm);
             data = confirmationBean.getData();
             redirect = confirmationBean.getRedirectPath();

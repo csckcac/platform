@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.admin.mgt.stub.AdminManagementServiceStub;
-import org.wso2.carbon.admin.mgt.stub.beans.xsd.ConfirmationBean;
 import org.wso2.carbon.admin.mgt.stub.beans.xsd.AdminMgtInfoBean;
 import org.wso2.carbon.admin.mgt.stub.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -85,10 +84,6 @@ public class AdminManagementClient {
             log.error(msg, axisFault);
             throw new RegistryException(msg, axisFault);
         }
-    }
-
-    public ConfirmationBean confirmUser(String confString) throws Exception {
-        return stub.confirmUser(confString);
     }
 
     /**

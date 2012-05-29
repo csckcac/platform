@@ -19,14 +19,19 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.admin.mgt.util.AdminMgtUtil;
+import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
+import org.wso2.carbon.email.verification.util.EmailVerifierConfig;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.TenantManager;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
+
+import java.io.File;
 
 /**
  * @scr.component name="org.wso2.carbon.admin.mgt.internal.AdminManagementServiceComponent"
@@ -41,21 +46,45 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * @scr.reference name="configuration.context.service"
  * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
  * policy="dynamic" bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
+ * @scr.reference name="emailverification.service" interface=
+ *                "org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber"
+ *                cardinality="1..1" policy="dynamic"
+ *                bind="setEmailVerificationService"
+ *                unbind="unsetEmailVerificationService"
  */
 public class AdminManagementServiceComponent {
     private static Log log = LogFactory.getLog(AdminManagementServiceComponent.class);
     private static ConfigurationContextService configurationContextService;
     private static RealmService realmService;
     private static RegistryService registryService;
-
+    private static EmailVerifcationSubscriber emailVerificationService = null;
+    private static EmailVerifierConfig emailVerifierConfig = null;
 
     protected void activate(ComponentContext context) {
-        AdminMgtUtil.loadAdminManagementConfig();
+        loadEmailVerifierConfig();
         log.debug("******* Admin Management bundle is activated ******* ");
         try {
             log.debug("******* Admin Management bundle is activated ******* ");
         } catch (Exception e) {
             log.debug("******* Failed to activate Admin Management bundle ******* ");
+        }
+    }
+
+    /**
+     * method to load the Email Verifier Configurations
+     */
+    public static void loadEmailVerifierConfig() {
+        String confXml = CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                AdminMgtConstants.EMAIL_CONF_DIRECTORY + File.separator +
+                AdminMgtConstants.EMAIL_ADMIN_CONF_FILE;
+        try {
+            emailVerifierConfig =
+                    org.wso2.carbon.email.verification.util.Util.
+                            loadeMailVerificationConfig(confXml);
+        } catch(Exception e) {
+            String msg = "Email Registration Configuration file not found. " +
+                    "Pls check the repository/conf folder.";
+            log.error(msg);
         }
     }
 
@@ -119,4 +148,21 @@ public class AdminManagementServiceComponent {
     public static UserRegistry getConfigSystemRegistry(int tenantId) throws RegistryException {
         return registryService.getConfigSystemRegistry(tenantId);
     }
+
+    protected void setEmailVerificationService(EmailVerifcationSubscriber emailService) {
+        AdminManagementServiceComponent.emailVerificationService = emailService;
+    }
+
+    protected void unsetEmailVerificationService(EmailVerifcationSubscriber emailService) {
+        setEmailVerificationService(null);
+    }
+
+    public static EmailVerifcationSubscriber getEmailVerificationService() {
+        return emailVerificationService;
+    }
+
+    public static EmailVerifierConfig getEmailVerifierConfig() {
+        return emailVerifierConfig;
+    }
+
 }

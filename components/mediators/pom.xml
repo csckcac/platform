@@ -77,6 +77,8 @@
 			  	<module>urlrewrite</module>
 			  	<module>conditionalrouter</module>
 			  	<module>payloadFactory</module>
+                                <module>ejb</module>
+				<module>bean-mediator</module>
 			</modules>
 
     <dependencyManagement>

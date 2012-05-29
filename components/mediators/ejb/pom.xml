@@ -29,7 +29,7 @@
     <groupId>org.wso2.carbon</groupId>
     <artifactId>ejb-mediator</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Cache Mediator Aggregator Module</name>
+    <name>WSO2 Carbon - EJB Mediator Aggregator Module</name>
     <url>http://wso2.org</url>
 
     <modules>

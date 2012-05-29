@@ -79,11 +79,8 @@ public class GovernanceApiServiceListing {
         serviceUrl = environment.getGreg().getServiceUrl();
         sessionCookie = environment.getGreg().getSessionCookie();
         registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
-
         governanceRegistry = GovernanceUtils.getGovernanceUserRegistry(registryWS, UserListCsvReader.getUserInfo(4).getUserName());
         serviceManager = new ServiceManager(governanceRegistry);
-
-
         wsdlMgr = new WsdlManager(governanceRegistry);
     }
 
@@ -95,10 +92,8 @@ public class GovernanceApiServiceListing {
         Service service2 = serviceManager.newService(new QName("http://my.service.ns2", "MyService2"));
         Service service4 = serviceManager.newService(new QName("http://my.service.ns4", "MyService4"));
         Service service3 = serviceManager.newService(new QName("http://my.service.ns3", "MyService3"));
-
         Service service5 = serviceManager.newService(new QName("http://my.service.ns5", "MyService5"));
         Service service6 = serviceManager.newService(new QName("http://my.service.ns6", "MyService6"));
-
         Service service8 = serviceManager.newService(new QName("http://my.service.ns8", "MyService8"));
         Service service7 = serviceManager.newService(new QName("http://my.service.ns7", "MyService7"));
         Service service9 = serviceManager.newService(new QName("http://my.service.ns9", "MyService9"));
@@ -112,7 +107,6 @@ public class GovernanceApiServiceListing {
         serviceManager.addService(service8);
         serviceManager.addService(service3);
         serviceManager.addService(service9);
-
     }
 
     @Test(groups = {"wso2.greg", "wso2.greg.GovernanceApiServiceListing"}, priority = 1)
@@ -134,20 +128,15 @@ public class GovernanceApiServiceListing {
                         if (previousindex >= nextIndexindex) {
                             Assert.fail("Sorting is not applied");
                         }
-
                     }
                 }
             }
-
         }
-
-
     }
 
 
     @Test(groups = {"wso2.greg", "wso2.greg.GovernanceApiServiceListing"}, priority = 2)
     public void testCheckVersioning() throws Exception, RemoteException {
-
         service.addAttribute("Owner", "Financial Department");
         serviceManager.updateService(service);
         serviceManager.getService(service.getId()).createVersion();

@@ -1,4 +1,5 @@
-package org.wso2.automation.common.test.greg.governance;/*
+package org.wso2.automation.common.test.greg.governance;
+/*
 *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *WSO2 Inc. licenses this file to you under the Apache License,
@@ -18,6 +19,7 @@ package org.wso2.automation.common.test.greg.governance;/*
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.governance.api.endpoints.EndpointManager;
@@ -57,7 +59,7 @@ public class WSDLManagerAPITest {
         WSRegistryServiceClient registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         Registry governance = new RegistryProvider().getGovernance(registryWS, userId);
         wsdlManager = new WsdlManager(governance);
-        //       endpointManager = new EndpointManager(governance);
+//       endpointManager = new EndpointManager(governance);
         schemaManager = new SchemaManager(governance);
     }
 
@@ -159,7 +161,7 @@ public class WSDLManagerAPITest {
 
     @Test(groups = {"wso2.greg.api"}, description = "Testing AddWSDL with Inline content", priority = 7)
     public void testAddWSDLContentWithName() throws GovernanceException {
-
+        cleanWSDL();
         String wsdlContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<wsdl:definitions xmlns:http=\"http://schemas.xmlsoap.org/wsdl/http/\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:mime=\"http://schemas.xmlsoap.org/wsdl/mime/\" xmlns:si=\"http://www.strikeiron.com\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:s=\"http://www.w3.org/2001/XMLSchema\" xmlns:tm=\"http://microsoft.com/wsdl/mime/textMatching/\" targetNamespace=\"http://www.strikeiron.com\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">\n" +
                 "  <wsdl:types>\n" +
@@ -527,7 +529,7 @@ public class WSDLManagerAPITest {
 
     @Test(groups = {"wso2.greg.api"}, description = "Testing AddWSDL with Inline content", priority = 8)
     public void testAddWSDLContentWithoutName() throws GovernanceException {
-
+        cleanWSDL();
         String wsdlContent = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<wsdl:definitions xmlns:http=\"http://schemas.xmlsoap.org/wsdl/http/\" xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:mime=\"http://schemas.xmlsoap.org/wsdl/mime/\" xmlns:si=\"http://www.strikeiron.com\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:s=\"http://www.w3.org/2001/XMLSchema\" xmlns:tm=\"http://microsoft.com/wsdl/mime/textMatching/\" targetNamespace=\"http://www.strikeiron.com\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">\n" +
                 "  <wsdl:types>\n" +
@@ -885,8 +887,16 @@ public class WSDLManagerAPITest {
                 "  </wsdl:service>\n" +
                 "</wsdl:definitions>";
         try {
+            boolean isWSDLFound = false;
             Wsdl wsdl = wsdlManager.newWsdl(wsdlContent.getBytes());
             wsdlManager.addWsdl(wsdl);
+            Wsdl[] wsdlArray = wsdlManager.getAllWsdls();
+            for (Wsdl w : wsdlArray) {
+                if (w.getQName().getNamespaceURI().equalsIgnoreCase("http://www.strikeiron.com")) {
+                    isWSDLFound = true;
+                }
+            }
+            assertTrue(isWSDLFound, "WsdlManager:newWsdl method doesn't not execute with inline wsdl content");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WsdlManager:newWsdl method " +
                     "which have Inline wsdl content" + e.getMessage());
@@ -1042,15 +1052,20 @@ public class WSDLManagerAPITest {
     @Test(groups = {"wso2.greg.api"}, description = "Testing getWsdlElement method in WSDL object", priority = 17)
     public void testLoadWSDLDetails() throws GovernanceException {
         Wsdl[] allWSDLs = wsdlManager.getAllWsdls();
-        try{
-        for (Wsdl w : allWSDLs) {
-            if (w.getQName().getLocalPart().equalsIgnoreCase(wsdlName)) {
-                 w.loadWsdlDetails();
+        try {
+            for (Wsdl w : allWSDLs) {
+                if (w.getQName().getLocalPart().equalsIgnoreCase(wsdlName)) {
+                    w.loadWsdlDetails();
+                }
             }
-        }
-        }catch (GovernanceException e){
+        } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing loadWsdlDetails API method with WSDL object" + e.getMessage());
         }
+    }
+
+    @AfterClass
+    public void cleanTestArtifacts() throws GovernanceException {
+        cleanWSDL();
     }
 
 

@@ -37,6 +37,8 @@ public class GRegMetadataSearchTestSuite extends MasterTestSuite {
                                                   RegistrySearchByTags.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByComments",
                                                   RegistrySearchByComments.class));
+        suiteVariablesList.add(new SuiteVariables("RegistrySearchByAssociationType",
+                                                  RegistrySearchByAssociationType.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByResourceNameTest",
                                                   RegistrySearchByResourceNameTest.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByKeyword",

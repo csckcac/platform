@@ -235,7 +235,6 @@ public class DelegationTokenRenewal {
       InetAddress iaddr = InetAddress.getByName(ipaddr[0]);
       String dnsName = iaddr.getCanonicalHostName();
       final URI uri = new URI (SCHEME + "://" + dnsName+":"+ipaddr[1]);
-      LOG.info("XXXXXXXXXXXX------------------------------------>>> "+UserGroupInformation.getCurrentUser());
       dfs = (DistributedFileSystem)
       UserGroupInformation.getLoginUser().doAs(
           new PrivilegedExceptionAction<DistributedFileSystem>() {

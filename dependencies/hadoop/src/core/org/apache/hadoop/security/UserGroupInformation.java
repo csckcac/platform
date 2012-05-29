@@ -343,7 +343,7 @@ public class UserGroupInformation {
                 if (LOG.isDebugEnabled()) {
 			LOG.debug("Searching for Tenant's KRB5 Ticket Cache...");
                 }
-		tktCacheFinder.setConf(conf);
+		//tktCacheFinder.setConf(conf);
     		ticketCache = tktCacheFinder.getTenantTicketCache();
         }
         if (ticketCache != null) {

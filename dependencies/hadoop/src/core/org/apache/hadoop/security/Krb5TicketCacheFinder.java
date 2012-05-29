@@ -14,12 +14,12 @@ public interface Krb5TicketCacheFinder {
 	/**
          * Set current Hadoop Configuration
 	 */
-	public void setConf(Configuration conf);
+	//public void setConf(Configuration conf);
 
 	/**
 	 * Get current hadoop Configuration
 	 */
-	public Configuration getConf();
+	//public Configuration getConf();
 
 	/**
 	 * Returns the ticket cache of the calling tenant.

@@ -20,6 +20,7 @@ import org.apache.catalina.core.StandardHost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.tomcat.api.CarbonTomcatService;
+import org.wso2.carbon.tomcat.ext.valves.CompositeValve;
 import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.registry.RegistryManager;
@@ -251,6 +252,7 @@ public class HostUtil {
         host.setAppBase(hostBaseDir);
         host.setName(hostName);
         host.setUnpackWARs(false);
+        host.addValve(new CompositeValve());
         engine.addChild(host);
         log.info("host added to the tomcat: " + host);
         return host;

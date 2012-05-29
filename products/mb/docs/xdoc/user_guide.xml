@@ -241,137 +241,147 @@
             	not be a problem anymore as there is no significant performance degrade with the number of publishers, 
             	subscribers and exchanges. Scalability is beyond you with WSO2 MB with combined resources you have. 
             	Fault tolerance brings you great benefits in deployment apart from the performance gain. 
-            	</p> 
-            <h3>How to enable clustering support</h3>
-            <p>
-                New MB version (2.0) supports clustering. Clustering makes WSO2 MB run on several machines providing
-                high message delivery rate and high availability. In order to enable clustering in the binary distribution
-                or extracted WSO2 MB built from the source, open repository/conf/advanced/qpid-config.xml file and enable
-                clustering as follows:</p>
-
-            <p>
-                <br>&lt;  clustering   &gt;</br>
-                <br>&nbsp;&nbsp;&lt;  enabled   &gt;  true  &lt;/enabled &gt;</br>
             </p>
+
             <p>
-                You also need a Apache Zookeeper server and a Apache Cassandra server running in a separate central
-                machines (or at a simple deployment it can be one of the machines running broker nodes as well) in
-                order to configure the clustering.
+                There are several cluster deployment models supported by WSO2 Message Broker. Read on them at <a href="deployment_guide.html">
+                Deployment guide
+                </a>
+                and choose the suitable deployment pattern for your use-case and enable clustering as described there.
             </p>
-            <ul>
-                <li>To configure Zookeeper:
 
-                    <ol>
-                        <li>
-                            <a href="http://www.apache.org/dyn/closer.cgi/zookeeper/">Download</a> Apache Zookeeper 3.X.X
-                        </li>
-                        <li>
-                            Extract the zip folder to a directory of choice.
-                        </li>
-                        <li>
-                            Create a zoo.config file as instructed in Zookeeper installation  guide <a href="http://zookeeper.apache.org/doc/r3.3.5/zookeeperStarted.html">here</a>.
-                        </li>
-                        <li>
-                            Navigate to bin folder and start Zookeeper server by issuing the command ?zkServer.sh start?
-                        </li>
-                        <li>
-                            Default port for Zookeeper will be ?2181?. You can change that using ?clientPort? in zoo.config file.
-                        </li>
-                    </ol>
-                    <p>
-                        At each client MB instance, configure Zookeeper host and port by editing repository/conf/advanced/qpid-config.xml file.
-                    </p>
-                    <img src="images/zookeeperConfig.png"
-                         alt="editing Zookeeper configurations"/>
-                    <p>
-                        In a actual deployment Zookeeper host will be a separate central machine to which all clients running
-                        MB would connect. Thus Zookeeper host should be the IP of that central machine.
-                    </p>
-                </li>
+            <li>   Sample Scenario - This sample is based on Clustering Scenario 1, <a href="cluster_scenario_01.html">'Starting external cassandra server
+                   and zoo keeper server and point all broker nodes to them'</a>:
+                <ul>
+                    <li>
+                        In your local machine setup two WSO2 MB instances running with external Cassandra server and Zookeeper server
+                        (note that you can setup Cassandra and Zookeeper to run on the same machine). In order to do that in the second WSO2 MB
+                        instance define a port offset changing &lt;MB Home&gt;/repository/conf/carbon.xml (eg: set port offset to 1).
+                    </li>
+                    <li>
+                        We will call first broker instance MB1 (runs on port 5672) and the other MB2 (runs on port 5673).
+                    </li>
+                    <li>
+                        Using following JMS client make subscriptions to a queue "myQueue" at MB1.
+                        <pre xml:space="preserve">
 
-                <li>To configure Cassandra:
-                    <ol>
-                        <li>
-                            Download Apache Cassandra <a href="http://www.apache.org/dyn/closer.cgi?path=/cassandra/1.0.9/apache-cassandra-1.0.9-bin.tar.gz ">apache-cassandra-1.0.9 </a>
-                            or <a href="http://www.apache.org/dyn/closer.cgi?path=/cassandra/0.8.10/apache-cassandra-0.8.10-bin.tar.gz">apache-cassandra-0.8.10</a> release from <a
-                                href="http://cassandra.apache.org/download/">here</a>
-                        </li>
-                        <li>
-                            As instructed in Apache Cassandra installation guide configure and start Cassandra server. Default port would be 9160.
-                        </li>
-                        <li>
-                            At each MB instance you want to have in the distributed cluster, configure Cassandra by editing &lt;MB Home &lt;/repository/conf/advanced/qpid-virtualhosts.xml file.
-                        </li>
-                    </ol>
-                    <img src="images/storeConfig.png"
-                         alt="editing store configurations"/>
-                    <p>
-                        Note that &lt;username&gt; and &lt;password&gt; are credentials for connecting Cassandra, &lt;host&gt;
-                        is the IP address of Cassandra server you have started and &lt;cluster&gt;  should be same for all the
-                        MB nodes in the same cluster.
-                    </p>
-                    <p>
-                        Now message sender and receivers can send messages to that cluster and consume messages from that cluster
-                        as if it was a single message broker running in a machine. Following is a sample client for queue scenario.
-                    </p>
-                </li>
+                        import org.apache.qpid.configuration.ClientProperties;
+                        import javax.jms.*;
+                        import javax.naming.InitialContext;
+                        import javax.naming.NamingException;
+                        import java.util.Properties;
 
-                <li>   Sample Scenario:
-                    <ul>
-                        <li>
-                            In your local machine setup two WSO2 MB instances running with Cassandra server and Zookeeper server as described above
-                            (note that you can setup Cassandra and Zookeeper to run on the same machine). In order to do that in the second WSO2 MB
-                            define a port offset changing &lt;MB Home&gt;/repository/conf/carbon.xml (eg: set port offset to 1).
-                        </li>
-                        <li>
-                            We will call first broker instance MB1 (runs on port 5672) and the other MB2 (runs on port 5673).
-                        </li>
-                        <li>
-                            Using following JMS client make subscriptions to a queue "myQueue" at MB1.
-                            <pre xml:space="preserve">
+                        public class ConsumeClient {
+
+
+                            public void consumeMessage() {
+
+                                System.setProperty(ClientProperties.AMQP_VERSION, "0-91");
+                                Properties initialContextProperties = new Properties();
+                                initialContextProperties.put("java.naming.factory.initial",
+                                        "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
+                                String connectionString = "amqp://admin:admin@clientID/cassandra?brokerlist='tcp://localhost:5673'";
+                                initialContextProperties.put("connectionfactory.qpidConnectionfactory", connectionString);
+                                initialContextProperties.put("queue.myQueue", "myQueue");
+
+                                try {
+                                    InitialContext initialContext = new InitialContext(initialContextProperties);
+                                    QueueConnectionFactory queueConnectionFactory
+                                              = (QueueConnectionFactory) initialContext.lookup("qpidConnectionfactory");
+                                    QueueConnection queueConnection = queueConnectionFactory.createQueueConnection();
+                                    queueConnection.start();
+
+                                    QueueSession queueSession = queueConnection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
+                                      Destination destination = (Destination) initialContext.lookup("myQueue");
+
+                                    MessageConsumer messageConsumer = queueSession.createConsumer(destination);
+
+                                    TextMessage textMessage = (TextMessage) messageConsumer.receive();
+                                    System.out.println("Got message ==> " + textMessage.getText());
+
+                                    try {
+                                        Thread.sleep(90000*1000);
+                                    } catch (Exception e) {
+                                        System.out.println(e);
+                                    }
+
+                                    messageConsumer.close();
+
+                                    queueSession.close();
+                                    queueConnection.stop();
+                                    queueConnection.close();
+
+                                } catch (NamingException e) {
+                                    e.printStackTrace();
+                                } catch (JMSException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                            }
+
+                            public static void main(String[] args) {
+                                    ConsumeClient sendConsumeClient = new ConsumeClient();
+                                    sendConsumeClient.consumeMessage();
+                            }
+                        }
+                        </pre>
+
+                    </li>
+                    <li>
+                        Now using Message Sender described below, send a message to "myQueue" at MB2.
+
+                        <pre xml:space="preserve">
 
                             import org.apache.qpid.configuration.ClientProperties;
                             import javax.jms.*;
                             import javax.naming.InitialContext;
                             import javax.naming.NamingException;
+                            import java.io.*;
                             import java.util.Properties;
 
-                            public class ConsumeClient {
+                            public class SendClient {
 
 
-                                public void consumeMessage() {
+                                public static void main(String[] args) {
+                                    SendClient sendClient = new SendClient();
+                                    sendClient.sendMessage();
+                                }
+
+                                 public void sendMessage() {
 
                                     System.setProperty(ClientProperties.AMQP_VERSION, "0-91");
-                                    Properties initialContextProperties = new Properties();
+                                      Properties initialContextProperties = new Properties();
                                     initialContextProperties.put("java.naming.factory.initial",
                                             "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
                                     String connectionString = "amqp://admin:admin@clientID/cassandra?brokerlist='tcp://localhost:5673'";
                                     initialContextProperties.put("connectionfactory.qpidConnectionfactory", connectionString);
                                     initialContextProperties.put("queue.myQueue", "myQueue");
 
+
                                     try {
                                         InitialContext initialContext = new InitialContext(initialContextProperties);
                                         QueueConnectionFactory queueConnectionFactory
-                                                  = (QueueConnectionFactory) initialContext.lookup("qpidConnectionfactory");
+                                                = (QueueConnectionFactory) initialContext.lookup("qpidConnectionfactory");
+
                                         QueueConnection queueConnection = queueConnectionFactory.createQueueConnection();
                                         queueConnection.start();
 
                                         QueueSession queueSession = queueConnection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
-                                          Destination destination = (Destination) initialContext.lookup("myQueue");
 
-                                        MessageConsumer messageConsumer = queueSession.createConsumer(destination);
+                                        TextMessage textMessage = queueSession.createTextMessage();
+                                        textMessage.setText("Test message");
+                                        System.out.println("Sending Message : " + textMessage.getText().length());
 
-                                        TextMessage textMessage = (TextMessage) messageConsumer.receive();
-                                        System.out.println("Got message ==> " + textMessage.getText());
+                                        // Send message
+                                        Queue queue = (Queue) initialContext.lookup("myQueue");
 
-                                        try {
-                                            Thread.sleep(90000*1000);
-                                        } catch (Exception e) {
-                                            System.out.println(e);
-                                        }
+                                       // Queue queue = queueSession.createQueue("testQueue;{create:always, node:{durable: true}}");
+                                        QueueSender queueSender = queueSession.createSender(queue);
+                                        queueSender.send(textMessage);
 
-                                        messageConsumer.close();
-
+                                        // Housekeeping
+                                        queueSender.close();
                                         queueSession.close();
                                         queueConnection.stop();
                                         queueConnection.close();
@@ -382,110 +392,31 @@
                                         e.printStackTrace();
                                     }
 
-
-                                }
-
-                                public static void main(String[] args) {
-                                        ConsumeClient sendConsumeClient = new ConsumeClient();
-                                        sendConsumeClient.consumeMessage();
-                                }
+                                 }
                             }
-                            </pre>
+                        </pre>
+                    </li>
+                    <li>
+                        Now you can run the consumer to receive messages from MB1. You will notice that the message you have
+                        sent to MB2 can be received by MB1. Even if MB2 instance was destroyed message will be consumed to the consumer.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <p>Following is a typical deployment diagram for a Message Broker cluster setup.</p>
 
-                        </li>
-                        <li>
-                            Now using Message Sender described below, send a message to "myQueue" at MB2.
-
-                            <pre xml:space="preserve">
-
-                                import org.apache.qpid.configuration.ClientProperties;
-                                import javax.jms.*;
-                                import javax.naming.InitialContext;
-                                import javax.naming.NamingException;
-                                import java.io.*;
-                                import java.util.Properties;
-
-                                public class SendClient {
-
-
-                                    public static void main(String[] args) {
-                                        SendClient sendClient = new SendClient();
-                                        sendClient.sendMessage();
-                                    }
-
-                                     public void sendMessage() {
-
-                                        System.setProperty(ClientProperties.AMQP_VERSION, "0-91");
-                                          Properties initialContextProperties = new Properties();
-                                        initialContextProperties.put("java.naming.factory.initial",
-                                                "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
-                                        String connectionString = "amqp://admin:admin@clientID/cassandra?brokerlist='tcp://localhost:5673'";
-                                        initialContextProperties.put("connectionfactory.qpidConnectionfactory", connectionString);
-                                        initialContextProperties.put("queue.myQueue", "myQueue");
-
-
-                                        try {
-                                            InitialContext initialContext = new InitialContext(initialContextProperties);
-                                            QueueConnectionFactory queueConnectionFactory
-                                                    = (QueueConnectionFactory) initialContext.lookup("qpidConnectionfactory");
-
-                                            QueueConnection queueConnection = queueConnectionFactory.createQueueConnection();
-                                            queueConnection.start();
-
-                                            QueueSession queueSession = queueConnection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
-
-                                            TextMessage textMessage = queueSession.createTextMessage();
-                                            textMessage.setText("Test message");
-                                            System.out.println("Sending Message : " + textMessage.getText().length());
-
-                                            // Send message
-                                            Queue queue = (Queue) initialContext.lookup("myQueue");
-
-                                           // Queue queue = queueSession.createQueue("testQueue;{create:always, node:{durable: true}}");
-                                            QueueSender queueSender = queueSession.createSender(queue);
-                                            queueSender.send(textMessage);
-
-                                            // Housekeeping
-                                            queueSender.close();
-                                            queueSession.close();
-                                            queueConnection.stop();
-                                            queueConnection.close();
-
-                                        } catch (NamingException e) {
-                                            e.printStackTrace();
-                                        } catch (JMSException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                     }
-                                }
-                            </pre>
-                        </li>
-                        <li>
-                            Now you can run the consumer to receive messages from MB1. You will notice that the message you have
-                            sent to MB2 can be received by MB1. Even if MB2 instance was destroyed message will be consumed to the consumer.
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <p>Following is a typical deployment diagram for a Message Broker cluster setup.</p>
-
-                    <img src="images/Deployment_Diagram.jpg"
-                         alt="A typical cluster deployment"/>
-                </li>
-            </ul>
+                <img src="images/Deployment_Diagram.jpg"
+                     alt="A typical cluster deployment"/>
+            </li>
         </ul>
         <h2 id="References">References</h2>
         <ul>
             <li>
-                <a href="http://qpid.apache.org/">Apache Qpid</a>
+                <a href="http://zookeeper.apache.org/">Apache Zookeeper
+                </a>
             </li>
             <li>
-                <a href="http://aws.amazon.com/sqs/">Amazon SQS</a>
-            </li>
-            <li>
-                <a href="http://queue.amazonaws.com/doc/2009-02-01/QueueService.wsdl">Amazon SQS
-                    WSDL
+                <a href="http://cassandra.apache.org/">Apache Cassandra
                 </a>
             </li>
         </ul>

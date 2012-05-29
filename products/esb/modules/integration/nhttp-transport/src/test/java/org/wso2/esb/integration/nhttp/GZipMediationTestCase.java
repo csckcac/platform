@@ -41,7 +41,7 @@ public class GZipMediationTestCase extends ESBIntegrationTestCase {
         launchBackendHttpServer(interceptor);
     }
 
-    @Test(description = "Tests the ability to mediate GZip payloads")
+    @Test(groups = {"wso2.esb"}, description = "Tests the ability to mediate GZip payloads")
     public void testGZipMediation() throws IOException {
         SimpleHttpClient httpClient = new SimpleHttpClient();
         loadESBConfigurationFromClasspath("/chunking_default.xml");

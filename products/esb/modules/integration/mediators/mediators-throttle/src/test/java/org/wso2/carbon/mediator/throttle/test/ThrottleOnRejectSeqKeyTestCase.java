@@ -64,7 +64,7 @@ public class ThrottleOnRejectSeqKeyTestCase extends ESBIntegrationTestCase{
 
     /*Once the maximum number of messages are sent from the previous test method, test by sending one more message.
           ESB should throw an AxisFault saying "Access Denied"*/
-    @Test(dependsOnMethods = "testSuccessWithOnRejectSequenceKey",
+    @Test(groups = {"wso2.esb"}, dependsOnMethods = "testSuccessWithOnRejectSequenceKey",
             description = "Testing Throttle Mediator failure scenario with onReject key Sequence",
             expectedExceptions = org.apache.axis2.AxisFault.class)
     public void testFailureWithOnRejectSequenceKey() throws AxisFault {
@@ -161,7 +161,7 @@ public class ThrottleOnRejectSeqKeyTestCase extends ESBIntegrationTestCase{
 
     /*Once the maximum number of messages are sent from the previous test method, test by sending one more message.
           ESB should throw an AxisFault saying "Access Denied"*/
-    @Test(dependsOnMethods = "testSuccessWithOnRejectSequenceKey",
+    @Test(groups = {"wso2.esb"}, dependsOnMethods = "testSuccessWithOnRejectSequenceKey",
             description = "Testing Throttle Mediator failure scenario with onReject key Sequence",
             expectedExceptions = org.apache.axis2.AxisFault.class)
     public void testFailureWithOnRejectSequenceKey() throws AxisFault {

@@ -40,7 +40,7 @@ public class ThrottleTestCase extends ESBIntegrationTestCase {
         super("ProxyServiceAdmin");
     }
 
-    @Test(description = "Test Throttling.")
+    @Test(groups = {"wso2.esb"}, description = "Test Throttling.")
     public void testThrottle() throws Exception {
         ProxyData proxyData;
         ProxyReader handler = new ProxyReader();

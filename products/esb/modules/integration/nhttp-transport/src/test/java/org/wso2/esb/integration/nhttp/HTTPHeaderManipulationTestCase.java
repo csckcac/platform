@@ -40,7 +40,7 @@ public class HTTPHeaderManipulationTestCase extends ESBIntegrationTestCase {
         log.info("Verifying functionality against the bug: ESBJAVA-626");
     }
 
-    @Test(groups = "This test case verifies some fixes done to the $trp Synapse XPath extension. This\n" +
+    @Test(groups = {"wso2.esb"}, description = "This test case verifies some fixes done to the $trp Synapse XPath extension. This\n" +
                    " makes sure that the extension matches header names in a case insensitive manner\n" +
                    " as stated in the HTTP specs.")
     public void testHttpHeaderManipulation() throws IOException {

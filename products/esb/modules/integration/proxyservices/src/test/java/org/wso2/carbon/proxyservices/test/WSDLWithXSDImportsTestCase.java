@@ -40,7 +40,7 @@ public class WSDLWithXSDImportsTestCase extends ESBIntegrationTestCase {
         serverManager.copyArtifacts();
     }
 
-    @Test(description = "Test WSDL with import XSDs.")
+    @Test(groups = {"wso2.esb"}, description = "Test WSDL with import XSDs.")
     public void testWSDLWithXSDImports() throws IOException {
         loadESBConfigurationFromClasspath("/import_wsdl_proxy.xml");
 

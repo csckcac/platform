@@ -64,7 +64,7 @@ public class ThrottleOnAccpetSeqInlineTestCase extends ESBIntegrationTestCase{
 
     /*Once the maximum number of messages are sent from the previous test method, test by sending one more message.
           ESB should throw an AxisFault saying "Access Denied"*/
-    @Test(dependsOnMethods = "testThrottleMediatorInlineSequenceSuccess",
+    @Test(groups = {"wso2.esb"}, dependsOnMethods = "testThrottleMediatorInlineSequenceSuccess",
             description = "Testing Throttle Mediator failure scenario with onAccept inline Sequence",
     expectedExceptions = org.apache.axis2.AxisFault.class)
     public void testThrottleMediatorInlineSequenceFailure() throws AxisFault{
@@ -161,7 +161,7 @@ public class ThrottleOnAccpetSeqInlineTestCase extends ESBIntegrationTestCase{
 
     /*Once the maximum number of messages are sent from the previous test method, test by sending one more message.
           ESB should throw an AxisFault saying "Access Denied"*/
-    @Test(dependsOnMethods = "testThrottleMediatorInlineSequenceSuccess",
+    @Test(groups = {"wso2.esb"}, dependsOnMethods = "testThrottleMediatorInlineSequenceSuccess",
             description = "Testing Throttle Mediator failure scenario with onAccept inline Sequence",
     expectedExceptions = org.apache.axis2.AxisFault.class)
     public void testThrottleMediatorInlineSequenceFailure() throws AxisFault{

@@ -35,7 +35,7 @@ public class QueryParameterManipulationTestCase extends ESBIntegrationTestCase {
         launchBackendHttpServer(null);
     }
 
-    @Test(description = "Test Query parameter manipulation.")
+    @Test(groups = {"wso2.esb"}, description = "Test Query parameter manipulation.")
     public void testQueryParameterManipulation() throws IOException {
         loadESBConfigurationFromClasspath("/query_param.xml");
         makeGET(new URL(getProxyServiceURL("ParamManipulationProxy", false) + "?MyParam=TestValue"));

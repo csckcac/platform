@@ -37,7 +37,7 @@ public class HTTP10TestCase extends ESBIntegrationTestCase {
         launchBackendHttpServer(interceptor);
     }
 
-    @Test(description = "Tests the ability to force HTTP 1.0 version")
+    @Test(groups = {"wso2.esb"}, description = "Tests the ability to force HTTP 1.0 version")
     public void testForceHttp10() throws IOException {
         SimpleHttpClient httpClient = new SimpleHttpClient();
         loadESBConfigurationFromClasspath("/chunking_default.xml");

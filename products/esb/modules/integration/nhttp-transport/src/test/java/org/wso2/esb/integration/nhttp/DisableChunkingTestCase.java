@@ -40,7 +40,7 @@ public class DisableChunkingTestCase extends ESBIntegrationTestCase {
         launchBackendHttpServer(interceptor);
     }
 
-    @Test(description = "Tests the ability to control chunking behavior of the ESB")
+    @Test(groups = {"wso2.esb"}, description = "Tests the ability to control chunking behavior of the ESB")
     public void testChunking() throws IOException {
         SimpleHttpClient httpClient = new SimpleHttpClient();
         loadESBConfigurationFromClasspath("/chunking_default.xml");

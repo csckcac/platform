@@ -108,7 +108,7 @@
             <outputDirectory>wso2esb-${pom.version}/repository/deployment/server/synapse-configs</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/</directory>
+            <directory>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/</directory>
             <outputDirectory>wso2esb-${pom.version}/repository/conf/advanced</outputDirectory>
             <includes>
                 <include>**/qpid-config.xml</include>
@@ -117,11 +117,18 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/security</directory>
+            <directory>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/security</directory>
             <outputDirectory>wso2esb-${pom.version}/repository/conf/security</outputDirectory>
             <includes>
                 <include>**/jaas.conf</include>
                 <include>**/krb5.conf</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../p2-profile/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity</directory>
+            <outputDirectory>wso2esb-${pom.version}/dbscripts/identity</outputDirectory>
+            <includes>
+                <include>**/**.sql</include>
             </includes>
         </fileSet>
 
@@ -137,7 +144,7 @@
         </dependencySet>
         <dependencySet>
             <outputDirectory>wso2esb-${pom.version}/lib/core/WEB-INF/lib/</outputDirectory>
-            <includes><include>org.apache.qpid.wso2:qpid-client:jar</include>
+            <includes><include>org.apache.qpid:qpid-client:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
@@ -318,11 +325,20 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
         </file>
         <file>
+            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/stratos.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+        </file>
+        <file>
+            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/usage-throttling-agent-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
+        </file>
+        <file>
             <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/identity.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+
 
         <!--End Stratos ESB-->
     </files>

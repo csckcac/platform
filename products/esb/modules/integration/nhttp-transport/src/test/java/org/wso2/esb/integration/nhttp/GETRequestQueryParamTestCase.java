@@ -41,7 +41,7 @@ public class GETRequestQueryParamTestCase extends ESBIntegrationTestCase {
         launchBackendHttpServer(interceptor);
     }
 
-    @Test(description = "Tests the query parameters of GET requests.")
+    @Test(groups = {"wso2.esb"}, description = "Tests the query parameters of GET requests.")
     public void testGetRequestQueryParameters() throws IOException {
         loadESBConfigurationFromClasspath("/get_request.xml");
 

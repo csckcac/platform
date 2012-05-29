@@ -34,7 +34,7 @@ public class WSDLRequestTestCase extends ESBIntegrationTestCase {
         launchBackendHttpServer(null);
     }
 
-    @Test()
+    @Test(groups = {"wso2.esb"})
     public void testWSDLRequest() throws IOException {
         loadESBConfigurationFromClasspath("/pass_thru.xml");
         makeGET(new URL(getMainSequenceURL() + "/foo/bar/service?wsdl"));

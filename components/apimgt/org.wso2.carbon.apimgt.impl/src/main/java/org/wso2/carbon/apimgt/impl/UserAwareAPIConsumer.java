@@ -16,12 +16,12 @@
 
 package org.wso2.carbon.apimgt.impl;
 
-import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 import org.wso2.carbon.apimgt.api.model.Application;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
+import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.core.util.AnonymousSessionUtil;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.AuthorizationManager;
@@ -95,23 +95,7 @@ public class UserAwareAPIConsumer extends APIConsumerImpl {
         super.addComment(identifier, s, user);
     }
 
-    private void checkPermission(String permission) throws APIManagementException {
-        if (username == null) {
-            throw new APIManagementException("Attempt to execute privileged operation as" +
-                    " the anonymous user");
-        }
-
-        boolean authorized;
-        try {
-            authorized = authorizationManager.isUserAuthorized(username, permission,
-                    CarbonConstants.UI_PERMISSION_ACTION);
-        } catch (UserStoreException e) {
-            throw new APIManagementException("Error while checking user authorization", e);
-        }
-
-        if (!authorized) {
-            throw new APIManagementException("User '" + username + "' does not have the " +
-                    "required permission: " + permission);
-        }
+    public void checkPermission(String permission) throws APIManagementException {
+        APIUtil.checkPermission(username, permission, authorizationManager);
     }
 }

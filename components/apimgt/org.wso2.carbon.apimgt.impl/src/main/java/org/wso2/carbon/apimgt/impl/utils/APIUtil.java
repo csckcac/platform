@@ -22,6 +22,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
@@ -42,6 +43,8 @@ import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.user.core.AuthorizationManager;
+import org.wso2.carbon.user.core.UserStoreException;
 
 import javax.xml.stream.XMLStreamException;
 import java.util.*;
@@ -472,5 +475,26 @@ public final class APIUtil {
             throw new APIManagementException(msg, e);
         }
         return tiers;
+    }
+
+    public static void checkPermission(String username, String permission,
+                                       AuthorizationManager authorizationManager) throws APIManagementException {
+        if (username == null) {
+            throw new APIManagementException("Attempt to execute privileged operation as" +
+                    " the anonymous user");
+        }
+
+        boolean authorized;
+        try {
+            authorized = authorizationManager.isUserAuthorized(username, permission,
+                    CarbonConstants.UI_PERMISSION_ACTION);
+        } catch (UserStoreException e) {
+            throw new APIManagementException("Error while checking user authorization", e);
+        }
+
+        if (!authorized) {
+            throw new APIManagementException("User '" + username + "' does not have the " +
+                    "required permission: " + permission);
+        }
     }
 }

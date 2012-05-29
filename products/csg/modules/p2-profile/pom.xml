@@ -156,7 +156,7 @@
 
                                 <!-- Cloud ESB related features -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
-                                <!--<featureArtifactDef>org.wso2.csg:org.wso2.stratos.csg.login.ui.feature:${project.version}</featureArtifactDef> -->
+                                <featureArtifactDef>org.wso2.csg:org.wso2.stratos.csg.login.ui.feature:${project.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
 				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}</featureArtifactDef>
                                 <!--<featureArtifactDef>org.wso2.stratos:org.wso2.stratos.tenant.mgt.synapse.feature:${project.version}</featureArtifactDef>-->
@@ -447,10 +447,10 @@
                                     <version>${carbon.version}</version>
                                 </feature-->
 
-                                <!--feature>
+                                <feature>
                                     <id>org.wso2.stratos.csg.login.ui.feature.group</id>
                                     <version>${project.version}</version>
-                                </feature-->
+                                </feature>
 
                                 <!--<feature>-->
                                     <!--<id>org.wso2.carbon.mediation.templates.feature.group</id>-->

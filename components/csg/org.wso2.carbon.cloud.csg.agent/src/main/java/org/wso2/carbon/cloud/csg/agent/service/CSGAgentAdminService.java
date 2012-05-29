@@ -496,7 +496,7 @@ public class CSGAgentAdminService extends AbstractAdmin {
         boolean isHasServices = false;
         try {
             org.wso2.carbon.registry.core.Registry registry = getConfigSystemRegistry();
-            if (registry.resourceExists(CSGConstant.REGISTRY_CSG_RESOURCE_PATH)) {
+            if (registry.resourceExists(CSGConstant.REGISTRY_FLAG_RESOURCE_PATH)) {
                 Resource resource = registry.get(CSGConstant.REGISTRY_FLAG_RESOURCE_PATH);
 
                 if (resource instanceof Collection) {

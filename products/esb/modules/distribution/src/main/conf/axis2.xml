@@ -713,6 +713,7 @@
            NOTE: This should be the very first phase in this flow
         -->
         <phase name="MsgInObservation"/>
+        <phase name="Validation"/>
         <phase name="Transport">
             <handler name="RequestURIBasedDispatcher"
                      class="org.apache.axis2.dispatchers.RequestURIBasedDispatcher">
@@ -790,6 +791,7 @@
            NOTE: This should be the very first phase in this flow
         -->
         <phase name="MsgInObservation"/>
+        <phase name="Validation"/>
         <phase name="Transport">
             <handler name="RequestURIBasedDispatcher"
                      class="org.apache.axis2.dispatchers.RequestURIBasedDispatcher">

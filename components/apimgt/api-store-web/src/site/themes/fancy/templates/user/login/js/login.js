@@ -3,14 +3,14 @@ var login = login || {};
     var loginbox = login.loginbox || (login.loginbox = {});
 
     loginbox.login = function (username, password, url) {
-
         jagg.post("/site/blocks/user/login/ajax/login.jag", { action:"login", username:username, password:password },
                  function (result) {
                      if (result.error == false) {
-                         debugger;
                          if (redirectToHTTP && redirectToHTTP != "") {
                              window.location.href = redirectToHTTP;
-                         } else {
+                         } else if(url){
+                             window.location.href = url;
+                         }else{
                              window.location.reload();
                          }
                      } else {
@@ -40,7 +40,7 @@ $(document).ready(function () {
         $('#mainLoginForm input').die();
          $('#mainLoginForm input').keydown(function(event) {
          if (event.which == 13) {
-                var goto_url = $('#loginBtn').data("goto_url");
+                var goto_url =$.cookie("goto_url");
                 event.preventDefault();
                 login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
 
@@ -50,7 +50,7 @@ $(document).ready(function () {
         $('#loginBtn').die();
          $('#loginBtn').click(
             function() {
-                var goto_url = $('#messageModal').data("goto_url");
+                var goto_url = $.cookie("goto_url");
                 login.loginbox.login($("#username").val(), $("#password").val(), goto_url);
             }
          );
@@ -65,7 +65,8 @@ $(document).ready(function () {
         }
 
         $('#messageModal').html($('#login-data').html());
-        $('#messageModal').modal('show').data("goto_url", $(this).attr("href"));
+        $('#messageModal').modal('show');
+        $.cookie("goto_url",$(this).attr("href"));
         $('#username').focus();
 
          registerEventsForLogin();
@@ -79,8 +80,9 @@ $(document).ready(function () {
 
     $(".need-login").click(showLoginForm);
     $('#login-link').click(showLoginForm);
-   if(isSecure && showLogin){
-       showLogin = false;
+
+    if(isSecure && showLogin){
+        showLogin = false;
         showLoginForm();
     }
 

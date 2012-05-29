@@ -86,16 +86,6 @@
             <classifier>docs</classifier>
             <type>zip</type>
         </dependency>
-        <!--  <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.ws.client</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>-->
-        <!--dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.webdav</artifactId>
-            <version>${carbon.version}</version>
-        </dependency-->
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.jcr</artifactId>
@@ -116,245 +106,6 @@
             <artifactId>org.wso2.governance.samples.shutterbug.ui</artifactId>
             <version>4.0.0-SNAPSHOT</version>
         </dependency>
-        <!--dependency>
-	  <groupId>org.wso2.carbon</groupId>
-	  <artifactId>org.wso2.carbon.ui.menu.tools</artifactId>
-	  <version>${carbon.version}</version>
-        </dependency>
-        <dependency>
-	  <groupId>org.wso2.carbon</groupId>
-	  <artifactId>org.wso2.carbon.ui.menu.governance</artifactId>
-	  <version>${carbon.version}</version>
-       </dependency>
-        <dependency>
-            <groupId>org.apache.batik.wso2</groupId>
-            <artifactId>batik</artifactId>
-            <version>1.7.0.wso2v1</version>
-        </dependency>-->
-        <!--<dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.ws.api</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>-->
-        <!--dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.logging.service</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.logging.admin.ui</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.logging.view.ui</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.event.api</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.event.broker</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.email.verification</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.email.verification.ui</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.eventing</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.registry.eventing</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.extensions</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.resource</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.properties.ui</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.properties</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.common</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.common.ui</artifactId>
-            <version>${registry-component.version}</version>
-        </dependency>
-	    <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.info.ui</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-		<dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.info</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-		<dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.search.ui</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-	    <dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.search</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-		<dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.activities.ui</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-	    <dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.activities</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-		<dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.relations.ui</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.relations</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-        <dependency>
-			<groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.lifecycles.ui</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.api</artifactId>
-            <version>${registry-component.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.lcm</artifactId>
-            <version>${registry-component.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.lcm.ui</artifactId>
-            <version>${registry-component.version}</version>
-        </dependency>
-		<dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.lifecycles</artifactId>
-            <version>${registry-component.version}</version>
-    	</dependency>
-        <dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.servlet</artifactId>
-            <version>${registry-component.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.statistics</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.server.admin</artifactId>
-            <version>${carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.server.admin.ui</artifactId>
-            <version>${carbon.version}</version>
-	    </dependency>
-        <dependency>
-			<groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.wsdltool.ui</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-
-        <dependency>
-	    <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.services.ui</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-
-        <dependency>
-	    <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.services</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-
-        <dependency>
-	    <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.list.ui</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-
-        <dependency>
-	    <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.list</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-        <dependency>
-	    <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.policy.ui</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-        <dependency>
-	    <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.wsdl.ui</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-        <dependency>
-	    <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.schema.ui</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-        <dependency>
-	    <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.notifications.ui</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-        <dependency>
-	    <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.resource.ui</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-	    <dependency>
-	    <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.wsdltool</artifactId>
-            <version>${governance-component.version}</version>
-        </dependency-->
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.carbon.governance.samples.lcm</artifactId>
@@ -385,81 +136,6 @@
             <artifactId>org.wso2.carbon.registry.handler</artifactId>
             <version>${registry-component.version}</version>
         </dependency>
-        <!--dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.registry.handler.ui</artifactId>
-            <version>${registry-component.version}</version>
-        </dependency>
-    	<dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.registry.extensions</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-    	<dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.custom.lifecycles.checklist.ui</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-    	<dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.custom.lifecycles.checklist</artifactId>
-            <version>${governance-component.version}</version>
-		</dependency>
-		<dependency>
-	        <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.governance.gadgetsource</artifactId>
-            <version>${governance-component.version}</version>
-    	</dependency>
-    	<dependency>
-	    <groupId>org.springframework.ws.wso2</groupId>
-            <artifactId>spring.framework</artifactId>
-            <version>2.5.1.wso2v1</version>
-	</dependency>
-        <dependency>
-            <groupId>rhino.wso2</groupId>
-            <artifactId>js</artifactId>
-            <version>1.7.0.R1-wso2v2</version>
-        </dependency>
-      		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.registry.profiles.ui</artifactId>
-			<version>${registry-component.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.identity.user.profile.ui</artifactId>
-			<version>${registry-component.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.user.mgt</artifactId>
-			<version>${registry-component.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.registry.profiles</artifactId>
-			<version>${registry-component.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.registry.profiles</artifactId>
-			<version>${registry-component.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.identity.user.profile</artifactId>
-			<version>${registry-component.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.identity.base</artifactId>
-			<version>${registry-component.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.identity.menu.ui</artifactId>
-			<version>${registry-component.version}</version>
-	</dependency-->
         <!--this dependency is needed for remote registry client-->
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
@@ -564,38 +240,9 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
                                 </artifactItem>
-                                <!--<artifactItem>-->
-                                <!--<groupId>org.wso2.carbon</groupId>-->
-                                <!--<artifactId>wso2carbon-core</artifactId>-->
-                                <!--<version>${carbon.version}</version>-->
-                                <!--<type>zip</type>-->
-                                <!--<overWrite>true</overWrite>-->
-                                <!--<classifier>sources</classifier>-->
-                                <!--<outputDirectory>target/sources</outputDirectory>-->
-                                <!--</artifactItem>-->
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!--<execution>-->
-                    <!--<id>unpack-carbon-component-sources</id>-->
-                    <!--<phase>package</phase>-->
-                    <!--<goals>-->
-                    <!--<goal>unpack-dependencies</goal>-->
-                    <!--</goals>-->
-                    <!--<configuration>-->
-                    <!--<classifier>sources</classifier>-->
-                    <!--<copyPom>true</copyPom>-->
-                    <!--<includeGroupIds>org.wso2.carbon</includeGroupIds>-->
-                    <!--<outputDirectory>target/sources/wso2-carbon-components-${carbon.version}-src</outputDirectory>-->
-                    <!--<excludeTransitive>true</excludeTransitive>-->
-                    <!--<failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>-->
-                    <!-- <useRepositoryLayout>true</useRepositoryLayout> -->
-                    <!--<useSubDirectoryPerArtifact>true</useSubDirectoryPerArtifact>-->
-                    <!--<stripVersion>true</stripVersion>-->
-                    <!-- make silent=true to stop verbose messages during buid -->
-                    <!--<silent>false</silent>-->
-                    <!--</configuration>-->
-                    <!--</execution>-->
                 </executions>
             </plugin>
 
@@ -813,10 +460,6 @@
                                 <reportSet>
                                     <reports>
                                         <report>index</report>
-                                        <!--                            <report>dependencies</report>
-                <report>dependency-convergence</report>
-                <report>mailing-list</report>
-                                        <report>issue-tracking</report-->
                                         <report>scm</report>
                                     </reports>
                                 </reportSet>
@@ -983,21 +626,6 @@
                             <pomFile>pom.xml</pomFile>
                         </configuration>
                     </execution>
-                    <!--execution>
-                        <id>install-src</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${build.version}</version>
-                            <classifier>src</classifier>
-                            <packaging>zip</packaging>
-                            <file>target/${project.artifactId}-${build.version}-src.zip</file>
-                        </configuration>
-                    </execution-->
                     <execution>
                         <id>install-docs</id>
                         <phase>install</phase>

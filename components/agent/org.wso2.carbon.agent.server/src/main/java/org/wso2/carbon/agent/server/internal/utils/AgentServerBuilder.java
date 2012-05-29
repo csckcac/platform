@@ -127,9 +127,9 @@ public final class AgentServerBuilder {
                                                       AgentServerConfiguration agentServerConfiguration){
         OMElement streamDefinitionStore = agentServerConfig.getFirstChildWithName(
                 new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE,
-                        AgentServerConstants.STREAM_DEFINITION_STORE));
+                          AgentServerConstants.STREAM_DEFINITION_STORE));
         if (streamDefinitionStore != null) {
-            agentServerConfiguration.setStreamDefinitionStore(streamDefinitionStore.getText());
+            agentServerConfiguration.setStreamDefinitionStoreName(streamDefinitionStore.getText());
         }
 
     }
@@ -158,7 +158,7 @@ public final class AgentServerBuilder {
             }
             populatePorts(agentServerConfig, serverConfiguration, agentServerConfiguration);
             populateEventStreamDefinitions(agentServerConfig, eventStreamDefinitions);
-            populateStreamDefinitionStore(agentServerConfig,agentServerConfiguration);
+            populateStreamDefinitionStore(agentServerConfig, agentServerConfiguration);
         }
     }
 }

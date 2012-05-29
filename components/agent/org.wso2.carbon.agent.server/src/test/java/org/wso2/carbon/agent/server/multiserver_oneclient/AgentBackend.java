@@ -78,7 +78,7 @@ public class AgentBackend {
             }
         }, new InMemoryStreamDefinitionStore());
         agentServer.subscribe(assignAgentCallback());
-        agentServer.start();
+        agentServer.start("localhost");
     }
 
     private AgentCallback assignAgentCallback() {

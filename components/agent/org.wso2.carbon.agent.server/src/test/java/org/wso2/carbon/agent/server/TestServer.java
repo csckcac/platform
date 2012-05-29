@@ -19,7 +19,6 @@
  */
 package org.wso2.carbon.agent.server;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.agent.commons.Event;
@@ -68,7 +67,7 @@ public class TestServer extends TestCase {
             }
 
         });
-        agentServer.start();
+        agentServer.start("localhost");
         log.info("Test Server Started");
     }
 

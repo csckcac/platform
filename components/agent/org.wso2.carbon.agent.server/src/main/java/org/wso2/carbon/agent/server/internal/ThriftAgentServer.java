@@ -66,17 +66,17 @@ public class ThriftAgentServer extends AbstractAgentServer {
     }
 
     @Override
-    protected void startSecureEventTransmission(int port, String keyStore, String keyStorePassword,
+    protected void startSecureEventTransmission(String hostName,int port, String keyStore, String keyStorePassword,
                                                 EventDispatcher eventDispatcher)
             throws TransportException, UnknownHostException {
         TSSLTransportFactory.TSSLTransportParameters params =
                 new TSSLTransportFactory.TSSLTransportParameters();
         params.setKeyStore(keyStore, keyStorePassword);
 
-        TServerSocket serverTransport = null;
+        TServerSocket serverTransport;
         try {
             serverTransport = TSSLTransportFactory.getServerSocket(
-                    port, AgentServerConstants.CLIENT_TIMEOUT_MS, InetAddress.getByName("localhost"), params);
+                    port, AgentServerConstants.CLIENT_TIMEOUT_MS, InetAddress.getByName(hostName), params);
         } catch (TTransportException e) {
             throw new TransportException("Thrift transport exception occurred ", e);
         }

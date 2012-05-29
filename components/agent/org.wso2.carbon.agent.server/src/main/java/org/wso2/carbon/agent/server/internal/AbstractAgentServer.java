@@ -19,6 +19,8 @@
  */
 package org.wso2.carbon.agent.server.internal;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
@@ -43,6 +45,7 @@ import java.util.List;
  * Carbon based implementation of the agent server
  */
 public abstract class AbstractAgentServer implements AgentServer {
+    private static final Log log = LogFactory.getLog(AbstractAgentServer.class);
     private EventDispatcher eventDispatcher;
     private AgentServerConfiguration agentServerConfiguration;
     private StreamDefinitionStore streamDefinitionStore;
@@ -137,9 +140,9 @@ public abstract class AbstractAgentServer implements AgentServer {
      * @throws org.wso2.carbon.agent.server.exception.AgentServerException
      *          if the agent server cannot be started
      */
-    public void start()
+    public void start(String hostName)
             throws AgentServerException {
-        startSecureEventTransmission(agentServerConfiguration.getSecureEventReceiverPort(),eventDispatcher);
+        startSecureEventTransmission(hostName,agentServerConfiguration.getSecureEventReceiverPort(),eventDispatcher);
         startEventTransmission(agentServerConfiguration.getEventReceiverPort(), eventDispatcher);
     }
 
@@ -147,7 +150,8 @@ public abstract class AbstractAgentServer implements AgentServer {
                                                    EventDispatcher eventDispatcher)
             throws AgentServerException;
 
-    private void startSecureEventTransmission(int port,EventDispatcher eventDispatcher) throws AgentServerException {
+    private void startSecureEventTransmission(String hostName, int port,
+                                              EventDispatcher eventDispatcher) throws AgentServerException {
         try {
 
             ServerConfiguration serverConfig = ServerConfiguration.getInstance();
@@ -166,7 +170,7 @@ public abstract class AbstractAgentServer implements AgentServer {
                 }
             }
 
-            startSecureEventTransmission(port, keyStore, keyStorePassword,eventDispatcher);
+            startSecureEventTransmission(hostName,port, keyStore, keyStorePassword,eventDispatcher);
         } catch (TransportException e) {
             throw new AgentServerException("Cannot start agent server on port " + port, e);
         } catch (UnknownHostException e) {
@@ -174,7 +178,7 @@ public abstract class AbstractAgentServer implements AgentServer {
         }
     }
 
-    protected abstract void startSecureEventTransmission(int port, String keyStore,
+    protected abstract void startSecureEventTransmission(String hostName, int port, String keyStore,
                                                          String keyStorePassword,
                                                          EventDispatcher eventDispatcher)
             throws AgentServerException, TransportException, UnknownHostException;

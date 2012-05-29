@@ -221,6 +221,14 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.mediator.payloadfactory.ui</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.mediator.ejb.ui</artifactId>
+        </dependency>
+         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.mediator.bean.ui</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -293,7 +301,9 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.proxyadmin.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.mediation.templates.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.payloadfactory.ui</bundleDef>
-                            </bundles>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.ejb.ui</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.mediator.bean.ui</bundleDef>
+                          </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.sequences.ui:${sequence.feature.version}</importFeatureDef>
                             </importFeatures>

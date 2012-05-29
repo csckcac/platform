@@ -310,6 +310,16 @@
                 <artifactId>org.wso2.carbon.mediator.payloadfactory.ui</artifactId>
                 <version>${wso2carbon.version.mediators}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.mediator.ejb.ui</artifactId>
+                <version>${wso2carbon.version.mediators}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.mediator.bean.ui</artifactId>
+                <version>${wso2carbon.version.mediators}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

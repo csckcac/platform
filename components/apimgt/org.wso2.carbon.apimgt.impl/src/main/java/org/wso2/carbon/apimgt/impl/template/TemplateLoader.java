@@ -36,6 +36,7 @@ public class TemplateLoader {
     private static final Log log = LogFactory.getLog(TemplateLoader.class);
 
     public static final String TEMPLATE_TYPE_API = "api";
+    public static final String TEMPLATE_TYPE_BLOCKED_API = "blocked_api";
     public static final String TEMPLATE_TYPE_RESOURCE = "resource";
     public static final String TEMPLATE_TYPE_COMPLEX_RESOURCE = "complex_resource";
     public static final String TEMPLATE_TYPE_HANDLERS = "handlers";

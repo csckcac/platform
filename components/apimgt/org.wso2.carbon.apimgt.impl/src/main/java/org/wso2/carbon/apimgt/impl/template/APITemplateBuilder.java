@@ -36,8 +36,4 @@ public interface APITemplateBuilder {
 
     public OMElement getConfigXMLForTemplate() throws APITemplateException;
 
-    public String getAPIName();
-
-    public String getAPIContext();
-
 }

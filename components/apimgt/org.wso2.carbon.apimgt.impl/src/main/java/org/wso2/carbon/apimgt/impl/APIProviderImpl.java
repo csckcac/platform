@@ -360,7 +360,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         if (oldApi.getStatus().equals(api.getStatus())) {
             createAPI(api);
             if (isAPIPublished(api)) {
-                updateGatewayConfiguration(api);
+                publishToGateway(api);
             }
         } else {
             // We don't allow API status updates via this method.
@@ -375,9 +375,13 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         if (!currentStatus.equals(status)) {
             api.setStatus(status);
             createAPI(api);
-            if (updateGatewayConfig && currentStatus.equals(APIStatus.CREATED) &&
-                    status.equals(APIStatus.PUBLISHED)) {
-                publishToGateway(api);
+            if (updateGatewayConfig) {
+                if (status.equals(APIStatus.PUBLISHED) || status.equals(APIStatus.DEPRECATED) ||
+                        status.equals(APIStatus.BLOCKED)) {
+                    publishToGateway(api);
+                } else {
+                    removeFromGateway(api);
+                }
             }
 
             apiMgtDAO.recordAPILifeCycleEvent(api.getId(), currentStatus, status, userId);
@@ -386,25 +390,41 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
 
     private void publishToGateway(API api) throws APIManagementException {
         try {
-            RESTAPIAdminClient client = new RESTAPIAdminClient(getTemplateBuilder(api));
-            client.addApi();
+            RESTAPIAdminClient client = new RESTAPIAdminClient(api.getId());
+            APITemplateBuilder builder;
+            if (api.getStatus().equals(APIStatus.BLOCKED)) {
+                Map<String, String> testAPIMappings = new HashMap<String, String>();
+                testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, api.getId().getProviderName() +
+                        "--" + api.getId().getApiName());
+                testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, api.getContext());
+                testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, api.getId().getVersion());
+                builder = new BasicTemplateBuilder(testAPIMappings);
+            } else {
+                builder = getTemplateBuilder(api);
+            }
+
+            if (client.getApi() != null) {
+                client.updateApi(builder);
+            } else {
+                client.addApi(builder);
+            }
         } catch (AxisFault axisFault) {
             handleException("Error while creating new API in gateway", axisFault);
         }
     }
 
-    private void updateGatewayConfiguration(API api) throws APIManagementException {        
+    private void removeFromGateway(API api) throws APIManagementException {
         try {
-            RESTAPIAdminClient client = new RESTAPIAdminClient(getTemplateBuilder(api));
-            client.updateApi();
+            RESTAPIAdminClient client = new RESTAPIAdminClient(api.getId());
+            client.deleteApi();
         } catch (AxisFault axisFault) {
-            handleException("Error while updating API in the API gateway", axisFault);
+            handleException("Error while creating new API in gateway", axisFault);
         }
     }
     
     private boolean isAPIPublished(API api) throws APIManagementException {
         try {
-            RESTAPIAdminClient client = new RESTAPIAdminClient(getTemplateBuilder(api));
+            RESTAPIAdminClient client = new RESTAPIAdminClient(api.getId());
             return client.getApi() != null;
         } catch (AxisFault axisFault) {
             handleException("Error while checking API status", axisFault);

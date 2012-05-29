@@ -1654,4 +1654,74 @@ public class ApiMgtDAO {
         }
         return events;    
     }
+    
+    public void makeKeysForwardCompatible(APIIdentifier oldApi, APIIdentifier newApi) throws APIManagementException {
+        String oldApiId = oldApi.getProviderName() + "_" + oldApi.getApiName() + "_" + 
+                oldApi.getVersion();
+
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        String getSubscriptionDataQuery = "SELECT" +
+                " SUB.SUBSCRIPTION_ID AS SUBSCRIPTION_ID," +
+                " SUB.TIER_ID AS TIER_ID," +
+                " SUB.APPLICATION_ID AS APPLICATION_ID," +
+                " KCM.CONTEXT AS CONTEXT," +
+                " KCM.ACCESS_TOKEN AS ACCESS_TOKEN," +
+                " SKM.KEY_TYPE AS KEY_TYPE " +
+                "FROM" +
+                " AM_SUBSCRIPTION SUB," +
+                " AM_KEY_CONTEXT_MAPPING KCM," +
+                " AM_SUBSCRIPTION_KEY_MAPPING SKM " +
+                "WHERE" +
+                " SUB.API_ID = ?" +
+                " AND SKM.SUBSCRIPTION_ID = SUB.SUBSCRIPTION_ID" +
+                " AND KCM.KEY_CONTEXT_MAPPING_ID = SKM.KEY_CONTEXT_MAPPING_ID";
+
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            prepStmt = connection.prepareStatement(getSubscriptionDataQuery);
+            prepStmt.setString(1, oldApiId);
+            rs = prepStmt.executeQuery();
+
+            Map<Integer,Collection<SubscriptionInfo>> subscriptionData = new HashMap<Integer, Collection<SubscriptionInfo>>();
+            while (rs.next()) {
+                SubscriptionInfo info = new SubscriptionInfo();
+                info.subscriptionId = rs.getInt("SUBSCRIPTION_ID");
+                info.tierId = rs.getString("TIER_ID");
+                info.context = rs.getString("CONTEXT");
+                info.applicationId = rs.getInt("APPLICATION_ID");
+                info.accessToken = rs.getString("ACCESS_TOKEN");
+                info.tokenType = rs.getString("KEY_TYPE");
+                
+                Collection<SubscriptionInfo> infoById = subscriptionData.get(info.subscriptionId);
+                if (infoById != null) {
+                    infoById.add(info);
+                } else {
+                    infoById = new ArrayList<SubscriptionInfo>();
+                    infoById.add(info);
+                    subscriptionData.put(info.subscriptionId, infoById);
+                }
+            }
+            prepStmt.close();
+            rs.close();
+
+        } catch (SQLException e) {
+            log.error("Error when executing the SQL queries");
+            throw new APIManagementException("Error when reading the application information from" +
+                    " the persistence store.", e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
+        }
+        
+    }
+    
+    private static class SubscriptionInfo {
+        private int subscriptionId;
+        private String tierId;
+        private String context;
+        private int applicationId;
+        private String accessToken;
+        private String tokenType;
+    }
 }

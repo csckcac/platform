@@ -17,6 +17,7 @@
 package org.wso2.carbon.apimgt.impl.utils;
 
 import org.apache.axis2.AxisFault;
+import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 import org.wso2.carbon.apimgt.impl.template.APITemplateBuilder;
 import org.wso2.carbon.rest.api.stub.RestApiAdminStub;
 import org.wso2.carbon.rest.api.stub.types.carbon.APIData;
@@ -24,17 +25,18 @@ import org.wso2.carbon.rest.api.stub.types.carbon.APIData;
 public class RESTAPIAdminClient extends AbstractAPIGatewayAdminClient {
 
     private RestApiAdminStub restApiAdminStub;
-    private APITemplateBuilder builder;
+    private String qualifiedName;
     
-    public RESTAPIAdminClient(APITemplateBuilder builder) throws AxisFault {
-        this.builder = builder;
+    public RESTAPIAdminClient(APIIdentifier apiId) throws AxisFault {
+        this.qualifiedName = apiId.getProviderName() + "--" + apiId.getApiName() +
+                ":v" + apiId.getVersion();
         String url = getServerURL();
         String cookie = login(url);
         restApiAdminStub = new RestApiAdminStub(null, url + "RestApiAdmin");
         setup(restApiAdminStub, cookie);
     }
 
-    public void addApi() throws AxisFault {
+    public void addApi(APITemplateBuilder builder) throws AxisFault {
         try {
             String apiConfig = builder.getConfigStringForTemplate();
             restApiAdminStub.addApiFromString(apiConfig);
@@ -45,16 +47,16 @@ public class RESTAPIAdminClient extends AbstractAPIGatewayAdminClient {
 
     public APIData getApi() throws AxisFault {
         try {
-            return restApiAdminStub.getApiByName(builder.getAPIName());
+            return restApiAdminStub.getApiByName(qualifiedName);
         } catch (Exception e) {
             throw new AxisFault("Error while obtaining API information from gateway", e);
         }
     }
 
-    public void updateApi() throws AxisFault{
+    public void updateApi(APITemplateBuilder builder) throws AxisFault{
         try {
             String apiConfig = builder.getConfigStringForTemplate();
-            restApiAdminStub.updateApiFromString(builder.getAPIName(), apiConfig);
+            restApiAdminStub.updateApiFromString(qualifiedName, apiConfig);
         } catch (Exception e) {
             throw new AxisFault("Error while updating API", e);
         }
@@ -62,7 +64,7 @@ public class RESTAPIAdminClient extends AbstractAPIGatewayAdminClient {
 
     public void deleteApi() throws AxisFault{
         try {
-            restApiAdminStub.deleteApi(builder.getAPIName());
+            restApiAdminStub.deleteApi(qualifiedName);
         } catch (Exception e) {
             throw new AxisFault("Error while deleting API", e);
         }

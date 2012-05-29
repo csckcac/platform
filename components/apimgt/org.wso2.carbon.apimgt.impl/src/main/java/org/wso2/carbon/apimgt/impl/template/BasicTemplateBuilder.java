@@ -40,6 +40,8 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
     private Map<String,String> apiMappings;
     private List<Map<String,String>> resourceMappings;
     private List<Map<String,String>> handlerMappings;
+    
+    private boolean blockedAPI = false;
 
     public BasicTemplateBuilder(Map<String,String> apiMappings,
                                 List<Map<String,String>> resourceMappings,
@@ -47,6 +49,11 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
         this.apiMappings = apiMappings;
         this.resourceMappings = resourceMappings;
         this.handlerMappings = handlerMappings;
+    }
+    
+    public BasicTemplateBuilder(Map<String,String> apiMappings) {
+        this.apiMappings = apiMappings;
+        this.blockedAPI = true;
     }
 
     public String getConfigStringForTemplate() throws APITemplateException {
@@ -61,18 +68,19 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
             }
         }
 
-        OMElement handlersConfigOM = createOMElementFrom(
-                templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_HANDLERS));
-
         List<String> handlerConfigs = constructHandlerConfig();
-        for (String handlerConfig : handlerConfigs) {
-            OMElement configSingleHandlerOM = createOMElementFrom(handlerConfig);
-            if (configSingleHandlerOM != null) {
-                handlersConfigOM.addChild(configSingleHandlerOM);
+        if (handlerConfigs.size() > 0) {
+            OMElement handlersConfigOM = createOMElementFrom(
+                    templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_HANDLERS));
+            for (String handlerConfig : handlerConfigs) {
+                OMElement configSingleHandlerOM = createOMElementFrom(handlerConfig);
+                if (configSingleHandlerOM != null) {
+                    handlersConfigOM.addChild(configSingleHandlerOM);
+                }
             }
+            configAPIOM.addChild(handlersConfigOM);
         }
 
-        configAPIOM.addChild(handlersConfigOM);
         return configAPIOM.toString();
     }
 
@@ -80,20 +88,17 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
         return createOMElementFrom(getConfigStringForTemplate());
     }
 
-    public String getAPIName() {
-        return apiMappings.get(KEY_FOR_API_NAME) + ":v" + apiMappings.get(KEY_FOR_API_VERSION);
-    }
-
-    public String getAPIContext() {
-        return apiMappings.get(KEY_FOR_API_CONTEXT);
-    }
-
     private String constructAPIConfig() throws APITemplateException {
         if (apiMappings.containsKey(KEY_FOR_API_NAME) &&
                 apiMappings.containsKey(KEY_FOR_API_CONTEXT) &&
                 apiMappings.containsKey(KEY_FOR_API_VERSION)) {
 
-            String apiTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_API);
+            String apiTemplate;
+            if (blockedAPI) {
+                apiTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_BLOCKED_API);
+            } else {
+                apiTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_API);
+            }
             String apiConfig = apiTemplate.toString().
                     replaceAll("\\[1\\]", apiMappings.get(KEY_FOR_API_NAME)).
                     replaceAll("\\[2\\]", apiMappings.get(KEY_FOR_API_CONTEXT)).
@@ -105,8 +110,11 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
     }
 
     private List<String> constructResourceConfig() throws APITemplateException {
-        Iterator<Map<String,String>> resourceMaps = resourceMappings.iterator();
         List<String> resourceListString = new ArrayList<String>();
+        if (resourceMappings == null) {
+            return resourceListString;
+        }
+        Iterator<Map<String,String>> resourceMaps = resourceMappings.iterator();
 
         int i = 0;
         while (resourceMaps.hasNext()) {
@@ -144,8 +152,11 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
     }
 
     private List<String> constructHandlerConfig() throws APITemplateException {
-        Iterator<Map<String,String>> handlerMaps = handlerMappings.iterator();
         List<String> handlerListStr = new ArrayList<String>();
+        if (handlerMappings == null) {
+            return handlerListStr;
+        }
+        Iterator<Map<String,String>> handlerMaps = handlerMappings.iterator();
 
         String complexHandlerTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_COMPLEX_HANDLER);
         String simpleHandlerTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_SIMPLE_HANDLER);

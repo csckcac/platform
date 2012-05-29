@@ -5,6 +5,7 @@
 %>
 <div id="item-info">
     <h2><%=api.name%>-v<%=api.version%></h2>
+    <span id="spanProvider" style="display:none;"><%=api.provider%></span>
     <ul id="tab" class="nav nav-tabs tabs">
         <li class="active"><a href="#view" data-toggle="tab" id="viewLink"><i class="icon-file"></i>Overview</a></li>
         <li><a href="#edit" data-toggle="tab" id="editLink"><i class="icon-edit"></i>Edit</a></li>

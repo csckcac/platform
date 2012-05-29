@@ -4,53 +4,16 @@
    var result = subs.getSubscribersOfAPI(api);
    var subscribers = result.subscribers;
 
-   var mod = jagg.module("statistics");
-   var provider = request.getParameter("provider");
-   var serviceTimes = mod.getProviderAPIServiceTime(provider,"");
-   var length = serviceTimes.usage.length;
-   var responseTime = null;
-   for (var i = 0; i < length; i++) {
-        if (serviceTimes.usage[i].apiName == api.name) {
-            responseTime = serviceTimes.usage[i].serviceTime + " ms";
-            break;
-        }
-   }
-
-   var accessTimes = mod.getProviderAPIVersionUserLastAccess(provider,"");
-   length = accessTimes.usage.length;
-   var lastAccessTime = null;
-   for (var i = 0; i < length; i++) {
-        if (accessTimes.usage[i].api_name == api.name) {
-            lastAccessTime = accessTimes.usage[i].lastAccess + " (Accessed version: " + accessTimes.usage[i].api_version + ")";
-            break;
-        }
-   }
 %>
-<%
-    if (responseTime != null && lastAccessTime != null) {
-%>
-    <div class="row-fluid">
-        <div class="span6">
-            <h3>Usage Summary</h3>
-            <table class="table table-bordered">
-                <tbody>
-                <tr>
-                    <td class="span4">Response Time (Across all versions)</td>
-                    <td><%=responseTime != null ? responseTime : "Data unavailable"%></td>
-                </tr>
-                <tr>
-                    <td class="span4">Last access time (Across all versions)</td>
-                    <td><%=lastAccessTime != null ? lastAccessTime : "Data unavailable"%></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+  <div class="row-fluid" id="usageSummary" style="display:none;">
+    <div class="span6">
+        <h3>Usage Summary</h3>
+        <table id="usageTable" class="table table-bordered">
+        </table>
     </div>
-<%
-    }
-%>
-    <div class="row-fluid">
+</div>
 
+    <div class="row-fluid">
             <div class="span12">
                 <h3>Active Subscriptions</h3>
                 <table class="table table-bordered">

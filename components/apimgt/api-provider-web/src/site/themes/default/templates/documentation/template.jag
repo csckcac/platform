@@ -119,23 +119,26 @@
                 <tr id="<%=api.name%>-<%=doc.name%>">
                     <td><a href="#"><%=doc.name%></a></td>
                     <td><%=doc.type%></td>
-                    <td>
+                    <td><%if(createPermitted){%>
                         <% if(doc.sourceType == "INLINE") { %>
                         <a href="javascript:editInlineContent('<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">
                         <%}else{%>
                         <a href="<%=doc.sourceUrl%>">
                         <%}%>
                         View
-                        </a></td>
+                        </a>
+                        <%}else{%>View<%}%>
+                        </td>
 
                     <td><a href="#"><%=user.username%></a></td>
                     <td><%=doc.lastUpdated%></td>
-                    <td> <% if(doc.sourceType == "INLINE") { %>
+                    <td><%if(createPermitted){%>
+                        <% if(doc.sourceType == "INLINE") { %>
                         <a href="javascript:editInlineContent('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Edit Content | </a>
-                        <% } %>
-                        <a href="javascript:updateDocumentation('<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Update | </a>
+                        <% }}else{ %>Edit Content | <%}%>
+                        <%if(createPermitted){%> <a href="javascript:updateDocumentation('<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Update | </a> <% }else{ %>Update |  <%}%>
                         <a href="javascript:removeDocumentation('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>')">Delete | </a>
-                        <a href="javascript:copyDocumentation('<%=doc.name%>','<%=doc.type%>')">Copy</a>
+                        <%if(createPermitted){%><a href="javascript:copyDocumentation('<%=doc.name%>','<%=doc.type%>')">Copy</a><% }else{ %>Copy <%}%>
                     </td>
                 </tr>
                 <% } %>

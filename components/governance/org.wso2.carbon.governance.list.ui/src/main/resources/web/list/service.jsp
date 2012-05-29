@@ -110,7 +110,7 @@
         		<tbody>
                           <tr>
         		    <td>
-       				<a class="icon-link" href="#" style="background-image: url(../component-mgt/images/search.gif);" onclick="submitFilterByNameForm(); return false;" alt="Search"></a>
+       				<a class="icon-link" href="#" style="background-image: url(../search/images/search.gif);" onclick="submitFilterByNameForm(); return false;" alt="Search"></a>
         		   </td>
         		   <td style="vertical-align:middle;padding-left:10px;padding-right:5px;">|</td>
                            <td>

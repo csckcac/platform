@@ -48,7 +48,6 @@
         <sslport>8672</sslport>
         <socketReceiveBuffer>32768</socketReceiveBuffer>
         <socketSendBuffer>32768</socketSendBuffer>
-        <bind>127.0.0.1</bind>
     </connector>
     <management>
         <enabled>true</enabled>

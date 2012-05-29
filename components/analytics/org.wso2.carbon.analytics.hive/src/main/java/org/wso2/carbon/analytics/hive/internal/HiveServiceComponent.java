@@ -20,6 +20,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hive.common.ServerUtils;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.service.HiveServer;
+import org.apache.synapse.commons.datasource.DataSourceInformation;
+import org.apache.synapse.commons.datasource.DataSourceInformationRepository;
+import org.apache.synapse.commons.datasource.factory.DataSourceFactory;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
@@ -33,6 +36,7 @@ import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.impl.HiveExecutorServiceImpl;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
+import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
 import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.ntask.core.service.TaskService;
@@ -40,7 +44,9 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.securevault.secret.SecretInformation;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.util.Map;
 import java.util.Properties;
@@ -56,6 +62,8 @@ import java.util.concurrent.Executors;
  * bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
  * @scr.reference name="ntask.component" interface="org.wso2.carbon.ntask.core.service.TaskService"
  * cardinality="1..1" policy="dynamic" bind="setTaskService" unbind="unsetTaskService"
+ * @scr.reference name="datasource.component" interface="org.wso2.carbon.datasource.DataSourceInformationRepositoryService"
+ * cardinality="1..1" policy="dynamic" bind="setDataSourceInformationRepositoryService" unbind="unsetDataSourceInformationRepositoryService"
  */
 
 public class HiveServiceComponent {
@@ -64,8 +72,8 @@ public class HiveServiceComponent {
 
     private static final String CARBON_HOME_ENV = "CARBON_HOME";
 
-    private static final String LOG4J_LOCATION="repository" + File.separator + "conf" +
-                                               File.separator + "log4j.properties";
+    private static final String LOG4J_LOCATION = "repository" + File.separator + "conf" +
+                                                 File.separator + "log4j.properties";
 
     private static final String LOG4J_PROPERTY = "log4j.properties";
 
@@ -88,7 +96,7 @@ public class HiveServiceComponent {
 
         // Setting up log4j system property so that forked VM during local mode execution can obtain
         // carbon log4j configurations
-        
+
         String log4jFile = carbonHome + File.separator + LOG4J_LOCATION;
         System.setProperty(LOG4J_PROPERTY, log4jFile);
 
@@ -101,8 +109,8 @@ public class HiveServiceComponent {
                 HiveExecutorService.class.getName(),
                 ServiceHolder.getHiveExecutorService(),
                 null);
-        HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
-        connectionManager.loadHiveConnectionConfiguration(ctx.getBundleContext());
+/*        HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
+        connectionManager.loadHiveConnectionConfiguration(ctx.getBundleContext());*/
 
         TaskService taskService = ServiceHolder.getTaskService();
 
@@ -115,6 +123,47 @@ public class HiveServiceComponent {
             log.error("Error while initializing TaskManager. Script scheduling may not" +
                       " work properly..", e);
         }
+
+        DataSourceInformationRepositoryService dataSourceInfoService = ServiceHolder.
+                getDataSourceInformationRepositoryService();
+        DataSourceInformationRepository repository = dataSourceInfoService.
+                getDataSourceInformationRepository();
+
+        // Registers HIVE DataSource used to connect to Hive service at component startup if not
+        // already existing
+        DataSourceInformation info = repository.
+                getDataSourceInformation(HiveConstants.DEFAULT_HIVE_DATASOURCE);
+        if (info == null) {
+            info = new DataSourceInformation();
+            info.setDatasourceName(HiveConstants.DEFAULT_HIVE_DATASOURCE);
+            info.setDriver(HiveConstants.HIVE_DRIVER);
+            info.setUrl(HiveConstants.HIVE_DEFAULT_URL);
+
+            SecretInformation secretInformation = new SecretInformation();
+            secretInformation.setUser(HiveConstants.HIVE_DEFAULT_USER);
+
+            info.setSecretInformation(secretInformation);
+
+            secretInformation = new SecretInformation();
+            secretInformation.setAliasSecret(HiveConstants.HIVE_DEFAULT_PASSWORD);
+
+            info.setSecretInformation(secretInformation);
+
+            repository.addDataSourceInformation(info);
+
+        }
+
+        DataSource dataSource = DataSourceFactory.createDataSource(info);
+        if (dataSource == null) {
+            log.error("Hive DataSource cannot be created..");
+        }
+
+        // Initialize HiveConnectionManager
+        HiveConnectionManager connectionManager = HiveConnectionManager.getInstance();
+        connectionManager.initialize(dataSource);
+
+        ServiceHolder.setHiveConnectionManager(connectionManager);
+
     }
 
     protected void deactivate(ComponentContext ctxt) {
@@ -148,6 +197,17 @@ public class HiveServiceComponent {
 
     protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
         ServiceHolder.setConfigurationContextService(null);
+    }
+
+    protected void setDataSourceInformationRepositoryService(
+            DataSourceInformationRepositoryService dataSourceInfoService) {
+        ServiceHolder.setDataSourceInformationRepositoryService(dataSourceInfoService);
+
+    }
+
+    protected void unsetDataSourceInformationRepositoryService(
+            DataSourceInformationRepositoryService dataSourceInfoService) {
+        ServiceHolder.setDataSourceInformationRepositoryService(null);
     }
 
     public class HiveRunnable implements Runnable {

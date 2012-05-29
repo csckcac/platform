@@ -31,6 +31,7 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
+import javax.sql.DataSource;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -38,6 +39,8 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -46,6 +49,11 @@ public class HiveConnectionManager {
     private static final Log log = LogFactory.getLog(HiveConnectionManager.class);
     private HashMap<String, String> credentials;
     public static HiveConnectionManager instance = null;
+
+    private Connection connection = null;
+    private DataSource dataSource = null;
+
+    private boolean initialized = false;
 
     private HiveConnectionManager() {
         credentials = new HashMap<String, String>();
@@ -57,6 +65,23 @@ public class HiveConnectionManager {
             instance = new HiveConnectionManager();
         }
         return instance;
+    }
+
+    public void initialize(DataSource dataSource) {
+        this.dataSource = dataSource;
+        this.initialized = true;
+    }
+
+    public Connection getHiveConnection() throws HiveConnectionException {
+        if (initialized) {
+            try {
+                return dataSource.getConnection();
+            } catch (SQLException e) {
+                throw new HiveConnectionException("Error getting Hive Data Source Connection..", e);
+            }
+        } else {
+            throw new HiveConnectionException("HiveConnectionManager not initialized yet..");
+        }
     }
 
     public void loadHiveConnectionConfiguration(BundleContext bundleContext) {

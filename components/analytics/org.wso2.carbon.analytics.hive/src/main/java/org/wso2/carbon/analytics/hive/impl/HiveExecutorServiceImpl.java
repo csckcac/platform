@@ -18,9 +18,11 @@ package org.wso2.carbon.analytics.hive.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.hive.HiveConstants;
+import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.dto.QueryResult;
 import org.wso2.carbon.analytics.hive.dto.QueryResultRow;
+import org.wso2.carbon.analytics.hive.exception.HiveConnectionException;
 import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
 import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 
@@ -34,6 +36,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
     private boolean initialized;
 
+    // TODO: Use datasource component instead of explicitly creating connections
     public void initialize(String driverName) {
         try {
             Class.forName(driverName);
@@ -52,18 +55,24 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
      */
     public QueryResult[] execute(String script) throws HiveExecutionException {
         if (script != null) {
-            Connection con = null;
-            HiveConnectionManager confManager = HiveConnectionManager.getInstance();
+            /*HiveConnectionManager confManager = HiveConnectionManager.getInstance();
 
             if (!initialized) {
                 initialize(confManager.getConfValue(HiveConstants.HIVE_DRIVER_KEY));
+            }*/
+
+            Connection con;
+            try {
+                con = ServiceHolder.getConnectionManager().getHiveConnection();
+            } catch (HiveConnectionException e) {
+                throw new HiveExecutionException("Error while connecting to Hive service..", e);
             }
 
             try {
-                con = DriverManager.getConnection(confManager.
+/*                con = DriverManager.getConnection(confManager.
                         getConfValue(HiveConstants.HIVE_URL_KEY), confManager.
                         getConfValue(HiveConstants.HIVE_USERNAME_KEY), confManager.
-                        getConfValue(HiveConstants.HIVE_PASSWORD_KEY));
+                        getConfValue(HiveConstants.HIVE_PASSWORD_KEY));*/
                 Statement stmt = con.createStatement(); // TODO: Use datasource
 
                 String[] cmdLines = script.split(";\\r?\\n|;\\r"); // Tokenize with ;[new-line]

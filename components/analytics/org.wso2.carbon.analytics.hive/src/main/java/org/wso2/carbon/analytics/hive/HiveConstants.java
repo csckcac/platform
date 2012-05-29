@@ -18,6 +18,9 @@ package org.wso2.carbon.analytics.hive;
 public class HiveConstants {
 
     public static final String HIVE_DRIVER = "org.apache.hadoop.hive.jdbc.HiveDriver";
+    public static final String HIVE_DEFAULT_URL = "jdbc:hive://localhost:10000/default";
+    public static final String HIVE_DEFAULT_USER = "admin";
+    public static final String HIVE_DEFAULT_PASSWORD = "admin";
     public static final String HIVE_SCRIPT_BASE_PATH= "/repository/hive/scripts/";
     public static final String HIVE_SCRIPT_EXT = ".hiveql";
     public static final String HIVE_CONNECTION_CONF_PATH="/repository/hive/conf/";
@@ -36,5 +39,7 @@ public class HiveConstants {
 
     public static final String HIVE_DEFAULT_TASK_CLASS = "org.wso2.carbon.analytics.hive.task.HiveScriptExecutorTask";
     public static final String HIVE_TASK = "HIVE_TASK";
+
+    public static final String DEFAULT_HIVE_DATASOURCE = "HIVE_DATASOURCE";
 
 }

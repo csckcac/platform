@@ -25,6 +25,7 @@ import org.wso2.carbon.appfactory.application.deployment.service.internal.AppFac
 import org.wso2.carbon.appfactory.application.deployment.service.internal.ApplicationUploadClient;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.application.mgt.stub.upload.types.carbon.UploadedFileItem;
+import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.activation.DataHandler;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ApplicationDeploymentService {
+public class ApplicationDeploymentService extends AbstractAdmin {
     private static final Log log = LogFactory.getLog(ApplicationDeploymentService.class);
     private static AppFactoryConfiguration appFactoryConfiguration = AppFactoryConfigurationHolder.getInstance().getAppFactoryConfiguration();
     private ISVNClientAdapter svnClient;

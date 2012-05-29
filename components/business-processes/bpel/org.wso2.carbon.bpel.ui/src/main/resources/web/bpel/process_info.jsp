@@ -238,10 +238,6 @@
 
         return serviceLocalName;
     }
-
-    function refresh() {
-        location.reload(true);
-    }
 </script>
 <%
     }
@@ -264,9 +260,7 @@
 <jsp:include page="../dialog/display_messages.jsp"/>
 <div id="middle">
 
-<h2><fmt:message key="bpel.process_info"/> (<%=processID%>)
-    <button id="refreshButton" onclick="refresh()" style="text-align:left; float:right; height: 25px; font-size: 11px;">Refresh</button>
-</h2>
+<h2><fmt:message key="bpel.process_info"/> (<%=processID%>)</h2>
 
     <div id="workArea">
 <%

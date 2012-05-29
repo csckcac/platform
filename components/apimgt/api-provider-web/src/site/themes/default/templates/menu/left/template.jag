@@ -12,13 +12,18 @@
     var userMappedUrl=jagg.getMappedUrl("/site/pages/user.jag");
     var statsUrl=jagg.getAbsoluteUrl("/site/pages/statistics.jag");
     var statsMappedUrl=jagg.getMappedUrl("/site/pages/statistics.jag");
+
+    var  mod,result,isPermitted;
+    mod = jagg.module("api");
+    result = mod.hasCreatePermission();
+    isPermitted=result.permitted;
 %>
 
 <div class="sidebar-nav well">
     <ul class="nav nav-list">
        <li class="nav-header">APIs</li>
         <li <% if(reqUrl.equals(site.context)||reqUrl.indexOf(listUrl)>=0 || reqUrl.indexOf(listMappedUrl)>=0||reqUrl.indexOf(infoUrl)>=0 || reqUrl.indexOf(infoMappedUrl)>=0){%>class="active"<% } %>><a href="<%=listMappedUrl%>?page=1">Browse</a></li>
-        <li <% if(reqUrl.indexOf(addUrl)>=0 || reqUrl.indexOf(addMappedUrl)>=0){%>class="active"<% } %>><a href="<%=addMappedUrl%>">Add</a></li>
+        <%if(isPermitted){%><li <% if(reqUrl.indexOf(addUrl)>=0 || reqUrl.indexOf(addMappedUrl)>=0){%>class="active"<% } %>><a href="<%=addMappedUrl%>">Add</a></li><%}%>
         <li class="nav-header">My APIs</li>
         <li <% if(reqUrl.indexOf(subsUrl)>=0|| reqUrl.indexOf(userUrl)>=0||reqUrl.indexOf(userMappedUrl)>=0||reqUrl.indexOf(subsMappedUrl)>=0){%>class="active"<% } %>><a href="<%=subsMappedUrl%>">Users/Keys</a></li>
         <li <% if(reqUrl.indexOf(statsUrl)>=0||reqUrl.indexOf(statsMappedUrl)>=0){%>class="active"<% } %>><a href="<%=statsMappedUrl%>">Statistics</a></li>

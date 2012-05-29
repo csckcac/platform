@@ -3,9 +3,15 @@ include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
-    var user = jagg.getUser();
+    var  mod,result,isPermitted,user = jagg.getUser();
+    mod = jagg.module("api");
+    result = mod.hasCreatePermission();
+    isPermitted=result.permitted;
     if (!user) {
         response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/login.jag"));
+        return;
+    }else if (!isPermitted) {
+        response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/index.jag"));
         return;
     }
     jagg.render({

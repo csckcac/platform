@@ -40,8 +40,85 @@
         </license>
     </licenses>
 
+    <build>
+       <sourceDirectory>src</sourceDirectory>
+       <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+       </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+        </dependency>
+    	<dependency>
+            <groupId>org.apache.ws.security.wso2</groupId>
+            <artifactId>wss4j</artifactId>
+    	</dependency>
+        <dependency>
+            <groupId>org.apache.neethi.wso2</groupId>
+            <artifactId>neethi</artifactId>
+            <version>${neethi.version}</version>
+        </dependency>
+    	<!--<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.security.rampart</artifactId>
+    	</dependency>
+    	<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.security.rahas</artifactId>
+    	</dependency>-->
+        <dependency>
+            <groupId>org.apache.rampart.wso2</groupId>
+            <artifactId>rampart-policy</artifactId>
+	    <version>${rampart.osgi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rampart.wso2</groupId>
+            <artifactId>rampart-trust</artifactId>
+            <version>${rampart.osgi.version}</version>
+        </dependency>
+	<dependency>
+            <groupId>org.apache.rampart.wso2</groupId>
+            <artifactId>rampart-core</artifactId>
+	    <version>${rampart.osgi.version}</version>
+        </dependency>
+    </dependencies>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.7.1</version>
+                <configuration>
+                    <outputDirectory>../../../target/site/${project.artifactId}</outputDirectory>
+                    <reportsDirectory>target/surefire-reports</reportsDirectory>
+                    <outputName>${project.artifactId}-test-report</outputName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-site-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<outputDirectory>../../target/site/${project.artifactId}</outputDirectory>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        </plugins>
+    </reporting>
     <modules>
-        <module>product</module>
-        <module>service</module>
+        <module>clients</module>
     </modules>
 </project>

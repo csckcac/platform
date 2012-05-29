@@ -1,7 +1,0 @@
-WSO2 Software License & Copyright Manager sample
-================================================
-1. Type 'ant' from this folder
-
-This will create a sample derby database inside current folder (./database/LICENSE_MANAGER_DB), polulate it with few records & deploy sample dataservice into server.
-
-

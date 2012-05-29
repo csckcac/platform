@@ -43,6 +43,7 @@ import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.impl.UserAwareAPIProvider;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
+import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
 import org.wso2.carbon.apimgt.usage.client.APIUsageStatisticsClient;
 import org.wso2.carbon.apimgt.usage.client.dto.*;
 import org.wso2.carbon.apimgt.usage.client.dto.APIUsageDTO;
@@ -351,13 +352,28 @@ public class APIProviderHostObject extends ScriptableObject {
         String version = (String) apiData.get("version", apiData);
         String status = (String) apiData.get("status", apiData);
         boolean publishToGateway = Boolean.parseBoolean((String) apiData.get("publishToGateway", apiData));
+        boolean deprecateOldVersions = false;
 
         try {
             APIProvider apiProvider = getAPIProvider(thisObj);
             APIIdentifier apiId = new APIIdentifier(provider, name, version);
             API api = apiProvider.getAPI(apiId);
-            apiProvider.changeAPIStatus(api, getApiStatus(status),
-                    ((APIProviderHostObject) thisObj).getUsername(), publishToGateway);
+            APIStatus oldStatus = api.getStatus();
+            APIStatus newStatus = getApiStatus(status);
+            String currentUser = ((APIProviderHostObject) thisObj).getUsername();
+            apiProvider.changeAPIStatus(api, newStatus, currentUser, publishToGateway);
+
+            if (oldStatus.equals(APIStatus.CREATED) && newStatus.equals(APIStatus.PUBLISHED) && deprecateOldVersions) {
+                List<API> apiList = apiProvider.getAPIsByProvider(provider);
+                APIVersionComparator versionComparator = new APIVersionComparator();
+                for (API oldAPI : apiList) {
+                    if (oldAPI.getId().getApiName().equals(name) && 
+                            versionComparator.compare(oldAPI, api) < 0 &&
+                            (oldAPI.getStatus().equals(APIStatus.PUBLISHED))) {
+                        apiProvider.changeAPIStatus(oldAPI, APIStatus.DEPRECATED, currentUser, publishToGateway);
+                    }
+                }
+            }
             success = true;
         } catch (APIManagementException e) {
             log.error("Error while updating API status", e);

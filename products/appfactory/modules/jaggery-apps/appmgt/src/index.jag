@@ -9,7 +9,7 @@ include('includes/template_header.jag');
             include('process/webServiceUtil.jag');
             include('constants.jag');
             try{
-                var applicationList = getAllApps("localhost");
+                var applicationList = getAllApps(userName,"localhost");
                 if(applicationList==undefined || applicationList.value=="" || applicationList.length()==0){
                     print("No Applications are created.");
                 }

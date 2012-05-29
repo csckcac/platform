@@ -1,0 +1,10 @@
+<%
+        include('process/webServiceUtil.jag');
+        var applicationName = request.getParameter("applicationName");
+        var applicationSvnLocation = request.getParameter("applicationSvnLocation");
+
+        invokeDeployToDevProcess(applicationSvnLocation,applicationName)
+
+
+
+%>

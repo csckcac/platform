@@ -131,7 +131,7 @@
                         <table class="styledLeft">
                             <tr>
                                 <td class="buttonRow">
-                                    <input type="button" value='Deploy to QA' class='button'/>
+                                    <input type="button" onclick="location.href='deployToQA.jag?applicationName=<%=applicationName%>&applicationSvnLocation=<%=applicationSVN%>'" value='Deploy to QA' class='button'/>
                                 </td>
                             </tr>
                         </table>

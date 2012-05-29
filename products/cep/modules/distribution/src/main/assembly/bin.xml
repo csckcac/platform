@@ -49,13 +49,20 @@
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
+
         <fileSet>
-            <directory>../../modules/samples/service/lib/qpidClientJars</directory>
-            <outputDirectory>wso2cep-${pom.version}/samples/lib</outputDirectory>
-            <includes>
-                <include>**/*.jar</include>
-            </includes>
+            <directory>../../modules/samples/services</directory>
+            <outputDirectory>wso2cep-${pom.version}/samples/services</outputDirectory>
         </fileSet>
+         <fileSet>
+            <directory>../../modules/samples/samples</directory>
+            <outputDirectory>wso2cep-${pom.version}/samples/cepSamples</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>../../modules/samples/events</directory>
+            <outputDirectory>wso2cep-${pom.version}/samples/events</outputDirectory>
+        </fileSet>
+
         <fileSet>
             <directory>
                 ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/
@@ -100,6 +107,17 @@
     </fileSets>
 
     <dependencySets>
+
+        <dependencySet>
+            <outputDirectory>wso2cep-${pom.version}/samples/lib</outputDirectory>
+            <includes>
+                <include>org.apache.qpid.wso2:qpid-client:jar</include>
+                <include>org.apache.geronimo.specs.wso2:geronimo-jms_1.1_spec:jar</include>
+                <include>org.wso2.carbon:org.wso2.carbon.event.client.stub:jar</include>
+                <include>org.wso2.carbon:org.wso2.carbon.event.client:jar</include>
+            </includes>
+        </dependencySet>
+
         <dependencySet>
             <outputDirectory>wso2cep-${pom.version}/repository/deployment/client/modules
             </outputDirectory>

@@ -55,18 +55,16 @@ public class RegistrySearchByCratedData {
     private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
-    WSRegistryServiceClient registry;
 
     @BeforeClass
     public void init()
-            throws LoginAuthenticationExceptionException, RemoteException, RegistryException {
+            throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
         gregServer = builder.build().getGreg();
 
         sessionCookie = gregServer.getSessionCookie();
         gregBackEndUrl = gregServer.getBackEndUrl();
         searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
-        registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
 
     }
 
@@ -255,7 +253,7 @@ public class RegistrySearchByCratedData {
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Records object not null");
+        Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
     }
 

@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
+import org.wso2.automation.common.test.greg.metadatasearch.utils.Parameters;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
@@ -71,7 +72,7 @@ public class RegistrySearchByResourceNameTest {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid resource name");
         for (ResourceData resource : result.getResourceDataList()) {
             Assert.assertTrue(resource.getName().contains("org"),
-                              "search keyword not contain on Resource Name :" + resource.getName());
+                              "search keyword not contain on Resource Name :" + resource.getResourcePath());
         }
 
 
@@ -148,13 +149,14 @@ public class RegistrySearchByResourceNameTest {
 
     }
 
-    @DataProvider(name = "invalidCharacter")
+     @DataProvider(name = "invalidCharacter")
     public Object[][] invalidCharacter() {
         return new Object[][]{
                 {"<"},
                 {">"},
                 {"#"},
                 {"   "},
+                {""},
                 {"@"},
                 {"|"},
                 {"^"},
@@ -169,7 +171,6 @@ public class RegistrySearchByResourceNameTest {
                 {"}"},
                 {"["},
                 {"]"},
-                {"-"},
                 {"("},
                 {")"}
         };

@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
+import org.wso2.automation.common.test.greg.metadatasearch.utils.Parameters;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
@@ -87,7 +88,7 @@ public class RegistrySearchByAuthor {
 
         searchQuery.setParameterValues(paramList);
 
-         // to set updatedRangeNegate
+        // to set updatedRangeNegate
         ArrayOfString authorNameNegate = new ArrayOfString();
         authorNameNegate.setArray(new String[]{"authorNameNegate", "on"});
 
@@ -98,7 +99,7 @@ public class RegistrySearchByAuthor {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name");
         for (ResourceData resource : result.getResourceDataList()) {
             Assert.assertFalse(resource.getAuthorUserName().contains("admin"),
-                              "search keyword contain on Author Name :" + resource.getName());
+                               "search keyword contain on Author Name :" + resource.getResourcePath());
         }
 
 
@@ -151,7 +152,7 @@ public class RegistrySearchByAuthor {
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Result Object found");
+        Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
 
     }
@@ -163,6 +164,7 @@ public class RegistrySearchByAuthor {
                 {">"},
                 {"#"},
                 {"   "},
+                {""},
                 {"@"},
                 {"|"},
                 {"^"},
@@ -181,7 +183,6 @@ public class RegistrySearchByAuthor {
                 {"("},
                 {")"}
         };
-
 
     }
 }

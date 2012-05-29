@@ -22,8 +22,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
+import org.wso2.automation.common.test.greg.metadatasearch.utils.Parameters;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
@@ -48,7 +50,7 @@ public class RegistrySearchByUpdater {
     private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
-    WSRegistryServiceClient registry;
+    private WSRegistryServiceClient registry;
 
     @BeforeClass
     public void init()
@@ -56,13 +58,10 @@ public class RegistrySearchByUpdater {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
         gregServer = builder.build().getGreg();
 
-
         sessionCookie = gregServer.getSessionCookie();
         gregBackEndUrl = gregServer.getBackEndUrl();
         searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
         registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
-        registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
-
 
     }
 
@@ -87,7 +86,7 @@ public class RegistrySearchByUpdater {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Updater Name not")
+    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Updater Name not")
     public void searchResourceByUpdaterNot()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
@@ -115,7 +114,7 @@ public class RegistrySearchByUpdater {
 
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by Updater Name pattern matching")
+    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Updater Name pattern matching")
     public void searchResourceByUpdaterNamePattern()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
@@ -128,12 +127,12 @@ public class RegistrySearchByUpdater {
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Updater name pattern");
-        for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue((registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains("wso2")
-                               && registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains("user")),
-                              "search word pattern not contain on Updater Name :" + resource.getName());
+        for (ResourceData resourceData : result.getResourceDataList()) {
+            Resource resource = registry.get(resourceData.getResourcePath());
+            Assert.assertTrue((resource.getLastUpdaterUserName().contains("wso2")
+                               && resource.getLastUpdaterUserName().contains("user")),
+                              "search word pattern not contain on Updater Name :" + resourceData.getResourcePath());
         }
-
 
     }
 
@@ -164,7 +163,7 @@ public class RegistrySearchByUpdater {
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Result Object found");
+        Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
 
     }
@@ -176,6 +175,7 @@ public class RegistrySearchByUpdater {
                 {">"},
                 {"#"},
                 {"   "},
+                {""},
                 {"@"},
                 {"|"},
                 {"^"},

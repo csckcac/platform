@@ -18,6 +18,8 @@
 package org.wso2.automation.common.test.greg.metadatasearch;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.ProductConfig;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
@@ -31,6 +33,8 @@ public class GRegMetadataSearchTestSuite extends MasterTestSuite {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
         suiteVariablesList.add(new SuiteVariables("SaveDeleteFilterTest",
                                                   SaveDeleteFilterTest.class));
+        suiteVariablesList.add(new SuiteVariables("RegistrySearchByTags",
+                                                  RegistrySearchByTags.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByResourceNameTest",
                                                   RegistrySearchByResourceNameTest.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByKeyword",
@@ -41,9 +45,10 @@ public class GRegMetadataSearchTestSuite extends MasterTestSuite {
                                                   RegistrySearchByUpdatedData.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByAuthor",
                                                   RegistrySearchByAuthor.class));
-suiteVariablesList.add(new SuiteVariables("RegistrySearchByUpdater",
-                                          RegistrySearchByUpdater.class));
+        suiteVariablesList.add(new SuiteVariables("RegistrySearchByUpdater",
+                                                  RegistrySearchByUpdater.class));
 
+        setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("GRegMetadataSearchTestSuite", suiteVariablesList).run();
 
     }

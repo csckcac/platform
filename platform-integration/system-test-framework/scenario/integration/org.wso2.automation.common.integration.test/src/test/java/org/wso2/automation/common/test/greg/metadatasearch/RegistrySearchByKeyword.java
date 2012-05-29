@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
+import org.wso2.automation.common.test.greg.metadatasearch.utils.Parameters;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.registry.core.Resource;
@@ -64,9 +65,10 @@ public class RegistrySearchByKeyword {
 
     }
 
-   @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available keyword")
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available keyword")
     public void searchResourceByAvailableKeyword()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException, RegistryException {
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
         paramBean.setContent("org");
@@ -91,7 +93,8 @@ public class RegistrySearchByKeyword {
     //Pattern search not applicable for content search
 //    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by  keywords pattern matching")
     public void searchResourceByContentPattern()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException, RegistryException {
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
         paramBean.setContent("carbon%org");
@@ -114,7 +117,8 @@ public class RegistrySearchByKeyword {
 
     @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by available keywords")
     public void searchResourceByAvailableContents()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException, RegistryException {
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
         paramBean.setContent("com org");
@@ -129,7 +133,7 @@ public class RegistrySearchByKeyword {
             String content = new String((byte[]) data.getContent());
 
             Assert.assertTrue((content.contains("org") || content.contains("com")),
-                              "search keyword not contain on Resource Name :" + resource.getName());
+                              "search keyword not contain on Resource Name :" + resource.getResourcePath());
 
         }
 
@@ -150,7 +154,8 @@ public class RegistrySearchByKeyword {
 
     }
 
-    @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
+    @Test(priority = 5, dataProvider = "invalidCharacter", dataProviderClass = Parameters.class,
+          groups = {"wso2.greg"},
           description = "Metadata search by keywords with invalid characters")
     public void searchResourceByContentWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
@@ -161,39 +166,9 @@ public class RegistrySearchByKeyword {
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Result Object found");
+        Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
 
     }
 
-    @DataProvider(name = "invalidCharacter")
-    public Object[][] invalidCharacter() {
-        return new Object[][]{
-                {"<"},
-                {">"},
-                {"#"},
-                {"   "},
-                {"@"},
-                {"|"},
-                {"^"},
-                {"/"},
-                {"\\"},
-                {","},
-                {"\""},
-                {"~"},
-                {"!"},
-                {"%"},
-                {"*"},
-                {"{"},
-                {"}"},
-                {"["},
-                {"]"},
-                {"-"},
-                {"("},
-                {")"}
-
-        };
-
-
-    }
 }

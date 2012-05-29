@@ -55,7 +55,7 @@ public class RegistrySearchByUpdatedData {
     private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
-    WSRegistryServiceClient registry;
+    private WSRegistryServiceClient registry;
 
     @BeforeClass
     public void init()
@@ -263,7 +263,7 @@ public class RegistrySearchByUpdatedData {
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Records object not null");
+        Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
     }
 

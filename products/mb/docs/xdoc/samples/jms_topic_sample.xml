@@ -28,7 +28,7 @@
     </head>
 
     <body>
-        <p>[<a href="../docs_index.html">Documentation Index</a>]
+        <p>[<a href="../docs_index.html">Documentation Index</a>]  </p>
             <h1>WSO2 MB - Samples :JMS Topic Sample</h1>
 
             <p>This guide demonstrates how topics can be created and used in Message
@@ -90,7 +90,7 @@
 
 
                 public class TopicPublisher {
-                    public static final String QPID_ICF = "org.apache.qpid.jndi.PropertiesFileInitialContextFactory";
+                    public static final String QPID_ICF = "org.wso2.andes.jndi.PropertiesFileInitialContextFactory";
                     private static final String CF_NAME_PREFIX = "connectionfactory.";
                     private static final String CF_NAME = "qpidConnectionfactory";
                     String userName = "admin";
@@ -188,7 +188,7 @@
 
 
                 public class TopicSubscriber {
-                    public static final String QPID_ICF = "org.apache.qpid.jndi.PropertiesFileInitialContextFactory";
+                    public static final String QPID_ICF = "org.wso2.andes.jndi.PropertiesFileInitialContextFactory";
                     private static final String CF_NAME_PREFIX = "connectionfactory.";
                     private static final String CF_NAME = "qpidConnectionfactory";
                     String userName = "admin";
@@ -247,7 +247,5 @@
 
 
             </pre>
-
-        </p>
     </body>
 </html>

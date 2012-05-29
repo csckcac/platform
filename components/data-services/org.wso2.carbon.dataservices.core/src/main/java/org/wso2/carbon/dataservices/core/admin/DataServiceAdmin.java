@@ -429,7 +429,7 @@ public class DataServiceAdmin extends AbstractAdmin {
 				service.getFeed(url,  CellFeed.class);
 				String message = "Google spreadsheet connection is successfull ";
 				log.debug(message);
-		return message;
+				return message;
 			} catch (IOException e) {
 				String message = "URL Not found:" + documentURL;
 				log.error(message,e);

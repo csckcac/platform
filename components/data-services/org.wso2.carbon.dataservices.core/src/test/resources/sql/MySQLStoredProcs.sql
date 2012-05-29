@@ -6,6 +6,8 @@ CREATE PROCEDURE getCustomerInfoWithIdLastName(custNo INTEGER, custLastName varc
 
 CREATE PROCEDURE getCustomerCreditLimitWithId(custNo INTEGER) SELECT * FROM Customers WHERE customerNumber=custNo;
 
+CREATE PROCEDURE getCustomerCreditLimitWithId1() SELECT * FROM Customers;
+
 CREATE PROCEDURE getPaymentInfo() SELECT customerNumber, checkNumber, paymentDate, amount FROM Payments WHERE customerNumber is NOT NULL;
 
 DELIMITER //

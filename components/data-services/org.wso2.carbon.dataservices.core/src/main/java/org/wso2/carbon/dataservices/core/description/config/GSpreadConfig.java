@@ -34,6 +34,8 @@ import org.wso2.carbon.dataservices.core.internal.DataServicesDSComponent;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
@@ -73,15 +75,21 @@ public class GSpreadConfig extends Config {
 	}
 
 	public static String extractKey(String documentURL) throws DataServiceFault {
-		int i1 = documentURL.lastIndexOf("key=");
-		if (documentURL.length() < (i1 + 5)) {
-			throw new DataServiceFault("Invalid documentURL: " + documentURL);
+		URI documentURI;
+		try {
+			documentURI = new URI(documentURL);
+		} catch (URISyntaxException e) {
+			String message = "Document URL Syntax error:" + documentURL;
+			log.warn(message,e);
+			throw new DataServiceFault(e, message);
 		}
-		int i2 = documentURL.indexOf("&", i1);
+		String extractedQuery = documentURI.getQuery();
+		int i1 = extractedQuery.lastIndexOf("key=");
+		int i2 = extractedQuery.indexOf("&", i1);
 		if (i2 < 0) {
-			return documentURL.substring(i1 + 4);
+			return extractedQuery.substring(i1 + 4);
 		} else {
-			return documentURL.substring(i1 + 4, i2);
+			return extractedQuery.substring(i1 + 4, i2);
 		}
 	}
 	

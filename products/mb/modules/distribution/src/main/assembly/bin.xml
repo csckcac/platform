@@ -68,10 +68,6 @@
             <outputDirectory>wso2mb-${pom.version}/samples/wsclient</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>../../modules/samples/product/sqsclient</directory>
-            <outputDirectory>wso2mb-${pom.version}/samples/sqsclient</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>../../modules/samples/product/services</directory>
             <outputDirectory>wso2mb-${pom.version}/samples/services</outputDirectory>
         </fileSet>

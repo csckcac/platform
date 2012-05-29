@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.cep</groupId>
         <artifactId>cep-parent</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -164,16 +164,16 @@
 
                                 <!-- Features related to Cloud -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${project.version}
+                                    org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${project.version}
+                                    org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${project.version}
+                                    org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.stratos.deployment.feature:${project.version}
+                                    org.wso2.carbon:org.wso2.carbon.stratos.deployment.feature:${stratos.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.identity.authenticator.token.feature:${carbon.version}
@@ -340,13 +340,13 @@
                                 <!--Cloud service deployment feature -->
                                 <feature>
                                     <id>org.wso2.carbon.stratos.deployment.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <version>${stratos.version}</version>
                                 </feature>
 
                                 <!-- multitenancy feature groups -->
                                 <feature>
                                     <id>org.wso2.carbon.stratos.common.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <version>${stratos.version}</version>
                                 </feature>
 
                                 <!-- GApp SSO features -->
@@ -388,11 +388,11 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.stratos.usage.agent.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>
-                                    <version>${project.version}</version>
+                                    <version>${stratos.version}</version>
                                 </feature>
                             </features>
                         </configuration>

@@ -38,7 +38,6 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/FastMovingStockQuoteReceiver.aar</exclude>
-                <exclude>**/qpidClientLibs.zip</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -111,7 +110,6 @@
         <dependencySet>
             <outputDirectory>wso2cep-${pom.version}/samples/lib</outputDirectory>
             <includes>
-                <include>org.apache.qpid.wso2:qpid-client:jar</include>
                 <include>org.apache.geronimo.specs.wso2:geronimo-jms_1.1_spec:jar</include>
                 <include>org.wso2.carbon:org.wso2.carbon.event.client.stub:jar</include>
                 <include>org.wso2.carbon:org.wso2.carbon.event.client:jar</include>

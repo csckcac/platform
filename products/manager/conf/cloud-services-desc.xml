@@ -7,7 +7,7 @@
     <cloudService name="WSO2 Stratos Manager">
 		<link>https://stratoslive.wso2.com</link>
     </cloudService>
-    <cloudService name="WSO2 Stratos Application Server" default="true">
+    <cloudService name="WSO2 Application Server" default="true">
         <label>Application Server</label>
         <link>https://appserver.stratoslive.wso2.com</link>
         <icon>
@@ -16,7 +16,7 @@
         <productPageURL>http://wso2.com/products/application-server/</productPageURL>
         <description>Application Server in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Data Services Server" default="true">
+    <cloudService name="WSO2 Data Services Server" default="true">
         <label>Data Services Server</label>
         <link>https://dss.stratoslive.wso2.com</link>
         <icon>
@@ -25,7 +25,7 @@
         <productPageURL>http://wso2.com/products/data-services-server/</productPageURL>
         <description>Data Services Server in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Mashup Server" default="true">
+    <cloudService name="WSO2 Mashup Server" default="true">
         <label>Mashup Server</label>
         <link>https://mashup.stratoslive.wso2.com</link>
         <icon>
@@ -34,7 +34,7 @@
         <description>Mashup Server in the cloud.</description>
         <productPageURL>http://wso2.com/products/mashup-server/</productPageURL>
     </cloudService>
-    <cloudService name="WSO2 Stratos Identity" default="true">
+    <cloudService name="WSO2 Identity" default="true">
         <label>Identity Server</label>
         <link>https://identity.stratoslive.wso2.com</link>
         <icon>
@@ -43,7 +43,7 @@
         <description>Identity in the cloud.</description>
         <productPageURL>http://wso2.com/products/identity-server/</productPageURL>
     </cloudService>
-    <cloudService name="WSO2 Stratos Governance" default="true">
+    <cloudService name="WSO2 Governance" default="true">
         <label>Governance Registry</label>
         <link>https://governance.stratoslive.wso2.com</link>
         <description>Governance in the cloud.</description>
@@ -52,7 +52,7 @@
         </icon>
         <productPageURL>http://wso2.com/products/governance-registry/</productPageURL>
     </cloudService>
-    <cloudService name="WSO2 Stratos Gadget Server" default="true">
+    <cloudService name="WSO2 Gadget Server" default="true">
         <label>Gadget Server</label>
         <link>https://gadget.stratoslive.wso2.com</link>
         <icon>
@@ -61,7 +61,7 @@
         <description>Gadgets in the cloud.</description>
         <productPageURL>http://wso2.com/products/gadget-server/</productPageURL>
     </cloudService>
-    <cloudService name="WSO2 Stratos Business Activity Monitor" default="true">
+    <cloudService name="WSO2 Business Activity Monitor" default="true">
         <label>Business Activity Monitor</label>
         <link>https://bam.stratoslive.wso2.com</link>
         <icon>
@@ -70,7 +70,7 @@
         <description>Business Activity Monitor in the cloud.</description>
         <productPageURL>http://wso2.com/products/business-activity-monitor/</productPageURL>
     </cloudService>
-    <cloudService name="WSO2 Stratos Business Process Server" default="true">
+    <cloudService name="WSO2 Business Process Server" default="true">
         <label>Business Process Server</label>
         <link>https://bps.stratoslive.wso2.com</link>
         <icon>
@@ -79,7 +79,7 @@
         <description>Business Process Server in the cloud.</description>
         <productPageURL>http://wso2.com/products/business-process-server/</productPageURL>
     </cloudService>
-    <cloudService name="WSO2 Stratos Business Rules Server" default="true">
+    <cloudService name="WSO2 Business Rules Server" default="true">
         <label>Business Rules Server</label>
         <link>https://brs.stratoslive.wso2.com</link>
         <icon>
@@ -88,7 +88,7 @@
         <description>Business Rules Server in the cloud.</description>
         <productPageURL>http://wso2.com/products/business-rules-server/</productPageURL>
     </cloudService>
-    <cloudService name="WSO2 Stratos Enterprise Service Bus" default="true">
+    <cloudService name="WSO2 Enterprise Service Bus" default="true">
         <label>Enterprise Service Bus</label>
         <link>https://esb.stratoslive.wso2.com</link>
         <icon>
@@ -97,7 +97,7 @@
         <productPageURL>http://wso2.com/products/enterprise-service-bus/</productPageURL>
         <description>Enterprise Service Bus in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Message Broker" default="true">
+    <cloudService name="WSO2 Message Broker" default="true">
 	<label>Message Broker</label>
 	<link>https://mb.stratoslive.wso2.com</link>
 	<icon>
@@ -105,7 +105,7 @@
 	</icon>
 	<description>Message Broker in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Complex Event Processing Server" default="true">
+    <cloudService name="WSO2 Complex Event Processing Server" default="true">
         <label>Complex Event Processing Server</label>
 	<link>https://cep.stratoslive.wso2.com</link>
 	<icon>
@@ -113,7 +113,7 @@
 	</icon>
 	<description>Complex Event Processing Server in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Cloud Services Gateway" default="true">
+    <cloudService name="WSO2 Cloud Services Gateway" default="true">
         <label>Cloud Services Gateway</label>
 	<link>https://csg.stratoslive.wso2.com</link>
 	<icon>

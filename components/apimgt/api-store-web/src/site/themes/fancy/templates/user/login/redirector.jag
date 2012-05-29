@@ -1,0 +1,6 @@
+<%
+    session.put("showLogin", "true");
+    session.put("redirectToHTTPS", request.getParameter("redirectToHTTPS"));
+    session.put("redirectToHTTP", request.getParameter("redirectToHTTP"));
+    response.sendRedirect(request.getParameter("redirectToHTTPS"));
+%>

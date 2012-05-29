@@ -1,0 +1,62 @@
+<% jagg.template("ui/dialogs", function(inputs, outputs, jagg) { %>
+<script type="text/javascript">
+        var isSecure = <%=outputs.isSecure%>;
+        var showLogin = <%=session.get("showLogin")%>;
+        var redirectToHTTP = '<%=session.get("redirectToHTTP")%>';
+        var redirectToHTTPS = '<%=session.get("redirectToHTTPS")%>';
+    </script>
+ <%
+        var httpsURL =  outputs.https_url + request.getRequestURI();
+        var httpURL =  outputs.http_url + request.getRequestURI();
+        if(request.getQueryString()){
+            httpsURL += "?" + request.getQueryString();
+            httpURL += "?" + request.getQueryString();
+        }
+
+        session.put("showLogin","false");
+        session.put("redirectToHTTP","");
+        session.put("redirectToHTTPS","");
+ %>
+<div class="modal fade" id="messageModal"></div>
+<div id="login-data" style="display:none;">
+    <% if(outputs.isSecure == true){%>
+    <form id="mainLoginForm">
+        <div class="modal-header">
+            <button class="close" data-dismiss="modal">×</button>
+            <h3>Login</h3>
+        </div>
+        <div class="modal-body">
+            <label>Username:</label>
+            <input type="text" id="username" name="name" class="span3" placeholder="Enter your user name."/>
+            <label>Password:</label>
+            <input type="password" id="password" name="pass" class="span3"/>
+
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+            <a href="#" class="btn btn-primary" id="loginBtn">Login</a>
+        </div>
+    </form>
+    <% } else { %>
+    <form id="loginRedirectForm" method="post" action="<%=outputs.https_url%><%=site.context%>/site/themes/fancy/templates/user/login/redirector.jag">
+        <input type="hidden" name="redirectToHTTPS" id="redirectToHTTPS" value="<%=httpsURL%>" />
+        <input type="hidden" name="redirectToHTTP" id="redirectToHTTP" value="<%=httpURL%>" />
+    </form>
+    <% } %>
+</div>
+
+
+<div id="confirmation-data" style="display:none;">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">×</button>
+        <h3 class="modal-title">Modal header</h3>
+    </div>
+    <div class="modal-body">
+        <p>One fine body…</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-primary">Save changes</a>
+        <a href="#" class="btn btn-other" data-dismiss="modal">Close</a>
+    </div>
+</div>
+<% }); %>

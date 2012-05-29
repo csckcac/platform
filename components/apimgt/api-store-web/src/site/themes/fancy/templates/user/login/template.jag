@@ -1,7 +1,5 @@
 <% jagg.template("user/login", function(inputs, outputs, jagg) { %>
 <% var user = outputs.user; %>
-
-
 <% if(user) { %>
 <ul class="nav actions login-sign-up">
     <li>

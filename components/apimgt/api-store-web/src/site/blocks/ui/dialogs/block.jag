@@ -1,0 +1,24 @@
+<%
+jagg.block("ui/dialogs", {
+
+    initialize:function (data) {
+
+    },
+
+     getOutputs:function (inputs) {
+        return {
+            "isSecure":request.isSecure(),
+            "https_url":"https://localhost:9443",
+            "http_url":"http://localhost:9763"
+        }
+    },
+
+    getInputs:function () {
+        return {};
+    },
+
+    getInputBlocks:function () {
+        return [];
+    }
+});
+%>

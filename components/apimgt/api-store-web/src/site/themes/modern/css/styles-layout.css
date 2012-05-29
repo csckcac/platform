@@ -392,3 +392,80 @@ footer{
 .search-fix-size{
     width:280px;
 }
+
+.application-api {
+    padding: 9px 15px;
+}
+.application-api img{
+    width:60px;
+}
+.search-back{
+    height:70px;
+}
+.search-back div.span9{
+    position:absolute;
+    right:50px;
+}
+.search-back div.searchAPIs-title{
+    display:none;
+}
+.search-back div.input-append{
+    float:right;
+}
+.search-back input{
+    width:200px;
+}
+#tag-cloud ul.nav-tabs{
+    display:none;
+}
+.cat_and_charts a.title, .more-from-provider a.title{
+     display: block;
+    max-width: 147px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left:0;
+}
+.thumbnails > li{
+    margin-left:5px;
+}
+.thumbnail-custom div.thumbnail{
+    width:140px;
+}
+.application-api {
+    padding: 9px 15px;
+}
+.application-api img{
+    width:60px;
+    margin-top:5px;
+}
+.application-api td{
+    padding:0 20px;
+}
+.subscription-list table td{
+    vertical-align:middle;
+}
+.application-thumb{
+    width:100px;
+}
+.application-provider{
+    width:100px;
+}
+.application-add{
+    padding:5px;
+}
+tr.application-api td.api-key-cell{
+    padding:0;
+    border-left:solid  1px #ccc;
+    width:320px;
+}
+.padding-from-right{
+    padding-right:10px;
+}
+.api-key-cell{
+    padding:0;border-left:solid  1px #ccc;
+    width:320px;
+}
+.comment-text{
+    padding:5px;
+    color:#888;
+}

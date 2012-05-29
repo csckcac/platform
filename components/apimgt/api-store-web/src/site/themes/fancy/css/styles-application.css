@@ -75,10 +75,6 @@ div.star-ratings img{
 .info-table{
     margin-top:-25px;
 }
-.comment-text{
-    padding:5px;
-    color:#444;
-}
 .key-generate-button{
     margin-bottom:10px;
     width:200px;
@@ -144,11 +140,6 @@ div div.accordion-inner {
 .application-api-listing div{
     padding-top:10px;
 }
-tr.application-api td.api-key-cell{
-    padding:0;
-    border-left:solid  1px #ccc;
-    width:320px;
-}
 .api-key-listing {
     display: inline-block;
     width:100%;
@@ -168,27 +159,4 @@ tr.application-api td.api-key-cell{
 }
 .accordion-inner .odd {
     background: #F6F6F6;
-}
-
-.application-api {
-    padding: 9px 15px;
-}
-.application-api img{
-    width:60px;
-    margin-top:5px;
-}
-.application-api td{
-    padding:0 20px;
-}
-.subscription-list table td{
-    vertical-align:middle;
-}
-.application-thumb{
-    width:100px;
-}
-.application-provider{
-    width:100px;
-}
-.application-add{
-    padding:5px;
 }

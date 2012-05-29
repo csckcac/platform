@@ -40,7 +40,7 @@
     %>
 </head>
 <body>
-<% jagg.includeJag("templates/page/base/dialog-box.jag"); %>
+<% jagg.includeBlock("ui/dialogs", {}); %>
 
 <% jagg.includeBlock("menu/primary", {"pagePath":outputs.pagePath}); %>
 
@@ -79,6 +79,7 @@ if(data.footer) {
 <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-collapse.js")%>"></script>
 <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-carousel.js")%>"></script>
 <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/bootstrap/js/bootstrap-typeahead.js")%>"></script>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery.cookie.js")%>"></script>
 <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery.corner.js")%>"></script>
 </body>
 </html>

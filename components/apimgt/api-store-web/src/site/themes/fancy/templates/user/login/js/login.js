@@ -3,11 +3,12 @@ var login = login || {};
     var loginbox = login.loginbox || (login.loginbox = {});
 
     loginbox.login = function (username, password, url) {
+
         jagg.post("/site/blocks/user/login/ajax/login.jag", { action:"login", username:username, password:password },
                  function (result) {
                      if (result.error == false) {
-                         if (url && url != undefined) {
-                             window.location.href = url;
+                         if (redirectToHTTPS && redirectToHTTPS != "") {
+                             window.location.href = redirectToHTTP;
                          } else {
                              window.location.reload();
                          }
@@ -53,9 +54,17 @@ $(document).ready(function () {
             }
          );
     };
-    var showLoginForm = function(){
+    var showLoginForm = function(event){
+        if(event != undefined){
+            event.preventDefault();
+        }
+        if(!isSecure){
+            $('#loginRedirectForm').submit();
+            return;
+        }
+
         $('#messageModal').html($('#login-data').html());
-        $('#messageModal').modal('show').data("goto_url", null);
+        $('#messageModal').modal('show').data("goto_url", $(this).attr("href"));
         $('#username').focus();
 
          registerEventsForLogin();
@@ -67,17 +76,11 @@ $(document).ready(function () {
         login.loginbox.logout();
     });
 
-    $(".need-login").click(function() {
-        $('#messageModal').html($('#login-data').html());
-        $('#messageModal').modal('show').data("goto_url", $(this).attr("href"));
-        $('#username').focus();
-
-        registerEventsForLogin();
-        return false;
-    });
-
-
+    $(".need-login").click(showLoginForm);
     $('#login-link').click(showLoginForm);
-
+   if(isSecure && showLogin){
+       showLogin = false;
+        showLoginForm();
+    }
 
 });

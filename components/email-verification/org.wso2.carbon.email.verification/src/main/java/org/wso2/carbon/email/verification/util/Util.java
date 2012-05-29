@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -42,7 +43,7 @@ public class Util {
     private static final Log log = LogFactory.getLog(Util.class);
 
     private static RegistryService registryService;
-    public static Map<String,EmailVerifierConfig> serviceConfigMap =
+    public static Map<String, EmailVerifierConfig> serviceConfigMap =
             new HashMap<String, EmailVerifierConfig>();
     private static final String EMAIL_VERIFICATION_COLLECTION =
             "/repository/components/org.wso2.carbon.email-verification/email-verifications-map";
@@ -64,45 +65,46 @@ public class Util {
     }
 
 
-    public static EmailVerifierConfig loadeMailVerificationConfig(String configFilename){
-       EmailVerifierConfig config = new EmailVerifierConfig();
-       File configfile = new File(configFilename);
-       if (!configfile.exists()) {
-           log.error("Email Configuration File is not present at: " + configFilename);
-           return null;
-       }
-       try {
-           XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(
-                   new FileInputStream(configfile));
-           StAXOMBuilder builder = new StAXOMBuilder(parser);
-           OMElement documentElement =  builder.getDocumentElement();
-           Iterator  it = documentElement.getChildElements();
-           while(it.hasNext()){
-               OMElement element = (OMElement)it.next();
-               if ("subject".equals(element.getLocalName())) {
-                   config.setSubject(element.getText());
-               } else if ("body".equals(element.getLocalName())) {
-                   config.setEmailBody(element.getText());
-               } else if ("footer".equals(element.getLocalName())) {
-                   config.setEmailFooter(element.getText());
-               } else if ("targetEpr".equals(element.getLocalName())) {
-                   config.setTargetEpr(element.getText());
-               }  else if ("redirectPath".equals(element.getLocalName())) {
-                   config.setRedirectPath(element.getText());
-               }
-           }
-           return config;
-       } catch(Exception e){
-           String msg = "Error in loading configuration for email verification: " + configFilename + ".";
-           log.error(msg, e);
-           return null;
-       }
+    public static EmailVerifierConfig loadeMailVerificationConfig(String configFilename) {
+        EmailVerifierConfig config = new EmailVerifierConfig();
+        File configfile = new File(configFilename);
+        if (!configfile.exists()) {
+            log.error("Email Configuration File is not present at: " + configFilename);
+            return null;
+        }
+        try {
+            XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(
+                    new FileInputStream(configfile));
+            StAXOMBuilder builder = new StAXOMBuilder(parser);
+            OMElement documentElement = builder.getDocumentElement();
+            Iterator it = documentElement.getChildElements();
+            while (it.hasNext()) {
+                OMElement element = (OMElement) it.next();
+                if ("subject".equals(element.getLocalName())) {
+                    config.setSubject(element.getText());
+                } else if ("body".equals(element.getLocalName())) {
+                    config.setEmailBody(element.getText());
+                } else if ("footer".equals(element.getLocalName())) {
+                    config.setEmailFooter(element.getText());
+                } else if ("targetEpr".equals(element.getLocalName())) {
+                    config.setTargetEpr(element.getText());
+                } else if ("redirectPath".equals(element.getLocalName())) {
+                    config.setRedirectPath(element.getText());
+                }
+            }
+            return config;
+        } catch (Exception e) {
+            String msg = "Error in loading configuration for email verification: " +
+                    configFilename + ".";
+            log.error(msg, e);
+            return null;
+        }
     }
 
     public static ConfirmationBean confirmUser(String secretKey) throws Exception {
         ConfirmationBean confirmationBean = new ConfirmationBean();
         OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMElement data = fac.createOMElement("configuration",null);
+        OMElement data = fac.createOMElement("configuration", null);
 
         Registry registry = Util.getConfigSystemRegistry(0);
         boolean success = false;
@@ -149,8 +151,7 @@ public class Util {
         } finally {
             if (success) {
                 registry.commitTransaction();
-            }
-            else {
+            } else {
                 registry.rollbackTransaction();
             }
         }
@@ -166,15 +167,17 @@ public class Util {
         }
     } */
 
-    public static void requestUserVerification(Map<String,String> data, EmailVerifierConfig serviceConfig) throws Exception {
+    public static void requestUserVerification(Map<String, String> data,
+                                               EmailVerifierConfig serviceConfig) throws Exception {
         String emailAddress = data.get("email");
 
         emailAddress = emailAddress.trim();
         try {
             String secretKey = UUID.randomUUID().toString();
 
-            //User suppose to give where he wants to store interemdiate data to them after confirmation
-            //here there's not tenant registration happened yet so get the super tenant registry instance
+            // User is supposed to give where he wants to store the intermediate data.
+            // But, here there is no tenant signing in happened yet.
+            // So get the super tenant registry instance.
             Registry registry = Util.getConfigSystemRegistry(0);
             Resource resource = registry.newResource();
             // store the redirector url
@@ -184,8 +187,9 @@ public class Util {
                 resource.setProperty(s, data.get(s));
             }
 
-            ((ResourceImpl)resource).setVersionableChange(false);
-            String secretKeyPath = EMAIL_VERIFICATION_COLLECTION + "/" + secretKey;
+            ((ResourceImpl) resource).setVersionableChange(false);
+            String secretKeyPath = EMAIL_VERIFICATION_COLLECTION +
+                    RegistryConstants.PATH_SEPARATOR + secretKey;
             registry.put(secretKeyPath, resource);
             // sending the mail
             EmailSender sender = new EmailSender(serviceConfig, emailAddress, secretKey,
@@ -196,5 +200,5 @@ public class Util {
             log.error(msg, e);
             throw new Exception(msg, e);
         }
-    }    
+    }
 }

@@ -1,0 +1,611 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax25="http://data.explorer.cassandra.carbon.wso2.org/xsd" xmlns:tns="http://service.explorer.cassandra.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://exception.explorer.cassandra.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.explorer.cassandra.carbon.wso2.org">
+    <wsdl:documentation>CassandraExplorerAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax26="http://data.explorer.cassandra.carbon.wso2.org/xsd" xmlns:ax24="http://exception.explorer.cassandra.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://exception.explorer.cassandra.carbon.wso2.org/xsd"/>
+            <xs:import namespace="http://data.explorer.cassandra.carbon.wso2.org/xsd"/>
+            <xs:element name="CassandraExplorerAdminCassandraExplorerException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="CassandraExplorerException" nillable="true" type="ax23:CassandraExplorerException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="searchColumns">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="rowName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="searchKey" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="startingNo" type="xs:int"/>
+                        <xs:element minOccurs="0" name="limit" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="searchColumnsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax25:Column"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="paginate">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="rowName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="startingNo" type="xs:int"/>
+                        <xs:element minOccurs="0" name="limit" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="paginateResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax25:Column"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRowNamesForColumnFamily">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="start" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="finish" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="limit" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRowNamesForColumnFamilyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNoSearchResults">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="rowName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="searchKey" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNoSearchResultsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNoOfRows">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNoOfRowsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNoOfColumns">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="rowName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNoOfColumnsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getColumnsInUpdateOrder">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="rowName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="startKey" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="lastKey" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="limit" type="xs:int"/>
+                        <xs:element minOccurs="0" name="isReversed" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getColumnsInUpdateOrderResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax25:Column"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getColumnsForRow">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keyspaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="rowName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="startKey" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="lastKey" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="limit" type="xs:int"/>
+                        <xs:element minOccurs="0" name="isReversed" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getColumnsForRowResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax25:Column"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getColumn">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="keySpaceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="rowID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="columnKey" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getColumnResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax25:Column"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://data.explorer.cassandra.carbon.wso2.org/xsd">
+            <xs:complexType name="Column">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="timeStamp" type="xs:long"/>
+                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.explorer.cassandra.carbon.wso2.org/xsd">
+            <xs:complexType name="CassandraExplorerException">
+                <xs:sequence/>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getNoOfColumnsRequest">
+        <wsdl:part name="parameters" element="ns1:getNoOfColumns"/>
+    </wsdl:message>
+    <wsdl:message name="getNoOfColumnsResponse">
+        <wsdl:part name="parameters" element="ns1:getNoOfColumnsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="CassandraExplorerAdminCassandraExplorerException">
+        <wsdl:part name="parameters" element="ns1:CassandraExplorerAdminCassandraExplorerException"/>
+    </wsdl:message>
+    <wsdl:message name="getRowNamesForColumnFamilyRequest">
+        <wsdl:part name="parameters" element="ns1:getRowNamesForColumnFamily"/>
+    </wsdl:message>
+    <wsdl:message name="getRowNamesForColumnFamilyResponse">
+        <wsdl:part name="parameters" element="ns1:getRowNamesForColumnFamilyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getColumnsForRowRequest">
+        <wsdl:part name="parameters" element="ns1:getColumnsForRow"/>
+    </wsdl:message>
+    <wsdl:message name="getColumnsForRowResponse">
+        <wsdl:part name="parameters" element="ns1:getColumnsForRowResponse"/>
+    </wsdl:message>
+    <wsdl:message name="paginateRequest">
+        <wsdl:part name="parameters" element="ns1:paginate"/>
+    </wsdl:message>
+    <wsdl:message name="paginateResponse">
+        <wsdl:part name="parameters" element="ns1:paginateResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getColumnRequest">
+        <wsdl:part name="parameters" element="ns1:getColumn"/>
+    </wsdl:message>
+    <wsdl:message name="getColumnResponse">
+        <wsdl:part name="parameters" element="ns1:getColumnResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getNoOfRowsRequest">
+        <wsdl:part name="parameters" element="ns1:getNoOfRows"/>
+    </wsdl:message>
+    <wsdl:message name="getNoOfRowsResponse">
+        <wsdl:part name="parameters" element="ns1:getNoOfRowsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getColumnsInUpdateOrderRequest">
+        <wsdl:part name="parameters" element="ns1:getColumnsInUpdateOrder"/>
+    </wsdl:message>
+    <wsdl:message name="getColumnsInUpdateOrderResponse">
+        <wsdl:part name="parameters" element="ns1:getColumnsInUpdateOrderResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getNoSearchResultsRequest">
+        <wsdl:part name="parameters" element="ns1:getNoSearchResults"/>
+    </wsdl:message>
+    <wsdl:message name="getNoSearchResultsResponse">
+        <wsdl:part name="parameters" element="ns1:getNoSearchResultsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="searchColumnsRequest">
+        <wsdl:part name="parameters" element="ns1:searchColumns"/>
+    </wsdl:message>
+    <wsdl:message name="searchColumnsResponse">
+        <wsdl:part name="parameters" element="ns1:searchColumnsResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="CassandraExplorerAdminPortType">
+        <wsdl:operation name="getNoOfColumns">
+            <wsdl:input message="tns:getNoOfColumnsRequest" wsaw:Action="urn:getNoOfColumns"/>
+            <wsdl:output message="tns:getNoOfColumnsResponse" wsaw:Action="urn:getNoOfColumnsResponse"/>
+            <wsdl:fault message="tns:CassandraExplorerAdminCassandraExplorerException" name="CassandraExplorerAdminCassandraExplorerException" wsaw:Action="urn:getNoOfColumnsCassandraExplorerAdminCassandraExplorerException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getRowNamesForColumnFamily">
+            <wsdl:input message="tns:getRowNamesForColumnFamilyRequest" wsaw:Action="urn:getRowNamesForColumnFamily"/>
+            <wsdl:output message="tns:getRowNamesForColumnFamilyResponse" wsaw:Action="urn:getRowNamesForColumnFamilyResponse"/>
+            <wsdl:fault message="tns:CassandraExplorerAdminCassandraExplorerException" name="CassandraExplorerAdminCassandraExplorerException" wsaw:Action="urn:getRowNamesForColumnFamilyCassandraExplorerAdminCassandraExplorerException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnsForRow">
+            <wsdl:input message="tns:getColumnsForRowRequest" wsaw:Action="urn:getColumnsForRow"/>
+            <wsdl:output message="tns:getColumnsForRowResponse" wsaw:Action="urn:getColumnsForRowResponse"/>
+            <wsdl:fault message="tns:CassandraExplorerAdminCassandraExplorerException" name="CassandraExplorerAdminCassandraExplorerException" wsaw:Action="urn:getColumnsForRowCassandraExplorerAdminCassandraExplorerException"/>
+        </wsdl:operation>
+        <wsdl:operation name="paginate">
+            <wsdl:input message="tns:paginateRequest" wsaw:Action="urn:paginate"/>
+            <wsdl:output message="tns:paginateResponse" wsaw:Action="urn:paginateResponse"/>
+            <wsdl:fault message="tns:CassandraExplorerAdminCassandraExplorerException" name="CassandraExplorerAdminCassandraExplorerException" wsaw:Action="urn:paginateCassandraExplorerAdminCassandraExplorerException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getColumn">
+            <wsdl:input message="tns:getColumnRequest" wsaw:Action="urn:getColumn"/>
+            <wsdl:output message="tns:getColumnResponse" wsaw:Action="urn:getColumnResponse"/>
+            <wsdl:fault message="tns:CassandraExplorerAdminCassandraExplorerException" name="CassandraExplorerAdminCassandraExplorerException" wsaw:Action="urn:getColumnCassandraExplorerAdminCassandraExplorerException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getNoOfRows">
+            <wsdl:input message="tns:getNoOfRowsRequest" wsaw:Action="urn:getNoOfRows"/>
+            <wsdl:output message="tns:getNoOfRowsResponse" wsaw:Action="urn:getNoOfRowsResponse"/>
+            <wsdl:fault message="tns:CassandraExplorerAdminCassandraExplorerException" name="CassandraExplorerAdminCassandraExplorerException" wsaw:Action="urn:getNoOfRowsCassandraExplorerAdminCassandraExplorerException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnsInUpdateOrder">
+            <wsdl:input message="tns:getColumnsInUpdateOrderRequest" wsaw:Action="urn:getColumnsInUpdateOrder"/>
+            <wsdl:output message="tns:getColumnsInUpdateOrderResponse" wsaw:Action="urn:getColumnsInUpdateOrderResponse"/>
+            <wsdl:fault message="tns:CassandraExplorerAdminCassandraExplorerException" name="CassandraExplorerAdminCassandraExplorerException" wsaw:Action="urn:getColumnsInUpdateOrderCassandraExplorerAdminCassandraExplorerException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getNoSearchResults">
+            <wsdl:input message="tns:getNoSearchResultsRequest" wsaw:Action="urn:getNoSearchResults"/>
+            <wsdl:output message="tns:getNoSearchResultsResponse" wsaw:Action="urn:getNoSearchResultsResponse"/>
+            <wsdl:fault message="tns:CassandraExplorerAdminCassandraExplorerException" name="CassandraExplorerAdminCassandraExplorerException" wsaw:Action="urn:getNoSearchResultsCassandraExplorerAdminCassandraExplorerException"/>
+        </wsdl:operation>
+        <wsdl:operation name="searchColumns">
+            <wsdl:input message="tns:searchColumnsRequest" wsaw:Action="urn:searchColumns"/>
+            <wsdl:output message="tns:searchColumnsResponse" wsaw:Action="urn:searchColumnsResponse"/>
+            <wsdl:fault message="tns:CassandraExplorerAdminCassandraExplorerException" name="CassandraExplorerAdminCassandraExplorerException" wsaw:Action="urn:searchColumnsCassandraExplorerAdminCassandraExplorerException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="CassandraExplorerAdminSoap11Binding" type="tns:CassandraExplorerAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getNoOfColumns">
+            <soap:operation soapAction="urn:getNoOfColumns" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRowNamesForColumnFamily">
+            <soap:operation soapAction="urn:getRowNamesForColumnFamily" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnsForRow">
+            <soap:operation soapAction="urn:getColumnsForRow" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="paginate">
+            <soap:operation soapAction="urn:paginate" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getColumn">
+            <soap:operation soapAction="urn:getColumn" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNoOfRows">
+            <soap:operation soapAction="urn:getNoOfRows" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnsInUpdateOrder">
+            <soap:operation soapAction="urn:getColumnsInUpdateOrder" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNoSearchResults">
+            <soap:operation soapAction="urn:getNoSearchResults" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="searchColumns">
+            <soap:operation soapAction="urn:searchColumns" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="CassandraExplorerAdminSoap12Binding" type="tns:CassandraExplorerAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getNoOfColumns">
+            <soap12:operation soapAction="urn:getNoOfColumns" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap12:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRowNamesForColumnFamily">
+            <soap12:operation soapAction="urn:getRowNamesForColumnFamily" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap12:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnsForRow">
+            <soap12:operation soapAction="urn:getColumnsForRow" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap12:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="paginate">
+            <soap12:operation soapAction="urn:paginate" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap12:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getColumn">
+            <soap12:operation soapAction="urn:getColumn" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap12:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNoOfRows">
+            <soap12:operation soapAction="urn:getNoOfRows" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap12:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnsInUpdateOrder">
+            <soap12:operation soapAction="urn:getColumnsInUpdateOrder" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap12:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getNoSearchResults">
+            <soap12:operation soapAction="urn:getNoSearchResults" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap12:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="searchColumns">
+            <soap12:operation soapAction="urn:searchColumns" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CassandraExplorerAdminCassandraExplorerException">
+                <soap12:fault use="literal" name="CassandraExplorerAdminCassandraExplorerException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="CassandraExplorerAdminHttpBinding" type="tns:CassandraExplorerAdminPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getNoOfColumns">
+            <http:operation location="getNoOfColumns"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getRowNamesForColumnFamily">
+            <http:operation location="getRowNamesForColumnFamily"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnsForRow">
+            <http:operation location="getColumnsForRow"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="paginate">
+            <http:operation location="paginate"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getColumn">
+            <http:operation location="getColumn"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getNoOfRows">
+            <http:operation location="getNoOfRows"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getColumnsInUpdateOrder">
+            <http:operation location="getColumnsInUpdateOrder"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getNoSearchResults">
+            <http:operation location="getNoSearchResults"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="searchColumns">
+            <http:operation location="searchColumns"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CassandraExplorerAdmin">
+        <wsdl:port name="CassandraExplorerAdminHttpsSoap11Endpoint" binding="tns:CassandraExplorerAdminSoap11Binding">
+            <soap:address location="https://10.150.3.169:9443/services/CassandraExplorerAdmin.CassandraExplorerAdminHttpsSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="CassandraExplorerAdminHttpsSoap12Endpoint" binding="tns:CassandraExplorerAdminSoap12Binding">
+            <soap12:address location="https://10.150.3.169:9443/services/CassandraExplorerAdmin.CassandraExplorerAdminHttpsSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="CassandraExplorerAdminHttpsEndpoint" binding="tns:CassandraExplorerAdminHttpBinding">
+            <http:address location="https://10.150.3.169:9443/services/CassandraExplorerAdmin.CassandraExplorerAdminHttpsEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

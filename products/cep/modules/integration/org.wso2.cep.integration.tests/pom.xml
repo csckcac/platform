@@ -38,7 +38,7 @@
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../../distribution/service/target/wso2cep-${project.version}.zip
+                            ${basedir}/../../distribution/target/wso2cep-${project.version}.zip
                         </carbon.zip>
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <samples.dir>${basedir}/../../samples/product</samples.dir>

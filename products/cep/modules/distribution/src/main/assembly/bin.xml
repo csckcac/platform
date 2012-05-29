@@ -50,7 +50,7 @@
             <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
-            <directory>../../../modules/samples/service/lib/qpidClientJars</directory>
+            <directory>../../modules/samples/service/lib/qpidClientJars</directory>
             <outputDirectory>wso2cep-${pom.version}/samples/lib</outputDirectory>
             <includes>
                 <include>**/*.jar</include>
@@ -58,7 +58,7 @@
         </fileSet>
         <fileSet>
             <directory>
-                ../../p2-profile/product/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/
             </directory>
             <outputDirectory>wso2cep-${pom.version}/repository/conf/advanced
             </outputDirectory>
@@ -71,7 +71,7 @@
         <!--copying multitenancy-packages.xml file-->
         <fileSet>
             <directory>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/
             </directory>
             <outputDirectory>wso2cep-${pom.version}/repository/conf</outputDirectory>
             <includes>
@@ -89,7 +89,7 @@
         </fileSet>
 
         <fileSet>
-            <directory>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/dbscripts/identity</directory>
+            <directory>../p2-profile/target/wso2carbon-core-${carbon.version}/dbscripts/identity</directory>
             <outputDirectory>wso2cep-${pom.version}/dbscripts/identity</outputDirectory>
             <includes>
                 <include>**/**.sql</include>
@@ -119,27 +119,27 @@
         <!-- copying event broker config file -->
         <file>
             <source>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
             </source>
             <outputDirectory>wso2cep-${pom.version}/repository/conf/</outputDirectory>
         </file>
         <!-- copying agent broker config files -->
         <file>
             <source>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/agent-config.xml
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/agent-config.xml
             </source>
             <outputDirectory>wso2cep-${pom.version}/repository/conf/</outputDirectory>
         </file>
         <file>
             <source>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/agent-server-config.xml
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/agent-server-config.xml
             </source>
             <outputDirectory>wso2cep-${pom.version}/repository/conf/</outputDirectory>
         </file>
         <!-- Including syslog-config.xml file -->
         <file>
             <source>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml
             </source>
             <outputDirectory>wso2cep-${pom.version}/repository/conf/advanced
             </outputDirectory>
@@ -150,7 +150,7 @@
         </file>-->
         <file>
             <source>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml
             </source>
             <outputDirectory>wso2cep-${pom.version}/repository/conf</outputDirectory>
         </file>
@@ -178,25 +178,25 @@
             </outputDirectory>
         </file>
         <file>
-            <source>../../../LICENSE.txt</source>
+            <source>../../LICENSE.txt</source>
             <outputDirectory>wso2cep-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../README.txt</source>
+            <source>../../README.txt</source>
             <outputDirectory>wso2cep-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../INSTALL.txt</source>
+            <source>../../INSTALL.txt</source>
             <outputDirectory>wso2cep-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../../../docs/xdoc/release-notes.xml</source>
+            <source>../../docs/xdoc/release-notes.xml</source>
             <outputDirectory>wso2cep-${pom.version}</outputDirectory>
             <destName>release-notes.html</destName>
             <fileMode>644</fileMode>
@@ -232,7 +232,7 @@
 
         <file>
             <source>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks
             </source>
             <outputDirectory>wso2cep-${pom.version}/repository/resources/security/
             </outputDirectory>

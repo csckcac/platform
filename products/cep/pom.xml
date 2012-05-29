@@ -49,7 +49,6 @@
         <module>modules/p2-profile</module>
         <module>modules/distribution</module>
         <module>modules/org.wso2.stratos.cep.dashboard.ui</module>
-        <module>modules/org.wso2.stratos.cep.login.ui</module>
         <module>modules/integration</module>
     </modules>
 

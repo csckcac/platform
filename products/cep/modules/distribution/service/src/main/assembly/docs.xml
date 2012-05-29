@@ -25,7 +25,7 @@
     <fileSets>
         <fileSet>
             <directory>target/site</directory>
-            <outputDirectory>wso2stratos-cep-${pom.version}-docs</outputDirectory>
+            <outputDirectory>wso2cep-${pom.version}-docs</outputDirectory>
             <fileMode>755</fileMode>
         </fileSet>
     </fileSets>

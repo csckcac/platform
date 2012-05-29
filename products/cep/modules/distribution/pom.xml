@@ -42,7 +42,6 @@
     </licenses>
 
     <modules>
-        <module>product</module>
         <module>service</module>
     </modules>
 

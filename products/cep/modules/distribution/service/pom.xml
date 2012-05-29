@@ -22,25 +22,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-
         <groupId>org.wso2.cep</groupId>
-
     	<artifactId>cep-distribution-parent</artifactId>
         <version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
-
     </parent>
 
-
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2stratos-cep</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <artifactId>wso2cep</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Stratos CEP - Distribution </name>
+    <name>WSO2 CEP - Distribution </name>
     <url>http://wso2.org/projects/cep/java</url>
     <description>WSO2 Complex Event Processing Server Distribution</description>
-
-   
 
     <build>
         <plugins>
@@ -89,13 +82,13 @@
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
-                                        <include name="wso2stratos-cep-${project.version}.zip"/>
+                                        <include name="wso2cep-${project.version}.zip"/>
                                     </fileset>
                                 </unzip>
                                 <copy todir="target/wso2carbon-core-${carbon.version}/repository/components/"
                                       overwrite="false">
                                     <fileset
-                                            dir="${tempdir}/wso2stratos-cep-${project.version}/repository/components/">
+                                            dir="${tempdir}/wso2cep-${project.version}/repository/components/">
                                     </fileset>
                                 </copy>
                                 <!--<delete file="target/wso2stratos-cep-${project.version}.zip"/-->
@@ -239,22 +232,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <!--reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.1.2</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>index</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting-->
 
 </project>

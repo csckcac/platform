@@ -28,7 +28,6 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wso2stratos-cep-p2-profile</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Stratos CEP - P2 Profile Generation</name>
     <url>http://wso2.org</url>
@@ -161,9 +160,6 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.cep:org.wso2.stratos.cep.dashboard.ui.feature:${project.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.cep:org.wso2.stratos.cep.login.ui.feature:${project.version}
                                 </featureArtifactDef>
 
                                 <!-- Features related to Cloud -->
@@ -339,10 +335,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.stratos.cep.dashboard.ui.feature.group</id>
-                                    <version>${project.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.stratos.cep.login.ui.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
                                 <!--Cloud service deployment feature -->

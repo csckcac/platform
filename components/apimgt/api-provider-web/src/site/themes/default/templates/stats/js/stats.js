@@ -44,6 +44,8 @@ $(document).ready(function() {
                                   renderer:$.jqplot.BarRenderer,
                                   rendererOptions: {fillToZero: true}
                               },
+                              seriesColors: [ "#fdca19", "#fa8216", "#e10718", "#aa1e52", "#e74d92", "#4e2e86",
+                                                                        "#028a7a", "#019d60", "#7ebe3a", "#cede3e"],
                               series:[
                                   {label:'API'}
                               ],
@@ -87,6 +89,7 @@ $(document).ready(function() {
                       }
                       if (length > 0) {
                           $('#subsTable').show();
+
                           var plot1 = jQuery.jqplot('subsChart', [data],
                                                     {
                                                         seriesDefaults:{
@@ -95,6 +98,8 @@ $(document).ready(function() {
                                                                 showDataLabels:true
                                                             }
                                                         },
+                                                        seriesColors: [ "#fdca19", "#fa8216", "#e10718", "#aa1e52", "#e74d92", "#4e2e86",
+                                                                        "#028a7a", "#019d60", "#7ebe3a", "#cede3e"],
                                                         legend:{ show:true, location:'e' }
                                                     }
                                   );
@@ -134,6 +139,8 @@ $(document).ready(function() {
                                                                 showDataLabels:true
                                                             }
                                                         },
+                                                        seriesColors: [ "#fdca19", "#fa8216", "#e10718", "#aa1e52", "#e74d92", "#4e2e86",
+                                                                        "#028a7a", "#019d60", "#7ebe3a", "#cede3e"],
                                                         legend:{ show:true, location:'e' }
                                                     }
                                   );

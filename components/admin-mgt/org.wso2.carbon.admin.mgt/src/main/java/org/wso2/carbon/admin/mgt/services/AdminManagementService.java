@@ -34,7 +34,8 @@ public class AdminManagementService {
     private static final Log log = LogFactory.getLog(AdminManagementService.class);
 
     /**
-     *  Confirms that the link shared in the email is used only once in password reset.
+     * Confirms that the link shared in the email is used only once in password reset.
+     *
      * @param secretKey - the key given in the password reset email.
      * @return ConfirmationBean, that has the data and redirect path.
      * @throws Exception, if the key provided in the link is expired, already clicked, or invalid.
@@ -77,23 +78,23 @@ public class AdminManagementService {
      *
      * @param adminInfoBean   userInfo
      * @param captchaInfoBean captcha
-     * @param confirmationKey  key that confirms the password reset
+     * @param confirmationKey key that confirms the password reset
      * @return true, if password is changed successfully. Final call in password reset.
      * @throws Exception, if password reset failed, due to captcha validation or the wrong attempt
-     * of password reset.
+     *                    of password reset.
      */
     public boolean updateAdminPasswordWithUserInput(
             AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean,
             String confirmationKey) throws Exception {
-        
-        String domain = adminInfoBean.getTenantDomain();                  
+
+        String domain = adminInfoBean.getTenantDomain();
         String adminName = adminInfoBean.getAdmin();
         String userName = AdminMgtUtil.getUserNameWithDomain(adminName, domain);
-        
+
         boolean isValidRequest = PasswordUtil.proceedUpdateCredentials(domain, adminName,
                 confirmationKey);
         boolean isPasswordUpdated = false;
-        
+
         if (isValidRequest) {
             //processes the captchaInfoBean
             CaptchaUtil.processCaptchaInfoBean(captchaInfoBean);

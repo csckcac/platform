@@ -18,6 +18,7 @@ package org.wso2.carbon.admin.mgt.internal.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.admin.mgt.beans.AdminMgtInfoBean;
 import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
 import org.wso2.carbon.admin.mgt.exception.AdminManagementException;
@@ -42,6 +43,7 @@ import java.util.Map;
  */
 public class PasswordUtil {
     private static final Log log = LogFactory.getLog(PasswordUtil.class);
+    private static Log audit = CarbonConstants.AUDIT_LOG;
 
     /**
      * Processing the password reset request by the user
@@ -156,6 +158,8 @@ public class PasswordUtil {
                 if (log.isDebugEnabled()) {
                     log.debug("Getting email address for the super tenant user password reset");
                 }
+                audit.info("Email Address of the super tenant user " + userName +
+                        " Retrieved for the password reset.");
                 email = ClaimsMgtUtil.getEmailAddressFromUserProfile(
                         AdminManagementServiceComponent.getRealmService(), userName, tenantId);
             } else if (tenantId > 0) {
@@ -179,12 +183,12 @@ public class PasswordUtil {
         String email = "";
         if (adminNameFromUserStore.equalsIgnoreCase(adminName)) {
             if (log.isDebugEnabled()) {
-                log.debug("The User is a tenant admin");
+                log.debug("Password reset for a tenant admin");
             }
             email = tenant.getEmail();
         } else if (!adminNameFromUserStore.equalsIgnoreCase(adminName)) {
             if (log.isDebugEnabled()) {
-                log.debug("A tenant user password reset");
+                log.debug("Password reset for a non-admin tenant user");
             }
             email = ClaimsMgtUtil.getEmailAddressFromUserProfile(
                     AdminManagementServiceComponent.getRealmService(), userName, tenantId);
@@ -212,9 +216,11 @@ public class PasswordUtil {
             userStoreManager.updateCredentialByAdmin(adminName, password);
             String msg = "Password reset for the user: " + userName;
             log.info(msg);
+            audit.info("Password for the user " + userName + " is successfully reset");
             return true;
         } catch (UserStoreException e) {
             String msg = "Error in changing the password for user: " + userName;
+            audit.error("Error in changing the password for the user: " + userName);
             log.error(msg, e);
             throw new AdminManagementException(msg, e);
         }
@@ -227,8 +233,8 @@ public class PasswordUtil {
      * @param adminInfoBean tenant domain details
      * @return true if successfully reset
      * @throws AdminManagementException, update password failed due to AdminManagementException
-     * @throws UserStoreException, exception in getting the user store.
-     * @throws RegistryException, exception in getting the config system registry.
+     * @throws UserStoreException,       exception in getting the user store.
+     * @throws RegistryException,        exception in getting the config system registry.
      */
     public static boolean updateTenantPassword(AdminMgtInfoBean adminInfoBean)
             throws AdminManagementException, UserStoreException, RegistryException {
@@ -268,7 +274,7 @@ public class PasswordUtil {
      * @param adminName       adminName
      * @param confirmationKey confirmation key to verify the request.
      * @return True, if successful in verifying and hence updating the credentials.
-     * @throws RegistryException, confirmation key doesn't exist in the registry.
+     * @throws RegistryException,        confirmation key doesn't exist in the registry.
      * @throws AdminManagementException, getting the admin Management path failed.
      */
     public static boolean proceedUpdateCredentials(String domain, String adminName,

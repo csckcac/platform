@@ -105,7 +105,7 @@ public class AdminMgtUtil {
             return config;
         } catch (Exception e) {
             String msg = "Error in loading configuration for configuring the admin user: " +
-                         configFilename + ".";
+                    configFilename + ".";
             log.error(msg, e);
             return null;
         }
@@ -113,11 +113,13 @@ public class AdminMgtUtil {
 
     /**
      * Confirms that the password reset request has been sent by the user.
+     *
      * @param secretKey the secret key that was sent in the email
      * @return ConfirmationBean, the bean with the data and redirect path.
-     * @throws AdminManagementException if the attempt failed - 
-     * mostly due to the password reset link already been used or expired.
-     * @throws org.wso2.carbon.registry.api.RegistryException Registry exception.
+     * @throws AdminManagementException if the attempt failed -
+     *                                  mostly due to the password reset link already been used or expired.
+     * @throws org.wso2.carbon.registry.api.RegistryException
+     *                                  Registry exception.
      */
     public static ConfirmationBean confirmUser(String secretKey) throws RegistryException,
             AdminManagementException {
@@ -133,7 +135,7 @@ public class AdminMgtUtil {
         try {
             registry.beginTransaction();
 
-            String secretKeyPath = AdminMgtConstants.ADMIN_MANAGEMENT_COLLECTION + 
+            String secretKeyPath = AdminMgtConstants.ADMIN_MANAGEMENT_COLLECTION +
                     RegistryConstants.PATH_SEPARATOR + secretKey;
             if (!registry.resourceExists(secretKeyPath)) {
                 String msg = "Password reset attempt failed, since the link was already clicked.";
@@ -175,7 +177,7 @@ public class AdminMgtUtil {
      * @param data - data to include in the mail
      * @throws AdminManagementException if loading config or sending verification fail.
      */
-    public static void requestUserVerification(Map<String, String> data) throws 
+    public static void requestUserVerification(Map<String, String> data) throws
             AdminManagementException {
         String emailAddress = data.get("email");
 
@@ -238,8 +240,8 @@ public class AdminMgtUtil {
         // check the tenant domain contains any illegal characters
         if (domainName.matches(AdminMgtConstants.ILLEGAL_CHARACTERS_FOR_TENANT_DOMAIN)) {
             String msg = "The tenant domain ' " + domainName +
-                         " ' contains one or more illegal characters. the valid characters are " +
-                         "letters, numbers, '.', '-' and '_'";
+                    " ' contains one or more illegal characters. the valid characters are " +
+                    "letters, numbers, '.', '-' and '_'";
             log.error(msg);
             throw new AdminManagementException(msg);
         }
@@ -247,6 +249,7 @@ public class AdminMgtUtil {
 
     /**
      * Gets the tenant id from the tenant domain
+     *
      * @param domain - tenant domain
      * @return - tenantId
      * @throws AdminManagementException, if getting tenant id failed.
@@ -261,7 +264,7 @@ public class AdminMgtUtil {
                 log.debug(msg);
             }
         } else {
-             try {
+            try {
                 tenantId = tenantManager.getTenantId(domain);
                 if (tenantId < 1) {
                     String msg = "Only the existing tenants can update the password";
@@ -272,19 +275,20 @@ public class AdminMgtUtil {
                 String msg = "Error in retrieving tenant id of tenant domain: " + domain + ".";
                 log.error(msg);
                 throw new AdminManagementException(msg, e);
-             }
+            }
         }
         return tenantId;
     }
 
     /**
-     *  Gets the admin management path of the tenant
+     * Gets the admin management path of the tenant
+     *
      * @param adminName, adminName
-     * @param domain, the tenant domain.
-     * @return  admin management path
+     * @param domain,    the tenant domain.
+     * @return admin management path
      * @throws AdminManagementException, if the user doesn't exist, or couldn't retrieve the path.
      */
-    public static String getAdminManagementPath(String adminName, String domain) throws 
+    public static String getAdminManagementPath(String adminName, String domain) throws
             AdminManagementException {
         int tenantId;
         String adminManagementPath;
@@ -336,10 +340,11 @@ public class AdminMgtUtil {
     }
 
     /**
-     *  Gets the userName from the tenantLess userName and Domain
+     * Gets the userName from the tenantLess userName and Domain
+     *
      * @param adminName, userName without domain
-     * @param domain, domainName
-     * @return  complete userName
+     * @param domain,    domainName
+     * @return complete userName
      */
     public static String getUserNameWithDomain(String adminName, String domain) {
         String userName = adminName;

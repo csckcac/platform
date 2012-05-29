@@ -46,8 +46,8 @@ public class ClaimsMgtUtil {
      * Gets the first name of a tenant admin to address him/her in the notifications
      *
      * @param realmService RealmService
-     * @param tenant tenant
-     * @param tenantId tenant Id
+     * @param tenant       tenant
+     * @param tenantId     tenant Id
      * @return first name / calling name
      * @throws AdminManagementException, if unable to retrieve the admin name
      */
@@ -62,8 +62,8 @@ public class ClaimsMgtUtil {
             // Not exceptions, due to the existence of tenants with no full name.
         }
         if (firstName == null || firstName.trim().equals("")) {
-            if (log.isDebugEnabled()){
-            log.debug("First name is not available");
+            if (log.isDebugEnabled()) {
+                log.debug("First name is not available");
             }
             try {
                 firstName = getAdminUserNameFromTenantId(realmService, tenant.getId());
@@ -80,8 +80,8 @@ public class ClaimsMgtUtil {
      * Get the claims of the admin from the user store manager
      *
      * @param realmService RealmService
-     * @param tenantId tenantId
-     * @param claim claim name
+     * @param tenantId     tenantId
+     * @param claim        claim name
      * @return claim value
      * @throws AdminManagementException, exception in getting the tenant admin claim
      */
@@ -94,7 +94,7 @@ public class ClaimsMgtUtil {
             userName = getAdminUserNameFromTenantId(realmService, tenantId);
         } catch (AdminManagementException e) {
             String msg = "Couldn't find the admin user name for the tenant with tenant id: " +
-                         tenantId;
+                    tenantId;
             log.warn(msg);
             throw new AdminManagementException(msg, e);
         }
@@ -105,14 +105,15 @@ public class ClaimsMgtUtil {
      * Get the claims from the user store manager
      *
      * @param realmService RealmService
-     * @param userName user name
-     * @param tenantId tenantId
-     * @param claim claim name
+     * @param userName     user name
+     * @param tenantId     tenantId
+     * @param claim        claim name
      * @return claim value
      * @throws AdminManagementException, exception in getting the user store manager
      */
     public static String getClaimFromUserStoreManager(RealmService realmService, String userName,
-                                             int tenantId, String claim) throws AdminManagementException {
+                                                      int tenantId, String claim)
+            throws AdminManagementException {
         UserStoreManager userStoreManager = null;
         String claimValue = "";
         try {
@@ -128,7 +129,7 @@ public class ClaimsMgtUtil {
         try {
             if (userStoreManager != null) {
                 claimValue = userStoreManager.getUserClaimValue(userName, claim,
-                                                                UserCoreConstants.DEFAULT_PROFILE);
+                        UserCoreConstants.DEFAULT_PROFILE);
             }
             return claimValue;
         } catch (UserStoreException e) {
@@ -142,7 +143,7 @@ public class ClaimsMgtUtil {
      * Gets first name from the user store manager
      *
      * @param realmService RealmService
-     * @param tenantId tenant id
+     * @param tenantId     tenant id
      * @return first name
      * @throws AdminManagementException, if getting the given name failed
      */
@@ -150,30 +151,30 @@ public class ClaimsMgtUtil {
                                                           int tenantId) throws
             AdminManagementException {
         return getTenantAdminClaim(realmService, tenantId,
-                                   UserCoreConstants.ClaimTypeURIs.GIVEN_NAME);
+                UserCoreConstants.ClaimTypeURIs.GIVEN_NAME);
     }
 
     /**
      * Gets email address from the user store manager
      *
      * @param realmService RealmService
-     * @param userName user name
-     * @param tenantId tenant id
+     * @param userName     user name
+     * @param tenantId     tenant id
      * @return email email
      * @throws AdminManagementException, if getting the claim email address failed.
      */
     public static String getEmailAddressFromUserProfile(RealmService realmService,
                                                         String userName, int tenantId)
             throws AdminManagementException {
-            return  getClaimFromUserStoreManager(realmService, userName, tenantId,
-                                       UserCoreConstants.ClaimTypeURIs.EMAIL_ADDRESS);
+        return getClaimFromUserStoreManager(realmService, userName, tenantId,
+                UserCoreConstants.ClaimTypeURIs.EMAIL_ADDRESS);
     }
 
     /**
      * Method to get the name of the admin user given the tenant id
      *
      * @param realmService RealmService
-     * @param tenantId tenant id
+     * @param tenantId     tenant id
      * @return admin user name
      * @throws AdminManagementException, if unable to get the admin username from the tenant id.
      */

@@ -20,10 +20,9 @@ package org.wso2.carbon.apimgt.api.model;
 /**
  * Status of an API can be anyone from following list.
  */
-@SuppressWarnings("unused")
 public enum APIStatus {
 
-    CREATED("CREATED"), DEPLOYED("DEPLOYED"), PUBLISHED("PUBLISHED"),
+    CREATED("CREATED"), PUBLISHED("PUBLISHED"),
     DEPRECATED("DEPRECATED"), RETIRED("RETIRED"), BLOCKED("BLOCKED");
 
     private String status;

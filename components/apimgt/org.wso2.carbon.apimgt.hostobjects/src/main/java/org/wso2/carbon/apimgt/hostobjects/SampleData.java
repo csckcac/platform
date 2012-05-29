@@ -115,7 +115,7 @@ class SampleData {
                             "  sit amet euismod.");
         api1.setLastUpdated(new Date(12 / 10 / 2011));
         api1.setLatest(true);
-        api1.setStatus(APIStatus.DEPLOYED);
+        api1.setStatus(APIStatus.DEPRECATED);
         api1.setUrl("http://appserver/services/hello");
         api1.addAvailableTiers(availableTier);
         return api1;
@@ -151,7 +151,7 @@ class SampleData {
                                "sit amet euismod.");
             api.setLastUpdated(new Date(12 / 10 / 2011));
             api.setLatest(true);
-            api.setStatus(APIStatus.DEPLOYED);
+            api.setStatus(APIStatus.DEPRECATED);
             api.setUrl("http://appserver/services/echo");
             api.addAvailableTiers(availableTier);
 

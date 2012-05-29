@@ -39,7 +39,9 @@ import org.wso2.carbon.apimgt.api.model.DuplicateAPIException;
 import org.wso2.carbon.apimgt.api.model.Subscriber;
 import org.wso2.carbon.apimgt.api.model.Tier;
 import org.wso2.carbon.apimgt.api.model.URITemplate;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
+import org.wso2.carbon.apimgt.impl.UserAwareAPIProvider;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.usage.client.APIUsageStatisticsClient;
 import org.wso2.carbon.apimgt.usage.client.dto.*;
@@ -1371,6 +1373,36 @@ public class APIProviderHostObject extends ScriptableObject {
         }
 
         return myn;
+    }
+
+    public static boolean jsFunction_hasCreatePermission(Context cx, Scriptable thisObj,
+                                                Object[] args,
+                                                Function funObj) throws ScriptException {
+        APIProvider provider = getAPIProvider(thisObj);
+        if (provider instanceof UserAwareAPIProvider) {
+            try {
+                ((UserAwareAPIProvider) provider).checkPermission(APIConstants.Permissions.API_CREATE);
+                return true;
+            } catch (APIManagementException e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public static boolean jsFunction_hasPublishPermission(Context cx, Scriptable thisObj,
+                                                         Object[] args,
+                                                         Function funObj) throws ScriptException {
+        APIProvider provider = getAPIProvider(thisObj);
+        if (provider instanceof UserAwareAPIProvider) {
+            try {
+                ((UserAwareAPIProvider) provider).checkPermission(APIConstants.Permissions.API_PUBLISH);
+                return true;
+            } catch (APIManagementException e) {
+                return false;
+            }
+        }
+        return false;
     }
 }
 

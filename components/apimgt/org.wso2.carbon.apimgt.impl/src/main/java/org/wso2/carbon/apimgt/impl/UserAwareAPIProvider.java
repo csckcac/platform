@@ -123,7 +123,7 @@ public class UserAwareAPIProvider extends APIProviderImpl {
         super.copyAllDocumentation(apiId, toVersion);
     }
 
-    private void checkPermission(String permission) throws APIManagementException {
+    public void checkPermission(String permission) throws APIManagementException {
         if (username == null) {
             throw new APIManagementException("Attempt to execute privileged operation as" +
                     " the anonymous user");

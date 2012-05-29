@@ -1,0 +1,148 @@
+<!--
+  ~  Licensed to the Apache Software Foundation (ASF) under one
+  ~  or more contributor license agreements.  See the NOTICE file
+  ~  distributed with this work for additional information
+  ~  regarding copyright ownership.  The ASF licenses this file
+  ~  to you under the Apache License, Version 2.0 (the
+  ~  "License"); you may not use this file except in compliance
+  ~  with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~   * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
+<project default="deploy">
+
+    <property name="cep.home" value="../.."/>
+    <property name="src.dir" value="conf/"/>
+    <property name="dest.dir" value="${cep.home}/repository/conf"/>
+    <property name="class.dir" value="target/classes"/>
+    <property name="lib.dir" value="../lib"/>
+    <property name="services" value="${cep.home}/repository/deployment/server/axis2services"/>
+    <property name="temp.dir" value="temp"/>
+    <property name="classes" value="${temp.dir}/classes"/>
+    <property name="src" value="../services/FastMovingStockQuoteReceiverService/src"/>
+
+    <path id="cep.class.path">
+        <pathelement path="${java.class.path}"/>
+        <fileset dir="${cep.home}">
+            <include name="repository/components/plugins/*.jar"/>
+        </fileset>
+    </path>
+     <path id="javac.classpath">
+            <pathelement path="${class.dir}"/>
+            <fileset dir="${lib.dir}">
+                <include name="*.jar"/>
+            </fileset>
+
+     </path>
+
+
+    <target name="clean">
+        <delete file="${dest.dir}/cep-config.xml"/>
+        <delete file="${dest.dir}/broker-manager-config.xml"/>
+        <delete dir="target" quiet="true"/>
+        <delete dir="${class.dir}" quiet="true"/>
+        <delete dir="${temp.dir}"/>
+    </target>
+
+    <target name="init" depends="clean">
+        <mkdir dir="${class.dir}"/>
+        <mkdir dir="${temp.dir}"/>
+        <mkdir dir="${classes}"/>
+
+    </target>
+
+    <target name="build-events" depends="init">
+        <ant antfile="build.xml"  dir="../events/CustomEvent/">
+            <property name="src" value="src"/>
+        </ant>
+    </target>
+
+    <target name="compile-services" depends="build-events">
+        <javac debug="on" destdir="${classes}">
+            <src path="${src}"/>
+            <classpath refid="cep.class.path"/>
+        </javac>
+    </target>
+
+    <target name="compile-all">
+         <javac srcdir="src" destdir="${class.dir}">
+            <classpath refid="javac.classpath"/>
+        </javac>
+    </target>
+
+     <target name="build-service" depends="compile-services">
+        <property name="FMSQ.dir" value="${temp.dir}/FastMovingStockQuote"/>
+        <mkdir dir="${FMSQ.dir}"/>
+
+        <mkdir dir="${FMSQ.dir}/META-INF"/>
+        <copy file="../services/FastMovingStockQuoteReceiverService/conf/services.xml"
+              tofile="${FMSQ.dir}/META-INF/services.xml"/>
+        <copy toDir="${FMSQ.dir}">
+            <fileset dir="${classes}">
+                <include name="**/*.class"/>
+            </fileset>
+        </copy>
+        <jar destfile="${services}/FastMovingStockQuoteService.aar">
+            <fileset dir="${FMSQ.dir}"/>
+        </jar>
+    </target>
+
+
+    <target name="deploy" depends="build-service">
+        <copy todir="${dest.dir}">
+            <fileset dir="${src.dir}"/>
+        </copy>
+        <copy todir="${lib.dir}" overwrite="false">
+            <fileset dir="${cep.home}/repository/components/plugins/">
+                <include name="axis2*.jar"/>
+                <include name="axiom*.jar"/>
+                <include name="commons-codec*.jar"/>
+                <include name="commons-httpclient*.jar"/>
+                <include name="httpcore*.jar"/>
+                <include name="neethi*.jar"/>
+                <include name="org.wso2.carbon.utils*.jar"/>
+                <include name="wsdl4j*.jar"/>
+                <include name="XmlSchema*.jar"/>
+                <include name="org.wso2.carbon.logging*.jar"/>
+                <include name="org.wso2.securevault*.jar"/>
+                <include name="slf4j.api*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+
+    <target name="fusionLocal" depends="compile-all">
+        <java classname="org.wso2.carbon.cep.sample.FusionLocalBrokerClient"
+              classpathref="javac.classpath" fork="true">
+        </java>
+    </target>
+    <target name="fusionLocalCustomEvent" depends="compile-all">
+        <java classname="org.wso2.carbon.cep.sample.FusionLocalBrokerCustomEventClient"
+              classpathref="javac.classpath" fork="true">
+        </java>
+    </target>
+    <target name="fusionJMS" depends="compile-all">
+        <java classname="org.wso2.carbon.cep.sample.FusionJMSBrokerClient"
+              classpathref="javac.classpath" fork="true">
+        </java>
+    </target>
+     <target name="esperLocal" depends="compile-all">
+        <java classname="org.wso2.carbon.cep.sample.EsperLocalBrokerClient"
+              classpathref="javac.classpath" fork="true">
+        </java>
+    </target>
+     <target name="esperJMS" depends="compile-all">
+        <java classname="org.wso2.carbon.cep.sample.EsperJMSBrokerClient"
+              classpathref="javac.classpath" fork="true">
+        </java>
+    </target>
+
+</project>

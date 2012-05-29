@@ -1,0 +1,290 @@
+<cepConfiguration xmlns="http://wso2.org/carbon/cep">
+    <!-- details of the Back end runtime provider can be esper or fusion -->
+    <cepEngineProviders>
+        <cepEngineProvider name="esperEngineProvider" default="true"
+                           class="org.wso2.carbon.cep.esper.EsperBackendRuntimeFactory"/>
+    </cepEngineProviders>
+
+    <!-- set of buckets to process the cep events -->
+    <buckets>
+	<!-- Bucket in the user guide Fusion / Local Broker-->
+	 <bucket name="StockQuoteAnalyzerFusionLocal" engineProvider="DroolsFusionCEPRuntime" owner="admin" overWriteRegistryStoredBucket="true">
+            	<description>This bucket analyzes stock quotes and trigger
+		 an event if the last traded amount is greater than 100.
+		</description>
+            <input topic="AllStockQuotes"  brokerName="localBroker">
+                <xmlMapping stream="allStockQuotes">
+                    <xpathDefinition prefix="quotedata"
+                                     namespace="http://ws.cdyne.com/"/>
+                    <property name="symbol" xpath="//quotedata:StockQuoteEvent/quotedata:StockSymbol"
+                              type="java.lang.String"/>
+                    <property name="price" xpath="//quotedata:StockQuoteEvent/quotedata:LastTradeAmount"
+                              type="java.lang.Double"/>
+                </xmlMapping>
+            </input>
+
+            <query name="ConditionalStocksDetector">
+                <expression type="inline">package org.wso2.carbon.cep.fusion;
+							import java.util.HashMap;
+							global org.wso2.carbon.cep.fusion.listener.FusionEventListener fusionListener;
+							declare HashMap
+							@role( event )
+							end
+							rule Invoke_Stock_Quotes
+							when
+							    $stockQuote : HashMap($symbol : this["symbol"], $stockPrice : this["price"], this["picked"] != "true") over
+								window:time(2m) from entry-point "allStockQuotes";
+							    eval((Double)$stockPrice > 100);
+							then
+							    $stockQuote.put("picked","true");
+							    update($stockQuote);
+							    HashMap $fastMovingStock = new HashMap();
+							    $fastMovingStock.put("price",$stockPrice);
+							    $fastMovingStock.put("symbol",$symbol);
+							    fusionListener.onEvent($fastMovingStock);
+							end
+
+
+                </expression>
+                <output topic="ConditionSatisfyingStockQuotes" brokerName="localBroker">                   
+                   <xmlMapping>
+                        <quotedata:StockQuoteDataEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+								xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+								xmlns:quotedata="http://ws.cdyne.com/">
+					<quotedata:StockSymbol>{symbol}</quotedata:StockSymbol>
+					<quotedata:LastTradeAmount>{price}</quotedata:LastTradeAmount>
+			</quotedata:StockQuoteDataEvent>
+                    </xmlMapping>
+                </output>
+            </query>
+        </bucket>
+
+        <bucket name="CustomEventStockQuoteAnalyzerFusionLocal" engineProvider="DroolsFusionCEPRuntime" owner="admin" overWriteRegistryStoredBucket="true">
+            <description>This bucket analyzes stock quotes and trigger
+                an event if the last traded amount is greater than 100.
+            </description>
+            <input topic="CustomEventStockQuotes"  brokerName="localBroker">
+                <xmlMapping stream="allStockQuotes" eventClass="org.wso2.cep.event.Event">
+                    <xpathDefinition prefix="quotedata"
+                                     namespace="http://ws.cdyne.com/"/>
+                    <property name="symbol" xpath="//quotedata:StockQuoteEvent/quotedata:StockSymbol"
+                              type="java.lang.String"/>
+                    <property name="price" xpath="//quotedata:StockQuoteEvent/quotedata:LastTradeAmount"
+                              type="java.lang.Double"/>
+                </xmlMapping>
+            </input>
+
+            <query name="CustomEventConditionalStocksDetector">
+                <expression type="inline">
+                    package org.wso2.carbon.cep.fusion;
+                    import org.wso2.cep.event.Event;
+                    import java.util.HashMap;
+                    global org.wso2.carbon.cep.fusion.listener.FusionEventListener fusionListener;
+                    declare Event
+                    @role( event )
+                    end
+                    rule Invoke_Stock_Quotes
+                    when
+                    $event : Event( price > 100);
+                    then
+                    fusionListener.onEvent($event);
+                    end
+                </expression>
+                <output topic="CustomEventConditionSatisfyingStockQuotes" brokerName="localBroker">
+                    <xmlMapping>
+                        <quotedata:StockQuoteDataEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                                       xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                                       xmlns:quotedata="http://ws.cdyne.com/">
+                            <quotedata:StockSymbol>{symbol}</quotedata:StockSymbol>
+                            <quotedata:LastTradeAmount>{price}</quotedata:LastTradeAmount>
+                        </quotedata:StockQuoteDataEvent>
+                    </xmlMapping>
+                </output>
+            </query>
+        </bucket>
+
+        <bucket name="StockQuoteAnalyzerFusionJMS" engineProvider="DroolsFusionCEPRuntime" owner="admin" overWriteRegistryStoredBucket="true">
+                   <description>This bucket analyzes stock quotes and trigger an event if the last
+						  traded amount vary by 2 percent with regards to the average traded
+						  price within past 2 minutes.
+           </description>
+               <input topic="AllStockQuotes"  brokerName="jmsBroker">
+                   <xmlMapping stream="allStockQuotes">
+                       <xpathDefinition prefix="quotedata"
+                                        namespace="http://ws.cdyne.com/"/>
+                       <property name="symbol" xpath="//quotedata:StockQuoteEvent/quotedata:StockSymbol"
+                                 type="java.lang.String"/>
+                       <property name="price" xpath="//quotedata:StockQuoteEvent/quotedata:LastTradeAmount"
+                                 type="java.lang.Double"/>
+                   </xmlMapping>
+               </input>
+
+               <query name="FastMovingStocksDetector">
+                   <expression type="inline">package org.wso2.carbon.cep.fusion;
+							import java.util.HashMap;
+							global org.wso2.carbon.cep.fusion.listener.FusionEventListener fusionListener;
+							declare HashMap
+							@role( event )
+							end
+							rule Invoke_Stock_Quotes
+							when
+							    $stockQuote : HashMap($symbol : this["symbol"], $stockPrice : this["price"], this["picked"] != "true") over
+								window:time(2m) from entry-point "allStockQuotes";
+							    $average : Double() from accumulate(HashMap(this["symbol"] == $symbol,$price : this["price"]) over window:time(2m) from entry-point 								"allStockQuotes" , average( $price));
+							    eval((Double)$stockPrice > $average * 1.01);
+							then
+							    $stockQuote.put("picked","true");
+							    update($stockQuote);
+							    HashMap $fastMovingStock = new HashMap();
+							    $fastMovingStock.put("price",$stockPrice);
+							    $fastMovingStock.put("symbol",$symbol);
+							    $fastMovingStock.put("average",$average);
+							    fusionListener.onEvent($fastMovingStock);
+							end
+                   </expression>
+                   <output topic="FastMovingStockQuotes" brokerName="jmsBroker">
+                       <xmlMapping>
+                           <quotedata:StockQuoteDataEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                                          xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                                          xmlns:quotedata="http://ws.cdyne.com/">
+                               <quotedata:StockSymbol>{symbol}</quotedata:StockSymbol>
+                               <quotedata:AvgLastTradeAmount>{average}</quotedata:AvgLastTradeAmount>
+                               <quotedata:LastTradeAmount>{price}</quotedata:LastTradeAmount>
+                           </quotedata:StockQuoteDataEvent>
+                       </xmlMapping>
+                   </output>
+               </query>
+           </bucket>
+
+
+	<!-- Bucket with Esper and Local Broker -->
+	<bucket name="StockQuoteAnalyzerLocalEsper" engineProvider="EsperCEPRuntime" owner="admin">
+            	<description>This bucket analyzes stock quotes and trigger an event if
+                                                             the last traded amount vary by 2 percent with regards to
+                                                             the average traded price within past 2 minutes.
+		</description>
+            <input topic="AllStockQuotesEsperLocal"  brokerName="localBroker">
+                <xmlMapping stream="allStockQuotes">
+                    <xpathDefinition prefix="quotedata"
+                                     namespace="http://ws.cdyne.com/"/>
+                    <property name="symbol" xpath="//quotedata:StockQuoteEvent/quotedata:StockSymbol"
+                              type="java.lang.String"/>
+                    <property name="price" xpath="//quotedata:StockQuoteEvent/quotedata:LastTradeAmount"
+                              type="java.lang.Double"/>
+                </xmlMapping>
+            </input>
+
+            <query name="FastMovingStocksDetector">
+                <expression type="inline">
+                    select symbol,avg(price),price from allStockQuotes.win:time(1 min)
+                                    group by symbol having ((price > (avg(price)*1.02)) or
+                                    ((avg(price)*0.98)>price ))
+                </expression>
+                <output topic="FastMovingStockQuotesEsperLocal" brokerName="localBroker">
+                   <xmlMapping>
+                       <quotedata:StockQuoteDataEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                                      xmlns:quotedata="http://ws.cdyne.com/">
+                           <quotedata:StockSymbol>{symbol}</quotedata:StockSymbol>
+                           <quotedata:LastTradeAmount>{price}</quotedata:LastTradeAmount>
+                       </quotedata:StockQuoteDataEvent>
+                    </xmlMapping>
+                </output>
+            </query>
+        </bucket>
+
+        <!-- Bucket with Esper and JMS Broker -->
+	<bucket name="StockQuoteAnalyzerJMSEsper" engineProvider="EsperCEPRuntime" owner="admin">
+            	<description>This bucket analyzes stock quotes and trigger an event if
+                                                             the last traded amount vary by 2 percent with regards to
+                                                             the average traded price within past 2 minutes.
+		</description>
+            <input topic="AllStockQuotesEsperJMS"  brokerName="jmsBroker">
+                <xmlMapping stream="allStockQuotes">
+                    <xpathDefinition prefix="quotedata"
+                                     namespace="http://ws.cdyne.com/"/>
+                    <property name="symbol" xpath="//quotedata:StockQuoteEvent/quotedata:StockSymbol"
+                              type="java.lang.String"/>
+                    <property name="price" xpath="//quotedata:StockQuoteEvent/quotedata:LastTradeAmount"
+                              type="java.lang.Double"/>
+                </xmlMapping>
+            </input>
+
+            <query name="FastMovingStocksDetector">
+                <expression type="inline">
+                    select symbol,avg(price),price from allStockQuotes.win:time(1 min)
+                                    group by symbol having ((price > (avg(price)*1.02)) or
+                                    ((avg(price)*0.98)>price ))
+                </expression>
+                <output topic="FastMovingStockQuotesEsperJMS" brokerName="jmsBroker">
+                   <xmlMapping>
+                       <quotedata:StockQuoteDataEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                                      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                                                      xmlns:quotedata="http://ws.cdyne.com/">
+                           <quotedata:StockSymbol>{symbol}</quotedata:StockSymbol>
+                           <quotedata:LastTradeAmount>{price}</quotedata:LastTradeAmount>
+                       </quotedata:StockQuoteDataEvent>
+                    </xmlMapping>
+                </output>
+            </query>
+        </bucket>
+
+        <bucket name="TwitterAndStockQuoteAnalyzer" engineProvider="EsperCEPRuntime" overWriteRegistryStoredBucket="true">
+             <description>
+                 This bucket analyzes stock quotes and Twitter feeds on the word count and
+                  trigger an event if the last traded amount vary by 2 percent with regards
+                  to the average traded price within past 2 minutes and the word count with
+                  related to that symbol is greater than 10.
+             </description>
+             <input topic="AllStockQuotes" brokerName="localBroker">
+                 <xmlMapping stream="allStockQuotes">
+                     <xpathDefinition prefix="quotedata" namespace="http://ws.cdyne.com/"/>
+                     <property name="symbol" xpath="//quotedata:StockQuoteEvent/quotedata:StockSymbol" type="java.lang.String"/>
+                     <property name="price" xpath="//quotedata:StockQuoteEvent/quotedata:LastTradeAmount" type="java.lang.Double"/>
+                 </xmlMapping>
+             </input>
+            <input topic="TwitterFeed" brokerName="localBroker">
+                <xmlMapping stream="twitterFeed">
+                    <xpathDefinition prefix="twitter" namespace="http://twitter.com/"/>
+                    <property name="company" xpath="//twitter:TwitterEvent/twitter:Company" type="java.lang.String"/>
+                    <property name="wordCount" xpath="//twitter:TwitterEvent/twitter:wordCount" type="java.lang.Integer"/>
+                </xmlMapping>
+            </input>
+            <query name="FastStockQuery">
+                <expression type="inline">
+                    insert into fastMovingStockQuotes 
+                           select symbol as symbol, avg(price) as averagePrice 
+                           from  allStockQuotes.win:time(10 min) 
+                           group by symbol 
+                           having ((price > (avg(price)*1.02)) or ((avg(price)*0.98)> price ))
+                </expression>
+            </query>
+            <query name="HighFrequentTweetQuery">
+                <expression type="inline">
+                    insert into highFrequentTweets
+                           select company as company, sum(wordCount) as words
+                           from  twitterFeed.win:time(10 min)
+                           group by company
+                           having (sum(wordCount) > 10)
+                </expression>
+            </query>
+            <query name="StocksPredictor">
+                <expression type="inline">
+                    select fastMovingStockQuotes.symbol as company, fastMovingStockQuotes.averagePrice as amount, highFrequentTweets.words as words 
+                    from fastMovingStockQuotes.win:time(10 min) as fastMovingStockQuotes, highFrequentTweets.win:time(10 min) as highFrequentTweets
+                </expression>
+                <output topic="PredictedStockQuotes" brokerName="localBroker">
+                    <xmlMapping>
+                        <quotedata:StockQuoteDataEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+								xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+								xmlns:quotedata="http://ws.cdyne.com/">
+									<quotedata:StockSymbol>{company}</quotedata:StockSymbol>
+									<quotedata:LastTradeAmount>{amount}</quotedata:LastTradeAmount>
+									<quotedata:WordCount>{words}</quotedata:WordCount>
+								</quotedata:StockQuoteDataEvent>
+                    </xmlMapping>
+                </output>
+            </query>
+        </bucket>
+    </buckets>
+</cepConfiguration>

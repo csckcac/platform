@@ -218,7 +218,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td><fmt:message key="mediator.ejb.jndiName" />
+							<td><fmt:message key="mediator.ejb.jndiName" /><span class="required">*</span>
 							</td>
 							<td><input class="longInput" type="text" value="<%=jndiName%>" name="jndiName" id="jndiName" />
 							</td>

@@ -25,18 +25,22 @@ import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.endpoints.EndpointManager;
 import org.wso2.carbon.governance.api.endpoints.dataobjects.Endpoint;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
+import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.governance.api.schema.dataobjects.Schema;
 import org.wso2.carbon.governance.api.services.ServiceFilter;
 import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
+import org.wso2.carbon.governance.api.util.GovernanceArtifactConfiguration;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
+import org.wso2.carbon.registry.api.Association;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
@@ -51,17 +55,19 @@ import java.io.FileInputStream;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.fail;
 import static org.testng.AssertJUnit.assertTrue;
 
 public class ServiceTestCaseClient {
     private static final Log log = LogFactory.getLog(ServiceTestCaseClient.class);
     private Registry governance;
     private String configPath;
+    private WSRegistryServiceClient registryWS;
 
     @BeforeClass(groups = {"wso2.greg"})
     public void initTest() throws RegistryException, AxisFault {
         int userId = new GregUserIDEvaluator().getTenantID();
-        WSRegistryServiceClient registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
+        registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         governance = new RegistryProvider().getGovernance(registryWS, userId);
 
         configPath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator +
@@ -395,7 +401,7 @@ public class ServiceTestCaseClient {
     @Test(groups = {"wso2.greg"}, description = "add 10000 resources to registry")
     public void testAddLargeNumberOfServices() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
-        Service newService = null;
+        Service newService;
         final String serviceName = "WSO2AutomatedService";
         int numberOfServices = 10 * 1000; //10000 services
         for (int i = 1; i <= numberOfServices; i++) {
@@ -557,6 +563,10 @@ public class ServiceTestCaseClient {
                             new QName("http://bar.org/purchasing", "purchasing.xsd"));
         Assert.assertNotNull(schemas[0].getId());
 
+        Association[] associations = governance.getAllAssociations(service.getPath());
+
+        verifyServiceAssociations(associations);
+
         service.detachWSDL(wsdls[0].getId());
         assertTrue("WSDL still exits ", service.getAttachedWsdls().length == 0);
 
@@ -566,7 +576,50 @@ public class ServiceTestCaseClient {
         //remove the service
         serviceManager.removeService(service.getId());
         assertNull(serviceManager.getService(service.getId()));
+    }
 
+    private boolean verifyServiceAssociations(Association[] associations) {
+        boolean status = false;
+        for (Association association : associations) {
+            if (association.getAssociationType().equals("depends") &&
+                association.getDestinationPath().contains("ep-")) {
+                assertTrue(association.getAssociationType().equals("depends"));
+                assertTrue(association.getSourcePath().contains("/test/org/bang/BizService"));
+                assertTrue(association.getDestinationPath().contains("endpoints/localhost/axis2/services/ep-BizService"));
+                status = true;
+
+            } else if (association.getAssociationType().equals("depends") &&
+                       association.getDestinationPath().contains(".wsdl")) {
+                assertTrue(association.getAssociationType().equals("depends"));
+                assertTrue(association.getSourcePath().contains("/test/org/bang/BizService"));
+                assertTrue(association.getDestinationPath().contains("/wsdls/com/foo/BizService" +
+                                                                     ".wsdl"));
+                status = true;
+
+
+            } else if (association.getAssociationType().equals("usedBy")
+                       && association.getSourcePath().contains("ep-")) {
+                assertTrue(association.getAssociationType().equals("usedBy"));
+                assertTrue(association.getSourcePath().contains("endpoints/localhost/axis2/services/ep-BizService"));
+                assertTrue(association.getDestinationPath().contains("services/test/org/bang/BizService"));
+                status = true;
+
+            } else if (association.getAssociationType().equals("usedBy")
+                       && association.getSourcePath().contains(".wsdl")) {
+                assertTrue(association.getAssociationType().equals("usedBy"));
+                assertTrue(association.getSourcePath().contains("/wsdls/com/foo/BizService" +
+                                                                ".wsdl"));
+                assertTrue(association.getDestinationPath().contains("services/test/org/bang/BizService"));
+                status = true;
+
+            } else if (!association.getAssociationType().equals("usedBy") ||
+                       association.getAssociationType().equals("depends")) {
+                fail("Required association types usedBy or depends not found");
+                status = false;
+
+            }
+        }
+        return status;
     }
 
     @Test(groups = {"wso2.greg"}, description = "Attach LC to a service")
@@ -618,6 +671,35 @@ public class ServiceTestCaseClient {
     }
 
 
+    @Test(groups = {"wso2.greg"}, description = "Attach Not existing LC to a service")
+    public void testCreateServiceVersions() throws Exception {
+        ServiceManager serviceManager = new ServiceManager(governance);
+        Service service = serviceManager.newService(new QName("http://wso2.org/automation/test",
+                                                              "ServiceVersions1"));
+        service.addAttribute("testAttribute", "serviceAttr");
+        serviceManager.addService(service);
+        String serviceId = service.getId();
+        int versionCountBefore = governance.getVersions(service.getPath()).length;
+
+        //create service versions
+        service.createVersion();
+        service.createVersion();
+
+        int versionCountAfter = governance.getVersions(service.getPath()).length;
+        assertTrue((versionCountAfter - versionCountBefore) == 2);
+
+        //get last version and asset for service name
+        assertTrue(governance.getVersions(service.getPath())[versionCountAfter - 1].contains("ServiceVersions1;version"));
+
+        Service newService = serviceManager.getService(serviceId);
+        assertTrue(newService.getQName().toString().contains("ServiceVersions1"));
+        assertEquals(newService.getAttribute("testAttribute"), "serviceAttr");
+
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
+    }
+
+
     @DataProvider(name = "invalidCharacter")
     public Object[][] invalidCharacter() {
         return new Object[][]{
@@ -639,4 +721,6 @@ public class ServiceTestCaseClient {
                                      {";"},
         };
     }
+
+
 }

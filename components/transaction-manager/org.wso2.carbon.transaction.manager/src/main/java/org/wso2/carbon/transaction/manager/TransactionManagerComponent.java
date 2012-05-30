@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.transaction.manager.exception.TransactionManagerException;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -59,7 +60,7 @@ public class TransactionManagerComponent {
     /* class level lock for controlling synchronized access to static variables */
     private static Object txManagerComponentLock = new Object();
 
-    protected void activate(ComponentContext ctxt) throws Exception {
+    protected void activate(ComponentContext ctxt) throws TransactionManagerException {
         BundleContext bundleContext = ctxt.getBundleContext();
         bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
                 new TransactionManagerAxis2ConfigurationContextObserver(), null);
@@ -69,11 +70,16 @@ public class TransactionManagerComponent {
         for (int tid : tenants) {
             bindTransactionManagerWithJNDIForTenant(tid);
         }
-        log.debug("Transaction Manager bundle is activated ");
+        if (log.isDebugEnabled()) {
+            log.debug("Transaction Manager bundle is activated ");
+        }
+
     }
 
     protected void deactivate(ComponentContext ctxt) {
-        log.debug("Transaction Manager bundle is deactivated ");
+        if (log.isDebugEnabled()) {
+            log.debug("Transaction Manager bundle is deactivated ");
+        }
     }
 
     protected void setTransactionManager(TransactionManager txManager) {
@@ -120,7 +126,7 @@ public class TransactionManagerComponent {
         return userTransaction;
     }
 
-    private List<Integer> getAllTenantIds() throws Exception {
+    private List<Integer> getAllTenantIds() throws TransactionManagerException {
 		try {
 			Tenant[] tenants = TransactionManagerComponent.getRealmService().getTenantManager().
 					getAllTenants();
@@ -131,7 +137,8 @@ public class TransactionManagerComponent {
 			tids.add(MultitenantConstants.SUPER_TENANT_ID);
 			return tids;
 		} catch (UserStoreException e) {
-			throw new Exception("Error in listing all the tenants", e);
+            log.error(e);
+			throw new TransactionManagerException("Error in listing all the tenants", e);
 		}
 	}
 

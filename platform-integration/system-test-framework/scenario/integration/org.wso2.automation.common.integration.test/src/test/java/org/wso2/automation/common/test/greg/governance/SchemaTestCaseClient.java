@@ -39,7 +39,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-    public class SchemaTestCaseClient {
+import static junit.framework.Assert.assertTrue;
+
+public class SchemaTestCaseClient {
     private Registry governance;
     private static final Log log = LogFactory.getLog(SchemaTestCaseClient.class);
 
@@ -180,6 +182,56 @@ import java.net.URL;
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
+        }
+    }
+
+    @Test(groups = {"wso2.greg"}, expectedExceptions = {GovernanceException.class})
+    public void testInvalidSchema() throws GovernanceException {
+        SchemaManager schemaManager = new SchemaManager(governance);
+        Schema schema;
+        try {
+            schema = schemaManager.newSchema("https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration" +
+                    "/system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts" +
+                    "/GREG/schema/XmlInvalidSchema.xsd");
+            assertTrue("Invalid schema added without any exceptions", false);
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Exception thrown while adding Invalid schema : " + e.getMessage());
+        }
+        schemaManager.addSchema(schema);
+    }
+
+    @Test(groups = {"wso2.greg"})
+    public void testInvalidSchemaContent() throws GovernanceException {
+        Schema schema;
+        String schemaContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<xsd:schema targetNamespace=\"http://OrderProcessingLib/bo\"\n" +
+                "            xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
+                "    <xsd:complexType>\n" +
+                "        <xsd:sequence>\n" +
+                "            <xsd:element minOccurs=\"0\" name=\"vendorID\"\n" +
+                "                         type=\"xsd:string\">\n" +
+                "            </xsd:element>\n" +
+                "            <xsd:element minOccurs=\"0\" name=\"deliveryCity\"\n" +
+                "                         type=\"xsd:string\">\n" +
+                "            </xsd:element>\n" +
+                "            <xsd:element minOccurs=\"0\" name=\"totalAmount\"\n" +
+                "                         type=\"xsd:double\">\n" +
+                "            </xsd:element>\n" +
+                "            <xsd:element minOccurs=\"0\" name=\"status\"\n" +
+                "                         type=\"xsd:string\">\n" +
+                "            </xsd:element>\n" +
+                "        </xsd:sequence>\n" +
+                "    </xsd:complexType>\n" +
+                "</xsd:schema>";
+
+        SchemaManager schemaManager = new SchemaManager(governance);
+        try {
+            schema = schemaManager.newSchema(schemaContent.getBytes(), "InvalidSchema.xsd");
+            schemaManager.addSchema(schema);
+            assertTrue("getAttribute(\"Schema Validation\") schema validation didn't executed",
+                    schema.getAttribute("Schema Validation").equalsIgnoreCase("invalid"));
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Exception thrown while adding Invalid schema : " + e.getMessage());
         }
     }
 }

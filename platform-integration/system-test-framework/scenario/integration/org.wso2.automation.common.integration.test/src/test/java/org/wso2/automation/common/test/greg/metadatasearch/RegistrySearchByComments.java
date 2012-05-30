@@ -53,10 +53,8 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class RegistrySearchByComments {
-    private String gregBackEndUrl;
 
     private String sessionCookie;
-    private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
     private WSRegistryServiceClient registry;
@@ -68,11 +66,10 @@ public class RegistrySearchByComments {
                    InterruptedException {
         final int userId = 3;
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
-        gregServer = builder.build().getGreg();
+        EnvironmentVariables gregServer = builder.build().getGreg();
 
-
+        String gregBackEndUrl = gregServer.getBackEndUrl();
         sessionCookie = gregServer.getSessionCookie();
-        gregBackEndUrl = gregServer.getBackEndUrl();
         searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
         registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         governance = new RegistryProvider().getGovernance(registry, userId);

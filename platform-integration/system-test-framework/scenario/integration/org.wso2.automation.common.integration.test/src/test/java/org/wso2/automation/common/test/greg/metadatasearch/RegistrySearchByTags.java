@@ -56,10 +56,8 @@ import java.rmi.RemoteException;
 Search Registry metadata by Tags
  */
 public class RegistrySearchByTags {
-    private String gregBackEndUrl;
 
     private String sessionCookie;
-    private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
     private WSRegistryServiceClient registry;
@@ -71,12 +69,11 @@ public class RegistrySearchByTags {
                    InterruptedException {
         final int userId = 3;
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
-        gregServer = builder.build().getGreg();
+        EnvironmentVariables gregServer = builder.build().getGreg();
 
 
         sessionCookie = gregServer.getSessionCookie();
-        gregBackEndUrl = gregServer.getBackEndUrl();
-        searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
+        searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
         registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         governance = new RegistryProvider().getGovernance(registry, userId);
 

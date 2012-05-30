@@ -51,7 +51,7 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
-public class RegistrySearchByAssociationType {
+public class RegistrySearchByAssociationDestination {
 
     private String sessionCookie;
 
@@ -59,14 +59,16 @@ public class RegistrySearchByAssociationType {
     private WSRegistryServiceClient registry;
     private Registry governance;
 
+    private String destinationPath1 = null;
+
     @BeforeClass
     public void init() throws Exception {
         final int userId = 3;
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
         EnvironmentVariables gregServer = builder.build().getGreg();
 
-
         sessionCookie = gregServer.getSessionCookie();
+
         searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
         registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         governance = new RegistryProvider().getGovernance(registry, userId);
@@ -77,43 +79,84 @@ public class RegistrySearchByAssociationType {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available AssociationType")
-    public void searchResourceByAssociationType()
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available AssociationDestination")
+    public void searchResourceByAssociationDestination()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
-        final String searchAssociationType = "associationType1";
+        Assert.assertNotNull(destinationPath1, "Destination path not found for search Query. Clarity Error");
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType(searchAssociationType);
+        paramBean.setAssociationDest(destinationPath1);
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Type");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Destination");
 
         for (ResourceData resource : result.getResourceDataList()) {
-            Association[] array = registry.getAssociations(resource.getResourcePath(), searchAssociationType);
+            Association[] array = registry.getAllAssociations(resource.getResourcePath());
             Assert.assertNotNull(array, "Association list null");
             Assert.assertTrue(array.length > 0);
+            boolean associationDestination = false;
             for (Association association : array) {
-                Assert.assertEquals(association.getAssociationType(), searchAssociationType,
-                                    "AssociationT type not found on Resource");
+                if (association.getDestinationPath().contains(destinationPath1)) {
+                    associationDestination = true;
+                    break;
+                }
+
             }
 
+            Assert.assertTrue(associationDestination, "Association Destination not found on Resource"
+                                                      + resource.getResourcePath());
         }
 
 
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Association Types")
-    public void searchResourceByAssociationTypes()
+    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available " +
+                                                              "Association Destination relative path")
+    public void searchResourceByAssociationDestinationRelativePath()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException,
+                   RegistryException {
+        final String relativePath = "sns";
+        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
+        SearchParameterBean paramBean = new SearchParameterBean();
+        paramBean.setAssociationDest(relativePath);
+        ArrayOfString[] paramList = paramBean.getParameterList();
+
+        searchQuery.setParameterValues(paramList);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Destination");
+
+        for (ResourceData resource : result.getResourceDataList()) {
+            Association[] array = registry.getAllAssociations(resource.getResourcePath());
+            Assert.assertNotNull(array, "Association list null");
+            Assert.assertTrue(array.length > 0);
+            boolean associationDestination = false;
+            for (Association association : array) {
+                if (association.getDestinationPath().contains(relativePath)) {
+                    associationDestination = true;
+                    break;
+                }
+
+            }
+
+            Assert.assertTrue(associationDestination, "Association Destination relative path not " +
+                                                      "found on Resource" + resource.getResourcePath());
+        }
+
+
+    }
+     @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Association Destinations")
+    public void searchResourceByAssociationDestinations()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
 
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType("associationType1 associationType2");
+        paramBean.setAssociationDest("autoService1 autoService2");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -121,56 +164,58 @@ public class RegistrySearchByAssociationType {
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Types");
         for (ResourceData resource : result.getResourceDataList()) {
-            boolean associationTypeFound = false;
+            boolean associationDestinationFound = false;
             for (Association association : registry.getAllAssociations(resource.getResourcePath())) {
-                if ("associationType1".equalsIgnoreCase(association.getAssociationType())
-                    || "associationType2".equalsIgnoreCase(association.getAssociationType())) {
-                    associationTypeFound = true;
+                if (association.getAssociationType().contains("autoService1")
+                    || association.getAssociationType().contains("autoService2")) {
+                    associationDestinationFound = true;
                     break;
                 }
             }
-            Assert.assertTrue(associationTypeFound, "Association Types not found on Resource");
+            Assert.assertTrue(associationDestinationFound, "Association Destinations not found on Resource"
+                                                           + resource.getResourcePath());
 
         }
 
 
     }
 
-    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Association Type pattern matching")
-    public void searchResourceByAssociationTypePattern()
+    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Association Destination pattern matching")
+    public void searchResourceByAssociationDestinationPattern()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType("%Type%");
+        paramBean.setAssociationDest("%sns%autoService%");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Type pattern");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Destination pattern");
         for (ResourceData resource : result.getResourceDataList()) {
-            boolean associationTypeFound = false;
+            boolean associationDestinationFound = false;
             for (Association association : registry.getAllAssociations(resource.getResourcePath())) {
-                if (association.getAssociationType().contains("Type")) {
-                    associationTypeFound = true;
+                if (association.getDestinationPath().contains("sns")
+                    && association.getDestinationPath().contains("autoService")) {
+                    associationDestinationFound = true;
                     break;
                 }
             }
-            Assert.assertTrue(associationTypeFound, "Association Type pattern not found on Resource");
+            Assert.assertTrue(associationDestinationFound, "Association Destination pattern not found on Resource"
+                                                           + resource.getResourcePath());
 
         }
-
 
     }
 
 
-    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable AssociationType")
-    public void searchResourceByUnAvailableAssociationType()
+    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable Association Destination")
+    public void searchResourceByUnAvailableAssociationDestination()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType("xyz1234ggf");
+        paramBean.setAssociationDest("xyz1234ggf76tgf");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -181,27 +226,26 @@ public class RegistrySearchByAssociationType {
     }
 
     @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by AssociationType with invalid characters")
-    public void searchResourceByAssociationTypeWithInvalidCharacter(String invalidInput)
+          description = "Metadata search by Association Destination with invalid characters")
+    public void searchResourceByAssociationDestinationWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
 
-        paramBean.setAssociationType(invalidInput);
+        paramBean.setAssociationDest(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
-
     }
 
     private void addResources() throws Exception {
-        String path1 = addService("sns1", "autoService1");
-        String path2 = addService("sns2", "autoService2");
-        addWSDL(path1, "associationType1");
-        addPolicy(path1, "associationType1");
-        addSchema(path2, "associationType2");
+        destinationPath1 = addService("sns1", "autoService1");
+        String destinationPath2 = addService("sns2", "autoService2");
+        addWSDL(destinationPath1, "associationType1");
+        addPolicy(destinationPath1, "associationType1");
+        addSchema(destinationPath2, "associationType2");
     }
 
     private String addService(String nameSpace, String serviceName)
@@ -268,7 +312,6 @@ public class RegistrySearchByAssociationType {
                 {"@"},
                 {"|"},
                 {"^"},
-                {"/"},
                 {"\\"},
                 {","},
                 {"\""},
@@ -279,7 +322,6 @@ public class RegistrySearchByAssociationType {
                 {"}"},
                 {"["},
                 {"]"},
-                {"-"},
                 {"("},
                 {")"}
         };

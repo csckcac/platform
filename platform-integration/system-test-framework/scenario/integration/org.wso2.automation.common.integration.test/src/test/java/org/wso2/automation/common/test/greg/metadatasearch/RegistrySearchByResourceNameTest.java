@@ -22,7 +22,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
-import org.wso2.automation.common.test.greg.metadatasearch.utils.Parameters;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
@@ -39,22 +38,19 @@ import java.rmi.RemoteException;
 Search Registry metadata by Resource Name
  */
 public class RegistrySearchByResourceNameTest {
-    private String gregBackEndUrl;
 
     private String sessionCookie;
-    private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
 
     @BeforeClass
     public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
-        gregServer = builder.build().getGreg();
+        EnvironmentVariables gregServer = builder.build().getGreg();
 
 
         sessionCookie = gregServer.getSessionCookie();
-        gregBackEndUrl = gregServer.getBackEndUrl();
-        searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
+        searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
 
     }
 

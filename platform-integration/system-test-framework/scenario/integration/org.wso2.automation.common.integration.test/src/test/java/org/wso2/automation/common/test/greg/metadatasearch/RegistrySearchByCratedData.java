@@ -26,17 +26,13 @@ import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
 import org.wso2.carbon.registry.search.stub.beans.xsd.CustomSearchParameterBean;
 import org.wso2.carbon.registry.search.stub.common.xsd.ResourceData;
-import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
-import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
-import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
 import java.rmi.RemoteException;
 import java.text.Format;
@@ -49,10 +45,8 @@ search registry metadata by resource created data
 */
 public class RegistrySearchByCratedData {
     private static final Log log = LogFactory.getLog(RegistrySearchByCratedData.class);
-    private String gregBackEndUrl;
 
     private String sessionCookie;
-    private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
 
@@ -60,11 +54,9 @@ public class RegistrySearchByCratedData {
     public void init()
             throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
-        gregServer = builder.build().getGreg();
-
+        EnvironmentVariables gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();
-        gregBackEndUrl = gregServer.getBackEndUrl();
-        searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
+        searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
 
     }
 
@@ -183,11 +175,11 @@ public class RegistrySearchByCratedData {
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         // to set not value
-        ArrayOfString createdRangeNegate = new  ArrayOfString();
+        ArrayOfString createdRangeNegate = new ArrayOfString();
         createdRangeNegate.setArray(new String[]{"createdRangeNegate", "on"});
 
         searchQuery.addParameterValues(createdRangeNegate);
-        
+
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid data range");

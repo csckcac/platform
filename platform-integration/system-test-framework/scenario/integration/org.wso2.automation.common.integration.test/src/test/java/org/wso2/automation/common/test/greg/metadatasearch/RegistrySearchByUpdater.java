@@ -22,7 +22,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
-import org.wso2.automation.common.test.greg.metadatasearch.utils.Parameters;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.registry.core.Resource;
@@ -44,10 +43,8 @@ import java.rmi.RemoteException;
 Search Registry metadata by last updater Name
 */
 public class RegistrySearchByUpdater {
-    private String gregBackEndUrl;
 
     private String sessionCookie;
-    private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
     private WSRegistryServiceClient registry;
@@ -56,11 +53,10 @@ public class RegistrySearchByUpdater {
     public void init()
             throws LoginAuthenticationExceptionException, RemoteException, RegistryException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
-        gregServer = builder.build().getGreg();
+        EnvironmentVariables gregServer = builder.build().getGreg();
 
         sessionCookie = gregServer.getSessionCookie();
-        gregBackEndUrl = gregServer.getBackEndUrl();
-        searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
+        searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
         registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
 
     }

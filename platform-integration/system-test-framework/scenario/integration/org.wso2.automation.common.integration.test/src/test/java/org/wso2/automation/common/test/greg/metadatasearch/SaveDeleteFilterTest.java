@@ -35,10 +35,8 @@ import java.rmi.RemoteException;
 Save and Delete metadata search Filter test
 */
 public class SaveDeleteFilterTest {
-    private String gregBackEndUrl;
 
     private String sessionCookie;
-    private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
     private final String filterName = "testFilter";
@@ -46,12 +44,10 @@ public class SaveDeleteFilterTest {
     @BeforeClass
     public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
-        gregServer = builder.build().getGreg();
-
+        EnvironmentVariables gregServer = builder.build().getGreg();
 
         sessionCookie = gregServer.getSessionCookie();
-        gregBackEndUrl = gregServer.getBackEndUrl();
-        searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
+        searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
 
 
     }

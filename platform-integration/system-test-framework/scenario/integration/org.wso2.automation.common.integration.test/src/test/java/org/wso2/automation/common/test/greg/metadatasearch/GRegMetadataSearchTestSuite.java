@@ -19,8 +19,6 @@ package org.wso2.automation.common.test.greg.metadatasearch;
 
 import org.testng.annotations.AfterSuite;
 import org.wso2.platform.test.core.ProductConstant;
-import org.wso2.platform.test.core.utils.ProductConfig;
-import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 
@@ -39,6 +37,8 @@ public class GRegMetadataSearchTestSuite extends MasterTestSuite {
                                                   RegistrySearchByComments.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByAssociationType",
                                                   RegistrySearchByAssociationType.class));
+        suiteVariablesList.add(new SuiteVariables("RegistrySearchByAssociationDestination",
+                                                  RegistrySearchByAssociationDestination.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByResourceNameTest",
                                                   RegistrySearchByResourceNameTest.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByKeyword",

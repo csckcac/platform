@@ -49,10 +49,8 @@ search registry metadata by resource updated data
 */
 public class RegistrySearchByUpdatedData {
     private static final Log log = LogFactory.getLog(RegistrySearchByUpdatedData.class);
-    private String gregBackEndUrl;
 
     private String sessionCookie;
-    private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
     private WSRegistryServiceClient registry;
@@ -61,11 +59,10 @@ public class RegistrySearchByUpdatedData {
     public void init()
             throws LoginAuthenticationExceptionException, RemoteException, RegistryException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
-        gregServer = builder.build().getGreg();
+        EnvironmentVariables gregServer = builder.build().getGreg();
 
         sessionCookie = gregServer.getSessionCookie();
-        gregBackEndUrl = gregServer.getBackEndUrl();
-        searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
+        searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
         registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
 
     }

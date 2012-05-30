@@ -19,7 +19,6 @@ package org.wso2.automation.common.test.greg.metadatasearch;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
 import org.wso2.automation.common.test.greg.metadatasearch.utils.Parameters;
@@ -44,10 +43,8 @@ import java.rmi.RemoteException;
 Search Registry metadata by keyword(content)
  */
 public class RegistrySearchByKeyword {
-    private String gregBackEndUrl;
 
     private String sessionCookie;
-    private EnvironmentVariables gregServer;
 
     private RegistrySearchAdminService searchAdminService;
     WSRegistryServiceClient registry;
@@ -56,11 +53,10 @@ public class RegistrySearchByKeyword {
     public void init()
             throws LoginAuthenticationExceptionException, RemoteException, RegistryException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
-        gregServer = builder.build().getGreg();
+        EnvironmentVariables gregServer = builder.build().getGreg();
 
         sessionCookie = gregServer.getSessionCookie();
-        gregBackEndUrl = gregServer.getBackEndUrl();
-        searchAdminService = new RegistrySearchAdminService(gregBackEndUrl);
+        searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
         registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
 
     }

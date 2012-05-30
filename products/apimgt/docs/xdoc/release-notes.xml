@@ -23,14 +23,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
-        <title>WSO2 API Manager v1.0.0-M2 Released - 25th April 2012</title>
+        <title>WSO2 API Manager v1.0.0-M6 Released - 30th May 2012</title>
     </head>
     <body>
         <div id="main-content">
-            <h1>The WSO2 API Manager 1.0.0-M5 Released!</h1>
+            <h1>The WSO2 API Manager 1.0.0-M6 Released!</h1>
 
             <p>
-                The WSO2 API Manager team is pleased to announce the release of version 1.0.0-M5 of
+                The WSO2 API Manager team is pleased to announce the release of version 1.0.0-M6 of
                 the Open Source API Manager.
             </p>
 
@@ -83,12 +83,12 @@
                 </li>                
             </ol>
 
-            <h2>New Features of WSO2 API Manager 1.0.0-M5</h2>
+            <h2>New Features of WSO2 API Manager 1.0.0-M6</h2>
             <p>
                 This release of API Manager comes with a horde of new features and bug fixes.
             </p>
             <ul>
-                <li><a href="https://wso2.org/jira/secure/ReleaseNote.jspa?projectId=10230&amp;version=10558">List of resolved issues</a></li>
+                <li><a href="https://wso2.org/jira/secure/ReleaseNote.jspa?projectId=10230&amp;version=10564">List of resolved issues</a></li>
             </ul>
 
             <h2>Key Features of WSO2 API Manager</h2>

@@ -218,7 +218,7 @@ public class HelloWorldSampleTestCase {
                 result.toString().trim());
     }
 
-    @Test(groups = {"wso2.as"}, enabled = true)
+    @Test(groups = {"wso2.as"}, enabled = false)
     public void reliableMessagingTestCase() throws IOException, XMLStreamException,
             InterruptedException, ModuleAdminServiceModuleMgtExceptionException {
         log.info("Reliable Messaging Tests");

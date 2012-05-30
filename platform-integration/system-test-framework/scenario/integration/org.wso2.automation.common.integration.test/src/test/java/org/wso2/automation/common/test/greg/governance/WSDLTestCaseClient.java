@@ -266,4 +266,91 @@ public class WSDLTestCaseClient {
         }
         assertTrue("Wsdl not get added which has policy import", isWsdlFound);
     }
+
+    @Test(groups = {"wso2.greg"}, description = "Test adding wsdl which has inline policy and schema")
+    public void testWsdlWithInlinePolicyAndSchema() throws GovernanceException {
+        WsdlManager wsdlManager = new WsdlManager(governance);
+        boolean isWsdlFound = false;
+        Wsdl wsdl;
+        try {
+            wsdl = wsdlManager.newWsdl("https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
+                    "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/" +
+                    "GREG/wsdl/WithInlinePolicyAndSchema.wsdl");
+            wsdlManager.addWsdl(wsdl);
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Exception thrown while adding wsdl which has inline policy " +
+                    "amd schema : " + e.getMessage());
+        }
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().equalsIgnoreCase("WithInlinePolicyAndSchema.wsdl")) {
+                isWsdlFound = true;
+            }
+        }
+        assertTrue("Wsdl not get added which has inline policy and schema", isWsdlFound);
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Test adding multiple wsdl")
+    public void testMultipleWsdl() throws GovernanceException {
+        Wsdl wsdl;
+        WsdlManager wsdlManager = new WsdlManager(governance);
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().contains("Automated")) {
+                wsdlManager.removeWsdl(w.getId());
+            }
+        }
+        String wsdlContent = "<?xml version='1.0' encoding='utf-8'?><wsdl:definitions name=\"ClinicalNotesImplService\" targetNamespace=\"http://impl.lemrs.migration.ihc.org/\" xmlns:ns1=\"http://lemrs.migration.ihc.org/\" xmlns:ns2=\"http://cxf.apache.org/bindings/xformat\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tns=\"http://impl.lemrs.migration.ihc.org/\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
+                "  <wsdl:import location=\"http://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/GREG/wsdl/IClinicalNotes.wsdl\" namespace=\"http://lemrs.migration.ihc.org/\">\n" +
+                "    </wsdl:import>\n" +
+                "  <wsdl:binding name=\"ClinicalNotesImplServiceSoapBinding\" type=\"ns1:IClinicalNotes\">\n" +
+                "    <soap:binding style=\"document\" transport=\"http://schemas.xmlsoap.org/soap/http\"></soap:binding>\n" +
+                "    <wsdl:operation name=\"getDocumentMetaDataListForHelp2\">\n" +
+                "      <soap:operation soapAction=\"\" style=\"document\"></soap:operation>\n" +
+                "      <wsdl:input name=\"getDocumentMetaDataListForHelp2\">\n" +
+                "        <soap:header message=\"ns1:getDocumentMetaDataListForHelp2\" part=\"UserName\" use=\"literal\">\n" +
+                "        </soap:header>\n" +
+                "        <soap:body parts=\"parameters\" use=\"literal\"></soap:body>\n" +
+                "      </wsdl:input>\n" +
+                "      <wsdl:output name=\"getDocumentMetaDataListForHelp2Response\">\n" +
+                "        <soap:body use=\"literal\"></soap:body>\n" +
+                "      </wsdl:output>\n" +
+                "      <wsdl:fault name=\"IHCLEMRSException\">\n" +
+                "        <soap:fault name=\"IHCLEMRSException\" use=\"literal\"></soap:fault>\n" +
+                "      </wsdl:fault>\n" +
+                "    </wsdl:operation>\n" +
+                "    <wsdl:operation name=\"getDocumentContentsForHelp2\">\n" +
+                "      <soap:operation soapAction=\"\" style=\"document\"></soap:operation>\n" +
+                "      <wsdl:input name=\"getDocumentContentsForHelp2\">\n" +
+                "        <soap:header message=\"ns1:getDocumentContentsForHelp2\" part=\"UserName\" use=\"literal\">\n" +
+                "        </soap:header>\n" +
+                "        <soap:body parts=\"parameters\" use=\"literal\"></soap:body>\n" +
+                "      </wsdl:input>\n" +
+                "      <wsdl:output name=\"getDocumentContentsForHelp2Response\">\n" +
+                "        <soap:body use=\"literal\"></soap:body>\n" +
+                "      </wsdl:output>\n" +
+                "      <wsdl:fault name=\"IHCLEMRSException\">\n" +
+                "        <soap:fault name=\"IHCLEMRSException\" use=\"literal\"></soap:fault>\n" +
+                "      </wsdl:fault>\n" +
+                "    </wsdl:operation>\n" +
+                "  </wsdl:binding>\n" +
+                "  <wsdl:service name=\"ClinicalNotesImplService\">\n" +
+                "    <wsdl:port binding=\"tns:ClinicalNotesImplServiceSoapBinding\" name=\"ClinicalNotesImplPort\">\n" +
+                "      <soap:address location=\"http://lpv-ideaappdev01:9133/lemrs-webservices/services/clinicalNotesService\"></soap:address>\n" +
+                "    </wsdl:port>\n" +
+                "  </wsdl:service>\n" +
+                "</wsdl:definitions>";
+        try {
+            for (int i = 0; i <= 10000; i++) {
+                wsdl = wsdlManager.newWsdl(wsdlContent.getBytes(), "AutomatedWsdl" + i + ".wsdl");
+                wsdlManager.addWsdl(wsdl);
+                System.out.println("Adding : AutomatedWsdl" + i + ".wsdl");
+                if (!wsdlManager.getWsdl(wsdl.getId()).getQName().getLocalPart().equalsIgnoreCase("AutomatedWsdl" + i + ".wsdl")) {
+                    assertTrue("Wsdl not added..", false);
+                }
+            }
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error found while adding multiple Wsdl : " + e.getMessage());
+        }
+    }
 }

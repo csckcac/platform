@@ -67,6 +67,8 @@ include('/includes/topnavi.jag');
                 mechanisms restrict developers to a framework-specific structure or patterns, which demand an additional
                 learning curve. By contrast, with Jaggery, any developers who are versed in Javascript have everything
                 they need to get going.</p>
+				
+				<p><strong>Jaggery is completely open source and released under Apache 2.0</strong></p>
 
 
             <!--p>This Framework uses <code>Mozilla Rhino</code> to process Javascript at the server and also contains a

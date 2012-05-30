@@ -1,11 +1,10 @@
-
 <%
 //Include this file in all the jaggery pages when you need to provide the single sign on into the jaggery application.
 // Update the ssoRelyingParty properties, identityProviderURL, issuerId  ,keyStorePassword   ,identityAlias ,keyStoreName properly.
 include('../config_reader.jag');
 var security =require("ssoRelyingParty");
 
-var ssoRelyingParty = new security.SSORelyingParty(getProperty('sso.name'));
+var ssoRelyingParty = new security.SSORelyingParty(getProperty(SSO_NAME));
 var sessionId = request.getHeader("Cookie").split(";")[0].split("=")[1];
 var isAuthenticated = ssoRelyingParty.isSessionAuthenticated(sessionId);
 session.put("LOGGED_IN_USER",ssoRelyingParty.getLoggedInUser(sessionId));
@@ -13,10 +12,10 @@ if (!Boolean(isAuthenticated)) {
     log("User is not authenticated, redirecting to identity server for authentication.", "info");
     // add properties for sso, these should be read from a config file.
 
-    ssoRelyingParty.setProperty("identityProviderURL", getProperty('sso.identityProviderURL'));
-    ssoRelyingParty.setProperty("keyStorePassword", getProperty('sso.keyStorePassword'));
-    ssoRelyingParty.setProperty("identityAlias",getProperty('sso.identityAlias'));
-    ssoRelyingParty.setProperty("keyStoreName", getProperty('sso.keyStoreName'));
+    ssoRelyingParty.setProperty("identityProviderURL", getProperty(SSO_PROVIDER));
+    ssoRelyingParty.setProperty("keyStorePassword", getProperty(SSO_KEYSTORE_PASSWORD));
+    ssoRelyingParty.setProperty("identityAlias",getProperty(SSO_KEY_ALIAS));
+    ssoRelyingParty.setProperty("keyStoreName", getProperty(SSO_KEYSTORE_NAME));
 
     var samlAuthRequest = ssoRelyingParty.getSAMLAuthRequest();
     var encodedRequest = ssoRelyingParty.encode(samlAuthRequest);

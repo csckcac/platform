@@ -12,5 +12,28 @@
 
     // property keys of registry 'userApplicationMapping' resource
     var APPLICATION_LIST = "applications";
+    
+    //appfactory.xml keys
+    var SSO_NAME = "SSORelyingParty.Name";
+    var SSO_PROVIDER = "SSORelyingParty.IdentityProviderURL";
+    var SSO_KEYSTORE_PASSWORD = "SSORelyingParty.KeyStorePassword";
+    var SSO_KEY_ALIAS = "SSORelyingParty.IdentityKeyAlias";
+    var SSO_KEYSTORE_NAME = "SSORelyingParty.KeyStoreName";
+    
+    var WS_ADD_USER_TO_APP = "WebServiceEndPoints.AddUserToApplication";
+    var WS_CREATE_APP = "WebServiceEndPoints.CreateApplication";
+    var WS_CREATE_USER = "WebServiceEndPoints.CreateUser";
+    var WS_ACTIVATE_USER = "WebServiceEndPoints.ActivateUser";
+    var WS_GET_ALL_APPS = "WebServiceEndPoints.GetAllApps";
+    var WS_EMAIL_VERIFICATION = "WebServiceEndPoints.EmailVerificationService";
+    var WS_USER_OF_APP = "WebServiceEndPoints.GetUsersOfApplication";
+    var WS_CREATE_REPO = "WebServiceEndPoints.CreateRepo";
+    var WS_GET_ROLE_OF_USER_FOR_APP = "WebServiceEndPoints.GetRolesOfUserForApplication";
+    var WS_GET_AUTH_COOKIE = "WebServiceEndPoints.GetAuthCookie";
+    
+    var ADMIN_USERNAME = "AdminUserName";
+    var ADMIN_PASSWORD = "AdminPassword";
+    
+    
 
 %>

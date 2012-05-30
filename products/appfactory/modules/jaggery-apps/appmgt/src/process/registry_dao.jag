@@ -2,7 +2,7 @@
      include('../config_reader.jag');
      var log = new Log();
 
-    var registry = new MetadataStore(getProperty('adminUserName'),getProperty('adminPassword'));
+    var registry = new MetadataStore(getProperty(ADMIN_USERNAME),getProperty(ADMIN_PASSWORD));
 
     // checks whether any resource exists in the given path
     function resourceExists(path) {

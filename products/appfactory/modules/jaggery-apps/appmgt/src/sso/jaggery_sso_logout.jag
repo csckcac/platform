@@ -1,9 +1,8 @@
-
 <%
 // include this jss file as a footer in log out jss page.
 include('../config_reader.jag');
 var security =require("ssoRelyingParty");
-var ssoRelyingParty = new security.SSORelyingParty(getProperty('sso.name'));
+var ssoRelyingParty = new security.SSORelyingParty(getProperty(SSO_NAME));
 var samlLogoutRequest = ssoRelyingParty.getSAMLLogoutRequest("admin");
 var encodedRequest = ssoRelyingParty.encode(samlLogoutRequest);
 var relayState = ssoRelyingParty.getUUID();

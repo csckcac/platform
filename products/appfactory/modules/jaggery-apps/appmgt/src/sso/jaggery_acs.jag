@@ -10,7 +10,7 @@
             // create a sso relying party js object
             include('../config_reader.jag');
                 var security =require("ssoRelyingParty");
-                var ssoRelyingParty = new security.SSORelyingParty(getProperty('sso.name'));
+                var ssoRelyingParty = new security.SSORelyingParty(getProperty(SSO_NAME));
                 var isLogoutResponse = false;
                 var isLogoutRequest =false;
 

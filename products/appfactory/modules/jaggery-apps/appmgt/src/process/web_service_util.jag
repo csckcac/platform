@@ -21,7 +21,7 @@
 
         var result;
         try {
-            var endPoint = getProperty('webService.createApplication');
+            var endPoint = getProperty(WS_CREATE_APP);
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
@@ -49,7 +49,7 @@
         var payload = '<p:createRepository xmlns:p="http://SCMClient.ws.scm.sonia"><applicationName xmlns="http://SCMClient.ws.scm.sonia">' + applicationName + '</applicationName></p:createRepository>';
         var result;
         try {
-            var endPoint = getProperty('webService.createRepo');
+            var endPoint = getProperty(WS_CREATE_REPO);
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseText;
@@ -77,7 +77,7 @@
         var result;
 
         try {
-            var endPoint = getProperty('webService.addUserToApplication');
+            var endPoint = getProperty(WS_ADD_USER_TO_APP);
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
@@ -104,7 +104,7 @@
         var result;
 
         try {
-            var endPoint = getProperty('webService.getRolesOfUserForApplication');
+            var endPoint = getProperty(WS_GET_ROLE_OF_USER_FOR_APP);
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
@@ -130,7 +130,7 @@
         var payload = '<p:getUserListForApplication xmlns:p="http://services.mgt.tenant.carbon.wso2.org"><applicationKey xmlns="http://services.mgt.tenant.carbon.wso2.org">' + applicationKey + '</applicationKey></p:getUserListForApplication>';
         var result;
         try {
-            var endPoint = getProperty('webService.getUsersOfApplication');
+            var endPoint = getProperty(WS_USER_OF_APP);
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
@@ -156,7 +156,7 @@
         var payload = '<p:UserCreationProcessRequest xmlns:p="http://wso2.org"><userName xmlns="http://wso2.org">' + newUserName + '</userName><password xmlns="http://wso2.org">' + password + '</password><email xmlns="http://wso2.org">' + email + '</email><firstName xmlns="http://wso2.org">' + firstName + '</firstName><lastName xmlns="http://wso2.org">' + lastName + '</lastName></p:UserCreationProcessRequest>';
         var result;
         try {
-            var endPoint = getProperty('bpel.createUser');
+            var endPoint = getProperty(WS_CREATE_USER);
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
@@ -176,15 +176,15 @@
       var options = new Array();
       options.useSOAP = 1.2;
       options.action = "urn:ConfirmationBean";
-      options.username=getProperty('adminUserName');
-      options.password=getProperty('adminPassword');
+      options.username=getProperty(ADMIN_USERNAME);
+      options.password=getProperty(ADMIN_PASSWORD);
       var payload =<ser:confirmUser xmlns:ser="http://services.verification.email.carbon.wso2.org"></ser:confirmUser>;
       var ser=new Namespace("http://services.verification.email.carbon.wso2.org");
       payload.ser::secretKey=secreteKey;
       var result;
 
       try {
-          var endPoint = getProperty('webService.emailVarificationService');
+          var endPoint = getProperty(WS_EMAIL_VERIFICATION);
           EmailVerificationService.open(options, endPoint, false);
           EmailVerificationService.send(payload);
           result = EmailVerificationService.responseE4X;
@@ -220,7 +220,7 @@
        var result;
 
        try {
-        var endPoint = getProperty('bpel.activateUser');
+        var endPoint = getProperty(WS_ACTIVATE_USER);
         UserActivationProcess.open(options,endPoint, false);
         UserActivationProcess.send(payload);
         result = UserActivationProcess.responseE4X;
@@ -249,7 +249,7 @@
               var result;
 
              try {
-             var endPoint = getProperty('webService.getAllApps');
+             var endPoint = getProperty(WS_GET_ALL_APPS);
 
              applicationMgtService.open(options, endPoint, false);
              applicationMgtService.send(payload);
@@ -294,9 +294,9 @@
        }
        function getAdminCookie(address){
              var xhr = new XMLHttpRequest();
-             var endPoint = getProperty('webService.getAuthCookie');
+             var endPoint = getProperty(WS_GET_AUTH_COOKIE);
              xhr.open("POST", endPoint);
-	         var payload='<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:aut="http://authentication.services.core.carbon.wso2.org"><soap:Header/><soap:Body><aut:login><aut:username>'+getProperty('adminUserName')+'</aut:username><aut:password>'+getProperty('adminPassword')+'</aut:password><aut:remoteAddress>'+address+'</aut:remoteAddress></aut:login></soap:Body></soap:Envelope>';
+	         var payload='<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:aut="http://authentication.services.core.carbon.wso2.org"><soap:Header/><soap:Body><aut:login><aut:username>'+getProperty(ADMIN_USERNAME)+'</aut:username><aut:password>'+getProperty(ADMIN_PASSWORD)+'</aut:password><aut:remoteAddress>'+address+'</aut:remoteAddress></aut:login></soap:Body></soap:Envelope>';
 
              xhr.send(payload);
              var cookie=(xhr.getAllResponseHeaders());

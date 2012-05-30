@@ -43,10 +43,9 @@ public class ApplicationManagementService extends AbstractAdmin {
     }
 
 
-    public boolean addUserToApplication(String applicationId, String userName)
+    public boolean addUserToApplication(String applicationId, String userName, String[] roles)
             throws ApplicationManagementException {
         TenantManager tenantManager = Util.getRealmService().getTenantManager();
-        String roles[] = {"admin"};
         try {
             UserRealm realm = Util.getRealmService().getTenantUserRealm(tenantManager.getTenantId(applicationId));
             realm.getUserStoreManager().addUser(userName, null, roles, null, null);

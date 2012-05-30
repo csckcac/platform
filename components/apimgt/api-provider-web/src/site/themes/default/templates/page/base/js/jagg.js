@@ -28,4 +28,17 @@ var jagg = jagg || {};
                    dialogClass: "alert"
                   });
     };
+    jagg.fillProgress = function (chartId){
+        if(t_on[chartId]){
+            var progressBar = $('#'+chartId+' div.progress-striped div.bar')[0];
+
+            var time = Math.floor((Math.random() * 400) + 800);
+            var divider = Math.floor((Math.random() * 2) + 2);
+            var currentWidth = parseInt(progressBar.style.width.split('%')[0]);
+            var newWidth = currentWidth + parseInt((100 - currentWidth) / divider);
+            newWidth += "%";
+            $(progressBar).css('width', newWidth);
+            var t = setTimeout('fillProgress("'+chartId+'")', time);
+        }
+    }
 }());

@@ -1,4 +1,12 @@
+var t_on = {
+            'versionChart':1,
+            'versionUserChart':1,
+            'userVersionChart':1,
+            'userChart':1
+            };
+
 $(document).ready(function() {
+
     if (($.cookie("tab") != null)) {
         var tabLink = $.cookie("tab");
         $('#' + tabLink).tab('show');
@@ -9,6 +17,8 @@ $(document).ready(function() {
         var clickedTab = e.target.href.split('#')[1];
         ////////////// edit tab
         if (clickedTab == "versions") {
+
+            jagg.fillProgress('versionChart');jagg.fillProgress('versionUserChart');
             var apiName = $("#item-info h2")[0].innerHTML.split("-v")[0];
             jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUsage", apiName:apiName, server:"https://localhost:9444/" },
                       function (json) {
@@ -41,7 +51,7 @@ $(document).ready(function() {
                               } else {
                                   $('#versionTable').hide();
                                   $('#versionChart').css("fontSize", 14);
-                                  $('#versionChart').text('No Data Found ...');
+                                  $('#versionChart').append($('<span class="label label-info">No Data Found ...</span>'));
                               }
 
                           } else {
@@ -79,7 +89,7 @@ $(document).ready(function() {
                               } else {
                                   $('#versionUserTable').hide();
                                   $('#versionUserChart').css("fontSize", 14);
-                                  $('#versionUserChart').text('No Data Found ...');
+                                  $('#versionUserChart').append($('<span class="label label-info">No Data Found ...</span>'));
                               }
 
                           } else {
@@ -90,6 +100,7 @@ $(document).ready(function() {
         }
 
         if (clickedTab == "users") {
+            jagg.fillProgress('userVersionChart');jagg.fillProgress('userChart');
             var name = $("#item-info h2")[0].innerHTML.split("-v")[0];
             var version = $("#item-info h2")[0].innerHTML.split("-v")[1];
             var provider = $("#item-info #spanProvider").text();
@@ -124,7 +135,7 @@ $(document).ready(function() {
                               } else {
                                   $('#userTable').hide();
                                   $('#userChart').css("fontSize", 14);
-                                  $('#userChart').text('No Data Found ...');
+                                  $('#userChart').append($('<span class="label label-info">No Data Found ...</span>'));
                               }
 
                           } else {
@@ -163,7 +174,7 @@ $(document).ready(function() {
                               } else {
                                   $('#userVersionTable').hide();
                                   $('#userVersionChart').css("fontSize", 14);
-                                  $('#userVersionChart').text('No Data Found ...');
+                                  $('#userVersionChart').append($('<span class="label label-info">No Data Found ...</span>'));
                               }
 
                           } else {

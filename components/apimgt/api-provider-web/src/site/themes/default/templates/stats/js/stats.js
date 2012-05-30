@@ -4,24 +4,10 @@ var t_on = {
             'serviceTimeChart':1,
             'tempLoadingSpace':1
             };
-function fillProgress(chartId)
-    {
-        if(t_on[chartId]){
-            var progressBar = $('#'+chartId+' div.progress-striped div.bar')[0];
-
-            var time = Math.floor((Math.random() * 400) + 800);
-            var divider = Math.floor((Math.random() * 2) + 2);
-            var currentWidth = parseInt(progressBar.style.width.split('%')[0]);
-            var newWidth = currentWidth + parseInt((100 - currentWidth) / divider);
-            newWidth += "%";
-            $(progressBar).css('width', newWidth);
-            var t = setTimeout('fillProgress("'+chartId+'")', time);
-        }
-    }
 $(document).ready(function() {
 
     //Initiating the fake progress bar
-    fillProgress('apiChart');fillProgress('subsChart');fillProgress('serviceTimeChart');fillProgress('tempLoadingSpace');
+    jagg.fillProgress('apiChart');jagg.fillProgress('subsChart');jagg.fillProgress('serviceTimeChart');jagg.fillProgress('tempLoadingSpace');
 
     jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",server:"https://localhost:9444/" },
               function (json) {

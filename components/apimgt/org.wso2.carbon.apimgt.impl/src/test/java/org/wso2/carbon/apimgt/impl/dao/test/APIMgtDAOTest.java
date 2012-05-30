@@ -234,6 +234,41 @@ public class APIMgtDAOTest extends TestCase {
         events = apiMgtDAO.getLifeCycleEvents(apiId);
         assertEquals(3, events.size());
     }
+    
+    public void testKeyForwardCompatibility() throws Exception {
+        Set<APIIdentifier> apiSet = apiMgtDAO.getAPIByConsumerKey("SSDCHEJJ-AWUIS-232");
+        assertEquals(1, apiSet.size());
+        for (APIIdentifier apiId : apiSet) {
+            assertEquals("SUMEDHA", apiId.getProviderName());
+            assertEquals("API1", apiId.getApiName());
+            assertEquals("V1.0.0", apiId.getVersion());
+        }
+
+        apiMgtDAO.makeKeysForwardCompatible("SUMEDHA", "API1", "V1.0.0", "V2.0.0");
+        apiSet = apiMgtDAO.getAPIByConsumerKey("SSDCHEJJ-AWUIS-232");
+        assertEquals(2, apiSet.size());
+        for (APIIdentifier apiId : apiSet) {
+            assertEquals("SUMEDHA", apiId.getProviderName());
+            assertEquals("API1", apiId.getApiName());
+            assertTrue("V1.0.0".equals(apiId.getVersion()) || "V2.0.0".equals(apiId.getVersion()));
+        }
+
+        apiSet = apiMgtDAO.getAPIByConsumerKey("p1q2r3s4");
+        assertEquals(2, apiSet.size());
+        for (APIIdentifier apiId : apiSet) {
+            assertEquals("SUMEDHA", apiId.getProviderName());
+            assertEquals("API1", apiId.getApiName());
+            assertTrue("V1.0.0".equals(apiId.getVersion()) || "V2.0.0".equals(apiId.getVersion()));
+        }
+
+        apiSet = apiMgtDAO.getAPIByConsumerKey("a1b2c3d4");
+        assertEquals(1, apiSet.size());
+        for (APIIdentifier apiId : apiSet) {
+            assertEquals("PRABATH", apiId.getProviderName());
+            assertEquals("API2", apiId.getApiName());
+            assertEquals("V1.0.0", apiId.getVersion());
+        }
+    }
 
 }
 

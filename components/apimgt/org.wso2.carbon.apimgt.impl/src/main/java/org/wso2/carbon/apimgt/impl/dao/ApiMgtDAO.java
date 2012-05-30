@@ -504,13 +504,14 @@ public class ApiMgtDAO {
 		}
     }
     
-    public void addSubscription(APIIdentifier identifier, String userId, int applicationId)
+    public int addSubscription(APIIdentifier identifier, String userId, int applicationId)
             throws APIManagementException {
 
         Connection conn = null;
         ResultSet resultSet = null;
         PreparedStatement ps = null;
-
+        int subscriptionId = -1;
+        
         try {
             conn = APIMgtDBUtil.getConnection();
             //This query to update the AM_SUBSCRIPTION table
@@ -526,7 +527,11 @@ public class ApiMgtDAO {
             ps.setString(2, apiId);
             ps.setInt(3, applicationId);
 
-            ps.executeUpdate();
+            ps.executeUpdate();            
+            ResultSet rs = ps.getGeneratedKeys();
+            while (rs.next()) {
+                subscriptionId = rs.getInt(1);
+            }
             ps.close();
 
             // finally commit transaction
@@ -546,6 +551,7 @@ public class ApiMgtDAO {
         } finally {
             APIMgtDBUtil.closeAllConnections(ps, conn, resultSet);
         }
+        return subscriptionId;
     }
 
     /**
@@ -610,7 +616,7 @@ public class ApiMgtDAO {
         return subscriber;
     }
     
-    public APIIdentifier getAPIByConsumerKey(String accessToken) throws APIManagementException {
+    public Set<APIIdentifier> getAPIByConsumerKey(String accessToken) throws APIManagementException {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet result = null;
@@ -626,18 +632,18 @@ public class ApiMgtDAO {
                 " AND KCM.KEY_CONTEXT_MAPPING_ID=SKM.KEY_CONTEXT_MAPPING_ID" +
                 " AND SKM.SUBSCRIPTION_ID=SUB.SUBSCRIPTION_ID";
 
+        Set<APIIdentifier> apiList = new HashSet<APIIdentifier>();
         try {
             connection = APIMgtDBUtil.getConnection();
             PreparedStatement nestedPS = connection.prepareStatement(getAPISql);
             nestedPS.setString(1, accessToken);
             ResultSet nestedRS = nestedPS.executeQuery();
-            String apiId = null;
             while (nestedRS.next()) {
-                apiId = nestedRS.getString("API_ID");    
-            }
-            if (apiId != null) {
-                String[] apiIdAttributes = apiId.split("_");
-                return new APIIdentifier(apiIdAttributes[0], apiIdAttributes[1], apiIdAttributes[2]);
+                String apiId = nestedRS.getString("API_ID");
+                if (apiId != null) {
+                    String[] apiIdAttributes = apiId.split("_");
+                    apiList.add(new APIIdentifier(apiIdAttributes[0], apiIdAttributes[1], apiIdAttributes[2]));
+                }
             }
         } catch (SQLException e) {
             String msg = "Failed to get API ID for token: " + accessToken;
@@ -645,7 +651,7 @@ public class ApiMgtDAO {
         } finally {
             APIMgtDBUtil.closeAllConnections(ps, connection, result);
         }
-        return null;    
+        return apiList;
     }
 
     /**
@@ -1655,9 +1661,9 @@ public class ApiMgtDAO {
         return events;    
     }
     
-    public void makeKeysForwardCompatible(APIIdentifier oldApi, APIIdentifier newApi) throws APIManagementException {
-        String oldApiId = oldApi.getProviderName() + "_" + oldApi.getApiName() + "_" + 
-                oldApi.getVersion();
+    public void makeKeysForwardCompatible(String provider, String apiName, 
+                                          String version, String newVersion) throws APIManagementException {
+        String oldApiId = provider + "_" + apiName + "_" + version;
 
         Connection connection = null;
         PreparedStatement prepStmt = null;
@@ -1677,6 +1683,14 @@ public class ApiMgtDAO {
                 " SUB.API_ID = ?" +
                 " AND SKM.SUBSCRIPTION_ID = SUB.SUBSCRIPTION_ID" +
                 " AND KCM.KEY_CONTEXT_MAPPING_ID = SKM.KEY_CONTEXT_MAPPING_ID";
+        
+        String addKeyContextMapping = "INSERT INTO" +
+                " AM_KEY_CONTEXT_MAPPING (CONTEXT, VERSION, ACCESS_TOKEN)" +
+                " VALUES (?,?,?)";
+        
+        String addSubKeyMapping = "INSERT INTO" +
+                " AM_SUBSCRIPTION_KEY_MAPPING (SUBSCRIPTION_ID, KEY_CONTEXT_MAPPING_ID, KEY_TYPE)" +
+                " VALUES (?,?,?)";
 
         try {
             connection = APIMgtDBUtil.getConnection();
@@ -1684,7 +1698,7 @@ public class ApiMgtDAO {
             prepStmt.setString(1, oldApiId);
             rs = prepStmt.executeQuery();
 
-            Map<Integer,Collection<SubscriptionInfo>> subscriptionData = new HashMap<Integer, Collection<SubscriptionInfo>>();
+            List<SubscriptionInfo> subscriptionData = new ArrayList<SubscriptionInfo>();
             while (rs.next()) {
                 SubscriptionInfo info = new SubscriptionInfo();
                 info.subscriptionId = rs.getInt("SUBSCRIPTION_ID");
@@ -1692,28 +1706,58 @@ public class ApiMgtDAO {
                 info.context = rs.getString("CONTEXT");
                 info.applicationId = rs.getInt("APPLICATION_ID");
                 info.accessToken = rs.getString("ACCESS_TOKEN");
-                info.tokenType = rs.getString("KEY_TYPE");
-                
-                Collection<SubscriptionInfo> infoById = subscriptionData.get(info.subscriptionId);
-                if (infoById != null) {
-                    infoById.add(info);
-                } else {
-                    infoById = new ArrayList<SubscriptionInfo>();
-                    infoById.add(info);
-                    subscriptionData.put(info.subscriptionId, infoById);
-                }
+                info.tokenType = rs.getString("KEY_TYPE");                
+                subscriptionData.add(info);
             }
             prepStmt.close();
             rs.close();
-
+            
+            Map<Integer,Integer> subscriptionIdMap = new HashMap<Integer, Integer>();
+            APIIdentifier newApi = new APIIdentifier(provider, apiName, newVersion);
+            for (SubscriptionInfo info : subscriptionData) {
+                if (!subscriptionIdMap.containsKey(info.subscriptionId)) {
+                    newApi.setTier(info.tierId);
+                    int subscriptionId = addSubscription(newApi, null, info.applicationId);
+                    if (subscriptionId == -1) {
+                        throw new APIManagementException("Unable to add a new subscription for " +
+                                "the API: " + newApi.getApiName() + ":v" + newApi.getVersion());
+                    }
+                    subscriptionIdMap.put(info.subscriptionId, subscriptionId);
+                }
+                
+                int subscriptionId = subscriptionIdMap.get(info.subscriptionId);
+                int contextMappingId;
+                
+                prepStmt = connection.prepareStatement(addKeyContextMapping);
+                prepStmt.setString(1, info.context);
+                prepStmt.setString(2, newVersion);
+                prepStmt.setString(3, info.accessToken);
+                prepStmt.execute();
+                rs = prepStmt.getGeneratedKeys();
+                if (rs.next()) {
+                    contextMappingId = rs.getInt(1);    
+                } else {
+                    throw new APIManagementException("Unable to add a key context mapping for the " +
+                            "API: " + newApi.getApiName() + ":v" + newApi.getVersion());
+                }
+                prepStmt.close();
+                rs.close();
+                
+                prepStmt = connection.prepareStatement(addSubKeyMapping);
+                prepStmt.setInt(1, subscriptionId);
+                prepStmt.setInt(2, contextMappingId);
+                prepStmt.setString(3, info.tokenType);
+                prepStmt.execute();
+                prepStmt.close();
+            }
+            connection.commit();
         } catch (SQLException e) {
             log.error("Error when executing the SQL queries");
             throw new APIManagementException("Error when reading the application information from" +
                     " the persistence store.", e);
         } finally {
             APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
-        }
-        
+        }        
     }
     
     private static class SubscriptionInfo {

@@ -10,6 +10,10 @@ h3{
     color:#666;
     padding:5px 0 10px;
 }
+h6{
+    color:#444;
+    text-decoration:underline;
+}
 div.navbar-inner {
    height:45px;
     min-width:450px;

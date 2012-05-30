@@ -13,7 +13,7 @@
     %>
     </ul>
     <% if(api.description && api.description != ""){ %>
-        <h3>Description:</h3>
+        <h6>Description:</h6>
     <p>
         <%=api.description%>
     </p>

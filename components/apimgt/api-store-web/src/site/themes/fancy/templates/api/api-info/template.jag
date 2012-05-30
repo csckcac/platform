@@ -67,7 +67,7 @@
                         </select>
                      <% }if(user && api) { %>
                       <Label><b>Tiers</b></Label>
-                      <select id="tiers-list" name="tiers-list" class="fancy">
+                      <select id="tiers-list" name="tiers-list">
                             <%var tiers = api.tierName;
                             var tiersList=tiers.split(",");
                             for(var j=0;j<tiersList.length;j++){
@@ -79,7 +79,7 @@
                         <%var firstTierDesc=api.tierDescription.split(",")[0];
                         if(firstTierDesc=="null"){firstTierDesc='';}
                         %>
-                        <div id="tierDesc" class="divAlign"><%=firstTierDesc%></div>
+                        <span class="help-block" id="tierDesc"><%=firstTierDesc%></span>
                         <div class="simple-space-maker"><button id="subscribe-button" class="btn btn-primary <% if(!user) { %>need-login<% } %>">Subscribe</button></div>
              <% } }%>
 

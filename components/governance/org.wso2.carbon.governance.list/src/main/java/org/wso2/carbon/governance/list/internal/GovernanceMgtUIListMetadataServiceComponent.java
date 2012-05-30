@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
+import org.jaxen.JaxenException;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
@@ -49,10 +50,13 @@ import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.component.xml.config.ManagementPermission;
+import org.xml.sax.SAXException;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -108,7 +112,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                 org.wso2.carbon.registry.extensions.utils.CommonUtil
                                         .acquireUpdateLock();
                                 try {
-                                    if(!CommonUtil.validateXMLConfigOnSchema(new String((byte[]) requestContext.getResource().getContent()),"service-ui-config")) {
+                                    if(!CommonUtil.validateXMLConfigOnSchema(new String((byte[]) requestContext.getResource().getContent()), "rxt-ui-config")) {
                                      throw new RegistryException("Violation of RXT definition in configuration file, follow the schema correctly..!!");
                                     }
 
@@ -131,7 +135,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                     requestContext.setProcessingComplete(true);
                                 } catch (UserStoreException e) {
                                     log.error("Could not get user information", e);
-                                } finally {
+                                }  finally {
                                     org.wso2.carbon.registry.extensions.utils.CommonUtil
                                             .releaseUpdateLock();
                                 }

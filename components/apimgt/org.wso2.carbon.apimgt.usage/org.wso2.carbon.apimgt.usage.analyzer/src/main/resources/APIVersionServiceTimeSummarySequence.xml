@@ -14,7 +14,7 @@
  ~ limitations under the License.
 -->
 <analyzerSequence name="APIVersionServiceTimeSummarySequence">
-    <trigger cron="0/10 * * * * ? *"/>
+    <trigger cron="1 * * * * ? *"/>
     <analyzers>
         <get name="BASEEnriched" batchSize="1000">
         </get>

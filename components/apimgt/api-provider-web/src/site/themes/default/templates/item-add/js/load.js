@@ -24,19 +24,14 @@ function loadTiers() {
                           }
                       }
                   }
-              }, "json");
-}
+              }, "json");}
 
-var setTierDescription= function(option) {
-    $("#tiersHelp").html(option);
-};
 
 
 $(document).ready(function() {
     $("select[name='tier']").change(function() {
         // multipleValues will be an array
         var multipleValues = $(this).val() || [];
-        setTierDescription($("select option:selected").attr("title"));
         var countLength = $('#tiersCollection').length;
         if (countLength == 0) {
 

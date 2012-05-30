@@ -106,7 +106,6 @@
                     <div class="controls">
                         <select id="editTier" name="editTier"  multiple="multiple">
                        </select>
-                     <p class="help-block" id="editTiersHelp"></p>
                     </div>
             </div>
             <div class="control-group">

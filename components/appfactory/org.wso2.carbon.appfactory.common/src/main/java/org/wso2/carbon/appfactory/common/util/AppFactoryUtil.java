@@ -144,6 +144,11 @@ public class AppFactoryUtil {
                 addToConfiguration(key, value);
             }
             readChildElements(element, nameStack);
+            
+            //If we had a named attribute, we have to pop that out
+            if (nameAttribute != null && nameAttribute.trim().length() != 0){
+                nameStack.pop();
+            }
             nameStack.pop();
         }
     }

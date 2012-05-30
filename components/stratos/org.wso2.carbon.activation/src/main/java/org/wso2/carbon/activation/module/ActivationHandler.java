@@ -18,6 +18,8 @@
  */
 package org.wso2.carbon.activation.module;
 
+import javax.xml.namespace.QName;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axis2.AxisFault;
@@ -27,16 +29,13 @@ import org.apache.axis2.engine.Handler;
 import org.apache.axis2.handlers.AbstractHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.stratos.common.util.CloudServicesUtil;
-import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.util.UserCoreUtil;
-import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.activation.utils.ActivationManager;
 import org.wso2.carbon.activation.utils.Util;
-
-import javax.xml.namespace.QName;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
+import org.wso2.carbon.stratos.common.util.CloudServicesUtil;
+import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 public class ActivationHandler extends AbstractHandler implements Handler {
 
@@ -134,11 +133,7 @@ public class ActivationHandler extends AbstractHandler implements Handler {
                                 ServerConstants.AUTHENTICATION_SERVICE_USERNAME));
                 if (usernameElem != null) {
                     String userName = usernameElem.getText();
-                    try {
-                        domain = UserCoreUtil.getTenantDomain(Util.getRealmService(), userName);
-                    } catch (UserStoreException e) {
-                        log.error("Unable to find the tenant domain :" + e.getMessage(), e);
-                    }
+                    domain = MultitenantUtils.getTenantDomain(userName);
                 }
             }
         }

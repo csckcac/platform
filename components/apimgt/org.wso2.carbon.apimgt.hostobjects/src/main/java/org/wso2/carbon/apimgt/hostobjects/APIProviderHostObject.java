@@ -174,6 +174,10 @@ public class APIProviderHostObject extends ScriptableObject {
         HttpServletRequest req = ((RequestHostObject) apiData.get("request", apiData)).getHttpServletRequest();
         NativeArray uriTemplateArr = (NativeArray) apiData.get("uriTemplateArr", apiData);
 
+        String techOwner = (String) apiData.get("techOwner", apiData);
+        String techOwnerEmail = (String) apiData.get("techOwnerEmail", apiData);
+        String bizOwner = (String) apiData.get("bizOwner", apiData);
+        String bizOwnerEmail = (String) apiData.get("bizOwnerEmail", apiData);
         APIIdentifier apiId = new APIIdentifier(provider, name, version);
         APIProvider apiProvider = getAPIProvider(thisObj);
         try {
@@ -217,6 +221,10 @@ public class APIProviderHostObject extends ScriptableObject {
             api.addAvailableTiers(availableTier);
             api.setStatus(APIStatus.CREATED);
             api.setContext(context);
+            api.setBusinessOwner(bizOwner);
+            api.setBusinessOwnerEmail(bizOwnerEmail);
+            api.setTechnicalOwner(techOwner);
+            api.setTechnicalOwnerEmail(techOwnerEmail);
 
             checkFileSize(fileHostObject);
             apiProvider.addAPI(api);
@@ -480,6 +488,10 @@ public class APIProviderHostObject extends ScriptableObject {
                 myn.put(12, myn, uriTempArr);
                 myn.put(13, myn, checkValue(api.getSandboxUrl()));
                 myn.put(14, myn, checkValue(tiersDescSet.toString()));
+                myn.put(15, myn, checkValue(api.getBusinessOwner()));
+                myn.put(16, myn, checkValue(api.getBusinessOwnerEmail()));
+                myn.put(17, myn, checkValue(api.getTechnicalOwner()));
+                myn.put(18, myn, checkValue(api.getTechnicalOwnerEmail()));
             }
         } catch (APIManagementException e) {
             log.error("Error from registry while getting API information for the api: " + apiName + "-" + version, e);

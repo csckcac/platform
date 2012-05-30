@@ -13,6 +13,7 @@ import org.wso2.carbon.apimgt.impl.template.APITemplateBuilder;
 import org.wso2.carbon.apimgt.impl.template.BasicTemplateBuilder;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
+import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
 import org.wso2.carbon.apimgt.impl.utils.RESTAPIAdminClient;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
@@ -386,6 +387,19 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
 
             apiMgtDAO.recordAPILifeCycleEvent(api.getId(), currentStatus, status, userId);
         }        
+    }
+
+    public void makeAPIKeysForwardCompatible(API api) throws APIManagementException {
+        String provider = api.getId().getProviderName();
+        String apiName = api.getId().getApiName();
+        Set<String> versions = getAPIVersions(provider, apiName);
+        APIVersionComparator comparator = new APIVersionComparator();
+        for (String version : versions) {
+            API otherApi = getAPI(new APIIdentifier(provider, apiName, version));
+            if (comparator.compare(otherApi, api) < 0 && otherApi.getStatus().equals(APIStatus.PUBLISHED)) {
+                apiMgtDAO.makeKeysForwardCompatible(provider, apiName, version, api.getId().getVersion());
+            }
+        }
     }
 
     private void publishToGateway(API api) throws APIManagementException {

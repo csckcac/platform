@@ -360,7 +360,9 @@ public class APIProviderHostObject extends ScriptableObject {
         String version = (String) apiData.get("version", apiData);
         String status = (String) apiData.get("status", apiData);
         boolean publishToGateway = Boolean.parseBoolean((String) apiData.get("publishToGateway", apiData));
+        
         boolean deprecateOldVersions = false;
+        boolean makeKeysForwardCompatible = false;
 
         try {
             APIProvider apiProvider = getAPIProvider(thisObj);
@@ -371,15 +373,22 @@ public class APIProviderHostObject extends ScriptableObject {
             String currentUser = ((APIProviderHostObject) thisObj).getUsername();
             apiProvider.changeAPIStatus(api, newStatus, currentUser, publishToGateway);
 
-            if (oldStatus.equals(APIStatus.CREATED) && newStatus.equals(APIStatus.PUBLISHED) && deprecateOldVersions) {
-                List<API> apiList = apiProvider.getAPIsByProvider(provider);
-                APIVersionComparator versionComparator = new APIVersionComparator();
-                for (API oldAPI : apiList) {
-                    if (oldAPI.getId().getApiName().equals(name) && 
-                            versionComparator.compare(oldAPI, api) < 0 &&
-                            (oldAPI.getStatus().equals(APIStatus.PUBLISHED))) {
-                        apiProvider.changeAPIStatus(oldAPI, APIStatus.DEPRECATED, currentUser, publishToGateway);
+            if (oldStatus.equals(APIStatus.CREATED) && newStatus.equals(APIStatus.PUBLISHED)) {
+                if (deprecateOldVersions) {
+                    List<API> apiList = apiProvider.getAPIsByProvider(provider);
+                    APIVersionComparator versionComparator = new APIVersionComparator();
+                    for (API oldAPI : apiList) {
+                        if (oldAPI.getId().getApiName().equals(name) &&
+                                versionComparator.compare(oldAPI, api) < 0 &&
+                                (oldAPI.getStatus().equals(APIStatus.PUBLISHED))) {
+                            apiProvider.changeAPIStatus(oldAPI, APIStatus.DEPRECATED,
+                                    currentUser, publishToGateway);
+                        }
                     }
+                }
+
+                if (makeKeysForwardCompatible) {
+                    apiProvider.makeAPIKeysForwardCompatible(api);
                 }
             }
             success = true;

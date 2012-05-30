@@ -1711,6 +1711,10 @@ public class ApiMgtDAO {
             }
             prepStmt.close();
             rs.close();
+
+            if (subscriptionData.size() == 0) {
+                return;
+            }
             
             Map<Integer,Integer> subscriptionIdMap = new HashMap<Integer, Integer>();
             APIIdentifier newApi = new APIIdentifier(provider, apiName, newVersion);

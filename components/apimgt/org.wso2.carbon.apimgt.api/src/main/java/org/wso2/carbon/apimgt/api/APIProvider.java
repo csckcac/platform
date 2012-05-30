@@ -167,6 +167,16 @@ public interface APIProvider extends APIManager {
                                 boolean updateGatewayConfig) throws APIManagementException;
 
     /**
+     * Locate any API keys issued for the previous versions of the given API, which are
+     * currently in the PUBLISHED state and make those API keys compatible with this
+     * version of the API
+     *
+     * @param api An API object with which the old API keys will be associated
+     * @throws APIManagementException on error
+     */
+    public void makeAPIKeysForwardCompatible(API api) throws APIManagementException;
+
+    /**
      * Create a new version of the <code>api</code>, with version <code>newVersion</code>
      *
      * @param api        The API to be copied

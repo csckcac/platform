@@ -3,7 +3,7 @@ var getSubscribersOfAPI = function (api) {
     var i, length, subscriber, subscribers,
             list = [],
             log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         subscribers = provider.getSubscribersOfAPI(api.provider, api.name, api.version);
         if (log.isDebugEnabled()) {
@@ -34,7 +34,7 @@ var getSubscribersOfProvider = function (username) {
     var i, length, subscriber, subscribers,
             list = [],
             log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         subscribers = provider.getAllAPIUsageByProvider(username);
         if (log.isDebugEnabled()) {
@@ -65,7 +65,7 @@ var getSubscribersOfProvider = function (username) {
 var getSubscribedAPIs = function (username) {
     var api, apis, i, length,log = new Log(),
             list = [],
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         apis = provider.getSubscribedAPIs(username);
         if (log.isDebugEnabled()) {

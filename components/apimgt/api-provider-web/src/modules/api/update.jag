@@ -1,7 +1,7 @@
 <%
 var updateAPI = function (api) {
     var log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         var success = provider.updateAPI(api);
         if (log.isDebugEnabled()) {
@@ -30,7 +30,7 @@ var updateAPI = function (api) {
 
 var updateAPIStatus = function (api) {
     var log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         var success = provider.updateAPIStatus(api);
         if (log.isDebugEnabled()) {

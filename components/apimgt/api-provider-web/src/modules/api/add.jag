@@ -1,7 +1,7 @@
 <%
 var addAPI = function (api) {
     var success, log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         success = provider.addAPI(api);
         if (log.isDebugEnabled()) {
@@ -25,7 +25,7 @@ var addAPI = function (api) {
 
 var isContextExist = function (context) {
     var exists, log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         exists = provider.isContextExist(context);
         if (log.isDebugEnabled()) {
@@ -45,7 +45,7 @@ var isContextExist = function (context) {
 
 var getTiers = function () {
     var tier,tiers,list=[],log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         tiers = provider.getTiers();
         if (log.isDebugEnabled()) {

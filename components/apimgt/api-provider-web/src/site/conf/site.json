@@ -1,6 +1,4 @@
 {
     "theme" : "default",
-    "context" : "/apiprovider",
-    "https_url":"https://localhost:9443",
-    "http_url":"http://localhost:9763"
+    "context" : "/apiprovider"
 }

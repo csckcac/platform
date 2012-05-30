@@ -1,7 +1,7 @@
 <%
 var searchAPIs = function (username,apiName) {
         var i,api,apis,length, log = new Log(), list = [],
-        provider = jagg.module("greg").getAPIProviderObj();
+        provider = jagg.module("manager").getAPIProviderObj();
         try {
         apis = provider.searchAPIs(username,apiName);
         if (log.isDebugEnabled()) {
@@ -34,7 +34,7 @@ for (i = 0; i < length; i++) {
 
 var searchAllAPIs = function (apiName) {
     var i,api,apis,length, log = new Log(), list = [],
-    provider = jagg.module("greg").getAPIProviderObj();
+    provider = jagg.module("manager").getAPIProviderObj();
     try {
         apis = provider.searchAllAPIs(apiName);
         if (log.isDebugEnabled()) {

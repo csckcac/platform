@@ -2,7 +2,7 @@
 var getAllTags = function () {
     var list, i, j, tagsLength, listLength, tag, tags, count, toSave,
             log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         tags = store.getAllTags();

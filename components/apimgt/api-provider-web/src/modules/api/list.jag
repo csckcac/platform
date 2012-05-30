@@ -2,7 +2,7 @@
 var getAPI = function (api) {
     var api, result,
             log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         result = provider.getAPI(api.provider, api.name, api.version);
         if (log.isDebugEnabled()) {
@@ -48,7 +48,7 @@ var getAPIsByProvider = function (username) {
     var i, length, api, apis,
             list = [],
             log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
 
     try {
         apis = provider.getAPIsByProvider(username);
@@ -84,7 +84,7 @@ var getAllAPIs = function () {
     var i, length, api, apis,
     list = [],
     log = new Log(),
-    provider = jagg.module("greg").getAPIProviderObj();
+    provider = jagg.module("manager").getAPIProviderObj();
 
     try {
         apis = provider.getAllAPIs();

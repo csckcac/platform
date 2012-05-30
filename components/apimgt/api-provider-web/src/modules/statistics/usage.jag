@@ -1,6 +1,6 @@
 <%
 log = new Log(),
-apiProvider = jagg.module("greg").getAPIProviderObj(),
+apiProvider = jagg.module("manager").getAPIProviderObj(),
 user = jagg.getUser();
 
 //methods for usage monitoring

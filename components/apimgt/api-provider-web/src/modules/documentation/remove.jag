@@ -1,7 +1,7 @@
 <%
 var removeDocumentation = function (api, doc) {
     var log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         var success = provider.removeDocumentation(api.provider, api.name, api.version, doc.name, doc.type);
         if (log.isDebugEnabled()) {

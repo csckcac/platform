@@ -27,6 +27,9 @@
     <!--/row-->
 </div>
 <% } else {
-        response.sendRedirect(site.https_url+site.context);
+        var mod,httpsUrl;
+        mod = jagg.module("manager");
+        httpsUrl= mod.getHTTPsURL();
+        response.sendRedirect(httpsUrl+site.context);
 } %>
 <%});%>

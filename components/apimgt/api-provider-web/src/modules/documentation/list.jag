@@ -2,7 +2,7 @@
 var getAllDocumentation = function (api) {
     var i, doc, docs, list = [],
             log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         docs = provider.getAllDocumentation(api.provider, api.name, api.version);
         if (log.isDebugEnabled()) {
@@ -36,7 +36,7 @@ var getAllDocumentation = function (api) {
 
 var getInlineContent = function (api, docName) {
     var doc,result, log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         result = provider.getInlineContent(api.provider, api.name, api.version, docName);
         if (log.isDebugEnabled()) {

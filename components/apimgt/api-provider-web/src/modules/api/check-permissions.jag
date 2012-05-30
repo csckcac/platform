@@ -1,7 +1,7 @@
 <%
 var hasCreatePermission = function () {
     var success, log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         success = provider.hasCreatePermission();
         if (log.isDebugEnabled()) {
@@ -28,7 +28,7 @@ var hasCreatePermission = function () {
 
 var hasPublishPermission = function () {
     var success, log = new Log(),
-            provider = jagg.module("greg").getAPIProviderObj();
+            provider = jagg.module("manager").getAPIProviderObj();
     try {
         success = provider.hasPublishPermission();
         if (log.isDebugEnabled()) {

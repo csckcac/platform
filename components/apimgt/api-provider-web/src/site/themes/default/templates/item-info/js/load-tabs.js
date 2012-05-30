@@ -5,6 +5,45 @@ var t_on = {
             'userChart':1
             };
 
+var getLastAccessTime = function(name) {
+    var lastAccessTime=null;
+    jagg.syncPost("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIVersionUserLastAccess",server:"" },
+              function (json) {
+                  if (!json.error) {
+                      var length = json.usage.length;
+                      for (var i = 0; i < length; i++) {
+                          if (json.usage[i].api_name == name) {
+                              lastAccessTime = json.usage[i].lastAccess + " (Accessed version: " + json.usage[i].api_version + ")";
+                              break;
+                          }
+                      }
+                  } else {
+                      jagg.message(json.message);
+                  }
+              });
+    return lastAccessTime;
+};
+
+var getResponseTime = function(name) {
+    var responseTime=null;
+    jagg.syncPost("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",server:"" },
+              function (json) {
+                  if (!json.error) {
+                      var length = json.usage.length;
+                      for (var i = 0; i < length; i++) {
+                          if (json.usage[i].apiName == name) {
+                              responseTime = json.usage[i].serviceTime + " ms";
+                              break;
+                          }
+                      }
+                  } else {
+                      jagg.message(json.message);
+                  }
+              });
+    return responseTime;
+};
+
+
 $(document).ready(function() {
 
     if (($.cookie("tab") != null)) {
@@ -186,36 +225,9 @@ $(document).ready(function() {
                           }
                       }, "json");
 
-            var responseTime = null;
-            var lastAccessTime = null;
-            jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIVersionUserLastAccess",server:"" },
-                      function (json) {
-                          if (!json.error) {
-                              length = json.usage.length;
-                              for (var i = 0; i < length; i++) {
-                                  if (json.usage[i].api_name == api.name) {
-                                      lastAccessTime = json.usage[i].lastAccess + " (Accessed version: " + json.usage[i].api_version + ")";
-                                      break;
-                                  }
-                              }
-                          } else {
-                              jagg.message(json.message);
-                          }
-                      }, "json");
-            jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",server:"" },
-                      function (json) {
-                          if (!json.error) {
-                              var length = json.usage.length;
-                              for (var i = 0; i < length; i++) {
-                                  if (json.usage[i].apiName == api.name) {
-                                      responseTime = json.usage[i].serviceTime + " ms";
-                                      break;
-                                  }
-                              }
-                          } else {
-                              jagg.message(json.message);
-                          }
-                      }, "json");
+            var responseTime = getResponseTime(name);
+            var lastAccessTime = getLastAccessTime(name);
+
             if (responseTime != null && lastAccessTime != null) {
                 $("#usageSummary").show();
                 $('#usageTable').append($('<tr><td>' + json.usage[i].user + '</td><td>' + json.usage[i].count + '</td></tr>'));
@@ -239,5 +251,6 @@ Object.size = function(obj) {
     }
     return size;
 };
+
 
 

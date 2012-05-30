@@ -12,6 +12,7 @@ public class SubscriptionPopulator {
 
 		String JDBC_DRIVER = "org.h2.Driver";
 		String DB_URL = "jdbc:h2:tcp://localhost/~/am2";
+		//String DB_URL = "jdbc:h2:~/am";
 		String USER = "sa";
 		String PASS = "password";
 

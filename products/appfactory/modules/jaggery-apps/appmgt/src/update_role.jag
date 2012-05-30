@@ -18,6 +18,7 @@
             <input type="checkbox" name="developer" value="dev">Developer</br>
             <input type="checkbox" name="manager" value="manager">Manager</br>
             <input type="checkbox" name="devops" value="devops">DevOps</br>
+            <input type="checkbox" name="QA" value="QA">QA</br>
             <input type='submit' name='Submit' value='Update'
                    class="btn primary"/>
             <input type="button" class="btn primary"

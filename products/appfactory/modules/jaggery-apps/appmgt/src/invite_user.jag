@@ -26,6 +26,7 @@
                     <td class="formRow">Role:</td>
                     <td class="formRow">
                         <input type='radio' name='role' value='developer' checked='true'/>developer<br />
+                        <input type='radio' name='role' value='QA'/>QA<br />
                         <input type='radio' name='role' value='devOp'/>devOp
                     </td>
                 </tr>

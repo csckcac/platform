@@ -53,11 +53,11 @@
                             preserveOrigParam = joinedParam.split("=");
                         } else if (joinedParam.split("=")[0].equals("viewVersion")) {
                             viewVersion = joinedParam.split("=");
-                            isViewVersion = Boolean.toString(false).equals(viewVersion[1]);
+                            isViewVersion = !Boolean.parseBoolean(viewVersion[1]);
                         } else if(joinedParam.split("=")[0].equals("displayMediaType")){
                             displayMediaType = joinedParam.split("=")[1];
                         } else if(joinedParam.split("=")[0].equals("showDependencies")){
-                            viewDependencies = Boolean.toString(true).equals(joinedParam.split("=")[1]);
+                            viewDependencies = Boolean.parseBoolean(joinedParam.split("=")[1]);
                         }else if(joinedParam.split("=")[0].equals("currentEnvironment")){
                             currentEnvironment = joinedParam.split("=")[1];
                         }
@@ -67,11 +67,11 @@
                         preserveOrigParam = parameter.split("=");
                     } else if (parameter.split("=")[0].equals("viewVersion")) {
                         viewVersion = parameters[0].split("=");
-                        isViewVersion = Boolean.toString(false).equals(viewVersion[1]);
+                        isViewVersion = !Boolean.parseBoolean(viewVersion[1]);
                     }else if(parameter.split("=")[0].equals("displayMediaType")){
                         displayMediaType = parameter.split("=")[1];
                     } else if(parameter.split("=")[0].equals("showDependencies")){
-                        viewDependencies = Boolean.toString(true).equals(parameter.split("=")[1]);
+                        viewDependencies = Boolean.parseBoolean(parameter.split("=")[1]);
                     }else if(parameter.split("=")[0].equals("currentEnvironment")){
                         currentEnvironment = parameter.split("=")[1];
                     }
@@ -108,7 +108,7 @@
 } else {
     String mediaType = request.getParameter("mediaType");
     if (preserveOrigParam != null && preserveOrigParam.length != 0) {
-        preserveOriginal = !Boolean.toString(false).equals(preserveOrigParam[1]);
+        preserveOriginal = Boolean.parseBoolean(preserveOrigParam[1]);
     }
         List<String> otherDependencies = new ArrayList<String>();
 

@@ -24,6 +24,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.tenant.Tenant;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /*
  * This class handles the parameters that are input during the registration
@@ -133,13 +134,13 @@ public class ClaimsMgtUtil {
      */
     public static String getAdminUserNameFromTenantId(RealmService realmService, int tenantId)
                                                                                               throws Exception {
-        if (tenantId == 0) {
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
             return realmService.getBootstrapRealmConfiguration().getAdminUserName();
         }
         String tenantAdminName ="";
         try {
             if (realmService.getTenantManager().getTenant(tenantId) != null) {
-		tenantAdminName = realmService.getTenantManager().getTenant(tenantId).getAdminName();
+                tenantAdminName = realmService.getTenantManager().getTenant(tenantId).getAdminName();
             }
         } catch (org.wso2.carbon.user.api.UserStoreException e) {
             String msg = "Unable to retrieve the admin name for the tenant with the tenant Id: " +

@@ -47,7 +47,6 @@ public class OutputHelper {
             facts.add(FactHelper.getFact(factElement));
         }
         output.setFacts(facts);
-        output.populateClassTypes();
         return output;
     }
 }

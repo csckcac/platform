@@ -201,6 +201,8 @@ public class RuleServiceDeployer extends AbstractDeployer {
             Input input = operation.getInput();
             Output output = operation.getOutput();
 
+            output.populateClassTypes();
+            
             schemaBuilder.addOperation(operation);
 
             AxisOperation axisOperation =

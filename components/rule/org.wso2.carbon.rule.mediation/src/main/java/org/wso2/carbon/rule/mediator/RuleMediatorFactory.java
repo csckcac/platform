@@ -38,6 +38,7 @@ public class RuleMediatorFactory extends AbstractMediatorFactory {
 
         try {
             processDefaultValues(ruleMediatorConfig, this.getClass().getClassLoader());
+            ruleMediatorConfig.getOutput().populateClassTypes();
             RuleEngine ruleEngine = new RuleEngine(ruleMediatorConfig.getRuleSet(),
                     this.getClass().getClassLoader());
             ruleMediator = new RuleMediator(ruleEngine,

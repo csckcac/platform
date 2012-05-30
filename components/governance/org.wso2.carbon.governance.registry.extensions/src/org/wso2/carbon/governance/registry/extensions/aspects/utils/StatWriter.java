@@ -104,10 +104,10 @@ public class StatWriter {
 //        Adding the state attribute
         itemChildElement.addAttribute("state", currentCollection.getState(), null);
 
-        if (!currentCollection.getOriginalPath().equals(currentCollection.getResourcePath())) {
+//        if (!currentCollection.getOriginalPath().equals(currentCollection.getResourcePath())) {
 //        Adding the originalPath attribute
             itemChildElement.addAttribute("originalPath", currentCollection.getResourcePath(),null);
-        }
+//        }
 
 //        Adding the action element
         OMElement actionElement = factory.createOMElement("action", itemChildElement.getNamespace(), itemChildElement);

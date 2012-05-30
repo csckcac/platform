@@ -29,31 +29,13 @@
     <!--
         Authentication manager configuration for API provider and API store. This is
         a required configuration for both web applications as their user authentication
-        logic relies on this. The same is used by the self-sign-up feature of API
-        store.
+        logic relies on this.
     -->
     <AuthManager>
         <!--
             Server URL of the Authentication service
         -->
         <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}/services/</ServerURL>
-
-        <SelfSignUp>
-            <!--
-                Enable or disable the self-sign-up feature
-            -->
-            <Enabled>true</Enabled>
-
-            <!--
-                Self signed up users should be associated with a suitable subscriber
-                role for them to be able to access the API store portal. This parameter
-                specifies which role should be used for that purpose. The role specified
-                here must have the '/permission/admin/manage/api/subscribe' permission.
-                If the specified role does not exist in the user store, API Manager will
-                attempt to create it.
-            -->
-            <SubscriberRoleName>subscriber</SubscriberRoleName>
-        </SelfSignUp>
     </AuthManager>
 
     <!--
@@ -147,5 +129,34 @@
         -->
         <EnableUnlimitedTier>true</EnableUnlimitedTier>
     </TierManagement>
+
+    <!--
+        Use this configuration to control the self-sign-up capability in API store.
+    -->
+    <SelfSignUp>
+        <!--
+            Enable or disable the self-sign-up feature.
+        -->
+        <Enabled>true</Enabled>
+
+        <!--
+            Self signed up users should be associated with a suitable subscriber
+            role for them to be able to access the API store portal. This required
+            parameter specifies which role should be used for that purpose. The role
+            specified here must have the '/permission/admin/manage/api/subscribe'
+            permission.
+        -->
+        <SubscriberRoleName>subscriber</SubscriberRoleName>
+
+        <!--
+            This parameter specifies whether the subscriber role specified above
+            should be created in the local user store or not. This only makes sense
+            when the API subscribers are authenticated against the local user store.
+            That is the local Carbon server is acting as the AuthManager. If a remote
+            Carbon server is acting as the AuthManager, this parameter should be turned
+            off for the local server.
+        -->
+        <CreateSubscriberRole>true</CreateSubscriberRole>
+    </SelfSignUp>
 </APIManager>
 

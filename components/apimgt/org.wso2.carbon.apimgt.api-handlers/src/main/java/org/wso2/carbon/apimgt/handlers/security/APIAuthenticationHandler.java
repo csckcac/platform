@@ -55,23 +55,21 @@ public class APIAuthenticationHandler extends AbstractHandler {
     
     private static final Log log = LogFactory.getLog(APIAuthenticationHandler.class);
 
-    private Authenticator authenticator;
+    private volatile Authenticator authenticator;
     
     public APIAuthenticationHandler() {
-        String authenticatorType = ServiceReferenceHolder.getInstance().getAPIManagerConfiguration().
-                getFirstProperty(APISecurityConstants.API_SECURITY_AUTHENTICATOR);
-        if (authenticatorType == null) {
-            authenticatorType = OAuthAuthenticator.class.getName();
-        }
-        try {
-            authenticator = (Authenticator) Class.forName(authenticatorType).newInstance();
-        } catch (Exception e) {
-            // Just throw it here - Synapse will handle it
-            throw new SynapseException("Error while initializing authenticator of type: " + authenticatorType);
-        }
+
     }
 
     public boolean handleRequest(MessageContext messageContext) {
+        if (authenticator == null) {
+            synchronized (this) {
+                if (authenticator == null) {
+                    initAuthenticator();
+                }
+            }
+        }
+
         try {
             if (authenticator.authenticate(messageContext)) {
                 return true;
@@ -85,6 +83,21 @@ public class APIAuthenticationHandler extends AbstractHandler {
 
     public boolean handleResponse(MessageContext messageContext) {
         return true;
+    }
+
+    private void initAuthenticator() {
+        String authenticatorType = ServiceReferenceHolder.getInstance().getAPIManagerConfiguration().
+                getFirstProperty(APISecurityConstants.API_SECURITY_AUTHENTICATOR);
+        if (authenticatorType == null) {
+            authenticatorType = OAuthAuthenticator.class.getName();
+        }
+        try {
+            authenticator = (Authenticator) Class.forName(authenticatorType).newInstance();
+        } catch (Exception e) {
+            // Just throw it here - Synapse will handle it
+            throw new SynapseException("Error while initializing authenticator of " +
+                    "type: " + authenticatorType);
+        }
     }
 
     private void handleAuthFailure(MessageContext messageContext, APISecurityException e) {

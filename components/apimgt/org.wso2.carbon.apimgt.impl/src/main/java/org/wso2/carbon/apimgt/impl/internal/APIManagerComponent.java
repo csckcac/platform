@@ -34,7 +34,12 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.api.UserStoreManager;
+import org.wso2.carbon.user.core.AuthorizationManager;
+import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.user.mgt.UserMgtConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileUtil;
 
@@ -42,7 +47,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Set;
 
@@ -72,6 +76,7 @@ public class APIManagerComponent {
         try {
             addRxtConfigs();
             addTierPolicies();
+
             APIManagerConfiguration configuration = new APIManagerConfiguration();
             String filePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
                     File.separator + "conf" + File.separator + "api-manager.xml";
@@ -82,6 +87,7 @@ public class APIManagerComponent {
             registration = componentContext.getBundleContext().registerService(
                     APIManagerConfigurationService.class.getName(),
                     configurationService, new Properties());
+            setupSelfRegistration(configuration);
         } catch (APIManagementException e) {
             log.fatal("Error while initializing the API manager component", e);
         }
@@ -132,7 +138,7 @@ public class APIManagerComponent {
         log.debug("Listener manager unbound from the API manager component");
     }
 
-    private static void addRxtConfigs() throws APIManagementException {
+    private void addRxtConfigs() throws APIManagementException {
         String rxtDir = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
                 "resources" + File.separator + "rxts";
         File file = new File(rxtDir);
@@ -176,7 +182,7 @@ public class APIManagerComponent {
         }
     }
     
-    protected static void addTierPolicies() throws APIManagementException {
+    private void addTierPolicies() throws APIManagementException {
         RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
         try {
             UserRegistry registry = registryService.getGovernanceSystemRegistry();
@@ -206,6 +212,47 @@ public class APIManagerComponent {
             throw new APIManagementException("Error while saving policy information to the registry", e);
         } catch (IOException e) {
             throw new APIManagementException("Error while reading policy file content", e);
+        }
+    }
+
+    private void setupSelfRegistration(APIManagerConfiguration config) throws APIManagementException {
+        boolean enabled = Boolean.parseBoolean(config.getFirstProperty(APIConstants.SELF_SIGN_UP_ENABLED));
+        if (!enabled) {
+            return;
+        }
+
+        String role = config.getFirstProperty(APIConstants.SELF_SIGN_UP_ROLE);
+        if (role == null) {
+            // Required parameter missing - Throw an exception and interrupt startup
+            throw new APIManagementException("Required subscriber role parameter missing " +
+                    "in the self sign up configuration");
+        }
+
+        boolean create = Boolean.parseBoolean(config.getFirstProperty(APIConstants.SELF_SIGN_UP_CREATE_ROLE));
+        if (create) {
+            String[] permissions = new String[] {
+                    "/permission/admin/login",
+                    APIConstants.Permissions.API_SUBSCRIBE
+            };
+            try {
+                RealmService realmService = ServiceReferenceHolder.getInstance().getRealmService();
+                UserRealm realm = realmService.getBootstrapRealm();
+                UserStoreManager manager = realm.getUserStoreManager();
+                AuthorizationManager authorizationManager = realm.getAuthorizationManager();
+                authorizationManager.clearRoleActionOnAllResources(role, UserMgtConstants.EXECUTE_ACTION);
+                for (String permission : permissions) {
+                    authorizationManager.authorizeRole(role, permission, UserMgtConstants.EXECUTE_ACTION);
+                }
+                if (!manager.isExistingRole(role)) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Creating subscriber role: " + role);
+                    }
+                    manager.addRole(role, null, null);
+                }
+            } catch (UserStoreException e) {
+                throw new APIManagementException("Error while creating subscriber role: " + role + " - " +
+                        "Self registration might not function properly.", e);
+            }
         }
     }
 }

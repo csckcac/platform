@@ -240,21 +240,22 @@ public class ServiceVersionExecutor implements Execution {
 //           We avoid copying dependencies here because they are added to the new resources
             copyAllAssociations(registry, newPathMappings.get(resourcePath), resourcePath);
 
-//            keeping the old path due to logging purposes
-                newResource.setProperty(LifecycleConstants.REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH,
-                        resourcePath);
-                requestContext.setResource(newResource);
-                requestContext.setOldResource(resource);
-                requestContext.setResourcePath(new ResourcePath(newPathMappings.get(resourcePath)));
+            requestContext.setResource(newResource);
+            requestContext.setOldResource(resource);
+            requestContext.setResourcePath(new ResourcePath(newPathMappings.get(resourcePath)));
 
 //           adding logs
-                StatCollection statCollection = (StatCollection) requestContext.getProperty(LifecycleConstants.STAT_COLLECTION);
-                statCollection.addExecutors(this.getClass().getName(), historyOperation);
-            } catch (RegistryException e) {
-                log.error("Failed to perform registry operation", e);
-            }
-            return true;
+            StatCollection statCollection = (StatCollection) requestContext.getProperty(LifecycleConstants.STAT_COLLECTION);
+
+//            keeping the old path due to logging purposes
+            newResource.setProperty(LifecycleConstants.REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH,
+                    statCollection.getOriginalPath());
+            statCollection.addExecutors(this.getClass().getName(), historyOperation);
+        } catch (RegistryException e) {
+            log.error("Failed to perform registry operation", e);
         }
+        return true;
+    }
 
     private void copyAllAssociations(Registry registry, String newPath, String path) throws RegistryException {
         if (copyAllAssociations) {

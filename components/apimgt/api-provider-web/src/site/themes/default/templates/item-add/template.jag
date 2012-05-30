@@ -41,30 +41,6 @@
                                   style="margin-left: 0px; margin-right: 0px; width: 501px; "></textarea>
                     </div>
                 </div>
-                 <div class="control-group">
-                    <label class="control-label" for="bizOwner">Business Owner:</label>
-                    <div class="controls">
-                         <input type="text" class="input-xlarge" id="bizOwner" name="bizOwner"/>
-                    </div>
-                </div>
-                 <div class="control-group">
-                    <label class="control-label" for="bizOwnerMail">Business Owner Email:</label>
-                    <div class="controls">
-                         <input type="text" class="input-xlarge" id="bizOwnerMail" name="bizOwnerMail"/>
-                    </div>
-                </div>
-                 <div class="control-group">
-                    <label class="control-label" for="techOwner">Technical Owner:</label>
-                    <div class="controls">
-                         <input type="text" class="input-xlarge" id="techOwner" name="techOwner"/>
-                    </div>
-                </div>
-                 <div class="control-group">
-                    <label class="control-label" for="techOwnerMail">Technical Owner Email:</label>
-                    <div class="controls">
-                         <input type="text" class="input-xlarge" id="techOwnerMail" name="techOwnerMail"/>
-                    </div>
-                </div>
 
                 <div class="control-group">
                     <label class="control-label" for="apiThumb">Thumbnail Image:</label>
@@ -115,6 +91,31 @@
                         <select id="tier" name="tier"  multiple="multiple">
                         </select>
                          <p class="help-block" id="tiersHelp"></p>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="bizOwner">Business Owner:</label>
+                    <div class="controls">
+                         <input type="text" class="input-xlarge" id="bizOwner" name="bizOwner"/>
+                    </div>
+                </div>
+                 <div class="control-group">
+                    <label class="control-label" for="bizOwnerMail">Business Owner Email:</label>
+                    <div class="controls">
+                         <input type="text" class="input-xlarge" id="bizOwnerMail" name="bizOwnerMail"/>
+                    </div>
+                </div>
+                 <div class="control-group">
+                    <label class="control-label" for="techOwner">Technical Owner:</label>
+                    <div class="controls">
+                         <input type="text" class="input-xlarge" id="techOwner" name="techOwner"/>
+                    </div>
+                </div>
+                 <div class="control-group">
+                    <label class="control-label" for="techOwnerMail">Technical Owner Email:</label>
+                    <div class="controls">
+                         <input type="text" class="input-xlarge" id="techOwnerMail" name="techOwnerMail"/>
                     </div>
                 </div>
 

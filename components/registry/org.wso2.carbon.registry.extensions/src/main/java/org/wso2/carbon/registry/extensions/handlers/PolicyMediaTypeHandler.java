@@ -179,7 +179,16 @@ public class PolicyMediaTypeHandler extends Handler {
         if (!systemRegistry.resourceExists(commonLocation)) {
             systemRegistry.put(commonLocation, systemRegistry.newCollection());
         }
-        String policyPath = commonLocation + extractResourceFromURL(policyFileName, ".xml");
+
+        String policyPath;
+        if(!resourcePath.startsWith(commonLocation)
+                && !resourcePath.equals(RegistryConstants.PATH_SEPARATOR + policyFileName)
+                && !resourcePath.equals(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH
+                + RegistryConstants.PATH_SEPARATOR +policyFileName)){
+            policyPath = resourcePath;
+        }else{
+            policyPath = commonLocation + extractResourceFromURL(policyFileName, ".xml");
+        }
 
 
         String policyId = policyResource.getUUID();

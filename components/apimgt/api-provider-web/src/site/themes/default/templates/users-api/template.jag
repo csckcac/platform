@@ -34,11 +34,11 @@
         path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + subscriber.username;
         %>
         <tr>
-        <td><i class="icon-user"></i><a href="<%=path%>"><%=subscriber.username%></a></td>
+        <td><i class="icon-user"></i> <a href="<%=path%>"><%=subscriber.username%></a></td>
         <td><%=subscriber.subscribedDate%></td>
-        <td><i class="icon-edit"></i><a href="#">Stats</a>
-            <i class="icon-trash"></i><a href="#">Revoke Access</a>
-            <i class="icon-ban-circle"></i><a href="#">Block</a>
+        <td><i class="icon-edit"></i> <a href="#">Stats</a>
+            <i class="icon-trash"></i> <a href="#">Revoke Access</a>
+            <i class="icon-ban-circle"></i> <a href="#">Block</a>
         </td>
         </tr>
         <%}}%>
@@ -51,13 +51,11 @@
         %>
         </tbody>
                 </table>
-                <div class="pagination">
-                </div>
             </div>
         </div>
 
         <!-- Row -->
-<h3 class="left-spaced">Usage by Current Subscribers (v-<%=request.getParameter("version")%>)</h3>
+<h3>Usage by Current Subscribers (v-<%=request.getParameter("version")%>)</h3>
 <div class="well">
     <div class="row-fluid">
         <div class="span6">
@@ -79,11 +77,11 @@
 </div>
 
 
-<h3 class="left-spaced">Usage by Current Subscribers (Across All Versions)</h3>
+<h3>Usage by Current Subscribers (Across All Versions)</h3>
 <div class="well">
     <div class="row-fluid">
         <div class="span6">
-            <div id="userChart" class="left-spaced">
+            <div id="userChart">
                 <div class="progress progress-striped active">
                     <div class="bar" style="width: 10%;"></div>
                 </div>

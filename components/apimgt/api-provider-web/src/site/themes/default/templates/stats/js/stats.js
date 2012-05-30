@@ -22,6 +22,7 @@ $(document).ready(function() {
                           $('#serviceTimeTable').append($('<tr><td>' + json.usage[i].apiName + '</td><td>' + json.usage[i].serviceTime + '</td></tr>'));
 
                       }
+
                       if (length > 0) {
                           $('#serviceTimeTable').show();
 
@@ -30,8 +31,7 @@ $(document).ready(function() {
                                   renderer:$.jqplot.BarRenderer,
                                   rendererOptions: {fillToZero: true}
                               },
-                              seriesColors: [ "#fdca19", "#fa8216", "#e10718", "#aa1e52", "#e74d92", "#4e2e86",
-                                                                        "#028a7a", "#019d60", "#7ebe3a", "#cede3e"],
+                              seriesColors: [ "#019d60", "#7ebe3a","#fdca19","#028a7a", "#cede3e", "#fa8216", "#e10718", "#aa1e52", "#e74d92", "#4e2e86"],
                               series:[
                                   {label:'API'}
                               ],
@@ -84,8 +84,7 @@ $(document).ready(function() {
                                                                 showDataLabels:true
                                                             }
                                                         },
-                                                        seriesColors: [ "#fdca19", "#fa8216", "#e10718", "#aa1e52", "#e74d92", "#4e2e86",
-                                                                        "#028a7a", "#019d60", "#7ebe3a", "#cede3e"],
+                                                        seriesColors: [ "#cede3e", "#aa1e52", "#e74d92", "#4e2e86","#028a7a", "#019d60", "#fdca19", "#e10718","#7ebe3a", "#fa8216"],
                                                         legend:{ show:true, location:'e' }
                                                     }
                                   );
@@ -115,6 +114,7 @@ $(document).ready(function() {
                           $('#apiTable').append($('<tr><td>' + json.usage[i].apiName + '</td><td>' + json.usage[i].count + '</td></tr>'));
 
                       }
+
                       if (length > 0) {
                           $('#apiTable').show();
                           var plot1 = jQuery.jqplot('apiChart', [data],
@@ -125,8 +125,7 @@ $(document).ready(function() {
                                                                 showDataLabels:true
                                                             }
                                                         },
-                                                        seriesColors: [ "#fdca19", "#fa8216", "#e10718", "#aa1e52", "#e74d92", "#4e2e86",
-                                                                        "#028a7a", "#019d60", "#7ebe3a", "#cede3e"],
+                                                        seriesColors: [ "#e10718", "#aa1e52","#fdca19", "#fa8216", "#e74d92", "#4e2e86","#7ebe3a", "#cede3e","#028a7a", "#019d60"],
                                                         legend:{ show:true, location:'e' }
                                                     }
                                   );

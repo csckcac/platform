@@ -561,7 +561,7 @@ public class SchemaProcessor {
                 xsdResource.setUUID(metaResource.getUUID());
 
 //                if there is a change in the path, we delete the old resource
-                if(!schemaPath.equals(path) && registry.resourceExists(path)){
+                if(path != null && !schemaPath.equals(path) && registry.resourceExists(path)){
                     Resource oldResource = registry.get(path);
                     if(oldResource.getProperty("registry.resource.symlink.path") != null){
                         registry.delete(oldResource.getProperty("registry.resource.symlink.path"));

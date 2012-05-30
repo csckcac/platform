@@ -18,6 +18,9 @@
  */
 package org.wso2.carbon.email.verification.util;
 
+/**
+ * The bean class that contains the email confirmation parameters.
+ */
 public class ConfirmationBean {
     private String redirectPath;
     private String data;

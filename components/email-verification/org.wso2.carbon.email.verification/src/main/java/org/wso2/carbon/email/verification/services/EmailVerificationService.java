@@ -21,8 +21,17 @@ package org.wso2.carbon.email.verification.services;
 import org.wso2.carbon.email.verification.util.Util;
 import org.wso2.carbon.email.verification.util.ConfirmationBean;
 
+/**
+ * The service that is responsible for the email verification functionality of carbon.
+ */
 public class EmailVerificationService {
 
+    /**
+     * Confirms the link that user clicks is valid.
+     * @param secretKey, the secretKey that is sent as a link in the email.
+     * @return ConfirmationBean, if the link is valid.
+     * @throws Exception, if the link is expired or invalid
+     */
     public static ConfirmationBean confirmUser(String secretKey) throws Exception {
         return Util.confirmUser(secretKey);
     }

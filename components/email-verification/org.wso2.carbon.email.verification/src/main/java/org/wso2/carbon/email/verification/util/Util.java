@@ -25,11 +25,11 @@ import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.ResourceImpl;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -38,13 +38,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.*;
 
-
+/**
+ * The utility methods of the Email Verifier component
+ */
 public class Util {
     private static final Log log = LogFactory.getLog(Util.class);
 
     private static RegistryService registryService;
-    public static Map<String, EmailVerifierConfig> serviceConfigMap =
-            new HashMap<String, EmailVerifierConfig>();
     private static final String EMAIL_VERIFICATION_COLLECTION =
             "/repository/components/org.wso2.carbon.email-verification/email-verifications-map";
     private static final String VERIFIED_EMAIL_RESOURCE_PATH =
@@ -65,6 +65,11 @@ public class Util {
     }
 
 
+    /**
+     * Loads the email configuration from the respective components.
+     * @param configFilename, the file that contains the email configurations
+     * @return EmailVerfierConfig
+     */
     public static EmailVerifierConfig loadeMailVerificationConfig(String configFilename) {
         EmailVerifierConfig config = new EmailVerifierConfig();
         File configfile = new File(configFilename);
@@ -101,17 +106,24 @@ public class Util {
         }
     }
 
+    /**
+     * Confirms that the link the user clicked is valid.
+     * @param secretKey, the key that is sent to the user with the email.
+     * @return the ConfirmationBean with the redirect path and data.
+     * @throws Exception, if confirming the user failed.
+     */
     public static ConfirmationBean confirmUser(String secretKey) throws Exception {
         ConfirmationBean confirmationBean = new ConfirmationBean();
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMElement data = fac.createOMElement("configuration", null);
 
-        Registry registry = Util.getConfigSystemRegistry(0);
+        Registry registry = Util.getConfigSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
         boolean success = false;
         try {
             registry.beginTransaction();
 
-            String secretKeyPath = EMAIL_VERIFICATION_COLLECTION + "/" + secretKey;
+            String secretKeyPath = EMAIL_VERIFICATION_COLLECTION +
+                    RegistryConstants.PATH_SEPARATOR + secretKey;
             if (!registry.resourceExists(secretKeyPath)) {
                 String msg = "Email verification failed.";
                 log.error(msg);
@@ -130,22 +142,22 @@ public class Util {
                     confirmationBean.setRedirectPath(resource.getProperty(key));
                 }
             }
-            registry.delete(resource.getPath());// remove the temporaraly store resource from registry
+            // remove the temporarily stored resource from the registry
+            registry.delete(resource.getPath());
             confirmationBean.setData(data.toString());
             success = true;
 
-            //when verifying the user ,email address is being persisted in order to be recognized for one time verification
-            if (success) {
-                Resource tempResource;
-                if (registry.resourceExists(VERIFIED_EMAIL_RESOURCE_PATH)) {
-                    String verifyingEmail = data.getFirstChildWithName(new QName("email")).getText();
-                    String key = UUIDGenerator.generateUUID();
-                    tempResource = registry.get(VERIFIED_EMAIL_RESOURCE_PATH);
-                    if (tempResource != null) {
-                        tempResource.setProperty(key, verifyingEmail);
-                    }
-                    registry.put(VERIFIED_EMAIL_RESOURCE_PATH, tempResource);
+            // when verifying the user,email address is being persisted in order to be recognized
+            // for one time verification
+            Resource tempResource;
+            if (registry.resourceExists(VERIFIED_EMAIL_RESOURCE_PATH)) {
+                String verifyingEmail = data.getFirstChildWithName(new QName("email")).getText();
+                String key = UUIDGenerator.generateUUID();
+                tempResource = registry.get(VERIFIED_EMAIL_RESOURCE_PATH);
+                if (tempResource != null) {
+                    tempResource.setProperty(key, verifyingEmail);
                 }
+                registry.put(VERIFIED_EMAIL_RESOURCE_PATH, tempResource);
             }
 
         } finally {
@@ -158,15 +170,12 @@ public class Util {
         return confirmationBean;
     }
 
-    /*
-    public static void requestUserVerification(Map<String,String> data, String configFilename) throws Exception {
-        EmailVerifierConfig serviceConfig = serviceConfigMap.get(configFilename);
-        if (serviceConfig == null) {
-            // hm, we have to load the stuff
-            serviceConfig = Util.loadeMailVerificationConfig(configFilename);
-        }
-    } */
-
+    /**
+     * Sends an email to the user with the link to verify.
+     * @param data of the user
+     * @param serviceConfig, EmailVerifier Configuration.
+     * @throws Exception, if sending the user verification mail failed.
+     */
     public static void requestUserVerification(Map<String, String> data,
                                                EmailVerifierConfig serviceConfig) throws Exception {
         String emailAddress = data.get("email");
@@ -187,7 +196,7 @@ public class Util {
                 resource.setProperty(s, data.get(s));
             }
 
-            ((ResourceImpl) resource).setVersionableChange(false);
+            resource.setVersionableChange(false);
             String secretKeyPath = EMAIL_VERIFICATION_COLLECTION +
                     RegistryConstants.PATH_SEPARATOR + secretKey;
             registry.put(secretKeyPath, resource);

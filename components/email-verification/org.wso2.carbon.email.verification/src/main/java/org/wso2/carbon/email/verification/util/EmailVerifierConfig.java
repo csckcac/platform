@@ -17,8 +17,10 @@
 */
 package org.wso2.carbon.email.verification.util;
 
+/**
+ * The common email configurations - set from the respective components.
+ */
 public class EmailVerifierConfig {
-        
 
     public final static String DEFAULT_VALUE_SUBJECT = "EmailVerification";
     public final static String DEFAULT_VALUE_MESSAGE = "Please point your browser to : ";

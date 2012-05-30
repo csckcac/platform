@@ -20,9 +20,13 @@ package org.wso2.carbon.email.verification.util;
 
 import java.util.Map;
 
+/**
+ * To allow subscribing to the email verifier component from other components.
+ */
 public class EmailVerifcationSubscriber {
 
-    public void requestUserVerification(Map<String,String> data, EmailVerifierConfig serviceConfig) throws Exception {
+    public void requestUserVerification(Map<String,String> data,
+                                        EmailVerifierConfig serviceConfig) throws Exception {
         Util.requestUserVerification(data, serviceConfig);
     }
 }

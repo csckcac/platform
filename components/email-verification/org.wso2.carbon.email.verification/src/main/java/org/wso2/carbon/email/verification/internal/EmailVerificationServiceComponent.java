@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.wso2.carbon.email.verification.internal;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.axis2.context.ConfigurationContext;
@@ -22,7 +23,7 @@ import org.osgi.framework.BundleContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.email.verification.util.Util;
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
-import org.wso2.carbon.utils.ConfigurationContextService;import java.util.Map;
+import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
  * @scr.component name="org.wso2.carbon.email.verification.internal.EmailVerificationServiceComponent"

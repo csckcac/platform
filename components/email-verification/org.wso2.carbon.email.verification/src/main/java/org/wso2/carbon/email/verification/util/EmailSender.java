@@ -36,7 +36,9 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * The thread responsible for sending emails.
+ */
 public class EmailSender extends Thread {
 
     public static final String CONF_STRING = "confirmation";

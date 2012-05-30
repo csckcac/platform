@@ -15,6 +15,7 @@
 */
 
 package org.wso2.automation.common.test.greg.governance;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -40,6 +41,8 @@ import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 import javax.xml.namespace.QName;
 import java.util.List;
 
+import static junit.framework.Assert.assertTrue;
+
 public class WSDLTestCaseClient {
 
     private Registry governance;
@@ -58,8 +61,8 @@ public class WSDLTestCaseClient {
         WsdlManager wsdlManager = new WsdlManager(governance);
 
         Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                                        "governance/org.wso2.carbon.governance.api/src/test/resources/" +
-                                        "test-resources/wsdl/BizService.wsdl");
+                "governance/org.wso2.carbon.governance.api/src/test/resources/" +
+                "test-resources/wsdl/BizService.wsdl");
         wsdl.addAttribute("creator", "it is me");
         wsdl.addAttribute("version", "0.01");
         wsdlManager.addWsdl(wsdl);
@@ -101,11 +104,11 @@ public class WSDLTestCaseClient {
         OMFactory factory = OMAbstractFactory.getOMFactory();
 
         OMElement importElement = factory.createOMElement(
-                                                                 new QName("http://www.w3.org/2001/XMLSchema", "import"));
+                new QName("http://www.w3.org/2001/XMLSchema", "import"));
         importElement.addAttribute("schemaLocation",
-                                   "http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance" +
-                                   "/org.wso2.carbon.governance.api/src/test/resources/test-resources/" +
-                                   "xsd/purchasing_dup.xsd", null);
+                "http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance" +
+                        "/org.wso2.carbon.governance.api/src/test/resources/test-resources/" +
+                        "xsd/purchasing_dup.xsd", null);
         schemaElement.addChild(importElement);
         importElement.addAttribute("namespace", "http://bar.org/purchasing_dup", null);
 
@@ -116,8 +119,8 @@ public class WSDLTestCaseClient {
 
         //test log
         log.info("####Schemas#####");
-        for(Schema schema:schemas){
-            log.info("#####Schema:"+schemas[0].getId() + " schemaName" + schema.getQName().toString());
+        for (Schema schema : schemas) {
+            log.info("#####Schema:" + schemas[0].getId() + " schemaName" + schema.getQName().toString());
         }
 
         Assert.assertEquals(schemas[schemas.length - 1].getPath(), "/trunk/schemas/org/bar/purchasing_dup/purchasing_dup.xsd");
@@ -128,14 +131,14 @@ public class WSDLTestCaseClient {
                 Schema[] schemas = wsdl.getAttachedSchemas();
                 for (Schema schema : schemas) {
                     if (schema.getPath().equals("/trunk/schemas/org/bar/purchasing_dup/purchasing_dup.xsd")) {
-                        log.info("###### Matching Schemas name"+ schema.getQName().toString() + "  schemaID:"+schema.getId());
+                        log.info("###### Matching Schemas name" + schema.getQName().toString() + "  schemaID:" + schema.getId());
                         return true;
                     }
                 }
                 return false;
             }
         });
-        log.info("WSDL len:"+wsdls.length);
+        log.info("WSDL len:" + wsdls.length);
         Assert.assertEquals(wsdls.length, 1);
         Assert.assertEquals(newWsdl.getId(), wsdls[0].getId());
 
@@ -147,8 +150,8 @@ public class WSDLTestCaseClient {
 
         // add again
         Wsdl anotherWsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components" +
-                                               "/governance/org.wso2.carbon.governance.api/src/test/resources" +
-                                               "/test-resources/wsdl/BizService.wsdl");
+                "/governance/org.wso2.carbon.governance.api/src/test/resources" +
+                "/test-resources/wsdl/BizService.wsdl");
         anotherWsdl.addAttribute("creator", "it is not me");
         anotherWsdl.addAttribute("version", "0.02");
         wsdlManager.addWsdl(anotherWsdl);
@@ -159,13 +162,13 @@ public class WSDLTestCaseClient {
 
     }
 
-    @Test(groups = {"wso2.greg"} , dependsOnMethods = {"testAddWSDL"})
+    @Test(groups = {"wso2.greg"}, dependsOnMethods = {"testAddWSDL"})
     public void testEditWSDL() throws Exception {
         WsdlManager wsdlManager = new WsdlManager(governance);
 
         Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components" +
-                                        "/governance/org.wso2.carbon.governance.api/src/test/resources" +
-                                        "/test-resources/wsdl/BizService.wsdl");
+                "/governance/org.wso2.carbon.governance.api/src/test/resources" +
+                "/test-resources/wsdl/BizService.wsdl");
         wsdl.addAttribute("creator2", "it is me");
         wsdl.addAttribute("version2", "0.01");
         wsdlManager.addWsdl(wsdl);
@@ -198,11 +201,69 @@ public class WSDLTestCaseClient {
         return nodes.get(0);
     }
 
-    private void doSleep(){
+    private void doSleep() {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
 
         }
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Test adding same wsdl twice")
+    public void testAddWSDLTwice() throws GovernanceException {
+        WsdlManager wsdlManager = new WsdlManager(governance);
+        String sampleWsdlURL = "http://ws.strikeiron.com/donotcall2_5?WSDL";
+        String wsdlName = "donotcall2_5.wsdl";
+        boolean isWsdlFound = false;
+
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().equalsIgnoreCase(wsdlName)) {
+                wsdlManager.removeWsdl(w.getId());
+            }
+        }
+
+        Wsdl wsdl = wsdlManager.newWsdl(sampleWsdlURL);
+        wsdlManager.addWsdl(wsdl);
+        try {
+            wsdlManager.addWsdl(wsdl);
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error found while adding same wsdl twice : " + e.getMessage());
+        }
+
+        wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().equalsIgnoreCase(wsdlName)) {
+                if (!isWsdlFound) {
+                    isWsdlFound = true;
+                } else {
+                    assertTrue("Same wsdl added twice", isWsdlFound);
+                }
+
+            }
+        }
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Test adding wsdl which has policy import")
+    public void testAddWsdWithPolicyImport() throws GovernanceException {
+        String wsdlLocation = "https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
+                "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/" +
+                "GREG/wsdl/wsdl_with_SigEncr.wsdl";
+        boolean isWsdlFound = false;
+        WsdlManager wsdlManager = new WsdlManager(governance);
+        try {
+            Wsdl wsdl = wsdlManager.newWsdl(wsdlLocation);
+            wsdlManager.addWsdl(wsdl);
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Exception thrown while adding wsdl which has policy import : " + e.getMessage());
+        }
+
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().equalsIgnoreCase("wsdl_with_SigEncr.wsdl")) {
+                isWsdlFound = true;
+            }
+        }
+        assertTrue("Wsdl not get added which has policy import", isWsdlFound);
     }
 }

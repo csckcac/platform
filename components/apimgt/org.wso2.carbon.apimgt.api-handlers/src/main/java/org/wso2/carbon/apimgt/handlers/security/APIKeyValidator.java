@@ -16,7 +16,6 @@
 
 package org.wso2.carbon.apimgt.handlers.security;
 
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.transport.http.HTTPConstants;
@@ -39,7 +38,6 @@ public class APIKeyValidator {
     private static final int TIMEOUT_IN_MILLIS = 15 * 60 * 1000;
 
     private APIKeyCache infoCache;
-    private volatile String cookie;
 
     private String getAuthSessionForAdminServices() throws Exception {
         return new AuthAdminServiceClient().login();
@@ -105,26 +103,8 @@ public class APIKeyValidator {
             options.setProperty(HTTPConstants.SO_TIMEOUT, TIMEOUT_IN_MILLIS);
             options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, TIMEOUT_IN_MILLIS);
             options.setManageSession(true);
-            if (cookie == null) {
-                synchronized (this) {
-                    if (cookie == null) {
-                        cookie = getAuthSessionForAdminServices();
-                    }
-                }
-            }
-
-            options.setProperty(HTTPConstants.COOKIE_STRING, cookie);
-            try {
-                return validator.validateKey(context, apiVersion, apiKey);
-            } catch (AxisFault e) {
-                if (e.getMessage().contains("401")) {
-                    cookie = getAuthSessionForAdminServices();
-                    options.setProperty(HTTPConstants.COOKIE_STRING, cookie);
-                    return validator.validateKey(context, apiVersion, apiKey);
-                } else {
-                    throw e;
-                }
-            }
+            options.setProperty(HTTPConstants.COOKIE_STRING, getAuthSessionForAdminServices());
+            return validator.validateKey(context, apiVersion, apiKey);
         } catch (Exception e) {
             throw new APISecurityException(APISecurityConstants.API_AUTH_GENERAL_ERROR,
                     "Error while accessing backend services for API key validation", e);

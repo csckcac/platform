@@ -27,6 +27,36 @@
     </Database>
 
     <!--
+        Authentication manager configuration for API provider and API store. This is
+        a required configuration for both web applications as their user authentication
+        logic relies on this. The same is used by the self-sign-up feature of API
+        store.
+    -->
+    <AuthManager>
+        <!--
+            Server URL of the Authentication service
+        -->
+        <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}/services/</ServerURL>
+
+        <SelfSignUp>
+            <!--
+                Enable or disable the self-sign-up feature
+            -->
+            <Enabled>true</Enabled>
+
+            <!--
+                Self signed up users should be associated with a suitable subscriber
+                role for them to be able to access the API store portal. This parameter
+                specifies which role should be used for that purpose. The role specified
+                here must have the '/permission/admin/manage/api/subscribe' permission.
+                If the specified role does not exist in the user store, API Manager will
+                attempt to create it.
+            -->
+            <SubscriberRoleName>subscriber</SubscriberRoleName>
+        </SelfSignUp>
+    </AuthManager>
+
+    <!--
         Credentials for the API gateway admin server. This configuration
         is mainly used by the API provider and store to connect to the API gateway and
         create/update published API configurations.
@@ -106,16 +136,6 @@
         -->
         <Password>admin</Password>
     </APIKeyManager>
-
-    <!--
-        API Store/Provider authentication manager.
-    -->
-    <AuthManager>
-        <!--
-            Server URL of the Authentication service
-        -->
-        <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}/services/</ServerURL>
-    </AuthManager>
 
     <!--
         Settings related to managing API access tiers.

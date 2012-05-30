@@ -30,7 +30,7 @@ public class GRegWSAPITestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
-        suiteVariablesList.add(new SuiteVariables("CommentTest", CommentTest.class));
+        suiteVariablesList.add(new SuiteVariables("WsapiCommentTest", WsapiCommentTest.class));
         suiteVariablesList.add(new SuiteVariables("ContinuousOperations", ContinuousOperations.class));
         suiteVariablesList.add(new SuiteVariables("PropertyTest", PropertiesTest.class));
         suiteVariablesList.add(new SuiteVariables("QueryTest", QueryTest.class));
@@ -44,10 +44,10 @@ public class GRegWSAPITestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("TestPaths", TestPaths.class));
         suiteVariablesList.add(new SuiteVariables("TestResources", TestResources.class));
         suiteVariablesList.add(new SuiteVariables("TestTagging", TestTagging.class));
-        suiteVariablesList.add(new SuiteVariables("CollectionChildCountTest", CollectionChildCountTest.class));
+        suiteVariablesList.add(new SuiteVariables("WsapiCollectionChildCountTest", WsapiCollectionChildCountTest.class));
         suiteVariablesList.add(new SuiteVariables("OnDemandContentTest", OnDemandContentTest.class));
         suiteVariablesList.add(new SuiteVariables("VersionHandlingTest", VersionHandlingTest.class));
-        suiteVariablesList.add(new SuiteVariables("AddWSDLTest", AddWSDLTest.class));
+        suiteVariablesList.add(new SuiteVariables("WsApiAddWsdlTest", WsApiAddWsdlTest.class));
 
         setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("WS-API-TestSuite", suiteVariablesList).run();

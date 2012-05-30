@@ -18,6 +18,8 @@ package org.wso2.automation.common.test.greg.wsapi;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -26,13 +28,11 @@ import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
-import static org.testng.Assert.*;
-
-import org.testng.annotations.*;
+import static org.testng.Assert.assertTrue;
 
 
-public class CollectionChildCountTest {
-    private static final Log log = LogFactory.getLog(CollectionChildCountTest.class);
+public class WsapiCollectionChildCountTest {
+    private static final Log log = LogFactory.getLog(WsapiCollectionChildCountTest.class);
     private static WSRegistryServiceClient registry = null;
 
 
@@ -40,7 +40,6 @@ public class CollectionChildCountTest {
     public void init() throws RegistryException, AxisFault {
         int tenantId = new GregUserIDEvaluator().getTenantID();
         registry = new RegistryProvider().getRegistry(tenantId, ProductConstant.GREG_SERVER_NAME);
-
     }
 
 

@@ -41,8 +41,8 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-public class CommentTest {
-    private static final Log log = LogFactory.getLog(CommentTest.class);
+public class WsapiCommentTest {
+    private static final Log log = LogFactory.getLog(WsapiCommentTest.class);
     private static WSRegistryServiceClient registry = null;
     private String username = null;
     private String password = null;
@@ -123,7 +123,7 @@ public class CommentTest {
 
             deleteResources("/d112");                 //delete Resource
             assertFalse(registry.resourceExists(path), path + "has not been deleted properly");    //assert resource has been properly deleted
-            log.info("***********WS-API CommentTest AddComment - Passed**********");
+            log.info("***********WS-API WsapiCommentTest AddComment - Passed**********");
         } catch (Exception e) {
             log.error("WS-API add comment Failed :" + e);
             throw new Exception("WS-API add comment Failed :" + e);

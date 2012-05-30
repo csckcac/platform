@@ -18,11 +18,12 @@ package org.wso2.automation.common.test.greg.wsapi;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
-import org.testng.annotations.*;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
@@ -30,17 +31,20 @@ import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
-import static org.testng.Assert.*;
-
-
 import java.util.Date;
 import java.util.List;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class TestResources {
     private static final Log log = LogFactory.getLog(TestResources.class);
     private static WSRegistryServiceClient registry = null;
     private static String password = null;
     private static String userName = null;
+    final int loopCount = 100000;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws RegistryException, AxisFault {
@@ -67,32 +71,32 @@ public class TestResources {
         try {
             r1.setContent(content.getBytes());
             r1.setDescription("This is r1 file description");
-            String path = "/d1/d2/d3/r1";
+            String path = "/automation/test/d3/r1";
 
             try {
                 registry.put(path, r1);
             } catch (RegistryException e) {
-                fail("Couldn't put content to path /d1/d2/d3/r1");
+                fail("Couldn't put content to path /automation/test/d3/r1");
             }
 
             Resource r1_actual = registry.newResource();
             try {
-                r1_actual = registry.get("/d1/d2/d3/r1");
+                r1_actual = registry.get("/automation/test/d3/r1");
             } catch (RegistryException e) {
-                fail("Couldn't get content from path /d1/d2/d3/r1");
+                fail("Couldn't get content from path /automation/test/d3/r1");
             }
 
             assertEquals(new String((byte[]) r1.getContent()),
-                    new String((byte[]) r1_actual.getContent()), "Content is not equal.");
+                         new String((byte[]) r1_actual.getContent()), "Content is not equal.");
 
             assertEquals(userName, r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-            assertEquals("/d1/d2/d3/r1", r1_actual.getPath(), "Can not get Resource path");
-            assertEquals("/d1/d2/d3", r1_actual.getParentPath(), "Can not get Resource parent path");
+            assertEquals("/automation/test/d3/r1", r1_actual.getPath(), "Can not get Resource path");
+            assertEquals("/automation/test/d3", r1_actual.getParentPath(), "Can not get Resource parent path");
             assertEquals(r1.getDescription(),
-                    r1_actual.getDescription(), "Resource description is not equal");
+                         r1_actual.getDescription(), "Resource description is not equal");
             assertEquals(userName, r1_actual.getAuthorUserName(), "Resource description is not equal");
 
-            deleteResources("/d1");
+            deleteResources("/automation");
             log.info("*************WS-API Hierachical Resource test- Passed***************");
         } catch (RegistryException e) {
             log.error("WS-API Hierachical Resource test-Fail:" + e);
@@ -111,28 +115,28 @@ public class TestResources {
             r1.setProperty("key1", "value1");
             r1.setProperty("key2", "value2");
 
-            String path = "/d1/d2/d3/d4/r1";
+            String path = "/automation/test/d3/d4/r1";
             try {
                 registry.put(path, r1);
             } catch (RegistryException e) {
-                fail("Couldn't put content to path /d1/d2/d3/d4/r1");
+                fail("Couldn't put content to path /automation/test/d3/d4/r1");
             }
 
-            Resource r1_actual = registry.get("/d1/d2/d3/d4/r1");
+            Resource r1_actual = registry.get("/automation/test/d3/d4/r1");
             assertEquals(new String((byte[]) r1.getContent()),
-                    new String((byte[]) r1_actual.getContent()), "Content is not equal.");
+                         new String((byte[]) r1_actual.getContent()), "Content is not equal.");
             assertEquals(userName, r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-            assertEquals("/d1/d2/d3/d4/r1", r1_actual.getPath(), "Can not get Resource path");
-            assertEquals("/d1/d2/d3/d4", r1_actual.getParentPath(), "Can not get Resource parent path");
+            assertEquals("/automation/test/d3/d4/r1", r1_actual.getPath(), "Can not get Resource path");
+            assertEquals("/automation/test/d3/d4", r1_actual.getParentPath(), "Can not get Resource parent path");
             assertEquals(r1.getDescription(),
-                    r1_actual.getDescription(), "Resource description is not equal");
+                         r1_actual.getDescription(), "Resource description is not equal");
             assertEquals(userName, r1_actual.getAuthorUserName(), "Author is not equal");
             assertEquals(r1.getProperty("key1"),
-                    r1_actual.getProperty("key1"), "Resource properties are equal");
+                         r1_actual.getProperty("key1"), "Resource properties are equal");
             assertEquals(r1.getProperty("key2"),
-                    r1_actual.getProperty("key2"), "Resource properties are equal");
+                         r1_actual.getProperty("key2"), "Resource properties are equal");
             assertEquals(r1.getProperty("key3_update"),
-                    r1_actual.getProperty("key3_update"), "Resource properties are equal");
+                         r1_actual.getProperty("key3_update"), "Resource properties are equal");
 
             String contentUpdated = "this is my content updated";
             r1.setContent(contentUpdated.getBytes());
@@ -142,23 +146,23 @@ public class TestResources {
             r1.setProperty("key3_update", "value3_update");
 
             registry.put(path, r1);
-            Resource r2_actual = registry.get("/d1/d2/d3/d4/r1");
+            Resource r2_actual = registry.get("/automation/test/d3/d4/r1");
             assertEquals(new String((byte[]) r1.getContent()),
-                    new String((byte[]) r2_actual.getContent()), "Content is not equal.");
+                         new String((byte[]) r2_actual.getContent()), "Content is not equal.");
             assertEquals(userName, r2_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-            assertEquals("/d1/d2/d3/d4/r1", r2_actual.getPath(), "Can not get Resource path");
-            assertEquals("/d1/d2/d3/d4", r2_actual.getParentPath(), "Can not get Resource parent path");
+            assertEquals("/automation/test/d3/d4/r1", r2_actual.getPath(), "Can not get Resource path");
+            assertEquals("/automation/test/d3/d4", r2_actual.getParentPath(), "Can not get Resource parent path");
             assertEquals(r1.getDescription(),
-                    r2_actual.getDescription(), "Resource description is not equal");
+                         r2_actual.getDescription(), "Resource description is not equal");
             assertEquals(userName, r2_actual.getAuthorUserName(), "Author is not equal");
             assertEquals(r1.getProperty("key1"),
-                    r2_actual.getProperty("key1"), "Resource properties are equal");
+                         r2_actual.getProperty("key1"), "Resource properties are equal");
             assertEquals(r1.getProperty("key2"),
-                    r2_actual.getProperty("key2"), "Resource properties are equal");
+                         r2_actual.getProperty("key2"), "Resource properties are equal");
             assertEquals(r1.getProperty("key3_update"),
-                    r2_actual.getProperty("key3_update"), "Resource properties are equal");
+                         r2_actual.getProperty("key3_update"), "Resource properties are equal");
 
-            deleteResources("/d1");
+            deleteResources("/automation");
             log.info("************WS-API Update Resource Content test - Passed****************");
         } catch (RegistryException e) {
             log.error("WS-API Update Resource Content test-Fail:" + e);
@@ -176,20 +180,20 @@ public class TestResources {
             r1.setProperty("key1", "value1");
             r1.setProperty("key2", "value2");
 
-            String path = "/d1/d2/d3/d4/r1";
+            String path = "/automation/test/d3/d4/r1";
             registry.put(path, r1);
 
-            Resource r1_actual = registry.getMetaData("/d1/d2/d3/d4/r1");
+            Resource r1_actual = registry.getMetaData("/automation/test/d3/d4/r1");
             assertEquals(userName, r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-            assertEquals(r1_actual.getPath(), "/d1/d2/d3/d4/r1", "Can not get Resource path");
-            assertEquals("/d1/d2/d3/d4", r1_actual.getParentPath(), "Can not get Resource parent path");
+            assertEquals(r1_actual.getPath(), "/automation/test/d3/d4/r1", "Can not get Resource path");
+            assertEquals("/automation/test/d3/d4", r1_actual.getParentPath(), "Can not get Resource parent path");
             assertEquals(r1.getDescription(),
-                    r1_actual.getDescription(), "Resource description is not equal");
+                         r1_actual.getDescription(), "Resource description is not equal");
             assertEquals(userName, r1_actual.getAuthorUserName(), "Author is not equal");
             assertEquals(r1_actual.getProperty("key1"), null, "Resource properties cannot be equal");
             assertEquals(r1_actual.getProperty("key2"), null, "Resource properties cannot be equal");
             assertEquals(r1_actual.getProperty("key3_update"), null, "Resource properties cannot be equal");
-            deleteResources("/d1");
+            deleteResources("/automation");
             log.info("*************WS-API Get MetaData test - Passed************");
         } catch (RegistryException e) {
             log.error("WS-API Get MetaData test -Failed" + e);
@@ -205,42 +209,118 @@ public class TestResources {
         try {
             r1.setContent(content.getBytes());
             r1.setDescription("r2 file description");
-            String path = "/d1/d2/r2";
+            String path = "/automation/test/r2";
             r1.setProperty("key1", "value1");
             r1.setProperty("key2", "value2");
 
             try {
                 registry.put(path, r1);
             } catch (RegistryException e) {
-                fail("Couldn't put content to path /d1/d2/r2");
+                fail("Couldn't put content to path /automation/test/r2");
             }
 
             Resource r1_actual = registry.newResource();
             try {
-                r1_actual = registry.get("/d1/d2/r2");
+                r1_actual = registry.get("/automation/test/r2");
             } catch (RegistryException e) {
-                fail("Couldn't get content from path /d1/d2/r2");
+                fail("Couldn't get content from path /automation/test/r2");
             }
 
             assertEquals(new String((byte[]) r1.getContent()),
-                    new String((byte[]) r1_actual.getContent()), "Content is not equal.");
+                         new String((byte[]) r1_actual.getContent()), "Content is not equal.");
             assertEquals(userName, r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-            assertEquals("/d1/d2/r2", r1_actual.getPath(), "Can not get Resource path");
-            assertEquals("/d1/d2", r1_actual.getParentPath(), "Can not get Resource parent path");
+            assertEquals("/automation/test/r2", r1_actual.getPath(), "Can not get Resource path");
+            assertEquals("/automation/test", r1_actual.getParentPath(), "Can not get Resource parent path");
             assertEquals(r1.getDescription(),
-                    r1_actual.getDescription(), "Resource description is not equal");
+                         r1_actual.getDescription(), "Resource description is not equal");
             assertEquals(userName, r1_actual.getAuthorUserName(), "Author is not equal");
             assertEquals(r1.getProperty("key1"),
-                    r1_actual.getProperty("key1"), "Resource properties are equal");
+                         r1_actual.getProperty("key1"), "Resource properties are equal");
             assertEquals(r1.getProperty("key2"),
-                    r1_actual.getProperty("key2"), "Resource properties are equal");
-            deleteResources("/d1");
+                         r1_actual.getProperty("key2"), "Resource properties are equal");
+            deleteResources("/automation");
             log.info("*************WS-API Add an Another Resource test - Passed**************");
         } catch (RegistryException e) {
             log.error("WS-API Add an Another Resource test - Failed:" + e);
             throw new RegistryException("WS-API Add an Another Resource test-Failed:" + e);
         }
     }
+
+    @Test(groups = {"wso2.greg"}, description = "Test add another resource", priority = 20)
+    private void testAddLargeSetOfResource() throws RegistryException {
+        Resource r1 = registry.newResource();
+        for (int index = 0; index <= loopCount; index++) {
+            String content = "this is my content2";
+
+            try {
+                r1.setContent(content.getBytes());
+                r1.setDescription("r2 file description");
+                r1.setProperty("key" + index, "value" + index);
+                r1.setProperty("key" + index + 1, "value" + index + 1);
+                String path = "/automation/test/r" + index;
+                try {
+                    registry.put(path, r1);
+                    System.out.println("put resource :" + index);
+                } catch (RegistryException e) {
+                    fail("Couldn't put content to path /automation/test/r" + index);
+                }
+
+                Resource r1_actual = registry.newResource();
+                try {
+                    r1_actual = registry.get("/automation/test/r" + index);
+                } catch (RegistryException e) {
+                    fail("Couldn't put content to path /automation/test/r" + index);
+                }
+
+                assertEquals(new String((byte[]) r1.getContent()),
+                             new String((byte[]) r1_actual.getContent()), "Content is not equal.");
+                assertEquals(userName, r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
+                assertEquals("/automation/test/r" + index, r1_actual.getPath(), "Can not get Resource path");
+                assertEquals("/automation/test", r1_actual.getParentPath(), "Can not get Resource parent path");
+                assertEquals(r1.getDescription(),
+                             r1_actual.getDescription(), "Resource description is not equal");
+                assertEquals(userName, r1_actual.getAuthorUserName(), "Author is not equal");
+                assertEquals(r1.getProperty("key" + index),
+                             r1_actual.getProperty("key" + index), "Resource properties are equal");
+                assertEquals(r1.getProperty("key" + index + 1),
+                             r1_actual.getProperty("key" + index + 1), "Resource properties are equal");
+            } catch (RegistryException e) {
+                log.error("WS-API Add an Another Resource test - Failed:" + e);
+                throw new RegistryException("WS-API Add an Another Resource test-Failed:" + e);
+            }
+
+        }
+//        deleteResources("/automation");
+    }
+
+
+    @Test(groups = {"wso2.greg"}, description = "Test add another resource", priority = 21)
+    private void testDeleteLargeSetOfResource() throws Exception {
+
+        for (int index = 0; index <= loopCount-1; index++) {
+            String path = "/automation/test/r" + index;
+            for (String resourcePath : registry.getCollectionContent("/automation/test")) {
+                if (resourcePath.equals(path)) {
+                    registry.delete(path);
+                    System.out.println("Delete resource :" + index);
+                    break;
+                }
+            }
+            boolean resourceExists = true;
+            if(registry.getCollectionContent("/automation/test")==null)
+                break;
+            for (String resourcePath : registry.getCollectionContent("/automation/test")) {
+                if (resourcePath.equals(path)) {
+                    resourceExists = false;
+                    break;
+                }
+
+            }
+            assertTrue(resourceExists, "Resource" + path + " " +
+                                       "is not deleted");
+        }
+    }
+
 
     @Test(groups = {"wso2.greg"}, description = "set resource details", priority = 5)
     private void testSetResourceDetails() throws RegistryException {
@@ -275,9 +355,9 @@ public class TestResources {
             assertEquals(r1.getDescription(), r1_actual.getDescription(), "Resource description is not equal");
             assertEquals(userName, r1_actual.getAuthorUserName(), "Author is not equal");
             assertEquals(r1.getProperty("key1"),
-                    r1_actual.getProperty("key1"), "Resource properties are not equal");
+                         r1_actual.getProperty("key1"), "Resource properties are not equal");
             assertEquals(r1.getProperty("key2"),
-                    r1_actual.getProperty("key2"), "Resource properties are not equal");
+                         r1_actual.getProperty("key2"), "Resource properties are not equal");
             assertEquals(r1.getMediaType(), r1_actual.getMediaType(), "Media Types are not equal");
             deleteResources("/c11");
             log.info("**************WS-API Set Resource Details test - Passed*******************");
@@ -341,12 +421,12 @@ public class TestResources {
             assertEquals(path_collection, r1_actual.getPath(), "Can not get Resource path");
             assertEquals("/c1/c2", r1_actual.getParentPath(), "Can not get Resource parent path");
             assertEquals(r1.getDescription(),
-                    r1_actual.getDescription(), "Resource description is not equal");
+                         r1_actual.getDescription(), "Resource description is not equal");
             assertEquals(userName, r1_actual.getAuthorUserName(), "Authour is not equal");
             assertEquals(r1.getProperty("key1"),
-                    r1_actual.getProperty("key1"), "Resource properties are not equal");
+                         r1_actual.getProperty("key1"), "Resource properties are not equal");
             assertEquals(r1.getProperty("key2"),
-                    r1_actual.getProperty("key2"), "Resource properties are not equal");
+                         r1_actual.getProperty("key2"), "Resource properties are not equal");
             deleteResources("/c1");
             log.info("**************WS-API Set Collection Details test - Passed ********************");
         } catch (RegistryException e) {
@@ -470,30 +550,30 @@ public class TestResources {
             r1.setProperty("key1", "value5");
             r1.setProperty("key2", "value3");
 
-            String path = "/d11/d12/d13/r1 space";
+            String path = "/automation1/automation2/automation3/r1 space";
             String actualPath = null;
             try {
                 actualPath = registry.put(path, r1);
             } catch (Exception e) {
-                fail("Couldn't put content to path /d11/d12/d13/r1 space");
+                fail("Couldn't put content to path /automation1/automation2/automation3/r1 space");
             }
 
             Resource r1_actual = null;
             try {
                 r1_actual = registry.get(actualPath);
             } catch (Exception e) {
-                fail("Couldn't get content of path /d11/d12/d13/r1 space");
+                fail("Couldn't get content of path /automation1/automation2/automation3/r1 space");
             }
 
             assertEquals(userName, r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
             assertEquals(path, r1_actual.getPath(), "Can not get Resource path");
-            assertEquals("/d11/d12/d13", r1_actual.getParentPath(), "Can not get Resource parent path");
+            assertEquals("/automation1/automation2/automation3", r1_actual.getParentPath(), "Can not get Resource parent path");
             assertEquals(r1.getDescription(), r1_actual.getDescription(), "Resource description is not equal");
             assertEquals(userName, r1_actual.getAuthorUserName(), "Authour is not equal");
             assertEquals(r1.getProperty("key1"), r1_actual.getProperty("key1"), "Resource properties are not equal");
             assertEquals(r1.getProperty("key2"), r1_actual.getProperty("key2"), "Resource properties are not equal");
             assertEquals(r1.getMediaType(), r1_actual.getMediaType(), "Media Types are not equal");
-            deleteResources("/d11");
+            deleteResources("/automation1");
             log.info("************WS-API Add Spaces to a Resource Name test- Passed***************");
         } catch (RegistryException e) {
             log.error("WS-API Add Spaces to a Resource Name test -Failed:" + e);
@@ -532,7 +612,7 @@ public class TestResources {
 
     @Test(groups = {"wso2.greg"}, description = "Test add a space in a collection name", priority = 12)
     private void testAddResourceFromURL() throws RegistryException {
-        String path = "/d25/d21/d23/d24/r1";
+        String path = "/test5/test1/test3/test4/r1";
         String url = "http://shortwaveapp.com/waves.txt";
 
         Resource r1 = registry.newResource();
@@ -553,12 +633,12 @@ public class TestResources {
             assertTrue(content, "Imported file is empty");
             assertEquals(userName, r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
             assertEquals(path, r1_actual.getPath(), "Can not get Resource path");
-            assertEquals("/d25/d21/d23/d24", r1_actual.getParentPath(), "Can not get Resource parent path");
+            assertEquals("/test5/test1/test3/test4", r1_actual.getParentPath(), "Can not get Resource parent path");
             //assertEquals("Resource description is not equal", r1.getDescription(), r1_actual.getDescription());
             assertEquals(userName, r1_actual.getAuthorUserName(), "Authour is not equal");
             assertEquals(r1.getProperty("key1"), r1_actual.getProperty("key1"), "Resource properties are equal");
             assertEquals(r1.getProperty("key2"), r1_actual.getProperty("key2"), "Resource properties are equal");
-            deleteResources("/d25");
+            deleteResources("/test5");
             log.info("************WS-API Add Resource From URL test - Passed**************");
         } catch (Exception e) {
             log.error("WS-API Add Resource From URL test -Failed:" + e);
@@ -592,7 +672,7 @@ public class TestResources {
             }
 
             assertEquals(new String((byte[]) r1.getContent()),
-                    new String((byte[]) r1_actual.getContent()), "Content is not equal.");
+                         new String((byte[]) r1_actual.getContent()), "Content is not equal.");
 
             /*rename the resource*/
 
@@ -649,7 +729,7 @@ public class TestResources {
             }
 
             assertEquals(new String((byte[]) r1.getContent()),
-                    new String((byte[]) r1_actual.getContent()), "Content is not equal.");
+                         new String((byte[]) r1_actual.getContent()), "Content is not equal.");
 
             boolean deleted = true;
             try {
@@ -683,7 +763,7 @@ public class TestResources {
             }
 
             assertEquals(new String((byte[]) r2.getContent()),
-                    new String((byte[]) r1_actual2.getContent()), "Content is not equal.");
+                         new String((byte[]) r1_actual2.getContent()), "Content is not equal.");
             deleteResources("/d40");
             log.info("************WS-API Delete And Update a Resource test - Passed*************");
         } catch (RegistryException e) {
@@ -713,7 +793,7 @@ public class TestResources {
             Resource r1_actual2 = registry.get(path);
 
             assertEquals(new String((byte[]) r1.getContent()),
-                    new String((byte[]) r1_actual2.getContent()), "Content is not equal.");
+                         new String((byte[]) r1_actual2.getContent()), "Content is not equal.");
 
             List propertyValues = r1_actual2.getPropertyValues("key1");
             Object[] valueName = propertyValues.toArray();
@@ -804,7 +884,7 @@ public class TestResources {
 
 
     private void removeResource() throws RegistryException {
-        deleteResources("/d1");
+        deleteResources("/automation");
         deleteResources("/col1");
         deleteResources("/lastModTest2");
         deleteResources("/m15");
@@ -813,8 +893,8 @@ public class TestResources {
         deleteResources("/c1");
         deleteResources("/c11");
         deleteResources("/c20");
-        deleteResources("/d11");
-        deleteResources("/d25");
+        deleteResources("/automation1");
+        deleteResources("/test5");
         deleteResources("/d33");
         deleteResources("/d30");
         deleteResources("/d40");

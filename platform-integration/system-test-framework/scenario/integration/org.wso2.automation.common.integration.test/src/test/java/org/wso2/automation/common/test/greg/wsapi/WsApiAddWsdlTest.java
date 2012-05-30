@@ -18,9 +18,9 @@ import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 /**
  * Automate carbon patch related to https://wso2.org/jira/browse/CARBON-11017
  */
-public class AddWSDLTest {
+public class WsApiAddWsdlTest {
 
-    private static final Log log = LogFactory.getLog(AddWSDLTest.class);
+    private static final Log log = LogFactory.getLog(WsApiAddWsdlTest.class);
     private static WSRegistryServiceClient registry = null;
     private static Registry governance = null;
     String wsdl_path = "/_system/governance/trunk/wsdls/com/foo/BizService.wsdl";

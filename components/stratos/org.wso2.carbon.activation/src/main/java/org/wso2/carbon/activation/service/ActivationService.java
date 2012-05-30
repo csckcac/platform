@@ -25,6 +25,7 @@ import org.wso2.carbon.activation.utils.Util;
 import org.wso2.carbon.stratos.common.config.CloudServiceConfigParser;
 import org.wso2.carbon.stratos.common.config.CloudServicesDescConfig;
 import org.wso2.carbon.stratos.common.util.CloudServicesUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /**
  * Admin Service to handle activation of cloud services used by tenants.
@@ -64,7 +65,7 @@ public class ActivationService {
      * @throws Exception if the operation failed.
      */
     public boolean isActive(int tenantId) throws Exception {
-        if (tenantId == 0) {
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
             return true;
         }
         if (ActivationManager.activationRecorded(tenantId)) {

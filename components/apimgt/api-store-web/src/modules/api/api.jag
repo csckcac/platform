@@ -24,7 +24,11 @@ var getAPIDescription = function (api, username) {
                 tierDescription:api.tierDescription,
                 context:api.context,
                 serverURL:api.serverURL,
-                status:api.status
+                status:api.status,
+                bizOwner:api.bizOwner,
+                bizOwnerMail:api.bizOwnerMail,
+                techOwner:api.techOwner,
+                techOwnerMail:api.techOwnerMail
             }
         };
     } catch (e) {

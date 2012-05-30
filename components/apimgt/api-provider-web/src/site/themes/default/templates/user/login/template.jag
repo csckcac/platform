@@ -1,4 +1,7 @@
 <% jagg.template("user/login", function(inputs, outputs, jagg) { %>
+<%
+        if(request.isSecure()){
+%>
 <div class="container content-section">
     <div class="row">
         <div class="span4 offset4">
@@ -23,4 +26,7 @@
     </div>
     <!--/row-->
 </div>
+<% } else {
+        response.sendRedirect(site.https_url+site.context);
+} %>
 <%});%>

@@ -108,6 +108,16 @@
     </APIKeyManager>
 
     <!--
+        API Store/Provider authentication manager.
+    -->
+    <AuthManager>
+        <!--
+            Server URL of the Authentication service
+        -->
+        <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}/services/</ServerURL>
+    </AuthManager>
+
+    <!--
         Settings related to managing API access tiers.
     -->
     <TierManagement>

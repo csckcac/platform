@@ -111,6 +111,17 @@ public class APIStoreHostObject extends ScriptableObject {
         }
     }
 
+    public static String jsFunction_getAuthServerURL(Context cx, Scriptable thisObj,
+                                                     Object[] args, Function funObj) throws APIManagementException {
+
+        APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
+        String url = config.getFirstProperty(APIConstants.AUTH_MANAGER_URL);
+        if (url == null) {
+            throw new APIManagementException("API key manager URL unspecified");
+        }
+        return url;
+    }
+
 	/*
 	 * getting key for API subscriber args[] list String subscriberID, String
 	 * api, String apiVersion, String Date

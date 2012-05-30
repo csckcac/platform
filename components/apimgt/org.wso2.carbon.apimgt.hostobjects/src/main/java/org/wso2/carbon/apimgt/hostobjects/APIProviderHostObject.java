@@ -39,7 +39,9 @@ import org.wso2.carbon.apimgt.api.model.DuplicateAPIException;
 import org.wso2.carbon.apimgt.api.model.Subscriber;
 import org.wso2.carbon.apimgt.api.model.Tier;
 import org.wso2.carbon.apimgt.api.model.URITemplate;
+import org.wso2.carbon.apimgt.hostobjects.internal.HostObjectComponent;
 import org.wso2.carbon.apimgt.impl.APIConstants;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.impl.UserAwareAPIProvider;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
@@ -114,6 +116,17 @@ public class APIProviderHostObject extends ScriptableObject {
     public static boolean jsFunction_login(Context cx, Scriptable thisObj,
                                            Object[] args, Function funObj) throws ScriptException {
         return true;
+    }
+
+    public static String jsFunction_getAuthServerURL(Context cx, Scriptable thisObj,
+                                                     Object[] args, Function funObj) throws APIManagementException {
+
+        APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
+        String url = config.getFirstProperty(APIConstants.AUTH_MANAGER_URL);
+        if (url == null) {
+            throw new APIManagementException("API key manager URL unspecified");
+        }
+        return url;
     }
 
     public static NativeArray jsFunction_getAPIUsageHostTest(String APIname, String serverURL)

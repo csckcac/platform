@@ -142,6 +142,9 @@ public final class APIConstants {
     public static final String API_KEY_MANAGER_URL = API_KEY_MANAGER + "ServerURL";
     public static final String API_KEY_MANAGER_USERNAME = API_KEY_MANAGER + "Username";
     public static final String API_KEY_MANAGER_PASSWORD = API_KEY_MANAGER + "Password";
+
+    public static final String AUTH_MANAGER = "AuthManager.";
+    public static final String AUTH_MANAGER_URL = AUTH_MANAGER + "ServerURL";
     
     public static final String API_KEY_TYPE = "AM_KEY_TYPE";
     public static final String API_KEY_TYPE_PRODUCTION = "PRODUCTION";

@@ -275,6 +275,11 @@ public class APIProviderHostObject extends ScriptableObject {
         FileHostObject fileHostObject = (FileHostObject) apiData.get("imageUrl", apiData);
         String endpoint = (String) apiData.get("endpoint", apiData);
         String sandboxUrl = (String) apiData.get("sandbox", apiData);
+        String techOwner = (String) apiData.get("techOwner", apiData);
+        String techOwnerEmail = (String) apiData.get("techOwnerEmail", apiData);
+        String bizOwner = (String) apiData.get("bizOwner", apiData);
+        String bizOwnerEmail = (String) apiData.get("bizOwnerEmail", apiData);
+
         if ("".equals(sandboxUrl)) {
             sandboxUrl = null;
         }
@@ -340,6 +345,10 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setStatus(oldApi.getStatus());
             api.setWsdlUrl(wsdl);
             api.setLastUpdated(new Date());
+            api.setBusinessOwner(bizOwner);
+            api.setBusinessOwnerEmail(bizOwnerEmail);
+            api.setTechnicalOwner(techOwner);
+            api.setTechnicalOwnerEmail(techOwnerEmail);
             checkFileSize(fileHostObject);
 
             if (fileHostObject != null) {

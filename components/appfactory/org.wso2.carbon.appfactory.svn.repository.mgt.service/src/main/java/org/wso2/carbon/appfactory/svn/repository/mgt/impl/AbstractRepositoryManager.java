@@ -20,6 +20,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
+import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.appfactory.svn.repository.mgt.RepositoryManager;
 
 /**
@@ -34,8 +35,8 @@ public abstract class AbstractRepositoryManager implements RepositoryManager {
 
         HttpClient client = new HttpClient();
 
-        String userName = config.getScmServerAdminUserName();
-        String password = config.getScmServerAdminPassword();
+        String userName = config.getFirstProperty(AppFactoryConstants.SERVER_ADMIN_NAME);
+        String password = config.getFirstProperty(AppFactoryConstants.SERVER_ADMIN_PASSWORD);
 
         AuthScope authScope = AuthScope.ANY;
 
@@ -48,7 +49,8 @@ public abstract class AbstractRepositoryManager implements RepositoryManager {
 
     protected String getServerURL( AppFactoryConfiguration config) {
         //TODO:create a field backend url instead of ip+port
-        return "http://" + config.getScmServerIp() + ":" + config.getScmServerPort();
+        return "http://" + config.getFirstProperty(AppFactoryConstants.SCM_SERVER_IP) + ":" 
+            + config.getFirstProperty(AppFactoryConstants.SCM_SERVER_PORT);
     }
 
 }

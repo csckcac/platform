@@ -20,9 +20,20 @@ package org.wso2.carbon.appfactory.common;
  * Constants for AppFactory configuration
  */
 public class AppFactoryConstants {
-    public static final String APPFACTORY_CONFIG_FILE_NAME = "appfactory.xml";
-    public static final String APPFACTORY_CONFIG_NAMESPACE = "http://www.wso2.org/appfactory/";
+    public static final String CONFIG_FILE_NAME = "appfactory.xml";
+    public static final String CONFIG_NAMESPACE = "http://www.wso2.org/appfactory/";
 
+    public static final String SERVER_ADMIN_NAME = "AdminUserName";
+    public static final String SERVER_ADMIN_PASSWORD = "AdminPassword";
+    public static final String DEPLOYMENT_STAGES = "ApplicationDeployment.DeploymentStage";
+    public static final String DEPLOYMENT_URL = "DeploymentServerURL";
+    
+    public static final String SCM_ADMIN_NAME = "RepositoryMGTConfig.SCMServerAdminUserName";
+    public static final String SCM_ADMIN_PASSWORD = "RepositoryMGTConfig.SCMServerAdminPassword";
+    public static final String SCM_SERVER_IP = "RepositoryMGTConfig.SCMServerIp";
+    public static final String SCM_SERVER_PORT = "RepositoryMGTConfig.SCMServerPort";
+    
+    /*
     public static final String APPFACTORY_CONFIG_ROOT_ELEMENT = "AppFactory";
 
     public static final String APPFACTORY_CONFIG_ADMIN_USER = "AdminUserName";
@@ -62,6 +73,6 @@ public class AppFactoryConstants {
     public static final String PROJECT_DEPLOYMENT_ROOT_ELEMENT = "ApplicationDeployment";
     public static final String PROJECT_DEPLOYMENT_STAGE = "DeploymentStage";
     public static final String PROJECT_DEPLOYMENT_SERVER_URL = "DeploymentServerURL";
-
+*/
 
 }

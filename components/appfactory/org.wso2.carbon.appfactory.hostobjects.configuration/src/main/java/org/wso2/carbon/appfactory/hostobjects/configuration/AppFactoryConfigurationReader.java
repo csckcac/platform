@@ -25,68 +25,7 @@ public class AppFactoryConfigurationReader extends ScriptableObject {
         return new AppFactoryConfigurationReader();
     }
 
-    public String jsFunction_getSsoRelyingPartyName() throws Exception {
-        return appFactoryConfiguration.getSsoRelyingPartyName();
+    public String jsFunction_getFirstProperty(String key) throws Exception {
+        return appFactoryConfiguration.getFirstProperty(key);
     }
-
-    public String jsFunction_getSsoIdentityAlias() throws Exception {
-        return appFactoryConfiguration.getSsoIdentityAlias();
-    }
-
-    public String jsFunction_getSsoIdentityProviderEpr() throws Exception {
-        return appFactoryConfiguration.getSsoIdentityProviderEpr();
-    }
-
-    public String jsFunction_getSsoKeyStoreName() throws Exception {
-        return appFactoryConfiguration.getSsoKeyStoreName();
-    }
-
-    public String jsFunction_getSsoKeyStorePassword() throws Exception {
-        return appFactoryConfiguration.getSsoKeyStorePassword();
-    }
-
-    public String jsFunction_getWebServiceEPRActivateUser() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRActivateUser();
-    }
-
-    public String jsFunction_getWebServiceEPRCreateApplication() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRCreateApplication();
-    }
-
-    public String jsFunction_getWebServiceEPRCreateRepo() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRCreateRepo();
-    }
-
-    public String jsFunction_getWebServiceEPRCreateUser() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRCreateUser();
-    }
-
-    public String jsFunction_getWebServiceEPREmailVerificationService() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPREmailVerificationService();
-    }
-
-    public String jsFunction_getWebServiceEPRAddUserToApplication() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRAddUserToApplication();
-    }
-
-    public String jsFunction_getWebServiceEPRGetRolesOfUserForApplication() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRGetRolesOfUserForApplication();
-    }
-
-    public String jsFunction_getWebServiceEPRGetUsersOfApplication() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRGetUsersOfApplication();
-    }
-    public String jsFunction_getAdminUserName() throws Exception {
-        return appFactoryConfiguration.getAdminUserName();
-    }
-    public String jsFunction_getAdminPassword() throws Exception {
-        return appFactoryConfiguration.getAdminPassword();
-    }
-    public String jsFunction_getWebServiceEPRGetAllApps() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRGetAllApps();
-    }
-    public String jsFunction_getWebServiceEPRGetAuthCookie() throws Exception {
-        return appFactoryConfiguration.getWebServiceEPRGetAuthCookie();
-    }
-
 }

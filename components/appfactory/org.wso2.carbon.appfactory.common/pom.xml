@@ -64,6 +64,10 @@
                         <Export-Package>
                             org.wso2.carbon.appfactory.common.*,
                         </Export-Package>
+                        <Private-Package>
+                            org.wso2.carbon.appfactory.common.internal.*,
+                            org.wso2.carbon.appfactory.common.util.*,
+                        </Private-Package>
                         <Import-Package>
                             !javax.xml.namespace,
                             javax.xml.namespace; version=0.0.0,

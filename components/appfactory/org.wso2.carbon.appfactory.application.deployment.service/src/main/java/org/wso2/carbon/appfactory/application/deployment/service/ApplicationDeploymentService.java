@@ -24,6 +24,7 @@ import org.tigris.subversion.svnclientadapter.utils.Depth;
 import org.wso2.carbon.appfactory.application.deployment.service.internal.AppFactoryConfigurationHolder;
 import org.wso2.carbon.appfactory.application.deployment.service.internal.ApplicationUploadClient;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
+import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.application.mgt.stub.upload.types.carbon.UploadedFileItem;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -74,8 +75,10 @@ public class ApplicationDeploymentService extends AbstractAdmin {
         try {
             clientType = SVNClientAdapterFactory.getPreferredSVNClientType();
             svnClient = SVNClientAdapterFactory.createSVNClient(clientType);
-            svnClient.setUsername(appFactoryConfiguration.getScmServerAdminUserName());
-            svnClient.setPassword(appFactoryConfiguration.getScmServerAdminPassword());
+            svnClient.setUsername(appFactoryConfiguration.getFirstProperty(
+                    AppFactoryConstants.SERVER_ADMIN_NAME));
+            svnClient.setPassword(appFactoryConfiguration.getFirstProperty(
+                    AppFactoryConstants.SERVER_ADMIN_PASSWORD));
         } catch (SVNClientException e) {
             throw new ApplicationDeploymentExceptions("Client type can not be defined.");
         }
@@ -168,9 +171,11 @@ public class ApplicationDeploymentService extends AbstractAdmin {
     public Application[] deployApplication(String applicationSvnUrl, String applicationId,
                                            String stage) throws ApplicationDeploymentExceptions {
 
-        List<String> deploymentServerUrls = appFactoryConfiguration.getDeploymentServerUrls(stage);
+        String key = AppFactoryConstants.DEPLOYMENT_STAGES + stage +
+                        AppFactoryConstants.DEPLOYMENT_URL;
+        String[] deploymentServerUrls = appFactoryConfiguration.getProperties(key);
 
-        if (deploymentServerUrls.isEmpty()) {
+        if (deploymentServerUrls.length == 0) {
             handleException("No deployment paths are configured for stage:" + stage);
         }
 
@@ -222,9 +227,9 @@ public class ApplicationDeploymentService extends AbstractAdmin {
         }
 
         try {
-            if (applicationUploadClient.authenticate(getAdminUsername(applicationId),
-                                                     appFactoryConfiguration.getAdminPassword(),
-                                                     remoteIp)) {
+            if (applicationUploadClient.authenticate(getAdminUsername(applicationId), 
+                    appFactoryConfiguration.getFirstProperty(
+                            AppFactoryConstants.SERVER_ADMIN_PASSWORD), remoteIp)) {
                 applicationUploadClient.uploadCarbonApp(uploadedFileItems);
                 log.info(deployArtifact.getName() + " is successfully uploaded.");
             } else {
@@ -286,7 +291,8 @@ public class ApplicationDeploymentService extends AbstractAdmin {
     }
 
     private String getAdminUsername(String applicationId) {
-        return appFactoryConfiguration.getAdminUserName() + "@" + applicationId;
+        return appFactoryConfiguration.getFirstProperty(
+                AppFactoryConstants.SERVER_ADMIN_NAME) + "@" + applicationId;
     }
 
 }

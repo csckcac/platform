@@ -123,6 +123,7 @@
         <li>CARBON-13028 - Source packs for CSG products and CSG service.</li>
         <li>CARBON-13029 - Add extra Items in required the run CSG service in Stratos.</li>
 	<li>CARBON-13312 - Unable to delete a CSG server (defined using CSG Agent) in BRS.</li>
+	<li>CARBON-13326 - Unable to define a CSG server (defined using CSG Agent) in ESB.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha RC3</h2>

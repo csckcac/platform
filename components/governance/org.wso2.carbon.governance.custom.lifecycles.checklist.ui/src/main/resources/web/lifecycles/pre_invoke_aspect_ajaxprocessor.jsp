@@ -34,6 +34,15 @@
         String[] viewVersion = null;
         String[] parameters = request.getParameterValues("parameterMap");
 
+        String path = request.getParameter("path");
+        String aspect = request.getParameter("aspect");
+        String action = request.getParameter("action");
+        String callBack = request.getParameter("callBack");
+
+        if (callBack == null || callBack.trim().length() == 0) {
+            callBack = "''";
+        }
+
         if (parameters != null) {
             for (String parameter : parameters) {
                 parameter = URLDecoder.decode(parameter, "utf-8");
@@ -71,10 +80,6 @@
         }
             if (isViewVersion) {
                 try {
-                    String path = request.getParameter("path");
-                    String aspect = request.getParameter("aspect");
-                    String action = request.getParameter("action");
-                    String callBack = request.getParameter("callBack");
                     if (preserveOrigParam != null) {
                         String preserveOrg = "";
                         if (preserveOrigParam[0].equals("preserveOriginal")) {
@@ -101,20 +106,13 @@
 %>
 <%
 } else {
-    String path = request.getParameter("path");
-    String aspect = request.getParameter("aspect");
-    String action = request.getParameter("action");
-    String callBack = request.getParameter("callBack");
-    if (callBack == null || callBack.trim().length() == 0) {
-        callBack = "''";
-    }
     String mediaType = request.getParameter("mediaType");
     if (preserveOrigParam != null && preserveOrigParam.length != 0) {
         preserveOriginal = !Boolean.toString(false).equals(preserveOrigParam[1]);
     }
         List<String> otherDependencies = new ArrayList<String>();
 
-        if (displayMediaType == null || displayMediaType == "") {
+        if (displayMediaType == null || displayMediaType.equals("")) {
             displayMediaType = CommonConstants.SERVICE_MEDIA_TYPE.replace(".", "[.]").replace("+", "[+]");
         }
 

@@ -6,12 +6,12 @@
             <field name="context"/>
             <field name="consumerKey"/>
             <field name="userId"/>
+            <field name="version"/>
         </groupBy>
         <drop type="column">
             <fieldSet>
                 <field name="api_version"/>
                 <field name="api"/>
-                <field name="version"/>
                 <field name="resource"/>
                 <field name="method"/>
                 <field name="requestTime"/>

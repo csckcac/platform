@@ -279,6 +279,7 @@ public class APIUsageStatisticsClient {
                         usageDTO.setCount(usageEntry.requestCount);
                         usageByUsername.put(usageEntry.username, usageDTO);
                     }
+                    break;
                 }
             }                        
         }
@@ -300,7 +301,8 @@ public class APIUsageStatisticsClient {
             for (API api : apiList) {
                 if (api.getContext().equals(usageEntry.context) &&
                         api.getId().getApiName().equals(apiName) &&
-                        api.getId().getVersion().equals(apiVersion)) {
+                        api.getId().getVersion().equals(apiVersion) &&
+                        apiVersion.equals(usageEntry.apiVersion)) {
                     PerUserAPIUsageDTO usageDTO = usageByUsername.get(usageEntry.username);
                     if (usageDTO != null) {
                         usageDTO.setCount(usageDTO.getCount() + usageEntry.requestCount);
@@ -310,6 +312,7 @@ public class APIUsageStatisticsClient {
                         usageDTO.setCount(usageEntry.requestCount);
                         usageByUsername.put(usageEntry.username, usageDTO);
                     }
+                    break;
                 }
             }
         }
@@ -447,6 +450,7 @@ public class APIUsageStatisticsClient {
         private String context;
         private String username;
         private long requestCount;
+        private String apiVersion;
 
         public APIUsageByUser(OMElement row) {
             context = row.getFirstChildWithName(new QName(
@@ -455,6 +459,8 @@ public class APIUsageStatisticsClient {
                     APIUsageStatisticsClientConstants.USER_ID)).getText();
             requestCount = (long) Double.parseDouble(row.getFirstChildWithName(new QName(
                     APIUsageStatisticsClientConstants.REQUEST)).getText());
+            apiVersion = row.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.VERSION)).getText();
         }
     }
 

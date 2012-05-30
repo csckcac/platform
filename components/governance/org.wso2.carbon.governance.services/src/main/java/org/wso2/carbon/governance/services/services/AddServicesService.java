@@ -21,6 +21,7 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.parsers.SAXParser;
+import org.jaxen.JaxenException;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
@@ -44,6 +45,7 @@ import org.xml.sax.SAXNotSupportedException;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
 import java.sql.SQLException;
@@ -309,47 +311,9 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
         return lifecycleAspectsToAdd.toArray(new String[lifecycleAspectsToAdd.size()]);
     }
 
-    public boolean validateXMLConfigOnSchema(String xml,String schema) {
-        SAXParser parser = new SAXParser();
-        String serviceConfPath = "";
-
-        if("service-ui-config".equalsIgnoreCase(schema)) {
-            serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
-                    "conf" + File.separator + "service-ui-config.xsd";
-        } else if("lifecycle-config".equalsIgnoreCase(schema)) {
-            serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
-                    "conf" + File.separator + "lifecycle-config.xsd";
-        }
-
-        String schemaURL = new File(serviceConfPath).toURI().toString();
-
-        try {
-            parser.setFeature("http://xml.org/sax/features/validation", true);
-            parser.setFeature("http://apache.org/xml/features/validation/schema",
-                    true);
-            parser.setFeature("http://apache.org/xml/features/validation/schema-full-checking",
-                    true);
-
-            parser.setProperty("http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation",
-                    schemaURL);
-            XMLConfigValidatorUtil handler = new XMLConfigValidatorUtil();
-            parser.setErrorHandler(handler);
-            parser.parse(new InputSource(new ByteArrayInputStream(xml.getBytes("utf-8"))));
-
-        } catch (SAXNotRecognizedException e) {
-            return false;
-        } catch (SAXNotSupportedException e) {
-            return false;
-        } catch (SAXException e) {
-            return false;
-        } catch (UnsupportedEncodingException e) {
-            return false;
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
+    public boolean validateXMLConfigOnSchema(String xml,String schema) throws Exception {
+        return Util.validateXMLConfigOnSchema(xml,schema);
     }
-
 
     private void removeAspect(Registry registry,String path,String aspect)throws Exception{
            try {

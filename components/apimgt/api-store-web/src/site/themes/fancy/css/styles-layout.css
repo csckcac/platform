@@ -132,12 +132,15 @@ div.navbar-inner {
     border-bottom:solid 1px #ddd;
 }
 .nav-tabs > li > a {
-    background-color:#d8d9da;
+    background-color:#708292;
+    color:#fff;
+}
+.nav-tabs > li > a:hover {
     color:#000;
 }
 .nav-tabs > .active > a, .nav-tabs > .active > a:hover{
-    background-color:#708292;
-    color:#fff;
+    background-color:#CFCFCF;
+    color:#000;
 }
 .tabs-section ul.nav-tabs{
     margin-bottom:0;
@@ -505,6 +508,7 @@ footer{
 .application-api img{
     width:60px;
     margin-top:5px;
+    margin-bottom:5px;
 }
 .application-api td{
     padding:0 20px;

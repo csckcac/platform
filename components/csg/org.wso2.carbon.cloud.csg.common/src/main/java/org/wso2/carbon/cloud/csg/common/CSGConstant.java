@@ -170,7 +170,7 @@ public class CSGConstant {
     /**
      * Client axis2.xml for admin services when using with ESB
      */
-    public static final String CLIENT_AXIS2_XML = "repository/conf/axis2_client.xml";
+    public static final String CLIENT_AXIS2_XML = "repository/conf/axis2/axis2_client.xml";
 
     /**
      * CSG Transport name

@@ -21,22 +21,18 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
-import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.endpoints.EndpointManager;
 import org.wso2.carbon.governance.api.endpoints.dataobjects.Endpoint;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
-import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.governance.api.schema.dataobjects.Schema;
 import org.wso2.carbon.governance.api.services.ServiceFilter;
 import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
-import org.wso2.carbon.governance.api.util.GovernanceArtifactConfiguration;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
@@ -55,19 +51,18 @@ import java.io.FileInputStream;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
-import static org.testng.AssertJUnit.assertTrue;
 
 public class ServiceTestCaseClient {
     private static final Log log = LogFactory.getLog(ServiceTestCaseClient.class);
     private Registry governance;
     private String configPath;
-    private WSRegistryServiceClient registryWS;
 
     @BeforeClass(groups = {"wso2.greg"})
     public void initTest() throws RegistryException, AxisFault {
         int userId = new GregUserIDEvaluator().getTenantID();
-        registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
+        WSRegistryServiceClient registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         governance = new RegistryProvider().getGovernance(registryWS, userId);
 
         configPath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator +
@@ -204,9 +199,8 @@ public class ServiceTestCaseClient {
         // now add a policy.
         PolicyManager policyManager = new PolicyManager(governance);
 
-        Policy policy = policyManager.newPolicy(
-                                                       "http://svn.wso2.org/repos/wso2/tags/wsf/php/2.1.0/samples/security/" +
-                                                       "complete/policy.xml");
+        Policy policy = policyManager.newPolicy("http://svn.wso2.org/repos/wso2/tags/wsf/php/2.1" +
+                                                ".0/samples/security/complete/policy.xml");
         policy.setName("mypolicy.xml");
         policyManager.addPolicy(policy);
 
@@ -395,7 +389,7 @@ public class ServiceTestCaseClient {
             status = true;
             log.info("Adding service with invalid Character " + invalidCharacters);
         }
-        assertTrue("Invalid service added with special character - " + invalidCharacters, status);
+        assertTrue(status, "Invalid service added with special character - " + invalidCharacters);
     }
 
     @Test(groups = {"wso2.greg"}, description = "add 10000 resources to registry")
@@ -416,16 +410,16 @@ public class ServiceTestCaseClient {
             assertEquals(newService.getAttribute("testAttribute"), "service" + i);
 
         }
-        assertTrue("Less than " + numberOfServices + " services exists",
-                   serviceManager.getAllServices().length >= numberOfServices);
+        assertTrue(serviceManager.getAllServices().length >= numberOfServices,
+                   "Less than " + numberOfServices + " services exists");
 
-        assertTrue("Less than " + numberOfServices + "  ids exists",
-                   serviceManager.getAllServiceIds().length >= numberOfServices);
+        assertTrue(serviceManager.getAllServiceIds().length >= numberOfServices,
+                   "Less than " + numberOfServices + "  ids exists");
 
         String[] servicePaths = serviceManager.getAllServicePaths();
 
-        assertTrue("Less than " + numberOfServices + "  paths exists",
-                   serviceManager.getAllServicePaths().length >= numberOfServices);
+        assertTrue(serviceManager.getAllServicePaths().length >= numberOfServices,
+                   "Less than " + numberOfServices + "  paths exists");
 
         //delete services
         for (String servicePath : servicePaths) {
@@ -536,7 +530,7 @@ public class ServiceTestCaseClient {
         assertNull(serviceManager.getService(service.getId()));
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to servcie with schema imports")
+    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to service with schema imports")
     public void testAttacheWsdlWithSchemaImports() throws Exception {
         // first put a WSDL
         WsdlManager wsdlManager = new WsdlManager(governance);
@@ -568,59 +562,16 @@ public class ServiceTestCaseClient {
         verifyServiceAssociations(associations);
 
         service.detachWSDL(wsdls[0].getId());
-        assertTrue("WSDL still exits ", service.getAttachedWsdls().length == 0);
+        assertTrue(service.getAttachedWsdls().length == 0, "WSDL still exits ");
 
         service.detachSchema(schemas[0].getId());
-        assertTrue("Schema still exits ", service.getAttachedSchemas().length == 0);
+        assertTrue(service.getAttachedSchemas().length == 0, "Schema still exits ");
 
         //remove the service
-        serviceManager.removeService(service.getId());
-        assertNull(serviceManager.getService(service.getId()));
+//        serviceManager.removeService(service.getId());
+//        assertNull(serviceManager.getService(service.getId()));
     }
 
-    private boolean verifyServiceAssociations(Association[] associations) {
-        boolean status = false;
-        for (Association association : associations) {
-            if (association.getAssociationType().equals("depends") &&
-                association.getDestinationPath().contains("ep-")) {
-                assertTrue(association.getAssociationType().equals("depends"));
-                assertTrue(association.getSourcePath().contains("/test/org/bang/BizService"));
-                assertTrue(association.getDestinationPath().contains("endpoints/localhost/axis2/services/ep-BizService"));
-                status = true;
-
-            } else if (association.getAssociationType().equals("depends") &&
-                       association.getDestinationPath().contains(".wsdl")) {
-                assertTrue(association.getAssociationType().equals("depends"));
-                assertTrue(association.getSourcePath().contains("/test/org/bang/BizService"));
-                assertTrue(association.getDestinationPath().contains("/wsdls/com/foo/BizService" +
-                                                                     ".wsdl"));
-                status = true;
-
-
-            } else if (association.getAssociationType().equals("usedBy")
-                       && association.getSourcePath().contains("ep-")) {
-                assertTrue(association.getAssociationType().equals("usedBy"));
-                assertTrue(association.getSourcePath().contains("endpoints/localhost/axis2/services/ep-BizService"));
-                assertTrue(association.getDestinationPath().contains("services/test/org/bang/BizService"));
-                status = true;
-
-            } else if (association.getAssociationType().equals("usedBy")
-                       && association.getSourcePath().contains(".wsdl")) {
-                assertTrue(association.getAssociationType().equals("usedBy"));
-                assertTrue(association.getSourcePath().contains("/wsdls/com/foo/BizService" +
-                                                                ".wsdl"));
-                assertTrue(association.getDestinationPath().contains("services/test/org/bang/BizService"));
-                status = true;
-
-            } else if (!association.getAssociationType().equals("usedBy") ||
-                       association.getAssociationType().equals("depends")) {
-                fail("Required association types usedBy or depends not found");
-                status = false;
-
-            }
-        }
-        return status;
-    }
 
     @Test(groups = {"wso2.greg"}, description = "Attach LC to a service")
     public void testAttachLifeCycleToService() throws Exception {
@@ -658,7 +609,7 @@ public class ServiceTestCaseClient {
             status = true;
             log.info("Cannot add invalid LC to service");
         }
-        assertTrue("LC not get added", status);
+        assertTrue(status, "LC not get added");
         assertNull(service.getLifecycleName());
         assertNull(service.getLifecycleState());
 
@@ -720,6 +671,142 @@ public class ServiceTestCaseClient {
                                      {"*"},
                                      {";"},
         };
+    }
+
+    private boolean verifyServiceAssociations(Association[] associations) {
+        boolean status = false;
+        for (Association association : associations) {
+            if (association.getAssociationType().equals("depends") &&
+                association.getDestinationPath().contains("ep-")) {
+                assertTrue(association.getAssociationType().equals("depends"));
+                assertTrue(association.getSourcePath().contains("/test/org/bang/BizService"));
+                assertTrue(association.getDestinationPath().contains("endpoints/localhost/axis2/services/ep-BizService"));
+                status = true;
+
+            } else if (association.getAssociationType().equals("depends") &&
+                       association.getDestinationPath().contains(".wsdl")) {
+                assertTrue(association.getAssociationType().equals("depends"));
+                assertTrue(association.getSourcePath().contains("/test/org/bang/BizService"));
+                assertTrue(association.getDestinationPath().contains("/wsdls/com/foo/BizService" +
+                                                                     ".wsdl"));
+                status = true;
+
+
+            } else if (association.getAssociationType().equals("usedBy")
+                       && association.getSourcePath().contains("ep-")) {
+                assertTrue(association.getAssociationType().equals("usedBy"));
+                assertTrue(association.getSourcePath().contains("endpoints/localhost/axis2/services/ep-BizService"));
+                assertTrue(association.getDestinationPath().contains("services/test/org/bang/BizService"));
+                status = true;
+
+            } else if (association.getAssociationType().equals("usedBy")
+                       && association.getSourcePath().contains(".wsdl")) {
+                assertTrue(association.getAssociationType().equals("usedBy"));
+                assertTrue(association.getSourcePath().contains("/wsdls/com/foo/BizService" +
+                                                                ".wsdl"));
+                assertTrue(association.getDestinationPath().contains("services/test/org/bang/BizService"));
+                status = true;
+
+            } else if (!association.getAssociationType().equals("usedBy") ||
+                       association.getAssociationType().equals("depends")) {
+                fail("Required association types usedBy or depends not found");
+                status = false;
+
+            }
+        }
+        return status;
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to service with policy imports")
+    public void testAttacheWsdlWithWsdlImports() throws Exception {
+
+        ServiceManager serviceManager = new ServiceManager(governance);
+        Service service = serviceManager.newService(new QName("http://wso2.org/automation/test",
+                                                              "WSDLWithPolicyTest"));
+        service.addAttribute("interface_wsdlURL",
+                             "https://svn.wso2.org/repos/wso2/carbon/platform/trunk/" +
+                             "platform-integration/system-test-framework/core/org.wso2.automation." +
+                             "platform.core/src/main/resources/artifacts/GREG/wsdl/wsdl_with_SigEncr.wsdl");
+        serviceManager.addService(service);
+
+        service = serviceManager.getService(service.getId());
+        assertTrue(service.getQName().toString().contains("WSDLWithPolicyTest"));
+
+        Endpoint[] endpoints = service.getAttachedEndpoints();
+        assertTrue(endpoints.length >= 4);
+
+        for (Endpoint endpoint : endpoints) {
+            assertTrue(endpoint.getUrl().contains
+                                                 ("SimpleStockQuoteService1M"), "Endpoint not found");
+        }
+
+        Wsdl[] wsdls = service.getAttachedWsdls();
+        assertTrue(wsdls[0].getAttribute("registry.WSDLImport").contains("true"));
+        assertTrue(wsdls[0].getAttribute("WSDL Validation").contains("Valid"));
+        assertTrue(wsdls[0].getAttribute("WSI Validation").contains("Invalid"));
+        assertTrue(wsdls[0].getAttribute("WSI Validation Message 1").contains
+                                                                             ("NullPointerException"));
+
+        assertEquals(wsdls.length, 1);
+        assertEquals(wsdls[0].getQName(), new QName("http://services.samples", "WSDLWithPolicyTest.wsdl"));
+
+        Association[] associations = governance.getAssociations(wsdls[0].getPath(), "usedBy");
+        boolean policyStatus = false;
+        for (Association association : associations) {
+            if (association.getSourcePath().contains("policies/SgnEncrAnonymous.xml")) {
+                policyStatus = true;
+            }
+        }
+
+        assertTrue(policyStatus, "policy dependency not found");
+        service.detachWSDL(wsdls[0].getId());
+        assertTrue(service.getAttachedWsdls().length == 0, "WSDL still exits ");
+
+        //remove the service
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to service with wsdl imports")
+    public void testAttacheWsdlWithPolicyImports() throws Exception {
+
+        ServiceManager serviceManager = new ServiceManager(governance);
+        Service service = serviceManager.newService(new QName("http://wso2.org/automation/test",
+                                                              "WSDLImportWSDLTest"));
+        service.addAttribute("interface_wsdlURL",
+                             "http://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
+                             "system-test-framework/core/org.wso2.automation.platform.core/src/main/" +
+                             "resources/artifacts/GREG/wsdl/clinicalNotesService.wsdl");
+
+        serviceManager.addService(service);
+
+        service = serviceManager.getService(service.getId());
+        assertTrue(service.getQName().toString().contains("WSDLImportWSDLTest"));
+
+        Wsdl[] wsdls = service.getAttachedWsdls();
+        assertTrue(wsdls[0].getAttribute("WSDL Validation").contains("Validation is not supported for " +
+                                                                     "WSDLs containing WSDL imports."));
+        assertTrue(wsdls[0].getAttribute("WSI Validation").contains("Validation is not supported for " +
+                                                                    "WSDLs containing WSDL imports."));
+        assertEquals(wsdls.length, 1);
+        assertTrue(wsdls[0].getQName().toString().contains("WSDLImportWSDLTest.wsdl"));
+
+        Association[] associations = governance.getAssociations(wsdls[0].getPath(), "usedBy");
+        boolean wsdlStatus = false;
+        for (Association association : associations) {
+            if (association.getSourcePath().contains("migration/lemrs/impl/WSDLImportWSDLTest.wsdl")) {
+                wsdlStatus = true;
+            }
+        }
+        assertTrue(wsdlStatus, "wsdl dependency not found");
+
+
+        service.detachWSDL(wsdls[0].getId());
+        assertTrue(service.getAttachedWsdls().length == 0, "WSDL still exits ");
+
+        //remove the service
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
     }
 
 

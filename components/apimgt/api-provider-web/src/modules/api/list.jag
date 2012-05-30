@@ -24,7 +24,11 @@ var getAPI = function (api) {
             subs:result[11],
             templates:result[12],
             sandbox:result[13],
-            tierDescs:result[14]
+            tierDescs:result[14],
+            bizOwner:result[15],
+            bizOwnerMail:result[16],
+            techOwner:result[17],
+            techOwnerMail:result[18]
         };
 
         return {

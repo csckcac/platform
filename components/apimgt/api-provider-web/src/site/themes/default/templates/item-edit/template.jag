@@ -50,7 +50,7 @@
             <div class="control-group">
                 <label class="control-label" for="context">Context:<span class="requiredAstrix">*</span></label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge" id="context" name="context" validation="required validContext" value="<%=api.context%>"/>
+                    <input type="text" class="input-xlarge required contextExists" id="context" name="context" value="<%=api.context%>"/>
                 </div>
             </div>
 
@@ -68,7 +68,30 @@
                     <p class="help-block">Max Size 1 MB</p>
                 </div>
             </div>
-
+             <div class="control-group">
+                    <label class="control-label" for="bizOwner">Business Owner:</label>
+                    <div class="controls">
+                         <input type="text" class="input-xlarge" id="bizOwner" name="bizOwner" value="<%=api.bizOwner%>"/>
+                    </div>
+                </div>
+                 <div class="control-group">
+                    <label class="control-label" for="bizOwnerMail">Business Owner Email:</label>
+                    <div class="controls">
+                         <input type="text" class="input-xlarge" id="bizOwnerMail" name="bizOwnerMail" value="<%=api.bizOwnerMail%>"/>
+                    </div>
+                </div>
+                 <div class="control-group">
+                    <label class="control-label" for="techOwner">Technical Owner:</label>
+                    <div class="controls">
+                         <input type="text" class="input-xlarge" id="techOwner" name="techOwner" value="<%=api.techOwner%>"/>
+                    </div>
+                </div>
+                 <div class="control-group">
+                    <label class="control-label" for="techOwnerMail">Technical Owner Email:</label>
+                    <div class="controls">
+                         <input type="text" class="input-xlarge" id="techOwnerMail" name="techOwnerMail" value="<%=api.techOwnerMail%>"/>
+                    </div>
+                </div>
             <div class="control-group">
                 <label class="control-label" for="editEndpoint">Endpoint URL:<span class="requiredAstrix">*</span></label>
                 <div class="controls">

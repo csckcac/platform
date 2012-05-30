@@ -21,6 +21,10 @@ include("/jagg/jagg.jag");
         apiData.tier = request.getParameter("tiersCollection");
         apiData.imageUrl = request.getFile("apiThumb");
         apiData.context = request.getParameter("context");
+        apiData.bizOwner = request.getParameter("bizOwner");
+        apiData.bizOwnerEmail = request.getParameter("bizOwnerMail");
+        apiData.techOwner = request.getParameter("techOwner");
+        apiData.techOwnerEmail = request.getParameter("techOwnerMail");
         var resCount = new Array();
         if (request.getParameter("resourceCount") != null) {
             resCount = request.getParameter("resourceCount").split(',');

@@ -28,9 +28,6 @@ public class AdminMgtConstants {
     public static final String CONFIRMATION_KEY_NOT_MACHING =
             "The credential update confirmation key is not matching.";
 
-    public static final String ADMIN_MANAGEMENT_COLLECTION =
-            "/repository/components/org.wso2.carbon.admin-mgt/admin-mgt-map";
-
     public static final String ILLEGAL_CHARACTERS_FOR_TENANT_DOMAIN =
             ".*[^a-zA-Z0-9\\._\\-].*";
     
@@ -40,8 +37,4 @@ public class AdminMgtConstants {
     public static final String EMAIL_CONF_DIRECTORY = "email";
     
     public static final String EMAIL_ADMIN_CONF_FILE = "email-admin-config.xml";
-
-    public static final String DEFAULT_VALUE_SUBJECT = "Configure Account Credentials";
-    public static final String DEFAULT_VALUE_MESSAGE = "Please point your browser to : ";
-
 }

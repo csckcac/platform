@@ -138,10 +138,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.mex.feature:${carbon.platform.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.ejbservices.feature:${carbon.platform.version}
-                                </featureArtifactDef>
-                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.eventing.feature:${carbon.platform.version}</featureArtifactDef>-->
                                 <!-- eventing -->
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.event.common.feature:${carbon.platform.version}
@@ -401,12 +397,6 @@
                                     <id>org.wso2.carbon.mex.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.ejbservices.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>
-
 
                                 <feature>
                                     <id>org.wso2.carbon.event.common.feature.group</id>

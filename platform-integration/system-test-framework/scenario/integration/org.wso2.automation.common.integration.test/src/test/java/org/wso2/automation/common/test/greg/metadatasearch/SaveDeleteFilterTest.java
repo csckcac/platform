@@ -49,7 +49,6 @@ public class SaveDeleteFilterTest {
         sessionCookie = gregServer.getSessionCookie();
         searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
 
-
     }
 
     @Test(priority = 1, groups = {"wso2.greg"}, description = "Save Metadata search filter")

@@ -52,6 +52,9 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
+/*
+Search Registry metadata by Comments
+ */
 public class RegistrySearchByComments {
 
     private String sessionCookie;

@@ -51,6 +51,9 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
+/*
+Search Registry metadata by AssociationDestination
+ */
 public class RegistrySearchByAssociationDestination {
 
     private String sessionCookie;

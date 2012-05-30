@@ -67,7 +67,7 @@ public class RegistrySearchByAuthor {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name");
         for (ResourceData resource : result.getResourceDataList()) {
             Assert.assertTrue(resource.getAuthorUserName().contains("admin"),
-                              "search keyword not contain on Author Name :" + resource.getName());
+                              "search keyword not contain on Author Name :" + resource.getResourcePath());
         }
 
 
@@ -114,7 +114,7 @@ public class RegistrySearchByAuthor {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name pattern");
         for (ResourceData resource : result.getResourceDataList()) {
             Assert.assertTrue((resource.getAuthorUserName().contains("wso2") && resource.getAuthorUserName().contains("user")),
-                              "search word pattern not contain on Author Name :" + resource.getName());
+                              "search word pattern not contain on Author Name :" + resource.getResourcePath());
         }
 
 

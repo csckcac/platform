@@ -76,7 +76,7 @@ public class RegistrySearchByUpdater {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid updater name");
         for (ResourceData resource : result.getResourceDataList()) {
             Assert.assertTrue(registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains("admin"),
-                              "search word not contain on Updater Name :" + resource.getName());
+                              "search word not contain on Updater Name :" + resource.getResourcePath());
         }
 
 
@@ -104,7 +104,7 @@ public class RegistrySearchByUpdater {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Updater name");
         for (ResourceData resource : result.getResourceDataList()) {
             Assert.assertFalse(registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains("admin"),
-                               "search word contain on Updater Name :" + resource.getName());
+                               "search word contain on Updater Name :" + resource.getResourcePath());
         }
 
 

@@ -19,8 +19,13 @@
                     doc = docs[i];
                 %>
                 <div class="documentation">
-                    <h5><%=doc.name%></h5>
-                    <div class="documentaion-body"><%=doc.summary%></div>
+                    <h5>Name:</h5>
+                    <p><%=doc.name%></p>
+                    <div class="documentaion-body"><h5>Summary:</h5><p><%=doc.summary%></p>
+                    <%if(doc.sourceUrl){%>
+                    <h5>Documentation URL:</h5><p><a href="<%=doc.sourceUrl%>"><%=doc.sourceUrl%></a></p>
+                    <%}%>
+                    </div>
                     <hr/>
                 </div>
                 <% } %>

@@ -8,7 +8,8 @@
   <div class="row-fluid" id="usageSummary" style="display:none;">
     <div class="span6">
         <h3>Usage Summary</h3>
-        <table id="usageTable" class="table table-bordered">
+        <table class="table table-bordered">
+          <tbody id="usageTable">
         </table>
     </div>
 </div>

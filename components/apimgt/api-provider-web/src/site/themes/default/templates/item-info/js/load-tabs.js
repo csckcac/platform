@@ -230,12 +230,31 @@ $(document).ready(function() {
 
             if (responseTime != null && lastAccessTime != null) {
                 $("#usageSummary").show();
-                $('#usageTable').append($('<tbody><tr><td class="span4">Response Time (Across all versions)</td><td>' +
-                                          responseTime != null ? responseTime : "Data unavailable" + '</td></tr><tr>' +
-                                                                                '<td class="span4">Last access time (Across all versions)</td><td>' +
-                                                                                lastAccessTime != null ? lastAccessTime : "Data unavailable" + '</td></tr></tbody>'));
-            }
+                var doc = document;
+                var tabBody = doc.getElementById("usageTable");
 
+                var row1 = doc.createElement("tr");
+                var cell1 = doc.createElement("td");
+                cell1.setAttribute("class", "span4");
+                cell1.innerHTML = "Response Time (Across all versions)";
+                var cell2 = doc.createElement("td");
+                cell2.innerHTML = responseTime != null ? responseTime : "Data unavailable";
+                row1.appendChild(cell1);
+                row1.appendChild(cell2);
+
+                var row2 = doc.createElement("tr");
+                var cell3 = doc.createElement("td");
+                cell3.setAttribute("class", "span4");
+                cell3.innerHTML = "Last access time (Across all versions)";
+                var cell4 = doc.createElement("td");
+                cell4.innerHTML = lastAccessTime != null ? lastAccessTime : "Data unavailable";
+                row2.appendChild(cell3);
+                row2.appendChild(cell4);
+
+                tabBody.appendChild(row1);
+                tabBody.appendChild(row2);
+
+            }
 
         }
     });

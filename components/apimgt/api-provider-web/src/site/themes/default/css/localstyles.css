@@ -174,3 +174,8 @@ a.powered-by-logo {
 .even-width-button{
     width:60px;
 }
+.icon-lifecycle{
+    background:transparent url(../images/lifecycle.png) no-repeat 0 0;
+    width:14px;
+    height:14px;
+}

@@ -40,6 +40,7 @@ import org.wso2.carbon.security.SecurityServiceHolder;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.utils.TenantUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -239,7 +240,7 @@ public class ServicePasswordCallbackHandler implements CallbackHandler {
 
                     String fullname = ks[i];
                     //get the primary keystore, only if it is super tenant.
-                    if (tenantId == 0 && fullname
+                    if (tenantId == MultitenantConstants.SUPER_TENANT_ID && fullname
                             .equals(RegistryResources.SecurityManagement.PRIMARY_KEYSTORE_PHANTOM_RESOURCE)) {
                         KeyStore store = keyMan.getPrimaryKeyStore();
                         if (store.containsAlias(username)) {

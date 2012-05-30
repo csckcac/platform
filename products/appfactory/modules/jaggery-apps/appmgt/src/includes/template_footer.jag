@@ -1,0 +1,14 @@
+        <!-- terminating the table used to structure the UI and html itself, read comment in
+             template_header for more information. -->
+        </div></td></tr></table></td></tr>
+        <tr>
+            <td id="footer" colspan="2">
+                <%
+                    // include the footer
+                    include('footer.jag');
+                %>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

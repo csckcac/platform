@@ -1,0 +1,28 @@
+
+<%
+// include this jss file as a footer in log out jss page.
+include('../config_reader.jag');
+var security =require("ssoRelyingParty");
+var ssoRelyingParty = new security.SSORelyingParty(getProperty('sso.name'));
+var samlLogoutRequest = ssoRelyingParty.getSAMLLogoutRequest("admin");
+var encodedRequest = ssoRelyingParty.encode(samlLogoutRequest);
+var relayState = ssoRelyingParty.getUUID();
+var idpURL = ssoRelyingParty.getProperty("identityProviderURL");
+%>
+<div>
+   <p>You are now redirected to Stratos Identity. If the
+   redirection fails, please click the post button.</p>
+
+    <form method="post" action="<%=idpURL%>">
+    <p>
+        <input type="hidden" name="SAMLRequest"
+              value="<%= encodedRequest %>"/>
+        <input type="hidden" name="RelayState" value="<%= relayState %>"/>
+        <button type="submit">POST</button>
+    </p>
+    </form>
+</div>
+<script type = "text/javascript" >
+       document.forms[0].submit();
+</script>
+

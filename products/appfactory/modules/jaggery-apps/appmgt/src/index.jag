@@ -1,0 +1,33 @@
+<%
+include('includes/template_header.jag');
+%>
+<div id="middle">
+    <h2>Your Applications</h2>
+
+    <div id="workArea">
+        <%
+            include('process/web_service_util.jag');
+            include('constants.jag');
+            try{
+                var applicationList = getAllApps(userName,"localhost");
+                if(applicationList==undefined || applicationList.value=="" || applicationList.length()==0){
+                    print("No Applications are created.");
+                }
+
+                for (var s in applicationList) {
+                    var applicationKey = applicationList[s].split(APPLICATION_SUFFIX)[0];
+                    var applicationName =applicationList[s].split(APPLICATION_SUFFIX)[0];
+            %>
+            <a href="application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>"><%=applicationName%></a>
+            </br>
+            <%
+                }
+            }catch(e){
+             print(e.message);
+            }
+        %>
+    </div>
+</div>
+<%
+    include('includes/template_footer.jag');
+%>

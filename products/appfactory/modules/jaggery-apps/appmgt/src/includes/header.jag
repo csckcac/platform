@@ -1,0 +1,45 @@
+<%
+    var userName = session.get("LOGGED_IN_USER");
+%>
+<tr>
+    <td id="header" colspan="2">
+        <div id="header-div">
+            <div class="right-logo">Application Management Console</div>
+            <div class="left-logo">
+                <a href="#" class="header-home"><img src="images/1px.gif"
+                                                     width="300px" height="32px"/></a>
+            </div>
+            <div class="middle-ad">
+            </div>
+            <div class="header-links">
+                <div class="right-links">
+                    <ul>
+                        <%
+                            if(userName != null) {
+                        %>
+                        <li class="middle">
+                            <!-- value for userName will be initialized in template_header.jag
+                                 and used here. -->
+                            <strong>Signed-in as:&nbsp;</strong><%= userName%>
+                        </li>
+                        <li class="middle">|</li>
+                        <li class="right">
+                            <a href="sso/jaggery_sso_logout.jag">Sign-out</a>
+                        </li>
+                        <%
+                            }
+                        %>
+                        <li class="middle">|</li>
+                        <li class="middle">
+                            <a target="_blank" href="#">Docs</a>
+                        </li>
+                        <li class="middle">|</li>
+                        <li class="left">
+                            <a target="_blank" href="#">About</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>

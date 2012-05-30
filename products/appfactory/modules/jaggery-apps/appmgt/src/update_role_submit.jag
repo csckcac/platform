@@ -1,0 +1,22 @@
+<%
+    include('includes/template_header.jag');
+
+    var applicationKey = request.getParameter("applicationKey");
+    var applicationName = request.getParameter("applicationName");
+%>
+
+<div id="middle">
+    <div id="workArea">
+        <%
+            print("applicationKey:" + request.getParameter("applicationKey") + "</br>");
+            print("userName:" + request.getParameter("userName") + "</br></br>");
+            print("developer:" + request.getParameter("developer") + "</br>");
+            print("manager:" + request.getParameter("manager") + "</br>");
+            print("devops:" + request.getParameter("devops") + "</br>");
+
+        %>
+    </div>
+</div>
+<%
+    include('includes/template_footer.jag');
+%>

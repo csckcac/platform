@@ -1,0 +1,50 @@
+<%
+    include('includes/template_header.jag');
+
+    var applicationKey = request.getParameter("applicationKey");
+    var applicationName = request.getParameter("applicationName");
+%>
+<div id="middle">
+    <h3>Pending Approvals</h3>
+
+    <h2><%= applicationName%>
+    </h2>
+
+    <div id="workArea">
+        <table id="table1">
+            <tr class="data" id="row5">
+            <tr>
+                <td><strong>Task</strong></td>
+                <td><strong>Description</strong></td>
+                <td><strong>Action</strong></td>
+            </tr>
+            <%
+            var pendingTasks =[["task1","desc1","key1"],["task2","desc2","key2"],["task3","desc3","key3"]];
+            for(var i =0; i <= pendingTasks.length-1; ++i) {
+                var task = pendingTasks[i][0];
+                var desc = pendingTasks[i][1];
+                var taskKey = pendingTasks[i][2];
+             %>
+            <tr>
+                <td><%=task%>
+                </td>
+                <td><%=desc%>
+                </td>
+                <td><input type="button" class="button"
+                           onclick="location.href='approval_result_submit.jag?result=approved&taskKey=<%=taskKey%>&applicationKey=<%=applicationKey%>'"
+                           value="Approve"/>
+                    <input type="button" class="button"
+                           onclick="location.href='approval_result_submit.jag?result=rejected&taskKey=<%=taskKey%>&applicationKey=<%=applicationKey%>'"
+                           value="Reject"/>
+                </td>
+            </tr>
+            <%
+                }
+            %>
+        </table>
+    </div>
+
+</div>
+<%
+    include('includes/template_footer.jag');
+%>

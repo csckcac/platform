@@ -1,0 +1,155 @@
+<%
+    include('includes/template_header.jag');
+    include('constants.jag');
+%>
+<script>
+    $(document).ready(function() {
+        var defaultTabId = "overview";//Set this to the default tab that needed to be selected
+        var tabId = "pageTabs";
+        $('#' + tabId + ' a').each(function() {
+            if ($(this).attr('name') == defaultTabId) {
+                $('#' + $(this).attr('name')).show('fold');
+                $(this).addClass('selected');
+            } else {
+                $('#' + $(this).attr('name')).hide();
+                $(this).removeClass('selected');
+            }
+
+        });
+        $('#' + tabId + ' a').click(function() {
+            $('#' + tabId + ' a').removeClass('selected');
+            $('#' + tabId + ' a').each(function() {
+                $('#' + $(this).attr('name')).hide();
+            });
+            $(this).addClass('selected');
+            $('#' + $(this).attr('name')).show('fold');
+        });
+    });
+</script>
+<%
+    var log = new Log();
+    var applicationName = request.getParameter("applicationName");
+    var applicationKey = request.getParameter("applicationKey")+APPLICATION_SUFFIX;
+
+    include('mgt/application_manager.jag');
+    var userHasAccess = false;
+    try {
+        // userName variable is taken from template_header.jag
+        userHasAccess = isUserInApplication(applicationKey, userName,"localhost");
+    } catch (e) {
+        log.error(e);
+    }
+    if(userHasAccess) {
+        var userIsOwner = false;
+        var isADevOp = false;
+        try {
+            userIsOwner = isOwner(applicationKey, userName,"localhost");
+            isADevOp = isUserADevOp(applicationKey, userName,"localhost");
+        } catch (e) {
+            log.error(e);
+        }
+
+        log.debug("user is an Owner "+userIsOwner);
+        
+        %>
+        <div id="middle">
+            <div id="workArea">
+                <%
+                    if (applicationName != null && applicationKey != null) {
+                %>
+                    <h2><%= applicationName%>
+                </h2>
+                <%
+                        include('mgt/registry_access_manager.jag');
+                        var applicationSVN = getRepositoryPath(applicationKey);
+                %>
+                    <!-- Including the tabbed navigation -->
+                    <div id="pageTabs" class="page-tabs">
+                        <a name="overview" class="tab">Overview</a><!-- Basicaly create a div with id="overview" and add content -->
+                        <%
+                            if(userIsOwner) {
+                        %>
+                        <a name="admin" class="tab selected">Admin</a>
+                        <%
+                            }
+                        %>
+                        <%
+                            if(isADevOp) {
+                        %>
+                        <a name="devOp" class="tab selected">Operations</a>
+                        <%
+                            }
+                        %>
+                    </div>
+                    <div style="clear:both"></div>
+        
+                    <!-- information common to all application users -->
+                    <div class="content-box" id="overview">
+                        <h3>Application overview</h3>
+        
+                        <div>
+                            <table>
+                                <tr>
+                                    <td>SVN location:</td>
+                                    <td><%= applicationSVN%>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- end of user information -->
+        
+                    <!-- admin content -->
+                    <%
+                        if(userIsOwner) {
+                    %>
+                    <div class="content-box" id="admin">
+                        <h3>Admin Portal</h3>
+                        <%
+                            include('user_list.jag');
+                        %>
+                        <table class="styledLeft">
+                            <tr>
+                                <td class="buttonRow">
+                                    <input type="button" onclick="location.href='invite_user.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Invite User' class='button'/>
+                                    <input type="button" onclick="location.href='approvals.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Pending Approvals' class='button'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <%
+                        }
+                    %>
+                    <!-- end of admin information -->
+
+                <!-- devOp information -->
+                    <%
+                        if (isADevOp) {
+                    %>
+                    <div class="content-box" id="devOp">
+                        <h3>devOp operations</h3>
+                        <table class="styledLeft">
+                            <tr>
+                                <td class="buttonRow">
+                                    <input type="button" onclick="location.href='deploy_to_qa.jag?applicationName=<%=applicationName%>&applicationSvnLocation=<%=applicationSVN%>'" value='Deploy to QA' class='button'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <%
+                        }
+                    %>
+                    <%
+                    }
+
+    } else {
+        %>
+            <p>Access denied for the application <%=applicationName%></p>
+        <%
+    }
+            %>
+    </div>
+</div>
+<%
+    include('includes/template_footer.jag');
+%>

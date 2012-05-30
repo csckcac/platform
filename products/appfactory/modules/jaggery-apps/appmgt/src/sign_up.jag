@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>WSO2 Application Management Tool</title>
+</head>
+<body>
+
+<script type="text/javascript">
+    function validate() {
+        if(document.inputData.firstName.value=="" || document.inputData.lastName.value=="" || document.inputData.email.value=="" || document.inputData.userName.value=="" || document.inputData.password.value=="" || document.inputData.repeatedPassword.value=="") {
+            alert("Please fill all fields");
+            return false;
+        } else if (document.inputData.password.value != document.inputData.repeatedPassword.value) {
+            alert("Password does not match");
+            return false;
+        } else {
+            document.inputData.action = 'sign_up_submit.jag';
+            document.inputData.submit();
+        }
+    }
+</script>
+
+<link href="css/global.css" rel="stylesheet">
+<link href="css/formStyles.css" rel="stylesheet">
+
+<table id="main-table" border="0" cellspacing="0">
+     <%
+        // include the header here
+        include("includes/header.jag");
+    %>
+    <tr>
+            <%
+            // include the left navigation menu as the 1st column in the row
+            include("includes/menu.jag");
+        %>
+
+        <td id="middle-content">
+            <table id="content-table" border="0" cellspacing="0">
+                <!--tr>
+                    <td id="page-header-links"></td> => USER FOR BREADCRUMB
+                </tr-->
+                <tr>
+                    <td id="body">
+                        <img src="../admin/images/1px.gif" width="735px" height="1px"/>
+                        <!-- dummy implementation of the closure of the table structure used to define
+                the UI structured in a table. The table and other html element such as the
+                body element is terminated appropriately in the template_footer.jag file-->
+
+<div id="middle">
+    <h2>SignUp for Application Management Tool</h2>
+
+    <div id="workArea">
+        <form method='post' name="inputData">
+            <table class="styledLeft" id="applicationInputTbl">
+                <thead>
+                <tr>
+                    <th colspan="2">Please enter the following information.</th>
+                </tr>
+                </thead>
+                <tr>
+                    <td class="formRow">First Name:</td>
+                    <td class="formRow"><input type='text' name='firstName' size='50'/></td>
+                </tr>
+                <tr>
+                    <td class="formRow">Last Name:</td>
+                    <td class="formRow"><input type='text' name='lastName' size='50'/></td>
+                </tr>
+                <tr>
+                    <td class="formRow">email:</td>
+                    <td class="formRow"><input type='text' name='email' size='50'/></td>
+                </tr>
+                <tr>
+                    <td class="formRow">User Name:</td>
+                    <td class="formRow"><input type='text' name='userName' size='50'/></td>
+                </tr>
+                <tr>
+                    <td class="formRow">Password:</td>
+                    <td class="formRow"><input type='password' name='password' size='50'/></td>
+                </tr>
+                <tr>
+                    <td class="formRow">Password (Repeat):</td>
+                    <td class="formRow"><input type='password' name='repeatedPassword' size='50'/></td>
+                </tr>
+            </table>
+            <table class="styledLeft">
+                <tr>
+                    <td class="buttonRow">
+                        <input type='submit' onclick="validate()"value='Submit' class='button'/>
+                        <input type="button" onclick="location.href='index.jag?'" value='Cancel' class='button'/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<%
+    include('includes/template_footer.jag');
+%>

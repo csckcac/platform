@@ -183,4 +183,18 @@ public interface QpidService {
      * @return required status of external
      */
     public boolean isExternalZookeeperServerRequired();
+
+    /**
+     * Returns Cassandra Connection String used in the internal broker
+     * @return cassandra connection string
+     */
+    public String getCassandraConnectionString();
+
+
+    /**
+     * Returns Zookeeper Connection String used in the internal broker
+     * @return zookeeper connection string
+     */
+    public String getZookeeperConnectionString();
+
 }

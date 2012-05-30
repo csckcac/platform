@@ -21,6 +21,7 @@ package org.wso2.carbon.andes.cluster.mgt;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.andes.cluster.mgt.internal.ClusterManagementDataHolder;
 import org.wso2.carbon.andes.cluster.mgt.internal.registry.ClusterManagementBeans;
 
 import java.util.ArrayList;
@@ -297,14 +298,9 @@ public class ClusterManagerService {
      * @return String cassandra connection
      */
     public String getCassandraConnection() throws ClusterMgtAdminException {
-        String connection = null;
-        ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
-        try {
-            connection = clusterManagementBeans.getCassandraAddressAndPort();
-        } catch (Exception e) {
-            throw new ClusterMgtAdminException(e.getMessage());
-        }
-        return connection;
+
+        return ClusterManagementDataHolder.getClusterManagementDataHolder().getQpidService().
+                getCassandraConnectionString();
     }
 
     /**
@@ -313,14 +309,8 @@ public class ClusterManagerService {
      * @return String zookeeper connection
      */
     public String getZookeeperConnection() throws ClusterMgtAdminException {
-        ClusterManagementBeans clusterManagementBeans = new ClusterManagementBeans();
-        String connection =null;
-        try {
-            connection = clusterManagementBeans.getZookeeperAddressAndPort();
-        } catch (Exception e) {
-            throw new ClusterMgtAdminException(e.getMessage());
-        }
-        return connection;
+        return ClusterManagementDataHolder.getClusterManagementDataHolder().getQpidService().
+                getZookeeperConnectionString();
     }
 
     /**

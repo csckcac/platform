@@ -49,17 +49,26 @@ public class QpidServiceImpl implements QpidService {
 
     private static final String QPID_CONF_DIR = "/repository/conf/advanced/";
     private static final String QPID_CONF_FILE = "qpid-config.xml";
+    private static final String QPID_VIRTUALHOST_CONF_FILE = "qpid-virtualhosts.xml";
     private static final String QPID_CONF_CONNECTOR_NODE = "connector";
     private static final String QPID_CONF_PORT_NODE = "port";
     private static final String QPID_CONF_SSL_PORT_NODE = "sslport";
     private static final String QPID_CONF_CLUSTER_NODE="clustering";
     private static final String QPID_CONF_CLUSTER_ENABLE_NODE="enabled";
+    private static final String QPID_CONF_CLUSTER_COORDINATION_NODE="coordination";
+    private static final String QPID_CONF_CLUSTER_ZK_CONNECTION_NODE="ZooKeeperConnection";
     private static final String QPID_CONF_EXTERNAL_CASSANDRA_SERVER="externalCassandraServerRequired";
     private static final String QPID_CONF_EXTERNAL_ZOOKEEPER_SERVER="externalZookeeperServerRequired";
 
     private static String CARBON_CONFIG_QPID_PORT_NODE = "Ports.EmbeddedQpid.BrokerPort";
     private static String CARBON_CONFIG_QPID_SSL_PORT_NODE = "Ports.EmbeddedQpid.BrokerSSLPort";
     private static String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
+
+    private static final String QPID_VIRTUALHOST_NODE = "virtualhost";
+    private static final String QPID_VIRTUALHOST_CARBON_NODE = "carbon";
+    private static final String QPID_VIRTUALHOST_STORE_NODE = "store";
+    private static final String QPID_VIRTUALHOST_STORE_CONNECTION_STRING_NODE = "connectionString";
+
 
     private static final String DOMAIN_NAME_SEPARATOR = "@";
     private static final String DOMAIN_NAME_SEPARATOR_INTERNAL = "!";
@@ -69,6 +78,8 @@ public class QpidServiceImpl implements QpidService {
     private String port = "";
     private String sslPort = "";
     private int portOffset = 0;
+    private String cassandraConnection;
+    private String zkConnection;
 
     private Boolean clsuterEnabled;
     private Boolean externalCassandraRequired;
@@ -481,5 +492,71 @@ public class QpidServiceImpl implements QpidService {
         // E.g. foo@bar.com -> foo!bar.com
         // Note : The Qpid authorization handler uses ! to extract domain name from username when authorizing
         return username.replace(DOMAIN_NAME_SEPARATOR, DOMAIN_NAME_SEPARATOR_INTERNAL);
+    }
+
+    @Override
+    public String getCassandraConnectionString() {
+
+        if(cassandraConnection != null) {
+            return cassandraConnection.trim();
+        }
+         try {
+            File confFile = new File(getQpidHome() + QPID_VIRTUALHOST_CONF_FILE);
+
+            OMElement docRootNode = new StAXOMBuilder(new FileInputStream(confFile)).
+                    getDocumentElement();
+            OMElement virtualHostNode = docRootNode.getFirstChildWithName(
+                    new QName(QPID_VIRTUALHOST_NODE));
+            OMElement carbonVirtualHost = virtualHostNode.getFirstChildWithName(
+                    new QName(QPID_VIRTUALHOST_CARBON_NODE));
+            OMElement storeElem  = carbonVirtualHost.
+                    getFirstChildWithName(new QName(QPID_VIRTUALHOST_STORE_NODE));
+            OMElement connectionStr = storeElem.getFirstChildWithName(
+                    new QName(QPID_VIRTUALHOST_STORE_CONNECTION_STRING_NODE));
+
+            cassandraConnection = connectionStr.getText();
+        } catch (FileNotFoundException e) {
+            log.error(getQpidHome() + QPID_CONF_FILE + " not found");
+        } catch (XMLStreamException e) {
+            log.error("Error while reading " + getQpidHome() +
+                      QPID_CONF_FILE + " : " + e.getMessage());
+        } catch (NullPointerException e) {
+            log.error("Invalid configuration : " + getQpidHome() + QPID_CONF_FILE);
+        }
+
+        return ((cassandraConnection != null) ? cassandraConnection.trim() : "");
+
+    }
+
+    @Override
+    public String getZookeeperConnectionString() {
+
+        if(zkConnection != null) {
+            return zkConnection.trim();
+        }
+
+        try {
+            File confFile = new File(getQpidHome() + QPID_CONF_FILE);
+
+            OMElement docRootNode = new StAXOMBuilder(new FileInputStream(confFile)).
+                    getDocumentElement();
+            OMElement clusteringNode = docRootNode.getFirstChildWithName(
+                    new QName(QPID_CONF_CLUSTER_NODE));
+            OMElement coordinationNode = clusteringNode.getFirstChildWithName(
+                    new QName(QPID_CONF_CLUSTER_COORDINATION_NODE));
+            OMElement zkConnectionNode = coordinationNode.getFirstChildWithName(
+                    new QName(QPID_CONF_CLUSTER_ZK_CONNECTION_NODE));
+
+            zkConnection = zkConnectionNode.getText();
+        } catch (FileNotFoundException e) {
+            log.error(getQpidHome() + QPID_CONF_FILE + " not found");
+        } catch (XMLStreamException e) {
+            log.error("Error while reading " + getQpidHome() +
+                    QPID_CONF_FILE + " : " + e.getMessage());
+        } catch (NullPointerException e) {
+            log.error("Invalid configuration : " + getQpidHome() + QPID_CONF_FILE);
+        }
+
+        return (zkConnection != null) ? zkConnection.trim() : "";
     }
 }

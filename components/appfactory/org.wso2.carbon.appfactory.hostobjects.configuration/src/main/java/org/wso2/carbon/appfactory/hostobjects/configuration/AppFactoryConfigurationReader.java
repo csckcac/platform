@@ -12,16 +12,16 @@ import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
  */
 public class AppFactoryConfigurationReader extends ScriptableObject {
     private static final String hostObjectName = "AppFactoryConfigurationReader";
-    private static AppFactoryConfiguration appFactoryConfiguration = AppFactoryConfigurationHolder.getInstance().getAppFactoryConfiguration();
+    private static AppFactoryConfiguration appFactoryConfiguration = AppFactoryConfigurationHolder
+            .getInstance().getAppFactoryConfiguration();
 
     @Override
     public String getClassName() {
         return hostObjectName;
     }
 
- public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj,
-                                           boolean inNewExpr)
-            throws Exception {
+ public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj, 
+                                        boolean inNewExpr) throws Exception {
         return new AppFactoryConfigurationReader();
     }
 

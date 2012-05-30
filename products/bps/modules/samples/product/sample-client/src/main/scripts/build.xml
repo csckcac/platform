@@ -37,11 +37,8 @@
     <property name="prxurl" value=""/>
     <property name="repository" value="client_repo"/>
     <property name="sampleDir" value=""/>
-    <property name="class.dir" value="target/classes"/>
 
     <target name="clean">
-        <delete dir="target" quiet="true"/>
-        <delete dir="${class.dir}" quiet="true"/>
         <delete file="pathing.jar" quiet="true"/>
     </target>
 
@@ -63,7 +60,6 @@
     </target>
 
     <path id="jar.classpath">
-        <pathelement path="${class.dir}"/>
         <pathelement path="../../lib"/>
         <fileset dir="lib">
             <include name="*.jar"/>
@@ -91,7 +87,6 @@
     </path>
 
     <target name="init">
-        <mkdir dir="${class.dir}"/>
         <mkdir dir="./../../work/temp/sampleClient"/>
         <manifestclasspath property="tem.classpath" jarfile="pathing.jar">
             <classpath refid="jar.classpath"/>
@@ -102,7 +97,6 @@
             </manifest>
         </jar>
         <path id="javac.classpath">
-            <pathelement path="${class.dir}"/>
             <pathelement path="pathing.jar"/>
         </path>
     </target>

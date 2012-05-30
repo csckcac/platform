@@ -4,6 +4,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axis2.Constants;
+import org.apache.axis2.addressing.AddressingConstants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -50,17 +51,28 @@ public class SamplesInvoker {
         }
     }
 
-    private static void loadServiceProperties(String propFilePath) {
+    private static void loadServiceProperties(String propFilePath, String operation) {
         File f = new File(propFilePath);
         Properties properties = new Properties();
         FileInputStream fin = null;
         ByteArrayInputStream bin = null;
+        String xmlStr = null;
         try {
             fin = new FileInputStream(f);
             properties.load(fin);
-            action = properties.getProperty(ACTION).trim();
-            String xmlStr = properties.getProperty(REQ_MSG).trim();
             serviceName = properties.getProperty(SVC_NAME).trim();
+
+            if(operation != null && !operation.equals("")) {
+
+               action = properties.getProperty(operation + "." + ACTION ).trim();
+               xmlStr = properties.getProperty(operation + "." + REQ_MSG).trim();
+
+            }  else {
+
+                action = properties.getProperty(ACTION).trim();
+                xmlStr = properties.getProperty(REQ_MSG).trim();
+
+            }
             bin = new ByteArrayInputStream(xmlStr.getBytes());
             StAXOMBuilder builder = new StAXOMBuilder(bin);
             requestPayload = builder.getDocumentElement();
@@ -123,13 +135,14 @@ public class SamplesInvoker {
         String trpUrl = getProperty("trpurl", null);
         String prxUrl = getProperty("prxurl", null);
         String repository = getProperty("repository", "client_repo");
-        String sampleName = getProperty("sample", null);
+        String sampleName = getProperty("sample", "CreditRating");
         String sampleDir = getProperty("sampleDir", ".");
+        String operation = getProperty("operation", null);
 
 
         String propertyFile = getPropertyFile(sampleName, sampleDir);
         if (propertyFile != null) {
-            loadServiceProperties(propertyFile);
+            loadServiceProperties(propertyFile, operation);
         } else {
             System.out.println("Matching properties file not found for the specified sample");
             System.exit(0);
@@ -150,7 +163,16 @@ public class SamplesInvoker {
         }
 
         Options options = new Options();
-        options.setAction(action);
+
+        if(action != null && !action.equals("")) {
+
+            options.setAction(action);
+
+        } else {
+
+            serviceClient.disengageModule("addressing");
+            options.setProperty(AddressingConstants.DISABLE_ADDRESSING_FOR_OUT_MESSAGES, true);
+        }
 
         if (addUrl != null && !"null".equals(addUrl + serviceName)) {
             options.setTo(new EndpointReference(addUrl));

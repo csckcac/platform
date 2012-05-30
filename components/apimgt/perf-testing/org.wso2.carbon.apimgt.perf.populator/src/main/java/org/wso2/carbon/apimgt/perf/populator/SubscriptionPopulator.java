@@ -50,7 +50,7 @@ public class SubscriptionPopulator {
 			PreparedStatement psSubscriberSQL = conn
 					.prepareStatement(INSERT_SUBSCRIBER_SQL);
 
-			String applicationName = "app";
+			String applicationNamePrefix = "app";
 
 			// Add Subscriber
 			psSubscriberSQL.setString(1, "perf1");
@@ -64,9 +64,10 @@ public class SubscriptionPopulator {
 			rs.close();
 
 			int loopCount = 10;
+			String applicationName;
 			for (int i = 0; i < loopCount; i++) {
 
-				applicationName = applicationName + i;
+				applicationName = applicationNamePrefix + i;
 				// Add Application
 				psApplications.setString(1, applicationName);
 				psApplications.setInt(2, Integer.valueOf(subscriberId));

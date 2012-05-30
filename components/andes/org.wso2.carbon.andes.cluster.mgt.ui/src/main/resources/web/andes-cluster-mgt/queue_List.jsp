@@ -44,10 +44,10 @@
 
         try {
             client = new ClusterManagerClient(configContext, serverURL, cookie);
-            client.initialize();
             totalQueueCount = client.updateQueueCountForNode(requestedHostName);
             numberOfPages =  (int) Math.ceil(((float) totalQueueCount) / queueCountPerPage);
             queueList  = client.getQueuesOfNode(requestedHostName, pageNumber * queueCountPerPage, queueCountPerPage);
+
         } catch (Exception e) {
             CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
     %>
@@ -128,9 +128,6 @@
                     <th><fmt:message key="queue.name"/></th>
                     <th><fmt:message key="queue.depth"/></th>
                     <th><fmt:message key="queue.messageCount"/></th>
-                    <th><fmt:message key="queue.created"/></th>
-                    <th><fmt:message key="queue.updated"/></th>
-                    <th><fmt:message key="queue.type"/></th>
                     <th colspan="2"><fmt:message key="queue.worker"/></th>
                 </tr>
                 </thead>
@@ -151,6 +148,7 @@
                             } else {
                                 queueSizeWithPostFix = Long.toString(queueSize) + " bytes";
                             }
+
                 %>
                 <tr>
                     <td>
@@ -159,24 +157,6 @@
                     <td><%=queueSizeWithPostFix%>
                     </td>
                     <td><%=queue.getMessageCount()%>
-                    </td>
-                    <td><%=queue.getCreatedTime().getTime().toString()%>
-                    </td>
-                    <td><%=queue.getUpdatedTime().getTime().toString()%>
-                    </td>
-                    <td>
-                        <%
-                            if (Constants.MB_QUEUE_CREATED_FROM_SQS_CLIENT.equals(queue.getCreatedFrom())) {
-                        %>
-                        <img src="images/queue_type_sqs.gif" alt="">
-
-                        <%
-                        } else if (Constants.MB_QUEUE_CREATED_FROM_AMQP.equals(queue.getCreatedFrom())) {
-                        %>
-                        <img src="images/queue_type_amqp.gif" alt="">
-                        <%
-                            }
-                        %>
                     </td>
                     <td>
                          <select id="combo<%=index%>">
@@ -191,10 +171,6 @@
                              }
                              %>
                          </select>
-                    </td>
-                    <td>
-                        <a style="background-image: url(images/move.gif);"
-                        class="icon-link" onclick="updateWorkerLocationForQueue('<%=queueName%>','<%=index%>','<%=Constants.SUCCESS%>')"></a>
                     </td>
                 </tr>
                 <%

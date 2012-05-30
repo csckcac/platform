@@ -192,7 +192,6 @@
                                 <mkdir dir="${tempdir}"/>
                                 <mkdir dir="${bpelSampleDir}"/>
                                 <mkdir dir="${humantaskSampleDir}"/>
-
                                 <!--zip destfile="target/samples/CreditRating.zip"
                                      basedir="${basedir}/../samples/src/main/resources/bpel/2.0/CreditRating"/-->
                                 <zip destfile="target/samples/bpel/CustomerInfo.zip"
@@ -221,12 +220,20 @@
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/RPCClientProcess"/>
                                 <zip destfile="target/samples/bpel/RPCServiceProcess.zip"
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/RPCServiceProcess"/>
-                                <zip destfile="target/samples/bpel/SampleCompensationHandlers.zip"
-                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleCompensationHandlers"/>
-                                <zip destfile="target/samples/bpel/SampleEventHandlers.zip"
+                                <zip destfile="target/samples/bpel/FlightReservationProcess.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleCompensationHandlers/FlightReservationProcess/"/>
+                                <zip destfile="target/samples/bpel/SampleEventHandler.zip"
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleEventHandlers"/>
-                                <zip destfile="target/samples/bpel/SampleFaultHandler.zip"
-                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleFaultHandler"/>
+                                <zip destfile="target/samples/bpel/AdderProcess.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleFaultHandler/AdderProcess/"/>
+                                <zip destfile="target/samples/bpel/DivisionProcess.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleFaultHandler/DivisionProcess/"/>
+                                <zip destfile="target/samples/bpel/FaultHandlingSample.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleFaultHandler/FaultHandlingSample/"/>
+                                <zip destfile="target/samples/bpel/Async-Client.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleAsynchronousProcess/Async-Client/"/>
+                                <zip destfile="target/samples/bpel/Async-Server.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SampleAsynchronousProcess/Async-Server/"/>
                                 <zip destfile="target/samples/bpel/SecurePartnerBPEL.zip"
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/SecurePartnerBPEL"/>
                                 <zip destfile="target/samples/bpel/TestAlarm.zip"

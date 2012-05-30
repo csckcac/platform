@@ -89,13 +89,13 @@ public class StatisticsServiceComponent {
             if(log.isDebugEnabled()){
                 log.debug("initializing StatisticsPersistenceScheduler..");
             }
-            int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
             bundleCtx.registerService(CarbonDeploymentSchedulerExtender.class.getName(),
-                                      new StatisticsPersistenceScheduler(
-                                              registryService.getLocalRepository(tenantId)),
+                                      new StatisticsPersistenceScheduler(registryService),
                                       null);
 
-            log.debug("Statistics bundle is activated");
+            if(log.isDebugEnabled()){
+                log.debug("Statistics bundle is activated");
+            }
         } catch (Throwable e) {
             log.error("Failed to activate Statistics bundle", e);
         }

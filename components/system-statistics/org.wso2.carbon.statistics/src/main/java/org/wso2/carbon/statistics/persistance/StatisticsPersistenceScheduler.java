@@ -1,44 +1,89 @@
 package org.wso2.carbon.statistics.persistance;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.clustering.ClusteringAgent;
+import org.apache.axis2.clustering.ClusteringFault;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.deployment.CarbonDeploymentSchedulerExtender;
+import org.wso2.carbon.core.deployment.SynchronizeRepositoryRequest;
+import org.wso2.carbon.core.internal.CarbonCoreDataHolder;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.core.util.SystemFilter;
 import org.wso2.carbon.registry.api.Collection;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.statistics.StatisticsConstants;
 import org.wso2.carbon.statistics.services.SystemStatisticsUtil;
 import org.wso2.carbon.statistics.services.util.OperationStatistics;
 import org.wso2.carbon.statistics.services.util.ServiceStatistics;
+import org.wso2.carbon.statistics.synchronize.StatisticsSynchronizeRequest;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 
 
-public class StatisticsPersistenceScheduler implements CarbonDeploymentSchedulerExtender{
+public class StatisticsPersistenceScheduler implements CarbonDeploymentSchedulerExtender {
 
-    private UserRegistry localRegistry;
+    private static final Log log = LogFactory.getLog(StatisticsPersistenceScheduler.class);
+
+    private RegistryService registryService;
     SystemStatisticsUtil statisticsUtil;
 
 
-    public StatisticsPersistenceScheduler(UserRegistry localRepository) {
-        this.localRegistry = localRepository;
+    public StatisticsPersistenceScheduler(RegistryService registryService) {
+        this.registryService = registryService;
         statisticsUtil = new SystemStatisticsUtil();
     }
 
-    public void invoke(AxisConfiguration axisConfiguration) {
-
-        persistSystemStatistics(axisConfiguration);
-        persistOperationStatistics(axisConfiguration);
-        persistServiceStatistics(axisConfiguration);
+    public void invoke(AxisConfiguration axisConfiguration, int tenantID) {
+        if(log.isDebugEnabled()){
+            log.debug("Invoking StatisticsPersistenceScheduler.. for tenant : " + tenantID);
+        }
+        try {
+            UserRegistry registry = registryService.getLocalRepository(tenantID);
+            persistSystemStatistics(axisConfiguration, registry);
+            persistOperationStatistics(axisConfiguration, registry);
+            persistServiceStatistics(axisConfiguration, registry);
+//        sendRepositorySyncMessage();
+        } catch (RegistryException e) {
+            log.error("Error getting tenant " + tenantID + "'s local registry instance.");
+            e.printStackTrace();
+        }
     }
 
-    public void persistSystemStatistics(AxisConfiguration axisConfig){
+    private void sendRepositorySyncMessage() {
+        // For sending clustering messages we need to use the super-tenant's AxisConfig (Main Server
+        // AxisConfiguration) because we are using the clustering facility offered by the ST in the
+        // tenants
+//        System.out.println("YYY StatisticsPersistenceScheduler.sendRepositorySyncMessage START");
+        ClusteringAgent clusteringAgent =
+                CarbonCoreDataHolder.getInstance().getMainServerConfigContext().
+                        getAxisConfiguration().getClusteringAgent();
+        int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
+        if (clusteringAgent != null) {
+//            int numberOfRetries = 0;
+//            while (numberOfRetries < 60) {
+            try {
+                clusteringAgent.sendMessage(new StatisticsSynchronizeRequest(tenantId), true);
+//                    break;
+            } catch (ClusteringFault e) {
+                log.error("Error sending Statistics Synchronize Request.. " + e.getMessage());
+                e.printStackTrace();
+            }
+//            }
+        }
+//        System.out.println("YYY StatisticsPersistenceScheduler.sendRepositorySyncMessage END");
+
+    }
+
+    public void persistSystemStatistics(AxisConfiguration axisConfig, UserRegistry registry) {
 
         //persist system stats
         String regPath = StatisticsConstants.SYSTEM_REG_PATH;
@@ -46,10 +91,10 @@ public class StatisticsPersistenceScheduler implements CarbonDeploymentScheduler
 
 
         try {
-            if(localRegistry.resourceExists(regPath)){
-                resource = localRegistry.get(regPath);
+            if (registry.resourceExists(regPath)) {
+                resource = registry.get(regPath);
             } else {
-                resource = localRegistry.newResource();
+                resource = registry.newResource();
             }
             resource.setProperty(StatisticsConstants.GLOBAL_REQUEST_COUNTER,
                                  String.valueOf(statisticsUtil.getTotalSystemRequestCount(axisConfig)));
@@ -72,7 +117,7 @@ public class StatisticsPersistenceScheduler implements CarbonDeploymentScheduler
 //            resource.setProperty(StatisticsConstants.GLOBAL_CURRENT_FAULT_COUNTER,
 //                                 String.valueOf(statisticsUtil.getCurrentSystemFaultCount(axisConfig)));
 
-            localRegistry.put(regPath, resource);
+            registry.put(regPath, resource);
 
         } catch (RegistryException e) {
             e.printStackTrace();
@@ -81,7 +126,8 @@ public class StatisticsPersistenceScheduler implements CarbonDeploymentScheduler
         }
     }
 
-    private void persistServiceStatistics(AxisConfiguration axisConfig) {
+    private void persistServiceStatistics(AxisConfiguration axisConfig,
+                                          UserRegistry registry) {
         //persist service stats
         String regPath = StatisticsConstants.SERVICES_REG_PATH;
 
@@ -97,10 +143,10 @@ public class StatisticsPersistenceScheduler implements CarbonDeploymentScheduler
                 Resource resource;
                 String serviceRegPath = regPath.concat("/").concat(axisService.getName());
 
-                if(localRegistry.resourceExists(serviceRegPath)){
-                    resource = localRegistry.get(serviceRegPath);
+                if (registry.resourceExists(serviceRegPath)) {
+                    resource = registry.get(serviceRegPath);
                 } else {
-                    resource = localRegistry.newResource();
+                    resource = registry.newResource();
                 }
                 ServiceStatistics serviceStatistics = statisticsUtil.getServiceStatistics
                         (axisService);
@@ -135,7 +181,7 @@ public class StatisticsPersistenceScheduler implements CarbonDeploymentScheduler
                         StatisticsConstants.CURRENT_OPERATION_AND_SERVICE_FAULT_COUNTER,
                         String.valueOf(serviceStatistics.getCurrentInvocationFaultCount()));
 
-                localRegistry.put(serviceRegPath, resource);
+                registry.put(serviceRegPath, resource);
             }
 
         } catch (RegistryException e) {
@@ -145,7 +191,8 @@ public class StatisticsPersistenceScheduler implements CarbonDeploymentScheduler
         }
     }
 
-    private void persistOperationStatistics(AxisConfiguration axisConfig) {
+    private void persistOperationStatistics(AxisConfiguration axisConfig,
+                                            UserRegistry registry) {
         //persist operation stats
         String regPath = StatisticsConstants.SERVICES_REG_PATH;
 
@@ -162,15 +209,15 @@ public class StatisticsPersistenceScheduler implements CarbonDeploymentScheduler
                 String serviceRegPath = regPath.concat("/").concat(axisService.getName());
 
                 Iterator<AxisOperation> axisOperationIterator = axisService.getOperations();
-                while (axisOperationIterator.hasNext()){
+                while (axisOperationIterator.hasNext()) {
                     AxisOperation axisOperation = axisOperationIterator.next();
                     String operationRegPath = serviceRegPath.concat("/").concat(
                             axisOperation.getName().getLocalPart());
 
-                    if(localRegistry.resourceExists(operationRegPath)){
-                        resource = localRegistry.get(operationRegPath);
+                    if (registry.resourceExists(operationRegPath)) {
+                        resource = registry.get(operationRegPath);
                     } else {
-                        resource = localRegistry.newResource();
+                        resource = registry.newResource();
                     }
                     OperationStatistics operationStatistics = statisticsUtil.getOperationStatistics
                             (axisOperation);
@@ -205,7 +252,7 @@ public class StatisticsPersistenceScheduler implements CarbonDeploymentScheduler
                             StatisticsConstants.CURRENT_OPERATION_AND_SERVICE_FAULT_COUNTER,
                             String.valueOf(operationStatistics.getCurrentInvocationFaultCount()));
 
-                    localRegistry.put(operationRegPath, resource);
+                    registry.put(operationRegPath, resource);
                 }
             }
         } catch (RegistryException e) {

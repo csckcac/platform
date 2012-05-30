@@ -26,8 +26,12 @@ import org.apache.axis2.engine.AxisObserver;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.core.util.SystemFilter;
 import org.wso2.carbon.statistics.internal.ResponseTimeProcessor;
+import org.wso2.carbon.statistics.persistance.StatisticsPersistenceUtils;
+import org.wso2.carbon.statistics.services.SystemStatisticsUtil;
+import org.wso2.carbon.statistics.services.util.OperationStatistics;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.PreAxisConfigurationPopulationObserver;
 
@@ -80,9 +84,16 @@ public class SystemStatisticsDeploymentInterceptor implements AxisObserver {
             axisService.isClientSide()) {
             return;
         }
+//        int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
+
         if (axisEvent.getEventType() == AxisEvent.SERVICE_DEPLOY) {
+            //TODO attach stats if exists
+            StatisticsPersistenceUtils.attachStatisticsForService(axisService);
+
             for (Iterator iter = axisService.getOperations(); iter.hasNext();) {
                 AxisOperation op = (AxisOperation) iter.next();
+
+//                StatisticsPersistenceUtils.attachStatisticsForOperation(op);
 
                 // IN operation counter
                 Parameter inOpCounter = new Parameter();
@@ -122,7 +133,14 @@ public class SystemStatisticsDeploymentInterceptor implements AxisObserver {
             }
         }
         else if(axisEvent.getEventType() == AxisEvent.SERVICE_REMOVE) {
-            //TODO remove persisted stats for service
+            Parameter keepStatHistory = axisService.getParameter(CarbonConstants
+                                                                  .KEEP_SERVICE_HISTORY_PARAM);
+            if(keepStatHistory == null || keepStatHistory.getValue() == null ||
+                Boolean.FALSE.equals(keepStatHistory.getValue())){
+                //TODO remove persisted stats for service
+//                StatisticsPersistenceUtils.removePersistedStats(axisService);
+
+            }
         }
     }
 

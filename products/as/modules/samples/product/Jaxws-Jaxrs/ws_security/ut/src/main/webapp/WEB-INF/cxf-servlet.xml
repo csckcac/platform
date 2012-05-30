@@ -31,47 +31,10 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
                     implementor="demo.wssec.server.GreeterImpl"
                     wsdlLocation="WEB-INF/classes/hello_world_wssec.wsdl">
 
-        <jaxws:inInterceptors>
-            <ref bean="wss4jInConfiguration"/>
-        </jaxws:inInterceptors>
-
-        <jaxws:outInterceptors>
-            <ref bean="wss4jOutConfiguration"/>
-        </jaxws:outInterceptors>
+        <jaxws:properties>
+            <entry key="ws-security.callback-handler" value="demo.wssec.server.UTPasswordCallback"/>
+        </jaxws:properties>
 
     </jaxws:endpoint>
-
-    <bean id="wss4jOutConfiguration" class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
-        <property name="properties">
-            <map>
-                <entry key="action" value="UsernameToken Timestamp"/>
-                <entry key="user" value="Alice"/>
-                <entry key="passwordType" value="PasswordText" />
-                <entry>
-                    <key>
-                        <value>passwordCallbackRef</value>
-                    </key>
-                    <ref bean="passwordCallback"/>
-                </entry>
-            </map>
-        </property>
-    </bean>
-
-    <bean id="wss4jInConfiguration" class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
-        <property name="properties">
-            <map>
-                <entry key="action" value="UsernameToken Timestamp"/>
-                <entry key="passwordType" value="PasswordDigest" />
-                <entry>
-                    <key>
-                        <value>passwordCallbackRef</value>
-                    </key>
-                    <ref bean="passwordCallback"/>
-                </entry>
-            </map>
-        </property>
-    </bean>
-
-    <bean id="passwordCallback" class="demo.wssec.server.UTPasswordCallback"/>
 
 </beans>

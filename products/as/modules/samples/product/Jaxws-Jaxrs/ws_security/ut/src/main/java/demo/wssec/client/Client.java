@@ -48,20 +48,20 @@ public final class Client {
             BusFactory.setDefaultBus(bus);
 
             Map<String, Object> outProps = new HashMap<String, Object>();
-            outProps.put("action", "UsernameToken Timestamp");
+            outProps.put("action", "UsernameToken");
 
-            outProps.put("passwordType", "PasswordDigest");
+            outProps.put("passwordType", "PasswordText");
             outProps.put("user", "abcd");
             outProps.put("passwordCallbackClass", "demo.wssec.client.UTPasswordCallback");
 
             bus.getOutInterceptors().add(new WSS4JOutInterceptor(outProps));
 
-            Map<String, Object> inProps = new HashMap<String, Object>();
-            inProps.put("action", "UsernameToken Timestamp");
-            inProps.put("passwordType", "PasswordText");
-            inProps.put("passwordCallbackClass", "demo.wssec.client.UTPasswordCallback");
+//            Map<String, Object> inProps = new HashMap<String, Object>();
+//            inProps.put("action", "UsernameToken Timestamp");
+//            inProps.put("passwordType", "PasswordText");
+//            inProps.put("passwordCallbackClass", "demo.wssec.client.UTPasswordCallback");
 
-            bus.getInInterceptors().add(new WSS4JInInterceptor(inProps));
+//            bus.getInInterceptors().add(new WSS4JInInterceptor(inProps));
 
             GreeterService service = new GreeterService();
             Greeter port = service.getGreeterPort();

@@ -22,6 +22,23 @@
     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
+    <!-- Policy for UsernameToken with plaintext password, sent from client to
+    server only -->
+    <wsp:Policy wsu:Id="UsernameToken" xmlns:wsu=
+            "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <sp:SupportingTokens>
+                    <wsp:Policy>
+                        <sp:UsernameToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient"/>
+                    </wsp:Policy>
+                </sp:SupportingTokens>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+
     <wsdl:types>
         <schema targetNamespace="http://cxf.apache.org/hello_world_soap_http/types" 
             xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
@@ -93,6 +110,8 @@
     </wsdl:portType>
 
     <wsdl:binding name="Greeter_SOAPBinding" type="tns:Greeter">
+
+        <wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#UsernameToken"/>
 
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         

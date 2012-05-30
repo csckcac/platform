@@ -129,17 +129,12 @@ public class APIProviderHostObject extends ScriptableObject {
         return url;
     }
 
-    public static NativeArray jsFunction_getAPIUsageHostTest(String APIname, String serverURL)
-            throws ScriptException {
-        NativeArray myn = new NativeArray(0L);
-        String[] usage = {"1.0.0", "10", "2.2.1", "40"};
+    public static String jsFunction_getHTTPsURL(Context cx, Scriptable thisObj,
+                                                Object[] args, Function funObj)
+            throws APIManagementException {
 
-        for (int i = 0; i < usage.length; i++) {
-            myn.put(i, myn, usage[i]);
-        }
-        return myn;
+        return "https://" + System.getProperty("carbon.local.ip") + ":" + System.getProperty("mgt.transport.https.port");
     }
-
     /**
      * This method is to functionality of add a new API in API-Provider
      *

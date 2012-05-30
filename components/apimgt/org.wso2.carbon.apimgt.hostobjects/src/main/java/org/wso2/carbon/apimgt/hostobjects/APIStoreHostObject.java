@@ -42,6 +42,9 @@ public class APIStoreHostObject extends ScriptableObject {
 	private static final long serialVersionUID = -3169012616750937045L;
 	private static final Log log = LogFactory.getLog(APIStoreHostObject.class);
     private static final String hostObjectName = "APIStore";
+    private static final String httpPort = "mgt.transport.http.port";
+    private static final String httpsPort = "mgt.transport.https.port";
+    private static final String hostName = "carbon.local.ip";
 
     private APIConsumer apiConsumer;
 
@@ -122,7 +125,21 @@ public class APIStoreHostObject extends ScriptableObject {
         return url;
     }
 
-	/*
+    public static String jsFunction_getHTTPsURL(Context cx, Scriptable thisObj,
+                                                Object[] args, Function funObj)
+            throws APIManagementException {
+
+        return "https://" + System.getProperty(hostName) + ":" + System.getProperty(httpsPort);
+    }
+
+    public static String jsFunction_getHTTPURL(Context cx, Scriptable thisObj,
+                                               Object[] args, Function funObj)
+            throws APIManagementException {
+
+        return "http://" + System.getProperty(hostName) + ":" + System.getProperty(httpPort);
+    }
+
+    /*
 	 * getting key for API subscriber args[] list String subscriberID, String
 	 * api, String apiVersion, String Date
 	 */

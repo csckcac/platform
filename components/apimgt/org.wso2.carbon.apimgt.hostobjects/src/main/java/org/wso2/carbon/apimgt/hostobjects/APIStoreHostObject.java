@@ -128,14 +128,12 @@ public class APIStoreHostObject extends ScriptableObject {
     public static String jsFunction_getHTTPsURL(Context cx, Scriptable thisObj,
                                                 Object[] args, Function funObj)
             throws APIManagementException {
-
         return "https://" + System.getProperty(hostName) + ":" + System.getProperty(httpsPort);
     }
 
     public static String jsFunction_getHTTPURL(Context cx, Scriptable thisObj,
                                                Object[] args, Function funObj)
             throws APIManagementException {
-
         return "http://" + System.getProperty(hostName) + ":" + System.getProperty(httpPort);
     }
 
@@ -713,6 +711,10 @@ public class APIStoreHostObject extends ScriptableObject {
         } else {
             row.put("thumbnailurl", row, api.getThumbnailUrl());
         }
+        row.put("bizOwner", row, api.getBusinessOwner());
+        row.put("bizOwnerMail", row, api.getBusinessOwnerEmail());
+        row.put("techOwner", row, api.getTechnicalOwner());
+        row.put("techOwnerMail", row, api.getTechnicalOwnerEmail());
         myn.put(0, myn, row);
 
         return myn;

@@ -18,6 +18,7 @@ package org.wso2.automation.common.test.greg.governance;/*
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
@@ -31,6 +32,7 @@ import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -54,6 +56,7 @@ public class SchemaManagerAPITest {
     @Test(groups = {"wso2.greg.api"}, description = "Testing newSchema API method", priority = 1)
     public void testNewSchemaUrl() throws GovernanceException {
         try {
+            cleanSchema();
             schemaObj = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/carbon" +
                     "/platform/trunk/platform-integration/system-test-framework/core/org.wso2." +
                     "automation.platform.core/src/main/resources/artifacts/GREG/schema/calculator.xsd");
@@ -185,17 +188,156 @@ public class SchemaManagerAPITest {
         }
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing removeSchema API method", priority = 10)
+
+    @Test(groups = {"wso2.greg.api"}, description = "Testing newSchema API method with inline schema content", priority = 10)
+    public void testNewSchemaInlineContent() throws GovernanceException {
+        String schemaContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<xsd:schema xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://charitha.org/\" attributeFormDefault=\"unqualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://charitha.org/\">\n" +
+                "<xsd:element name=\"division\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"k\" type=\"xsd:double\"/>\n" +
+                "<xsd:element name=\"l\" type=\"xsd:double\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "<xsd:element name=\"divisionResponse\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"divreturn\" type=\"xsd:double\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "<xsd:element name=\"addition\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"x\" type=\"xsd:int\"/>\n" +
+                "<xsd:element name=\"y\" type=\"xsd:int\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "<xsd:element name=\"additionResponse\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"addreturn\" type=\"xsd:int\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "<xsd:element name=\"multiplication\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"a\" type=\"xsd:int\"/>\n" +
+                "<xsd:element name=\"b\" type=\"xsd:int\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "<xsd:element name=\"multiplicationResponse\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"multiplyreturn\" type=\"xsd:int\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "</xsd:schema>";
+        try {
+            schemaObj = schemaManager.newSchema(schemaContent.getBytes());
+            schemaManager.addSchema(schemaObj);
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Exception thrown while executing newSchema API method with " +
+                    "inline wsdl content" + e.getMessage());
+        }
+        schemaObj = schemaManager.getSchema(schemaObj.getId());
+        assertTrue(schemaObj.getQName().getNamespaceURI().contains("http://charitha.org/"), "Error" +
+                " found in newSchema with inline schema content");
+    }
+
+
+    @Test(groups = {"wso2.greg.api"}, description = "Testing newSchema API method with inline schema content with name value", priority = 11)
+    public void testNewSchemaInlineContentWithName() throws GovernanceException {
+        String schemaContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<xsd:schema xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://charitha.org/\" attributeFormDefault=\"unqualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://charitha.org/\">\n" +
+                "<xsd:element name=\"division\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"k\" type=\"xsd:double\"/>\n" +
+                "<xsd:element name=\"l\" type=\"xsd:double\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "<xsd:element name=\"divisionResponse\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"divreturn\" type=\"xsd:double\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "<xsd:element name=\"addition\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"x\" type=\"xsd:int\"/>\n" +
+                "<xsd:element name=\"y\" type=\"xsd:int\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "<xsd:element name=\"additionResponse\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"addreturn\" type=\"xsd:int\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "<xsd:element name=\"multiplication\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"a\" type=\"xsd:int\"/>\n" +
+                "<xsd:element name=\"b\" type=\"xsd:int\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "<xsd:element name=\"multiplicationResponse\">\n" +
+                "<xsd:complexType>\n" +
+                "<xsd:sequence>\n" +
+                "<xsd:element name=\"multiplyreturn\" type=\"xsd:int\"/>\n" +
+                "</xsd:sequence>\n" +
+                "</xsd:complexType>\n" +
+                "</xsd:element>\n" +
+                "</xsd:schema>";
+        try {
+            schemaObj = schemaManager.newSchema(schemaContent.getBytes(),"SampleSchemaContentWithName.xsd");
+            schemaManager.addSchema(schemaObj);
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Exception thrown while executing newSchema API method with " +
+                    "inline wsdl content and name" + e.getMessage());
+        }
+        schemaObj = schemaManager.getSchema(schemaObj.getId());
+        assertTrue(schemaObj.getQName().getLocalPart().equalsIgnoreCase("SampleSchemaContentWithName.xsd"),
+                "Error found in newSchema with inline schema content and name");
+    }
+
+    @Test(groups = {"wso2.greg.api"}, description = "Testing removeSchema API method", priority = 12)
     public void testRemoveSchema() throws GovernanceException {
         try {
             schemaManager.removeSchema(schemaObj.getId());
             schemaArray = schemaManager.getAllSchemas();
             for (Schema s : schemaArray) {
-                assertTrue(s.getId().equalsIgnoreCase(schemaObj.getId()), "SchemaManager:removeSchema API method having error");
+                assertFalse(s.getId().equalsIgnoreCase(schemaObj.getId()), "SchemaManager:removeSchema" +
+                        " API method having error");
             }
 
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing SchemaManager:removeSchema method" + e);
+        }
+    }
+
+    @AfterClass
+    public void removeTestArtifacts() throws GovernanceException {
+        cleanSchema();
+    }
+
+    private void cleanSchema() throws GovernanceException {
+        Schema[] schemas = schemaManager.getAllSchemas();
+        for (Schema s : schemas) {
+            schemaManager.removeSchema(s.getId());
         }
     }
 }

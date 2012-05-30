@@ -1042,7 +1042,6 @@ public class WSDLManagerAPITest {
                             "Error occurred while executing getWsdlElement API method with WSDL object");
                 }
             }
-
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing getWsdlElement API " +
                     "method with WSDL object" + e.getMessage());

@@ -27,6 +27,7 @@ import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.core.util.SystemFilter;
 import org.wso2.carbon.statistics.services.SystemStatisticsUtil;
 import org.wso2.carbon.utils.NetworkUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
@@ -82,9 +83,9 @@ public class SystemStatistics {
         Date stTime = new Date(startTime);
 
         // only super admin can view serverStartTime and systemUpTime
-        if(tenantId == 0 ){
-        serverStartTime = dateFormatter.format(stTime);
-        systemUpTime = (getTime((System.currentTimeMillis() - startTime) / 1000));
+        if(tenantId == MultitenantConstants.SUPER_TENANT_ID){
+            serverStartTime = dateFormatter.format(stTime);
+            systemUpTime = (getTime((System.currentTimeMillis() - startTime) / 1000));
         }
         try {
             totalRequestCount = statService.getTotalSystemRequestCount(axisConfig);
@@ -106,9 +107,9 @@ public class SystemStatistics {
         Runtime runtime = Runtime.getRuntime();
 
           // only super admin can view usedMemory and totalMemory
-        if(tenantId == 0 ){
-        usedMemory = formatMemoryValue(runtime.totalMemory() - runtime.freeMemory());
-        totalMemory = formatMemoryValue(runtime.totalMemory());
+        if(tenantId == MultitenantConstants.SUPER_TENANT_ID ){
+            usedMemory = formatMemoryValue(runtime.totalMemory() - runtime.freeMemory());
+            totalMemory = formatMemoryValue(runtime.totalMemory());
         }
         wso2wsasVersion = ServerConfiguration.getInstance().getFirstProperty("Version");
 
@@ -127,7 +128,7 @@ public class SystemStatistics {
         this.services = activeServices;
         try {
             // only susper admin is allow to view serverName.
-            if (tenantId == 0) {
+            if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
                 serverName = NetworkUtils.getLocalHostname();
             }
         } catch (SocketException ignored) {

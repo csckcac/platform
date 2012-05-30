@@ -224,11 +224,10 @@ public class PasswordUtil {
     private static boolean updatePassword(AdminMgtInfoBean adminInfoBean,
                                           UserStoreManager userStoreManager) throws
             AdminManagementException {
-        String tenantLessUserName, tenantDomain, password, userName;
-        tenantLessUserName = adminInfoBean.getTenantLessUserName();
-        tenantDomain = adminInfoBean.getTenantDomain();
-        password = adminInfoBean.getPassword();
-        userName = AdminMgtUtil.getUserNameWithDomain(tenantLessUserName, tenantDomain);
+        String tenantLessUserName = adminInfoBean.getTenantLessUserName();
+        String tenantDomain = adminInfoBean.getTenantDomain();
+        String password = adminInfoBean.getPassword();
+        String userName = AdminMgtUtil.getUserNameWithDomain(tenantLessUserName, tenantDomain);
         try {
             userStoreManager.updateCredentialByAdmin(tenantLessUserName, password);
             String msg = "Password reset for the user: " + userName;

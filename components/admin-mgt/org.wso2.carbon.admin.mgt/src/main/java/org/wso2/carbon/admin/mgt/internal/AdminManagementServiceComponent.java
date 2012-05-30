@@ -83,7 +83,8 @@ public class AdminManagementServiceComponent {
                             loadeMailVerificationConfig(confXml);
         } catch(Exception e) {
             String msg = "Email Configuration file for the password reset feature not found. " +
-                    "Pls check the repository/conf/email folder for email-admin-config.xml.";
+                    "Pls check the repository/conf/email folder for " +
+                    AdminMgtConstants.EMAIL_ADMIN_CONF_FILE;
             log.error(msg);
         }
     }

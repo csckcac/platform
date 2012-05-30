@@ -216,7 +216,7 @@ public class RegistrySearchByComments {
         serviceManager.addService(service);
         for (String serviceId : serviceManager.getAllServiceIds()) {
             service = serviceManager.getService(serviceId);
-            if (service.getPath().contains(serviceName)) {
+            if (service.getPath().endsWith(serviceName)) {
                 Comment comment = new Comment();
                 comment.setText(commentString);
                 governance.addComment(service.getPath(), comment);

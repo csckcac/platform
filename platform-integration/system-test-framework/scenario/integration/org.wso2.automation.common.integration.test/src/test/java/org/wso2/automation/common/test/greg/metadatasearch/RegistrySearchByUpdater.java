@@ -33,6 +33,7 @@ import org.wso2.carbon.registry.search.stub.beans.xsd.CustomSearchParameterBean;
 import org.wso2.carbon.registry.search.stub.common.xsd.ResourceData;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
@@ -45,6 +46,7 @@ Search Registry metadata by last updater Name
 public class RegistrySearchByUpdater {
 
     private String sessionCookie;
+    private String userName;
 
     private RegistrySearchAdminService searchAdminService;
     private WSRegistryServiceClient registry;
@@ -54,7 +56,7 @@ public class RegistrySearchByUpdater {
             throws LoginAuthenticationExceptionException, RemoteException, RegistryException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
         EnvironmentVariables gregServer = builder.build().getGreg();
-
+        userName = UserListCsvReader.getUserInfo(3).getUserName();
         sessionCookie = gregServer.getSessionCookie();
         searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
         registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
@@ -67,7 +69,7 @@ public class RegistrySearchByUpdater {
                    RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setUpdater("admin");
+        paramBean.setUpdater(userName);
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -75,7 +77,7 @@ public class RegistrySearchByUpdater {
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid updater name");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains("admin"),
+            Assert.assertTrue(registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains(userName),
                               "search word not contain on Updater Name :" + resource.getResourcePath());
         }
 
@@ -88,7 +90,7 @@ public class RegistrySearchByUpdater {
                    RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setUpdater("admin");
+        paramBean.setUpdater(userName);
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -103,7 +105,7 @@ public class RegistrySearchByUpdater {
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Updater name");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertFalse(registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains("admin"),
+            Assert.assertFalse(registry.get(resource.getResourcePath()).getLastUpdaterUserName().contains(userName),
                                "search word contain on Updater Name :" + resource.getResourcePath());
         }
 

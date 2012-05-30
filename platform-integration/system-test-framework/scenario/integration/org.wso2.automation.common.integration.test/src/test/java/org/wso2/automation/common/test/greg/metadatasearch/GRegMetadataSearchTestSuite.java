@@ -39,6 +39,8 @@ public class GRegMetadataSearchTestSuite extends MasterTestSuite {
                                                   RegistrySearchByAssociationType.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByAssociationDestination",
                                                   RegistrySearchByAssociationDestination.class));
+        suiteVariablesList.add(new SuiteVariables("RegistrySearchByPropertyName",
+                                                  RegistrySearchByPropertyName.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByResourceNameTest",
                                                   RegistrySearchByResourceNameTest.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByKeyword",
@@ -53,6 +55,8 @@ public class GRegMetadataSearchTestSuite extends MasterTestSuite {
                                                   RegistrySearchByUpdater.class));
         suiteVariablesList.add(new SuiteVariables("RegistrySearchByMediaType",
                                                   RegistrySearchByMediaType.class));
+        suiteVariablesList.add(new SuiteVariables("RegistrySearchByAll",
+                                                  RegistrySearchByAll.class));
 
         setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("GRegMetadataSearchTestSuite", suiteVariablesList).run();

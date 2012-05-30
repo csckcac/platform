@@ -105,7 +105,7 @@ public class RegistrySearchByTags {
                     break;
                 }
             }
-            Assert.assertTrue(tagFound, "Tag not found on Resource");
+            Assert.assertTrue(tagFound, "Tag not found on Resource " + resource.getResourcePath());
 
         }
 
@@ -133,7 +133,7 @@ public class RegistrySearchByTags {
                     break;
                 }
             }
-            Assert.assertTrue(tagFound, "Tags not found on Resource");
+            Assert.assertTrue(tagFound, "Tags not found on Resource " + resource.getResourcePath());
 
         }
 
@@ -146,7 +146,7 @@ public class RegistrySearchByTags {
                    RegistryException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setTags("%B%");
+        paramBean.setTags("A%C");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -156,12 +156,12 @@ public class RegistrySearchByTags {
         for (ResourceData resource : result.getResourceDataList()) {
             boolean tagFound = false;
             for (Tag tag : registry.getTags(resource.getResourcePath())) {
-                if (tag.getTagName().contains("B")) {
+                if (tag.getTagName().contains("A") && tag.getTagName().contains("C")) {
                     tagFound = true;
                     break;
                 }
             }
-            Assert.assertTrue(tagFound, "Tag pattern not found on Resource");
+            Assert.assertTrue(tagFound, "Tag pattern not found on Resource. " + resource.getResourcePath());
 
         }
 
@@ -205,7 +205,7 @@ public class RegistrySearchByTags {
         addService("sns2", "autoService2", "BC");
         addWSDL("AB");
         addPolicy("BC");
-        addSchema("AB");
+        addSchema("ABB");
     }
 
     private void addService(String nameSpace, String serviceName, String tag)
@@ -216,7 +216,7 @@ public class RegistrySearchByTags {
         serviceManager.addService(service);
         for (String serviceId : serviceManager.getAllServiceIds()) {
             service = serviceManager.getService(serviceId);
-            if (service.getPath().contains(serviceName)) {
+            if (service.getPath().endsWith(serviceName)) {
                 governance.applyTag(service.getPath(), tag);
 
             }

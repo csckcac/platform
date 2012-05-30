@@ -19,7 +19,6 @@ package org.wso2.automation.common.test.greg.metadatasearch;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
@@ -31,7 +30,7 @@ import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
-import org.wso2.carbon.registry.core.Association;
+import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
@@ -41,6 +40,7 @@ import org.wso2.carbon.registry.search.stub.beans.xsd.CustomSearchParameterBean;
 import org.wso2.carbon.registry.search.stub.common.xsd.ResourceData;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 import org.wso2.platform.test.core.utils.fileutils.FileManager;
@@ -50,161 +50,168 @@ import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /*
-Search Registry metadata by AssociationType
+test matching resource with all fields
  */
-public class RegistrySearchByAssociationType {
-
+public class RegistrySearchByAll {
     private String sessionCookie;
+    private String userName;
+    private String destinationPath;
 
     private RegistrySearchAdminService searchAdminService;
     private WSRegistryServiceClient registry;
     private Registry governance;
 
     @BeforeClass
-    public void init() throws Exception {
+    public void init()
+            throws Exception {
         final int userId = 3;
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
         EnvironmentVariables gregServer = builder.build().getGreg();
 
-
         sessionCookie = gregServer.getSessionCookie();
+        userName = UserListCsvReader.getUserInfo(3).getUserName();
         searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
         registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         governance = new RegistryProvider().getGovernance(registry, userId);
 
         addResources();
-        //wait to cache  resources in order to search
-        Thread.sleep(1000 * 60);
+//        //wait to cache  resources in order to search
+        Thread.sleep(1000 * 60 * 1);
 
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available AssociationType")
-    public void searchResourceByAssociationType()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException,
-                   RegistryException {
-        final String searchAssociationType = "associationType1";
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType(searchAssociationType);
-        ArrayOfString[] paramList = paramBean.getParameterList();
-
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Type");
-
-        for (ResourceData resource : result.getResourceDataList()) {
-            Association[] array = registry.getAssociations(resource.getResourcePath(), searchAssociationType);
-            Assert.assertNotNull(array, "Association list null");
-            Assert.assertTrue(array.length > 0);
-            for (Association association : array) {
-                Assert.assertEquals(association.getAssociationType(), searchAssociationType,
-                                    "AssociationT type not found on Resource");
-            }
-
-        }
-
-
-    }
-
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Association Types")
-    public void searchResourceByAssociationTypes()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException,
-                   RegistryException {
-
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType("associationType1 associationType2");
-        ArrayOfString[] paramList = paramBean.getParameterList();
-
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Types");
-        for (ResourceData resource : result.getResourceDataList()) {
-            boolean associationTypeFound = false;
-            for (Association association : registry.getAllAssociations(resource.getResourcePath())) {
-                if ("associationType1".equalsIgnoreCase(association.getAssociationType())
-                    || "associationType2".equalsIgnoreCase(association.getAssociationType())) {
-                    associationTypeFound = true;
-                    break;
-                }
-            }
-            Assert.assertTrue(associationTypeFound, "Association Types not found on Resource");
-
-        }
-
-
-    }
-
-    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Association Type pattern matching")
-    public void searchResourceByAssociationTypePattern()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException,
-                   RegistryException {
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType("%Type%");
-        ArrayOfString[] paramList = paramBean.getParameterList();
-
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Type pattern");
-        for (ResourceData resource : result.getResourceDataList()) {
-            boolean associationTypeFound = false;
-            for (Association association : registry.getAllAssociations(resource.getResourcePath())) {
-                if (association.getAssociationType().contains("Type")) {
-                    associationTypeFound = true;
-                    break;
-                }
-            }
-            Assert.assertTrue(associationTypeFound, "Association Type pattern not found on Resource");
-
-        }
-
-
-    }
-
-
-    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable AssociationType")
-    public void searchResourceByUnAvailableAssociationType()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationType("xyz1234ggf");
-        ArrayOfString[] paramList = paramBean.getParameterList();
-
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Result Object found");
-
-
-    }
-
-    @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by AssociationType with invalid characters")
-    public void searchResourceByAssociationTypeWithInvalidCharacter(String invalidInput)
+    @Test(priority = 1, description = "Metadata search by All fields for wsdl")
+    public void searchWsdlByAllCriteria()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
 
-        paramBean.setAssociationType(invalidInput);
+        Calendar fromCalender = Calendar.getInstance();
+        fromCalender.add(Calendar.DAY_OF_MONTH, -2);
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        Calendar toCalender = Calendar.getInstance();
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setResourceName("echo");
+        paramBean.setContent("echoString");
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        paramBean.setUpdatedAfter(formatDate(fromCalender.getTime()));
+        paramBean.setUpdatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setAuthor(userName);
+        paramBean.setUpdater(userName);
+        paramBean.setTags("autoTag");
+        paramBean.setCommentWords("TestAutomation");
+        paramBean.setAssociationType("associationType1");
+        paramBean.setAssociationDest(destinationPath);
+        paramBean.setMediaType("application/wsdl+xml");
         ArrayOfString[] paramList = paramBean.getParameterList();
+
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNull(result.getResourceDataList(), "Result Object found.");
+        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
+        for (ResourceData resource : result.getResourceDataList()) {
+            Assert.assertEquals(resource.getName(), "echo.wsdl", "wsdl not found");
+        }
 
+    }
+
+    @Test(priority = 2, description = "Metadata search by All fields for schema")
+    public void searchSchemaByAllCriteria()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
+        SearchParameterBean paramBean = new SearchParameterBean();
+
+        Calendar fromCalender = Calendar.getInstance();
+        fromCalender.add(Calendar.DAY_OF_MONTH, -2);
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        Calendar toCalender = Calendar.getInstance();
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setResourceName("Person");
+        paramBean.setContent("PersonType");
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        paramBean.setUpdatedAfter(formatDate(fromCalender.getTime()));
+        paramBean.setUpdatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setAuthor(userName);
+        paramBean.setUpdater(userName);
+        paramBean.setTags("autoTag");
+        paramBean.setCommentWords("TestAutomation");
+        paramBean.setAssociationType("associationType1");
+        paramBean.setAssociationDest(destinationPath);
+        paramBean.setMediaType("application/x-xsd+xml");
+        ArrayOfString[] paramList = paramBean.getParameterList();
+
+        searchQuery.setParameterValues(paramList);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
+        for (ResourceData resource : result.getResourceDataList()) {
+            Assert.assertEquals(resource.getName(), "Person.xsd", "Schema not found");
+        }
+
+    }
+
+    @Test(priority = 3, description = "Metadata search by All fields for policy")
+    public void searchPolicyByAllCriteria()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
+        SearchParameterBean paramBean = new SearchParameterBean();
+
+        Calendar fromCalender = Calendar.getInstance();
+        fromCalender.add(Calendar.DAY_OF_MONTH, -2);
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        Calendar toCalender = Calendar.getInstance();
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setResourceName("UTPolicy");
+        paramBean.setContent("PersonType");
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        paramBean.setUpdatedAfter(formatDate(fromCalender.getTime()));
+        paramBean.setUpdatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setAuthor(userName);
+        paramBean.setUpdater(userName);
+        paramBean.setTags("autoTag");
+        paramBean.setCommentWords("TestAutomation");
+        paramBean.setAssociationType("associationType1");
+        paramBean.setAssociationDest(destinationPath);
+        paramBean.setMediaType("application/policy+xml");
+        ArrayOfString[] paramList = paramBean.getParameterList();
+
+        searchQuery.setParameterValues(paramList);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
+        for (ResourceData resource : result.getResourceDataList()) {
+            Assert.assertEquals(resource.getName(), "UTPolicy.xml", "Schema not found");
+        }
 
     }
 
     private void addResources() throws Exception {
-        String path1 = addService("sns1", "autoService1");
-        String path2 = addService("sns2", "autoService2");
-        addWSDL(path1, "associationType1");
-        addPolicy(path1, "associationType1");
-        addSchema(path2, "associationType2");
+        destinationPath = addService("sns1", "autoService1");
+        addWSDL(destinationPath, "associationType1");
+        addSchema(destinationPath, "associationType1");
+        addPolicy(destinationPath, "associationType1");
+
     }
 
     private String addService(String nameSpace, String serviceName)
@@ -236,9 +243,16 @@ public class RegistrySearchByAssociationType {
         wsdl = wsdlManager.getWsdl(wsdl.getId());
 
         governance.addAssociation(wsdl.getPath(), destinationPath, type);
+        Comment comment = new Comment();
+        comment.setText("TestAutomation Comment");
+        governance.addComment(wsdl.getPath(), comment);
+        governance.applyTag(wsdl.getPath(), "autoTag");
+
+        wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFilePath + "echo.wsdl").getBytes(), "echo1.wsdl");
+        wsdlManager.addWsdl(wsdl);
     }
 
-    private void addSchema(String destinationPath, String typ)
+    private void addSchema(String destinationPath, String type)
             throws IOException, RegistryException {
         SchemaManager schemaManager = new SchemaManager(governance);
         String schemaFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
@@ -246,10 +260,17 @@ public class RegistrySearchByAssociationType {
         Schema schema = schemaManager.newSchema(FileManager.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person.xsd");
         schemaManager.addSchema(schema);
         schema = schemaManager.getSchema(schema.getId());
-        governance.addAssociation(schema.getPath(), destinationPath, typ);
+        governance.addAssociation(schema.getPath(), destinationPath, type);
+        Comment comment = new Comment();
+        comment.setText("TestAutomation Comment");
+        governance.addComment(schema.getPath(), comment);
+        governance.applyTag(schema.getPath(), "autoTag");
+
+        schema = schemaManager.newSchema(FileManager.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person1.xsd");
+        schemaManager.addSchema(schema);
     }
 
-    private void addPolicy(String destinationPath, String typ)
+    private void addPolicy(String destinationPath, String type)
             throws RegistryException, IOException {
         PolicyManager policyManager = new PolicyManager(governance);
         String policyFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
@@ -257,36 +278,17 @@ public class RegistrySearchByAssociationType {
         Policy policy = policyManager.newPolicy(FileManager.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy.xml");
         policyManager.addPolicy(policy);
         policy = policyManager.getPolicy(policy.getId());
-        governance.addAssociation(policy.getPath(), destinationPath, typ);
+        governance.addAssociation(policy.getPath(), destinationPath, type);
+        Comment comment = new Comment();
+        comment.setText("TestAutomation Comment");
+        governance.addComment(policy.getPath(), comment);
+        governance.applyTag(policy.getPath(), "autoTag");
+        policy = policyManager.newPolicy(FileManager.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy1.xml");
+        policyManager.addPolicy(policy);
     }
 
-    @DataProvider(name = "invalidCharacter")
-    public Object[][] invalidCharacter() {
-        return new Object[][]{
-                {"<"},
-                {">"},
-                {"#"},
-                {"   "},
-                {""},
-                {"@"},
-                {"|"},
-                {"^"},
-                {"/"},
-                {"\\"},
-                {","},
-                {"\""},
-                {"~"},
-                {"!"},
-                {"*"},
-                {"{"},
-                {"}"},
-                {"["},
-                {"]"},
-                {"-"},
-                {"("},
-                {")"}
-        };
-
-
+    private String formatDate(Date date) {
+        Format formatter = new SimpleDateFormat("MM/dd/yyyy");
+        return formatter.format(date);
     }
 }

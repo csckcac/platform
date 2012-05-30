@@ -23,6 +23,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.governance.api.schema.SchemaManager;
@@ -31,8 +32,8 @@ import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
-import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
@@ -50,28 +51,25 @@ import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.Iterator;
 
-/*
-Search Registry metadata by AssociationDestination
- */
-public class RegistrySearchByAssociationDestination {
-
+public class RegistrySearchByPropertyName {
     private String sessionCookie;
 
     private RegistrySearchAdminService searchAdminService;
     private WSRegistryServiceClient registry;
     private Registry governance;
 
-    private String destinationPath1 = null;
-
     @BeforeClass
-    public void init() throws Exception {
+    public void init()
+            throws LoginAuthenticationExceptionException, IOException, RegistryException,
+                   InterruptedException {
         final int userId = 3;
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
         EnvironmentVariables gregServer = builder.build().getGreg();
 
-        sessionCookie = gregServer.getSessionCookie();
 
+        sessionCookie = gregServer.getSessionCookie();
         searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
         registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         governance = new RegistryProvider().getGovernance(registry, userId);
@@ -82,143 +80,72 @@ public class RegistrySearchByAssociationDestination {
 
     }
 
-    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available AssociationDestination")
-    public void searchResourceByAssociationDestination()
+    @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available Property Name")
+    public void searchResourceByPropertyName()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
-        Assert.assertNotNull(destinationPath1, "Destination path not found for search Query. Clarity Error");
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationDest(destinationPath1);
+        paramBean.setPropertyName("x");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Destination");
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid property name");
 
         for (ResourceData resource : result.getResourceDataList()) {
-            Association[] array = registry.getAllAssociations(resource.getResourcePath());
-            Assert.assertNotNull(array, "Association list null");
-            Assert.assertTrue(array.length > 0);
-            boolean associationDestination = false;
-            for (Association association : array) {
-                if (association.getDestinationPath().contains(destinationPath1)) {
-                    associationDestination = true;
-                    break;
+            boolean propertyFound = false;
+            Iterator<String> properties = (Iterator<String>) registry.get(resource.getResourcePath())
+                    .getProperties().propertyNames();
+            while (properties.hasNext()) {
+                if (properties.next().contains("x")) {
+                    propertyFound = true;
                 }
-
             }
+            Assert.assertTrue(propertyFound, "Property name not found on Resource " + resource.getResourcePath());
 
-            Assert.assertTrue(associationDestination, "Association Destination not found on Resource"
-                                                      + resource.getResourcePath());
         }
-
 
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available " +
-                                                              "Association Destination relative path")
-    public void searchResourceByAssociationDestinationRelativePath()
+    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by PropertyName pattern matching")
+    public void searchResourceByPropertyNamePattern()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
-        final String relativePath = "sns";
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationDest(relativePath);
+        paramBean.setPropertyName("abc%pqr");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Destination");
-
+        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid PropertyName pattern");
         for (ResourceData resource : result.getResourceDataList()) {
-            Association[] array = registry.getAllAssociations(resource.getResourcePath());
-            Assert.assertNotNull(array, "Association list null");
-            Assert.assertTrue(array.length > 0);
-            boolean associationDestination = false;
-            for (Association association : array) {
-                if (association.getDestinationPath().contains(relativePath)) {
-                    associationDestination = true;
-                    break;
-                }
-
-            }
-
-            Assert.assertTrue(associationDestination, "Association Destination relative path not " +
-                                                      "found on Resource" + resource.getResourcePath());
-        }
-
-
-    }
-     @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Association Destinations")
-    public void searchResourceByAssociationDestinations()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException,
-                   RegistryException {
-
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationDest("autoService1 autoService2");
-        ArrayOfString[] paramList = paramBean.getParameterList();
-
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Types");
-        for (ResourceData resource : result.getResourceDataList()) {
-            boolean associationDestinationFound = false;
-            for (Association association : registry.getAllAssociations(resource.getResourcePath())) {
-                if (association.getAssociationType().contains("autoService1")
-                    || association.getAssociationType().contains("autoService2")) {
-                    associationDestinationFound = true;
-                    break;
+            boolean propertyFound = false;
+            Iterator<String> properties = (Iterator<String>) registry.get(resource.getResourcePath())
+                    .getProperties().propertyNames();
+            while (properties.hasNext()) {
+                String prop = properties.next();
+                if (prop.contains("abc") && prop.contains("pqr")) {
+                    propertyFound = true;
                 }
             }
-            Assert.assertTrue(associationDestinationFound, "Association Destinations not found on Resource"
-                                                           + resource.getResourcePath());
+            Assert.assertTrue(propertyFound, "PropertyName pattern not found on Resource. " + resource.getResourcePath());
 
         }
 
 
     }
 
-    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Association Destination pattern matching")
-    public void searchResourceByAssociationDestinationPattern()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException,
-                   RegistryException {
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationDest("%sns%autoService%");
-        ArrayOfString[] paramList = paramBean.getParameterList();
 
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Destination pattern");
-        for (ResourceData resource : result.getResourceDataList()) {
-            boolean associationDestinationFound = false;
-            for (Association association : registry.getAllAssociations(resource.getResourcePath())) {
-                if (association.getDestinationPath().contains("sns")
-                    && association.getDestinationPath().contains("autoService")) {
-                    associationDestinationFound = true;
-                    break;
-                }
-            }
-            Assert.assertTrue(associationDestinationFound, "Association Destination pattern not found on Resource"
-                                                           + resource.getResourcePath());
-
-        }
-
-    }
-
-
-    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable Association Destination")
-    public void searchResourceByUnAvailableAssociationDestination()
+    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search by unavailable PropertyName")
+    public void searchResourceByUnAvailablePropertyName()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAssociationDest("xyz1234ggf76tgf");
+        paramBean.setPropertyName("xyz1234");
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -229,30 +156,31 @@ public class RegistrySearchByAssociationDestination {
     }
 
     @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by Association Destination with invalid characters")
-    public void searchResourceByAssociationDestinationWithInvalidCharacter(String invalidInput)
+          description = "Metadata search by PropertyName with invalid characters")
+    public void searchResourceByPropertyNameWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
 
-        paramBean.setAssociationDest(invalidInput);
+        paramBean.setPropertyName(invalidInput);
         ArrayOfString[] paramList = paramBean.getParameterList();
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
         Assert.assertNull(result.getResourceDataList(), "Result Object found.");
 
+
     }
 
-    private void addResources() throws Exception {
-        destinationPath1 = addService("sns1", "autoService1");
-        String destinationPath2 = addService("sns2", "autoService2");
-        addWSDL(destinationPath1, "associationType1");
-        addPolicy(destinationPath1, "associationType1");
-        addSchema(destinationPath2, "associationType2");
+    private void addResources() throws RegistryException, IOException {
+        addService("sns1", "autoService1");
+        addService("sns2", "autoService2");
+        addWSDL();
+        addPolicy();
+        addSchema();
     }
 
-    private String addService(String nameSpace, String serviceName)
-            throws Exception {
+    private void addService(String nameSpace, String serviceName)
+            throws RegistryException {
         ServiceManager serviceManager = new ServiceManager(governance);
         Service service;
         service = serviceManager.newService(new QName(nameSpace, serviceName));
@@ -260,17 +188,17 @@ public class RegistrySearchByAssociationDestination {
         for (String serviceId : serviceManager.getAllServiceIds()) {
             service = serviceManager.getService(serviceId);
             if (service.getPath().endsWith(serviceName)) {
+                Resource resource = governance.get(service.getPath());
+                resource.addProperty("x", "10");
+                governance.put(service.getPath(), resource);
 
-                return service.getPath();
             }
 
         }
-        throw new Exception("Getting Service path failed");
 
     }
 
-    private void addWSDL(String destinationPath, String type)
-            throws IOException, RegistryException {
+    private void addWSDL() throws IOException, RegistryException {
         WsdlManager wsdlManager = new WsdlManager(governance);
         Wsdl wsdl;
         String wsdlFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
@@ -278,30 +206,35 @@ public class RegistrySearchByAssociationDestination {
         wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFilePath + "echo.wsdl").getBytes(), "echo.wsdl");
         wsdlManager.addWsdl(wsdl);
         wsdl = wsdlManager.getWsdl(wsdl.getId());
+        Resource resource = governance.get(wsdl.getPath());
+        resource.addProperty("y", "20");
+        governance.put(wsdl.getPath(), resource);
 
-        governance.addAssociation(wsdl.getPath(), destinationPath, type);
     }
 
-    private void addSchema(String destinationPath, String typ)
-            throws IOException, RegistryException {
+    private void addSchema() throws IOException, RegistryException {
         SchemaManager schemaManager = new SchemaManager(governance);
         String schemaFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
                                 + File.separator + "schema" + File.separator;
         Schema schema = schemaManager.newSchema(FileManager.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person.xsd");
         schemaManager.addSchema(schema);
         schema = schemaManager.getSchema(schema.getId());
-        governance.addAssociation(schema.getPath(), destinationPath, typ);
+        Resource resource = governance.get(schema.getPath());
+        resource.addProperty("z", "30");
+        governance.put(schema.getPath(), resource);
     }
 
-    private void addPolicy(String destinationPath, String typ)
-            throws RegistryException, IOException {
+    private void addPolicy() throws RegistryException, IOException {
         PolicyManager policyManager = new PolicyManager(governance);
         String policyFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
                                 + File.separator + "policy" + File.separator;
         Policy policy = policyManager.newPolicy(FileManager.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy.xml");
         policyManager.addPolicy(policy);
         policy = policyManager.getPolicy(policy.getId());
-        governance.addAssociation(policy.getPath(), destinationPath, typ);
+        Resource resource = governance.get(policy.getPath());
+        resource.addProperty("abcxyzpqr", "40");
+        governance.put(policy.getPath(), resource);
+
     }
 
     @DataProvider(name = "invalidCharacter")
@@ -315,6 +248,7 @@ public class RegistrySearchByAssociationDestination {
                 {"@"},
                 {"|"},
                 {"^"},
+                {"/"},
                 {"\\"},
                 {","},
                 {"\""},
@@ -325,6 +259,7 @@ public class RegistrySearchByAssociationDestination {
                 {"}"},
                 {"["},
                 {"]"},
+                {"-"},
                 {"("},
                 {")"}
         };

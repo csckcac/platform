@@ -29,6 +29,7 @@ import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
 import org.wso2.carbon.registry.search.stub.beans.xsd.ArrayOfString;
 import org.wso2.carbon.registry.search.stub.beans.xsd.CustomSearchParameterBean;
 import org.wso2.carbon.registry.search.stub.common.xsd.ResourceData;
+import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 
@@ -40,14 +41,14 @@ Search Registry metadata by Author Name
 public class RegistrySearchByAuthor {
 
     private String sessionCookie;
-
+    private String userName;
     private RegistrySearchAdminService searchAdminService;
 
     @BeforeClass
     public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
         EnvironmentVariables gregServer = builder.build().getGreg();
-
+        userName = UserListCsvReader.getUserInfo(3).getUserName();
         sessionCookie = gregServer.getSessionCookie();
         searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
 
@@ -58,7 +59,7 @@ public class RegistrySearchByAuthor {
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAuthor("admin");
+        paramBean.setAuthor(userName);
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -66,7 +67,7 @@ public class RegistrySearchByAuthor {
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(resource.getAuthorUserName().contains("admin"),
+            Assert.assertTrue(resource.getAuthorUserName().contains(userName),
                               "search keyword not contain on Author Name :" + resource.getResourcePath());
         }
 
@@ -78,7 +79,7 @@ public class RegistrySearchByAuthor {
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
-        paramBean.setAuthor("admin");
+        paramBean.setAuthor(userName);
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -93,7 +94,7 @@ public class RegistrySearchByAuthor {
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Author name");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertFalse(resource.getAuthorUserName().contains("admin"),
+            Assert.assertFalse(resource.getAuthorUserName().contains(userName),
                                "search keyword contain on Author Name :" + resource.getResourcePath());
         }
 

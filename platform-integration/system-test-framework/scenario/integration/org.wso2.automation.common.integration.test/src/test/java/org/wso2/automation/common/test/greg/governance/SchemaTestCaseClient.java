@@ -58,8 +58,8 @@ public class SchemaTestCaseClient {
         SchemaManager schemaManager = new SchemaManager(governance);
 
         Schema schema = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                                                "governance/org.wso2.carbon.governance.api/src/test/resources/" +
-                                                "test-resources/xsd/purchasing.xsd");
+                "governance/org.wso2.carbon.governance.api/src/test/resources/" +
+                "test-resources/xsd/purchasing.xsd");
         schema.addAttribute("creator", "it is me");
         schema.addAttribute("version", "0.01");
         schemaManager.addSchema(schema);
@@ -118,8 +118,8 @@ public class SchemaTestCaseClient {
         byte[] bytes = null;
         try {
             InputStream inputStream = new URL("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                                              "governance/org.wso2.carbon.governance.api/src/test/resources/" +
-                                              "test-resources/xsd/purchasing.xsd").openStream();
+                    "governance/org.wso2.carbon.governance.api/src/test/resources/" +
+                    "test-resources/xsd/purchasing.xsd").openStream();
             try {
                 bytes = IOUtils.toByteArray(inputStream);
             } finally {
@@ -135,7 +135,7 @@ public class SchemaTestCaseClient {
 
         Schema newSchema = schemaManager.getSchema(schema.getId());
         Assert.assertEquals(newSchema.getSchemaElement().toString(),
-                            schema.getSchemaElement().toString());
+                schema.getSchemaElement().toString());
         Assert.assertEquals(newSchema.getAttribute("creator"), "it is me");
         Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
 
@@ -151,8 +151,8 @@ public class SchemaTestCaseClient {
         byte[] bytes = null;
         try {
             InputStream inputStream = new URL("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                                              "governance/org.wso2.carbon.governance.api/src/test/resources/" +
-                                              "test-resources/xsd/purchasing.xsd").openStream();
+                    "governance/org.wso2.carbon.governance.api/src/test/resources/" +
+                    "test-resources/xsd/purchasing.xsd").openStream();
             try {
                 bytes = IOUtils.toByteArray(inputStream);
             } finally {
@@ -168,7 +168,7 @@ public class SchemaTestCaseClient {
 
         Schema newSchema = schemaManager.getSchema(schema.getId());
         Assert.assertEquals(newSchema.getSchemaElement().toString(),
-                            schema.getSchemaElement().toString());
+                schema.getSchemaElement().toString());
         Assert.assertEquals(newSchema.getAttribute("creator"), "it is me");
         Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
 
@@ -185,7 +185,7 @@ public class SchemaTestCaseClient {
         }
     }
 
-    @Test(groups = {"wso2.greg"}, expectedExceptions = {GovernanceException.class})
+    @Test(groups = {"wso2.greg"}, expectedExceptions = {GovernanceException.class}, description = "Testing invalid schema")
     public void testInvalidSchema() throws GovernanceException {
         SchemaManager schemaManager = new SchemaManager(governance);
         Schema schema;
@@ -200,7 +200,7 @@ public class SchemaTestCaseClient {
         schemaManager.addSchema(schema);
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"}, description = "Testing invalid schema")
     public void testInvalidSchemaContent() throws GovernanceException {
         Schema schema;
         String schemaContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -232,6 +232,92 @@ public class SchemaTestCaseClient {
                     schema.getAttribute("Schema Validation").equalsIgnoreCase("invalid"));
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception thrown while adding Invalid schema : " + e.getMessage());
+        }
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Testing sample schema which has schema import")
+    public void testSchemaImport() throws GovernanceException {
+        SchemaManager schemaManager = new SchemaManager(governance);
+        Schema schema;
+        try {
+            schema = schemaManager.newSchema("https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
+                    "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/" +
+                    "GREG/schema/SchemaImportSample.xsd");
+            schemaManager.addSchema(schema);
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Exception thrown while executing newSchema API method schema " +
+                    "which has schema import : " + e.getMessage());
+        }
+        schema = schemaManager.getSchema(schema.getId());
+        assertTrue("Schema does not added which has schema import", schema.getQName().getLocalPart()
+                .equalsIgnoreCase("SchemaImportSample.xsd"));
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Duplicate schema import test")
+    public void testAddDuplicateSchema() throws GovernanceException {
+        Schema schema;
+        boolean isSchemaFound = false;
+        SchemaManager schemaManager = new SchemaManager(governance);
+        Schema[] schemaList = schemaManager.getAllSchemas();
+        for (Schema s : schemaList) {
+            if (s.getQName().getLocalPart().equalsIgnoreCase("SchemaImportSample.xsd")) {
+                schemaManager.removeSchema(s.getId());
+            }
+        }
+        schema = schemaManager.newSchema("https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
+                "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/" +
+                "GREG/schema/SchemaImportSample.xsd");
+        schemaManager.addSchema(schema);
+        try {
+            schemaManager.addSchema(schema);
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error found while adding same schema twice : " + e.getMessage());
+        }
+
+        schemaList = schemaManager.getAllSchemas();
+        for (Schema s : schemaList) {
+            if (s.getQName().getLocalPart().equalsIgnoreCase("SchemaImportSample.xsd")) {
+                if (!isSchemaFound) {
+                    isSchemaFound = true;
+                } else {
+                    assertTrue("Same schema added twice", isSchemaFound);
+                }
+
+            }
+        }
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Adding large number of schemas")
+    public void testAddLargeNoOfSchemas() throws GovernanceException {
+        Schema schema;
+        String schemaContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<xsd:schema xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://www.company.org\" xmlns=\"http://www.company.org\" elementFormDefault=\"qualified\">\n" +
+                "    <xsd:complexType name=\"PersonType\">\n" +
+                "        <xsd:sequence>\n" +
+                "           <xsd:element name=\"Name\" type=\"xsd:string\"/>\n" +
+                "           <xsd:element name=\"SSN\" type=\"xsd:string\"/>\n" +
+                "        </xsd:sequence>\n" +
+                "    </xsd:complexType>\n" +
+                "</xsd:schema>";
+
+        SchemaManager schemaManager = new SchemaManager(governance);
+        Schema[] schemaList = schemaManager.getAllSchemas();
+        for (Schema s : schemaList) {
+            if (s.getQName().getLocalPart().contains("Automated")) {
+                schemaManager.removeSchema(s.getId());
+            }
+        }
+        try {
+            for (int i = 0; i <= 10000; i++) {
+                schema = schemaManager.newSchema(schemaContent.getBytes(), "AutomatedSchema" + i + ".xsd");
+                schemaManager.addSchema(schema);
+                System.out.println("Adding : AutomatedSchema" + i + ".xsd");
+                if (!schemaManager.getSchema(schema.getId()).getQName().getLocalPart().equalsIgnoreCase("AutomatedSchema" + i + ".xsd")) {
+                    assertTrue("Schema not added..", false);
+                }
+            }
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Error found while adding multiple schemas : " + e.getMessage());
         }
     }
 }

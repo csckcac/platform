@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+ <xs:element name="content">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="table"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="service">
     <xs:complexType>
       <xs:sequence>
@@ -7,6 +17,7 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+
   <xs:element name="table">
     <xs:complexType>
       <xs:sequence>
@@ -31,8 +42,10 @@
         <xs:element ref="name"/>
         <xs:element minOccurs="0" ref="values"/>
       </xs:sequence>
-      <xs:attribute name="maxoccurs" type="xs:NCName"/>
+      <xs:attribute name="maxoccurs" type="xs:NCName" fixed="unbounded"/>
       <xs:attribute name="readonly" type="xs:boolean"/>
+      <xs:attribute name="url" type="xs:boolean"/>
+      <xs:attribute name="path" type="xs:boolean"/>
       <xs:attribute name="required" type="xs:boolean"/>
       <xs:attribute name="type" use="required" type="xs:NCName"/>
     </xs:complexType>

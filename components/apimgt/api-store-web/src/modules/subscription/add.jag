@@ -2,7 +2,7 @@
 var addAPISubscription = function (api, tier, applicationId, username) {
     var status,
             log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         status = store.addSubscription(api.provider, api.name, api.version, tier, applicationId, username);

@@ -1,7 +1,7 @@
 <%
 var addRating = function (api, rating) {
     var log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         //TODO : how to idenftify the rated user

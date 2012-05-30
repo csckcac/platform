@@ -2,7 +2,7 @@
 var generateAPIKey = function (api, context, application, username, keyType) {
     var key,
             log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         key = store.getKey(api.provider, api.name, api.version, context, application, username, keyType);

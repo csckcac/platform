@@ -2,7 +2,7 @@
 var getAllDocumentations = function (api) {
     var documentations,
             log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         documentations = store.getAllDocumentation(api.provider, api.name, api.version);

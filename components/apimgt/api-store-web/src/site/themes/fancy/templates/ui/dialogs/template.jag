@@ -5,9 +5,13 @@
         var redirectToHTTP = '<%=session.get("redirectToHTTP")%>';
         var redirectToHTTPS = '<%=session.get("redirectToHTTPS")%>';
     </script>
- <%
-        var httpsURL =  outputs.https_url + request.getRequestURI();
-        var httpURL =  outputs.http_url + request.getRequestURI();
+ <%     var mod,httpUrl,httpsUrl;
+        mod = jagg.module("manager");
+        httpUrl= mod.getHTTPURL();
+        httpsUrl= mod.getHTTPsURL();
+
+        var httpsURL =  httpsUrl + request.getRequestURI();
+        var httpURL =   httpUrl + request.getRequestURI();
         if(request.getQueryString()){
             httpsURL += "?" + request.getQueryString();
             httpURL += "?" + request.getQueryString();
@@ -38,7 +42,7 @@
         </div>
     </form>
     <% } else { %>
-    <form id="loginRedirectForm" method="post" action="<%=outputs.https_url%><%=site.context%>/site/themes/fancy/templates/user/login/redirector.jag">
+    <form id="loginRedirectForm" method="post" action="<%=httpsUrl%><%=site.context%>/site/themes/fancy/templates/user/login/redirector.jag">
         <input type="hidden" name="redirectToHTTPS" id="redirectToHTTPS" value="<%=httpsURL%>" />
         <input type="hidden" name="redirectToHTTP" id="redirectToHTTP" value="<%=httpURL%>" />
     </form>

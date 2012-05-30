@@ -2,7 +2,7 @@
 var getTopRatedAPIs = function (limit) {
     var list, i, length, api, apis,
             log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         apis = store.getTopRatedAPIs(limit);

@@ -1,7 +1,7 @@
 <%
 var updateApplication = function (applicationNew,applicationOld,username) {
     var log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         store.updateApplication(applicationNew,applicationOld,username);

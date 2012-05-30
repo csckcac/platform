@@ -2,7 +2,7 @@
 var getAllSubscriptions = function (username) {
     var applications,
             log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         applications = store.getAllSubscriptions(username);
@@ -25,7 +25,7 @@ var getAllSubscriptions = function (username) {
 var getAPISubscriptions = function (api, username) {
     var subscriptions,
             log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         subscriptions = store.getSubscriptions(api.provider, api.name, api.version, username);

@@ -2,7 +2,7 @@
 var getAPIComments = function (api) {
     var list, i, length, comment, comments,
             log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         //TODO : how to idenftify the comment added user

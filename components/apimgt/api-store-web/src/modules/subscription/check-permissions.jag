@@ -2,7 +2,7 @@
 var hasSubscribePermission= function () {
     var success,
             log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         success = store.hasSubscribePermission();

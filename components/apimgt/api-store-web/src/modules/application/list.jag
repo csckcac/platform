@@ -2,7 +2,7 @@
 var getApplications = function (username) {
     var applications,
             log = new Log(),
-            store = jagg.module("greg").getAPIStoreObj();
+            store = jagg.module("manager").getAPIStoreObj();
 
     try {
         applications = store.getApplications(username);

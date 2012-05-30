@@ -2,9 +2,9 @@
 var login = function (username, password) {
     var xml, cookie, status, ns, payload, result,
             log = new Log(),
-            mod = jagg.module("greg"),
-            store = jagg.module("greg").getAPIStoreObj(),
-            remoteAddress = mod.getServer();
+            manager = jagg.module("manager"),
+            store = manager.getAPIStoreObj(),
+            remoteAddress = manager.getServer().server;
 
     payload =
             <aut:login xmlns:aut="http://authentication.services.core.carbon.wso2.org">
@@ -12,7 +12,7 @@ var login = function (username, password) {
                 <aut:password>{password}</aut:password>
                 <aut:remoteAddress>{remoteAddress}</aut:remoteAddress>
             </aut:login>;
-    result = mod.invokeService(null, "AuthenticationAdmin", "urn:login", payload);
+    result = manager.invokeService(manager.getAuthServerURL(), "AuthenticationAdmin", "urn:login", payload);
     if (result.error) {
         if (log.isDebugEnabled()) {
             log.debug("Error while authenticating user : " + username + " at " + remoteAddress);

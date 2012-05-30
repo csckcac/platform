@@ -117,7 +117,7 @@ public class ClusterManager {
         ClusterConfiguration config = ClusterResourceHolder.getInstance().getClusterConfiguration();
 
         if(config.isOnceInOrderSupportEnabled()) {
-
+            //TODO handle this in once in order impl
             return;
         }
 
@@ -128,6 +128,27 @@ public class ClusterManager {
          */
         if(!config.isClusteringEnabled()) {
           //   nodeMap.get(nodeId).addGlobalQueueWorker(queueName);
+
+            String[] queues = queueNodeMap.get(nodeId);
+            if(queues == null || queues.length == 0) {
+                queues = new String[]{queueName};
+                queueNodeMap.put(nodeId,queues);
+            } else {
+                List<String> list  = new ArrayList<String>();
+
+
+                for(String q : queues) {
+                    list.add(q);
+                }
+                if(!list.contains(queueName)) {
+                    list.add(queueName);
+                }
+
+                queues = list.toArray(new String[list.size()]);
+                queueNodeMap.put(nodeId,queues);
+            }
+
+
             globalQueueManager.addGlobalQueue(queueName);
             return;
         }
@@ -468,6 +489,7 @@ public class ClusterManager {
 
         //If Clustering is disabled
         if(!config.isClusteringEnabled()) {
+            queueNodeMap.put(new Integer(nodeId),new String[]{});
             return;
         }
 

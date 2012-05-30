@@ -18,6 +18,7 @@
 package org.wso2.carbon.billing.core.internal;
 
 import org.wso2.carbon.billing.core.BillingHandler;
+import org.wso2.carbon.billing.core.BillingTenantMgtListenerImpl;
 import org.wso2.carbon.billing.core.conf.BillingTaskConfiguration;
 import org.wso2.carbon.billing.core.scheduler.ScheduleHelper;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -76,6 +77,12 @@ public class BillingServiceComponent {
                 CommonUtil.setStratosConfig(stratosConfig);
             }
             Util.initBillingManager(context.getBundleContext());
+            Util.initDataAccessManager();
+
+            BillingTenantMgtListenerImpl billingTenantMgtListener = new BillingTenantMgtListenerImpl();
+            context.getBundleContext().registerService(
+                    org.wso2.carbon.stratos.common.listeners.TenantMgtListener.class.getName(),
+                    billingTenantMgtListener, null);
             if (log.isDebugEnabled()) {
                 log.debug("******* Billing bundle is activated ******* ");
             }

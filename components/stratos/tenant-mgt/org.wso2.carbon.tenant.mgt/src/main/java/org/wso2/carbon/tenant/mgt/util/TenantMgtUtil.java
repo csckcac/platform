@@ -400,7 +400,7 @@ public class TenantMgtUtil {
         }
 
         //deactivating the subscription
-        try {
+        /*try {
             if (TenantMgtServiceComponent.getBillingService() != null) {
                 TenantMgtServiceComponent.getBillingService().deactivateActiveUsagePlan(tenantDomain);
             }
@@ -408,6 +408,6 @@ public class TenantMgtUtil {
             String msg = "Error while deactivating subscription for domain: " + tenantDomain + ".";
             log.error(msg, e);
             throw new Exception(msg, e);
-        }
+        }*/
     }
 }

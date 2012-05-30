@@ -93,7 +93,7 @@ public class TenantMgtAdminService extends AbstractAdmin {
             throw new Exception(msg, e);
         }
         //adding the subscription entry
-        try {
+        /*try {
             if (TenantMgtServiceComponent.getBillingService() != null) {
                 TenantMgtServiceComponent.getBillingService().
                         addUsagePlan(tenant, tenantInfoBean.getUsagePlan());
@@ -105,7 +105,7 @@ public class TenantMgtAdminService extends AbstractAdmin {
         } catch (Exception e) {
             String msg = "Error occurred while adding the subscription for tenant: " + tenantDomain;
             log.error(msg, e);
-        }
+        }*/
 
         // For the super tenant tenant creation, tenants are always activated as they are created.
         TenantMgtUtil.activateTenantInitially(tenantInfoBean, tenantId);
@@ -346,7 +346,7 @@ public class TenantMgtAdminService extends AbstractAdmin {
         }
 
         //updating the usage plan
-        try{
+        /*try{
             if(TenantMgtServiceComponent.getBillingService() != null){
                 TenantMgtServiceComponent.getBillingService().
                         updateUsagePlan(tenantInfoBean.getTenantDomain(), tenantInfoBean.getUsagePlan());
@@ -355,7 +355,7 @@ public class TenantMgtAdminService extends AbstractAdmin {
             String msg = "Error when updating the usage plan: " + e.getMessage();
             log.error(msg, e);
             throw new Exception(msg, e);
-        }
+        }*/
     }
 
     /**

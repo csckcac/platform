@@ -39,6 +39,10 @@ public class DataAccessManager {
     public DataAccessManager(DataSource dataSource) {
         this.dataAccessObject = new DataAccessObject(dataSource);
     }
+    
+    public DataAccessManager(DataAccessObject dao){
+        this.dataAccessObject = dao;
+    }
 
     public void beginTransaction() throws BillingException {
         dataAccessObject.beginTransaction();

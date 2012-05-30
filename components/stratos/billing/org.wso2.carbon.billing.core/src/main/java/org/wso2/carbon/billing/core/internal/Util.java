@@ -22,7 +22,9 @@ import org.osgi.framework.BundleContext;
 import org.wso2.carbon.billing.core.BillingConstants;
 import org.wso2.carbon.billing.core.BillingException;
 import org.wso2.carbon.billing.core.BillingManager;
+import org.wso2.carbon.billing.core.DataAccessManager;
 import org.wso2.carbon.billing.core.conf.BillingConfiguration;
+import org.wso2.carbon.billing.core.jdbc.DataAccessObject;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -41,6 +43,7 @@ public class Util {
     private static RealmService realmService;
     private static RuleEngineConfigService ruleEngineConfigService;
     private static List<TenantMgtListener> tenantMgtListeners = new ArrayList<TenantMgtListener>();
+    private static DataAccessManager dataAccessManager;
 
     public static synchronized void setRegistryService(RegistryService service) {
         if (registryService == null) {
@@ -75,6 +78,14 @@ public class Util {
         BillingManager billingManager = new BillingManager(billingConfiguration);
 
         bundleContext.registerService(BillingManager.class.getName(), billingManager, null);
+    }
+    
+    public static void initDataAccessManager() throws BillingException{
+        Util.dataAccessManager = new DataAccessManager(BillingManager.getInstance().getDataAccessObject());
+    }
+
+    public static DataAccessManager getDataAccessManager(){
+        return dataAccessManager;
     }
 
     public static void cleanBillingManager() {

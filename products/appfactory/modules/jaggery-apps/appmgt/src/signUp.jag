@@ -67,7 +67,7 @@
                     <td class="formRow"><input type='text' name='lastName' size='50'/></td>
                 </tr>
                 <tr>
-                    <td class="formRow">email:</td>
+                    <td class="formRow">Email:</td>
                     <td class="formRow"><input type='text' name='email' size='50'/></td>
                 </tr>
                 <tr>

@@ -35,6 +35,7 @@ import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.stratos.common.util.CloudServicesUtil;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 public class ActivationHandler extends AbstractHandler implements Handler {
@@ -60,8 +61,8 @@ public class ActivationHandler extends AbstractHandler implements Handler {
             }
             return InvocationResponse.CONTINUE;
         }
-        if (tenantId == 0) {
-            log.debug("Granted access for tenant 0");
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+            log.debug("Granted access for super tenant");
             return InvocationResponse.CONTINUE;
         }
         if (ActivationManager.activationRecorded(tenantId)) {
@@ -121,7 +122,7 @@ public class ActivationHandler extends AbstractHandler implements Handler {
         SuperTenantCarbonContext carbonContext =
                 SuperTenantCarbonContext.getCurrentContext(messageContext);
         int tenantId = carbonContext.getTenantId();
-        if (tenantId > -1) {
+        if (tenantId > -1 || tenantId == MultitenantConstants.SUPER_TENANT_ID) {
             return tenantId;
         }
         String domain = carbonContext.getTenantDomain();

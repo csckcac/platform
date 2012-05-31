@@ -19,12 +19,15 @@
 package org.wso2.carbon.cassandra.explorer.service;
 
 import me.prettyprint.cassandra.serializers.StringSerializer;
+import me.prettyprint.cassandra.service.CassandraHostConfigurator;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.ColumnSlice;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.beans.OrderedRows;
 import me.prettyprint.hector.api.beans.Row;
+import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
+import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.RangeSlicesQuery;
@@ -34,9 +37,7 @@ import org.wso2.carbon.cassandra.explorer.data.Column;
 import org.wso2.carbon.cassandra.explorer.exception.CassandraExplorerException;
 import org.wso2.carbon.core.AbstractAdmin;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * KeySpace Explorer for Cassandra
@@ -91,10 +92,10 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
      */
     public String[] getRowNamesForColumnFamily(String keyspaceName, String columnFamily,
                                                String start, String finish, int limit) throws CassandraExplorerException {
-        if ("".equals(start) & "".equals(finish)) { // Query forward
+        if ("".equals(start) && "".equals(finish)) { // Query forward
             return this.queryRowsforColumnFamily(keyspaceName, columnFamily,
                     start, finish, limit);
-        } else if ("".equals(start) & !("".equals(finish))) { // Query backwards
+        } else if ("".equals(start) && !("".equals(finish))) { // Query backwards
             String[] window1 = new String[limit];
             String[] window2 = new String[limit];
 
@@ -201,7 +202,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         if ("".equals(startKey) && "".equals(lastKey)) { // Query forward
             return this.queryColumnForRow(keyspaceName, columnFamily, rowName,
                     startKey, lastKey, limit, isReversed);
-        } else if ("".equals(startKey) & !("".equals(lastKey))) { // Query backwards
+        } else if ("".equals(startKey) && !("".equals(lastKey))) { // Query backwards
             Column[] window1 = new Column[limit];
             Column[] window2 = new Column[limit];
 
@@ -411,8 +412,8 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         return columnsList.size();
     }
 
-    public Column[] paginate(String keyspaceName, String columnFamily, String rowName,
-                             int startingNo, int limit) throws CassandraExplorerException {
+    public Column[] getColumnPaginateSlice(String keyspaceName, String columnFamily, String rowName,
+                                        int startingNo, int limit) throws CassandraExplorerException {
         Cluster cluster = ConnectionManager.getCluster();
         Keyspace keyspace = ConnectionManager.getKeyspace(cluster, keyspaceName);
         //get the results up to the startingNo
@@ -468,5 +469,40 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         List<HColumn<String, String>> hColumnsList;
         hColumnsList = result.get().getColumns();
         return hColumnsList.size();
+    }
+
+    public boolean connectToCassandraCluster(String clusterName, String connectionUrl, String userName, String password )
+            throws CassandraExplorerException {
+        Map<String, String> credentials = new HashMap<String, String>();
+        if(connectionUrl ==null || connectionUrl.isEmpty()){
+            throw new CassandraExplorerException("Connection URL is empty. Please provide Cassandra Connection URL to " +
+                    "connect") ;
+        }
+        ConnectionManager connectionManager = new ConnectionManager(clusterName,
+                new CassandraHostConfigurator(connectionUrl.trim()),credentials);
+        return connectionManager.isConnected();
+    }
+
+    public String [] getKeyspaces() throws CassandraExplorerException {
+      Cluster cluster = ConnectionManager.getCluster();
+      Iterator<KeyspaceDefinition> keyspaceItr =  cluster.describeKeyspaces().iterator();
+      ArrayList<String> keyspaceNames = new ArrayList();
+        while(keyspaceItr.hasNext()){
+            keyspaceNames.add(keyspaceItr.next().getName());
+        }
+        String [] keySpaceNameArray = new String[keyspaceNames.size()];
+        return keyspaceNames.toArray(keySpaceNameArray);
+    }
+
+    public String [] getColumnFamilies(String keySpace) throws CassandraExplorerException {
+        Cluster cluster = ConnectionManager.getCluster();
+        Iterator<ColumnFamilyDefinition> keyspaceItr =  cluster.describeKeyspace(keySpace).getCfDefs()
+                .iterator();
+        ArrayList<String> columnFamiliyNamesList = new ArrayList();
+        while(keyspaceItr.hasNext()){
+            columnFamiliyNamesList.add(keyspaceItr.next().getName());
+        }
+        String [] keySpaceNameArray = new String[columnFamiliyNamesList.size()];
+        return columnFamiliyNamesList.toArray(keySpaceNameArray);
     }
 }

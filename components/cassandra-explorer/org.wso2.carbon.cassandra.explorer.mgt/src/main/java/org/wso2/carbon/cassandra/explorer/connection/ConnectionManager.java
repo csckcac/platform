@@ -35,13 +35,16 @@ public class ConnectionManager {
     private static Cluster cluster = null;
 
     public ConnectionManager(String clusterName, CassandraHostConfigurator hostConfigurator,
-                             Map<String, String> credentials){
+                             Map<String, String> credentials) throws CassandraExplorerException {
         this.setCassandraCluster(clusterName,hostConfigurator,credentials);
     }
 
     private void setCassandraCluster(String clusterName, CassandraHostConfigurator hostConfigurator,
-                                       Map<String, String> credentials) {
+                                       Map<String, String> credentials) throws CassandraExplorerException {
         this.cluster = HFactory.getOrCreateCluster(clusterName, hostConfigurator, credentials);
+        if(cluster == null){
+            throw new CassandraExplorerException("Cannot connect to cluster");
+        }
     }
 
     public List<Keyspace> getCassandraKeySpacesList(Cluster cluster) {
@@ -65,5 +68,8 @@ public class ConnectionManager {
       }
     }
 
+    public boolean isConnected(){
+         return (cluster!=null);
+    }
 
 }

@@ -57,6 +57,6 @@ public class Column implements Comparable{
           throw new ClassCastException("Invalid object");
       }
       Column column = (Column) o;
-       return (new Long(column.getTimeStamp())).compareTo(timeStamp);
+       return (Long.valueOf(column.getTimeStamp())).compareTo(timeStamp);
     }
 }

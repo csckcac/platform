@@ -79,7 +79,7 @@ public class CassandraExplorerAdminClient {
                             String endKey, int limit)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
         return explorerAdminStub.getRowNamesForColumnFamily(keyspaceName, columnFamily, startKey,
-                endKey, limit);
+                                                            endKey, limit);
 
     }
 
@@ -101,8 +101,8 @@ public class CassandraExplorerAdminClient {
                                          String lastCoulmn, int limit, boolean isReversed)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
         return explorerAdminStub.getColumnsForRow(keyspaceName, columnFamily,
-                rowName, startColumn,
-                lastCoulmn, limit, isReversed);
+                                                  rowName, startColumn,
+                                                  lastCoulmn, limit, isReversed);
     }
 
     /**
@@ -118,12 +118,13 @@ public class CassandraExplorerAdminClient {
      * @throws java.rmi.RemoteException
      * @ * @throws org.wso2.carbon.cassandra.mgt.stub.explorer.CassandraExplorerAdminCassandraServerManagementException
      */
-    public Column[] getColumnsInUpdateOrder(String keyspaceName, String columnFamily, String rowName,
+    public Column[] getColumnsInUpdateOrder(String keyspaceName, String columnFamily,
+                                            String rowName,
                                             String startColumn, String lastColumn, int limit,
                                             boolean isReversed)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
         return explorerAdminStub.getColumnsInUpdateOrder(keyspaceName, columnFamily, rowName,
-                startColumn, lastColumn, limit, isReversed);
+                                                         startColumn, lastColumn, limit, isReversed);
     }
 
     /**
@@ -134,7 +135,6 @@ public class CassandraExplorerAdminClient {
      * @param rowName
      * @param columnName
      * @return
-     *
      * @throws java.rmi.RemoteException
      */
     public Column getColumn(String keyspace, String columnFamily, String rowName, String columnName)
@@ -145,7 +145,8 @@ public class CassandraExplorerAdminClient {
     public Column[] paginate(String keyspace, String columnFamily, String rowName,
                              int startingNo, int limit)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
-        return explorerAdminStub.paginate(keyspace, columnFamily, rowName, startingNo, limit);
+        return explorerAdminStub.getColumnPaginateSlice(keyspace, columnFamily, rowName, startingNo,
+                                                        limit);
     }
 
     public int getNoOfColumns(String keyspace, String columnFamily, String rowName)
@@ -157,13 +158,31 @@ public class CassandraExplorerAdminClient {
                            int startingNo, int limit)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
         return explorerAdminStub.searchColumns(keyspace, columnFamily, rowName, searchKey,
-                startingNo, limit);
+                                               startingNo, limit);
     }
 
     public int getNoOfFilteredResults(String keyspace, String columnFamily, String rowName,
                                       String searchKey)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
         return explorerAdminStub.getNoSearchResults(keyspace, columnFamily, rowName, searchKey);
+    }
+
+    public boolean connectToCassandraCluster(String clusterName, String connectionUrl,
+                                             String userName,
+                                             String password)
+            throws CassandraExplorerAdminCassandraExplorerException, RemoteException {
+        return explorerAdminStub.connectToCassandraCluster(clusterName, connectionUrl, userName,
+                                                           password);
+    }
+
+    public String[] getKeyspaces()
+            throws CassandraExplorerAdminCassandraExplorerException, RemoteException {
+        return explorerAdminStub.getKeyspaces();
+    }
+
+    public String[] getColumnFamilies(String keyspace)
+            throws CassandraExplorerAdminCassandraExplorerException, RemoteException {
+        return explorerAdminStub.getColumnFamilies(keyspace);
     }
 
 }

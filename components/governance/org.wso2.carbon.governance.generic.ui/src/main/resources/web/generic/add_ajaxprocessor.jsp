@@ -41,6 +41,16 @@
     try {
         String effectivePath = ManageGenericArtifactUtil.addArtifactContent(
                 head, request, config, session, dataName, dataNamespace);
+
+        if(effectivePath.contains("An identical resource already exists in the defined path")){
+%>
+        <script type="text/javascript">
+            window.location = "../generic/add_edit.jsp?region=<%=request.getParameter("region")%>&item=<%=request.getParameter("item")%>&key=<%=request.getParameter("key")%>&lifecycleAttribute=<%=request.getParameter("lifecycleAttribute")%>&breadcrumb=<%=request.getParameter("breadcrumb")%>&duplicateWarning=" + encodeURIComponent("<%=effectivePath%>");
+        </script>
+<%
+        return;
+        }
+        
         if (effectivePath != null){
             try {
                 if(request.getParameter("path")!=null){
@@ -69,7 +79,3 @@
     return;
 }
 %>
-
-
-
-    

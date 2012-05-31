@@ -171,6 +171,9 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                         }
                                     }
                                 }
+
+                                unDeployCRUDService(artifactConfiguration,
+                                        CommonUtil.getConfigurationContext().getAxisConfiguration());
                             }
                         });
                 handlerManager.addHandler(null,
@@ -202,6 +205,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                             }
                         },
                         new Handler() {
+/*
                             public void put(RequestContext requestContext)
                                     throws RegistryException {
                                 if (!org.wso2.carbon.registry.extensions.utils.CommonUtil
@@ -224,6 +228,7 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                                             .releaseUpdateLock();
                                 }
                             }
+*/
 
                             @Override
                             public void createLink(RequestContext requestContext) throws RegistryException {
@@ -271,6 +276,10 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                     String key = configuration.getKey();
                     String mediatype = configuration.getMediaType();
 
+//                    We avoid creation of a axis service if there is a service with the same name
+                    if(axisConfig.getService(singularLabel) != null){
+                        continue;
+                    }
                     AxisService service = new AxisService(singularLabel);
 
                     Parameter param1 = new Parameter("AuthorizationAction", "/permission/admin/login");
@@ -360,6 +369,19 @@ public class GovernanceMgtUIListMetadataServiceComponent {
                 }
             }
         }
+    }
+
+    private void unDeployCRUDService(GovernanceArtifactConfiguration configuration, AxisConfiguration axisConfig){
+        String singularLabel = configuration.getSingularLabel();
+
+        try {
+            if(axisConfig.getService(singularLabel) != null){
+                axisConfig.removeService(singularLabel);
+            }
+        } catch (AxisFault axisFault) {
+            log.error(axisFault);
+        }
+
     }
 
     protected void deactivate(ComponentContext context) {

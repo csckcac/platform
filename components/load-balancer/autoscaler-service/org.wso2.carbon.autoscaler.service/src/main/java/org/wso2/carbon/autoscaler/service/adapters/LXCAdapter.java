@@ -53,7 +53,7 @@ public class LXCAdapter extends Adapter {
 		
 		if(agentManagementService != null) {
 			
-			log.info("agentManagementService is not null");
+			//log.info("agentManagementService is not null");
 			// Check whether we can spawn any 
 			// instance in this adapter
 			// TODO need a database query or?
@@ -68,7 +68,7 @@ public class LXCAdapter extends Adapter {
 					
 				} else {
 					log.info(" No workernode available in given domain");
-					log.error(" No further instances can be spwn");
+					log.error(" No further instances can be spawn");
 					return false;
 				}
 			} catch (Exception e) {
@@ -338,7 +338,9 @@ public class LXCAdapter extends Adapter {
 
 	@Override
 	public int getPendingInstanceCount(String domainName) {
-		// TODO Auto-generated method stub
+	    
+	    
+	    
 		return 0;
 	}
 

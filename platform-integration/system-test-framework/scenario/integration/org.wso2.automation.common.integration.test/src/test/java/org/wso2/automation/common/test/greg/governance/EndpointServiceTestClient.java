@@ -179,6 +179,73 @@ public class EndpointServiceTestClient {
         }
     }
 
+    @Test(groups = {"wso2.greg"}, description = "Add duplicate endpoints")
+    public void testAddDuplicateEndpoints() throws GovernanceException {
+
+        EndpointManager endpointManager = new EndpointManager(governance);
+        Endpoint ep1 = endpointManager.newEndpoint("http://wso2.automation.endpoint");
+        endpointManager.addEndpoint(ep1);
+        assertTrue(endpointManager.getEndpoint(ep1.getId()).getQName().toString().contains("http://wso2.automation.endpoint"), "Endpoint not found");
+
+        //add same endpoint again
+        Endpoint ep2 = endpointManager.newEndpoint("http://wso2.automation.endpoint");
+        endpointManager.addEndpoint(ep2);
+
+        assertTrue(endpointManager.getEndpoint(ep2.getId()).getQName().toString().contains("http://wso2.automation.endpoint"), "Endpoint not found");
+
+        //delete endpoint
+        endpointManager.removeEndpoint(ep2.getId());
+        assertNull(endpointManager.getEndpoint(ep2.getId()), "Endpoint not removed");
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Add jmx endpoints")
+    public void testAddJmxEndpoint() throws GovernanceException {
+
+        EndpointManager endpointManager = new EndpointManager(governance);
+        Endpoint ep1 = endpointManager.newEndpoint("jms:/myqueue?transport.jms." +
+                                                   "ConnectionFactoryJNDIName=QueueConnectionFactory&amp;" +
+                                                   "java.naming.factory.initial=" +
+                                                   "org.apache.qpid.jndi.PropertiesFileInitialContextFactory&amp;" +
+                                                   "java.naming.provider.url=resources/jndi.properties");
+
+        endpointManager.addEndpoint(ep1);
+        assertTrue(endpointManager.getEndpoint(ep1.getId()).getQName().toString().contains("jms:/myqueue?transport.jms"), "Endpoint not found");
+
+        //delete endpoint
+        endpointManager.removeEndpoint(ep1.getId());
+        assertNull(endpointManager.getEndpoint(ep1.getId()), "Endpoint not removed");
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Add 1000 endpoints")
+    public void testAddLargeNumberOfEndpoints() throws RegistryException {
+        int numberOfEndpoints = 1000;
+        EndpointManager endpointManager = new EndpointManager(governance);
+
+        for (int i = 1; i < numberOfEndpoints; i++) {
+            Endpoint ep1 = endpointManager.newEndpoint("http://wso2.automation.endpoint" + i);
+            endpointManager.addEndpoint(ep1);
+            assertTrue(endpointManager.getEndpoint(ep1.getId()).getQName().toString().contains
+                                      ("http://wso2.automation.endpoint" + i), "Endpoint not found");
+        }
+
+        for (int i = 1; i < numberOfEndpoints; i++) {
+            governance.delete("trunk/endpoints" + "/ep-wso2-automation-endpoint"
+                              + i);
+        }
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Get endpoint by URL")
+    public void testGetEndpointByURL() throws GovernanceException {
+
+        EndpointManager endpointManager = new EndpointManager(governance);
+        Endpoint ep1 = endpointManager.newEndpoint("http://wso2.automation.endpoint/urltest");
+        endpointManager.addEndpoint(ep1);
+        assertTrue(endpointManager.getEndpoint(ep1.getId()).getQName().toString().contains("http://wso2.automation.endpoint/urltest"), "Endpoint not found");
+        assertTrue(endpointManager.getEndpointByUrl(ep1.getUrl()).getQName().toString().contains("http://wso2.automation.endpoint/urltest"), "Endpoint not found");
+        endpointManager.removeEndpoint(ep1.getId());
+        assertNull(endpointManager.getEndpoint(ep1.getId()), "Endpoint not removed");
+    }
+
     private void removeServices(GovernanceArtifact[] artifacts) throws GovernanceException {
         ServiceManager serviceManager = new ServiceManager(governance);
 

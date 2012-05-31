@@ -54,8 +54,7 @@ import static org.testng.Assert.assertTrue;
 /**
  *test case for issue  String[] children = collection.getChildren();      via Governance Registry API
  * https://wso2.org/jira/browse/CARBON-12200
- *
- */
+  */
 public class GovApiGetChildren {
     String sessionCookie = null;
     private static final Log log = LogFactory.getLog(GovApiGetChildren.class);
@@ -123,8 +122,6 @@ public class GovApiGetChildren {
         {
             Assert.assertFalse(true,"child list is null");
         }
-
-
     }
 
 

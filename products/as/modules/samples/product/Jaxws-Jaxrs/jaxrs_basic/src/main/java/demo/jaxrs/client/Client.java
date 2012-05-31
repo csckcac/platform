@@ -25,6 +25,7 @@ import org.apache.commons.httpclient.methods.FileRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.io.CachedOutputStream;
@@ -104,6 +105,26 @@ public final class Client {
             // Release current connection to the connection pool once you are
             // done
             post.releaseConnection();
+        }
+
+        // Testing the new method which Consumes and Produces text/plain
+        System.out.println("\n");
+        System.out.println("Sent HTTP POST request to get customer name");
+        PostMethod post2 = new PostMethod(serviceURL + "/customers/name");
+        post2.addRequestHeader("Accept" , "text/plain");
+        RequestEntity myEntity = new StringRequestEntity("123456", "text/plain", "ISO-8859-1");
+        post2.setRequestEntity(myEntity);
+        httpclient = new HttpClient();
+
+        try {
+            int result = httpclient.executeMethod(post2);
+            System.out.println("Response status code: " + result);
+            System.out.println("Response body: ");
+            System.out.println(post2.getResponseBodyAsString());
+        } finally {
+            // Release current connection to the connection pool once you are
+            // done
+            post2.releaseConnection();
         }
 
         System.out.println("\n");

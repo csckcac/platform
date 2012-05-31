@@ -1,0 +1,522 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.mgt.application.appfactory.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax25="http://service.mgt.application.appfactory.carbon.wso2.org/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.mgt.application.appfactory.carbon.wso2.org">
+    <wsdl:documentation>ApplicationManagementService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.mgt.application.appfactory.carbon.wso2.org/xsd">
+            <xs:complexType name="ApplicationManagementException">
+                <xs:sequence />
+            </xs:complexType>
+            <xs:complexType name="UserInfoBean">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="lastName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ApplicationInfoBean">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="applicationKey" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="description" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="ownerUserName" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax26="http://service.mgt.application.appfactory.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.mgt.application.appfactory.carbon.wso2.org">
+            <xs:import namespace="http://service.mgt.application.appfactory.carbon.wso2.org/xsd" />
+            <xs:element name="ApplicationManagementServiceApplicationManagementException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ApplicationManagementException" nillable="true" type="ax25:ApplicationManagementException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="revokeApplication">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="applicationId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="revokeApplicationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeUserFromApplication">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="applicationId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeUserFromApplicationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isApplicationIdAvailable">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="applicationKey" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isApplicationIdAvailableResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserInfoBean">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserInfoBeanResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax25:UserInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRolesOfUserPerApplication">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="appId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRolesOfUserPerApplicationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllApplications">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllApplicationsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createApplication">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="application" nillable="true" type="ax25:ApplicationInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createApplicationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addUserToApplication">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="applicationId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="roles" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addUserToApplicationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="createApplicationRequest">
+        <wsdl:part name="parameters" element="ns:createApplication" />
+    </wsdl:message>
+    <wsdl:message name="createApplicationResponse">
+        <wsdl:part name="parameters" element="ns:createApplicationResponse" />
+    </wsdl:message>
+    <wsdl:message name="isApplicationIdAvailableRequest">
+        <wsdl:part name="parameters" element="ns:isApplicationIdAvailable" />
+    </wsdl:message>
+    <wsdl:message name="isApplicationIdAvailableResponse">
+        <wsdl:part name="parameters" element="ns:isApplicationIdAvailableResponse" />
+    </wsdl:message>
+    <wsdl:message name="ApplicationManagementServiceApplicationManagementException">
+        <wsdl:part name="parameters" element="ns:ApplicationManagementServiceApplicationManagementException" />
+    </wsdl:message>
+    <wsdl:message name="getRolesOfUserPerApplicationRequest">
+        <wsdl:part name="parameters" element="ns:getRolesOfUserPerApplication" />
+    </wsdl:message>
+    <wsdl:message name="getRolesOfUserPerApplicationResponse">
+        <wsdl:part name="parameters" element="ns:getRolesOfUserPerApplicationResponse" />
+    </wsdl:message>
+    <wsdl:message name="getUserInfoBeanRequest">
+        <wsdl:part name="parameters" element="ns:getUserInfoBean" />
+    </wsdl:message>
+    <wsdl:message name="getUserInfoBeanResponse">
+        <wsdl:part name="parameters" element="ns:getUserInfoBeanResponse" />
+    </wsdl:message>
+    <wsdl:message name="addUserToApplicationRequest">
+        <wsdl:part name="parameters" element="ns:addUserToApplication" />
+    </wsdl:message>
+    <wsdl:message name="addUserToApplicationResponse">
+        <wsdl:part name="parameters" element="ns:addUserToApplicationResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAllApplicationsRequest">
+        <wsdl:part name="parameters" element="ns:getAllApplications" />
+    </wsdl:message>
+    <wsdl:message name="getAllApplicationsResponse">
+        <wsdl:part name="parameters" element="ns:getAllApplicationsResponse" />
+    </wsdl:message>
+    <wsdl:message name="revokeApplicationRequest">
+        <wsdl:part name="parameters" element="ns:revokeApplication" />
+    </wsdl:message>
+    <wsdl:message name="revokeApplicationResponse">
+        <wsdl:part name="parameters" element="ns:revokeApplicationResponse" />
+    </wsdl:message>
+    <wsdl:message name="removeUserFromApplicationRequest">
+        <wsdl:part name="parameters" element="ns:removeUserFromApplication" />
+    </wsdl:message>
+    <wsdl:message name="removeUserFromApplicationResponse">
+        <wsdl:part name="parameters" element="ns:removeUserFromApplicationResponse" />
+    </wsdl:message>
+    <wsdl:portType name="ApplicationManagementServicePortType">
+        <wsdl:operation name="createApplication">
+            <wsdl:input message="ns:createApplicationRequest" wsaw:Action="urn:createApplication" />
+            <wsdl:output message="ns:createApplicationResponse" wsaw:Action="urn:createApplicationResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="isApplicationIdAvailable">
+            <wsdl:input message="ns:isApplicationIdAvailableRequest" wsaw:Action="urn:isApplicationIdAvailable" />
+            <wsdl:output message="ns:isApplicationIdAvailableResponse" wsaw:Action="urn:isApplicationIdAvailableResponse" />
+            <wsdl:fault message="ns:ApplicationManagementServiceApplicationManagementException" name="ApplicationManagementServiceApplicationManagementException" wsaw:Action="urn:isApplicationIdAvailableApplicationManagementServiceApplicationManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="getRolesOfUserPerApplication">
+            <wsdl:input message="ns:getRolesOfUserPerApplicationRequest" wsaw:Action="urn:getRolesOfUserPerApplication" />
+            <wsdl:output message="ns:getRolesOfUserPerApplicationResponse" wsaw:Action="urn:getRolesOfUserPerApplicationResponse" />
+            <wsdl:fault message="ns:ApplicationManagementServiceApplicationManagementException" name="ApplicationManagementServiceApplicationManagementException" wsaw:Action="urn:getRolesOfUserPerApplicationApplicationManagementServiceApplicationManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="getUserInfoBean">
+            <wsdl:input message="ns:getUserInfoBeanRequest" wsaw:Action="urn:getUserInfoBean" />
+            <wsdl:output message="ns:getUserInfoBeanResponse" wsaw:Action="urn:getUserInfoBeanResponse" />
+            <wsdl:fault message="ns:ApplicationManagementServiceApplicationManagementException" name="ApplicationManagementServiceApplicationManagementException" wsaw:Action="urn:getUserInfoBeanApplicationManagementServiceApplicationManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="addUserToApplication">
+            <wsdl:input message="ns:addUserToApplicationRequest" wsaw:Action="urn:addUserToApplication" />
+            <wsdl:output message="ns:addUserToApplicationResponse" wsaw:Action="urn:addUserToApplicationResponse" />
+            <wsdl:fault message="ns:ApplicationManagementServiceApplicationManagementException" name="ApplicationManagementServiceApplicationManagementException" wsaw:Action="urn:addUserToApplicationApplicationManagementServiceApplicationManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllApplications">
+            <wsdl:input message="ns:getAllApplicationsRequest" wsaw:Action="urn:getAllApplications" />
+            <wsdl:output message="ns:getAllApplicationsResponse" wsaw:Action="urn:getAllApplicationsResponse" />
+            <wsdl:fault message="ns:ApplicationManagementServiceApplicationManagementException" name="ApplicationManagementServiceApplicationManagementException" wsaw:Action="urn:getAllApplicationsApplicationManagementServiceApplicationManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="revokeApplication">
+            <wsdl:input message="ns:revokeApplicationRequest" wsaw:Action="urn:revokeApplication" />
+            <wsdl:output message="ns:revokeApplicationResponse" wsaw:Action="urn:revokeApplicationResponse" />
+            <wsdl:fault message="ns:ApplicationManagementServiceApplicationManagementException" name="ApplicationManagementServiceApplicationManagementException" wsaw:Action="urn:revokeApplicationApplicationManagementServiceApplicationManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="removeUserFromApplication">
+            <wsdl:input message="ns:removeUserFromApplicationRequest" wsaw:Action="urn:removeUserFromApplication" />
+            <wsdl:output message="ns:removeUserFromApplicationResponse" wsaw:Action="urn:removeUserFromApplicationResponse" />
+            <wsdl:fault message="ns:ApplicationManagementServiceApplicationManagementException" name="ApplicationManagementServiceApplicationManagementException" wsaw:Action="urn:removeUserFromApplicationApplicationManagementServiceApplicationManagementException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ApplicationManagementServiceSoap11Binding" type="ns:ApplicationManagementServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="createApplication">
+            <soap:operation soapAction="urn:createApplication" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isApplicationIdAvailable">
+            <soap:operation soapAction="urn:isApplicationIdAvailable" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserInfoBean">
+            <soap:operation soapAction="urn:getUserInfoBean" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRolesOfUserPerApplication">
+            <soap:operation soapAction="urn:getRolesOfUserPerApplication" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addUserToApplication">
+            <soap:operation soapAction="urn:addUserToApplication" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllApplications">
+            <soap:operation soapAction="urn:getAllApplications" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="revokeApplication">
+            <soap:operation soapAction="urn:revokeApplication" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeUserFromApplication">
+            <soap:operation soapAction="urn:removeUserFromApplication" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ApplicationManagementServiceSoap12Binding" type="ns:ApplicationManagementServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="createApplication">
+            <soap12:operation soapAction="urn:createApplication" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isApplicationIdAvailable">
+            <soap12:operation soapAction="urn:isApplicationIdAvailable" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap12:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserInfoBean">
+            <soap12:operation soapAction="urn:getUserInfoBean" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap12:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRolesOfUserPerApplication">
+            <soap12:operation soapAction="urn:getRolesOfUserPerApplication" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap12:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addUserToApplication">
+            <soap12:operation soapAction="urn:addUserToApplication" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap12:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllApplications">
+            <soap12:operation soapAction="urn:getAllApplications" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap12:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="revokeApplication">
+            <soap12:operation soapAction="urn:revokeApplication" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap12:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeUserFromApplication">
+            <soap12:operation soapAction="urn:removeUserFromApplication" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ApplicationManagementServiceApplicationManagementException">
+                <soap12:fault use="literal" name="ApplicationManagementServiceApplicationManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ApplicationManagementServiceHttpBinding" type="ns:ApplicationManagementServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="createApplication">
+            <http:operation location="createApplication" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isApplicationIdAvailable">
+            <http:operation location="isApplicationIdAvailable" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserInfoBean">
+            <http:operation location="getUserInfoBean" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getRolesOfUserPerApplication">
+            <http:operation location="getRolesOfUserPerApplication" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addUserToApplication">
+            <http:operation location="addUserToApplication" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllApplications">
+            <http:operation location="getAllApplications" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="revokeApplication">
+            <http:operation location="revokeApplication" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeUserFromApplication">
+            <http:operation location="removeUserFromApplication" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ApplicationManagementService">
+        <wsdl:port name="ApplicationManagementServiceHttpsSoap11Endpoint" binding="ns:ApplicationManagementServiceSoap11Binding">
+            <soap:address location="https://localhost:9443/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ApplicationManagementServiceHttpsSoap12Endpoint" binding="ns:ApplicationManagementServiceSoap12Binding">
+            <soap12:address location="https://localhost:9443/services/ApplicationManagementService.ApplicationManagementServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ApplicationManagementServiceHttpsEndpoint" binding="ns:ApplicationManagementServiceHttpBinding">
+            <http:address location="https://localhost:9443/services/ApplicationManagementService.ApplicationManagementServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

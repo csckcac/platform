@@ -24,7 +24,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceStub;
-import org.wso2.carbon.governance.lcm.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.registry.common.utils.CommonUtil;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.ui.CarbonUIUtil;
@@ -131,7 +130,7 @@ public class LifeCycleManagementServiceClient {
                 output = stub.updateLifecycle(lifecycleName, payload);
             }
             else{
-                throw new Exception("Another user has already modified this resource");
+                throw new Exception("Lifecycle resource has already modified ");
             }
 
         } catch (Exception e) {

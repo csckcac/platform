@@ -33,7 +33,11 @@ import org.wso2.carbon.apimgt.impl.dto.xsd.APIInfoDTO;
 import org.wso2.carbon.apimgt.keymgt.client.SubscriberKeyMgtClient;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
+import org.wso2.carbon.user.mgt.stub.AddUserUserAdminExceptionException;
+import org.wso2.carbon.user.mgt.stub.UserAdminStub;
+import org.wso2.carbon.utils.CarbonUtils;
 
+import java.rmi.RemoteException;
 import java.util.*;
 
 @SuppressWarnings("unused")
@@ -1513,5 +1517,39 @@ public class APIStoreHostObject extends ScriptableObject {
             }
         }
         return false;
+    }
+    
+    private static void jsFunction_addUser(Context cx, Scriptable thisObj,
+                                           Object[] args,
+                                           Function funObj) throws APIManagementException {
+
+        String username = args[0].toString();
+        String password = args[1].toString();
+
+        APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
+        String serverURL = config.getFirstProperty(APIConstants.AUTH_MANAGER_URL);
+        String adminUsername = config.getFirstProperty(APIConstants.AUTH_MANAGER_USERNAME);
+        String adminPassword = config.getFirstProperty(APIConstants.AUTH_MANAGER_PASSWORD);
+        if (serverURL != null || adminUsername != null || adminPassword != null) {
+            throw new APIManagementException("Required parameter missing to connect to the" +
+                    " authentication manager");
+        }
+        
+        String role = config.getFirstProperty(APIConstants.SELF_SIGN_UP_ROLE);
+        if (role == null) {
+            throw new APIManagementException("Subscriber role undefined for self registration");
+        }
+        
+        String url = serverURL + "UserAdmin";
+        try {
+            UserAdminStub stub = new UserAdminStub(url);
+            CarbonUtils.setBasicAccessSecurityHeaders(adminUsername, adminPassword, 
+                    true, stub._getServiceClient());
+            stub.addUser(username, password, new String[] { role }, null, null);
+        } catch (RemoteException e) {
+            throw new APIManagementException("Error while invoking user admin service", e);
+        } catch (AddUserUserAdminExceptionException e) {
+            throw new APIManagementException("Error while adding the user: " + username, e);
+        }
     }
 }

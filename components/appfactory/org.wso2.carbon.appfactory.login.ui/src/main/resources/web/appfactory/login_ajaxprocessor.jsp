@@ -144,7 +144,9 @@
 
                         <form action="../appmgt/sign_up.jag" id="registrationForm">
 
-                            <a  onclick="doRegister()" class="registerClass">Get Started Now for FREE!</a>
+                            <div align="center">
+                                <button type="button" onclick="doRegister()">Get Started Now for FREE! </button>
+                            </div>
                         </form>
         <h2><fmt:message key="sign.in"/></h2>
 					<table>

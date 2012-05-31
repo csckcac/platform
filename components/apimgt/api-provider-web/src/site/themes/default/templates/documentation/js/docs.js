@@ -57,7 +57,7 @@ var updateDocumentation = function (docName, docType, summary, docUrl) {
     $('#newDoc').show('slow');
     $('#newDoc #docName').val(docName);
     $('#newDoc #summary').val(summary);
-    if (docUrl != "undefined") {
+    if (docUrl != "{}") {
         $('#newDoc #docUrl').val(docUrl);
         $('#optionsRadios8').attr('checked', true);
         $('#newDoc #docUrl').show();

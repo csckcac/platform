@@ -10,12 +10,18 @@ public class SubscriptionPopulator {
 
 	public static void main(String[] args) {
 
-		String JDBC_DRIVER = "org.h2.Driver";
-		String DB_URL = "jdbc:h2:tcp://localhost/~/am2";
-		//String DB_URL = "jdbc:h2:~/am";
-		String USER = "sa";
-		String PASS = "password";
+//		String JDBC_DRIVER = "org.h2.Driver";
+//		String DB_URL = "jdbc:h2:tcp://localhost/~/am3";
+//		// String DB_URL = "jdbc:h2:~/am";
+//		String USER = "sa";
+//		String PASS = "password";
 
+		String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+		String DB_URL = "jdbc:mysql://10.150.3.172:3306/am1";
+		// String DB_URL = "jdbc:h2:~/am";
+		String USER = "root";
+		String PASS = "root123";
+		
 		Connection conn = null;
 		try {
 			Class.forName(JDBC_DRIVER);
@@ -63,73 +69,78 @@ public class SubscriptionPopulator {
 			}
 			rs.close();
 
-			int loopCount = 10;
+			int loopCount = 100000;
 			String applicationName;
+			
 			for (int i = 0; i < loopCount; i++) {
+				System.out.println("Iteration Count : "+i);
+				try {
+					applicationName = applicationNamePrefix + i;
+					// Add Application
+					psApplications.setString(1, applicationName);
+					psApplications.setInt(2, Integer.valueOf(subscriberId));
+					psApplications.executeUpdate();
+					rs = psApplications.getGeneratedKeys();
+					String applicationId = null;
+					if (rs.next()) {
+						applicationId = rs.getString(1);
+					}
+					rs.close();
 
-				applicationName = applicationNamePrefix + i;
-				// Add Application
-				psApplications.setString(1, applicationName);
-				psApplications.setInt(2, Integer.valueOf(subscriberId));
-				psApplications.executeUpdate();
-				rs = psApplications.getGeneratedKeys();
-				String applicationId = null;
-				if (rs.next()) {
-					applicationId = rs.getString(1);
+					// Add Subscription
+					psSubscriptions.setString(1, "Unlimited");
+					psSubscriptions.setString(2, "SUMEDHA_API1_V1.0.0");
+					psSubscriptions.setInt(3, Integer.valueOf(applicationId));
+					psSubscriptions.executeUpdate();
+					rs = psSubscriptions.getGeneratedKeys();
+					String subscriptionId = null;
+					if (rs.next()) {
+						subscriptionId = rs.getString(1);
+					}
+					rs.close();
+
+					// Add Key Context Mapping
+					String accessKey = "9nEQnijLZ0Gi0gZ6a3pZIC" + i;
+					psKeyContextMappings.setString(1, "/api1");
+					psKeyContextMappings.setString(2, "1.0.0");
+					// TODO : add padding to make the key length constant
+					psKeyContextMappings.setString(3, accessKey);
+					psKeyContextMappings.executeUpdate();
+					rs = psKeyContextMappings.getGeneratedKeys();
+					String keyContexMappingId = null;
+					if (rs.next()) {
+						keyContexMappingId = rs.getString(1);
+					}
+					rs.close();
+
+					// Add Subscription Key Mapping
+					psSubscriptionKeyMappingSQL.setInt(1,
+							Integer.valueOf(subscriptionId));
+					psSubscriptionKeyMappingSQL.setInt(2,
+							Integer.valueOf(keyContexMappingId));
+					psSubscriptionKeyMappingSQL.setString(3, "PRODUCTION");
+					psSubscriptionKeyMappingSQL.executeUpdate();
+
+					// Add Consumer Application
+					psConsumerApplicationSQL.setString(1, applicationName);
+					psConsumerApplicationSQL.setString(2, applicationName);
+					psConsumerApplicationSQL.executeUpdate();
+
+					// Add OAuth2 access token
+					psOAuth2AccessTokenSQL.setString(1, accessKey);
+					psOAuth2AccessTokenSQL.setString(2, applicationName);
+					psOAuth2AccessTokenSQL.executeUpdate();
+
+					psApplications.clearParameters();
+					psSubscriptions.clearParameters();
+					psKeyContextMappings.clearParameters();
+					psOAuth2AccessTokenSQL.clearParameters();
+					psSubscriptionKeyMappingSQL.clearParameters();
+					psConsumerApplicationSQL.clearParameters();
+					conn.commit();
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
-				rs.close();
-
-				// Add Subscription
-				psSubscriptions.setString(1, "Unlimited");
-				psSubscriptions.setString(2, "SUMEDHA_API1_V1.0.0");
-				psSubscriptions.setInt(3, Integer.valueOf(applicationId));
-				psSubscriptions.executeUpdate();
-				rs = psSubscriptions.getGeneratedKeys();
-				String subscriptionId = null;
-				if (rs.next()) {
-					subscriptionId = rs.getString(1);
-				}
-				rs.close();
-
-				// Add Key Context Mapping
-				String accessKey = "9nEQnijLZ0Gi0gZ6a3pZIC" + i;
-				psKeyContextMappings.setString(1, "/api1");
-				psKeyContextMappings.setString(2, "1.0.0");
-				// TODO : add padding to make the key length constant
-				psKeyContextMappings.setString(3, accessKey);
-				psKeyContextMappings.executeUpdate();
-				rs = psKeyContextMappings.getGeneratedKeys();
-				String keyContexMappingId = null;
-				if (rs.next()) {
-					keyContexMappingId = rs.getString(1);
-				}
-				rs.close();
-
-				// Add Subscription Key Mapping
-				psSubscriptionKeyMappingSQL.setInt(1,
-						Integer.valueOf(subscriptionId));
-				psSubscriptionKeyMappingSQL.setInt(2,
-						Integer.valueOf(keyContexMappingId));
-				psSubscriptionKeyMappingSQL.setString(3, "PRODUCTION");
-				psSubscriptionKeyMappingSQL.executeUpdate();
-
-				// Add Consumer Application
-				psConsumerApplicationSQL.setString(1, applicationName);
-				psConsumerApplicationSQL.setString(2, applicationName);
-				psConsumerApplicationSQL.executeUpdate();
-
-				// Add OAuth2 access token
-				psOAuth2AccessTokenSQL.setString(1, accessKey);
-				psOAuth2AccessTokenSQL.setString(2, applicationName);
-				psOAuth2AccessTokenSQL.executeUpdate();
-
-				psApplications.clearParameters();
-				psSubscriptions.clearParameters();
-				psKeyContextMappings.clearParameters();
-				psOAuth2AccessTokenSQL.clearParameters();
-				psSubscriptionKeyMappingSQL.clearParameters();
-				psConsumerApplicationSQL.clearParameters();
-				conn.commit();
 			}
 
 		} catch (ClassNotFoundException e) {

@@ -7,7 +7,7 @@
                 <data type="path" value="overview_name" href="@{storagePath}"/>
             </column>
 	    <column name="Type">
-                <data type="path" value="overview_type"/>
+                <data type="text" value="overview_type"/>
             </column>
         </list>
     </ui>

@@ -100,6 +100,7 @@ public class Util {
         try {
             validator.validate(xmlFile);
         } catch (SAXException e) {
+            log.error("#### RXT validation fails due to: " + e.getMessage());
             return false;
         } catch (IOException e) {
             throw new IOException("File not found " + e.getMessage());

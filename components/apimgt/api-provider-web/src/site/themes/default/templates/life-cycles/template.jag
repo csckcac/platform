@@ -1,12 +1,20 @@
 <% jagg.template("life-cycles", function(inputs, outputs, jagg) { %>
 
 <script type="text/javascript">
-function checkValue() {
-if($('#publishToGateway').is(":checked")==false){
-$('#publishToGateway').attr('value','false');
+function checkValue(element) {
+if($(element).is(":checked")==false){
+$(element).attr('value','false');
 }
 else{
-$('#publishToGateway').attr('value','true');
+$(element).attr('value','true');
+}
+}
+function getSelectedValue(oldStatus){
+var selObj = document.getElementById('editStatus');
+var selIndex = selObj.selectedIndex;
+var newStatus=selObj.options[selIndex].value;
+if(oldStatus=="CREATED" && newStatus=="PUBLISHED"){
+$('#deprecateOldVersionsDiv').show();
 }
 }
 </script>
@@ -25,7 +33,7 @@ $('#publishToGateway').attr('value','true');
      <div class="control-group">
                 <label class="control-label" for="editStatus" name="state">State:</label>
                 <div class="controls">
-                    <select id="editStatus" name="status">
+                    <select id="editStatus" name="status" onChange="getSelectedValue('<%=api.status%>');">
                         <option value="CREATED"<%=(api.status == "CREATED" ? ' selected="selected"' : '')%>>CREATED</option>
                         <option value="PUBLISHED"<%=(api.status == "PUBLISHED" ? ' selected="selected"' : '')%>>PUBLISHED</option>
                         <option value="DEPRECATED"<%=(api.status == "DEPRECATED" ? ' selected="selected"' : '')%>>DEPRECATED</option>
@@ -34,7 +42,11 @@ $('#publishToGateway').attr('value','true');
                     </select>
                  </div> <br/>
                  <div class="controls">
-                  <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue()" checked="true" value="true"> Push To Gateway
+                  <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue('#publishToGateway')" checked="true" value="true"> Push To Gateway
+                 </div>
+
+                 <div class="controls" id="deprecateOldVersionsDiv" style="display:none;">
+                  <input type="checkbox" id="deprecateOldVersions" name="deprecateOldVersions" onChange="checkValue('#deprecateOldVersions')" checked="true" value="true"> Deprecate Old Versions
                  </div>
 
 

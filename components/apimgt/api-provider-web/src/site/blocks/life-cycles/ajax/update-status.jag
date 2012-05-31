@@ -14,6 +14,7 @@ include("/jagg/jagg.jag");
         apiData.version = request.getParameter("version");
         apiData.status = request.getParameter("status");
         apiData.publishToGateway = request.getParameter("publishToGateway");
+        apiData.deprecateOldVersions = request.getParameter("deprecateOldVersions");
         result = mod.updateAPIStatus(apiData);
         if (result.error==true) {
             obj = {

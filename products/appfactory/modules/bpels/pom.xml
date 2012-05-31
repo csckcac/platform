@@ -20,5 +20,6 @@
 		<module>ApplicationCreation</module>
 		<module>DeployApplicationToDev</module>
 		<module>DeployApplicationToLive</module>
+		<module>AddUserToApplication</module>
 	</modules>
 </project>

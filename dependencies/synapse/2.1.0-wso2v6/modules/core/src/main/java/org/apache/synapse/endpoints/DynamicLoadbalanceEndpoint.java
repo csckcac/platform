@@ -146,7 +146,7 @@ public class DynamicLoadbalanceEndpoint extends LoadbalanceEndpoint {
 
         }
 
-        setupTransportHeaders(synCtx);
+
         DynamicLoadbalanceFaultHandlerImpl faultHandler = new DynamicLoadbalanceFaultHandlerImpl();
         if (sessionInformation != null && currentMember != null) {
             //send message on current session
@@ -319,7 +319,7 @@ public class DynamicLoadbalanceEndpoint extends LoadbalanceEndpoint {
                     memberHosts = new HashMap<String, String>());
         }
         memberHosts.put(extractHost(synCtx), "true");
-
+        setupTransportHeaders(synCtx);
         try {
             endpoint.send(synCtx);
         } catch (Exception e) {

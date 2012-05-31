@@ -25,6 +25,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.common.AbstractUserStoreManagerListener;
 import org.wso2.carbon.user.core.listener.AuthorizationManagerListener;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class PerUserAddListener extends AbstractUserStoreManagerListener {
                            Map<String, String> claims, String profileName, UserStoreManager userStoreManager)
             throws UserStoreException {
         int tenantId = userStoreManager.getTenantId();
-        if (tenantId == 0) {
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
             return true;
         }
         // running the rules invoking the remote throttling manager.

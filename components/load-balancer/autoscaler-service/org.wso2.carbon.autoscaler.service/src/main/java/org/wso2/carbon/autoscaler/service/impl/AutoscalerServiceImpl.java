@@ -32,6 +32,7 @@ import org.wso2.carbon.autoscaler.service.adapters.Adapter;
 import org.wso2.carbon.autoscaler.service.adapters.LXCAdapter;
 import org.wso2.carbon.autoscaler.service.exception.NoInstanceFoundException;
 import org.wso2.carbon.autoscaler.service.util.Policy;
+import org.wso2.carbon.autoscaler.service.xml.AdaptersFileReader;
 import org.wso2.carbon.autoscaler.service.xml.AutoscalerPolicyFileReader;
 import org.wso2.carbon.lb.common.persistence.AgentPersistenceManager;
 
@@ -70,7 +71,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
     /**
      * Keeps a JVMAdapter instance.
      */
-    private LXCAdapter containerAdapter = new LXCAdapter();
+    //private LXCAdapter containerAdapter = new LXCAdapter();
 
     /**
      * Keeps a EC2Adapter instance.
@@ -80,8 +81,8 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
     /**
      * Specify all available adapters here.
      */
-    private Adapter[] adapters = new Adapter[]{containerAdapter};
-    
+    //private Adapter[] adapters = new Adapter[]{containerAdapter};
+    private List<Adapter> adapters ;
     /**
      * To read autoscaler-policy.xml file.
      */
@@ -108,9 +109,11 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
                     = AgentPersistenceManager.getPersistenceManager();
             instanceIdToAdapterMap = agentPersistenceManager.retrieveInstanceIdToAdapterMap();
             domainToInstanceIdsMap = agentPersistenceManager.retrieveDomainToInstanceIdsMap();
+            
+            // read policies
             policyReader = new AutoscalerPolicyFileReader();
             autoscalerPolicy = policyReader.getPolicy();
-
+            
         } catch (Exception e) {
             log.warn("Using default policy configurations....");
             
@@ -127,6 +130,19 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
             }
 
         }
+        
+        // load adapters
+        AdaptersFileReader adaptersReader;
+        try {
+            adaptersReader = new AdaptersFileReader();
+            loadAdapters(adaptersReader.adapterClassList());
+            
+        } catch (Exception e) {
+            String msg = "Failed to load adapters.";
+            log.error(msg, e);
+            throw new RuntimeException(msg);
+        }
+        
 
     }
     
@@ -278,6 +294,30 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
         }
 
         return false;
+    }
+    
+    /**
+     * This method will instantiate all the available classes of Adapters
+     * and add those instances into a list.
+     * @param adapterClassList should contain paths to the classes of Adapters.
+     */
+    private void loadAdapters(List<String> adapterClassList) {
+
+        String errorMsg = "Failed when loading Adapter : ";
+        adapters = new ArrayList<Adapter>();
+        
+        for (String className : adapterClassList) {
+            try {
+                adapters.add((Adapter)Class.forName(className).newInstance());
+            } catch (InstantiationException e) {
+                // we only need to complain.
+                log.error(errorMsg+ className, e);
+            } catch (IllegalAccessException e) {
+                log.error(errorMsg+ className, e);
+            } catch (ClassNotFoundException e) {
+                log.error(errorMsg+ className, e);
+            }
+        }
     }
 
     /**

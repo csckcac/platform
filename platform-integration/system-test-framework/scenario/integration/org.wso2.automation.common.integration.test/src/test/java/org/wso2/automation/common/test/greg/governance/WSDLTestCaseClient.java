@@ -290,6 +290,27 @@ public class WSDLTestCaseClient {
         assertTrue("Wsdl not get added which has inline policy and schema", isWsdlFound);
     }
 
+    @Test(threadPoolSize = 2, invocationCount = 6, timeOut = 10000, groups = {"wso2.greg"}, description =
+            "Concurrent wsdl update")
+    public void testWsdlConcurrentUpdate() throws GovernanceException {
+        WsdlManager wsdlManager = new WsdlManager(governance);
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+        try {
+            for (Wsdl w : wsdlList) {
+                if (w.getQName().getLocalPart().contains("WithInlinePolicyAndSchema.wsdl")) {
+                    w.addAttribute("version", "0.02");
+                    wsdlManager.addWsdl(w);
+                    System.out.println("Concurrent update");
+                    wsdlManager.updateWsdl(w);
+                }
+            }
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Exception thrown while updating wsdl concurrently"
+                    + e.getMessage());
+        }
+
+    }
+
     @Test(groups = {"wso2.greg"}, description = "Test adding multiple wsdl")
     public void testMultipleWsdl() throws GovernanceException {
         Wsdl wsdl;

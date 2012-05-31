@@ -346,7 +346,7 @@ public class RegistryTopicManager implements TopicManager {
     }
 
     private boolean validateTopicName(String topicName) {
-        String topicNameRegex = "([a-zA-Z0-9_\\-/#*.?\\s])+";
+        String topicNameRegex = "([a-zA-Z0-9_\\-/#*.?&\\s])+";
         return Pattern.matches(topicNameRegex, topicName);
     }
 

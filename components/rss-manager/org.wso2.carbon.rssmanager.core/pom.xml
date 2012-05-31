@@ -30,7 +30,7 @@
                 </executions>
                 <configuration>
                     <className>
-                        org.wso2.carbon.rssmanager.core.admin.RSSAdmin
+                        org.wso2.carbon.rssmanager.core.servicece.RSSAdmin
                     </className>
                 </configuration>
             </plugin-->
@@ -49,7 +49,6 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Bundle-Description>RSS Manager Core Bundle</Bundle-Description>
-                        <Bundle-Activator>org.wso2.carbon.rssmanager.core.internal.RSSManagerBundleActivator</Bundle-Activator>
                         <Private-Package>org.wso2.carbon.rssmanager.core.internal</Private-Package>
                         <Import-Package>
 			    org.apache.axis2.*; version="${axis2.osgi.version.range}",

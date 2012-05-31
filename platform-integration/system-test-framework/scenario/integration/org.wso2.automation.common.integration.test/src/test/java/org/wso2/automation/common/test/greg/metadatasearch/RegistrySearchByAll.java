@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
+import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.governance.api.schema.SchemaManager;
@@ -64,7 +65,6 @@ public class RegistrySearchByAll {
     private String destinationPath;
 
     private RegistrySearchAdminService searchAdminService;
-    private WSRegistryServiceClient registry;
     private Registry governance;
 
     @BeforeClass
@@ -75,9 +75,9 @@ public class RegistrySearchByAll {
         EnvironmentVariables gregServer = builder.build().getGreg();
 
         sessionCookie = gregServer.getSessionCookie();
-        userName = UserListCsvReader.getUserInfo(3).getUserName();
+        userName = UserListCsvReader.getUserInfo(userId).getUserName();
         searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
-        registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
+        WSRegistryServiceClient registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         governance = new RegistryProvider().getGovernance(registry, userId);
 
         addResources();
@@ -89,45 +89,74 @@ public class RegistrySearchByAll {
     @Test(priority = 1, description = "Metadata search by All fields for wsdl")
     public void searchWsdlByAllCriteria()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-
-        Calendar fromCalender = Calendar.getInstance();
-        fromCalender.add(Calendar.DAY_OF_MONTH, -2);
-        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
-
-        Calendar toCalender = Calendar.getInstance();
-        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
-
-        paramBean.setResourceName("echo");
-        paramBean.setContent("echoString");
-        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
-        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
-
-        paramBean.setUpdatedAfter(formatDate(fromCalender.getTime()));
-        paramBean.setUpdatedBefore(formatDate(toCalender.getTime()));
-
-        paramBean.setAuthor(userName);
-        paramBean.setUpdater(userName);
-        paramBean.setTags("autoTag");
-        paramBean.setCommentWords("TestAutomation");
-        paramBean.setAssociationType("associationType1");
-        paramBean.setAssociationDest(destinationPath);
-        paramBean.setMediaType("application/wsdl+xml");
-        ArrayOfString[] paramList = paramBean.getParameterList();
-
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
-        for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertEquals(resource.getName(), "echo.wsdl", "wsdl not found");
-        }
+        searchWsdl();
 
     }
 
-    @Test(priority = 2, description = "Metadata search by All fields for schema")
+    @Test(priority = 2, description = "Metadata search by All fields for wsdl when having two wsdl name starting same prefix")
+    public void searchWsdlByAllCriteriaHavingTwoResources()
+            throws SearchAdminServiceRegistryExceptionException, IOException, GovernanceException,
+                   InterruptedException {
+        WsdlManager wsdlManager = new WsdlManager(governance);
+        Wsdl wsdl;
+        String wsdlFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
+                              + File.separator + "wsdl" + File.separator;
+        wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFilePath + "echo.wsdl").getBytes(), "echo1.wsdl");
+        wsdlManager.addWsdl(wsdl);
+        Thread.sleep(1000 * 60 * 2);
+
+        searchWsdl();
+
+    }
+
+
+    @Test(priority = 3, description = "Metadata search by All fields for schema")
     public void searchSchemaByAllCriteria()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+        searchSchemaFile();
+
+    }
+
+    @Test(priority = 4, description = "Metadata search by All fields for schema when having two schema name starting same prefix")
+    public void searchSchemaByAllCriteriaHavingTwoResources()
+            throws SearchAdminServiceRegistryExceptionException, IOException, GovernanceException,
+                   InterruptedException {
+        SchemaManager schemaManager = new SchemaManager(governance);
+        String schemaFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
+                                + File.separator + "schema" + File.separator;
+        Schema schema = schemaManager.newSchema(FileManager.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person1.xsd");
+        schemaManager.addSchema(schema);
+
+        Thread.sleep(1000 * 60 * 2);
+
+        searchSchemaFile();
+
+    }
+
+    @Test(priority = 5, description = "Metadata search by All fields for policy")
+    public void searchPolicyByAllCriteria()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+        searchPolicyFile();
+
+    }
+
+    @Test(priority = 6, description = "Metadata search by All fields for policy when having two policy name starting same prefix")
+    public void searchPolicyByAllCriteriaHavingTwoResources()
+            throws SearchAdminServiceRegistryExceptionException, IOException, GovernanceException,
+                   InterruptedException {
+        PolicyManager policyManager = new PolicyManager(governance);
+        String policyFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
+                                + File.separator + "policy" + File.separator;
+        Policy policy = policyManager.newPolicy(FileManager.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy1.xml");
+        policyManager.addPolicy(policy);
+
+        Thread.sleep(1000 * 60 * 2);
+
+        searchPolicyFile();
+    }
+
+    @Test(priority = 7, description = "Search schema with all fields with wrong tag")
+    public void searchSchemaNotExist()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
@@ -149,7 +178,7 @@ public class RegistrySearchByAll {
 
         paramBean.setAuthor(userName);
         paramBean.setUpdater(userName);
-        paramBean.setTags("autoTag");
+        paramBean.setTags("autoTag1234");
         paramBean.setCommentWords("TestAutomation");
         paramBean.setAssociationType("associationType1");
         paramBean.setAssociationDest(destinationPath);
@@ -158,51 +187,7 @@ public class RegistrySearchByAll {
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
-        for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertEquals(resource.getName(), "Person.xsd", "Schema not found");
-        }
-
-    }
-
-    @Test(priority = 3, description = "Metadata search by All fields for policy")
-    public void searchPolicyByAllCriteria()
-            throws SearchAdminServiceRegistryExceptionException, RemoteException {
-        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
-        SearchParameterBean paramBean = new SearchParameterBean();
-
-        Calendar fromCalender = Calendar.getInstance();
-        fromCalender.add(Calendar.DAY_OF_MONTH, -2);
-        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
-
-        Calendar toCalender = Calendar.getInstance();
-        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
-
-        paramBean.setResourceName("UTPolicy");
-        paramBean.setContent("PersonType");
-        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
-        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
-
-        paramBean.setUpdatedAfter(formatDate(fromCalender.getTime()));
-        paramBean.setUpdatedBefore(formatDate(toCalender.getTime()));
-
-        paramBean.setAuthor(userName);
-        paramBean.setUpdater(userName);
-        paramBean.setTags("autoTag");
-        paramBean.setCommentWords("TestAutomation");
-        paramBean.setAssociationType("associationType1");
-        paramBean.setAssociationDest(destinationPath);
-        paramBean.setMediaType("application/policy+xml");
-        ArrayOfString[] paramList = paramBean.getParameterList();
-
-        searchQuery.setParameterValues(paramList);
-        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
-        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
-        Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
-        for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertEquals(resource.getName(), "UTPolicy.xml", "Schema not found");
-        }
+        Assert.assertNull(result.getResourceDataList(), "No Record Found");
 
     }
 
@@ -248,8 +233,6 @@ public class RegistrySearchByAll {
         governance.addComment(wsdl.getPath(), comment);
         governance.applyTag(wsdl.getPath(), "autoTag");
 
-        wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFilePath + "echo.wsdl").getBytes(), "echo1.wsdl");
-        wsdlManager.addWsdl(wsdl);
     }
 
     private void addSchema(String destinationPath, String type)
@@ -266,8 +249,6 @@ public class RegistrySearchByAll {
         governance.addComment(schema.getPath(), comment);
         governance.applyTag(schema.getPath(), "autoTag");
 
-        schema = schemaManager.newSchema(FileManager.readFile(schemaFilePath + "Person.xsd").getBytes(), "Person1.xsd");
-        schemaManager.addSchema(schema);
     }
 
     private void addPolicy(String destinationPath, String type)
@@ -283,12 +264,123 @@ public class RegistrySearchByAll {
         comment.setText("TestAutomation Comment");
         governance.addComment(policy.getPath(), comment);
         governance.applyTag(policy.getPath(), "autoTag");
-        policy = policyManager.newPolicy(FileManager.readFile(policyFilePath + "UTPolicy.xml").getBytes(), "UTPolicy1.xml");
-        policyManager.addPolicy(policy);
     }
 
     private String formatDate(Date date) {
         Format formatter = new SimpleDateFormat("MM/dd/yyyy");
         return formatter.format(date);
+    }
+
+    private void searchPolicyFile()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
+        SearchParameterBean paramBean = new SearchParameterBean();
+
+        Calendar fromCalender = Calendar.getInstance();
+        fromCalender.add(Calendar.DAY_OF_MONTH, -2);
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        Calendar toCalender = Calendar.getInstance();
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setResourceName("UTPolicy");
+        paramBean.setContent("TransportToken");
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        paramBean.setUpdatedAfter(formatDate(fromCalender.getTime()));
+        paramBean.setUpdatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setAuthor(userName);
+        paramBean.setUpdater(userName);
+        paramBean.setTags("autoTag");
+        paramBean.setCommentWords("TestAutomation");
+        paramBean.setAssociationType("associationType1");
+        paramBean.setAssociationDest(destinationPath);
+        paramBean.setMediaType("application/policy+xml");
+        ArrayOfString[] paramList = paramBean.getParameterList();
+
+        searchQuery.setParameterValues(paramList);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
+        for (ResourceData resource : result.getResourceDataList()) {
+            Assert.assertEquals(resource.getName(), "UTPolicy.xml", "Schema not found");
+        }
+    }
+
+    private void searchSchemaFile()
+            throws SearchAdminServiceRegistryExceptionException, RemoteException {
+        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
+        SearchParameterBean paramBean = new SearchParameterBean();
+
+        Calendar fromCalender = Calendar.getInstance();
+        fromCalender.add(Calendar.DAY_OF_MONTH, -2);
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        Calendar toCalender = Calendar.getInstance();
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setResourceName("Person");
+        paramBean.setContent("PersonType");
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        paramBean.setUpdatedAfter(formatDate(fromCalender.getTime()));
+        paramBean.setUpdatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setAuthor(userName);
+        paramBean.setUpdater(userName);
+        paramBean.setTags("autoTag");
+        paramBean.setCommentWords("TestAutomation");
+        paramBean.setAssociationType("associationType1");
+        paramBean.setAssociationDest(destinationPath);
+        paramBean.setMediaType("application/x-xsd+xml");
+        ArrayOfString[] paramList = paramBean.getParameterList();
+
+        searchQuery.setParameterValues(paramList);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
+        for (ResourceData resource : result.getResourceDataList()) {
+            Assert.assertEquals(resource.getName(), "Person.xsd", "Schema not found");
+        }
+    }
+
+    private void searchWsdl() throws SearchAdminServiceRegistryExceptionException, RemoteException {
+        CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
+        SearchParameterBean paramBean = new SearchParameterBean();
+
+        Calendar fromCalender = Calendar.getInstance();
+        fromCalender.add(Calendar.DAY_OF_MONTH, -2);
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        Calendar toCalender = Calendar.getInstance();
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setResourceName("echo");
+        paramBean.setContent("echoString");
+        paramBean.setCreatedBefore(formatDate(toCalender.getTime()));
+        paramBean.setCreatedAfter(formatDate(fromCalender.getTime()));
+
+        paramBean.setUpdatedAfter(formatDate(fromCalender.getTime()));
+        paramBean.setUpdatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setAuthor(userName);
+        paramBean.setUpdater(userName);
+        paramBean.setTags("autoTag");
+        paramBean.setCommentWords("TestAutomation");
+        paramBean.setAssociationType("associationType1");
+        paramBean.setAssociationDest(destinationPath);
+        paramBean.setMediaType("application/wsdl+xml");
+        ArrayOfString[] paramList = paramBean.getParameterList();
+
+        searchQuery.setParameterValues(paramList);
+        AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
+        Assert.assertTrue((result.getResourceDataList().length == 1), "No Record Found.");
+        for (ResourceData resource : result.getResourceDataList()) {
+            Assert.assertEquals(resource.getName(), "echo.wsdl", "wsdl not found");
+        }
     }
 }

@@ -13,40 +13,66 @@
     // Set standard HTTP/1.0 no-cache header.
     response.setHeader("Pragma", "no-cache");
 %>
+<script type="text/javascript" src="js/hadoopmgt.js"></script>
+<div id="middle">
+    <h2>New Hadoop Job</h2>
 
-<form method="post">
-	<table border="0" cellpadding="0"  cellspacing="0">
-		<tr>
-			<td>Hadoop Jar: </td>
-			<td>
-				<input type="text" name="hadoopJarPath"/>
-			</td>
-		</tr>
-		<tr>
-			<td>Class Name: </td>
-			<td>
-				<input type="text" name="hadoopClassName"/>
-			</td>
-		</tr>
-		<tr>
-			<td>Input File: </td>
-			<td>
-				<input type="text" name="hadoopInFile"/>
-			</td>
-		</tr>
-		<tr>
-			<td>Output File: </td>
-			<td>
-				<input type="text" name="hadoopOutFile"/>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<input type="submit" value="Submit"/>
-			</td>
-		</tr>
-	</table>
-</form>	
+    <div id="workArea">
+        <h3 id="whatStep">Step 1 : Hadoop Jar</h3>
+
+        <form method="post" id="hadoopForm">
+            <table width="60%" id="userAdd" class="styledLeft">
+                <thead>
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody><tr>
+                    <td class="formRaw">
+                        <table class="normal" id="wizardTable">
+                            <tbody>
+                            <tr id="step1">
+                                <td>Hadoop Jar:<font color="red">*</font>
+                                </td>
+                                <td><input type="text" name="hadoopJarPath" id="hadoopJarPath"/></td>
+                            </tr>
+                            <tr id="step2" style="display:none">
+                                <td>Class Name:<font color="red">*</font></td>
+                                <td><input type="text" name="hadoopClassName" id="hadoopClassName"/></td>
+                            </tr>
+                            <tr id="step3" style="display:none">
+                                <td>Input File:<font color="red">*</font></td>
+                                <td><input type="text" name="hadoopInFile" id="hadoopInFile"/></td>
+                            </tr>
+                            <tr id="step4" style="display:none">
+                                <td>Output File:<font color="red">*</font></td>
+                                <td><input type="text" name="hadoopOutFile" id="hadoopOutFile"/></td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="buttonRow">
+                        <input type="button" onclick="doPre();" value="&lt; Pre" disabled="" class="button" id="preButton" />
+                        <input type="button" onclick="doNext();" value="Next &gt;" class="button" id="nextButton" />
+                        <input type="button" class="button" disabled="" value="Finish" id="finishButton" />
+                        <input type="button" onclick="doCancel();" value="Cancel" class="button">
+                    </td>
+                </tr>
+            </tbody></table>
+        </form>
+    </div>
+    <p>&nbsp;</p>
+</div>
+
+
+
+
+
+
+
+
+
 
 <%
     String jarPath = request.getParameter("hadoopJarPath");

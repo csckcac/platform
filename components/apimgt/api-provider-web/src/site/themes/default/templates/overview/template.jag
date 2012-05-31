@@ -39,7 +39,7 @@
         <label>To Version</label>
         <input type="text" class="span3" id="new-version"><span class="help-inline">Ex:v1.0.1</span>
         <div class="copy-buttons">
-            <button type="button" class="btn btn-primary copy-button" onclick="copyAPIToNewVersion()">Done</button>
+            <button type="button" class="btn btn-primary copy-button" onclick="copyAPIToNewVersion('<%=api.provider%>')">Done</button>
             <button type="button" class="btn cancel-button" onclick="javascript:$('#copy-api').toggle('slow');$('#show-copy-api').toggle()">Cancel</button>
         </div>
     </div>

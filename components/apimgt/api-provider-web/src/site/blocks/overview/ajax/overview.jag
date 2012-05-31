@@ -11,7 +11,7 @@ include("/jagg/jagg.jag");
 
         mod = jagg.module("api");
         var api = {};
-        api.provider = jagg.getUser().username;
+        api.provider = request.getParameter("provider");
         api.name = request.getParameter("apiName");
         api.version = request.getParameter("version");
         var newVersion = request.getParameter("newVersion");

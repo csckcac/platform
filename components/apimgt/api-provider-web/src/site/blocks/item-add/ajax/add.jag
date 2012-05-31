@@ -9,7 +9,6 @@ include("/jagg/jagg.jag");
     if (action === "addAPI" ||action === "updateAPI") {
         mod = jagg.module("api");
         var apiData = {};
-        apiData.provider= jagg.getUser().username;
         apiData.request = request;
         apiData.apiName = request.getParameter("name");
         apiData.version = request.getParameter("version");
@@ -40,8 +39,10 @@ include("/jagg/jagg.jag");
 
         apiData.uriMethodArr = uriMethodArr;
         if(action === "addAPI"){
+        apiData.provider= jagg.getUser().username;
         result = mod.addAPI(apiData);
         }else{
+        apiData.provider= request.getParameter("provider");
         result = mod.updateAPI(apiData);
         }
         if (result.error==true) {

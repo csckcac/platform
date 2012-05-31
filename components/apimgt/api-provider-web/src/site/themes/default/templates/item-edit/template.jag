@@ -37,6 +37,7 @@
             <input type="hidden" name="action" id="action" value="updateAPI"/>
             <input type="hidden" name="name" id="name" value="<%=api.name%>"/>
             <input type="hidden" name="version" id="version" value="<%=api.version%>"/>
+            <input type="hidden" name="provider" id="provider" value="<%=api.provider%>"/>
             <input type="hidden" name="tiersCollection" id="tiersCollection" value="<%=api.availableTiers%>"/>
 
             <div class="control-group">

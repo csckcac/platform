@@ -16,89 +16,89 @@
  ~ under the License.
  -->
 <cloudServices xmlns="http://wso2.com/carbon/cloud/mgt/services">
-    <cloudService name="WSO2 Stratos Manager">
+    <cloudService name="WSO2 Manager">
     </cloudService>
-    <cloudService name="WSO2 Stratos Enterprise Service Bus" default="true">
-      <label>Stratos Enterprise Service Bus</label>
+    <cloudService name="WSO2 Enterprise Service Bus" default="true">
+      <label>Enterprise Service Bus</label>
       <link>https://esb.stratoslive.wso2.com</link>
       <icon>
         https://localhost:9443/cloud-services-icons/esb.gif
       </icon>
       <description>Enterprise Service Bus in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Application Server" default="true">
-        <label>Stratos Application Server</label>
+    <cloudService name="WSO2 Application Server" default="true">
+        <label>Application Server</label>
         <link>https://appserver.stratoslive.wso2.com</link>
         <icon>
             https://localhost:9443/cloud-services-icons/appserver.gif
         </icon>
         <description>Application Server in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Data Services Server" default="true">
-      <label>Stratos Data Services Server</label>
+    <cloudService name="WSO2 Data Services Server" default="true">
+      <label>Data Services Server</label>
       <link>https://dss.stratoslive.wso2.com</link>
       <icon>
         https://localhost:9443/cloud-services-icons/ds.gif
       </icon>
       <description>Data Services Server in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Governance" default="true">
-        <label>Stratos Governance</label>
+    <cloudService name="WSO2 Governance" default="true">
+        <label>Governance</label>
         <link>https://governance.stratoslive.wso2.com</link>
         <description>Governance in the cloud.</description>
         <icon>
             https://localhost:9443/cloud-services-icons/governance.gif
         </icon>
     </cloudService>
-    <cloudService name="WSO2 Stratos Identity" default="true">
-        <label>Stratos Identity</label>
+    <cloudService name="WSO2 Identity" default="true">
+        <label>Identity</label>
         <link>https://identity.stratoslive.wso2.com</link>
         <icon>
             https://localhost:9443/cloud-services-icons/identity.gif
         </icon>
         <description>Identity in the cloud.</description>
     </cloudService>
-	<cloudService name="WSO2 Stratos Business Activity Monitor" default="true">
-        <label>Stratos Business Activity Monitor</label>
+	<cloudService name="WSO2 Business Activity Monitor" default="true">
+        <label>Business Activity Monitor</label>
         <link>https://bam.stratoslive.wso2.com</link>
         <icon>
             https://localhost:9443/cloud-services-icons/bam.gif
         </icon>
         <description>Business Activity Monitor in the cloud.</description>
 	</cloudService>
-    <cloudService name="WSO2 Stratos Business Process Server" default="true">
-      <label>Stratos Business Process Server</label>
+    <cloudService name="WSO2 Business Process Server" default="true">
+      <label>Business Process Server</label>
       <link>https://bps.stratoslive.wso2.com</link>
       <icon>
         https://localhost:9443/cloud-services-icons/bps.gif
       </icon>
       <description>Business Process Server in the cloud.</description>
     </cloudService>
-	<cloudService name="WSO2 Stratos Business Rule Server" default="true">
-        <label>Stratos Business Rule Server</label>
+	<cloudService name="WSO2 Business Rule Server" default="true">
+        <label>Business Rule Server</label>
         <link>https://brs.stratoslive.wso2.com</link>
         <icon>
             https://localhost:9443/cloud-services-icons/brs.gif
         </icon>
         <description>Business Rule Server in the cloud.</description>
 	</cloudService>
-	<cloudService name="WSO2 Stratos Mashup Server" default="true">
-        <label>Stratos Mashup Server</label>
+	<cloudService name="WSO2 Mashup Server" default="true">
+        <label>Mashup Server</label>
         <link>https://mashup.stratoslive.wso2.com</link>
         <icon>
             https://localhost:9443/cloud-services-icons/mashup.gif
         </icon>
         <description>Mashup Server in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Gadgets" default="true">
-        <label>Stratos Gadgets</label>
+    <cloudService name="WSO2 Gadgets" default="true">
+        <label>Gadgets</label>
         <link>https://gadget.stratoslive.wso2.com</link>
         <icon>
             https://localhost:9443/cloud-services-icons/gadget.gif
         </icon>
         <description>Gadgets in the cloud.</description>
     </cloudService>
-    <cloudService name="WSO2 Stratos Cloud Services Gateway" default="true">
+    <cloudService name="WSO2 Cloud Services Gateway" default="true">
         <label>Cloud Services Gateway</label>
 	<link>https://csg.stratoslive.wso2.com</link>
 	<icon>

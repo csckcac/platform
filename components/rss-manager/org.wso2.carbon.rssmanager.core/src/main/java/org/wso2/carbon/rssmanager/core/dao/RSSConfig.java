@@ -21,8 +21,8 @@ package org.wso2.carbon.rssmanager.core.dao;
 import org.apache.axiom.om.OMElement;
 import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
+import org.wso2.carbon.rssmanager.core.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.description.RSSInstance;
-import org.wso2.carbon.rssmanager.core.exception.RSSDAOException;
 
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -145,16 +145,16 @@ public class RSSConfig {
 		tmpEl = tmpItr.next();
 		String serverCategory = tmpEl.getText().trim();
 		
-		tmpItr = rssInstEl.getChildrenWithLocalName("admin-username");
+		tmpItr = rssInstEl.getChildrenWithLocalName("service-username");
 		if (!tmpItr.hasNext()) {
 			throw new RSSDAOException("Server instance adming username is missing in RSS database definition");
 		}
 		tmpEl = tmpItr.next();		
 		String adminUsername = tmpEl.getText().trim();
 		
-		tmpItr = rssInstEl.getChildrenWithLocalName("admin-password");
+		tmpItr = rssInstEl.getChildrenWithLocalName("service-password");
 		if (!tmpItr.hasNext()) {
-			throw new RSSDAOException("Server instance admin password is missing in RSS database definition");
+			throw new RSSDAOException("Server instance service password is missing in RSS database definition");
 		}
 		tmpEl = tmpItr.next();
 		String adminPassword = tmpEl.getText().trim();

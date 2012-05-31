@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.admin;
+package org.wso2.carbon.rssmanager.core.service;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -36,13 +36,13 @@ import org.wso2.carbon.datasource.DataSourceManagementHandler;
 import org.wso2.carbon.datasource.MiscellaneousHelper;
 import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.RSSManagerUtil;
-import org.wso2.carbon.rssmanager.core.connections.DBConnectionHandler;
+import org.wso2.carbon.rssmanager.core.*;
+import org.wso2.carbon.rssmanager.core.DBConnectionHandler;
 import org.wso2.carbon.rssmanager.core.dao.RSSDAO;
 import org.wso2.carbon.rssmanager.core.dao.RSSDAOFactory;
-import org.wso2.carbon.rssmanager.core.dao.RSSManager;
+import org.wso2.carbon.rssmanager.core.RSSManager;
+import org.wso2.carbon.rssmanager.core.RSSManagerFactory;
 import org.wso2.carbon.rssmanager.core.description.*;
-import org.wso2.carbon.rssmanager.core.exception.RSSDAOException;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.securevault.secret.SecretInformation;
 
@@ -66,8 +66,6 @@ public class RSSAdmin extends AbstractAdmin {
             RSS_MANAGER_EXTENSION_NS, "instance");
 
     private static final Log log = LogFactory.getLog(RSSAdmin.class);
-
-    private RSSManager rssManager = RSSManager.getInstance();
 
     /**
      * Adds a RSS instance to metadata.
@@ -94,6 +92,9 @@ public class RSSAdmin extends AbstractAdmin {
      * @throws RSSDAOException rssDaoException
      */
     public void removeRSSInstance(int rssInsId) throws RSSDAOException {
+        String rmType = RSSManagerUtil.getDatabaseMgtSystemType(rssInsId);
+        RSSManager rm = RSSManagerFactory.getRSSManager(rmType);
+
         RSSDAO dao = RSSDAOFactory.getRSSDAO();
         List<DatabaseInstance> dbs = dao.getAllDatabaseInstancesByRSSInstanceId(rssInsId);
         for (DatabaseInstance db : dbs) {
@@ -103,10 +104,10 @@ public class RSSAdmin extends AbstractAdmin {
                 for (DatabaseUserEntry user : users) {
                     /* users should be detached rather than deleting. */
                     if (user != null) {
-                        rssManager.dropUser(user.getUserId(), db.getDatabaseInstanceId());
+                        rm.dropUser(user.getUserId(), db.getDatabaseInstanceId());
                     }
                 }
-                rssManager.dropDatabase(db.getDatabaseInstanceId());
+                rm.dropDatabase(db.getDatabaseInstanceId());
             }
         }
         /* deleting the RSS instance from the metadata repository */
@@ -117,7 +118,7 @@ public class RSSAdmin extends AbstractAdmin {
      * Edits metadata corresponding to a particular RSS instance.
      *
      * @param rssIns RSS instance information to be edited.
-     * @throws RSSDAOException rssDaoException
+     * @throws org.wso2.carbon.rssmanager.core.RSSDAOException rssDaoException
      */
     public void editRSSInstance(RSSInstance rssIns) throws RSSDAOException {
         if (RSSManagerUtil.isSuperTenant()) {
@@ -189,7 +190,10 @@ public class RSSAdmin extends AbstractAdmin {
      */
     public void createDatabase(OMElement dbIns) throws RSSDAOException {
         DatabaseInstance db = RSSManagerUtil.buildDatabaseInstance(dbIns);
-        rssManager.createDatabase(db);
+
+        String rmType = RSSManagerUtil.getDatabaseMgtSystemType(db.getRssInstanceId());
+        RSSManager rm = RSSManagerFactory.getRSSManager(rmType);
+        rm.createDatabase(db);
     }
 
     /**
@@ -203,7 +207,11 @@ public class RSSAdmin extends AbstractAdmin {
                 getDatabaseInstanceById(dbInsId))) {
             throw new RSSDAOException("Database does not belong to the current tenant");
         }
-        rssManager.dropDatabase(dbInsId);
+        DatabaseInstance dbIns = RSSDAOFactory.getRSSDAO().getDatabaseInstanceById(dbInsId);
+
+        String rmType = RSSManagerUtil.getDatabaseMgtSystemType(dbIns.getRssInstanceId());
+        RSSManager rm = RSSManagerFactory.getRSSManager(rmType);
+        rm.dropDatabase(dbInsId);
     }
 
     /**
@@ -230,7 +238,7 @@ public class RSSAdmin extends AbstractAdmin {
      *
      * @param dbInsId Id of the database instance.
      * @return Database instance information as a string.
-     * @throws RSSDAOException rssDaoException
+     * @throws org.wso2.carbon.rssmanager.core.RSSDAOException rssDaoException
      */
     public DatabaseInstanceEntry getDatabaseInstanceById(int dbInsId) throws RSSDAOException {
         return RSSDAOFactory.getRSSDAO().getDatabaseInstanceEntryById(dbInsId);
@@ -247,7 +255,9 @@ public class RSSAdmin extends AbstractAdmin {
      */
     public void createUser(DatabaseUser user, int privGroupId, int dbInsId) throws RSSDAOException {
         try {
-            rssManager.createUser(user, privGroupId, dbInsId);
+            String rmType = RSSManagerUtil.getDatabaseMgtSystemType(user.getRssInstanceId());
+            RSSManager rm = RSSManagerFactory.getRSSManager(rmType);
+            rm.createUser(user, privGroupId, dbInsId);
         } catch (SQLException e) {
             handleException("Unable to create user " + user.getUsername(), e);
         }
@@ -261,7 +271,9 @@ public class RSSAdmin extends AbstractAdmin {
      * @throws RSSDAOException rssDaoException
      */
     public void dropUser(int userId, int dbInsId) throws RSSDAOException {
-        rssManager.dropUser(userId, dbInsId);
+        String rmType = RSSManagerUtil.getDatabaseType(dbInsId);
+        RSSManager rm = RSSManagerFactory.getRSSManager(rmType);
+        rm.dropUser(userId, dbInsId);
     }
 
     /**
@@ -278,7 +290,9 @@ public class RSSAdmin extends AbstractAdmin {
             if (privs != null) {
                 DatabasePermissions permissions = RSSManagerUtil.getPermissionObject(
                         AXIOMUtil.stringToOM(privs));
-                rssManager.editUserPrivileges(permissions, user, dbInsId);
+                String rmType = RSSManagerUtil.getDatabaseMgtSystemType(user.getRssInstanceId());
+                RSSManager rm = RSSManagerFactory.getRSSManager(rmType);
+                rm.editUserPrivileges(permissions, user, dbInsId);
             }
         } catch (XMLStreamException e) {
             handleException("Unable to edit user " + user.getUsername(), e);

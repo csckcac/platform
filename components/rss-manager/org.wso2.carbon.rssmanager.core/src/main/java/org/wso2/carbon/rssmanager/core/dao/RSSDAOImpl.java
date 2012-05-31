@@ -24,7 +24,7 @@ import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
 import org.wso2.carbon.rssmanager.core.RSSManagerUtil;
 import org.wso2.carbon.rssmanager.core.description.*;
-import org.wso2.carbon.rssmanager.core.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.RSSDAOException;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 

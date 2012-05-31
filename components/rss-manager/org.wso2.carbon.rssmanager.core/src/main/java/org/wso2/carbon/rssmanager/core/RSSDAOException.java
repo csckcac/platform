@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.exception;
+package org.wso2.carbon.rssmanager.core;
 
 /**
  * Exception class for RSS DAO related operations.

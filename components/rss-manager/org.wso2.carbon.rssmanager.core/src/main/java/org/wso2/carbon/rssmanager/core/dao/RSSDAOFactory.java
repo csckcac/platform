@@ -18,7 +18,7 @@
  */
 package org.wso2.carbon.rssmanager.core.dao;
 
-import org.wso2.carbon.rssmanager.core.exception.RSSDAOException;
+import org.wso2.carbon.rssmanager.core.RSSDAOException;
 
 /**
  * DAO factory class for creating RSS DAO objects.

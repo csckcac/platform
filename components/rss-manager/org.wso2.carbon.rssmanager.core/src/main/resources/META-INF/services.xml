@@ -36,7 +36,7 @@
                              class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
         </messageReceivers>
         <parameter name="ServiceClass">
-            org.wso2.carbon.rssmanager.core.admin.RSSAdmin
+            org.wso2.carbon.rssmanager.core.service.RSSAdmin
         </parameter>
 
         <parameter name="AuthorizationAction" locked="true">/permission/admin/configure/rssmanager</parameter>

@@ -16,14 +16,13 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.rssmanager.core.dao;
+package org.wso2.carbon.rssmanager.core;
 
 import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.RSSManagerUtil;
-import org.wso2.carbon.rssmanager.core.connections.DBConnectionHandler;
+import org.wso2.carbon.rssmanager.core.dao.RSSDAO;
+import org.wso2.carbon.rssmanager.core.dao.RSSDAOFactory;
 import org.wso2.carbon.rssmanager.core.description.*;
-import org.wso2.carbon.rssmanager.core.exception.RSSDAOException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,15 +34,15 @@ import java.util.Map;
 /**
  * This class carries all the RSS manager related functionality implemented upon Mysql.
  */
-public class RSSManager {
+public class MySQLRSSManager implements RSSManager {
 
-    private static RSSManager thisInstance = new RSSManager();
+    private static RSSManager thisInstance = new MySQLRSSManager();
 
-    public static RSSManager getInstance() {
-        return thisInstance;
+    private MySQLRSSManager() {
     }
 
-    private RSSManager() {
+    public static synchronized RSSManager getInstance() {
+        return thisInstance;
     }
 
     /**
@@ -232,7 +231,7 @@ public class RSSManager {
      * @param user Details of the newly created database user.
      * @throws SQLException throws a SQLException if the the database related executions become
      *                      unsuccessful.
-     * @throws RSSDAOException rssDAOException.
+     * @throws org.wso2.carbon.rssmanager.core.RSSDAOException rssDAOException.
      */
     private void insertIntoUserTable(Connection conn, DatabaseUser user)
             throws RSSDAOException, SQLException {

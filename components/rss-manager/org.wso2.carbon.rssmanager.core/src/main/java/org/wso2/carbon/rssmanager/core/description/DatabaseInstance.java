@@ -35,7 +35,7 @@ public class DatabaseInstance {
     private int tenantId = -1;
 	
 	private Map<String, String> properties;
-		
+
 	public DatabaseInstance(int databaseInstanceId, String name, int rssInstanceId, int tenantId) {
 		this.databaseInstanceId = databaseInstanceId;
 		this.name = name;

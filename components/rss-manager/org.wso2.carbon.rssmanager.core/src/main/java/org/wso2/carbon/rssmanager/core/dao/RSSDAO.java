@@ -18,8 +18,8 @@
  */
 package org.wso2.carbon.rssmanager.core.dao;
 
+import org.wso2.carbon.rssmanager.core.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.description.*;
-import org.wso2.carbon.rssmanager.core.exception.RSSDAOException;
 
 import java.util.List;
 import java.util.Map;

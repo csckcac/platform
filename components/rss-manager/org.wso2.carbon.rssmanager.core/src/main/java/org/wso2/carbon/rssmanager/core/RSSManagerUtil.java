@@ -24,11 +24,9 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.om.util.Base64;
 import org.wso2.carbon.rssmanager.common.RSSManagerCommonUtil;
 import org.wso2.carbon.rssmanager.common.RSSManagerConstants;
-import org.wso2.carbon.rssmanager.core.connections.DBConnectionHandler;
 import org.wso2.carbon.rssmanager.core.dao.RSSConfig;
 import org.wso2.carbon.rssmanager.core.dao.RSSDAOFactory;
 import org.wso2.carbon.rssmanager.core.description.*;
-import org.wso2.carbon.rssmanager.core.exception.RSSDAOException;
 import org.wso2.carbon.rssmanager.core.internal.RSSManagerServiceComponent;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -520,6 +518,22 @@ public class RSSManagerUtil {
             }
         }
         return false;
+    }
+
+    public static String getDatabaseMgtSystemType(int rssInsId) throws RSSDAOException {
+        RSSInstance rssIns = RSSDAOFactory.getRSSDAO().getRSSInstanceById(rssInsId);
+        return rssIns.getDbmsType();
+    }
+
+    public static String getDatabaseType(int dbInsId) throws RSSDAOException {
+        DatabaseInstance db = RSSDAOFactory.getRSSDAO().getDatabaseInstanceById(dbInsId);
+        return RSSManagerUtil.getDatabaseMgtSystemType(db.getRssInstanceId());
+
+    }
+
+    public static int getRSSInstanceId(int dbInsId) throws RSSDAOException {
+        DatabaseInstance dbIns = RSSDAOFactory.getRSSDAO().getDatabaseInstanceById(dbInsId);
+        return dbIns.getRssInstanceId();
     }
 
 

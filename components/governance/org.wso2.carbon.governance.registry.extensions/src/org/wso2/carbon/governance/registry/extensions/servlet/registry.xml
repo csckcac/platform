@@ -65,31 +65,6 @@
         <dataSource>dataSourceName</dataSource>
     </dbconfig>
 
-
-    <handler class="org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler" methods="PUT, PUT_CHILD">
-        <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
-            <property name="mediaType">application/vnd.apache.synapse</property>
-        </filter>
-    </handler>
-
-    <handler class="org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler" methods="PUT, PUT_CHILD">
-        <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
-            <property name="mediaType">application/vnd.wso2.esb</property>
-        </filter>
-    </handler>
-
-    <handler class="org.wso2.carbon.registry.extensions.handlers.Axis2RepositoryHandler" methods="PUT, PUT_CHILD">
-        <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
-            <property name="mediaType">application/vnd.apache.axis2</property>
-        </filter>
-    </handler>
-
-    <handler class="org.wso2.carbon.registry.extensions.handlers.Axis2RepositoryHandler" methods="PUT, PUT_CHILD">
-        <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
-            <property name="mediaType">application/vnd.wso2.wsas</property>
-        </filter>
-    </handler>
-
     <handler class="org.wso2.carbon.registry.extensions.handlers.WSDLValidationHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
             <property name="mediaType">application/wsdl+xml</property>

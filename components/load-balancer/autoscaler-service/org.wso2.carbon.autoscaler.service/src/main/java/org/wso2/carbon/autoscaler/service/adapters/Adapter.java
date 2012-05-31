@@ -71,8 +71,6 @@ public abstract class Adapter {
     
     /**
      * This method should return total number of pending instances for a given domain.
-     * This is required when dealing with EC2 instances. Adapters that are
-     * not EC2 can simply return zero.
      * 
      * @return number of pending instances.
      */

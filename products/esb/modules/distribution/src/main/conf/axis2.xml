@@ -748,6 +748,12 @@
 
             <handler name="HTTPLocationBasedDispatcher"
                      class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"/>
+            <handler name="MultitenantDispatcher"
+                     class="org.wso2.carbon.tenant.dispatcher.MultitenantDispatcher"/>
+            <handler name="SynapseDispatcher"
+                     class="org.apache.synapse.core.axis2.SynapseDispatcher"/>
+            <handler name="SynapseMustUnderstandHandler"
+                     class="org.apache.synapse.core.axis2.SynapseMustUnderstandHandler"/>
         </phase>
         <!--  System pre defined phases       -->
         <phase name="RMPhase"/>

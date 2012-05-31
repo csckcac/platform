@@ -108,7 +108,10 @@
 } catch (Exception e) {
 %>
 <script type="text/javascript">
-    window.location = "../services/services.jsp?region=region3&item=governance_services_menu&wsdlError=" + encodeURIComponent("<%=e.getMessage()%>");
+    CARBON.showErrorDialog('<%=e.getMessage()%>', function() {
+       window.history.back();
+    });
+//    window.location = "../services/services.jsp?region=region3&item=governance_services_menu&wsdlError=" + encodeURIComponent("<%=e.getMessage()%>");
 </script>
 <%
         return;
@@ -166,7 +169,9 @@
 
 <script type="text/javascript">
     <% if (request.getParameter("wsdlError") != null) { %>
-    CARBON.showErrorDialog(decodeURIComponent("<%=request.getParameter("wsdlError")%>"));
+        CARBON.showErrorDialog('<%=request.getParameter("wsdlError")%>', function() {
+           window.history.back();
+        });
     <% } %>
 
 

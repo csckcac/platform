@@ -639,6 +639,9 @@ public class DefaultLifeCycle extends Aspect {
             AddCheckItems(resource, checkListItems.get(state.getId()), state.getId());
             addScripts(state.getId(), resource);
             addTransitionUI(resource, state.getId());
+
+//            For auditing purposes
+            statCollection.setTargetState(nextState);
         }
         if (!preserveOldResource) {
             requestContext.getRegistry().delete(resourcePath);

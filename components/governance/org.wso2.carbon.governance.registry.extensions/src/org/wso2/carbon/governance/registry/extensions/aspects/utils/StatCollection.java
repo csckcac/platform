@@ -18,6 +18,15 @@ public class StatCollection {
     private Map<String,OMElement> validations;
     private Map<String,OMElement> executors;
     private String actionValue;
+    private String targetState;
+
+    public String getTargetState() {
+        return targetState;
+    }
+
+    public void setTargetState(String targetState) {
+        this.targetState = targetState;
+    }
 
     public String getOriginalPath() {
         return originalPath;

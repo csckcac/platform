@@ -328,28 +328,24 @@ public class SubscriptionBeanPopulator {
         String delimiter="";
 
         String[] temp = path.split("/");
-        if(path.lastIndexOf("/")!=0){
-            path="";
-            StringBuffer buf = new StringBuffer();
-            for(int i=1;i<(temp.length-1);i++){
-                buf.append("/");
-                buf.append(temp[i]);
+        if (path.lastIndexOf("/") != 0) {
+            path = path.substring(0, path.lastIndexOf("/"));
+            if (temp != null && temp.length != 0) {
+                if (temp[temp.length - 1].equals("#") || temp[temp.length - 1].equals("*")) {
+                    delimiter = temp[temp.length - 1];
+                } else {
+                    if (!path.endsWith("/")) {
+                        path = path + "/" + temp[temp.length - 1];
+                    }
+                }
             }
-            path=buf.toString();
-        }else{
-            if(path.contains("*")||path.contains("#")){
-                path=path.substring(0,path.length()-1);
-            }else{
-                path=path.substring(0,path.length());
-            }
-        }
-
-        if(temp!=null && temp.length!=0){
-            if (temp[temp.length-1].equals("#") || temp[temp.length-1].equals("*")) {
-                delimiter=temp[temp.length-1];
-            } else{
-                if(path.lastIndexOf("/")!=0){
-                    path=path+"/"+temp[temp.length-1];
+        } else {
+            if (path.contains("*") || path.contains("#")) {
+                path = path.substring(0, path.length() - 1);
+                if (temp != null && temp.length != 0) {
+                    if (temp[temp.length - 1].equals("#") || temp[temp.length - 1].equals("*")) {
+                        delimiter = temp[temp.length - 1];
+                    }
                 }
             }
         }

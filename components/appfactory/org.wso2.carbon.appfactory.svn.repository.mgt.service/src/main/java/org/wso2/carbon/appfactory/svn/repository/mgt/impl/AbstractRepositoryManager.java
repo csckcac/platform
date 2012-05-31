@@ -35,8 +35,8 @@ public abstract class AbstractRepositoryManager implements RepositoryManager {
 
         HttpClient client = new HttpClient();
 
-        String userName = config.getFirstProperty(AppFactoryConstants.SERVER_ADMIN_NAME);
-        String password = config.getFirstProperty(AppFactoryConstants.SERVER_ADMIN_PASSWORD);
+        String userName = config.getFirstProperty(AppFactoryConstants.SCM_ADMIN_NAME);
+        String password = config.getFirstProperty(AppFactoryConstants.SCM_ADMIN_PASSWORD);
 
         AuthScope authScope = AuthScope.ANY;
 

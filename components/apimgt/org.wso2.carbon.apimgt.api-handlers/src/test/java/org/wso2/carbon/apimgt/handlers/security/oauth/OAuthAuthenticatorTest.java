@@ -17,14 +17,24 @@
 package org.wso2.carbon.apimgt.handlers.security.oauth;
 
 import junit.framework.TestCase;
+import org.wso2.carbon.apimgt.handlers.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.handlers.security.APISecurityConstants;
 import org.wso2.carbon.apimgt.handlers.security.APISecurityException;
 import org.wso2.carbon.apimgt.handlers.security.TestAPIKeyValidator;
 import org.wso2.carbon.apimgt.handlers.security.TestUtils;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
+import org.wso2.carbon.apimgt.impl.APIManagerConfigurationServiceImpl;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
 
-public class OAuthAuthenticatorTest extends TestCase {    
-    
+public class OAuthAuthenticatorTest extends TestCase {
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ServiceReferenceHolder.getInstance().setAPIManagerConfigurationService(
+                new APIManagerConfigurationServiceImpl(new APIManagerConfiguration()));
+    }
+
     public void testSimpleAuthentication() throws Exception {
         TestAPIKeyValidator keyValidator = new TestAPIKeyValidator();        
         APIKeyValidationInfoDTO goldUser = new APIKeyValidationInfoDTO();

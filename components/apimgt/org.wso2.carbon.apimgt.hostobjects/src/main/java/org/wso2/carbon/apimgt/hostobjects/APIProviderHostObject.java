@@ -377,8 +377,7 @@ public class APIProviderHostObject extends ScriptableObject {
         String version = (String) apiData.get("version", apiData);
         String status = (String) apiData.get("status", apiData);
         boolean publishToGateway = Boolean.parseBoolean((String) apiData.get("publishToGateway", apiData));
-        
-        boolean deprecateOldVersions = false;
+        boolean deprecateOldVersions = Boolean.parseBoolean((String) apiData.get("deprecateOldVersions", apiData)); ;
         boolean makeKeysForwardCompatible = false;
 
         try {

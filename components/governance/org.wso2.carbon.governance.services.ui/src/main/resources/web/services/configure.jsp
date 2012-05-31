@@ -45,7 +45,7 @@
         AddServicesServiceClient client = new AddServicesServiceClient(config,session);
         content = client.getServiceConfiguration();
     } catch (Exception e){
-        response.setStatus(500);
+      //  response.setStatus(500);
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
         session.setAttribute(CarbonUIMessage.ID, uiMsg);
 %>
@@ -68,11 +68,12 @@
 
     function validateAndSaveConfiguration() {
 
-        var xmlURL = editAreaLoader.getValue("payloadEditor");
-        var _schema="service-ui-config";
+        sessionAwareFunction(function() {
+           var xmlURL = editAreaLoader.getValue("payloadEditor");
+           var _schema="service-ui-config";
 
            new Ajax.Request('../services/xmlconfig_validator_ajaxprocessor.jsp',
-            {
+           {
                 method:'post',
                 parameters: { target_xml: xmlURL,schema: _schema},
                 onSuccess: function(transport) {
@@ -88,7 +89,8 @@
                     CARBON.showErrorDialog(transport.responseText);
                     return;
                 }
-            });
+           });
+        }, org_wso2_carbon_governance_services_ui_jsi18n["session.timed.out"]);
     }
 
     function SaveConfiguration() {

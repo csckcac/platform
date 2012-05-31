@@ -19,11 +19,13 @@
                     doc = docs[i];
                 %>
                 <div class="documentation">
-                    <h5>Name:</h5>
+                    <h6>Name:</h6>
                     <p><%=doc.name%></p>
-                    <div class="documentaion-body"><h5>Summary:</h5><p><%=doc.summary%></p>
+                    <div class="documentaion-body"><h6>Summary:</h6><p><%=doc.summary%></p>
                     <%if(doc.sourceUrl){%>
-                    <h5>Documentation URL:</h5><p><a href="<%=doc.sourceUrl%>"><%=doc.sourceUrl%></a></p>
+                    <h6>Documentation URL:</h6><p><a href="<%=doc.sourceUrl%>"><%=doc.sourceUrl%></a></p>
+                    <%}else{%>
+                    <h6>Documentation Content:</h6><p><%=doc.content%></p>
                     <%}%>
                     </div>
                     <hr/>

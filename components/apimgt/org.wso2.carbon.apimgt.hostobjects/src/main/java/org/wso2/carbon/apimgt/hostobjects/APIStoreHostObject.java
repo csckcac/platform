@@ -818,23 +818,27 @@ public class APIStoreHostObject extends ScriptableObject {
 
 		Iterator it = doclist.iterator();
 		int i = 0;
-		while (it.hasNext()) {
-			NativeObject row = new NativeObject();
-			Object docObject = it.next();
-			Documentation documentation = (Documentation) docObject;
-			Object objectSourceType= documentation.getSourceType();
-         	String strSourceType = objectSourceType.toString();
-
-			row.put("name", row, documentation.getName());
-			row.put("sourceType", row, strSourceType);
-			row.put("summary", row, documentation.getSummary());
-			row.put("sourceUrl", row, documentation.getSourceUrl());
-			DocumentationType documentationType = documentation.getType();
-			row.put("type", row, documentationType.getType());
-			myn.put(i, myn, row);
-			i++;
-		}
-		return myn;
+        while (it.hasNext()) {
+            NativeObject row = new NativeObject();
+            Object docObject = it.next();
+            Documentation documentation = (Documentation) docObject;
+            Object objectSourceType = documentation.getSourceType();
+            String strSourceType = objectSourceType.toString();
+            row.put("name", row, documentation.getName());
+            row.put("sourceType", row, strSourceType);
+            row.put("summary", row, documentation.getSummary());
+            String content;
+            if (strSourceType.equals("INLINE")) {
+                content = apiConsumer.getDocumentationContent(apiIdentifier, documentation.getName());
+                row.put("content", row, content);
+            }
+            row.put("sourceUrl", row, documentation.getSourceUrl());
+            DocumentationType documentationType = documentation.getType();
+            row.put("type", row, documentationType.getType());
+            myn.put(i, myn, row);
+            i++;
+        }
+        return myn;
 	}
 
 

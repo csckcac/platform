@@ -1,6 +1,6 @@
-var getStaticStars = function (context, rating) {
+var getStaticStars = function (context, rating, theme) {
 
-    var prefix = context + "/site/themes/fancy/utils/ratings/images/";
+    var prefix = context + "/site/themes/"+theme+"/utils/ratings/images/";
 
     var getHTML = function (image) {
         return '<img src="' + prefix + image + '"/>';

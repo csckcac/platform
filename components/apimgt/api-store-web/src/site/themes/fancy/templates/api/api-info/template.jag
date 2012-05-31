@@ -1,9 +1,9 @@
 <% jagg.template("api/api-info", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
+<% var stars = require("/site/themes/"+site.theme+"/utils/ratings/star-generator.js"); %>
 <% var i, length, app, thumbURL, api = outputs.api, apps = outputs.applications, user = outputs.user;
    thumbURL = api.thumbURL;
    if(thumbURL && thumbURL.indexOf("images/") == 0) {
-        thumbURL = site.context + "/site/themes/fancy/" + thumbURL;
+        thumbURL = site.context + "/site/themes/"+site.theme+"/" + thumbURL;
    }
    var subsPermitted = jagg.module("subscription").hasSubscribePermission().permitted;
 %>
@@ -28,7 +28,7 @@
                     <td>
                         <div class="star-ratings">
                             <% if(user) { %><%=stars.getDynamicStars(api.rating)%>
-                            <% } else { %><%=stars.getStaticStars(site.context, api.rating)%><% } %>
+                            <% } else { %><%=stars.getStaticStars(site.context, api.rating,site.theme)%><% } %>
                         </div>
                     </td>
 
@@ -52,7 +52,7 @@
                          length = apps.length;
                      %>
                     <Label><b>Applications</b></Label>
-                     <select id="application-list" class="fancy">
+                     <select id="application-list">
                             <option value="-">Select Application...</option>
                             <option value="createNewApp">New Application...</option>
                             <optgroup label="My Applications">

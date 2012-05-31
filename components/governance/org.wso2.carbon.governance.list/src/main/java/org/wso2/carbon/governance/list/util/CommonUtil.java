@@ -253,6 +253,7 @@ public class CommonUtil {
         Validator validator = schema.newValidator();
             validator.validate(xmlFile);
         } catch (Exception e) {
+            log.error("#### RXT validation fails due to: "+e.getMessage());
             return false;
         }
         return true;

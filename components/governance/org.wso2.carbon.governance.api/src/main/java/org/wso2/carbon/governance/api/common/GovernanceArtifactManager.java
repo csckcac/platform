@@ -33,6 +33,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
+import org.wso2.carbon.ui.CarbonUIMessage;
 
 import javax.xml.namespace.QName;
 import java.util.*;
@@ -112,7 +113,7 @@ public class GovernanceArtifactManager {
      *
      * @throws GovernanceException if the operation failed.
      */
-    public void addGovernanceArtifact(GovernanceArtifact artifact) throws GovernanceException {
+    public String addGovernanceArtifact(GovernanceArtifact artifact) throws GovernanceException {
         // adding the attributes for name, namespace + artifact
         if (artifact.getQName() == null || artifact.getQName().getLocalPart() == null) {
             String msg = "A valid qualified name was not set for this artifact";
@@ -139,33 +140,43 @@ public class GovernanceArtifactManager {
             resource.setMediaType(mediaType);
             setContent(artifact, resource);
             // the artifact will not actually stored in the tmp path.
+
+// if an artifact is already existing in the defined location, then a error message will be prompted, to avoid the old artifact being replaced by the new one
             String path = GovernanceUtils.getPathFromPathExpression(
                     pathExpression, artifact);
-            if (registry.resourceExists(path)) {
-                Resource oldResource = registry.get(path);
-                Properties properties = (Properties) oldResource.getProperties().clone();
-                resource.setProperties(properties);
-                String oldContent;
-                Object content = oldResource.getContent();
-                if (content instanceof String) {
-                    oldContent = (String) content;
-                } else {
-                    oldContent = new String((byte[]) content);
-                }
-                String newContent;
-                content = resource.getContent();
-                if (content instanceof String) {
-                    newContent = (String) content;
-                } else {
-                    newContent = new String((byte[]) content);
-                }
-                if (newContent.equals(oldContent)) {
-                    artifact.setId(oldResource.getUUID());
-                    addRelationships(path, artifact);
-                    succeeded = true;
-                    return;
-                }
+            if(registry.resourceExists(path)){
+                String msg = "An identical resource already exists in the defined path";
+                log.error(msg);
+                return msg;
             }
+
+//  if an artifact is already existing in the defined location, then the content of the old resource will be transfered to the new resource, wich is disabled
+//            if (registry.resourceExists(path)) {
+//                Resource oldResource = registry.get(path);
+//                Properties properties = (Properties) oldResource.getProperties().clone();
+//                resource.setProperties(properties);
+//                String oldContent;
+//                Object content = oldResource.getContent();
+//                if (content instanceof String) {
+//                    oldContent = (String) content;
+//                } else {
+//                    oldContent = new String((byte[]) content);
+//                }
+//                String newContent;
+//                content = resource.getContent();
+//                if (content instanceof String) {
+//                    newContent = (String) content;
+//                } else {
+//                    newContent = new String((byte[]) content);
+//                }
+//                if (newContent.equals(oldContent)) {
+//                    artifact.setId(oldResource.getUUID());
+//                    addRelationships(path, artifact);
+//                    succeeded = true;
+//                    return;
+//                }
+//            }
+
             String artifactId = artifact.getId();
             resource.setUUID(artifactId);
             registry.put(path, resource);
@@ -173,6 +184,7 @@ public class GovernanceArtifactManager {
             addRelationships(path, artifact);
 
             succeeded = true;
+            return path;
         }
         catch (RegistryException e) {
             String msg;

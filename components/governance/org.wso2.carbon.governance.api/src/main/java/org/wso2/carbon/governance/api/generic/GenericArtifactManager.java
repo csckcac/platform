@@ -134,12 +134,13 @@ public class GenericArtifactManager {
     /**
      * Adds the given artifact to the registry.
      *
+     *
      * @param artifact the artifact.
      *
      * @throws GovernanceException if the operation failed.
      */
-    public void addGenericArtifact(GenericArtifact artifact) throws GovernanceException {
-        manager.addGovernanceArtifact(artifact);
+    public String addGenericArtifact(GenericArtifact artifact) throws GovernanceException {
+        return manager.addGovernanceArtifact(artifact);
     }
 
     /**

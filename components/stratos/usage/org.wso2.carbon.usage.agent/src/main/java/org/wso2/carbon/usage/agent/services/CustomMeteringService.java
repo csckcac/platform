@@ -27,25 +27,23 @@ public class CustomMeteringService extends AbstractAdmin {
 
     /**
      * method to get recorded durations
-     * @param userName user name
      * @param measurement  the measurement name
      * @return  duration array
      * @throws Exception
      */
 
-    public String[] getRecordedDurations(String userName, String measurement) throws Exception {
+    public String[] getRecordedDurations(String measurement) throws Exception {
         return new CustomMeteringAgent(getGovernanceRegistry()).getRecordedDurations(measurement);
     }
 
     /**
      * method to check whether usage entry exists or not
-     * @param userName user name
      * @param duration  duration
      * @param measurement measurement name
      * @return true if usage entry exist
      * @throws Exception
      */
-    public boolean isUsageEntryExists(String userName, String duration, String measurement)
+    public boolean isUsageEntryExists( String duration, String measurement)
             throws Exception {
         return new CustomMeteringAgent(getGovernanceRegistry()).isUsageEntryExists(duration,
                 measurement);
@@ -53,27 +51,25 @@ public class CustomMeteringService extends AbstractAdmin {
 
     /**
      * method to persist usage
-     * @param userName user name
      * @param duration
      * @param measurement measurement name
      * @param value   value of measurement
      * @throws Exception
      */
-    public void persistUsage(String userName, String duration, String measurement, String value)
+    public void persistUsage( String duration, String measurement, String value)
             throws Exception {
         new CustomMeteringAgent(getGovernanceRegistry()).persistUsage(duration, measurement, value);
     }
 
     /**
      * method to retrieve usage
-     * @param userName user name
      * @param duration
      * @param measurement measurement name
      * @return usage value
      * @throws UsageException
      */
 
-    public String retrieveUsage(String userName, String duration, String measurement)
+    public String retrieveUsage( String duration, String measurement)
             throws UsageException {
         return new CustomMeteringAgent(getGovernanceRegistry())
                 .retrieveUsage(duration, measurement);

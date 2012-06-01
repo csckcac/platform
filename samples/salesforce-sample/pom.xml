@@ -111,7 +111,7 @@
         <dependency>
             <groupId>commons-httpclient.wso2</groupId>
             <artifactId>commons-httpclient</artifactId>
-            <version>3.1.0.wso2v1</version>
+            <version>${orbit.version.commons.httpclient}</version>
         </dependency>
         <dependency>
             <groupId>com.google.common.wso2</groupId>

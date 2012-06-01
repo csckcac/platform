@@ -80,31 +80,37 @@ public class Util {
 
       public static boolean validateXMLConfigOnSchema(String xml, String schema) throws JaxenException, XMLStreamException, IOException, SAXException {
         String serviceConfPath = "";
+         boolean isLC = false;
         if ("service-ui-config".equalsIgnoreCase(schema)) {
             serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
                     "conf" + File.separator + "service-ui-config.xsd";
         } else if ("lifecycle-config".equalsIgnoreCase(schema)) {
             serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
                     "conf" + File.separator + "lifecycle-config.xsd";
+            isLC = true;
         }
-      return validateRXTContent(xml, serviceConfPath);
+      return validateRXTContent(xml, serviceConfPath,isLC);
     }
 
-    private static boolean validateRXTContent(String rxtContent, String xsdPath) throws IOException, SAXException, XMLStreamException, FileNotFoundException, JaxenException, UnsupportedEncodingException {
-//        InputStream is = new ByteArrayInputStream(rxtContent.getBytes("utf-8"));
-//        Source xmlFile = new StreamSource(is);
-//        SchemaFactory schemaFactory = SchemaFactory
-//                .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-//        Schema schema = schemaFactory.newSchema(new File(xsdPath));
-//        Validator validator = schema.newValidator();
-//        try {
-//            validator.validate(xmlFile);
-//        } catch (SAXException e) {
-//            log.error("#### RXT validation fails due to: " + e.getMessage());
-//            return false;
-//        } catch (IOException e) {
-//            throw new IOException("File not found " + e.getMessage());
-//        }
+    private static boolean validateRXTContent(String rxtContent, String xsdPath, boolean lc) throws IOException, SAXException, XMLStreamException, FileNotFoundException, JaxenException, UnsupportedEncodingException {
+        InputStream is = new ByteArrayInputStream(rxtContent.getBytes("utf-8"));
+        Source xmlFile = new StreamSource(is);
+        SchemaFactory schemaFactory = SchemaFactory
+                .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema = schemaFactory.newSchema(new File(xsdPath));
+        Validator validator = schema.newValidator();
+        try {
+            validator.validate(xmlFile);
+        } catch (SAXException e) {
+            if(lc) {
+                log.error("#### Lifecycle validation fails due to: " + e.getMessage());
+            } else {
+                log.error("#### RXT validation fails due to: " + e.getMessage());
+            }
+            return false;
+        } catch (IOException e) {
+            throw new IOException("File not found " + e.getMessage());
+        }
         return true;
     }
 

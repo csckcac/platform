@@ -91,7 +91,7 @@ public class HadoopJobRunnerThread extends Thread {
 			Class<?> mainClass = Class.forName(mainClassName, true, loader);
 			
 			CarbonMapRedJob carbonMapRedJob = (CarbonMapRedJob)mainClass.newInstance();
-			Configuration conf = (Configuration) (HadoopJobRunner.getConf().clone());
+			Configuration conf = new Configuration(HadoopJobRunner.getConf());
 			//Allways sanitize Configuration object before passing to client.
 			HadoopJobRunner.sanitizeConfiguration(conf);
 			carbonMapRedJob.setConfiguration(conf);

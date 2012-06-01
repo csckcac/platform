@@ -155,22 +155,15 @@ public class HadoopJobRunner extends AbstractAdmin {
 		conf.set("hadoop.security.admin.username", "");
 		conf.set("hadoop.security.admin.password", "");
 		//Clean all sensitive dfs details
-		conf.set("dfs.name.dir", "");
+	    conf.set("dfs.name.dir", "");
 		conf.set("dfs.name.edits.dir", "");
 		conf.set("dfs.data.dir", "");
 		conf.set("dfs.namenode.keytab.file", "");
-		conf.set("dfs.namenode.kerberos.principal", "");
-		conf.set("dfs.namenode.kerberos.https.principal", "");
 		conf.set("dfs.secondary.namenode.keytab.file", "");
 		conf.set("dfs.datanode.keytab.file", "");
-		conf.set("dfs.datanode.kerberos.principal", "");
 		//Clean all sensitive mapred details
 		conf.set("mapred.system.dir", "");
-		conf.set("mapreduce.jobtracker.kerberos.principal", "");
-		conf.set("mapreduce.jobtracker.kerberos.https.principal", "");
 		conf.set("mapreduce.jobtracker.keytab.file", "");
-		conf.set("mapreduce.tasktracker.kerberos.principal", "");
-		conf.set("mapreduce.tasktracker.kerberos.https.principal", "");
 		conf.set("mapreduce.tasktracker.keytab.file", "");
 		conf.set("mapreduce.tasktracker.group", "");
 		conf.set("mapred.local.dir", "");

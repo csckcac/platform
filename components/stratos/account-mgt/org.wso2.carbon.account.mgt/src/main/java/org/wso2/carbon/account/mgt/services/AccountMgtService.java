@@ -29,6 +29,7 @@ import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
+import org.wso2.carbon.tenant.mgt.util.TenantMgtUtil;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
@@ -98,7 +99,7 @@ public class AccountMgtService extends AbstractAdmin {
             datatostore.put("first-name",
                     ClaimsMgtUtil.getFirstName(Util.getRealmService(), tenantId));
             datatostore.put("email", contactEmail);
-            datatostore.put("admin", tenant.getAdminName());
+            datatostore.put("userName", tenant.getAdminName());
             datatostore.put("tenantDomain", tenant.getDomain());
             datatostore.put("confirmationKey", confirmationKey);
             emailverifier.requestUserVerification(datatostore, Util.getEmailVerifierConfig());
@@ -314,13 +315,7 @@ public class AccountMgtService extends AbstractAdmin {
             throw new Exception(msg, e);
         }
         String domainName = tenant.getDomain();
-
-        int indexOfDot = domainName.lastIndexOf(".");
-        if (indexOfDot < 0) {
-            String msg = "Invalid domain: " + domainName;
-            log.error(msg);
-            throw new Exception(msg);
-        }
+        TenantMgtUtil.validateDomain(domainName);
 
         String domainValidationPath = StratosConstants.TENANT_DOMAIN_VERIFICATION_FLAG_PATH +
                 RegistryConstants.PATH_SEPARATOR + tenantId;

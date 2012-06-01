@@ -134,7 +134,7 @@ public class EmailValidationService {
             try{
                 AccountMgtServiceComponent.getBillingService().activateUsagePlan(domain);
             }catch(Exception e){
-                log.error("Error occurred while activating the usage plan for tenat: " + domain
+                log.error("Error occurred while activating the usage plan for tenant: " + domain
                         + " tenant Id: " + tenantId, e);
             }
 

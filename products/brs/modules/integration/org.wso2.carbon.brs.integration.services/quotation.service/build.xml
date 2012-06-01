@@ -31,7 +31,7 @@
     </target>
     <target name="deploy.service" depends="generate.service">
         <copy file="${build.dir}/QuoteService.aar"
-              todir="${BRS_HOME}/repository/services/ruleservice"
+              todir="${BRS_HOME}/repository/deployment/server/ruleservices/"
               overwrite="yes"/>
     </target>
     <target name="main" depends="clean,generate.service,deploy.service"/>

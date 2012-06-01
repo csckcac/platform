@@ -70,13 +70,15 @@
     </RepositoryMGTConfig>
 
     <!--This element defines the set of staging servers, where the application applications are deployed. -->
-    <ApplicationDeployment>
+   <ApplicationDeployment>
         <DeploymentStage name="Development">
+            <ProcesEndPoint>https://localhost:9443/services/DeployApplicationToDev</ProcesEndPoint>
             <DeploymentServerURL>
                 https://localhost:9443/services/
             </DeploymentServerURL>
         </DeploymentStage>
         <DeploymentStage name="QA">
+            <ProcesEndPoint>https://localhost:9443/services/DeployApplicationToQA</ProcesEndPoint>
             <DeploymentServerURL>
                 https://localhost:9445/services/
             </DeploymentServerURL>

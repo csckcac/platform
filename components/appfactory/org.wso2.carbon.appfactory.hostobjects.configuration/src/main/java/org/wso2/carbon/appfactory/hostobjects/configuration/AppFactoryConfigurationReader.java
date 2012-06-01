@@ -28,4 +28,7 @@ public class AppFactoryConfigurationReader extends ScriptableObject {
     public String jsFunction_getFirstProperty(String key) throws Exception {
         return appFactoryConfiguration.getFirstProperty(key);
     }
+    public String[] jsFunction_getProperties(String key) throws Exception {
+        return appFactoryConfiguration.getProperties(key);
+    }
 }

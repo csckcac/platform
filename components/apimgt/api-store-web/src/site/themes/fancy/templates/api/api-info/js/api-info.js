@@ -39,7 +39,7 @@ $(document).ready(function () {
             $("#subscribe-button").removeAttr('disabled');
             if (result.error == false) {
                 $('#messageModal').html($('#confirmation-data').html());
-                $('#messageModal h3.modal-title').html('API Provider');
+                $('#messageModal h3.modal-title').html('Subscription Successful');
                 $('#messageModal div.modal-body').html('\n\nCongratulations! You have successfully subscribed to the API. Please go to \'My Subscriptions\' page to review your subscription and generate API keys.');
                 $('#messageModal a.btn-primary').html('Go to My Subscriptions');
                 $('#messageModal a.btn-other').html('Stay on this page');

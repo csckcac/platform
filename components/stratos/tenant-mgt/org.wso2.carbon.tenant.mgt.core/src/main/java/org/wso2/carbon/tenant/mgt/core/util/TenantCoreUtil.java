@@ -55,7 +55,7 @@ public class TenantCoreUtil {
         }
     
         // check a tenant with same domain exist.
-        if (tenantId > 0 || tenant.getDomain().equals(MultitenantConstants.SUPER_TENANT_NAME)) {
+        if (tenantId > 0 || tenant.getDomain().equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             String msg =
                          "A tenant with same domain already exist. " +
                                  "Please use a different domain name. tenant domain: " +

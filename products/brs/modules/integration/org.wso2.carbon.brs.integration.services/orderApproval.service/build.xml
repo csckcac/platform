@@ -26,6 +26,7 @@
             </fileset>
             <fileset dir="${basedir}/service">
                 <include name="META-INF/**"/>
+                <include name="conf/**"/>
             </fileset>
         </jar>
     </target>
@@ -34,5 +35,5 @@
               todir="${BRS_HOME}/repository/deployment/server/ruleservices/"
               overwrite="yes"/>
     </target>
-    <target name="main" depends="clean,generate.service,deploy.service"/>
+    <target name="main" depends="clean,generate.service"/>
 </project>

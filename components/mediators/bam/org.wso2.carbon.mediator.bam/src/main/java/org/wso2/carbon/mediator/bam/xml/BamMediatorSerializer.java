@@ -15,13 +15,15 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.mediator.transform.xml;
+package org.wso2.carbon.mediator.bam.xml;
 
 import org.apache.synapse.config.xml.AbstractMediatorSerializer;
 import org.apache.synapse.Mediator;
 import org.apache.axiom.om.OMElement;
-import org.wso2.carbon.mediator.transform.BamMediator;
+import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
+import org.wso2.carbon.mediator.bam.BamMediator;
 
+import java.util.List;
 
 
 public class BamMediatorSerializer extends AbstractMediatorSerializer {
@@ -33,10 +35,22 @@ public class BamMediatorSerializer extends AbstractMediatorSerializer {
         BamMediator bamMediator = (BamMediator) mediator;
         OMElement bam = fac.createOMElement("bam", synNS);
 
-        //bam.addAttribute(fac.createOMAttribute("config-key", nullNS, bamMediator.getConfigKey()));
+        OMElement serverProfileElement = fac.createOMElement("serverProfile", synNS);
+        serverProfileElement.addAttribute(fac.createOMAttribute("path", nullNS, bamMediator.getServerProfile()));
+        bam.addChild(serverProfileElement);
 
-        //bam.addChild(createInput(BamMediator.getInput()));
-        //bam.addChild(createOutput(bamMediator.getOutput()));
+        OMElement propertiesElement = fac.createOMElement("properties", synNS);
+        List<Property> properties = bamMediator.getProperties();
+        if(properties != null){
+            OMElement propertyElement;
+            for (Property property : properties) {
+                propertyElement = fac.createOMElement("property", synNS);
+                propertyElement.addAttribute("name", property.getKey(), nullNS);
+                propertyElement.addAttribute("value", property.getValue(), nullNS);
+                propertiesElement.addChild(propertyElement);
+            }
+        }
+        bam.addChild(propertiesElement);
 
         return bam;
     }

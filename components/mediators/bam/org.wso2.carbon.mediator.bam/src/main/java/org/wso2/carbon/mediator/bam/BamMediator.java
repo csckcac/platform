@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mediator.transform;
+package org.wso2.carbon.mediator.bam;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseLog;
@@ -47,6 +47,8 @@ import org.wso2.carbon.agent.conf.AgentConfiguration;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.utils.CarbonUtils;
+import java.io.File;
 
 import java.net.MalformedURLException;
 
@@ -143,8 +145,15 @@ public class BamMediator extends AbstractMediator {
 
         if (streamId == null) {
             AgentConfiguration agentConfiguration = new AgentConfiguration();
-            agentConfiguration.setTrustStore("/works/platform_trunk/graphite/components/agent/org.wso2.carbon.agent.server/src/test/resources/client-truststore.jks");
-            agentConfiguration.setTrustStorePassword("wso2carbon");
+            //agentConfiguration.setTrustStore("/works/platform_trunk/graphite/components/agent/org.wso2.carbon.agent.server/src/test/resources/client-truststore.jks");
+            /*String keyStorePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
+                                  File.separator + "resources" + File.separator + "security" +
+                                  File.separator + "client-truststore.jks";
+            String keyStorePassword = "wso2carbon";
+            agentConfiguration.setTrustStore(keyStorePath);
+            agentConfiguration.setTrustStorePassword(keyStorePassword);
+            System.setProperty("javax.net.ssl.trustStore", keyStorePath);
+            System.setProperty("javax.net.ssl.trustStorePassword", keyStorePassword);*/
             Agent agent = new Agent(agentConfiguration);
             //create data publisher
             dataPublisher = new DataPublisher("tcp://" + this.serverIp + ":" + this.serverPort,

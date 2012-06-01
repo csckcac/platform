@@ -45,7 +45,7 @@
                         <Bundle-Description>${project.description}</Bundle-Description>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>
-                            org.wso2.carbon.mediator.transform.*,
+                            org.wso2.carbon.mediator.bam.*,
                         </Export-Package>
                         <Import-Package>
                             !javax.xml.namespace,

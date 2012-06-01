@@ -49,7 +49,11 @@
 	<div id="middle">
 	<h2><fmt:message key='claim.management'/></h2>
 	<div id="workArea">
-	
+
+<%
+    String claimUri = request.getParameter("claimUri");
+%>
+
 	 <script type="text/javascript">
 	    function setType(chk,hidden) {
 	    	var val = document.getElementById(chk).checked;
@@ -103,6 +107,7 @@
             	  return false;
             	}
         	}
+
         	document.addclaim.submit();
     	}  
   	   </script>
@@ -130,8 +135,18 @@
 			
 						<tr>
 							<td class="leftCol-small"><fmt:message key='claim.uri'/><font color="red">*</font></td>
+<%
+                            if(claimUri != null && claimUri.trim().length() > 0){
+%>
+							<td><input type="text" name="claimUri" id="claimUri" class="text-box-big" value="<%=claimUri%>"/></td>
+<%
+                            } else {
+%>
 							<td><input type="text" name="claimUri" id="claimUri" class="text-box-big"/></td>
-						</tr>
+<%
+                            }
+%>
+                        </tr>
 			
 						<tr>
 							<td class="leftCol-small"><fmt:message key='mapped.attribute'/><font color="red">*</font></td>

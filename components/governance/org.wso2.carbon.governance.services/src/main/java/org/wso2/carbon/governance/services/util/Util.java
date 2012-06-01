@@ -91,20 +91,20 @@ public class Util {
     }
 
     private static boolean validateRXTContent(String rxtContent, String xsdPath) throws IOException, SAXException, XMLStreamException, FileNotFoundException, JaxenException, UnsupportedEncodingException {
-        InputStream is = new ByteArrayInputStream(rxtContent.getBytes("utf-8"));
-        Source xmlFile = new StreamSource(is);
-        SchemaFactory schemaFactory = SchemaFactory
-                .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = schemaFactory.newSchema(new File(xsdPath));
-        Validator validator = schema.newValidator();
-        try {
-            validator.validate(xmlFile);
-        } catch (SAXException e) {
-            log.error("#### RXT validation fails due to: " + e.getMessage());
-            return false;
-        } catch (IOException e) {
-            throw new IOException("File not found " + e.getMessage());
-        }
+//        InputStream is = new ByteArrayInputStream(rxtContent.getBytes("utf-8"));
+//        Source xmlFile = new StreamSource(is);
+//        SchemaFactory schemaFactory = SchemaFactory
+//                .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+//        Schema schema = schemaFactory.newSchema(new File(xsdPath));
+//        Validator validator = schema.newValidator();
+//        try {
+//            validator.validate(xmlFile);
+//        } catch (SAXException e) {
+//            log.error("#### RXT validation fails due to: " + e.getMessage());
+//            return false;
+//        } catch (IOException e) {
+//            throw new IOException("File not found " + e.getMessage());
+//        }
         return true;
     }
 

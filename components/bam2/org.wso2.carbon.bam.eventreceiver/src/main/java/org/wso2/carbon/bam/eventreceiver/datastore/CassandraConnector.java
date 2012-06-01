@@ -1,11 +1,13 @@
 package org.wso2.carbon.bam.eventreceiver.datastore;
 
+import me.prettyprint.cassandra.model.IndexedSlicesQuery;
 import me.prettyprint.cassandra.serializers.*;
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
-import me.prettyprint.cassandra.service.StringKeyIterator;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.HColumn;
+import me.prettyprint.hector.api.beans.OrderedRows;
+import me.prettyprint.hector.api.beans.Row;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
 import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
 import me.prettyprint.hector.api.factory.HFactory;
@@ -33,13 +35,10 @@ public class CassandraConnector {
 
     public static final String USERNAME_VALUE = "admin";
     public static final String PASSWORD_VALUE = "admin";
-//    public static final String CSS_NODE0 = "css0.stratoslive.wso2.com";
-//    public static final String CSS_NODE1 = "css1.stratoslive.wso2.com";
-//    public static final String CSS_NODE2 = "css2.stratoslive.wso2.com";
 
     public static final String LOCAL_NODE = "localhost";
-    public static final String BAM_EVENT_DATA_KEYSPACE = "BAM_EVENT_DATA";
-    //public static final String EVENT_DATA = "EVENT_DATA";
+
+
 
     private static final String STREAM_NAME_KEY = "Name";
     private static final String STREAM_VERSION_KEY = "Version";
@@ -47,11 +46,18 @@ public class CassandraConnector {
     private static final String STREAM_DESCRIPTION_KEY = "Description";
 
     public static final String BAM_META_KEYSPACE = "BAM_AGENT_API_META_DATA";
-    public static final String BAM_META_STREAM_ID_CF = "AGENT_STEAM_ID";
-    public static final String BAM_META_STREAM_DEF_CF = "AGENT_STEAM_DEF";
+    public static final String BAM_META_STREAM_ID_CF = "AGENT_STREAM_ID";
+    public static final String BAM_META_STREAM_DEF_CF = "AGENT_STREAM_DEF";
+    private static final String BAM_META_STREAM_ID_KEY_CF = "STREAM_DEF_ID_KEY";
+    private static final String BAM_META_STREAMID_TO_STREAM_ID_KEY = "STREAM_ID_TO_STREAM_ID_KEY";
 
-    public static final String STREAM_ID_NAME = "STREAM_ID";
-    public static final String STREAM_DEF_NAME = "STREAM_ID";
+    public static final String BAM_EVENT_DATA_KEYSPACE = "BAM_EVENT_DATA";
+    public static final String BAM_EVENT_DATA_STREAM_DEF_CF = "EVENT_STREAM_DEF";
+
+    private static final String STREAM_ID_KEY = "STREAM_DEF_ID_KEY";
+    private static final String STREAM_ID = "STREAM_DEF_ID";
+    private static final String STREAM_DEF = "STREAM_DEF";
+    private static final String STREAM_DEF_DOMAIN = "STREAM_DEF_DOMAIN";
 
     private final static StringSerializer stringSerializer = StringSerializer.get();
     // private final static BytesArraySerializer bytesArraySerializer = BytesArraySerializer.get();
@@ -64,8 +70,11 @@ public class CassandraConnector {
 
     Log logger = LogFactory.getLog(CassandraConnector.class);
 
-
     private Cluster cluster = null;
+
+
+    private static final String DOMAIN_NAME = "DOMAIN_NAME";
+    private static final String WSO2_CARBON_STAND_ALONE = "WSO2-CARBON-STAND-ALONE";
 
     public CassandraConnector() {
         // to test agent API without username and passwd in stream definition
@@ -74,7 +83,7 @@ public class CassandraConnector {
         credentials.put(USERNAME_KEY, USERNAME_VALUE);
         credentials.put(PASSWORD_KEY, PASSWORD_VALUE);
 ////        String hostList = CSS_NODE0 + ":" + RPC_PORT + "," + CSS_NODE1 + ":" + RPC_PORT + ","
-////                + CSS_NODE2 + ":" + RPC_PORT;
+////                + CSS_NODE2 + ":" + RPC_PORT;                                                                                String
         String hostList = LOCAL_NODE + ":" + RPC_PORT;
         cluster = HFactory.createCluster(CLUSTER_NAME,
                 new CassandraHostConfigurator(hostList), credentials);
@@ -100,12 +109,12 @@ public class CassandraConnector {
         return LOCAL_NODE + ":" + RPC_PORT;
     }
 
-    public void createColumnFamily(String domainName, String streamName,String userName, String userPassword) {
+    public void createColumnFamily(String domainName, String streamName, String userName, String userPassword) {
         if (domainName != null) {
             userName = userName + "@" + domainName;
         }
         Cluster tenantCluster = getCassandraConnector(userName, userPassword);
-        String eventStreamCfName =  streamName.replace(".", "_");
+        String eventStreamCfName = streamName.replace(".", "_");
         Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
         KeyspaceDefinition keyspaceDef =
                 tenantCluster.describeKeyspace(keyspace.getKeyspaceName());
@@ -119,24 +128,22 @@ public class CassandraConnector {
         }
         ColumnFamilyDefinition columnFamilyDefinition = HFactory.
                 createColumnFamilyDefinition(BAM_EVENT_DATA_KEYSPACE, streamName.replace(".", "_"));
-        cluster.addColumnFamily(columnFamilyDefinition);
+        tenantCluster.addColumnFamily(columnFamilyDefinition);
     }
 
 
     public void insertEvent(Event eventData, String userName, String userPassword) throws MalformedStreamDefinitionException {
         String sessionId[] = eventData.getStreamId().split("-");
-        EventStreamDefinition eventStreamDef = getStreamDefinition(sessionId[0] + "-" + sessionId[1]);
         Cluster tenantCluster = getCassandraConnector(userName, userPassword);
-        // String streamColumnFamily = getStreamDefinition(eventData.getStreamId()).getName();
+        EventStreamDefinition eventStreamDef = getStreamDefinition(tenantCluster, eventData.getStreamId());
         String streamColumnFamily = sessionId[0].replace(".", "_");
-        //To change body of created methods use File | Settings | File Templates.
+
         Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
         Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());
-        // CF key  - to be changed based on analyser
+
         UUID uuid = UUID.randomUUID();
         String randomUUIDString = uuid.toString();
-        //mutator.insert(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(EVENT_DATA, eventData));
-        //add / dupicate CF meta data in the columns
+
         mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_NAME_KEY, eventStreamDef.getName()));
         mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_VERSION_KEY, eventStreamDef.getVersion()));
         if (eventStreamDef.getDescription() != null && !eventStreamDef.getDescription().isEmpty()) {
@@ -145,8 +152,6 @@ public class CassandraConnector {
         if (eventStreamDef.getNickName() != null && !eventStreamDef.getNickName().isEmpty()) {
             mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_NICK_NAME_KEY, eventStreamDef.getNickName()));
         }
-        // To insert Data type specific data
-        //Iterate for Meta data
 
         int eventDataIndex = 0;
         if (eventStreamDef.getMetaData() != null) {
@@ -280,102 +285,57 @@ public class CassandraConnector {
         mutator.execute();
     }
 
-    public void insertEventDataColumnKeyLess(Event eventData, String userName, String userPassword) throws MalformedStreamDefinitionException {
-        EventStreamDefinition eventStreamDef = getStreamDefinition(eventData.getStreamId());
-        Cluster tenantCluster = getCassandraConnector(userName, userPassword);
-        String streamColumnFamily = eventData.getStreamId();
-        //To change body of created methods use File | Settings | File Templates.
-        Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
-        Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());
-        // CF key  - to be changed based on analyser
-        UUID uuid = UUID.randomUUID();
-        String randomUUIDString = uuid.toString();
-        //mutator.insert(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(EVENT_DATA, eventData));
-        //add / dupicate CF meta data in the columns
-        mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_NAME_KEY, eventStreamDef.getName()));
-        mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_VERSION_KEY, eventStreamDef.getVersion()));
-        if (eventStreamDef.getDescription() != null && !eventStreamDef.getDescription().isEmpty()) {
-            mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_DESCRIPTION_KEY, eventStreamDef.getDescription()));
-        }
-        if (eventStreamDef.getNickName() != null && !eventStreamDef.getNickName().isEmpty()) {
-            mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_NICK_NAME_KEY, eventStreamDef.getNickName()));
-        }
-
-        if (eventData.getMetaData() != null) {
-            for (Object eventMetaData : eventData.getMetaData()) {
-                String columnKeyUUID = UUID.randomUUID().toString();
-                //test the object.tostring result
-                mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createColumn(columnKeyUUID, eventMetaData.toString(), stringSerializer, stringSerializer));
-            }
-        }
-        if (eventData.getCorrelationData() != null) {
-            for (Object eventCorrelationData : eventData.getCorrelationData()) {
-                String columnKeyUUID = UUID.randomUUID().toString();
-                //test the object.tostring result
-                mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createColumn(columnKeyUUID, eventCorrelationData.toString(), stringSerializer, stringSerializer));
-            }
-        }
-        if (eventData.getPayloadData() != null) {
-            for (Object eventPayloadData : eventData.getPayloadData()) {
-                String columnKeyUUID = UUID.randomUUID().toString();
-                //test the object.tostring result
-                mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createColumn(columnKeyUUID, eventPayloadData.toString(), stringSerializer, stringSerializer));
-            }
-        }
-        mutator.execute();
-    }
-
-    public String getStreamId(String domainName, String streamName, String streamVersion) {
-
-        String streamIdKey = createStreamIdKey(streamName, streamVersion);
-        //Careate KS if it is not there - DO We really need this in getStreamId
-//        if (!isKeyspaceExist(BAM_META_KEYSPACE)) {
-//            Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
-//            ColumnFamilyDefinition columnFamilyDefinition = HFactory.
-//                    createColumnFamilyDefinition(BAM_META_KEYSPACE, BAM_META_STREAM_ID_CF);
-//            cluster.addColumnFamily(columnFamilyDefinition);
+//    public void insertEventDataColumnKeyLess(Event eventData, String userName, String userPassword) throws MalformedStreamDefinitionException {
+//        Cluster tenantCluster = getCassandraConnector(userName, userPassword);
+//        EventStreamDefinition eventStreamDef = getStreamDefinition(tenantCluster, eventData.getStreamId());
+//        String streamColumnFamily = eventData.getStreamId();
+//        //To change body of created methods use File | Settings | File Templates.
+//        Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
+//        Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());
+//        // CF key  - to be changed based on analyser
+//        UUID uuid = UUID.randomUUID();
+//        String randomUUIDString = uuid.toString();
+//        //mutator.insert(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(EVENT_DATA, eventData));
+//        //add / dupicate CF meta data in the columns
+//        mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_NAME_KEY, eventStreamDef.getName()));
+//        mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_VERSION_KEY, eventStreamDef.getVersion()));
+//        if (eventStreamDef.getDescription() != null && !eventStreamDef.getDescription().isEmpty()) {
+//            mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_DESCRIPTION_KEY, eventStreamDef.getDescription()));
 //        }
-        Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
+//        if (eventStreamDef.getNickName() != null && !eventStreamDef.getNickName().isEmpty()) {
+//            mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createStringColumn(STREAM_NICK_NAME_KEY, eventStreamDef.getNickName()));
+//        }
+//
+//        if (eventData.getMetaData() != null) {
+//            for (Object eventMetaData : eventData.getMetaData()) {
+//                String columnKeyUUID = UUID.randomUUID().toString();
+//                //test the object.tostring result
+//                mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createColumn(columnKeyUUID, eventMetaData.toString(), stringSerializer, stringSerializer));
+//            }
+//        }
+//        if (eventData.getCorrelationData() != null) {
+//            for (Object eventCorrelationData : eventData.getCorrelationData()) {
+//                String columnKeyUUID = UUID.randomUUID().toString();
+//                //test the object.tostring result
+//                mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createColumn(columnKeyUUID, eventCorrelationData.toString(), stringSerializer, stringSerializer));
+//            }
+//        }
+//        if (eventData.getPayloadData() != null) {
+//            for (Object eventPayloadData : eventData.getPayloadData()) {
+//                String columnKeyUUID = UUID.randomUUID().toString();
+//                //test the object.tostring result
+//                mutator.addInsertion(randomUUIDString, streamColumnFamily, HFactory.createColumn(columnKeyUUID, eventPayloadData.toString(), stringSerializer, stringSerializer));
+//            }
+//        }
+//        mutator.execute();
+//    }
+
+
+    public EventStreamDefinition getStreamDefinition(Cluster tenantCluster, String streamId) throws MalformedStreamDefinitionException {
+        Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
         ColumnQuery<String, String, String> columnQuery =
                 HFactory.createStringColumnQuery(keyspace);
-        columnQuery.setColumnFamily(BAM_META_STREAM_ID_CF).setKey(streamIdKey).setName(STREAM_ID_NAME);
-        QueryResult<HColumn<String, String>> result = columnQuery.execute();
-        HColumn<String, String> hColumn = result.get();
-        if (hColumn != null) {
-            return hColumn.getValue();
-        }
-        return null;
-
-    }
-
-    public void saveStreamDefinitionToCSS(String domainName,
-                                          EventStreamDefinition eventStreamDefinition) {
-        //Create KS if it no there
-        if (!isKeyspaceExist(BAM_META_KEYSPACE)) {
-            HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
-            ColumnFamilyDefinition columnFamilyDefinition = HFactory.
-                    createColumnFamilyDefinition(BAM_META_KEYSPACE, BAM_META_STREAM_ID_CF);
-            cluster.addColumnFamily(columnFamilyDefinition);
-            columnFamilyDefinition = HFactory.
-                    createColumnFamilyDefinition(BAM_META_KEYSPACE, BAM_META_STREAM_DEF_CF);
-            cluster.addColumnFamily(columnFamilyDefinition);
-        }
-        Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
-        //add streamId to Stream Definition CF
-        Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());
-        String streamIdKey = createStreamIdKey(eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
-        mutator.insert(streamIdKey, BAM_META_STREAM_DEF_CF, HFactory.createStringColumn(STREAM_DEF_NAME, EventConverter.convertToJson(eventStreamDefinition)));
-        //add streamId to StreamId CF  - do we need this
-        mutator.insert(streamIdKey, BAM_META_STREAM_ID_CF, HFactory.createStringColumn(STREAM_ID_NAME, streamIdKey));
-        //add CF for the event stream
-
-    }
-
-    public EventStreamDefinition getStreamDefinition(String streamId) throws MalformedStreamDefinitionException {
-        Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
-        ColumnQuery<String, String, String> columnQuery =
-                HFactory.createStringColumnQuery(keyspace);
-        columnQuery.setColumnFamily(BAM_META_STREAM_DEF_CF).setKey(streamId).setName(STREAM_ID_NAME);
+        columnQuery.setColumnFamily(BAM_EVENT_DATA_STREAM_DEF_CF).setKey(streamId).setName(STREAM_DEF);
         QueryResult<HColumn<String, String>> result = columnQuery.execute();
         HColumn<String, String> hColumn = result.get();
         if (hColumn != null) {
@@ -384,37 +344,141 @@ public class CassandraConnector {
         return null;
     }
 
-    private String createStreamIdKey(String streamName, String streamVersion) {
-        return streamName + "-" + streamVersion;
-    }
-
-    public boolean isKeyspaceExist(String keyspaceName) {
-       // Keyspace keyspace = HFactory.createKeyspace(keyspaceName, cluster);
-        if (cluster.describeKeyspace(keyspaceName).getName().equals(BAM_META_KEYSPACE)) {
-            return true;
+    /**
+     * Store stream Id and the stream Id key to Cassandra data store
+     *
+     * @param domainName  Tenant domain name
+     * @param streamIdKey Stream Id Key
+     * @param streamId    Stream Id
+     */
+    public void saveStreamIdToStore(String domainName, String streamIdKey, String streamId) {
+        if (domainName == null) {
+            domainName = WSO2_CARBON_STAND_ALONE;
         }
-        return false;
+        Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
+        Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());
+        mutator.insert(streamId, BAM_META_STREAM_ID_CF, HFactory.createStringColumn(STREAM_DEF_DOMAIN, domainName));
+        mutator.addInsertion(streamIdKey, BAM_META_STREAM_ID_KEY_CF, HFactory.createStringColumn(STREAM_DEF_DOMAIN, domainName));
+        mutator.addInsertion(streamId, BAM_META_STREAMID_TO_STREAM_ID_KEY, HFactory.createStringColumn(STREAM_ID_KEY, streamId));
+        mutator.execute();
     }
 
-//    public boolean isColumnFamilyExist(String columnFamilyName) {
-//
-//        return false;
-//    }
+    /**
+     * Store event stream definition to Cassandra data store
+     *
+     * @param domainName            Domain name
+     * @param streamId              Stream Id
+     * @param eventStreamDefinition Event stream definition
+     */
+    public void saveStreamDefinitionToStore(String domainName, String streamId, EventStreamDefinition eventStreamDefinition) {
+        if (domainName == null) {
+            domainName = WSO2_CARBON_STAND_ALONE;
+        }
+        Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
+        Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());
+        mutator.addInsertion(domainName + "-" + streamId, BAM_META_STREAM_DEF_CF, HFactory.createStringColumn(STREAM_DEF, EventConverter.convertToJson(eventStreamDefinition)));
+        //mutator.addInsertion(domainName, BAM_META_STREAM_DEF_CF, HFactory.createStringColumn(STREAM_DEF, EventConverter.convertToJson(eventStreamDefinition)));
+        mutator.execute();
 
-    public Collection<EventStreamDefinition> getAllStreamDefinition() throws MalformedStreamDefinitionException {
+    }
+
+    /**
+     * Returns Stream ID stored under  key domainName-streamIdKey
+     *
+     * @param domainName  Tenant domain
+     * @param streamIdKey Stream Id key streamName::streamVersion
+     * @return Returns stored stream Ids
+     */
+    public String getStreamIdFromStore(String domainName, String streamIdKey) {
+        if (domainName == null) {
+            domainName = WSO2_CARBON_STAND_ALONE;
+        }
+        Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
+        ColumnQuery<String, String, String> columnQuery =
+                HFactory.createStringColumnQuery(keyspace);
+        columnQuery.setColumnFamily(BAM_META_STREAM_ID_CF).setKey(domainName + "-" + streamIdKey).setName(STREAM_ID);
+        QueryResult<HColumn<String, String>> result = columnQuery.execute();
+        HColumn<String, String> hColumn = result.get();
+        if (hColumn != null) {
+            return hColumn.getValue();
+        }
+        return null;
+    }
+
+    /**
+     * Retrun Stream Definition   stored in stream definition column family under key domainName-streamIdKey
+     *
+     * @param domainName Tenant domain name
+     * @param streamId   Stream Id
+     * @return Returns event stream definition stored in BAM meta data keyspace
+     * @throws MalformedStreamDefinitionException
+     *
+     */
+
+    public EventStreamDefinition getStreamDefinitionFromStore(String domainName, String streamId) throws MalformedStreamDefinitionException {
+        if (domainName == null) {
+            domainName = WSO2_CARBON_STAND_ALONE;
+        }
+        Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
+        ColumnQuery<String, String, String> columnQuery =
+                HFactory.createStringColumnQuery(keyspace);
+        columnQuery.setColumnFamily(BAM_META_STREAM_DEF_CF).setKey(domainName + "-" + streamId).setName(STREAM_DEF);
+        QueryResult<HColumn<String, String>> result = columnQuery.execute();
+        HColumn<String, String> hColumn = result.get();
+        if (hColumn != null) {
+            return EventConverter.convertFromJson(hColumn.getValue());
+        }
+        return null;
+
+    }
+
+    /**
+     * Retrun all stream definitions stored under one domain
+     *
+     * @param domainName    Tenant domain name
+     * @return                             All stream definitions related to given tenant domain
+     * @throws MalformedStreamDefinitionException
+     *
+     */
+    public Collection<EventStreamDefinition> getAllStreamDefinitionFromStore(String domainName) throws MalformedStreamDefinitionException {
+        if (domainName == null) {
+            domainName = WSO2_CARBON_STAND_ALONE;
+        }
         List<EventStreamDefinition> eventStreamDefinition = new ArrayList<EventStreamDefinition>();
         Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
         ColumnQuery<String, String, String> columnQuery =
                 HFactory.createStringColumnQuery(keyspace);
-        StringKeyIterator stringKeyIterator = new StringKeyIterator(keyspace,BAM_META_STREAM_DEF_CF);
-        for (String streamId :stringKeyIterator){
-            columnQuery.setColumnFamily(BAM_META_STREAM_DEF_CF).setKey(streamId).setName(STREAM_ID_NAME);
-            QueryResult<HColumn<String, String>> result = columnQuery.execute();
-            HColumn<String, String> hColumn = result.get();
+        IndexedSlicesQuery<String, String, String> query = HFactory.createIndexedSlicesQuery(keyspace, stringSerializer, stringSerializer, stringSerializer);
+        query.addEqualsExpression(DOMAIN_NAME, domainName);
+        query.setColumnFamily(BAM_META_STREAM_ID_CF);
+        query.setStartKey("");
+        QueryResult<OrderedRows<String, String, String>> result = query.execute();
+        for (Row<String, String, String> row : result.get()) {
+            if (row == null) {
+                continue;
+            }
+            String streamId = row.getKey();
+            columnQuery.setColumnFamily(BAM_META_STREAM_DEF_CF).setKey(domainName + "-" + streamId).setName(STREAM_DEF);
+            QueryResult<HColumn<String, String>> streamDef = columnQuery.execute();
+            HColumn<String, String> hColumn = streamDef.get();
             if (hColumn != null) {
                 eventStreamDefinition.add(EventConverter.convertFromJson(hColumn.getValue()));
             }
         }
-      return eventStreamDefinition;
+        return eventStreamDefinition;
+    }
+
+    /**
+     * Insert event definition to tenant event definition column family
+     * @param userName                         Tenant user name
+     * @param userPassword                  Tenant password
+     * @param eventStreamDefinition     Event stream definition
+     */
+    public void insertEventDefinition(String userName, String userPassword, EventStreamDefinition eventStreamDefinition) {
+        Cluster tenantCluster = getCassandraConnector(userName, userPassword);
+        Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
+        Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());
+        mutator.addInsertion(eventStreamDefinition.getStreamId(), BAM_EVENT_DATA_STREAM_DEF_CF, HFactory.createStringColumn(STREAM_DEF, EventConverter.convertToJson(eventStreamDefinition)));
+        mutator.execute();
     }
 }

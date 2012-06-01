@@ -7,7 +7,7 @@ no warnings 'all' ;
 my $packs_dir;
 my $stratos_dir;
 my $manager_version='1.1.0-SNAPSHOT';
-my $as_version='4.5.0';
+my $as_version='4.5.0-SNAPSHOT';
 my $stratos_version;
 my $sso_enabled;
 my $create_db;
@@ -262,132 +262,131 @@ if ($manager_enabled eq 'true') {
 		print "SSO provider functionality is disabled\n";
 	}
 }
-exit;
 
 	
-if ($is_enabled eq 'true') {
-	print "\n\nSetting up Stratos Identity...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-is-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	if ($packs_dir eq '') {
-		system "unzip -qu $carbon_dir/products/is/modules/distribution/service/target/wso2stratos-is-$stratos_version.zip -d $stratos_dir";
-	}
-	else {
-	system "unzip -qu $packs_dir/wso2stratos-is-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-is-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing Identity configuration files\n";
-	my $is_base_dir = "setup/is";
-	my $is_target_dir = "setup_target/is";
-    my $ret = config_identity($config_file, $is_base_dir, $is_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "Identity cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-
-	print "Copying Identity configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-is-$stratos_version/repository/conf";
-	system "cp setup_target/is/repository/conf/*.xml  $stratos_dir/wso2stratos-is-$stratos_version/repository/conf";
-	system "cp setup_target/is/repository/conf/security/*.xml  $stratos_dir/wso2stratos-is-$stratos_version/repository/conf/security";
-	system "cp setup_target/is/bin/*  $stratos_dir/wso2stratos-is-$stratos_version/bin";
-    if(-e "setup_target/is/repository/conf/datasources.properties") {
-	    system "cp setup_target/is/repository/conf/datasources.properties  $stratos_dir/wso2stratos-is-$stratos_version/repository/conf";
-    }
-	print "done\n";
-
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-	}
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-is-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-		print "SSO provider functionality is disabled\n";
-	}
-}
-	
-
-
-
-if ($greg_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Governance...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-governance-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	if ($packs_dir eq '') 
-	{
-		system "unzip -qu $carbon_dir/products/greg/modules/distribution/service/target/wso2stratos-governance-$stratos_version.zip -d $stratos_dir";
-	}
-	else 
-	{
-	system "unzip -qu $packs_dir/wso2stratos-governance-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-governance-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing Governance configuration files\n";
-	my $governance_base_dir = "setup/governance";
-	my $governance_target_dir = "setup_target/governance";
-    my $ret = config_governance($config_file, $governance_base_dir, $governance_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "Governance cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-	
-	print "Copying Governance configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-governance-$stratos_version/repository/conf";
-	system "cp setup_target/governance/repository/conf/*.xml  $stratos_dir/wso2stratos-governance-$stratos_version/repository/conf";
-	system "cp setup_target/governance/repository/conf/security/*.xml  $stratos_dir/wso2stratos-governance-$stratos_version/repository/conf/security";
-	system "cp setup_target/governance/bin/*  $stratos_dir/wso2stratos-governance-$stratos_version/bin";
-    if(-e "setup_target/governance/repository/conf/datasources.properties") {
-	    system "cp setup_target/governance/repository/conf/datasources.properties  $stratos_dir/wso2stratos-governance-$stratos_version/repository/conf";
-    }
-	print "done\n";
-
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-	}
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-governance-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-		print "SSO provider functionality is disabled\n";
-	}
-}
-	
-
-
+#if ($is_enabled eq 'true') {
+#	print "\n\nSetting up Stratos Identity...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-is-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	if ($packs_dir eq '') {
+#		system "unzip -qu $carbon_dir/products/is/modules/distribution/service/target/wso2stratos-is-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else {
+#	system "unzip -qu $packs_dir/wso2stratos-is-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-is-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing Identity configuration files\n";
+#	my $is_base_dir = "setup/is";
+#	my $is_target_dir = "setup_target/is";
+#    my $ret = config_identity($config_file, $is_base_dir, $is_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "Identity cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#
+#	print "Copying Identity configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-is-$stratos_version/repository/conf";
+#	system "cp setup_target/is/repository/conf/*.xml  $stratos_dir/wso2stratos-is-$stratos_version/repository/conf";
+#	system "cp setup_target/is/repository/conf/security/*.xml  $stratos_dir/wso2stratos-is-$stratos_version/repository/conf/security";
+#	system "cp setup_target/is/bin/*  $stratos_dir/wso2stratos-is-$stratos_version/bin";
+#    if(-e "setup_target/is/repository/conf/datasources.properties") {
+#	    system "cp setup_target/is/repository/conf/datasources.properties  $stratos_dir/wso2stratos-is-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#	}
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-is-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#		print "SSO provider functionality is disabled\n";
+#	}
+#}
+#	
+#
+#
+#
+#if ($greg_enabled eq 'true') {
+#	print "\n\nSetting up the Stratos Governance...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-governance-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	if ($packs_dir eq '') 
+#	{
+#		system "unzip -qu $carbon_dir/products/greg/modules/distribution/service/target/wso2stratos-governance-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else 
+#	{
+#	system "unzip -qu $packs_dir/wso2stratos-governance-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-governance-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing Governance configuration files\n";
+#	my $governance_base_dir = "setup/governance";
+#	my $governance_target_dir = "setup_target/governance";
+#    my $ret = config_governance($config_file, $governance_base_dir, $governance_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "Governance cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#	
+#	print "Copying Governance configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-governance-$stratos_version/repository/conf";
+#	system "cp setup_target/governance/repository/conf/*.xml  $stratos_dir/wso2stratos-governance-$stratos_version/repository/conf";
+#	system "cp setup_target/governance/repository/conf/security/*.xml  $stratos_dir/wso2stratos-governance-$stratos_version/repository/conf/security";
+#	system "cp setup_target/governance/bin/*  $stratos_dir/wso2stratos-governance-$stratos_version/bin";
+#    if(-e "setup_target/governance/repository/conf/datasources.properties") {
+#	    system "cp setup_target/governance/repository/conf/datasources.properties  $stratos_dir/wso2stratos-governance-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#	}
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-governance-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#		print "SSO provider functionality is disabled\n";
+#	}
+#}
+#	
+#
+#
 if ($as_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Appserver...\n\n";
+	print "\n\nSetting up the Appserver...\n\n";
 	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-as-$stratos_version";
+	system "rm -rf $stratos_dir/wso2as-$as_version";
 	print "done\n";
 	
 	print "Unzipping\n";
 	
 	if ($packs_dir eq '') 
 	{
-		system "unzip -qu $carbon_dir/products/as/modules/distribution/service/target/wso2stratos-as-$stratos_version.zip -d $stratos_dir";
+		system "unzip -qu $carbon_dir/products/as/modules/distribution/service/target/wso2as-$as_version.zip -d $stratos_dir";
 	}
 	else
 	{
-		system "unzip -qu $packs_dir/wso2stratos-as-$stratos_version.zip -d $stratos_dir";
+		system "unzip -qu $packs_dir/wso2as-$as_version.zip -d $stratos_dir";
 	}
 	print "done\n";
 	
 	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-as-$stratos_version/repository/components/lib";
+	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2as-$as_version/repository/components/lib";
 	print "done\n";
 	
 	print "Changing Application Server configuration files\n";
@@ -401,12 +400,12 @@ if ($as_enabled eq 'true') {
 	
 	print "Copying Application Server configuration files\n";
 
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-as-$stratos_version/repository/conf";
-	system "cp setup_target/as/repository/conf/*.xml  $stratos_dir/wso2stratos-as-$stratos_version/repository/conf";
-	system "cp setup_target/as/repository/conf/security/*.xml  $stratos_dir/wso2stratos-as-$stratos_version/repository/conf/security";
-	system "cp setup_target/as/bin/*  $stratos_dir/wso2stratos-as-$stratos_version/bin";
+	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2as-$as_version/repository/conf";
+	system "cp setup_target/as/repository/conf/*.xml  $stratos_dir/wso2as-$as_version/repository/conf";
+	system "cp setup_target/as/repository/conf/security/*.xml  $stratos_dir/wso2as-$as_version/repository/conf/security";
+	system "cp setup_target/as/bin/*  $stratos_dir/wso2as-$as_version/bin";
     if(-e "setup_target/as/repository/conf/datasources.properties") {
-	    system "cp setup_target/as/repository/conf/datasources.properties  $stratos_dir/wso2stratos-as-$stratos_version/repository/conf";
+	    system "cp setup_target/as/repository/conf/datasources.properties  $stratos_dir/wso2as-$as_version/repository/conf";
     }
 	print "done\n";
 	
@@ -415,504 +414,506 @@ if ($as_enabled eq 'true') {
 	}
 	else
 	{
-	    system "rm $stratos_dir/wso2stratos-as-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-		print "SSO provider functionality is disabled\n";
-	}
-}
-	
-
-
-if ($bam_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Business Activity Monitor...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-bam-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	
-	if ($packs_dir eq '') 
-	{
-		system "unzip -qu $carbon_dir/products/bam/modules/distribution/service/target/wso2stratos-bam-$stratos_version.zip -d $stratos_dir";
-	}
-	else
-	{
-		system "unzip -qu $packs_dir/wso2stratos-bam-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-bam-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing BAM configuration files\n";
-	my $bam_base_dir = "setup/bam";
-	my $bam_target_dir = "setup_target/bam";
-    my $ret = config_bam($config_file, $bam_base_dir, $bam_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "BAM cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-	
-	print "Copying BAM configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf";
-	system "cp setup_target/bam/repository/conf/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf";
-	system "cp setup_target/bam/repository/conf/security/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf/security";
-	system "cp setup_target/bam/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf/etc";
-	system "cp setup_target/bam/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf/tomcat";
-	system "cp setup_target/bam/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf/advanced";
-	system "cp setup_target/bam/bin/*  $stratos_dir/wso2stratos-bam-$stratos_version/bin";
-    if(-e "setup_target/bam/repository/conf/datasources.properties") {
-	    system "cp setup_target/bam/repository/conf/datasources.properties  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf";
-    }
-	print "done\n";
-
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-    }
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-bam-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-	print "SSO provider functionality is disabled\n";
-	}
-}	
-
-
-if ($bps_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Business Process Server...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-bps-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	
-	if ($packs_dir eq '') 
-	{
-		system "unzip -qu $carbon_dir/products/bps/modules/distribution/service/target/wso2stratos-bps-$stratos_version.zip -d $stratos_dir";
-	}
-	else
-	{
-		system "unzip -qu $packs_dir/wso2stratos-bps-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-bps-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing BPS configuration files\n";
-	my $bps_base_dir = "setup/bps";
-	my $bps_target_dir = "setup_target/bps";
-    my $ret = config_bps($config_file, $bps_base_dir, $bps_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "BPS cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-	
-	print "Copying BPS configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf";
-	system "cp setup_target/bps/repository/conf/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf";
-	system "cp setup_target/bps/repository/conf/security/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf/security";
-	system "cp setup_target/bps/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf/etc";
-	system "cp setup_target/bps/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf/tomcat";
-	system "cp setup_target/bps/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf/advanced";
-	system "cp setup_target/bps/bin/*  $stratos_dir/wso2stratos-bps-$stratos_version/bin";
-    if(-e "setup_target/bps/repository/conf/datasources.properties") {
-	    system "cp setup_target/bps/repository/conf/datasources.properties  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf";
-    }
-	print "done\n";
-	
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-	}
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-bps-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+	    system "rm $stratos_dir/wso2as-$as_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
 		print "SSO provider functionality is disabled\n";
 	}
 }
 
-	
-if ($brs_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Business Rules Server...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-brs-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	
-	if ($packs_dir eq '') 
-	{
-		system "unzip -qu $carbon_dir/products/brs/modules/distribution/service/target/wso2stratos-brs-$stratos_version.zip -d $stratos_dir";
-	}
-	else
-	{
-	system "unzip -qu $packs_dir/wso2stratos-brs-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-brs-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing BRS configuration files\n";
-	my $brs_base_dir = "setup/brs";
-	my $brs_target_dir = "setup_target/brs";
-    my $ret = config_brs($config_file, $brs_base_dir, $brs_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "BRS cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-	
-    
-    print "Copying BRS configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-brs-$stratos_version/repository/conf";
-	system "cp setup_target/brs/repository/conf/*.xml  $stratos_dir/wso2stratos-brs-$stratos_version/repository/conf";
-	system "cp setup_target/brs/repository/conf/security/*.xml  $stratos_dir/wso2stratos-brs-$stratos_version/repository/conf/security";
-	system "cp setup_target/brs/bin/*  $stratos_dir/wso2stratos-brs-$stratos_version/bin";
-    if(-e "setup_target/brs/repository/conf/datasources.properties") {
-        system "cp setup_target/brs/repository/conf/datasources.properties  $stratos_dir/wso2stratos-brs-$stratos_version/repository/conf";
-    }
-	print "done\n";
-	
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-	}
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-brs-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-		print "SSO provider functionality is disabled\n";
-	}
-}
-	
-
-if ($cep_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Complex Event Processing Server...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-cep-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	
-	if ($packs_dir eq '') 
-	{
-		system "unzip -qu $carbon_dir/products/cep/modules/distribution/service/target/wso2stratos-cep-$stratos_version.zip -d $stratos_dir";
-	}
-	else
-	{
-		system "unzip -qu $packs_dir/wso2stratos-cep-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-cep-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing CEP configuration files\n";
-	my $cep_base_dir = "setup/cep";
-	my $cep_target_dir = "setup_target/cep";
-    my $ret = config_cep($config_file, $cep_base_dir, $cep_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "CEP cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-	
-	
-	print "Copying CEP configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf";
-	system "cp setup_target/cep/repository/conf/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf";
-	system "cp setup_target/cep/repository/conf/security/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf/security";
-	system "cp setup_target/cep/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf/etc";
-	system "cp setup_target/cep/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf/tomcat";
-	system "cp setup_target/cep/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf/advanced";
-	system "cp setup_target/cep/bin/*  $stratos_dir/wso2stratos-cep-$stratos_version/bin";
-    if(-e "setup_target/cep/repository/conf/datasources.properties") {
-	    system "cp setup_target/cep/repository/conf/datasources.properties  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf";
-    }
-	print "done\n";
-	
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-	}
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-cep-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-		print "SSO provider functionality is disabled\n";
-	}
-}
-	
-
-if ($dss_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Data Serviecs Server...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-dss-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	
-	if ($packs_dir eq '') 
-	{
-		system "unzip -qu $carbon_dir/products/dss/modules/distribution/service/target/wso2stratos-dss-$stratos_version.zip -d $stratos_dir";
-	}
-	else
-	{
-		system "unzip -qu $packs_dir/wso2stratos-dss-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-dss-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing DSS configuration files\n";
-	my $dss_base_dir = "setup/dss";
-	my $dss_target_dir = "setup_target/dss";
-    my $ret = config_dss($config_file, $dss_base_dir, $dss_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "DSS cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-	
-	
-	print "Copying DSS configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-dss-$stratos_version/repository/conf";
-	system "cp setup_target/dss/repository/conf/*.xml  $stratos_dir/wso2stratos-dss-$stratos_version/repository/conf";
-	system "cp setup_target/dss/repository/conf/security/*.xml  $stratos_dir/wso2stratos-dss-$stratos_version/repository/conf/security";
-	system "cp setup_target/dss/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-dss-$stratos_version/repository/conf/advanced";
-	system "cp setup_target/dss/bin/*  $stratos_dir/wso2stratos-dss-$stratos_version/bin";
-    if(-e "setup_target/dss/repository/conf/datasources.properties") {
-        system "cp setup_target/dss/repository/conf/datasources.properties  $stratos_dir/wso2stratos-dss-$stratos_version/repository/conf";
-    }
-	print "done\n";
-	
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-	}
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-dss-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-		print "SSO provider functionality is disabled\n";
-	}
-}
-
-	
-
-if ($esb_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Enterprice Service Bus...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-esb-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	
-	if ($packs_dir eq '') 
-	{
-		system "unzip -qu $carbon_dir/products/esb/modules/distribution/service/target/wso2stratos-esb-$stratos_version.zip -d $stratos_dir";
-	}
-	else
-	{
-		system "unzip -qu $packs_dir/wso2stratos-esb-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-esb-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing ESB configuration files\n";
-	my $esb_base_dir = "setup/esb";
-	my $esb_target_dir = "setup_target/esb";
-    my $ret = config_esb($config_file, $esb_base_dir, $esb_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "ESB cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-	
-	
-	print "Copying ESB configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-esb-$stratos_version/repository/conf";
-	system "cp setup_target/esb/repository/conf/*.xml  $stratos_dir/wso2stratos-esb-$stratos_version/repository/conf";
-	system "cp setup_target/esb/repository/conf/security/*.xml  $stratos_dir/wso2stratos-esb-$stratos_version/repository/conf/security";
-	system "cp setup_target/esb/bin/*  $stratos_dir/wso2stratos-esb-$stratos_version/bin";
-    if(-e "setup_target/esb/repository/conf/datasources.properties") {
-        system "cp setup_target/esb/repository/conf/datasources.properties  $stratos_dir/wso2stratos-esb-$stratos_version/repository/conf";
-    }
-	print "done\n";
-	
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-	}
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-esb-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-		print "SSO provider functionality is disabled\n";
-	}
-}
-
-	
-
-if ($gs_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Gadgets...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-gs-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	
-	if ($packs_dir eq '') 
-	{
-		system "unzip -qu $carbon_dir/products/gs/modules/distribution/service/target/wso2stratos-gs-$stratos_version.zip -d $stratos_dir";
-	}
-	else
-	{
-		system "unzip -qu $packs_dir/wso2stratos-gs-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-gs-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing GS configuration files\n";
-	my $gs_base_dir = "setup/gs";
-	my $gs_target_dir = "setup_target/gs";
-    my $ret = config_gs($config_file, $gs_base_dir, $gs_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "GS cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-	
-	print "Copying GS configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf";
-	system "cp setup_target/gs/repository/conf/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf";
-	system "cp setup_target/gs/repository/conf/security/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf/security";
-	system "cp setup_target/gs/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf/etc";
-	system "cp setup_target/gs/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf/tomcat";
-	system "cp setup_target/gs/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf/advanced";
-	system "cp setup_target/gs/bin/*  $stratos_dir/wso2stratos-gs-$stratos_version/bin";
-    if(-e "setup_target/gs/repository/conf/datasources.properties") {
-	    system "cp setup_target/gs/repository/conf/datasources.properties  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf";
-    }
-	print "done\n";
-	
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-	}
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-gs-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-		print "SSO provider functionality is disabled\n";
-	}
-}
-	
-
-if ($mb_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Message Broker...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-mb-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	
-	if ($packs_dir eq '') 
-	{
-	system "unzip -qu $carbon_dir/products/mb/modules/distribution/service/target/wso2stratos-mb-$stratos_version.zip -d $stratos_dir";
-	}
-	else
-	{
-		system "unzip -qu $packs_dir/wso2stratos-mb-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-mb-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing MB configuration files\n";
-	my $mb_base_dir = "setup/mb";
-	my $mb_target_dir = "setup_target/mb";
-    my $ret = config_mb($config_file, $mb_base_dir, $mb_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "MB cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-	
-	print "Copying MB configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf";
-	system "cp setup_target/mb/repository/conf/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf";
-	system "cp setup_target/mb/repository/conf/security/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf/security";
-	system "cp setup_target/mb/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf/etc";
-	system "cp setup_target/mb/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf/tomcat";
-	system "cp setup_target/mb/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf/advanced";
-	system "cp setup_target/mb/bin/*  $stratos_dir/wso2stratos-mb-$stratos_version/bin";
-    if(-e "setup_target/mb/repository/conf/datasources.properties") {
-	    system "cp setup_target/mb/repository/conf/datasources.properties  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf";
-    }
-	print "done\n";
-	
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-	}
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-mb-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-		print "SSO provider functionality is disabled\n";
-	}
-}	
-
-	
-if ($ms_enabled eq 'true') {
-	print "\n\nSetting up the Stratos Mashup Server...\n\n";
-	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-ms-$stratos_version";
-	print "done\n";
-	
-	print "Unzipping\n";
-	
-	if ($packs_dir eq '') 
-	{
-		system "unzip -qu $carbon_dir/products/ms/modules/distribution/service/target/wso2stratos-ms-$stratos_version.zip -d $stratos_dir";
-	}
-	else
-	{
-		system "unzip -qu $packs_dir/wso2stratos-ms-$stratos_version.zip -d $stratos_dir";
-	}
-	print "done\n";
-	
-	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-ms-$stratos_version/repository/components/lib";
-	print "done\n";
-	
-	print "Changing MS configuration files\n";
-	my $ms_base_dir = "setup/ms";
-	my $ms_target_dir = "setup_target/ms";
-    my $ret = config_mashup($config_file, $ms_base_dir, $ms_target_dir, $sso_enabled, $dbuser, $dbpasswd);
-    if($ret == 0) {
-        die "MS cofniguratin initialization failed \n";
-    }	
-	print "done\n";
-	
-	
-	print "Copying MS configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf";
-	system "cp setup_target/ms/repository/conf/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf";
-	system "cp setup_target/ms/repository/conf/security/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf/security";
-	system "cp setup_target/ms/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf/etc";
-	system "cp setup_target/ms/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf/tomcat";
-	system "cp setup_target/ms/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf/advanced";
-	system "cp setup_target/ms/bin/*  $stratos_dir/wso2stratos-ms-$stratos_version/bin";
-    if(-e "setup_target/ms/repository/conf/datasources.properties") {
-	    system "cp setup_target/ms/repository/conf/datasources.properties  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf";
-    }
-	print "done\n";
-	
-	if ($sso_enabled eq 'true') {
-		print "SSO provider functionality is enabled\n";
-	}
-	else
-	{
-	    system "rm $stratos_dir/wso2stratos-ms-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
-		print "SSO provider functionality is disabled\n";
-	}
-}
+exit;
+#	
+#
+#
+#if ($bam_enabled eq 'true') {
+#	print "\n\nSetting up the Stratos Business Activity Monitor...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-bam-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	
+#	if ($packs_dir eq '') 
+#	{
+#		system "unzip -qu $carbon_dir/products/bam/modules/distribution/service/target/wso2stratos-bam-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else
+#	{
+#		system "unzip -qu $packs_dir/wso2stratos-bam-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-bam-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing BAM configuration files\n";
+#	my $bam_base_dir = "setup/bam";
+#	my $bam_target_dir = "setup_target/bam";
+#    my $ret = config_bam($config_file, $bam_base_dir, $bam_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "BAM cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#	
+#	print "Copying BAM configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf";
+#	system "cp setup_target/bam/repository/conf/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf";
+#	system "cp setup_target/bam/repository/conf/security/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf/security";
+#	system "cp setup_target/bam/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf/etc";
+#	system "cp setup_target/bam/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf/tomcat";
+#	system "cp setup_target/bam/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf/advanced";
+#	system "cp setup_target/bam/bin/*  $stratos_dir/wso2stratos-bam-$stratos_version/bin";
+#    if(-e "setup_target/bam/repository/conf/datasources.properties") {
+#	    system "cp setup_target/bam/repository/conf/datasources.properties  $stratos_dir/wso2stratos-bam-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#    }
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-bam-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#	print "SSO provider functionality is disabled\n";
+#	}
+#}	
+#
+#
+#if ($bps_enabled eq 'true') {
+#	print "\n\nSetting up the Stratos Business Process Server...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-bps-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	
+#	if ($packs_dir eq '') 
+#	{
+#		system "unzip -qu $carbon_dir/products/bps/modules/distribution/service/target/wso2stratos-bps-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else
+#	{
+#		system "unzip -qu $packs_dir/wso2stratos-bps-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-bps-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing BPS configuration files\n";
+#	my $bps_base_dir = "setup/bps";
+#	my $bps_target_dir = "setup_target/bps";
+#    my $ret = config_bps($config_file, $bps_base_dir, $bps_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "BPS cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#	
+#	print "Copying BPS configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf";
+#	system "cp setup_target/bps/repository/conf/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf";
+#	system "cp setup_target/bps/repository/conf/security/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf/security";
+#	system "cp setup_target/bps/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf/etc";
+#	system "cp setup_target/bps/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf/tomcat";
+#	system "cp setup_target/bps/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf/advanced";
+#	system "cp setup_target/bps/bin/*  $stratos_dir/wso2stratos-bps-$stratos_version/bin";
+#    if(-e "setup_target/bps/repository/conf/datasources.properties") {
+#	    system "cp setup_target/bps/repository/conf/datasources.properties  $stratos_dir/wso2stratos-bps-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#	
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#	}
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-bps-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#		print "SSO provider functionality is disabled\n";
+#	}
+#}
+#
+#	
+#if ($brs_enabled eq 'true') {
+#	print "\n\nSetting up the Stratos Business Rules Server...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-brs-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	
+#	if ($packs_dir eq '') 
+#	{
+#		system "unzip -qu $carbon_dir/products/brs/modules/distribution/service/target/wso2stratos-brs-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else
+#	{
+#	system "unzip -qu $packs_dir/wso2stratos-brs-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-brs-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing BRS configuration files\n";
+#	my $brs_base_dir = "setup/brs";
+#	my $brs_target_dir = "setup_target/brs";
+#    my $ret = config_brs($config_file, $brs_base_dir, $brs_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "BRS cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#	
+#    
+#    print "Copying BRS configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-brs-$stratos_version/repository/conf";
+#	system "cp setup_target/brs/repository/conf/*.xml  $stratos_dir/wso2stratos-brs-$stratos_version/repository/conf";
+#	system "cp setup_target/brs/repository/conf/security/*.xml  $stratos_dir/wso2stratos-brs-$stratos_version/repository/conf/security";
+#	system "cp setup_target/brs/bin/*  $stratos_dir/wso2stratos-brs-$stratos_version/bin";
+#    if(-e "setup_target/brs/repository/conf/datasources.properties") {
+#        system "cp setup_target/brs/repository/conf/datasources.properties  $stratos_dir/wso2stratos-brs-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#	
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#	}
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-brs-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#		print "SSO provider functionality is disabled\n";
+#	}
+#}
+#	
+#
+#if ($cep_enabled eq 'true') {
+#	print "\n\nSetting up the Stratos Complex Event Processing Server...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-cep-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	
+#	if ($packs_dir eq '') 
+#	{
+#		system "unzip -qu $carbon_dir/products/cep/modules/distribution/service/target/wso2stratos-cep-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else
+#	{
+#		system "unzip -qu $packs_dir/wso2stratos-cep-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-cep-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing CEP configuration files\n";
+#	my $cep_base_dir = "setup/cep";
+#	my $cep_target_dir = "setup_target/cep";
+#    my $ret = config_cep($config_file, $cep_base_dir, $cep_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "CEP cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#	
+#	
+#	print "Copying CEP configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf";
+#	system "cp setup_target/cep/repository/conf/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf";
+#	system "cp setup_target/cep/repository/conf/security/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf/security";
+#	system "cp setup_target/cep/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf/etc";
+#	system "cp setup_target/cep/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf/tomcat";
+#	system "cp setup_target/cep/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf/advanced";
+#	system "cp setup_target/cep/bin/*  $stratos_dir/wso2stratos-cep-$stratos_version/bin";
+#    if(-e "setup_target/cep/repository/conf/datasources.properties") {
+#	    system "cp setup_target/cep/repository/conf/datasources.properties  $stratos_dir/wso2stratos-cep-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#	
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#	}
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-cep-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#		print "SSO provider functionality is disabled\n";
+#	}
+#}
+#	
+#
+#if ($dss_enabled eq 'true') {
+#	print "\n\nSetting up the Stratos Data Serviecs Server...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-dss-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	
+#	if ($packs_dir eq '') 
+#	{
+#		system "unzip -qu $carbon_dir/products/dss/modules/distribution/service/target/wso2stratos-dss-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else
+#	{
+#		system "unzip -qu $packs_dir/wso2stratos-dss-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-dss-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing DSS configuration files\n";
+#	my $dss_base_dir = "setup/dss";
+#	my $dss_target_dir = "setup_target/dss";
+#    my $ret = config_dss($config_file, $dss_base_dir, $dss_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "DSS cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#	
+#	
+#	print "Copying DSS configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-dss-$stratos_version/repository/conf";
+#	system "cp setup_target/dss/repository/conf/*.xml  $stratos_dir/wso2stratos-dss-$stratos_version/repository/conf";
+#	system "cp setup_target/dss/repository/conf/security/*.xml  $stratos_dir/wso2stratos-dss-$stratos_version/repository/conf/security";
+#	system "cp setup_target/dss/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-dss-$stratos_version/repository/conf/advanced";
+#	system "cp setup_target/dss/bin/*  $stratos_dir/wso2stratos-dss-$stratos_version/bin";
+#    if(-e "setup_target/dss/repository/conf/datasources.properties") {
+#        system "cp setup_target/dss/repository/conf/datasources.properties  $stratos_dir/wso2stratos-dss-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#	
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#	}
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-dss-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#		print "SSO provider functionality is disabled\n";
+#	}
+#}
+#
+#	
+#
+#if ($esb_enabled eq 'true') {
+#	print "\n\nSetting up the Stratos Enterprice Service Bus...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-esb-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	
+#	if ($packs_dir eq '') 
+#	{
+#		system "unzip -qu $carbon_dir/products/esb/modules/distribution/service/target/wso2stratos-esb-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else
+#	{
+#		system "unzip -qu $packs_dir/wso2stratos-esb-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-esb-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing ESB configuration files\n";
+#	my $esb_base_dir = "setup/esb";
+#	my $esb_target_dir = "setup_target/esb";
+#    my $ret = config_esb($config_file, $esb_base_dir, $esb_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "ESB cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#	
+#	
+#	print "Copying ESB configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-esb-$stratos_version/repository/conf";
+#	system "cp setup_target/esb/repository/conf/*.xml  $stratos_dir/wso2stratos-esb-$stratos_version/repository/conf";
+#	system "cp setup_target/esb/repository/conf/security/*.xml  $stratos_dir/wso2stratos-esb-$stratos_version/repository/conf/security";
+#	system "cp setup_target/esb/bin/*  $stratos_dir/wso2stratos-esb-$stratos_version/bin";
+#    if(-e "setup_target/esb/repository/conf/datasources.properties") {
+#        system "cp setup_target/esb/repository/conf/datasources.properties  $stratos_dir/wso2stratos-esb-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#	
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#	}
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-esb-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#		print "SSO provider functionality is disabled\n";
+#	}
+#}
+#
+#	
+#
+#if ($gs_enabled eq 'true') {
+#	print "\n\nSetting up the Stratos Gadgets...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-gs-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	
+#	if ($packs_dir eq '') 
+#	{
+#		system "unzip -qu $carbon_dir/products/gs/modules/distribution/service/target/wso2stratos-gs-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else
+#	{
+#		system "unzip -qu $packs_dir/wso2stratos-gs-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-gs-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing GS configuration files\n";
+#	my $gs_base_dir = "setup/gs";
+#	my $gs_target_dir = "setup_target/gs";
+#    my $ret = config_gs($config_file, $gs_base_dir, $gs_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "GS cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#	
+#	print "Copying GS configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf";
+#	system "cp setup_target/gs/repository/conf/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf";
+#	system "cp setup_target/gs/repository/conf/security/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf/security";
+#	system "cp setup_target/gs/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf/etc";
+#	system "cp setup_target/gs/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf/tomcat";
+#	system "cp setup_target/gs/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf/advanced";
+#	system "cp setup_target/gs/bin/*  $stratos_dir/wso2stratos-gs-$stratos_version/bin";
+#    if(-e "setup_target/gs/repository/conf/datasources.properties") {
+#	    system "cp setup_target/gs/repository/conf/datasources.properties  $stratos_dir/wso2stratos-gs-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#	
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#	}
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-gs-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#		print "SSO provider functionality is disabled\n";
+#	}
+#}
+#	
+#
+#if ($mb_enabled eq 'true') {
+#	print "\n\nSetting up the Stratos Message Broker...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-mb-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	
+#	if ($packs_dir eq '') 
+#	{
+#	system "unzip -qu $carbon_dir/products/mb/modules/distribution/service/target/wso2stratos-mb-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else
+#	{
+#		system "unzip -qu $packs_dir/wso2stratos-mb-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-mb-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing MB configuration files\n";
+#	my $mb_base_dir = "setup/mb";
+#	my $mb_target_dir = "setup_target/mb";
+#    my $ret = config_mb($config_file, $mb_base_dir, $mb_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "MB cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#	
+#	print "Copying MB configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf";
+#	system "cp setup_target/mb/repository/conf/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf";
+#	system "cp setup_target/mb/repository/conf/security/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf/security";
+#	system "cp setup_target/mb/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf/etc";
+#	system "cp setup_target/mb/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf/tomcat";
+#	system "cp setup_target/mb/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf/advanced";
+#	system "cp setup_target/mb/bin/*  $stratos_dir/wso2stratos-mb-$stratos_version/bin";
+#    if(-e "setup_target/mb/repository/conf/datasources.properties") {
+#	    system "cp setup_target/mb/repository/conf/datasources.properties  $stratos_dir/wso2stratos-mb-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#	
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#	}
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-mb-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#		print "SSO provider functionality is disabled\n";
+#	}
+#}	
+#
+#	
+#if ($ms_enabled eq 'true') {
+#	print "\n\nSetting up the Stratos Mashup Server...\n\n";
+#	print "Removing old files\n";
+#	system "rm -rf $stratos_dir/wso2stratos-ms-$stratos_version";
+#	print "done\n";
+#	
+#	print "Unzipping\n";
+#	
+#	if ($packs_dir eq '') 
+#	{
+#		system "unzip -qu $carbon_dir/products/ms/modules/distribution/service/target/wso2stratos-ms-$stratos_version.zip -d $stratos_dir";
+#	}
+#	else
+#	{
+#		system "unzip -qu $packs_dir/wso2stratos-ms-$stratos_version.zip -d $stratos_dir";
+#	}
+#	print "done\n";
+#	
+#	print "Copying mysql driver\n";
+#	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-ms-$stratos_version/repository/components/lib";
+#	print "done\n";
+#	
+#	print "Changing MS configuration files\n";
+#	my $ms_base_dir = "setup/ms";
+#	my $ms_target_dir = "setup_target/ms";
+#    my $ret = config_mashup($config_file, $ms_base_dir, $ms_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+#    if($ret == 0) {
+#        die "MS cofniguratin initialization failed \n";
+#    }	
+#	print "done\n";
+#	
+#	
+#	print "Copying MS configuration files\n";
+#	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf";
+#	system "cp setup_target/ms/repository/conf/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf";
+#	system "cp setup_target/ms/repository/conf/security/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf/security";
+#	system "cp setup_target/ms/repository/conf/etc/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf/etc";
+#	system "cp setup_target/ms/repository/conf/tomcat/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf/tomcat";
+#	system "cp setup_target/ms/repository/conf/advanced/*.xml  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf/advanced";
+#	system "cp setup_target/ms/bin/*  $stratos_dir/wso2stratos-ms-$stratos_version/bin";
+#    if(-e "setup_target/ms/repository/conf/datasources.properties") {
+#	    system "cp setup_target/ms/repository/conf/datasources.properties  $stratos_dir/wso2stratos-ms-$stratos_version/repository/conf";
+#    }
+#	print "done\n";
+#	
+#	if ($sso_enabled eq 'true') {
+#		print "SSO provider functionality is enabled\n";
+#	}
+#	else
+#	{
+#	    system "rm $stratos_dir/wso2stratos-ms-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+#		print "SSO provider functionality is disabled\n";
+#	}
+#}
 	
 if ($create_db eq 'true') {
 	if ($manager_enabled eq 'true') {

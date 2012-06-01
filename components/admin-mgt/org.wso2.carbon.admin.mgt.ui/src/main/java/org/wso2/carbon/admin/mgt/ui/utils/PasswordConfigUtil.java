@@ -23,6 +23,7 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.admin.mgt.stub.AdminManagementServiceAdminManagementExceptionException;
 import org.wso2.carbon.admin.mgt.ui.clients.AdminManagementClient;
 import org.wso2.carbon.registry.common.ui.UIException;
 
@@ -34,8 +35,10 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.wso2.carbon.admin.mgt.stub.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.admin.mgt.stub.beans.xsd.AdminMgtInfoBean;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import java.io.StringReader;
+import java.rmi.RemoteException;
 import java.util.Iterator;
 
 /**
@@ -99,7 +102,7 @@ public class PasswordConfigUtil {
      * @return if password successfully reset.
      * @throws UIException if password update failed
      */
-    public static boolean updateAdminPasswordWithUserInput(HttpServletRequest request,
+    public static boolean updatePasswordWithUserInput(HttpServletRequest request,
                                                            ServletConfig config,
                                                            HttpSession session) throws UIException {
         String domain = request.getParameter("domain");
@@ -120,13 +123,24 @@ public class PasswordConfigUtil {
 
             AdminManagementClient adminManagementClient =
                     new AdminManagementClient(config, session);
-            return adminManagementClient.updateAdminPasswordWithUserInput(
+            return adminManagementClient.updatePasswordWithUserInput(
                     adminInfoBean, captchaInfoBean, confirmationKey);
-        } catch (Exception e) {
+        } catch (AdminManagementServiceAdminManagementExceptionException e) {
+            String errorMsg = e.getFaultMessage().getAdminManagementException().getErrorMsg();
+            AxisFault fault = new AxisFault(e.getMessage());
+            String msg = errorMsg + " " + fault.getReason() +
+                    " Failed to update password. tenant-domain: " + domain;
+            log.error(errorMsg, e);
+            throw new UIException(msg, e);
+        } catch (RegistryException e) {
             AxisFault fault = new AxisFault(e.getMessage());
             String msg = fault.getReason() + " Failed to update password. tenant-domain: " + domain;
             log.error(msg, e);
-            // we are preserving the original message.
+            throw new UIException(msg, e);
+        } catch (RemoteException e) {
+            AxisFault fault = new AxisFault(e.getMessage());
+            String msg = fault.getReason() + " Failed to update password. tenant-domain: " + domain;
+            log.error(msg, e);
             throw new UIException(msg, e);
         }
     }

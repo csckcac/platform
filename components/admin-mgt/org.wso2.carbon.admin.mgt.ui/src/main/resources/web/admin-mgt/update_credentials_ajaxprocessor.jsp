@@ -18,6 +18,7 @@
 <%@ page import="org.wso2.carbon.registry.core.exceptions.RegistryException" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.captcha.mgt.constants.CaptchaMgtConstants" %>
+<%@ page import="org.wso2.carbon.admin.mgt.stub.exception.xsd.AdminManagementException" %>
 <%@ page import="org.wso2.carbon.admin.mgt.ui.clients.AdminManagementClient" %>
 <%@ page import="org.wso2.carbon.admin.mgt.ui.utils.PasswordConfigUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -30,7 +31,7 @@
 <%
 
     try {
-        boolean isCredentialsUpdated = PasswordConfigUtil.updateAdminPasswordWithUserInput(
+        boolean isCredentialsUpdated = PasswordConfigUtil.updatePasswordWithUserInput(
                 request, config, session);
 
         if (isCredentialsUpdated) {

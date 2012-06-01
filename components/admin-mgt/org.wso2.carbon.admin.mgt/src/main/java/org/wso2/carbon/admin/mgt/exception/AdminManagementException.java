@@ -22,11 +22,17 @@ package org.wso2.carbon.admin.mgt.exception;
  * Admin Management specific exception
  */
 public class AdminManagementException  extends Exception {
+    private String errorMsg;
     public AdminManagementException(String msg, Exception e) {
         super(msg, e);
+        errorMsg = msg;
     }
 
     public AdminManagementException(String msg) {
         super(msg);
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
     }
 }

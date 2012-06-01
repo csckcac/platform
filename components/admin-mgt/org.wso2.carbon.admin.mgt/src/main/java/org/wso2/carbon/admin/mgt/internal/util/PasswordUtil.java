@@ -52,12 +52,9 @@ public class PasswordUtil {
      * @param adminInfoBean user details
      * @return true if the reset request is processed successfully.
      * @throws AdminManagementException if reset password failed.
-     * @throws RegistryException,       if generating the confirmationKey failed
-     * @throws UserStoreException,      if getting the tenant from the TenantManager failed.
      */
     public static boolean initiatePasswordReset(
-            AdminMgtInfoBean adminInfoBean) throws AdminManagementException,
-            org.wso2.carbon.user.api.UserStoreException, RegistryException {
+            AdminMgtInfoBean adminInfoBean) throws AdminManagementException {
         String tenantLessUserName = adminInfoBean.getTenantLessUserName();
         String domainName = adminInfoBean.getTenantDomain();
         String email;
@@ -71,7 +68,14 @@ public class PasswordUtil {
         } else {
             userName = tenantLessUserName + "@" + domainName;
         }
-        Tenant tenant = (Tenant) tenantManager.getTenant(tenantId);
+        Tenant tenant = null;
+        try {
+            tenant = (Tenant) tenantManager.getTenant(tenantId);
+        } catch (org.wso2.carbon.user.api.UserStoreException e) {
+            String msg = "Unable to get the tenant with the tenantId: " + tenantId;
+            log.error(msg, e);
+            throw new AdminManagementException(msg, e);
+        }
 
         try {
             email = getEmailAddressForUser(tenantLessUserName, userName, tenantId, tenant);
@@ -89,9 +93,16 @@ public class PasswordUtil {
 
         // generates the confirmationKey to include in the email, and to set the resource under the
         // adminMgtPath of the tenant.
-        String confirmationKey = generateConfirmationKey(tenantLessUserName, domainName);
+        String confirmationKey = null;
+        try {
+            confirmationKey = generateConfirmationKey(tenantLessUserName, domainName);
+        } catch (RegistryException e) {
+            String msg = "Error in generating the confirmation key for the password reset";
+            log.error(msg, e);
+            throw new AdminManagementException(msg, e);
+        }
         Map<String, String> dataToStore =
-                populateDataMap(adminInfoBean, tenantLessUserName, userName, email, 
+                populateDataMap(adminInfoBean, tenantLessUserName, userName, email,
                         tenantId, confirmationKey);
 
         return verifyPasswordResetRequest(userName, dataToStore);
@@ -236,7 +247,7 @@ public class PasswordUtil {
             return true;
         } catch (UserStoreException e) {
             String msg = "Error in changing the password for user: " + userName;
-            audit.error("Error in changing the password for the user: " + userName);
+            audit.error("Error in changing the password for the user: " + userName, e);
             log.error(msg, e);
             throw new AdminManagementException(msg, e);
         }
@@ -247,19 +258,25 @@ public class PasswordUtil {
      *
      * @param adminInfoBean tenant domain details
      * @return true if successfully reset
-     * @throws AdminManagementException, update password failed due to AdminManagementException
-     * @throws UserStoreException,       exception in getting the user store.
-     * @throws RegistryException,        exception in getting the config system registry.
+     * @throws AdminManagementException, update password failed due to the failure in getting the
+     * user store or config system registry.
      */
     public static boolean updateCredentials(AdminMgtInfoBean adminInfoBean)
-            throws AdminManagementException, UserStoreException, RegistryException {
+            throws AdminManagementException {
         String tenantDomain = adminInfoBean.getTenantDomain();
         int tenantId = AdminMgtUtil.getTenantIdFromDomain(tenantDomain);
         UserStoreManager userStoreManager;
 
         // filling the non-set admin and admin password first
-        UserRegistry configSystemRegistry =
-                AdminManagementServiceComponent.getConfigSystemRegistry(tenantId);
+        UserRegistry configSystemRegistry;
+        try {
+            configSystemRegistry = AdminManagementServiceComponent.getConfigSystemRegistry(tenantId);
+        } catch (RegistryException e) {
+            String msg = "Error in getting the config system registry for the tenant, " +
+                    tenantDomain;
+            log.error(msg, e);
+            throw new AdminManagementException(msg, e);
+        }
 
         boolean updatePassword = false;
         if (adminInfoBean.getPassword() != null
@@ -270,14 +287,13 @@ public class PasswordUtil {
         UserRealm userRealm = configSystemRegistry.getUserRealm();
         try {
             userStoreManager = userRealm.getUserStoreManager();
+            if (!userStoreManager.isReadOnly() && updatePassword) {
+                return updatePassword(adminInfoBean, userStoreManager);
+            }
         } catch (UserStoreException e) {
             String msg = "Error in getting the user store manager for the user.";
             log.error(msg, e);
             throw new AdminManagementException(msg, e);
-        }
-
-        if (!userStoreManager.isReadOnly() && updatePassword) {
-            return updatePassword(adminInfoBean, userStoreManager);
         }
         return false;
     }
@@ -289,42 +305,47 @@ public class PasswordUtil {
      * @param adminName       adminName
      * @param confirmationKey confirmation key to verify the request.
      * @return True, if successful in verifying and hence updating the credentials.
-     * @throws RegistryException,        confirmation key doesn't exist in the registry.
-     * @throws AdminManagementException, getting the admin Management path failed.
+     * @throws AdminManagementException, if the confirmation key doesn't exist, or if getting the
+     * admin Management path failed.
      */
     public static boolean proceedUpdateCredentials(String domain, String adminName,
                                                    String confirmationKey)
-            throws RegistryException, AdminManagementException {
+            throws AdminManagementException {
 
         String adminManagementPath = AdminMgtUtil.getAdminManagementPath(adminName, domain);
 
-        UserRegistry superTenantSystemRegistry = AdminManagementServiceComponent.
-                getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
-        Resource resource;
-        if (superTenantSystemRegistry.resourceExists(adminManagementPath)) {
-            resource = superTenantSystemRegistry.get(adminManagementPath);
-            String actualConfirmationKey = null;
-            Object content = resource.getContent();
-            if (content instanceof String) {
-                actualConfirmationKey = (String) content;
-            } else if (content instanceof byte[]) {
-                actualConfirmationKey = new String((byte[]) content);
-            }
-
-            if ((actualConfirmationKey != null) &&
-                    (actualConfirmationKey.equals(confirmationKey))) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Password resetting for the user of the domain: " + domain);
+        try {
+            UserRegistry superTenantSystemRegistry = AdminManagementServiceComponent.
+                    getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
+            if (superTenantSystemRegistry.resourceExists(adminManagementPath)) {
+                Resource  resource = superTenantSystemRegistry.get(adminManagementPath);
+                String actualConfirmationKey = null;
+                Object content = resource.getContent();
+                if (content instanceof String) {
+                    actualConfirmationKey = (String) content;
+                } else if (content instanceof byte[]) {
+                    actualConfirmationKey = new String((byte[]) content);
                 }
-                return true;
-            } else if (actualConfirmationKey == null ||
-                    !actualConfirmationKey.equals(confirmationKey)) {
-                String msg = AdminMgtConstants.CONFIRMATION_KEY_NOT_MACHING;
-                log.error(msg);
-                return false; // validation fails; do not proceed
+
+                if ((actualConfirmationKey != null) &&
+                        (actualConfirmationKey.equals(confirmationKey))) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Password resetting for the user of the domain: " + domain);
+                    }
+                    return true;
+                } else if (actualConfirmationKey == null ||
+                        !actualConfirmationKey.equals(confirmationKey)) {
+                    String msg = AdminMgtConstants.CONFIRMATION_KEY_NOT_MACHING;
+                    log.error(msg);
+                    return false; // validation fails; do not proceed
+                }
+            } else {
+                log.warn("The confirmationKey doesn't exist in service.");
             }
-        } else {
-            log.warn("The confirmationKey doesn't exist in service.");
+        } catch (RegistryException e) {
+            String msg = "Unable to verify the update credentials request";
+            log.error(msg, e);
+            throw new AdminManagementException(msg, e);
         }
         return false;
     }

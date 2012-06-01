@@ -22,6 +22,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.admin.mgt.stub.AdminManagementServiceAdminManagementExceptionException;
 import org.wso2.carbon.admin.mgt.stub.AdminManagementServiceStub;
 import org.wso2.carbon.admin.mgt.stub.beans.xsd.AdminMgtInfoBean;
 import org.wso2.carbon.admin.mgt.stub.beans.xsd.CaptchaInfoBean;
@@ -31,6 +32,7 @@ import org.wso2.carbon.utils.ServerConstants;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpSession;
+import java.rmi.RemoteException;
 
 /**
  * Admin Management Client class
@@ -92,13 +94,15 @@ public class AdminManagementClient {
      * @param adminInfoBean   AdminMgtInfoBean
      * @param captchaInfoBean CaptchaInfoBean
      * @param confirmationKey  key to confirm the password reset request.
-     * @return true/false
-     * @throws Exception, if update password failed
+     * @return true, if update password was successful.
+     * @throws java.rmi.RemoteException, axis2 exception
+     * @throws AdminManagementServiceAdminManagementExceptionException AdminManagementException
      */
-    public boolean updateAdminPasswordWithUserInput(
+    public boolean updatePasswordWithUserInput(
             AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean,
-            String confirmationKey) throws Exception {
-        return stub.updateAdminPasswordWithUserInput(adminInfoBean, captchaInfoBean,
+            String confirmationKey) throws AdminManagementServiceAdminManagementExceptionException,
+            RemoteException {
+        return stub.updatePasswordWithUserInput(adminInfoBean, captchaInfoBean,
                 confirmationKey);
     }
 

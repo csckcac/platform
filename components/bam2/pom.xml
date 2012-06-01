@@ -48,8 +48,8 @@
         <module>org.wso2.carbon.bam.clustermonitor.ui</module>
         <module>org.wso2.carbon.bam.gadgetgenwizard</module>
         <module>org.wso2.carbon.bam.gadgetgenwizard.ui</module>
-        <module>org.wso2.carbon.bam.restapi</module>
-        <module>org.wso2.carbon.bam.eventreceiver</module>
+        <!--<module>org.wso2.carbon.bam.restapi</module>-->
+        <!--<module>org.wso2.carbon.bam.eventreceiver</module>-->
     </modules>
 
     <properties>

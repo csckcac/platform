@@ -16,7 +16,7 @@
 
 package org.wso2.carbon.apimgt.handlers.security;
 
-import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
+import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.impl.utils.LRUCache;
 
 import java.util.Map;

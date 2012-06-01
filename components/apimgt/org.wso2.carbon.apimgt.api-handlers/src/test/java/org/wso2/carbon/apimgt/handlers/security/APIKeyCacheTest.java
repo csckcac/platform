@@ -18,7 +18,7 @@ package org.wso2.carbon.apimgt.handlers.security;
 
 import junit.framework.TestCase;
 import org.wso2.carbon.apimgt.handlers.security.oauth.TestAuthenticator;
-import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
+import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 
 public class APIKeyCacheTest extends TestCase {
 

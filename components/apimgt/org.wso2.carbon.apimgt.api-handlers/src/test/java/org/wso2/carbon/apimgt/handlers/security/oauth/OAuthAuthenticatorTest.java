@@ -24,7 +24,7 @@ import org.wso2.carbon.apimgt.handlers.security.TestAPIKeyValidator;
 import org.wso2.carbon.apimgt.handlers.security.TestUtils;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.APIManagerConfigurationServiceImpl;
-import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
+import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 
 public class OAuthAuthenticatorTest extends TestCase {
 

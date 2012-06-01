@@ -74,6 +74,15 @@ public final class APIMgtDBUtil {
         }
     }
 
+    public static boolean checkDBConfiguration() {
+        DBConfiguration configuration = getDBConfig();
+        String dbUrl = configuration.getDbUrl();
+        String driver = configuration.getDriverName();
+        String username = configuration.getUserName();
+        String password = configuration.getPassword();
+        return dbUrl != null && driver != null && username != null && password != null;
+    }
+
     /**
      * Utility method to get a new database connection
      *

@@ -23,7 +23,7 @@ import org.apache.synapse.rest.RESTConstants;
 import org.wso2.carbon.apimgt.handlers.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.handlers.security.*;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
-import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
+import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 
 import java.util.Map;
 
@@ -63,7 +63,7 @@ public class OAuthAuthenticator implements Authenticator {
         }
 
         APIKeyValidationInfoDTO info = keyValidator.getKeyValidationInfo(apiContext, apiKey, apiVersion);
-        if (info.getAuthorized()) {
+        if (info.isAuthorized()) {
             AuthenticationContext authContext = new AuthenticationContext();
             authContext.setAuthenticated(true);
             authContext.setTier(info.getTier());

@@ -66,7 +66,10 @@
             try {
                 registryServicePath = returnedServicePath.replaceAll("&", "%26");
             } catch (Exception ignore) {}
-            String resourcePagePath = "../resources/resource.jsp?region=region3&item=resource_browser_menu&path=" + URLEncoder.encode(registryServicePath,"Utf-8");
+            //Service Path encode remove to fix CARBON-13289.
+           // String resourcePagePath = "../resources/resource.jsp?region=region3&item=resource_browser_menu&path=" + URLEncoder.encode(registryServicePath,"Utf-8");
+            String resourcePagePath = "../resources/resource.jsp?region=region3&item=resource_browser_menu&path=" + registryServicePath;
+
             response.sendRedirect(resourcePagePath);
         }else{
             request.setAttribute(CarbonUIMessage.ID,new CarbonUIMessage(error1,error1,null));

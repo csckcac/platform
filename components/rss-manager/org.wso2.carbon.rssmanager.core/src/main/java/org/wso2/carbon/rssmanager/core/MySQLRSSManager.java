@@ -35,16 +35,7 @@ import java.util.Map;
  * This class carries all the RSS manager related functionality implemented upon Mysql.
  */
 public class MySQLRSSManager implements RSSManager {
-
-    private static RSSManager thisInstance = new MySQLRSSManager();
-
-    private MySQLRSSManager() {
-    }
-
-    public static synchronized RSSManager getInstance() {
-        return thisInstance;
-    }
-
+    
     /**
      * Creates the database in the desired database server instance.
      *

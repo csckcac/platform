@@ -26,15 +26,6 @@ import java.sql.SQLException;
 
 public class OracleRSSManager implements RSSManager {
     
-    private static RSSManager thisInstance = new OracleRSSManager();
-
-    private OracleRSSManager() {
-    }
-
-    public static synchronized RSSManager getInstance() {
-        return thisInstance;
-    }
-    
     public void createDatabase(DatabaseInstance db) throws RSSDAOException {
         //To change body of implemented methods use File | Settings | File Templates.
     }

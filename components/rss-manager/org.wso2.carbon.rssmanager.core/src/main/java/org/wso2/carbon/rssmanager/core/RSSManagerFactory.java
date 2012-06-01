@@ -24,9 +24,9 @@ public class RSSManagerFactory {
 
     public static RSSManager getRSSManager(String type) throws RSSDAOException {
         if (RSSManagerConstants.MYSQL_PREFIX.equals(type.toLowerCase())) {
-            return MySQLRSSManager.getInstance();
+            return new MySQLRSSManager();
         } else if (RSSManagerConstants.ORACLE_PREFIX.equals(type.toLowerCase())) {
-            return OracleRSSManager.getInstance();
+            return new OracleRSSManager();
         } else {
             throw new RSSDAOException("Unsupported database type");
         }

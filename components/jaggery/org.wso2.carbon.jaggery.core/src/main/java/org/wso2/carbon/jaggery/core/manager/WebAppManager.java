@@ -82,12 +82,12 @@ public class WebAppManager extends CommonManager {
         fileURL = keys[1] + keys[2];
 
         ScriptReader source;
-        if(isBuilt) {
+        if (isBuilt) {
             source = new ScriptReader(context.getResourceAsStream(fileURL)) {
                 @Override
                 protected void build() throws IOException {
                     try {
-                        if(isJSON) {
+                        if (isJSON) {
                             sourceReader = new StringReader("(" + HostObjectUtil.streamToString(sourceIn) + ")");
                         } else {
                             sourceReader = new StringReader(HostObjectUtil.streamToString(sourceIn));
@@ -106,7 +106,7 @@ public class WebAppManager extends CommonManager {
         sctx.setSourceModifiedTime(lastModified);
 
         includesCallstack.push(fileURL);
-        if(isJSON) {
+        if (isJSON) {
             scope = (ScriptableObject) engine.eval(source, scope, sctx);
         } else {
             engine.exec(source, scope, sctx);
@@ -128,13 +128,13 @@ public class WebAppManager extends CommonManager {
 
         String param = (String) args[0];
         int dotIndex = param.lastIndexOf(".");
-        if(param.length() == dotIndex + 1) {
+        if (param.length() == dotIndex + 1) {
             String msg = "Invalid file path for require method : " + param;
             log.error(msg);
             throw new ScriptException(msg);
         }
 
-        if(dotIndex == -1) {
+        if (dotIndex == -1) {
             return CommonManager.require(cx, thisObj, args, funObj);
         }
 
@@ -143,11 +143,11 @@ public class WebAppManager extends CommonManager {
         object.setPrototype(thisObj);
         object.setParentScope(null);
         String ext = param.substring(dotIndex + 1);
-        if(ext.equalsIgnoreCase("json")) {
+        if (ext.equalsIgnoreCase("json")) {
             return executeScript(jaggeryContext, object, param, true, true);
-        } else if(ext.equalsIgnoreCase("js")) {
+        } else if (ext.equalsIgnoreCase("js")) {
             return executeScript(jaggeryContext, object, param, false, true);
-        } else if(ext.equalsIgnoreCase("jag")) {
+        } else if (ext.equalsIgnoreCase("jag")) {
             return executeScript(jaggeryContext, object, param, false, false);
         } else {
             String msg = "Unsupported file type for require() method : ." + ext;
@@ -229,6 +229,10 @@ public class WebAppManager extends CommonManager {
 
     public static String getScriptPath(HttpServletRequest request) {
         String url = request.getServletPath();
+        if (request.getPathInfo() != null) {
+            // if there are more path info it should be sent to a wild card
+            url += "/*";
+        }
         Map<String, Object> urlMappings = (Map<String, Object>) request.getServletContext()
                 .getAttribute(CommonManager.JAGGERY_URLS_MAP);
         if (urlMappings == null) {
@@ -312,9 +316,8 @@ public class WebAppManager extends CommonManager {
     }
 
     /**
-     *
-     * @param context in the form of /foo
-     * @param parent in the form of /foo/bar/ or /foo/bar/dar.jss
+     * @param context    in the form of /foo
+     * @param parent     in the form of /foo/bar/ or /foo/bar/dar.jss
      * @param scriptPath in the form of /foo/bar/mar.jss or bar/mar.jss
      * @return String[] with keys
      */

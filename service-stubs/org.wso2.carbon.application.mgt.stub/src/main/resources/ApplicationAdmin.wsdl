@@ -98,6 +98,7 @@
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="associations" nillable="true" type="ax25:Association" />
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="collections" nillable="true" type="xs:string" />
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="resources" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="dumps" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Association">

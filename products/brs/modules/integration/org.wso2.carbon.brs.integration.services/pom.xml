@@ -10,7 +10,7 @@
     <name>WSO2 BRS - Integration Service Module</name>
     <packaging>pom</packaging>
 
-    <dependencies>
+<!--    <dependencies>
         <dependency>
             <groupId>org.wso2.brs</groupId>
             <artifactId>org.wso2.brs.samples</artifactId>
@@ -22,9 +22,9 @@
                 </exclusion>
             </exclusions>
         </dependency>
-    </dependencies>
+    </dependencies>-->
     <modules>
-        <module>banking.service</module>
+<!--        <module>banking.service</module>
         <module>callcharging.service</module> 
         <module>carrental.service</module>
         <module>greeting.service</module>
@@ -33,7 +33,20 @@
         <module>MIPCalculate.service</module>
         <module>orderApproval.service</module>
         <module>quotation.service</module>
-        <module>shopping.service</module> 
+        <module>shopping.service</module>-->
+
+        <module>Banking.service</module>
+        <module>Callcharging.service</module>
+        <module>Carrental.service</module>
+        <module>Greeting.service</module>
+        <module>Healthcare.service</module>
+        <module>Insurance.service</module>
+        <module>mipCalculate.service</module>
+        <module>OrderApproval.service</module>
+        <module>Quotation.service</module>
+        <module>Shopping.service</module>
+
+
     </modules>
 
     <properties>

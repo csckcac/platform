@@ -25,18 +25,30 @@ var addNewDoc = function (provider) {
 
 
 var removeDocumentation = function (provider,apiName, version, docName, docType) {
-
-    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"removeDocumentation",provider:provider,
-        apiName:apiName, version:version,docName:docName,docType:docType},
-              function (result) {
-                  if (!result.error) {
-                      $('#' + apiName + '-' + docName).hide('slow');
-                  } else {
-                      jagg.message(result.message);
-                  }
-              }, "json");
-
-
+    $('#messageModal').html($('#confirmation-data').html());
+    $('#messageModal h3.modal-title').html('Confirm Delete');
+    $('#messageModal div.modal-body').html('\n\nAre you sure you want to delete the file <b>"' + docName + '</b>"?');
+    $('#messageModal a.btn-primary').html('Yes');
+    $('#messageModal a.btn-other').html('No');
+    $('#messageModal a.btn-primary').click(function() {
+        jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"removeDocumentation",provider:provider,
+                apiName:apiName, version:version,docName:docName,docType:docType},
+            function (result) {
+                if (!result.error) {
+                    $('#messageModal').modal('hide');
+                    $('#' + apiName + '-' + docName).remove();
+                    if ($('#docTable tr').length == 1) {
+                        $('#docTable').append($('<tr><td colspan="6">No documentation associated with the API</td></tr>'));
+                    }
+                } else {
+                    jagg.message(result.message);
+                }
+            }, "json");
+    });
+    $('#messageModal a.btn-other').click(function() {
+        return;
+    });
+    $('#messageModal').modal();
 };
 
 var copyDocumentation = function (docName, docType, summary) {

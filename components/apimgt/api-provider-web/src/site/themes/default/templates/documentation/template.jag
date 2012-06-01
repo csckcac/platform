@@ -99,7 +99,7 @@
         </div>
         <!-- Row -->
         <div class="row-fluid">
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="docTable">
                 <thead>
                 <tr>
                     <th>Name</th>

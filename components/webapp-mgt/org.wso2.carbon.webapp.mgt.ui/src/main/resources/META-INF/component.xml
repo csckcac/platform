@@ -24,7 +24,7 @@
             <parent-menu>manage_menu</parent-menu>
             <link>#</link>
             <region>region1</region>
-            <order>3</order>
+            <order>2</order>
             <icon>../webapp-mgt/images/webapps.gif</icon>
             <style-class>home</style-class>
             <require-permission>/permission/admin/manage/manage/webapp</require-permission>

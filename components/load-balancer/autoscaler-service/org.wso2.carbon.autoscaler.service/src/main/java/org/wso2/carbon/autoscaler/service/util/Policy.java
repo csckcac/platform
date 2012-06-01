@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.autoscaler.service.xml.AutoscalerPolicyFileReader;
 
 /**
  * <p>
@@ -39,8 +36,6 @@ import org.wso2.carbon.autoscaler.service.xml.AutoscalerPolicyFileReader;
  * 
  */
 public class Policy {
-    
-    private static final Log log = LogFactory.getLog(Policy.class);
     
     /**
      * This list is populated after reading autoscaler-policy XML.

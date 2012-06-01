@@ -58,6 +58,7 @@ public interface IAutoscalerService {
 	public int getPendingInstanceCount(String domainName);
 	
 	/**
+	 * TODO remove this
 	 * This should be called in order to add to pending instance count for this domain.
 	 * If you want to deduct, you can simply send a negative value.
 	 * @param domainName name of the domain.

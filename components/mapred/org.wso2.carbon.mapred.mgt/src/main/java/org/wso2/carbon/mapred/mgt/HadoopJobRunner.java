@@ -60,7 +60,6 @@ public class HadoopJobRunner extends AbstractAdmin {
 		ConfigurationContext cfgCtx = msgCtx.getConfigurationContext();
 		HadoopCarbonMessageContext hadoopMsgCtx = new HadoopCarbonMessageContext(cfgCtx, cookie);
 		HadoopCarbonMessageContext.set(hadoopMsgCtx);
-		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> "+ hadoopMsgCtx.getCookie());
 		HadoopJobRunnerThread hadoopJobThread = new HadoopJobRunnerThread(jarName, className, args);
 		hadoopJobThread.start();
 	}
@@ -147,5 +146,36 @@ public class HadoopJobRunner extends AbstractAdmin {
 	
 	public static org.apache.hadoop.conf.Configuration getConf() {
 		return conf;
+	}
+	
+	public static void sanitizeConfiguration(Configuration conf) {
+		//Clean everything related to hadoop.security.group.mapping and admin stuff
+		conf.set("hadoop.security.group.mapping", "");
+		conf.set("hadoop.security.group.mapping.service.url", "");
+		conf.set("hadoop.security.admin.username", "");
+		conf.set("hadoop.security.admin.password", "");
+		//Clean all sensitive dfs details
+		conf.set("dfs.name.dir", "");
+		conf.set("dfs.name.edits.dir", "");
+		conf.set("dfs.data.dir", "");
+		conf.set("dfs.namenode.keytab.file", "");
+		conf.set("dfs.namenode.kerberos.principal", "");
+		conf.set("dfs.namenode.kerberos.https.principal", "");
+		conf.set("dfs.secondary.namenode.keytab.file", "");
+		conf.set("dfs.datanode.keytab.file", "");
+		conf.set("dfs.datanode.kerberos.principal", "");
+		//Clean all sensitive mapred details
+		conf.set("mapred.system.dir", "");
+		conf.set("mapreduce.jobtracker.kerberos.principal", "");
+		conf.set("mapreduce.jobtracker.kerberos.https.principal", "");
+		conf.set("mapreduce.jobtracker.keytab.file", "");
+		conf.set("mapreduce.tasktracker.kerberos.principal", "");
+		conf.set("mapreduce.tasktracker.kerberos.https.principal", "");
+		conf.set("mapreduce.tasktracker.keytab.file", "");
+		conf.set("mapreduce.tasktracker.group", "");
+		conf.set("mapred.local.dir", "");
+		conf.set("hadoop.log.dir", "");
+		conf.set("mapred.tasktracker.carbon.proxy.user", "");
+		conf.set("hadoop.job.history.user.location", "");
 	}
 }

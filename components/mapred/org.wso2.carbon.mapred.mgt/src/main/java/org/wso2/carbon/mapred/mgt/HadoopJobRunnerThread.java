@@ -16,6 +16,7 @@ import java.util.jar.JarFile;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileUtil;
 
 import org.wso2.carbon.mapred.mgt.api.CarbonMapRedJob;
@@ -90,7 +91,10 @@ public class HadoopJobRunnerThread extends Thread {
 			Class<?> mainClass = Class.forName(mainClassName, true, loader);
 			
 			CarbonMapRedJob carbonMapRedJob = (CarbonMapRedJob)mainClass.newInstance();
-			carbonMapRedJob.setConfiguration(HadoopJobRunner.getConf());
+			Configuration conf = (Configuration) (HadoopJobRunner.getConf().clone());
+			//Allways sanitize Configuration object before passing to client.
+			HadoopJobRunner.sanitizeConfiguration(conf);
+			carbonMapRedJob.setConfiguration(conf);
 			String[] newArgs = args.split(" ");
 			carbonMapRedJob.run(newArgs);
 			HadoopCarbonSecurity.clean();

@@ -19,7 +19,7 @@ import org.apache.commons.cli.*;
 
 import org.wso2.carbon.mapred.mgt.api.*;
 
-public class WordCount implements CarbonMapRedJob {
+public class WordCount extends CarbonMapRedJob {
 	
 	public static class TokenizerMapper 
 	extends Mapper<Object, Text, Text, IntWritable>{
@@ -53,23 +53,11 @@ public class WordCount implements CarbonMapRedJob {
 		}
 	}
 
-	private Configuration conf;
-	@Override
-	public void setConfiguration(Configuration conf) {
-		this.conf = conf;
-	}
-
-	@Override
-	public Configuration getConfiguration() {
-		return conf;
-	}
-
 	@Override
 	public void run(String[] args) {
-		
 		String[] otherArgs = null;
 		Job job = null;
-		
+		Configuration conf = getConfiguration();
 		try {
 			if (args.length != 2)
 				return;
@@ -97,6 +85,5 @@ public class WordCount implements CarbonMapRedJob {
 			return;
 		}
 	}
-
 }
 

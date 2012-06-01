@@ -80,10 +80,6 @@
             <artifactId>saxon</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-httpclient.wso2</groupId>
-            <artifactId>commons-httpclient</artifactId>
-        </dependency>
-        <dependency>
             <groupId>bsh.wso2</groupId>
             <artifactId>bsh</artifactId>
         </dependency>
@@ -166,7 +162,6 @@
                                 <bundleDef>com.hp.hpl.jena.wso2:arq</bundleDef>
                                 <bundleDef>org.webharvest.wso2:webharvest-core</bundleDef>
                                 <bundleDef>net.sf.saxon.wso2:saxon</bundleDef>
-                                <bundleDef>commons-httpclient.wso2:commons-httpclient</bundleDef>
                                 <bundleDef>bsh.wso2:bsh</bundleDef>
                                 <bundleDef>org.htmlcleaner.wso2:htmlcleaner</bundleDef>
                                 <bundleDef>commons-dbcp.wso2:commons-dbcp</bundleDef>

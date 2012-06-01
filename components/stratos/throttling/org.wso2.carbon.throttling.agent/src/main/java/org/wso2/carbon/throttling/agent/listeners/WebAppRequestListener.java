@@ -54,7 +54,7 @@ public class WebAppRequestListener implements CarbonTomcatValve {
         String urlContext = getContext(requestURI);
         try {
             int tenantId = throttlingAgent.getRealmService().getTenantManager().getTenantId(tenantDomainName);
-            if (tenantId == org.wso2.carbon.utils.multitenancy.MultitenantConstants.SUPER_TENANT_ID ) {
+            if (tenantId <= 0) {
             	//Allow to proceed
             } else {
                 if (!throttlingAgent.getRealmService().getTenantManager().getTenant(tenantId).isActive()) {

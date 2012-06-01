@@ -177,6 +177,12 @@
     <files>
         <!-- Deploy the bpels -->
          <file>
+            <source>../../bpels/AddUserToApplication/target/AddUserToApplication.zip</source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>../../bpels/DeployApplicationToDev/target/DeployApplicationToDev.zip</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
             <filtered>true</filtered>

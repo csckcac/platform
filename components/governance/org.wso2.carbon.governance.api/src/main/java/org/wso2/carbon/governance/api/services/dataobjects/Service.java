@@ -107,10 +107,13 @@ public class Service extends GovernanceArtifact {
 
     /**
      * Method to activate this service.
+     * @deprecated since active functionality is no longer used.
      *
      * @throws GovernanceException if the operation failed.
      */
-    @SuppressWarnings("unused")
+
+//TODO remove this in the next release
+    @Deprecated
     public void activate() throws GovernanceException {
         checkRegistryResourceAssociation();
         try {
@@ -129,10 +132,12 @@ public class Service extends GovernanceArtifact {
 
     /**
      * Method to deactivate this service.
+     * @deprecated since active functionality is no longer used.
      *
      * @throws GovernanceException if the operation failed.
      */
-    @SuppressWarnings("unused")
+    //TODO remove this in the next release
+    @Deprecated
     public void deactivate() throws GovernanceException {
         checkRegistryResourceAssociation();
         try {
@@ -153,10 +158,12 @@ public class Service extends GovernanceArtifact {
      * Method to set/unset the active status of this service.
      *
      * @param isActive whether the service is active.
+     * @deprecated since active functionality is no longer used.
      *
      * @throws GovernanceException if the operation failed.
      */
-    @SuppressWarnings("unused")
+    //TODO remove this in the next release
+    @Deprecated
     public void setActive(boolean isActive) throws GovernanceException {
         checkRegistryResourceAssociation();
         try {
@@ -177,11 +184,13 @@ public class Service extends GovernanceArtifact {
 
     /**
      * Method to obtain whether this service is active or not.
+     * @deprecated since active functionality is no longer used.
      *
      * @return true if this service is active, and false if not.
      * @throws GovernanceException if the operation failed.
      */
-    @SuppressWarnings("unused")
+    //TODO remove this in the next release
+    @Deprecated
     public boolean isActive() throws GovernanceException {
         checkRegistryResourceAssociation();
         try {

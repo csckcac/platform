@@ -196,9 +196,10 @@
                     <thead>
                     <tr>
                         <th width="15%"><nobr><fmt:message key="carbonapps.registry.artifact"/></nobr></th>
-                        <th width="25%"><fmt:message key="carbonapps.registry.resources"/></th>
-                        <th width="25%"><fmt:message key="carbonapps.registry.collections"/></th>
-                        <th width="35%"><fmt:message key="carbonapps.registry.associations"/></th>
+                        <th width="20%"><fmt:message key="carbonapps.registry.resources"/></th>
+                        <th width="20%"><fmt:message key="carbonapps.registry.collections"/></th>
+                        <th width="20%"><fmt:message key="carbonapps.registry.dumps"/></th>
+                        <th width="25%"><fmt:message key="carbonapps.registry.associations"/></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -225,6 +226,19 @@
                                 <%
                                     if (meta.getCollections() != null) {
                                         for (String path : meta.getCollections()) {
+                                %>
+                                <tr><td style="padding:0;border:0; !important"><nobr><%= path%></nobr></td></tr>
+                                <%
+                                        }
+                                    }
+                                %>
+                            </table>
+                        </td>
+                        <td>
+                            <table style="padding:0;border:0; !important">
+                                <%
+                                    if (meta.getDumps() != null) {
+                                        for (String path : meta.getDumps()) {
                                 %>
                                 <tr><td style="padding:0;border:0; !important"><nobr><%= path%></nobr></td></tr>
                                 <%

@@ -14,7 +14,7 @@
     <types>
         <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://wso2.org/carbon/appfactory/applicaiton/deployment">
 
-            <element name="DeployApplicationToDevRequest">
+            <element name="DeployApplicationToDevelopmentRequest">
                 <complexType>
                     <sequence>
                     	<element name="applicationSvnLocation"
@@ -40,7 +40,7 @@
      part of the port type defintions
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
     <message name="DeployApplicationToDevRequestMessage">
-        <part element="tns:DeployApplicationToDevRequest" name="payload"/>
+        <part element="tns:DeployApplicationToDevelopmentRequest" name="payload"/>
     </message>
     <message name="DeployApplicationToDevResponseMessage">
         <part element="tns:DeployApplicationToDevResponse" name="payload"/>

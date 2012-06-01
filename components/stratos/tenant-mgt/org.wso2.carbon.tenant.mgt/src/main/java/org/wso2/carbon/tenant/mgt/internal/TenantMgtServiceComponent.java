@@ -105,12 +105,12 @@ public class TenantMgtServiceComponent {
                 CommonUtil.setEula(eula);
             }
             
-			populateRampartConfig(configurationContextService.
+            populateRampartConfig(configurationContextService.
 					              getServerConfigContext().getAxisConfiguration());
 
-            log.debug("******* Governance Tenant Config bundle is activated ******* ");
+            log.debug("******* Tenant Config bundle is activated ******* ");
         } catch (Exception e) {
-            log.error("******* Governance Tenant Config bundle failed activating ****", e);
+            log.error("******* Tenant Config bundle failed activating ****", e);
         }
     }
 

@@ -32,6 +32,7 @@ import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.DataPaginator;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,7 +72,7 @@ public class TenantMgtAdminService extends AbstractAdmin {
             throw new Exception("Invalid data."); // obscure error message.
         }
 
-        if (userRegistry.getTenantId() != 0) {
+        if (userRegistry.getTenantId() != MultitenantConstants.SUPER_TENANT_ID) {
             log.error("Security Alert! Non super tenant trying to create a tenant.");
             throw new Exception("Invalid data."); // obscure error message.
         }

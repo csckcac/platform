@@ -1480,7 +1480,7 @@ public class APIStoreHostObject extends ScriptableObject {
 				row.put("apiName", row, apiName);
 				row.put("apiVersion", row, version);
 				row.put("docName", row, docName);
-				row.put("content", row, "Content of the File"+content);
+				row.put("content", row, content);
 				myn.put(0, myn, row);
 
 			}

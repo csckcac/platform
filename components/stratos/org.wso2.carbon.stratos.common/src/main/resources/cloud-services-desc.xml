@@ -16,7 +16,7 @@
  ~ under the License.
  -->
 <cloudServices xmlns="http://wso2.com/carbon/cloud/mgt/services">
-    <cloudService name="WSO2 Manager">
+    <cloudService name="WSO2 Stratos Manager">
     </cloudService>
     <cloudService name="WSO2 Enterprise Service Bus" default="true">
       <label>Enterprise Service Bus</label>

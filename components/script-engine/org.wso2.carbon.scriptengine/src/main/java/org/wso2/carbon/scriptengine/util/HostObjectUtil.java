@@ -116,7 +116,7 @@ public class HostObjectUtil {
                 obj instanceof Boolean) {
             json.append(obj.toString());
         } else if (obj instanceof String) {
-            json.append("\"").append(obj.toString()).append("\"");
+            json.append("\"").append(obj.toString().replaceAll("\\n", "\\\\n").replaceAll("\"", "\\\\\"")).append("\"");
         } else {
             json.append("{}");
         }

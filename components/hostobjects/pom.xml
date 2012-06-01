@@ -120,7 +120,7 @@
             <dependency>
                 <groupId>commons-httpclient.wso2</groupId>
                 <artifactId>commons-httpclient</artifactId>
-                <version>3.1.0.wso2v1</version>
+                <version>${commons-httpclient.wso2.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-pool</groupId>

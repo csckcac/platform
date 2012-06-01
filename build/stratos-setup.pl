@@ -233,7 +233,6 @@ if ($manager_enabled eq 'true') {
 	
 	print "Copying mysql driver\n";
 	copy("setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar","$stratos_dir/wso2stratos-manager-$manager_version/repository/components/lib") or die "Copy mysql-connector-java-5.1.12-bin.jar failed";
-exit;
 
 	print "done\n";
 	
@@ -421,7 +420,6 @@ if ($as_enabled eq 'true') {
 	}
 }
 
-exit;
 #	
 #
 #

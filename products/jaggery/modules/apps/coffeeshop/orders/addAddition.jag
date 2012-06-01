@@ -1,0 +1,60 @@
+<%
+include("../api/databaseConn.jag");
+include("../respond/respond.jag");
+//	include("../api/init.jag")
+
+/*
+url is to be http://10.100.3.206:9763/coffeeshop/order/1765/addAddition.jag?addition=Peppermint
+
+var uriMatcher = new URIMatcher(request.getRequestURI());
+if(uriMatcher.match("/{dir}/{type}/{order_id}/{page}")) {
+print("Directory element is : " + uriMatcher.elements().order_id);
+}
+*/
+
+//getting Params from url
+var orderid = request.getParameter('orderid');
+var addition = request.getParameter('addition');
+
+//db processing
+var order = db.query("SELECT STATUS, COST FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");
+//print(order[0]);
+//checking order is there
+if(order.length != 0) {
+	//checking for status
+	if(order[0].STATUS == "order") {
+		//Order is existing
+		//processing new price
+		var price = db.query("SELECT COST FROM ADDITIONS WHERE ADDITION ='" + addition + "'");
+		//print(price);
+		if(price.length != 0) {
+			var newPrice = parseFloat(price[0].COST.substring(1)) + parseFloat(order[0].COST.substring(1));
+			print(newPrice);
+			var order = db.query("UPDATE COFFEE_ORDER" + " SET ADDITION='" + addition + "', COST = '$" + newPrice + "', STATUS = 'addAddition'" + " WHERE ORDER_ID ='" + orderid + "'");
+			var order = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");
+			print(order[0]);
+		} else {
+			print({
+				"Infor" : "Sorry, Addition is not in shop"
+			});
+		}
+	} else {
+		if(order[0].STATUS == "addAddition") {
+			print({
+				"Infor" : "Sorry, Order can be add addition only one time"
+			});
+		} else {
+			print({
+				"Infor" : "Sorry, Order has be send to prepared"
+			});
+		}
+
+	}
+}else {
+		
+			print({
+				"Infor" : "Sorry, Order is not exsit"
+			});
+		}
+
+%>

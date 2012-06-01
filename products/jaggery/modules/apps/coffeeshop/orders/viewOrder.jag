@@ -1,0 +1,18 @@
+<%
+include("../api/databaseConn.jag");
+include("../respond/respond.jag");
+
+//getting Params from url
+var orderid = request.getParameter('orderid');
+
+//db processing
+var order = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");
+    if(order.length != 0){
+print(order[0]);
+}else {
+		
+			print({
+				"Infor" : "Sorry, Order is not exsit"
+			});
+		}
+%>

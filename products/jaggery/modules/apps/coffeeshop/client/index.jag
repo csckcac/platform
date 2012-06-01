@@ -1,0 +1,22 @@
+<html>
+<header>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="js/util.js"></script>
+<script src="js/coffeeshopclient.js"></script>
+<title>
+Coffee Shop Client
+</title>
+</header>
+<body>
+<h1 > Coffee Shop Client</h1>
+<p> </p>
+Order Name<input type="text" id="orderName" value="Percolator"/>
+<input name="AddOrder" type="button" class="add_order" onclick="CoffeeShopClient.addOrder()" />Add Order<br/>
+Order ID<input type="text" id="orderid" value="66"/><br/>
+Addittion<input type="text" id="addittion" value="Peppermint"/>
+<input type="button" class="add_order" onclick="CoffeeShopClient.addAddittion()" />Add Order<br/>
+
+<input name="AddOrder" type="button" class="add_order" onclick="CoffeeShopClient.addOrder('Percolator')" />Add Order<br/>
+<input name="AddOrder" type="button" class="add_order" onclick="CoffeeShopClient.addOrder('Percolator')" />Add Order<br/>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<%
+
+include("api/databaseConn.jag");
+include("respond/respond.jag");
+
+var verb = request.getMethod();
+var orderid = request.getParameter('orderid');
+
+if(verb == "GET" && orderid != null){
+	//is paid for order
+	isPaid(orderid);
+	
+}else if (verb == "GET" && orderid != null){
+	pay(orderid);
+}
+
+function isPaid (orderid) {
+  //db processing
+var order = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");
+if(order.length != 0) {
+	print(order[0].PAY);
+} else {
+
+	print({
+		"Infor" : "Sorry, Order is not exsiting"
+	});
+}
+}
+
+function pay (orderid) {
+  
+//db processing
+var order = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");
+
+//checking order is there
+if(order.length != 0) {
+	//Order is existing
+	if(order[0].PAY) {
+		print({
+			"Infor" : "Sorry, Order was paid"
+		});
+	} else {
+		var order = db.query("UPDATE COFFEE_ORDER SET PAY=" + true + " WHERE ORDER_ID ='" + orderid + "'");
+		var order = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");
+		print(order[0]);
+	}
+} else {
+
+	print({
+		"Infor" : "Sorry, Order is not exsiting"
+	});
+}
+
+}
+%>

@@ -1,0 +1,24 @@
+<%
+include("../api/databaseConn.jag");
+include("../api/init.jag");
+include("../respond/respond.jag");
+%>
+
+<%
+var orderIdx = 1;
+var lastOrderID = db.query("SELECT MAX(ORDER_ID) AS LAST_ID FROM COFFEE_ORDER");
+if(lastOrderID.length == 0) {
+	orderIdx = 0;
+} else {
+	orderIdx = lastOrderID[0].LAST_ID;
+}
+var order = request.getParameter('order');
+
+var price = db.query("SELECT COST FROM DRINKS WHERE DRINK ='" + order + "'");
+
+db.query("INSERT INTO COFFEE_ORDER VALUES(" + ++orderIdx + ",'','" + order + "','" + price[0].COST + "','order',false)");
+//order is been taken
+var result = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID = " + orderIdx);
+print(result[0]);
+
+%>

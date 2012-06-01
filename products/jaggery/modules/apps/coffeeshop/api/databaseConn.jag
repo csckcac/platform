@@ -1,0 +1,4 @@
+<%
+ var db = new Database("jdbc:h2:tmp/demo", "admin", "admin");
+ 
+%>

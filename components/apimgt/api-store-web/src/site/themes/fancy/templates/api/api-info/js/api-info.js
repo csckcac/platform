@@ -20,7 +20,7 @@ $(document).ready(function () {
         }
         var applicationId = $("#application-list").val();
         if (applicationId == "-") {
-            jagg.message("Please select an application before subscribing");
+            jagg.message("<i class='icon-exclamation-sign' /> Please select an application before subscribing");
             return;
         }
         var api = jagg.api;

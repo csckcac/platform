@@ -8,14 +8,16 @@ var jagg = jagg || {};
     };
 
     jagg.message = function (content) {
-        /*$("#message-box:ui-dialog").dialog("destroy");
-        var dialog = $("#message-box");
-        $(".message", dialog).text(content);
-        dialog.dialog({
-            modal:true,
-            dialogClass: "alert"
-        });*/
-        alert(content);
+        $('#messageModal').html($('#confirmation-data').html());
+        $('#messageModal h3.modal-title').html('API Store');
+        $('#messageModal div.modal-body').html(content);
+        $('#messageModal a.btn-primary').html('OK');
+        $('#messageModal a.btn-other').hide();
+
+        $('#messageModal a.btn-primary').click(function() {
+            $('#messageModal').modal('hide');
+        });
+        $('#messageModal').modal();
     };
 
     jagg.initStars = function (elem, saveCallback, removeCallback, data) {

@@ -1,16 +1,40 @@
 <% jagg.template("user/login", function(inputs, outputs, jagg) { %>
 <% var user = outputs.user; %>
 <% if(user) { %>
-<ul class="nav actions login-sign-up">
-    <li>
-        <a id="logout-link">Logout</a>
-    </li>
-    <li>
-        <a class="link-to-user"><%=user.username%></a>
-    </li>
-</ul>
+       <ul class="nav actions login-sign-up">
+            <li class="dropdown">
+              <a class="link-to-user dropdown-toggle" data-toggle="dropdown"><%=user.username%> <b class="caret"></b></a>
+              <ul class="dropdown-menu" id="userInfoMenu">
+                <li class="themeSelection">
+                    <h3><%=user.username%></h3>
+                </li>
+                <li class="logout-link-special"><button id="logout-link" class="btn btn-danger">Logout</button></li>
+              </ul>
+            </li>
+            <li class="divider-vertical"></li>
+            <li class="dropdown settingsSection">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-weal"></i></a>
+              <ul class="dropdown-menu">
+                <li  class="themeSelection"><h3>Select a theme</h3>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <div class="thumbnail">allsf</div>
+                            </td>
+                            <td>
+                                <div class="thumbnail">allsf</div>
+                            </td>
+                        </tr>
+                    </table></li>
+              </ul>
+            </li>
+          </ul>
 <% } else { %>
 <ul class="nav actions login-sign-up">
+    <li>
+        <a id="register-link" href="<%=site.context%>/site/pages/sign-up.jag">Sign-up</a>
+    </li>
+    <li class="divider-vertical"></li>
     <li>
         <a id="login-link">Login</a>
     </li>

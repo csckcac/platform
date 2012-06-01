@@ -45,6 +45,7 @@ div.navbar-inner {
 .menu-content{
     margin: 0 5% 0;
 }
+
 .navbar .navbar-inner .nav.actions a {
     color: #fff;
     font-size: 11px;
@@ -61,7 +62,6 @@ div.navbar-inner {
 .navbar .nav > li > a:hover {
     color: #efefef;
 }
-
 .page-content {
     /*background: transparent url(../images/whiteBack-more.png) repeat-x center top;*/
 }
@@ -448,7 +448,7 @@ footer{
     display:none;
 }
 .well{
-    background-color:#AFAFAF;
+    background-color:#efefef;
 }
 .search-fix-size{
     width:280px;

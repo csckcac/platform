@@ -1,0 +1,59 @@
+<% jagg.template("user/sign-up", function(inputs, outputs, jagg) { %>
+<h3>Sign - up for a new account</h3>
+<div class="alert alert-error" id="sign-up-error-box">
+    <button class="close" data-dismiss="alert">×</button>
+    <div id="sign-up-error"><strong>Oh snap!</strong> Change a few things up and try submitting again.</div>
+</div>
+<form class="form-horizontal well" id="sign-up">
+        <fieldset>
+          <div class="control-group">
+            <label class="control-label" for="username">Username:</label>
+            <div class="controls">
+              <input type="text" class="input-xlarge" id="username" />
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="password">Password:</label>
+            <div class="controls">
+                <div class="row-fluid">
+                    <div class="span6">
+                        <input type="password" class="input-xlarge password" id="password"/>
+                    </div>
+                    <div class="span6">
+                        <div class="password-meter">
+                            <div class="password-meter-message"></div>
+                            <div class="password-meter-bg">
+                                <div class="password-meter-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+              <div class="help-block" id="password-help" style="display:none">
+                  For a more secure password:
+                  <ul>
+                      <li>Use 6 to 32 characters</li>
+                      <li>Use both letters and numbers</li>
+                      <li>Add special characters (such as @, ?, %)</li>
+                      <li>Mix capital and lowercase letters</li>
+                  </ul>
+
+              </div>
+            </div>
+          </div>
+
+            <div class="control-group">
+            <label class="control-label" for="passwordConfirm">Re-type Password:</label>
+            <div class="controls">
+              <input type="password" class="input-xlarge" id="passwordConfirm" />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary">Create My Accounts</button>
+          </div>
+        </fieldset>
+      </form>
+<% }); %>

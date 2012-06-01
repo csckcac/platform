@@ -25,6 +25,8 @@
 <%@ page import="org.wso2.carbon.governance.notifications.stub.services.utils.xsd.EventType" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<%@ page import="org.wso2.carbon.registry.resource.ui.clients.ResourceServiceClient" %>
+<%@ page import="org.wso2.carbon.registry.resource.stub.beans.xsd.ResourceTreeEntryBean" %>
 
 <%
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
@@ -36,6 +38,17 @@
     boolean canSubscribeOtherRoles = false;
     String username = null;
     String[] roles = null;
+    boolean isCollection=true;
+    ResourceServiceClient resourceServiceClient=null;
+    ResourceTreeEntryBean resourceTreeEntryBean = null;
+
+    resourceServiceClient = new ResourceServiceClient(config, session);
+    String path = request.getParameter("path");
+
+    if (resourceServiceClient.getResourceTreeEntry(path) != null) {
+        isCollection = resourceServiceClient.getResourceTreeEntry(path).getCollection();
+    }
+
     try{
         InfoAdminServiceClient client = new InfoAdminServiceClient(cookie, config, session);
         SubscriptionBean subscriptionBean = client.getSubscriptions(request);
@@ -186,6 +199,24 @@
                 <option value="5"><fmt:message key="digest.monthly"/></option>
             </select></td>
         </tr>
+    <%
+        if(isCollection){
+    %>
+    <div id="hierarchicalSubscriptionInfo" style="display:1">
+        <tr>
+            <td valign="middle" style="width:30px;text-align:left"><fmt:message key="hierarchical.subcription"/>&nbsp;</td>
+            <td valign="top" style="width:70px;text-align:left;">
+                <select id="hierarchicalSubscriptionList">
+                    <option value="none"><fmt:message key="none"/></option>
+                    <option value="#"><fmt:message key="all.child"/></option>
+                    <option value="*"><fmt:message key="immediate.child"/></option>
+                </select>
+            </td>
+        </tr>
+    </div>
+    <%
+        }
+    %>
 </table>
 <% if (request.getParameter("notificationMethod") != null) { %>
 <script type="text/javascript">

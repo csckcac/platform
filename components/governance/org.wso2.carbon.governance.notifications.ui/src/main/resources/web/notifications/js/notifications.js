@@ -48,6 +48,14 @@ function subscribe() {
     var reason = "";
     var eventName = "";
     var digest = "";
+    var delimiter = "";
+
+    if($('hierarchicalSubscriptionInfo')!= null){
+        if ($('hierarchicalSubscriptionInfo').style.display != null){
+            delimiter = $('hierarchicalSubscriptionList').value;
+        }
+    }
+
     switch ($('subscriptionDigestTypeInput').value) {
         case "0":
             digest = "";
@@ -94,7 +102,7 @@ function subscribe() {
                             sessionAwareFunction(function() {
                                 new Ajax.Request('../info/subscription-ajaxprocessor.jsp', {
                                     method: 'post',
-                                    parameters: {path: path, endpoint: endpoint, eventName: eventName},
+                                    parameters: {path: path, endpoint: endpoint, eventName: eventName, delimiter:delimiter},
                                     onSuccess: function(transport) {
                                         if (!transport) {return;}
                                         window.location = "../notifications/notifications.jsp?region=region1&item=governance_notification_menu";
@@ -146,7 +154,7 @@ function subscribe() {
                             sessionAwareFunction(function() {
                                 new Ajax.Request('../info/subscription-ajaxprocessor.jsp', {
                                     method: 'post',
-                                    parameters: {path: path, endpoint: endpoint, eventName: eventName},
+                                    parameters: {path: path, endpoint: endpoint, eventName: eventName, delimiter:delimiter},
                                     onSuccess: function(transport) {
                                         if (!transport) {return;}
                                         window.location = "../notifications/notifications.jsp?region=region1&item=governance_notification_menu";
@@ -196,7 +204,7 @@ function subscribe() {
                         sessionAwareFunction(function() {
                             new Ajax.Request('../info/subscription-ajaxprocessor.jsp', {
                                 method: 'post',
-                                parameters: {path: path, endpoint: endpoint, eventName: eventName},
+                                parameters: {path: path, endpoint: endpoint, eventName: eventName, delimiter:delimiter},
                                 onSuccess: function(transport) {
                                     if (!transport) {return;}
                                     window.location = "../notifications/notifications.jsp?region=region1&item=governance_notification_menu";
@@ -229,7 +237,7 @@ function subscribe() {
                 sessionAwareFunction(function() {
                     new Ajax.Request('../info/subscription-ajaxprocessor.jsp', {
                         method: 'post',
-                        parameters: {path: path, endpoint: endpoint, eventName: eventName, doRest: doRest},
+                        parameters: {path: path, endpoint: endpoint, eventName: eventName, doRest: doRest,delimiter:delimiter},
                         onSuccess: function(transport) {
                             if (!transport) {return;}
                             subscribeConfirms = 0;

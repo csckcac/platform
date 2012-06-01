@@ -110,6 +110,15 @@ public class InfoAdminServiceClient {
         String path = (String) Utils.getParameter(request, "path");
         String endpoint = (String) Utils.getParameter(request, "endpoint");
         String eventName = (String) Utils.getParameter(request, "eventName");
+        String topicDelimiter= (String) Utils.getParameter(request, "delimiter");
+
+        if (topicDelimiter.equals("#") || topicDelimiter.equals("*")) {
+            if (path.endsWith("/")) {
+                path = path + topicDelimiter;
+            } else {
+                path = path + "/" + topicDelimiter;
+            }
+        }
         SubscriptionBean bean = null;
         try {
             bean = stub.subscribe(path, endpoint, eventName, null);

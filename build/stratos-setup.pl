@@ -6,6 +6,8 @@ no warnings 'all' ;
 
 my $packs_dir;
 my $stratos_dir;
+my $manager_version='1.1.0-SNAPSHOT';
+my $as_version='4.5.0';
 my $stratos_version;
 my $sso_enabled;
 my $create_db;
@@ -68,10 +70,6 @@ if (!defined($stratos_dir) || $stratos_dir eq '') {
     die "Please set a value for the option -t <stratos dir> \n";
 }
 
-if (!defined($stratos_version) || $stratos_version eq '') {
-    usage();
-    die "Please set a value for the option -v <stratos version> \n";
-}
 
 if (!defined($sso_enabled) || $sso_enabled eq '') {
     usage();
@@ -220,21 +218,21 @@ if($ret == 0) {
 if ($manager_enabled eq 'true') {
 	print "\nSetting up the Stratos Manager...\n\n";
 	print "Removing old files\n";
-	system "rm -rf $stratos_dir/wso2stratos-manager-$stratos_version";
+	system "rm -rf $stratos_dir/wso2stratos-manager-$manager_version";
 	print "done\n";
 
 	print "Unzipping\n";
 	if ($packs_dir eq '') {
-		system "unzip -qu $carbon_dir/products/manager/modules/distribution/service/target/wso2stratos-manager-$stratos_version.zip -d $stratos_dir";
+		system "unzip -qu $carbon_dir/products/manager/modules/distribution/service/target/wso2stratos-manager-$manager_version.zip -d $stratos_dir";
 	}
 	else {
-		system "unzip -qu $packs_dir/wso2stratos-manager-$stratos_version.zip -d $stratos_dir";
+		system "unzip -qu $packs_dir/wso2stratos-manager-$manager_version.zip -d $stratos_dir";
 	}
 	print "unzipping done\n";
     
 	
 	print "Copying mysql driver\n";
-	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-manager-$stratos_version/repository/components/lib";
+	system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-manager-$manager_version/repository/components/lib";
 	print "done\n";
 	
 	print "Changing manager configuration files\n";
@@ -247,23 +245,24 @@ if ($manager_enabled eq 'true') {
 	print "done\n";
 	
 	print "Copying Manager configuration files\n";
-	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-manager-$stratos_version/repository/conf";
-	system "cp setup_target/manager/repository/conf/*.xml  $stratos_dir/wso2stratos-manager-$stratos_version/repository/conf";
-	system "cp setup_target/manager/repository/conf/security/*.xml  $stratos_dir/wso2stratos-manager-$stratos_version/repository/conf/security";
-	system "cp setup_target/manager/bin/*  $stratos_dir/wso2stratos-manager-$stratos_version/bin";
+	system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-manager-$manager_version/repository/conf";
+	system "cp setup_target/manager/repository/conf/*.xml  $stratos_dir/wso2stratos-manager-$manager_version/repository/conf";
+	system "cp setup_target/manager/repository/conf/security/*.xml  $stratos_dir/wso2stratos-manager-$manager_version/repository/conf/security";
+	system "cp setup_target/manager/bin/*  $stratos_dir/wso2stratos-manager-$manager_version/bin";
     if(-e "setup_target/manager/repository/conf/datasources.properties") {
-	    system "cp setup_target/manager/repository/conf/datasources.properties  $stratos_dir/wso2stratos-manager-$stratos_version/repository/conf";
+	    system "cp setup_target/manager/repository/conf/datasources.properties  $stratos_dir/wso2stratos-manager-$manager_version/repository/conf";
     }
-	system "cp setup/manager/lib/home/index.html  $stratos_dir/wso2stratos-manager-$stratos_version/repository/deployment/server/webapps/STRATOS_ROOT/";
+	system "cp setup/manager/lib/home/index.html  $stratos_dir/wso2stratos-manager-$manager_version/repository/deployment/server/webapps/STRATOS_ROOT/";
 	print "done\n";
 	if ($sso_enabled eq 'true') {
 	    print "SSO provider functionality is enabled\n";
 	}
 	else {
-	    system "rm $stratos_dir/wso2stratos-manager-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+	    system "rm $stratos_dir/wso2stratos-manager-$manager_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
 		print "SSO provider functionality is disabled\n";
 	}
 }
+exit;
 
 	
 if ($is_enabled eq 'true') {

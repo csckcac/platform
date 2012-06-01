@@ -34,7 +34,7 @@
         <EmailVerificationService>https://localhost:9443/services/EmailVerificationService
         </EmailVerificationService>
 
-        <AddUserToApplication>http://localhost:9763/services/AddUserToApplicationService/process
+        <AddUserToApplication>http://localhost:9763/services/AddUserToApplication/process
         </AddUserToApplication>
         <CreateApplication>http://localhost:9763/services/CreateApplication</CreateApplication>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>

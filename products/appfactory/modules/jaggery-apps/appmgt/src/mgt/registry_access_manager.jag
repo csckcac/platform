@@ -10,7 +10,7 @@
             return resourceExists(path);
         } catch (e) {
             log.error("Error while accessing registry resource \n"+e.message);
-            throw "Error while storing registry resource";
+            throw "Error while accessing registry resource";
         }
     }
 
@@ -33,8 +33,8 @@
         try {
             putResource(path, resource);
         } catch (e) {
-            log.error("Error while creating storing resource \n"+e.message);
-            throw new Error("Error while creating registry resource");
+            log.error("Error while storing resource \n"+e.message);
+            throw new Error("Error while storing registry resource");
         }
     }
 

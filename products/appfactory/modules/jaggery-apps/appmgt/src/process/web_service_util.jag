@@ -73,7 +73,7 @@
         options.timeout = 1000000;
         options.action = "urn:process";
 
-        var payload = '<p:AddUserToApplicationRequest xmlns:p="http://wso2.org/addusertoapplication"><applicationKey xmlns="http://wso2.org/addusertoapplication">' + applicationKey + '</applicationKey><requestersUsername xmlns="http://wso2.org/addusertoapplication">' + requestersUsername + '</requestersUsername><newUsername xmlns="http://wso2.org/addusertoapplication">' + newUsername + '</newUsername><newUserRole xmlns="http://wso2.org/addusertoapplication">' + newUserRole + '</newUserRole></p:AddUserToApplicationRequest>';
+        var payload = '<p:AddUserToApplicationRequest xmlns:p="http://wso2.org"><applicationId xmlns="http://wso2.org">' + applicationKey + '</applicationId><userName xmlns="http://wso2.org">' + newUsername + '</userName><roles xmlns="http://wso2.org">' + newUserRole + '</roles></p:AddUserToApplicationRequest>';
         var result;
 
         try {

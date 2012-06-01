@@ -1,0 +1,43 @@
+<%
+include("/jagg/jagg.jag");
+var site = require("/site/conf/site.json");
+
+(function () {
+
+    var result, api, title, mod, links,
+            apiName = request.getParameter("name"),
+            version = request.getParameter("version"),
+            provider = request.getParameter("provider"),
+            docName = request.getParameter("docName");
+
+    result = jagg.module("documentation").getInlineContent(provider,apiName,version,docName);
+    var doc= result.doc;
+
+    title = "API Store-Document Viewer";
+
+    jagg.render({
+        "name":"page/base",
+        "inputs":{
+            "title":title,
+            "pagePath":"/site/pages/doc-viewer.jag",
+            "body":[
+                {
+                    "name":"layout/base",
+                    "inputs":{
+                        "title":"Document Viewer",
+                        "top":null,
+                        "left":null,
+                        "middle":{
+                            "name":"api/documentation/view",
+                            "inputs":{
+                                "doc":doc
+                            }
+                        },
+                        "right":null
+                    }
+                }
+            ]
+        }
+    });
+}());
+//%>

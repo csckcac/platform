@@ -1,0 +1,15 @@
+<%
+jagg.block("api/documentation/view", {
+    initializer:function (data) {
+
+    },
+
+    getInputs:function () {
+        return {
+            "doc":null
+        }
+    },
+
+
+});
+%>

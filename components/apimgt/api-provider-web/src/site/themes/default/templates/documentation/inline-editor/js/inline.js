@@ -22,14 +22,7 @@ function loadDefaultTinyMCEContent(provider,apiName, version, docName) {
                       var apiName = json.doc.provider.apiName;
                       var docContent = json.doc.provider.content;
                       $('#apiDeatils').empty().html('<p><h1> ' + docName + '</h1></p>');
-                      console.log(docContent);
-                      var stringOut = decodeURI(docContent);
-                      var xout = stringOut.replace(/%2F/g, "/");
-                      // xout= xout.replace(/+/g, " ");
-                      xout = xout.replace(/%3D/g, "=");
-                      xout = xout.replace(/%23/g, "=");
-                      console.log(xout);
-                      tinyMCE.activeEditor.setContent(xout);
+                      tinyMCE.activeEditor.setContent(docContent);
                   } else {
                       $('#inlineError').show('fast');
                       $('#inlineSpan').html('<strong>Sorry. The content of this document cannot be loaded.</strong><br />'+result.message);

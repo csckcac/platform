@@ -63,7 +63,7 @@
 				if(tmp) { is_new = false; }
 				else {
 					tmp = document.createElement("style");
-					tmp.setAttribute('type',"text/css");
+					tmp.setAttribute('type',"text/gadgetgen.css");
 					if(opts.title) { tmp.setAttribute("id", opts.title + "-stylesheet"); }
 				}
 				if(tmp.styleSheet) {
@@ -88,7 +88,7 @@
 				else {
 					tmp			= document.createElement('link');
 					tmp.rel		= 'stylesheet';
-					tmp.type	= 'text/css';
+					tmp.type	= 'text/gadgetgen.css';
 					tmp.media	= "all";
 					tmp.href	= opts.url;
 					document.getElementsByTagName("head")[0].appendChild(tmp);
@@ -265,7 +265,7 @@
 	// set the prototype for all instances
 	$.jstree._fn = $.jstree._instance.prototype = {};
 
-	// load the css when DOM is ready
+	// load the gadgetgen.css when DOM is ready
 	$(function() {
 		// code is copied from jQuery ($.browser is deprecated + there is a bug in IE)
 		var u = navigator.userAgent.toLowerCase(),
@@ -1440,7 +1440,7 @@
 		_fn : {
 			set_theme : function (theme_name, theme_url) {
 				if(!theme_name) { return false; }
-				if(!theme_url) { theme_url = $.jstree._themes + theme_name + '/style.css'; }
+				if(!theme_url) { theme_url = $.jstree._themes + theme_name + '/style.gadgetgen.css'; }
 				if($.inArray(theme_url, themes_loaded) == -1) {
 					$.vakata.css.add_sheet({ "url" : theme_url });
 					themes_loaded.push(theme_url);
@@ -2009,7 +2009,7 @@
 			},
 			_load_css : function () {
 				var langs = this._get_settings().languages,
-					str = "/* languages css */",
+					str = "/* languages gadgetgen.css */",
 					selector = ".jstree-" + this.get_index() + ' a',
 					ln;
 				if($.isArray(langs) && langs.length) {

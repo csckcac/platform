@@ -183,7 +183,7 @@ function loadSource(tree){
 
 }
 function initSections(initHidden) {
-   // $(".togglebleTitle").next().css("border","solid 1px #ccc");
+   // $(".togglebleTitle").next().gadgetgen.css("border","solid 1px #ccc");
     if (initHidden == "hidden") {
         $(".togglebleTitle").next().hide();
         $(".togglebleTitle").removeClass("contentHidden");

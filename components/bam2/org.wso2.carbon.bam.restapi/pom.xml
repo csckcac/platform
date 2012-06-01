@@ -10,8 +10,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon</groupId>
-    <artifactId>org.wso2.carbon.bam.gadgetgenwizard</artifactId>
-    <name>WSO2 BAM Gadget Gen Backend - Backend functionality required to generate gadgets</name>
+    <artifactId>org.wso2.carbon.bam.restapi</artifactId>
+    <name>WSO2 BAM Rest API - Backend functionality</name>
     <packaging>bundle</packaging>
 
 
@@ -48,6 +48,11 @@
             <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
             <version>${wso2carbon.version.bam2}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.cxf.wso2</groupId>
+            <artifactId>cxf-bundle</artifactId>
+            <version>${cxf.wso2.version.bam2}</version>
+        </dependency>
 
 
     </dependencies>
@@ -71,13 +76,13 @@
 
 
                         <Private-Package>
-                            org.wso2.carbon.bam.gadgetgenwizard.internal
+                            org.wso2.carbon.bam.restapi.internal
                         </Private-Package>
                         <Export-Package>
-                            org.wso2.carbon.bam.gadgetgenwizard.*
+                            org.wso2.carbon.bam.restapi.*
                         </Export-Package>
                         <Import-Package>
-                            !org.wso2.carbon.bam.gadgetgenwizard.*,
+                            !org.wso2.carbon.bam.restapi.*,
                             org.apache.commons.logging.*,
                             *;resolution:=optional
                         </Import-Package>

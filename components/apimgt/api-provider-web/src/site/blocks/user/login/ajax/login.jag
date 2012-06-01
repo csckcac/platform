@@ -20,7 +20,7 @@ include("/jagg/jagg.jag");
                 error:false
             }
         jagg.setUser({username:username, cookie:result.cookie});
-
+        }
         print(obj);
     } else if (action === "logout") {
         jagg.setUser(null);

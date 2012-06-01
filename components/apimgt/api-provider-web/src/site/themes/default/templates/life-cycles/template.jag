@@ -15,8 +15,10 @@ var selIndex = selObj.selectedIndex;
 var newStatus=selObj.options[selIndex].value;
 if(oldStatus=="CREATED" && newStatus=="PUBLISHED"){
 $('#deprecateOldVersionsDiv').show();
+$('#makeKeysForwardCompatibleDiv').show();
 }else{
 $('#deprecateOldVersionsDiv').hide();
+$('#makeKeysForwardCompatibleDiv').hide();
 }
 }
 </script>
@@ -49,6 +51,9 @@ $('#deprecateOldVersionsDiv').hide();
 
                  <div class="controls" id="deprecateOldVersionsDiv" style="display:none;">
                   <input type="checkbox" id="deprecateOldVersions" name="deprecateOldVersions" onChange="checkValue('#deprecateOldVersions')" value="false"> Deprecate Old Versions
+                 </div>
+                 <div class="controls" id="makeKeysForwardCompatibleDiv" style="display:none;">
+                  <input type="checkbox" id="makeKeysForwardCompatible" name="makeKeysForwardCompatible" onChange="checkValue('#makeKeysForwardCompatible')" value="false"> Make Keys Forward Compatible
                  </div>
 
 

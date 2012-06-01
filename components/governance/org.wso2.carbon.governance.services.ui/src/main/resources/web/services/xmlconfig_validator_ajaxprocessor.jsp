@@ -27,6 +27,6 @@
     if(validated) {
         %>---XMLSchemaValidated----<%
     } else {
-        %>---XML Schema Violated. XML should follow the schema definition..!!!----<%
+        %>XML Schema Violated. XML should follow the schema definition..!!!<%
     }
 %>

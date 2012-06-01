@@ -16,6 +16,7 @@
 package org.wso2.carbon.billing.mgt.dataobjects;
 
 import org.wso2.carbon.billing.core.dataobjects.Customer;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /**
  * Multitenancy customer class
@@ -29,7 +30,7 @@ public class MultitenancyCustomer extends Customer {
     private long currentStorage;
     private long historyStorage;
     private long totalStorage;
-    private int tenantId = -1;
+    private int tenantId = MultitenantConstants.INVALID_TENANT_ID;
 
     public int getTenantId() {
         return tenantId;

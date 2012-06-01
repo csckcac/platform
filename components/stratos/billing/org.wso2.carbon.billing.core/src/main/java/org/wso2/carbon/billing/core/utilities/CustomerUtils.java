@@ -92,7 +92,7 @@ public class CustomerUtils {
      */
     public static int getCustomerId(String customerName) throws BillingException {
         TenantManager tenantManager = Util.getRealmService().getTenantManager();
-        int tenantId = 0;
+        int tenantId;
         try{
             tenantId = tenantManager.getTenantId(customerName);
         }catch (Exception e){

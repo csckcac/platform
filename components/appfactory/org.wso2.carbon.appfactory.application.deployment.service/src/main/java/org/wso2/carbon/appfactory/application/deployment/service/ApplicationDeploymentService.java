@@ -76,9 +76,9 @@ public class ApplicationDeploymentService extends AbstractAdmin {
             clientType = SVNClientAdapterFactory.getPreferredSVNClientType();
             svnClient = SVNClientAdapterFactory.createSVNClient(clientType);
             svnClient.setUsername(appFactoryConfiguration.getFirstProperty(
-                    AppFactoryConstants.SERVER_ADMIN_NAME));
+                    AppFactoryConstants.SCM_ADMIN_NAME));
             svnClient.setPassword(appFactoryConfiguration.getFirstProperty(
-                    AppFactoryConstants.SERVER_ADMIN_PASSWORD));
+                    AppFactoryConstants.SCM_ADMIN_PASSWORD));
         } catch (SVNClientException e) {
             throw new ApplicationDeploymentExceptions("Client type can not be defined.");
         }
@@ -171,8 +171,8 @@ public class ApplicationDeploymentService extends AbstractAdmin {
     public Application[] deployApplication(String applicationSvnUrl, String applicationId,
                                            String stage) throws ApplicationDeploymentExceptions {
 
-        String key = AppFactoryConstants.DEPLOYMENT_STAGES + stage +
-                        AppFactoryConstants.DEPLOYMENT_URL;
+        String key = new StringBuilder(AppFactoryConstants.DEPLOYMENT_STAGES).append(".").
+                append(stage).append(".").append(AppFactoryConstants.DEPLOYMENT_URL).toString();
         String[] deploymentServerUrls = appFactoryConfiguration.getProperties(key);
 
         if (deploymentServerUrls.length == 0) {
@@ -227,9 +227,9 @@ public class ApplicationDeploymentService extends AbstractAdmin {
         }
 
         try {
-            if (applicationUploadClient.authenticate(getAdminUsername(applicationId), 
-                    appFactoryConfiguration.getFirstProperty(
-                            AppFactoryConstants.SERVER_ADMIN_PASSWORD), remoteIp)) {
+            if (applicationUploadClient.authenticate(getAdminUsername(applicationId),
+                                                     appFactoryConfiguration.getFirstProperty(
+                                                             AppFactoryConstants.SERVER_ADMIN_PASSWORD), remoteIp)) {
                 applicationUploadClient.uploadCarbonApp(uploadedFileItems);
                 log.info(deployArtifact.getName() + " is successfully uploaded.");
             } else {

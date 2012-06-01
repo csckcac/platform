@@ -35,9 +35,9 @@ var docMappedUrl=jagg.getMappedUrl("/site/pages/doc-viewer.jag");
                     %>
                     <div>
                      <%if(reqUrl.indexOf(".jag")>=0){%>
-                     <a href="#" onclick="docView('<%=provider%>','<%=name%>','<%=version%>','<%=doc.name%>')">Read Document Content</a>
+                     <a href="doc-viewer.jag?docName=<%=doc.name%>&name=<%=name%>&version=<%=version%>&provider=<%=provider%>"  target="_blank">Read Document Content</a>
                      <%}else{%>
-                     <a href="#" onclick="docView('<%=provider%>','<%=name%>','<%=version%>','<%=doc.name%>')">Read Document Content</a>
+                     <a href="../site/pages/doc-viewer.jag?docName=<%=doc.name%>&name=<%=name%>&version=<%=version%>&provider=<%=provider%>"  target="_blank">Read Document Content</a>
                      <%}%>
                     </div>
                      <%}%>

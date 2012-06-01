@@ -5,6 +5,7 @@ public class RegistryMetadata {
 
     String artifactName;
     String[] resources;
+    String[] dumps;
     String[] collections;
     Association[] associations;
 
@@ -14,6 +15,14 @@ public class RegistryMetadata {
 
     public void setResources(String[] resources) {
         this.resources = resources;
+    }
+
+    public String[] getDumps() {
+        return dumps;
+    }
+
+    public void setDumps(String[] dumps) {
+        this.dumps = dumps;
     }
 
     public String[] getCollections() {

@@ -214,6 +214,7 @@ public class ApplicationAdmin extends AbstractAdmin {
                 regMeta.setArtifactName(artifact.getName());
 
                 List<String> resources = new ArrayList<String>();
+                List<String> dumps = new ArrayList<String>();
                 List<String> collections = new ArrayList<String>();
                 List<Association> associations = new ArrayList<Association>();
 
@@ -221,6 +222,12 @@ public class ApplicationAdmin extends AbstractAdmin {
                 for (RegistryConfig.Resourse resourse : regConf.getResources()) {
                     resources.add(resourse.getPath() + "/" + resourse.getFileName());
                 }
+
+                // add dumps
+                for (RegistryConfig.Dump dump : regConf.getDumps()) {
+                    dumps.add(dump.getPath());
+                }
+
                 // add collections
                 for (RegistryConfig.Collection collection : regConf.getCollections()) {
                     collections.add(collection.getPath());
@@ -232,10 +239,12 @@ public class ApplicationAdmin extends AbstractAdmin {
                     associations.add(assoMeta);
                 }
 
-                if (resources.size() == 0 && collections.size() == 0 && associations.size() == 0) {
+                if (resources.size() == 0 && dumps.size() == 0 && collections.size() == 0
+                        && associations.size() == 0) {
                     continue;
                 }
                 regMeta.setResources(resources.toArray(new String[resources.size()]));
+                regMeta.setDumps(dumps.toArray(new String[dumps.size()]));
                 regMeta.setCollections(collections.toArray(new String[collections.size()]));
                 regMeta.setAssociations(associations.toArray(new Association[associations.size()]));
                 regArtifacts.add(regMeta);

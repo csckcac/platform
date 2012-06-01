@@ -24,11 +24,26 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 
 	private static final Log LOG = LogFactory.getLog(WSBasedCarbonGroupMapping.class);
 	private Configuration conf = null;
-	
+	private final int NR_RETRIES = 5;
+	private final int WINDOW_UPER_BOUND = 10000;
 	@Override
 	public List<String> getGroups(String user) throws IOException {
-		// TODO Auto-generated method stub
-		return getCarbonRoles(user);
+		List<String> groups = null;
+		for (int i=0; i<NR_RETRIES; i++) {
+			try {
+				groups = getCarbonRoles(user);
+				break;
+			} catch (IOException e) {
+				try {
+					Thread.sleep((i+1)*WINDOW_UPER_BOUND);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				continue;
+			}
+		}
+		return groups;
 	}
 
 	@Override
@@ -61,7 +76,7 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 			confCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);  
 		} catch (AxisFault e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
 		}
@@ -70,7 +85,7 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 			authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl+"AuthenticationAdmin");
 		} catch (AxisFault e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
 		}
@@ -82,17 +97,17 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 			LOG.info("Logging in as admin");
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
 		} catch (LoginAuthenticationExceptionException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 		}
         try {
@@ -108,12 +123,12 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 		    LOG.info("Retreived user roles");
 		} catch (UserStoreException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
 		} catch (org.wso2.carbon.user.api.UserStoreException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
 		}

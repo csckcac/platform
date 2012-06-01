@@ -22,7 +22,6 @@ public class HadoopJobRunnerActivator implements BundleActivator {
 
 	@Override
 	public void stop(BundleContext bc) throws Exception {
-		bc.ungetService(bc.getServiceReference(HadoopJobRunnerFactory.class.getName()));
 		log.info("Stopping HadoopJobRunner bundle");
 	}
 

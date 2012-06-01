@@ -79,6 +79,11 @@
                 <artifactId>hive-jdbc</artifactId>
                 <version>0.8.1-wso2v1</version>
 	   </dependency>
+           <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>hive-jdbc-handler</artifactId>
+                <version>0.8.1-wso2v1</version>
+           </dependency>
     </dependencies>
 
     <build>
@@ -96,6 +101,7 @@
                         <Export-Package>
                             org.apache.hadoop.hive.*;-split-package:=merge-last,
 			    org.apache.hadoop.hive.cassandra.*,
+			    org.wso2.carbon.hive.storage.*,
 			    org.apache.thrift.*;version="${hive.thrift.osgi.version}"
                         </Export-Package>
                         <_exportcontents>
@@ -110,7 +116,7 @@
                             *;resolution:=optional
                         </Import-Package>
                         <Embed-Dependency>
-			    hive-exec|hive-shims|hive-builtins|hive-service|hive-serde|hive-metastore||hive-jdbc|hive-cassandra;scope=compile|runtime;inline=false;
+			    hive-exec|hive-shims|hive-builtins|hive-service|hive-serde|hive-metastore||hive-jdbc|hive-jdbc-handler|hive-cassandra;scope=compile|runtime;inline=false;
                         </Embed-Dependency>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

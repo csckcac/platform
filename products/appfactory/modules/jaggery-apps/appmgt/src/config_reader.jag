@@ -6,5 +6,8 @@ var appFactoryConfigReader = new appFactoryConfigReaderModule.AppFactoryConfigur
  function getProperty(expression){
     return "" + appFactoryConfigReader.getFirstProperty(expression);
  }
+  function getProperties(expression){
+    return "" + appFactoryConfigReader.getProperties(expression);
+ }
 
 %>

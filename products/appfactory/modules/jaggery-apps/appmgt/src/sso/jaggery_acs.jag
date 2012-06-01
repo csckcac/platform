@@ -3,6 +3,7 @@
     Waiting for responses from identity server and validate response and forward to requested URI.
         <%
         (function() {
+                var log = new Log();
                 var samlResponse = request.getParameter("SAMLResponse");
                 var sessionId = request.getHeader("Cookie").split(";")[0].split("=")[1];
                 var samlRequest =request.getParameter("SAMLRequest");
@@ -22,7 +23,7 @@
                         var relayState = request.getParameter("RelayState");
                         var requestedURI =  ssoRelyingParty.getRelayStateProperty(relayState);
                         if(  requestedURI==null){
-                            log("Relaystate value is invalid.", "error");
+                            log.error("Relaystate value is invalid.");
                             response.sendRedirect("../error.jag");
                             return;
                         }
@@ -30,7 +31,7 @@
                         // validating the signature
                         var isSignatureValid =ssoRelyingParty.validateSignature(samlResponse);
                         if(!Boolean(isSignatureValid)){
-                            log("SAML response signature is verification failed.", "error");
+                            log.error("SAML response signature is verification failed.");
                             response.sendRedirect("../error.jag");
                             return;
                         }

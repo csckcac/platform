@@ -3,7 +3,7 @@
 include('../config_reader.jag');
 var security =require("ssoRelyingParty");
 var ssoRelyingParty = new security.SSORelyingParty(getProperty(SSO_NAME));
-var samlLogoutRequest = ssoRelyingParty.getSAMLLogoutRequest("admin");
+var samlLogoutRequest = ssoRelyingParty.getSAMLLogoutRequest(userName);
 var encodedRequest = ssoRelyingParty.encode(samlLogoutRequest);
 var relayState = ssoRelyingParty.getUUID();
 var idpURL = ssoRelyingParty.getProperty("identityProviderURL");

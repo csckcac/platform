@@ -3,14 +3,13 @@
 // Update the ssoRelyingParty properties, identityProviderURL, issuerId  ,keyStorePassword   ,identityAlias ,keyStoreName properly.
 include('../config_reader.jag');
 var security =require("ssoRelyingParty");
-
+var log = new Log();
 var ssoRelyingParty = new security.SSORelyingParty(getProperty(SSO_NAME));
 var sessionId = request.getHeader("Cookie").split(";")[0].split("=")[1];
 var isAuthenticated = ssoRelyingParty.isSessionAuthenticated(sessionId);
 session.put("LOGGED_IN_USER",ssoRelyingParty.getLoggedInUser(sessionId));
 if (!Boolean(isAuthenticated)) {
-    log("User is not authenticated, redirecting to identity server for authentication.", "info");
-    // add properties for sso, these should be read from a config file.
+    log.info("User is not authenticated, redirecting to identity server for authentication.");
 
     ssoRelyingParty.setProperty("identityProviderURL", getProperty(SSO_PROVIDER));
     ssoRelyingParty.setProperty("keyStorePassword", getProperty(SSO_KEYSTORE_PASSWORD));

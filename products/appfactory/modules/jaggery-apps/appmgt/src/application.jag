@@ -129,11 +129,21 @@
                     <div class="content-box" id="devOp">
                         <h3>devOp operations</h3>
                         <table class="styledLeft">
-                            <tr>
+                            <%
+                            var stages = getProperty('ApplicationDeployment.DeploymentStage');
+                            for(var i=0; i<stages.length;i++){
+                                var stage = stages[i];
+                            %>
+                               <tr>
                                 <td class="buttonRow">
-                                    <input type="button" onclick="location.href='deploy_to_qa.jag?applicationName=<%=applicationName%>&applicationSvnLocation=<%=applicationSVN%>'" value='Deploy to QA' class='button'/>
+                                    <input type="button" onclick="location.href='deploy_to_stage.jag?applicationName=<%=applicationName%>&applicationSvnLocation=<%=applicationSVN%>&stageName=<%=stage%>'" value='Deploy to <%=stage%>' class='button'/>
                                 </td>
                             </tr>
+                            <%
+                            }
+
+                            %>
+
                         </table>
                     </div>
                     <%

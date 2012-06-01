@@ -265,31 +265,30 @@
              throw new Error(e.message);
              }
              }
-        function invokeDeployToDevProcess(applicationSvnLocation,applicationName){
-       var ws = require('ws');
+        function invokeDeployToStage(applicationSvnLocation,applicationName,stageName){
+               var ws = require('ws');
+               var deployApplicationToStageProcess = new ws.WSRequest();
+               var options = new Array();
+               options.useSOAP = 1.1;
+               options.action = "urn:process";
+               var payload = '<p:DeployApplicationTo'+stageName+'Request xmlns:p="http://wso2.org/carbon/appfactory/applicaiton/deployment"><p:applicationSvnLocation>'+applicationSvnLocation+'</p:applicationSvnLocation><p:applicationName>'+applicationName+'</p:applicationName></p:DeployApplicationTo'+stageName+'Request>';
+               var result;
 
-       var deployApplicationToDevProcess = new ws.WSRequest();
-       var options = new Array();
-       options.useSOAP = 1.1;
-       options.action = "urn:process";
-       var payload = '<p:DeployApplicationToDevRequest xmlns:p="http://wso2.org/carbon/appfactory/applicaiton/deployment"><p:applicationSvnLocation>'+applicationSvnLocation+'</p:applicationSvnLocation><p:applicationName>'+applicationName+'</p:applicationName></p:DeployApplicationToDevRequest>';
-       var result;
-
-       try {
-        var endPoint = 'https://localhost:9443/services/DeployApplicationToDev';
-        deployApplicationToDevProcess.open(options,endPoint, false);
-        deployApplicationToDevProcess.send(payload);
-        result = deployApplicationToDevProcess.responseE4X;
-        var resultNS=new Namespace("http://wso2.org/carbon/appfactory/applicaiton/deployment");
-        var deployedArtifact=result.resultNS::["result"].text();
-        if(log.isDebugEnabled()){
-            log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
-        }
-       } catch (e) {
-        log.error(e.toString());
-        throw new Error(e.message);
-        }
-        return deployedArtifact;
+               try {
+                    var endPoint =getProperty('ApplicationDeployment.DeploymentStage.'+stageName+'.ProcesEndPoint');
+                    deployApplicationToStageProcess.open(options,endPoint, false);
+                    deployApplicationToStageProcess.send(payload);
+                    result = deployApplicationToStageProcess.responseE4X;
+                    var resultNS=new Namespace("http://wso2.org/carbon/appfactory/applicaiton/deployment");
+                    var deployedArtifact=result.resultNS::["result"].text();
+                    if(log.isDebugEnabled()){
+                        log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+                    }
+               } catch (e) {
+               log.error(e.toString());
+               throw new Error(e.message);
+               }
+               return deployedArtifact;
 
        }
        function getAdminCookie(address){

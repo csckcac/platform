@@ -52,31 +52,31 @@ public class BRSTestServerManager extends TestServerManager {
         String deploymentDir = computeDestDirPath(carbonHome);
 
 //        /*Banking service Sample*/
-        copySampleFile(computeSourcePath("banking.service/target/BankingService.aar"), deploymentDir);
+        copySampleFile(computeSourcePath("banking.service/service/target/BankingService.aar"), deploymentDir);
 
 //        GetQuote Service Sample
-        copySampleFile(computeSourcePath("quotation.service/target/GetQuoteService.aar"), deploymentDir);
+        copySampleFile(computeSourcePath("quotation.service/service/target/GetQuoteService.aar"), deploymentDir);
 
 //        Call Charging service sample
 //        copySampleFile(computeSourcePath("callcharging.service/target/CallChargingService.aar"), deploymentDir);
 
 //        Car Rental Service Sample
-        copySampleFile(computeSourcePath("carrental.service/target/CarRentalService.aar"), deploymentDir);
+        copySampleFile(computeSourcePath("carrental.service/service/target/CarRentalService.aar"), deploymentDir);
 
 //        Health care service sample
-        copySampleFile(computeSourcePath("heathcare.service/target/HealthCareService.aar"), deploymentDir);
+        copySampleFile(computeSourcePath("healthcare.service/service/target/HealthCareService.aar"), deploymentDir);
 
 //        Insurance Service Sample
-        copySampleFile(computeSourcePath("insurance.service/target/InsuranceService.aar"), deploymentDir);
+        copySampleFile(computeSourcePath("insurance.service/service/target/InsuranceService.aar"), deploymentDir);
 
 //       MIP Calculating service Sample
-        copySampleFile(computeSourcePath("MIPCalculate.service/target/MIPCalculateService.aar"), deploymentDir);
+        copySampleFile(computeSourcePath("MIPCalculate.service/service/target/MIPCalculateService.aar"), deploymentDir);
 
 //        Order approval service sample
-        copySampleFile(computeSourcePath("orderApproval.service/target/OrderApprovalService.aar"), deploymentDir);
+        copySampleFile(computeSourcePath("orderApproval.service/service/target/OrderApprovalService.aar"), deploymentDir);
 
 //        Shopping service sample
-        copySampleFile(computeSourcePath("shopping.service/target/ShoppingService.aar"), deploymentDir);
+        copySampleFile(computeSourcePath("shopping.service/service/target/ShoppingService.aar"), deploymentDir);
     }
 
     private void copySampleFile(String sourceFilePath, String destDirPath) throws IOException {

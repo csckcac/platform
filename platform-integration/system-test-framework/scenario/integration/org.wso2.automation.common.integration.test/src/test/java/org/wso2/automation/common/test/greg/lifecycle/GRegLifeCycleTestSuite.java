@@ -32,7 +32,9 @@ public class GRegLifeCycleTestSuite extends MasterTestSuite {
 
         suiteVariablesList.add(new SuiteVariables("DefaultServiceLifeCycleTest",
                                                   DefaultServiceLifeCycleTest.class));
-        suiteVariablesList.add(new SuiteVariables("DefaultServiceLifeCycleTest",
+        suiteVariablesList.add(new SuiteVariables("PreserveOriginalDefaultServiceLifeCycle",
+                                                  PreserveOriginalDefaultServiceLifeCycle.class));
+        suiteVariablesList.add(new SuiteVariables("DefaultServiceLifeCycleWithDependency",
                                                   DefaultServiceLifeCycleWithDependency.class));
 
 

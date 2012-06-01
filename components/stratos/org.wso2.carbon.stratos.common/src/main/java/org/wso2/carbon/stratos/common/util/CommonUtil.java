@@ -555,9 +555,9 @@ public class CommonUtil {
 
     /**
      * method to check whether a domain name is available to register given a domain name
-     * @param tenantDomain
-     * @return
-     * @throws Exception
+     * @param tenantDomain, domain name
+     * @return true, if the domain is available to register
+     * @throws Exception, if checking the existence of the tenant is failed.
      */
     public static boolean isDomainNameAvailable(String tenantDomain) throws Exception {
 

@@ -69,7 +69,9 @@ public class DefaultTenantPersistor implements TenantPersistor {
                              String originatedService) throws Exception {
         int tenantId;
         validateAdminUserName(tenant);
-        boolean isDomainAvailable = TenantCoreUtil.isDomainNameAvailable(tenant);
+        String tenantDomain = tenant.getDomain();
+
+        boolean isDomainAvailable = CommonUtil.isDomainNameAvailable(tenantDomain);
         if (!isDomainAvailable) {
             throw new Exception("Domain is not available to register");
         }
@@ -313,9 +315,10 @@ public class DefaultTenantPersistor implements TenantPersistor {
      * @throws Exception, if persisting tenant failed.
      */
     public int persistTenant(Tenant tenant) throws Exception {
+        String tenantDomain = tenant.getDomain();
         int tenantId;
         validateAdminUserName(tenant);
-        boolean isDomainAvailable = TenantCoreUtil.isDomainNameAvailable(tenant);
+        boolean isDomainAvailable = CommonUtil.isDomainNameAvailable(tenantDomain);
         if (!isDomainAvailable) {
             throw new Exception("Domain is not available to register");
         }

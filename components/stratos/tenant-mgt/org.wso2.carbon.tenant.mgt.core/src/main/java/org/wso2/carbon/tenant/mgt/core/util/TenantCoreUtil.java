@@ -6,6 +6,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
@@ -20,51 +21,6 @@ import org.wso2.carbon.tenant.mgt.core.internal.TenantMgtCoreServiceComponent;
 public class TenantCoreUtil {
     
     private static final Log log = LogFactory.getLog(TenantCoreUtil.class);
-
-    /**
-     * Check whether a tenant exist with the given tenantInfoBean and
-     * TenantManager.
-     * 
-     * @param tenant tenant Information
-     * @return true, if the chosen name is available to register
-     * @throws Exception
-     *             if unable to get the tenant id or if a tenant with same
-     *             domain exists.
-     */
-    public static boolean isDomainNameAvailable(Tenant tenant) throws Exception {
-        TenantManager tenantManager = TenantMgtCoreServiceComponent.getTenantManager();
-        String tenantDomain = tenant.getDomain();
-    
-        // The registry reserved words are checked first.
-        if (tenantDomain.equals("atom") || tenantDomain.equals("registry") ||
-            tenantDomain.equals("resource")) {
-            String msg = "You can not use a registry reserved word:" + tenantDomain +
-                         ":as a tenant domain. Please choose a different one.";
-            log.error(msg);
-            throw new Exception(msg);
-        }
-    
-        int tenantId;
-        try {
-            tenantId = tenantManager.getTenantId(tenantDomain);
-        } catch (UserStoreException e) {
-            String msg = "Error in getting the tenant id for the given domain  " +
-                         tenant.getDomain() + ".";
-            log.error(msg);
-            throw new Exception(msg, e);
-        }
-    
-        // check a tenant with same domain exist.
-        if (tenantId > 0 || tenant.getDomain().equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            String msg =
-                         "A tenant with same domain already exist. " +
-                                 "Please use a different domain name. tenant domain: " +
-                                 tenant.getDomain() + ".";
-            log.info(msg);
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Initializes the registry for the tenant.

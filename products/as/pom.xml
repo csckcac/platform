@@ -242,6 +242,7 @@
         <servlet-api.version>2.4</servlet-api.version>
         <apache.derby.version>10.3.2.1wso2v1</apache.derby.version>
         <hibernate.version>3.2.5.ga-wso2v1</hibernate.version>
+		<synapse.version>2.1.0-wso2v6</synapse.version>
         <bcel.version>5.2.0.wso2v1</bcel.version>
         <asm.version>1.5.3.wso2v1</asm.version>
         <cglib.version>2.1.3.wso2v1</cglib.version>

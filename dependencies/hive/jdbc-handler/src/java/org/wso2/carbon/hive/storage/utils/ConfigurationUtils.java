@@ -1,12 +1,12 @@
-package org.wso2.carbon.hive.storage;
+package org.wso2.carbon.hive.storage.utils;
 
 
-import com.google.common.collect.ImmutableSet;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Properties;
 
 public class ConfigurationUtils {
 
@@ -19,7 +19,7 @@ public class ConfigurationUtils {
     public static final String HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER = "hive.jdbc.upsert.query.values.order";
 
 
-    public static final Set<String> ALL_PROPERTIES = ImmutableSet.of(
+    public static final String[] ALL_PROPERTIES = new String[]{
             DBConfiguration.DRIVER_CLASS_PROPERTY,
             DBConfiguration.USERNAME_PROPERTY,
             DBConfiguration.PASSWORD_PROPERTY,
@@ -31,8 +31,7 @@ public class ConfigurationUtils {
             HIVE_JDBC_COLUMNS_MAPPING,
             HIVE_JDBC_TABLE_CREATE_QUERY,
             HIVE_JDBC_OUTPUT_UPSERT_QUERY,
-            HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER
-    );
+            HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER };
 
 
     public static void copyJDBCProperties(Properties from, Map<String, String> to) {
@@ -48,7 +47,7 @@ public class ConfigurationUtils {
         String tableName = conf.get(DBConfiguration.OUTPUT_TABLE_NAME_PROPERTY);
         if (tableName == null) {
             String createTableQuery = conf.get(HIVE_JDBC_TABLE_CREATE_QUERY);
-            tableName = extractingTableNameFromQuery(tableName, createTableQuery);
+            tableName = Commons.extractingTableNameFromQuery(createTableQuery);
         }
         return tableName;
     }
@@ -98,36 +97,6 @@ public class ConfigurationUtils {
         return null;
     }
 
-
-    //If user has given the query for creating table, we don't need to ask the table name again. Get the table name from the query
-    public final static String extractingTableNameFromQuery(String tableName,
-                                                            String createTableQuery) {
-        if (createTableQuery != null) {
-            List<String> queryList = Arrays.asList(createTableQuery.split(" "));
-            Iterator<String> iterator = queryList.iterator();
-            while (iterator.hasNext()) {
-                if (iterator.next().equalsIgnoreCase("create")) {
-                    while (iterator.hasNext()) {
-                        if (iterator.next().equalsIgnoreCase("table")) {
-                            while (iterator.hasNext()) {
-                                String nextString = iterator.next();
-                                if (!nextString.equalsIgnoreCase("")) {
-                                    tableName = nextString;
-                                    return tableName;
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-        } else {
-            throw new IllegalArgumentException("You should provide at least " +
-                                               DBConfiguration.OUTPUT_TABLE_NAME_PROPERTY + " or " +
-                                               ConfigurationUtils.HIVE_JDBC_TABLE_CREATE_QUERY + " property.");
-        }
-        return tableName;
-    }
 
     public static String getDbSpecificUpdateQuery(JobConf conf) {
         return conf.get(ConfigurationUtils.HIVE_JDBC_OUTPUT_UPSERT_QUERY);

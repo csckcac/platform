@@ -1,4 +1,4 @@
-package org.wso2.carbon.hive.storage;
+package org.wso2.carbon.hive.storage.db;
 
 
 public class DatabaseProperties {
@@ -9,11 +9,29 @@ public class DatabaseProperties {
     private String driverClass;
     private String tableName;
     private String dbSpecificUpsertQuery;
+    private String tableCreateQuery;
+    private String dataSourceName;
     private String[] upsertQueryValuesOrder;
     private String[] fieldsNames;
     private String[] primaryFields;
     private String[] columnMappingFields;
     private boolean updateOnDuplicate;
+
+    public String getTableCreateQuery() {
+        return tableCreateQuery;
+    }
+
+    public void setTableCreateQuery(String tableCreateQuery) {
+        this.tableCreateQuery = tableCreateQuery;
+    }
+
+    public String getDataSourceName() {
+        return dataSourceName;
+    }
+
+    public void setDataSourceName(String dataSourceName) {
+        this.dataSourceName = dataSourceName;
+    }
 
     public String getDbSpecificUpsertQuery() {
         return dbSpecificUpsertQuery;

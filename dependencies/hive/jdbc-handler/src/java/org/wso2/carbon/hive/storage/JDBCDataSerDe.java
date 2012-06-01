@@ -34,6 +34,8 @@ public class JDBCDataSerDe implements SerDe {
     private List<String> columnNames;
     String[] columnTypesArray;
 
+    private List<Object> row;
+
     public void initialize(Configuration entries, Properties properties) throws SerDeException {
 
         String tableColumnNamesString = properties.getProperty(Constants.LIST_COLUMNS);
@@ -133,7 +135,43 @@ public class JDBCDataSerDe implements SerDe {
     }
 
     public Object deserialize(Writable writable) throws SerDeException {
-        return null;
+        if (!(writable instanceof MapWritable)) {
+            throw new SerDeException("Expected MapWritable, received "
+                                     + writable.getClass().getName());
+        }
+        final MapWritable input = (MapWritable) writable;
+        final Text t = new Text();
+        row.clear();
+
+        for (int i = 0; i < fieldCount; i++) {
+            t.set(columnNames.get(i));
+            final Writable value = input.get(t);
+            if (value != null && !NullWritable.get().equals(value)) {
+                //parse as double to avoid NumberFormatException...
+                //TODO:need more test,especially for type 'bigint'
+                if (HIVE_TYPE_INT.equalsIgnoreCase(columnTypesArray[i])) {
+                    row.add(Double.valueOf(value.toString()).intValue());
+                } else if (HIVE_TYPE_SMALLINT.equalsIgnoreCase(columnTypesArray[i])) {
+                    row.add(Double.valueOf(value.toString()).shortValue());
+                } else if (HIVE_TYPE_TINYINT.equalsIgnoreCase(columnTypesArray[i])) {
+                    row.add(Double.valueOf(value.toString()).byteValue());
+                } else if (HIVE_TYPE_BIGINT.equalsIgnoreCase(columnTypesArray[i])) {
+                    row.add(Long.valueOf(value.toString()));
+                } else if (HIVE_TYPE_BOOLEAN.equalsIgnoreCase(columnTypesArray[i])) {
+                    row.add(Boolean.valueOf(value.toString()));
+                } else if (HIVE_TYPE_FLOAT.equalsIgnoreCase(columnTypesArray[i])) {
+                    row.add(Double.valueOf(value.toString()).floatValue());
+                } else if (HIVE_TYPE_DOUBLE.equalsIgnoreCase(columnTypesArray[i])) {
+                    row.add(Double.valueOf(value.toString()));
+                } else {
+                    row.add(value.toString());
+                }
+            } else {
+                row.add(null);
+            }
+        }
+
+        return row;
     }
 
     public ObjectInspector getObjectInspector() throws SerDeException {

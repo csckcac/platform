@@ -46,13 +46,14 @@
 <%
     }
 %>
-<fmt:bundle basename="org.wso2.carbon.cassandra.mgt.ui.i18n.Resources">
+<%--TODO refactor JSI bundle--%>
+<fmt:bundle basename="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources">
 <carbon:jsi18n
-        resourceBundle="org.wso2.carbon.cassandra.mgt.ui.i18n.JSResources"
+        resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
         request="<%=request%>" i18nObjectName="cassandrajsi18n"/>
 <carbon:breadcrumb
         label="cassandra.cf"
-        resourceBundle="org.wso2.carbon.cassandra.mgt.ui.i18n.Resources"
+        resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
         topPage="false"
         request="<%=request%>"/>
 

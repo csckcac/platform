@@ -17,14 +17,14 @@
 -->
 
 <%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
+<script type="text/javascript" src="js/cassandra_cf_explorer.js"></script>
+<script language="text/javascript" src="../admin/js/customControls.js"></script>
 
 <%
     CassandraExplorerAdminClient adminClient
             = new CassandraExplorerAdminClient(config.getServletContext(), session);
     String[] keyspaces = adminClient.getKeyspaces();
 %>
-
-<script language="text/javascript" src="../admin/js/customControls.js"></script>
 <script>
     jQuery(document).ready(function () {
         initSections("");
@@ -42,7 +42,7 @@
 </style>
 
 <div id="middle">
-    <h2>User Management</h2>
+    <h2>Keyspaces</h2>
 
     <div id="workArea">
         <!-- Section 1 -->

@@ -178,9 +178,9 @@ function loadPageSize(keySpace, columnFamily) {
         "&pageSize=" + pageSize;
 }
 
-function viewExplorer(keyspace, index) {
+function viewExplorer(keyspace, columnFamily) {
     location.href = 'cf_explorer.jsp?keyspace=' + keyspace + "&columnFamily=" +
-        document.getElementById("cfName" + index).value;
+        columnFamily;
 }
 
 function getDataForRow(keyspace, cf, rowID) {

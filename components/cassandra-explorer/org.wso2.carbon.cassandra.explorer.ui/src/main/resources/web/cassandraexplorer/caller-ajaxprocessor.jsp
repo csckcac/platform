@@ -16,9 +16,8 @@
 ~ under the License.
 --%>
 
-<%@ page import="org.wso2.carbon.cassandra.explorer.stub" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
-<%@ page import="org.wso2.carbon.explorer.ui.CassandraExplorerAdminClient" %>
+<%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
 <%@ page import="org.wso2.carbon.cassandra.explorer.stub.data.xsd.Column" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>

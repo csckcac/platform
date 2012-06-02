@@ -27,8 +27,8 @@
             <region>region1</region>
             <order>30</order>
             <style-class>manage</style-class>
-            <icon>../web.cassandra.explorer/images/explorer.png</icon>
-            <require-permission>/permission/admin/manage/add</require-permission>
+            <icon>../cassandraexplorer/images/explorer.png</icon>
+            <require-permission>/permission/admin/manage</require-permission>
         </menu>
     </menus>
 </component>

@@ -16,8 +16,7 @@
 ~ under the License.
 -->
 
-<%@ page import="org.wso2.carbon.cassandra.explorer.stub.CassandraExplorerAdmin" %>
-<%@ page import="org.wso2.carbon.explorer.ui.CassandraExplorerAdminClient" %>
+<%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
 
 <%
     CassandraExplorerAdminClient adminClient

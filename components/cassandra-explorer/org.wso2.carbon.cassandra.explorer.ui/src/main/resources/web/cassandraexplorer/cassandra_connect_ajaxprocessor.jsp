@@ -1,3 +1,4 @@
+
 <!--
 ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
@@ -15,8 +16,8 @@
 ~ specific language governing permissions and limitations
 ~ under the License.
 -->
-<%@ page import="org.wso2.carbon.cassandra.explorer.stub.CassandraExplorerAdmin" %>
-<%@ page import="org.wso2.carbon.explorer.ui.CassandraExplorerAdminClient" %>
+<%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
+
 <%
     CassandraExplorerAdminClient adminClient =
             new CassandraExplorerAdminClient(config.getServletContext(), session);

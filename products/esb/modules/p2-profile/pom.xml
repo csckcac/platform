@@ -202,6 +202,7 @@
                                 <!-- End GApp SSO features -->
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transaction.manager.feature:${carbon.version}</featureArtifactDef>
 
 
                             </featureArtifacts>
@@ -559,7 +560,11 @@
                                     <id>org.wso2.carbon.stratos.common.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
-
+                             
+                                <feature>
+                                    <id>org.wso2.carbon.transaction.manager.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
 
                                 <!--End Stratos ESB features-->
                             </features>

@@ -64,7 +64,7 @@ public class SyslogConfigManager {
     public static SyslogConfiguration loadSyslogConfiguration() {
         // gets the configuration file name from the syslog-config.xml.
 		String syslogConfigFileName = CarbonUtils.getCarbonConfigDirPath()
-				+ RegistryConstants.PATH_SEPARATOR + LoggingConstants.ADVANCE_DIR
+				+ RegistryConstants.PATH_SEPARATOR + LoggingConstants.ETC_DIR
 				+ RegistryConstants.PATH_SEPARATOR + LoggingConstants.SYSLOG_CONF_FILE;
         return loadSyslogConfiguration(syslogConfigFileName);
     }

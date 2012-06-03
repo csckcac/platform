@@ -83,9 +83,6 @@
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.sts.feature:${wso2carbon.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.xfer.feature:${wso2carbon.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.mex.feature:${wso2carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}</featureArtifactDef>
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>
 
 								<!-- registry related features-->
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.common.feature:${wso2carbon.version}</featureArtifactDef>
@@ -278,18 +275,6 @@
 									<id>org.wso2.identity.styles.feature.group</id>
 									<version>${identity.version}</version>
 								</feature>
-                                <feature>
-                                    <id>org.wso2.carbon.admin.mgt.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.admin.mgt.ui.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.captcha.mgt.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.sts.passive.feature.group</id>
                                     <version>${identity.version}</version>

@@ -207,16 +207,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.application.deployer.gadget.feature:${carbon.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}
-                                </featureArtifactDef>
-
 
                                 <!-- GApp SSO features -->
                                 <featureArtifactDef>
@@ -305,19 +295,6 @@
                                     <id>
                                         org.wso2.carbon.core.common.feature.group
                                     </id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.admin.mgt.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.admin.mgt.ui.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.captcha.mgt.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <!-- END Dashboard-->

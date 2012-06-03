@@ -181,10 +181,7 @@
                                 <!-- reporting features -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.feature:${carbon.version}</featureArtifactDef>
                                 <!-- end reporting features -->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>								
-
+                         		
                                 <!--Stratos ESB related artifacts-->
 
                                 <!-- Cloud ESB related features -->
@@ -515,21 +512,6 @@
                                     <id>org.wso2.carbon.reporting.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.admin.mgt.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.admin.mgt.ui.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.captcha.mgt.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>								
-
                                 <!--Start Stratos ESB features-->
 
 

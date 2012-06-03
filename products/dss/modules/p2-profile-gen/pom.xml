@@ -165,10 +165,6 @@
                                 <!-- reporting features -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.ui.feature:${carbon.version}</featureArtifactDef>
-
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.transaction.manager.feature:${carbon.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.version}</featureArtifactDef>
 
@@ -453,21 +449,6 @@
                                     <id>org.wso2.carbon.reporting.ui.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature> 
-
-                                <feature>
-                                    <id>org.wso2.carbon.admin.mgt.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.admin.mgt.ui.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.captcha.mgt.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
 				<feature>
                                     <id>org.wso2.carbon.stratos.usage.agent.feature.group</id>
                                     <version>${stratos.version}</version>

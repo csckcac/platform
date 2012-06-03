@@ -173,8 +173,8 @@
         </file>
 	<!-- Including syslog-config.xml file -->
  	<file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced/</outputDirectory>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/syslog-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/</outputDirectory>
         </file>
         <file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml</source>

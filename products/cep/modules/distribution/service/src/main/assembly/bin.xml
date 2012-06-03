@@ -139,9 +139,9 @@
         <!-- Including syslog-config.xml file -->
         <file>
             <source>
-                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml
+                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/etc/syslog-config.xml
             </source>
-            <outputDirectory>wso2cep-${pom.version}/repository/conf/advanced
+            <outputDirectory>wso2cep-${pom.version}/repository/conf/etc
             </outputDirectory>
         </file>
         <!-- <file>

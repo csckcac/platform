@@ -27,7 +27,7 @@ public final class LoggingConstants {
     public static final String URL_SEPARATOR ="/";
     public static final String SYSLOG_CONF_FILE ="syslog-config.xml";
     public static final String CASSANDRA_CONF_FILE ="cassandra-config.xml";
-    public static final String ADVANCE_DIR = "advanced";
+    public static final String ETC_DIR = "etc";
     public static final String USERNAME_KEY = "username";
 	public static final String PASSWORD_KEY = "password";
 	public static final String DEFUALT_CLUSTER_NAME = "TestCluster";
@@ -71,7 +71,9 @@ public final class LoggingConstants {
     	public static final String MESSAGE = "message";
     	public static final String IP = "ip";
     	public static final String STACKTRACE = "stacktrace";
+    	public static final String INSTANCE ="instance";
     }
+    
     public static final class CassandraProperties {
     	public static final String URL = "cassandra.host.url";
     	public static final String KEYSPACE = "cassandra.keyspace";
@@ -80,6 +82,7 @@ public final class LoggingConstants {
     	public static final String PASSWORD ="password";
     	public static final String IS_CASSANDRA_AVAILABLE ="isCassandraAvailable";
     }
+    
 
     public static final class LoggerProperties {
         public static final String NAME = "name";

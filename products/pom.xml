@@ -277,7 +277,7 @@
             <module>bam2</module>
             <module>cep</module>
             <module>bps</module>
-            <module>brs</module>
+            <!--module>brs</module-->
             <module>mb</module>	
             <module>lb</module>	
             <module>wsf</module>

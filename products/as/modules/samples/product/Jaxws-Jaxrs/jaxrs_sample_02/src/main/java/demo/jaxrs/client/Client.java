@@ -59,7 +59,7 @@ public final class Client {
         String currentOrderId = null;
 
         // Sent HTTP GET request to query customer info
-        System.out.println("Sent HTTP GET request to query order info");
+        System.out.println("Sent HTTP GET request to query order info of " + 123);
         URL url = new URL(serviceURL + "/orders/123");
         InputStream in = url.openStream();
         System.out.println(getStringFromInputStream(in));
@@ -94,6 +94,13 @@ public final class Client {
             System.out.println("The retrieved order id is null. Either the POST operation was failed or some other error.");
             return;
         }
+
+        // Sent HTTP GET request to query customer info
+        System.out.println("\n");
+        System.out.println("Sent HTTP GET request to query order info of " + currentOrderId);
+        url = new URL(serviceURL + "/orders/"+currentOrderId);
+        in = url.openStream();
+        System.out.println(getStringFromInputStream(in));
 
         // Sent HTTP PUT request to update order
         System.out.println("\n");

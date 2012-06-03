@@ -55,7 +55,7 @@ public class CassandraConfigManager {
 		// gets the configuration file name from the cassandra-config.xml.
 		String cassandraConfigFileName = CarbonUtils.getCarbonConfigDirPath()
 				+ RegistryConstants.PATH_SEPARATOR
-				+ LoggingConstants.ADVANCE_DIR
+				+ LoggingConstants.ETC_DIR
 				+ RegistryConstants.PATH_SEPARATOR
 				+ LoggingConstants.CASSANDRA_CONF_FILE;
 		return loadCassandraConfiguration(cassandraConfigFileName);

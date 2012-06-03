@@ -40,9 +40,10 @@ import static org.testng.Assert.*;
  */
 public class ServiceEditTestCase {
     private static final Log log = LogFactory.getLog(ServiceEditTestCase.class);
-    private String servicePath = "/_system/governance/trunk/services/";
-    private String wsdlPath = "/_system/governance/trunk/wsdls/";
-    private String schemaPath = "/_system/governance/trunk/schemas/";
+    public static final String TRUNK = "/_system/governance/trunk";
+    private String servicePath = TRUNK + "/services/";
+    private String wsdlPath = TRUNK + "/wsdls/";
+    private String schemaPath = TRUNK + "/schemas/";
     private AddServicesServiceStub addServicesServiceStub;
     private ResourceAdminServiceStub resourceAdminServiceStub;
 
@@ -115,7 +116,6 @@ public class ServiceEditTestCase {
                     wsdlNamespacePath + serviceName);
 
 //            check if the deleted file exists in registry
-//            TODO fix
             try{
 //                This is for a normal delete operation.
                 if(isResourceExist(loggedInSessionCookie, servicePath +
@@ -129,7 +129,7 @@ public class ServiceEditTestCase {
 //                If the delete service handler has been engaged, then the collection hierarchy is deleted too.
 //                We test that scenario from this code segment.
                 if(re.getMessage().contains("Resource does not exist at path")){
-                    if(isResourceExist(loggedInSessionCookie,servicePath,"samples",resourceAdminServiceStub)){
+                    if(isResourceExist(loggedInSessionCookie,TRUNK,"",resourceAdminServiceStub)){
                         log.error("Collection hierarchy not deleted from the registry");
                         fail("Collection hierarchy not deleted from the registry");
                     }else{

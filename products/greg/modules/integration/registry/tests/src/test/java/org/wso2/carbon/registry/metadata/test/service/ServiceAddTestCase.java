@@ -43,9 +43,10 @@ import static org.wso2.carbon.registry.metadata.test.util.TestUtils.isResourceEx
 public class ServiceAddTestCase {
 
     private static final Log log = LogFactory.getLog(ServiceAddTestCase.class);
-    private String servicePath = "/_system/governance/trunk/services/";
-    private String wsdlPath = "/_system/governance/trunk/wsdls/";
-    private String schemaPath = "/_system/governance/trunk/schemas/";
+    public static final String TRUNK = "/_system/governance/trunk";
+    private String servicePath = TRUNK + "/services/";
+    private String wsdlPath = TRUNK + "/wsdls/";
+    private String schemaPath = TRUNK + "/schemas/";
 
     private AddServicesServiceStub addServicesServiceStub;
     private ResourceAdminServiceStub resourceAdminServiceStub;
@@ -123,14 +124,27 @@ public class ServiceAddTestCase {
             resourceAdminServiceStub.delete(servicePath +
                     wsdlNamespacePath + serviceName);
 
-            //check if the deleted file exists in registry
-            if (!isResourceExist(loggedInSessionCookie, servicePath +
-                    wsdlNamespacePath, serviceName, resourceAdminServiceStub)) {
-                log.info("Resource successfully deleted from the registry");
-
-            } else {
-                log.error("Resource not deleted from the registry");
-                fail("Resource not deleted from the registry");
+//            check if the deleted file exists in registry
+            try{
+//                This is for a normal delete operation.
+                if(isResourceExist(loggedInSessionCookie, servicePath +
+                        wsdlNamespacePath, serviceName, resourceAdminServiceStub)){
+                    log.error("Resource not deleted from the registry");
+                    fail("Resource not deleted from the registry");
+                }else{
+                    log.info("Resource successfully deleted from the registry");
+                }
+            }catch(Exception re){
+//                If the delete service handler has been engaged, then the collection hierarchy is deleted too.
+//                We test that scenario from this code segment.
+                if(re.getMessage().contains("Resource does not exist at path")){
+                    if(isResourceExist(loggedInSessionCookie,TRUNK,"",resourceAdminServiceStub)){
+                        log.error("Collection hierarchy not deleted from the registry");
+                        fail("Collection hierarchy not deleted from the registry");
+                    }else{
+                        log.info("Collection hierarchy successfully deleted from the registry");
+                    }
+                }
             }
         } catch (Exception e) {
             fail("Unable to get text content " + e);

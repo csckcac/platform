@@ -4,6 +4,7 @@ package org.wso2.carbon.hive.storage.utils;
 import org.apache.hadoop.hive.serde2.io.ByteWritable;
 import org.apache.hadoop.hive.serde2.io.ShortWritable;
 import org.apache.hadoop.io.BooleanWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -39,9 +40,9 @@ public class Commons {
         } else if (w instanceof FloatWritable) {
             // float
             return ((FloatWritable) w).get();
-        } else if (w instanceof org.apache.hadoop.hive.serde2.io.DoubleWritable) {
+        } else if (w instanceof DoubleWritable) {
             // double
-            return ((org.apache.hadoop.hive.serde2.io.DoubleWritable) w).get();
+            return ((DoubleWritable) w).get();
         } else if (w instanceof NullWritable) {
             //null
             return null;
@@ -117,6 +118,24 @@ public class Commons {
                                                ConfigurationUtils.HIVE_JDBC_TABLE_CREATE_QUERY + " property.");
         }
         return tableName;
+    }
+
+    public static final String extractFieldNames(String selectQuery){
+        String fields = "";
+        List<String> queryList = Arrays.asList(selectQuery.split(" "));
+        Iterator<String> iterator = queryList.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().equalsIgnoreCase("select")) {
+                while (iterator.hasNext()) {
+                    String nextString = iterator.next();
+                    if(nextString.equalsIgnoreCase("from")){
+                        return fields;
+                    }
+                    fields += nextString;
+                }
+            }
+        }
+        return fields;
     }
 
 }

@@ -1,6 +1,8 @@
 package org.wso2.carbon.hive.storage.db;
 
 
+import org.wso2.carbon.hive.storage.input.JDBCSplit;
+
 import java.util.List;
 
 public class QueryConstructor {
@@ -106,12 +108,33 @@ public class QueryConstructor {
         return query.toString();
     }
 
-    public String constructSelectAllQuery(DatabaseProperties dbProperties) {
+    public String constructSelectQueryForReading(DatabaseProperties dbProperties, JDBCSplit split) {
+        StringBuilder query = new StringBuilder();
+
+        query.append("SELECT ");
+
+        String[] fieldNames = dbProperties.getFieldsNames();
+        for (int i = 0; i < fieldNames.length; i++) {
+            query.append(fieldNames[i]);
+            if (i != fieldNames.length - 1) {
+                query.append(", ");
+            }
+        }
+
+        query.append(" FROM ").append(dbProperties.getTableName());
+        query.append(" AS ").append(dbProperties.getTableName()); //in hsqldb this is necessary
+
+        query.append(" LIMIT ").append(split.getLength());
+        query.append(" OFFSET ").append(split.getStart());
+        return query.toString();
+    }
+
+    public String constructCountQuery(DatabaseProperties dbProperties) {
 
         StringBuilder query = new StringBuilder();
         query.append("SELECT COUNT(");
-        if(dbProperties.getPrimaryFields()!=null){
-            query.append(dbProperties.getPrimaryFields()[0]);
+        if(dbProperties.getFieldsNames()!=null){
+            query.append(dbProperties.getFieldsNames()[0]);
         } else {
              query.append("*");
         }

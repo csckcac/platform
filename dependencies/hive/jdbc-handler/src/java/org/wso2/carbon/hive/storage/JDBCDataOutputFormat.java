@@ -34,8 +34,8 @@ public class JDBCDataOutputFormat implements OutputFormat<NullWritable, MapWrita
             dbProperties.setDriverClass(ConfigurationUtils.getDriverClass(conf));
             dbProperties.setUserName(ConfigurationUtils.getDatabaseUserName(conf));
             dbProperties.setPassword(ConfigurationUtils.getDatabasePassword(conf));
-            dbProperties.setTableName(ConfigurationUtils.getTableName(conf));
-            dbProperties.setFieldsNames(ConfigurationUtils.getFieldNames(conf));
+            dbProperties.setTableName(ConfigurationUtils.getOutputTableName(conf));
+            dbProperties.setFieldsNames(ConfigurationUtils.getOutputFieldNames(conf));
             dbProperties.setUpdateOnDuplicate(ConfigurationUtils.isUpdateOnDuplicate(conf));
             dbProperties.setPrimaryFields(ConfigurationUtils.getPrimaryKeyFields(conf));
             dbProperties.setColumnMappingFields(ConfigurationUtils.getColumnMappingFields(conf));

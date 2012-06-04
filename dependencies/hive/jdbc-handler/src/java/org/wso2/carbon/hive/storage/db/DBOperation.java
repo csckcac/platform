@@ -192,45 +192,52 @@ public class DBOperation {
 
 
     public void createTableIfNotExist(Map<String, String> tableParameters) {
-        DatabaseProperties dbProperties = new DatabaseProperties();
-        dbProperties.setTableName(tableParameters.get(DBConfiguration.OUTPUT_TABLE_NAME_PROPERTY));
-        dbProperties.setUserName(tableParameters.get(DBConfiguration.USERNAME_PROPERTY));
-        dbProperties.setPassword(tableParameters.get(DBConfiguration.PASSWORD_PROPERTY));
-        dbProperties.setConnectionUrl(tableParameters.get(DBConfiguration.URL_PROPERTY));
-        dbProperties.setDriverClass(tableParameters.get(DBConfiguration.DRIVER_CLASS_PROPERTY));
+        String inputTable = tableParameters.get(DBConfiguration.INPUT_TABLE_NAME_PROPERTY);
+        String outputTable = tableParameters.get(DBConfiguration.OUTPUT_TABLE_NAME_PROPERTY);
         String createTableQuery = tableParameters.get(ConfigurationUtils.HIVE_JDBC_TABLE_CREATE_QUERY);
+        /*If inputTable=null, then most probably it should be a output table.
+         In input table table must already exist.
+          */
+        if(inputTable==null && (outputTable !=null || createTableQuery!=null)){
+            DatabaseProperties dbProperties = new DatabaseProperties();
+            dbProperties.setTableName(outputTable);
+            dbProperties.setUserName(tableParameters.get(DBConfiguration.USERNAME_PROPERTY));
+            dbProperties.setPassword(tableParameters.get(DBConfiguration.PASSWORD_PROPERTY));
+            dbProperties.setConnectionUrl(tableParameters.get(DBConfiguration.URL_PROPERTY));
+            dbProperties.setDriverClass(tableParameters.get(DBConfiguration.DRIVER_CLASS_PROPERTY));
 
-        if (dbProperties.getTableName() == null) {
-            dbProperties.setTableName(Commons.extractingTableNameFromQuery(createTableQuery));
-        }
-
-        DBManager dbManager = new DBManager();
-        dbManager.configureDB(dbProperties);
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = dbManager.getConnection();
-            if (!isTableExist(dbProperties.getTableName(), connection)) {
-                statement = connection.createStatement();
-                statement.executeUpdate(createTableQuery);
+            if (dbProperties.getTableName() == null) {
+                dbProperties.setTableName(Commons.extractingTableNameFromQuery(createTableQuery));
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+
+            DBManager dbManager = new DBManager();
+            dbManager.configureDB(dbProperties);
+            Connection connection = null;
+            Statement statement = null;
+            try {
+                connection = dbManager.getConnection();
+                if (!isTableExist(dbProperties.getTableName(), connection)) {
+                    statement = connection.createStatement();
+                    statement.executeUpdate(createTableQuery);
                 }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }finally {
+                if (statement != null) {
+                    try {
+                        statement.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (connection != null) {
+                    try {
+                        connection.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

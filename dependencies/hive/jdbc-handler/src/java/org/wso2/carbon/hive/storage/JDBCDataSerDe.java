@@ -85,6 +85,7 @@ public class JDBCDataSerDe implements SerDe {
         } else {
             throw new SerDeException("Can't find table column definitions");
         }
+        row = new ArrayList<Object>(columnNames.size());
     }
 
     public Class<? extends Writable> getSerializedClass() {
@@ -148,13 +149,12 @@ public class JDBCDataSerDe implements SerDe {
             final Writable value = input.get(t);
             if (value != null && !NullWritable.get().equals(value)) {
                 //parse as double to avoid NumberFormatException...
-                //TODO:need more test,especially for type 'bigint'
                 if (HIVE_TYPE_INT.equalsIgnoreCase(columnTypesArray[i])) {
                     row.add(Double.valueOf(value.toString()).intValue());
                 } else if (HIVE_TYPE_SMALLINT.equalsIgnoreCase(columnTypesArray[i])) {
                     row.add(Double.valueOf(value.toString()).shortValue());
                 } else if (HIVE_TYPE_TINYINT.equalsIgnoreCase(columnTypesArray[i])) {
-                    row.add(Double.valueOf(value.toString()).byteValue());
+                    row.add(Byte.valueOf(value.toString()));
                 } else if (HIVE_TYPE_BIGINT.equalsIgnoreCase(columnTypesArray[i])) {
                     row.add(Long.valueOf(value.toString()));
                 } else if (HIVE_TYPE_BOOLEAN.equalsIgnoreCase(columnTypesArray[i])) {

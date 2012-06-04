@@ -2,6 +2,7 @@ package org.wso2.carbon.hive.storage.utils;
 
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hive.metastore.api.Constants;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
 
@@ -26,12 +27,14 @@ public class ConfigurationUtils {
             DBConfiguration.URL_PROPERTY,
             DBConfiguration.OUTPUT_TABLE_NAME_PROPERTY,
             DBConfiguration.OUTPUT_FIELD_NAMES_PROPERTY,
+            DBConfiguration.INPUT_TABLE_NAME_PROPERTY,
+            Constants.META_TABLE_NAME,
             HIVE_JDBC_UPDATE_ON_DUPLICATE,
             HIVE_JDBC_PRIMARY_KEY_FIELDS,
             HIVE_JDBC_COLUMNS_MAPPING,
             HIVE_JDBC_TABLE_CREATE_QUERY,
             HIVE_JDBC_OUTPUT_UPSERT_QUERY,
-            HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER };
+            HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER};
 
 
     public static void copyJDBCProperties(Properties from, Map<String, String> to) {
@@ -43,13 +46,27 @@ public class ConfigurationUtils {
         }
     }
 
-    public final static String getTableName(Configuration conf) {
-        String tableName = conf.get(DBConfiguration.OUTPUT_TABLE_NAME_PROPERTY);
+    public final static String getOutputTableName(Configuration configuration) {
+        String tableName = configuration.get(DBConfiguration.OUTPUT_TABLE_NAME_PROPERTY);
         if (tableName == null) {
-            String createTableQuery = conf.get(HIVE_JDBC_TABLE_CREATE_QUERY);
-            tableName = Commons.extractingTableNameFromQuery(createTableQuery);
+            String createTableQuery = configuration.get(HIVE_JDBC_TABLE_CREATE_QUERY);
+            if (createTableQuery != null) {
+                tableName = Commons.extractingTableNameFromQuery(createTableQuery);
+            } else {
+                //assign the meta table name
+                tableName = configuration.get(Constants.META_TABLE_NAME);
+            }
         }
         return tableName;
+    }
+
+    public final static String getInputTableName(Configuration configuration) {
+        String inputTableName = configuration.get(DBConfiguration.INPUT_TABLE_NAME_PROPERTY);
+        if (inputTableName == null) {
+            //assign the meta table name
+            inputTableName = configuration.get(Constants.META_TABLE_NAME);
+        }
+        return inputTableName.trim();
     }
 
     public final static String getConnectionUrl(Configuration conf) {
@@ -68,7 +85,20 @@ public class ConfigurationUtils {
         return conf.get(DBConfiguration.PASSWORD_PROPERTY);
     }
 
-    public final static String[] getFieldNames(Configuration conf) {
+    public final static String[] getInputFieldNames(Configuration conf) {
+        String[] fieldNames = null;
+        String inputFieldNames = conf.get(DBConfiguration.INPUT_FIELD_NAMES_PROPERTY);
+        if (inputFieldNames != null) {
+            fieldNames = inputFieldNames.split(",");
+        } else {
+
+            String selectQuery = conf.get("hive.query.string");
+            fieldNames = Commons.extractFieldNames(selectQuery).split(",");
+        }
+        return fieldNames;
+    }
+
+    public final static String[] getOutputFieldNames(Configuration conf){
         String[] fieldNames = null;
         String outputFieldNames = conf.get(DBConfiguration.OUTPUT_FIELD_NAMES_PROPERTY);
         if (outputFieldNames != null) {
@@ -106,7 +136,7 @@ public class ConfigurationUtils {
         String valuesOrder = conf.get(ConfigurationUtils.HIVE_JDBC_UPSERT_QUERY_VALUES_ORDER);
         String[] order = null;
         if (valuesOrder != null) {
-            valuesOrder= valuesOrder.trim();
+            valuesOrder = valuesOrder.trim();
             order = valuesOrder.split(",");
         }
         return order;

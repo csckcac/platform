@@ -83,15 +83,15 @@ public class JDBCSplit extends FileSplit implements InputSplit {
     public static JDBCSplit[] getSplits(JobConf conf, int numSplits) {
 
         DatabaseProperties dbProperties = new DatabaseProperties();
-        dbProperties.setTableName(ConfigurationUtils.getTableName(conf));
+        dbProperties.setTableName(ConfigurationUtils.getInputTableName(conf));
         dbProperties.setUserName(ConfigurationUtils.getDatabaseUserName(conf));
         dbProperties.setPassword(ConfigurationUtils.getDatabasePassword(conf));
         dbProperties.setConnectionUrl(ConfigurationUtils.getConnectionUrl(conf));
         dbProperties.setDriverClass(ConfigurationUtils.getDriverClass(conf));
-        dbProperties.setPrimaryFields(ConfigurationUtils.getPrimaryKeyFields(conf));
+        dbProperties.setFieldsNames(ConfigurationUtils.getInputFieldNames(conf));
 
         QueryConstructor queryConstructor = new QueryConstructor();
-        String sql = queryConstructor.constructSelectAllQuery(dbProperties);
+        String sql = queryConstructor.constructCountQuery(dbProperties);
 
         DBManager dbManager = new DBManager();
         dbManager.configureDB(dbProperties);

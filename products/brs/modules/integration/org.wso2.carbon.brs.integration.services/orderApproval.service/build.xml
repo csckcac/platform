@@ -8,6 +8,7 @@
     <target name="compile.facts">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.dir}/classes"/>
+        <mkdir dir="${build.dir}/lib"/>
 
         <javac debug="on"
                destdir="${build.dir}/classes"

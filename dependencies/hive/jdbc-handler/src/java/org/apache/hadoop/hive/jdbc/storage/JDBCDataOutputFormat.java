@@ -1,4 +1,4 @@
-package org.wso2.carbon.hive.storage;
+package org.apache.hadoop.hive.jdbc.storage;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -11,9 +11,9 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.OutputFormat;
 import org.apache.hadoop.mapred.RecordWriter;
 import org.apache.hadoop.util.Progressable;
-import org.wso2.carbon.hive.storage.utils.ConfigurationUtils;
-import org.wso2.carbon.hive.storage.db.DBRecordWriter;
-import org.wso2.carbon.hive.storage.db.DatabaseProperties;
+import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
+import org.apache.hadoop.hive.jdbc.storage.db.DBRecordWriter;
+import org.apache.hadoop.hive.jdbc.storage.db.DatabaseProperties;
 
 import java.io.IOException;
 import java.sql.SQLException;

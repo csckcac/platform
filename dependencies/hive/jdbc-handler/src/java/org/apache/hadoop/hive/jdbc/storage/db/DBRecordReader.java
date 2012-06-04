@@ -1,4 +1,4 @@
-package org.wso2.carbon.hive.storage.db;
+package org.apache.hadoop.hive.jdbc.storage.db;
 
 
 import org.apache.hadoop.io.BooleanWritable;
@@ -12,7 +12,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.RecordReader;
-import org.wso2.carbon.hive.storage.input.JDBCSplit;
+import org.apache.hadoop.hive.jdbc.storage.input.JDBCSplit;
 
 import java.io.IOException;
 import java.sql.Connection;

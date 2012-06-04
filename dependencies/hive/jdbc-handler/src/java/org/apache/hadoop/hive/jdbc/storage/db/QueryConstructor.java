@@ -1,7 +1,7 @@
-package org.wso2.carbon.hive.storage.db;
+package org.apache.hadoop.hive.jdbc.storage.db;
 
 
-import org.wso2.carbon.hive.storage.input.JDBCSplit;
+import org.apache.hadoop.hive.jdbc.storage.input.JDBCSplit;
 
 import java.util.List;
 

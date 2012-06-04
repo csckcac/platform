@@ -1,11 +1,11 @@
-package org.wso2.carbon.hive.storage.db;
+package org.apache.hadoop.hive.jdbc.storage.db;
 
 
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapred.lib.db.DBConfiguration;
-import org.wso2.carbon.hive.storage.utils.Commons;
-import org.wso2.carbon.hive.storage.utils.ConfigurationUtils;
+import org.apache.hadoop.hive.jdbc.storage.utils.Commons;
+import org.apache.hadoop.hive.jdbc.storage.utils.ConfigurationUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

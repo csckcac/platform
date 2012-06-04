@@ -1,4 +1,4 @@
-package org.wso2.carbon.hive.storage.utils;
+package org.apache.hadoop.hive.jdbc.storage.utils;
 
 
 import org.apache.hadoop.conf.Configuration;

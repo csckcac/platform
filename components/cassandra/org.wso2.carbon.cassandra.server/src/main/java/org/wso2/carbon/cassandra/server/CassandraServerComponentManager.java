@@ -27,6 +27,7 @@ import org.wso2.carbon.identity.authentication.AuthenticationService;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 
 /**
  * Keep and manage the services required for operation of this component
@@ -38,9 +39,8 @@ public class CassandraServerComponentManager {
     private static CassandraServerComponentManager ourInstance = new CassandraServerComponentManager();
 
     private RealmService realmService;
-
     private AuthenticationService authenticationService;
-
+    private ServerConfigurationService serverConfigurationService;
     private boolean initialized = false;
 
     public static CassandraServerComponentManager getInstance() {
@@ -55,11 +55,13 @@ public class CassandraServerComponentManager {
      *
      * @param realmService          realm
      * @param authenticationService authentication service
+     * @param serverConfigurationService
      */
     public void init(RealmService realmService,
-                     AuthenticationService authenticationService) {
+                     AuthenticationService authenticationService, ServerConfigurationService serverConfigurationService) {
         this.realmService = realmService;
         this.authenticationService = authenticationService;
+        this.serverConfigurationService = serverConfigurationService;
         this.initialized = true;
     }
 

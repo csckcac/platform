@@ -121,10 +121,12 @@ public class EndpointMediaTypeHandler extends Handler {
                 byte[] oldContent = (byte[])oldResource.getContent();
                 if (oldContent != null && !new String(oldContent).equals(resourceContent)) {
                     // oops somebody trying to update the endpoint resource content. that should not happen
-                    String msg = "Endpoint content for endpoint resource is not allowed to change, " +
-                            "path: " + path + ".";
-                    log.error(msg);
-                    throw new RegistryException(msg);
+//                    String msg = "Endpoint content for endpoint resource is not allowed to change, " +
+//                            "path: " + path + ".";
+//                    log.error(msg);
+//                    throw new RegistryException(msg);
+                    //This is for fixing REGISTRY-785.
+                    resource.setContent(resourceContent.getBytes());
                 }
             } else if (endpointId == null) {
                 endpointId = UUID.randomUUID().toString();

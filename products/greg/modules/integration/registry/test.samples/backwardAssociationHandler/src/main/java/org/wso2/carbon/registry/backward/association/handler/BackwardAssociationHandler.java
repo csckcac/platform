@@ -108,22 +108,17 @@ public class BackwardAssociationHandler extends Handler {
 
         try {
             List<Association> newAssociationList = new ArrayList<Association>();
-
             Registry registry = requestContext.getRegistry();
 
-            Association[] allAssociations = registry.getAssociations(requestContext.getResourcePath().getPath(), requestContext.getAssociationType());
+//            Getting all the associations with the given path
+            String sourcePath = requestContext.getResourcePath().getPath();
+            Association[] allAssociations = registry.getAllAssociations(sourcePath);
 
-//        The list of associations that were retrieved are added to an arrayList to return a combined list
-            newAssociationList.addAll(Arrays.asList(allAssociations));
-
+//            Iterate through all of the associations to get the matching ones
             for (Association association : allAssociations) {
-                if (typeMap.containsKey(association.getAssociationType())) {
-                    Association newAssociation = new Association();
-                    newAssociation.setSourcePath(association.getDestinationPath());
-                    newAssociation.setDestinationPath(association.getSourcePath());
-                    newAssociation.setAssociationType(typeMap.get(association.getAssociationType()));
-
-                    newAssociationList.add(newAssociation);
+                if(association.getSourcePath().equals(sourcePath)
+                        && association.getAssociationType().equals(requestContext.getAssociationType())){
+                    newAssociationList.add(association);
                 }
             }
             requestContext.setProcessingComplete(true);

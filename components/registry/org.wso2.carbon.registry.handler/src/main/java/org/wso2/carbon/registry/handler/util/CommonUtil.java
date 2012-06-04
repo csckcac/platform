@@ -19,9 +19,9 @@
 package org.wso2.carbon.registry.handler.util;
 
 import org.apache.axiom.om.*;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.service.SimulationService;
@@ -948,9 +948,9 @@ public class CommonUtil {
             temp.addAttribute(factory.createOMAttribute("name", null, property));
             OMElement xmlProperty = bean.getXmlProperties().get(property);
             if (xmlProperty != null) {
-                temp.addAttribute(factory.createOMAttribute("type", null, "xml"));
-                temp.addChild(xmlProperty);
-                handler.addChild(temp);
+//                The serialization happens by adding the whole XML property value to the bean.
+//                Therefore if it is a XML property, we take that whole element.
+                handler.addChild(xmlProperty);
             } else {
                 String nonXMLProperty = bean.getNonXmlProperties().get(property);
                 if (nonXMLProperty != null) {

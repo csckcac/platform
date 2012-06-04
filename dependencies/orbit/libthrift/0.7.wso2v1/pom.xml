@@ -81,7 +81,7 @@
                         <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${pom.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.apache.thrift.*; version="0.7.0.wso2v1";-split-package:=merge-first
+                            org.apache.thrift.*;version="0.7.0.wso2v1";-split-package:=merge-first
                         </Export-Package>
                         <Import-Package>
                             !org.apache.thrift.*,

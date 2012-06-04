@@ -14,6 +14,8 @@ Pre - Requirements
 Steps for running this sample
 --------------------------------
 
-1. Run the ant command "ant run", which will add a set of Collections and Resources to the Registry.
+1. Change the directory to the src directory (GREG_HOME/samples/jcr-client/src) of the JCR sample.
 
-2. Login to the Registry and see the added Collections and Resources.
+2. Run the ant command "ant", which will add a set of Collections and Resources to the Registry.
+
+3. A collection will be created in root by the name of jcr_system (i.e., path = /jcr_system). This can be checked through the Resource Browser which can be accessed through the Management Console.

@@ -278,7 +278,12 @@
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
         </file>
-
+	<file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/tenant-mgt.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
         <!-- Stratos specific files -->
         <file>
             <source>

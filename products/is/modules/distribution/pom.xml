@@ -159,6 +159,12 @@
                                         token="&lt;/ISUserStoreManager--&gt;"
                                         value="&lt;/UserStoreManager&gt;"/>
 
+				<!--Replace MultiTenantRealmConfigBuilder in user-mgt.xml-->
+				<replace
+                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/user-mgt.xml"
+                                        token="&lt;Property name=&quot;MultiTenantRealmConfigBuilder&quot;&gt;org.wso2.carbon.user.core.config.multitenancy.SimpleRealmConfigBuilder&lt;/Property&gt;"
+                                        value="&lt;Property name=&quot;MultiTenantRealmConfigBuilder&quot;&gt;org.wso2.carbon.user.core.config.multitenancy.CommonLDAPRealmConfigBuilder&lt;/Property&gt;"/>
+
 				<!-- Enable KDC for IS -->
 
                                 <copy
@@ -326,7 +332,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>maven-buildnumber-plugin</artifactId>

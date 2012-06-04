@@ -261,6 +261,7 @@ public class SecurityServiceAdmin {
                     PersistenceUtils.getXPathTextPredicate(null, uuid));
             if (bindingPolicyUuidOM != null) {
                 bindingPolicyUuidOM.detach();
+                serviceGroupFilePM.setMetaFileModification(serviceGroupId);
             }
         }
         if (!transactionStarted) {

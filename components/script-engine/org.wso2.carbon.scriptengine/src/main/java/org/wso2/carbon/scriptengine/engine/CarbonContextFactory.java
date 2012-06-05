@@ -16,7 +16,7 @@ public class CarbonContextFactory extends ContextFactory {
     @Override
     protected Context makeContext() {
         Context cx = super.makeContext();
-        cx.setClassShutter(new CarbonClassShutter());
+        //cx.setClassShutter(new CarbonClassShutter());
         return cx;
     }
 

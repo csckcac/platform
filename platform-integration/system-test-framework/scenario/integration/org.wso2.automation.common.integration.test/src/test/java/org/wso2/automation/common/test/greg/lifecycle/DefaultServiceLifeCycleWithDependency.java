@@ -81,6 +81,7 @@ public class DefaultServiceLifeCycleWithDependency {
         Association[] dependency = registry.getAssociations(servicePathDev, ASS_TYPE_DEPENDS);
         Assert.assertNotNull(dependency, "Dependency Not Found.");
         Assert.assertTrue(dependency.length > 0, "Dependency list empty");
+        Assert.assertTrue(dependency.length == 1, "Additional dependency found");
         Assert.assertEquals(dependency[0].getDestinationPath(), policyPathDev, "Dependency Name mismatched");
     }
 
@@ -205,7 +206,7 @@ public class DefaultServiceLifeCycleWithDependency {
 
     private void addDependency(String resourcePath, String dependencyPath)
             throws RegistryException {
-        registry.addAssociation(resourcePath, dependencyPath, "depends");
+        registry.addAssociation(resourcePath, dependencyPath, ASS_TYPE_DEPENDS);
     }
 
     private String addPolicy(String policyName) throws RegistryException, IOException {

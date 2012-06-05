@@ -54,7 +54,7 @@ public class DefaultServiceLifeCycleTest {
     private final String serviceName = "serviceForLifeCycleTest";
     private final String aspectName = "ServiceLifeCycle";
     private final String ACTION_PROMOTE = "Promote";
-    //    private final String ACTION_DEMOTE = "Demote";           ityA
+    //    private final String ACTION_DEMOTE = "Demote";
     private String servicePathDev;
     private String servicePathTest;
     private String servicePathProd;
@@ -96,6 +96,8 @@ public class DefaultServiceLifeCycleTest {
         Assert.assertEquals(lifeCycle.getLifecycleProperties()[4].getValues()[0], "Development",
                             "LifeCycle State Mismatched");
 
+
+        //Activity search
         Thread.sleep(1000 * 10);
         ActivityBean activityObj = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
                 , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
@@ -104,10 +106,10 @@ public class DefaultServiceLifeCycleTest {
         Assert.assertNotNull(activityObj.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObj.getActivity().length > 0), "Activity list object null");
         for (String activity : activityObj.getActivity()) {
-            Assert.assertTrue(activity.contains(userInfo.getUserName()), "User name not found on activity");
+            Assert.assertTrue(activity.contains(userInfo.getUserName()), "User name not found on activity last activity. " + activity);
             Assert.assertTrue(activity.contains("associated the aspect ServiceLifeCycle"),
-                              "associated the aspect ServiceLifeCycle not contain in activity");
-            Assert.assertTrue(activity.contains("0m ago"), "current time not found on activity");
+                              "associated the aspect ServiceLifeCycle not contain in last activity. " + activity);
+            Assert.assertTrue(activity.contains("0m ago"), "current time not found on activity. " + activity);
             break;
         }
 
@@ -141,14 +143,14 @@ public class DefaultServiceLifeCycleTest {
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
                 , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
-        Assert.assertNotNull(activityObjTrunk, "Activity object null");
+        Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
         for (String activity : activityObjTrunk.getActivity()) {
-            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on activity");
+            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
             Assert.assertTrue(activity.contains("has updated the resource"),
-                              "Activity not found. has updated not contain in activity");
-            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on activity");
+                              "Activity not found. has updated not contain in last activity. " + activity);
+            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
             break;
         }
 
@@ -160,10 +162,10 @@ public class DefaultServiceLifeCycleTest {
         Assert.assertNotNull(activityObjTest.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTest.getActivity().length > 0), "Activity list object null");
         for (String activity : activityObjTest.getActivity()) {
-            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on activity");
+            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
             Assert.assertTrue(activity.contains("has added the resource") || activity.contains("has updated the resource"),
-                              "Activity not found. has added not contain in activity");
-            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on activity");
+                              "Activity not found. has added or has updated not contain in last activity. " + activity);
+            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
             break;
         }
 
@@ -193,24 +195,9 @@ public class DefaultServiceLifeCycleTest {
 
         Assert.assertEquals(registry.get(servicePathTest).getPath(), servicePathTest, "Preserve original failed");
 
+
+        //activity search for test branch
         Thread.sleep(1000 * 10);
-        ActivityBean activityObj = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
-                , servicePathTest, Utils.formatDate(Calendar.getInstance().getTime())
-                , "", ActivitySearchAdminService.FILTER_ASSOCIATE_ASPECT, 1);
-        Assert.assertNotNull(activityObj, "Activity object null");
-        Assert.assertNotNull(activityObj.getActivity(), "Activity list object null");
-        Assert.assertTrue((activityObj.getActivity().length > 0), "Activity list object null");
-        for (String activity : activityObj.getActivity()) {
-            Assert.assertTrue(activity.contains(userInfo.getUserName()), "User name not found on activity");
-            Assert.assertTrue(activity.contains("has updated the resource"),
-                              "associated the aspect ServiceLifeCycle not contain in activity");
-            Assert.assertTrue(activity.contains("0m ago"), "current time not found on activity");
-            break;
-        }
-
-
-        //activity search for trunk
-        Thread.sleep(1000 * 20);
         ActivityBean activityObjTest = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
                 , servicePathTest, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
@@ -218,14 +205,14 @@ public class DefaultServiceLifeCycleTest {
         Assert.assertNotNull(activityObjTest.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjTest.getActivity().length > 0), "Activity list object null");
         for (String activity : activityObjTest.getActivity()) {
-            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on activity");
+            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
             Assert.assertTrue(activity.contains("has updated the resource"),
-                              "Activity not found. has updated not contain in activity");
-            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on activity");
+                              "Activity not found. has updated not contain in last activity. " + activity);
+            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on activity. " + activity);
             break;
         }
 
-        //activity search for test branch
+        //activity search for production branch
         ActivityBean activityObjProd = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
                 , servicePathProd, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivitySearchAdminService.FILTER_ALL, 1);
@@ -233,10 +220,10 @@ public class DefaultServiceLifeCycleTest {
         Assert.assertNotNull(activityObjProd.getActivity(), "Activity list object null");
         Assert.assertTrue((activityObjProd.getActivity().length > 0), "Activity list object null");
         for (String activity : activityObjProd.getActivity()) {
-            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on activity");
+            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on activity. " + activity);
             Assert.assertTrue(activity.contains("has added the resource") || activity.contains("has updated the resource"),
-                              "Activity not found. has added not contain in activity");
-            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on activity");
+                              "Activity not found. has added not contain in activity. " + activity);
+            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on activity. " + activity);
             break;
         }
 
@@ -245,7 +232,7 @@ public class DefaultServiceLifeCycleTest {
     @Test(priority = 4, dependsOnMethods = {"addLifecycle"}, description = "Promote Service to testing with new version")
     public void promoteServiceToTestingWithNewVersion()
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
-                   InterruptedException, RegistryException {
+                   InterruptedException, RegistryException, RegistryExceptionException {
         Thread.sleep(1000);
         ArrayOfString[] parameters = new ArrayOfString[1];
         parameters[0] = new ArrayOfString();
@@ -270,13 +257,45 @@ public class DefaultServiceLifeCycleTest {
 
         Assert.assertEquals(registry.get(servicePathDev).getPath(), servicePathDev, "Preserve original failed");
 
+        //activity search for trunk
+        Thread.sleep(1000 * 10);
+        ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+        Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
+        Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
+        for (String activity : activityObjTrunk.getActivity()) {
+            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
+            Assert.assertTrue(activity.contains("has updated the resource"),
+                              "Activity not found. has updated not contain in last activity. " + activity);
+            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
+            break;
+        }
+
+        //activity search for test branch
+        ActivityBean activityObjTest = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , testBranch, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+        Assert.assertNotNull(activityObjTest, "Activity object null");
+        Assert.assertNotNull(activityObjTest.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjTest.getActivity().length > 0), "Activity list object null");
+        for (String activity : activityObjTest.getActivity()) {
+            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
+            Assert.assertTrue(activity.contains("has added the resource") || activity.contains("has updated the resource"),
+                              "Activity not found. has added or has updated not contain in last activity. " + activity);
+            Assert.assertTrue(activity.contains("1.0.0"), "Activity not found. version not found on last activity. " + activity);
+            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
+            break;
+        }
+
     }
 
     @Test(priority = 5, dependsOnMethods = {"promoteServiceToTestingWithNewVersion"},
           description = "Promote Service to production with new version")
     public void promoteServiceToProductionWithNewVersion()
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
-                   InterruptedException, RegistryException {
+                   InterruptedException, RegistryException, RegistryExceptionException {
         Thread.sleep(1000);
         Assert.assertNotNull(testBranch, "test brunch path not found");
         ArrayOfString[] parameters = new ArrayOfString[1];
@@ -302,6 +321,40 @@ public class DefaultServiceLifeCycleTest {
                             "LifeCycle State Mismatched");
 
         Assert.assertEquals(registry.get(testBranch).getPath(), testBranch, "Preserve original failed");
+
+        //activity search for test branch
+        Thread.sleep(1000 * 10);
+        ActivityBean activityObjTest = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , testBranch, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+        Assert.assertNotNull(activityObjTest, "Activity object null");
+        Assert.assertNotNull(activityObjTest.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjTest.getActivity().length > 0), "Activity list object null");
+        for (String activity : activityObjTest.getActivity()) {
+            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
+            Assert.assertTrue(activity.contains("has updated the resource"),
+                              "Activity not found. has updated not contain in last activity. " + activity);
+            Assert.assertTrue(activity.contains("1.0.0"), "Activity not found. version not found on last activity. " + activity);
+            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on activity. " + activity);
+            break;
+        }
+
+        //activity search for production branch
+        ActivityBean activityObjProd = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , prodBranch, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+        Assert.assertNotNull(activityObjProd, "Activity object null");
+        Assert.assertNotNull(activityObjProd.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjProd.getActivity().length > 0), "Activity list object null");
+        for (String activity : activityObjProd.getActivity()) {
+            Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on activity. " + activity);
+            Assert.assertTrue(activity.contains("has added the resource") || activity.contains("has updated the resource"),
+                              "Activity not found. has added not contain in activity. " + activity);
+            Assert.assertTrue(activity.contains("1.0.0"), "Activity not found. version not found on last activity. " + activity);
+            Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on activity. " + activity);
+            break;
+        }
+
 
     }
 

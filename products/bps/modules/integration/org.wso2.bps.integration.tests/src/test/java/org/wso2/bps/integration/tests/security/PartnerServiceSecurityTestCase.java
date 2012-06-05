@@ -170,7 +170,7 @@ public class PartnerServiceSecurityTestCase {
         keyStore.setFileData(data);
         keyStore.setFilename("service.jks");
         keyStore.setPassword("apache");
-        keyStore.setProvider("");
+        keyStore.setProvider("org.wso2.carbon.security.util.ServerCrypto");
         keyStore.setType("JKS");
         keyStore.setPvtkeyPass("apache");
 

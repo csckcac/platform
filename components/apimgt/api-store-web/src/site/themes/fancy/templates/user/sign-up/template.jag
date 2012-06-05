@@ -48,52 +48,10 @@
             <div class="controls"><input type="password" class="matchPasswords input-xlarge" id="passwordConfirm" /></div>
     </div>
 
-    <div class="control-group">
-        <label for="ccomment">Your comment (required)</label>
-        <div class="controls"><textarea id="ccomment" name="comment" class="required"></textarea></div>
-    </div>
     <div class="form-actions">
         <input class="submit btn btn-primary" type="submit" value="Submit"/>
 
     </div>
 </fieldset>
-
-
-<!--<fieldset>
-          <div class="control-group">
-            <label class="control-label" for="username">Username:</label>
-            <div class="controls">
-              <input type="text" class="input-xlarge" id="username" />
-            </div>
-          </div>
-
-          <div class="control-group">
-
-            <div class="controls">
-                <div class="row-fluid">
-                    <div class="span6">
-
-                    </div>
-                    <div class="span6">
-
-                    </div>
-                </div>
-
-
-
-            </div>
-          </div>
-
-            <div class="control-group">
-
-            <div class="controls">
-
-            </div>
-          </div>
-
-          <div class="form-actions">
-
-          </div>
-        </fieldset>-->
       </form>
 <% }); %>

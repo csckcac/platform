@@ -1,49 +1,27 @@
 <%
 var login = function (username, password) {
-    var xml, cookie, status, ns, payload, result,
+    var result,
             log = new Log(),
             manager = jagg.module("manager"),
-            store = manager.getAPIStoreObj(),
-            remoteAddress = manager.getServer().server;
+            store = manager.getAPIStoreObj();
 
-    payload =
-            <aut:login xmlns:aut="http://authentication.services.core.carbon.wso2.org">
-                <aut:username>{username}</aut:username>
-                <aut:password>{password}</aut:password>
-                <aut:remoteAddress>{remoteAddress}</aut:remoteAddress>
-            </aut:login>;
-    result = manager.invokeService(manager.getAuthServerURL(), "AuthenticationAdmin", "urn:login", payload);
+    result = store.login(username, password);
     if (result.error) {
         if (log.isDebugEnabled()) {
-            log.debug("Error while authenticating user : " + username + " at " + remoteAddress);
+            log.debug("Error while authenticating user : " + username);
         }
         return {
             error:result.error,
             cookie:null
         };
     }
-    xml = result.client.responseE4X;
-    ns = "http://authentication.services.core.carbon.wso2.org";
-    status = xml.ns::["return"].text().toString();
-    if (status == "false") {
-        if (log.isDebugEnabled()) {
-            log.info("Error verifying credentials for user : " + username + " at " + remoteAddress);
-        }
-        return {
-            error:true,
-            cookie:null
-        };
-    }
     var subscriber = store.getSubscriber(username);
-    if(!subscriber) {
+    if (!subscriber) {
         store.addSubscriber(username);
         subscriber = store.getSubscriber(username);
     }
-    cookie = result.client.getResponseHeader("Set-Cookie");
+    cookie = result.sessionId;
     cookie = cookie.split(';')[0];
-    /*session.put("username", username);
-     session.put("userId", subscriber.id);
-     session.put("cookie", cookie);*/
     return {
         error:false,
         cookie:cookie

@@ -130,7 +130,7 @@
                         <h3>devOp operations</h3>
                         <table class="styledLeft">
                             <%
-                            var stages = getProperty('ApplicationDeployment.DeploymentStage');
+                            var stages = getProperties('ApplicationDeployment.DeploymentStage');
                             for(var i=0; i<stages.length;i++){
                                 var stage = stages[i];
                             %>

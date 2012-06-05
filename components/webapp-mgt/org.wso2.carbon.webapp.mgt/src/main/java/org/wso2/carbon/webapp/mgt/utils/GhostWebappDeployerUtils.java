@@ -246,12 +246,12 @@ public class GhostWebappDeployerUtils {
      *
      * @param requestURI - uri to be checked of contextName
      * @param cfgContext - ConfigurationContext to get the transitGhost webapps map
-     * @return the webapp context name
+     * @return the webapp
      */
 
-    public static String dispatchWebAppFromTransitGhosts(String requestURI,
+    public static WebApplication dispatchWebAppFromTransitGhosts(String requestURI,
                                                          ConfigurationContext cfgContext) {
-        String actualWebappContextName = null;
+        WebApplication actualWebapp = null;
         // get the map of ghost services which are being redeployed..
         Map<String, WebApplication> transitGhostMap = getTransitGhostWebAppsMap(cfgContext);
 
@@ -275,17 +275,17 @@ public class GhostWebappDeployerUtils {
              * To avoid performance issues if an incorrect URL comes in with a long service name
              * including lots of '/' separated strings, we limit the hierarchical depth to 10
              */
-            while (actualWebappContextName == null && count < parts.length &&
+            while (actualWebapp == null && count < parts.length &&
                    count < WebappsConstants.MAX_DEPTH) {
                 tmpWebappContextName = count == 0 ? tmpWebappContextName + parts[count] :
                                        tmpWebappContextName + "/" + parts[count];
                 if (transitGhostMap.containsKey(tmpWebappContextName)) {
-                    actualWebappContextName = tmpWebappContextName;
+                    actualWebapp = transitGhostMap.get(tmpWebappContextName);
                 }
                 count++;
             }
         }
-        return actualWebappContextName;
+        return actualWebapp;
     }
 
     /**
@@ -297,7 +297,7 @@ public class GhostWebappDeployerUtils {
      * @param contextName - contextName to bec checked with the ghostTransitMap
      * @param cfgContext  - ConfigurationContext to get the transitGhost webapps map
      */
-    public static void waitForActualWebAppToDeploy(String contextName,
+    public static void waitForWebAppToLeaveTransit(String contextName,
                                                    ConfigurationContext cfgContext) {
         Map<String, WebApplication> transitGhostMap = getTransitGhostWebAppsMap(cfgContext);
         while (transitGhostMap.containsKey(contextName)) {

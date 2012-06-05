@@ -56,18 +56,33 @@ public class GhostWebappDeployerValve implements CarbonTomcatValve {
 
         WebApplication deployedWebapp;
         if ((deployedWebapp = getDeployedWebappFromThisURI(requestURI, currentCtx)) == null) {
-            String webappContext = GhostWebappDeployerUtils.
+            WebApplication transitWebapp = GhostWebappDeployerUtils.
                     dispatchWebAppFromTransitGhosts(requestURI,
                                                     currentCtx);
-            if (webappContext != null) {
-                GhostWebappDeployerUtils.
-                        waitForActualWebAppToDeploy(webappContext,
-                                                    currentCtx);
-                try {
-                    response.sendRedirect(requestURI);
-                    return;
-                } catch (IOException e) {
-                    log.error("Error when redirecting response to " + requestURI, e);
+            if (transitWebapp != null) {
+                // if the webapp is found in the temp ghost list, we have to wait until the
+                // particular webapp is deployed or unloaded..
+                String isBeingUnloaded = (String) transitWebapp.
+                        getProperty(CarbonConstants.IS_ARTIFACT_BEING_UNLOADED);
+                if (isBeingUnloaded != null && "true".equals(isBeingUnloaded)) {
+                    // wait until the webapp is unloaded by the unload task
+                    GhostWebappDeployerUtils.
+                            waitForWebAppToLeaveTransit(transitWebapp.getContextName(),
+                                                        currentCtx);
+                    // now the webapp is unloaded and in ghost form so we can safely
+                    // continue with invocation
+                    handleWebapp(transitWebapp.getWebappFile().getName(), currentCtx);
+                } else {
+                    // wait until webapp is deployed
+                    GhostWebappDeployerUtils.
+                            waitForWebAppToLeaveTransit(transitWebapp.getContextName(),
+                                                        currentCtx);
+                    try {
+                        response.sendRedirect(requestURI);
+                        return;
+                    } catch (IOException e) {
+                        log.error("Error when redirecting response to " + requestURI, e);
+                    }
                 }
             }
         } else {

@@ -83,6 +83,11 @@ public class WebappUnloader implements ArtifactUnloader {
                         log.info("Unloading actual webapp : " + webApplication.getWebappFile().
                                 getName() + " and adding Ghost webapp. Tenant Domain: " +
                                  tenantDomain);
+                        // Adding this parameter to keep track of this webapp in GhostWebappDeployerValve
+                        webApplication.setProperty(CarbonConstants.IS_ARTIFACT_BEING_UNLOADED, "true");
+                        Map<String, WebApplication> transitGhostList =
+                                    GhostWebappDeployerUtils.getTransitGhostWebAppsMap(configCtx);
+                            transitGhostList.put(webApplication.getContextName(), webApplication);
                         try {
                             TomcatGenericWebappsDeployer tomcatWebappDeployer =
                                     (TomcatGenericWebappsDeployer) configCtx.
@@ -100,6 +105,7 @@ public class WebappUnloader implements ArtifactUnloader {
                                         put(webappFileData.getName(), ghostWebapp);
                                 webApplicationsHolder.getFaultyWebapps().
                                         remove(webappFileData.getName());
+                                transitGhostList.remove(ghostWebapp.getContextName());
                             }
                         } catch (Exception e) {
                             log.error("Error while unloading webapp : "

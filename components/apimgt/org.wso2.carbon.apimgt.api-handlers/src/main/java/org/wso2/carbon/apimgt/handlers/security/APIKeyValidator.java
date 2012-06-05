@@ -19,10 +19,8 @@ package org.wso2.carbon.apimgt.handlers.security;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.handlers.security.keys.APIKeyDataStore;
-import org.wso2.carbon.apimgt.handlers.security.keys.JDBCAPIKeyDataStore;
 import org.wso2.carbon.apimgt.handlers.security.keys.WSAPIKeyDataStore;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
-import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtil;
 
 /**
  * This class is used to validate a given API key against a given API context and a version.
@@ -103,12 +101,7 @@ public class APIKeyValidator {
     }
 
     private void initDataStore() throws APISecurityException {
-        if (APIMgtDBUtil.checkDBConfiguration()) {
-            log.debug("Initializing JDBC API key data store");
-            dataStore = new JDBCAPIKeyDataStore();
-        } else {
-            log.debug("Initializing WS API key data store");
-            dataStore = new WSAPIKeyDataStore();
-        }
+        log.debug("Initializing WS API key data store");
+        dataStore = new WSAPIKeyDataStore();
     }
 }

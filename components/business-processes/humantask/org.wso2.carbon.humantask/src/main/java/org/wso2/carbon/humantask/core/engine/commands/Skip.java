@@ -95,7 +95,7 @@ public class Skip extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.skip();
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

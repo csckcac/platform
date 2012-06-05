@@ -87,7 +87,7 @@ public class Claim extends AbstractHumanTaskCommand {
         checkState();
         authorise();
         task.claim(caller);
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

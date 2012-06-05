@@ -100,7 +100,7 @@ public class Release extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.release();
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

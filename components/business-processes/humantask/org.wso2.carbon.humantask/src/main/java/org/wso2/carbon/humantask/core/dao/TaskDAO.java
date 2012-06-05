@@ -31,12 +31,18 @@ public interface TaskDAO {
     void setStatus(TaskStatus status);
 
     /**
-     * @return : Return the taks status.
+     * @return : Return the task status.
      */
     TaskStatus getStatus();
 
+    /**
+     * @return The task type.
+     */
     TaskType getType();
 
+    /**
+     * @return : the task name.
+     */
     String getName();
 
     /**
@@ -54,15 +60,37 @@ public interface TaskDAO {
      */
     void start();
 
+    /**
+     * Stops this task. i.e. Updates the task's status to STOPPED.
+     */
     void stop();
 
+    /**
+     * Suspends this task. i.e. Updates the task's status to SUSPENDED.
+     * Also the status before suspension field is updated.
+     */
     void suspend();
 
+    /**
+     * Completes the task with the provided response message.
+     *
+     * @param response : The task completion message.
+     */
     void complete(MessageDAO response);
 
+    /**
+     * Claim this task.
+     *
+     * @param caller : The person claiming the task.
+     */
     void claim(OrganizationalEntityDAO caller);
 
-    void delegate(OrganizationalEntityDAO orgEntity);
+    /**
+     * Delegates this task to the provided org entity.
+     *
+     * @param delegatee : The delegatee.
+     */
+    void delegate(OrganizationalEntityDAO delegatee);
 
     /**
      * Persist the provided comment to this task.
@@ -93,10 +121,23 @@ public interface TaskDAO {
      */
     List<CommentDAO> getComments();
 
+    /**
+     * @return : the input message for the task.
+     */
     MessageDAO getInputMessage();
 
+    /**
+     * Get the task description for the provided content type.
+     *
+     * @param contentType : The content type
+     *
+     * @return : The matching task description.
+     */
     String getTaskDescription(String contentType);
 
+    /**
+     * Release the task. i.e. remove the actual owner from the task.
+     */
     void release();
 
     /**
@@ -119,8 +160,18 @@ public interface TaskDAO {
      */
     void skip();
 
+    /**
+     * Update the provided comment id with the new comment content.
+     *
+     * @param commentId : The id of the comment to be updated.
+     * @param newComment : The new comment content.
+     * @param modifiedBy : The modified by user name.
+     */
     void updateAndPersistComment(Long commentId, String newComment, String modifiedBy);
 
+    /**
+     * @param skipable : the skipable flag to set.
+     */
     void setSkipable(Boolean skipable);
 
     /**
@@ -158,22 +209,52 @@ public interface TaskDAO {
      */
     void setAttachments(List<AttachmentDAO> attachments);
 
+    /**
+     * Add an attachment to this task.
+     *
+     * @param attachment : The attachment to be added.
+     * @return <tt>true</tt> (as specified by {@link java.util.Collection#add})
+     */
     boolean addAttachment(AttachmentDAO attachment);
 
+    /**
+     * @return : The task Id.
+     */
     Long getId();
 
+    /**
+     * @return : The list of GHRs of this task.
+     */
     List<GenericHumanRoleDAO> getHumanRoles();
 
+    /**
+     * @param humanRole : The new generic human role to be added.
+     */
     void addHumanRole(GenericHumanRoleDAO humanRole);
 
+    /**
+     * @param param : the new presentation parameter to be added.
+     */
     void addPresentationParameter(PresentationParameterDAO param);
 
+    /**
+     * @return : The list of presentation parameters of this task.
+     */
     List<PresentationParameterDAO> getPresentationParameters();
 
+    /**
+     * @param preName : The presentation name to be added.
+     */
     void addPresentationName(PresentationNameDAO preName);
 
+    /**
+     * @param preSubject : the presentation subject to be added.
+     */
     void addPresentationSubject(PresentationSubjectDAO preSubject);
 
+    /**
+     * @param preDesc : The presentation description to be added.
+     */
     void addPresentationDescription(PresentationDescriptionDAO preDesc);
 
     /**
@@ -326,7 +407,8 @@ public interface TaskDAO {
     void nominate(List<OrganizationalEntityDAO> nominees);
 
     /**
-     * Fails this task . Changes the task's status to FAIL. Also a failure message and the failure name is persisted.
+     * Fails this task . Changes the task's status to FAIL. Also a failure message and
+     * the failure name is persisted.
      *
      * @param faultName : The failure name.
      * @param faultData : The fault data to persist.
@@ -374,8 +456,16 @@ public interface TaskDAO {
      */
     GenericHumanRoleDAO getGenericHumanRole(GenericHumanRoleDAO.GenericHumanRoleType type);
 
+    /**
+     * Adds a new deadline to this task
+     *
+     * @param deadlineDAO : The new deadline object.
+     */
     void addDeadline(DeadlineDAO deadlineDAO);
 
+    /**
+     * @return : The list of deadlines of this task.
+     */
     List<DeadlineDAO> getDeadlines();
 
     /**
@@ -384,7 +474,8 @@ public interface TaskDAO {
      * @param type : The human role type of which the org entities should be replaced.
      * @param orgEntities : The new list of organizational entities to be added to the human role
      */
-    void replaceOrgEntitiesForLogicalPeopleGroup(GenericHumanRoleDAO.GenericHumanRoleType type, List<OrganizationalEntityDAO> orgEntities);
+    void replaceOrgEntitiesForLogicalPeopleGroup(GenericHumanRoleDAO.GenericHumanRoleType type,
+                                                 List<OrganizationalEntityDAO> orgEntities);
 
     /**
      * Gets the task events for the particular task.
@@ -393,8 +484,7 @@ public interface TaskDAO {
     List<EventDAO> getEvents();
 
     /**
-     * TODO
-     * @param events
+     * @param events : The list of persisted events of this task.
      */
     void setEvents(List<EventDAO> events);
 

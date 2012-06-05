@@ -103,7 +103,7 @@ public class Activate extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         getTask().activate();
-        getTask().persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

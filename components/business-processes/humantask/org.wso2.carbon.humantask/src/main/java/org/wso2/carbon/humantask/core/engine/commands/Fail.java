@@ -93,7 +93,7 @@ public class Fail extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.fail(faultName, faultElement);
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

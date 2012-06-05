@@ -10,6 +10,7 @@
             <xsd:element name="SchedulerConfig" type="tns:tSchedulerConfig"/>
             <xsd:element name="TransactionManagerConfig" type="tns:tTransactionManagerConfig"/>
             <xsd:element name="TaskCleanupConfig" type="tns:tTaskCleanupConfig"/>
+            <xsd:element name="TaskEventListeners" type="tns:tTaskEventListeners"/>
         </xsd:sequence>
     </xsd:complexType>
     <xsd:complexType name="tPersistenceConfig">
@@ -41,6 +42,11 @@
         <xsd:sequence>
             <xsd:element name="cronExpression" type="xsd:string"/>
             <xsd:element name="statuses" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="tTaskEventListeners">
+        <xsd:sequence>
+            <xsd:element name="ClassName" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
 </xsd:schema>

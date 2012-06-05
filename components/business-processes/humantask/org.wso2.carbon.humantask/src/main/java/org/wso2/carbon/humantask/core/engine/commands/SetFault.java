@@ -91,7 +91,7 @@ public class SetFault extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.persistFault(faultName, faultElement);
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

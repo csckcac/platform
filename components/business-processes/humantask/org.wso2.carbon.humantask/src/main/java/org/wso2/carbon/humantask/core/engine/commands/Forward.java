@@ -65,7 +65,7 @@ public class Forward extends AbstractHumanTaskCommand {
         TaskDAO task = getTask();
         EventDAO taskEvent = super.createTaskEvent();
         taskEvent.setDetails("");
-        task.persistEvent(taskEvent);
+        processTaskEvent();
         return taskEvent;
     }
 

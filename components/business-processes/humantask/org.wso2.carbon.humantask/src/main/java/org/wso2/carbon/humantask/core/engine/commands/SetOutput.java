@@ -91,7 +91,7 @@ public class SetOutput extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.persistOutput(outputName, outputData);
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

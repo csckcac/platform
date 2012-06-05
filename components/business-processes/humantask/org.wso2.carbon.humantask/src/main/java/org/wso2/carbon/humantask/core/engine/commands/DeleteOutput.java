@@ -82,7 +82,7 @@ public class DeleteOutput extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.deleteOutput();
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

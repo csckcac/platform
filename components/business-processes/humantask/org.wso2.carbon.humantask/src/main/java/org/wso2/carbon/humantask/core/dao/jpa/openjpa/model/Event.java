@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.dao.jpa.openjpa.model;
 
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
+import org.wso2.carbon.humantask.core.dao.TaskEventType;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 
 import javax.persistence.Column;
@@ -49,7 +50,7 @@ public class Event implements EventDAO {
     private Date timeStamp;
 
     @Column(name = "TYPE", nullable = false)
-    private String type;
+    private TaskEventType type;
 
     @Column(name = "DETAILS", nullable = true)
     private String details;
@@ -86,12 +87,12 @@ public class Event implements EventDAO {
     }
 
     @Override
-    public String getType() {
+    public TaskEventType getType() {
         return type;
     }
 
     @Override
-    public void setType(String type) {
+    public void setType(TaskEventType type) {
         this.type = type;
     }
 

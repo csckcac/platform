@@ -16,16 +16,32 @@
 
 package org.wso2.carbon.humantask.core.engine.util;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.humantask.*;
+import org.wso2.carbon.humantask.TArgument;
+import org.wso2.carbon.humantask.TDeadline;
+import org.wso2.carbon.humantask.TDeadlines;
+import org.wso2.carbon.humantask.TFrom;
+import org.wso2.carbon.humantask.TPriorityExpr;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
+import org.wso2.carbon.humantask.core.api.event.TaskEventInfo;
+import org.wso2.carbon.humantask.core.dao.TaskEventType;
+import org.wso2.carbon.humantask.core.api.event.TaskInfo;
 import org.wso2.carbon.humantask.core.api.scheduler.Scheduler;
-import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.dao.DeadlineDAO;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
+import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.MessageDAO;
+import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
+import org.wso2.carbon.humantask.core.dao.PresentationDescriptionDAO;
+import org.wso2.carbon.humantask.core.dao.PresentationNameDAO;
+import org.wso2.carbon.humantask.core.dao.PresentationParameterDAO;
+import org.wso2.carbon.humantask.core.dao.PresentationSubjectDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
+import org.wso2.carbon.humantask.core.dao.TaskStatus;
 import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Deadline;
 import org.wso2.carbon.humantask.core.engine.HumanTaskException;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
@@ -155,7 +171,7 @@ public final class CommonTaskUtil {
         for (GenericHumanRoleDAO humanRoleDAO : task.getHumanRoles()) {
             if (GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS.
                     equals(humanRoleDAO.getType()) && humanRoleDAO.getOrgEntities() != null &&
-                    humanRoleDAO.getOrgEntities().size() > 0) {
+                humanRoleDAO.getOrgEntities().size() > 0) {
                 try {
                     pqe.checkOrgEntitiesExist(humanRoleDAO.getOrgEntities());
                     hasPotentialOwners = true;
@@ -181,7 +197,7 @@ public final class CommonTaskUtil {
         OrganizationalEntityDAO matchingUser = null;
         for (GenericHumanRoleDAO humanRoleDAO : task.getHumanRoles()) {
             if (type.equals(humanRoleDAO.getType()) && humanRoleDAO.getOrgEntities() != null &&
-                    humanRoleDAO.getOrgEntities().size() == 1) {
+                humanRoleDAO.getOrgEntities().size() == 1) {
                 matchingUser = humanRoleDAO.getOrgEntities().get(0);
                 break;
             }
@@ -201,7 +217,7 @@ public final class CommonTaskUtil {
         List<OrganizationalEntityDAO> matchingOrgEntities = new ArrayList<OrganizationalEntityDAO>();
         if (task != null && type != null) {
             for (GenericHumanRoleDAO humanRoleDAO : task.getHumanRoles()) {
-                if (humanRoleDAO.getType().equals(type)) {
+                if (humanRoleDAO.getType().equals(type) && humanRoleDAO.getOrgEntities() != null) {
                     matchingOrgEntities.addAll(humanRoleDAO.getOrgEntities());
                     break;
                 }
@@ -225,7 +241,7 @@ public final class CommonTaskUtil {
             } else {
                 for (PresentationNameDAO presentationName : task.getPresentationNames()) {
                     if (StringUtils.isNotEmpty(presentationName.getXmlLang()) &&
-                            presentationName.getXmlLang().toLowerCase().contains("en")) {
+                        presentationName.getXmlLang().toLowerCase().contains("en")) {
                         defaultPresentationName = presentationName;
                         break;
                     }
@@ -254,7 +270,7 @@ public final class CommonTaskUtil {
             } else {
                 for (PresentationSubjectDAO subject : task.getPresentationSubjects()) {
                     if (StringUtils.isNotEmpty(subject.getXmlLang()) &&
-                            subject.getXmlLang().toLowerCase().contains("en")) {
+                        subject.getXmlLang().toLowerCase().contains("en")) {
                         defaultPresentationSubject = subject;
                         break;
                     }
@@ -285,7 +301,7 @@ public final class CommonTaskUtil {
             } else {
                 for (PresentationDescriptionDAO description : task.getPresentationDescriptions()) {
                     if (StringUtils.isNotEmpty(description.getXmlLang()) &&
-                            description.getXmlLang().toLowerCase().contains("en")) {
+                        description.getXmlLang().toLowerCase().contains("en")) {
                         presentationDescriptionDAO = description;
                         break;
                     }
@@ -300,27 +316,6 @@ public final class CommonTaskUtil {
         }
         return presentationDescriptionDAO;
     }
-
-//    /**
-//     * Gets the presentation name of the task for the given language.
-//     *
-//     * @param task    : The task object.
-//     * @param xmlLang : The xml lang to filter.
-//     * @return : The matching PresentationNameDAO if one exists, else null.
-//     */
-//    public static PresentationSubjectDAO getPresentationSubject(TaskDAO task, String xmlLang) {
-//        PresentationSubjectDAO matchingSubject = null;
-//        if (task.getPresentationSubjects() != null && task.getPresentationSubjects().size() > 0) {
-//            for (PresentationSubjectDAO subjectDAO : task.getPresentationSubjects()) {
-//                if (StringUtils.isNotEmpty(subjectDAO.getXmlLang()) &&
-//                        subjectDAO.getXmlLang().toLowerCase().contains(xmlLang)) {
-//                    matchingSubject = subjectDAO;
-//                    break;
-//                }
-//            }
-//        }
-//        return matchingSubject;
-//    }
 
     /**
      * Nominates the given task to a matching actual owner, if there's only 1 user in the potential owners list. In that case
@@ -343,7 +338,7 @@ public final class CommonTaskUtil {
                                 // task for that particular user.
                                 GenericHumanRoleDAO actualOwnerRole =
                                         pqe.createGHRForRoleName(roleName,
-                                                GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
+                                                                 GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
                                 actualOwnerRole.setTask(task);
                                 task.addHumanRole(actualOwnerRole);
                                 task.setStatus(TaskStatus.RESERVED);
@@ -376,8 +371,8 @@ public final class CommonTaskUtil {
 
         if (priorityDef != null) {
             String expLang = priorityDef.getExpressionLanguage() == null ?
-                    taskConfig.getExpressionLanguage() :
-                    priorityDef.getExpressionLanguage();
+                             taskConfig.getExpressionLanguage() :
+                             priorityDef.getExpressionLanguage();
             ExpressionLanguageRuntime expLangRuntime = HumanTaskServiceComponent.getHumanTaskServer().
                     getTaskEngine().getExpressionLanguageRuntime(expLang);
 
@@ -385,8 +380,8 @@ public final class CommonTaskUtil {
                     getTextValue().trim(), evalCtx);
             if (priority.intValue() > 10 || priority.intValue() < 1) {
                 log.warn(String.format("Ignoring the task priority value " +
-                        ":[%d] The task priority has to be with 1 and 10. ",
-                        priority.intValue()));
+                                       ":[%d] The task priority has to be with 1 and 10. ",
+                                       priority.intValue()));
             } else {
                 taskPriorityInt = priority.intValue();
             }
@@ -395,6 +390,12 @@ public final class CommonTaskUtil {
         return taskPriorityInt;
     }
 
+    /**
+     * @param peopleQueryEvaluator
+     * @param tFrom
+     * @return
+     * @throws HumanTaskException
+     */
     public static List<OrganizationalEntityDAO> getOrganizationalEntities(
 
             PeopleQueryEvaluator peopleQueryEvaluator,
@@ -422,6 +423,13 @@ public final class CommonTaskUtil {
 
     }
 
+    /**
+     * Replace the presentation param values with the exact values matching for this task instance.
+     *
+     * @param presentationParameters  : The list of presentation parameters for the task.
+     * @param expression : The expression to be replaces/
+     * @return : The processed string.
+     */
     public static String replaceUsingPresentationParams(
             List<PresentationParameterDAO> presentationParameters,
             String expression) {
@@ -475,6 +483,13 @@ public final class CommonTaskUtil {
 
     }
 
+    /**
+     * Process the deadlines for the given task.
+     *
+     * @param task : The task object.
+     * @param taskConf : The task configuration for this task.
+     * @param evalContext : The task's eval context.
+     */
     public static void processDeadlines(TaskDAO task, TaskConfiguration taskConf,
                                         EvaluationContext evalContext) {
         //TODO is it possible to process deadlines once per a task definition and set the duration per a task instance?
@@ -511,15 +526,15 @@ public final class CommonTaskUtil {
                                               EvaluationContext evalCtx) {
         if (deadline.getUntil() != null) {
             String expLang = deadline.getUntil().getExpressionLanguage() == null ?
-                    taskConf.getExpressionLanguage() :
-                    deadline.getUntil().getExpressionLanguage();
+                             taskConf.getExpressionLanguage() :
+                             deadline.getUntil().getExpressionLanguage();
             return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().
                     getExpressionLanguageRuntime(expLang).evaluateAsDate(deadline.getUntil().
                     newCursor().getTextValue(), evalCtx);
         } else if (deadline.getFor() != null) {
             String expLang = deadline.getFor().getExpressionLanguage() == null ?
-                    taskConf.getExpressionLanguage() :
-                    deadline.getFor().getExpressionLanguage();
+                             taskConf.getExpressionLanguage() :
+                             deadline.getFor().getExpressionLanguage();
             Duration duration = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().
                     getExpressionLanguageRuntime(expLang).evaluateAsDuration(deadline.getFor().
                     newCursor().getTextValue(), evalCtx);
@@ -531,27 +546,33 @@ public final class CommonTaskUtil {
         return null;
     }
 
+    /**
+     * Schedule deadlines for the given task.
+     *
+     * @param task : the task object.
+     */
     public static void scheduleDeadlines(TaskDAO task) {
         List<DeadlineDAO> deadlines = task.getDeadlines();
         for (DeadlineDAO deadline : deadlines) {
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
                     scheduleJob(System.currentTimeMillis(), deadline.getDeadlineDate().getTime(),
-                            Scheduler.JobType.TIMER_DEADLINE, null, task.getId(), deadline.getName());
+                                Scheduler.JobType.TIMER_DEADLINE, null, task.getId(), deadline.getName());
         }
     }
 
     /**
      * Gets the potential owner role name for the given task.
+     *
      * @param task : The task object.
      * @return : The potential owner role name.
      */
     public static String getPotentialOwnerRoleName(TaskDAO task) {
-          String roleName = null;
+        String roleName = null;
         GHR_ITERATION:
-        for(GenericHumanRoleDAO role : task.getHumanRoles()){
-            if(GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS.equals(role.getType())) {
-                for(OrganizationalEntityDAO orgEntity : role.getOrgEntities()) {
-                    if(OrganizationalEntityDAO.OrganizationalEntityType.GROUP.equals(orgEntity.getOrgEntityType())) {
+        for (GenericHumanRoleDAO role : task.getHumanRoles()) {
+            if (GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS.equals(role.getType())) {
+                for (OrganizationalEntityDAO orgEntity : role.getOrgEntities()) {
+                    if (OrganizationalEntityDAO.OrganizationalEntityType.GROUP.equals(orgEntity.getOrgEntityType())) {
                         roleName = orgEntity.getName();
                         break GHR_ITERATION;
                     }
@@ -601,7 +622,7 @@ public final class CommonTaskUtil {
      *
      * @param task : The task object.
      * @return : The actual owner of the task IF exists, null otherwise. The caller should always
-     *           check for null in the return value.
+     *         check for null in the return value.
      */
     public static OrganizationalEntityDAO getActualOwner(TaskDAO task) {
 
@@ -611,10 +632,85 @@ public final class CommonTaskUtil {
                                       GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
 
         // There should be only 1 actual owner for the task if any exists.
-        if(actualOwner != null && actualOwner.size() ==1) {
-                 actualOwnerOrgEntity = actualOwner.get(0);
+        if (actualOwner != null && actualOwner.size() == 1) {
+            actualOwnerOrgEntity = actualOwner.get(0);
         }
 
         return actualOwnerOrgEntity;
+    }
+
+    /**
+     * Creates a new TaskEventInfo object for the task creation event.
+     *
+     * @param task : The newly created task object.
+     *
+     * @return : The respective TaskEventInfo object for the task creation event.
+     */
+    public static TaskEventInfo createNewTaskEvent(TaskDAO task) {
+        TaskEventInfo createTaskEvent = new TaskEventInfo();
+        createTaskEvent.setEventType(TaskEventType.CREATE);
+        createTaskEvent.setTimestamp(task.getCreatedOn());
+
+        //TODO - how to handle the event initiator for create task event ?
+        //createTaskEvent.setEventInitiator(null);
+
+        createTaskEvent.setTaskInfo(populateTaskInfo(task));
+        return createTaskEvent;
+    }
+
+    /**
+     * Creates the TaskInfo object from the provided TaskDAO object.
+     *
+     * @param taskDAO : The original task dao object
+     * @return : The representational TaskInfo.
+     */
+    public static TaskInfo populateTaskInfo(TaskDAO taskDAO) {
+
+        TaskInfo taskInfo = new TaskInfo();
+        taskInfo.setId(taskDAO.getId());
+        taskInfo.setCreatedDate(taskDAO.getCreatedOn());
+        taskInfo.setName(taskDAO.getName());
+
+        if(getDefaultPresentationDescription(taskDAO) != null) {
+            taskInfo.setDescription(getDefaultPresentationDescription(taskDAO).getValue());
+        }
+
+        if(getActualOwner(taskDAO) != null) {
+            taskInfo.setOwner(getActualOwner(taskDAO).getName());
+        }
+
+        if(getDefaultPresentationName(taskDAO) != null) {
+            taskInfo.setName(getDefaultPresentationName(taskDAO).getValue());
+        }
+
+        if(getDefaultPresentationSubject(taskDAO) != null){
+            taskInfo.setSubject(getDefaultPresentationSubject(taskDAO).getValue());
+        }
+
+        taskInfo.setStatus(taskDAO.getStatus());
+        taskInfo.setType(taskDAO.getType());
+        taskInfo.setModifiedDate(taskDAO.getUpdatedOn());
+        taskInfo.setStatusBeforeSuspension(taskDAO.getStatusBeforeSuspension());
+
+        return taskInfo;
+    }
+
+    /**
+     * Create the TaskEventInfo object from the EventDAO and the TaskDAO.
+     * @param eventDAO : The event
+     * @param taskDAO : The related task dao.
+     *
+     * @return : The new TaskEventInfo object.
+     */
+    public static TaskEventInfo populateTaskEventInfo(EventDAO eventDAO, TaskDAO taskDAO) {
+        TaskEventInfo eventInfo = new TaskEventInfo();
+        eventInfo.setTimestamp(eventDAO.getTimeStamp());
+        eventInfo.setEventInitiator(eventDAO.getUser());
+        eventInfo.setEventType(eventDAO.getType());
+        eventInfo.setNewState(eventDAO.getNewState());
+        eventInfo.setOldState(eventDAO.getOldState());
+        eventInfo.setTaskInfo(populateTaskInfo(taskDAO));
+
+        return eventInfo;
     }
 }

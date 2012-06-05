@@ -102,7 +102,7 @@ public class Exit extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.exit();
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

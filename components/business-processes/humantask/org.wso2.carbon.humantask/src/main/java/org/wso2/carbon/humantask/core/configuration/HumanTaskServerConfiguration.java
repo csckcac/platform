@@ -38,6 +38,7 @@ import java.util.List;
  * The memory model of the humantask configuration - humantask.xml.
  */
 public class HumanTaskServerConfiguration {
+
     private static final Log log = LogFactory.getLog(HumanTaskServerConfiguration.class);
 
     private HumanTaskServerConfigDocument htServerConfigDocument;
@@ -62,6 +63,8 @@ public class HumanTaskServerConfiguration {
     private String transactionFactoryClass = "org.apache.ode.il.EmbeddedGeronimoFactory";
 
     private List<TaskStatus> removableTaskStatuses = Collections.emptyList();
+
+    private List<String> eventListenerClassNames = new ArrayList<String>();
 
     private String taskCleanupCronExpression;
 
@@ -134,6 +137,10 @@ public class HumanTaskServerConfiguration {
         if (tHumanTaskServerConfig.getTaskCleanupConfig() != null) {
             iniTaskCleanupConfig(tHumanTaskServerConfig.getTaskCleanupConfig());
         }
+
+        if(tHumanTaskServerConfig.getTaskEventListeners() != null) {
+           initEventListeners(tHumanTaskServerConfig.getTaskEventListeners());
+        }
     }
 
     private void iniTaskCleanupConfig(TTaskCleanupConfig taskCleanupConfig) {
@@ -164,6 +171,16 @@ public class HumanTaskServerConfiguration {
                     }
                 }
                 this.removableTaskStatuses = removableTaskStatusList;
+            }
+        }
+    }
+
+    private void initEventListeners(TTaskEventListeners taskEventListeners) {
+        if(taskEventListeners.getClassNameArray() != null) {
+            for(String eventListenerClassName : taskEventListeners.getClassNameArray()) {
+                if(StringUtils.isNotEmpty(eventListenerClassName)) {
+                    this.eventListenerClassNames.add(eventListenerClassName.trim());
+                }
             }
         }
     }
@@ -239,26 +256,44 @@ public class HumanTaskServerConfiguration {
         }
     }
 
+    /**
+     * @return : The data source name.
+     */
     public String getDataSourceName() {
         return dataSourceName;
     }
 
+    /**
+     * @return :
+     */
     public String getDataSourceJNDIRepoInitialContextFactory() {
         return dataSourceJNDIRepoInitialContextFactory;
     }
 
+    /**
+     * @return : the JNDI repo provider URL.
+     */
     public String getDataSourceJNDIRepoProviderURL() {
         return dataSourceJNDIRepoProviderURL;
     }
 
+    /**
+     * @return : Return the is generate DDL option in the server configuration.
+     */
     public boolean isGenerateDdl() {
         return generateDdl;
     }
 
+    /**
+     * @return : The value of the show sqp property in the config file.
+     */
     public boolean isShowSql() {
         return showSql;
     }
 
+    /**
+     * @return : the dao connection factory class.
+     */
     public String getDaoConnectionFactoryClass() {
         return daoConnectionFactoryClass;
     }
@@ -270,37 +305,41 @@ public class HumanTaskServerConfiguration {
         return peopleQueryEvaluatorClass;
     }
 
+    /**
+     * @return : The thread pool max size.
+     */
     public int getThreadPoolMaxSize() {
         return threadPoolMaxSize;
     }
 
+    /**
+     * @return : The transaction factory class.
+     */
     public String getTransactionFactoryClass() {
         return transactionFactoryClass;
     }
 
+    /**
+     * @return : The task cleanup cron expression.
+     */
     public String getTaskCleanupCronExpression() {
         return taskCleanupCronExpression;
     }
 
-//    public void setTaskCleanupCronExpression(String taskCleanupCronExpression) {
-//        this.taskCleanupCronExpression = taskCleanupCronExpression;
-//    }
 
+    /**
+     * @return : The list of event listener classes in the humantask config file.
+     */
+    public List<String> getEventListenerClassNames() {
+        return this.eventListenerClassNames;
+    }
+
+    /**
+     * @return : Return the list of removable task statuses in the humantask config file.
+     */
     public List<TaskStatus> getRemovableTaskStatuses() {
         return removableTaskStatuses;
     }
-
-//    public void setRemovableTaskStatuses(List<TaskStatus> removableTaskStatuses) {
-//        this.removableTaskStatuses = removableTaskStatuses;
-//    }
-//
-//    public boolean isEnableTaskEventPersistence() {
-//        return enableTaskEventPersistence;
-//    }
-//
-//    public void setEnableTaskEventPersistence(boolean enableTaskEventPersistence) {
-//        this.enableTaskEventPersistence = enableTaskEventPersistence;
-//    }
 
     /**
      * @return :  true if we have a valid task cleanup configuration parameters. False otherwise.

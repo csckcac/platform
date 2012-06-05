@@ -97,7 +97,7 @@ public class Complete extends AbstractHumanTaskCommand {
         } catch (Exception e) {
             throw new HumanTaskRuntimeException("Error occurred while invoking callback service", e);
         }
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 

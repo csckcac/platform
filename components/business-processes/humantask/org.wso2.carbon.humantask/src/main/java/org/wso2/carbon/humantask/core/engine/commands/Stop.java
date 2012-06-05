@@ -96,7 +96,7 @@ public class Stop extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.stop();
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

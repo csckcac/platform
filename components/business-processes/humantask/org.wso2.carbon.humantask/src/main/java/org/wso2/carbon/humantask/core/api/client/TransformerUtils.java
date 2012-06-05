@@ -577,7 +577,7 @@ public final class TransformerUtils {
                 tEvent.setEventTime(eventTime);
 
 
-                tEvent.setEventType(taskEvent.getType());
+                tEvent.setEventType(taskEvent.getType().toString().toLowerCase());
                 tEvent.setNewState(transformStatus(taskEvent.getNewState()));
                 tEvent.setOldState(transformStatus(taskEvent.getOldState()));
 

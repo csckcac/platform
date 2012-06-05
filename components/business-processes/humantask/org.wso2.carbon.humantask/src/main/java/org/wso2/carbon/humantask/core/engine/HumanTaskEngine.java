@@ -21,6 +21,7 @@ import org.wso2.carbon.humantask.core.api.scheduler.Scheduler;
 import org.wso2.carbon.humantask.core.dao.HumanTaskDAOConnectionFactory;
 import org.wso2.carbon.humantask.core.dao.TaskCreationContext;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
+import org.wso2.carbon.humantask.core.engine.event.processor.EventProcessor;
 import org.wso2.carbon.humantask.core.engine.runtime.api.ExpressionLanguageRuntime;
 import org.wso2.carbon.humantask.core.engine.runtime.xpath.XPathExpressionRuntime;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
@@ -47,6 +48,9 @@ public class HumanTaskEngine {
 
     /** The expression  */
     private Map<String, ExpressionLanguageRuntime> expressionLanguageRuntimeRegistry;
+
+    /** */
+    private EventProcessor eventProcessor;
 
     /**
      * Deadline scheduler
@@ -152,5 +156,21 @@ public class HumanTaskEngine {
      */
     public void setScheduler(Scheduler scheduler) {
         this.scheduler = scheduler;
+    }
+
+    /**
+     *
+     * @param eventProcessor
+     */
+    public void setEventProcessor(EventProcessor eventProcessor) {
+        this.eventProcessor = eventProcessor;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public EventProcessor getEventProcessor() {
+        return this.eventProcessor;
     }
 }

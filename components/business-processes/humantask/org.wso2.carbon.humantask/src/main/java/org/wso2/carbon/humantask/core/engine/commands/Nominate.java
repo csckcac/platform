@@ -100,7 +100,7 @@ public class Nominate extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.nominate(nominees);
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.humantask.core.api.event.HumanTaskEventListener;
 import org.wso2.carbon.humantask.core.api.scheduler.Scheduler;
 import org.wso2.carbon.humantask.core.configuration.HumanTaskServerConfiguration;
 import org.wso2.carbon.humantask.core.dao.HumanTaskDAOConnectionFactory;
@@ -25,6 +26,7 @@ import org.wso2.carbon.humantask.core.db.Database;
 import org.wso2.carbon.humantask.core.engine.HumanTaskEngine;
 import org.wso2.carbon.humantask.core.engine.HumanTaskServerException;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
+import org.wso2.carbon.humantask.core.engine.event.processor.EventProcessor;
 import org.wso2.carbon.humantask.core.scheduler.JobProcessorImpl;
 import org.wso2.carbon.humantask.core.scheduler.SimpleScheduler;
 import org.wso2.carbon.humantask.core.store.HumanTaskStoreManager;
@@ -45,30 +47,46 @@ public class HumanTaskServer {
 
     private static final Log log = LogFactory.getLog(HumanTaskServer.class);
 
-    /** The human task server configurations */
+    /**
+     * The human task server configurations
+     */
     private HumanTaskServerConfiguration serverConfig;
 
-    /** The task engine */
+    /**
+     * The task engine
+     */
     private HumanTaskEngine taskEngine;
 
-    /** The human task database representation */
+    /**
+     * The human task database representation
+     */
     private Database database;
 
-    /** The task store manager */
+    /**
+     * The task store manager
+     */
     private HumanTaskStoreManager taskStoreManager;
 
-    /** The transaction manager */
+    /**
+     * The transaction manager
+     */
     private TransactionManager tnxManager;
 
-    /** The dao connection factory */
+    /**
+     * The dao connection factory
+     */
     private HumanTaskDAOConnectionFactory daoConnectionFactory;
 
-    /** Human task scheduler */
+    /**
+     * Human task scheduler
+     */
     private Scheduler scheduler;
+
+    private EventProcessor eventProcessor;
 
     /**
      * The initialisation logic for the human task server.
-
+     *
      * @throws HumanTaskServerException : If the server initialisation fails.
      */
     public void init() throws HumanTaskServerException {
@@ -76,12 +94,16 @@ public class HumanTaskServer {
         initTransactionManager();
         initDataSource();
         initDAO();
+        initEventProcessor();
         initHumanTaskEngine();
         initPeopleQueryEvaluator();
         initHumanTaskStore();
         initScheduler();
     }
 
+    /**
+     * Scheduler initialisation.
+     */
     private void initScheduler() {
         ThreadFactory threadFactory = new ThreadFactory() {
             private int threadNumber = 0;
@@ -108,6 +130,11 @@ public class HumanTaskServer {
         scheduler = simpleScheduler;
     }
 
+    /**
+     *
+     *
+     * @throws HumanTaskServerException :
+     */
     private void initPeopleQueryEvaluator() throws HumanTaskServerException {
         try {
             PeopleQueryEvaluator peopleQueryEvaluator = (PeopleQueryEvaluator)
@@ -125,6 +152,7 @@ public class HumanTaskServer {
     private void initHumanTaskEngine() {
         HumanTaskEngine humanTaskEngine = new HumanTaskEngine();
         humanTaskEngine.setDaoConnectionFactory(this.daoConnectionFactory);
+        humanTaskEngine.setEventProcessor(this.eventProcessor);
         this.taskEngine = humanTaskEngine;
     }
 
@@ -155,6 +183,32 @@ public class HumanTaskServer {
                             serverConfig.getDaoConnectionFactoryClass();
             throw new HumanTaskServerException(errMsg, e);
         }
+    }
+
+    //
+
+    /**
+     *  Event processor initialisation logic.
+     *  As of now we have a set of event listeners which we register at the server startup.
+     *
+     * @throws HumanTaskServerException : If the event listener object instantiation fails.
+     */
+    private void initEventProcessor() throws HumanTaskServerException {
+        EventProcessor eventProcessor = new EventProcessor();
+        for (String eventListenerClassName : serverConfig.getEventListenerClassNames()) {
+            try {
+                Class eventListenerClass = this.getClass().getClassLoader().loadClass(eventListenerClassName);
+                HumanTaskEventListener eventListener = (HumanTaskEventListener) eventListenerClass.newInstance();
+                eventProcessor.addEventListener(eventListener);
+            } catch (Exception e) {
+                log.fatal("Couldn't initialize the event listener for class: "
+                          + eventListenerClassName, e);
+                throw new HumanTaskServerException("Couldn't initialize a event listener: "
+                                                   + eventListenerClassName, e);
+            }
+        }
+
+        this.eventProcessor = eventProcessor;
     }
 
     /**
@@ -242,7 +296,7 @@ public class HumanTaskServer {
             log.fatal("Couldn't initialize a transaction manager with factory: "
                       + transactionFactoryName, e);
             throw new HumanTaskServerException("Couldn't initialize a transaction manager with factory: "
-                                          + transactionFactoryName, e);
+                                               + transactionFactoryName, e);
         }
     }
 

@@ -19,15 +19,18 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.humantask.core.api.event.TaskEventInfo;
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
+import org.wso2.carbon.humantask.core.dao.TaskEventType;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 import org.wso2.carbon.humantask.core.dao.TaskType;
 import org.wso2.carbon.humantask.core.engine.HumanTaskCommand;
 import org.wso2.carbon.humantask.core.engine.HumanTaskEngine;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
+import org.wso2.carbon.humantask.core.engine.util.CommonTaskUtil;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 
@@ -77,7 +80,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
 
     /**
      * @param invokerUserName : The user name of the operation invoker.
-     * @param taskId   : The task id.
+     * @param taskId          : The task id.
      */
     public AbstractHumanTaskCommand(String invokerUserName, Long taskId) {
         engine = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine();
@@ -93,7 +96,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
     private void validateCaller(String callerId) {
         if (StringUtils.isEmpty(callerId) || !engine.getPeopleQueryEvaluator().isExistingUser(callerId)) {
             String errMsg = String.format("The caller[name:%s] is not a valid user in the user store.",
-                    operationInvoker.getName());
+                                          operationInvoker.getName());
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -101,7 +104,6 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
 
     /**
      * Checks whether the this task is a valid task of TASK.
-     *
      */
     public void checkForValidTask() {
         if (task == null) {
@@ -110,7 +112,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
 
         if (!TaskType.TASK.equals(task.getType())) {
             String errMsg = String.format("The task[%d] is a notification, hence cannot perform [%s].",
-                    task.getId(), this.getClass().getSimpleName());
+                                          task.getId(), this.getClass().getSimpleName());
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -118,7 +120,6 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
 
     /**
      * Checks whether the this task is a valid task of TASK.
-     *
      */
     public void checkForValidNotification() {
         if (task == null) {
@@ -128,7 +129,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
         if (!TaskType.NOTIFICATION.equals(task.getType())) {
 
             String errMsg = String.format("The task[%d] is a task, hence cannot perform [%s].",
-                    task.getId(), this.getClass().getSimpleName());
+                                          task.getId(), this.getClass().getSimpleName());
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -138,13 +139,12 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
      * Checks the post state of a task after a command execution
      *
      * @param expectedStatus : The expected post state.
-     *
      */
     protected void checkPostState(TaskStatus expectedStatus) {
         if (!expectedStatus.equals(task.getStatus())) {
             String errMsg = String.format("Operation [%s] was not successfully performed on task[id: %d]" +
-                    " as it's state is still in[%s]", this.getClass().getSimpleName(),
-                    task.getId(), task.getStatus());
+                                          " as it's state is still in[%s]", this.getClass().getSimpleName(),
+                                          task.getId(), task.getStatus());
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -155,15 +155,14 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
      * task before the task operation is performed.
      *
      * @param expectedStatus : The expected pre state.
-     *
      */
     protected void checkPreState(TaskStatus expectedStatus) {
         if (!expectedStatus.equals(task.getStatus())) {
             String errMsg = String.format("User[%s] cannot [%s] task[id:%d] as the task is in state[%s]. " +
-                    "[%s] operation can be performed on tasks in state[%s]!",
-                    operationInvoker.getName(), this.getClass().getSimpleName(), task.getId(),
-                    task.getStatus(), this.getClass().getSimpleName(),
-                    expectedStatus);
+                                          "[%s] operation can be performed on tasks in state[%s]!",
+                                          operationInvoker.getName(), this.getClass().getSimpleName(), task.getId(),
+                                          task.getStatus(), this.getClass().getSimpleName(),
+                                          expectedStatus);
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -174,15 +173,14 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
      * task before the task operation is performed.
      *
      * @param expectedStates : The expected pre states.
-     *
      */
     protected void checkPreStates(List<TaskStatus> expectedStates) {
         if (!expectedStates.contains(task.getStatus())) {
             String errMsg = String.format("User[%s] cannot [%s] task[id:%d] as the task is in state[%s]. " +
-                    "[%s] operation can be performed on tasks in states[%s]!",
-                    operationInvoker.getName(), this.getClass().getSimpleName(), task.getId(),
-                    task.getStatus(), this.getClass().getSimpleName(),
-                    expectedStates);
+                                          "[%s] operation can be performed on tasks in states[%s]!",
+                                          operationInvoker.getName(), this.getClass().getSimpleName(), task.getId(),
+                                          task.getStatus(), this.getClass().getSimpleName(),
+                                          expectedStates);
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -190,11 +188,11 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
 
     protected void authoriseRoles(List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles) {
         if (!OperationAuthorizationUtil.authoriseUser(this.task, operationInvoker, allowedRoles,
-                engine.getPeopleQueryEvaluator())) {
+                                                      engine.getPeopleQueryEvaluator())) {
             throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
-                    " operation as he is not in task roles[%s]",
-                    operationInvoker.getName(), this.getClass().getSimpleName(),
-                    allowedRoles));
+                                                              " operation as he is not in task roles[%s]",
+                                                              operationInvoker.getName(), this.getClass().getSimpleName(),
+                                                              allowedRoles));
         }
     }
 
@@ -230,7 +228,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
     protected EventDAO createTaskEvent() {
         event.setTask(task);
         //As the getClass method gives the run time class name we can directly set the operation type.
-        event.setType(this.getClass().getSimpleName().toLowerCase());
+        event.setType(TaskEventType.valueOf(this.getClass().getSimpleName().toUpperCase()));
         event.setUser(operationInvoker.getName());
         event.setNewState(task.getStatus());
         return event;
@@ -238,10 +236,20 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
 
     /**
      * @return : Returns the empty event object.
-     * Note the calling child object should fill all the fields properly.
+     *         Note the calling child object should fill all the fields properly.
      */
     protected EventDAO getTaskEvent() {
         return event;
+    }
+
+    /**
+     *
+     */
+    protected void processTaskEvent() {
+        EventDAO eventDAO = createTaskEvent();
+        getTask().persistEvent(eventDAO);
+        TaskEventInfo taskEventInfo = CommonTaskUtil.populateTaskEventInfo(eventDAO, task);
+        getEngine().getEventProcessor().processEvent(taskEventInfo);
     }
 
 }

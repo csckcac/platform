@@ -86,7 +86,7 @@ public class Suspend extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.suspend();
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

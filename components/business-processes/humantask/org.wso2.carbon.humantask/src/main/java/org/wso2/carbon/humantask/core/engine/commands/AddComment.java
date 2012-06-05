@@ -91,7 +91,7 @@ public class AddComment extends AbstractHumanTaskCommand {
         checkState();
         persistedComment = getTask().persistComment(getEngine().getDaoConnectionFactory().
                 getConnection().getCommentDAO(commentString, getOperationInvoker().getName()));
-        getTask().persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 

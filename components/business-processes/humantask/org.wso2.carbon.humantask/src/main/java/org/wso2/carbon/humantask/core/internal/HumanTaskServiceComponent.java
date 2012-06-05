@@ -171,13 +171,6 @@ public class HumanTaskServiceComponent {
         return HumanTaskServerHolder.getInstance().getHtServer();
     }
 
-//    /**
-//     * @return : The HumanTaskUIResourceProvider.
-//     */
-//    public static HumanTaskUIResourceProvider getHumanTaskUIResourceProvider() {
-//        return HumanTaskServerHolder.getInstance().getHumanTaskUIResourceProvider();
-//    }
-
     private void registerHumanTaskServerService() {
         this.bundleContext.registerService(HumanTaskEngineService.class.getName(),
                                                           new HumanTaskEngineServiceImpl(), null);

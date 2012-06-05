@@ -85,7 +85,7 @@ public class SetPriority extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.persistPriority(newPriority);
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

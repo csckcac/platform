@@ -39,12 +39,12 @@ public interface EventDAO {
     /**
      * @return : The type of this event.
      */
-    String getType();
+    TaskEventType getType();
 
     /**
      * @param type : The type of this event to set.
      */
-    void setType(String type);
+    void setType(TaskEventType type);
 
     /**
      * @return : The details of this event.

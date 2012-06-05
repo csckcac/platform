@@ -87,7 +87,7 @@ public class DeleteComment extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.deleteComment(updatingCommentId);
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

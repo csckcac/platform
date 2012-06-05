@@ -15,4 +15,8 @@
         <cronExpression>0 0 0/4 * * ?</cronExpression>
         <statuses>COMPLETED,OBSOLETE</statuses>
     </TaskCleanupConfig-->
+    <!--TaskEventListeners>
+        <ClassName>ClassName</ClassName>
+        <ClassName>ClassName</ClassName>
+    </TaskEventListeners-->
 </HumanTaskServerConfig>

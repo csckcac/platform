@@ -9,6 +9,7 @@ import org.wso2.carbon.humantask.core.dao.jpa.openjpa.util.HumanTaskBuilderImpl;
 import org.wso2.carbon.humantask.core.dao.sql.HumanTaskJPQLQueryBuilder;
 import org.wso2.carbon.humantask.core.engine.HumanTaskException;
 import org.wso2.carbon.humantask.core.engine.util.CommonTaskUtil;
+import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.store.TaskConfiguration;
 
 import javax.persistence.EntityManager;
@@ -65,6 +66,9 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
                                             creationContext.getEvalContext());
             CommonTaskUtil.scheduleDeadlines(task);
         }
+
+        HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getEventProcessor().processEvent(CommonTaskUtil.createNewTaskEvent(task));
+
         return task;
     }
 

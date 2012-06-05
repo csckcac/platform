@@ -125,7 +125,7 @@ public class Resume extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.resume();
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

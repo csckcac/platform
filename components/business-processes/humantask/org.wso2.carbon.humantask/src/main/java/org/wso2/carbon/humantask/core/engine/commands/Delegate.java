@@ -137,7 +137,7 @@ public class Delegate extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.delegate(delegatee);
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

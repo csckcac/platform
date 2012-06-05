@@ -615,8 +615,8 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     }
 
     @Override
-    public void delegate(OrganizationalEntityDAO orgEntity) {
-        claim(orgEntity);
+    public void delegate(OrganizationalEntityDAO delegatee) {
+        claim(delegatee);
     }
 
     @Override
@@ -880,6 +880,7 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     }
 
 
+    // Update the updated on field before persisting the task object.
     @PrePersist
     @PreUpdate
     private void persistLastUpdated() {

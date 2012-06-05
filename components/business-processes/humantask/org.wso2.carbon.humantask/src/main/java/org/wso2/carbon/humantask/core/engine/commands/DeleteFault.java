@@ -83,7 +83,7 @@ public class DeleteFault extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.deleteFault();
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

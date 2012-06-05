@@ -102,7 +102,6 @@ public class TaskCreationTestCase {
 
         FlaggedName[] clerkUsers = userAdminStub.getUsersOfRole(HumanTaskTestConstants.REGIONAL_CLERKS_ROLE,
                                                                 "clerk*");
-        log.info("NUMBER OF CLERKS ---" + clerkUsers.length);
         assertTrue(clerkUsers.length == 2, "There should be exactly 2 clerks users in the system!");
 
         FlaggedName[] managerUsers = userAdminStub.getUsersOfRole(HumanTaskTestConstants.REGIONAL_MANAGER_ROLE,

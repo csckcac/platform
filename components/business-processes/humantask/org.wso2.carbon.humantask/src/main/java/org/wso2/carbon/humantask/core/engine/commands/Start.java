@@ -117,7 +117,7 @@ public class Start extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.start();
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

@@ -89,7 +89,7 @@ public class UpdateComment extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.updateAndPersistComment(updatingCommentId, updatedCommentString, getOperationInvoker().getName());
-        task.persistEvent(createTaskEvent());
+        processTaskEvent();
         checkPostConditions();
     }
 }

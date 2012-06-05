@@ -76,4 +76,7 @@ public final class HumanTaskConstants {
 
     /** The default content category value for an attachment*/
     public static final String DEFAULT_ATTACHMENT_CONTENT_CATEGORY = "AnonymousContentCategory";
+
+    /** The default content type of the presentation desc. */
+    public static final String PRESENTATION_DESC_CONTENT_TYPE = "text/plain";
 }

@@ -228,24 +228,35 @@ function getFilteredLogs() {
 	
 	var loglevel = document.getElementById("logLevelID");
 	var log_index = document.getElementById("logIndex").value;
-
-	var time = document.getElementById("time").value;
-	var date = document.getElementById("date").value;
-
+	var appName = document.getElementById("appName");
+	alert(appName);
+	var start = document.getElementById("start").value;
+	var end = document.getElementById("end").value;
+	if (document.getElementById("NowradioDate").checked) {
+		start='';
+		end='';
+	}
 	var serviceName = null;
 	var tenantDomain = null;
-	 // regular expression to match required date format 
-	var reTdate = /^\d{1,2}\/\d{1,2}\/\d{4}$/; 
-	if(date != '' && !date.match(reTdate)) {  
-		CARBON.showWarningDialog('Invalid Date Format');
+	 // regular expression to match required date format
+	var reTdate = '\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{1,2}';
+	var re = new RegExp(reTdate);
+	 
+	if(start != '' && !start.match(re)) {  
+		CARBON.showWarningDialog('Invalid start date Format');
     	return false; 
     } 
-	// regular expression to match required time format 
-	var reTime = /^\d{1,2}:\d{2}([ap]m)?$/; 
-	if(time != '' && !time.match(reTime)) {  
-		CARBON.showWarningDialog('Invalid Time Format');
+	if(end != '' && !end.match(re)) {  
+		CARBON.showWarningDialog('Invalid end date Format');
     	return false; 
     } 
+//	// regular expression to match required time format 
+//	var reTime = /^\d{1,2}:\d{2}([ap]m)?$/; 
+//	if(time != '' && !time.match(reTime)) {  
+//		CARBON.showWarningDialog('Invalid Time Format');
+//    	return false; 
+//    } 
+
 	if (document.getElementById("serviceName") != null) {
 		serviceName = document.getElementById("serviceName").value
 	}
@@ -266,10 +277,21 @@ function getFilteredLogs() {
 	}
 	var keyword = document.getElementById("keyword").value;
 	var logger = document.getElementById("logger").value;
-
-
-	location.href = "cassandra_log_viewer.jsp?priority=" + loglevel_value + "&keyword="
-	+ keyword+"&logIndex=" + log_index+"&tenantDomain="+tenantDomain+"&serviceName="+serviceName+"&logger="+logger+"&time="+time+"&date="+date;
+	if (appName != null) {
+		appName = document.getElementById("appName").value;
+		location.href = "application_log_viewer.jsp?priority=" + loglevel_value
+		+ "&keyword=" + keyword + "&logIndex=" + log_index
+		+ "&tenantDomain=" + tenantDomain + "&serviceName=" + serviceName
+		+ "&logger=" + logger + "&start=" + start + "&appName=" + appName
+		+ "&end=" + end;
+	} else {
+		location.href = "cassandra_log_viewer.jsp?priority=" + loglevel_value
+		+ "&keyword=" + keyword + "&logIndex=" + log_index
+		+ "&tenantDomain=" + tenantDomain + "&serviceName=" + serviceName
+		+ "&logger=" + logger + "&start=" + start 
+		+ "&end=" + end;
+	}
+	
 }
 
 function showQueryProperties() {

@@ -57,7 +57,7 @@
 		boolean showManager = false;
 		String logIndex = request.getParameter("logIndex");
 		String start = request.getParameter("start");
-		
+		String appName = request.getParameter("appName");
 		String end = request.getParameter("end");
 		boolean showTenantDomain = false;
 		boolean isStratosService = false;
@@ -67,6 +67,7 @@
 		String priority = request.getParameter("priority");
 		String logger = request.getParameter("logger");
 		String keyWord = request.getParameter("keyword");
+		String[] applicationNames;
 // 		LogEvent logs[];
 		if (start != null && !start.equals("null")&& !start.equals("")) {
 			isDateGiven=true;
@@ -74,14 +75,17 @@
 		int returnRows;
 		logIndex = (logIndex == null) ? "20" : logIndex;
 		tenantDomain = (tenantDomain == null) ? "" : tenantDomain;
+		appName = (appName == null) ? "" : appName;
 		start = (start == null) ? "" : start;
 		end = (end == null) ? "" : end;
 		priority = (priority == null) ? "ALL" : priority;
 		keyWord = (keyWord == null) ? "" : keyWord;
 		logger = (logger == null) ? "" : logger;
 		try {
+			
 			returnRows = (logIndex == null) ? 20 : Integer.parseInt(logIndex);
 			logViewerClient = new LogViewerClient(cookie, backendServerURL, configContext);
+			applicationNames = logViewerClient.getTenantApplicationNames();
 			isLogsFromSyslog = logViewerClient.isDataFromSysLog(tenantDomain);
 			isSTSyslog = logViewerClient.isSTSyslogConfig(tenantDomain);
 			isManager = logViewerClient.isManager();
@@ -91,16 +95,9 @@
 			isStratosService = logViewerClient.isStratosService();
 			showTenantDomain = (isSTSyslog && isLogsFromSyslog && isStratosService);
 			showManager = (isManager && isLogsFromSyslog);
-			events = logViewerClient.getSystemLogs(start, end,
-					logger, priority, "", serviceName, "", Integer.parseInt(logIndex));
-			System.out.println("events "+events);
-			System.out.println("Return Rows "+logIndex);
-			System.out.println("isDateGiven "+isDateGiven);
-			System.out.println("start "+start+" : "+start);
-			System.out.println("end "+end+" : "+end);
-			System.out.println("Priority "+priority);
-			System.out.println("Logger "+logger);
-			System.out.println("Keyword "+keyWord);
+			events = logViewerClient.getApplicationLogs(appName, start, end, logger, priority, "",  Integer.parseInt(logIndex));
+			
+			
 		
 			System.out.println();
 			System.out.println();
@@ -128,94 +125,7 @@
 			</h2>
 			<div id="workArea">
 			
-			<%
-				if (showTenantDomain || showManager) {
-			%>	<br /> <br />
-			<table border="0" class="styledLeft">
-				<tbody>
-					<tr>
-						<td>
-
-							<table class="normal">
-								<tr>
-									<%
-										if (showTenantDomain) {
-									%>
-
-									<td style="padding-right: 2px !important;"><nobr>
-											<fmt:message key="tenant.domain" />
-										</nobr>
-									</td>
-									<td style="padding-right: 2px !important;"><input
-										value="<%=tenantDomain%>" id="tenantDomain"
-										name="tenantDomain" size="20" type="text"></td>
-
-									<td style="padding-left: 0px !important;"><input
-										type="button" value="Get Tenant Logs"
-										onclick="javascript:getTenantSpecificIndex(); return false;"
-										class="button"></td>
-									<%
-										} else {
-									%>
-									<td><input type="hidden" id="tenantDomain"
-										name="tenantDomain" value="<%=tenantDomain%>" />
-									</td>
-									<%
-										}
-												if (showManager) {
-									%>
-									<td style="width: 100%;"></td>
-									<td style="width: 100%;"></td>
-									<td style="width: 100%;"></td>
-									<td style="padding-left: 0px !important;"><nobr>
-											<fmt:message key="service.name" />
-										</nobr>
-									</td>
-									<td style="width: 100%;"></td>
-									<td style="padding-left: 0px !important;"><select
-										name="serviceName" id="serviceName"
-										onchange="getProductTenantSpecificIndex()">
-											<%
-												for (String name : serviceNames) {
-											%>
-											<%
-												if (name.equals(serviceName)) {
-											%>
-											<option selected="selected" value="<%=name%>">
-												<%=name%>
-											</option>
-											<%
-												} else {
-											%>
-											<option value="<%=name%>">
-												<%=name%>
-											</option>
-											<%
-												}
-											%>
-											<%
-												}
-											%>
-
-									</select></td>
-									<%
-										} else {
-									%>
-									<input type="hidden" id="serviceName" name="serviceName"
-										value="<%=serviceName%>" />
-									<%
-										}
-									%>
-								</tr>
-
-
-							</table></td>
-					</tr>
-				</tbody>
-			</table><br /> <br />
-			<%
-				}
-			%>
+			
 			
 				<table border="0" class="styledLeft">
 
@@ -281,6 +191,38 @@
 
 
 												</tr>
+												<tr>
+												<td><nobr>
+											<fmt:message key="application.name" />
+										</nobr>
+									</td>
+									
+									<td ><select
+										name="appName" id="appName">
+											<%
+												for (String name : applicationNames) {
+											%>
+											<%
+												if (name.equals(appName)) {
+											%>
+											<option selected="selected" value="<%=name%>">
+												<%=name%>
+											</option>
+											<%
+												} else {
+											%>
+											<option value="<%=name%>">
+												<%=name%>
+											</option>
+											<%
+												}
+											%>
+											<%
+												}
+											%>
+
+									</select></td>
+												</tr>
 
 											</table>
 										</td>
@@ -340,8 +282,7 @@
 									</tr>
 								</table></td>
 									<br />
-<%-- 				  	<carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>" --%>
-<%--                                   page="view.jsp" pageNumberParameterName="pageNumber" parameters="<%=parameter%>"/>   --%>
+
 				<%
 				if (!isDateGiven) {
 			%>
@@ -431,8 +372,7 @@
 							
 							</table>
 					</tr>
-<%-- 					<tr><carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>" --%>
-<%--                                   page="view.jsp" pageNumberParameterName="pageNumber" parameters="<%=parameter%>"/> <tr>  --%>
+
 					
 				</tbody>
 			</table>

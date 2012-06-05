@@ -31,5 +31,18 @@
             <require-permission>/permission/admin/monitor/logging</require-permission>
             <!--require-super-tenant>true</require-super-tenant-->
         </menu>
+         <!--<menu>
+            <id>app_log_menu</id>
+            <i18n-key>applogsmenutext</i18n-key>
+            <i18n-bundle>org.wso2.carbon.logging.view.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>monitor_menu</parent-menu>
+            <link>../log-view/application_log_viewer.jsp</link>
+            <region>region4</region>
+            <order>3</order>
+            <style-class>monitor</style-class>
+            <icon>../log-view/images/script_gear.gif</icon>
+            <require-permission>/permission/admin/monitor/logging</require-permission>
+          
+        </menu>-->
     </menus>
 </component>

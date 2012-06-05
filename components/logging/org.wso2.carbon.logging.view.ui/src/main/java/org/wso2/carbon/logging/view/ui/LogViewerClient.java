@@ -209,7 +209,27 @@ public class LogViewerClient {
 			throw e;
 		}
 	}
+	
+	public String[] getTenantApplicationNames() throws LogViewerLogViewerException, RemoteException {
+		try {
+			return stub.getTenantApplicationNames();
+		} catch (RemoteException e) {
+			String msg = "Error occurred while getting logger data. Backend service may be unavailable";
+			log.error(msg, e);
+			throw e;
+		}
+	}
 
+	public LogEvent[] getApplicationLogs(String appName, String start, String end, String logger,
+			String priority, String keyword, int logIndex) throws LogViewerLogViewerException, RemoteException {
+		try {
+			return stub.getApplicationLogs(appName, start, end, logger, priority, keyword, logIndex);
+		} catch (RemoteException e) {
+			String msg = "Error occurred while getting logger data. Backend service may be unavailable";
+			log.error(msg, e);
+			throw e;
+		}
+	}
 	public String[] getServiceNames() throws RemoteException, LogViewerLogViewerException {
 		try {
 			return stub.getServiceNames();
@@ -223,7 +243,8 @@ public class LogViewerClient {
 	public  LogEvent[]  getSystemLogs(String start, String end, String logger,
 			String priority, String keyword, String serviceName, String tenantDomain, int logIndex) throws LogViewerLogViewerException, RemoteException {
 		try {
-			return stub.getSystemLogs(start, end, logger, priority, keyword, serviceName, tenantDomain, logIndex);
+			LogEvent[] logs = stub.getSystemLogs(start, end, logger, priority, keyword, serviceName, tenantDomain, logIndex);
+			return logs;
 		} catch (RemoteException e) {
 			String msg = "Error occurred while getting logger data. Backend service may be unavailable";
 			log.error(msg, e);

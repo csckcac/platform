@@ -119,7 +119,7 @@ public class LoggingServiceComponent {
         }
 
         long currentLastModified = log4jFile.lastModified();
-
+        
         String lmStr =
                 new RegistryManager().
                         getConfigurationProperty(LoggingConstants.LOG4J_FILE_LAST_MODIFIED);

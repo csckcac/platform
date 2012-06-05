@@ -20,13 +20,13 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.logging.config.CassandraConfigManager;
 import org.wso2.carbon.logging.config.SyslogConfigManager;
 import org.wso2.carbon.logging.config.SyslogConfiguration;
 import org.wso2.carbon.logging.service.data.CassandraConfig;
 import org.wso2.carbon.logging.service.data.SyslogData;
 import org.wso2.carbon.logging.util.LoggingConstants;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.logging.appender.CassandraAppender;
 import org.wso2.carbon.logging.appenders.MemoryAppender;
 import org.wso2.carbon.logging.appenders.CircularBuffer;
 import org.wso2.carbon.core.RegistryResources;
@@ -434,6 +434,23 @@ public class RegistryManager {
 		}
 
 	}
+	
+	private CassandraConfig loadCassandraFromLog4j() {
+		  Logger rootLogger = Logger.getRootLogger();
+	        CassandraAppender logger = (CassandraAppender) rootLogger.getAppender("CASSANDRA");
+	        if (logger != null) {
+	        	CassandraConfig cassandraConfig = new CassandraConfig();
+	        	cassandraConfig.setCassandraServerAvailable(true);
+	        	cassandraConfig.setColFamily(logger.getColFamily());
+	        	cassandraConfig.setKeyspace(logger.getKeyspace());
+	        	cassandraConfig.setPassword(logger.getPassword());
+	        	cassandraConfig.setUrl(logger.getUrl());
+	        	cassandraConfig.setUser(logger.getUser());
+	        	return cassandraConfig;
+	        } else {
+	        	return null;
+	        }
+	}
 
 	public CassandraConfig getCassandraConfigData() throws Exception {
 		Resource cassandraConfigResource;
@@ -458,13 +475,14 @@ public class RegistryManager {
 				password = decriptPassword(cassandraConfigResource
 						.getProperty(LoggingConstants.CassandraProperties.PASSWORD));
 			} else { // read cassandra properties from the cassandra-config.xml
-				CassandraConfig config = CassandraConfigManager
-						.loadCassandraConfiguration();
+				CassandraConfig config = loadCassandraFromLog4j();
 				url = config.getUrl();
 				keyspace = config.getKeyspace();
 				colFamily = config.getColFamily();
 				userName = config.getUser();
+				userName = (userName == null) ? "":userName;
 				password = config.getPassword();
+				password = (password == null) ? "":password;
 			}
 
 			return new CassandraConfig(keyspace, userName, password, colFamily,

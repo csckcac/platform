@@ -27,6 +27,8 @@ import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
+import org.wso2.carbon.logging.appender.CassandraAppender;
+import org.wso2.carbon.logging.appenders.MemoryAppender;
 import org.wso2.carbon.logging.config.ServiceConfigManager;
 import org.wso2.carbon.logging.service.data.LogEvent;
 import org.wso2.carbon.logging.service.data.LogInfo;
@@ -36,7 +38,6 @@ import org.wso2.carbon.logging.service.data.PaginatedLogMessage;
 import org.wso2.carbon.logging.util.LoggingConstants;
 import org.wso2.carbon.logging.util.LoggingUtil;
 import org.wso2.carbon.utils.DataPaginator;
-import org.wso2.carbon.logging.appenders.MemoryAppender;
 
 /**
  * This is the Log Viewer service used for obtaining Log messages from locally
@@ -302,14 +303,31 @@ public class LogViewer {
 		}
 	}
 
+	public LogEvent[] getApplicationLogs(String appName, String start, String end, String logger,
+			String priority, String keyword, int logIndex) throws LogViewerException {
+		return LoggingUtil.getApplicationLogs(appName, start, end, logger, priority, keyword,
+				logIndex);
+	}
+
+	public String[] getTenantApplicationNames() throws LogViewerException {
+		return LoggingUtil.getTenantApplicationNames();
+	}
+
 	public LogEvent[] getSystemLogs(String start, String end, String logger, String priority,
 			String keyword, String serviceName, String tenantDomain, int logIndex)
 			throws LogViewerException {
-		return LoggingUtil.getSystemLogs(start, end, logger, priority, keyword, serviceName,
-				tenantDomain, logIndex);
+		LogEvent[] events = LoggingUtil.getSystemLogs(start, end, logger, priority, keyword,
+				serviceName, tenantDomain, logIndex);
+		return events;
 	}
 
 	public boolean isCassandraConfigured() {
-		return LoggingUtil.isCassandraConfigured();
+		Logger rootLogger = Logger.getRootLogger();
+		CassandraAppender logger = (CassandraAppender) rootLogger.getAppender("CASSANDRA");
+		if (logger != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

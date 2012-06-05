@@ -26,71 +26,97 @@ public class LogEvent {
 	private String message;
 	private String ip;
 	private String stacktrace;
-	
-	
+	private String instance;
+
 	public LogEvent() {
 	}
-	
-	
+
 	public String getKey() {
 		return key;
 	}
+
 	public void setKey(String key) {
 		this.key = key;
 	}
+
 	public String getTenantId() {
 		return tenantId;
 	}
+
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
+
 	public String getServerName() {
 		return serverName;
 	}
+
 	public void setServerName(String serverName) {
 		this.serverName = serverName;
 	}
+
 	public String getAppName() {
 		return appName;
 	}
+
 	public void setAppName(String appName) {
 		this.appName = appName;
 	}
+
 	public String getLogTime() {
 		return logTime;
 	}
+
 	public void setLogTime(String logTime) {
 		this.logTime = logTime;
 	}
+
 	public String getLogger() {
 		return logger;
 	}
+
 	public void setLogger(String logger) {
 		this.logger = logger;
 	}
+
 	public String getPriority() {
 		return priority;
 	}
+
 	public void setPriority(String priority) {
 		this.priority = priority;
 	}
+
 	public String getMessage() {
 		return message;
 	}
+
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
 	public String getIp() {
 		return ip;
 	}
+
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
+
 	public String getStacktrace() {
 		return stacktrace;
 	}
+
 	public void setStacktrace(String stacktrace) {
 		this.stacktrace = stacktrace;
 	}
-   
+
+	public String getInstance() {
+		return instance;
+	}
+
+	public void setInstance(String instance) {
+		this.instance = instance;
+	}
+
 }

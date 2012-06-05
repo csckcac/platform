@@ -995,10 +995,4 @@ public class LoggingReader {
 		}
 		return tenantId;
 	}
-
-	
-
-	
-
-
 }

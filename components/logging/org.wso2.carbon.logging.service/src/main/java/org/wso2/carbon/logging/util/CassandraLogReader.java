@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import me.prettyprint.cassandra.model.IndexedSlicesQuery;
 import me.prettyprint.cassandra.serializers.BytesArraySerializer;
@@ -44,7 +45,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.logging.config.CassandraConfigManager;
 import org.wso2.carbon.logging.internal.LoggingServiceComponent;
 import org.wso2.carbon.logging.service.LogViewerException;
 import org.wso2.carbon.logging.service.data.CassandraConfig;
@@ -84,14 +84,7 @@ public class CassandraLogReader {
 		}
 	}
 
-	public LogEvent getLogs(int tenantId, String serverName, String startdate, String enddate,
-			String logger, String priority, String keyword, int index) {
-
-		return null;
-	}
-
-	public Keyspace getCurrentCassandraKeyspace() throws LogViewerException {
-
+	private Keyspace getCurrentCassandraKeyspace() throws LogViewerException {
 		CassandraConfig config;
 		try {
 			config = LoggingUtil.getCassandraConfig();
@@ -112,7 +105,7 @@ public class CassandraLogReader {
 		return HFactory.createKeyspace(keyspaceName, cluster);
 	}
 
-	public boolean isSuperTenantUser() {
+	private boolean isSuperTenantUser() {
 		CarbonContext carbonContext = CarbonContext.getCurrentContext();
 		int tenantId = carbonContext.getTenantId();
 		if (tenantId == LoggingConstants.SUPER_TENANT_ID) {
@@ -122,12 +115,7 @@ public class CassandraLogReader {
 		}
 	}
 
-	public boolean isCassandraConfigured() {
-		CassandraConfig config = CassandraConfigManager.loadCassandraConfiguration();
-		return config.isCassandraServerAvailable();
-	}
-
-	public byte[] longToByteArray(long data) {
+	private byte[] longToByteArray(long data) {
 		return new byte[] { (byte) ((data >> 56) & 0xff), (byte) ((data >> 48) & 0xff),
 				(byte) ((data >> 40) & 0xff), (byte) ((data >> 32) & 0xff),
 				(byte) ((data >> 24) & 0xff), (byte) ((data >> 16) & 0xff),
@@ -135,18 +123,19 @@ public class CassandraLogReader {
 
 	}
 
-	public String convertByteToString(byte[] array) {
+	private String convertByteToString(byte[] array) {
 		return new String(array);
 	}
 
-	public String convertLongToString(Long longval) {
+	private String convertLongToString(Long longval) {
 		Date date = new Date(longval);
-		DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh-MM-ss");
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss,SSS");
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String formattedDate = formatter.format(date);
 		return formattedDate;
 	}
 
-	public long convertByteToLong(byte[] array, int offset) {
+	private long convertByteToLong(byte[] array, int offset) {
 		return ((long) (array[offset] & 0xff) << 56) | ((long) (array[offset + 1] & 0xff) << 48)
 				| ((long) (array[offset + 2] & 0xff) << 40)
 				| ((long) (array[offset + 3] & 0xff) << 32)
@@ -156,71 +145,9 @@ public class CassandraLogReader {
 
 	}
 
-
-	public LogEvent[] getSystemLogs(String start, String end, String logger, String priority,
-			String keyword, String serviceName, String tenantDomain, int logIndex)
-			throws LogViewerException {
+	private List<LogEvent> getLoggingResultList(
+			IndexedSlicesQuery<String, String, byte[]> indexedSlicesQuery) {
 		List<LogEvent> resultList = new ArrayList<LogEvent>();
-		DateFormat formatter;
-		Date startDate, endDate;
-		formatter = new SimpleDateFormat("dd-MM-yyyy hh-MM-ss");
-
-		int tenantId = getCurrentTenantId(tenantDomain);
-		serviceName = getCurrentServerName(serviceName);
-		Keyspace currKeyspace = getCurrentCassandraKeyspace();
-		CassandraConfig config;
-		try {
-			config = LoggingUtil.getCassandraConfig();
-		} catch (Exception e) {
-			throw new LogViewerException("Cannot read the log config file", e);
-		}
-		String colFamily = config.getColFamily();
-		IndexedSlicesQuery<String, String, byte[]> indexedSlicesQuery = HFactory
-				.createIndexedSlicesQuery(currKeyspace, stringSerializer, stringSerializer,
-						BytesArraySerializer.get());
-		indexedSlicesQuery.setColumnNames(LoggingConstants.HColumn.TENANT_ID,
-				LoggingConstants.HColumn.SERVER_NAME, LoggingConstants.HColumn.APP_NAME,
-				LoggingConstants.HColumn.LOG_TIME, LoggingConstants.HColumn.LOGGER,
-				LoggingConstants.HColumn.PRIORITY, LoggingConstants.HColumn.MESSAGE,
-				LoggingConstants.HColumn.IP, LoggingConstants.HColumn.STACKTRACE);
-
-		indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.TENANT_ID,
-				String.valueOf(tenantId).getBytes());
-		indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.SERVER_NAME,
-				serviceName.getBytes());
-		if (!logger.equals("")) {
-			indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.LOGGER,
-					logger.getBytes());
-		}
-		if (!priority.equals("ALL")) {
-			indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.PRIORITY,
-					priority.getBytes());
-		}
-		try {
-
-			if ( start.equals("now") || start.equals("")) {
-				Calendar newTime = Calendar.getInstance();
-				newTime.set(Calendar.HOUR_OF_DAY, newTime.getTime().getHours() - 1);
-				indexedSlicesQuery.addGteExpression(LoggingConstants.HColumn.LOG_TIME,
-						longToByteArray(newTime.getTime().getTime()));
-			} else {
-				startDate = (Date) formatter.parse(start);
-				endDate = (Date) formatter.parse(end);
-				indexedSlicesQuery.addGteExpression(LoggingConstants.HColumn.LOG_TIME,
-						longToByteArray(endDate.getTime()));
-				indexedSlicesQuery.addLtExpression(LoggingConstants.HColumn.LOG_TIME,
-						longToByteArray(startDate.getTime()));
-			}
-
-		} catch (ParseException e1) {
-			throw new LogViewerException("Illegal Date Format", e1);
-		}
-
-		indexedSlicesQuery.setColumnFamily(colFamily);
-		indexedSlicesQuery.setStartKey("");
-		// TODO limit the return rows
-		indexedSlicesQuery.setRowCount(logIndex);
-
 		QueryResult<OrderedRows<String, String, byte[]>> result = indexedSlicesQuery.execute();
 		for (Row<String, String, byte[]> row : result.get().getList()) {
 			LogEvent event = new LogEvent();
@@ -262,15 +189,201 @@ public class CassandraLogReader {
 					event.setStacktrace(convertByteToString(hc.getValue()));
 					continue;
 				}
+				if (hc.getName().equals(LoggingConstants.HColumn.INSTANCE)) {
+					event.setIp(convertByteToString(hc.getValue()));
+					continue;
+				}
+
 			}
 			resultList.add(event);
 		}
+		return resultList;
+	}
+
+	public LogEvent[] getSystemLogs(String start, String end, String logger, String priority,
+			String keyword, String serviceName, String tenantDomain, int logIndex)
+			throws LogViewerException {
+
+		
+		int tenantId = getCurrentTenantId(tenantDomain);
+		serviceName = getCurrentServerName(serviceName);
+		Keyspace currKeyspace = getCurrentCassandraKeyspace();
+		CassandraConfig config;
+		try {
+			config = LoggingUtil.getCassandraConfig();
+		} catch (Exception e) {
+			throw new LogViewerException("Cannot load cassandra configuration", e);
+		}
+		String colFamily = config.getColFamily();
+		IndexedSlicesQuery<String, String, byte[]> indexedSlicesQuery = HFactory
+				.createIndexedSlicesQuery(currKeyspace, stringSerializer, stringSerializer,
+						BytesArraySerializer.get());
+		indexedSlicesQuery.setColumnNames(LoggingConstants.HColumn.TENANT_ID,
+				LoggingConstants.HColumn.SERVER_NAME, LoggingConstants.HColumn.APP_NAME,
+				LoggingConstants.HColumn.LOG_TIME, LoggingConstants.HColumn.LOGGER,
+				LoggingConstants.HColumn.PRIORITY, LoggingConstants.HColumn.MESSAGE,
+				LoggingConstants.HColumn.IP, LoggingConstants.HColumn.STACKTRACE);
+
+		indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.TENANT_ID,
+				String.valueOf(tenantId).getBytes());
+		indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.SERVER_NAME,
+				serviceName.getBytes());
+		if (!logger.equals("")) {
+			indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.LOGGER,
+					logger.getBytes());
+		}
+		if (!priority.equals("ALL")) {
+			indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.PRIORITY,
+					priority.getBytes());
+		}
+
+		if (start.equals("now") || start.equals("")) {
+			Calendar newTime = Calendar.getInstance();
+			Long mills = new Long(newTime.getTimeInMillis() - 1800000);
+			newTime.setTimeInMillis(mills);
+			indexedSlicesQuery.addGteExpression(LoggingConstants.HColumn.LOG_TIME,
+					longToByteArray(newTime.getTime().getTime()));
+		} else {
+			Date startDate = getDateForCurrFormat(start);
+			Date endDate = getDateForCurrFormat(end);
+			indexedSlicesQuery.addLteExpression(LoggingConstants.HColumn.LOG_TIME,
+					longToByteArray(endDate.getTime()));
+			indexedSlicesQuery.addGtExpression(LoggingConstants.HColumn.LOG_TIME,
+					longToByteArray(startDate.getTime()));
+		}
+		indexedSlicesQuery.setColumnFamily(colFamily);
+		indexedSlicesQuery.setStartKey("");
+		indexedSlicesQuery.setRowCount(logIndex);
+
+		List<LogEvent> resultList = getLoggingResultList(indexedSlicesQuery);
+		getSortedLogInfo(resultList.toArray(new LogEvent[resultList.size()]));
+		return getSortedLogInfo(resultList.toArray(new LogEvent[resultList.size()]));
+	}
+
+	public String[] getTenantApplicationNames() throws LogViewerException {
+		int tenantId = getCurrentTenantId("");
+		String serviceName = getCurrentServerName("");
+		Keyspace currKeyspace = getCurrentCassandraKeyspace();
+		CassandraConfig config;
+		try {
+			config = LoggingUtil.getCassandraConfig();
+		} catch (Exception e) {
+			throw new LogViewerException("Cannot load cassandra configuration", e);
+		}
+		String colFamily = config.getColFamily();
+		IndexedSlicesQuery<String, String, byte[]> indexedSlicesQuery = HFactory
+				.createIndexedSlicesQuery(currKeyspace, stringSerializer, stringSerializer,
+						BytesArraySerializer.get());
+		indexedSlicesQuery.setColumnNames(LoggingConstants.HColumn.APP_NAME);
+		indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.TENANT_ID,
+				String.valueOf(tenantId).getBytes());
+		indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.SERVER_NAME,
+				serviceName.getBytes());
+		indexedSlicesQuery.setColumnFamily(colFamily);
+		indexedSlicesQuery.setStartKey("");
+		QueryResult<OrderedRows<String, String, byte[]>> result = indexedSlicesQuery.execute();
+		List<String> appList = new ArrayList<String>();
+		for (Row<String, String, byte[]> row : result.get().getList()) {
+			for (HColumn<String, byte[]> hc : row.getColumnSlice().getColumns()) {
+				if (hc.getName().equals(LoggingConstants.HColumn.APP_NAME)) {
+					if (!appList.contains(convertByteToString(hc.getValue()))) {
+						appList.add(convertByteToString(hc.getValue()));
+					}
+				}
+			}
+		}
+		return appList.toArray(new String[appList.size()]);
+	}
+	
+	// convert date to the given fomat.
+	public Date getDateForCurrFormat(String dateString) throws LogViewerException {
+		// 2012-05-23 09:16:46,114
+		DateFormat formatter;
+		formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss,SSS");
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+		dateString = (dateString.length() == 16) ? dateString + ":00,000" : dateString;
+		dateString = (dateString.length() == 19) ? dateString + ",000" : dateString;
+		Date date;
+		try {
+			date = (Date) formatter.parse(dateString);
+		} catch (ParseException e) {
+			log.error("Illegal Date Format", e);
+			throw new LogViewerException("Illegal Date Format", e);
+		}
+		return date;
+
+	}
+
+	/**
+	 * Get Application level logs.
+	 * 
+	 * @param appName
+	 * @param start
+	 * @param end
+	 * @param logger
+	 * @param priority
+	 * @param keyword
+	 * @param logIndex
+	 * @return
+	 * @throws LogViewerException
+	 */
+	public LogEvent[] getApplicationLogs(String appName, String start, String end, String logger,
+			String priority, String keyword, int logIndex) throws LogViewerException {
+		
+
+		int tenantId = getCurrentTenantId("");
+		String serviceName = getCurrentServerName("");
+		Keyspace currKeyspace = getCurrentCassandraKeyspace();
+		CassandraConfig config;
+		try {
+			config = LoggingUtil.getCassandraConfig();
+		} catch (Exception e) {
+			throw new LogViewerException("Cannot load cassandra configuration", e);
+		}
+		String colFamily = config.getColFamily();
+		IndexedSlicesQuery<String, String, byte[]> indexedSlicesQuery = HFactory
+				.createIndexedSlicesQuery(currKeyspace, stringSerializer, stringSerializer,
+						BytesArraySerializer.get());
+		indexedSlicesQuery.setColumnNames(LoggingConstants.HColumn.TENANT_ID,
+				LoggingConstants.HColumn.SERVER_NAME, LoggingConstants.HColumn.APP_NAME,
+				LoggingConstants.HColumn.LOG_TIME, LoggingConstants.HColumn.LOGGER,
+				LoggingConstants.HColumn.PRIORITY, LoggingConstants.HColumn.MESSAGE,
+				LoggingConstants.HColumn.IP, LoggingConstants.HColumn.STACKTRACE);
+
+		indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.TENANT_ID,
+				String.valueOf(tenantId).getBytes());
+		indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.SERVER_NAME,
+				serviceName.getBytes());
+		indexedSlicesQuery
+				.addEqualsExpression(LoggingConstants.HColumn.APP_NAME, appName.getBytes());
+		if (!logger.equals("")) {
+			indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.LOGGER,
+					logger.getBytes());
+		}
+		if (!priority.equals("ALL")) {
+			indexedSlicesQuery.addEqualsExpression(LoggingConstants.HColumn.PRIORITY,
+					priority.getBytes());
+		}
+		if (start.equals("now") || start.equals("")) {
+		} else {
+			Date startDate = getDateForCurrFormat(start);
+			Date endDate = getDateForCurrFormat(end);
+			indexedSlicesQuery.addLteExpression(LoggingConstants.HColumn.LOG_TIME,
+					longToByteArray(endDate.getTime()));
+			indexedSlicesQuery.addGtExpression(LoggingConstants.HColumn.LOG_TIME,
+					longToByteArray(startDate.getTime()));
+		}
+		indexedSlicesQuery.setColumnFamily(colFamily);
+		indexedSlicesQuery.setStartKey("");
+		indexedSlicesQuery.setRowCount(logIndex);
+		List<LogEvent> resultList = getLoggingResultList(indexedSlicesQuery);
 		return getSortedLogInfo(resultList.toArray(new LogEvent[resultList.size()]));
 	}
 
 	private LogEvent[] getSortedLogInfo(LogEvent logs[]) {
 		int maxLen = logs.length;
-		final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh-MM-ss");
+		final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss,SSS");
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 		if (maxLen > 0) {
 			List<LogEvent> logInfoList = Arrays.asList(logs);
 			Collections.sort(logInfoList, new Comparator<Object>() {
@@ -286,7 +399,7 @@ public class CassandraLogReader {
 						log.error(e1.getStackTrace());
 
 					}
-					return  -d1.compareTo(d2);
+					return -d1.compareTo(d2);
 
 				}
 

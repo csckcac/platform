@@ -16,6 +16,15 @@
 
 package org.wso2.carbon.logging.util;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.activation.DataHandler;
+
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.FileAppender;
@@ -24,6 +33,9 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.net.SyslogAppender;
+import org.springframework.util.Log4jConfigurer;
+import org.wso2.carbon.logging.appenders.CircularBuffer;
+import org.wso2.carbon.logging.appenders.MemoryAppender;
 import org.wso2.carbon.logging.registry.RegistryManager;
 import org.wso2.carbon.logging.service.LogViewerException;
 import org.wso2.carbon.logging.service.data.CassandraConfig;
@@ -31,22 +43,10 @@ import org.wso2.carbon.logging.service.data.LogEvent;
 import org.wso2.carbon.logging.service.data.LogInfo;
 import org.wso2.carbon.logging.service.data.LogMessage;
 import org.wso2.carbon.logging.service.data.SyslogData;
-import org.wso2.carbon.logging.appenders.CircularBuffer;
-import org.wso2.carbon.logging.appenders.MemoryAppender;
-import org.wso2.carbon.utils.Pageable;
-import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.Collection;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.springframework.util.Log4jConfigurer;
-
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.io.FileNotFoundException;
-
-import javax.activation.DataHandler;
+import org.wso2.carbon.utils.Pageable;
 
 public class LoggingUtil {
 
@@ -69,6 +69,15 @@ public class LoggingUtil {
 			throws LogViewerException {
 		return cassendraLogReader.getSystemLogs(start, end, logger, priority, keyword, serviceName,
 				tenantDomain, logIndex);
+	}
+	
+	public static String[] getTenantApplicationNames() throws LogViewerException {
+		return cassendraLogReader.getTenantApplicationNames();
+	}
+	
+	public static LogEvent[] getApplicationLogs(String appName, String start, String end, String logger,
+			String priority, String keyword, int logIndex) throws LogViewerException {
+		return cassendraLogReader.getApplicationLogs(appName, start, end, logger, priority, keyword, logIndex);
 	}
 
 	public static SyslogData getSyslogData() throws Exception {
@@ -296,10 +305,7 @@ public class LoggingUtil {
 		}
 	}
 	
-	public static boolean isCassandraConfigured () {
-		return cassendraLogReader.isCassandraConfigured();
-	}
-
+	
 	public static boolean isSTSyslogConfig(String tenantDomain) throws Exception {
 		return loggingReader.isSuperTenantUser();
 	}
@@ -307,7 +313,7 @@ public class LoggingUtil {
 	public static boolean isStratosService() throws Exception {
 		return loggingReader.isStratosService();
 	}
-
+	
 	public static int getLineNumbers(String logFile, String tenantDomain, String serviceName)
 			throws Exception {
 		return loggingReader.getLineNumbers(logFile, tenantDomain, serviceName);

@@ -133,7 +133,7 @@ include('/includes/topnavi.jag');
                     <span>Sample Jaggery Apps</span>
                 </li>
                 <li><a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="images/icon-apache.png" alt=""></a>
-                    <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank" class="linktext">Apache 2.0</a> <br>
+                    <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank" class="linktext">License</a> <br>
                     <span>Licensed under Apache 2.0</span>
                 </li>
 

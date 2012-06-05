@@ -52,3 +52,16 @@ function deleteApp(linkObj) {
     $('#messageModal').modal();
 
 }
+
+function alertMsg() {
+    $('#applicationTable tr:last').css("background-color", "");
+}
+$(document).ready(function() {
+    if ($.cookie('highlight') != null && $.cookie('highlight') == "true") {
+        $.cookie('highlight', "false");
+
+        $('#applicationTable tr:last').css("background-color", "#d1dce3");
+
+        var t = setTimeout("alertMsg()", 3000);
+    }
+});

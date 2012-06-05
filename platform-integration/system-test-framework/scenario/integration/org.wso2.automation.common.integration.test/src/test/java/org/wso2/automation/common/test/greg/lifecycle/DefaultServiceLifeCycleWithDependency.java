@@ -23,8 +23,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.lifecycle.utils.Utils;
 import org.wso2.carbon.admin.service.LifeCycleAdminService;
-import org.wso2.carbon.governance.api.policies.PolicyManager;
-import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceExceptionException;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.services.ArrayOfString;
@@ -36,11 +34,8 @@ import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
-import org.wso2.platform.test.core.utils.fileutils.FileManager;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
-import java.io.File;
-import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class DefaultServiceLifeCycleWithDependency {
@@ -75,7 +70,7 @@ public class DefaultServiceLifeCycleWithDependency {
         governance = new RegistryProvider().getGovernance(registry, userId);
 
         servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName, governance);
-        policyPathDev = "/_system/governance" + addPolicy(serviceDependencyName);
+        policyPathDev = "/_system/governance" + Utils.addPolicy(serviceDependencyName, governance);
         addDependency(servicePathDev, policyPathDev);
         Thread.sleep(1000);
         Association[] dependency = registry.getAssociations(servicePathDev, ASS_TYPE_DEPENDS);
@@ -209,14 +204,4 @@ public class DefaultServiceLifeCycleWithDependency {
         registry.addAssociation(resourcePath, dependencyPath, ASS_TYPE_DEPENDS);
     }
 
-    private String addPolicy(String policyName) throws RegistryException, IOException {
-        PolicyManager policyManager = new PolicyManager(governance);
-        String policyFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
-                                + File.separator + "policy" + File.separator;
-        Policy policy = policyManager.newPolicy(FileManager.readFile(policyFilePath + "UTPolicy.xml").getBytes(), policyName);
-        policyManager.addPolicy(policy);
-        policy = policyManager.getPolicy(policy.getId());
-        return policy.getPath();
-
-    }
 }

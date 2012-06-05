@@ -17,11 +17,23 @@
 */
 package org.wso2.automation.common.test.greg.lifecycle.utils;
 
+import org.wso2.carbon.governance.api.policies.PolicyManager;
+import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
+import org.wso2.carbon.governance.api.schema.SchemaManager;
+import org.wso2.carbon.governance.api.schema.dataobjects.Schema;
 import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
+import org.wso2.carbon.governance.api.wsdls.WsdlManager;
+import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
+import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.fileutils.FileManager;
 
 import javax.xml.namespace.QName;
+import java.io.File;
+import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,6 +55,43 @@ public class Utils {
         }
         throw new Exception("Getting Service path failed");
 
+
+    }
+
+    public static String addPolicy(String policyName, Registry governance)
+            throws RegistryException, IOException {
+        PolicyManager policyManager = new PolicyManager(governance);
+        String policyFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
+                                + File.separator + "policy" + File.separator;
+        Policy policy = policyManager.newPolicy(FileManager.readFile(policyFilePath + "UTPolicy.xml").getBytes(), policyName);
+        policyManager.addPolicy(policy);
+        policy = policyManager.getPolicy(policy.getId());
+        return policy.getPath();
+
+    }
+
+    public static String addWSDL(String name, Registry governance)
+            throws IOException, RegistryException {
+        WsdlManager wsdlManager = new WsdlManager(governance);
+        Wsdl wsdl;
+        String wsdlFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
+                              + File.separator + "wsdl" + File.separator;
+        wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFilePath + "echo.wsdl").getBytes(), name);
+        wsdlManager.addWsdl(wsdl);
+        wsdl = wsdlManager.getWsdl(wsdl.getId());
+
+        return wsdl.getPath();
+    }
+
+    public static String addSchema(String name, Registry governance)
+            throws IOException, RegistryException {
+        SchemaManager schemaManager = new SchemaManager(governance);
+        String schemaFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
+                                + File.separator + "schema" + File.separator;
+        Schema schema = schemaManager.newSchema(FileManager.readFile(schemaFilePath + "Person.xsd").getBytes(), name);
+        schemaManager.addSchema(schema);
+        schema = schemaManager.getSchema(schema.getId());
+        return schema.getPath();
 
     }
 

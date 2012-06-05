@@ -89,11 +89,11 @@ public class APIUsageStatisticsClient {
                 if (providerAPI.getId().getApiName().equals(usage.apiName) &&
                         providerAPI.getId().getVersion().equals(usage.apiVersion) &&
                         providerAPI.getContext().equals(usage.context)) {
-                    APIUsageDTO usageDTO = usageByAPIs.get(usage.apiName);
+                    String apiName = usage.apiName + " (" + providerAPI.getId().getProviderName() + ")";
+                    APIUsageDTO usageDTO = usageByAPIs.get(apiName);
                     if (usageDTO != null) {
                         usageDTO.setCount(usageDTO.getCount() + usage.requestCount);
                     } else {
-                        String apiName = usage.apiName + "(" + providerAPI.getId().getProviderName() + ")";
                         usageDTO = new APIUsageDTO();
                         usageDTO.setApiName(apiName);
                         usageDTO.setCount(usage.requestCount);

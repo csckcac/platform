@@ -603,6 +603,9 @@ public class APIProviderHostObject extends ScriptableObject {
                         continue;
                     }
                     long count = apiProvider.getAPISubscriptionCountByAPI(api.getId());
+                    if (count == 0) {
+                        continue;
+                    }
                     Long currentCount = subscriptions.get(api.getId().getApiName());
                     if (currentCount != null) {
                         subscriptions.put(api.getId().getApiName(), currentCount + count);
@@ -673,6 +676,9 @@ public class APIProviderHostObject extends ScriptableObject {
                         continue;
                     }
                     long count = apiProvider.getAPISubscriptionCountByAPI(api.getId());
+                    if (count == 0) {
+                        continue;
+                    }
                     subscriptions.put(api.getId().getVersion(), count);
                 }
 

@@ -35,7 +35,7 @@ public final class HumanTaskConstants {
     public static final String WSHT_EXP_LANG_XPATH20 = "urn:wsht:sublang:xpath2.0";
 
     /** HumanTask Repo directory name */
-    public static final String HUMANTASK_REPO_DIRECTORY = "humantask";
+    public static final String HUMANTASK_REPO_DIRECTORY = "humantasks";
 
     /** HumanTask package temporary location */
     public static final String HUMANTASK_PACKAGE_TEMP_DIRECTORY = "tmp" +

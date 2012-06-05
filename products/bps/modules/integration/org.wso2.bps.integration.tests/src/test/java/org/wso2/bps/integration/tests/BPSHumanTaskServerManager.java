@@ -56,7 +56,7 @@ public class BPSHumanTaskServerManager  extends TestServerManager {
         File[] samples = FileManipulator.getMatchingFiles(BPSTestUtils.getHumanTaskSampleLocation(carbonHome), null, "zip");
         File humanTaskRepo = new File(carbonHome + File.separator + "repository" + File.separator +
                                  "deployment" + File.separator +
-                                 "server" + File.separator + "humantask" + File.separator);
+                                 "server" + File.separator + "humantasks" + File.separator);
         for (File sample : samples) {
 
             FileManipulator.copyFileToDir(sample, humanTaskRepo);

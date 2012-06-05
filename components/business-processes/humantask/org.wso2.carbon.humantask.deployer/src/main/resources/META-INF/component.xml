@@ -18,7 +18,7 @@
 <component xmlns="http://products.wso2.org/carbon">
     <deployers>
             <deployer>
-                <directory>humantask</directory>
+                <directory>humantasks</directory>
                 <extension>zip</extension>
                 <class>org.wso2.carbon.humantask.deployer.HumanTaskDeployer</class>
             </deployer>

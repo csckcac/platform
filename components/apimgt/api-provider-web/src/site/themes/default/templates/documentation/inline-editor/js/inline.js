@@ -32,4 +32,36 @@ function loadDefaultTinyMCEContent(provider,apiName, version, docName) {
 
 
 }
-;
+
+function saveContent(provider, apiName, apiVersion, docName, mode) {
+    var contentDoc = tinyMCE.get('inlineEditor').getContent();
+    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"addInlineContent",provider:provider,apiName:apiName,version:apiVersion,docName:docName,content:contentDoc},
+              function (result) {
+                  if (result.error) {
+                      jagg.message(result.message);
+                  } else {
+                      if (mode == "save") {
+                          $('#messageModal').html($('#confirmation-data').html());
+                          $('#messageModal h3.modal-title').html('Document Content Addition Successful');
+                          $('#messageModal div.modal-body').html('\n\n Successfully saved the documentation content and you will be moved away from this tab.');
+                          $('#messageModal a.btn-primary').html('OK');
+                          $('#messageModal a.btn-other').hide();
+                          $('#messageModal a.btn-primary').click(function() {
+                              window.close();
+                          });
+                          $('#messageModal').modal();
+                      } else {
+                          $('#messageModal').html($('#confirmation-data').html());
+                          $('#messageModal h3.modal-title').html('Document Content Addition Successful');
+                          $('#messageModal div.modal-body').html('\n\n Successfully applied the changes you have done to the documentation.');
+                          $('#messageModal a.btn-primary').html('OK');
+                          $('#messageModal a.btn-other').hide();
+                          $('#messageModal a.btn-primary').click(function() {
+                              window.location.reload();
+                          });
+                          $('#messageModal').modal();
+
+                      }
+                  }
+              }, "json");
+}

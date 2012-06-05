@@ -39,31 +39,12 @@ var docName = '<%=request.getParameter("docName")%>';
         <% if(mode=="edit"){%>
         <div class="span11">
             <div class="form-actions">
-                <button type="button" class="btn btn-primary" id="inline-save-button">Save</button>
-				<p class="help-block">click save button to save the Doc</p>
+                <button type="button" title="click 'Apply' button to apply the change to the Doc and stay in this tab" class="btn btn-primary" id="inline-apply-button" onclick="saveContent(provider,apiName,apiVersion,docName,'apply')">Apply</button>
+				<button type="button" title="click 'Save' button to save the Doc and move away from this tab" class="btn btn-primary" id="inline-save-button" onclick="saveContent(provider,apiName,apiVersion,docName,'save')">Save</button>
+				<button type="button" title="click 'Close' button to cancel and move away from this tab"  class="btn btn-primary" id="inline-cancel-button" onclick="window.close()">Close</button>
 
             </div>
         </div>
         <%}%>
-
-    <script type="text/javascript">
-    $("#inline-save-button").click(function() {
-            var contentDoc = tinyMCE.get('inlineEditor').getContent();
-            jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"addInlineContent",provider:provider,apiName:apiName,version:apiVersion,docName:docName,content:contentDoc},
-    function (result) {
-            if (result.error) {
-              jagg.message(result.message);
-            }else{
-            var current = window.location.pathname;
-            if (current.indexOf(".jag") >= 0) {
-            location.href="item-info.jag?name="+apiName+"&version="+apiVersion+"&provider="+provider;
-            }else{
-            location.href="site/pages/item-info.jag?name="+apiName+"&version="+apiVersion+"&provider="+provider;
-            }
-            }
-    }, "json");
-
-    });
-    </script>
 
 <%});%>

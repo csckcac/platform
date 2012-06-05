@@ -1523,7 +1523,7 @@ public class APIStoreHostObject extends ScriptableObject {
         return false;
     }
     
-    private static void jsFunction_addUser(Context cx, Scriptable thisObj,
+    public static void jsFunction_addUser(Context cx, Scriptable thisObj,
                                            Object[] args,
                                            Function funObj) throws APIManagementException {
 
@@ -1534,7 +1534,7 @@ public class APIStoreHostObject extends ScriptableObject {
         String serverURL = config.getFirstProperty(APIConstants.AUTH_MANAGER_URL);
         String adminUsername = config.getFirstProperty(APIConstants.AUTH_MANAGER_USERNAME);
         String adminPassword = config.getFirstProperty(APIConstants.AUTH_MANAGER_PASSWORD);
-        if (serverURL != null || adminUsername != null || adminPassword != null) {
+        if (serverURL == null || adminUsername == null || adminPassword == null) {
             throw new APIManagementException("Required parameter missing to connect to the" +
                     " authentication manager");
         }

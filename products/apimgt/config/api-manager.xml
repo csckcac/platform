@@ -36,6 +36,14 @@
             Server URL of the Authentication service
         -->
         <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}/services/</ServerURL>
+        <!--
+            Admin username for the Authentication manager.
+        -->
+        <Username>admin</Username>
+         <!--
+            Admin password for the Authentication manager.
+        -->
+        <Password>admin</Password>
     </AuthManager>
 
     <!--

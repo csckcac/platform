@@ -37,47 +37,6 @@ public class PersistenceManager {
 
 
     /**
-     * this method instantiates and starts a thread to persist  bandwidth usage statistics
-     */
-    public void startPersisting() {
-        new Thread() {
-            public void run() {
-                // thread runs as long as it is not interrupted and sleeps for 10 seconds
-                while (true) {
-
-                    // check whether the jobQueue is  not empty
-                    if (!jobQueue.isEmpty()) {
-                        try {
-                            // if JobQueue is not empty persist usage
-                            persistUsage();
-                        } catch (UsageException e) {
-                            log.error("Error when persisting bandwidth usage statistics", e);
-                        }
-                    }
-
-                    // return from while loop if the thread is interrupted
-                    if (isInterrupted()) {
-                        break;
-                    }
-
-                    // let the thread sleep for 10 seconds
-                    try {
-                        sleep(10 * 1000);
-                    } catch (InterruptedException e) {
-
-                        if (jobQueue == null || jobQueue.isEmpty()) {
-                            break;
-                        }
-                        // Restoring the interrupted status after catching InterruptedException
-                        // instead of Swallowing
-                        Thread.currentThread().interrupt();
-                    }
-                }
-            }
-        }.start();
-    }
-
-    /**
      * this method add bandwidth usage entries to the jobQueue
      *
      * @param usage Bandwidth usage
@@ -88,52 +47,6 @@ public class PersistenceManager {
     }
 
 
-    /**
-     * this method create a Summarizer object for each tenant and call accumulate() method to
-     * accumulate usage statistics
-     *
-     * @throws UsageException
-     */
-
-    public void persistUsage() throws UsageException {
-
-        // create a map to hold summarizer objects against tenant id
-        HashMap<Integer, Summarizer> summarizerMap = new HashMap<Integer, Summarizer>();
-
-        // if the jobQueue is not empty
-        while (!jobQueue.isEmpty()) {
-
-            // get the first element from the queue, which is a BandwidthUsage object
-            BandwidthUsage usage = jobQueue.poll();
-            
-            // get the tenant id 
-            int tenantId = usage.getTenantId();
-
-            //get the Summarizer object corresponds to the tenant id
-            Summarizer summarizer = summarizerMap.get(tenantId);
-
-            // when tenant invoke service for the first time, no corresponding summarizer object in
-            // the map
-            if (summarizer == null) {
-                //create a Summarizer object and put to the summarizerMap
-                summarizer = new Summarizer();
-                summarizerMap.put(tenantId, summarizer);
-            }
-
-            //  now accumulate usage
-            summarizer.accumulate(usage);
-        }
-
-        //Finished accumulating. Now publish the events
-
-        // get the collection view of values in summarizerMap
-        Collection<Summarizer> summarizers = summarizerMap.values();
-
-        // for each summarizer object call the publish method
-        for (Summarizer summarizer : summarizers) {
-            summarizer.publish();
-        }
-    }
 
     /**
      * inner class Summarizer
@@ -166,28 +79,6 @@ public class PersistenceManager {
             } else {
                 // if this measurement is not metered previously we need to add it to the usageMap
                 usageMap.put(key, usage);
-            }
-        }
-
-        /**
-         * this method reads usage items from the usageMap and call publish method to publish to
-         * the BAM
-         *
-         * @throws UsageException
-         */
-
-        public void publish() throws UsageException {
-
-            // get the collection view of values in usageMap
-            Collection<BandwidthUsage> usages = usageMap.values();
-
-            for (BandwidthUsage usage : usages) {
-                try {
-                    // publish the usage entry
-                    PublisherUtils.publish(usage);
-                } catch (UsageException e) {
-                    log.error("Error in publishing bandwidth usage data", e);
-                }
             }
         }
     }

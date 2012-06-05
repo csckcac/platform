@@ -254,7 +254,7 @@ function subscribe() {
                 sessionAwareFunction(function() {
                     new Ajax.Request('../info/subscription-ajaxprocessor.jsp', {
                         method: 'post',
-                        parameters: {path: path, endpoint: endpoint, eventName: eventName},
+                        parameters: {path: path, endpoint: endpoint, eventName: eventName,delimiter:delimiter},
                         onSuccess: function(transport) {
                             if (!transport) {return;}
                             subscribeConfirms = 0;

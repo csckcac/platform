@@ -22,10 +22,10 @@
             <id>multitenancy_menu</id>
             <i18n-key>multitenancy</i18n-key>
             <i18n-bundle>org.wso2.carbon.tenant.mgt.ui.i18n.Resources</i18n-bundle>
-            <parent-menu></parent-menu>
+            <parent-menu>configure_menu</parent-menu>
             <link>#</link>
-            <region>region3</region>
-            <order>29</order>
+            <region>region1</region>
+            <order>60</order>
             <style-class>home</style-class>
             <require-super-tenant>true</require-super-tenant>
         </menu>
@@ -35,7 +35,7 @@
             <i18n-bundle>org.wso2.carbon.tenant.mgt.ui.i18n.Resources</i18n-bundle>
             <parent-menu>multitenancy_menu</parent-menu>
             <link>../tenant-mgt/add_tenant.jsp</link>
-            <region>region3</region>
+            <region>region1</region>
             <order>1</order>
             <style-class>manage-configuration</style-class>
             <icon>../tenant-mgt/images/services.gif</icon>
@@ -46,7 +46,7 @@
             <i18n-bundle>org.wso2.carbon.tenant.mgt.ui.i18n.Resources</i18n-bundle>
             <parent-menu>multitenancy_menu</parent-menu>
             <link>../tenant-mgt/view_tenants.jsp</link>
-            <region>region3</region>
+            <region>region1</region>
             <order>2</order>
             <style-class>manage</style-class>
             <icon>../tenant-mgt/images/services1.gif</icon>

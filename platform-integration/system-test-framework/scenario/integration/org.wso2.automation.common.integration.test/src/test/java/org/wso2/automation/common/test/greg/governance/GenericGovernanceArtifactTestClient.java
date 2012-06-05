@@ -118,6 +118,7 @@ public class GenericGovernanceArtifactTestClient {
         artifact.setAttribute("serviceLifecycle_lifecycleName", "ServiceLifeCycle");
         artifactManager.addGenericArtifact(artifact);
         Thread.sleep(5000);
+
         artifact = artifactManager.getGenericArtifact(artifact.getId());
         assertTrue(artifact.getQName().toString().contains("testEvent1"), "artifact name not found");
         assertTrue(artifact.getPath().contains("/events/testEvent1"), "Artifact path not found");
@@ -171,7 +172,7 @@ public class GenericGovernanceArtifactTestClient {
         String governanceArtifactContent = "<metadata xmlns=\"http://www.wso2" +
                                            ".org/governance/metadata\"><details><author>testAuthor" +
                                            "</author>" + "<venue>Colombo</venue><date>12/12/2012</date>" +
-                                           "<name>testEvent2</name>" + "</details><overview><namespace>" +
+                                           "<name>testEvent5</name>" + "</details><overview><namespace>" +
                                            "</namespace></overview><serviceLifecycle>" +
                                            "<lifecycleName>ServiceLifeCycle</lifecycleName>" +
                                            "</serviceLifecycle><rules>" + "<gender>male</gender>" +
@@ -179,9 +180,10 @@ public class GenericGovernanceArtifactTestClient {
 
         GenericArtifact artifact = artifactManager.newGovernanceArtifact(AXIOMUtil.stringToOM(governanceArtifactContent));
 
-        artifactManager.addGenericArtifact(artifact);
 
+        artifactManager.addGenericArtifact(artifact);
         artifact = artifactManager.getGenericArtifact(artifact.getId());
+
         assertTrue(artifact.getQName().toString().contains("testEvent2"),
                    "artifact name not found");
         assertTrue(artifact.getPath().contains("/events/testEvent2"), "Artifact path not found");
@@ -198,7 +200,7 @@ public class GenericGovernanceArtifactTestClient {
         assertTrue(artifact.getAttribute("rules_gender").equals("male"),
                    "Artifact field gender not matching");
         assertTrue(artifact.getAttribute("serviceLifecycle_lifecycleName").contains("ServiceLifeCycle"),
-                   "Artifact field LC not found");
+                   "Artifact field artifact.getDependencies()LC not found");
 
         GenericArtifact[] artifacts = artifactManager.getAllGenericArtifacts();
 
@@ -230,7 +232,6 @@ public class GenericGovernanceArtifactTestClient {
         artifactManager.removeGenericArtifact(artifact.getId());
         assertNull("Generic artifact exists even after deletion",
                    artifactManager.getGenericArtifact(artifact.getId()));
-
     }
 
     @Test(groups = {"wso2.greg"}, description = "add new rxt file", priority = 4)
@@ -289,5 +290,174 @@ public class GenericGovernanceArtifactTestClient {
             }
         }
         assertTrue(counter == numberOfArtifacts, "All artifacts were not added.");
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Test artifact dependencies and associations", priority = 6)
+    public void testArtifactDependencies() throws Exception {
+        GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");
+        GenericArtifact artifact = artifactManager.newGovernanceArtifact(new QName
+                                                                         ("testEvent5"));
+        artifact.setAttribute("details_venue", "Colombo");
+        artifact.setAttribute("details_date", "12/12/2012");
+        artifact.setAttribute("details_name", "code");
+        artifact.setAttribute("details_author", "testAuthor");
+
+        artifact.setAttribute("rules_description", "Coding event");
+        artifact.setAttribute("rules_gender", "male");
+        artifact.setAttribute("serviceLifecycle_lifecycleName", "ServiceLifeCycle");
+        artifactManager.addGenericArtifact(artifact);
+
+        //add another artifact
+        GenericArtifact artifactSecond = artifactManager.newGovernanceArtifact(new QName
+                                                                               ("testEvent6"));
+        artifactSecond.setAttribute("details_venue", "Colombo");
+        artifactSecond.setAttribute("details_date", "12/12/2012");
+        artifactSecond.setAttribute("details_name", "code");
+        artifactSecond.setAttribute("details_author", "testAuthor");
+
+        artifactSecond.setAttribute("rules_description", "Coding event");
+        artifactSecond.setAttribute("rules_gender", "male");
+        artifactSecond.setAttribute("serviceLifecycle_lifecycleName", "ServiceLifeCycle");
+
+        artifactManager.addGenericArtifact(artifactSecond);
+
+        governance.addAssociation(artifact.getPath(), artifactSecond.getPath(), "depends");
+        governance.addAssociation(artifact.getPath(), artifactSecond.getPath(), "usedBy");
+
+        assertTrue(governance.getAssociations(artifact.getPath(), "depends").length > 0);
+        assertTrue(governance.getAssociations(artifact.getPath(), "usedBy").length > 0);
+
+        assertTrue(artifact.getDependents().length == 1);
+        assertTrue(artifact.getDependencies().length == 1);
+
+        assertTrue(artifact.getDependencies()[0].getQName().toString().contains("testEvent6"));
+        assertTrue(artifact.getDependents()[0].getQName().toString().contains("testEvent6"));
+
+        artifactManager.removeGenericArtifact(artifact.getId());
+        assertNull("artifact exists", artifactManager.getGenericArtifact(artifact.getId()));
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Get LC state and LC name", priority = 7, enabled = false)
+    public void testArtifactLifeCycle() throws Exception {
+        GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");
+        GenericArtifact artifact = artifactManager.newGovernanceArtifact(new QName
+                                                                         ("testEvent7"));
+        artifact.setAttribute("details_venue", "Colombo");
+        artifact.setAttribute("details_date", "12/12/2012");
+        artifact.setAttribute("details_name", "code");
+        artifact.setAttribute("details_author", "testAuthor");
+
+        artifact.setAttribute("rules_description", "Coding event");
+        artifact.setAttribute("rules_gender", "male");
+        artifact.setAttribute("serviceLifecycle_lifecycleName", "ServiceLifeCycle");
+        artifactManager.addGenericArtifact(artifact);
+        Thread.sleep(5000);
+
+        artifact = artifactManager.getGenericArtifact(artifact.getId());
+        assertTrue(artifact.getQName().toString().contains("testEvent7"), "artifact name not found");
+        assertTrue(artifact.getPath().contains("/events/testEvent7"), "Artifact path not found");
+        assertTrue(artifact.getAttribute("details_venue").equals("Colombo"),
+                   "artifact venue not found");
+        assertTrue(artifact.getAttribute("details_date").contains("12/12/2012"),
+                   "Date not found");
+        assertTrue(artifact.getAttribute("details_name").contains("testEvent7"),
+                   "Artifact detail name not found");
+        assertTrue(artifact.getAttribute("details_author").contains("testAuthor"),
+                   "Artifact Author not found");
+        assertTrue(artifact.getAttribute("rules_description").contains("Coding event"),
+                   "Artifact rule description not found");
+        assertTrue(artifact.getAttribute("rules_gender").equals("male"),
+                   "Artifact field gender not matching");
+        assertTrue(artifact.getAttribute("serviceLifecycle_lifecycleName").contains("ServiceLifeCycle"),
+                   "Artifact field LC not found");
+        assertTrue(artifact.getLifecycleName().contains("ServiceLifeCycle"), "LC name not found");
+        assertTrue(artifact.getLifecycleState().contains("Development"), "LC state not found");
+
+        artifactManager.removeGenericArtifact(artifact.getId());
+        assertNull("artifact exists", artifactManager.getGenericArtifact(artifact.getId()));
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Get LC state and LC name", priority = 8)
+    public void testUpdateArtifact() throws Exception {
+        GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");
+        GenericArtifact artifact = artifactManager.newGovernanceArtifact(new QName
+                                                                         ("testEvent8"));
+        artifact.setAttribute("details_venue", "Colombo");
+        artifact.setAttribute("details_date", "12/12/2012");
+        artifact.setAttribute("details_name", "code");
+        artifact.setAttribute("details_author", "testAuthor");
+
+        artifact.setAttribute("rules_description", "Coding event");
+        artifact.setAttribute("rules_gender", "male");
+        artifact.setAttribute("serviceLifecycle_lifecycleName", "ServiceLifeCycle");
+        artifactManager.addGenericArtifact(artifact);
+
+        artifact = artifactManager.getGenericArtifact(artifact.getId());
+        Thread.sleep(5000);
+        assertTrue(artifact.getQName().toString().contains("testEvent8"),
+                   "artifact name not found");
+        assertTrue(artifact.getPath().contains("/events/testEvent8"),
+                   "Artifact path not found");
+        assertTrue(artifact.getAttribute("details_venue").equals("Colombo"),
+                   "artifact venue not found");
+        assertTrue(artifact.getAttribute("details_date").contains("12/12/2012"),
+                   "Date not found");
+        assertTrue(artifact.getAttribute("details_name").contains("testEvent8"),
+                   "Artifact detail name not found");
+        assertTrue(artifact.getAttribute("details_author").contains("testAuthor"),
+                   "Artifact Author not found");
+        assertTrue(artifact.getAttribute("rules_description").contains("Coding event"),
+                   "Artifact rule description not found");
+        assertTrue(artifact.getAttribute("rules_gender").equals("male"),
+                   "Artifact field gender not matching");
+        assertTrue(artifact.getAttribute("serviceLifecycle_lifecycleName").contains("ServiceLifeCycle"),
+                   "Artifact field LC not found");
+
+        artifact.setAttribute("details_venue", "ColomboUpdated");
+        artifact.setAttribute("details_date", "12/12/2015");
+        artifact.setAttribute("details_name", "codeUpdated");
+        artifact.setAttribute("details_author", "testAuthorUpdated");
+
+        artifact.setAttribute("rules_description", "Coding event Updated");
+        artifact.setAttribute("rules_gender", "female");
+        artifact.setAttribute("serviceLifecycle_lifecycleName", "None");
+
+        Resource artifactResource = governance.get(artifact.getPath());
+        artifactResource.addProperty("testKey", "testValue");
+        governance.applyTag(artifact.getPath(), "testTag");
+        governance.put(artifact.getPath(), artifactResource);
+
+        
+        artifactManager.addGenericArtifact(artifact);
+
+        artifact = artifactManager.getGenericArtifact(artifact.getId());
+        Thread.sleep(2000);
+        //asset updated values
+        assertTrue(artifact.getQName().toString().contains("testEvent8"),
+                   "artifact name not found");
+        assertTrue(artifact.getPath().contains("/events/testEvent8"),
+                   "Artifact path not found");
+        assertTrue(artifact.getAttribute("details_venue").equals("ColomboUpdated"),
+                   "artifact venue not found");
+        assertTrue(artifact.getAttribute("details_date").contains("12/12/2015"),
+                   "Date not found");
+        assertTrue(artifact.getAttribute("details_name").contains("testEvent8"),
+                   "Artifact detail name not found");
+        assertTrue(artifact.getAttribute("details_author").contains("testAuthorUpdated"),
+                   "Artifact Author not found");
+        assertTrue(artifact.getAttribute("rules_description").contains("Coding event Updated"),
+                   "Artifact rule description not found");
+        assertTrue(artifact.getAttribute("rules_gender").equals("female"),
+                   "Artifact field gender not matching");
+        assertTrue(artifact.getAttribute("serviceLifecycle_lifecycleName").contains("None"),
+                   "Artifact field LC not found");
+
+        //check for tag and properties
+        Resource artifactResourceUpdated = governance.get(artifact.getPath());
+        assertTrue(artifactResourceUpdated.getProperty("testKey").equals("testValue"));
+        assertTrue(governance.getTags(artifact.getPath())[0].getTagName().equals("testTag"));
+
+        artifactManager.removeGenericArtifact(artifact.getId());
+        assertNull("artifact exists", artifactManager.getGenericArtifact(artifact.getId()));
     }
 }

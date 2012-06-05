@@ -71,7 +71,7 @@ public class ServiceTestCaseClient {
 
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"}, description = "add a simple service ", priority = 1)
     public void testAddService() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
 
@@ -94,7 +94,7 @@ public class ServiceTestCaseClient {
         Assert.assertEquals(values.length, 2);
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"}, description = "Search services ", priority = 2)
     public void testServiceSearch() throws Exception {
         File file = new File(configPath);
         FileInputStream fileInputStream = new FileInputStream(file);
@@ -167,7 +167,7 @@ public class ServiceTestCaseClient {
                           services[1].getQName().equals(service2.getQName()));
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"}, description = "Attach meta data into service", priority = 3)
     public void testServiceAttachments() throws Exception {
         // first put a WSDL
         WsdlManager wsdlManager = new WsdlManager(governance);
@@ -231,7 +231,7 @@ public class ServiceTestCaseClient {
 
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"}, description = "Rename service", priority = 4)
     public void testServiceRename() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
 
@@ -270,7 +270,7 @@ public class ServiceTestCaseClient {
 
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"}, description = "delete service ", priority = 5)
     public void testServiceDelete() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
 
@@ -297,7 +297,7 @@ public class ServiceTestCaseClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a duplicate service again with different " +
-                                                "namespace")
+                                                "namespace", priority = 6)
     public void testDuplicateService() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
 
@@ -333,7 +333,7 @@ public class ServiceTestCaseClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a duplicate service again with same " +
-                                                "namespace")
+                                                "namespace", priority = 7)
     public void testDuplicateServiceWithNameSpaces() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
 
@@ -376,7 +376,8 @@ public class ServiceTestCaseClient {
         Assert.assertNull(newServiceDuplicate);
     }
 
-    @Test(groups = {"wso2.greg"}, description = "add service with special characters", dataProvider = "invalidCharacter")
+    @Test(groups = {"wso2.greg"}, description = "add service with special characters",
+          dataProvider = "invalidCharacter", priority = 8)
     public void testServiceWithSpecialCharacters(String invalidCharacters) throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
         boolean status = false;
@@ -392,7 +393,7 @@ public class ServiceTestCaseClient {
         assertTrue(status, "Invalid service added with special character - " + invalidCharacters);
     }
 
-    @Test(groups = {"wso2.greg"}, description = "add 10000 resources to registry")
+    @Test(groups = {"wso2.greg"}, description = "add 10000 resources to registry",  priority = 19)
     public void testAddLargeNumberOfServices() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
         Service newService;
@@ -436,7 +437,7 @@ public class ServiceTestCaseClient {
         }
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Service activate and deactivate")
+    @Test(groups = {"wso2.greg"}, description = "Service activate and deactivate", priority = 10)
     public void testServiceStatus() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
 
@@ -459,7 +460,7 @@ public class ServiceTestCaseClient {
         assertNull(serviceManager.getService(service.getId()));
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Attache 100 endpoints to a service")
+    @Test(groups = {"wso2.greg"}, description = "Attache 100 endpoints to a service",  priority = 20)
     public void testAttachLargeNumberOfEndpoints() throws RegistryException {
         String service_namespace = "http://wso2.org/atomation/test";
         String service_name = "ServiceForLargeNumberOfEndpoints";
@@ -493,11 +494,11 @@ public class ServiceTestCaseClient {
         assertNull(serviceManager.getService(service.getId()));
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Attache 100 policies to a service")
+    @Test(groups = {"wso2.greg"}, description = "Attache 100 policies to a service",  priority = 18)
     public void testAttachLargeNumberOfPolicies() throws RegistryException {
         String service_namespace = "http://wso2.org/atomation/test";
         String service_name = "ServiceForLargeNumberOfPolicies1";
-        int numberOfPolicies = 10;
+        int numberOfPolicies = 1000;
 
         ServiceManager serviceManager = new ServiceManager(governance);
         Service service;
@@ -530,7 +531,7 @@ public class ServiceTestCaseClient {
         assertNull(serviceManager.getService(service.getId()));
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to service with schema imports")
+    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to service with schema imports", priority = 11)
     public void testAttacheWsdlWithSchemaImports() throws Exception {
         // first put a WSDL
         WsdlManager wsdlManager = new WsdlManager(governance);
@@ -568,12 +569,12 @@ public class ServiceTestCaseClient {
         assertTrue(service.getAttachedSchemas().length == 0, "Schema still exits ");
 
         //remove the service
-//        serviceManager.removeService(service.getId());
-//        assertNull(serviceManager.getService(service.getId()));
+        serviceManager.removeService(service.getId());
+        assertNull(serviceManager.getService(service.getId()));
     }
 
 
-    @Test(groups = {"wso2.greg"}, description = "Attach LC to a service")
+    @Test(groups = {"wso2.greg"}, description = "Attach LC to a service", priority = 12)
     public void testAttachLifeCycleToService() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
 
@@ -594,7 +595,7 @@ public class ServiceTestCaseClient {
         assertNull(serviceManager.getService(service.getId()));
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Attach Not existing LC to a service")
+    @Test(groups = {"wso2.greg"}, description = "Attach Not existing LC to a service", priority = 13)
     public void testAttachNonExistingLCToService() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
         boolean status = false;
@@ -622,7 +623,7 @@ public class ServiceTestCaseClient {
     }
 
 
-    @Test(groups = {"wso2.greg"}, description = "Attach Not existing LC to a service")
+    @Test(groups = {"wso2.greg"}, description = "Attach Not existing LC to a service", priority = 14)
     public void testCreateServiceVersions() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
         Service service = serviceManager.newService(new QName("http://wso2.org/automation/test",
@@ -654,22 +655,22 @@ public class ServiceTestCaseClient {
     @DataProvider(name = "invalidCharacter")
     public Object[][] invalidCharacter() {
         return new Object[][]{
-                                     {"<a>"},
-                                     {"#"},
-                                     {"a|b"},
-                                     {"@"},
-                                     {"|"},
-                                     {"^"},
-                                     {"abc^"},
-                                     {"\\"},
-                                     {"{"},
-                                     {"}"},
-                                     {"%"},
-                                     {"+"},
-                                     {"="},
-                                     {"}"},
-                                     {"*"},
-                                     {";"},
+                {"<a>"},
+                {"#"},
+                {"a|b"},
+                {"@"},
+                {"|"},
+                {"^"},
+                {"abc^"},
+                {"\\"},
+                {"{"},
+                {"}"},
+                {"%"},
+                {"+"},
+                {"="},
+                {"}"},
+                {"*"},
+                {";"},
         };
     }
 
@@ -717,7 +718,7 @@ public class ServiceTestCaseClient {
         return status;
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to service with policy imports")
+    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to service with policy imports", priority = 15)
     public void testAttacheWsdlWithWsdlImports() throws Exception {
 
         ServiceManager serviceManager = new ServiceManager(governance);
@@ -737,7 +738,7 @@ public class ServiceTestCaseClient {
 
         for (Endpoint endpoint : endpoints) {
             assertTrue(endpoint.getUrl().contains
-                                                 ("SimpleStockQuoteService1M"), "Endpoint not found");
+                    ("SimpleStockQuoteService1M"), "Endpoint not found");
         }
 
         Wsdl[] wsdls = service.getAttachedWsdls();
@@ -745,7 +746,7 @@ public class ServiceTestCaseClient {
         assertTrue(wsdls[0].getAttribute("WSDL Validation").contains("Valid"));
         assertTrue(wsdls[0].getAttribute("WSI Validation").contains("Invalid"));
         assertTrue(wsdls[0].getAttribute("WSI Validation Message 1").contains
-                                                                             ("NullPointerException"));
+                ("NullPointerException"));
 
         assertEquals(wsdls.length, 1);
         assertEquals(wsdls[0].getQName(), new QName("http://services.samples", "WSDLWithPolicyTest.wsdl"));
@@ -767,7 +768,7 @@ public class ServiceTestCaseClient {
         assertNull(serviceManager.getService(service.getId()));
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to service with wsdl imports")
+    @Test(groups = {"wso2.greg"}, description = "Add a wsdl to service with wsdl imports", priority = 16)
     public void testAttacheWsdlWithPolicyImports() throws Exception {
 
         ServiceManager serviceManager = new ServiceManager(governance);
@@ -809,5 +810,36 @@ public class ServiceTestCaseClient {
         assertNull(serviceManager.getService(service.getId()));
     }
 
+    @Test(groups = {"wso2.greg"}, threadPoolSize = 10, invocationCount = 10,
+          description = "Update the service concurrently", priority = 17)
+    public void testServiceConcurrentUpdate() throws Exception {
+        ServiceManager serviceManager = new ServiceManager(governance);
+        long id = Thread.currentThread().getId();
+        Service service = serviceManager.newService(new QName("http://bang.boom.com/mnm/beep",
+                                                              "WSO2AutomationActiveServiceUpdate" + id));
 
+        service.addAttribute("overview_description", "serviceAttr");
+        serviceManager.addService(service);
+        service.setAttribute("overview_description", "serviceAttrUpdated");
+        serviceManager.addService(service);
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Update the service concurrently")
+    public void testDeleteUpdatedServices() throws Exception {
+        ServiceManager serviceManager = new ServiceManager(governance);
+        ServiceFilter filter = new ServiceFilter() {
+            public boolean matches(Service service) throws GovernanceException {
+                if (service.getQName().toString().contains("WSO2AutomationActiveServiceUpdate")) {
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        Service[] services = serviceManager.findServices(filter);
+        for (Service service : services) {
+            serviceManager.removeService(service.getId());
+            assertNull(serviceManager.getService(service.getId()));
+        }
+    }
 }

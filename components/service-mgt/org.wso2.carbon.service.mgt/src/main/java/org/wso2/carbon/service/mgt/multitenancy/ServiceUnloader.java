@@ -95,7 +95,7 @@ public class ServiceUnloader implements ArtifactUnloader {
                                 .getServiceGroupName() + " and adding a Ghost Service Group. " +
                                  "Tenant Domain: " + tenantDomain);
                         // add this parameter to keep track of this service at ghost dispatcher
-                        existingSG.addParameter(CarbonConstants.IS_SERVICE_BEING_UNLOADED, "true");
+                        existingSG.addParameter(CarbonConstants.IS_ARTIFACT_BEING_UNLOADED, "true");
                         GhostDeployerUtils.addServiceGroupToTransitMap(existingSG, axisConfig);
                         // we can't delete the configs in the registry. so keep history..
                         existingSG.addParameter(CarbonConstants.KEEP_SERVICE_HISTORY_PARAM, "true");

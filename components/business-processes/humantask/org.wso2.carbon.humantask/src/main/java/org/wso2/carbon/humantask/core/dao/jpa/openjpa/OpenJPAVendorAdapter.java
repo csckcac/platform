@@ -49,13 +49,15 @@ public class OpenJPAVendorAdapter extends AbstractJPAVendorAdapter {
             log.info("[HT OpenJPA] Show SQL enabled.");
             jpaProperties.put("openjpa.Log", "DefaultLevel=WARN, Runtime=INFO, Tool=INFO, SQL=TRACE");
             jpaProperties.put("openjpa.ConnectionFactoryProperties", "PrettyPrint=true, PrettyPrintLineLength=72");
+        } else {
+            jpaProperties.put("openjpa.Log", "commons");
         }
 
         if (tnxManager != null) {
             jpaProperties.put("openjpa.ManagedRuntime", new TransactionManagerProvider(tnxManager));
         }
 
-        jpaProperties.put("openjpa.Id", "HT-PU");
+//        jpaProperties.put("openjpa.Id", "HT-PU");
         jpaProperties.put("openjpa.QueryCache", "false");
         jpaProperties.put("openjpa.DataCache", "false");
         jpaProperties.put("openjpa.jdbc.QuerySQLCache", "false");

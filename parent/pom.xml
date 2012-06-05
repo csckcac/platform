@@ -313,7 +313,7 @@
 	<version.commons.logging>1.1.1</version.commons.logging>
 
 	<!--OpenJPA -->
-	<openjpa.version>2.0.0-wso2v1</openjpa.version>
+	<openjpa.version>2.2.0-wso2v1</openjpa.version>
 
     </properties>
 </project>

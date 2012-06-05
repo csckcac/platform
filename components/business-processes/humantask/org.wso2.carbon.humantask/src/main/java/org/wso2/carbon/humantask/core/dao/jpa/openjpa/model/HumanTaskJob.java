@@ -41,10 +41,10 @@ public class HumanTaskJob extends OpenJPAEntity implements HumanTaskJobDAO {
     private Long time = 0L;
 
     @Column(name = "SCHEDULED", nullable = false)
-    private boolean scheduled = false;
+    private boolean scheduled;
 
     @Column(name = "TRANSACTED", nullable = false)
-    private boolean transacted = false;
+    private boolean transacted;
 
     @Column(name = "DETAILS", length = 4096)
     private String details;

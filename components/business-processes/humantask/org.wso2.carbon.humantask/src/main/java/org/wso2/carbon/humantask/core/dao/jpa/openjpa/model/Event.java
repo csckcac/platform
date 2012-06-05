@@ -49,6 +49,7 @@ public class Event implements EventDAO {
     @Temporal(TemporalType.TIMESTAMP)
     private Date timeStamp;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", nullable = false)
     private TaskEventType type;
 

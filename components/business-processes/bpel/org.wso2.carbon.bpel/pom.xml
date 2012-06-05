@@ -67,6 +67,12 @@
         <dependency>
             <groupId>org.apache.ode.wso2</groupId>
             <artifactId>ode</artifactId>
+            <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.openjpa</groupId>
+                        <artifactId>openjpa</artifactId>
+                    </exclusion>
+                </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>

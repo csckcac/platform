@@ -116,7 +116,7 @@
         </dependency>
         <dependency>
                 <groupId>org.apache.openjpa</groupId>
-                <artifactId>openjpa-osgi</artifactId>
+                <artifactId>openjpa</artifactId>
                 <version>${openjpa.version}</version>
                 <!-- We don't need an orbit bundle, since this is a bundle -->
         </dependency>

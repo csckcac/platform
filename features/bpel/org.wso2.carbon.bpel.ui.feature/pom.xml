@@ -104,7 +104,7 @@
                                 <importBundleDef>geronimo-spec.wso2:geronimo-spec-jms</importBundleDef>
                                 <importBundleDef>org.apache.geronimo.components.wso2:geronimo-transaction
                                 </importBundleDef>
-                                <importBundleDef>org.apache.openjpa:openjpa-osgi</importBundleDef>
+                                <importBundleDef>org.apache.openjpa:openjpa</importBundleDef>
                                 <importBundleDef>org.apache.geronimo.specs:geronimo-jpa_2.0_spec</importBundleDef>
                                 <importBundleDef>net.sf.saxon.wso2:saxon.bps</importBundleDef>
                                 <importBundleDef>net.sourceforge.serp.wso2:serp</importBundleDef>

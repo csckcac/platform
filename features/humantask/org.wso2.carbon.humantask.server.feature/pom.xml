@@ -163,7 +163,7 @@
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.humantask.cleanup.scheduler</bundleDef>
                             </bundles>
                             <importBundles>
-                                <importBundleDef>org.apache.openjpa:openjpa-osgi</importBundleDef>
+                                <importBundleDef>org.apache.openjpa:openjpa</importBundleDef>
                                 <importBundleDef>org.apache.geronimo.specs:geronimo-jpa_2.0_spec</importBundleDef>
                                 <importBundleDef>org.apache.xmlbeans.wso2:xmlbeans</importBundleDef>
                                 <importBundleDef>org.apache.geronimo.components.wso2:geronimo-connector</importBundleDef>

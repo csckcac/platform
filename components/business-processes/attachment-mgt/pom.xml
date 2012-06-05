@@ -48,6 +48,12 @@
                 <groupId>org.apache.ode.wso2</groupId>
                 <artifactId>ode</artifactId>
                 <version>${ode.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.openjpa</groupId>
+                        <artifactId>openjpa</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -61,7 +67,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.openjpa</groupId>
-                <artifactId>openjpa-osgi</artifactId>
+                <artifactId>openjpa</artifactId>
                 <version>${openjpa.version}</version>
                 <!-- We don't need an orbit bundle, since this is a bundle -->
             </dependency>

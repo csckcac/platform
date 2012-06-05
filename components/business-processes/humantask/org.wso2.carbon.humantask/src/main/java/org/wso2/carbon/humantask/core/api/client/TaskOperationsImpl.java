@@ -87,9 +87,6 @@ public class TaskOperationsImpl extends AbstractAdmin
     public TTaskSimpleQueryResultSet simpleQuery(final TSimpleQueryInput tSimpleQueryInput)
             throws IllegalStateFault, IllegalArgumentFault {
 
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-
         try {
             List<TaskDAO> matchingTasks = HumanTaskServiceComponent.getHumanTaskServer().
                     getTaskEngine().getScheduler().execTransaction(new Callable<List<TaskDAO>>() {

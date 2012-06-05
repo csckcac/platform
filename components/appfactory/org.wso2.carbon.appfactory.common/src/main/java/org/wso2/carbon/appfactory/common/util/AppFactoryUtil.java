@@ -16,6 +16,10 @@
 
 package org.wso2.carbon.appfactory.common.util;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.appfactory.common.AppFactoryException;
@@ -25,11 +29,10 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,11 +44,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 /**
  * Util class for building app factory configuration
@@ -82,6 +80,8 @@ public class AppFactoryUtil {
     private static OMElement loadAppFactoryXML() throws AppFactoryException {
         String fileLocation =
                 new StringBuilder().append(CarbonUtils.getCarbonConfigDirPath())
+                        .append(RegistryConstants.PATH_SEPARATOR)
+                        .append(AppFactoryConstants.CONFIG_FOLDER)
                         .append(RegistryConstants.PATH_SEPARATOR)
                         .append(AppFactoryConstants.CONFIG_FILE_NAME).toString();
 

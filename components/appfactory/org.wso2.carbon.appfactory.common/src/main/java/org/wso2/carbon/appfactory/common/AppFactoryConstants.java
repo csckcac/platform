@@ -20,6 +20,7 @@ package org.wso2.carbon.appfactory.common;
  * Constants for AppFactory configuration
  */
 public class AppFactoryConstants {
+    public static final String CONFIG_FOLDER = "appfactory";
     public static final String CONFIG_FILE_NAME = "appfactory.xml";
     public static final String CONFIG_NAMESPACE = "http://www.wso2.org/appfactory/";
 

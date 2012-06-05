@@ -310,7 +310,7 @@
         </file>
 		<file>
 			<source>resources/appfactory.xml</source>
-			<outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
+			<outputDirectory>wso2appfactory-${pom.version}/repository/conf/appfactory</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 		<file>

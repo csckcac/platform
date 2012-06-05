@@ -58,7 +58,7 @@ public class AppFactoryUserStore extends ApacheDSUserStoreManager {
         if (isExistingUser(userName)) {
             // do nothing
         } else {
-            addUser(userName, credential, roleList, claims, profileName);
+            super.addUser(userName, credential, roleList, claims, profileName);
         }
     }
 
@@ -68,7 +68,7 @@ public class AppFactoryUserStore extends ApacheDSUserStoreManager {
         if (isExistingUser(userName)) {
             // do nothing
         } else {
-            addUser(userName, credential, roleList, claims, profileName,
+            super.addUser(userName, credential, roleList, claims, profileName,
                     requirePasswordChange);
         }
     }

@@ -3,7 +3,7 @@
     include('constants.jag');
 
     var applicationKey = request.getParameter("applicationKey");
-    var applicationName = request.getParameter("applicationName")+APPLICATION_SUFFIX;
+    var applicationName = request.getParameter("applicationName");
     var applicationDescription = request.getParameter("applicationDescription");
      var userName = session.get("LOGGED_IN_USER");
 

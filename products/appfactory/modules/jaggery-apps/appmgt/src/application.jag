@@ -29,7 +29,7 @@
 <%
     var log = new Log();
     var applicationName = request.getParameter("applicationName");
-    var applicationKey = request.getParameter("applicationKey")+APPLICATION_SUFFIX;
+    var applicationKey = request.getParameter("applicationKey");
 
     include('mgt/application_manager.jag');
     var userHasAccess = false;

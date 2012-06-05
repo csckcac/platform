@@ -16,8 +16,8 @@ include('includes/template_header.jag');
                 }
 
                 for (var s in applicationList) {
-                    var applicationKey = applicationList[s].split(APPLICATION_SUFFIX)[0];
-                    var applicationName =applicationList[s].split(APPLICATION_SUFFIX)[0];
+                    var applicationKey = applicationList[s];
+                    var applicationName =applicationList[s];
             %>
             <a href="application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>"><%=applicationName%></a>
             </br>

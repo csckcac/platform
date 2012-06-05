@@ -16,15 +16,29 @@
 
 package org.wso2.carbon.apimgt.handlers.security;
 
+import net.sf.jsr107cache.*;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
+import org.wso2.carbon.apimgt.impl.utils.LRUCache;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class TestAPIKeyValidator extends APIKeyValidator {
     
     private int counter = 0;
     private Map<String,APIKeyValidationInfoDTO> userInfo = new HashMap<String, APIKeyValidationInfoDTO>();
+
+    public TestAPIKeyValidator() {
+        super(new AxisConfiguration());
+    }
+
+    @Override
+    protected Cache initCache() {
+        return new SimpleCache();
+    }
 
     @Override
     protected APIKeyValidationInfoDTO doGetKeyValidationInfo(String context, String apiVersion, 
@@ -51,5 +65,94 @@ public class TestAPIKeyValidator extends APIKeyValidator {
 
     public int getCounter() {
         return counter;
+    }
+    
+    private static class SimpleCache implements Cache {
+        
+        private Map<Object,Object> map = new LRUCache<Object, Object>(APISecurityConstants.DEFAULT_MAX_INVALID_KEYS);
+        
+        public boolean containsKey(Object o) {
+            return map.containsKey(o);
+        }
+
+        public boolean containsValue(Object o) {
+            return map.containsValue(o);
+        }
+
+        public Set entrySet() {
+            return map.entrySet();
+        }
+
+        public boolean isEmpty() {
+            return map.isEmpty();
+        }
+
+        public Set keySet() {
+            return map.keySet();
+        }
+
+        public void putAll(Map map) {
+            map.putAll(map);
+        }
+
+        public int size() {
+            return map.size();
+        }
+
+        public Collection values() {
+            return map.values();
+        }
+
+        public Object get(Object o) {
+            return map.get(o);
+        }
+
+        public Map getAll(Collection collection) throws CacheException {
+            return null;
+        }
+
+        public void load(Object o) throws CacheException {
+
+        }
+
+        public void loadAll(Collection collection) throws CacheException {
+
+        }
+
+        public Object peek(Object o) {
+            return map.get(o);
+        }
+
+        public Object put(Object o, Object o1) {
+            return map.put(o, o1);
+        }
+
+        public CacheEntry getCacheEntry(Object o) {
+            return null;
+        }
+
+        public CacheStatistics getCacheStatistics() {
+            return null;
+        }
+
+        public Object remove(Object o) {
+            return map.remove(o);
+        }
+
+        public void clear() {
+            map.clear();
+        }
+
+        public void evict() {
+
+        }
+
+        public void addListener(CacheListener cacheListener) {
+
+        }
+
+        public void removeListener(CacheListener cacheListener) {
+
+        }
     }
 }

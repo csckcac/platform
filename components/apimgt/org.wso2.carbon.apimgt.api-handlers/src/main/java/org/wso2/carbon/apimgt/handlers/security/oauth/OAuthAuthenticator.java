@@ -44,7 +44,7 @@ public class OAuthAuthenticator implements Authenticator {
     private String consumerKeySegmentDelimiter = " ";
 
     public void init(SynapseEnvironment env) {
-        this.keyValidator = new APIKeyValidator();
+        this.keyValidator = new APIKeyValidator(env.getSynapseConfiguration().getAxisConfiguration());
         initOAuthParams();
     }
 

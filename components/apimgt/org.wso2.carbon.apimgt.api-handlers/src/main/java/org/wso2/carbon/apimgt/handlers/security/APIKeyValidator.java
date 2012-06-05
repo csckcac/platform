@@ -16,11 +16,14 @@
 
 package org.wso2.carbon.apimgt.handlers.security;
 
+import net.sf.jsr107cache.Cache;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.handlers.security.keys.APIKeyDataStore;
 import org.wso2.carbon.apimgt.handlers.security.keys.WSAPIKeyDataStore;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 
 /**
  * This class is used to validate a given API key against a given API context and a version.
@@ -34,8 +37,18 @@ public class APIKeyValidator {
     
     private static final Log log = LogFactory.getLog(APIKeyValidator.class);
 
-    private APIKeyCache infoCache;
+    private Cache infoCache;
     private volatile APIKeyDataStore dataStore;
+    private AxisConfiguration axisConfig;
+
+    public APIKeyValidator(AxisConfiguration axisConfig) {
+        this.axisConfig = axisConfig;
+        this.infoCache = initCache();
+    }
+
+    protected Cache initCache() {
+        return SuperTenantCarbonContext.getCurrentContext(axisConfig).getCache();
+    }
 
     /**
      * Get the API key validated against the specified API
@@ -48,18 +61,9 @@ public class APIKeyValidator {
      */
     public APIKeyValidationInfoDTO getKeyValidationInfo(String context, String apiKey,
                                                        String apiVersion) throws APISecurityException {
-        APIKeyValidationInfoDTO info;
-        if (infoCache == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Initializing API key cache for context: " + context + " and " +
-                        "version: " + apiVersion);
-            }
-            infoCache = APIKeyCacheFactory.getInstance().getAPIKeyCache(context, apiVersion);
-        } else {
-            info = infoCache.getInfo(apiKey);
-            if (info != null) {
-                return info;
-            }
+        APIKeyValidationInfoDTO info = (APIKeyValidationInfoDTO) infoCache.get(apiKey);
+        if (info != null) {
+            return info;
         }
 
         synchronized (apiKey.intern()) {
@@ -67,18 +71,14 @@ public class APIKeyValidator {
             // of different API keys - However when a burst of requests with the
             // same key is encountered, only one will be allowed to execute the logic,
             // and the rest will pick the value from the cache.
-            info = infoCache.getInfo(apiKey);
+            info = (APIKeyValidationInfoDTO) infoCache.get(apiKey);
             if (info != null) {
                 return info;
             }
 
             info = doGetKeyValidationInfo(context, apiVersion, apiKey);
             if (info != null) {
-                if (info.isAuthorized()) {
-                    infoCache.addValidKey(apiKey, info);
-                } else {
-                    infoCache.addInvalidKey(apiKey, info);
-                }
+                infoCache.put(apiKey, info);
                 return info;
             } else {
                 throw new APISecurityException(APISecurityConstants.API_AUTH_GENERAL_ERROR,

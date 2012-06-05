@@ -1,10 +1,13 @@
 $(document).ready(function() {
-    $("#myform").validate({
+    $.validator.addMethod("matchPasswords", function(value) {
+		return value == $("#password").val();
+	}, "The passwords you entered do not match. Please try again.");
+
+    $("#sign-up").validate({
      submitHandler: function(form) {
        form.submit();
      }
     });
-    $("#sign-up").validate();
     $("#password").keyup(function() {
         $(this).valid();
     });
@@ -14,6 +17,4 @@ $(document).ready(function() {
     $('#password').blur(function(){
         $('#password-help').hide();
     });
-
-
 });

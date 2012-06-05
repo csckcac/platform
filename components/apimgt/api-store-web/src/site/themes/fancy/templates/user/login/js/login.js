@@ -6,8 +6,8 @@ var login = login || {};
         jagg.post("/site/blocks/user/login/ajax/login.jag", { action:"login", username:username, password:password },
                  function (result) {
                      if (result.error == false) {
-                         if (redirectToHTTP && redirectToHTTP != "") {
-                             window.location.href = redirectToHTTP;
+                         if (redirectToHTTPS && redirectToHTTPS != "") {
+                             window.location.href = redirectToHTTPS;
                          } else if(url){
                              window.location.href = url;
                          }else{

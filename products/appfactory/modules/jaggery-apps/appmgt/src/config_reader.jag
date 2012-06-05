@@ -4,10 +4,10 @@ var appFactoryConfigReaderModule = require("appFactoryConfigReaderModule");
 var appFactoryConfigReader = new appFactoryConfigReaderModule.AppFactoryConfigurationReader();
 
  function getProperty(expression){
-    return "" + appFactoryConfigReader.getFirstProperty(expression);
+    appFactoryConfigReader.getFirstProperty(expression);
  }
   function getProperties(expression){
-    return "" + appFactoryConfigReader.getProperties(expression);
+    appFactoryConfigReader.getProperties(expression);
  }
 
 %>

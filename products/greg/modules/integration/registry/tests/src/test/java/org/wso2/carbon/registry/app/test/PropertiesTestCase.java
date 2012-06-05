@@ -83,7 +83,7 @@ public class PropertiesTestCase {
         assertTrue(propValues.contains("p1v2"), "Property p1 of /propTest/r1 should contain the value p1v2");
         //System.out.println(propValues.contains("p1v2"));
     }
-
+/*
     @Test(groups = {"wso2.greg"})
     public void NullValuedPropertiesTest() throws RegistryException {
 
@@ -116,7 +116,7 @@ public class PropertiesTestCase {
             assertTrue(true, "Property p1 of /propTest4/r1 should contain the value null");
         }
     }
-
+*/
     @Test(groups = {"wso2.greg"})
     public void RemovingPropertiesTest() throws RegistryException {
 

@@ -143,7 +143,9 @@ public class APIProviderHostObject extends ScriptableObject {
             options.setManageSession(true);
             
             String host = new URL(url).getHost();
-            authAdminStub.login(username, password, host);
+            if (!authAdminStub.login(username, password, host)) {
+                throw new APIManagementException("Authentication failed. Invalid username or password.");
+            }
             ServiceContext serviceContext = authAdminStub.
                     _getServiceClient().getLastOperationContext().getServiceContext();
             String sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);

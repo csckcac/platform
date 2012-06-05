@@ -93,10 +93,11 @@ public class APIUsageStatisticsClient {
                     if (usageDTO != null) {
                         usageDTO.setCount(usageDTO.getCount() + usage.requestCount);
                     } else {
+                        String apiName = usage.apiName + "(" + providerAPI.getId().getProviderName() + ")";
                         usageDTO = new APIUsageDTO();
-                        usageDTO.setApiName(usage.apiName);
+                        usageDTO.setApiName(apiName);
                         usageDTO.setCount(usage.requestCount);
-                        usageByAPIs.put(usage.apiName, usageDTO);
+                        usageByAPIs.put(apiName, usageDTO);
                     }
                 }
             }
@@ -173,15 +174,16 @@ public class APIUsageStatisticsClient {
                         providerAPI.getId().getVersion().equals(responseTime.apiVersion) &&
                         providerAPI.getContext().equals(responseTime.context)) {
                     Double cumulativeResponseTime = apiCumulativeServiceTimeMap.get(responseTime.apiName);
+                    String apiName = responseTime.apiName + " (" + providerAPI.getId().getProviderName() + ")";
                     if (cumulativeResponseTime != null) {
-                        apiCumulativeServiceTimeMap.put(responseTime.apiName,
+                        apiCumulativeServiceTimeMap.put(apiName,
                                 cumulativeResponseTime + responseTime.responseTime * responseTime.responseCount);
-                        apiUsageMap.put(responseTime.apiName,
-                                apiUsageMap.get(responseTime.apiName) + responseTime.responseCount);
+                        apiUsageMap.put(apiName,
+                                apiUsageMap.get(apiName) + responseTime.responseCount);
                     } else {
-                        apiCumulativeServiceTimeMap.put(responseTime.apiName,
+                        apiCumulativeServiceTimeMap.put(apiName,
                                 responseTime.responseTime * responseTime.responseCount);
-                        apiUsageMap.put(responseTime.apiName, responseTime.responseCount);
+                        apiUsageMap.put(apiName, responseTime.responseCount);
                     }
                 }
             }
@@ -224,9 +226,10 @@ public class APIUsageStatisticsClient {
                         providerAPI.getId().getVersion().equals(accessTime.apiVersion) &&
                         providerAPI.getContext().equals(accessTime.context)) {
 
+                    String apiName = accessTime.apiName + " (" + providerAPI.getId().getProviderName() + ")";
                     APIAccessTime lastAccessTime = lastAccessTimes.get(accessTime.apiName);
                     if (lastAccessTime == null || lastAccessTime.accessTime < accessTime.accessTime) {
-                        lastAccessTimes.put(accessTime.apiName, accessTime);
+                        lastAccessTimes.put(apiName, accessTime);
                     }
                 }
             }
@@ -234,9 +237,10 @@ public class APIUsageStatisticsClient {
 
         List<APIVersionLastAccessTimeDTO> accessTimeDTOs = new ArrayList<APIVersionLastAccessTimeDTO>();
         DateFormat dateFormat = new SimpleDateFormat();
-        for (APIAccessTime lastAccessTime : lastAccessTimes.values()) {
+        for (Map.Entry<String,APIAccessTime> entry : lastAccessTimes.entrySet()) {
             APIVersionLastAccessTimeDTO accessTimeDTO = new APIVersionLastAccessTimeDTO();
-            accessTimeDTO.setApiName(lastAccessTime.apiName);
+            accessTimeDTO.setApiName(entry.getKey());
+            APIAccessTime lastAccessTime = entry.getValue();
             accessTimeDTO.setApiVersion(lastAccessTime.apiVersion);
             accessTimeDTO.setLastAccessTime(dateFormat.format(lastAccessTime.accessTime));
             accessTimeDTO.setUser(lastAccessTime.username);
@@ -368,7 +372,11 @@ public class APIUsageStatisticsClient {
 
     private List<API> getAPIsByProvider(String providerId) throws APIMgtUsageQueryServiceClientException{
         try {
-            return apiProviderImpl.getAPIsByProvider(providerId);
+            if (APIUsageStatisticsClientConstants.ALL_PROVIDERS.equals(providerId)) {
+                return apiProviderImpl.getAllAPIs();
+            } else {
+                return apiProviderImpl.getAPIsByProvider(providerId);
+            }
         } catch (APIManagementException e) {
             throw new APIMgtUsageQueryServiceClientException("Error while retrieving APIs by " + providerId, e);
         }

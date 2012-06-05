@@ -63,5 +63,8 @@ public final class APIUsageStatisticsClientConstants {
     public static final String CONSUMER_KEY = "consumerKey";
     
     public static final String USER_ID = "userId";
+    
+    
+    public static final String ALL_PROVIDERS = "__all_providers__";
 
 }

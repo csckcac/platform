@@ -9,7 +9,14 @@ var site = require("/site/conf/site.json");
         return;
     }
     var userId = request.getParameter("uname");
-    var apis, result, mod;
+    var apis, result, mod,isCreatePermitted;
+
+    mod = jagg.module("api");
+    isCreatePermitted = mod.hasCreatePermission().permitted;
+    if(!isCreatePermitted){
+    response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/index.jag"));
+    return;
+    }
 
     mod = jagg.module("subscription");
     result = mod.getSubscribedAPIs(userId);

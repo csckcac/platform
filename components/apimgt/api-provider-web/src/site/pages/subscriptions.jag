@@ -3,11 +3,17 @@ include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
-    var subs, result, mod;
+    var subs, result, mod,isCreatePermitted;
     var user = jagg.getUser();
     if (!user) {
         response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/login.jag"));
         return;
+    }
+    mod = jagg.module("api");
+    isCreatePermitted = mod.hasCreatePermission().permitted;
+    if(!isCreatePermitted){
+    response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/index.jag"));
+    return;
     }
     mod = jagg.module("subscription");
     result = mod.getSubscribersOfProvider(user.username);

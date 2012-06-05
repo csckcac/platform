@@ -134,6 +134,7 @@
 		<module>jaggery</module>
         <!--module>apimgt</module-->
 	<module>andes</module>
+        <module>url-mapper</module>
 	<module>data-agents</module>
 	<module>bam2</module>
 	<module>analytics</module>

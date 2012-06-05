@@ -324,9 +324,9 @@
             <td valign="middle" style="width:30px;text-align:left"><fmt:message key="hierarchical.subcription"/>&nbsp;</td>
             <td valign="top" style="width:70px;text-align:left;">
                 <select id="hierarchicalSubscriptionList">
-                    <option value="none"><fmt:message key="none"/></option>
-                    <option value="#"><fmt:message key="all.child"/></option>
+                    <option value="none"><fmt:message key="collection.only"/></option>
                     <option value="*"><fmt:message key="immediate.child"/></option>
+                    <option value="#"><fmt:message key="all.child"/></option>
                 </select>
             </td>
         </tr>

@@ -14,7 +14,7 @@ var login = login || {};
                              window.location.reload();
                          }
                      } else {
-                         $('#messageModal').modal('hide');
+                         $('#messageModal').modal('show');
                          jagg.message(result.message);
                      }
                  }, "json");

@@ -116,8 +116,6 @@
     function isUserADevOp(applicationKey, userName,address) {
         try {
             var roleArray = getUserRolesForApplication(applicationKey, userName,address);
-            log("roleArray :"+roleArray);
-            log("roleArray length : "+roleArray.length());
             var isADevOp = false;
             for(var i =0; i < roleArray.length(); ++i) {
                 if(roleArray[i] == "devOp") {

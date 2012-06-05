@@ -32,7 +32,7 @@
 
     <!--<tns:TransactionFactory class=""/>-->
 
-    <!-- BPEL Event Listeners. They must implement BPELEventListener inteface -->
+    <!-- BPEL Event Listeners. They must implement BPELEventListener interface -->
     <!--<tns:EventListeners>
         <tns:listener class="org.wso2.bps.SampleEventListener"/>
     </tns:EventListeners>-->

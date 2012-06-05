@@ -27,8 +27,6 @@ import org.wso2.carbon.url.mapper.stub.UrlMapperAdminServiceStub;
 import org.wso2.carbon.url.mapper.stub.types.carbon.MappingData;
 
 
-
-
 /**
  * This is the client to communicate with backend when the tenant tries to
  * create new virtual host by specifying webapp specific id..

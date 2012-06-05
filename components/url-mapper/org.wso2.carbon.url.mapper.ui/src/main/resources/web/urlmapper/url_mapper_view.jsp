@@ -106,9 +106,9 @@
 				<tr bgcolor="#eeeffb">
 					<%
 						}
-									if (hosts == null || hosts.length == 0) {
+									if (hosts == null || hosts[0] == null ) {
 					%>
-					<td colspan="2"><fmt:message key="no.mappings.found" /></td>
+					<td colspan="3"><fmt:message key="no.mappings.found" /></td>
 					<%
 						} else {
 					%>

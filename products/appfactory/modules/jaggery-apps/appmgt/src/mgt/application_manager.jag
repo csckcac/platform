@@ -2,7 +2,7 @@
     include('../process/web_service_util.jag');
 
     //function createNewApplication(applicationKey, applicationName, applicationDescription, userName) {
-    function createNewApplication(applicationName, userName);
+    function createNewApplication(applicationName, userName) {
         try {
             //var result = createApplication(applicationKey, applicationName, applicationDescription);
             var result = createApplication(applicationName, userName);

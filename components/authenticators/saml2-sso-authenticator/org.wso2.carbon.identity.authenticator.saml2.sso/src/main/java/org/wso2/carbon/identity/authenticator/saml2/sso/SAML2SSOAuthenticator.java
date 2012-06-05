@@ -44,6 +44,7 @@ import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.AuthenticationObserver;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -77,7 +78,7 @@ public class SAML2SSOAuthenticator extends AbstractAdmin implements CarbonServer
 
             RegistryService registryService = SAML2SSOAuthBEDataHolder.getInstance().getRegistryService();
             RealmService realmService = SAML2SSOAuthBEDataHolder.getInstance().getRealmService();
-            String tenantDomain = UserCoreUtil.getTenantDomain(realmService, username);
+            String tenantDomain = MultitenantUtils.getTenantDomain(username);
             int tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
             handleAuthenticationStarted(tenantId);
             boolean isSignatureValid = validateSignature(response, tenantDomain);
@@ -90,7 +91,7 @@ public class SAML2SSOAuthenticator extends AbstractAdmin implements CarbonServer
                 return false;
             }
 
-            username = UserCoreUtil.getTenantLessUsername(username);
+            username = MultitenantUtils.getTenantAwareUsername(username);
             UserRealm realm = AnonymousSessionUtil.getRealmByTenantDomain(registryService,
                                                                           realmService, tenantDomain);
 

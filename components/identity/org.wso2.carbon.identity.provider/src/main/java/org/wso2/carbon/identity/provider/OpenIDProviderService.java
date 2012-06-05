@@ -100,7 +100,7 @@ public class OpenIDProviderService {
 		IdentityPersistenceManager persistenceManager =
 		                                                IdentityPersistenceManager.getPersistanceManager();
 		domainName = TenantUtils.getDomainNameFromOpenId(openID);
-		tenantUser = UserCoreUtil.getTenantLessUsername(userName);
+		tenantUser = MultitenantUtils.getTenantAwareUsername(userName);
 
 		XMPPSettingsDO xmppSettingsDO =
 		                                persistenceManager.getXmppSettings(IdentityTenantUtil.getRegistry(domainName,
@@ -172,7 +172,7 @@ public class OpenIDProviderService {
 		OpenIDRememberMeDO rememberMe = null;
 		OpenIDRememberMeDAO dao = null;
 		String token = null;
-		tenantUser = UserCoreUtil.getTenantLessUsername(userName);
+		tenantUser = MultitenantUtils.getTenantAwareUsername(userName);
 
 		rememberMe = new OpenIDRememberMeDO();
 		rememberMe.setOpenID(openID);
@@ -254,7 +254,7 @@ public class OpenIDProviderService {
 		}
 
 		providerInfo.setSubDomain(domain);
-		userName = UserCoreUtil.getTenantLessUsername(userName);
+		userName = MultitenantUtils.getTenantAwareUsername(userName);
 		providerInfo.setUserExist(realm.getUserStoreManager().isExistingUser(userName));
 		providerInfo.setOpenIDProviderServerUrl(IdentityUtil.getProperty(ServerConfig.OPENID_SERVER_URL));
 		providerInfo.setOpenID(IdentityUtil.getProperty(ServerConfig.OPENID_USER_PATTERN) +
@@ -502,7 +502,7 @@ public class OpenIDProviderService {
 		XMPPSettingsDO xmppSettingsDO =
 		                                persistenceManager.getXmppSettings(IdentityTenantUtil.getRegistry(null,
 		                                                                                                  userId),
-		                                                                   UserCoreUtil.getTenantLessUsername(userId));
+		                                                                   MultitenantUtils.getTenantAwareUsername(userId));
 
 		// attempts to do multi-factor authentication, if the user has enabled
 		// it.
@@ -537,7 +537,7 @@ public class OpenIDProviderService {
 
 		try {
 			userName = OpenIDUtil.getUserName(openId);
-			tenatUser = UserCoreUtil.getTenantLessUsername(userName);
+			tenatUser = MultitenantUtils.getTenantAwareUsername(userName);
 
 			domainName = TenantUtils.getDomainNameFromOpenId(openId);
 
@@ -719,7 +719,7 @@ public class OpenIDProviderService {
 
 		userName = OpenIDUtil.getUserName(openId);
 		domainName = TenantUtils.getDomainNameFromOpenId(openId);
-		tenatUser = UserCoreUtil.getTenantLessUsername(userName);
+		tenatUser = MultitenantUtils.getTenantAwareUsername(userName);
 
 		realm = IdentityTenantUtil.getRealm(domainName, userName);
 		userStore = realm.getUserStoreManager();

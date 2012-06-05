@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserRealmService;
 import org.wso2.carbon.user.api.UserStoreException;
-import org.wso2.carbon.user.core.util.UserCoreUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 /**
  * The default implementation of the <code>AuthenticationService</code>
@@ -51,7 +51,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @throws AuthenticationException for failures in the authentication
      */
     public boolean authenticate(String username, String password) throws AuthenticationException {
-        String tenantLessUsername = UserCoreUtil.getTenantLessUsername(username);
+        String tenantLessUsername = MultitenantUtils.getTenantAwareUsername(username);
         try {
             int tenantID = 0;
             if (username.contains("@")) {

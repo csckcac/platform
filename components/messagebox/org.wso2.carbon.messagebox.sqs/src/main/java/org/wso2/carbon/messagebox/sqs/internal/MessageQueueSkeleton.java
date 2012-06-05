@@ -15,6 +15,7 @@ import org.wso2.carbon.messagebox.MessageBoxException;
 import org.wso2.carbon.messagebox.sqs.internal.util.Utils;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -368,7 +369,7 @@ public class MessageQueueSkeleton {
         message.setMd5ofMessageBody(MD5OfMessage);
         message.setMessageId(messageId);
         message.setReceiptHandle(receiptHandler);
-        message.setSenderId(UserCoreUtil.getTenantLessUsername(CarbonContext.getCurrentContext().getUsername()));
+        message.setSenderId(MultitenantUtils.getTenantAwareUsername(CarbonContext.getCurrentContext().getUsername()));
 
 
         try {

@@ -61,6 +61,7 @@ import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.TenantUtils;
 
 import com.google.step2.Step2;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 public class RelyingPartyService extends AbstractAdmin {
 
@@ -264,7 +265,7 @@ public class RelyingPartyService extends AbstractAdmin {
                 }
             }
 
-            String username = UserCoreUtil.getTenantLessUsername(email);
+            String username = MultitenantUtils.getTenantAwareUsername(email);
             if (username == null) {
                 log.error("The username is null");
                 throw new Exception("The username is null");

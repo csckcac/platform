@@ -31,6 +31,7 @@ import org.wso2.carbon.identity.relyingparty.stub.auth.LoggedUserInfoAdminStub;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -95,7 +96,7 @@ public class AuthenticationServiceClient {
                         .getPasswordExpiration());
             }
             session.setAttribute(ServerConstants.ADMIN_SERVICE_COOKIE, cookie);
-            String tenantAwareUserName = UserCoreUtil.getTenantLessUsername(userName);
+            String tenantAwareUserName = MultitenantUtils.getTenantAwareUsername(userName);
             if (userName.equals(tenantAwareUserName)) {
             	 session.setAttribute(MultitenantConstants.IS_MASTER_TENANT,"true");
             }

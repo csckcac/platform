@@ -27,6 +27,7 @@ import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.api.UserStoreManager;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -83,7 +84,7 @@ public class CarbonCassandraAuthority implements IAuthority {
             UserStoreManager userStoreManager = userRealm.getUserStoreManager();
             AuthorizationManager authorizationManager = userRealm.getAuthorizationManager();
 
-            String tenantLessUsername = UserCoreUtil.getTenantLessUsername(authenticatedUser.username);
+            String tenantLessUsername = MultitenantUtils.getTenantAwareUsername(authenticatedUser.username);
 
             switch (action) {
                 case ADD: {

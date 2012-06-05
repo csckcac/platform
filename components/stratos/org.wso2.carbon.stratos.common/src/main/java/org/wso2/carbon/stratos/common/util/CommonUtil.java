@@ -582,7 +582,8 @@ public class CommonUtil {
           }
 
           // check a tenant with same domain exist.
-          if (tenantId > 0 || tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+          if ((tenantId != MultitenantConstants.INVALID_TENANT_ID && tenantId != MultitenantConstants.SUPER_TENANT_ID) ||
+                  tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
               String msg =
                            "A tenant with same domain already exist. " +
                                    "Please use a different domain name. tenant domain: " +

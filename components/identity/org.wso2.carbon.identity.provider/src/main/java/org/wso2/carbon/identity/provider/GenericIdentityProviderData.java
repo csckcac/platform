@@ -41,6 +41,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.claim.Claim;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -299,7 +300,7 @@ public class GenericIdentityProviderData {
             }
         }
         String[] claims = new String[claimList.size()];
-        String userId = UserCoreUtil.getTenantLessUsername(userIdentifier);
+        String userId = MultitenantUtils.getTenantAwareUsername(userIdentifier);
         Map<String, String> mapValues = null;
 
         try {
@@ -313,11 +314,7 @@ public class GenericIdentityProviderData {
             RequestedClaimData claimData = ite.next();
             if (IdentityConstants.CLAIM_TENANT_DOMAIN.equals(claimData.getUri())) {
                 String domainName = null;
-                try {
-                    domainName = UserCoreUtil.getTenantDomain(IdentityProviderServiceComponent.getRealmService(),userIdentifier);
-                } catch (UserStoreException e) {
-                    throw new IdentityProviderException(e.getMessage(), e);
-                }
+                domainName = MultitenantUtils.getTenantDomain(userIdentifier);
                 if (domainName == null) {
                     domainName = IdentityConstants.DEFAULT_SUPER_TENAT;
                 }

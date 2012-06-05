@@ -30,6 +30,7 @@ import org.wso2.carbon.messagebox.internal.utils.Utils;
 import org.wso2.carbon.messagebox.queue.QueueManager;
 import org.wso2.carbon.messagebox.queue.QueueUserPermission;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -619,7 +620,7 @@ public class JMSMessageBoxService implements MessageBoxService {
      * @return Current username
      */
     private String getCurrentUser() {
-        return UserCoreUtil.getTenantLessUsername(CarbonContext.getCurrentContext().getUsername());
+        return MultitenantUtils.getTenantAwareUsername(CarbonContext.getCurrentContext().getUsername());
     }
 
 

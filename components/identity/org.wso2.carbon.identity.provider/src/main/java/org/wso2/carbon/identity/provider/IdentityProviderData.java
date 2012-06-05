@@ -43,6 +43,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.claim.Claim;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.TenantUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 /**
  * Meta-data collection of related to CardSpace required for token issuance.
@@ -139,11 +140,7 @@ public class IdentityProviderData extends GenericIdentityProviderData {
         }
         
         String domain = null;;
-        try {
-            domain = UserCoreUtil.getTenantDomain(IdentityProviderServiceComponent.getRealmService(),userIdentifier);
-        } catch (UserStoreException e) {
-            throw new IdentityProviderException("Invalid tenant domain");
-        }
+        domain = MultitenantUtils.getTenantDomain(userIdentifier);
         return domain;
     }
 

@@ -23,6 +23,7 @@ import org.wso2.carbon.identity.authentication.AuthenticationService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.ThriftSession;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.util.Map;
 import java.util.UUID;
@@ -119,7 +120,7 @@ public class ThriftAuthenticatorServiceImpl extends AbstractAdmin
                 /*call onSuccessLogin in CarbonAuthenticationUtil to initialize registry for this
                 thrift session*/
                 if (realmService != null) {
-                    String tenantDomain = UserCoreUtil.getTenantDomain(realmService, userName);
+                    String tenantDomain = MultitenantUtils.getTenantDomain(userName);
                     int tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
                     CarbonAuthenticationUtil.onSuccessAdminLogin(session, userName, tenantId,
                                                                  tenantDomain, "");

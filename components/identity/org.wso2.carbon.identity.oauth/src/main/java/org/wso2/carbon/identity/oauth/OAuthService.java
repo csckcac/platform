@@ -33,6 +33,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -127,9 +128,8 @@ public class OAuthService {
 	 * @throws Exception
 	 */
 	public Parameters authorizeOauthRequestToken(Parameters params) throws Exception {
-		String tenantUser = UserCoreUtil.getTenantLessUsername(params.getAuthorizedbyUserName());
-		String domainName = UserCoreUtil.getTenantDomain(OAuthServiceComponent.getRealmService(),
-				params.getAuthorizedbyUserName());
+		String tenantUser = MultitenantUtils.getTenantAwareUsername(params.getAuthorizedbyUserName());
+		String domainName = MultitenantUtils.getTenantDomain(params.getAuthorizedbyUserName());
 		boolean isAuthenticated = IdentityTenantUtil
 				.getRealm(domainName, params.getAuthorizedbyUserName()).getUserStoreManager()
 				.authenticate(tenantUser, params.getAuthorizedbyUserPassword());

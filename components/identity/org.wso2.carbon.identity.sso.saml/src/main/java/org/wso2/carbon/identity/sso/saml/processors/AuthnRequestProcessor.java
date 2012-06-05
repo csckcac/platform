@@ -228,7 +228,7 @@ public class AuthnRequestProcessor {
 
             // Check the authentication
             isAuthenticated = userStoreManager.authenticate(
-                    UserCoreUtil.getTenantLessUsername(username), password);
+                    MultitenantUtils.getTenantAwareUsername(username), password);
             if (!isAuthenticated) {
                 if (log.isDebugEnabled()) {
                     log.debug("user authentication failed due to invalid credentials.");
@@ -238,7 +238,7 @@ public class AuthnRequestProcessor {
 
             // Check the authorization
             boolean isAuthorized = realm.getAuthorizationManager().
-                    isUserAuthorized(UserCoreUtil.getTenantLessUsername(username),
+                    isUserAuthorized(MultitenantUtils.getTenantAwareUsername(username),
                                      "/permission/admin/login",
                                      CarbonConstants.UI_PERMISSION_ACTION);
             if (!isAuthorized) {

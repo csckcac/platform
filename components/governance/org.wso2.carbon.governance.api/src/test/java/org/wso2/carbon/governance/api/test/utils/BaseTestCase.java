@@ -16,6 +16,7 @@
 package org.wso2.carbon.governance.api.test.utils;
 
 import junit.framework.TestCase;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.config.RegistryContext;
 import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
@@ -69,7 +70,7 @@ public class BaseTestCase extends TestCase {
          registry = registryService.getGovernanceUserRegistry("admin","admin");*/
 
         registryService = new InMemoryEmbeddedRegistryService(is);
-        registry = registryService.getGovernanceUserRegistry("admin", 0);
+        registry = registryService.getGovernanceUserRegistry("admin", MultitenantConstants.SUPER_TENANT_ID);
         RegistryCoreServiceComponent component = new RegistryCoreServiceComponent() {
             {
                 setRealmService(registryService.getRealmService());

@@ -29,6 +29,7 @@ import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.user.api.UserStoreManager;
 import org.wso2.carbon.user.core.Permission;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 /**
  * Authorization of message boxes for given operations are handled here.
@@ -46,7 +47,7 @@ public class MessageBoxAuthorizationHandler {
      * @throws MessageBoxException if fails to check authorizations
      */
     public boolean isAuthorized(String messageBoxId, String operation) throws MessageBoxException {
-        String loggedInUser = UserCoreUtil.getTenantLessUsername(CarbonContext.getCurrentContext().getUsername());
+        String loggedInUser = MultitenantUtils.getTenantAwareUsername(CarbonContext.getCurrentContext().getUsername());
         try {
             AuthorizationManager authorizationManager = Utils.getUserRelam().getAuthorizationManager();
 

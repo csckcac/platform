@@ -57,7 +57,7 @@ public class OAuthAdminService extends AbstractAdmin {
             log.debug("Adding a consumer secret for the logged in user " + loggedInUser);
         }
 
-        String tenantUser = UserCoreUtil.getTenantLessUsername(loggedInUser);
+        String tenantUser = MultitenantUtils.getTenantAwareUsername(loggedInUser);
         int tenantId = IdentityUtil.getTenantIdOFUser(loggedInUser);
         OAuthAppDAO dao = new OAuthAppDAO();
         return dao.addOAuthConsumer(tenantUser, tenantId);
@@ -82,7 +82,7 @@ public class OAuthAdminService extends AbstractAdmin {
             throw new Exception("User not logged in");
         }
 
-        String tenantUser = UserCoreUtil.getTenantLessUsername(userName);
+        String tenantUser = MultitenantUtils.getTenantAwareUsername(userName);
         int tenantId = IdentityUtil.getTenantIdOFUser(userName);
         OAuthAppDAO dao = new OAuthAppDAO();
         OAuthAppDO[] apps = dao.getOAuthConsumerAppsOfUser(tenantUser, tenantId);
@@ -134,7 +134,7 @@ public class OAuthAdminService extends AbstractAdmin {
     public void registerOAuthApplicationData(OAuthConsumerAppDTO application) throws Exception {
         String userName = getLoggedInUser();
         if (userName != null) {
-            String tenantUser = UserCoreUtil.getTenantLessUsername(userName);
+            String tenantUser = MultitenantUtils.getTenantAwareUsername(userName);
             int tenantId = IdentityUtil.getTenantIdOFUser(userName);
 
             OAuthAppDAO dao = new OAuthAppDAO();

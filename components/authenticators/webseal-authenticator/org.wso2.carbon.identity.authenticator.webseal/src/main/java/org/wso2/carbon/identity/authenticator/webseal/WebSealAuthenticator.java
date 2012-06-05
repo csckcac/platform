@@ -34,6 +34,7 @@ import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.TenantUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 public class WebSealAuthenticator {
 
@@ -73,8 +74,8 @@ public class WebSealAuthenticator {
             RegistryService registryService = WebSealAuthBEDataHolder.getInstance().getRegistryService();
             RealmService realmService = WebSealAuthBEDataHolder.getInstance().getRealmService();
 
-            String tenantDomain = UserCoreUtil.getTenantDomain(realmService, username);
-            username = UserCoreUtil.getTenantLessUsername(username);
+            String tenantDomain = MultitenantUtils.getTenantDomain(username);
+            username = MultitenantUtils.getTenantAwareUsername(username);
 
             UserRealm realm = AnonymousSessionUtil.getRealmByTenantDomain(registryService,
                     realmService, tenantDomain);

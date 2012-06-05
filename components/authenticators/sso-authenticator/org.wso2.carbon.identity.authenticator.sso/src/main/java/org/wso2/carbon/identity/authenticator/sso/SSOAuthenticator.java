@@ -33,6 +33,7 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -56,8 +57,8 @@ public class SSOAuthenticator {
             RegistryService registryService = SSOAuthBEDataHolder.getInstance().getRegistryService();
             RealmService realmService = SSOAuthBEDataHolder.getInstance().getRealmService();
 
-            String tenantDomain = UserCoreUtil.getTenantDomain(realmService, username);
-            username = UserCoreUtil.getTenantLessUsername(username);
+            String tenantDomain = MultitenantUtils.getTenantDomain(username);
+            username = MultitenantUtils.getTenantAwareUsername(username);
 
             UserRealm realm = AnonymousSessionUtil.getRealmByTenantDomain(registryService,
                     realmService, tenantDomain);

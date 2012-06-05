@@ -17,6 +17,7 @@ import org.wso2.carbon.messagebox.MessageBoxService;
 import org.wso2.carbon.messagebox.sqs.internal.util.MessageBoxHolder;
 import org.wso2.carbon.messagebox.sqs.internal.util.Utils;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -36,7 +37,7 @@ public class QueueServiceSkeleton {
      */
 
     public ListQueuesResponse listQueues(ListQueues listQueues) throws AxisFault {
-        String userName = UserCoreUtil.getTenantLessUsername(CarbonContext.getCurrentContext().getUsername());
+        String userName = MultitenantUtils.getTenantAwareUsername(CarbonContext.getCurrentContext().getUsername());
 
         MessageBoxService messageBoxService = Utils.getMessageBoxService();
         String queueNamePrefix = listQueues.getQueueNamePrefix();
@@ -98,7 +99,7 @@ public class QueueServiceSkeleton {
 
     public CreateQueueResponse createQueue(CreateQueue createQueue) throws AxisFault {
 
-        String userName =UserCoreUtil.getTenantLessUsername(CarbonContext.getCurrentContext().getUsername());
+        String userName = MultitenantUtils.getTenantAwareUsername(CarbonContext.getCurrentContext().getUsername());
 
 
         String messageBoxName = createQueue.getQueueName();

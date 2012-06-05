@@ -19,6 +19,7 @@ package org.wso2.carbon.throttling.agent.listeners;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.throttling.agent.ThrottlingAgent;
 import org.wso2.carbon.throttling.agent.cache.TenantThrottlingInfo;
@@ -148,7 +149,7 @@ public class WebAppRequestListener implements CarbonTomcatValve {
             return matcher.group(1);
         }
 
-        return null;
+        return MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
     }
 
     /**

@@ -27,6 +27,7 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,7 +105,7 @@ public class RegistryMessageBoxHandler {
 
     public List<String> getMessageBoxURISuffixes(String queueNamePrefix)
             throws MessageBoxException {
-        String loggedInUserName = UserCoreUtil.getTenantLessUsername(CarbonContext.getCurrentContext().getUsername());
+        String loggedInUserName = MultitenantUtils.getTenantAwareUsername(CarbonContext.getCurrentContext().getUsername());
 
         try {
             UserRegistry userRegistry = Utils.getUserRegistry();

@@ -39,6 +39,7 @@ import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -72,7 +73,7 @@ public class TokenAuthenticator extends AbstractAdmin implements CarbonServerAut
             try {
                 RegistryService registryService = TokenAuthBEDataHolder.getInstance().getRegistryService();
                 RealmService realmService = TokenAuthBEDataHolder.getInstance().getRealmService();
-                String tenantDomain = UserCoreUtil.getTenantDomain(realmService, username);
+                String tenantDomain = MultitenantUtils.getTenantDomain(username);
                 int tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
                 UserRealm realm = registryService.getUserRealm(tenantId);
                 int userId = realm.getUserStoreManager().getUserId(username);

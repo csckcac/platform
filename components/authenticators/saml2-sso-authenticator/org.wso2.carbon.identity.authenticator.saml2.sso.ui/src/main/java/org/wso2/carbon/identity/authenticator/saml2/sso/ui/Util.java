@@ -304,10 +304,6 @@ public class Util {
         AuthenticatorsConfiguration authenticatorsConfiguration = AuthenticatorsConfiguration.getInstance();
         AuthenticatorsConfiguration.AuthenticatorConfig authenticatorConfig =
                 authenticatorsConfiguration.getAuthenticatorConfig(SAML2SSOAuthenticatorConstants.AUTHENTICATOR_NAME);
-        // if the authenticator is disabled, then do not register the servlet filter.
-        if(authenticatorConfig.isDisabled()){
-            return initSuccess;
-        }
         if (authenticatorConfig != null) {
             Map<String, String> parameters = authenticatorConfig.getParameters();
             serviceProviderId = parameters.get(SAML2SSOAuthenticatorConstants.SERVICE_PROVIDER_ID);
@@ -317,6 +313,19 @@ public class Util {
             initSuccess = true;
         }
         return initSuccess;
+    }
+
+    /**
+     * checks whether authenticator enable ot disable
+     *
+     * @return  True/False
+     */
+    public static boolean isAuthenticatorEnabled() {
+        AuthenticatorsConfiguration authenticatorsConfiguration = AuthenticatorsConfiguration.getInstance();
+        AuthenticatorsConfiguration.AuthenticatorConfig authenticatorConfig =
+                authenticatorsConfiguration.getAuthenticatorConfig(SAML2SSOAuthenticatorConstants.AUTHENTICATOR_NAME);
+        // if the authenticator is disabled, then do not register the servlet filter.
+        return !authenticatorConfig.isDisabled();
     }
 
     /**

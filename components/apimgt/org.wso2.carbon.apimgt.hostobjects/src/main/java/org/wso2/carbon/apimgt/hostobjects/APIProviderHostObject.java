@@ -576,8 +576,9 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static NativeArray jsFunction_getSubscriberCountByAPIs(Context cx, Scriptable thisObj,
-                                                Object[] args,
-                                                Function funObj) throws ScriptException {
+                                                                  Object[] args,
+                                                                  Function funObj)
+            throws ScriptException {
         NativeArray myn = new NativeArray(0);
         String providerName = null;
         APIProvider apiProvider = getAPIProvider(thisObj);
@@ -587,12 +588,18 @@ public class APIProviderHostObject extends ScriptableObject {
             }
             providerName = (String) args[0];
             if (providerName != null) {
-                List<API> apiSet = apiProvider.getAPIsByProvider(providerName);
-                Map<String,Long> subscriptions = new TreeMap<String,Long>();
+                List<API> apiSet;
+                if (providerName.equals("__all_providers__")) {
+                    apiSet = apiProvider.getAllAPIs();
+                } else {
+                    apiSet = apiProvider.getAPIsByProvider(providerName);
+                }
+
+                Map<String, Long> subscriptions = new TreeMap<String, Long>();
                 for (API api : apiSet) {
                     if (api.getStatus() == APIStatus.CREATED) {
                         continue;
-                    }                    
+                    }
                     long count = apiProvider.getAPISubscriptionCountByAPI(api.getId());
                     Long currentCount = subscriptions.get(api.getId().getApiName());
                     if (currentCount != null) {
@@ -601,22 +608,22 @@ public class APIProviderHostObject extends ScriptableObject {
                         subscriptions.put(api.getId().getApiName(), count);
                     }
                 }
-                
+
                 int i = 0;
-                for (Map.Entry<String,Long> entry : subscriptions.entrySet()) {
+                for (Map.Entry<String, Long> entry : subscriptions.entrySet()) {
                     NativeObject row = new NativeObject();
                     row.put("apiName", row, entry.getKey());
                     row.put("count", row, entry.getValue().longValue());
                     myn.put(i, myn, row);
                     i++;
-                }                                
+                }
             }
         } catch (APIManagementException e) {
             log.error("Error from registry while getting subscribers of the provider: " + providerName, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return myn;        
+        return myn;
     }
 
     public static NativeArray jsFunction_getTiers(Context cx, Scriptable thisObj,
@@ -684,7 +691,7 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         return myn;
     }
-    
+
     private static int getSubscriberCount(APIIdentifier apiId, Scriptable thisObj) throws APIManagementException {
         APIProvider apiProvider = getAPIProvider(thisObj);
         Set<Subscriber> subs = apiProvider.getSubscribersOfAPI(apiId);
@@ -732,7 +739,7 @@ public class APIProviderHostObject extends ScriptableObject {
             log.error("Error from registry while getting the APIs", e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-        }        
+        }
         return myn;
     }
 
@@ -898,7 +905,7 @@ public class APIProviderHostObject extends ScriptableObject {
             }
 
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting document information for the api: " + 
+            log.error("Error from registry while getting document information for the api: " +
                     apiName + "-" + version, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -1002,7 +1009,7 @@ public class APIProviderHostObject extends ScriptableObject {
             apiProvider.addDocumentation(apiId, doc);
             success = true;
         } catch (APIManagementException e) {
-            log.error("Error from registry while adding the document: " + docName + 
+            log.error("Error from registry while adding the document: " + docName +
                     " for the api :" + apiName + "-" + version, e);
         }
         return success;
@@ -1028,7 +1035,7 @@ public class APIProviderHostObject extends ScriptableObject {
             apiProvider.removeDocumentation(apiId, docName, docType);
             success = true;
         } catch (APIManagementException e) {
-            log.error("Error from registry while removing the document: " + docName + 
+            log.error("Error from registry while removing the document: " + docName +
                     " for the api:" + apiName + "-" + version, e);
         }
         return success;
@@ -1037,7 +1044,7 @@ public class APIProviderHostObject extends ScriptableObject {
     public static boolean jsFunction_createNewAPIVersion(Context cx, Scriptable thisObj,
                                                          Object[] args, Function funObj)
             throws ScriptException {
-        
+
         boolean success = false;
         if (args.length != 4 || !isStringValues(args)) {
             throw new ScriptException("Invalid number of parameters or their types.");
@@ -1096,7 +1103,7 @@ public class APIProviderHostObject extends ScriptableObject {
             }
 
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting subscribers for the API: " + apiName + 
+            log.error("Error from registry while getting subscribers for the API: " + apiName +
                     "-" + version, e);
         }
         return myn;
@@ -1189,7 +1196,7 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIUsage(String providerName, String serverURL) throws ScriptException {
+    public static NativeArray jsFunction_getProviderAPIUsage(String providerName) throws ScriptException {
         List<APIUsageDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
@@ -1246,7 +1253,7 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionUserUsage(String providerName, String apiName, 
+    public static NativeArray jsFunction_getProviderAPIVersionUserUsage(String providerName, String apiName,
                                                                         String version, String serverURL) throws ScriptException {
         List<PerUserAPIUsageDTO> list = null;
         try {
@@ -1305,7 +1312,7 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIServiceTime(String providerName,String serverURL) throws ScriptException {
+    public static NativeArray jsFunction_getProviderAPIServiceTime(String providerName) throws ScriptException {
         List<APIResponseTimeDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();

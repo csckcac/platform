@@ -169,7 +169,14 @@ div div.accordion-inner {
 }
 .themeSelection{
     padding:20px;
-    width:250px;
+    width:400px;
+}
+.navbar .navbar-inner .nav.actions a.themeSelectionLink {
+    margin:5px;
+    color:#444;
+}
+.themeSelection a{
+    color:#000;
 }
 #login-link{
     margin-left:0;

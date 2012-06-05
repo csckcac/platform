@@ -1,0 +1,5 @@
+<%
+        session.put("theme",request.getParameter("themeToApply"));
+        response.sendRedirect(request.getParameter("pathToSend"));
+
+%>

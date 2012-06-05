@@ -25,11 +25,12 @@ function updateApplication(linkObj){
             }
         }, "json");
 }
+
 function deleteApp(linkObj) {
     var theTr = $(linkObj).parent().parent();
     var appName = $(theTr).attr('data-value');
     $('#messageModal').html($('#confirmation-data').html());
-    $('#messageModal h3.modal-title').html('API Provider');
+    $('#messageModal h3.modal-title').html('Confirm Delete');
     $('#messageModal div.modal-body').html('\n\nAre you sure you want to remove the application "' + appName + '"? This will cancel all the existing subscriptions and keys associated with the application.');
     $('#messageModal a.btn-primary').html('Yes');
     $('#messageModal a.btn-other').html('No');
@@ -51,3 +52,16 @@ function deleteApp(linkObj) {
     $('#messageModal').modal();
 
 }
+
+function alertMsg() {
+    $('#applicationTable tr:last').css("background-color", "");
+}
+$(document).ready(function() {
+    if ($.cookie('highlight') != null && $.cookie('highlight') == "true") {
+        $.cookie('highlight', "false");
+
+        $('#applicationTable tr:last').css("background-color", "#d1dce3");
+
+        var t = setTimeout("alertMsg()", 3000);
+    }
+});

@@ -1,4 +1,11 @@
-<% jagg.template("api/documentation", function(inputs, outputs, jagg) { %>
+<% jagg.template("api/documentation", function(inputs, outputs, jagg) {
+var provider=request.getParameter("provider");
+var name=request.getParameter("name");
+var version=request.getParameter("version");
+var reqUrl = request.getRequestURI();
+var docUrl=jagg.getAbsoluteUrl("/site/pages/doc-viewer.jag");
+var docMappedUrl=jagg.getMappedUrl("/site/pages/doc-viewer.jag");
+%>
 <div class="api-documentation">
     <%
     var i, type, length, doc, docs, empty = true, documentations = outputs.documentations;
@@ -19,8 +26,22 @@
                     doc = docs[i];
                 %>
                 <div class="documentation">
-                    <h5><%=doc.name%></h5>
-                    <div class="documentaion-body"><%=doc.summary%></div>
+                    <h6>Name:</h6>
+                    <p><%=doc.name%></p>
+                    <div class="documentaion-body"><h6>Summary:</h6><p><%=doc.summary%></p>
+                    <%if(doc.sourceUrl){%>
+                    <h6>Documentation URL:</h6><p><a href="<%=doc.sourceUrl%>"><%=doc.sourceUrl%></a></p>
+                    <%}else{
+                    %>
+                    <div>
+                     <%if(reqUrl.indexOf(".jag")>=0){%>
+                     <a href="doc-viewer.jag?docName=<%=doc.name%>&name=<%=name%>&version=<%=version%>&provider=<%=provider%>"  target="_blank">Read Document Content</a>
+                     <%}else{%>
+                     <a href="../site/pages/doc-viewer.jag?docName=<%=doc.name%>&name=<%=name%>&version=<%=version%>&provider=<%=provider%>"  target="_blank">Read Document Content</a>
+                     <%}%>
+                    </div>
+                     <%}%>
+                    </div>
                     <hr/>
                 </div>
                 <% } %>

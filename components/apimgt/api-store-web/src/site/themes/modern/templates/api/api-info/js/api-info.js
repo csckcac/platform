@@ -20,11 +20,11 @@ $(document).ready(function () {
         }
         var applicationId = $("#application-list").val();
         if (applicationId == "-") {
-            jagg.message("Please select an application before subscribing");
+            jagg.message("<i class='icon-exclamation-sign' /> Please select an application before subscribing");
             return;
         }
         var api = jagg.api;
-
+        var tier=$("#tiers-list").val();
         $(this).html('Please wait...').attr('disabled', 'disabled');
 
         jagg.post("/site/blocks/subscription/subscription-add/ajax/subscription-add.jag", {
@@ -33,13 +33,13 @@ $(document).ready(function () {
             name:api.name,
             version:api.version,
             provider:api.provider,
-            tier:api.tier
+            tier:tier
         }, function (result) {
             $("#subscribe-button").html('Subscribe');
             $("#subscribe-button").removeAttr('disabled');
             if (result.error == false) {
                 $('#messageModal').html($('#confirmation-data').html());
-                $('#messageModal h3.modal-title').html('API Provider');
+                $('#messageModal h3.modal-title').html('Subscription Successful');
                 $('#messageModal div.modal-body').html('\n\nCongratulations! You have successfully subscribed to the API. Please go to \'My Subscriptions\' page to review your subscription and generate API keys.');
                 $('#messageModal a.btn-primary').html('Go to My Subscriptions');
                 $('#messageModal a.btn-other').html('Stay on this page');

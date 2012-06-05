@@ -87,3 +87,10 @@ $(document).ready(function () {
     }
 
 });
+//Theme Selection Logic
+function applyTheme(elm){
+    $('#themeToApply').val(elm.title);
+    $('#themeSelectForm').submit();
+}
+
+

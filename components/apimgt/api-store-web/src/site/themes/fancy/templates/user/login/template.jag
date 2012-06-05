@@ -4,6 +4,12 @@
         var mod = jagg.module("manager");
         var httpsUrl= mod.getHTTPsURL();
 
+        var currentURL = request.getRequestURI();
+        if(request.getQueryString()){
+            currentURL += "?" + request.getQueryString();
+        }
+
+
 %>
 <% if(user) { %>
        <ul class="nav actions login-sign-up">
@@ -21,16 +27,29 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-weal"></i></a>
               <ul class="dropdown-menu">
                 <li  class="themeSelection"><h3>Select a theme</h3>
-                    <table class="table">
-                        <tr>
-                            <td>
-                                <div class="thumbnail">allsf</div>
-                            </td>
-                            <td>
-                                <div class="thumbnail">allsf</div>
-                            </td>
-                        </tr>
-                    </table></li>
+                    <form id="themeSelectForm" action="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/templates/user/theme/template.jag?theme=modern")%>">
+                        <input type="hidden" id="themeToApply" name="themeToApply" />
+                        <input type="hidden" id="pathToSend" name="pathToSend" value="<%=currentURL%>" />
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <div class="thumbnail">
+                                        <img src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-fancy.png")%>" />
+                                    </div>
+                                    <% if(jagg.getUserTheme() != "fancy") { %>
+                                        <a class="themeSelectionLink" title="fancy" onclick="applyTheme(this)">Apply</a>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <div class="thumbnail"><img src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-modern.png")%>" /></div>
+                                    <% if(jagg.getUserTheme() != "modern") { %>
+                                        <a class="themeSelectionLink" title="modern" onclick="applyTheme(this)">Apply</a>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </li>
               </ul>
             </li>
           </ul>

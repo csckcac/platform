@@ -1,5 +1,5 @@
 <% jagg.template("api/listing", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/"+site.theme+"/utils/ratings/star-generator.js"); %>
+<% var stars = require("/site/themes/"+jagg.getUserTheme()+"/utils/ratings/star-generator.js"); %>
  <div class="thumbnail-custom">
                     <div class="navbar">
                         <div class="navbar-inner">
@@ -34,7 +34,7 @@
                             api = apis[i];
                             thumbURL = api.thumbURL;
                             if(thumbURL && thumbURL.indexOf("images/") == 0) {
-                                thumbURL = site.context + "/site/themes/"+site.theme+"/" + thumbURL;
+                                thumbURL = site.context + "/site/themes/"+jagg.getUserTheme()+"/" + thumbURL;
                             }
                             path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
                         %>
@@ -45,7 +45,7 @@
                                         </a>
                                         <div><a href="<%=path%>" class="link-to-api" title="<%=api.name%>"><%if(api.name.length>12){%><%=api.name.slice(0,10)%>..<%}else{%><%=api.name%><% } %> (<%=api.version%>)</a></div>
                                         <div><a href="<%=path%>" class="link-to-provider"><%=api.provider%></a></div>
-                                        <div class="star-ratings"><%=stars.getStaticStars(site.context, api.rating, site.theme)%></div>
+                                        <div class="star-ratings"><%=stars.getStaticStars(site.context, api.rating, jagg.getUserTheme())%></div>
                                     </div>
                                 </li>
 

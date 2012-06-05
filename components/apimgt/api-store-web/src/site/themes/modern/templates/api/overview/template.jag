@@ -18,6 +18,34 @@
         <%=api.description%>
     </p>
         <% } %>
+
+    <% if(api.bizOwner && api.bizOwner != ""){ %>
+        <h6>Business Owner:</h6>
+    <p>
+        <%=api.bizOwner%>
+    </p>
+    <% } %>
+     <% if(api.bizOwnerMail && api.bizOwnerMail != ""){ %>
+        <h6>Business Owner Email:</h6>
+    <p><a href="mailto:<%=api.bizOwnerMail%>">
+    <%=api.bizOwnerMail%></a>
+    </p>
+    <% } %>
+
+     <% if(api.techOwner && api.techOwner != ""){ %>
+        <h6>Technical Owner:</h6>
+    <p>
+        <%=api.techOwner%>
+    </p>
+    <% } %>
+
+    <% if(api.techOwnerMail && api.techOwnerMail != ""){ %>
+        <h6>Technical Owner Email:</h6>
+    <p><a href="mailto:<%=api.techOwnerMail%>">
+    <%=api.techOwnerMail%></a>
+    </p>
+    <% } %>
+
     <h3>Comments:</h3>
     <% if(user) jagg.includeBlock("comment/comment-add", null); %>
     <% jagg.includeBlock("comment/comment-list", {api:api}); %>

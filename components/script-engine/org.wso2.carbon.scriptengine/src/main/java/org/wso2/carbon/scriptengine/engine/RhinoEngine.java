@@ -56,7 +56,7 @@ public class RhinoEngine {
     public RhinoEngine(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
         Context cx = enterContext();
-        setEngineScope(cx, new CarbonTopLevel(cx, false));
+        setEngineScope(cx, removeUnsafeObjects(new CarbonTopLevel(cx, false)));
         exitContext();
     }
 
@@ -294,7 +294,7 @@ public class RhinoEngine {
      */
     public ScriptableObject getRuntimeScope() {
         Context cx = enterContext();
-        ScriptableObject global = new CarbonTopLevel(cx, false);
+        ScriptableObject global = removeUnsafeObjects(new CarbonTopLevel(cx, false));
         ScriptableObject parentScope = (ScriptableObject) cx.newObject(global);
         ScriptableObject scope = (ScriptableObject) cx.newObject(global);
 
@@ -482,6 +482,32 @@ public class RhinoEngine {
         } finally {
             exitContext();
         }
+    }
+
+    private static ScriptableObject removeUnsafeObjects(ScriptableObject scope) {
+        /**
+         * TODO : go through ECMAScript and E4X specs and remove unwanted objects from following values
+         * QName, TypeError, isNaN, isFinite, ConversionError, EvalError, encodeURI, Boolean, Call, Iterator, Array,
+         * XML, unescape, URIError, decodeURI, Infinity, SyntaxError, Date, String, encodeURIComponent, RangeError,
+         * ReferenceError, RegExp, With, Function, InternalError, NaN, Number, escape, XMLList, Math, JavaException,
+         * parseFloat, Error, undefined, parseInt, Object, Continuation, decodeURIComponent, StopIteration, log,
+         * Namespace, isXMLName, global, eval
+        */
+        scope.delete("JavaAdapter");
+        scope.delete("org");
+        scope.delete("java");
+        scope.delete("JavaImporter");
+        scope.delete("Script");
+        scope.delete("edu");
+        scope.delete("uneval");
+        scope.delete("javax");
+        scope.delete("getClass");
+        scope.delete("com");
+        scope.delete("net");
+        scope.delete("Packages");
+        scope.delete("importClass");
+        scope.delete("importPackage");
+        return scope;
     }
 
     private static void copyEngineScope(ScriptableObject engineScope, ScriptableObject scope) {

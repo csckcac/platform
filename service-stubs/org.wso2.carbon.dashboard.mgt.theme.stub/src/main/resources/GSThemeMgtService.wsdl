@@ -1,26 +1,22 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-                  xmlns:ax2161="http://common.theme.mgt.dashboard.carbon.wso2.org/xsd"
-                  xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://org.wso2.wsf/tools"
-                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
-                  xmlns:tns="http://theme.mgt.dashboard.carbon.wso2.org"
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd"
+                  xmlns:ns="http://org.wso2.wsf/tools" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
                   xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
-                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://theme.mgt.dashboard.carbon.wso2.org"
+                  xmlns:ax2156="http://common.theme.mgt.dashboard.carbon.wso2.org/xsd"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
                   xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
                   targetNamespace="http://theme.mgt.dashboard.carbon.wso2.org">
-    <wsdl:documentation>ThemeMgtService</wsdl:documentation>
+    <wsdl:documentation>GSThemeMgtService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax2162="http://common.theme.mgt.dashboard.carbon.wso2.org/xsd"
-                   attributeFormDefault="qualified" elementFormDefault="qualified"
-                   targetNamespace="http://org.wso2.wsf/tools">
+        <xs:schema xmlns:ax2157="http://common.theme.mgt.dashboard.carbon.wso2.org/xsd" attributeFormDefault="qualified"
+                   elementFormDefault="qualified" targetNamespace="http://org.wso2.wsf/tools">
             <xs:import namespace="http://common.theme.mgt.dashboard.carbon.wso2.org/xsd"/>
-            <xs:element name="ThemeMgtServiceException">
+            <xs:element name="GSThemeMgtServiceException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="ThemeMgtServiceException" nillable="true"
+                        <xs:element minOccurs="0" name="GSThemeMgtServiceException" nillable="true"
                                     type="ns:Exception"/>
-
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -30,18 +26,15 @@
                 </xs:sequence>
             </xs:complexType>
             <xs:element name="setThemeForUser">
-
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="themePath" nillable="true"
-                                    type="xs:string"/>
+                        <xs:element minOccurs="0" name="themePath" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="user" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="setThemeForUserResponse">
                 <xs:complexType>
-
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:boolean"/>
                     </xs:sequence>
@@ -51,7 +44,6 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="user" nillable="true" type="xs:string"/>
-
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -61,18 +53,16 @@
                         <xs:element minOccurs="0" name="user" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
-
             </xs:element>
             <xs:element name="getThemesResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return"
-                                    nillable="true" type="ax2161:Theme"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true"
+                                    type="ax2156:Theme"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="getDefaultThemeForUser">
-
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="user" nillable="true" type="xs:string"/>
@@ -82,7 +72,6 @@
             <xs:element name="getDefaultThemeForUserResponse">
                 <xs:complexType>
                     <xs:sequence>
-
                         <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -91,15 +80,10 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="path" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="mediaType" nillable="true"
-                                    type="xs:string"/>
-
-                        <xs:element minOccurs="0" name="description" nillable="true"
-                                    type="xs:string"/>
-                        <xs:element minOccurs="0" name="content" nillable="true"
-                                    type="xs:base64Binary"/>
-                        <xs:element minOccurs="0" name="symlinkLocation" nillable="true"
-                                    type="xs:string"/>
+                        <xs:element minOccurs="0" name="mediaType" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="description" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="content" nillable="true" type="xs:base64Binary"/>
+                        <xs:element minOccurs="0" name="symlinkLocation" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -107,7 +91,6 @@
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
                    targetNamespace="http://common.theme.mgt.dashboard.carbon.wso2.org/xsd">
             <xs:complexType name="Theme">
-
                 <xs:sequence>
                     <xs:element minOccurs="0" name="cssUrl" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="themeAuthor" nillable="true" type="xs:string"/>
@@ -117,17 +100,15 @@
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
-
     </wsdl:types>
     <wsdl:message name="rollbackToDefaultGSThemeRequest">
         <wsdl:part name="parameters" element="ns:rollbackToDefaultGSTheme"/>
     </wsdl:message>
-    <wsdl:message name="ThemeMgtServiceException">
-        <wsdl:part name="parameters" element="ns:ThemeMgtServiceException"/>
+    <wsdl:message name="GSThemeMgtServiceException">
+        <wsdl:part name="parameters" element="ns:GSThemeMgtServiceException"/>
     </wsdl:message>
     <wsdl:message name="getDefaultThemeForUserRequest">
         <wsdl:part name="parameters" element="ns:getDefaultThemeForUser"/>
-
     </wsdl:message>
     <wsdl:message name="getDefaultThemeForUserResponse">
         <wsdl:part name="parameters" element="ns:getDefaultThemeForUserResponse"/>
@@ -137,7 +118,6 @@
     </wsdl:message>
     <wsdl:message name="setThemeForUserRequest">
         <wsdl:part name="parameters" element="ns:setThemeForUser"/>
-
     </wsdl:message>
     <wsdl:message name="setThemeForUserResponse">
         <wsdl:part name="parameters" element="ns:setThemeForUserResponse"/>
@@ -147,56 +127,47 @@
     </wsdl:message>
     <wsdl:message name="getThemesResponse">
         <wsdl:part name="parameters" element="ns:getThemesResponse"/>
-
     </wsdl:message>
-    <wsdl:portType name="ThemeMgtServicePortType">
+    <wsdl:portType name="GSThemeMgtServicePortType">
         <wsdl:operation name="rollbackToDefaultGSTheme">
-            <wsdl:input message="tns:rollbackToDefaultGSThemeRequest"
-                        wsaw:Action="urn:rollbackToDefaultGSTheme"/>
-            <wsdl:fault message="tns:ThemeMgtServiceException" name="ThemeMgtServiceException"
-                        wsaw:Action="urn:rollbackToDefaultGSThemeThemeMgtServiceException"/>
+            <wsdl:input message="tns:rollbackToDefaultGSThemeRequest" wsaw:Action="urn:rollbackToDefaultGSTheme"/>
+            <wsdl:fault message="tns:GSThemeMgtServiceException" name="GSThemeMgtServiceException"
+                        wsaw:Action="urn:rollbackToDefaultGSThemeGSThemeMgtServiceException"/>
         </wsdl:operation>
         <wsdl:operation name="getDefaultThemeForUser">
-            <wsdl:input message="tns:getDefaultThemeForUserRequest"
-                        wsaw:Action="urn:getDefaultThemeForUser"/>
-            <wsdl:output message="tns:getDefaultThemeForUserResponse"
-                         wsaw:Action="urn:getDefaultThemeForUserResponse"/>
-
-            <wsdl:fault message="tns:ThemeMgtServiceException" name="ThemeMgtServiceException"
-                        wsaw:Action="urn:getDefaultThemeForUserThemeMgtServiceException"/>
+            <wsdl:input message="tns:getDefaultThemeForUserRequest" wsaw:Action="urn:getDefaultThemeForUser"/>
+            <wsdl:output message="tns:getDefaultThemeForUserResponse" wsaw:Action="urn:getDefaultThemeForUserResponse"/>
+            <wsdl:fault message="tns:GSThemeMgtServiceException" name="GSThemeMgtServiceException"
+                        wsaw:Action="urn:getDefaultThemeForUserGSThemeMgtServiceException"/>
         </wsdl:operation>
         <wsdl:operation name="addResource">
             <wsdl:input message="tns:addResourceRequest" wsaw:Action="urn:addResource"/>
-            <wsdl:fault message="tns:ThemeMgtServiceException" name="ThemeMgtServiceException"
-                        wsaw:Action="urn:addResourceThemeMgtServiceException"/>
+            <wsdl:fault message="tns:GSThemeMgtServiceException" name="GSThemeMgtServiceException"
+                        wsaw:Action="urn:addResourceGSThemeMgtServiceException"/>
         </wsdl:operation>
         <wsdl:operation name="setThemeForUser">
             <wsdl:input message="tns:setThemeForUserRequest" wsaw:Action="urn:setThemeForUser"/>
-            <wsdl:output message="tns:setThemeForUserResponse"
-                         wsaw:Action="urn:setThemeForUserResponse"/>
-
-            <wsdl:fault message="tns:ThemeMgtServiceException" name="ThemeMgtServiceException"
-                        wsaw:Action="urn:setThemeForUserThemeMgtServiceException"/>
+            <wsdl:output message="tns:setThemeForUserResponse" wsaw:Action="urn:setThemeForUserResponse"/>
+            <wsdl:fault message="tns:GSThemeMgtServiceException" name="GSThemeMgtServiceException"
+                        wsaw:Action="urn:setThemeForUserGSThemeMgtServiceException"/>
         </wsdl:operation>
         <wsdl:operation name="getThemes">
             <wsdl:input message="tns:getThemesRequest" wsaw:Action="urn:getThemes"/>
             <wsdl:output message="tns:getThemesResponse" wsaw:Action="urn:getThemesResponse"/>
-            <wsdl:fault message="tns:ThemeMgtServiceException" name="ThemeMgtServiceException"
-                        wsaw:Action="urn:getThemesThemeMgtServiceException"/>
+            <wsdl:fault message="tns:GSThemeMgtServiceException" name="GSThemeMgtServiceException"
+                        wsaw:Action="urn:getThemesGSThemeMgtServiceException"/>
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="ThemeMgtServiceSoap11Binding" type="tns:ThemeMgtServicePortType">
-
+    <wsdl:binding name="GSThemeMgtServiceSoap11Binding" type="tns:GSThemeMgtServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
         <wsdl:operation name="rollbackToDefaultGSTheme">
             <soap:operation soapAction="urn:rollbackToDefaultGSTheme" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
-            <wsdl:fault name="ThemeMgtServiceException">
-                <soap:fault use="literal" name="ThemeMgtServiceException"/>
+            <wsdl:fault name="GSThemeMgtServiceException">
+                <soap:fault use="literal" name="GSThemeMgtServiceException"/>
             </wsdl:fault>
-
         </wsdl:operation>
         <wsdl:operation name="getDefaultThemeForUser">
             <soap:operation soapAction="urn:getDefaultThemeForUser" style="document"/>
@@ -206,9 +177,8 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
-
-            <wsdl:fault name="ThemeMgtServiceException">
-                <soap:fault use="literal" name="ThemeMgtServiceException"/>
+            <wsdl:fault name="GSThemeMgtServiceException">
+                <soap:fault use="literal" name="GSThemeMgtServiceException"/>
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="addResource">
@@ -216,9 +186,8 @@
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
-
-            <wsdl:fault name="ThemeMgtServiceException">
-                <soap:fault use="literal" name="ThemeMgtServiceException"/>
+            <wsdl:fault name="GSThemeMgtServiceException">
+                <soap:fault use="literal" name="GSThemeMgtServiceException"/>
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="setThemeForUser">
@@ -226,39 +195,35 @@
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
-
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
-            <wsdl:fault name="ThemeMgtServiceException">
-                <soap:fault use="literal" name="ThemeMgtServiceException"/>
+            <wsdl:fault name="GSThemeMgtServiceException">
+                <soap:fault use="literal" name="GSThemeMgtServiceException"/>
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="getThemes">
             <soap:operation soapAction="urn:getThemes" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
-            <wsdl:fault name="ThemeMgtServiceException">
-                <soap:fault use="literal" name="ThemeMgtServiceException"/>
+            <wsdl:fault name="GSThemeMgtServiceException">
+                <soap:fault use="literal" name="GSThemeMgtServiceException"/>
             </wsdl:fault>
-
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:binding name="ThemeMgtServiceSoap12Binding" type="tns:ThemeMgtServicePortType">
+    <wsdl:binding name="GSThemeMgtServiceSoap12Binding" type="tns:GSThemeMgtServicePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
         <wsdl:operation name="rollbackToDefaultGSTheme">
             <soap12:operation soapAction="urn:rollbackToDefaultGSTheme" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
-
-            <wsdl:fault name="ThemeMgtServiceException">
-                <soap12:fault use="literal" name="ThemeMgtServiceException"/>
+            <wsdl:fault name="GSThemeMgtServiceException">
+                <soap12:fault use="literal" name="GSThemeMgtServiceException"/>
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="getDefaultThemeForUser">
@@ -266,37 +231,33 @@
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
-
             <wsdl:output>
                 <soap12:body use="literal"/>
             </wsdl:output>
-            <wsdl:fault name="ThemeMgtServiceException">
-                <soap12:fault use="literal" name="ThemeMgtServiceException"/>
+            <wsdl:fault name="GSThemeMgtServiceException">
+                <soap12:fault use="literal" name="GSThemeMgtServiceException"/>
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="addResource">
             <soap12:operation soapAction="urn:addResource" style="document"/>
-
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
-            <wsdl:fault name="ThemeMgtServiceException">
-                <soap12:fault use="literal" name="ThemeMgtServiceException"/>
+            <wsdl:fault name="GSThemeMgtServiceException">
+                <soap12:fault use="literal" name="GSThemeMgtServiceException"/>
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="setThemeForUser">
             <soap12:operation soapAction="urn:setThemeForUser" style="document"/>
-
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
             <wsdl:output>
                 <soap12:body use="literal"/>
             </wsdl:output>
-            <wsdl:fault name="ThemeMgtServiceException">
-                <soap12:fault use="literal" name="ThemeMgtServiceException"/>
+            <wsdl:fault name="GSThemeMgtServiceException">
+                <soap12:fault use="literal" name="GSThemeMgtServiceException"/>
             </wsdl:fault>
-
         </wsdl:operation>
         <wsdl:operation name="getThemes">
             <soap12:operation soapAction="urn:getThemes" style="document"/>
@@ -306,17 +267,15 @@
             <wsdl:output>
                 <soap12:body use="literal"/>
             </wsdl:output>
-
-            <wsdl:fault name="ThemeMgtServiceException">
-                <soap12:fault use="literal" name="ThemeMgtServiceException"/>
+            <wsdl:fault name="GSThemeMgtServiceException">
+                <soap12:fault use="literal" name="GSThemeMgtServiceException"/>
             </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:binding name="ThemeMgtServiceHttpBinding" type="tns:ThemeMgtServicePortType">
+    <wsdl:binding name="GSThemeMgtServiceHttpBinding" type="tns:GSThemeMgtServicePortType">
         <http:binding verb="POST"/>
         <wsdl:operation name="rollbackToDefaultGSTheme">
             <http:operation location="rollbackToDefaultGSTheme"/>
-
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
@@ -326,7 +285,6 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
-
             <wsdl:output>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:output>
@@ -336,7 +294,6 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
-
         </wsdl:operation>
         <wsdl:operation name="setThemeForUser">
             <http:operation location="setThemeForUser"/>
@@ -346,7 +303,6 @@
             <wsdl:output>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:output>
-
         </wsdl:operation>
         <wsdl:operation name="getThemes">
             <http:operation location="getThemes"/>
@@ -356,39 +312,31 @@
             <wsdl:output>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:output>
-
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:service name="ThemeMgtService">
-        <wsdl:port name="ThemeMgtServiceHttpsSoap11Endpoint"
-                   binding="tns:ThemeMgtServiceSoap11Binding">
+    <wsdl:service name="GSThemeMgtService">
+        <wsdl:port name="GSThemeMgtServiceHttpsSoap11Endpoint" binding="tns:GSThemeMgtServiceSoap11Binding">
             <soap:address
-                    location="https://10.100.0.33:8443/services/ThemeMgtService.ThemeMgtServiceHttpsSoap11Endpoint/"/>
+                    location="https://10.100.3.38:9443/services/GSThemeMgtService.GSThemeMgtServiceHttpsSoap11Endpoint/"/>
         </wsdl:port>
-        <wsdl:port name="ThemeMgtServiceHttpSoap11Endpoint"
-                   binding="tns:ThemeMgtServiceSoap11Binding">
+        <wsdl:port name="GSThemeMgtServiceHttpSoap11Endpoint" binding="tns:GSThemeMgtServiceSoap11Binding">
             <soap:address
-                    location="http://10.100.0.33:8080/services/ThemeMgtService.ThemeMgtServiceHttpSoap11Endpoint/"/>
+                    location="http://10.100.3.38:9763/services/GSThemeMgtService.GSThemeMgtServiceHttpSoap11Endpoint/"/>
         </wsdl:port>
-
-        <wsdl:port name="ThemeMgtServiceHttpsSoap12Endpoint"
-                   binding="tns:ThemeMgtServiceSoap12Binding">
+        <wsdl:port name="GSThemeMgtServiceHttpSoap12Endpoint" binding="tns:GSThemeMgtServiceSoap12Binding">
             <soap12:address
-                    location="https://10.100.0.33:8443/services/ThemeMgtService.ThemeMgtServiceHttpsSoap12Endpoint/"/>
+                    location="http://10.100.3.38:9763/services/GSThemeMgtService.GSThemeMgtServiceHttpSoap12Endpoint/"/>
         </wsdl:port>
-        <wsdl:port name="ThemeMgtServiceHttpSoap12Endpoint"
-                   binding="tns:ThemeMgtServiceSoap12Binding">
+        <wsdl:port name="GSThemeMgtServiceHttpsSoap12Endpoint" binding="tns:GSThemeMgtServiceSoap12Binding">
             <soap12:address
-                    location="http://10.100.0.33:8080/services/ThemeMgtService.ThemeMgtServiceHttpSoap12Endpoint/"/>
+                    location="https://10.100.3.38:9443/services/GSThemeMgtService.GSThemeMgtServiceHttpsSoap12Endpoint/"/>
         </wsdl:port>
-        <wsdl:port name="ThemeMgtServiceHttpEndpoint" binding="tns:ThemeMgtServiceHttpBinding">
-            <http:address
-                    location="http://10.100.0.33:8080/services/ThemeMgtService.ThemeMgtServiceHttpEndpoint/"/>
+        <wsdl:port name="GSThemeMgtServiceHttpEndpoint" binding="tns:GSThemeMgtServiceHttpBinding">
+            <http:address location="http://10.100.3.38:9763/services/GSThemeMgtService.GSThemeMgtServiceHttpEndpoint/"/>
         </wsdl:port>
-
-        <wsdl:port name="ThemeMgtServiceHttpsEndpoint" binding="tns:ThemeMgtServiceHttpBinding">
+        <wsdl:port name="GSThemeMgtServiceHttpsEndpoint" binding="tns:GSThemeMgtServiceHttpBinding">
             <http:address
-                    location="https://10.100.0.33:8443/services/ThemeMgtService.ThemeMgtServiceHttpsEndpoint/"/>
+                    location="https://10.100.3.38:9443/services/GSThemeMgtService.GSThemeMgtServiceHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

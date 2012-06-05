@@ -248,9 +248,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.subversion.feature:${carbon.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.issue.tracker.feature:${carbon.version}
-                                </featureArtifactDef>
 
                                 <!-- GApp SSO features -->
                                 <featureArtifactDef>
@@ -577,10 +574,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.deployment.synchronizer.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.issue.tracker.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <!-- GApp SSO features -->

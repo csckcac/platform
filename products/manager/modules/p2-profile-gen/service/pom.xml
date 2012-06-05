@@ -151,7 +151,6 @@
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.feature:${carbon.version}
                                 </featureArtifactDef>		
-   				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.issue.tracker.feature:${carbon.version}</featureArtifactDef>		
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}</featureArtifactDef>
 
                                 <!-- Status Monitor Feature. Uncomment, if you want the manager to be used as a Stratos Status Monitor --> 
@@ -334,10 +333,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.load.balance.agent.server.feature.group</id>
                                     <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.issue.tracker.feature.group</id>
-                                    <version>${carbon.version}</version>
                                 </feature>
 				<feature>
                                     <id>org.wso2.carbon.stratos.usage.server.feature.group</id>

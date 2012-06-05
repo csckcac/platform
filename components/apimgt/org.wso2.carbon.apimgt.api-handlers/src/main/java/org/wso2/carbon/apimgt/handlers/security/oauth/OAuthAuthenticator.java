@@ -18,6 +18,7 @@ package org.wso2.carbon.apimgt.handlers.security.oauth;
 
 import org.apache.http.HttpHeaders;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.wso2.carbon.apimgt.handlers.internal.ServiceReferenceHolder;
@@ -42,7 +43,7 @@ public class OAuthAuthenticator implements Authenticator {
     private String oauthHeaderSplitter = ",";
     private String consumerKeySegmentDelimiter = " ";
 
-    public OAuthAuthenticator() {
+    public void init(SynapseEnvironment env) {
         this.keyValidator = new APIKeyValidator();
         initOAuthParams();
     }

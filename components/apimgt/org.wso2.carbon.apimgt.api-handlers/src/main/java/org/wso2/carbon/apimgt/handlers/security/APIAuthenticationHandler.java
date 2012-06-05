@@ -24,10 +24,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import org.apache.synapse.Mediator;
-import org.apache.synapse.MessageContext;
-import org.apache.synapse.SynapseConstants;
-import org.apache.synapse.SynapseException;
+import org.apache.synapse.*;
+import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.Axis2Sender;
 import org.apache.synapse.rest.AbstractHandler;
@@ -51,25 +49,34 @@ import java.util.Map;
  * If no authentication errors are encountered, this will add some AuthenticationContext
  * information to the request and let it through to the next handler in the chain.
  */
-public class APIAuthenticationHandler extends AbstractHandler {
+public class APIAuthenticationHandler extends AbstractHandler implements ManagedLifecycle {
     
     private static final Log log = LogFactory.getLog(APIAuthenticationHandler.class);
 
     private volatile Authenticator authenticator;
-    
-    public APIAuthenticationHandler() {
 
+    public void init(SynapseEnvironment synapseEnvironment) {
+        log.debug("Initializing API authentication handler instance");
+        String authenticatorType = ServiceReferenceHolder.getInstance().getAPIManagerConfiguration().
+                getFirstProperty(APISecurityConstants.API_SECURITY_AUTHENTICATOR);
+        if (authenticatorType == null) {
+            authenticatorType = OAuthAuthenticator.class.getName();
+        }
+        try {
+            authenticator = (Authenticator) Class.forName(authenticatorType).newInstance();
+        } catch (Exception e) {
+            // Just throw it here - Synapse will handle it
+            throw new SynapseException("Error while initializing authenticator of " +
+                    "type: " + authenticatorType);
+        }
+        authenticator.init(synapseEnvironment);
+    }
+
+    public void destroy() {
+        log.debug("Destroying API authentication handler instance");
     }
 
     public boolean handleRequest(MessageContext messageContext) {
-        if (authenticator == null) {
-            synchronized (this) {
-                if (authenticator == null) {
-                    initAuthenticator();
-                }
-            }
-        }
-
         try {
             if (authenticator.authenticate(messageContext)) {
                 return true;
@@ -83,21 +90,6 @@ public class APIAuthenticationHandler extends AbstractHandler {
 
     public boolean handleResponse(MessageContext messageContext) {
         return true;
-    }
-
-    private void initAuthenticator() {
-        String authenticatorType = ServiceReferenceHolder.getInstance().getAPIManagerConfiguration().
-                getFirstProperty(APISecurityConstants.API_SECURITY_AUTHENTICATOR);
-        if (authenticatorType == null) {
-            authenticatorType = OAuthAuthenticator.class.getName();
-        }
-        try {
-            authenticator = (Authenticator) Class.forName(authenticatorType).newInstance();
-        } catch (Exception e) {
-            // Just throw it here - Synapse will handle it
-            throw new SynapseException("Error while initializing authenticator of " +
-                    "type: " + authenticatorType);
-        }
     }
 
     private void handleAuthFailure(MessageContext messageContext, APISecurityException e) {

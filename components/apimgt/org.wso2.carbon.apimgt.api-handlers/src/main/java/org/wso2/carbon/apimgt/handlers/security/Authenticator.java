@@ -17,6 +17,7 @@
 package org.wso2.carbon.apimgt.handlers.security;
 
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.core.SynapseEnvironment;
 
 /**
  * Interface through which API consumers are authenticated. An implementation of this interface
@@ -25,6 +26,13 @@ import org.apache.synapse.MessageContext;
  * are signaled by throwing an APISecurityException.
  */
 public interface Authenticator {
+
+    /**
+     * Initializes this authenticator instance.
+     *
+     * @param env Current SynapseEnvironment instance containing the global/tenant configuration
+     */
+    public void init(SynapseEnvironment env);
 
     /**
      * Authenticates the given request to see if an API consumer is allowed to access

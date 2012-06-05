@@ -61,8 +61,6 @@ public class OpenJPAVendorAdapter extends AbstractJPAVendorAdapter {
             //Using managed transactions
             jpaProperties.put("openjpa.ConnectionFactoryMode", "managed");
             jpaProperties.put("openjpa.ManagedRuntime", new TransactionManagerProvider(transactionManager));
-        } else {
-            log.error("openjpa.ManagedRuntime property is not set.");
         }
 
         jpaProperties.put("openjpa.Id", "Attachment-Mgt-PU");

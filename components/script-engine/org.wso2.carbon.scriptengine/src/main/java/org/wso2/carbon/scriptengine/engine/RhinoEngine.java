@@ -25,7 +25,6 @@ public class RhinoEngine {
 
     private static final Log log = LogFactory.getLog(RhinoEngine.class);
 
-    private static ScriptableObject global;
     private static ContextFactory contextFactory;
 
     private CacheManager cacheManager;
@@ -34,9 +33,6 @@ public class RhinoEngine {
     static {
         contextFactory = new CarbonContextFactory();
         ContextFactory.initGlobal(contextFactory);
-        Context cx = enterContext();
-        global = new CarbonTopLevel(cx, true);
-        exitContext();
     }
 
     /**
@@ -60,7 +56,7 @@ public class RhinoEngine {
     public RhinoEngine(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
         Context cx = enterContext();
-        setEngineScope(cx, global);
+        setEngineScope(cx, new CarbonTopLevel(cx, false));
         exitContext();
     }
 
@@ -298,11 +294,19 @@ public class RhinoEngine {
      */
     public ScriptableObject getRuntimeScope() {
         Context cx = enterContext();
-        ScriptableObject runtimeScope = (ScriptableObject) cx.newObject(engineScope);
-        runtimeScope.setPrototype(engineScope);
-        runtimeScope.setParentScope(engineScope);
+        ScriptableObject global = new CarbonTopLevel(cx, false);
+        ScriptableObject parentScope = (ScriptableObject) cx.newObject(global);
+        ScriptableObject scope = (ScriptableObject) cx.newObject(global);
+
+        parentScope.setPrototype(global);
+        parentScope.setParentScope(null);
+
+        scope.setPrototype(parentScope);
+        scope.setParentScope(parentScope);
+        copyEngineScope(engineScope, parentScope);
+
         exitContext();
-        return runtimeScope;
+        return scope;
     }
 
     /**
@@ -477,6 +481,14 @@ public class RhinoEngine {
             throw new ScriptException(e);
         } finally {
             exitContext();
+        }
+    }
+
+    private static void copyEngineScope(ScriptableObject engineScope, ScriptableObject scope) {
+        Object[] objs = engineScope.getAllIds();
+        for(Object obj : objs) {
+            String id = (String) obj;
+            scope.put(id, scope, engineScope.get(id, engineScope));
         }
     }
 }

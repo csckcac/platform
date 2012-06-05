@@ -12,11 +12,11 @@
     <!--SSO relying party configuration.-->
     <SSORelyingParty>
         <Name>WSO2 AppFactory Application Management</Name>
-        <IdentityProviderURL>https://localhost:9444/samlsso</IdentityProviderURL>
+        <IdentityProviderURL>https://localhost:9443/samlsso</IdentityProviderURL>
         <KeyStorePassword>wso2carbon</KeyStorePassword>
         <IdentityKeyAlias>wso2carbon</IdentityKeyAlias>
         <KeyStoreName>
-            /mnt/appfactory/wso2appfactory-1.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks
+			${carbon.home}/repository/resources/security/wso2carbon.jks
         </KeyStoreName>
     </SSORelyingParty>
 

@@ -19,7 +19,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.billing.core.dataobjects.Customer;
 import org.wso2.carbon.billing.core.dataobjects.Subscription;
-import org.wso2.carbon.billing.core.internal.BillingServiceComponent;
 import org.wso2.carbon.billing.core.internal.Util;
 import org.wso2.carbon.billing.core.jdbc.DataAccessObject;
 import org.wso2.carbon.stratos.common.exception.StratosException;
@@ -71,6 +70,19 @@ public class DataAccessManager {
             throw new BillingException(msg, e);
         }
         return subscriptionId;
+    }
+
+    public void deleteBillingData(int tenantId) throws BillingException {
+        try {
+            beginTransaction();
+            dataAccessObject.deleteBillingData(tenantId);
+            commitTransaction();
+        } catch (Exception e) {
+            rollbackTransaction();
+            String msg = "Error occurred while deleting subscription for tenant id: " + tenantId ;
+            log.error(msg, e);
+            throw new BillingException(msg, e);
+        }
     }
 
     public List<Customer> getCustomersWithName(String customerName) throws BillingException {

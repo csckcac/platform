@@ -801,6 +801,85 @@ public class DataAccessObject {
         return subscriptionId;
     }
 
+    public void deleteBillingData(int tenantId) throws Exception {
+        Connection conn = Transaction.getConnection();
+        PreparedStatement deleteSubItemPs = null;
+        PreparedStatement deleteInvoiceSubsPs = null;
+        PreparedStatement deletePaymentSubsPs = null;
+        PreparedStatement deletePaymentPs = null;
+        PreparedStatement deleteInvoicePs = null;
+        PreparedStatement deleteSubscriptionPs = null;
+        try {
+            conn.setAutoCommit(false);
+            String deleteSubItemRecordsSql = "DELETE FROM BC_INVOICE_SUBSCRIPTION_ITEM WHERE BC_INVOICE_SUBSCRIPTION_ID IN " +
+                                             "(SELECT BC_ID FROM BC_INVOICE_SUBSCRIPTION WHERE BC_INVOICE_ID IN " +
+                                             "(SELECT BC_ID FROM BC_INVOICE WHERE BC_TENANT_ID = ?));";
+            deleteSubItemPs = conn.prepareStatement(deleteSubItemRecordsSql);
+            deleteSubItemPs.setInt(1, tenantId);
+            deleteSubItemPs.executeUpdate();
+
+            String deleteInvoiceSubsRecordsSql = "DELETE FROM BC_INVOICE_SUBSCRIPTION WHERE BC_INVOICE_ID IN " +
+                                                 "(SELECT BC_ID FROM BC_INVOICE WHERE BC_TENANT_ID = ?) OR " +
+                                                 "BC_SUBSCRIPTION_ID IN (SELECT BC_ID FROM BC_SUBSCRIPTION WHERE BC_TENANT_ID = ?)";
+            deleteInvoiceSubsPs = conn.prepareStatement(deleteInvoiceSubsRecordsSql);
+            deleteInvoiceSubsPs.setInt(1, tenantId);
+            deleteInvoiceSubsPs.setInt(2, tenantId);
+            deleteInvoiceSubsPs.executeUpdate();
+
+            String deletePaymentSubsRecordsSql = "DELETE FROM BC_PAYMENT_SUBSCRIPTION WHERE BC_PAYMENT_ID IN " +
+                                                 "(SELECT BC_ID FROM BC_PAYMENT WHERE BC_TENANT_ID = ?) OR " +
+                                                 "BC_SUBSCRIPTION_ID IN (SELECT BC_ID FROM BC_SUBSCRIPTION WHERE BC_TENANT_ID = ?)";
+            deletePaymentSubsPs = conn.prepareStatement(deletePaymentSubsRecordsSql);
+            deletePaymentSubsPs.setInt(1, tenantId);
+            deletePaymentSubsPs.setInt(2, tenantId);
+            deletePaymentSubsPs.executeUpdate();
+
+            String deletePaymentRecordsSql = "DELETE FROM BC_PAYMENT WHERE BC_INVOICE_ID IN " +
+                                             "(SELECT BC_ID FROM BC_INVOICE WHERE BC_TENANT_ID = ?)";
+            deletePaymentPs = conn.prepareStatement(deletePaymentRecordsSql);
+            deletePaymentPs.setInt(1, tenantId);
+            deletePaymentPs.executeUpdate();
+
+            String deleteInvoiceRecordsSql = "DELETE FROM BC_INVOICE WHERE BC_TENANT_ID = ?";
+            deleteInvoicePs = conn.prepareStatement(deleteInvoiceRecordsSql);
+            deleteInvoicePs.setInt(1, tenantId);
+            deleteInvoicePs.executeUpdate();
+
+            String deleteSubscriptionRecordsSql = "DELETE FROM BC_SUBSCRIPTION WHERE BC_TENANT_ID = ?";
+            deleteSubscriptionPs = conn.prepareStatement(deleteSubscriptionRecordsSql);
+            deleteSubscriptionPs.setInt(1, tenantId);
+            deleteSubscriptionPs.executeUpdate();
+        } catch (SQLException e) {
+            String msg = "Failed to delete billing information for tenant: " + tenantId;
+            log.error(msg, e);
+            throw new BillingException(msg, e);
+        } finally {
+            try {
+                if (deleteSubItemPs != null) {
+                    deleteSubItemPs.close();
+                }
+                if (deleteInvoiceSubsPs != null) {
+                    deleteInvoiceSubsPs.close();
+                }
+                if (deletePaymentSubsPs != null) {
+                    deletePaymentSubsPs.close();
+                }
+                if (deletePaymentPs != null) {
+                    deletePaymentPs.close();
+                }
+                if (deleteInvoicePs != null) {
+                    deleteInvoicePs.close();
+                }
+                if (deleteSubscriptionPs != null) {
+                    deleteSubscriptionPs.close();
+                }
+            } catch (SQLException ex) {
+                String msg = RegistryConstants.RESULT_SET_PREPARED_STATEMENT_CLOSE_ERROR;
+                log.error(msg, ex);
+            }
+        }
+    }
+
     /**
      * Get all the active subscriptions for a particular filter.
      * Customers and Items are just dummy objects that only have a valid id.

@@ -1,7 +1,5 @@
 package org.wso2.carbon.billing.mgt.api;
 
-import java.util.Calendar;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.billing.core.dataobjects.Customer;
@@ -13,6 +11,8 @@ import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.stratos.common.internal.CloudCommonServiceComponent;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.api.TenantManager;
+
+import java.util.Calendar;
 
 public class DefaultTenantBilling implements TenantBillingService {
     
@@ -179,6 +179,17 @@ public class DefaultTenantBilling implements TenantBillingService {
         } catch (Exception e) {
             String msg = "Error occurred while deactivating the active subscription of tenant: " +
                     tenantDomain;
+            log.error(msg, e);
+            throw new StratosException(msg, e);
+        }
+    }
+
+    public void deleteBillingData(int tenantId) throws StratosException{
+        try {
+            BillingDataAccessService dataAccessService = new BillingDataAccessService();
+            dataAccessService.deleteBillingData(tenantId);
+        } catch (Exception e) {
+            String msg = "Error deleting subscription  for tenant: " + tenantId;
             log.error(msg, e);
             throw new StratosException(msg, e);
         }

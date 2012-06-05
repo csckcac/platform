@@ -46,6 +46,16 @@ public class BillingDataAccessService extends AbstractAdmin {
     }
 
     /**
+     * Delete a particular tenants subscription and all related data
+     * @param tenantId id of the tenant whose billing details should be deleted
+     * @throws Exception thorwn if an error is occured while deleting data
+     */
+    public void deleteBillingData(int tenantId) throws Exception {
+        DataAccessManager dataAccessManager = Util.getDataAccessManager();
+        dataAccessManager.deleteBillingData(tenantId);
+    }
+
+    /**
      * Finds the customer with a given tenant domain
      * @param customerName  is the tenant domain
      * @return  a customer object

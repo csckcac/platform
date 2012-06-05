@@ -69,6 +69,10 @@
             <parameter name="superTenantService" locked="true">true</parameter>
             <parameter name="AuthorizationAction" locked="true">/permission/protected/manage/modify/tenants</parameter>
         </operation>
+        <operation name="deleteTenant">
+            <parameter name="superTenantService" locked="true">true</parameter>
+            <parameter name="AuthorizationAction" locked="true">/permission/protected/manage/modify/tenants</parameter>
+        </operation>
         <parameter name="adminService" locked="true">true</parameter>
     </service>
     

@@ -15,9 +15,13 @@
  */
 package org.wso2.carbon.tenant.mgt.util;
 
+import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.jdbc.dataaccess.JDBCDataAccessManager;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
 import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
@@ -34,12 +38,10 @@ import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.config.multitenancy.MultiTenantRealmConfigBuilder;
+import org.wso2.carbon.user.core.jdbc.JDBCRealmConstants;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -409,5 +411,33 @@ public class TenantMgtUtil {
             log.error(msg, e);
             throw new Exception(msg, e);
         }*/
+    }
+
+    public static void deleteTenantRegistryData(int tenantId) throws Exception {
+        // delete data from mounted config registry database
+        JDBCDataAccessManager configMgr = (JDBCDataAccessManager) TenantMgtServiceComponent.getRegistryService().
+                getConfigUserRegistry().getRegistryContext().getDataAccessManager();
+        TenantRegistryDataDeletionUtil.deleteTenantRegistryData(tenantId, configMgr.getDataSource().getConnection());
+
+        // delete data from mounted governance registry database
+        JDBCDataAccessManager govMgr = (JDBCDataAccessManager) TenantMgtServiceComponent.getRegistryService().
+                getGovernanceUserRegistry().getRegistryContext().getDataAccessManager();
+        TenantRegistryDataDeletionUtil.deleteTenantRegistryData(tenantId, govMgr.getDataSource().getConnection());
+
+    }
+
+    public static void deleteTenantUMData(int tenantId) throws Exception {
+        RealmConfiguration realmConfig = TenantMgtServiceComponent.getRealmService().
+                getBootstrapRealmConfiguration();
+        BasicDataSource dataSource = new BasicDataSource();
+        dataSource.setDriverClassName(realmConfig.getRealmProperty(JDBCRealmConstants.DRIVER_NAME));
+        dataSource.setUrl(realmConfig.getRealmProperty(JDBCRealmConstants.URL));
+        dataSource.setUsername(realmConfig.getRealmProperty(JDBCRealmConstants.USER_NAME));
+        dataSource.setPassword(realmConfig.getRealmProperty(JDBCRealmConstants.PASSWORD));
+        dataSource.setMaxActive(Integer.parseInt(realmConfig.getRealmProperty(JDBCRealmConstants.MAX_ACTIVE)));
+        dataSource.setMinIdle(Integer.parseInt(realmConfig.getRealmProperty(JDBCRealmConstants.MIN_IDLE)));
+        dataSource.setMaxWait(Integer.parseInt(realmConfig.getRealmProperty(JDBCRealmConstants.MAX_WAIT)));
+
+        TenantUMDataDeletionUtil.deleteTenantUMData(tenantId, dataSource.getConnection());
     }
 }

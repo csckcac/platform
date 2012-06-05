@@ -17,6 +17,8 @@ public interface TenantBillingService {
     public void activateUsagePlan(String tenantDomain) throws StratosException;
     
     public void deactivateActiveUsagePlan(String tenantDomain) throws StratosException;
-    
+
+    public void deleteBillingData(int tenantId) throws StratosException;
+
     
 }

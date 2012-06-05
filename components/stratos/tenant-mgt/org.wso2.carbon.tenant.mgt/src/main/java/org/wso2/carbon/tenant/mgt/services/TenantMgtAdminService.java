@@ -23,6 +23,7 @@ import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.stratos.common.util.ClaimsMgtUtil;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.tenant.mgt.beans.PaginatedTenantInfoBean;
+import org.wso2.carbon.tenant.mgt.core.internal.TenantMgtCoreServiceComponent;
 import org.wso2.carbon.tenant.mgt.internal.TenantMgtServiceComponent;
 import org.wso2.carbon.tenant.mgt.util.TenantMgtUtil;
 import org.wso2.carbon.user.core.UserCoreConstants;
@@ -416,6 +417,29 @@ public class TenantMgtAdminService extends AbstractAdmin {
             TenantMgtUtil.triggerTenantDeactivation(tenantId);
         } catch (StratosException e) {
             String msg = "Error in notifying tenant deactivate.";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+    }
+
+    /**
+     * Delete a specific tenant
+     *
+     * @param tenantDomain The domain name of the tennat that needs to be deleted
+     */
+    public void deleteTenant(String tenantDomain) throws Exception {
+        TenantManager tenantManager = TenantMgtCoreServiceComponent.getTenantManager();
+        int tenantId = tenantManager.getTenantId(tenantDomain);
+        try {
+            TenantMgtServiceComponent.getBillingService().deleteBillingData(tenantId);
+            TenantMgtUtil.deleteTenantRegistryData(tenantId);
+            TenantMgtUtil.deleteTenantUMData(tenantId);
+            tenantManager.deleteTenant(tenantId);
+            log.info("Deleted tenant with domain: " + tenantDomain + " and tenant id: " + tenantId + 
+                     " from the system.");
+        } catch (Exception e) {
+            String msg = "Error deleting tenant with domain: " + tenantDomain + " and tenant id: " +
+                    tenantId + ".";
             log.error(msg, e);
             throw new Exception(msg, e);
         }

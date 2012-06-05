@@ -1,4 +1,4 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax2207="http://data.service.logging.carbon.wso2.org/xsd" xmlns:tns="http://service.logging.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2205="http://service.logging.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.logging.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://service.logging.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2219="http://data.service.logging.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2217="http://service.logging.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.logging.carbon.wso2.org">
     <wsdl:documentation>LogViewer</wsdl:documentation>
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.logging.carbon.wso2.org/xsd">
@@ -6,8 +6,7 @@
                 <xs:sequence />
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2208="http://data.service.logging.carbon.wso2.org/xsd" xmlns:ax2206="http://service.logging.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
-
+        <xs:schema xmlns:ax2220="http://data.service.logging.carbon.wso2.org/xsd" xmlns:ax2218="http://service.logging.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
             <xs:import namespace="http://service.logging.carbon.wso2.org/xsd" />
             <xs:import namespace="http://data.service.logging.carbon.wso2.org/xsd" />
             <xs:element name="isValidTenantDomain">
@@ -17,7 +16,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-
             <xs:element name="isValidTenantDomainResponse">
                 <xs:complexType>
                     <xs:sequence>
@@ -27,7 +25,6 @@
             </xs:element>
             <xs:element name="LogViewerException">
                 <xs:complexType>
-
                     <xs:sequence>
                         <xs:element minOccurs="0" name="LogViewerException" nillable="true" type="ns1:Exception" />
                     </xs:sequence>
@@ -37,7 +34,6 @@
                 <xs:sequence>
                     <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
                 </xs:sequence>
-
             </xs:complexType>
             <xs:element name="isStratosService">
                 <xs:complexType>
@@ -47,7 +43,6 @@
             <xs:element name="isStratosServiceResponse">
                 <xs:complexType>
                     <xs:sequence>
-
                         <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
@@ -57,7 +52,6 @@
                     <xs:sequence>
                         <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
                     </xs:sequence>
-
                 </xs:complexType>
             </xs:element>
             <xs:element name="isSTSyslogConfigResponse">
@@ -67,7 +61,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-
             <xs:element name="isManager">
                 <xs:complexType>
                     <xs:sequence />
@@ -77,7 +70,6 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:boolean" />
-
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -87,7 +79,6 @@
                         <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
-
             </xs:element>
             <xs:element name="isLogsConfiguredResponse">
                 <xs:complexType>
@@ -97,7 +88,6 @@
                 </xs:complexType>
             </xs:element>
             <xs:element name="isDataFromSysLog">
-
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
@@ -107,7 +97,6 @@
             <xs:element name="isDataFromSysLogResponse">
                 <xs:complexType>
                     <xs:sequence>
-
                         <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
@@ -117,7 +106,6 @@
                     <xs:sequence />
                 </xs:complexType>
             </xs:element>
-
             <xs:element name="isCassandraConfiguredResponse">
                 <xs:complexType>
                     <xs:sequence>
@@ -127,9 +115,20 @@
             </xs:element>
             <xs:element name="LogViewerLogViewerException">
                 <xs:complexType>
-
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="LogViewerException" nillable="true" type="ax2205:LogViewerException" />
+                        <xs:element minOccurs="0" name="LogViewerException" nillable="true" type="ax2218:LogViewerException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTenantApplicationNames">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTenantApplicationNamesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -137,7 +136,6 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="start" nillable="true" type="xs:string" />
-
                         <xs:element minOccurs="0" name="end" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="logger" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="priority" nillable="true" type="xs:string" />
@@ -147,17 +145,15 @@
                         <xs:element minOccurs="0" name="logIndex" type="xs:int" />
                     </xs:sequence>
                 </xs:complexType>
-
             </xs:element>
             <xs:element name="getSystemLogsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2207:LogEvent" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2220:LogEvent" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="getServiceNames">
-
                 <xs:complexType>
                     <xs:sequence />
                 </xs:complexType>
@@ -167,7 +163,6 @@
                     <xs:sequence>
                         <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
                     </xs:sequence>
-
                 </xs:complexType>
             </xs:element>
             <xs:element name="getPaginatedLogMessage">
@@ -177,7 +172,6 @@
                         <xs:element minOccurs="0" name="type" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="keyword" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="logFile" nillable="true" type="xs:string" />
-
                         <xs:element minOccurs="0" name="logIndex" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="maxLines" type="xs:int" />
                         <xs:element minOccurs="0" name="start" type="xs:int" />
@@ -187,17 +181,15 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-
             <xs:element name="getPaginatedLogMessageResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2207:PaginatedLogMessage" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2220:PaginatedLogMessage" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="getPaginatedLogInfo">
                 <xs:complexType>
-
                     <xs:sequence>
                         <xs:element minOccurs="0" name="pageNumber" type="xs:int" />
                         <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
@@ -207,9 +199,8 @@
             </xs:element>
             <xs:element name="getPaginatedLogInfoResponse">
                 <xs:complexType>
-
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2207:PaginatedLogInfo" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2220:PaginatedLogInfo" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -217,7 +208,6 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="pageNumber" type="xs:int" />
-
                         <xs:element minOccurs="0" name="type" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="keyword" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="logFile" nillable="true" type="xs:string" />
@@ -227,17 +217,15 @@
                         <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
                     </xs:sequence>
-
                 </xs:complexType>
             </xs:element>
             <xs:element name="getPaginatedBottomUpLogMessageResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2207:PaginatedLogMessage" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2220:PaginatedLogMessage" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-
             <xs:element name="getLogs">
                 <xs:complexType>
                     <xs:sequence>
@@ -247,17 +235,15 @@
                 </xs:complexType>
             </xs:element>
             <xs:element name="getLogsResponse">
-
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2207:LogMessage" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2220:LogMessage" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="getLogLinesFromFile">
                 <xs:complexType>
                     <xs:sequence>
-
                         <xs:element minOccurs="0" name="logFile" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="maxLogs" type="xs:int" />
                         <xs:element minOccurs="0" name="start" type="xs:int" />
@@ -267,7 +253,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-
             <xs:element name="getLogLinesFromFileResponse">
                 <xs:complexType>
                     <xs:sequence>
@@ -277,7 +262,6 @@
             </xs:element>
             <xs:element name="getLineNumbers">
                 <xs:complexType>
-
                     <xs:sequence>
                         <xs:element minOccurs="0" name="logFile" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
@@ -287,9 +271,28 @@
             </xs:element>
             <xs:element name="getLineNumbersResponse">
                 <xs:complexType>
-
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getApplicationLogs">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="appName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="start" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="end" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="logger" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="priority" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="keyword" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="logIndex" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getApplicationLogsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2220:LogEvent" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -297,7 +300,6 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="logFile" nillable="true" type="xs:string" />
-
                         <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
                     </xs:sequence>
@@ -307,7 +309,6 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" nillable="true" type="xs:base64Binary" />
-
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -316,8 +317,8 @@
             <xs:complexType name="LogEvent">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="appName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="instance" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="ip" nillable="true" type="xs:string" />
-
                     <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="logTime" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="logger" nillable="true" type="xs:string" />
@@ -327,27 +328,24 @@
                     <xs:element minOccurs="0" name="stacktrace" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="tenantId" nillable="true" type="xs:string" />
                 </xs:sequence>
-
             </xs:complexType>
             <xs:complexType name="PaginatedLogMessage">
                 <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="logInfo" nillable="true" type="ax2207:LogMessage" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="logInfo" nillable="true" type="ax2219:LogMessage" />
                     <xs:element minOccurs="0" name="numberOfPages" type="xs:int" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="LogMessage">
                 <xs:sequence>
-
                     <xs:element minOccurs="0" name="logMessage" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="type" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="PaginatedLogInfo">
                 <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="logInfo" nillable="true" type="ax2207:LogInfo" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="logInfo" nillable="true" type="ax2219:LogInfo" />
                     <xs:element minOccurs="0" name="numberOfPages" type="xs:int" />
                 </xs:sequence>
-
             </xs:complexType>
             <xs:complexType name="LogInfo">
                 <xs:sequence>
@@ -357,7 +355,6 @@
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
-
     </wsdl:types>
     <wsdl:message name="isLogsConfiguredRequest">
         <wsdl:part name="parameters" element="ns1:isLogsConfigured" />
@@ -367,7 +364,6 @@
     </wsdl:message>
     <wsdl:message name="LogViewerException">
         <wsdl:part name="parameters" element="ns1:LogViewerException" />
-
     </wsdl:message>
     <wsdl:message name="downloadLogFilesRequest">
         <wsdl:part name="parameters" element="ns1:downloadLogFiles" />
@@ -375,19 +371,29 @@
     <wsdl:message name="downloadLogFilesResponse">
         <wsdl:part name="parameters" element="ns1:downloadLogFilesResponse" />
     </wsdl:message>
-    <wsdl:message name="getSystemLogsRequest">
-        <wsdl:part name="parameters" element="ns1:getSystemLogs" />
-
+    <wsdl:message name="getTenantApplicationNamesRequest">
+        <wsdl:part name="parameters" element="ns1:getTenantApplicationNames" />
     </wsdl:message>
-    <wsdl:message name="getSystemLogsResponse">
-        <wsdl:part name="parameters" element="ns1:getSystemLogsResponse" />
+    <wsdl:message name="getTenantApplicationNamesResponse">
+        <wsdl:part name="parameters" element="ns1:getTenantApplicationNamesResponse" />
     </wsdl:message>
     <wsdl:message name="LogViewerLogViewerException">
         <wsdl:part name="parameters" element="ns1:LogViewerLogViewerException" />
     </wsdl:message>
+    <wsdl:message name="getApplicationLogsRequest">
+        <wsdl:part name="parameters" element="ns1:getApplicationLogs" />
+    </wsdl:message>
+    <wsdl:message name="getApplicationLogsResponse">
+        <wsdl:part name="parameters" element="ns1:getApplicationLogsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getSystemLogsRequest">
+        <wsdl:part name="parameters" element="ns1:getSystemLogs" />
+    </wsdl:message>
+    <wsdl:message name="getSystemLogsResponse">
+        <wsdl:part name="parameters" element="ns1:getSystemLogsResponse" />
+    </wsdl:message>
     <wsdl:message name="isManagerRequest">
         <wsdl:part name="parameters" element="ns1:isManager" />
-
     </wsdl:message>
     <wsdl:message name="isManagerResponse">
         <wsdl:part name="parameters" element="ns1:isManagerResponse" />
@@ -397,7 +403,6 @@
     </wsdl:message>
     <wsdl:message name="isCassandraConfiguredResponse">
         <wsdl:part name="parameters" element="ns1:isCassandraConfiguredResponse" />
-
     </wsdl:message>
     <wsdl:message name="getLogLinesFromFileRequest">
         <wsdl:part name="parameters" element="ns1:getLogLinesFromFile" />
@@ -407,7 +412,6 @@
     </wsdl:message>
     <wsdl:message name="getLineNumbersRequest">
         <wsdl:part name="parameters" element="ns1:getLineNumbers" />
-
     </wsdl:message>
     <wsdl:message name="getLineNumbersResponse">
         <wsdl:part name="parameters" element="ns1:getLineNumbersResponse" />
@@ -417,7 +421,6 @@
     </wsdl:message>
     <wsdl:message name="getServiceNamesResponse">
         <wsdl:part name="parameters" element="ns1:getServiceNamesResponse" />
-
     </wsdl:message>
     <wsdl:message name="getLogsRequest">
         <wsdl:part name="parameters" element="ns1:getLogs" />
@@ -427,7 +430,6 @@
     </wsdl:message>
     <wsdl:message name="getPaginatedLogMessageRequest">
         <wsdl:part name="parameters" element="ns1:getPaginatedLogMessage" />
-
     </wsdl:message>
     <wsdl:message name="getPaginatedLogMessageResponse">
         <wsdl:part name="parameters" element="ns1:getPaginatedLogMessageResponse" />
@@ -437,7 +439,6 @@
     </wsdl:message>
     <wsdl:message name="getPaginatedLogInfoResponse">
         <wsdl:part name="parameters" element="ns1:getPaginatedLogInfoResponse" />
-
     </wsdl:message>
     <wsdl:message name="isDataFromSysLogRequest">
         <wsdl:part name="parameters" element="ns1:isDataFromSysLog" />
@@ -447,7 +448,6 @@
     </wsdl:message>
     <wsdl:message name="isSTSyslogConfigRequest">
         <wsdl:part name="parameters" element="ns1:isSTSyslogConfig" />
-
     </wsdl:message>
     <wsdl:message name="isSTSyslogConfigResponse">
         <wsdl:part name="parameters" element="ns1:isSTSyslogConfigResponse" />
@@ -457,7 +457,6 @@
     </wsdl:message>
     <wsdl:message name="isValidTenantDomainResponse">
         <wsdl:part name="parameters" element="ns1:isValidTenantDomainResponse" />
-
     </wsdl:message>
     <wsdl:message name="isStratosServiceRequest">
         <wsdl:part name="parameters" element="ns1:isStratosService" />
@@ -467,7 +466,6 @@
     </wsdl:message>
     <wsdl:message name="getPaginatedBottomUpLogMessageRequest">
         <wsdl:part name="parameters" element="ns1:getPaginatedBottomUpLogMessage" />
-
     </wsdl:message>
     <wsdl:message name="getPaginatedBottomUpLogMessageResponse">
         <wsdl:part name="parameters" element="ns1:getPaginatedBottomUpLogMessageResponse" />
@@ -477,17 +475,25 @@
             <wsdl:input message="tns:isLogsConfiguredRequest" wsaw:Action="urn:isLogsConfigured" />
             <wsdl:output message="tns:isLogsConfiguredResponse" wsaw:Action="urn:isLogsConfiguredResponse" />
             <wsdl:fault message="tns:LogViewerException" name="LogViewerException" wsaw:Action="urn:isLogsConfiguredLogViewerException" />
-
         </wsdl:operation>
         <wsdl:operation name="downloadLogFiles">
             <wsdl:input message="tns:downloadLogFilesRequest" wsaw:Action="urn:downloadLogFiles" />
             <wsdl:output message="tns:downloadLogFilesResponse" wsaw:Action="urn:downloadLogFilesResponse" />
             <wsdl:fault message="tns:LogViewerException" name="LogViewerException" wsaw:Action="urn:downloadLogFilesLogViewerException" />
         </wsdl:operation>
+        <wsdl:operation name="getTenantApplicationNames">
+            <wsdl:input message="tns:getTenantApplicationNamesRequest" wsaw:Action="urn:getTenantApplicationNames" />
+            <wsdl:output message="tns:getTenantApplicationNamesResponse" wsaw:Action="urn:getTenantApplicationNamesResponse" />
+            <wsdl:fault message="tns:LogViewerLogViewerException" name="LogViewerLogViewerException" wsaw:Action="urn:getTenantApplicationNamesLogViewerLogViewerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getApplicationLogs">
+            <wsdl:input message="tns:getApplicationLogsRequest" wsaw:Action="urn:getApplicationLogs" />
+            <wsdl:output message="tns:getApplicationLogsResponse" wsaw:Action="urn:getApplicationLogsResponse" />
+            <wsdl:fault message="tns:LogViewerLogViewerException" name="LogViewerLogViewerException" wsaw:Action="urn:getApplicationLogsLogViewerLogViewerException" />
+        </wsdl:operation>
         <wsdl:operation name="getSystemLogs">
             <wsdl:input message="tns:getSystemLogsRequest" wsaw:Action="urn:getSystemLogs" />
             <wsdl:output message="tns:getSystemLogsResponse" wsaw:Action="urn:getSystemLogsResponse" />
-
             <wsdl:fault message="tns:LogViewerLogViewerException" name="LogViewerLogViewerException" wsaw:Action="urn:getSystemLogsLogViewerLogViewerException" />
         </wsdl:operation>
         <wsdl:operation name="isManager">
@@ -497,7 +503,6 @@
         <wsdl:operation name="isCassandraConfigured">
             <wsdl:input message="tns:isCassandraConfiguredRequest" wsaw:Action="urn:isCassandraConfigured" />
             <wsdl:output message="tns:isCassandraConfiguredResponse" wsaw:Action="urn:isCassandraConfiguredResponse" />
-
         </wsdl:operation>
         <wsdl:operation name="getLogLinesFromFile">
             <wsdl:input message="tns:getLogLinesFromFileRequest" wsaw:Action="urn:getLogLinesFromFile" />
@@ -507,7 +512,6 @@
         <wsdl:operation name="getLineNumbers">
             <wsdl:input message="tns:getLineNumbersRequest" wsaw:Action="urn:getLineNumbers" />
             <wsdl:output message="tns:getLineNumbersResponse" wsaw:Action="urn:getLineNumbersResponse" />
-
             <wsdl:fault message="tns:LogViewerException" name="LogViewerException" wsaw:Action="urn:getLineNumbersLogViewerException" />
         </wsdl:operation>
         <wsdl:operation name="getServiceNames">
@@ -517,7 +521,6 @@
         </wsdl:operation>
         <wsdl:operation name="getLogs">
             <wsdl:input message="tns:getLogsRequest" wsaw:Action="urn:getLogs" />
-
             <wsdl:output message="tns:getLogsResponse" wsaw:Action="urn:getLogsResponse" />
         </wsdl:operation>
         <wsdl:operation name="getPaginatedLogMessage">
@@ -527,7 +530,6 @@
         </wsdl:operation>
         <wsdl:operation name="getPaginatedLogInfo">
             <wsdl:input message="tns:getPaginatedLogInfoRequest" wsaw:Action="urn:getPaginatedLogInfo" />
-
             <wsdl:output message="tns:getPaginatedLogInfoResponse" wsaw:Action="urn:getPaginatedLogInfoResponse" />
             <wsdl:fault message="tns:LogViewerException" name="LogViewerException" wsaw:Action="urn:getPaginatedLogInfoLogViewerException" />
         </wsdl:operation>
@@ -537,7 +539,6 @@
             <wsdl:fault message="tns:LogViewerException" name="LogViewerException" wsaw:Action="urn:isDataFromSysLogLogViewerException" />
         </wsdl:operation>
         <wsdl:operation name="isSTSyslogConfig">
-
             <wsdl:input message="tns:isSTSyslogConfigRequest" wsaw:Action="urn:isSTSyslogConfig" />
             <wsdl:output message="tns:isSTSyslogConfigResponse" wsaw:Action="urn:isSTSyslogConfigResponse" />
             <wsdl:fault message="tns:LogViewerException" name="LogViewerException" wsaw:Action="urn:isSTSyslogConfigLogViewerException" />
@@ -547,7 +548,6 @@
             <wsdl:output message="tns:isValidTenantDomainResponse" wsaw:Action="urn:isValidTenantDomainResponse" />
         </wsdl:operation>
         <wsdl:operation name="isStratosService">
-
             <wsdl:input message="tns:isStratosServiceRequest" wsaw:Action="urn:isStratosService" />
             <wsdl:output message="tns:isStratosServiceResponse" wsaw:Action="urn:isStratosServiceResponse" />
             <wsdl:fault message="tns:LogViewerException" name="LogViewerException" wsaw:Action="urn:isStratosServiceLogViewerException" />
@@ -557,7 +557,6 @@
             <wsdl:output message="tns:getPaginatedBottomUpLogMessageResponse" wsaw:Action="urn:getPaginatedBottomUpLogMessageResponse" />
             <wsdl:fault message="tns:LogViewerException" name="LogViewerException" wsaw:Action="urn:getPaginatedBottomUpLogMessageLogViewerException" />
         </wsdl:operation>
-
     </wsdl:portType>
     <wsdl:binding name="LogViewerSoap11Binding" type="tns:LogViewerPortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
@@ -567,7 +566,6 @@
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-
                 <soap:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
@@ -577,7 +575,6 @@
         <wsdl:operation name="downloadLogFiles">
             <soap:operation soapAction="urn:downloadLogFiles" style="document" />
             <wsdl:input>
-
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -587,17 +584,6 @@
                 <soap:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
-
-        <wsdl:operation name="isManager">
-            <soap:operation soapAction="urn:isManager" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-
         <wsdl:operation name="getSystemLogs">
             <soap:operation soapAction="urn:getSystemLogs" style="document" />
             <wsdl:input>
@@ -607,7 +593,39 @@
                 <soap:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerLogViewerException">
-
+                <soap:fault use="literal" name="LogViewerLogViewerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTenantApplicationNames">
+            <soap:operation soapAction="urn:getTenantApplicationNames" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="LogViewerLogViewerException">
+                <soap:fault use="literal" name="LogViewerLogViewerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isManager">
+            <soap:operation soapAction="urn:isManager" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getApplicationLogs">
+            <soap:operation soapAction="urn:getApplicationLogs" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="LogViewerLogViewerException">
                 <soap:fault use="literal" name="LogViewerLogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
@@ -617,7 +635,6 @@
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
@@ -627,7 +644,6 @@
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-
                 <soap:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
@@ -637,7 +653,6 @@
         <wsdl:operation name="getLogLinesFromFile">
             <soap:operation soapAction="urn:getLogLinesFromFile" style="document" />
             <wsdl:input>
-
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -647,7 +662,6 @@
                 <soap:fault use="literal" name="LogViewerLogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
-
         <wsdl:operation name="getServiceNames">
             <soap:operation soapAction="urn:getServiceNames" style="document" />
             <wsdl:input>
@@ -657,7 +671,6 @@
                 <soap:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerLogViewerException">
-
                 <soap:fault use="literal" name="LogViewerLogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
@@ -667,7 +680,6 @@
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-
                 <soap:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
@@ -677,7 +689,6 @@
         <wsdl:operation name="getLogs">
             <soap:operation soapAction="urn:getLogs" style="document" />
             <wsdl:input>
-
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -687,7 +698,6 @@
         <wsdl:operation name="getPaginatedLogInfo">
             <soap:operation soapAction="urn:getPaginatedLogInfo" style="document" />
             <wsdl:input>
-
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -697,7 +707,6 @@
                 <soap:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
-
         <wsdl:operation name="isDataFromSysLog">
             <soap:operation soapAction="urn:isDataFromSysLog" style="document" />
             <wsdl:input>
@@ -707,7 +716,6 @@
                 <soap:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
-
                 <soap:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
@@ -717,7 +725,6 @@
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-
                 <soap:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
@@ -727,7 +734,6 @@
         <wsdl:operation name="isValidTenantDomain">
             <soap:operation soapAction="urn:isValidTenantDomain" style="document" />
             <wsdl:input>
-
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -737,7 +743,6 @@
         <wsdl:operation name="isStratosService">
             <soap:operation soapAction="urn:isStratosService" style="document" />
             <wsdl:input>
-
                 <soap:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -747,7 +752,6 @@
                 <soap:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
-
         <wsdl:operation name="getPaginatedBottomUpLogMessage">
             <soap:operation soapAction="urn:getPaginatedBottomUpLogMessage" style="document" />
             <wsdl:input>
@@ -757,7 +761,6 @@
                 <soap:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
-
                 <soap:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
@@ -767,7 +770,6 @@
         <wsdl:operation name="isLogsConfigured">
             <soap12:operation soapAction="urn:isLogsConfigured" style="document" />
             <wsdl:input>
-
                 <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -777,7 +779,6 @@
                 <soap12:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
-
         <wsdl:operation name="downloadLogFiles">
             <soap12:operation soapAction="urn:downloadLogFiles" style="document" />
             <wsdl:input>
@@ -787,8 +788,31 @@
                 <soap12:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
-
                 <soap12:fault use="literal" name="LogViewerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSystemLogs">
+            <soap12:operation soapAction="urn:getSystemLogs" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="LogViewerLogViewerException">
+                <soap12:fault use="literal" name="LogViewerLogViewerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTenantApplicationNames">
+            <soap12:operation soapAction="urn:getTenantApplicationNames" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="LogViewerLogViewerException">
+                <soap12:fault use="literal" name="LogViewerLogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="isManager">
@@ -797,17 +821,15 @@
                 <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-
                 <soap12:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getSystemLogs">
-            <soap12:operation soapAction="urn:getSystemLogs" style="document" />
+        <wsdl:operation name="getApplicationLogs">
+            <soap12:operation soapAction="urn:getApplicationLogs" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-
                 <soap12:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerLogViewerException">
@@ -817,7 +839,6 @@
         <wsdl:operation name="isCassandraConfigured">
             <soap12:operation soapAction="urn:isCassandraConfigured" style="document" />
             <wsdl:input>
-
                 <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -827,7 +848,6 @@
         <wsdl:operation name="getLineNumbers">
             <soap12:operation soapAction="urn:getLineNumbers" style="document" />
             <wsdl:input>
-
                 <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -837,7 +857,6 @@
                 <soap12:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
-
         <wsdl:operation name="getLogLinesFromFile">
             <soap12:operation soapAction="urn:getLogLinesFromFile" style="document" />
             <wsdl:input>
@@ -847,7 +866,6 @@
                 <soap12:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerLogViewerException">
-
                 <soap12:fault use="literal" name="LogViewerLogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
@@ -857,7 +875,6 @@
                 <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-
                 <soap12:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerLogViewerException">
@@ -867,7 +884,6 @@
         <wsdl:operation name="getPaginatedLogMessage">
             <soap12:operation soapAction="urn:getPaginatedLogMessage" style="document" />
             <wsdl:input>
-
                 <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -877,7 +893,6 @@
                 <soap12:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
-
         <wsdl:operation name="getLogs">
             <soap12:operation soapAction="urn:getLogs" style="document" />
             <wsdl:input>
@@ -887,7 +902,6 @@
                 <soap12:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="getPaginatedLogInfo">
             <soap12:operation soapAction="urn:getPaginatedLogInfo" style="document" />
             <wsdl:input>
@@ -897,7 +911,6 @@
                 <soap12:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
-
                 <soap12:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
@@ -907,7 +920,6 @@
                 <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-
                 <soap12:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
@@ -917,7 +929,6 @@
         <wsdl:operation name="isSTSyslogConfig">
             <soap12:operation soapAction="urn:isSTSyslogConfig" style="document" />
             <wsdl:input>
-
                 <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
@@ -927,7 +938,6 @@
                 <soap12:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
-
         <wsdl:operation name="isValidTenantDomain">
             <soap12:operation soapAction="urn:isValidTenantDomain" style="document" />
             <wsdl:input>
@@ -937,7 +947,6 @@
                 <soap12:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="isStratosService">
             <soap12:operation soapAction="urn:isStratosService" style="document" />
             <wsdl:input>
@@ -947,7 +956,6 @@
                 <soap12:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
-
                 <soap12:fault use="literal" name="LogViewerException" />
             </wsdl:fault>
         </wsdl:operation>
@@ -957,7 +965,6 @@
                 <soap12:body use="literal" />
             </wsdl:input>
             <wsdl:output>
-
                 <soap12:body use="literal" />
             </wsdl:output>
             <wsdl:fault name="LogViewerException">
@@ -967,7 +974,6 @@
     </wsdl:binding>
     <wsdl:binding name="LogViewerHttpBinding" type="tns:LogViewerPortType">
         <http:binding verb="POST" />
-
         <wsdl:operation name="isLogsConfigured">
             <http:operation location="isLogsConfigured" />
             <wsdl:input>
@@ -977,7 +983,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="downloadLogFiles">
             <http:operation location="downloadLogFiles" />
             <wsdl:input>
@@ -987,17 +992,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
-        <wsdl:operation name="isManager">
-            <http:operation location="isManager" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
-
         <wsdl:operation name="getSystemLogs">
             <http:operation location="getSystemLogs" />
             <wsdl:input>
@@ -1007,7 +1001,33 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
+        <wsdl:operation name="getTenantApplicationNames">
+            <http:operation location="getTenantApplicationNames" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isManager">
+            <http:operation location="isManager" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getApplicationLogs">
+            <http:operation location="getApplicationLogs" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="isCassandraConfigured">
             <http:operation location="isCassandraConfigured" />
             <wsdl:input>
@@ -1017,7 +1037,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="getLineNumbers">
             <http:operation location="getLineNumbers" />
             <wsdl:input>
@@ -1027,7 +1046,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="getLogLinesFromFile">
             <http:operation location="getLogLinesFromFile" />
             <wsdl:input>
@@ -1037,7 +1055,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="getServiceNames">
             <http:operation location="getServiceNames" />
             <wsdl:input>
@@ -1047,7 +1064,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="getPaginatedLogMessage">
             <http:operation location="getPaginatedLogMessage" />
             <wsdl:input>
@@ -1057,7 +1073,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="getLogs">
             <http:operation location="getLogs" />
             <wsdl:input>
@@ -1067,7 +1082,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="getPaginatedLogInfo">
             <http:operation location="getPaginatedLogInfo" />
             <wsdl:input>
@@ -1077,7 +1091,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="isDataFromSysLog">
             <http:operation location="isDataFromSysLog" />
             <wsdl:input>
@@ -1087,7 +1100,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="isSTSyslogConfig">
             <http:operation location="isSTSyslogConfig" />
             <wsdl:input>
@@ -1097,7 +1109,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="isValidTenantDomain">
             <http:operation location="isValidTenantDomain" />
             <wsdl:input>
@@ -1107,7 +1118,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="isStratosService">
             <http:operation location="isStratosService" />
             <wsdl:input>
@@ -1117,7 +1127,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
         <wsdl:operation name="getPaginatedBottomUpLogMessage">
             <http:operation location="getPaginatedBottomUpLogMessage" />
             <wsdl:input>
@@ -1127,18 +1136,16 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-
     </wsdl:binding>
     <wsdl:service name="LogViewer">
         <wsdl:port name="LogViewerHttpsSoap11Endpoint" binding="tns:LogViewerSoap11Binding">
-            <soap:address location="https://10.200.2.82:9443/services/LogViewer.LogViewerHttpsSoap11Endpoint/" />
+            <soap:address location="https://192.168.1.2:9443/services/LogViewer.LogViewerHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="LogViewerHttpsSoap12Endpoint" binding="tns:LogViewerSoap12Binding">
-            <soap12:address location="https://10.200.2.82:9443/services/LogViewer.LogViewerHttpsSoap12Endpoint/" />
+            <soap12:address location="https://192.168.1.2:9443/services/LogViewer.LogViewerHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="LogViewerHttpsEndpoint" binding="tns:LogViewerHttpBinding">
-
-            <http:address location="https://10.200.2.82:9443/services/LogViewer.LogViewerHttpsEndpoint/" />
+            <http:address location="https://192.168.1.2:9443/services/LogViewer.LogViewerHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

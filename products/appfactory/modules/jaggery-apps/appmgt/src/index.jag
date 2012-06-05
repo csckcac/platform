@@ -6,10 +6,11 @@ include('includes/template_header.jag');
 
     <div id="workArea">
         <%
-            include('process/web_service_util.jag');
+            include('mgt/application_manager.jag');
             include('constants.jag');
             try{
-                var applicationList = getAllApps(userName,"localhost");
+                //var applicationList = getAllApps(userName,"localhost");
+                var applicationList = getAllAppsOfUser(userName,"localhost");
                 if(applicationList==undefined || applicationList.value=="" || applicationList.length()==0){
                     print("No Applications are created.");
                 }

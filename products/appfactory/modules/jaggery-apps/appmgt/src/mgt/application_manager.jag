@@ -1,9 +1,11 @@
 <%
     include('../process/web_service_util.jag');
 
-    function createNewApplication(applicationKey, applicationName, applicationDescription, userName) {
+    //function createNewApplication(applicationKey, applicationName, applicationDescription, userName) {
+    function createNewApplication(applicationName, userName);
         try {
-            var result = createApplication(applicationKey, applicationName, applicationDescription);
+            //var result = createApplication(applicationKey, applicationName, applicationDescription);
+            var result = createApplication(applicationName, userName);
             if( result != null) {
                 return result;
             } else {
@@ -128,4 +130,48 @@
         }
     }
 
+    //TODO move the logic here
+    function getAllAppsOfUser(userName, address) {
+        try {
+            var result = getAllApps(userName, address);
+            var ns=new Namespace("http://service.mgt.application.appfactory.carbon.wso2.org");
+            return result.ns::["return"].text();
+        } catch(e) {
+            throw "Error while getting application of user";
+        }
+    }
+
+    function getUserConfirmationObject(secreteKey) {
+        try {
+            var result = getConfirmationObject(secreteKey);
+            var ax2342=new Namespace("http://util.verification.email.carbon.wso2.org/xsd");
+            var ns=new Namespace("http://services.verification.email.carbon.wso2.org");
+            var data=new XML(result.ns::["return"].ax2342::data+"");
+
+            var confirmationObject=new Array();
+            confirmationObject.admin=(data.admin.text());
+            confirmationObject.email=data.email.text();
+            confirmationObject.confirmationKey=data.confirmationKey.text();
+            return confirmationObject;
+        } catch(e) {
+            throw "Error while getting confirmation object";
+        }
+    }
+
+    function activateUser(userName,email,confirmationKey) {
+        try {
+            var result = invokeUserActivationProcess(userName,email,confirmationKey);
+            var wso2=new Namespace("http://wso2.org");
+            return result.wso2::success;
+        } catch(e) {
+            throw "Error while activating user";
+        }
+
+    }
+
+    function deployToStage(applicationSvnLocation,applicationName,stageName) {
+        var result =  invokeDeployToStage(applicationSvnLocation,applicationName,stageName);
+        var resultNS=new Namespace("http://wso2.org/carbon/appfactory/applicaiton/deployment");
+        return deployedArtifact=result.resultNS::["result"].text();
+    }
 %>

@@ -7,7 +7,7 @@
 <body>
  <%
 
- include('process/web_service_util.jag');
+ include('mgt/application_manager.jag');
 
  %>
 
@@ -43,20 +43,24 @@
     <div id="workArea">
        <%
        var confirm = request.getParameter("confirmation");
-       var confirmationObject=getConfirmationObject(confirm);
+       //var confirmationObject=getConfirmationObject(confirm);
+       var confirmationObject=getUserConfirmationObject(confirm);
+
        if(confirmationObject!=null){
-       if(invokeUserActivationProcess(confirmationObject.admin,confirmationObject.email,confirmationObject.confirmationKey)){
-       %>
-        <div style="margin:20px">You have successfully validated your email address and the contact information associated with your WSO2
-            Cloud Services account is updated. Click <a href="../appmgt/index.jag">here</a> to access WSO2 Appfactory Application Manager.
-        </div>
-       <%
-       }else{
-         %>
-        <div style="margin:20px">Your activation request is failed
+//       if(invokeUserActivationProcess(confirmationObject.admin,confirmationObject.email,confirmationObject.confirmationKey)){
+           if(activateUser(confirmationObject.admin,confirmationObject.email,confirmationObject.confirmationKey)){
+
+               %>
+                <div style="margin:20px">You have successfully validated your email address and the contact information associated with your WSO2
+                    Cloud Services account is updated. Click <a href="../appmgt/index.jag">here</a> to access WSO2 Appfactory Application Manager.
                 </div>
-          <%
-       }
+               <%
+           }else{
+               %>
+               <div style="margin:20px">Your activation request is failed
+               </div>
+               <%
+           }
 
        }else{
        %>

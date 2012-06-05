@@ -11,13 +11,14 @@
 <div id="middle">
     <div id="workArea">
         <%
-             include('process/web_service_util.jag');
-             include('mgt/registry_access_manager.jag');
+            include('mgt/application_manager.jag');
+            include('mgt/registry_access_manager.jag');
             try {
                     if(isApplicationKeyAlreadyTaken(applicationName)=="true"){
                           print("Application id:"+applicationName+" is already taken, please try another applicaiton name");
                     }else{
-                       var repositoryPath=createApplication(applicationName,userName);
+                       //var repositoryPath=createApplication(applicationName,userName);
+                        var repositoryPath = createNewApplication(applicationName,userName);
                        if(repositoryPath!=undefined){
                             repositoryPath=repositoryPath.toString();
                             addApplicationToApp(applicationName, applicationName, applicationName, repositoryPath);

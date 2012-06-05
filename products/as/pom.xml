@@ -264,10 +264,10 @@
         </mailingList>
         <mailingList>
             <name>WSO2 Carbon Developers' List</name>
-            <post>mailto:carbon-dev@wso2.org</post>
-            <archive>http://www.wso2.org/mailarchive/carbon-dev/</archive>
-            <subscribe>mailto:carbon-dev-request@wso2.org?subject=subscribe</subscribe>
-            <unsubscribe>mailto:carbon-dev-request@wso2.org?subject=unsubscribe</unsubscribe>
+            <post>mailto:dev@wso2.org</post>
+            <archive>http://www.wso2.org/mailarchive/dev/</archive>
+            <subscribe>mailto:dev-request@wso2.org?subject=subscribe</subscribe>
+            <unsubscribe>mailto:dev-request@wso2.org?subject=unsubscribe</unsubscribe>
         </mailingList>
     </mailingLists>
 

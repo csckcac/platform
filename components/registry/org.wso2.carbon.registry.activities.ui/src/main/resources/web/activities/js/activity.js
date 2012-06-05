@@ -26,6 +26,11 @@ function submitActivityForm(page, pageNumber) {
         var userNameValue = userName.value;
         var pathValue = path.value;
 
+        if(fromDateValue=="" && toDateValue=="" && userNameValue =="" && pathValue =="" ){
+            $('activityList').innerHTML="";
+            CARBON.showWarningDialog("Please fill at least one field");
+            return true;
+        }
         reasonDiv.innerHTML = reason;
         if (reason != "") {
             CARBON.showWarningDialog(reason);

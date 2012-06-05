@@ -132,9 +132,9 @@ include('/includes/topnavi.jag');
                     <a href="samples.jag" class="linktext">Samples</a> <br>
                     <span>Sample Jaggery Apps</span>
                 </li>
-                <li><a href="https://wso2.org/jira/browse/JAGGERY#selectedTab=com.atlassian.jira.plugin.system.project%3Achangelog-panel"><img src="images/icon-changelog.png" alt=""></a>
-                    <a href="https://wso2.org/jira/browse/JAGGERY#selectedTab=com.atlassian.jira.plugin.system.project%3Achangelog-panel" class="linktext">Change log</a> <br>
-                    <span>Current Version 4.0</span>
+                <li><a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="images/icon-apache.png" alt=""></a>
+                    <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank" class="linktext">Apache 2.0</a> <br>
+                    <span>Licensed under Apache 2.0</span>
                 </li>
 
             </ul>

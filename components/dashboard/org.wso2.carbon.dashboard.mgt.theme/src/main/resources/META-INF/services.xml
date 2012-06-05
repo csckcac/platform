@@ -24,7 +24,7 @@
     <parameter name="enableMTOM">false</parameter>
     <parameter name="hiddenService">true</parameter>
 
-    <service name="ThemeMgtService" scope="transportsession">
+    <service name="GSThemeMgtService" scope="transportsession">
         <schema schemaNamespace="http://org.wso2.wsf/tools" elementFormDefaultQualified="true"/>
         <transports>
             <transport>https</transport>

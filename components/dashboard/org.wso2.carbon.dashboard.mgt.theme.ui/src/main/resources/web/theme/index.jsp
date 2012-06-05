@@ -19,7 +19,7 @@
 <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
-<%@ page import="org.wso2.carbon.dashboard.mgt.theme.stub.ThemeMgtService" %>
+<%@ page import="org.wso2.carbon.dashboard.mgt.theme.stub.GSThemeMgtService" %>
 <%@ page import="org.wso2.carbon.dashboard.mgt.theme.ui.GSThemeMgtClient" %>
 <%@ page import="org.wso2.carbon.dashboard.mgt.theme.stub.types.carbon.Theme" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>

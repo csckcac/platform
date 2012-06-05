@@ -23,9 +23,9 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.dashboard.mgt.theme.stub.ThemeMgtServiceException;
+import org.wso2.carbon.dashboard.mgt.theme.stub.GSThemeMgtServiceException;
 import org.wso2.carbon.dashboard.mgt.theme.stub.types.carbon.Theme;
-import org.wso2.carbon.dashboard.mgt.theme.stub.ThemeMgtServiceStub;
+import org.wso2.carbon.dashboard.mgt.theme.stub.GSThemeMgtServiceStub;
 
 import javax.activation.DataHandler;
 import java.lang.*;
@@ -36,14 +36,14 @@ import java.util.Locale;
 
 public class GSThemeMgtClient {
     private static final Log log = LogFactory.getLog(GSThemeMgtClient.class);
-    public ThemeMgtServiceStub stub;
+    public GSThemeMgtServiceStub stub;
 
     public GSThemeMgtClient(String cookie,
                             String backendServerURL,
                             ConfigurationContext configCtx,
                             Locale locale) throws AxisFault {
-        String serviceURL = backendServerURL + "ThemeMgtService";
-        stub = new ThemeMgtServiceStub(configCtx, serviceURL);
+        String serviceURL = backendServerURL + "GSThemeMgtService";
+        stub = new GSThemeMgtServiceStub(configCtx, serviceURL);
         ServiceClient client = stub._getServiceClient();
         Options option = client.getOptions();
         option.setManageSession(true);
@@ -87,7 +87,7 @@ public class GSThemeMgtClient {
             stub.rollbackToDefaultGSTheme(user);
         } catch (RemoteException e) {
             log.error(e.getMessage(), e);
-        } catch (ThemeMgtServiceException e) {
+        } catch (GSThemeMgtServiceException e) {
             log.error(e.getMessage(), e);
         }
     }

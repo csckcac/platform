@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.wso2.carbon.dashboard.mgt.theme.stub.ThemeMgtServiceStub;
+import org.wso2.carbon.dashboard.mgt.theme.stub.GSThemeMgtServiceStub;
 import org.wso2.carbon.dashboard.mgt.theme.stub.types.carbon.Theme;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 
@@ -57,7 +57,7 @@ public class ThemeTestCase {
     String gadgetFile;
     FileDataSource gadgetFileDataSource;
     DataHandler content;
-    ThemeMgtServiceStub themeMgtServiceStub;
+    GSThemeMgtServiceStub themeMgtServiceStub;
 
     @BeforeMethod(groups = {"wso2.gs"})
     public void init() throws java.lang.Exception {

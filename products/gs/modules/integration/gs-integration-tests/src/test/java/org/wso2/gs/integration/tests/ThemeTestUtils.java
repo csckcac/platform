@@ -25,7 +25,7 @@ import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.wso2.carbon.dashboard.mgt.theme.stub.ThemeMgtServiceStub;
+import org.wso2.carbon.dashboard.mgt.theme.stub.GSThemeMgtServiceStub;
 
 import java.io.File;
 
@@ -55,12 +55,12 @@ public class ThemeTestUtils {
      * @param sessionCookie
      * @return ThemeMgtServiceStub
      */
-    public static ThemeMgtServiceStub getThemeMgtServiceStub(String sessionCookie) {
+    public static GSThemeMgtServiceStub getThemeMgtServiceStub(String sessionCookie) {
         String serviceURL;
-        serviceURL = FrameworkSettings.SERVICE_URL + "ThemeMgtService";
-        ThemeMgtServiceStub themeMgtServiceStub = null;
+        serviceURL = FrameworkSettings.SERVICE_URL + "GSThemeMgtService";
+        GSThemeMgtServiceStub themeMgtServiceStub = null;
         try {
-            themeMgtServiceStub = new ThemeMgtServiceStub(serviceURL);
+            themeMgtServiceStub = new GSThemeMgtServiceStub(serviceURL);
             ServiceClient client = themeMgtServiceStub._getServiceClient();
             Options option = client.getOptions();
             option.setManageSession(true);

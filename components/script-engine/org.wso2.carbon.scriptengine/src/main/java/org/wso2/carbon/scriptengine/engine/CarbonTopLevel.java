@@ -8,9 +8,6 @@ import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 
 public class CarbonTopLevel extends ImporterTopLevel {
@@ -21,10 +18,10 @@ public class CarbonTopLevel extends ImporterTopLevel {
 
     public CarbonTopLevel(Context context, boolean sealed) {
         super(context, sealed);
-        //TODO: need to remove this once the log is refactored @Nuwan
         defineGlobalFunctions(context);
     }
 
+    //TODO: need to remove this once the log is refactored @Nuwan
     public static void log(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
         String functionName = "log";
         int argsCount = args.length;

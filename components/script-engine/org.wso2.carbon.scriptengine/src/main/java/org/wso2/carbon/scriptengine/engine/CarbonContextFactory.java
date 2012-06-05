@@ -13,6 +13,13 @@ public class CarbonContextFactory extends ContextFactory {
         return super.hasFeature(cx, featureIndex);
     }
 
+    @Override
+    protected Context makeContext() {
+        Context cx = super.makeContext();
+        cx.setClassShutter(new CarbonClassShutter());
+        return cx;
+    }
+
     /**
      * This methods is used to get the E4x implementation factory.
      *

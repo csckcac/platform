@@ -131,7 +131,7 @@ public abstract class AbstractAPIManager implements APIManager {
                     return versionSet;
                 }
                 for (String path : versionPaths) {
-                    versionSet.add(path.split(apiPath)[1]);
+                    versionSet.add(path = path.substring(apiPath.length() + 1));
                 }
             } else {
                 throw new APIManagementException("API version must be a collection " + apiName);

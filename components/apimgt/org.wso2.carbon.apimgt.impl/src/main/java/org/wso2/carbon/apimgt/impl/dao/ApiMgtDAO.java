@@ -29,6 +29,7 @@ import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtil;
 import org.wso2.carbon.apimgt.impl.dto.APIInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
+import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
@@ -727,7 +728,12 @@ public class ApiMgtDAO {
                 if (!map.containsKey(application.getName())) {
                     map.put(application.getName(), new TreeSet<SubscribedAPI>(new Comparator<SubscribedAPI>() {
                         public int compare(SubscribedAPI o1, SubscribedAPI o2) {
-                            return o1.getApiId().getApiName().compareTo(o2.getApiId().getApiName());
+                            int placement = o1.getApiId().getApiName().compareTo(o2.getApiId().getApiName());
+                            if (placement == 0) {
+                                return new APIVersionComparator().compare(new API(o1.getApiId()),
+                                        new API(o2.getApiId()));
+                            }
+                            return placement;
                         }
                     }));
                 }

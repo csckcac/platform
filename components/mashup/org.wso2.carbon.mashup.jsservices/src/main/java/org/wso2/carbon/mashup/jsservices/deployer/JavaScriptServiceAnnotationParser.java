@@ -26,6 +26,7 @@ import org.apache.axis2.description.Parameter;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
+import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
 import org.wso2.javascript.xmlimpl.XML;
 import org.wso2.carbon.mashup.jsservices.JSConstants;
 import org.wso2.javascript.xmlimpl.XMLList;
@@ -122,9 +123,10 @@ public class JavaScriptServiceAnnotationParser {
     // Holds the value for serviceParameters annotation
     private List<Parameter> serviceParameters = new ArrayList<Parameter>();
 
-    public JavaScriptServiceAnnotationParser(Scriptable service, String serviceName)
+    public JavaScriptServiceAnnotationParser(String serviceName)
             throws DeploymentException {
 
+        Scriptable service = JavaScriptEngineUtils.getActiveScope();
         // Check weather the user provided a schemaTargetNamespace. If its not present use a default
         // namespace
         Object schemaTargetNamespaceObject =

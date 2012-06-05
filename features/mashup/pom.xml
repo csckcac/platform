@@ -344,10 +344,16 @@
                 <artifactId>arq</artifactId>
                 <version>${jena.wso2.version}</version>
             </dependency>
+			<dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.scriptengine</artifactId>
+                <version>${scriptengine.version.mashup}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <properties>
+		<scriptengine.version.mashup>1.0.0-SNAPSHOT</scriptengine.version.mashup>
         <!-- carbon component version in all mashup features -->
         <wso2carbon.component.version.mashup>${wso2carbon.version}
         </wso2carbon.component.version.mashup>

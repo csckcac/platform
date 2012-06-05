@@ -284,6 +284,11 @@
                 <version>${wso2carbon.core.version.mashup}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.scriptengine</artifactId>
+                <version>${scriptengine.version.mashup}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-io.wso2</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.wso2.version.mashup}</version>
@@ -307,6 +312,7 @@
     </dependencyManagement>
 
     <properties>
+        <scriptengine.version.mashup>1.0.0-SNAPSHOT</scriptengine.version.mashup>
         <axiom.osgi.version.range.mashup>${axiom.osgi.version.range}
         </axiom.osgi.version.range.mashup>
         <commons-logging.osgi.version.mashup>${commons-logging.version}

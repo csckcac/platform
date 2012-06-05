@@ -16,27 +16,31 @@
 
 package org.wso2.carbon.mashup.javascript.messagereceiver;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import org.apache.axiom.om.OMDataSource;
 import org.apache.axiom.om.impl.llom.OMSourcedElementImpl;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.description.AxisService;
 import org.apache.axis2.json.JSONBadgerfishDataSource;
 import org.apache.axis2.json.JSONDataSource;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.UniqueTag;
 import org.mozilla.javascript.Undefined;
+import org.wso2.carbon.mashup.utils.MashupConstants;
+import org.wso2.carbon.mashup.utils.MashupReader;
+import org.wso2.carbon.mashup.utils.MashupUtils;
+import org.wso2.carbon.scriptengine.cache.ScriptCachingContext;
+import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.net.URL;
 
 /**
  * Class JavaScriptEngine implements a simple Javascript evaluator using Rhino.
@@ -44,11 +48,9 @@ import java.net.URL;
  * Extending the ImporterTopLevel class gives access to the top level methods,
  * importClass() and importPackage().
  */
-public class JavaScriptEngine extends ImporterTopLevel {
+public class JavaScriptEngine {
     //TODO Do we really need this?? (thilina)
     public static String axis2RepositoryLocation;
-
-    private Context cx;
 
     private boolean json = false;
 
@@ -60,22 +62,22 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @param scriptName - Used to display error and warning messages
      */
     public JavaScriptEngine(String scriptName) {
-        super(new AxiomE4XContextFactory().enter());
         this.scriptName = scriptName;
-        cx = Context.getCurrentContext();
-        cx.setErrorReporter(new JavaScriptErrorReporter());
-        String[] names = {"load", "print"};
-        defineFunctionProperties(names, JavaScriptEngine.class, ScriptableObject.DONTENUM);
+        //defineFunctionProperties(names, JavaScriptEngine.class, ScriptableObject.DONTENUM);
     }
 
     /**
      * Evaluates a Reader instance associated to a Javascript source.
      *
-     * @param reader a Reader instance associated to a Javascript source
-     * @throws IOException if the Reader instance generates an IOException
+     * @param service a Reader instance associated to a Javascript source
+     * @throws ScriptException if the Reader instance generates an IOException
      */
-    public void evaluate(Reader reader) throws IOException {
-        cx.evaluateReader(this, reader, scriptName, 1, null);
+    public void evaluate(AxisService service) throws ScriptException {
+        ScriptableObject scope = JavaScriptEngineUtils.getActiveScope();
+        ConfigurationContext configurationContext = (ConfigurationContext) RhinoEngine.getContextProperty(
+                MashupConstants.AXIS2_CONFIGURATION_CONTEXT);
+        RhinoEngine engine = JavaScriptEngineUtils.getEngine();
+        engine.exec(new MashupReader(service), scope, MashupUtils.getScriptCachingContext(configurationContext, service));
     }
 
     /**
@@ -94,7 +96,7 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * @throws FileNotFoundException if the specified source cannot be found
      * @throws IOException           if evaluating the source produces an IOException
      */
-    public static void load(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+    /*public static void load(Context cx, Scriptable thisObj, Object[] args, Function funObj)
             throws IOException {
 
         JavaScriptEngine engine = (JavaScriptEngine) getTopLevelScope(thisObj);
@@ -111,41 +113,21 @@ public class JavaScriptEngine extends ImporterTopLevel {
             FileReader fReader = new FileReader(f);
             engine.evaluate(fReader);
         }
-    }
-
-    /**
-     * Prints the value of each element in the args array.
-     * This is a similar implementation to the Rhino's print()
-     * functionality in the shell.
-     * <strong>We load this method to the JS Engine to be used internally by the java scripts.</strong>
-     *
-     * @param cx
-     * @param thisObj
-     * @param args
-     * @param funObj
-     */
-    public static void print(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
-        for (int i = 0; i < args.length; i++) {
-            if (i > 0) {
-                System.out.print(" ");
-            }
-            String s = Context.toString(args[i]);
-            System.out.print(s);
-        }
-        System.out.println();
-    }
+    }*/
 
     /**
      * Evaluates the requested operation in the Javascript service implementation.
      *
      * @param method Javascript operation name
-     * @param reader a Reader instance associated with the Javascript service
+     * @param service a Reader instance associated with the Javascript service
      * @param args   an Object representing the input to the operation
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault- Thrown in case an exception occurs
      */
-    private Object call(String method, Reader reader, Object args) throws AxisFault {
+    private Object call(String method, AxisService service, Object args) throws AxisFault {
         Object functionArgs[];
+        RhinoEngine engine = JavaScriptEngineUtils.getEngine();
+        Context cx = RhinoEngine.enterContext();
         try {
             // Handle JSON messages
             if (args instanceof OMSourcedElementImpl) {
@@ -161,47 +143,51 @@ public class JavaScriptEngine extends ImporterTopLevel {
                 //content without operation name, so we remove it using a regex
                 args = ((String) args).replaceAll("^[\\{][\\t\\s\\r\\n]*[\"](" + method +
                         ")[\"][\\t\\s\\r\\n]*[:][\\t\\s\\r\\n]*|[\\}]$", "");
-                args = "var x = " + args + ";";
-                cx.evaluateString(this, (String) args, "Get JSON", 0, null);
-                args = this.get("x", this);
+                Gson gson = new Gson();
+                JsonElement element = gson.fromJson((String) args, JsonElement.class);
+                args = "var x = " + element.toString() + ";";
+                ScriptableObject tmp = engine.getRuntimeScope();
+                cx.evaluateString(tmp, (String) args, "Get JSON", 0, null);
+                args = tmp.get("x", tmp);
                 functionArgs = new Object[]{args};
                 json = true;
             } else if (args instanceof Object[]) {
                 functionArgs = (Object[]) args;
             } else if (args != null) {
                 Object[] objects = {args};
-                args = cx.newObject(this, "XML", objects);
+                args = RhinoEngine.newObject("XML", engine.getRuntimeScope(), objects);
                 functionArgs = new Object[]{args};
             } else {
                 functionArgs = new Object[0];
             }
 
-            // Evaluates the javascript file
-            evaluate(reader);
+            ConfigurationContext configurationContext = (ConfigurationContext) RhinoEngine.getContextProperty(
+                    MashupConstants.AXIS2_CONFIGURATION_CONTEXT);
+            ScriptableObject scope = JavaScriptEngineUtils.getActiveScope();
+            ScriptCachingContext sctx = MashupUtils.getScriptCachingContext(configurationContext, service);
 
-            // Get the function from the scope the javascript object is in
-            Object fObj = this.get(method, this);
-            if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
-                throw new AxisFault("Method " + method + " is undefined or not a function");
-            }
-            // Invokes the java script function
+            return engine.call(new MashupReader(service), method, functionArgs, scope, scope, sctx);
 
-            Function f = (Function) fObj;
-            return f.call(cx, this, this, functionArgs);
         } catch (WrappedException exception) {
             throw AxisFault.makeFault(exception.getCause());
         } catch (JavaScriptException exception) {
             throw new AxisFault(exception.getValue().toString(), exception);
         } catch (Throwable throwable) {
             throw AxisFault.makeFault(throwable);
+        } finally {
+            RhinoEngine.exitContext();
         }
     }
 
     public Object evaluateFunction(String func, Object[] args) {
         func = "var x = " + func + ";";
-        this.cx.evaluateString(this, func, "Eval Func", 0, null);
-        Function function = (Function) this.get("x", this);
-        return function.call(this.cx, this, this, args);
+        ScriptableObject scope = JavaScriptEngineUtils.getEngine().getRuntimeScope();
+        Context cx = RhinoEngine.enterContext();
+        cx.evaluateString(scope, func, "Eval Func", 0, null);
+        Function function = (Function) scope.get("x", scope);
+        Object result = function.call(cx, scope, scope, args);
+        RhinoEngine.exitContext();
+        return result;
     }
 
     /**
@@ -210,37 +196,19 @@ public class JavaScriptEngine extends ImporterTopLevel {
      * parameter is evaluated before evaluating the operation.
      *
      * @param method  Javascript operation name
-     * @param reader  a Reader instance associated with the Javascript service
+     * @param service  a Reader instance associated with the Javascript service
      * @param args    an Object representing the input to the operation
      * @param scripts a string represnting a set of Javascript files to be evaluated
      *                before evaluating the service
      * @return an OMNode containing the result from executing the operation
      * @throws AxisFault - Thrown in case an exception occurs
      */
-    public Object call(String method, Reader reader, Object args, String scripts) throws AxisFault {
-
-        if (scripts != null) {
-            // Generate load command out of the parameter scripts
-            scripts = "load(" + ("[\"" + scripts + "\"]").replaceAll(",", "\"],[\"") + ")";
-            cx.evaluateString(this, scripts, "Load JavaScripts", 0, null);
-        }
-        return call(method, reader, args);
-    }
-
-    public Context getCx() {
-        return cx;
+    public Object call(String method, AxisService service, Object args, String scripts) throws AxisFault {
+        return call(method, service, args);
     }
 
     public boolean isJson() {
         return json;
-    }
-
-    public String getScriptName() {
-        return scriptName;
-    }
-
-    public void setScriptName(String scriptName) {
-        this.scriptName = scriptName;
     }
 
     public static boolean isNull(Object object) {

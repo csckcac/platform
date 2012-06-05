@@ -33,20 +33,20 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.synapse.task.TaskDescription;
 import org.mozilla.javascript.*;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
 import org.wso2.carbon.mashup.utils.MashupUtils;
 import org.wso2.carbon.mashup.utils.MashupConstants;
-import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngine;
+import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.utils.NetworkUtils;
 import org.quartz.SimpleTrigger;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Date;
 import java.util.Map;
@@ -161,8 +161,6 @@ public class SystemHostObject extends ScriptableObject {
      */
     public static void jsFunction_include(Context cx, Scriptable thisObj, Object[] arguments,
                                           Function funObj) throws CarbonException {
-        // sanity check
-        JavaScriptEngine engine = (JavaScriptEngine) getTopLevelScope(thisObj);
 
         AxisService axisService;
         // retrieves the AxisService object from the Rhino context
@@ -203,20 +201,22 @@ public class SystemHostObject extends ScriptableObject {
             throw new CarbonException("Cannot create the server base URI.", e);
         }*/
 
-        for (int i = 0; i < arguments.length; i++) {
+        RhinoEngine engine = JavaScriptEngineUtils.getEngine();
+        ConfigurationContext configurationContext =
+                (ConfigurationContext) RhinoEngine.getContextProperty(MashupConstants.AXIS2_CONFIGURATION_CONTEXT);
+
+        for (Object argument : arguments) {
             Reader reader;
-            String path = arguments[i].toString();
+            String path = argument.toString();
             File f = new File(resourceFolder, path);
-            // We change the scriptName in the engine so that when warnings are displayed they use the  name of the
-            // included scripr rather than the calling script name.
-            String parentScriptName = engine.getScriptName();
 
             try {
                 // Check whether this is a file in the service.resources directory
                 if (f.exists() && !f.isDirectory()) {
                     reader = new FileReader(f);
-                    engine.setScriptName(path);
-                    engine.evaluate(reader);
+                    //TODO : we need to cache this too, store updated time against path as an axis param
+                    engine.exec(reader, JavaScriptEngineUtils.getActiveScope(),
+                            MashupUtils.getScriptCachingContext(configurationContext, f.getAbsolutePath(), f.lastModified()));
                 } else {
                     // This is not a file.. So we check whether this is a URL
                     //todo need to check this
@@ -224,45 +224,9 @@ public class SystemHostObject extends ScriptableObject {
                 }
             } catch (IOException e) {
                 throw new CarbonException(e);
-            } finally {
-                engine.setScriptName(parentScriptName);
+            } catch (ScriptException e) {
+                throw new CarbonException(e);
             }
-        }
-    }
-
-    private static void readFromURI(JavaScriptEngine engine, URI baseURI, String path)
-            throws CarbonException {
-        Reader reader;
-        // Not a file in the service.resources Dir.. Then check whether this is
-        // a URI.
-        if (path.startsWith("file://")) {
-            // we do not allow file: schema due to security restrictions
-            throw new CarbonException(
-                    "Unsupported URI schema 'file'. 'file://' is not allowed due to security policies.");
-        }
-
-        // If this is a relative URL, then we resolves this relative to the
-        // baseURI, if the URL is absolute we leave it as it is
-        URI uri = baseURI.resolve(path);
-        HttpMethod method = new GetMethod(uri.toString());
-        try {
-            URL url = uri.toURL();
-            int statusCode = MashupUtils.executeHTTPMethod(method, url, null, null);
-            if (statusCode != HttpStatus.SC_OK) {
-                throw new CarbonException(
-                        "An error occured while getting the resource at " + url + ". Reason :" +
-                        method.getStatusLine());
-            }
-            reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream()));
-            engine.setScriptName(path);
-            engine.evaluate(reader);
-        } catch (MalformedURLException e) {
-            throw new CarbonException(e);
-        } catch (IOException e) {
-            throw new CarbonException(e);
-        } finally {
-            // Release the connection.
-            method.releaseConnection();
         }
     }
 

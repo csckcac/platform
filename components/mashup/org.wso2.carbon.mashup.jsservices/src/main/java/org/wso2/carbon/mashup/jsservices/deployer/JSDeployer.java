@@ -55,10 +55,7 @@ import org.apache.synapse.task.TaskConstants;
 import org.apache.synapse.task.TaskDescriptionRepository;
 import org.apache.synapse.task.TaskScheduler;
 import org.apache.ws.commons.schema.XmlSchemaElement;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.NativeObject;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.*;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.mashup.javascript.hostobjects.system.multitenancy.SystemHostObjectInitializer;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngine;
@@ -68,6 +65,8 @@ import org.wso2.carbon.mashup.javascript.hostobjects.system.FunctionSchedulingMa
 import org.wso2.carbon.mashup.jsservices.JSConstants;
 import org.wso2.carbon.mashup.jsservices.JSUtils;
 import org.wso2.carbon.mashup.utils.MashupConstants;
+import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.javascript.xmlimpl.XML;
 import org.wso2.javascript.xmlimpl.XMLList;
@@ -150,6 +149,8 @@ public class JSDeployer extends AbstractDeployer {
      */
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {
 
+        RhinoEngine.enterContext();
+
         String jsFilePath = deploymentFileData.getAbsolutePath();
         /*
         Due to hierarchical services deployment of axis2, we need to check for the location
@@ -227,6 +228,7 @@ public class JSDeployer extends AbstractDeployer {
             }
             //End tenant flow
             SuperTenantCarbonContext.endTenantFlow();
+            RhinoEngine.exitContext();
         }
     }
 
@@ -303,8 +305,10 @@ public class JSDeployer extends AbstractDeployer {
                         (Function) service.getParameterValue(JSConstants.MASHUP_DESTROY_FUNCTION);
                 if (destroy != null) {
                     JavaScriptEngine engine = new JavaScriptEngine(jsFileName);
-                    JavaScriptEngineUtils.loadHostObjects(engine, jsFilePath);
-                    destroy.call(engine.getCx(), engine, engine, new Object[0]);
+                    ScriptableObject scope = JavaScriptEngineUtils.getActiveScope();
+                    Context cx = RhinoEngine.enterContext();
+                    destroy.call(cx, scope, scope, new Object[0]);
+                    RhinoEngine.exitContext();
                 }
             }
 
@@ -363,6 +367,7 @@ public class JSDeployer extends AbstractDeployer {
             String jsFileNameShort = DescriptionBuilder.getShortFileName(jsFileName);
 
             AxisService axisService = new AxisService();
+            axisService.setLastUpdate();
 
             /*
             org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptReceiver needs this to
@@ -410,22 +415,17 @@ public class JSDeployer extends AbstractDeployer {
              having the MessageContext injected in the deployment time. Some host objects need
              data from them at the initialize time.
              */
-            engine.getCx().putThreadLocal(MashupConstants.AXIS2_SERVICE, axisService);
-            engine.getCx().putThreadLocal(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configCtx);
+            ScriptableObject serviceScope = JavaScriptEngineUtils.getEngine().getRuntimeScope();
+            RhinoEngine.putContextProperty(MashupConstants.ACTIVE_SCOPE, serviceScope);
+            RhinoEngine.putContextProperty(MashupConstants.AXIS2_SERVICE, axisService);
+            RhinoEngine.putContextProperty(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configCtx);
 
-            /*
-            Load the JavaScriptHostObjects that are specified using the OSGI header
-            JavaScript-HostObject
-            */
-            JavaScriptEngineUtils.loadHostObjects(engine, jsFileNameShort);
-
-            FileInputStream fileInputStream = new FileInputStream(jsFile);
             // load the service java script file
-            engine.evaluate(new BufferedReader(new InputStreamReader(fileInputStream)));
+            engine.evaluate(axisService);
 
             // Use the JavaScriptServiceAnnotationParser to extract serviceLevel annotations
             JavaScriptServiceAnnotationParser serviceAnnotationParser =
-                    new JavaScriptServiceAnnotationParser(engine, jsFileNameShort);
+                    new JavaScriptServiceAnnotationParser(jsFileNameShort);
 
             axisService.setParent(axisServiceGroup);
             axisService.setClassLoader(deploymentFileData.getClassLoader());
@@ -513,11 +513,11 @@ public class JSDeployer extends AbstractDeployer {
             createDefaultEndpoints(axisService);
 
             // Obtain the list of functions in the java script service and process each one of them.
-            Object[] ids = engine.getIds();
+            Object[] ids = serviceScope.getIds();
             boolean operationFound = false;
             for (Object id : ids) {
                 String method = (String) id;
-                Object object = engine.get(method, engine);
+                Object object = serviceScope.get(method, serviceScope);
                 // some id's are not functions
                 if (object instanceof Function) {
                     if (!operationFound) {
@@ -546,8 +546,9 @@ public class JSDeployer extends AbstractDeployer {
             undeployment.
             */
             if (init != null) {
-                JavaScriptEngineUtils.loadHostObjects(engine, serviceName);
-                init.call(engine.getCx(), engine, engine, new Object[0]);
+                Context cx = RhinoEngine.enterContext();
+                init.call(cx, serviceScope, serviceScope, new Object[0]);
+                RhinoEngine.exitContext();
             }
 
             if (destroy != null) {
@@ -557,11 +558,11 @@ public class JSDeployer extends AbstractDeployer {
             ArrayList<AxisService> serviceList = new ArrayList<AxisService>();
             serviceList.add(axisService);
             return serviceList;
-        } catch (FileNotFoundException e) {
-            throw new DeploymentException("JS Service File Not Found", e);
         } catch (IOException e) {
             throw new DeploymentException(e);
         } catch (CarbonException e) {
+            throw new DeploymentException(e);
+        } catch (ScriptException e) {
             throw new DeploymentException(e);
         }
     }
@@ -990,13 +991,15 @@ public class JSDeployer extends AbstractDeployer {
         function. We need that to get the order of the parameter names in that function.
         Rhino does not preserve the order of parameters as they are held in a map
         */
+        Context cx = RhinoEngine.enterContext();
+        ScriptableObject serviceScope = JavaScriptEngineUtils.getActiveScope();
         String sourceStr =
                 "function org_wso2_mashup_ConvertToString(){ " + "var code = " + functionName +
                         ".toString();" + "return code;}";
-        engine.getCx().evaluateString(engine, sourceStr, "", 0, null);
+        cx.evaluateString(serviceScope, sourceStr, "", 0, null);
 
         // Get the function from the scope the javascript object is in
-        Object fObj = engine.get("org_wso2_mashup_ConvertToString", engine);
+        Object fObj = serviceScope.get("org_wso2_mashup_ConvertToString", serviceScope);
         if (!(fObj instanceof Function) || (fObj == Scriptable.NOT_FOUND)) {
             throw new DeploymentException("Method " + "org_wso2_mashup_ConvertToString" +
                     " is undefined or not a function");
@@ -1006,7 +1009,7 @@ public class JSDeployer extends AbstractDeployer {
         Function f = (Function) fObj;
 
         // Execute our org_wso2_mashup_ConvertToString function and get the function a string
-        Object args = f.call(engine.getCx(), engine, engine, functionArgs);
+        Object args = f.call(cx, serviceScope, serviceScope, functionArgs);
         String[] params = null;
         if (args instanceof String) {
             String functionString = (String) args;

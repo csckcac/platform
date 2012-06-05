@@ -29,6 +29,7 @@ import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.databinding.types.Day;
 import org.apache.axis2.databinding.types.Duration;
@@ -40,6 +41,7 @@ import org.apache.axis2.databinding.types.YearMonth;
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.axis2.description.AxisMessage;
 import org.apache.axis2.description.AxisOperation;
+import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.java2wsdl.TypeTable;
 import org.apache.axis2.engine.MessageReceiver;
@@ -57,12 +59,8 @@ import org.apache.ws.commons.schema.XmlSchemaSimpleTypeContent;
 import org.apache.ws.commons.schema.XmlSchemaSimpleTypeRestriction;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.constants.Constants;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.NativeObject;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.Undefined;
-import org.mozilla.javascript.UniqueTag;
+import org.mozilla.javascript.*;
+import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.javascript.xmlimpl.XML;
 import org.wso2.javascript.xmlimpl.XMLList;
 import org.wso2.carbon.mashup.utils.MashupConstants;
@@ -98,15 +96,20 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             throws AxisFault {
         SOAPEnvelope soapEnvelope = inMessage.getEnvelope();
         try {
+
+            RhinoEngine.enterContext();
             // Create JS Engine, Inject HostObjects
             String serviceName = inMessage.getAxisService().getName();
             JavaScriptEngine engine = new JavaScriptEngine(serviceName);
+            AxisService axisService = inMessage.getAxisService();
+            ConfigurationContext configurationContext = inMessage.getConfigurationContext();
 
+            RhinoEngine.putContextProperty(MashupConstants.ACTIVE_SCOPE,
+                    JavaScriptEngineUtils.getEngine().getRuntimeScope());
             // Inject the incoming MessageContext to the Rhino Context. Some
             // host objects need access to the MessageContext. Eg: FileSystem,
             // WSRequest
-            Context context = engine.getCx();
-            context.putThreadLocal(MashupConstants.AXIS2_MESSAGECONTEXT, inMessage);
+            RhinoEngine.putContextProperty(MashupConstants.AXIS2_MESSAGECONTEXT, inMessage);
 
             /*
              * Some host objects depend on the data we obtain from the
@@ -117,15 +120,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
              * available at that time. For the consistency we inject them in
              * here too..
              */
-            context.putThreadLocal(MashupConstants.AXIS2_SERVICE, inMessage.getAxisService());
-            context.putThreadLocal(MashupConstants.AXIS2_CONFIGURATION_CONTEXT,
-                    inMessage.getConfigurationContext());
-
-            // Rhino E4X XMLLibImpl object can be instantiated only from within a script
-            // So we instantiate it in here, so that we can use it outside of the script later
-            engine.getCx().evaluateString(engine, "new XML();", "Instantiate E4X", 0, null);
-
-            JavaScriptEngineUtils.loadHostObjects(engine, serviceName);
+            RhinoEngine.putContextProperty(MashupConstants.AXIS2_SERVICE, axisService);
+            RhinoEngine.putContextProperty(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configurationContext);
 
             // JS Engine seems to need the Axis2 repository location to load the
             // imported scripts
@@ -185,7 +181,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             if (parameter != null) {
                 annotated = (Boolean) parameter.getValue();
             }
-            Object response = engine.call(jsFunctionName, reader, args, scripts);
+            Object response = engine.call(jsFunctionName, axisService, args, scripts);
 
             // Create the outgoing message
             SOAPFactory fac;
@@ -280,16 +276,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     : SOAP12Constants.SOAP_DEFAULT_NAMESPACE_PREFIX + ":" + SOAP11Constants
                     .FAULT_CODE_RECEIVER);
             throw fault;
-        }
-    }
-
-    private String getOMResponse(Object response, JavaScriptEngine engine) {
-        String func = "function(xml){return xml.toXMLString();}";
-        Object result = engine.evaluateFunction(func, new Object[]{response});
-        if (result instanceof String) {
-            return (String) result;
-        } else {
-            return "</>";
+        } finally {
+            RhinoEngine.exitContext();
         }
     }
 
@@ -395,7 +383,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     List innerParams = handleComplexTypeInRequest((XmlSchemaComplexType) schemaType,
                             complexTypePayload,
                             engine, innerParamNames);
-                    Scriptable scriptable = engine.getCx().newObject(engine);
+                    Scriptable scriptable = JavaScriptEngineUtils.getEngine().newObject();
                     for (int i = 0; i < innerParams.size(); i++) {
                         scriptable.put((String) innerParamNames.get(i), scriptable,
                                 innerParams.get(i));
@@ -767,12 +755,13 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
     private Object createParam(OMElement omElement, QName type, JavaScriptEngine engine)
             throws AxisFault {
 
+        RhinoEngine rhinoEngine = JavaScriptEngineUtils.getEngine();
+        ScriptableObject serviceScope = JavaScriptEngineUtils.getActiveScope();
         if (Constants.XSD_ANYTYPE.equals(type)) {
-            Context context = engine.getCx();
             OMElement element = omElement.getFirstElement();
             if (element != null) {
                 Object[] objects = {element};
-                return context.newObject(engine, "XML", objects);
+                return RhinoEngine.newObject("XML", serviceScope, objects);
             } else if (omElement.getText() != null) {
                 OMAttribute omAttribute = omElement.getAttribute(new QName("http://www.w3.org/2001/XMLSchema-instance", "type"));
                 if (omAttribute != null) {
@@ -922,7 +911,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_DATETIME.equals(type)) {
             try {
                 Calendar calendar = ConverterUtil.convertToDateTime(value);
-                return engine.getCx().newObject(engine, "Date", new Object[]{calendar.getTimeInMillis()});
+                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "date time"));
             }
@@ -930,7 +919,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_DATE.equals(type)) {
             try {
                 Date date = ConverterUtil.convertToDate(value);
-                return engine.getCx().newObject(engine, "Date", new Object[]{date.getTime()});
+                return RhinoEngine.newObject("Date", serviceScope, new Object[]{date.getTime()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "date"));
             }
@@ -938,7 +927,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_TIME.equals(type)) {
             try {
                 Time time = ConverterUtil.convertToTime(value);
-                return engine.getCx().newObject(engine, "Date", new Object[]{time.getAsCalendar().getTimeInMillis()});
+                return RhinoEngine.newObject("Date", serviceScope, new Object[]{time.getAsCalendar().getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "time"));
             }
@@ -954,7 +943,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                return engine.getCx().newObject(engine, "Date", new Object[]{calendar.getTimeInMillis()});
+                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "yearMonth"));
             }
@@ -970,7 +959,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                return engine.getCx().newObject(engine, "Date", new Object[]{calendar.getTimeInMillis()});
+                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "MonthDay"));
             }
@@ -985,7 +974,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                return engine.getCx().newObject(engine, "Date", new Object[]{calendar.getTimeInMillis()});
+                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "year"));
             }
@@ -1000,7 +989,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                return engine.getCx().newObject(engine, "Date", new Object[]{calendar.getTimeInMillis()});
+                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "month"));
             }
@@ -1015,7 +1004,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                return engine.getCx().newObject(engine, "Date", new Object[]{calendar.getTimeInMillis()});
+                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "day"));
             }
@@ -1046,11 +1035,11 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     Object[] namespaceObjects = {prefix,
                             namespaceURI};
                     e4xNamespace =
-                            engine.getCx().newObject(engine, "Namespace", namespaceObjects);
+                            RhinoEngine.newObject("Namespace", serviceScope, namespaceObjects);
                 }
                 Object[] qnameObjects = {e4xNamespace,
                         value};
-                return engine.getCx().newObject(engine, "QName", qnameObjects);
+                return RhinoEngine.newObject("QName", serviceScope, qnameObjects);
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "string"));
             }

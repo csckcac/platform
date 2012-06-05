@@ -342,8 +342,7 @@ public class WSRequestHostObject extends ScriptableObject {
 
         try {
             if (wsRequest.async) { // asynchronous call to send()
-                AxisCallback callback =
-                        new WSRequestCallBack(Context.getCurrentContext(), wsRequest);
+                AxisCallback callback = new WSRequestCallBack(wsRequest);
                 setRampartConfigs(wsRequest, operationName);
                 if (wsRequest.wsdlMode) {
                     //                    setSSLProperties(wsRequest);

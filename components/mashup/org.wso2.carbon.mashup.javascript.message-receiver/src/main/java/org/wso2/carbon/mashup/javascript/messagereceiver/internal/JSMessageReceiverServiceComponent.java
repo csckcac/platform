@@ -20,6 +20,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
 import org.wso2.carbon.mashup.javascript.hostobjects.hostobjectservice.service.HostObjectService;
+import org.wso2.carbon.scriptengine.cache.CacheManager;
+import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+
 
 /**
  * This class is used to get OSGI services and register OSGI services.
@@ -42,6 +45,13 @@ public class JSMessageReceiverServiceComponent {
     public void activate(ComponentContext componentContext){
         try {
             JavaScriptEngineUtils.setHostObjectService(hostObjectService);
+            String dir = System.getProperty("java.io.tmpdir");
+            if (dir != null) {
+                JavaScriptEngineUtils.setEngine(new RhinoEngine(new CacheManager("mashup", dir)));
+            } else {
+                String msg = "Please specify java.io.tmpdir system property";
+                log.error(msg);
+            }
         } catch (Exception e) {
             log.error("Failed setting the OSGI servce, HostObjectService", e);
         }

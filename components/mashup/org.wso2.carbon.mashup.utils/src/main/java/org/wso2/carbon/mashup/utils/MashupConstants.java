@@ -69,6 +69,8 @@ public class MashupConstants {
 
     public static final String SERVICE_JS = "ServiceJS";
 
+    public static final String ACTIVE_SCOPE = "active_scope";
+
     public static final String JS_SERVICE_REPO = "jsservices";
 
     public static final String JS_SERVICE_EXTENSION = ".js";

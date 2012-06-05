@@ -17,6 +17,7 @@
 package org.wso2.carbon.mashup.utils;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.commons.httpclient.Credentials;
@@ -31,7 +32,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.protocol.HTTP;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.core.transports.CarbonHttpResponse;
+import org.wso2.carbon.scriptengine.cache.ScriptCachingContext;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -84,6 +87,23 @@ public class MashupUtils {
         }
 
         return httpClient.executeMethod(method);
+    }
+
+    public static ScriptCachingContext getScriptCachingContext(ConfigurationContext configurationContext,
+                                                               AxisService service) {
+        String tenantId = Integer.toString(MultitenantUtils.getTenantId(configurationContext));
+        String scriptPath = (String) service.getParameterValue(MashupConstants.SERVICE_JS);
+        ScriptCachingContext sctx = new ScriptCachingContext(tenantId, "/", "/", scriptPath);
+        sctx.setSourceModifiedTime(service.getLastUpdate());
+        return sctx;
+    }
+
+    public static ScriptCachingContext getScriptCachingContext(ConfigurationContext configurationContext,
+                                                               String scriptPath, long lastModified) {
+        String tenantId = Integer.toString(MultitenantUtils.getTenantId(configurationContext));
+        ScriptCachingContext sctx = new ScriptCachingContext(tenantId, "/", "/", scriptPath);
+        sctx.setSourceModifiedTime(lastModified);
+        return sctx;
     }
 
     /**

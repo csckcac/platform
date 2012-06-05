@@ -13,7 +13,8 @@ var login = function (username, password) {
         }
         return {
             error:result.error,
-            cookie:null
+            cookie:null,
+            message:result.detail
         };
     }
     cookie = result.sessionId;

@@ -208,30 +208,4 @@
     </div>
 </div>
 
- <script type="text/javascript">
-
-/*
-
- $(document).ready(function() {
-     $('input#addNewAPIButton').click(function() {
-         $.ajax({
-             url: '<%=site.context%>/site/blocks/item-add/ajax/add.jag',
-             type: 'post',
-             dataType: 'json',
-             data: $('form#addAPIForm').serialize(),
-             success: function(data) {
-                 if (!data.error) {
-                     location.href = "site/pages/index.jag";
-                     $("#addAPIForm")[0].reset();
-                 } else {
-                     $('#addAPIError').show('fast');
-                     $('#addErrorSpan').html('<strong>Sorry. This API cannot be added.</strong><br />' + data.message);
-                 }
-             }
-         });
-         return false;
-     });
- });*/
-
- </script>
 <% }); %>

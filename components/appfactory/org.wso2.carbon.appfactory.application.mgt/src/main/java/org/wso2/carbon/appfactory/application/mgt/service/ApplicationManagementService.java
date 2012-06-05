@@ -48,7 +48,7 @@ public class ApplicationManagementService extends AbstractAdmin {
         TenantManager tenantManager = Util.getRealmService().getTenantManager();
         try {
             UserRealm realm = Util.getRealmService().getTenantUserRealm(tenantManager.getTenantId(applicationId));
-            realm.getUserStoreManager().addUser(userName, null, roles, null, null);
+            realm.getUserStoreManager().updateRoleListOfUser(userName, null, roles);
             return true;
         } catch (UserStoreException e) {
             String msg = "Error while adding user " + userName + " to application " + applicationId;

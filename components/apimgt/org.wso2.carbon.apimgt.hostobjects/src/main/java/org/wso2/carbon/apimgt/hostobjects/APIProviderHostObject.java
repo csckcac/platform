@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.apimgt.hostobjects;
 
+import org.apache.axis2.client.Options;
+import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.context.ServiceContext;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,6 +49,7 @@ import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.impl.UserAwareAPIProvider;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
+import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
 import org.wso2.carbon.apimgt.usage.client.APIUsageStatisticsClient;
 import org.wso2.carbon.apimgt.usage.client.dto.*;
@@ -53,6 +58,7 @@ import org.wso2.carbon.apimgt.usage.client.dto.APIVersionLastAccessTimeDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.APIVersionUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.PerUserAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
+import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.hostobjects.file.FileHostObject;
 import org.wso2.carbon.hostobjects.web.RequestHostObject;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
@@ -61,6 +67,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,7 +88,6 @@ public class APIProviderHostObject extends ScriptableObject {
     // The zero-argument constructor used for create instances for runtime
     public APIProviderHostObject() throws APIManagementException {
         apiProvider = APIManagerFactory.getInstance().getAPIProvider();
-        //apiProvider = APIManagerFactory.getInstance().getAPIProvider();
     }
 
     public APIProviderHostObject(String loggedUser) throws APIManagementException {
@@ -113,9 +119,52 @@ public class APIProviderHostObject extends ScriptableObject {
         return ((APIProviderHostObject) thisObj).getApiProvider();
     }
 
-    public static boolean jsFunction_login(Context cx, Scriptable thisObj,
-                                           Object[] args, Function funObj) throws ScriptException {
-        return true;
+    public static NativeObject jsFunction_login(Context cx, Scriptable thisObj,
+                                           Object[] args, Function funObj) throws ScriptException, APIManagementException {
+
+        if (args.length != 2 || !isStringValues(args)) {
+            throw new ScriptException("Invalid input parameters to the login method");
+        }
+
+        String username = (String) args[0];
+        String password = (String) args[1];
+
+        APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
+        String url = config.getFirstProperty(APIConstants.AUTH_MANAGER_URL);
+        if (url == null) {
+            throw new APIManagementException("API key manager URL unspecified");
+        }
+
+        NativeObject row = new NativeObject();
+        try {
+            AuthenticationAdminStub authAdminStub = new AuthenticationAdminStub(null, url + "AuthenticationAdmin");
+            ServiceClient client = authAdminStub._getServiceClient();
+            Options options = client.getOptions();
+            options.setManageSession(true);
+            
+            String host = new URL(url).getHost();
+            authAdminStub.login(username, password, host);
+            ServiceContext serviceContext = authAdminStub.
+                    _getServiceClient().getLastOperationContext().getServiceContext();
+            String sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
+
+            boolean authorized =
+                    APIUtil.checkPermissionQuietly(username, APIConstants.Permissions.API_CREATE) ||
+                    APIUtil.checkPermissionQuietly(username, APIConstants.Permissions.API_PUBLISH);
+            
+            if (authorized) {
+                row.put("user", row, username);
+                row.put("sessionId", row, sessionCookie);
+                row.put("error", row, false);
+            } else {
+                throw new APIManagementException("Insufficient privileges");
+            }
+        } catch (Exception e) {
+            row.put("error", row, true);
+            row.put("detail", row, e.getMessage());
+        }
+
+        return row;
     }
 
     public static String jsFunction_getAuthServerURL(Context cx, Scriptable thisObj,

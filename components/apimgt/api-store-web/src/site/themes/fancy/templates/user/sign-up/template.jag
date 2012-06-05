@@ -6,24 +6,24 @@
             location.href = "<%=site.context%>";
         </script>
         <% } %>
+        <script>
+            var context= "<%=site.context%>";
+        </script>
 <h3>Sign - up for a new account</h3>
-<!--<div class="alert alert-error" id="sign-up-error-box">
-    <button class="close" data-dismiss="alert">×</button>
-    <div id="sign-up-error"><strong>Oh snap!</strong> Change a few things up and try submitting again.</div>
-</div>-->
+
 <form class="form-horizontal well" id="sign-up">
 <fieldset>
     <div class="control-group">
-        <label class="control-label"  for="username">Username</label>
-        <div class="controls"><input id="username" name="username" type="text" class="required input-xlarge" /></div>
+        <label class="control-label"  for="newUsername">Username</label>
+        <div class="controls"><input id="newUsername" name="newUsername" type="text" class="required input-xlarge" /></div>
     </div>
 
     <div class="control-group">
-        <label class="control-label" for="password">Password:</label>
+        <label class="control-label" for="newPassword">Password:</label>
         <div class="controls">
             <div class="row-fluid">
                     <div class="span6">
-                        <input type="password" class="input-xlarge password" id="password"/>
+                        <input type="password" class="input-xlarge password" id="newPassword" name="newPassword" />
 
                         <div class="help-block" id="password-help" style="display:none">
                             For a more secure password:
@@ -51,8 +51,8 @@
 
 
     <div class="control-group">
-            <label class="control-label" for="passwordConfirm">Re-type Password:</label>
-            <div class="controls"><input type="password" class="matchPasswords input-xlarge" id="passwordConfirm" /></div>
+            <label class="control-label" for="newPasswordConfirm">Re-type Password:</label>
+            <div class="controls"><input type="password" class="matchPasswords input-xlarge" id="newPasswordConfirm" /></div>
     </div>
 
     <div class="form-actions">

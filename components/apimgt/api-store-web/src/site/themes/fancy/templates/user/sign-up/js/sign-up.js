@@ -1,20 +1,31 @@
 $(document).ready(function() {
     $.validator.addMethod("matchPasswords", function(value) {
-		return value == $("#password").val();
+		return value == $("#newPassword").val();
 	}, "The passwords you entered do not match.");
 
     $("#sign-up").validate({
      submitHandler: function(form) {
-       form.submit();
+       jagg.post("/site/blocks/user/sign-up/ajax/user-add.jag", {
+            action:"addUser",
+            username:$('#newUsername').val(),
+            password:$('#newPassword').val()
+        }, function (result) {
+            if (result.error == false) {
+                jagg.message('User added success');
+                location.href = context;
+            } else {
+                jagg.message(result.message);
+            }
+        }, "json");
      }
     });
-    $("#password").keyup(function() {
+    $("#newPassword").keyup(function() {
         $(this).valid();
     });
-    $('#password').focus(function(){
+    $('#newPassword').focus(function(){
         $('#password-help').show();
     });
-    $('#password').blur(function(){
+    $('#newPassword').blur(function(){
         $('#password-help').hide();
     });
 });

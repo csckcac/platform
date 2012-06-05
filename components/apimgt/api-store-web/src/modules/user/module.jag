@@ -9,6 +9,10 @@ jagg.module("user", {
         return jagg.require(jagg.getModulesDir() + "user/user.jag").setUser.apply(this, arguments);
     },
 
+    addUser:function () {
+        return jagg.require(jagg.getModulesDir() + "user/add.jag").addUser.apply(this, arguments);
+    },
+
     login:function () {
         return jagg.require(jagg.getModulesDir() + "user/login.jag").login.apply(this, arguments);
     },

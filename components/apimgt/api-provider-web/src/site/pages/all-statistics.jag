@@ -1,0 +1,35 @@
+<%
+include("/jagg/jagg.jag");
+var site = require("/site/conf/site.json");
+
+(function () {
+    var user = jagg.getUser();
+    if (!user) {
+        response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/login.jag"));
+        return;
+    }
+    mod = jagg.module("api");
+    jagg.render({
+        "name":"page/base",
+        "inputs":{
+            "title":"API Provider- All Statistics",
+             "header":{
+                "name":"menu/primary"
+            },
+            "body":[
+                {
+                    "name":"layout/extended",
+                    "inputs":{
+                        "middle":{
+                            "name":"stats"
+
+                        }
+                    }
+                }
+            ]
+        }
+    });
+}());
+
+
+%>

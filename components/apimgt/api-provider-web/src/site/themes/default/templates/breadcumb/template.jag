@@ -13,6 +13,8 @@
                 var userMappedUrl=jagg.getMappedUrl("/site/pages/user.jag");
                 var statsUrl=jagg.getAbsoluteUrl("/site/pages/statistics.jag");
                 var statsMappedUrl=jagg.getMappedUrl("/site/pages/statistics.jag");
+                var allStatsUrl=jagg.getAbsoluteUrl("/site/pages/all-statistics.jag");
+                var allStatsMappedUrl=jagg.getMappedUrl("/site/pages/all-statistics.jag");
             %>
             <ul class="breadcrumb">
                 <% if(reqUrl.indexOf(listUrl)>=0 ||reqUrl.indexOf(listMappedUrl)>=0||reqUrl.equals(site.context+"/")){%>
@@ -48,6 +50,18 @@
                 </li>
                 <li>
                     <a href="<%=addMappedUrl%>">Add New API</a>
+                </li>
+                <% } %>
+
+                <% if(reqUrl.indexOf(allStatsUrl)>=0||reqUrl.indexOf(allStatsMappedUrl)>=0){%>
+                <li>
+                    APIs
+                </li>
+                <li>
+                    <span class="divider">/</span>
+                </li>
+                <li>
+                    <a href="<%=allStatsMappedUrl%>">All Statistics</a>
                 </li>
                 <% } %>
 

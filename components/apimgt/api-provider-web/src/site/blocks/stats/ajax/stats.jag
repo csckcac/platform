@@ -5,12 +5,17 @@ include("/jagg/jagg.jag");
     var mod, obj, result, username,
             action = request.getParameter("action"),
             site = require("/site/conf/site.json"),
-            msg = require("/site/conf/ui-messages.jag");
+            msg = require("/site/conf/ui-messages.jag")
+            allProviders="__all_providers__";
     if (action === "getProviderAPIServiceTime") {
         mod = jagg.module("statistics");
         var provider = jagg.getUser().username;
-        var server = request.getParameter("server");
-        result = mod.getProviderAPIServiceTime(provider,server);
+        var currentLocation = request.getParameter("currentLocation");
+        if(currentLocation.indexOf("all-statistics")>=0){
+        result = mod.getProviderAPIServiceTime(allProviders);
+        }else{
+        result = mod.getProviderAPIServiceTime(provider);
+        }
         if (result.error == "true") {
             obj = {
                 error:result.error,
@@ -26,8 +31,12 @@ include("/jagg/jagg.jag");
     } else if (action === "getProviderAPIUsage") {
         mod = jagg.module("statistics");
         var provider = jagg.getUser().username;
-        var server = request.getParameter("server");
-        result = mod.getProviderAPIUsage(provider,server);
+        var currentLocation = request.getParameter("currentLocation");
+        if(currentLocation.indexOf("all-statistics")>=0){
+        result = mod.getProviderAPIUsage(allProviders);
+        }else{
+        result = mod.getProviderAPIUsage(provider);
+        }
         if (result.error == "true") {
             obj = {
                 error:result.error,
@@ -44,8 +53,12 @@ include("/jagg/jagg.jag");
     } else if (action === "getProviderAPIVersionUserLastAccess") {
         mod = jagg.module("statistics");
         var provider = jagg.getUser().username;
-        var server = request.getParameter("server");
-        result = mod.getProviderAPIVersionUserLastAccess(provider,server);
+        var currentLocation = request.getParameter("currentLocation");
+        if(currentLocation.indexOf("all-statistics")>=0){
+        result = mod.getProviderAPIVersionUserLastAccess(allProviders);
+        }else{
+        result = mod.getProviderAPIVersionUserLastAccess(provider);
+        }
         if (result.error == "true") {
             obj = {
                 error:result.error,
@@ -62,7 +75,12 @@ include("/jagg/jagg.jag");
     }else if (action === "getSubscriberCountByAPIs") {
         mod = jagg.module("statistics");
         var provider = jagg.getUser().username;
+        var currentLocation = request.getParameter("currentLocation");
+        if(currentLocation.indexOf("all-statistics")>=0){
+        result = mod.getSubscriberCountByAPIs(allProviders);
+        }else{
         result = mod.getSubscriberCountByAPIs(provider);
+        }
         if (result.error == "true") {
             obj = {
                 error:result.error,

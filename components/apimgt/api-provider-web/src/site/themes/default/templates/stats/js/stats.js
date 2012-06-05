@@ -8,8 +8,8 @@ $(document).ready(function() {
 
     //Initiating the fake progress bar
     jagg.fillProgress('apiChart');jagg.fillProgress('subsChart');jagg.fillProgress('serviceTimeChart');jagg.fillProgress('tempLoadingSpace');
-
-    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",server:"https://localhost:9444/" },
+    var currentLocation=window.location.pathname;
+    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",currentLocation:currentLocation },
               function (json) {
                   if (!json.error) {
                       var length = json.usage.length,s1 = [];
@@ -61,7 +61,7 @@ $(document).ready(function() {
               }, "json");
 
 
-    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getSubscriberCountByAPIs" },
+    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getSubscriberCountByAPIs",currentLocation:currentLocation  },
               function (json) {
                   if (!json.error) {
                       var length = json.usage.length,data = [];
@@ -103,7 +103,7 @@ $(document).ready(function() {
               }, "json");
 
 
-    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIUsage",server:"https://localhost:9444/" },
+    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIUsage",currentLocation:currentLocation  },
               function (json) {
                   if (!json.error) {
                       var length = json.usage.length,data = [];
@@ -144,7 +144,7 @@ $(document).ready(function() {
               }, "json");
 
 
-    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIVersionUserLastAccess",server:"https://localhost:9444/" },
+    jagg.post("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIVersionUserLastAccess",currentLocation:currentLocation  },
               function (json) {
                   if (!json.error) {
                       $('#lastAccessTable').find("tr:gt(0)").remove();

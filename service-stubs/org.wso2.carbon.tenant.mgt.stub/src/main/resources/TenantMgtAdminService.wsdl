@@ -1,7 +1,8 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.mgt.tenant.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2402="http://beans.mgt.tenant.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.mgt.tenant.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.mgt.tenant.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax2515="http://beans.mgt.tenant.carbon.wso2.org/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2513="http://beans.common.stratos.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.mgt.tenant.carbon.wso2.org">
     <wsdl:documentation>TenantMgtAdminService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax2403="http://beans.mgt.tenant.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.mgt.tenant.carbon.wso2.org">
+        <xs:schema xmlns:ax2517="http://beans.mgt.tenant.carbon.wso2.org/xsd" xmlns:ax2514="http://beans.common.stratos.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.mgt.tenant.carbon.wso2.org">
+            <xs:import namespace="http://beans.common.stratos.carbon.wso2.org/xsd"/>
             <xs:import namespace="http://beans.mgt.tenant.carbon.wso2.org/xsd"/>
             <xs:element name="TenantMgtAdminServiceException">
                 <xs:complexType>
@@ -18,7 +19,7 @@
             <xs:element name="updateTenant">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="tenantInfoBean" nillable="true" type="ax2402:TenantInfoBean"/>
+                        <xs:element minOccurs="0" name="tenantInfoBean" nillable="true" type="ax2513:TenantInfoBean"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -30,7 +31,7 @@
             <xs:element name="retrieveTenantsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2402:TenantInfoBean"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2513:TenantInfoBean"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -44,7 +45,7 @@
             <xs:element name="retrievePaginatedTenantsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2402:PaginatedTenantInfoBean"/>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2515:PaginatedTenantInfoBean"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -58,14 +59,7 @@
             <xs:element name="getTenantResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2402:TenantInfoBean"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deleteTenant">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2513:TenantInfoBean"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -79,7 +73,7 @@
             <xs:element name="addTenant">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="tenantInfoBean" nillable="true" type="ax2402:TenantInfoBean"/>
+                        <xs:element minOccurs="0" name="tenantInfoBean" nillable="true" type="ax2513:TenantInfoBean"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -98,7 +92,7 @@
                 </xs:complexType>
             </xs:element>
         </xs:schema>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.mgt.tenant.carbon.wso2.org/xsd">
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.common.stratos.carbon.wso2.org/xsd">
             <xs:complexType name="TenantInfoBean">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="active" type="xs:boolean"/>
@@ -115,10 +109,13 @@
                     <xs:element minOccurs="0" name="usagePlan" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2516="http://beans.common.stratos.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.mgt.tenant.carbon.wso2.org/xsd">
+            <xs:import namespace="http://beans.common.stratos.carbon.wso2.org/xsd"/>
             <xs:complexType name="PaginatedTenantInfoBean">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="numberOfPages" type="xs:int"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="tenantInfoBeans" nillable="true" type="ax2402:TenantInfoBean"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="tenantInfoBeans" nillable="true" type="ax2516:TenantInfoBean"/>
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
@@ -141,7 +138,6 @@
     <wsdl:message name="deactivateTenantRequest">
         <wsdl:part name="parameters" element="ns:deactivateTenant"/>
     </wsdl:message>
-    <wsdl:message name="deactivateTenantResponse"/>
     <wsdl:message name="retrievePaginatedTenantsRequest">
         <wsdl:part name="parameters" element="ns:retrievePaginatedTenants"/>
     </wsdl:message>
@@ -151,7 +147,6 @@
     <wsdl:message name="updateTenantRequest">
         <wsdl:part name="parameters" element="ns:updateTenant"/>
     </wsdl:message>
-    <wsdl:message name="updateTenantResponse"/>
     <wsdl:message name="addTenantRequest">
         <wsdl:part name="parameters" element="ns:addTenant"/>
     </wsdl:message>
@@ -161,11 +156,6 @@
     <wsdl:message name="activateTenantRequest">
         <wsdl:part name="parameters" element="ns:activateTenant"/>
     </wsdl:message>
-    <wsdl:message name="activateTenantResponse"/>
-    <wsdl:message name="deleteTenantRequest">
-        <wsdl:part name="parameters" element="ns:deleteTenant"/>
-    </wsdl:message>
-    <wsdl:message name="deleteTenantResponse"/>
     <wsdl:portType name="TenantMgtAdminServicePortType">
         <wsdl:operation name="retrieveTenants">
             <wsdl:input message="ns:retrieveTenantsRequest" wsaw:Action="urn:retrieveTenants"/>
@@ -179,7 +169,6 @@
         </wsdl:operation>
         <wsdl:operation name="deactivateTenant">
             <wsdl:input message="ns:deactivateTenantRequest" wsaw:Action="urn:deactivateTenant"/>
-            <wsdl:output message="ns:deactivateTenantResponse" wsaw:Action="urn:deactivateTenantResponse"/>
             <wsdl:fault message="ns:TenantMgtAdminServiceException" name="TenantMgtAdminServiceException" wsaw:Action="urn:deactivateTenantTenantMgtAdminServiceException"/>
         </wsdl:operation>
         <wsdl:operation name="retrievePaginatedTenants">
@@ -189,7 +178,6 @@
         </wsdl:operation>
         <wsdl:operation name="updateTenant">
             <wsdl:input message="ns:updateTenantRequest" wsaw:Action="urn:updateTenant"/>
-            <wsdl:output message="ns:updateTenantResponse" wsaw:Action="urn:updateTenantResponse"/>
             <wsdl:fault message="ns:TenantMgtAdminServiceException" name="TenantMgtAdminServiceException" wsaw:Action="urn:updateTenantTenantMgtAdminServiceException"/>
         </wsdl:operation>
         <wsdl:operation name="addTenant">
@@ -199,13 +187,7 @@
         </wsdl:operation>
         <wsdl:operation name="activateTenant">
             <wsdl:input message="ns:activateTenantRequest" wsaw:Action="urn:activateTenant"/>
-            <wsdl:output message="ns:activateTenantResponse" wsaw:Action="urn:activateTenantResponse"/>
             <wsdl:fault message="ns:TenantMgtAdminServiceException" name="TenantMgtAdminServiceException" wsaw:Action="urn:activateTenantTenantMgtAdminServiceException"/>
-        </wsdl:operation>
-        <wsdl:operation name="deleteTenant">
-            <wsdl:input message="ns:deleteTenantRequest" wsaw:Action="urn:deleteTenant"/>
-            <wsdl:output message="ns:deleteTenantResponse" wsaw:Action="urn:deleteTenantResponse"/>
-            <wsdl:fault message="ns:TenantMgtAdminServiceException" name="TenantMgtAdminServiceException" wsaw:Action="urn:deleteTenantTenantMgtAdminServiceException"/>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="TenantMgtAdminServiceSoap11Binding" type="ns:TenantMgtAdminServicePortType">
@@ -239,9 +221,6 @@
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal"/>
-            </wsdl:output>
             <wsdl:fault name="TenantMgtAdminServiceException">
                 <soap:fault use="literal" name="TenantMgtAdminServiceException"/>
             </wsdl:fault>
@@ -263,9 +242,6 @@
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal"/>
-            </wsdl:output>
             <wsdl:fault name="TenantMgtAdminServiceException">
                 <soap:fault use="literal" name="TenantMgtAdminServiceException"/>
             </wsdl:fault>
@@ -282,26 +258,11 @@
                 <soap:fault use="literal" name="TenantMgtAdminServiceException"/>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="deleteTenant">
-            <soap:operation soapAction="urn:deleteTenant" style="document"/>
-            <wsdl:input>
-                <soap:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal"/>
-            </wsdl:output>
-            <wsdl:fault name="TenantMgtAdminServiceException">
-                <soap:fault use="literal" name="TenantMgtAdminServiceException"/>
-            </wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="activateTenant">
             <soap:operation soapAction="urn:activateTenant" style="document"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal"/>
-            </wsdl:output>
             <wsdl:fault name="TenantMgtAdminServiceException">
                 <soap:fault use="literal" name="TenantMgtAdminServiceException"/>
             </wsdl:fault>
@@ -338,9 +299,6 @@
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal"/>
-            </wsdl:output>
             <wsdl:fault name="TenantMgtAdminServiceException">
                 <soap12:fault use="literal" name="TenantMgtAdminServiceException"/>
             </wsdl:fault>
@@ -362,9 +320,6 @@
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal"/>
-            </wsdl:output>
             <wsdl:fault name="TenantMgtAdminServiceException">
                 <soap12:fault use="literal" name="TenantMgtAdminServiceException"/>
             </wsdl:fault>
@@ -381,26 +336,11 @@
                 <soap12:fault use="literal" name="TenantMgtAdminServiceException"/>
             </wsdl:fault>
         </wsdl:operation>
-        <wsdl:operation name="deleteTenant">
-            <soap12:operation soapAction="urn:deleteTenant" style="document"/>
-            <wsdl:input>
-                <soap12:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal"/>
-            </wsdl:output>
-            <wsdl:fault name="TenantMgtAdminServiceException">
-                <soap12:fault use="literal" name="TenantMgtAdminServiceException"/>
-            </wsdl:fault>
-        </wsdl:operation>
         <wsdl:operation name="activateTenant">
             <soap12:operation soapAction="urn:activateTenant" style="document"/>
             <wsdl:input>
                 <soap12:body use="literal"/>
             </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal"/>
-            </wsdl:output>
             <wsdl:fault name="TenantMgtAdminServiceException">
                 <soap12:fault use="literal" name="TenantMgtAdminServiceException"/>
             </wsdl:fault>
@@ -431,9 +371,6 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters"/>
-            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="retrievePaginatedTenants">
             <http:operation location="retrievePaginatedTenants"/>
@@ -449,21 +386,9 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters"/>
-            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="addTenant">
             <http:operation location="addTenant"/>
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters"/>
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters"/>
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="deleteTenant">
-            <http:operation location="deleteTenant"/>
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
@@ -476,20 +401,26 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters"/>
-            </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="TenantMgtAdminService">
+        <wsdl:port name="TenantMgtAdminServiceHttpSoap11Endpoint" binding="ns:TenantMgtAdminServiceSoap11Binding">
+            <soap:address location="http://10.100.2.106:9763/services/TenantMgtAdminService.TenantMgtAdminServiceHttpSoap11Endpoint/"/>
+        </wsdl:port>
         <wsdl:port name="TenantMgtAdminServiceHttpsSoap11Endpoint" binding="ns:TenantMgtAdminServiceSoap11Binding">
-            <soap:address location="https://172.16.172.1:9443/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsSoap11Endpoint/"/>
+            <soap:address location="https://10.100.2.106:9443/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="TenantMgtAdminServiceHttpsSoap12Endpoint" binding="ns:TenantMgtAdminServiceSoap12Binding">
-            <soap12:address location="https://172.16.172.1:9443/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://10.100.2.106:9443/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="TenantMgtAdminServiceHttpSoap12Endpoint" binding="ns:TenantMgtAdminServiceSoap12Binding">
+            <soap12:address location="http://10.100.2.106:9763/services/TenantMgtAdminService.TenantMgtAdminServiceHttpSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="TenantMgtAdminServiceHttpEndpoint" binding="ns:TenantMgtAdminServiceHttpBinding">
+            <http:address location="http://10.100.2.106:9763/services/TenantMgtAdminService.TenantMgtAdminServiceHttpEndpoint/"/>
         </wsdl:port>
         <wsdl:port name="TenantMgtAdminServiceHttpsEndpoint" binding="ns:TenantMgtAdminServiceHttpBinding">
-            <http:address location="https://172.16.172.1:9443/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/"/>
+            <http:address location="https://10.100.2.106:9443/services/TenantMgtAdminService.TenantMgtAdminServiceHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

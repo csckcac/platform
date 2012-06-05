@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.apimgt.hostobjects;
 
+import org.apache.axis2.client.Options;
+import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.context.ServiceContext;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.*;
@@ -30,13 +34,16 @@ import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.impl.UserAwareAPIConsumer;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIInfoDTO;
+import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.keymgt.client.SubscriberKeyMgtClient;
+import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 import org.wso2.carbon.user.mgt.stub.AddUserUserAdminExceptionException;
 import org.wso2.carbon.user.mgt.stub.UserAdminStub;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
 
@@ -187,38 +194,51 @@ public class APIStoreHostObject extends ScriptableObject {
         }
     }
 
-	static boolean logStatus = false;
-
-	public static String jsFunction_login(Context cx, Scriptable thisObj,
+	public static NativeObject jsFunction_login(Context cx, Scriptable thisObj,
 			Object[] args, Function funObj) throws ScriptException,
 			APIManagementException {
-        // TODO: Get rid of this
-		return "" + logStatus;
-	}
+        if (args.length != 2) {
+            throw new ScriptException("Invalid input parameters to the login method");
+        }
 
-	public static String jsFunction_userLogin(Context cx, Scriptable thisObj,
-			Object[] args, Function funObj) throws ScriptException,
-			APIManagementException {
-		String userName = "";
-		String password = "";
-		if (isStringArray(args)) {
-			userName = args[0].toString();
-			password = args[1].toString();
-		}
+        String username = (String) args[0];
+        String password = (String) args[1];
+
+        APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
+        String url = config.getFirstProperty(APIConstants.AUTH_MANAGER_URL);
+        if (url == null) {
+            throw new APIManagementException("API key manager URL unspecified");
+        }
+
+        NativeObject row = new NativeObject();
         try {
-            login(userName, password);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new ScriptException(e);
-        }
-        return "" + logStatus;
-	}
+            AuthenticationAdminStub authAdminStub = new AuthenticationAdminStub(null, url + "AuthenticationAdmin");
+            ServiceClient client = authAdminStub._getServiceClient();
+            Options options = client.getOptions();
+            options.setManageSession(true);
 
-	public static boolean login(String userName, String password) throws APIManagementException {
-        if (!logStatus) {
-            logStatus = true;
+            String host = new URL(url).getHost();
+            authAdminStub.login(username, password, host);
+            ServiceContext serviceContext = authAdminStub.
+                    _getServiceClient().getLastOperationContext().getServiceContext();
+            String sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
+
+            boolean authorized =
+                    APIUtil.checkPermissionQuietly(username, APIConstants.Permissions.API_SUBSCRIBE);
+
+            if (authorized) {
+                row.put("user", row, username);
+                row.put("sessionId", row, sessionCookie);
+                row.put("error", row, false);
+            } else {
+                throw new APIManagementException("Insufficient privileges");
+            }
+        } catch (Exception e) {
+            row.put("error", row, true);
+            row.put("detail", row, e.getMessage());
         }
-        return logStatus;
+
+        return row;
 	}
 
 	public static NativeArray jsFunction_getTopRatedAPIs1(Context cx,

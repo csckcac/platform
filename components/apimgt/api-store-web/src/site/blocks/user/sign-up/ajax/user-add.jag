@@ -17,7 +17,7 @@ include("/jagg/jagg.jag");
         if (result.error) {
             obj = {
                 error:result.error,
-                message:result.message
+                message:msg.error.authError(action, username)
             };
         } else {
             obj = {

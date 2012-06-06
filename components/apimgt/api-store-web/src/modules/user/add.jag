@@ -14,8 +14,7 @@ var addUser = function (username, password) {
     } catch (e) {
         log.error(e.message);
         return {
-            error:e,
-            message:e.message
+            error:e
         };
     }
 };

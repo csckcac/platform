@@ -61,6 +61,11 @@ public class PropertiesAdminService extends RegistryAbstractAdmin implements
      * @throws RegistryException throws if there is an error.
      */
     public void setProperty(String path, String name, String value) throws RegistryException {
+
+        if(name != null && name.startsWith("registry.")) {
+            throw new RegistryException("Property cannot start with the \"registry.\" prefix. " +
+                    "Property name " + name + ". Resource path = " + path);
+        }
         UserRegistry registry = (UserRegistry) getRootRegistry();
         if (RegistryUtils.isRegistryReadOnly(registry.getRegistryContext())) {
             return;
@@ -83,6 +88,12 @@ public class PropertiesAdminService extends RegistryAbstractAdmin implements
      */
     public void updateProperty(String path, String name, String value, String oldName) throws
             RegistryException {
+
+        if(name != null && name.startsWith("registry.")) {
+            throw new RegistryException("Property cannot start with the \"registry.\" prefix. " +
+                    "Property name " + name + ". Resource path = " + path);
+        }
+
         UserRegistry registry = (UserRegistry) getRootRegistry();
         if (RegistryUtils.isRegistryReadOnly(registry.getRegistryContext())) {
             return;

@@ -1,5 +1,9 @@
 var propertyOperationStarted = false;
 
+String.prototype.startsWith = function(prefix) {
+     return this.indexOf(prefix) == 0;
+}
+
 function setProperty() {
     if (propertyOperationStarted) {
         CARBON.showWarningDialog(org_wso2_carbon_registry_properties_ui_jsi18n["property.operation.in.progress"]);
@@ -32,6 +36,10 @@ function setProperty() {
             if (propertyValue == "") {
                 reason = org_wso2_carbon_registry_properties_ui_jsi18n["property.value.cannot.contain.only.white.spaces"];
             }
+        }
+
+        if(propertyName.startsWith("registry.")) {
+            reason =  org_wso2_carbon_registry_properties_ui_jsi18n["property.name.cannot.be.hidden"];
         }
         //Check for the previously entered property
         var foundPropName = false;

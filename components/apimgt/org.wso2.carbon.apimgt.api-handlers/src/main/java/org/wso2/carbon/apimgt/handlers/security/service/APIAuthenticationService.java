@@ -16,20 +16,17 @@
 
 package org.wso2.carbon.apimgt.handlers.security.service;
 
-import org.wso2.carbon.apimgt.handlers.security.APIKeyCache;
-import org.wso2.carbon.apimgt.handlers.security.APIKeyCacheFactory;
+import net.sf.jsr107cache.Cache;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.mediation.initializer.AbstractServiceBusAdmin;
 
 public class APIAuthenticationService extends AbstractServiceBusAdmin {
 
     public void invalidateKeys(APIKeyMapping[] mappings) {
-        APIKeyCacheFactory fac = APIKeyCacheFactory.getInstance();
+        Cache cache = SuperTenantCarbonContext.getCurrentContext(getAxisConfig()).getCache();
         for (APIKeyMapping mapping : mappings) {
-            APIKeyCache keyCache = fac.getExistingAPIKeyCache(mapping.getContext(),
-                    mapping.getApiVersion());
-            if (keyCache != null) {
-                keyCache.invalidateEntry(mapping.getKey());
-            }
+            String cacheKey = mapping.getKey() + ":" + mapping.getContext() + ":" + mapping.getApiVersion();
+            cache.remove(cacheKey);
         }
     }
 

@@ -50,7 +50,9 @@ var editUrl="info";
         jagg.printData(data.footer.code);
     }
     %>
-
+    <script>
+        var siteRoot = '<%=jagg.getAbsoluteUrl("/site/themes/default")%>';
+    </script>
         <footer>
              <div class="container-fluid">
                 <div class="row">

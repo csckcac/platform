@@ -8,9 +8,10 @@ var logout = function () {
                 location.href = 'site/pages/login.jag';
             }
         } else {
-            jagg.message(result.message);
+            jagg.message({content:result.message,type:"error"});
         }
     }, "json");
 };
+
 
 

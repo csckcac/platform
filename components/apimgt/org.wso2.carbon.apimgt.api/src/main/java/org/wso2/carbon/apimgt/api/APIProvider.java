@@ -240,4 +240,14 @@ public interface APIProvider extends APIManager {
     public void copyAllDocumentation(APIIdentifier apiId, String toVersion)
             throws APIManagementException;
 
+    /**
+     * Returns the details of all the life-cycle changes done per API.
+     *
+     * @param apiId     id of the APIIdentifier
+     * @return List of life-cycle events per given API
+     * @throws APIManagementException if failed to copy docs
+     */
+    public List<LifeCycleEvent> getLifeCycleEvents(APIIdentifier apiId)
+            throws APIManagementException;
+
 }

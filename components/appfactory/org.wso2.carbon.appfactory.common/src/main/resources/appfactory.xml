@@ -25,6 +25,21 @@
         <DefaultApplicationUserRoles>Developer</DefaultApplicationUserRoles>
     </ApplicationMgt>
 
+    <DefaultRoles>
+        <Role name="developer">
+            <Permission>/permission/login/</Permission>
+        </Role>
+        <Role name="devOps">
+            <Permission>/permission/login/</Permission>
+        </Role>
+        <Role name="qa">
+            <Permission>/permission/login/</Permission>
+        </Role>
+        <Role name="appOwner">
+            <Permission>/permission/login/</Permission>
+        </Role>
+    </DefaultRoles>
+
     <!--SSO relying party configuration.-->
     <SSORelyingParty>
         <Name>WSO2 AppFactory Application Management</Name>

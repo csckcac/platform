@@ -16,15 +16,13 @@
 
 package org.wso2.carbon.appfactory.common.internal;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.common.AppFactoryException;
 import org.wso2.carbon.appfactory.common.util.AppFactoryUtil;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
 
 /**
  * @scr.component name="appfactory.common" immediate="true"
@@ -40,7 +38,7 @@ public class AppFactoryCommonServiceComponent {
             configuration = AppFactoryUtil.loadAppFactoryConfiguration();
             bundleContext.registerService(AppFactoryConfiguration.class.getName(), configuration, null);
         } catch (AppFactoryException e) {
-            log.error("Error in creating appfactory configuration");
+            log.error("Error in creating appfactory configuration", e);
         }
         if (log.isDebugEnabled()) {
             log.debug("Appfactory common bundle is activated");

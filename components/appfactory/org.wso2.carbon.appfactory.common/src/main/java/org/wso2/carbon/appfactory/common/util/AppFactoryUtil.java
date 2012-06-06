@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.common.AppFactoryConstants;
 import org.wso2.carbon.appfactory.common.AppFactoryException;
-import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.securevault.SecretManagerInitializer;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.securevault.SecretResolver;
@@ -80,9 +79,9 @@ public class AppFactoryUtil {
     private static OMElement loadAppFactoryXML() throws AppFactoryException {
         String fileLocation =
                 new StringBuilder().append(CarbonUtils.getCarbonConfigDirPath())
-                        .append(RegistryConstants.PATH_SEPARATOR)
+                        .append(File.separator)
                         .append(AppFactoryConstants.CONFIG_FOLDER)
-                        .append(RegistryConstants.PATH_SEPARATOR)
+                        .append(File.separator)
                         .append(AppFactoryConstants.CONFIG_FILE_NAME).toString();
 
         File configFile = new File(fileLocation);

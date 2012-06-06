@@ -1553,6 +1553,10 @@ public class APIStoreHostObject extends ScriptableObject {
         String password = args[1].toString();
 
         APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
+        boolean enabled = Boolean.parseBoolean(config.getFirstProperty(APIConstants.SELF_SIGN_UP_ENABLED));
+        if (!enabled) {
+            throw new APIManagementException("Self sign up has been disabled on this server");
+        }
         String serverURL = config.getFirstProperty(APIConstants.AUTH_MANAGER_URL);
         String adminUsername = config.getFirstProperty(APIConstants.AUTH_MANAGER_USERNAME);
         String adminPassword = config.getFirstProperty(APIConstants.AUTH_MANAGER_PASSWORD);

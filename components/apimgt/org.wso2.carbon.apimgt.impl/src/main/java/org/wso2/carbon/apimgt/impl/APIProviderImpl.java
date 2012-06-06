@@ -720,4 +720,16 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             handleException("Failed to add documentation", e);
         }
     }
+
+    /**
+     * Returns the details of all the life-cycle changes done per api
+     *
+     * @param apiId API Identifier
+     * @return List of lifecycle events per given api
+     * @throws org.wso2.carbon.apimgt.api.APIManagementException
+     *          If failed to get Lifecycle Events
+     */
+    public List<LifeCycleEvent> getLifeCycleEvents(APIIdentifier apiId) throws APIManagementException {
+        return apiMgtDAO.getLifeCycleEvents(apiId);
+    }
 }

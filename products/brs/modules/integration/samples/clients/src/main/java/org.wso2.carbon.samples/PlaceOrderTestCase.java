@@ -20,53 +20,40 @@ package org.wso2.carbon.samples;
 import org.wso2.carbon.samples.orderApprovalService.order.OrderAccept;
 import org.wso2.carbon.samples.orderApprovalService.order.PlaceOrder;
 import org.wso2.carbon.samples.orderApprovalService.order.PlaceOrderE;
+import org.wso2.carbon.samples.orderApprovalService.order.PlaceOrderRespone;
 import org.wso2.carbon.samples.orderApprovalService.stub.OrderApprovalServiceCallbackHandler;
 import org.wso2.carbon.samples.orderApprovalService.stub.OrderApprovalServiceStub;
+import java.rmi.RemoteException;
 
 public class PlaceOrderTestCase {
 
     public static void main(String[] args) {
 
         try {
-            OrderApprovalServiceStub orderApprovalServiceStub =
-                    new OrderApprovalServiceStub("http://localhost:9763/services/OrderApprovalService");
-
-            PlaceOrderE placeOrderRequest = new PlaceOrderE();
+            OrderApprovalServiceStub orderApprovalServiceStub = new OrderApprovalServiceStub("http://localhost:9763/services/OrderApprovalService");
+            PlaceOrderE placeOrderE = new PlaceOrderE();
             PlaceOrder placeOrder = new PlaceOrder();
-            placeOrder.setPrice(2);
             placeOrder.setSymbol("IBM");
-            placeOrder.setQuantity(22);
-            placeOrderRequest.addOrder(placeOrder);
-            PlaceOrder[] placeOrdersArray = new PlaceOrder[1];
-            placeOrdersArray[0] = placeOrder;
+            placeOrder.setPrice(150);
+            placeOrder.setQuantity(128);
+            PlaceOrder[] placeOrders = new PlaceOrder[1];
+            placeOrders[0] = placeOrder;
+            placeOrderE.setOrder(placeOrders);
 
-            orderApprovalServiceStub.placeOrder(placeOrdersArray);
+            PlaceOrderRespone placeOrderRespone = null; //new PlaceOrderRespone();
+            try {
+                placeOrderRespone = orderApprovalServiceStub.placeOrder(placeOrders);
+            } catch (RemoteException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+            OrderAccept[] orderAccepts = placeOrderRespone.getOrderAccept();
+            String result = orderAccepts[0].getMessage();
+            System.out.println(result);
 
-            OrderApprovalServiceCallbackHandler callback = new OrderApprovalServiceCallbackHandler() {
 
-                public void receiveResultplaceOrder(
-                        org.wso2.carbon.samples.orderApprovalService.order.PlaceOrderResponse result) {
-
-                    OrderAccept[] orderAcceptList = result.getOrderAccept();
-                    String acceptMessage = orderAcceptList[0].getMessage();
-                    System.out.println(acceptMessage);
-
-                    synchronized (this) {
-                        this.notify();
-                    }
-                }
-
-                public void receiveErrorapproveOrder(Exception e) {
-                    e.printStackTrace();
-                }
-            };
-
-            orderApprovalServiceStub.startplaceOrder(placeOrdersArray, callback);
-            Thread.sleep(10000);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
-

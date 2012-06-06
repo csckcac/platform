@@ -1,5 +1,0 @@
-org.wso2.carbon.rule.common_
-org.wso2.carbon.rule.kernel_
-org.wso2.carbon.rule.ws_
-org.wso2.carbon.rule.ws.admin_
-org.wso2.carbon.rule.ws.ui_

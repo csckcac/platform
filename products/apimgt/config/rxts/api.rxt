@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<artifactType type="application/vnd.wso2-api+xml" shortName="api" singularLabel="Api" pluralLabel="APIs" hasNamespace="false" iconSet="7">
+<artifactType type="application/vnd.wso2-api+xml" shortName="api" singularLabel="API" pluralLabel="APIs" hasNamespace="false" iconSet="7">
 	<storagePath>/apimgt/applicationdata/provider/@{overview_provider}/@{overview_name}/@{overview_version}/api</storagePath>
 	<nameAttribute>overview_name</nameAttribute>
 	<ui>

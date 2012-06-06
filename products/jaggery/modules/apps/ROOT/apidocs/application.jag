@@ -159,7 +159,7 @@ include('/includes/scripts.jag')
 <script>
 
     $(document).ready(function(){
-        $('#req').toggleClass('active')
+        $('#app').toggleClass('active')
         $('#docs').addClass('active')
     })
 </script>

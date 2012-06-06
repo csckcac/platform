@@ -19,6 +19,7 @@ package org.wso2.carbon.dashboard.dashboardpopulator.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.core.services.callback.LoginSubscriptionManagerService;
 import org.wso2.carbon.dashboard.dashboardpopulator.DashboardPopulatorContext;
 import org.wso2.carbon.dashboard.dashboardpopulator.GadgetPopulator;
@@ -48,7 +49,7 @@ public class DashboardPopulatorServiceComponent {
     	log.debug("Dashboard Populator for Governance - bundle is activated ");
     	
     	// This is the initial server start. Populate for Tenant 0.
-    	GadgetPopulator.populateDashboard(0);
+        GadgetPopulator.populateDashboard(MultitenantConstants.SUPER_TENANT_ID);
     }
 
     protected void deactivate(ComponentContext context) {

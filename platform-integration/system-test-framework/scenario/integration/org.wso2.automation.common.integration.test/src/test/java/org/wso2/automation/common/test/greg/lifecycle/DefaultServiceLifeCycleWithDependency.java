@@ -42,7 +42,6 @@ public class DefaultServiceLifeCycleWithDependency {
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
-    private Registry governance;
     private LifeCycleAdminService lifeCycleAdminService;
 
     private final String serviceName = "serviceForLifeCycleWithDependency";
@@ -67,7 +66,7 @@ public class DefaultServiceLifeCycleWithDependency {
         sessionCookie = gregServer.getSessionCookie();
         lifeCycleAdminService = new LifeCycleAdminService(gregServer.getBackEndUrl());
         registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
-        governance = new RegistryProvider().getGovernance(registry, userId);
+        Registry governance = new RegistryProvider().getGovernance(registry, userId);
 
         servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName, governance);
         policyPathDev = "/_system/governance" + Utils.addPolicy(serviceDependencyName, governance);
@@ -90,12 +89,8 @@ public class DefaultServiceLifeCycleWithDependency {
         Resource service = registry.get(servicePathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
         Assert.assertTrue(service.getPath().contains("trunk"), "Service not in trunk. " + servicePathDev);
-        Assert.assertTrue((lifeCycle.getLifecycleProperties().length > 5), "LifeCycle properties missing some properties");
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[4], "LifeCycle State property not found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[4].getKey(), "registry.lifecycle.ServiceLifeCycle.state",
-                            "LifeCycle State property not found");
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[4].getValues(), "State Value Not Found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[4].getValues()[0], "Development",
+
+        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Development",
                             "LifeCycle State Mismatched");
 
         Assert.assertTrue((lifeCycleAdminService.getAllDependencies(sessionCookie, servicePathDev).length == 2),
@@ -125,14 +120,8 @@ public class DefaultServiceLifeCycleWithDependency {
         Resource service = registry.get(servicePathTest);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTest);
         Assert.assertTrue(service.getPath().contains("branches/testing"), "Service not in branches/testing. " + servicePathTest);
-        Assert.assertTrue((lifeCycle.getLifecycleProperties().length > 5), "LifeCycle properties missing some properties");
 
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[4], "LifeCycle State property not found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[4].getKey(), "registry.lifecycle.ServiceLifeCycle.state",
-                            "LifeCycle State property not found");
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[4].getValues(), "State Value Not Found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[4].getValues()[0], "Testing",
-                            "LifeCycle State Mismatched");
+        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Testing", "LifeCycle State Mismatched");
 
         Association[] dependency = registry.getAssociations(servicePathTest, ASS_TYPE_DEPENDS);
         Assert.assertNotNull(dependency, "Dependency Not Found.");
@@ -169,14 +158,8 @@ public class DefaultServiceLifeCycleWithDependency {
         Resource service = registry.get(servicePathProd);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathProd);
         Assert.assertTrue(service.getPath().contains("branches/production"), "Service not in branches/production. " + servicePathProd);
-        Assert.assertTrue((lifeCycle.getLifecycleProperties().length > 0), "LifeCycle properties missing some properties");
 
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[0], "LifeCycle State property not found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[0].getKey(), "registry.lifecycle.ServiceLifeCycle.state",
-                            "LifeCycle State property not found");
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[0].getValues(), "State Value Not Found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[0].getValues()[0], "Production",
-                            "LifeCycle State Mismatched");
+        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Production", "LifeCycle State Mismatched");
 
         Association[] dependency = registry.getAssociations(servicePathProd, ASS_TYPE_DEPENDS);
         Assert.assertNotNull(dependency, "Dependency Not Found.");

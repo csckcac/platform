@@ -93,14 +93,8 @@ public class PreserveOriginalDefaultServiceLifeCycle {
         Resource service = registry.get(testBranch);
         Assert.assertNotNull(service, "Service Not found on registry path " + testBranch);
         Assert.assertEquals(service.getPath(), testBranch, "Service not in branches/testing. " + testBranch);
-        Assert.assertTrue((lifeCycle.getLifecycleProperties().length > 5), "LifeCycle properties missing some properties");
 
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[4], "LifeCycle State property not found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[4].getKey(), "registry.lifecycle.ServiceLifeCycle.state",
-                            "LifeCycle State property not found");
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[4].getValues(), "State Value Not Found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[4].getValues()[0], "Testing",
-                            "LifeCycle State Mismatched");
+        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Testing", "LifeCycle State Mismatched");
 
 
         try {
@@ -133,14 +127,8 @@ public class PreserveOriginalDefaultServiceLifeCycle {
         Resource service = registry.get(proBranch);
         Assert.assertNotNull(service, "Service Not found on registry path " + proBranch);
         Assert.assertEquals(service.getPath(), proBranch, "Service not in branches/production. " + proBranch);
-        Assert.assertTrue((lifeCycle.getLifecycleProperties().length > 0), "LifeCycle properties missing some properties");
 
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[0], "LifeCycle State property not found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[0].getKey(), "registry.lifecycle.ServiceLifeCycle.state",
-                            "LifeCycle State property not found");
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[0].getValues(), "State Value Not Found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[0].getValues()[0], "Production",
-                            "LifeCycle State Mismatched");
+        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Production", "LifeCycle State Mismatched");
 
         try {
             registry.get(testBranch);
@@ -170,14 +158,8 @@ public class PreserveOriginalDefaultServiceLifeCycle {
         Resource service = registry.get(testBranch);
         Assert.assertNotNull(service, "Service Not found on registry path " + testBranch);
         Assert.assertEquals(service.getPath(), testBranch, "Service not in branches/testing. " + testBranch);
-        Assert.assertTrue((lifeCycle.getLifecycleProperties().length > 5), "LifeCycle properties missing some properties");
 
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[4], "LifeCycle State property not found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[4].getKey(), "registry.lifecycle.ServiceLifeCycle.state",
-                            "LifeCycle State property not found");
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[4].getValues(), "State Value Not Found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[4].getValues()[0], "Testing",
-                            "LifeCycle State Mismatched");
+        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Testing", "LifeCycle State Mismatched");
 
 
         Assert.assertEquals(registry.get(trunkPreserve).getPath(), trunkPreserve, "Resource not exist on trunk");
@@ -206,14 +188,8 @@ public class PreserveOriginalDefaultServiceLifeCycle {
         Resource service = registry.get(proBranch);
         Assert.assertNotNull(service, "Service Not found on registry path " + proBranch);
         Assert.assertEquals(service.getPath(), proBranch, "Service not in branches/production. " + proBranch);
-        Assert.assertTrue((lifeCycle.getLifecycleProperties().length > 0), "LifeCycle properties missing some properties");
 
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[0], "LifeCycle State property not found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[0].getKey(), "registry.lifecycle.ServiceLifeCycle.state",
-                            "LifeCycle State property not found");
-        Assert.assertNotNull(lifeCycle.getLifecycleProperties()[0].getValues(), "State Value Not Found");
-        Assert.assertEquals(lifeCycle.getLifecycleProperties()[0].getValues()[0], "Production",
-                            "LifeCycle State Mismatched");
+        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Production", "LifeCycle State Mismatched");
 
         Assert.assertEquals(registry.get(proBranch).getPath(), proBranch, "Resource not exist on branch");
     }

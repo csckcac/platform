@@ -40,6 +40,12 @@ public class GRegLifeCycleTestSuite extends MasterTestSuite {
                                                   PreserveOriginalWithDependencyTest.class));
         suiteVariablesList.add(new SuiteVariables("DefaultServiceLifeCycleTestWithAllDependency",
                                                   DefaultServiceLifeCycleTestWithAllDependency.class));
+        suiteVariablesList.add(new SuiteVariables("WSDLDefaultServiceLifeCycleTest",
+                                                  WSDLDefaultServiceLifeCycleTest.class));
+        suiteVariablesList.add(new SuiteVariables("SchemaDefaultLifeCycleTest",
+                                                  SchemaDefaultLifeCycleTest.class));
+        suiteVariablesList.add(new SuiteVariables("PolicyDefaultLifeCycleTest",
+                                                  PolicyDefaultLifeCycleTest.class));
 
         setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("GRegLifeCycleTestSuite", suiteVariablesList).run();

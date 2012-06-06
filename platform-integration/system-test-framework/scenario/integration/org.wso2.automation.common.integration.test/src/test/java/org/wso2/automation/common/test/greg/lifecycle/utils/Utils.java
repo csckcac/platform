@@ -17,6 +17,8 @@
 */
 package org.wso2.automation.common.test.greg.lifecycle.utils;
 
+import org.testng.Assert;
+import org.wso2.automation.common.test.greg.multitenancy.LifeCycleComparisonServiceTestClient;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.governance.api.schema.SchemaManager;
@@ -25,6 +27,8 @@ import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
+import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
+import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property;
 import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -93,6 +97,22 @@ public class Utils {
         schema = schemaManager.getSchema(schema.getId());
         return schema.getPath();
 
+    }
+
+    public static String getLifeCycleState(LifecycleBean lifeCycle) {
+        Assert.assertTrue((lifeCycle.getLifecycleProperties().length > 0), "LifeCycle properties missing some properties");
+        String state = null;
+        boolean stateFound = false;
+        for (Property prop : lifeCycle.getLifecycleProperties()) {
+            if ("registry.lifecycle.ServiceLifeCycle.state".equalsIgnoreCase(prop.getKey())) {
+                stateFound = true;
+                Assert.assertNotNull(prop.getValues(), "State Value Not Found");
+                state = prop.getValues()[0];
+
+            }
+        }
+        Assert.assertTrue(stateFound, "LifeCycle State property not found");
+        return state;
     }
 
     public static String formatDate(Date date) {

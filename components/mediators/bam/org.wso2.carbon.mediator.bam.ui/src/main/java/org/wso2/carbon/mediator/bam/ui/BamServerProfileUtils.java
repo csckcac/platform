@@ -1,6 +1,26 @@
+/*
+*  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+*  WSO2 Inc. licenses this file to you under the Apache License,
+*  Version 2.0 (the "License"); you may not use this file except
+*  in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied.  See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*/
+
 package org.wso2.carbon.mediator.bam.ui;
 
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.wso2.carbon.governance.api.common.GovernanceArtifactManager;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
@@ -22,6 +42,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.namespace.QName;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +64,11 @@ public class BamServerProfileUtils {
         System.setProperty("javax.net.ssl.trustStore", trustStore);
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
-        System.setProperty("carbon.repo.write.mode","true");
+        //System.setProperty("carbon.repo.write.mode","true");
     }
 
     private RemoteRegistryService initialize(){
-        String remoteRegistryUrl = "https://localhost:9443/registry";
+        String remoteRegistryUrl = "https://localhost:9444/registry";
         String username = "admin";
         String password = "admin";
         try {
@@ -73,25 +94,39 @@ public class BamServerProfileUtils {
         setSystemProperties();
         rootRegService = initialize();
         createRegistry(rootRegService);*/
-//        addArtifacts();
+//        addResource();
 //        getGovernanceArtifacts();
     }
 
-    public void addArtifacts(){
-        String path = "/_system/governance/resource1.txt";
+    public void addResource(String ip, String port, String userName, String password,
+                            String bamServerProfileLocation){
+        //String path = "/_system/governance/resource1.txt";
 
         RemoteRegistryService rootRegService;
         setSystemProperties();
         try {
             rootRegService = initialize();
             createRegistry(rootRegService);
+            Resource storeResource;
+            storeResource = registry.newResource();
 
-            Resource resource1;
-            resource1 = registry.newResource();
+            MediatorConfigurationXml mediatorConfigurationXml = new MediatorConfigurationXml();
+            OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, password);
+            String stringStoreXml = storeXml.toString();
 
-            resource1.setContent("I like it.");
+            storeResource.setContent(stringStoreXml);
+            registry.put(bamServerProfileLocation,storeResource);
 
-            registry.put(path,resource1);
+            /*MediatorConfigurationXml mediatorConfigurationXml = new MediatorConfigurationXml();
+            OMElement oe = mediatorConfigurationXml.buildServerProfile("localhost", "7611", "admin", "admin");
+            String s = oe.toString();
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1" + s);
+
+            OMElement oe2 = new StAXOMBuilder(new ByteArrayInputStream(s.getBytes())).getDocumentElement();
+
+            String s2 = oe2.toString();
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + s2);*/
+
         } catch (RegistryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (Exception e) {
@@ -99,41 +134,36 @@ public class BamServerProfileUtils {
         }
     }
 
-    /*public static void getGovernanceArtifacts() throws RegistryException {
+    public String getResource(String bamServerProfileLocation){
 
-        UriManager manager = new UriManager(itsGovernanceRegistry);
-        Uri wsdlUri = manager.newUri(new QName("listing5.wsdl"));
-        wsdlUri.setAttribute("overview_name", "listing5.wsdl");
-        wsdlUri.setAttribute("overview_type", "WSDL");
-        wsdlUri.addAttribute("overview_uri",
-                             "http://people.wso2.com/~evanthika/wsdls/listing5.wsdl");
-        manager.addUri(wsdlUri);
+            //String path = "/_system/governance/resource1.txt";
+            Resource resource;
+            RemoteRegistryService rootRegService;
+            setSystemProperties();
+            rootRegService = initialize();
+            createRegistry(rootRegService);
+        try {
+            resource = registry.get(bamServerProfileLocation);
+            return new String((byte[])resource.getContent());
 
+            //System.out.println("##############################################" + new String((byte[])resource.getContent()));
+        } catch (RegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return null;
+    }
 
-        Uri wsdl2Uri = manager.newUri(new QName("BizService.wsdl"));
-        wsdl2Uri.setAttribute("overview_name", "BizService.wsdl");
-        wsdl2Uri.setAttribute("overview_type", "WSDL");
-        wsdl2Uri.addAttribute("overview_uri",
-                              "http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/" +
-                              "org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
-        manager.addUri(wsdl2Uri);
-
-        Uri schemaUri = manager.newUri(new QName("purchasing_dup.xsd"));
-        schemaUri.setAttribute("overview_name", "purchasing_dup.xsd");
-        schemaUri.setAttribute("overview_type", "XSD");
-        schemaUri.addAttribute("overview_uri",
-                               "http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/" +
-                               "org.wso2.carbon.governance.api/src/test/resources/test-resources/xsd/purchasing_dup.xsd");
-        manager.addUri(schemaUri);
-
-
-        Uri policyUri = manager.newUri(new QName("policy.xml"));
-        policyUri.setAttribute("overview_name", "policy.xml");
-        policyUri.setAttribute("overview_type", "Policy");
-        policyUri.addAttribute("overview_uri",
-                               "http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/" +
-                               "org.wso2.carbon.governance.api/src/test/resources/test-resources/policy/policy.xml");
-        manager.addUri(policyUri);
-
-    }*/
+    public boolean resourceAlreadyExists(String bamServerProfileLocation){
+        Resource resource;
+        RemoteRegistryService rootRegService;
+        setSystemProperties();
+        rootRegService = initialize();
+        createRegistry(rootRegService);
+        try {
+            return registry.resourceExists(bamServerProfileLocation);
+        } catch (RegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return true;
+    }
 }

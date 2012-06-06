@@ -40,6 +40,7 @@ import org.wso2.carbon.apimgt.api.model.APIStatus;
 import org.wso2.carbon.apimgt.api.model.Documentation;
 import org.wso2.carbon.apimgt.api.model.DocumentationType;
 import org.wso2.carbon.apimgt.api.model.DuplicateAPIException;
+import org.wso2.carbon.apimgt.api.model.LifeCycleEvent;
 import org.wso2.carbon.apimgt.api.model.Subscriber;
 import org.wso2.carbon.apimgt.api.model.Tier;
 import org.wso2.carbon.apimgt.api.model.URITemplate;
@@ -548,7 +549,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     List<String> utArr = new ArrayList<String>();
                     URITemplate ut = (URITemplate) i.next();
                     utArr.add(ut.getUriTemplate());
-                    utArr.add(ut.getMethodsAsString().replaceAll("\\s",","));;
+                    utArr.add(ut.getMethodsAsString().replaceAll("\\s",","));
 
                     NativeArray utNArr = new NativeArray(utArr.size());
                     for (int p = 0; p < utArr.size(); p++) {
@@ -1520,6 +1521,38 @@ public class APIProviderHostObject extends ScriptableObject {
             }
         }
         return false;
+    }
+
+    public static NativeArray jsFunction_getLifeCycleEvents(Context cx, Scriptable thisObj,
+                                                            Object[] args,
+                                                            Function funObj)
+            throws ScriptException {
+        NativeArray lifeCycles = new NativeArray(0);
+        if (args.length == 0) {
+            throw new ScriptException("Invalid number of input parameters.");
+        }
+        NativeObject apiData = (NativeObject) args[0];
+        String provider = (String) apiData.get("provider", apiData);
+        String name = (String) apiData.get("name", apiData);
+        String version = (String) apiData.get("version", apiData);
+        APIIdentifier apiId = new APIIdentifier(provider, name, version);
+        APIProvider apiProvider = getAPIProvider(thisObj);
+        try {
+            List<LifeCycleEvent> lifeCycleEvents = apiProvider.getLifeCycleEvents(apiId);
+            int i = 0;
+            for (LifeCycleEvent lcEvent : lifeCycleEvents) {
+                NativeObject event = new NativeObject();
+                event.put("username", event, checkValue(lcEvent.getUserId()));
+                event.put("newStatus", event,lcEvent.getNewStatus()!=null?lcEvent.getNewStatus().toString():"");
+                event.put("oldStatus", event,lcEvent.getOldStatus()!=null?lcEvent.getOldStatus().toString():"");
+                event.put("date", event, checkValue(lcEvent.getDate().toString()));
+                lifeCycles.put(i, lifeCycles, event);
+                i++;
+            }
+        } catch (APIManagementException e) {
+            log.error("Error from registry while checking the input context is already exist", e);
+        }
+        return lifeCycles;
     }
 }
 

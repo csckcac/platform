@@ -1771,6 +1771,31 @@ resume actions are used to pause a transaction at some point and start it again
 later. Additionally, the transaction mediator supports three other actions,
 i.e. use-existing-or-new, fault-if-no-tx, rollback. </p>
 
+<h4><a name="ejb">Ejb</a><a name="Ejb"></a></h4>
+<div><pre>&lt;ejb beanstalk=&quot;string&quot; class=&quot;string&quot; [sessionId=&quot;string&quot;] [remove=&quot;true | false&quot;] 
+  [method=&quot;string&quot;] [target=&quot;string | {xpath}&quot;] [jndiName=&quot;string&quot;] /&gt; 
+    &lt;args&gt; 
+      &lt;arg (value=&quot;string | {xpath}&quot;)/&gt;* 
+    &lt;/args&gt; 
+&lt;/ejb&gt;</pre></div>
+
+<p>EJB Mediator - EJB mediator calls an external Enterprise JavaBean(EJB) and stores 
+the result in the message payload or in a message context property. Currently, 
+this mediator supports EJB3 Stateless Session Beans and Stateful Session Beans. 
+</p>
+
+<h4><a name="bean">Bean</a><a name="Bean"></a></h4>
+<div><pre>&lt;bean action=&quot;CREATE | REMOVE | SET_PROPERTY | GET_PROPERTY&quot; var=&quot;string&quot; 
+  [class=&quot;string&quot;] [property=&quot;string&quot;] 
+  [value=&quot;string | {xpath}&quot;] /&gt; </pre></div>
+
+<p>Bean mediator can manipulate a JavaBean that is bound to the Synapse message context as a property.
+This mediator can be used to create a new bean (CREATE action), remove an existing bean (REMOVE action), 
+set a property of an existing JavaBean (SET_PROPERTY action) or to retrieve a property of an existing JavaBean
+ (GET_PROPERTY action). Classes of objects manipulated by this mediator must follow the JavaBeans specification.
+</p>
+
+
 <h3 id="extension-mediators">Extension mediators </h3>
 
 <h4><a name="class">Class</a></h4>

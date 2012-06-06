@@ -276,9 +276,9 @@ public class WSDLManagerAPITest {
 
     @Test(groups = {"wso2.greg.api"}, description = "Testing attachSchema method in WSDL object", priority = 13)
     public void testAttachSchema() throws GovernanceException {
-        Schema schema = schemaManager.newSchema("schemaObj = schemaManager.newSchema(\"http://svn.wso2.org/repos/wso2/carbon\" +\n" +
-                "                    \"/platform/trunk/platform-integration/system-test-framework/core/org.wso2.\" +\n" +
-                "                    \"automation.platform.core/src/main/resources/artifacts/GREG/schema/calculator.xsd\");");
+        Schema schema = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/carbon/platform/trunk/" +
+                "platform-integration/system-test-framework/core/org.wso2.automation.platform.core/" +
+                "src/main/resources/artifacts/GREG/schema/calculator.xsd");
         try {
             wsdlObj.attachSchema(schema);
         } catch (GovernanceException e) {

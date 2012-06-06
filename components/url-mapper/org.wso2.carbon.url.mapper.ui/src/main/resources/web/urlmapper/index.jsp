@@ -26,6 +26,7 @@
         <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
         <%@ page import="org.wso2.carbon.utils.multitenancy.CarbonContextHolder" %>
         <%@ page import="org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext" %>
+        <script type="text/javascript" src="js/mapping_validator.js"></script>
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
         <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <!--         <script type="text/javascript" src="../admin/dialog/js/dialog.js"></script> -->
@@ -73,7 +74,7 @@
 		topPage="true" request="<%=request%>" />
 		<div id="middle">
 		<script type="text/javascript">
-			function showSucessMessage(msg,myepr) {
+			function    showSucessMessage(msg,myepr) {
 				var failMsg = new RegExp("Failed to add URL Mapping.");
             	if (msg.match(failMsg)) //if match sucess 
 				{	
@@ -89,14 +90,19 @@
 		  
    function add(myepr){
         CARBON.showInputDialog("Enter URL Mapping name :\n",function(inputVal){
-            jQuery.ajax({
-                            type: "POST",
-                            url: "contextMapper_ajaxprocessor.jsp",
-                            data: "type=add&carbonEndpoint=" + myepr + "&userEndpoint=" + inputVal + "&endpointType=Endpoint_1",
-                            success: function(msg){
-                            	showSucessMessage(msg,myepr);
-                            }
-                        });
+            var reason = checkMappingAvailability(inputVal);
+            if(reason == "") {
+                jQuery.ajax({
+                                type: "POST",
+                                url: "contextMapper_ajaxprocessor.jsp",
+                                data: "type=add&carbonEndpoint=" + myepr + "&userEndpoint=" + inputVal + "&endpointType=Endpoint_1",
+                                success: function(msg){
+                                    showSucessMessage(msg,myepr);
+                                }
+                            });
+            } else {
+                CARBON.showWarningDialog(reason);
+            }
         });
     }   
 </script> 
@@ -104,6 +110,8 @@
  <script type="text/javascript">
    function edit(myepr,host){
         CARBON.showInputDialog("Enter URL Mapping name :\n",function(inputVal){
+        var reason = checkMappingAvailability(inputVal);
+        if(reason == "") {
             jQuery.ajax({
                             type: "POST",
                             url: "contextMapper_ajaxprocessor.jsp",
@@ -112,6 +120,9 @@
                             	showSucessMessage(msg,myepr);	
                             }
                         });
+        } else {
+            CARBON.showWarningDialog(reason);
+        }
         });
     }   
 </script> 
@@ -191,7 +202,7 @@
 							
 						
                 <tr>             
-                    <td td colspan="2"">
+                    <td td colspan="2">
                         <a class="icon-link"
                            style="background-image:url(images/add.gif);" onclick="add('<%=carbonEndpoint%>');" title="Add Service Specific Url">
                            Add New Mapping

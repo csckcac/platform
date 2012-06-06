@@ -8,7 +8,8 @@ var t_on = {
 var getLastAccessTime = function(name) {
     var currentLocation=window.location.pathname;
     var lastAccessTime = null;
-    jagg.syncPost("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIVersionUserLastAccess",currentLocation:currentLocation },
+    var provider = $("#item-info #spanProvider").text();
+    jagg.syncPost("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIVersionUserLastAccess",provider:provider,currentLocation:currentLocation },
                   function (json) {
                       if (!json.error) {
                           var length = json.usage.length;
@@ -28,7 +29,8 @@ var getLastAccessTime = function(name) {
 var getResponseTime = function(name) {
     var responseTime = null;
     var currentLocation=window.location.pathname;
-    jagg.syncPost("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",currentLocation:currentLocation},
+    var provider = $("#item-info #spanProvider").text();
+    jagg.syncPost("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",provider:provider,currentLocation:currentLocation},
                   function (json) {
                       if (!json.error) {
                           var length = json.usage.length;
@@ -61,7 +63,8 @@ $(document).ready(function() {
 
             jagg.fillProgress('versionChart');jagg.fillProgress('versionUserChart');
             var apiName = $("#item-info h2")[0].innerHTML.split("-v")[0];
-            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUsage", apiName:apiName, server:"https://localhost:9444/" },
+            var provider = $("#item-info #spanProvider").text();
+            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUsage", provider:provider,apiName:apiName },
                       function (json) {
                           if (!json.error) {
                               var length = json.usage.length,data = [];
@@ -102,7 +105,7 @@ $(document).ready(function() {
                       }, "json");
 
 
-            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getSubscriberCountByAPIVersions", apiName:apiName },
+            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getSubscriberCountByAPIVersions", provider:provider,apiName:apiName },
                       function (json) {
                           if (!json.error) {
                               var length = json.usage.length,data = [];
@@ -147,7 +150,7 @@ $(document).ready(function() {
             var name = $("#item-info h2")[0].innerHTML.split("-v")[0];
             var version = $("#item-info h2")[0].innerHTML.split("-v")[1];
             var provider = $("#item-info #spanProvider").text();
-            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIUserUsage", apiName:name, server:"https://localhost:9444/" },
+            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIUserUsage", provider:provider,apiName:name },
                       function (json) {
                           if (!json.error) {
                               var length = json.usage.length,data = [];
@@ -187,7 +190,7 @@ $(document).ready(function() {
                           }
                       }, "json");
 
-            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUserUsage", apiName:name,version:version, server:"https://localhost:9444/" },
+            jagg.post("/site/blocks/usage/ajax/usage.jag", { action:"getProviderAPIVersionUserUsage", provider:provider,apiName:name,version:version, server:"https://localhost:9444/" },
                       function (json) {
                           if (!json.error) {
                               var length = json.usage.length,data = [];

@@ -126,6 +126,14 @@
                 <exclude>**/pom.xml</exclude>
             </excludes>
         </fileSet>
+
+        <fileSet>
+           <directory>../integration/samples</directory>
+            <includes>
+                <include>clients/**</include>
+            </includes>
+            <outputDirectory>wso2brs-${pom.version}/samples</outputDirectory>
+        </fileSet>
 	
     </fileSets>
 
@@ -148,10 +156,17 @@
             <outputDirectory>wso2brs-${pom.version}/repository/conf/</outputDirectory>
         </file>
          <!-- Including syslog-config.xml file -->
+
+
+
+<!--
  	<file>
             <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/etc/syslog-config.xml</source>
             <outputDirectory>wso2brs-${pom.version}/repository/conf/etc</outputDirectory>
         </file>
+        -->
+
+
        <!-- <file>
 		<source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml</source>
 		<outputDirectory>wso2stratos-brs-${pom.version}/repository/conf</outputDirectory>

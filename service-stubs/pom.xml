@@ -182,7 +182,6 @@
 				<module>org.wso2.carbon.usage.meteringqueryds.stub</module>
 				<module>org.wso2.carbon.mashup.jsservices.stub</module>
 				<module>org.wso2.carbon.usage.meteringsummarygenerationds.stub</module>
-				<module>org.wso2.carbon.issue.tracker.stub</module>
 				<module>org.wso2.carbon.qpid.stub</module>
                                 <module>org.wso2.carbon.tenant.activity.stub</module>
 				<module>org.wso2.carbon.load.balance.agent.stub</module>

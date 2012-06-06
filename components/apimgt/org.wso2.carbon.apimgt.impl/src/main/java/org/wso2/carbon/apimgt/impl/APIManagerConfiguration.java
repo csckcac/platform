@@ -21,6 +21,8 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.wso2.carbon.apimgt.api.APIManagementException;
+import org.wso2.securevault.SecretResolver;
+import org.wso2.securevault.SecretResolverFactory;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -40,6 +42,8 @@ public class APIManagerConfiguration {
     
     private Map<String,List<String>> configuration = new ConcurrentHashMap<String, List<String>>();
 
+    private SecretResolver secretResolver;
+
     private boolean initialized;
 
     /**
@@ -58,6 +62,7 @@ public class APIManagerConfiguration {
         try {
             in = FileUtils.openInputStream(new File(filePath));
             StAXOMBuilder builder = new StAXOMBuilder(in);
+            secretResolver = SecretResolverFactory.create(builder.getDocumentElement(), true);
             readChildElements(builder.getDocumentElement(), new Stack<String>());
             initialized = true;
         } catch (IOException e) {
@@ -98,6 +103,9 @@ public class APIManagerConfiguration {
             if (elementHasText(element)) {
                 String key = getKey(nameStack);
                 String value = element.getText();
+                if (secretResolver.isInitialized() && secretResolver.isTokenProtected(key)) {
+                    value = secretResolver.resolve(key);
+                }
                 addToConfiguration(key, replaceSystemProperty(value));
             }
             readChildElements(element, nameStack);

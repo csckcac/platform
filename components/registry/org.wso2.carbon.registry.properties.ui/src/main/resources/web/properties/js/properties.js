@@ -106,6 +106,12 @@ function editProperty(rowid) {
         var foundPropName = false;
         var allNodes = document.getElementById("propertiesList").getElementsByTagName("*");
 
+        for (var i = 0; i < allNodes.length; i++) {
+            if (YAHOO.util.Dom.hasClass(allNodes[i], "propEditNameSelector")) {
+                if(allNodes[i].value == propertyName.value && oldPropertyName.value != propertyName.value) reason += org_wso2_carbon_registry_properties_ui_jsi18n["duplicate.entry.please.choose.another.name"];
+            }
+        }
+
         if(reason==""){
             new Ajax.Request('../properties/properties-ajaxprocessor.jsp',
             {

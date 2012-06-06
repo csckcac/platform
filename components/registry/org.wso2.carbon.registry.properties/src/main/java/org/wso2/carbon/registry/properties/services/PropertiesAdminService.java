@@ -28,6 +28,8 @@ import org.wso2.carbon.registry.properties.beans.PropertiesBean;
 import org.wso2.carbon.registry.properties.beans.RetentionBean;
 import org.wso2.carbon.registry.properties.utils.PropertiesBeanPopulator;
 
+import java.util.Properties;
+
 /**
  * The admin service that will be used in managing properties.
  */
@@ -71,6 +73,12 @@ public class PropertiesAdminService extends RegistryAbstractAdmin implements
             return;
         }
         Resource resource = registry.get(path);
+
+        if(resource.getProperties().keySet().contains(name)) {
+            throw new RegistryException("Cannot duplicate property name. Please choose a different name. " +
+                    "Property name " + name + ". Resource path = " + path);
+        }
+
         resource.addProperty(name, value);
         registry.put(resource.getPath(), resource);
         resource.discard();
@@ -99,6 +107,12 @@ public class PropertiesAdminService extends RegistryAbstractAdmin implements
             return;
         }
         Resource resource = registry.get(path);
+
+        if(resource.getProperties().keySet().contains(name) && !name.equals(oldName)) {
+            throw new RegistryException("Cannot duplicate property name. Please choose a different name. " +
+                    "Property name " + name + ". Resource path = " + path);
+        }
+
         if (oldName.equals(name)) {
             resource.setProperty(name, value);
         } else {

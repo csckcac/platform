@@ -73,20 +73,20 @@ public class RestApiAdminUtils {
         try {
             if(resourceData.getInSequenceKey() != null){
                 resource.addAttribute("inSequence", resourceData.getInSequenceKey(), nullNS);
-            } else if (resourceData.getInSeqXml() != null) {
+            } else if (!"".equals(resourceData.getInSeqXml())) {
                 resource.addChild(AXIOMUtil.stringToOM(resourceData.getInSeqXml()));
             }
             if(resourceData.getOutSequenceKey() != null){
                 resource.addAttribute("outSequence", resourceData.getOutSequenceKey(), nullNS);
-            } else if (resourceData.getOutSeqXml() != null) {
+            } else if (!"".equals(resourceData.getOutSeqXml())) {
                 resource.addChild(AXIOMUtil.stringToOM(resourceData.getOutSeqXml()));
             }
             if(resourceData.getFaultSequenceKey() != null){
                 resource.addAttribute("faultSequence", resourceData.getFaultSequenceKey(), nullNS);
-            } else if (resourceData.getFaultSeqXml() != null) {
+            } else if (!"".equals(resourceData.getFaultSeqXml())) {
                 resource.addChild(AXIOMUtil.stringToOM(resourceData.getFaultSeqXml()));
             }
-        } catch (XMLStreamException e) { // todo handle this exception.
+        } catch (XMLStreamException e) {
             e.printStackTrace();
             return null;
         }

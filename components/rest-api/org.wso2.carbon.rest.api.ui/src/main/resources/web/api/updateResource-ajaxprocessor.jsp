@@ -97,7 +97,10 @@
         }
         data.setInSeqXml(inSeqXml);
     } else {
-        data.setInSequenceKey("none".equals(inSequence) ? null : inSequence);
+        if (inSequence == null) {
+            inSequence = "";
+        }
+        data.setInSequenceKey("none".equals(inSequence) ? "" : inSequence);
     }
 
     if (inlineOutSeq) {
@@ -107,7 +110,10 @@
         }
         data.setOutSeqXml(outSeqXml);
     } else {
-        data.setOutSequenceKey("none".equals(outSequence) ? null : outSequence);
+        if (outSequence == null) {
+            outSequence = "";
+        }
+        data.setOutSequenceKey("none".equals(outSequence) ? "" : outSequence);
     }
 
     if (inlineFaultSeq) {
@@ -117,7 +123,10 @@
         }
         data.setFaultSeqXml(faultSeqXml);
     } else {
-        data.setFaultSequenceKey("none".equals(faultSequence) ? null : faultSequence);
+        if (faultSequence == null) {
+            faultSequence = "";
+        }
+        data.setFaultSequenceKey("none".equals(faultSequence) ? "" : faultSequence);
     }
     session.removeAttribute("inSeqXml");
     session.removeAttribute("outSeqXml");

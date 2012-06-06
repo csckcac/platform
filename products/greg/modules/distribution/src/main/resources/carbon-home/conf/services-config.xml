@@ -31,14 +31,6 @@
         </field>
     </table>
 
-    <table name="Service Lifecycle">
-        <field type="options">
-            <name label="Lifecycle Name" >Lifecycle Name</name>
-            <values class="org.wso2.carbon.governance.services.ui.utils.LifecycleListPopulator"/>
-        </field>
-    </table>
-
-
     <table name="Contacts">
         <subheading>
             <heading>Contact Type</heading><heading>Contact Name/Organization Name</heading>

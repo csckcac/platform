@@ -1178,7 +1178,7 @@ public class APIProviderHostObject extends ScriptableObject {
         return apiStatus;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionUsage(String providerName, String APIname, String serverURL)
+    public static NativeArray jsFunction_getProviderAPIVersionUsage(String providerName, String APIname)
             throws ScriptException {
         List<APIVersionUsageDTO> list = null;
         try {
@@ -1236,7 +1236,7 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIUserUsage(String providerName, String apiName, String serverURL) throws ScriptException {
+    public static NativeArray jsFunction_getProviderAPIUserUsage(String providerName, String apiName) throws ScriptException {
         List<PerUserAPIUsageDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
@@ -1265,7 +1265,7 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static NativeArray jsFunction_getProviderAPIVersionUserUsage(String providerName, String apiName,
-                                                                        String version, String serverURL) throws ScriptException {
+                                                                        String version) throws ScriptException {
         List<PerUserAPIUsageDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
@@ -1293,7 +1293,7 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionUserLastAccess(String providerName,String serverURL) throws ScriptException {
+    public static NativeArray jsFunction_getProviderAPIVersionUserLastAccess(String providerName) throws ScriptException {
         List<APIVersionLastAccessTimeDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();

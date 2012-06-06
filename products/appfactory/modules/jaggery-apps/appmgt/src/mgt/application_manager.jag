@@ -1,5 +1,6 @@
 <%
     include('../process/web_service_util.jag');
+    include('../constants.jag');
 
     //function createNewApplication(applicationKey, applicationName, applicationDescription, userName) {
     function createNewApplication(applicationName, userName) {
@@ -44,9 +45,9 @@
         }
     }
 
-    function getUserRolesForApplication(applicationKey, userName,address) {
+    function getUserRolesForApplication(applicationKey, userName) {
         try {
-            var result = getRoles(applicationKey, userName,address);
+            var result = getRoles(applicationKey, userName);
             if( result != null) {
                 var roleArray = result.*::["return"].text();
                 return roleArray;
@@ -86,9 +87,8 @@
     }
 
     // check whether the logged in user plays any role in the given application
-    function isUserInApplication(applicationKey, userName,address) {
+    function isUserInApplication(applicationKey, userName, roleArray) {
         try {
-            var roleArray = getUserRolesForApplication(applicationKey, userName,address);
             if(roleArray.length() > 0) {
                 return true;
             } else {
@@ -100,13 +100,13 @@
     }
 
     // checks whether the logged in user is the owner of the given application
-    function isOwner(applicationKey, userName,address) {
+    function isOwner(applicationKey, userName, roleArray) {
         try {
-            var roleArray = getUserRolesForApplication(applicationKey, userName,address);
             var isOwner = false;
             for(var i =0; i < roleArray.length(); ++i) {
-                if(roleArray[i] == "admin") {
+                if(roleArray[i] == ROLE_APP_OWNER) {
                     isOwner = true;
+                    break;
                 }
             }
             return isOwner;
@@ -115,25 +115,40 @@
         }
     }
 
-    function isUserADevOp(applicationKey, userName,address) {
+    function isDevOps(applicationKey, userName, roleArray) {
         try {
-            var roleArray = getUserRolesForApplication(applicationKey, userName,address);
-            var isADevOp = false;
+            var isDevOps = false;
             for(var i =0; i < roleArray.length(); ++i) {
-                if(roleArray[i] == "devOp") {
-                    isADevOp = true;
+                if(roleArray[i] == ROLE_DEVOPS) {
+                	isDevOp = true;
+                    break;
                 }
             }
-            return isADevOp;
+            return isDevOps;
+        } catch(e) {
+            throw "Error while checking ownership of application";
+        }
+    }
+    
+    function isAdmin(applicationKey, userName, roleArray) {
+        try {
+            var isAdmin = false;
+            for(var i =0; i < roleArray.length(); ++i) {
+                if(roleArray[i] == ROLE_ADMIN) {
+                	isAdmin = true;
+                    break;
+                }
+            }
+            return isAdmin;
         } catch(e) {
             throw "Error while checking ownership of application";
         }
     }
 
     //TODO move the logic here
-    function getAllAppsOfUser(userName, address) {
+    function getAllAppsOfUser(userName) {
         try {
-            var result = getAllApps(userName, address);
+            var result = getAllApps(userName);
             var ns=new Namespace("http://service.mgt.application.appfactory.carbon.wso2.org");
             return result.ns::["return"].text();
         } catch(e) {

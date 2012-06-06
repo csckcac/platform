@@ -9,8 +9,7 @@ include('includes/template_header.jag');
             include('mgt/application_manager.jag');
             include('constants.jag');
             try{
-                //var applicationList = getAllApps(userName,"localhost");
-                var applicationList = getAllAppsOfUser(userName,"localhost");
+                var applicationList = getAllAppsOfUser(userName);
                 if(applicationList==undefined || applicationList.value=="" || applicationList.length()==0){
                     print("No Applications are created.");
                 }

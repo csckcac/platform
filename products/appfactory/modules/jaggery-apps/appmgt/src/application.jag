@@ -33,23 +33,28 @@
 
     include('mgt/application_manager.jag');
     var userHasAccess = false;
+    var roleArray = null;
     try {
+    	roleArray = getUserRolesForApplication(applicationKey, userName);
         // userName variable is taken from template_header.jag
-        userHasAccess = isUserInApplication(applicationKey, userName,"localhost");
+    	if (roleArray != null){
+    		userHasAccess = isUserInApplication(applicationKey, userName, roleArray);
+    	}
     } catch (e) {
         log.error(e);
     }
     if(userHasAccess) {
-        var userIsOwner = false;
-        var isADevOp = false;
+        var adminPrivilege = false;
+        var devOpsPrivilege = false;
         try {
-            userIsOwner = isOwner(applicationKey, userName,"localhost");
-            isADevOp = isUserADevOp(applicationKey, userName,"localhost");
+        	adminPrivilege = isOwner(applicationKey, userName, roleArray);
+        	adminPrivilege = adminPrivilege || isAdmin(applicationKey, userName, roleArray);
+        	devOpsPrivilege = adminPrivilege || isDevOps(applicationKey, userName, roleArray);
         } catch (e) {
             log.error(e);
         }
 
-        log.debug("user is an Owner "+userIsOwner);
+        log.debug("user is an Owner " + adminPrivilege);
         
         %>
         <div id="middle">
@@ -67,14 +72,14 @@
                     <div id="pageTabs" class="page-tabs">
                         <a name="overview" class="tab">Overview</a><!-- Basicaly create a div with id="overview" and add content -->
                         <%
-                            if(userIsOwner) {
+                            if(adminPrivilege) {
                         %>
                         <a name="admin" class="tab selected">Admin</a>
                         <%
                             }
                         %>
                         <%
-                            if(isADevOp) {
+                            if(devOpsPrivilege) {
                         %>
                         <a name="devOp" class="tab selected">Operations</a>
                         <%
@@ -101,7 +106,7 @@
         
                     <!-- admin content -->
                     <%
-                        if(userIsOwner) {
+                        if(adminPrivilege) {
                     %>
                     <div class="content-box" id="admin">
                         <h3>Admin Portal</h3>
@@ -124,7 +129,7 @@
 
                 <!-- devOp information -->
                     <%
-                        if (isADevOp) {
+                        if (devOpsPrivilege) {
                     %>
                     <div class="content-box" id="devOp">
                         <h3>devOp operations</h3>

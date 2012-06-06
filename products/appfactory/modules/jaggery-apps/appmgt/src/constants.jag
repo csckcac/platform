@@ -34,5 +34,12 @@
     var ADMIN_PASSWORD = "AdminPassword";
     
     
+    var ROLE_ADMIN = "admin";
+    var ROLE_APP_OWNER = "appOwner";
+    var ROLE_QA = "qa";
+    var ROLE_DEVOPS = "devOps";
+    var ROLE_DEV = "dev";
+    
+    
 
 %>

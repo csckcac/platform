@@ -57,6 +57,35 @@ public class ApplicationManagementService extends AbstractAdmin {
         }
 
     }
+    
+    public String[] getUsersOfApplicaton(String applicationId ) throws ApplicationManagementException {
+        TenantManager tenantManager = Util.getRealmService().getTenantManager();
+        ArrayList<String> userList = new ArrayList<String>();
+        try {
+            UserRealm realm = Util.getRealmService().getTenantUserRealm(tenantManager.getTenantId(applicationId));
+            String[] roles = realm.getUserStoreManager().getRoleNames();
+            if (roles.length >0) {
+                for(String roleName : roles) {
+                    if (!roleName.equals("everyone")) {
+                        String[] usersOfRole = realm.getUserStoreManager().getUserListOfRole(roleName);
+                        if (usersOfRole != null && usersOfRole.length > 0) {
+                            for(String user : usersOfRole) {
+                                if(!userList.contains(user)) {
+                                    userList.add(user);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+            return userList.toArray(new String[userList.size()]);
+        } catch (UserStoreException e) {
+            String msg = "Error while getting users of application "+applicationId;
+            log.error(msg,e);
+            throw new ApplicationManagementException(msg, e);
+        }
+    }
 
     public boolean removeUserFromApplication(String applicationId, String userName)
             throws ApplicationManagementException {

@@ -30,7 +30,6 @@ h3{
     line-height: 1;
     margin-left: 20px;
     padding: 7px 16px 6px;
-    text-transform: uppercase;
     cursor:pointer;
 }
 
@@ -468,4 +467,7 @@ tr.application-api td.api-key-cell{
 .comment-text{
     padding:5px;
     color:#888;
+}
+.settingsSection img {
+    cursor: pointer;
 }

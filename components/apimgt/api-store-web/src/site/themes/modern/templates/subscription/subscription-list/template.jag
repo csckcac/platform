@@ -81,5 +81,10 @@
         </div>
     </div>
     <% } %>
+    <% if(lenI==0){ %>
+        <div class="alert alert-info">
+            No Subscriptions created yet.
+        </div>
+    <% } %>
 </div>
 <% }); %>

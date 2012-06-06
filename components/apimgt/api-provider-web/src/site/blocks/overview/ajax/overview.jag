@@ -17,7 +17,7 @@ include("/jagg/jagg.jag");
         var newVersion = request.getParameter("newVersion");
 
         result = mod.copyAPI(api, newVersion);
-        if (result.error == "true") {
+        if (result.error) {
             obj = {
                 error:result.error,
                 message:msg.error.backendError(action)

@@ -28,32 +28,5 @@ var updateAPI = function (api) {
     }
 };
 
-var updateAPIStatus = function (api) {
-    var log = new Log(),
-            provider = jagg.module("manager").getAPIProviderObj();
-    try {
-        var success = provider.updateAPIStatus(api);
-        if (log.isDebugEnabled()) {
-            log.debug("updateAPIStatus : " + api.name + "-" + api.version);
-        }
-        if(!success)
-        {
-        return {
-            error:true
-        };
-        }else
-        {
-        return {
-            error:false
-        };
-        }
 
-    } catch (e) {
-        log.error(e.message);
-        return {
-            error:e
-
-        };
-    }
-};
 %>

@@ -23,13 +23,21 @@ $('#makeKeysForwardCompatibleDiv').hide();
 }
 </script>
 
-<% var i,resCount,rowNums = [],api = outputs.api;%>
+<% var i,resCount,rowNums = [],api = outputs.api;
+   var mod = jagg.module("api");
+   var apiData={};
+   apiData.provider= api.provider;
+   apiData.name= api.name;
+   apiData.version= api.version;
+   var result = mod.getLifeCyclesEvents(apiData);
+   var lcs=result.lcs;
+%>
 <div class="alert alert-error" id="statusAPIError" style="display:none">
 <span id="statusErrorSpan"></span>
 </div>
 <div class="row-fluid">
     <div class="span12">
- <form method="POST" class="form-horizontal well" id="editStatusForm" action="<%=site.context%>/site/blocks/life-cycles/ajax/update-status.jag"  enctype="multipart/form-data">
+ <form method="POST" class="form-horizontal well" id="editStatusForm" action="<%=site.context%>/site/blocks/life-cycles/ajax/life-cycles.jag"  enctype="multipart/form-data">
      <input type="hidden" name="action" id="action" value="updateStatus"/>
      <input type="hidden" name="name" id="name" value="<%=api.name%>"/>
      <input type="hidden" name="version" id="version" value="<%=api.version%>"/>
@@ -61,9 +69,29 @@ $('#makeKeysForwardCompatibleDiv').hide();
        <div class="form-actions">
                 <input type="submit" id="updateButton" class="btn btn-primary" value="Update"/>
                 <input type="reset" id="cancelEdit" class="btn btn-primary" value="Reset">
-            </div>
+       </div>
 </form>
-
+<h4>Life-Cycle History</h4><br/>
+<%if(lcs!=null){
+        var length = lcs.length;
+        if (length == 0) {
+        %>
+        <ul><li>No Life-cycles history data can be found for this API.</li></ul>
+ <%}%>
+ <ul>
+        <%for(var j=0;j<length;j++){
+        var lc=lcs[j];
+        var path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + lc.username;
+        %>
+        <li>
+        <b><%=lc.date%></b> - &nbsp;&nbsp;<i class="icon-user"></i><a href="<%=path%>"><%=lc.username%></a>&nbsp;&nbsp;
+        <%if(lc.oldStatus==""){%>created the API. <%}else{%>
+        changed api status from '<%=lc.oldStatus%>' to '<%=lc.newStatus%>'.
+        <%}%>
+        </li>
+        <%}%>
+        </ul>
+        <%}%>
 
 </div></div>
 

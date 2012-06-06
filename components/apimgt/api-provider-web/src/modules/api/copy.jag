@@ -8,9 +8,16 @@ var copyAPI = function (api, newVersion) {
         if (log.isDebugEnabled()) {
             log.debug("copyAPI for : " + api.name + "-" + api.version + " as " + api.name + "-" + newVersion);
         }
-        return {
-            error:success
-        };
+        if (!success) {
+            return {
+                error:true
+            };
+        }
+        else {
+            return {
+                error:false
+            };
+        }
     } catch (e) {
         log.error(e.message);
         return {

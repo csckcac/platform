@@ -251,7 +251,7 @@
         <axis2.jaxb.version>1.6.1.wso2v1</axis2.jaxb.version>
         <axis2.version>1.6.1.wso2v5</axis2.version>
         <stratos.version>1.1.0-SNAPSHOT</stratos.version>
-        <project.version>5.0-SNAPSHOT</project.version>
+        <appserver.version>5.0-SNAPSHOT</appserver.version>
     </properties>
 
     <mailingLists>

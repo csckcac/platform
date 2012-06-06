@@ -25,7 +25,6 @@ public class UrlImpl extends ListFieldImpl implements Url {
     private String linkText;
 
     public UrlImpl() {
-        setLinkText("default_linkText");
     }
 
     public UrlImpl(String value, String linkText, String type) {

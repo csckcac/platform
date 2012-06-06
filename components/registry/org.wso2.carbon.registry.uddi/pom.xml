@@ -115,9 +115,20 @@
             <version>2.0.4.wso2v3</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jpa_2.0_spec</artifactId>
+            <version>${version.geronimo.specs.geronimo-jpa_2.0_spec}</version>
+        </dependency>
+        <dependency>
                 <groupId>org.apache.openjpa</groupId>
                 <artifactId>openjpa</artifactId>
                 <version>${openjpa.version}</version>
+		<exclusions>
+			<exclusion>
+				<groupId>org.apache.geronimo.specs</groupId>
+				<artifactId>geronimo-jpa_2.0_spec</artifactId>
+			</exclusion>
+		</exclusions>
                 <!-- We don't need an orbit bundle, since this is a bundle -->
         </dependency>
     </dependencies>

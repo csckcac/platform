@@ -76,7 +76,6 @@
                 <module>localentry</module>
                 <module>logging</module>
               <module>ldap-server</module>
-               <module>issue-tracker</module>
                 <module>mediation-initializer</module>
                 <module>mediation-statistics</module>
                 <module>mediation-tracer</module>

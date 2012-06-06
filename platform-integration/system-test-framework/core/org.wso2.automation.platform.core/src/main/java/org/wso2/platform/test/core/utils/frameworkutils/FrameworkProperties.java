@@ -12,6 +12,7 @@ public class FrameworkProperties {
     private Selenium selenium;
     private Ravana ravana;
     private DashboardVariables dashboardVariables;
+    private CoverageSettings coverageSettings;
 
     public DataSource getDataSource() {
         return dataSource;
@@ -67,11 +68,15 @@ public class FrameworkProperties {
         return dashboardVariable;
     }
 
+    public void setCoverageSettings(CoverageSettings coverage)
+    {
+        this.coverageSettings=coverage;
+    }
     public void setFrameworkProperties(DataSource dataSource,
                                        EnvironmentSettings environmentSettings,
                                        EnvironmentVariables environmentVariables,
                                        ProductVariables productVariables, Selenium selenium,
-                                       Ravana ravana, DashboardVariables dbVariables) {
+                                       Ravana ravana, DashboardVariables dbVariables,CoverageSettings coverage) {
         this.dataSource = dataSource;
         this.environmentSettings = environmentSettings;
         this.environmentVariables = environmentVariables;
@@ -79,6 +84,7 @@ public class FrameworkProperties {
         this.selenium = selenium;
         this.ravana = ravana;
         this.dashboardVariables = dbVariables;
+        this.coverageSettings =coverage;
     }
 
 }

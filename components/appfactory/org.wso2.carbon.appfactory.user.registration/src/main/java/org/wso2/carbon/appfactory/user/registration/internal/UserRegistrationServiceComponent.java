@@ -21,6 +21,7 @@ package org.wso2.carbon.appfactory.user.registration.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.appfactory.user.registration.util.Util;
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 
@@ -31,6 +32,9 @@ import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
  * cardinality="1..1" policy="dynamic"
  * bind="setEmailVerificationService"
  * unbind="unsetEmailVerificationService"
+ * @scr.reference name="appfactory.common"
+ * interface="org.wso2.carbon.appfactory.common.AppFactoryConfiguration" cardinality="1..1"
+ * policy="dynamic" bind="setAppFactoryConfiguration" unbind="unsetAppFactoryConfiguration"
  */
 public class UserRegistrationServiceComponent {
     private static Log log = LogFactory.getLog(UserRegistrationServiceComponent.class);
@@ -53,5 +57,12 @@ public class UserRegistrationServiceComponent {
         Util.setEmailVerificationService(null);
     }
 
+    protected void setAppFactoryConfiguration(AppFactoryConfiguration appFactoryConfiguration) {
+        Util.setConfiguration(appFactoryConfiguration);
+    }
+
+    protected void unsetAppFactoryConfiguration(AppFactoryConfiguration appFactoryConfiguration) {
+        Util.setConfiguration(null);
+    }
 
 }

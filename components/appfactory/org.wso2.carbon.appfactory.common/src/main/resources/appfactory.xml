@@ -22,8 +22,11 @@
 
     <!--Application Management configurations-->
     <ApplicationMgt>
-        <DefaultApplicationUserRoles>Developer</DefaultApplicationUserRoles>
+         <DefaultApplicationUserRole name="appFactoryUsers">
+            <Permission>/permission/login/</Permission>
+        </DefaultApplicationUserRole>
     </ApplicationMgt>
+
 
     <DefaultRoles>
         <Role name="developer">

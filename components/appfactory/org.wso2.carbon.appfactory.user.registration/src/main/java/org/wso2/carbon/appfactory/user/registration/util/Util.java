@@ -18,6 +18,7 @@
  */
 package org.wso2.carbon.appfactory.user.registration.util;
 
+import org.wso2.carbon.appfactory.common.AppFactoryConfiguration;
 import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
 
 /**
@@ -25,6 +26,7 @@ import org.wso2.carbon.email.verification.util.EmailVerifcationSubscriber;
  */
 public class Util {
     private static EmailVerifcationSubscriber emailVerificationService = null;
+    private static AppFactoryConfiguration configuration;
 
     public static synchronized void setEmailVerificationService(
             EmailVerifcationSubscriber emailService) {
@@ -33,5 +35,13 @@ public class Util {
 
     public static EmailVerifcationSubscriber getEmailVerificationService() {
         return emailVerificationService;
+    }
+
+    public static AppFactoryConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    public static void setConfiguration(AppFactoryConfiguration configuration) {
+        Util.configuration = configuration;
     }
 }

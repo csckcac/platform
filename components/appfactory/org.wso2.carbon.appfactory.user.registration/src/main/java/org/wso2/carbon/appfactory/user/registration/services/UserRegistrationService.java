@@ -21,7 +21,11 @@ package org.wso2.carbon.appfactory.user.registration.services;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.appfactory.common.AppFactoryConstants;
+import org.wso2.carbon.appfactory.common.AppFactoryException;
 import org.wso2.carbon.appfactory.user.registration.beans.UserRegistrationInfoBean;
+import org.wso2.carbon.appfactory.user.registration.util.Util;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.core.Registry;
@@ -31,9 +35,12 @@ import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.api.UserStoreManager;
+import org.wso2.carbon.user.core.Permission;
 import org.wso2.carbon.user.core.UserRealm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -101,32 +108,49 @@ public class UserRegistrationService extends AbstractAdmin {
         if ((email.equals(userEmail)) && (confirmationKey.equals(userConfirmationKey))) {
             try {
                 superTenantRegistry.delete(userValidationKeyPath);
+                updateUserRole(userName);
             } catch (RegistryException e) {
                 handleException("Could not delete confirmation key for " + userName, e);
+            } catch (AppFactoryException e) {
+                handleException("Failed to add/update default role for user:" + userName, e);
             }
-            updateUserRole(userName);
             return true;
         }
 
         return false;
     }
 
-    private void updateUserRole(String userName) throws UserRegistrationException {
-        UserRealm realm;
-        realm = getUserRealm();
-
-        String adminRoleName;
-        String[] newUserRoles = new String[1];
-        String[] userRolesToDelete = null;
+    private void updateUserRole(String userName)
+            throws UserRegistrationException, AppFactoryException {
+        UserRealm realm = getUserRealm();
         try {
             UserStoreManager userStoreManager = realm.getUserStoreManager();
-            adminRoleName = realm.getRealmConfiguration().getAdminRoleName();
-            newUserRoles[0] = adminRoleName;
-            userStoreManager.updateRoleListOfUser(userName, userRolesToDelete, newUserRoles);
-        } catch (org.wso2.carbon.user.core.UserStoreException e) {
-            handleException("Failed to get realm configuration", e);
+
+            String defaultRoleName = Util.getConfiguration().getFirstProperty(
+                    AppFactoryConstants.DEFAULT_APPLICATION_USER_ROLE);
+
+            if (!userStoreManager.isExistingRole(defaultRoleName)) {
+                String defaultPermissionString = Util.getConfiguration().getFirstProperty(
+                        AppFactoryConstants.DEFAULT_APPLICATION_USER_ROLE + "." + defaultRoleName +
+                        "." + AppFactoryConstants.PERMISSION);
+                if (defaultPermissionString == null) {
+                    throw new AppFactoryException("Failed to get default application user role permissions.");
+                }
+
+                String[] resourceIds = defaultPermissionString.split(",");
+                List<Permission> permissionList = new ArrayList<Permission>();
+                for (String resourceId : resourceIds) {
+                    Permission permission = new Permission(resourceId,
+                                                           CarbonConstants.UI_PERMISSION_ACTION);
+                    permissionList.add(permission);
+                }
+                userStoreManager.addRole(defaultRoleName, new String[]{userName},
+                                         new Permission[permissionList.size()]);
+            } else {
+                userStoreManager.updateRoleListOfUser(userName, null, new String[]{defaultRoleName});
+            }
         } catch (UserStoreException e) {
-            handleException("Failed to get realm configuration", e);
+            handleException("Failed to get add/update roles of user:" + userName, e);
         }
     }
 

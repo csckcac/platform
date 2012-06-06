@@ -478,6 +478,10 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
             throw new CassandraExplorerException("Connection URL is empty. Please provide Cassandra Connection URL to " +
                     "connect") ;
         }
+        if(userName !=null && password !=null){
+        credentials.put("username",userName);
+        credentials.put("password",password);
+        }
         ConnectionManager connectionManager = new ConnectionManager(clusterName,
                 new CassandraHostConfigurator(connectionUrl.trim()),credentials);
         return connectionManager.isConnected();

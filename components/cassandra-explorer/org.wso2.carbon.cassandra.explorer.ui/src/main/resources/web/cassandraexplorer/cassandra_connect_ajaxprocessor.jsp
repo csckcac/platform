@@ -17,6 +17,8 @@
 ~ under the License.
 -->
 <%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
+<%@ page
+        import="org.wso2.carbon.cassandra.explorer.stub.CassandraExplorerAdminCassandraExplorerException" %>
 
 <%
     CassandraExplorerAdminClient adminClient =
@@ -25,12 +27,20 @@
     String connectionUrl = request.getParameter("connection_url");
     String userName = request.getParameter("user_name");
     String password = request.getParameter("password");
-    boolean isConnectionSuccess = adminClient.connectToCassandraCluster(clusterName, connectionUrl,
-                                                                        userName, password);
+    //Connection URL is being reused as ClusterName since it should be unique
+    boolean isConnectionSuccess = false;
+    try{
+    isConnectionSuccess = adminClient.connectToCassandraCluster(connectionUrl, connectionUrl,userName, password);
+    } catch (CassandraExplorerAdminCassandraExplorerException exception) {    %>
+
+<script type="text/javascript">
+    location.href = "cassandra_connect.jsp";
+</script>
+  <%  }
     if (isConnectionSuccess) {
 %>
 <script type="text/javascript">
-    location.href = "cassandra_Keyspaces.jsp";
+    location.href = "cassandra_keyspaces.jsp";
 </script>
 <%
     }

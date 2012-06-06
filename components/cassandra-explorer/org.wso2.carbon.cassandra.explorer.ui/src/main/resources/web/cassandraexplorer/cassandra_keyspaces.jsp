@@ -21,9 +21,24 @@
 <script language="text/javascript" src="../admin/js/customControls.js"></script>
 
 <%
+    String[] keyspaces = new String[0];
     CassandraExplorerAdminClient adminClient
             = new CassandraExplorerAdminClient(config.getServletContext(), session);
-    String[] keyspaces = adminClient.getKeyspaces();
+    try{
+     keyspaces = adminClient.getKeyspaces();
+    }catch (Exception e) { %>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        CARBON.showErrorDialog('<%=e.getMessage()%>', function () {
+            CARBON.closeWindow();
+            location.href = "cassandra_connect.jsp";
+        }, function () {
+            CARBON.closeWindow();
+            location.href = "cassandra_connect.jsp";
+        });
+    });
+</script>
+   <% }
 %>
 <script>
     jQuery(document).ready(function () {

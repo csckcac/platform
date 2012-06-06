@@ -1,4 +1,3 @@
-
 <!--
 ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
@@ -22,13 +21,39 @@
 <script type="text/javascript" src="../admin/js/jquery.js"></script>
 <script type="text/javascript" src="../admin/js/jquery.form.js"></script>
 <script type="text/javascript" src="../dialog/js/jqueryui/jquery-ui.min.js"></script>
-
-<form id="connect_form" method="POST" action="cassandra_connect_ajaxprocessor.jsp">
-    <table>
-        <tr><td>Cluster Name</td><td><input type="text" name="cluster_name" id="cluster_name"/></td></tr>
-        <tr><td>Connection Url</td><td><input type="text" name="connection_url" id="connection_url"/></td></tr>
-        <tr><td>User Name</td><td><input type="text" name="user_name" id="username"/></td></tr>
-        <tr><td>Password</td><td><input type="password" name="password" id="password"/></td></tr>
-        <tr><td></td><td><input type="submit" value="Connect"/></td></tr>
-    </table>
-</form>
+<div id="middle">
+    <h2>Connect</h2>
+    <div id="workArea">
+        <form id="connect_form" method="POST" action="cassandra_connect_ajaxprocessor.jsp">
+            <table  class="carbonFormTable">
+               <%-- <tr>
+                    <td>Cluster Name</td>
+                    <td><input type="text" name="cluster_name" id="cluster_name"/>
+                        <div class="sectionHelp">
+                            Enter the Name of the Cluster eg: ClusterOne.
+                        </div>
+                    </td>
+                </tr>--%>
+                <tr>
+                    <td>Connection Url</td>
+                    <td><input type="text" name="connection_url" id="connection_url"/>
+                        <div class="sectionHelp">
+                            Connection URL eg: localhost:9160.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>User Name</td>
+                    <td><input type="text" name="user_name" id="username"/></td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td><input type="password" name="password" id="password"/></td>
+                </tr>
+            </table>
+            <div class="buttonRow">
+                <input type="submit" value="Connect">
+            </div>
+        </form>
+    </div>
+</div>

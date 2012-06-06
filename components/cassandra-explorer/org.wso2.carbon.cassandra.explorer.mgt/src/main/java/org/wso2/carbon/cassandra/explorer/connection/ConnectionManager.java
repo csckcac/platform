@@ -41,7 +41,12 @@ public class ConnectionManager {
 
     private void setCassandraCluster(String clusterName, CassandraHostConfigurator hostConfigurator,
                                        Map<String, String> credentials) throws CassandraExplorerException {
+        try{
+        hostConfigurator.setRetryDownedHosts(false);
         this.cluster = HFactory.getOrCreateCluster(clusterName, hostConfigurator, credentials);
+        }catch (Exception exception){
+            throw new CassandraExplorerException(exception.getMessage(),exception.getCause());
+        }
         if(cluster == null){
             throw new CassandraExplorerException("Cannot connect to cluster");
         }

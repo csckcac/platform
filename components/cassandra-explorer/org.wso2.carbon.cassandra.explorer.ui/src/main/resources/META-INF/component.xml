@@ -19,7 +19,7 @@
     <!-- cassandra mgt menu configuration -->
     <menus>
         <menu>
-            <id>cassandra_ks_mgt_menu</id>
+            <id>cassandra_explorer_menu</id>
             <i18n-key>cassandra.explorer</i18n-key>
             <i18n-bundle>org.wso2.carbon.cassandra.explorer.ui.i18n.Resources</i18n-bundle>
             <parent-menu>manage_menu</parent-menu>
@@ -28,7 +28,28 @@
             <order>30</order>
             <style-class>manage</style-class>
             <icon>../cassandraexplorer/images/explorer.png</icon>
-            <require-permission>/permission/admin/manage</require-permission>
+        </menu>
+        <menu>
+            <id>cassandra_explorer_connect_menu</id>
+            <i18n-key>cassandra.explorer.connect</i18n-key>
+            <i18n-bundle>org.wso2.carbon.cassandra.explorer.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>cassandra_explorer_menu</parent-menu>
+            <link>../cassandraexplorer/cassandra_connect.jsp</link>
+            <region>region1</region>
+            <order>35</order>
+            <style-class>manage</style-class>
+            <icon>../cassandraexplorer/images/explorer.png</icon>
+        </menu>
+        <menu>
+            <id>cassandra_explorer_list_keyspaces_menu</id>
+            <i18n-key>cassandra.explorer.list.keyspaces</i18n-key>
+            <i18n-bundle>org.wso2.carbon.cassandra.explorer.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>cassandra_explorer_menu</parent-menu>
+            <link>../cassandraexplorer/cassandra_keyspaces.jsp</link>
+            <region>region1</region>
+            <order>40</order>
+            <style-class>manage</style-class>
+            <icon>../cassandraexplorer/images/explorer.png</icon>
         </menu>
     </menus>
 </component>

@@ -38,7 +38,7 @@ function saveContent(provider, apiName, apiVersion, docName, mode) {
     jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"addInlineContent",provider:provider,apiName:apiName,version:apiVersion,docName:docName,content:contentDoc},
               function (result) {
                   if (result.error) {
-                      jagg.message(result.message);
+                      jagg.message({content:result.message,type:"error"});
                   } else {
                       if (mode == "save") {
                           $('#messageModal').html($('#confirmation-data').html());

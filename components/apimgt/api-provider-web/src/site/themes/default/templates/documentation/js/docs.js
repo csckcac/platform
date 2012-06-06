@@ -16,7 +16,7 @@ var addNewDoc = function (provider) {
                       $.cookie("tab", "docsLink");
                       window.location.reload();
                   } else {
-                      jagg.message(result.message);
+                      jagg.message({content:result.message,type:"error"});
                   }
               }, "json");
 
@@ -41,7 +41,7 @@ var removeDocumentation = function (provider,apiName, version, docName, docType)
                         $('#docTable').append($('<tr><td colspan="6">No documentation associated with the API</td></tr>'));
                     }
                 } else {
-                    jagg.message(result.message);
+                    jagg.message({content:result.message,type:"error"});
                 }
             }, "json");
     });

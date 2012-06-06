@@ -6,7 +6,7 @@ var login = function () {
                   if (!result.error) {
                       location.href = 'index.jag';
                   } else {
-                      jagg.message(result.message);
+                      jagg.message({content:result.message,type:"error"});
                   }
               }, "json");
 
@@ -18,7 +18,7 @@ var logout = function () {
         if (!result.error) {
             window.location.reload();
         } else {
-            jagg.message(result.message);
+            jagg.message({content:result.message,type:"error"});
         }
     }, "json");
 };

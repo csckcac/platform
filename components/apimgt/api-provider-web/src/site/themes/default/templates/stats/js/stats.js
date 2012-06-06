@@ -55,7 +55,7 @@ $(document).ready(function() {
 
 
                   } else {
-                      jagg.message(json.message);
+                      jagg.message({content:json.message,type:"error"});
                   }
                   t_on['serviceTimeChart'] = 0;
               }, "json");
@@ -97,7 +97,7 @@ $(document).ready(function() {
 
 
                   } else {
-                      jagg.message(json.message);
+                      jagg.message({content:json.message,type:"error"});
                   }
                   t_on['subsChart'] = 0;
               }, "json");
@@ -138,7 +138,7 @@ $(document).ready(function() {
 
 
                   } else {
-                      jagg.message(json.message);
+                      jagg.message({content:json.message,type:"error"});
                   }
                   t_on['apiChart'] = 0;
               }, "json");
@@ -163,7 +163,7 @@ $(document).ready(function() {
                       }
 
                   } else {
-                      jagg.message(json.message);
+                      jagg.message({content:json.message,type:"error"});
                   }
                   t_on['tempLoadingSpace'] = 0;
               }, "json");

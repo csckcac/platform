@@ -18,7 +18,7 @@ var getLastAccessTime = function(name) {
                               }
                           }
                       } else {
-                          jagg.message(json.message);
+                          jagg.message({content:json.message,type:"error"});
                       }
                   });
     return lastAccessTime;
@@ -37,7 +37,7 @@ var getResponseTime = function(name) {
                               }
                           }
                       } else {
-                          jagg.message(json.message);
+                          jagg.message({content:json.message,type:"error"});
                       }
                   });
     return responseTime;
@@ -95,7 +95,7 @@ $(document).ready(function() {
                               }
 
                           } else {
-                              jagg.message(json.message);
+                              jagg.message({content:json.message,type:"error"});
                           }
                       }, "json");
 
@@ -134,7 +134,7 @@ $(document).ready(function() {
                               }
 
                           } else {
-                              jagg.message(json.message);
+                              jagg.message({content:json.message,type:"error"});
                           }
                       }, "json");
 
@@ -181,7 +181,7 @@ $(document).ready(function() {
                               }
 
                           } else {
-                              jagg.message(json.message);
+                              jagg.message({content:json.message,type:"error"});
                           }
                       }, "json");
 
@@ -221,7 +221,7 @@ $(document).ready(function() {
                               }
 
                           } else {
-                              jagg.message(json.message);
+                              jagg.message({content:json.message,type:"error"});
                           }
                       }, "json");
 

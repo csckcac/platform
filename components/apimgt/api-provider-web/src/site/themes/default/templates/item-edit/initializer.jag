@@ -3,6 +3,7 @@ jagg.initializer("item-edit", {
 
     preInitialize:function () {
         jagg.addHeaderJS("item-edit", "item-edit", "templates/item-edit/js/edit.js");
+        jagg.addHeaderJS("custom-validate", "jagg", "templates/utils/custom-validation/custom-validation.js");
     }
 });
 %>

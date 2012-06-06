@@ -4,6 +4,7 @@ jagg.initializer("item-add", {
     preInitialize:function () {
     jagg.addHeaderJS("item-add", "jagg", "templates/item-add/js/load.js");
     jagg.addHeaderJS("add-resource", "jagg", "templates/item-add/js/resource-template.js");
+    jagg.addHeaderJS("custom-validate", "jagg", "templates/utils/custom-validation/custom-validation.js");
     }
 });
 %>

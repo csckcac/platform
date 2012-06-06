@@ -51,7 +51,7 @@
             <div class="control-group">
                 <label class="control-label" for="context">Context:<span class="requiredAstrix">*</span></label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge required contextExists" id="context" name="context" value="<%=api.context%>"/>
+                    <input type="text" class="input-xlarge required" id="context" name="context" value="<%=api.context%>"/>
                 </div>
             </div>
 
@@ -103,9 +103,9 @@
                 </div>
             </div>
             <div class="control-group">
-                    <label class="control-label" for="editTier">Tier Availability:</label>
+                    <label class="control-label" for="editTier">Tier Availability:<span class="requiredAstrix">*</span></label>
                     <div class="controls">
-                        <select id="editTier" name="editTier"  multiple="multiple">
+                        <select id="editTier" class="selected" name="editTier"  multiple="multiple">
                        </select>
                     </div>
             </div>

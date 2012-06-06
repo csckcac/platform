@@ -86,9 +86,9 @@
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="tier">Tier Availability:</label>
+                    <label class="control-label" for="tier">Tier Availability:<span class="requiredAstrix">*</span></label>
                     <div class="controls">
-                        <select id="tier" name="tier"  multiple="multiple">
+                        <select id="tier" class="selected" name="tier"  multiple="multiple">
                         </select>
                     </div>
                 </div>

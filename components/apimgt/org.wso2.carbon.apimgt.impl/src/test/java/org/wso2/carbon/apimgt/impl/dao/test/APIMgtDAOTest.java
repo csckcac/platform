@@ -71,15 +71,18 @@ public class APIMgtDAOTest extends TestCase {
     }
 
     public void testValidateKey() throws Exception{
-        APIKeyValidationInfoDTO apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "1.0.0", "a1b2c3d4");
+        APIKeyValidationInfoDTO apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "V1.0.0", "a1b2c3d4");
+        assertNotNull(apiKeyValidationInfoDTO);
+        assertTrue(apiKeyValidationInfoDTO.isAuthorized());
+        assertEquals("SUMEDHA", apiKeyValidationInfoDTO.getUsername());
+        assertEquals("SANDBOX", apiKeyValidationInfoDTO.getType());
+        assertEquals("T1", apiKeyValidationInfoDTO.getTier());
+
+        apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/context1", "V1.0.0", "p1q2r3s4");
         assertNotNull(apiKeyValidationInfoDTO);
         assertTrue(apiKeyValidationInfoDTO.isAuthorized());
 
-        apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "1.0.0", "p1q2r3s4");
-        assertNotNull(apiKeyValidationInfoDTO);
-        assertTrue(apiKeyValidationInfoDTO.isAuthorized());
-
-        apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "1.0.0", "w1x2y3z4");
+        apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "V1.0.0", "w1x2y3z4");
         assertNotNull(apiKeyValidationInfoDTO);
         assertFalse(apiKeyValidationInfoDTO.isAuthorized());
     }
@@ -112,7 +115,7 @@ public class APIMgtDAOTest extends TestCase {
     }
 
     public void testGetAllAPIUsageByProvider() throws Exception{
-        UserApplicationAPIUsage[] userApplicationAPIUsages = apiMgtDAO.getAllAPIUsageByProvider("SUMEDHA_API1_V1.0.0");
+        UserApplicationAPIUsage[] userApplicationAPIUsages = apiMgtDAO.getAllAPIUsageByProvider("SUMEDHA");
         assertNotNull(userApplicationAPIUsages);
 
     }
@@ -121,7 +124,8 @@ public class APIMgtDAOTest extends TestCase {
         APIIdentifier apiIdentifier = new APIIdentifier("SUMEDHA","API1","V1.0.0");
         apiIdentifier.setApplicationId("APPLICATION99");
         apiIdentifier.setTier("T1");
-        apiMgtDAO.addSubscription(apiIdentifier, "SUMEDHA",100);
+        API api = new API(apiIdentifier);
+        apiMgtDAO.addSubscription(apiIdentifier, api.getContext(), 100);
     }
 
     public void testRegisterAccessToken()throws  Exception{
@@ -166,7 +170,6 @@ public class APIMgtDAOTest extends TestCase {
             assertTrue(applications[a].getId() > 0);
             assertNotNull(applications[a].getName());
         }
-
     }
 
     public void testAddApplication2() throws Exception{
@@ -220,14 +223,17 @@ public class APIMgtDAOTest extends TestCase {
     
     public void testLifeCycleEvents() throws Exception {
         APIIdentifier apiId = new APIIdentifier("hiranya", "WSO2Earth", "1.0.0");
-        apiMgtDAO.recordAPILifeCycleEvent(apiId, null, APIStatus.CREATED, "admin");
+        API api = new API(apiId);
+        api.setContext("/wso2earth");
+        apiMgtDAO.addAPI(api);
+
         List<LifeCycleEvent> events = apiMgtDAO.getLifeCycleEvents(apiId);
         assertEquals(1, events.size());
         LifeCycleEvent event = events.get(0);
         assertEquals(apiId, event.getApi());
         assertNull(event.getOldStatus());
         assertEquals(APIStatus.CREATED, event.getNewStatus());
-        assertEquals("admin", event.getUserId());
+        assertEquals("hiranya", event.getUserId());
 
         apiMgtDAO.recordAPILifeCycleEvent(apiId, APIStatus.CREATED, APIStatus.PUBLISHED, "admin");
         apiMgtDAO.recordAPILifeCycleEvent(apiId, APIStatus.PUBLISHED, APIStatus.DEPRECATED, "admin");
@@ -244,7 +250,10 @@ public class APIMgtDAOTest extends TestCase {
             assertEquals("V1.0.0", apiId.getVersion());
         }
 
-        apiMgtDAO.makeKeysForwardCompatible("SUMEDHA", "API1", "V1.0.0", "V2.0.0");
+        API api = new API(new APIIdentifier("SUMEDHA", "API1", "V2.0.0"));
+        api.setContext("/context1");
+        apiMgtDAO.addAPI(api);
+        apiMgtDAO.makeKeysForwardCompatible("SUMEDHA", "API1", "V1.0.0", "V2.0.0", "/context1");
         apiSet = apiMgtDAO.getAPIByConsumerKey("SSDCHEJJ-AWUIS-232");
         assertEquals(2, apiSet.size());
         for (APIIdentifier apiId : apiSet) {

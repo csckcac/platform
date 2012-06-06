@@ -73,14 +73,12 @@ public class ApiMgtDAO {
 
         String accessKey = null;
 
-        String apiId = identifier.getProviderId() + "_" + identifier.getApiName() + "_" + identifier.getVersion();
-
         //get the tenant id for the corresponding domain
         String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(userId);
         int tenantId = IdentityUtil.getTenantIdOFUser(userId);
 
         if (log.isDebugEnabled()) {
-            log.debug("Searching for: " + apiId + ", User: " + tenantAwareUserId + 
+            log.debug("Searching for: " + identifier.getAPIIdentifier() + ", User: " + tenantAwareUserId +
                     ", ApplicationName: " + applicationName + ", Tenant ID: " + tenantId);
         }
 
@@ -89,22 +87,24 @@ public class ApiMgtDAO {
         ResultSet rs = null;
         String sqlQuery =
                 "SELECT " +
-                        "   KCM.ACCESS_TOKEN AS ACCESS_TOKEN " +
+                        "   SKM.ACCESS_TOKEN AS ACCESS_TOKEN " +
                         "FROM " +
                         "   AM_SUBSCRIPTION SP," +
+                        "   AM_API API," +
                         "   AM_SUBSCRIBER SB," +
                         "   AM_APPLICATION APP, " +
-                        "   AM_KEY_CONTEXT_MAPPING KCM," +
                         "   AM_SUBSCRIPTION_KEY_MAPPING SKM " +
                         "WHERE " +
                         "   SB.USER_ID=? " +
                         "   AND SB.TENANT_ID=? " +
-                        "   AND SP.API_ID=? " +
+                        "   AND API.API_PROVIDER=? " +
+                        "   AND API.API_NAME=?" +
+                        "   AND API.API_VERSION=?" +
                         "   AND APP.NAME=? " +
-                        "   AND SKM.KEY_TYPE=? "   +
+                        "   AND SKM.KEY_TYPE=? " +
+                        "   AND API.API_ID = SP.API_ID"   +
                         "   AND SB.SUBSCRIBER_ID = APP.SUBSCRIBER_ID " +
                         "   AND APP.APPLICATION_ID = SP.APPLICATION_ID " +
-                        "   AND KCM.KEY_CONTEXT_MAPPING_ID = SKM.KEY_CONTEXT_MAPPING_ID " +
                         "   AND SP.SUBSCRIPTION_ID = SKM.SUBSCRIPTION_ID ";
 
         try {
@@ -112,9 +112,11 @@ public class ApiMgtDAO {
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, tenantAwareUserId);
             ps.setInt(2, tenantId);
-            ps.setString(3, apiId);
-            ps.setString(4, applicationName);
-            ps.setString(5, keyType);
+            ps.setString(3, identifier.getProviderId());
+            ps.setString(4, identifier.getApiName());
+            ps.setString(5, identifier.getVersion());
+            ps.setString(6, applicationName);
+            ps.setString(7, keyType);
 
             rs = ps.executeQuery();
 
@@ -150,16 +152,20 @@ public class ApiMgtDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String sqlQuery = "SELECT " +
-                "   SP.API_ID AS API_ID " +
+                "   API.API_PROVIDER AS API_PROVIDER," +
+                "   API.API_NAME AS API_NAME," +
+                "   API.API_VERSION AS API_VERSION " +
                 "FROM " +
                 "   AM_SUBSCRIPTION SP, " +
+                "   AM_API API," +
                 "   AM_SUBSCRIBER SB, " +
                 "   AM_APPLICATION APP " +
                 "WHERE " +
                 "   SB.USER_ID = ? " +
                 "   AND SB.TENANT_ID = ? " +
                 "   AND SB.SUBSCRIBER_ID = APP.SUBSCRIBER_ID " +
-                "   AND APP.APPLICATION_ID=SP.APPLICATION_ID ";
+                "   AND APP.APPLICATION_ID=SP.APPLICATION_ID " +
+                "   AND API.API_ID = SP.API_ID";
         try {
             conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
@@ -167,13 +173,10 @@ public class ApiMgtDAO {
             ps.setInt(2, tenantId);
             rs = ps.executeQuery();
             while (rs.next()) {
-                String apiId = rs.getString(APIConstants.SUBSCRIPTION_FIELD_API_ID);
-                // api_id store as "providerName_apiName_apiVersion" in AM_SUBSCRIPTION table
-                String[] unique = apiId.split("_");
                 APIInfoDTO infoDTO = new APIInfoDTO();
-                infoDTO.setProviderId(unique[0]);
-                infoDTO.setApiName(unique[1]);
-                infoDTO.setVersion(unique[2]);
+                infoDTO.setProviderId(rs.getString("API_PROVIDER"));
+                infoDTO.setApiName(rs.getString("API_NAME"));
+                infoDTO.setVersion(rs.getString("API_VERSION"));
                 apiInfoDTOList.add(infoDTO);
             }
         } catch (SQLException e) {
@@ -197,8 +200,6 @@ public class ApiMgtDAO {
 
         APIKeyInfoDTO[] apiKeyInfoDTOs = null;
         // api_id store as "providerName_apiName_apiVersion" in AM_SUBSCRIPTION table
-        String apiId = apiInfoDTO.getProviderId() + "_"
-                + apiInfoDTO.getApiName() + "_" + apiInfoDTO.getVersion();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -208,15 +209,21 @@ public class ApiMgtDAO {
                 "FROM " +
                 "   AM_SUBSCRIBER SB, " +
                 "   AM_APPLICATION APP, " +
-                "   AM_SUBSCRIPTION SP " +
+                "   AM_SUBSCRIPTION SP, " +
+                "   AM_API API " +
                 "WHERE " +
-                "   SP.API_ID = ? " +
+                "   API.API_PROVIDER = ? " +
+                "   AND API.API_NAME = ?" +
+                "   AND API.API_VERSION = ?" +
                 "   AND SP.APPLICATION_ID = APP.APPLICATION_ID " +
-                "   AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID ";
+                "   AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID " +
+                "   AND API.API_ID = SP.API_ID";
         try {
             conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
-            ps.setString(1, apiId);
+            ps.setString(1, apiInfoDTO.getProviderId());
+            ps.setString(2, apiInfoDTO.getApiName());
+            ps.setString(3, apiInfoDTO.getVersion());
             rs = ps.executeQuery();
             List<APIKeyInfoDTO> apiKeyInfoList = new ArrayList<APIKeyInfoDTO>();
             while (rs.next()) {
@@ -258,20 +265,21 @@ public class ApiMgtDAO {
         String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userId);
         int tenantId = 0;
         IdentityUtil.getTenantIdOFUser(userId);
-        String apiId = apiInfoDTO.getProviderId() + "_"
-                + apiInfoDTO.getApiName() + "_" + apiInfoDTO.getVersion();
         Connection conn = null;
         PreparedStatement ps = null;
         String sqlQuery = "UPDATE" +
                 " IDENTITY_OAUTH2_ACCESS_TOKEN IAT , AM_SUBSCRIBER SB," +
-                " AM_SUBSCRIPTION SP , AM_APPLICATION APP," +
+                " AM_SUBSCRIPTION SP , AM_APPLICATION APP, AM_API API" +
                 " SET IAT.TOKEN_STATE=?" +
                 " WHERE SB.USER_ID=?" +
                 " AND SB.TENANT_ID=?" +
-                " AND SP.API_ID=?" +
+                " AND API.API_PROVIDER=?" +
+                " AND API.API_NAME=?" +
+                " AND API.API_VERSION=?" +
                 " AND SP.ACCESS_TOKEN=IAT.ACCESS_TOKEN" +
                 " AND SB.SUBSCRIBER_ID=APP.SUBSCRIBER_ID" +
-                " AND APP.APPLICATION_ID = SP.APPLICATION_ID";
+                " AND APP.APPLICATION_ID = SP.APPLICATION_ID" +
+                " AND API.API_ID = SP.API_ID";
         try {
 
             conn = APIMgtDBUtil.getConnection();
@@ -279,7 +287,9 @@ public class ApiMgtDAO {
             ps.setString(1, statusEnum);
             ps.setString(2, tenantAwareUsername);
             ps.setInt(3, tenantId);
-            ps.setString(4, apiId);
+            ps.setString(4, apiInfoDTO.getProviderId());
+            ps.setString(5, apiInfoDTO.getApiName());
+            ps.setString(6, apiInfoDTO.getVersion());
 
             int count = ps.executeUpdate();
             if (log.isDebugEnabled()) {
@@ -343,17 +353,17 @@ public class ApiMgtDAO {
                 "   AM_SUBSCRIPTION SUB," +
                 "   AM_SUBSCRIBER SUBS," +
                 "   AM_APPLICATION APP," +
-                "   AM_KEY_CONTEXT_MAPPING KCM," +
-                "   AM_SUBSCRIPTION_KEY_MAPPING SKM" +
+                "   AM_SUBSCRIPTION_KEY_MAPPING SKM," +
+                "   AM_API API" +
                 " WHERE " +
-                "   KCM.ACCESS_TOKEN = ? " +
-                "   AND KCM.CONTEXT = ? " +
-                "   AND KCM.VERSION = ? " +
-                "   AND IAT.ACCESS_TOKEN=KCM.ACCESS_TOKEN " +
-                "   AND KCM.KEY_CONTEXT_MAPPING_ID = SKM.KEY_CONTEXT_MAPPING_ID" +
+                "   SKM.ACCESS_TOKEN = ? " +
+                "   AND API.CONTEXT = ? " +
+                "   AND API.API_VERSION = ? " +
+                "   AND IAT.ACCESS_TOKEN=SKM.ACCESS_TOKEN " +
                 "   AND SUB.SUBSCRIPTION_ID = SKM.SUBSCRIPTION_ID" +
                 "   AND SUB.APPLICATION_ID = APP.APPLICATION_ID" +
-                "   AND APP.SUBSCRIBER_ID = SUBS.SUBSCRIBER_ID";
+                "   AND APP.SUBSCRIBER_ID = SUBS.SUBSCRIBER_ID" +
+                "   AND API.API_ID = SUB.API_ID";
         try {
             conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
@@ -505,27 +515,43 @@ public class ApiMgtDAO {
 		}
     }
     
-    public int addSubscription(APIIdentifier identifier, String userId, int applicationId)
+    public int addSubscription(APIIdentifier identifier, String context, int applicationId)
             throws APIManagementException {
 
         Connection conn = null;
         ResultSet resultSet = null;
         PreparedStatement ps = null;
         int subscriptionId = -1;
+        int apiId = -1;
         
         try {
             conn = APIMgtDBUtil.getConnection();
+            String getApiQuery = "SELECT API_ID FROM AM_API API WHERE API_PROVIDER = ? AND " +
+                    "API_NAME = ? AND API_VERSION = ?";
+            ps = conn.prepareStatement(getApiQuery);
+            ps.setString(1, identifier.getProviderName());
+            ps.setString(2, identifier.getApiName());
+            ps.setString(3, identifier.getVersion());
+            resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                apiId = resultSet.getInt("API_ID");
+            }
+            resultSet.close();
+            ps.close();
+
+            if (apiId == -1) {
+                throw new APIManagementException("Unable to get the API ID for: " + identifier);
+            }
+
             //This query to update the AM_SUBSCRIPTION table
             String sqlQuery = "INSERT " +
                     "INTO AM_SUBSCRIPTION (TIER_ID,API_ID,APPLICATION_ID)" +
                     " VALUES (?,?,?)";
 
             //Adding data to the AM_SUBSCRIPTION table
-            String apiId = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
-                    identifier.getVersion();
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, identifier.getTier());
-            ps.setString(2, apiId);
+            ps.setInt(2, apiId);
             ps.setInt(3, applicationId);
 
             ps.executeUpdate();            
@@ -623,15 +649,17 @@ public class ApiMgtDAO {
         ResultSet result = null;
 
         String getAPISql = "SELECT" +
-                " SUB.API_ID " +
+                " API.API_PROVIDER," +
+                " API.API_NAME," +
+                " API.API_VERSION " +
                 "FROM" +
                 " AM_SUBSCRIPTION SUB," +
-                " AM_SUBSCRIPTION_KEY_MAPPING SKM," +
-                " AM_KEY_CONTEXT_MAPPING KCM " +
+                " AM_SUBSCRIPTION_KEY_MAPPING SKM, " +
+                " AM_API API " +
                 "WHERE" +
-                " KCM.ACCESS_TOKEN=?" +
-                " AND KCM.KEY_CONTEXT_MAPPING_ID=SKM.KEY_CONTEXT_MAPPING_ID" +
-                " AND SKM.SUBSCRIPTION_ID=SUB.SUBSCRIPTION_ID";
+                " SKM.ACCESS_TOKEN=?" +
+                " AND SKM.SUBSCRIPTION_ID=SUB.SUBSCRIPTION_ID" +
+                " AND API.API_ID = SUB.API_ID";
 
         Set<APIIdentifier> apiList = new HashSet<APIIdentifier>();
         try {
@@ -640,11 +668,9 @@ public class ApiMgtDAO {
             nestedPS.setString(1, accessToken);
             ResultSet nestedRS = nestedPS.executeQuery();
             while (nestedRS.next()) {
-                String apiId = nestedRS.getString("API_ID");
-                if (apiId != null) {
-                    String[] apiIdAttributes = apiId.split("_");
-                    apiList.add(new APIIdentifier(apiIdAttributes[0], apiIdAttributes[1], apiIdAttributes[2]));
-                }
+                apiList.add(new APIIdentifier(nestedRS.getString("API_PROVIDER"),
+                        nestedRS.getString("API_NAME"),
+                        nestedRS.getString("API_VERSION")));
             }
         } catch (SQLException e) {
             String msg = "Failed to get API ID for token: " + accessToken;
@@ -674,7 +700,9 @@ public class ApiMgtDAO {
 
             String sqlQuery = "SELECT " +
                     "   SUBS.SUBSCRIPTION_ID" +
-                    "   ,SUBS.API_ID AS API_ID " +
+                    "   ,API.API_PROVIDER AS API_PROVIDER" +
+                    "   ,API.API_NAME AS API_NAME" +
+                    "   ,API.API_VERSION AS API_VERSION" +
                     "   ,SUBS.TIER_ID AS TIER_ID" +
                     "   ,APP.APPLICATION_ID AS APP_ID" +
                     "   ,SUBS.LAST_ACCESSED AS LAST_ACCESSED" +
@@ -682,12 +710,14 @@ public class ApiMgtDAO {
                     "FROM " +
                     "   AM_SUBSCRIBER SUB," +
                     "   AM_APPLICATION APP, " +
-                    "   AM_SUBSCRIPTION SUBS " +
+                    "   AM_SUBSCRIPTION SUBS, " +
+                    "   AM_API API " +
                     "WHERE " +
                     "   SUB.USER_ID = ? " +
                     "   AND SUB.TENANT_ID = ? " +
                     "   AND SUB.SUBSCRIBER_ID=APP.SUBSCRIBER_ID " +
-                    "   AND APP.APPLICATION_ID=SUBS.APPLICATION_ID";
+                    "   AND APP.APPLICATION_ID=SUBS.APPLICATION_ID " +
+                    "   AND API.API_ID=SUBS.API_ID";
             
             ps = connection.prepareStatement(sqlQuery);
             ps.setString(1, subscriber.getName());
@@ -702,11 +732,8 @@ public class ApiMgtDAO {
             Map<String,Set<SubscribedAPI>> map = new TreeMap<String, Set<SubscribedAPI>>();
 
             while (result.next()) {
-                String apiId = result.getString(APIConstants.SUBSCRIPTION_FIELD_API_ID);
-                String[] apiIdAttributes = apiId.split("_");
-
-                APIIdentifier apiIdentifier = new APIIdentifier(apiIdAttributes[0], apiIdAttributes[1],
-                        apiIdAttributes[2]);
+                APIIdentifier apiIdentifier = new APIIdentifier(result.getString("API_PROVIDER"),
+                        result.getString("API_NAME"), result.getString("API_VERSION"));
 
                 SubscribedAPI subscribedAPI = new SubscribedAPI(subscriber, apiIdentifier);                
                 subscribedAPI.setTier(new Tier(
@@ -765,14 +792,12 @@ public class ApiMgtDAO {
         ResultSet result = null;
 
         String getKeysSql = "SELECT " +
-                " KCM.ACCESS_TOKEN AS ACCESS_TOKEN," +
+                " SKM.ACCESS_TOKEN AS ACCESS_TOKEN," +
                 " SKM.KEY_TYPE AS TOKEN_TYPE " +
                 "FROM" +
-                " AM_SUBSCRIPTION_KEY_MAPPING SKM," +
-                " AM_KEY_CONTEXT_MAPPING KCM " +
+                " AM_SUBSCRIPTION_KEY_MAPPING SKM " +
                 "WHERE" +
-                " SKM.SUBSCRIPTION_ID = ?" +
-                " AND SKM.KEY_CONTEXT_MAPPING_ID = KCM.KEY_CONTEXT_MAPPING_ID";
+                " SKM.SUBSCRIPTION_ID = ?";
 
         Set<APIKey> apiKeys = new HashSet<APIKey>();
         try {
@@ -820,15 +845,17 @@ public class ApiMgtDAO {
                     "FROM " +
                     "   AM_SUBSCRIBER  SUBS," +
                     "   AM_APPLICATION  APP, " +
-                    "   AM_SUBSCRIPTION SUB " +
+                    "   AM_SUBSCRIPTION SUB, " +
+                    "   AM_API API " +
                     "WHERE  " +
                     "   SUB.APPLICATION_ID = APP.APPLICATION_ID " +
                     "   AND SUBS. SUBSCRIBER_ID = APP.SUBSCRIBER_ID " +
-                    "   AND SUB.API_ID LIKE ?";
+                    "   AND API.API_ID = SUB.API_ID " +
+                    "   AND API.API_PROVIDER = ?";
 
 
             ps = connection.prepareStatement(sqlQuery);
-            ps.setString(1, providerName + "%");
+            ps.setString(1, providerName);
             result = ps.executeQuery();
 
             while (result.next()) {
@@ -865,15 +892,18 @@ public class ApiMgtDAO {
 
             String sqlQuery = "SELECT " +
                     "SB.USER_ID, SB.DATE_SUBSCRIBED " +
-                    "FROM AM_SUBSCRIBER SB, AM_SUBSCRIPTION SP,AM_APPLICATION APP" +
-                    " WHERE SP.API_ID=? " +
+                    "FROM AM_SUBSCRIBER SB, AM_SUBSCRIPTION SP,AM_APPLICATION APP,AM_API API" +
+                    " WHERE API.API_PROVIDER=? " +
+                    "AND API.API_NAME=? " +
+                    "AND API.API_VERSION=? " +
                     "AND SP.APPLICATION_ID=APP.APPLICATION_ID" +
-                    " AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID";
+                    " AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID " +
+                    " AND API.API_ID = SP.API_ID";
 
             ps = connection.prepareStatement(sqlQuery);
-            String apiId = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
-                    identifier.getVersion();
-            ps.setString(1, apiId);
+            ps.setString(1, identifier.getProviderName());
+            ps.setString(2, identifier.getApiName());
+            ps.setString(3, identifier.getVersion());
             result = ps.executeQuery();
             if (result == null) {
                 return subscribers;
@@ -899,15 +929,14 @@ public class ApiMgtDAO {
     public long getAPISubscriptionCountByAPI(APIIdentifier identifier)
             throws APIManagementException {
 
-
         String sqlQuery = "SELECT" +
-                " COUNT(API_ID) AS " + APIConstants.SUBSCRIPTION_FIELD_API_ID +
-                " FROM AM_SUBSCRIPTION " +
-                " WHERE API_ID=? ";
+                " COUNT(SUB.SUBSCRIPTION_ID) AS SUB_ID" +
+                " FROM AM_SUBSCRIPTION SUB, AM_API API " +
+                " WHERE API.API_PROVIDER=? " +
+                " AND API.API_NAME=?" +
+                " AND API.API_VERSION=?" +
+                " AND API.API_ID=SUB.API_ID";
         long subscriptions = 0;
-
-        String apiId = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
-                identifier.getVersion();
 
         Connection connection = null;
         PreparedStatement ps = null;
@@ -917,16 +946,18 @@ public class ApiMgtDAO {
             connection = APIMgtDBUtil.getConnection();
 
             ps = connection.prepareStatement(sqlQuery);
-            ps.setString(1, apiId);
+            ps.setString(1, identifier.getProviderName());
+            ps.setString(2, identifier.getApiName());
+            ps.setString(3, identifier.getVersion());
             result = ps.executeQuery();
             if (result == null) {
                 return subscriptions;
             }
             while (result.next()) {
-                subscriptions = result.getLong(APIConstants.SUBSCRIPTION_FIELD_API_ID);
+                subscriptions = result.getLong("SUB_ID");
             }
         } catch (SQLException e) {
-            String msg = "Failed to get subscription count for :" + apiId;
+            String msg = "Failed to get subscription count for API";
             log.error(msg, e);
             throw new APIManagementException(msg, e);
         } finally {
@@ -939,14 +970,14 @@ public class ApiMgtDAO {
      * This method is used to update the subscriber
      *
      * @param identifier APIIdentifier
-     * @param userId     @throws APIManagementException if failed to update the subscriber.
+     * @param context Context of the API
      * @param applicationId Application id
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to update subscriber
      */
-    public void updateSubscriptions(APIIdentifier identifier, String userId,int applicationId)
+    public void updateSubscriptions(APIIdentifier identifier, String context, int applicationId)
             throws APIManagementException {
-        addSubscription(identifier, userId, applicationId);
+        addSubscription(identifier, context, applicationId);
     }
 
     /**
@@ -966,26 +997,25 @@ public class ApiMgtDAO {
                 " INTO IDENTITY_OAUTH2_ACCESS_TOKEN (ACCESS_TOKEN, CONSUMER_KEY, TOKEN_STATE, TOKEN_SCOPE) " +
                 " VALUES (?,?,?,?)";
         
-        // Add access token against context mapping 
-        String sqlAddContextMapping = "INSERT " +
-                "INTO AM_KEY_CONTEXT_MAPPING (CONTEXT, VERSION, ACCESS_TOKEN)" +
-                " VALUES (?,?,?)";
-        
         String getSubscriptionId = "SELECT SUBS.SUBSCRIPTION_ID " +
                 "FROM " +
                 "  AM_SUBSCRIPTION SUBS, " +
                 "  AM_APPLICATION APP, " +
-                "  AM_SUBSCRIBER SUB " +
+                "  AM_SUBSCRIBER SUB, " +
+                "  AM_API API " +
                 "WHERE " +
                 "  SUB.USER_ID = ?" +
                 "  AND SUB.TENANT_ID = ?" +
                 "  AND APP.SUBSCRIBER_ID = SUB.SUBSCRIBER_ID" +
                 "  AND APP.NAME = ?" +
-                "  AND SUBS.API_ID = ?" +
-                "  AND APP.APPLICATION_ID = SUBS.APPLICATION_ID";
+                "  AND API.API_PROVIDER = ?" +
+                "  AND API.API_NAME = ?" +
+                "  AND API.API_VERSION = ?" +
+                "  AND APP.APPLICATION_ID = SUBS.APPLICATION_ID" +
+                "  AND API.API_ID = SUBS.API_ID";
 
         String addSubscriptionKeyMapping = "INSERT " +
-                "INTO AM_SUBSCRIPTION_KEY_MAPPING (SUBSCRIPTION_ID, KEY_CONTEXT_MAPPING_ID, KEY_TYPE) " +
+                "INTO AM_SUBSCRIPTION_KEY_MAPPING (SUBSCRIPTION_ID, ACCESS_TOKEN, KEY_TYPE) " +
                 "VALUES (?,?,?)";
 
         //String apiId = apiInfoDTO.getProviderId()+"_"+apiInfoDTO.getApiName()+"_"+apiInfoDTO.getVersion();
@@ -1004,27 +1034,15 @@ public class ApiMgtDAO {
             prepStmt.execute();
             prepStmt.close();
 
-            //Add key context mapping for the new access token
-            prepStmt = connection.prepareStatement(sqlAddContextMapping);
-            prepStmt.setString(1, apiInfoDTO.getContext());
-            prepStmt.setString(2, apiInfoDTO.getVersion());
-            prepStmt.setString(3, accessToken);
-            prepStmt.execute();
-
-            int keyContextMappingId = -1;
-            ResultSet rs = prepStmt.getGeneratedKeys();
-            while (rs.next()) {
-                keyContextMappingId = rs.getInt(1);
-            }
-            prepStmt.close();
-
             //Update subscription with new key context mapping
             int subscriptionId = -1;
             prepStmt = connection.prepareStatement(getSubscriptionId);
             prepStmt.setString(1, userId);
             prepStmt.setInt(2, tenantId);
             prepStmt.setString(3, applicationName);
-            prepStmt.setString(4, apiInfoDTO.getAPIIdentifier());
+            prepStmt.setString(4, apiInfoDTO.getProviderId());
+            prepStmt.setString(5, apiInfoDTO.getApiName());
+            prepStmt.setString(6, apiInfoDTO.getVersion());
             ResultSet getSubscriptionIdResult = prepStmt.executeQuery();
             while (getSubscriptionIdResult.next()) {
                 subscriptionId = getSubscriptionIdResult.getInt(1);
@@ -1033,7 +1051,7 @@ public class ApiMgtDAO {
 
             prepStmt = connection.prepareStatement(addSubscriptionKeyMapping);
             prepStmt.setInt(1, subscriptionId);
-            prepStmt.setInt(2, keyContextMappingId);
+            prepStmt.setString(2, accessToken);
             prepStmt.setString(3, keyType);
             prepStmt.execute();
             prepStmt.close();
@@ -1073,31 +1091,39 @@ public class ApiMgtDAO {
         ResultSet rs = null;
         String sqlQuery = "SELECT " +
                 "   SUBS.TIER_ID ," +
-                "   SUBS. API_ID ," +
+                "   API.API_PROVIDER ," +
+                "   API.API_NAME ," +
+                "   API.API_VERSION ," +
                 "   SUBS.LAST_ACCESSED ," +
                 "   SUBS.APPLICATION_ID " +
                 "FROM " +
-                "   AM_SUBSCRIPTION SUBS ," +
-                "   AM_SUBSCRIBER SUB , " +
-                "   AM_APPLICATION  APP  " +
+                "   AM_SUBSCRIPTION SUBS," +
+                "   AM_SUBSCRIBER SUB, " +
+                "   AM_APPLICATION  APP, " +
+                "   AM_API API " +
                 "WHERE " +
-                "   SUBS.API_ID  = ?" +
+                "   API.API_PROVIDER  = ?" +
+                "   AND API.API_NAME = ?" +
+                "   AND API.API_VERSION = ?" +
                 "   AND SUB.USER_ID = ?" +
                 "   AND SUB.TENANT_ID = ? " +
-                "   AND APP.SUBSCRIBER_ID = SUB.SUBSCRIBER_ID";
+                "   AND APP.SUBSCRIBER_ID = SUB.SUBSCRIBER_ID" +
+                "   AND API.API_ID = SUBS.API_ID";
 
         try {
             conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
-            ps.setString(1, apiId);
-            ps.setString(2, userId);
+            ps.setString(1, apiIdentifier.getProviderName());
+            ps.setString(2, apiIdentifier.getApiName());
+            ps.setString(3, apiIdentifier.getVersion());
+            ps.setString(4, userId);
             int tenantId;
             try {
                 tenantId = IdentityUtil.getTenantIdOFUser(userId);
             } catch (IdentityException e) {
                 throw new APIManagementException("Failed to get tenant id of user : " + userId, e);
             }
-            ps.setInt(3, tenantId);
+            ps.setInt(5, tenantId);
 
             rs = ps.executeQuery();
 
@@ -1131,23 +1157,27 @@ public class ApiMgtDAO {
             String sqlQuery = "SELECT " +
                     "   SUBS.SUBSCRIPTION_ID AS SUBSCRIPTION_ID, " +
                     "   SUBS.TIER_ID AS TIER_ID, " +
-                    "   SUBS.API_ID AS API_ID, " +
+                    "   API.API_PROVIDER AS API_PROVIDER, " +
+                    "   API.API_NAME AS API_NAME, " +
+                    "   API.API_VERSION AS API_VERSION, " +
                     "   SUBS.LAST_ACCESSED AS LAST_ACCESSED, " +
                     "   SUB.USER_ID AS USER_ID, " +
                     "   APP.NAME AS APPNAME " +
                     "FROM " +
                     "   AM_SUBSCRIPTION SUBS, " +
                     "   AM_APPLICATION APP, " +
-                    "   AM_SUBSCRIBER SUB  " +
+                    "   AM_SUBSCRIBER SUB, " +
+                    "   AM_API API " +
                     "WHERE " +
                     "   SUBS.APPLICATION_ID = APP.APPLICATION_ID " +
                     "   AND APP.SUBSCRIBER_ID = SUB.SUBSCRIBER_ID " +
-                    "   AND SUBS.API_ID LIKE ? " +
+                    "   AND API.API_PROVIDER = ? " +
+                    "   AND API.API_ID = SUBS.API_ID " +
                     "ORDER BY " +
                     "   APP.NAME";
 
             ps = connection.prepareStatement(sqlQuery);
-            ps.setString(1, providerName + "%");
+            ps.setString(1, providerName);
             result = ps.executeQuery();
 
             Map<String,UserApplicationAPIUsage> userApplicationUsages = new TreeMap<String, UserApplicationAPIUsage>();
@@ -1163,7 +1193,8 @@ public class ApiMgtDAO {
                     userApplicationUsages.put(key, usage);
                 }
                 
-                usage.addApiIdentifier(new APIIdentifier(result.getString("API_ID")));
+                usage.addApiIdentifier(new APIIdentifier(result.getString("API_PROVIDER"),
+                        result.getString("API_NAME"), result.getString("API_VERSION")));
             }
             return userApplicationUsages.values().toArray(
                     new UserApplicationAPIUsage[userApplicationUsages.size()]);
@@ -1190,12 +1221,11 @@ public class ApiMgtDAO {
         Subscriber subscriber = null;
         String query = " SELECT" +
                 " SB.USER_ID, SB.DATE_SUBSCRIBED" +
-                " FROM AM_SUBSCRIBER SB , AM_SUBSCRIPTION SP, AM_APPLICATION APP, AM_KEY_CONTEXT_MAPPING KCM, AM_SUBSCRIPTION_KEY_MAPPING SKM" +
-                " WHERE KCM.ACCESS_TOKEN=?" +
+                " FROM AM_SUBSCRIBER SB , AM_SUBSCRIPTION SP, AM_APPLICATION APP, AM_SUBSCRIPTION_KEY_MAPPING SKM" +
+                " WHERE SKM.ACCESS_TOKEN=?" +
                 " AND SP.APPLICATION_ID=APP.APPLICATION_ID" +
                 " AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID" +
-                " AND SP.SUBSCRIPTION_ID=SKM.SUBSCRIPTION_ID" +
-                " AND KCM.KEY_CONTEXT_MAPPING_ID=SKM.KEY_CONTEXT_MAPPING_ID";
+                " AND SP.SUBSCRIPTION_ID=SKM.SUBSCRIPTION_ID";
 
         try {
             connection = APIMgtDBUtil.getConnection();
@@ -1561,6 +1591,7 @@ public class ApiMgtDAO {
         PreparedStatement ps = null;
 
         int tenantId;
+        int apiId = -1;
         try {
             tenantId = IdentityUtil.getTenantIdOFUser(userId);
         } catch (IdentityException e) {
@@ -1575,16 +1606,35 @@ public class ApiMgtDAO {
             throw new APIManagementException("No measurable differences in API state");
         }
 
-        String apiId = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
-                identifier.getVersion();
+        String getAPIQuery = "SELECT " +
+                "API.API_ID FROM AM_API API" +
+                " WHERE " +
+                "API.API_PROVIDER = ?" +
+                "AND API.API_NAME = ?" +
+                "AND API.API_VERSION = ?";
+
         String sqlQuery = "INSERT " +
                 "INTO AM_API_LC_EVENT (API_ID, PREVIOUS_STATE, NEW_STATE, USER_ID, TENANT_ID, EVENT_DATE)" +
                 " VALUES (?,?,?,?,?,?)";
 
         try {
             conn = APIMgtDBUtil.getConnection();
+            ps = conn.prepareStatement(getAPIQuery);
+            ps.setString(1, identifier.getProviderName());
+            ps.setString(2, identifier.getApiName());
+            ps.setString(3, identifier.getVersion());
+            resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                apiId = resultSet.getInt("API_ID");
+            }
+            resultSet.close();
+            ps.close();
+            if (apiId == -1) {
+                throw new APIManagementException("Unable to find the API: " + identifier);
+            }
+            
             ps = conn.prepareStatement(sqlQuery);
-            ps.setString(1, apiId);
+            ps.setInt(1, apiId);
             if (oldStatus != null) {
                 ps.setString(2, oldStatus.getStatus());
             } else {
@@ -1627,18 +1677,22 @@ public class ApiMgtDAO {
                 " LC.USER_ID AS USER_ID," +
                 " LC.EVENT_DATE AS EVENT_DATE " +                
                 "FROM" +
-                " AM_API_LC_EVENT LC " +
+                " AM_API_LC_EVENT LC, " +
+                " AM_API API " +
                 "WHERE" +
-                " LC.API_ID = ?";
+                " API.API_PROVIDER = ?" +
+                " AND API.API_NAME = ?" +
+                " AND API.API_VERSION = ?" +
+                " AND API.API_ID = LC.API_ID";
 
-        String apiIdString = apiId.getProviderName() + "_" + apiId.getApiName() + "_" +
-                apiId.getVersion();
         List<LifeCycleEvent> events = new ArrayList<LifeCycleEvent>();
         
         try {
             connection = APIMgtDBUtil.getConnection();
             prepStmt = connection.prepareStatement(sqlQuery);
-            prepStmt.setString(1, apiIdString);
+            prepStmt.setString(1, apiId.getProviderName());
+            prepStmt.setString(2, apiId.getApiName());
+            prepStmt.setString(3, apiId.getVersion());
             rs = prepStmt.executeQuery();
 
             while (rs.next()) {
@@ -1666,10 +1720,9 @@ public class ApiMgtDAO {
         }
         return events;    
     }
-    
-    public void makeKeysForwardCompatible(String provider, String apiName, 
-                                          String version, String newVersion) throws APIManagementException {
-        String oldApiId = provider + "_" + apiName + "_" + version;
+
+    public void makeKeysForwardCompatible(String provider, String apiName, String oldVersion,
+                                          String newVersion, String context) throws APIManagementException {
 
         Connection connection = null;
         PreparedStatement prepStmt = null;
@@ -1678,30 +1731,31 @@ public class ApiMgtDAO {
                 " SUB.SUBSCRIPTION_ID AS SUBSCRIPTION_ID," +
                 " SUB.TIER_ID AS TIER_ID," +
                 " SUB.APPLICATION_ID AS APPLICATION_ID," +
-                " KCM.CONTEXT AS CONTEXT," +
-                " KCM.ACCESS_TOKEN AS ACCESS_TOKEN," +
+                " API.CONTEXT AS CONTEXT," +
+                " SKM.ACCESS_TOKEN AS ACCESS_TOKEN," +
                 " SKM.KEY_TYPE AS KEY_TYPE " +
                 "FROM" +
                 " AM_SUBSCRIPTION SUB," +
-                " AM_KEY_CONTEXT_MAPPING KCM," +
-                " AM_SUBSCRIPTION_KEY_MAPPING SKM " +
+                " AM_SUBSCRIPTION_KEY_MAPPING SKM, " +
+                " AM_API API " +
                 "WHERE" +
-                " SUB.API_ID = ?" +
+                " API.API_PROVIDER = ?" +
+                " AND API.API_NAME = ?" +
+                " AND API.API_VERSION = ?" +
                 " AND SKM.SUBSCRIPTION_ID = SUB.SUBSCRIPTION_ID" +
-                " AND KCM.KEY_CONTEXT_MAPPING_ID = SKM.KEY_CONTEXT_MAPPING_ID";
-        
-        String addKeyContextMapping = "INSERT INTO" +
-                " AM_KEY_CONTEXT_MAPPING (CONTEXT, VERSION, ACCESS_TOKEN)" +
-                " VALUES (?,?,?)";
+                " AND API.API_ID = SUB.API_ID";
         
         String addSubKeyMapping = "INSERT INTO" +
-                " AM_SUBSCRIPTION_KEY_MAPPING (SUBSCRIPTION_ID, KEY_CONTEXT_MAPPING_ID, KEY_TYPE)" +
+                " AM_SUBSCRIPTION_KEY_MAPPING (SUBSCRIPTION_ID, ACCESS_TOKEN, KEY_TYPE)" +
                 " VALUES (?,?,?)";
 
         try {
+            // Retrieve all the existing subscription for the old version
             connection = APIMgtDBUtil.getConnection();
             prepStmt = connection.prepareStatement(getSubscriptionDataQuery);
-            prepStmt.setString(1, oldApiId);
+            prepStmt.setString(1, provider);
+            prepStmt.setString(2, apiName);
+            prepStmt.setString(3, oldVersion);
             rs = prepStmt.executeQuery();
 
             List<SubscriptionInfo> subscriptionData = new ArrayList<SubscriptionInfo>();
@@ -1723,39 +1777,22 @@ public class ApiMgtDAO {
             }
             
             Map<Integer,Integer> subscriptionIdMap = new HashMap<Integer, Integer>();
-            APIIdentifier newApi = new APIIdentifier(provider, apiName, newVersion);
+            APIIdentifier apiId = new APIIdentifier(provider, apiName, newVersion);
             for (SubscriptionInfo info : subscriptionData) {
                 if (!subscriptionIdMap.containsKey(info.subscriptionId)) {
-                    newApi.setTier(info.tierId);
-                    int subscriptionId = addSubscription(newApi, null, info.applicationId);
+                    apiId.setTier(info.tierId);
+                    int subscriptionId = addSubscription(apiId, context, info.applicationId);
                     if (subscriptionId == -1) {
                         throw new APIManagementException("Unable to add a new subscription for " +
-                                "the API: " + newApi.getApiName() + ":v" + newApi.getVersion());
+                                "the API: " + apiName + ":v" + newVersion);
                     }
                     subscriptionIdMap.put(info.subscriptionId, subscriptionId);
                 }
                 
-                int subscriptionId = subscriptionIdMap.get(info.subscriptionId);
-                int contextMappingId;
-                
-                prepStmt = connection.prepareStatement(addKeyContextMapping);
-                prepStmt.setString(1, info.context);
-                prepStmt.setString(2, newVersion);
-                prepStmt.setString(3, info.accessToken);
-                prepStmt.execute();
-                rs = prepStmt.getGeneratedKeys();
-                if (rs.next()) {
-                    contextMappingId = rs.getInt(1);    
-                } else {
-                    throw new APIManagementException("Unable to add a key context mapping for the " +
-                            "API: " + newApi.getApiName() + ":v" + newApi.getVersion());
-                }
-                prepStmt.close();
-                rs.close();
-                
+                int subscriptionId = subscriptionIdMap.get(info.subscriptionId);                                                
                 prepStmt = connection.prepareStatement(addSubKeyMapping);
                 prepStmt.setInt(1, subscriptionId);
-                prepStmt.setInt(2, contextMappingId);
+                prepStmt.setString(2, info.accessToken);
                 prepStmt.setString(3, info.tokenType);
                 prepStmt.execute();
                 prepStmt.close();
@@ -1768,6 +1805,34 @@ public class ApiMgtDAO {
         } finally {
             APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
         }        
+    }
+    
+    public void addAPI(API api) throws APIManagementException {
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet rs = null;
+        
+        String query = "INSERT INTO AM_API (API_PROVIDER, API_NAME, API_VERSION, CONTEXT) " +
+                "VALUES (?,?,?,?)";
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            prepStmt = connection.prepareStatement(query);
+            prepStmt.setString(1, api.getId().getProviderName());
+            prepStmt.setString(2, api.getId().getApiName());
+            prepStmt.setString(3, api.getId().getVersion());
+            prepStmt.setString(4, api.getContext());
+            prepStmt.execute();
+            connection.commit();
+
+            recordAPILifeCycleEvent(api.getId(), null, APIStatus.CREATED, api.getId().getProviderName());
+        } catch (SQLException e) {
+            String msg = "Error while adding the API: " + api.getId() + " to the database";
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
+
+        } finally {
+            APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
+        }
     }
     
     private static class SubscriptionInfo {

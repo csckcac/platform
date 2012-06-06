@@ -346,7 +346,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
      */
     public void addAPI(API api) throws APIManagementException {
         createAPI(api);
-        apiMgtDAO.recordAPILifeCycleEvent(api.getId(), null, APIStatus.CREATED, api.getId().getProviderName());
+        apiMgtDAO.addAPI(api);
     }
 
     /**
@@ -397,7 +397,8 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         for (String version : versions) {
             API otherApi = getAPI(new APIIdentifier(provider, apiName, version));
             if (comparator.compare(otherApi, api) < 0 && otherApi.getStatus().equals(APIStatus.PUBLISHED)) {
-                apiMgtDAO.makeKeysForwardCompatible(provider, apiName, version, api.getId().getVersion());
+                apiMgtDAO.makeKeysForwardCompatible(provider, apiName, version,
+                        api.getId().getVersion(), api.getContext());
             }
         }
     }
@@ -538,6 +539,10 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                     apiSourceArtifact.getUUID());
             oldArtifact.setAttribute(APIConstants.API_OVERVIEW_IS_LATEST, "false");
             artifactManager.updateGenericArtifact(oldArtifact);
+
+            APIIdentifier id = new APIIdentifier(api.getId().getProviderName(),
+                    api.getId().getApiName(), newVersion);
+            apiMgtDAO.addAPI(getAPI(id));
 
         } catch (RegistryException e) {
             String msg = "Failed to create new version : " + newVersion + " of : "

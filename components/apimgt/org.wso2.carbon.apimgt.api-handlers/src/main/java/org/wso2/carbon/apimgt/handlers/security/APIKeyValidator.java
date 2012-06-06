@@ -61,7 +61,8 @@ public class APIKeyValidator {
      */
     public APIKeyValidationInfoDTO getKeyValidationInfo(String context, String apiKey,
                                                        String apiVersion) throws APISecurityException {
-        APIKeyValidationInfoDTO info = (APIKeyValidationInfoDTO) infoCache.get(apiKey);
+        String cacheKey = apiKey + ":" + context + ":" + apiVersion;
+        APIKeyValidationInfoDTO info = (APIKeyValidationInfoDTO) infoCache.get(cacheKey);
         if (info != null) {
             return info;
         }
@@ -71,14 +72,14 @@ public class APIKeyValidator {
             // of different API keys - However when a burst of requests with the
             // same key is encountered, only one will be allowed to execute the logic,
             // and the rest will pick the value from the cache.
-            info = (APIKeyValidationInfoDTO) infoCache.get(apiKey);
+            info = (APIKeyValidationInfoDTO) infoCache.get(cacheKey);
             if (info != null) {
                 return info;
             }
 
             info = doGetKeyValidationInfo(context, apiVersion, apiKey);
             if (info != null) {
-                infoCache.put(apiKey, info);
+                infoCache.put(cacheKey, info);
                 return info;
             } else {
                 throw new APISecurityException(APISecurityConstants.API_AUTH_GENERAL_ERROR,

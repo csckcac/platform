@@ -442,6 +442,10 @@ public class APIProviderHostObject extends ScriptableObject {
             apiProvider.changeAPIStatus(api, newStatus, currentUser, publishToGateway);
 
             if (oldStatus.equals(APIStatus.CREATED) && newStatus.equals(APIStatus.PUBLISHED)) {
+                if (makeKeysForwardCompatible) {
+                    apiProvider.makeAPIKeysForwardCompatible(api);
+                }
+
                 if (deprecateOldVersions) {
                     List<API> apiList = apiProvider.getAPIsByProvider(provider);
                     APIVersionComparator versionComparator = new APIVersionComparator();
@@ -453,10 +457,6 @@ public class APIProviderHostObject extends ScriptableObject {
                                     currentUser, publishToGateway);
                         }
                     }
-                }
-
-                if (makeKeysForwardCompatible) {
-                    apiProvider.makeAPIKeysForwardCompatible(api);
                 }
             }
             success = true;

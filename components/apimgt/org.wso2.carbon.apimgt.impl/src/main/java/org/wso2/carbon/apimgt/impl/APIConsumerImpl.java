@@ -350,7 +350,7 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
             throws APIManagementException {
         API api = getAPI(identifier);
         if (api.getStatus().equals(APIStatus.PUBLISHED)) {
-            apiMgtDAO.addSubscription(identifier, userId, applicationId);
+            apiMgtDAO.addSubscription(identifier, api.getContext(), applicationId);
         } else {
             throw new APIManagementException("Subscriptions not allowed on APIs in the state: " +
                     api.getStatus().getStatus());
@@ -364,7 +364,8 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
 
     public void updateSubscriptions(APIIdentifier identifier, String userId, int applicationId)
             throws APIManagementException {
-        apiMgtDAO.updateSubscriptions(identifier, userId, applicationId);
+        API api = getAPI(identifier);
+        apiMgtDAO.updateSubscriptions(identifier, api.getContext(), applicationId);
     }
 
     public void addComment(APIIdentifier identifier, String s, String user) throws APIManagementException {

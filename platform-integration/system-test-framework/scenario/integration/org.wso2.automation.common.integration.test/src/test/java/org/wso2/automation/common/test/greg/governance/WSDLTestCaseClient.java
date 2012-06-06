@@ -35,10 +35,13 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.fileutils.FileManager;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
 import javax.xml.namespace.QName;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
@@ -312,323 +315,28 @@ public class WSDLTestCaseClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "Test adding multiple wsdl")
-    public void testMultipleWsdl() throws GovernanceException {
+    public void testMultipleWsdl() throws GovernanceException, IOException {
         Wsdl wsdl;
         WsdlManager wsdlManager = new WsdlManager(governance);
+        String wsdlFileLocation = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator
+                + "artifacts" + File.separator + "GREG" + File.separator + "wsdl" + File.separator + "Automated.wsdl";
+
+
         Wsdl[] wsdlList = wsdlManager.getAllWsdls();
         for (Wsdl w : wsdlList) {
             if (w.getQName().getLocalPart().contains("Automated")) {
                 wsdlManager.removeWsdl(w.getId());
             }
         }
-        String wsdlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<wsdl:definitions xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:ns1=\"http://org.apache.axis2/xsd\" xmlns:ns=\"http://echo.services.core.carbon.wso2.org\" xmlns:wsaw=\"http://www.w3.org/2006/05/addressing/wsdl\" xmlns:http1=\"http://schemas.xmlsoap.org/wsdl/http/\" xmlns:ax21=\"http://echo.services.core.carbon.wso2.org/xsd\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:mime=\"http://schemas.xmlsoap.org/wsdl/mime/\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:soap12=\"http://schemas.xmlsoap.org/wsdl/soap12/\" targetNamespace=\"http://echo.services.core.carbon.wso2.org\">\n" +
-                "    <wsdl:documentation>echo</wsdl:documentation>\n" +
-                "    <wsdl:types>\n" +
-                "        <xs:schema attributeFormDefault=\"unqualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://echo.services.core.carbon.wso2.org/xsd\">\n" +
-                "            <xs:complexType name=\"SimpleBean\">\n" +
-                "                <xs:sequence>\n" +
-                "                    <xs:element maxOccurs=\"unbounded\" minOccurs=\"0\" name=\"a_r\" nillable=\"true\" type=\"xs:int\"/>\n" +
-                "                    <xs:element maxOccurs=\"unbounded\" minOccurs=\"0\" name=\"b_r\" nillable=\"true\" type=\"xs:int\"/>\n" +
-                "                    <xs:element minOccurs=\"0\" name=\"c\" type=\"xs:int\"/>\n" +
-                "                </xs:sequence>\n" +
-                "            </xs:complexType>\n" +
-                "        </xs:schema>\n" +
-                "        <xs:schema xmlns:ax22=\"http://echo.services.core.carbon.wso2.org/xsd\"   targetNamespace=\"http://echo.services.core.carbon.wso2.org\">\n" +
-                "            <xs:import namespace=\"http://echo.services.core.carbon.wso2.org/xsd\"/>\n" +
-                "            <xs:complexType name=\"Exception\">\n" +
-                "                <xs:sequence>\n" +
-                "                    <xs:element minOccurs=\"0\" name=\"Exception\" nillable=\"true\" type=\"xs:string\"/>\n" +
-                "                </xs:sequence>\n" +
-                "            </xs:complexType>\n" +
-                "            <xs:element name=\"throwAxisFaultResponse\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"return\" nillable=\"true\" type=\"xs:string\"/>\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "            <xs:element name=\"echoStringArrays\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element maxOccurs=\"unbounded\" minOccurs=\"0\" name=\"a\" nillable=\"true\" type=\"xs:string\"/>\n" +
-                "                        <xs:element maxOccurs=\"unbounded\" minOccurs=\"0\" name=\"b\" nillable=\"true\" type=\"xs:string\"/>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"c\" type=\"xs:int\"/>\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "            <xs:element name=\"echoStringArraysResponse\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"return\" nillable=\"true\" type=\"ax21:SimpleBean\"/>\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "            <xs:element name=\"echoString\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"in\" nillable=\"true\" type=\"xs:string\"/>\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "            <xs:element name=\"echoStringResponse\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"return\" nillable=\"true\" type=\"xs:string\"/>\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "            <xs:element name=\"echoOMElement\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"omEle\" nillable=\"true\" type=\"xs:anyType\"/>\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "            <xs:element name=\"echoOMElementResponse\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"return\" nillable=\"true\" type=\"xs:anyType\"/>\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "            <xs:element name=\"echoInt\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"in\" type=\"xs:int\"/>\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "            <xs:element name=\"echoIntResponse\">\n" +
-                "                <xs:complexType>\n" +
-                "                    <xs:sequence>\n" +
-                "                        <xs:element minOccurs=\"0\" name=\"return\" type=\"xs:int\"/>\n" +
-                "                    </xs:sequence>\n" +
-                "                </xs:complexType>\n" +
-                "            </xs:element>\n" +
-                "        </xs:schema>\n" +
-                "    </wsdl:types>\n" +
-                "    <wsdl:message name=\"echoStringArraysRequest\">\n" +
-                "        <wsdl:part name=\"parameters\" element=\"ns:echoStringArrays\"/>\n" +
-                "    </wsdl:message>\n" +
-                "    <wsdl:message name=\"echoStringArraysResponse\">\n" +
-                "        <wsdl:part name=\"parameters\" element=\"ns:echoStringArraysResponse\"/>\n" +
-                "    </wsdl:message>\n" +
-                "    <wsdl:message name=\"echoOMElementRequest\">\n" +
-                "        <wsdl:part name=\"parameters\" element=\"ns:echoOMElement\"/>\n" +
-                "    </wsdl:message>\n" +
-                "    <wsdl:message name=\"echoOMElementResponse\">\n" +
-                "        <wsdl:part name=\"parameters\" element=\"ns:echoOMElementResponse\"/>\n" +
-                "    </wsdl:message>\n" +
-                "    <wsdl:message name=\"echoIntRequest\">\n" +
-                "        <wsdl:part name=\"parameters\" element=\"ns:echoInt\"/>\n" +
-                "    </wsdl:message>\n" +
-                "    <wsdl:message name=\"echoIntResponse\">\n" +
-                "        <wsdl:part name=\"parameters\" element=\"ns:echoIntResponse\"/>\n" +
-                "    </wsdl:message>\n" +
-                "    <wsdl:message name=\"throwAxisFaultRequest\"/>\n" +
-                "    <wsdl:message name=\"throwAxisFaultResponse\">\n" +
-                "        <wsdl:part name=\"parameters\" element=\"ns:throwAxisFaultResponse\"/>\n" +
-                "    </wsdl:message>\n" +
-                "    <wsdl:message name=\"echoStringRequest\">\n" +
-                "        <wsdl:part name=\"parameters\" element=\"ns:echoString\"/>\n" +
-                "    </wsdl:message>\n" +
-                "    <wsdl:message name=\"echoStringResponse\">\n" +
-                "        <wsdl:part name=\"parameters\" element=\"ns:echoStringResponse\"/>\n" +
-                "    </wsdl:message>\n" +
-                "    <wsdl:portType name=\"echoPortType\">\n" +
-                "        <wsdl:operation name=\"Echo-StringArrays\">\n" +
-                "            <wsdl:input message=\"ns:echoStringArraysRequest\" wsaw:Action=\"urn:echoStringArrays\"/>\n" +
-                "            <wsdl:output message=\"ns:echoStringArraysResponse\" wsaw:Action=\"urn:echoStringArraysResponse\"/>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echo$OMElement\">\n" +
-                "            <wsdl:input message=\"ns:echoOMElementRequest\" wsaw:Action=\"urn:echoOMElement\"/>\n" +
-                "            <wsdl:output message=\"ns:echoOMElementResponse\" wsaw:Action=\"urn:echoOMElementResponse\"/>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoInt\">\n" +
-                "            <wsdl:input message=\"ns:echoIntRequest\" wsaw:Action=\"urn:echoInt\"/>\n" +
-                "            <wsdl:output message=\"ns:echoIntResponse\" wsaw:Action=\"urn:echoIntResponse\"/>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"throwAxisFault\">\n" +
-                "            <wsdl:input message=\"ns:throwAxisFaultRequest\" wsaw:Action=\"urn:throwAxisFault\"/>\n" +
-                "            <wsdl:output message=\"ns:throwAxisFaultResponse\" wsaw:Action=\"urn:throwAxisFaultResponse\"/>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoString\">\n" +
-                "            <wsdl:input message=\"ns:echoStringRequest\" wsaw:Action=\"urn:echoString\"/>\n" +
-                "            <wsdl:output message=\"ns:echoStringResponse\" wsaw:Action=\"urn:echoStringResponse\"/>\n" +
-                "        </wsdl:operation>\n" +
-                "    </wsdl:portType>\n" +
-                "    <wsdl:binding name=\"echoSoap11Binding\" type=\"ns:echoPortType\">\n" +
-                "        <soap:binding transport=\"http://schemas.xmlsoap.org/soap/http\" style=\"document\"/>\n" +
-                "        <wsdl:operation name=\"EchoStringArrays\">\n" +
-                "            <soap:operation soapAction=\"urn:EchoStringArrays\" style=\"document\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <soap:body use=\"literal\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <soap:body use=\"literal\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoOMElement\">\n" +
-                "            <soap:operation soapAction=\"urn:echoOMElement\" style=\"document\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <soap:body use=\"literal\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <soap:body use=\"literal\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoInt\">\n" +
-                "            <soap:operation soapAction=\"urn:echoInt\" style=\"document\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <soap:body use=\"literal\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <soap:body use=\"literal\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"throwAxisFault\">\n" +
-                "            <soap:operation soapAction=\"urn:throwAxisFault\" style=\"document\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <soap:body use=\"literal\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <soap:body use=\"literal\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoString\">\n" +
-                "            <soap:operation soapAction=\"urn:echoString\" style=\"document\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <soap:body use=\"literal\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <soap:body use=\"literal\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "    </wsdl:binding>\n" +
-                "    <wsdl:binding name=\"echoSoap12Binding\" type=\"ns:echoPortType\">\n" +
-                "        <soap12:binding transport=\"http://schemas.xmlsoap.org/soap/http\" style=\"document\"/>\n" +
-                "        <wsdl:operation name=\"echoStringArrays\">\n" +
-                "            <soap12:operation soapAction=\"urn:echoStringArrays\" style=\"document\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <soap12:body use=\"literal\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <soap12:body use=\"literal\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoOMElement\">\n" +
-                "            <soap12:operation soapAction=\"urn:echoOMElement\" style=\"document\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <soap12:body use=\"literal\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <soap12:body use=\"literal\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoInt\">\n" +
-                "            <soap12:operation soapAction=\"urn:echoInt\" style=\"document\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <soap12:body use=\"literal\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <soap12:body use=\"literal\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"throwAxisFault\">\n" +
-                "            <soap12:operation soapAction=\"urn:throwAxisFault\" style=\"document\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <soap12:body use=\"literal\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <soap12:body use=\"literal\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoString\">\n" +
-                "            <soap12:operation soapAction=\"urn:echoString\" style=\"document\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <soap12:body use=\"literal\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <soap12:body use=\"literal\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "    </wsdl:binding>\n" +
-                "    <wsdl:binding name=\"echoHttpBinding\" type=\"ns:echoPortType\">\n" +
-                "        <http1:binding verb=\"POST\"/>\n" +
-                "        <wsdl:operation name=\"echoStringArrays\">\n" +
-                "            <http1:operation location=\"echoStringArrays\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <mime:content type=\"text/xml\" part=\"echoStringArrays\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <mime:content type=\"text/xml\" part=\"echoStringArrays\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoOMElement\">\n" +
-                "            <http1:operation location=\"echoOMElement\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <mime:content type=\"text/xml\" part=\"echoOMElement\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <mime:content type=\"text/xml\" part=\"echoOMElement\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoInt\">\n" +
-                "            <http1:operation location=\"echoInt\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <mime:content type=\"text/xml\" part=\"echoInt\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <mime:content type=\"text/xml\" part=\"echoInt\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"throwAxisFault\">\n" +
-                "            <http1:operation location=\"throwAxisFault\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <mime:content type=\"text/xml\" part=\"throwAxisFault\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <mime:content type=\"text/xml\" part=\"throwAxisFault\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "        <wsdl:operation name=\"echoString\">\n" +
-                "            <http1:operation location=\"echoString\"/>\n" +
-                "            <wsdl:input>\n" +
-                "                <mime:content type=\"text/xml\" part=\"echoString\"/>\n" +
-                "            </wsdl:input>\n" +
-                "            <wsdl:output>\n" +
-                "                <mime:content type=\"text/xml\" part=\"echoString\"/>\n" +
-                "            </wsdl:output>\n" +
-                "        </wsdl:operation>\n" +
-                "    </wsdl:binding>\n" +
-                "    <wsdl:service name=\"echoyuSer1\">\n" +
-                "        <wsdl:port name=\"echoHttpsSoap11Endpoint\" binding=\"ns:echoSoap11Binding\">\n" +
-                "            <soap:address location=\"https://localhost:8243/services/echo-yu.echoHttpsSoap11Endpoint\"/>\n" +
-                "        </wsdl:port>\n" +
-                "        <wsdl:port name=\"echoHttpSoap11Endpoint\" binding=\"ns:echoSoap11Binding\">\n" +
-                "            <soap:address location=\"http://localhost:8280/services/echo-yu.echoHttpSoap11Endpoint\"/>\n" +
-                "        </wsdl:port>\n" +
-                "        <wsdl:port name=\"echoHttpSoap12Endpoint\" binding=\"ns:echoSoap12Binding\">\n" +
-                "            <soap12:address location=\"http://localhost:8280/services/echo-yu.echoHttpSoap12Endpoint\"/>\n" +
-                "        </wsdl:port>\n" +
-                "        <wsdl:port name=\"echoHttpsSoap12Endpoint\" binding=\"ns:echoSoap12Binding\">\n" +
-                "            <soap12:address location=\"https://localhost:8243/services/echo-yu.echoHttpsSoap12Endpoint\"/>\n" +
-                "        </wsdl:port>\n" +
-                "        <wsdl:port name=\"echoHttpEndpoint\" binding=\"ns:echoHttpBinding\">\n" +
-                "            <http1:address location=\"http://localhost:8280/services/echo-yu.echoHttpEndpoint\"/>\n" +
-                "        </wsdl:port>\n" +
-                "        <wsdl:port name=\"echoHttpsEndpoint\" binding=\"ns:echoHttpBinding\">\n" +
-                "            <http1:address location=\"https://localhost:8243/services/echo-yu.echoHttpsEndpoint\"/>\n" +
-                "        </wsdl:port>\n" +
-                "    </wsdl:service>\n" +
-                "</wsdl:definitions>\n";
+
         try {
             for (int i = 0; i <= 10000; i++) {
-                wsdl = wsdlManager.newWsdl(wsdlContent.getBytes(), "AutomatedWsdl" + i + ".wsdl");
+                wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFileLocation).getBytes(),
+                        "AutomatedWsdl" + i + ".wsdl");
                 wsdlManager.addWsdl(wsdl);
                 System.out.println("Adding : AutomatedWsdl" + i + ".wsdl");
-                if (!wsdlManager.getWsdl(wsdl.getId()).getQName().getLocalPart().equalsIgnoreCase("AutomatedWsdl" + i + ".wsdl")) {
+                if (!wsdlManager.getWsdl(wsdl.getId()).getQName().getLocalPart().equalsIgnoreCase
+                        ("AutomatedWsdl" + i + ".wsdl")) {
                     assertTrue("Wsdl not added..", false);
                 }
             }

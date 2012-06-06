@@ -271,9 +271,11 @@ public class CSGTransportSender extends AbstractTransportSender {
             responseMsgCtx.setProperty(Constants.Configuration.MESSAGE_TYPE,
                     msgCtx.getProperty(Constants.Configuration.MESSAGE_TYPE));
 
+            responseMsgCtx.setProperty(Constants.Configuration.CONTENT_TYPE, msgCtx.getProperty(Constants.Configuration.CONTENT_TYPE));
+                        
             String contentType = message.getContentType();
             if (contentType == null) {
-                contentType = inferContentType(responseMsgCtx);
+                contentType = inferContentType(msgCtx, responseMsgCtx);
             }
 
             ByteArrayInputStream inputStream = new ByteArrayInputStream(message.getMessage());
@@ -441,7 +443,7 @@ public class CSGTransportSender extends AbstractTransportSender {
         }
     }
 
-    private String inferContentType(MessageContext responseMsgCtx) {
+    private String inferContentType(MessageContext incomingMsgCtx, MessageContext responseMsgCtx) {
         // Try to get the content type from the message context
         Object cTypeProperty = responseMsgCtx.getProperty(Constants.Configuration.CONTENT_TYPE);
         if (cTypeProperty != null) {
@@ -453,6 +455,15 @@ public class CSGTransportSender extends AbstractTransportSender {
         if (cTypeParam != null) {
             return cTypeParam.getValue().toString();
         }
+        
+        //Try to determine the content type using incomming request.
+        Map transportHeaders = (Map) incomingMsgCtx.getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
+        cTypeProperty = transportHeaders.get("Content-Type");
+        if ( cTypeProperty != null){
+        	return cTypeProperty.toString();
+        }
+        
+        
         // Unable to determine the content type - Return default value
         return CSGConstant.DEFAULT_CONTENT_TYPE;
     }

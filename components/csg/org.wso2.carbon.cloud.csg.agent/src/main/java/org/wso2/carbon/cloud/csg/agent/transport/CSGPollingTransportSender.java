@@ -16,6 +16,7 @@
 package org.wso2.carbon.cloud.csg.agent.transport;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.TransportOutDescription;
@@ -28,6 +29,7 @@ import org.wso2.carbon.cloud.csg.common.thrift.gen.Message;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayOutputStream;
+import java.util.Map;
 
 /**
  * CSG Polling transport sender implementation
@@ -57,8 +59,9 @@ public class CSGPollingTransportSender extends AbstractTransportSender {
 
         Message thriftMsg = new Message();
         thriftMsg.setMessageId(relatesTo);
-        thriftMsg.setSoapAction(msgCtx.getSoapAction());
+        thriftMsg.setSoapAction(msgCtx.getSoapAction());        
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+        
         try {
             msgCtx.getEnvelope().serialize(out);
         } catch (XMLStreamException e) {

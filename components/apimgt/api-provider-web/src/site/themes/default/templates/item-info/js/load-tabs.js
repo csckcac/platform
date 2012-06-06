@@ -6,8 +6,9 @@ var t_on = {
             };
 
 var getLastAccessTime = function(name) {
+    var currentLocation=window.location.pathname;
     var lastAccessTime = null;
-    jagg.syncPost("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIVersionUserLastAccess",server:"" },
+    jagg.syncPost("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIVersionUserLastAccess",currentLocation:currentLocation },
                   function (json) {
                       if (!json.error) {
                           var length = json.usage.length;
@@ -26,7 +27,8 @@ var getLastAccessTime = function(name) {
 
 var getResponseTime = function(name) {
     var responseTime = null;
-    jagg.syncPost("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",server:"" },
+    var currentLocation=window.location.pathname;
+    jagg.syncPost("/site/blocks/stats/ajax/stats.jag", { action:"getProviderAPIServiceTime",currentLocation:currentLocation},
                   function (json) {
                       if (!json.error) {
                           var length = json.usage.length;

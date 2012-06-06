@@ -21,7 +21,7 @@ function updateApplication(linkObj){
             if (result.error == false) {
                 window.location.reload();
             } else {
-                jagg.message(result.message);
+                jagg.message({content:result.message,type:"error"});
             }
         }, "json");
 }
@@ -42,7 +42,7 @@ function deleteApp(linkObj) {
             if (!result.error) {
                 window.location.reload();
             } else {
-                jagg.message(result.message);
+                jagg.message({content:result.message,type:"error"});
             }
         }, "json");
     });

@@ -3,6 +3,7 @@
         var isSecure = <%=outputs.isSecure%>;
         var showLogin = <%=session.get("showLogin")%>;
         var redirectToHTTPS = '<%=session.get("redirectToHTTPS")%>';
+
     </script>
  <%     var mod,httpUrl,httpsUrl;
         mod = jagg.module("manager");

@@ -21,7 +21,7 @@ $(document).ready(function () {
                 window.location.reload();
             } else {
                 $("#subscribe-button").html('Subscribe').addClass('green').removeClass('disabled').removeAttr('disabled');
-                jagg.message(result.message);
+                jagg.message({content:result.message,type:"error"});
             }
         }, "json");
 

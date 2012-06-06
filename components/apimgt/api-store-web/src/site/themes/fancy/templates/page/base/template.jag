@@ -38,6 +38,9 @@
         jagg.printData(data.header.code);
     }
     %>
+      <script>
+        var siteRoot = '<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme())%>';
+    </script>
 </head>
 <body>
 <% jagg.includeBlock("ui/dialogs", {}); %>

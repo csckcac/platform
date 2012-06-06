@@ -20,7 +20,7 @@ $(document).ready(function () {
         }
         var applicationId = $("#application-list").val();
         if (applicationId == "-") {
-            jagg.message("<i class='icon-exclamation-sign' /> Please select an application before subscribing");
+            jagg.message({content:"Please select an application before subscribing",type:"info"});
             return;
         }
         var api = jagg.api;
@@ -53,8 +53,7 @@ $(document).ready(function () {
 
 
             } else {
-                jagg.message(result.message);
-
+                jagg.message({content:result.message,type:"error"});
 
                 //$('#messageModal').html($('#confirmation-data').html());
                 /*$('#messageModal h3.modal-title').html('API Provider');
@@ -99,7 +98,7 @@ $(document).ready(function () {
             if (result.error == false) {
                 window.location.reload();
             } else {
-                jagg.message(result.message);
+                jagg.message({content:result.message,type:"error"});
             }
         }, "json");
     }, function (api) {

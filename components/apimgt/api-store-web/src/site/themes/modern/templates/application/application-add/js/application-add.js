@@ -9,7 +9,7 @@ $(document).ready(function () {
                 $.cookie('highlight','true');
                 window.location.reload();
             } else {
-                jagg.message(result.message);
+                jagg.message({content:result.message,type:"error"});
             }
         }, "json");
     };

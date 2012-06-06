@@ -34,14 +34,14 @@
                             <tr>
                                 <td>
                                     <div class="thumbnail">
-                                        <img src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-fancy.png")%>" />
+                                        <img title="fancy" onclick="applyTheme(this)" src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-fancy.png")%>" />
                                     </div>
                                     <% if(jagg.getUserTheme() != "fancy") { %>
                                         <a class="themeSelectionLink" title="fancy" onclick="applyTheme(this)">Apply</a>
                                     <% } %>
                                 </td>
                                 <td>
-                                    <div class="thumbnail"><img src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-modern.png")%>" /></div>
+                                    <div class="thumbnail"><img title="modern" onclick="applyTheme(this)" src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-modern.png")%>" /></div>
                                     <% if(jagg.getUserTheme() != "modern") { %>
                                         <a class="themeSelectionLink" title="modern" onclick="applyTheme(this)">Apply</a>
                                     <% } %>
@@ -63,11 +63,5 @@
         <a id="login-link">Login</a>
     </li>
 </ul>
-<% } %>
-
-<% if(!user) { %>
-
-
-
 <% } %>
 <% }); %>

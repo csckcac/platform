@@ -6,7 +6,7 @@ var login = login || {};
         jagg.post("/site/blocks/user/login/ajax/login.jag", { action:"login", username:username, password:password },
                  function (result) {
                      if (result.error == false) {
-                         if (redirectToHTTPS && redirectToHTTPS != "") {
+                         if (redirectToHTTPS && redirectToHTTPS != "" && redirectToHTTPS != "{}" ) {
                              window.location.href = redirectToHTTPS;
                          } else if(url){
                              window.location.href = url;
@@ -14,8 +14,8 @@ var login = login || {};
                              window.location.reload();
                          }
                      } else {
-                         $('#messageModal').modal('hide');
-                         jagg.message(result.message);
+                         $('#messageModal').modal('show');
+                         jagg.message({content:result.message,type:"error"});
                      }
                  }, "json");
     };
@@ -25,7 +25,7 @@ var login = login || {};
             if (result.error == false) {
                 window.location.reload();
             } else {
-                jagg.message(result.message);
+                jagg.message({content:result.message,type:"error"});
             }
         }, "json");
     };
@@ -81,7 +81,7 @@ $(document).ready(function () {
     $(".need-login").click(showLoginForm);
     $('#login-link').click(showLoginForm);
 
-    if(isSecure && showLogin){
+    if(isSecure && showLogin==true){
         showLogin = false;
         showLoginForm();
     }

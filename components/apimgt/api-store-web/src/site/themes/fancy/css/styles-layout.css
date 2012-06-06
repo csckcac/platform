@@ -32,6 +32,22 @@ div.navbar-inner {
 }
 .navbar .nav > li > a{
     color:#fff;
+    height:27px;
+}
+.navbar .nav > li{
+    height:45px;
+}
+.navbar .nav > li:hover{
+  /*background: transparent url(../images/whiteBack.png) repeat center top;*/
+    background: -moz-linear-gradient(top, rgba(57,57,57, 1) 0%, rgba(113,113,113, 1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(57,57,57, 1)), color-stop(100%, rgba(113,113,113, 1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(57,57,57, 1) 0%, rgba(113,113,113, 1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(57,57,57, 1) 0%, rgba(113,113,113, 1) 100%); /* Opera11.10+ */
+    background: -ms-linear-gradient(top, rgba(57,57,57, 1) 0%, rgba(113,113,113, 1) 100%); /* IE10+ */
+    background: linear-gradient(top, rgba(57,57,57, 1) 0%, rgba(113,113,113, 1) 100%); /* W3C */
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#393939',EndColorStr='#717171'); /* IE8 */
+    -ms-filter: progid: DXImageTransform.Microsoft.gradient(gradientType = 0, startColor = '#393939', endColoStr = '#717171'); /*Transparent back */
+
 }
 .page-header-back {
     background-color:#fefefe;
@@ -49,7 +65,6 @@ div.navbar-inner {
 .navbar .navbar-inner .nav.actions a {
     color: #fff;
     font-size: 11px;
-    margin-left: 20px;
     padding: 7px 16px 6px;
     text-transform: uppercase;
     cursor:pointer;
@@ -537,4 +552,15 @@ tr.application-api td.api-key-cell{
 .comment-text{
     padding:5px;
     color:#444;
+}
+.settingsSection img{
+    cursor:pointer;
+}
+
+.settingsSection table {
+    margin-bottom:0;
+}
+.settingsSection form {
+    padding: 0;
+    margin:0;
 }

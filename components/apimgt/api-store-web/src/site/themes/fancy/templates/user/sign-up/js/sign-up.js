@@ -11,10 +11,10 @@ $(document).ready(function() {
             password:$('#newPassword').val()
         }, function (result) {
             if (result.error == false) {
-                jagg.message('User added success');
-                location.href = context;
+                jagg.message({content:"User added success",type:"info",cbk:function(){location.href = context;}});
+
             } else {
-                jagg.message(result.message);
+                jagg.message({content:result.message,type:"error"});
             }
         }, "json");
      }

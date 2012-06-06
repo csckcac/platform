@@ -88,7 +88,7 @@
         <description>Mashup Server in the cloud.</description>
         <productPageURL>http://wso2.com/products/mashup-server/</productPageURL>
     </cloudService>
-    <cloudService name="Gadget Server" default="true">
+    <cloudService name="WSO2 Gadget Server" default="true">
         <label>Gadget Server</label>
         <link>https://gadget.cloud.wso2.com</link>
         <icon>

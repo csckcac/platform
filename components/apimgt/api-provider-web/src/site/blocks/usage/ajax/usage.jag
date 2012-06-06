@@ -8,11 +8,10 @@ include("/jagg/jagg.jag");
             msg = require("/site/conf/ui-messages.jag");
     if (action === "getProviderAPIVersionUsage") {
         mod = jagg.module("statistics");
-        var provider = jagg.getUser().username;
+        var provider =request.getParameter("provider");
         var apiName = request.getParameter("apiName");
-        var server = request.getParameter("server");
 
-        result = mod.getProviderAPIVersionUsage(provider, apiName, server);
+        result = mod.getProviderAPIVersionUsage(provider, apiName);
         if (result.error) {
             obj = {
                 error:result.error,
@@ -27,7 +26,7 @@ include("/jagg/jagg.jag");
         print(obj);
     } else if (action === "getSubscriberCountByAPIVersions") {
         mod = jagg.module("statistics");
-        var provider = jagg.getUser().username;
+        var provider =request.getParameter("provider");
         var apiName = request.getParameter("apiName");
         result = mod.getSubscriberCountByAPIVersions(provider, apiName);
         if (result.error == "true") {
@@ -45,10 +44,9 @@ include("/jagg/jagg.jag");
 
     } else if (action === "getProviderAPIUserUsage") {
         mod = jagg.module("statistics");
-        var provider = jagg.getUser().username;
+        var provider =request.getParameter("provider");
         var apiName = request.getParameter("apiName");
-        var server = request.getParameter("server");
-        result = mod.getProviderAPIUserUsage(provider, apiName, server);
+        result = mod.getProviderAPIUserUsage(provider, apiName);
         if (result.error == "true") {
             obj = {
                 error:result.error,
@@ -64,11 +62,10 @@ include("/jagg/jagg.jag");
 
     } else if (action === "getProviderAPIVersionUserUsage") {
         mod = jagg.module("statistics");
-        var provider = jagg.getUser().username;
+        var provider =request.getParameter("provider");
         var apiName = request.getParameter("apiName");
         var version = request.getParameter("version");
-        var server = request.getParameter("server");
-        result = mod.getProviderAPIVersionUserUsage(provider, apiName,version, server);
+        result = mod.getProviderAPIVersionUserUsage(provider, apiName,version);
         if (result.error == "true") {
             obj = {
                 error:result.error,

@@ -55,14 +55,6 @@ public class XSLTHostObject extends ScriptableObject {
 
     private static final String hostObjectName = "XSLT";
 
-    /*
-        * If we are removing xalan-2.7.0.xxx.jar from lib/endorsed, then we can remove following static block and use
-        * TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl", null);  when initializing TransformerFactory.
-     */
-    static {
-        System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
-    }
-
     /**
      * XSLT(xslt)
      * XSLT(xslt, paramMap)

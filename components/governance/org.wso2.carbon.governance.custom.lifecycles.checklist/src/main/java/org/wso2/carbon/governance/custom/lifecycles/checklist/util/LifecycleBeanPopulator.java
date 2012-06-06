@@ -147,7 +147,7 @@ public class LifecycleBeanPopulator {
                 lifecycleBean.setPutAllowed(
                         UserUtil.isPutAllowed(registry.getUserName(), resourcePath.getPath(), registry));
                 lifecycleBean.setLoggedIn(!RegistryConstants.ANONYMOUS_USER.equals(registry.getUserName()));
-                lifecycleBean.setShowAddDelete(!"application/vnd.wso2-service+xml".equals(resource.getMediaType()));
+                lifecycleBean.setShowAddDelete(true);
                 resource.discard();
             }
             else {

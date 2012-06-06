@@ -122,7 +122,6 @@
         <module>unified-endpoint</module>
         <module>csg</module>
         <module>dbconsole</module>
-        <module>issue-tracker</module>
         <module>deployment-synchronizer</module>
         <module>ec2-client</module>
         <module>esb-mediation</module>

@@ -17,6 +17,7 @@ package org.wso2.carbon.url.mapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.url.mapper.data.MappingData;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.util.HostUtil;
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * Backend service to handle virtual host addition to registry and to tomcat.
  */
-public class UrlMapperAdminService {
+public class UrlMapperAdminService extends AbstractAdmin{
     private static final Log log = LogFactory.getLog(UrlMapperAdminService.class);
 
     public void addWebAppToHost(String hostName, String uri) throws UrlMapperException {

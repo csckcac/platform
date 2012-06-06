@@ -607,11 +607,13 @@ public class APIProviderHostObject extends ScriptableObject {
                     if (count == 0) {
                         continue;
                     }
-                    Long currentCount = subscriptions.get(api.getId().getApiName());
+                    
+                    String key = api.getId().getApiName() + " (" + api.getId().getProviderName() + ")";
+                    Long currentCount = subscriptions.get(key);
                     if (currentCount != null) {
-                        subscriptions.put(api.getId().getApiName(), currentCount + count);
+                        subscriptions.put(key, currentCount + count);
                     } else {
-                        subscriptions.put(api.getId().getApiName(), count);
+                        subscriptions.put(key, count);
                     }
                 }
 

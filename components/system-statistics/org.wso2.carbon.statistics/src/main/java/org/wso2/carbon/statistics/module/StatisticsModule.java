@@ -26,6 +26,7 @@ import org.apache.neethi.Assertion;
 import org.apache.neethi.Policy;
 import org.wso2.carbon.statistics.StatisticsConstants;
 import org.wso2.carbon.statistics.internal.ResponseTimeProcessor;
+import org.wso2.carbon.statistics.persistance.StatisticsPersistenceUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,30 +40,7 @@ public class StatisticsModule implements Module {
                      AxisModule module) throws AxisFault {
 
         AxisConfiguration axisConfig = configContext.getAxisConfiguration();
-
-        {
-            AtomicInteger globalRequestCounter = new AtomicInteger(0);
-            Parameter globalRequestCounterParam = new Parameter();
-            globalRequestCounterParam.setName(StatisticsConstants.GLOBAL_REQUEST_COUNTER);
-            globalRequestCounterParam.setValue(globalRequestCounter);
-            axisConfig.addParameter(globalRequestCounterParam);
-        }
-
-        {
-            AtomicInteger globalResponseCounter = new AtomicInteger(0);
-            Parameter globalResponseCounterParam = new Parameter();
-            globalResponseCounterParam.setName(StatisticsConstants.GLOBAL_RESPONSE_COUNTER);
-            globalResponseCounterParam.setValue(globalResponseCounter);
-            axisConfig.addParameter(globalResponseCounterParam);
-        }
-
-        {
-            AtomicInteger globalFaultCounter = new AtomicInteger(0);
-            Parameter globalFaultCounterParam = new Parameter();
-            globalFaultCounterParam.setName(StatisticsConstants.GLOBAL_FAULT_COUNTER);
-            globalFaultCounterParam.setValue(globalFaultCounter);
-            axisConfig.addParameter(globalFaultCounterParam);
-        }
+        StatisticsPersistenceUtils.retrieveSystemStatistics(axisConfig);
 
         {
             ResponseTimeProcessor responseTimeProcessor = new ResponseTimeProcessor();

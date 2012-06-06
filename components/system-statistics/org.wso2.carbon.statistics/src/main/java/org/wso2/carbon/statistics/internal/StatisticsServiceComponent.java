@@ -90,8 +90,7 @@ public class StatisticsServiceComponent {
                 log.debug("initializing StatisticsPersistenceScheduler..");
             }
             bundleCtx.registerService(CarbonDeploymentSchedulerExtender.class.getName(),
-                                      new StatisticsPersistenceScheduler(registryService),
-                                      null);
+                                      new StatisticsPersistenceScheduler(), null);
 
             if(log.isDebugEnabled()){
                 log.debug("Statistics bundle is activated");

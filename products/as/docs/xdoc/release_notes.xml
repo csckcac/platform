@@ -16,14 +16,14 @@
 <html>
 <head>
     <meta http-equiv="content-type" content=""/>
-    <title>WSO2 Application Server 4.5.0-SNAPSHOT Release
+    <title>WSO2 Application Server 5.0-SNAPSHOT Release
            Notes</title>
     <link href="./tools/cmd/css/appserver-dist-doc.css" rel="stylesheet"
           type="text/css" media="all"/>
 </head>
 
 <body>
-<h1>WSO2 Application Server(WSO2 AppServer) 4.5.0-SNAPSHOT
+<h1>WSO2 Application Server(WSO2 AppServer) 5.0-SNAPSHOT
     Release Notes</h1>
 
 <h3>@buildNumber@</h3>
@@ -32,7 +32,7 @@
     <a target="_blank" href="http://wso2.com/products/carbon/">
     WSO2 Carbon
     </a>
-    framework. Being the successor of the WSO2 Web Services Application Server(WSAS), WSO2 Application Server(AS) 4.5.0-SNAPSHOT
+    framework. Being the successor of the WSO2 Web Services Application Server(WSAS), WSO2 Application Server(AS) 5.0-SNAPSHOT
     now supports web application deployment and management in addition to its award winning web services management capabilities.
     Coupled with WSO2 Carbon Authentication/Authorization feature, now users can manage their applications that ranges
     from web services, business processes to web applications in a unified manner within the AppServer management console

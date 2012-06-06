@@ -25,6 +25,12 @@
         </tns:DataSource>
     </tns:DataBaseConfig>
 
+    <extensionBundles>
+        <runtimes>
+          <runtime>org.wso2.carbon.appfactory.config.reader.xpath.ext</runtime>
+	</runtimes>
+    </extensionBundles>
+
     <!-- Process dehydration configuration -->
     <!--<tns:ProcessDehydration maxCount="0" value="true">
         <tns:MaxAge value="0"/>

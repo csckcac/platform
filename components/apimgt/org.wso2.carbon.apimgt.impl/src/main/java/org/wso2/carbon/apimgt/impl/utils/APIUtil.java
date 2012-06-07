@@ -28,7 +28,6 @@ import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
-import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.util.AnonymousSessionUtil;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.endpoints.EndpointManager;
@@ -390,22 +389,19 @@ public final class APIUtil {
      * Crate an WSDL from given wsdl url.
      *
      * @param wsdlUrl  wsdl url
+     * @param provider of the API
      * @return Path of the created resource
      * @throws APIManagementException  if failed to create WSDL in registry.
      */
-    public  static String  createWSDL(String wsdlUrl) throws APIManagementException {
-        WsdlManager wsdlManager;
+    public  static String  createWSDL(String wsdlUrl, String provider) throws APIManagementException {
         String path = null;
         try {
-            String user = CarbonContext.getCurrentContext().getUsername();
-            //TODO should be remove, currently api provider is not a part of carbon therefore user is null.
-            user = "admin";
-            Registry registry1 = ServiceReferenceHolder.getInstance().getRegistryService().
-                    getGovernanceUserRegistry(user);
-            wsdlManager = new WsdlManager(registry1);
+            Registry registry = ServiceReferenceHolder.getInstance().getRegistryService().
+                    getGovernanceUserRegistry(provider);
+            WsdlManager wsdlManager = new WsdlManager(registry);
             Wsdl wsdl = wsdlManager.newWsdl(wsdlUrl);
             wsdlManager.addWsdl(wsdl);
-            path =  GovernanceUtils.getArtifactPath(registry1,wsdl.getId());
+            path =  GovernanceUtils.getArtifactPath(registry,wsdl.getId());
         } catch (GovernanceException e) {
             String msg = "Failed to add wsdl " + wsdlUrl + " to registry ";
             log.error(msg, e);
@@ -420,17 +416,15 @@ public final class APIUtil {
      * Create an Endpoint
      *
      * @param endpointUrl Endpoint url
+     * @param provider of the API
      * @return Path of the created resource
      * @throws org.wso2.carbon.apimgt.api.APIManagementException failed to add endpoint
      */
-    public static String createEndpoint(String endpointUrl) throws APIManagementException{
-        String user = CarbonContext.getCurrentContext().getUsername();
-        //TODO Remove
-        user = "admin";
+    public static String createEndpoint(String endpointUrl, String provider) throws APIManagementException{
         String path = null;
         try {
             Registry registry = ServiceReferenceHolder.getInstance().getRegistryService().
-                    getGovernanceUserRegistry(user);
+                    getGovernanceUserRegistry(provider);
             EndpointManager endpointManager = new EndpointManager(registry);
             Endpoint endpoint = endpointManager.newEndpoint(endpointUrl);
             endpointManager.addEndpoint(endpoint);

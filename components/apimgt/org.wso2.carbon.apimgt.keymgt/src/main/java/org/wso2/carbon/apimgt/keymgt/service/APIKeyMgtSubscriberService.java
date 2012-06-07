@@ -49,7 +49,7 @@ public class APIKeyMgtSubscriberService extends AbstractAdmin {
             APIManagementException, IdentityException {
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         String accessToken = apiMgtDAO.getAccessKeyForAPI(userId, applicationName, apiInfoDTO, tokenType);
-        if(accessToken == null){
+        if (accessToken == null){
             //get the tenant id for the corresponding domain
             String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(userId);
             int tenantId = IdentityUtil.getTenantIdOFUser(userId);
@@ -58,6 +58,32 @@ public class APIKeyMgtSubscriberService extends AbstractAdmin {
 
             accessToken = apiMgtDAO.registerAccessToken(credentials[0],applicationName,
                     tenantAwareUserId, tenantId, apiInfoDTO, tokenType);
+        }
+        return accessToken;
+    }
+
+    /**
+     * Get the access token for the specified application. This token can be used as an OAuth
+     * 2.0 bearer token to access any API in the given application.
+     *
+     * @param userId User/Developer name
+     * @param applicationName Name of the application
+     * @param tokenType Type (scope) of the required access token
+     * @return Access token
+     * @throws APIKeyMgtException on error
+     */
+    public String getApplicationAccessToken(String userId, String applicationName, String tokenType)
+            throws APIKeyMgtException, APIManagementException, IdentityException {
+
+        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
+        String accessToken = apiMgtDAO.getAccessKeyForApplication(userId, applicationName, tokenType);
+        if (accessToken == null){
+            //get the tenant id for the corresponding domain
+            String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(userId);
+            int tenantId = IdentityUtil.getTenantIdOFUser(userId);
+            String[] credentials = apiMgtDAO.addOAuthConsumer(tenantAwareUserId, tenantId);
+            accessToken = apiMgtDAO.registerApplicationAccessToken(credentials[0],applicationName,
+                    tenantAwareUserId, tenantId, tokenType);
         }
         return accessToken;
     }

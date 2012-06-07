@@ -66,6 +66,87 @@
                 <exclude>**/Axis2Module/**</exclude>
             </excludes>
         </fileSet>
+		
+
+		<!--  copying jaggery samples-->
+		<fileSet>
+            <directory>../samples/jaggerySamples</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
+        </fileSet>
+		
+		 <!--  copying mashup samples -->
+        <fileSet>
+            <directory>../samples/mashupSamples/RdfDocQueryService</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+        
+        <fileSet>
+            <directory>../samples/mashupSamples/SparqlEndPointService</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+        
+        <fileSet>
+            <directory>../samples/mashupSamples/digit2image</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../samples/mashupSamples/exchangeRate</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+
+        <!--fileSet>
+            <directory>../samples/mashupSamples/feedCache</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet-->
+
+        <fileSet>
+            <directory>../samples/mashupSamples/RESTSample</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../samples/mashupSamples/storexml</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../samples/mashupSamples/sudoku</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../samples/mashupSamples/tomatoTube</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../samples/mashupSamples/TwitterMap</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../samples/mashupSamples/upgradeChecker</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../samples/mashupSamples/yahooGeoCode</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../samples/mashupSamples/gmapsAPIKey</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../samples/mashupSamples/version</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <excludes>
+                <exclude>**/version.xml</exclude>
+            </excludes>
+        </fileSet>
 
         <!--  copying JAX-WS/JAX-RS samples and Axis2Module with pom.xml files-->
         <fileSet>
@@ -124,14 +205,14 @@
         </fileSet>
 
         <!-- copy executables in samples with execute permissions -->
-        <fileSet>
+        <!--fileSet>
             <directory>../samples/product</directory>
             <outputDirectory>${pom.artifactId}-${project.version}/samples</outputDirectory>
             <includes>
                 <include>**/**.sh</include>
             </includes>
             <fileMode>755</fileMode>
-        </fileSet>
+        </fileSet-->
 
         <!--copying qpid config files -->
         <fileSet>

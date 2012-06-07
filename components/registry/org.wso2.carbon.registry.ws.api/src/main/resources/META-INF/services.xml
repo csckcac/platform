@@ -21,7 +21,6 @@
 		<parameter name="ServiceClass" locked="false">
 			org.wso2.carbon.registry.ws.api.WSRegistry
         </parameter>
-		<parameter name="DoAuthentication" locked="true">false</parameter>
 		
 		
 		<excludeOperations>

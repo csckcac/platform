@@ -63,29 +63,6 @@ public class WSRegistry extends RegistryAbstractAdmin implements Registry {
 			throw new RegistryException("Not able to create temp files. Check permissions", e);
 		}
 	}
-
-	/**
-	 * Sets the tenant id to be used by future operation. This functionality is only available for
-     * super tenant.
-	 *
-	 * @param tenantId the tenant identifier.
-	 * @throws RegistryException is thrown depending on the implementation.
-	 */
-	public void setTenantId(int tenantId) throws RegistryException {
-        if (tenantId > 0) {
-            HttpSession httpSession = ((HttpServletRequest) MessageContext.getCurrentMessageContext().getProperty(
-                    HTTPConstants.MC_HTTP_SERVLETREQUEST)).getSession();
-            if (httpSession != null) {
-                if (SuperTenantCarbonContext.getCurrentContext(httpSession).getTenantId() ==
-                        MultitenantConstants.SUPER_TENANT_ID) {
-                    httpSession.setAttribute(REGISTRY_WS_API_TENANT, tenantId);
-                } else {
-                    log.error("Malicious attempt to modify the tenant identifier to that of " +
-                            "tenant " + tenantId + " was detected.");
-                }
-            }
-        }
-	}
     
     private Registry getRegistryForTenant() {
         Registry registry = getRootRegistry();

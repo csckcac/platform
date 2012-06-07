@@ -70,7 +70,7 @@ public class APIMgtDAOTest extends TestCase {
         assertTrue(apis.length > 1);
     }
 
-    public void testValidateKey() throws Exception{
+    public void testValidateKey() throws Exception {
         APIKeyValidationInfoDTO apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "V1.0.0", "a1b2c3d4");
         assertNotNull(apiKeyValidationInfoDTO);
         assertTrue(apiKeyValidationInfoDTO.isAuthorized());
@@ -85,6 +85,29 @@ public class APIMgtDAOTest extends TestCase {
         apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "V1.0.0", "w1x2y3z4");
         assertNotNull(apiKeyValidationInfoDTO);
         assertFalse(apiKeyValidationInfoDTO.isAuthorized());
+    }
+
+    public void testValidateApplicationKey() throws Exception {
+        APIKeyValidationInfoDTO apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/context1", "V1.0.0", "test1");
+        assertNotNull(apiKeyValidationInfoDTO);
+        assertTrue(apiKeyValidationInfoDTO.isAuthorized());
+        assertEquals("SUMEDHA", apiKeyValidationInfoDTO.getUsername());
+        assertEquals("PRODUCTION", apiKeyValidationInfoDTO.getType());
+        assertEquals("T1", apiKeyValidationInfoDTO.getTier());
+
+        apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/context1", "V1.0.0", "test2");
+        assertNotNull(apiKeyValidationInfoDTO);
+        assertTrue(apiKeyValidationInfoDTO.isAuthorized());
+        assertEquals("SUMEDHA", apiKeyValidationInfoDTO.getUsername());
+        assertEquals("SANDBOX", apiKeyValidationInfoDTO.getType());
+        assertEquals("T1", apiKeyValidationInfoDTO.getTier());
+
+        apiKeyValidationInfoDTO = apiMgtDAO.validateKey("/deli2", "V1.0.0", "test3");
+        assertNotNull(apiKeyValidationInfoDTO);
+        assertTrue(apiKeyValidationInfoDTO.isAuthorized());
+        assertEquals("SUMEDHA", apiKeyValidationInfoDTO.getUsername());
+        assertEquals("PRODUCTION", apiKeyValidationInfoDTO.getType());
+        assertEquals("T1", apiKeyValidationInfoDTO.getTier());
     }
 
     public void testGetSubscribedUsersForAPI() throws Exception{

@@ -390,6 +390,31 @@ public class ApiMgtDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
+        String applicationSqlQuery = "SELECT " +
+                "   IAT.VALIDITY_PERIOD, " +
+                "   IAT.TIME_CREATED ," +
+                "   IAT.TOKEN_STATE," +
+                "   SUB.TIER_ID," +
+                "   SUBS.USER_ID," +
+                "   APP.APPLICATION_ID," +
+                "   AKM.KEY_TYPE" +
+                " FROM " +
+                "   IDENTITY_OAUTH2_ACCESS_TOKEN IAT," +
+                "   AM_SUBSCRIPTION SUB," +
+                "   AM_SUBSCRIBER SUBS," +
+                "   AM_APPLICATION APP," +
+                "   AM_APPLICATION_KEY_MAPPING AKM," +
+                "   AM_API API" +
+                " WHERE " +
+                "   AKM.ACCESS_TOKEN = ? " +
+                "   AND API.CONTEXT = ? " +
+                "   AND API.API_VERSION = ? " +
+                "   AND IAT.ACCESS_TOKEN=AKM.ACCESS_TOKEN " +
+                "   AND APP.APPLICATION_ID = APP.APPLICATION_ID" +
+                "   AND SUB.APPLICATION_ID = APP.APPLICATION_ID" +
+                "   AND APP.SUBSCRIBER_ID = SUBS.SUBSCRIBER_ID" +
+                "   AND API.API_ID = SUB.API_ID";
+
         String sqlQuery = "SELECT " +
                 "   IAT.VALIDITY_PERIOD, " +
                 "   IAT.TIME_CREATED ," +
@@ -416,6 +441,29 @@ public class ApiMgtDAO {
                 "   AND API.API_ID = SUB.API_ID";
         try {
             conn = APIMgtDBUtil.getConnection();
+            ps = conn.prepareStatement(applicationSqlQuery);
+            ps.setString(1, accessToken);
+            ps.setString(2, context);
+            ps.setString(3, version);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                status = rs.getString(APIConstants.IDENTITY_OAUTH2_FIELD_TOKEN_STATE);
+                tier = rs.getString(APIConstants.SUBSCRIPTION_FIELD_TIER_ID);
+                type = rs.getString(APIConstants.SUBSCRIPTION_KEY_TYPE);
+                username = rs.getString(APIConstants.SUBSCRIBER_FIELD_USER_ID);
+                // Check whether the token is ACTIVE
+                if (APIConstants.TokenStatus.ACTIVE.equals(status)) {
+                    keyValidationInfoDTO.setAuthorized(true);
+                    keyValidationInfoDTO.setTier(tier);
+                    keyValidationInfoDTO.setType(type);
+                    keyValidationInfoDTO.setUsername(username);
+                    return keyValidationInfoDTO;
+                }
+            }
+
+            rs.close();
+            ps.close();
+
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, accessToken);
             ps.setString(2, context);
@@ -437,30 +485,14 @@ public class ApiMgtDAO {
                 return keyValidationInfoDTO;
             }
 
-
             // Check whether the token is ACTIVE
             if (APIConstants.TokenStatus.ACTIVE.equals(status)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Provided Access Token : " + accessToken + "is not ACTIVE.");
-                }
                 keyValidationInfoDTO.setAuthorized(true);
                 keyValidationInfoDTO.setTier(tier);
                 keyValidationInfoDTO.setType(type);
                 keyValidationInfoDTO.setUsername(username);
                 return keyValidationInfoDTO;
             }
-
-//            // Check whether the access token is expired.
-//            long validUntil = timestamp.getTime() + validityPeriod;
-//            if (new java.util.Date().after(new java.util.Date(validUntil))) {
-//                if (log.isDebugEnabled()) {
-//                    log.debug("Provided access token : " + accessToken + " is expired.");
-//                }
-//                keyValidationInfoDTO.setAuthorized(false);
-//                return keyValidationInfoDTO;
-//            }
-//            keyValidationInfoDTO.setAuthorized(true);
-//            keyValidationInfoDTO.setTier(tier);
 
         } catch (SQLException e) {
             log.error("Error when executing the SQL ");

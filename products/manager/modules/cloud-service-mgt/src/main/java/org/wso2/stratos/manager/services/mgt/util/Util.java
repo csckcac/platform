@@ -24,6 +24,7 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.stratos.common.config.CloudServiceConfig;
 import org.wso2.carbon.stratos.common.config.CloudServicesDescConfig;
 import org.wso2.carbon.stratos.common.config.PermissionConfig;
+import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.user.api.RealmConfiguration;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -97,7 +98,8 @@ public class Util {
     public static void loadCloudServicesConfiguration() throws Exception {
         // now load the cloud services configuration
         String configFileName =
-                CarbonUtils.getCarbonConfigDirPath() + File.separator + CONFIG_FILENAME;
+                CarbonUtils.getCarbonConfigDirPath() + File.separator + StratosConstants.MULTITENANCY_CONFIG_FOLDER +
+                        File.separator+ CONFIG_FILENAME;
         OMElement configElement;
         try {
             configElement = CommonUtil.buildOMElement(new FileInputStream(configFileName));

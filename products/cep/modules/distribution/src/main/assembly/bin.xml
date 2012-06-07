@@ -81,12 +81,23 @@
             </directory>
             <outputDirectory>wso2cep-${pom.version}/repository/conf</outputDirectory>
             <includes>
-                <include>**/multitenancy-packages.xml</include>
                 <include>**/identity.xml</include>
-                <include>**/stratos.xml</include>
             </includes>
         </fileSet>
 
+	 <!--Multitenancy related file -->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
+            <includes>
+                <include>**/stratos.xml</include>
+                <include>**/multitenancy-packages.xml</include>
+                <include>**/usage-throttling-agent-config.xml</include>
+                <include>**/cloud-services-desc.xml</include>
+            </includes>
+        </fileSet>
 
         <!-- copy the landing page webapp -->
         <fileSet>
@@ -164,12 +175,6 @@
             <source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml</source>
             <outputDirectory>wso2stratos-cep-${pom.version}/repository/conf</outputDirectory>
         </file>-->
-        <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml
-            </source>
-            <outputDirectory>wso2cep-${pom.version}/repository/conf</outputDirectory>
-        </file>
         <file>
             <source>src/main/conf/cep-config.xml</source>
             <outputDirectory>wso2cep-${pom.version}/repository/conf</outputDirectory>

@@ -70,11 +70,23 @@
             </directory>
             <outputDirectory>wso2brs-${pom.version}/repository/conf</outputDirectory>
             <includes>
-                <include>**/multitenancy-packages.xml</include>
                 <include>**/identity.xml</include>
-                <include>**/stratos.xml</include>
             </includes>
         </fileSet>
+	
+	<fileSet>
+            <directory>
+                ../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy/
+            </directory>
+            <outputDirectory>wso2brs-${pom.version}/repository/conf/multitenancy</outputDirectory>
+            <includes>
+                <include>**/multitenancy-packages.xml</include>
+                <include>**/stratos.xml</include>
+		<include>**/usage-throttling-agent-config.xml</include>
+                <include>**/cloud-services-desc.xml</include>
+            </includes>
+        </fileSet>
+
 
 	<!--copying multitenancy-packages.xml file-->
         <fileSet>
@@ -171,11 +183,6 @@
 		<source>../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml</source>
 		<outputDirectory>wso2stratos-brs-${pom.version}/repository/conf</outputDirectory>
 	</file> -->
-	<file>
-		<source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml</source>
-		<outputDirectory>wso2brs-${pom.version}/repository/conf</outputDirectory>
-	</file>
-
 	
         <file>
             <source>target/wso2carbon-core-${carbon.version}/repository/conf/axis2/axis2.xml</source>

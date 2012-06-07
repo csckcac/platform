@@ -96,11 +96,21 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <includes>
                 <include>**/identity.xml</include>
-                <!--include>**/eula.xml</include-->
-                        <include>**/stratos.xml</include>
-                <include>**/multitenancy-packages.xml</include>
             </includes>
         </fileSet>
+	<!-- Multitenancy related files -->
+	<fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
+            <includes>
+		<include>**/stratos.xml</include>
+                <include>**/multitenancy-packages.xml</include>
+		<include>**/cloud-services-desc.xml</include>
+            </includes>
+        </fileSet>
+
 	<!--<fileSet>
             <directory>carbon-home/resources/theme</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/resources/theme</outputDirectory>

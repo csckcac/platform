@@ -89,6 +89,7 @@
                 <exclude>email-registration-moderation.xml</exclude>
                 <exclude>email-registration.xml</exclude>
                 <exclude>email-update.xml</exclude>
+		<exclude>tenant-reg-agent.xml</exclude>
             </excludes>
         </fileSet>
         <fileSet>
@@ -108,6 +109,14 @@
                 <include>email-update.xml</include>
             </includes>
         </fileSet>
+	<fileSet>
+            <directory>../../../conf</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
+            <includes>
+                <include>tenant-reg-agent.xml</include>
+            </includes>
+        </fileSet>
+
         <fileSet>
             <directory>carbon-home/scripts</directory>
             <outputDirectory>wso2gaas-${pom.version}/billing-dbscripts</outputDirectory>
@@ -192,14 +201,23 @@
            <directory>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/</directory>
            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
 	   <includes>
-       	<include>**/identity.xml</include>
-		<include>**/multitenancy-packages.xml</include>
-		<include>**/stratos.xml</include>
-		<include>**/eula.xml</include>
-		<include>**/usage-throttling-agent-config.xml</include>
+       		<include>**/identity.xml</include>
 		<include>**/rule-engine-config.xml</include>
            </includes>
         </fileSet>
+
+	<fileSet>
+           <directory>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy/</directory>
+           <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy/</outputDirectory>
+           <includes>
+                <include>**/multitenancy-packages.xml</include>
+                <include>**/stratos.xml</include>
+                <include>**/eula.xml</include>
+                <include>**/usage-throttling-agent-config.xml</include>
+		<include>**/cloud-services-desc.xml</include>
+           </includes>
+        </fileSet>
+
 		<!-- copy the landing page webapp -->
         <fileSet>
 			<directory>lib/home</directory>

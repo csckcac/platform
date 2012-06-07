@@ -119,6 +119,20 @@
                <include>**/**.sql</include>
            </includes>
        </fileSet>
+	 <!--Multitenancy related file -->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
+            <includes>
+                <include>**/stratos.xml</include>
+                <include>**/multitenancy-packages.xml</include>
+                <include>**/usage-throttling-agent-config.xml</include>
+                <include>**/cloud-services-desc.xml</include>
+            </includes>
+        </fileSet>
+
        <fileSet>
            <directory>../styles/service/src/main/resources/web/styles/css</directory>
            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/admin</outputDirectory>
@@ -158,15 +172,6 @@
             <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/etc/syslog-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
         </file>
-        <file>
-	        <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml</source>
-	        <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
-    	</file>
-        <file>
-	        <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml</source>
-	        <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
-    	</file>
-
         <file>
             <source>src/main/conf/axis2.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/axis2</outputDirectory>
@@ -271,13 +276,6 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>	
-        <file>
-            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/stratos.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-
     </files>
 </assembly>
 

@@ -393,50 +393,6 @@ public class ServiceTestCaseClient {
         assertTrue(status, "Invalid service added with special character - " + invalidCharacters);
     }
 
-    @Test(groups = {"wso2.greg"}, description = "add 10000 resources to registry",  priority = 19)
-    public void testAddLargeNumberOfServices() throws Exception {
-        ServiceManager serviceManager = new ServiceManager(governance);
-        Service newService;
-        final String serviceName = "WSO2AutomatedService";
-        int numberOfServices = 10 * 1000; //10000 services
-        for (int i = 1; i <= numberOfServices; i++) {
-            Service service = serviceManager.newService(new QName("http://wso2.test" +
-                                                                  ".automation/boom/test" + i,
-                                                                  serviceName + i));
-            service.addAttribute("testAttribute", "service" + i);
-            serviceManager.addService(service);
-            String serviceId = service.getId();
-            newService = serviceManager.getService(serviceId);
-            assertTrue(newService.getQName().toString().contains(serviceName + i));
-            assertEquals(newService.getAttribute("testAttribute"), "service" + i);
-
-        }
-        assertTrue(serviceManager.getAllServices().length >= numberOfServices,
-                   "Less than " + numberOfServices + " services exists");
-
-        assertTrue(serviceManager.getAllServiceIds().length >= numberOfServices,
-                   "Less than " + numberOfServices + "  ids exists");
-
-        String[] servicePaths = serviceManager.getAllServicePaths();
-
-        assertTrue(serviceManager.getAllServicePaths().length >= numberOfServices,
-                   "Less than " + numberOfServices + "  paths exists");
-
-        //delete services
-        for (String servicePath : servicePaths) {
-            if (servicePath.contains(serviceName)) {
-                governance.delete(servicePath);
-                numberOfServices--;
-                ServiceFilter filter = new ServiceFilter() {
-                    public boolean matches(Service service) throws GovernanceException {
-                        return service.getQName().toString().contains(serviceName);
-                    }
-                };
-                assertTrue(serviceManager.findServices(filter).length == numberOfServices);
-            }
-        }
-    }
-
     @Test(groups = {"wso2.greg"}, description = "Service activate and deactivate", priority = 10)
     public void testServiceStatus() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
@@ -456,77 +412,6 @@ public class ServiceTestCaseClient {
         assertTrue(newService.getQName().toString().contains("WSO2AutomationActiveService"));
         assertEquals(newService.getAttribute("testAttribute"), "serviceAttr");
 
-        serviceManager.removeService(service.getId());
-        assertNull(serviceManager.getService(service.getId()));
-    }
-
-    @Test(groups = {"wso2.greg"}, description = "Attache 100 endpoints to a service",  priority = 20)
-    public void testAttachLargeNumberOfEndpoints() throws RegistryException {
-        String service_namespace = "http://wso2.org/atomation/test";
-        String service_name = "ServiceForLargeNumberOfEndpoints";
-        int numberOfEndPoints = 100;
-
-        ServiceManager serviceManager = new ServiceManager(governance);
-        Service service;
-        service = serviceManager.newService(new QName(service_namespace, service_name));
-        serviceManager.addService(service);
-        EndpointManager endpointManager = new EndpointManager(governance);
-
-        for (int i = 1; i <= numberOfEndPoints; i++) {
-            Endpoint ep1 = endpointManager.newEndpoint("http://wso2.automation" +
-                                                       ".endpoint" + i);
-            endpointManager.addEndpoint(ep1);
-            service.attachEndpoint(ep1);
-        }
-
-        Endpoint[] endpoints = service.getAttachedEndpoints();
-        assertEquals(numberOfEndPoints, endpoints.length);
-
-        //Detach Endpoint one
-        for (Endpoint endpoint : endpoints) {
-            service.detachEndpoint(endpoint.getId());
-            numberOfEndPoints--;
-            Assert.assertTrue(numberOfEndPoints == service.getAttachedEndpoints().length);
-        }
-
-        //remove the service
-        serviceManager.removeService(service.getId());
-        assertNull(serviceManager.getService(service.getId()));
-    }
-
-    @Test(groups = {"wso2.greg"}, description = "Attache 100 policies to a service",  priority = 18)
-    public void testAttachLargeNumberOfPolicies() throws RegistryException {
-        String service_namespace = "http://wso2.org/atomation/test";
-        String service_name = "ServiceForLargeNumberOfPolicies1";
-        int numberOfPolicies = 1000;
-
-        ServiceManager serviceManager = new ServiceManager(governance);
-        Service service;
-        service = serviceManager.newService(new QName(service_namespace, service_name));
-        serviceManager.addService(service);
-        PolicyManager policyManager = new PolicyManager(governance);
-
-        for (int i = 1; i <= numberOfPolicies; i++) {
-            Policy policy = policyManager.newPolicy("https://svn.wso2.org/repos/wso2/carbon/platform" +
-                                                    "/trunk/platform-integration/system-test-framework" +
-                                                    "/core/org.wso2.automation.platform.core/src/main" +
-                                                    "/resources/artifacts/GREG/policy/UTPolicy.xml");
-            policy.setName("testPolicy" + i);
-            policyManager.addPolicy(policy);
-            service.attachPolicy(policy);
-        }
-
-        Policy[] policies = service.getAttachedPolicies();
-        assertEquals(numberOfPolicies, policies.length);
-
-        //Detach Endpoint one
-        for (Policy policy : policies) {
-            service.detachPolicy(policy.getId());
-            numberOfPolicies--;
-            Assert.assertTrue(numberOfPolicies == service.getAttachedPolicies().length);
-        }
-
-        //remove the service
         serviceManager.removeService(service.getId());
         assertNull(serviceManager.getService(service.getId()));
     }
@@ -810,36 +695,4 @@ public class ServiceTestCaseClient {
         assertNull(serviceManager.getService(service.getId()));
     }
 
-    @Test(groups = {"wso2.greg"}, threadPoolSize = 10, invocationCount = 10,
-          description = "Update the service concurrently", priority = 17)
-    public void testServiceConcurrentUpdate() throws Exception {
-        ServiceManager serviceManager = new ServiceManager(governance);
-        long id = Thread.currentThread().getId();
-        Service service = serviceManager.newService(new QName("http://bang.boom.com/mnm/beep",
-                                                              "WSO2AutomationActiveServiceUpdate" + id));
-
-        service.addAttribute("overview_description", "serviceAttr");
-        serviceManager.addService(service);
-        service.setAttribute("overview_description", "serviceAttrUpdated");
-        serviceManager.addService(service);
-    }
-
-    @Test(groups = {"wso2.greg"}, description = "Update the service concurrently")
-    public void testDeleteUpdatedServices() throws Exception {
-        ServiceManager serviceManager = new ServiceManager(governance);
-        ServiceFilter filter = new ServiceFilter() {
-            public boolean matches(Service service) throws GovernanceException {
-                if (service.getQName().toString().contains("WSO2AutomationActiveServiceUpdate")) {
-                    return true;
-                }
-                return false;
-            }
-        };
-
-        Service[] services = serviceManager.findServices(filter);
-        for (Service service : services) {
-            serviceManager.removeService(service.getId());
-            assertNull(serviceManager.getService(service.getId()));
-        }
-    }
 }

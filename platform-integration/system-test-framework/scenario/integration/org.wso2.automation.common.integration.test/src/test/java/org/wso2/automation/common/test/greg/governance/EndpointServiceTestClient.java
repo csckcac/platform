@@ -216,23 +216,6 @@ public class EndpointServiceTestClient {
         assertNull(endpointManager.getEndpoint(ep1.getId()), "Endpoint not removed");
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Add 1000 endpoints")
-    public void testAddLargeNumberOfEndpoints() throws RegistryException {
-        int numberOfEndpoints = 1000;
-        EndpointManager endpointManager = new EndpointManager(governance);
-
-        for (int i = 1; i < numberOfEndpoints; i++) {
-            Endpoint ep1 = endpointManager.newEndpoint("http://wso2.automation.endpoint" + i);
-            endpointManager.addEndpoint(ep1);
-            assertTrue(endpointManager.getEndpoint(ep1.getId()).getQName().toString().contains
-                                      ("http://wso2.automation.endpoint" + i), "Endpoint not found");
-        }
-
-        for (int i = 1; i < numberOfEndpoints; i++) {
-            governance.delete("trunk/endpoints" + "/ep-wso2-automation-endpoint"
-                              + i);
-        }
-    }
 
     @Test(groups = {"wso2.greg"}, description = "Get endpoint by URL")
     public void testGetEndpointByURL() throws GovernanceException {

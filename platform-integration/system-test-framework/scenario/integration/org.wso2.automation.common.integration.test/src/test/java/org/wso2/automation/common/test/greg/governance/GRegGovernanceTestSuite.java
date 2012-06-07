@@ -30,24 +30,33 @@ public class GRegGovernanceTestSuite extends MasterTestSuite {
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
 
-        suiteVariablesList.add(new SuiteVariables("EndpointTest", EndpointServiceTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("GarFileImportTest", GarFileImportServiceTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("LifeCycleTest", LifeCycleServiceTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("PolicyImportTest", PolicyImportServiceTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("SchemaImportServiceClient", SchemaImportServiceTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("ServiceImportTest", ServiceImportServiceTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("WSDLImportTest", WSDLImportServiceTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("WSDLContentUpdateTest", WsdlUpadateContentServiceTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("WSDLWithSpecialCharTest", WSDLWithSpecialCharTest.class));
-        suiteVariablesList.add(new SuiteVariables("EndpointTestCaseClient", EndpointTestCaseClient.class));
-        suiteVariablesList.add(new SuiteVariables("PolicyTestCaseClient", PolicyTestCaseClient.class));
-        suiteVariablesList.add(new SuiteVariables("ServiceTestCaseClient", ServiceTestCaseClient.class));
-        suiteVariablesList.add(new SuiteVariables("WSDLTestCaseClient", WSDLTestCaseClient.class));
-        suiteVariablesList.add(new SuiteVariables("ServiceManagerAPITests", ServiceManagerAPITests.class));
         suiteVariablesList.add(new SuiteVariables("EndpointManagerAPITest", EndpointManagerAPITest.class));
-        suiteVariablesList.add(new SuiteVariables("WSDLManagerAPITest", WSDLManagerAPITest.class));
-        suiteVariablesList.add(new SuiteVariables("SchemaManagerAPITest", SchemaManagerAPITest.class));
+        suiteVariablesList.add(new SuiteVariables("EndpointServiceTestClient", EndpointServiceTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("EndpointTestCaseClient", EndpointTestCaseClient.class));
+        suiteVariablesList.add(new SuiteVariables("GarFileImportServiceTestClient", GarFileImportServiceTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("GenericGovernanceArtifactTestClient", GenericGovernanceArtifactTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("GovApiGetChildren", GovApiGetChildren.class));
+        suiteVariablesList.add(new SuiteVariables("GovernanceApiServiceCreation", GovernanceApiServiceCreation.class));
+        suiteVariablesList.add(new SuiteVariables("GovernanceApiServiceListing", GovernanceApiServiceListing.class));
+        suiteVariablesList.add(new SuiteVariables("GovernanceApiWsdl", GovernanceApiWsdl.class));
+        suiteVariablesList.add(new SuiteVariables("LifeCycleServiceTestClient", LifeCycleServiceTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("MetaDataVolumeTestClient", MetaDataVolumeTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("PolicyImportServiceTestClient", PolicyImportServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("PolicyManagerAPITest", PolicyManagerAPITest.class));
+        suiteVariablesList.add(new SuiteVariables("PolicyTestCaseClient", PolicyTestCaseClient.class));
+        suiteVariablesList.add(new SuiteVariables("SchemaImportServiceTestClient", SchemaImportServiceTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("SchemaManagerAPITest", SchemaManagerAPITest.class));
+        suiteVariablesList.add(new SuiteVariables("SchemaTestCaseClient", SchemaTestCaseClient.class));
+        suiteVariablesList.add(new SuiteVariables("ServiceImportServiceTestClient", ServiceImportServiceTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("ServiceManagerAPITests", ServiceManagerAPITests.class));
+        suiteVariablesList.add(new SuiteVariables("ServiceTestCaseClient", ServiceTestCaseClient.class));
+        suiteVariablesList.add(new SuiteVariables("WSDLImportServiceTestClient", WSDLImportServiceTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("WSDLManagerAPITest", WSDLManagerAPITest.class));
+        suiteVariablesList.add(new SuiteVariables("WSDLTestCaseClient", WSDLTestCaseClient.class));
+        suiteVariablesList.add(new SuiteVariables("WSDLUpdateContentServiceTestClient", WSDLUpdateContentServiceTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("WSDLWithSpecialCharTest", WSDLWithSpecialCharTest.class));
+
+
         setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("GovernanceTestSuite", suiteVariablesList).run();
     }

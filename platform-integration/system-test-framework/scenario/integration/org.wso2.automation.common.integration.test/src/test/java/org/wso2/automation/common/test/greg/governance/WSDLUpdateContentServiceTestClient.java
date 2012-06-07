@@ -40,8 +40,8 @@ import javax.xml.namespace.QName;
 import java.util.List;
 
 
-public class WsdlUpadateContentServiceTestClient {
-    private static final Log log = LogFactory.getLog(WsdlUpadateContentServiceTestClient.class);
+public class WSDLUpdateContentServiceTestClient {
+    private static final Log log = LogFactory.getLog(WSDLUpdateContentServiceTestClient.class);
     private static WSRegistryServiceClient registry = null;
     private static Registry governance = null;
     String wsdl_path = "/_system/governance/trunk/wsdls/com/foo/BizService.wsdl";

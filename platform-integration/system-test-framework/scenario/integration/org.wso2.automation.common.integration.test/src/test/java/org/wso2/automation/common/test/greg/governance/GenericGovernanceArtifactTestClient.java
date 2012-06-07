@@ -252,46 +252,6 @@ public class GenericGovernanceArtifactTestClient {
         assertTrue(status, "Add Artifact - Invalid content added ");
     }
 
-    @Test(groups = {"wso2.greg"}, description = "add new rxt file", priority = 5)
-    public void testAddLargeNumberOfGenericArtifacts() throws Exception {
-        int numberOfArtifacts = 100;
-        GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");
-
-        GenericArtifact artifact;
-        for (int i = 1; i <= numberOfArtifacts; i++) {
-            String governanceArtifactContent = "<metadata xmlns=\"http://www.wso2" +
-                                               ".org/governance/metadata\"><details><author>testAuthor" +
-                                               "</author><venue>Colombo</venue><date>12/12/2012</date>" +
-                                               "<name>testEvent" + i + "</name>" + "</details><overview>" +
-                                               "<namespace></namespace></overview><serviceLifecycle>" +
-                                               "<lifecycleName>ServiceLifeCycle</lifecycleName>" +
-                                               "</serviceLifecycle><rules>" + "<gender>male</gender>" +
-                                               "<description>Coding event</description></rules></metadata>";
-
-            artifact = artifactManager.newGovernanceArtifact(AXIOMUtil.stringToOM(governanceArtifactContent));
-            artifactManager.addGenericArtifact(artifact);
-            Thread.sleep(200);
-            assertTrue(artifact.getQName().toString().contains("testEvent" + i),
-                       "artifact name not found");
-            assertTrue(artifact.getAttribute("details_name").contains("testEvent" + i),
-                       "Artifact detail name not found");
-            assertTrue(artifact.getAttribute("details_author").contains("testAuthor"),
-                       "Artifact Author not found");
-        }
-
-        //delete all artifacts
-        int counter = 0;
-        GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
-        for (GenericArtifact genericArtifact : genericArtifacts) {
-            if (genericArtifact.getQName().toString().contains("testEvent")) {
-                counter++;
-                artifactManager.removeGenericArtifact(genericArtifact.getId());
-                assertNull(artifactManager.getGenericArtifact(genericArtifact.getId()));
-            }
-        }
-        assertTrue(counter == numberOfArtifacts, "All artifacts were not added.");
-    }
-
     @Test(groups = {"wso2.greg"}, description = "Test artifact dependencies and associations", priority = 6)
     public void testArtifactDependencies() throws Exception {
         GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");

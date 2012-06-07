@@ -105,36 +105,6 @@ public class PolicyTestCaseClient {
         Assert.assertNull(deletedPolicy);
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Add 1000 policies")
-    public void testAddLargeNumberOfPolicies() throws GovernanceException {
-        int policyCount = 20;
-        PolicyManager policyManager = new PolicyManager(governance);
-
-        Policy policy;
-        int policyCountBeforeTest = policyManager.getAllPolicies().length;
-
-        for (int i = 1; i <= policyCount; i++) {
-            policy = policyManager.newPolicy("http://svn.wso2.org/repos/wso2/carbon/platform/" +
-                                             "trunk/platform-integration/system-test-framework" +
-                                             "/core/org.wso2.automation.platform.core/src/main/" +
-                                             "resources/artifacts/GREG/policy/UTPolicy.xml");
-            policy.setName("WSO2AutomationUTPolicy" + i + ".xml");
-            policyManager.addPolicy(policy);
-        }
-        Policy[] policies = policyManager.getAllPolicies();
-        int policyCountAfterTest = policies.length;
-        assertTrue(((policyCountAfterTest - policyCountBeforeTest) == policyCount),
-                   "All " + policyCount + "policies were not added");
-
-        //delete policies
-        for (Policy policyEntry : policies) {
-            if (policyEntry.getQName().toString().contains("WSO2AutomationUTPolicy")) {
-                policyManager.removePolicy(policyEntry.getId());
-                assertNull(policyManager.getPolicy(policyEntry.getId()));
-            }
-        }
-    }
-
     @Test(groups = {"wso2.greg"}, description = "Adding duplicate policy")
     public void testAddDuplicatePolicy() throws GovernanceException {
         PolicyManager policyManager = new PolicyManager(governance);

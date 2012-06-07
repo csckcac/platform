@@ -39,6 +39,9 @@
             <name>WSDL</name>
         </field>
         <field type="text">
+            <name>WADL</name>
+        </field> 
+        <field type="text">
             <name>Tags</name>
         </field>
         <field type="text">

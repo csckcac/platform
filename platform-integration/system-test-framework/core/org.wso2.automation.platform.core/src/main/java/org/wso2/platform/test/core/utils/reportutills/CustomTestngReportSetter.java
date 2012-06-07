@@ -45,4 +45,22 @@ public class CustomTestngReportSetter {
         CustomTestNGrReporter customTestNGrReporter = new CustomTestNGrReporter(context, e);
         customTestNGrReporter.generateReport(xmlSuites, iSuites, out);
     }
+
+
+
+    public void createReport(ISuite testSuite,Exception e)
+    {
+        List<XmlSuite> xmlSuites = new ArrayList<XmlSuite>();
+        List<ISuite> iSuites = new ArrayList<ISuite>();
+        XmlSuite suite =testSuite.getXmlSuite();
+        XmlTest test = new XmlTest(suite);
+        List<XmlTest> xmlTests = new ArrayList<XmlTest>();
+        xmlTests.add(test);
+        suite.setTests(xmlTests);
+        xmlSuites.add(suite);
+        iSuites.add(testSuite);
+        String out = ProductConstant.REPORT_LOCATION + File.separator + "reports" + File.separator + suite.getName();
+        CustomTestNGrReporter customTestNGrReporter = new CustomTestNGrReporter(testSuite, e);
+        customTestNGrReporter.generateReport(xmlSuites, iSuites, out);
+    }
 }

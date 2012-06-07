@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.mediator.bam.ui;
+package org.wso2.carbon.mediator.bam.config.ui;
 
 import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
 

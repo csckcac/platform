@@ -53,12 +53,12 @@ public class MetaDataConcurrentTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, threadPoolSize = 40, invocationCount = 100,
-          description = "Update the service concurrently", priority = 1)
+            description = "Update the service concurrently", priority = 1)
     public void testServiceConcurrentUpdate() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
         long id = Thread.currentThread().getId();
         Service service = serviceManager.newService(new QName("http://bang.boom.com/mnm/beep",
-                                                              "WSO2AutomationActiveServiceUpdate" + id));
+                "WSO2AutomationActiveServiceUpdate" + id));
 
         service.addAttribute("overview_description", "serviceAttr");
         serviceManager.addService(service);
@@ -82,8 +82,25 @@ public class MetaDataConcurrentTestClient {
         }
     }
 
+    @Test(groups = {"wso2.greg"}, description = "Add Wsdl to concurrent test", priority = 3)
+    public void testAddWsdl() throws GovernanceException {
+        WsdlManager wsdlManager = new WsdlManager(governance);
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().equalsIgnoreCase("WithInlinePolicyAndSchema.wsdl")) {
+                wsdlManager.removeWsdl(w.getId());
+            }
+        }
+        Wsdl wsdl = wsdlManager.newWsdl("https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
+                "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/" +
+                "GREG/wsdl/WithInlinePolicyAndSchema.wsdl");
+        wsdlManager.addWsdl(wsdl);
+
+    }
+
     @Test(threadPoolSize = 40, invocationCount = 100, groups = {"wso2.greg"}, description =
-            "Concurrent wsdl update", priority = 3)
+            "Concurrent wsdl update", priority = 4)
     public void testWsdlConcurrentUpdate() throws GovernanceException {
         WsdlManager wsdlManager = new WsdlManager(governance);
         Wsdl[] wsdlList = wsdlManager.getAllWsdls();
@@ -91,13 +108,24 @@ public class MetaDataConcurrentTestClient {
             for (Wsdl w : wsdlList) {
                 if (w.getQName().getLocalPart().contains("WithInlinePolicyAndSchema.wsdl")) {
                     w.addAttribute("version", "0.02");
-                    wsdlManager.addWsdl(w);
                     wsdlManager.updateWsdl(w);
                 }
             }
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception thrown while updating wsdl concurrently"
-                                          + e);
+                    + e);
+        }
+    }
+
+    @Test(groups = {"wso2.greg"}, description = "Add Wsdl to concurrent test", priority = 5)
+    public void testRemoveWsdl() throws GovernanceException {
+        WsdlManager wsdlManager = new WsdlManager(governance);
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().equalsIgnoreCase("WithInlinePolicyAndSchema.wsdl")) {
+                wsdlManager.removeWsdl(w.getId());
+            }
         }
     }
 }

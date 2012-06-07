@@ -134,6 +134,56 @@ public class ApiMgtDAO {
         return accessKey;
     }
 
+    public String getAccessKeyForApplication(String userId, String applicationName,
+                                     String keyType) throws APIManagementException, IdentityException {
+
+        String accessKey = null;
+
+        //get the tenant id for the corresponding domain
+        String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(userId);
+        int tenantId = IdentityUtil.getTenantIdOFUser(userId);
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sqlQuery =
+                "SELECT " +
+                        "   AKM.ACCESS_TOKEN AS ACCESS_TOKEN " +
+                        "FROM " +
+                        "   AM_SUBSCRIBER SB," +
+                        "   AM_APPLICATION APP, " +
+                        "   AM_APPLICATION_KEY_MAPPING AKM " +
+                        "WHERE " +
+                        "   SB.USER_ID=? " +
+                        "   AND SB.TENANT_ID=? " +
+                        "   AND APP.NAME=? " +
+                        "   AND AKM.KEY_TYPE=? " +
+                        "   AND SB.SUBSCRIBER_ID = APP.SUBSCRIBER_ID " +
+                        "   AND APP.APPLICATION_ID = AKM.APPLICATION_ID";
+
+        try {
+            conn = APIMgtDBUtil.getConnection();
+            ps = conn.prepareStatement(sqlQuery);
+            ps.setString(1, tenantAwareUserId);
+            ps.setInt(2, tenantId);
+            ps.setString(3, applicationName);
+            ps.setString(4, keyType);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                accessKey = rs.getString(APIConstants.SUBSCRIPTION_FIELD_ACCESS_TOKEN);
+            }
+        } catch (SQLException e) {
+            log.error("Error when executing the SQL query to read the access key for user : "
+                    + userId + "of tenant(id) : " + tenantId, e);
+            throw new APIManagementException("Error when executing the SQL query to read the" +
+                    " access key ", e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(ps, conn, rs);
+        }
+        return accessKey;
+    }
+
     /**
      * Get Subscribed APIs for given userId
      *
@@ -1067,6 +1117,77 @@ public class ApiMgtDAO {
                 }
             }
           //  throw new IdentityException("Error when storing the access code for consumer key : " + consumerKey);
+        } finally {
+            IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
+        }
+        return accessToken;
+    }
+
+    public String registerApplicationAccessToken(String consumerKey, String applicationName, String userId,
+                                      int tenantId, String keyType) throws IdentityException {
+        // Add Access Token
+        String sqlAddAccessToken = "INSERT" +
+                " INTO IDENTITY_OAUTH2_ACCESS_TOKEN (ACCESS_TOKEN, CONSUMER_KEY, TOKEN_STATE, TOKEN_SCOPE) " +
+                " VALUES (?,?,?,?)";
+
+        String getApplicationId = "SELECT APP.APPLICATION_ID " +
+                "FROM " +
+                "  AM_APPLICATION APP, " +
+                "  AM_SUBSCRIBER SUB " +
+                "WHERE " +
+                "  SUB.USER_ID = ?" +
+                "  AND SUB.TENANT_ID = ?" +
+                "  AND APP.NAME = ?" +
+                "  AND APP.SUBSCRIBER_ID = SUB.SUBSCRIBER_ID";
+
+        String addApplicationKeyMapping = "INSERT " +
+                "INTO AM_APPLICATION_KEY_MAPPING (APPLICATION_ID, ACCESS_TOKEN, KEY_TYPE) " +
+                "VALUES (?,?,?)";
+
+        String accessToken = OAuthUtil.getRandomNumber();
+
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            //Add access token
+            prepStmt = connection.prepareStatement(sqlAddAccessToken);
+            prepStmt.setString(1, accessToken);
+            prepStmt.setString(2, consumerKey);
+            prepStmt.setString(3, APIConstants.TokenStatus.ACTIVE);
+            prepStmt.setString(4, keyType);
+            prepStmt.execute();
+            prepStmt.close();
+
+            int applicationId = -1;
+            prepStmt = connection.prepareStatement(getApplicationId);
+            prepStmt.setString(1, userId);
+            prepStmt.setInt(2, tenantId);
+            prepStmt.setString(3, applicationName);
+            ResultSet getApplicationIdResult = prepStmt.executeQuery();
+            while (getApplicationIdResult.next()) {
+                applicationId = getApplicationIdResult.getInt(1);
+            }
+            prepStmt.close();
+
+            prepStmt = connection.prepareStatement(addApplicationKeyMapping);
+            prepStmt.setInt(1, applicationId);
+            prepStmt.setString(2, accessToken);
+            prepStmt.setString(3, keyType);
+            prepStmt.execute();
+            prepStmt.close();
+
+            connection.commit();
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException e1) {
+                    log.error("Failed to rollback the add access token ", e);
+                }
+            }
+            //  throw new IdentityException("Error when storing the access code for consumer key : " + consumerKey);
         } finally {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }

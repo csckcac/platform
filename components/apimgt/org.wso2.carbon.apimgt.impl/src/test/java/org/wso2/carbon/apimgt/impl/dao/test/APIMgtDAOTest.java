@@ -146,6 +146,18 @@ public class APIMgtDAOTest extends TestCase {
         assertTrue(!key1.equals(key2));
     }
 
+    public void testRegisterApplicationAccessToken()throws  Exception{
+        apiMgtDAO.registerApplicationAccessToken("CON1","APPLICATION3","PRABATH",0,"SANDBOX");
+        String key1 = apiMgtDAO.getAccessKeyForApplication("PRABATH", "APPLICATION3", "SANDBOX");
+        assertNotNull(key1);
+
+        apiMgtDAO.registerApplicationAccessToken("CON1","APPLICATION4","PRABATH",0,"PRODUCTION");
+        String key2 = apiMgtDAO.getAccessKeyForApplication("PRABATH", "APPLICATION4", "PRODUCTION");
+        assertNotNull(key2);
+
+        assertTrue(!key1.equals(key2));
+    }
+
     public void testGetSubscribedAPIs() throws Exception{
         Subscriber subscriber = new Subscriber("SUMEDHA");
         subscriber.setDescription("Subscriber description");

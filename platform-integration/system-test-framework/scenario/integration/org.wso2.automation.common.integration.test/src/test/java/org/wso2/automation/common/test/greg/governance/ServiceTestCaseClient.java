@@ -660,9 +660,10 @@ public class ServiceTestCaseClient {
         Service service = serviceManager.newService(new QName("http://wso2.org/automation/test",
                                                               "WSDLImportWSDLTest"));
         service.addAttribute("interface_wsdlURL",
-                             "http://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
-                             "system-test-framework/core/org.wso2.automation.platform.core/src/main/" +
-                             "resources/artifacts/GREG/wsdl/clinicalNotesService.wsdl");
+                             "https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
+                                     "system-test-framework/core/org.wso2.automation.platform.core/src/" +
+                                     "main/resources/artifacts/GREG/wsdl/" +
+                                     "Axis2Service_Wsdl_With_Wsdl_Imports.wsdl");
 
         serviceManager.addService(service);
 

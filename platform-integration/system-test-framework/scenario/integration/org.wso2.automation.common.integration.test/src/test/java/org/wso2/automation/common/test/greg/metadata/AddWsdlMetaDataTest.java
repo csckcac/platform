@@ -393,10 +393,10 @@ public class AddWsdlMetaDataTest {
 
         Wsdl[] wsdlList = wsdlManager.getAllWsdls();
         for (Wsdl w : wsdlList) {
-            if (w.getQName().getLocalPart().contains("clinicalNotesService.wsdl")) {
+            if (w.getQName().getLocalPart().contains("Axis2Service_Wsdl_With_Wsdl_Imports.wsdl")) {
                 wsdlManager.removeWsdl(w.getId());
             }
-            if (w.getQName().getLocalPart().contains("IClinicalNotes.wsdl")) {
+            if (w.getQName().getLocalPart().contains("Axis2ImportedWsdl.wsdl")) {
                 wsdlManager.removeWsdl(w.getId());
             }
         }

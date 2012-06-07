@@ -26,6 +26,7 @@ import org.wso2.carbon.dashboard.mgt.users.TenantAdminDataPopulator;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 
 /**
@@ -64,14 +65,14 @@ public class GadgetServerUserManagementServiceComponent {
     protected void activate(ComponentContext context) {
         try {
 
-            if (!GadgetServerUserManagementContext.isPortalPermissionsSet(0)) {
+            if (!GadgetServerUserManagementContext.isPortalPermissionsSet(MultitenantConstants.SUPER_TENANT_ID)) {
                 // Setting self registration on by default
-                GadgetServerUserManagementContext.setSelfRegistration(true, 0);
+                GadgetServerUserManagementContext.setSelfRegistration(true, MultitenantConstants.SUPER_TENANT_ID);
 
                 // Seting external Gadget addition to true by default
-                GadgetServerUserManagementContext.setExternalGadgetAddition(true, 0);
+                GadgetServerUserManagementContext.setExternalGadgetAddition(true, MultitenantConstants.SUPER_TENANT_ID);
 
-                GadgetServerUserManagementContext.setAnonModeState(true, 0);
+                GadgetServerUserManagementContext.setAnonModeState(true, MultitenantConstants.SUPER_TENANT_ID);
             }
 
             log.debug("Gadget Server User Management Component Backend bundle is activated ");

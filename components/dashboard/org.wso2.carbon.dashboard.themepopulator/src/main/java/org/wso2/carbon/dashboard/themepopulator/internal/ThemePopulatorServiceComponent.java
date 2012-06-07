@@ -24,6 +24,7 @@ import org.wso2.carbon.dashboard.themepopulator.ThemePopulator;
 import org.wso2.carbon.dashboard.themepopulator.ThemePopulatorContext;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /**
  * @scr.component name="org.wso2.carbon.dashboard.themepopulator" immediate="true"
@@ -55,7 +56,7 @@ public class ThemePopulatorServiceComponent {
         log.debug("Theme Populator - bundle is activated ");
 
         // This is the initial server start. Populate for Tenant 0.
-        ThemePopulator.populateThemes(0);
+        ThemePopulator.populateThemes(MultitenantConstants.SUPER_TENANT_ID);
     }
 
 

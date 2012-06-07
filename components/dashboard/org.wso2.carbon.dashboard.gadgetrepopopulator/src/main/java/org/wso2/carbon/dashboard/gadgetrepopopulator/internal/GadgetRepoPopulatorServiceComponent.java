@@ -29,6 +29,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.io.File;
 import java.io.FileReader;
@@ -65,7 +66,7 @@ public class GadgetRepoPopulatorServiceComponent {
         log.debug("Gadget Repository Populator - bundle is activated ");
 
         // This is the initial server start. Populate for Tenant 0.
-        GadgetRepoPopulator.populateRepo(0);
+        GadgetRepoPopulator.populateRepo(MultitenantConstants.SUPER_TENANT_ID);
     }
 
 

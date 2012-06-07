@@ -27,6 +27,7 @@
             <region>region1</region>
             <order>60</order>
             <style-class>home</style-class>
+            <icon>../tenant-mgt/images/multi_tenancy.png</icon>
             <require-super-tenant>true</require-super-tenant>
         </menu>
         <menu>

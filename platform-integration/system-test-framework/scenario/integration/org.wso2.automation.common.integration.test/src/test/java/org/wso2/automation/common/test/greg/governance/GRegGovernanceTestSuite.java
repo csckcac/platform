@@ -46,6 +46,8 @@ public class GRegGovernanceTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("ServiceManagerAPITests", ServiceManagerAPITests.class));
         suiteVariablesList.add(new SuiteVariables("EndpointManagerAPITest", EndpointManagerAPITest.class));
         suiteVariablesList.add(new SuiteVariables("WSDLManagerAPITest", WSDLManagerAPITest.class));
+        suiteVariablesList.add(new SuiteVariables("SchemaManagerAPITest", SchemaManagerAPITest.class));
+        suiteVariablesList.add(new SuiteVariables("PolicyManagerAPITest", PolicyManagerAPITest.class));
         setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("GovernanceTestSuite", suiteVariablesList).run();
     }

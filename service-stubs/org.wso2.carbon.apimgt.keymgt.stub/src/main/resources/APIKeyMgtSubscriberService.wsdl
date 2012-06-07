@@ -1,8 +1,8 @@
 
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax29="http://keymgt.apimgt.carbon.wso2.org/xsd" xmlns:ax27="http://dto.impl.apimgt.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax213="http://base.identity.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax211="http://api.apimgt.carbon.wso2.org/xsd" xmlns:tns="http://service.keymgt.apimgt.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.keymgt.apimgt.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax29="http://api.apimgt.carbon.wso2.org/xsd" xmlns:ax27="http://keymgt.apimgt.carbon.wso2.org/xsd" xmlns:ax25="http://dto.impl.apimgt.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax211="http://base.identity.carbon.wso2.org/xsd" xmlns:tns="http://service.keymgt.apimgt.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.keymgt.apimgt.carbon.wso2.org">
     <wsdl:documentation>APIKeyMgtSubscriberService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax214="http://base.identity.carbon.wso2.org/xsd" xmlns:ax212="http://api.apimgt.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax28="http://dto.impl.apimgt.carbon.wso2.org/xsd" xmlns:ax210="http://keymgt.apimgt.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+        <xs:schema xmlns:ax212="http://base.identity.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax28="http://keymgt.apimgt.carbon.wso2.org/xsd" xmlns:ax210="http://api.apimgt.carbon.wso2.org/xsd" xmlns:ax26="http://dto.impl.apimgt.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
             <xs:import namespace="http://dto.impl.apimgt.carbon.wso2.org/xsd" />
             <xs:import namespace="http://keymgt.apimgt.carbon.wso2.org/xsd" />
             <xs:import namespace="http://api.apimgt.carbon.wso2.org/xsd" />
@@ -11,7 +11,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="apiInfoDTO" nillable="true" type="ax27:APIInfoDTO" />
+                        <xs:element minOccurs="0" name="apiInfoDTO" nillable="true" type="ax25:APIInfoDTO" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -19,7 +19,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="apiInfoDTO" nillable="true" type="ax27:APIInfoDTO" />
+                        <xs:element minOccurs="0" name="apiInfoDTO" nillable="true" type="ax25:APIInfoDTO" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -33,35 +33,51 @@
             <xs:element name="APIKeyMgtSubscriberServiceAPIKeyMgtException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="APIKeyMgtException" nillable="true" type="ax29:APIKeyMgtException" />
+                        <xs:element minOccurs="0" name="APIKeyMgtException" nillable="true" type="ax27:APIKeyMgtException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="APIKeyMgtSubscriberServiceAPIManagementException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="APIManagementException" nillable="true" type="ax212:APIManagementException" />
+                        <xs:element minOccurs="0" name="APIManagementException" nillable="true" type="ax29:APIManagementException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="APIKeyMgtSubscriberServiceIdentityException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="IdentityException" nillable="true" type="ax214:IdentityException" />
+                        <xs:element minOccurs="0" name="IdentityException" nillable="true" type="ax212:IdentityException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="getSubscribedAPIsOfUser">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" />
+                        xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="getSubscribedAPIsOfUserResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax27:APIInfoDTO" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax25:APIInfoDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getApplicationAccessToken">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="applicationName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="tokenType" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getApplicationAccessTokenResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -69,7 +85,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="apiInfoDTO" nillable="true" type="ax27:APIInfoDTO" />
+                        <xs:element minOccurs="0" name="apiInfoDTO" nillable="true" type="ax25:APIInfoDTO" />
                         <xs:element minOccurs="0" name="applicationName" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="tokenType" nillable="true" type="xs:string" />
                     </xs:sequence>
@@ -134,6 +150,12 @@
     <wsdl:message name="APIKeyMgtSubscriberServiceIdentityException">
         <wsdl:part name="parameters" element="ns1:APIKeyMgtSubscriberServiceIdentityException" />
     </wsdl:message>
+    <wsdl:message name="getApplicationAccessTokenRequest">
+        <wsdl:part name="parameters" element="ns1:getApplicationAccessToken" />
+    </wsdl:message>
+    <wsdl:message name="getApplicationAccessTokenResponse">
+        <wsdl:part name="parameters" element="ns1:getApplicationAccessTokenResponse" />
+    </wsdl:message>
     <wsdl:message name="getAccessTokenRequest">
         <wsdl:part name="parameters" element="ns1:getAccessToken" />
     </wsdl:message>
@@ -154,6 +176,13 @@
             <wsdl:fault message="tns:APIKeyMgtSubscriberServiceAPIKeyMgtException" name="APIKeyMgtSubscriberServiceAPIKeyMgtException" wsaw:Action="urn:getSubscribedAPIsOfUserAPIKeyMgtSubscriberServiceAPIKeyMgtException" />
             <wsdl:fault message="tns:APIKeyMgtSubscriberServiceAPIManagementException" name="APIKeyMgtSubscriberServiceAPIManagementException" wsaw:Action="urn:getSubscribedAPIsOfUserAPIKeyMgtSubscriberServiceAPIManagementException" />
             <wsdl:fault message="tns:APIKeyMgtSubscriberServiceIdentityException" name="APIKeyMgtSubscriberServiceIdentityException" wsaw:Action="urn:getSubscribedAPIsOfUserAPIKeyMgtSubscriberServiceIdentityException" />
+        </wsdl:operation>
+        <wsdl:operation name="getApplicationAccessToken">
+            <wsdl:input message="tns:getApplicationAccessTokenRequest" wsaw:Action="urn:getApplicationAccessToken" />
+            <wsdl:output message="tns:getApplicationAccessTokenResponse" wsaw:Action="urn:getApplicationAccessTokenResponse" />
+            <wsdl:fault message="tns:APIKeyMgtSubscriberServiceAPIKeyMgtException" name="APIKeyMgtSubscriberServiceAPIKeyMgtException" wsaw:Action="urn:getApplicationAccessTokenAPIKeyMgtSubscriberServiceAPIKeyMgtException" />
+            <wsdl:fault message="tns:APIKeyMgtSubscriberServiceAPIManagementException" name="APIKeyMgtSubscriberServiceAPIManagementException" wsaw:Action="urn:getApplicationAccessTokenAPIKeyMgtSubscriberServiceAPIManagementException" />
+            <wsdl:fault message="tns:APIKeyMgtSubscriberServiceIdentityException" name="APIKeyMgtSubscriberServiceIdentityException" wsaw:Action="urn:getApplicationAccessTokenAPIKeyMgtSubscriberServiceIdentityException" />
         </wsdl:operation>
         <wsdl:operation name="getAccessToken">
             <wsdl:input message="tns:getAccessTokenRequest" wsaw:Action="urn:getAccessToken" />
@@ -182,6 +211,24 @@
         </wsdl:operation>
         <wsdl:operation name="getSubscribedAPIsOfUser">
             <soap:operation soapAction="urn:getSubscribedAPIsOfUser" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIKeyMgtException">
+                <soap:fault use="literal" name="APIKeyMgtSubscriberServiceAPIKeyMgtException" />
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceIdentityException">
+                <soap:fault use="literal" name="APIKeyMgtSubscriberServiceIdentityException" />
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIManagementException">
+                <soap:fault use="literal" name="APIKeyMgtSubscriberServiceAPIManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getApplicationAccessToken">
+            <soap:operation soapAction="urn:getApplicationAccessToken" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -252,6 +299,24 @@
                 <soap12:fault use="literal" name="APIKeyMgtSubscriberServiceAPIManagementException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="getApplicationAccessToken">
+            <soap12:operation soapAction="urn:getApplicationAccessToken" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIKeyMgtException">
+                <soap12:fault use="literal" name="APIKeyMgtSubscriberServiceAPIKeyMgtException" />
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceIdentityException">
+                <soap12:fault use="literal" name="APIKeyMgtSubscriberServiceIdentityException" />
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIManagementException">
+                <soap12:fault use="literal" name="APIKeyMgtSubscriberServiceAPIManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="getAccessToken">
             <soap12:operation soapAction="urn:getAccessToken" style="document" />
             <wsdl:input>
@@ -290,6 +355,15 @@
         </wsdl:operation>
         <wsdl:operation name="getSubscribedAPIsOfUser">
             <http:operation location="getSubscribedAPIsOfUser" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getApplicationAccessToken">
+            <http:operation location="getApplicationAccessToken" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>

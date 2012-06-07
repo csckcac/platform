@@ -40,7 +40,7 @@
         <module>org.wso2.carbon.reporting.template.ui</module>
         <module>org.wso2.carbon.reporting.ui</module>
         <module>org.wso2.carbon.reporting.util</module>
-        <!--<module>org.wso2.carbon.reporting.custom.ui</module>-->
+        <module>org.wso2.carbon.reporting.custom.ui</module>
     </modules>
 
     <dependencyManagement>

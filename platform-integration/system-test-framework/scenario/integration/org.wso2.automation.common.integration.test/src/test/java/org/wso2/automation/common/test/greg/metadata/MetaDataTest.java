@@ -22,6 +22,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
+import org.wso2.carbon.governance.api.policies.PolicyManager;
+import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
+import org.wso2.carbon.governance.api.schema.SchemaManager;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
 import org.wso2.carbon.registry.core.Registry;
@@ -33,11 +36,14 @@ import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
+
 import javax.activation.DataHandler;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -46,6 +52,8 @@ import static org.testng.Assert.assertTrue;
 
 public class MetaDataTest {
     public static WsdlManager wsdlManager;
+    public static SchemaManager schemaManager;
+    public static PolicyManager policyManager;
     private ManageEnvironment environment;
 
     @BeforeClass(alwaysRun = true)
@@ -54,11 +62,10 @@ public class MetaDataTest {
         WSRegistryServiceClient registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         Registry governance = new RegistryProvider().getGovernance(registryWS, userId);
         wsdlManager = new WsdlManager(governance);
-
+        schemaManager = new SchemaManager(governance);
+        policyManager = new PolicyManager(governance);
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
         environment = builder.build();
-//       endpointManager = new EndpointManager(governance);
-
     }
 
     @Test(groups = {"wso2.greg.metadata"}, description = "Testing add wsdl from wsdl URL", priority = 1)
@@ -87,11 +94,11 @@ public class MetaDataTest {
         assertTrue(isWsdlFound, "Wsdl not get added from the governance registry.");
     }
 
-    @Test(groups = {"wso2.greg.metadata"}, description = "Testing add wsdl with wsdl file path", priority = 2)
+    @Test(groups = {"wso2.greg.metadata"}, description = "Testing add wsdl zip from file path", priority = 2)
     public void testAddWsdlViaZip() throws GovernanceException, IOException, ResourceAdminServiceExceptionException {
         String wsdlFileLocation = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator
-                + "artifacts" + File.separator + "GREG" + File.separator + "gregresources" +File.separator
-                +"sampleWSDL.zip";
+                + "artifacts" + File.separator + "GREG" + File.separator + "gregresources" + File.separator
+                + "sampleWSDL.zip";
         String registryLocation = "/sample.wsdl";
         URL wsdlURL = new URL("file:///" + wsdlFileLocation);
 
@@ -111,4 +118,79 @@ public class MetaDataTest {
                         "desc", zipDataHandler), "WSDL.zip Adding failed");
 
     }
+
+    @Test(groups = {"wso2.greg.metadata"}, description = "Testing add wsdl from file path", priority = 3)
+    public void testAddWsdlViaFilePath() throws GovernanceException, MalformedURLException, RemoteException, ResourceAdminServiceExceptionException {
+
+        String wsdlFileLocation = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator
+                + "artifacts" + File.separator + "GREG" + File.separator + "wsdl" + File.separator
+                + "echo.wsdl";
+
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().contains("echo.wsdl")) {
+                wsdlManager.removeWsdl(w.getId());
+            }
+        }
+
+        String registryLocation = "/echo.wsdl";
+        URL wsdlURL = new URL("file:///" + wsdlFileLocation);
+        DataHandler wsdlDataHandler = new DataHandler(wsdlURL);
+        AdminServiceResourceAdmin adminServiceResourceAdmin =
+                new AdminServiceResourceAdmin(environment.getGreg().getBackEndUrl());
+
+        Assert.assertTrue(adminServiceResourceAdmin.addResource
+                (environment.getGreg().getSessionCookie(), registryLocation, "application/wsdl+xml",
+                        "desc", wsdlDataHandler), "WSDL Adding failed");
+
+    }
+
+    @Test(groups = {"wso2.greg.metadata"}, description = "Testing add wsdl which has policy import", priority = 4)
+    public void testAddWsdlWithPolicy() throws GovernanceException {
+        String wsdlUrl = "https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
+                "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/" +
+                "artifacts/GREG/wsdl/wsdl_with_SigEncr.wsdl";
+
+        boolean isWsdlFound = false;
+        boolean isPolicyFound = false;
+
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+        Policy[] policyList = policyManager.getAllPolicies();
+
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().contains("wsdl_with_SigEncr")) {
+                wsdlManager.removeWsdl(w.getId());
+            }
+        }
+
+        for(Policy p:policyList){
+            if(p.getQName().getLocalPart().equalsIgnoreCase("SgnEncrAnonymous.xml")){
+                policyManager.removePolicy(p.getId());
+            }
+        }
+
+        Wsdl wsdl = wsdlManager.newWsdl(wsdlUrl);
+        wsdlManager.addWsdl(wsdl);
+
+        wsdlList = wsdlManager.getAllWsdls();
+        policyList = policyManager.getAllPolicies();
+
+        for(Wsdl w:wsdlList){
+            if(w.getQName().getLocalPart().equalsIgnoreCase("wsdl_with_SigEncr.wsdl")){
+                isWsdlFound = true;
+            }
+        }
+
+        for(Policy p:policyList){
+            if(p.getQName().getLocalPart().equalsIgnoreCase("SgnEncrAnonymous.xml")){
+                isPolicyFound = true;
+            }
+        }
+
+        assertTrue(isWsdlFound,"WSDL not added from governance registry");
+        assertTrue(isPolicyFound,"Imported policy with WSDL not added from governance registry");
+
+
+    }
+
 }

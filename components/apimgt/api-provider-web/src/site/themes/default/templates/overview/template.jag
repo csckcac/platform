@@ -12,14 +12,19 @@
                 <td>Endpoint URL</td>
                 <td id="inUrl"><%=api.endpoint%></td>
             </tr>
+            <%if(api.wsdl!=''){%>
             <tr>
                 <td>WSDL</td>
-                <td id="wsdl"><%=api.wsdl%></td>
+                <td id="wsdl"><a href="<%=api.wsdl%>"><%=api.wsdl%></a></td>
             </tr>
+            <%}%>
+            <%
+            if(api.wadl!=''){%>
             <tr>
                 <td>WADL</td>
-                <td id="wadl"><%=api.wadl%></td>
+                <td id="wadl"><a href="<%=api.wadl%>"><%=api.wadl%></a></td>
             </tr>
+            <%}%>
             <tr>
                 <td>Date Last Updated</td>
                 <td id="inUpdated"><%=api.lastUpdated%></td>

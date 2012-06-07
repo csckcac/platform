@@ -13,8 +13,12 @@
                 <td id="inUrl"><%=api.endpoint%></td>
             </tr>
             <tr>
-                <td>WSDL/WADL</td>
+                <td>WSDL</td>
                 <td id="wsdl"><%=api.wsdl%></td>
+            </tr>
+            <tr>
+                <td>WADL</td>
+                <td id="wadl"><%=api.wadl%></td>
             </tr>
             <tr>
                 <td>Date Last Updated</td>

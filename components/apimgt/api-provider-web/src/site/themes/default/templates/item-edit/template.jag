@@ -86,13 +86,17 @@
             </div>
 
             <div class="control-group">
-                <label class="control-label" for="editWsdl">WSDL/WADL:</label>
+                <label class="control-label" for="editWsdl">WSDL:</label>
                 <div class="controls">
                     <input type="text" class="input-xlarge" id="editWsdl" name="wsdl" value="<%=api.wsdl%>">
-                    <button class="btn" id="registryPicker" rel="tooltip" title="Pick From Registry" type="button"
-                            data-toggle="modal" href="#myModal">..
-                    </button>
                     <p class="help-block">Ex:http://appserver/services/echo?wsdl</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="editWadl">WADL:</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" id="editWadl" name="wadl" value="<%=api.wadl%>">
+                    <p class="help-block">Ex:http://example.com/service.wadl</p>
                 </div>
             </div>
 

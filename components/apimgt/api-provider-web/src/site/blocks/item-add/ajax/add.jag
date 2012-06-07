@@ -16,6 +16,7 @@ include("/jagg/jagg.jag");
         apiData.endpoint = request.getParameter("endpoint");
         apiData.sandbox = request.getParameter("sandbox");
         apiData.wsdl = request.getParameter("wsdl");
+        apiData.wadl = request.getParameter("wadl");
         apiData.tags = request.getParameter("tags");
         apiData.tier = request.getParameter("tiersCollection");
         apiData.imageUrl = request.getFile("apiThumb");

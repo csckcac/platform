@@ -28,7 +28,8 @@ var getAPI = function (api) {
             bizOwner:result[15],
             bizOwnerMail:result[16],
             techOwner:result[17],
-            techOwnerMail:result[18]
+            techOwnerMail:result[18],
+            wadl:result[19]
         };
 
         return {

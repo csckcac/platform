@@ -390,6 +390,13 @@ of the built in mediators of WSO2 ESB.</p>
       <td>2-legged OAuth support</td>
     </tr>
     <tr>
+       <td/>
+        <td>
+             <a href="mediators/ejb.html">Ejb</a>
+        </td>
+        <td>Create a Ejb mediator</td>
+      </tr>
+    <tr>
       <td>Extension </td>
       <td><a href="mediators/class.html">Class</a> </td>
       <td>Create and execute a custom mediator</td>
@@ -420,6 +427,13 @@ of the built in mediators of WSO2 ESB.</p>
               <a href="mediators/store.html">Store</a>
           </td>
           <td>Create Mediator to Store messages in a Message store</td>
+      </tr>
+      <tr>
+       <td/>
+        <td>
+             <a href="mediators/bean.html">Bean</a>
+        </td>
+        <td>Create a Bean mediator</td>
       </tr>
   </tbody>
 </table>

@@ -88,9 +88,15 @@ public class DefaultServiceLifeCycleTest {
         Resource service = registry.get(servicePathDev);
         Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
         Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);
-        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Development",
-                            "LifeCycle State Mismatched");
+        Assert.assertEquals(Utils.getLifeCycleState(lifeCycle), "Development", "LifeCycle State Mismatched");
 
+        //life cycle check list
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.0.item")[1],
+                            "name:Code Completed", "Code Completed Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.1.item")[1],
+                            "name:WSDL, Schema Created", "WSDL, Schema Created Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.2.item")[1],
+                            "name:QoS Created", "QoS Created Check List Item Not Found");
 
         //Activity search
         Thread.sleep(1000 * 10);
@@ -98,7 +104,7 @@ public class DefaultServiceLifeCycleTest {
                 , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivitySearchAdminService.FILTER_ASSOCIATE_ASPECT, 1);
         Assert.assertNotNull(activityObj, "Activity object null for Associate Aspect");
-        Assert.assertNotNull(activityObj.getActivity(), "Activity list object null");
+        Assert.assertNotNull(activityObj.getActivity(), "Activity list object null for Associate Aspect");
         Assert.assertTrue((activityObj.getActivity().length > 0), "Activity list object null");
         String activity = activityObj.getActivity()[0];
         Assert.assertTrue(activity.contains(userInfo.getUserName()), "User name not found on activity last activity. " + activity);
@@ -126,6 +132,14 @@ public class DefaultServiceLifeCycleTest {
                             "LifeCycle State Mismatched");
 
         Assert.assertEquals(registry.get(servicePathDev).getPath(), servicePathDev, "Preserve original failed");
+
+        //life cycle check list
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.0.item")[1],
+                            "name:Effective Inspection Completed", "Effective Inspection Completed Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.1.item")[1],
+                            "name:Test Cases Passed", "Test Cases Passed  Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.2.item")[1],
+                            "name:Smoke Test Passed", "Smoke Test Passed Check List Item Not Found");
 
         //activity search for trunk
         Thread.sleep(1000 * 10);

@@ -97,7 +97,7 @@ public class WSDLDefaultServiceLifeCycleTest {
                 , wsdlPathDev, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivitySearchAdminService.FILTER_ASSOCIATE_ASPECT, 1);
         Assert.assertNotNull(activityObj, "Activity object null for Associate Aspect");
-        Assert.assertNotNull(activityObj.getActivity(), "Activity list object null");
+        Assert.assertNotNull(activityObj.getActivity(), "Activity list object null for Associate Aspect");
         Assert.assertTrue((activityObj.getActivity().length > 0), "Activity list object null");
         String activity = activityObj.getActivity()[0];
         Assert.assertTrue(activity.contains(userInfo.getUserName()), "User name not found on activity last activity. " + activity);

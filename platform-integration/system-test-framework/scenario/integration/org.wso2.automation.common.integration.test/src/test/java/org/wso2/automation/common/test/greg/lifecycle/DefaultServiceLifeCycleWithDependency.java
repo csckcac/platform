@@ -143,15 +143,15 @@ public class DefaultServiceLifeCycleWithDependency {
         Thread.sleep(1000);
         ArrayOfString[] parameters = new ArrayOfString[2];
         parameters[0] = new ArrayOfString();
-        parameters[0].setArray(new String[]{servicePathTest, "1.0.0"});
+        parameters[0].setArray(new String[]{servicePathTest, "2.0.0"});
 
         parameters[1] = new ArrayOfString();
-        parameters[1].setArray(new String[]{policyPathTest, "1.0.0"});
+        parameters[1].setArray(new String[]{policyPathTest, "1.5.0"});
         lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathTest, aspectName,
                                                      ACTION_PROMOTE, null, parameters);
 
-        servicePathProd = "/_system/governance/branches/production/services/sns/1.0.0/" + serviceName;
-        String policyPathProd = "/_system/governance/branches/production/policies/1.0.0/" + serviceDependencyName;
+        servicePathProd = "/_system/governance/branches/production/services/sns/2.0.0/" + serviceName;
+        String policyPathProd = "/_system/governance/branches/production/policies/1.5.0/" + serviceDependencyName;
         Thread.sleep(500);
         LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathProd);
 

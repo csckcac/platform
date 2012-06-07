@@ -1,0 +1,200 @@
+/*
+*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+*WSO2 Inc. licenses this file to you under the Apache License,
+*Version 2.0 (the "License"); you may not use this file except
+*in compliance with the License.
+*You may obtain a copy of the License at
+*
+*http://www.apache.org/licenses/LICENSE-2.0
+*
+*Unless required by applicable law or agreed to in writing,
+*software distributed under the License is distributed on an
+*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+*KIND, either express or implied.  See the License for the
+*specific language governing permissions and limitations
+*under the License.
+*/
+package org.wso2.automation.common.test.greg.lifecycle;
+
+import org.apache.axis2.AxisFault;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.wso2.automation.common.test.greg.lifecycle.utils.Utils;
+import org.wso2.carbon.admin.service.ActivitySearchAdminService;
+import org.wso2.carbon.admin.service.LifeCycleAdminService;
+import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
+import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceExceptionException;
+import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
+import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property;
+import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceExceptionException;
+import org.wso2.carbon.registry.activities.stub.RegistryExceptionException;
+import org.wso2.carbon.registry.activities.stub.beans.xsd.ActivityBean;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
+import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.UserInfo;
+import org.wso2.platform.test.core.utils.UserListCsvReader;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
+import org.wso2.platform.test.core.utils.fileutils.FileManager;
+import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.util.Calendar;
+
+public class AddCustomLifeCycle {
+    private String sessionCookie;
+
+    private WSRegistryServiceClient registry;
+    private LifeCycleAdminService lifeCycleAdminService;
+    private LifeCycleManagerAdminService lifeCycleManagerAdminService;
+    private ActivitySearchAdminService activitySearch;
+    private UserInfo userInfo;
+
+    private final String ASPECT_NAME = "IntergalacticServiceLC";
+    private String servicePathDev;
+
+    @BeforeClass
+    public void init() throws Exception {
+        final int userId = 3;
+        EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
+        EnvironmentVariables gregServer = builder.build().getGreg();
+        userInfo = UserListCsvReader.getUserInfo(userId);
+        sessionCookie = gregServer.getSessionCookie();
+        lifeCycleAdminService = new LifeCycleAdminService(gregServer.getBackEndUrl());
+        activitySearch = new ActivitySearchAdminService(gregServer.getBackEndUrl());
+        lifeCycleManagerAdminService = new LifeCycleManagerAdminService(gregServer.getBackEndUrl());
+        registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
+        Registry governance = new RegistryProvider().getGovernance(registry, userId);
+
+        String serviceName = "CustomLifeCycleTestService.xml";
+        servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName, governance);
+        Thread.sleep(1000);
+
+    }
+
+    @Test(priority = 1, description = "Add new Life Cycle")
+    public void createNewLifeCycle()
+            throws IOException, LifeCycleManagementServiceExceptionException, InterruptedException {
+        String filePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
+                          + File.separator + "lifecycle" + File.separator + "customLifeCycle.xml";
+        String lifeCycleConfiguration = FileManager.readFile(filePath);
+        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, lifeCycleConfiguration)
+                , "Adding New LifeCycle Failed");
+        Thread.sleep(2000);
+        lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(sessionCookie, ASPECT_NAME);
+        Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"IntergalacticServiceLC\""),
+                          "LifeCycleName Not Found in lifecycle configuration");
+
+        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
+        Assert.assertNotNull(lifeCycleList);
+        Assert.assertTrue(lifeCycleList.length > 0, "Life Cycle List length zero");
+        boolean found = false;
+        for (String lc : lifeCycleList) {
+            if (ASPECT_NAME.equalsIgnoreCase(lc)) {
+                found = true;
+            }
+        }
+        Assert.assertTrue(found, "Life Cycle list not contain newly added life cycle");
+
+    }
+
+    @Test(priority = 2, description = "Add LifeCycle to a service", dependsOnMethods = {"createNewLifeCycle"})
+    public void addLifeCycleToService()
+            throws RegistryException, InterruptedException,
+                   CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+                   RegistryExceptionException {
+        registry.associateAspect(servicePathDev, ASPECT_NAME);
+        Thread.sleep(500);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        Resource service = registry.get(servicePathDev);
+        Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
+        Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);
+        Assert.assertEquals(getLifeCycleState(lifeCycle), "Commencement",
+                            "LifeCycle State Mismatched");
+
+        //life cycle check list
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.0.item")[1],
+                            "name:Requirements Gathered", "Requirements Gathered Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.1.item")[1],
+                            "name:Document Requirements", "Document Requirements Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.2.item")[1],
+                            "name:Architecture Diagram Finalized", "Architecture Diagram Finalize Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.3.item")[1],
+                            "name:Design UML Diagrams", "Design UML Diagrams Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.4.item")[1]
+                , "name:High Level Design Completed", "High Level Design Completed Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.5.item")[1]
+                , "name:Completion of Commencement", "Completion of Commencement  Check List Item Not Found");
+
+        //Activity search
+        Thread.sleep(1000 * 10);
+        ActivityBean activityObj = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_ASSOCIATE_ASPECT, 1);
+        Assert.assertNotNull(activityObj, "Activity object null for Associate Aspect");
+        Assert.assertNotNull(activityObj.getActivity(), "Activity list object null for Associate Aspect");
+        Assert.assertTrue((activityObj.getActivity().length > 0), "Activity list object null");
+        String activity = activityObj.getActivity()[0];
+        Assert.assertTrue(activity.contains(userInfo.getUserName()), "User name not found on activity last activity. " + activity);
+        Assert.assertTrue(activity.contains("associated the aspect IntergalacticServiceLC"),
+                          "associated the aspect ServiceLifeCycle not contain in last activity. " + activity);
+        Assert.assertTrue(activity.contains("0m ago"), "current time not found on activity. " + activity);
+    }
+
+    @Test(priority = 3, description = "delete LifeCycle when there is usage", dependsOnMethods = {"addLifeCycleToService"})
+    public void deleteLifeCycleWhenHavingUsage()
+            throws LifeCycleManagementServiceExceptionException, RemoteException {
+        Assert.assertTrue(lifeCycleManagerAdminService.isLifecycleNameInUse(sessionCookie, ASPECT_NAME),
+                          "No Usage Found for Life Cycle");
+        try {
+            Assert.assertFalse(lifeCycleManagerAdminService.deleteLifeCycle(sessionCookie, ASPECT_NAME),
+                               "Life Cycle Deleted even if there is a usage");
+            Assert.fail("Life Cycle Deleted even if there is a usage");
+        } catch (AxisFault e) {
+            Assert.assertEquals(e.getMessage(), "Lifecycle could not be deleted, since it is already in use!",
+                                "Message mismatched");
+        }
+    }
+
+
+    @AfterClass
+    public void cleanUp()
+            throws RegistryException, LifeCycleManagementServiceExceptionException,
+                   RemoteException {
+        if (servicePathDev != null) {
+            registry.delete(servicePathDev);
+        }
+        Assert.assertTrue(lifeCycleManagerAdminService.deleteLifeCycle(sessionCookie, ASPECT_NAME),
+                          "Life Cycle Deleted failed");
+        registry = null;
+        activitySearch = null;
+        lifeCycleAdminService = null;
+    }
+
+    public static String getLifeCycleState(LifecycleBean lifeCycle) {
+        Assert.assertTrue((lifeCycle.getLifecycleProperties().length > 0), "LifeCycle properties missing some properties");
+        String state = null;
+        boolean stateFound = false;
+        for (Property prop : lifeCycle.getLifecycleProperties()) {
+            if ("registry.lifecycle.IntergalacticServiceLC.state".equalsIgnoreCase(prop.getKey())) {
+                stateFound = true;
+                Assert.assertNotNull(prop.getValues(), "State Value Not Found");
+                state = prop.getValues()[0];
+
+            }
+        }
+        Assert.assertTrue(stateFound, "LifeCycle State property not found");
+        return state;
+    }
+
+
+
+}

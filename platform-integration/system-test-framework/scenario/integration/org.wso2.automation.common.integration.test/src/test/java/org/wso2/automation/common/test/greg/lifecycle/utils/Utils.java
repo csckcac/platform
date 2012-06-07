@@ -99,6 +99,22 @@ public class Utils {
 
     }
 
+    public static String[] getLifeCycleProperty(Property[] properties, String key) {
+        Assert.assertTrue((properties.length > 0), "LifeCycle properties missing some properties");
+        String[] values = null;
+        boolean stateFound = false;
+        for (Property prop : properties) {
+            if (key.equalsIgnoreCase(prop.getKey())) {
+                stateFound = true;
+                Assert.assertNotNull(prop.getValues(), "State Value Not Found");
+                values = prop.getValues();
+
+            }
+        }
+        Assert.assertTrue(stateFound,  key + " property not found");
+        return values;
+    }
+
     public static String getLifeCycleState(LifecycleBean lifeCycle) {
         Assert.assertTrue((lifeCycle.getLifecycleProperties().length > 0), "LifeCycle properties missing some properties");
         String state = null;

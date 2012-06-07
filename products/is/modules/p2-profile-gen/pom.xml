@@ -338,22 +338,22 @@
                     <include name="**/bundles.info"/>
                 </replace>
 		<replace
-                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/tenant-mgt.xml"
+                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
                                         token="&lt;TenantManager"
                                         value="&lt;!--TenantManager"/>
 
                                 <replace
-                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/tenant-mgt.xml"
+                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
                                         token="&lt;/TenantManager&gt;"
                                         value="&lt;/TenantManager--&gt;"/>
 
                                 <replace
-                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/tenant-mgt.xml"
+                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
                                         token="&lt;!--ISTenantManager"
                                         value="&lt;TenantManager"/>
 				
                                 <replace
-                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/tenant-mgt.xml"
+                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
                                         token="&lt;/ISTenantManager--&gt;"
                                         value="&lt;/TenantManager&gt;"/>
             </tasks>

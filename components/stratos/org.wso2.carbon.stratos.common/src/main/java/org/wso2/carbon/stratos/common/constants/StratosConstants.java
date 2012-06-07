@@ -116,8 +116,8 @@ public class StratosConstants {
 
     // Configuration file name
     public static final String STRATOS_CONF_FILE = "stratos.xml";
-    public static final String STRATOS_CONF_LOC = "repository/conf/";
-    public static final String STRATOS_CONF_FILE_WITH_PATH = STRATOS_CONF_LOC + STRATOS_CONF_FILE;
+    //public static final String STRATOS_CONF_LOC = "repository/conf/";
+    //public static final String STRATOS_CONF_FILE_WITH_PATH = STRATOS_CONF_LOC + STRATOS_CONF_FILE;
 
     // EULA location
     public static final String STRATOS_EULA = "eula.xml";
@@ -138,5 +138,6 @@ public class StratosConstants {
     public static final String MULTITENANCY_MEDIUM_PLAN = "Professional";
     public static final String MULTITENANCY_LARGE_PLAN = "Enterprise";
     public static final String EMAIL_CONFIG= "email";
+    public static final String MULTITENANCY_CONFIG_FOLDER = "multitenancy";
 
 }

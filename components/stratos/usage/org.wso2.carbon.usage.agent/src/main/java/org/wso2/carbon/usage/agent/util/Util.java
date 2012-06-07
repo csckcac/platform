@@ -24,6 +24,7 @@ import org.wso2.carbon.event.core.exception.EventBrokerException;
 import org.wso2.carbon.event.core.subscription.Subscription;
 import org.wso2.carbon.event.core.util.EventBrokerConstants;
 import org.wso2.carbon.registry.core.config.RegistryContext;
+import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.usage.agent.beans.BandwidthUsage;
 import org.wso2.carbon.usage.agent.config.UsageAgentConfiguration;
 import org.wso2.carbon.usage.agent.listeners.RegistryUsageListener;
@@ -43,6 +44,7 @@ import java.io.File;
 
 public class Util {
     private static final Log log = LogFactory.getLog(Util.class);
+    private static final String USAGE_THROTTLING_AGENT_CONFIG_FILE = "usage-throttling-agent-config.xml";
     private static RealmService realmService;
     private static ConfigurationContextService contextService;
     private static UsageDataPersistenceManager persistenceManager;
@@ -79,7 +81,7 @@ public class Util {
 
     public static void initializePersistenceManager() {
         File usageAgentConfigFile  = new File(CarbonUtils.getCarbonConfigDirPath() + File.separator +
-                "usage-throttling-agent-config.xml");
+                StratosConstants.MULTITENANCY_CONFIG_FOLDER + File.separator + Util.USAGE_THROTTLING_AGENT_CONFIG_FILE);
         persistenceManager = new UsageDataPersistenceManager(new UsageAgentConfiguration(usageAgentConfigFile));
         //start a thread for persisting bandwidth Usage statistics
         persistenceManager.scheduleBandwidthUsageDataRetrievalTask();

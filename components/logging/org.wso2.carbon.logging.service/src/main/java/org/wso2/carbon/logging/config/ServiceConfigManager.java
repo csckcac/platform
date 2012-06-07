@@ -23,7 +23,8 @@ public class ServiceConfigManager {
 	private static final Log log = LogFactory.getLog(ServiceConfigManager.class);
 
 	public static String[] getServiceNames() throws LogViewerException {
-		String configFileName = CarbonUtils.getCarbonConfigDirPath() + "/" + LoggingConstants.CONFIG_FILENAME;
+		String configFileName = CarbonUtils.getCarbonConfigDirPath() + File.separator + 
+                LoggingConstants.MULTITENANCY_CONFIG_FOLDER + File.separator + LoggingConstants.CONFIG_FILENAME;
 		ArrayList<String> serviceNames = new ArrayList<String>();
 		File configFile = new File(configFileName);
 		if (configFile.exists()) {

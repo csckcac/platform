@@ -23,6 +23,7 @@ import org.jaxen.JaxenException;
 import org.wso2.carbon.billing.core.BillingException;
 import org.wso2.carbon.billing.core.dataobjects.Cash;
 import org.wso2.carbon.billing.mgt.dataobjects.MultitenancyPackage;
+import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -78,6 +79,7 @@ public class MultitenancyBillingInfo {
      */
     private List<MultitenancyPackage> deserializePackageDescriptionConfig() throws BillingException {
         String configFilePath = CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                StratosConstants.MULTITENANCY_CONFIG_FOLDER + File.separator +
                 PACKAGE_DESCRIPTION_CONFIG_FILENAME;
         
         OMElement packageConfigs;

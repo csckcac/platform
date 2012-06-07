@@ -20,6 +20,7 @@ import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
+import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -71,7 +72,8 @@ public class PackageInfoHolder {
      */
     private List<PackageInfo> deserializePackageDescriptionConfig() throws StratosException {
         String configFilePath = CarbonUtils.getCarbonConfigDirPath() + File.separator +
-                        PACKAGE_DESCRIPTION_CONFIG;
+                StratosConstants.MULTITENANCY_CONFIG_FOLDER + File.separator +
+                PACKAGE_DESCRIPTION_CONFIG;
         
         OMElement packageConfigs;
         try {

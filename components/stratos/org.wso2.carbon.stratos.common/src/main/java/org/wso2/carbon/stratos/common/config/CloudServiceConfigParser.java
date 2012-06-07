@@ -3,9 +3,11 @@ package org.wso2.carbon.stratos.common.config;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import java.io.File;
 import java.io.FileInputStream;
 
 public class CloudServiceConfigParser {
@@ -29,7 +31,8 @@ public class CloudServiceConfigParser {
         synchronized (loadlock) {
             if (cloudServicesDescConfig == null) {
                 try {
-                    String configFileName = CarbonUtils.getCarbonConfigDirPath() + "/" + CONFIG_FILENAME;
+                    String configFileName = CarbonUtils.getCarbonConfigDirPath() + File.separator + 
+                            StratosConstants.MULTITENANCY_CONFIG_FOLDER + File.separator + CONFIG_FILENAME;
                     OMElement configElement = CommonUtil.buildOMElement(new FileInputStream(configFileName));
                     cloudServicesDescConfig = new CloudServicesDescConfig(configElement);
                 } catch (Exception e) {

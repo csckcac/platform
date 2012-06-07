@@ -378,7 +378,8 @@ public class Util {
 
         // load the configuration and initialize the billing engine + do the
         // necessary scheduling.
-        String configFile = CarbonUtils.getCarbonConfigDirPath() + "/" + THROTTLING_CONFIG;
+        String configFile = CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                StratosConstants.MULTITENANCY_CONFIG_FOLDER + File.separator + THROTTLING_CONFIG;
         // the configuration init will initialize task objects.
         throttlingConfiguration = new ThrottlingConfiguration(configFile);
         List<Task> throttlingTasks = throttlingConfiguration.getThrottlingTasks();

@@ -274,7 +274,7 @@ public class Util {
     public static void loadSamplesConfiguration() throws Exception {
         // now load the cloud services configuration
         String samplesFileName = CarbonUtils.getCarbonConfigDirPath() +
-                                 RegistryConstants.PATH_SEPARATOR + SAMPLES_FILENAME;
+                                 File.separator + SAMPLES_FILENAME;
         File samplesFile = new File(samplesFileName);
         if (!samplesFile.exists()) {
             return;

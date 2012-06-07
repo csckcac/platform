@@ -16,6 +16,7 @@
 package org.wso2.carbon.sample.installer.ui;
 
 import org.wso2.carbon.authenticator.proxy.AuthenticationAdminClient;
+import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -25,6 +26,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ import javax.xml.stream.XMLStreamReader;
 public class Util {
     private static final Log log = LogFactory.getLog(Util.class);
 
-    private static String CONF_FILENAME = "tenant-reg-agent.xml";
+    private static String TENANT_REG_AGENT_CONF_FILENAME = "tenant-reg-agent.xml";
 
     private static List<ServerInfoBean> listenerServers = new ArrayList<ServerInfoBean>();
 
@@ -63,7 +65,8 @@ public class Util {
     }
 
     private static void loadConfig() throws Exception {
-        String configFilename = CarbonUtils.getCarbonConfigDirPath() + "/" + CONF_FILENAME;
+        String configFilename = CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                StratosConstants.MULTITENANCY_CONFIG_FOLDER + File.separator + TENANT_REG_AGENT_CONF_FILENAME;
         OMElement agentConfigEle = buildOMElement(new FileInputStream(configFilename));
 
         Iterator configChildren = agentConfigEle.getChildElements();

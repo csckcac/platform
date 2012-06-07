@@ -45,6 +45,7 @@ public final class LoggingConstants {
     
     public static final String LOG4J_FILE_FOUND = "log4j.file.not.found";
     public static final String CONFIG_FILENAME = "cloud-services-desc.xml";
+    public static final String MULTITENANCY_CONFIG_FOLDER = "multitenancy";
     public static final String WSO2CARBON_CONSOLE_APPENDER = "CARBON_CONSOLE";
     public static final String WSO2CARBON_FILE_APPENDER = "CARBON_LOGFILE";
     public static final String WSO2CARBON_MEMORY_APPENDER = "CARBON_MEMORY";

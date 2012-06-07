@@ -148,9 +148,9 @@ public class CommonUtil {
             } catch (Exception e) {
                 if (log.isWarnEnabled()) {
                     log.warn("Invalid Email Address provided for tenant creation notification. " +
-                             "Pls check whether the parameter NotificationEmail" +
+                             "Please check whether the parameter NotificationEmail" +
                              " is set properly in " +
-                             StratosConstants.STRATOS_CONF_FILE_WITH_PATH, e);
+                             StratosConstants.STRATOS_CONF_FILE, e);
                 }
                 return "";
             }
@@ -342,9 +342,9 @@ public class CommonUtil {
      */
     public static StratosConfiguration loadStratosConfiguration() {
         // gets the configuration file name from the StratosConstants.
-        String StratosConfigFileName = CarbonUtils.getCarbonConfigDirPath() +
-                                       RegistryConstants.PATH_SEPARATOR +
-                                       StratosConstants.STRATOS_CONF_FILE;
+        String StratosConfigFileName = CarbonUtils.getCarbonConfigDirPath() + File.separator + 
+                StratosConstants.MULTITENANCY_CONFIG_FOLDER + File.separator +
+                StratosConstants.STRATOS_CONF_FILE;
         return loadStratosConfiguration(StratosConfigFileName);
     }
 
@@ -505,9 +505,9 @@ public class CommonUtil {
      */
     public static String loadTermsOfUsage() {
         // currently loads from the file; gets the eula file name from the StratosConstants.
-        String StratosEULAFileName = CarbonUtils.getCarbonConfigDirPath() +
-                                     RegistryConstants.PATH_SEPARATOR +
-                                     StratosConstants.STRATOS_EULA;
+        String StratosEULAFileName = CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                StratosConstants.MULTITENANCY_CONFIG_FOLDER + File.separator +
+                StratosConstants.STRATOS_EULA;
         return loadTermsOfUsage(StratosEULAFileName);
     }
 

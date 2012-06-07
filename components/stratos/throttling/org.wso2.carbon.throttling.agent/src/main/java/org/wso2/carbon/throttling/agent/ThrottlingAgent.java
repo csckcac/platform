@@ -174,14 +174,12 @@ public class ThrottlingAgent {
         // it is acceptable that throttling agent file is not present, when the
         // embedded rule invoker is in use.
         ThrottlingAgentConfiguration throttlingAgentConfig = null;
-        String configFileName = CarbonUtils.getCarbonConfigDirPath() +
-                RegistryConstants.PATH_SEPARATOR + CONFIG_FILE;
+        String configFileName = CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                StratosConstants.MULTITENANCY_CONFIG_FOLDER + File.separator + CONFIG_FILE;
         if (new File(configFileName).exists()) {
             throttlingAgentConfig = new ThrottlingAgentConfiguration(configFileName);
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("config file is not present. file name: " + configFileName + ".");
-            }
+            log.warn("Throttling agent config file is not present. File name: " + configFileName + ".");
         }
 
         return throttlingAgentConfig;

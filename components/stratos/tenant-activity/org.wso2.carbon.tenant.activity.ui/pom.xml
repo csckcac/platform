@@ -62,6 +62,7 @@
                         </Export-Package>
                         <Import-Package>
 			                org.wso2.carbon.tenant.activity.stub.*; version="${carbon.platform.package.import.version.range}",
+                            org.wso2.carbon.stratos.common.*,
                             javax.servlet; version=2.4.0,
                             javax.servlet.http; version=2.4.0,
                             !javax.xml.namespace,

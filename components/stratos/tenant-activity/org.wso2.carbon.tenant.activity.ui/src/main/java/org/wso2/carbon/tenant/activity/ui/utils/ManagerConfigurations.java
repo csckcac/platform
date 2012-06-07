@@ -20,11 +20,13 @@ package org.wso2.carbon.tenant.activity.ui.utils;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.util.CommonUtil;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.namespace.QName;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -60,7 +62,8 @@ public class ManagerConfigurations {
     public String getConfigFileName() throws Exception {
 
         String configFileName = CarbonUtils.getCarbonConfigDirPath() +
-                RegistryConstants.PATH_SEPARATOR + CONFIG_FILE;
+                File.separator + StratosConstants.MULTITENANCY_CONFIG_FOLDER +
+                File.separator + CONFIG_FILE;
 
         return configFileName;
 

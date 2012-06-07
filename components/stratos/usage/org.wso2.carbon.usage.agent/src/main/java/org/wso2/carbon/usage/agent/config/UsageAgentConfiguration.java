@@ -95,10 +95,9 @@ public class UsageAgentConfiguration {
                 }
 
             } catch (FileNotFoundException e) {
-                log.error("Cannot find usage-throttling-agent-config.xml in repository/conf directry.", e);
+                log.error("Cannot find " + configFile.getAbsolutePath(), e);
             } catch (XMLStreamException e) {
-                log.error("Error reading XML stream of file usage-throttling-agent-config.xml in repository/conf directry.",
-                        e);
+                log.error("Error reading XML stream of file " + configFile.getAbsolutePath(), e);
             }
         }
     }

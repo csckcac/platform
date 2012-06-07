@@ -173,7 +173,7 @@ public class CSGAgentAdminService extends AbstractAdmin {
             csgAdminClient.unDeployProxy(serviceName);
             flagServiceStatus(serviceName, serverName, false, false);
         } catch (Exception e) {
-            handleException("Cloud not un-publish the service '" + serviceName + "'", e);
+            handleException("Could not un-publish the service '" + serviceName + "'", e);
         }
     }
 

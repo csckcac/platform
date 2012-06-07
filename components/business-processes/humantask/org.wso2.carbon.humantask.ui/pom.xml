@@ -99,13 +99,11 @@
                         <Export-Package>
                             org.wso2.carbon.humantask.ui.*
                         </Export-Package>
-			            <_nouse>true</_nouse>
-						<Import-Package>
+			<Import-Package>
                             javax.servlet.*;version=2.4.0,
                             javax.xml.namespace; version=0.0.0,
                             javax.xml.transform.*; version=0.0.0,
                             org.w3c.dom.*;version="0.0.0",
-                            org.apache.batik.*,
                             org.json.simple.*,
                             org.wso2.carbon.humantask.stub.*; version="${carbon.platform.package.import.version.range}",
                             *;resolution:=optional

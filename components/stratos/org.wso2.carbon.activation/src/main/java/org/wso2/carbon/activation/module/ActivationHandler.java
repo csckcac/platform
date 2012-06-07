@@ -48,8 +48,11 @@ public class ActivationHandler extends AbstractHandler implements Handler {
      * {@inheritDoc}
      */
     public InvocationResponse invoke(MessageContext messageContext) throws AxisFault {
-        log.debug("Staring Activation Handler invocation. Incoming Message: " +
-                messageContext.getEnvelope().toString());
+        if(log.isDebugEnabled()){
+            log.debug("Starting Activation Handler invocation. Incoming Message: " +
+                    messageContext.getEnvelope().toString());
+        }
+
         AxisService service = messageContext.getAxisService();
         int tenantId = getTenantId(messageContext);
         if (service != null && "ActivationService".equals(service.getName())) {

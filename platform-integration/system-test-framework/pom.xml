@@ -166,7 +166,7 @@
                             <property>
                                 <name>listener</name>
                                 <value>
-                                    org.wso2.platform.test.core.PlatformTestManager,org.wso2.platform.test.core.PlatformSuiteManager,org.wso2.platform.test.core.PlatformReportManager
+                                    org.wso2.platform.test.core.PlatformTestManager,org.wso2.platform.test.core.PlatformSuiteManager,org.wso2.platform.test.core.PlatformReportManager,org.wso2.platform.test.core.PlatformExecutionManager
                                 </value>
                             </property>
                         </properties>

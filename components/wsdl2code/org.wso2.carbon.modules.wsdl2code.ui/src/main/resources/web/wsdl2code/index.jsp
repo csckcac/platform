@@ -91,12 +91,13 @@
     }
 
     function startCodegen(optionsObj) {
-        var idUriElement = document.getElementById("id_uri").value;
-
-        if (idUriElement != null && idUriElement.length > 0) {
-            if (idUriElement.substring(0, 4) != "http" && idUriElement.substring(1, 6) != "extra") {
+        if (document.getElementById("id_uri") != null) {
+            var idUriElement = document.getElementById("id_uri").value;
+            if (idUriElement != null && idUriElement.length > 0) {
+                if (idUriElement.substring(0, 4) != "http" && idUriElement.substring(1, 6) != "extra") {
                     CARBON.showWarningDialog('<fmt:message key="error.codegenFile.wrong"/>');
                     return false;
+                }
             }
         }
 

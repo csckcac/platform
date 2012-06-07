@@ -7,9 +7,12 @@ import java.io.InputStream;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.activation.DataHandler;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
@@ -18,8 +21,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.tools.ant.taskdefs.condition.Http;
+import org.apache.xalan.xsltc.compiler.sym;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.context.*;
+import org.wso2.carbon.mapred.mgt.CarbonJobReporter.CarbonJobReporterMap;
+import org.wso2.carbon.mapred.mgt.CarbonJobReporter;
 import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.api.RegistryException;
@@ -34,6 +41,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 	public static final String REG_JAR_PATH = "/job/jar/";
 	public static final String DEFAULT_HADOOP_JAR_PATH = ".";
 	public static int DEFAULT_READ_LENGTH = 1024;
+	private static final String JOB_CONTEXT_UUID = "jobConttextUuid";
 	
 	private static final String MAPRED_SITE = "mapred-site.xml";
 	private static final String CORE_SITE = "core-site.xml";
@@ -42,7 +50,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 	private static final String CAPACITY_SCHED = "cacpacity-scheduler.xml";
 	private static final String MAPRED_QUEUE_ACLS = "mapred-queue-acls.xml";
 	private static Configuration conf;
-	
+
 	static {
 		conf = new Configuration();
 		conf.addResource(new Path(HADOOP_CONFIG+File.separator+CORE_SITE));
@@ -53,15 +61,76 @@ public class HadoopJobRunner extends AbstractAdmin {
         conf.addResource(new Path(HADOOP_CONFIG+File.separator+MAPRED_QUEUE_ACLS));
 	}
 	
-	public void runJob(String jarName, String className, String args) {
+	public String runJob(String jarName, String className, String args) {
 		MessageContext msgCtx = MessageContext.getCurrentMessageContext();
 		HttpServletRequest request = (HttpServletRequest) msgCtx.getProperty(HTTPConstants.MC_HTTP_SERVLETREQUEST);
 		String cookie = request.getHeader(HTTPConstants.COOKIE_STRING);
 		ConfigurationContext cfgCtx = msgCtx.getConfigurationContext();
+		UUID threadUuid = UUID.randomUUID();
 		HadoopCarbonMessageContext hadoopMsgCtx = new HadoopCarbonMessageContext(cfgCtx, cookie);
 		HadoopCarbonMessageContext.set(hadoopMsgCtx);
 		HadoopJobRunnerThread hadoopJobThread = new HadoopJobRunnerThread(jarName, className, args);
 		hadoopJobThread.start();
+		synchronized (hadoopJobThread) {
+			try {
+				hadoopJobThread.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		CarbonJobReporter reporter = hadoopJobThread.getCarbonJobReporter();
+		CarbonJobReporterMap.putCarbonHadoopJobReporter(threadUuid, hadoopJobThread.getCarbonJobReporter());
+		synchronized (reporter) {
+			try {
+				reporter.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return threadUuid.toString();
+	}
+	
+	public float[] getProgress(String key) {
+		float[] progress = {-1, -1};
+		CarbonJobReporter jobReporter = getJobReporter(key);
+		if (jobReporter == null) {
+			return progress;
+		}
+		progress[0] = jobReporter.getMapProgress();
+		progress[1] = jobReporter.getReduceProgress();
+		return progress;
+	}
+	
+	public boolean isJobComplete(String key) {
+		CarbonJobReporter jobReporter = getJobReporter(key);
+		return jobReporter.isJobComplete();
+	}
+	
+	public boolean isJobSuccessul(String key) {
+		CarbonJobReporter jobReporter = getJobReporter(key);
+		return jobReporter.isJobSuccessful();
+	}
+	
+	public String getJobName(String key) {
+		CarbonJobReporter jobReporter = getJobReporter(key);
+		return jobReporter.getJobName();
+	}
+	
+	public String getJobId(String key) {
+		CarbonJobReporter jobReporter = getJobReporter(key);
+		return jobReporter.getJobId();
+	}
+	
+	public long getCounter(String key, Enum counterKey) {
+		CarbonJobReporter jobReporter = getJobReporter(key);
+		return jobReporter.getCounter(counterKey);
+	}
+	
+	private CarbonJobReporter getJobReporter(String threadUuidString) {
+		UUID threadUuid = UUID.fromString(threadUuidString);
+		return CarbonJobReporterMap.getCarbonHadoopJobReporter(threadUuid);
 	}
 	
 	public void getJar(String jarPath) {

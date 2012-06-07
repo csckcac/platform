@@ -1,6 +1,9 @@
 package org.wso2.carbon.mapred.mgt.api;
 
+import java.io.PrintStream;
+
 import org.apache.hadoop.conf.Configuration;
+import org.apache.log4j.Logger;
 
 public abstract class CarbonMapRedJob {
 	
@@ -8,6 +11,7 @@ public abstract class CarbonMapRedJob {
 	 * This the private Configuration object for this class.
 	 */
 	private Configuration conf;
+	private final Logger logger = Logger.getLogger(CarbonMapRedJob.class);
 	
 	/**
 	 * This method is invoked by an HadoopJobRunnerThread object which is responsible for executing 
@@ -25,11 +29,11 @@ public abstract class CarbonMapRedJob {
 		return this.conf;
 	}
 	
-	
 	/**
 	 * This is the entry point to the MapReduce job, this method is called by an HadoopJobRunnerThread 
 	 * object to start the MapReduce job.
 	 * @param args Arguments to the Hadoop MapReduce job.
 	 */
 	public abstract void run(String[] args);
+	
 }

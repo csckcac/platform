@@ -38,6 +38,6 @@
         <parameter name="AuthorizationAction" locked="true">/permission/admin/hadoop/submission</parameter>-->
         <parameter name="DoAuthentication" locked="true">false</parameter>
     </service>
-    <parameter name="adminService" locked="ture">true</parameter>
-    <!--<parameter name="hiddenService" locked="true">true</parameter> -->
+    <parameter name="adminService" locked="true">false</parameter>
+    <parameter name="hiddenService" locked="true">false</parameter>
 </serviceGroup>

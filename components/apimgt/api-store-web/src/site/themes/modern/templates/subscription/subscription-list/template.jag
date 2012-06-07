@@ -83,7 +83,8 @@
     <% } %>
     <% if(lenI==0){ %>
         <div class="alert alert-info">
-            No Subscriptions created yet.
+            No subscriptions created yet. Click on the 'APIs' tab on the top to browse the APIs
+            available for subscription.
         </div>
     <% } %>
 </div>

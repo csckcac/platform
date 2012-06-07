@@ -16,8 +16,8 @@
             <li class="dropdown">
               <a class="link-to-user dropdown-toggle" data-toggle="dropdown"><%=user.username%> <b class="caret"></b></a>
               <ul class="dropdown-menu" id="userInfoMenu">
-                <li class="themeSelection">
-                    <h3><%=user.username%></h3>
+                <li class="userInfoSection">
+                    Logged in as <h4><%=user.username%></h4>
                 </li>
                 <li class="logout-link-special"><button id="logout-link" class="btn btn-danger">Logout</button></li>
               </ul>
@@ -33,18 +33,21 @@
                         <table class="table">
                             <tr>
                                 <td>
-                                    <div class="thumbnail">
-                                        <img title="fancy" onclick="applyTheme(this)" src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-fancy.png")%>" />
+                                    <div class="thumbnail <% if(jagg.getUserTheme() == "fancy") { %>currentTheme<% } %>">
+                                        <a title="fancy" class="badge themeLabel" <% if(jagg.getUserTheme() != "fancy") { %>onclick="applyTheme(this)"<% } %>>
+                                            <img src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-fancy.png")%>" />
+                                            <br /><div class="themeName">Fancy Theme</div>
+                                        </a>
                                     </div>
-                                    <% if(jagg.getUserTheme() != "fancy") { %>
-                                        <a class="themeSelectionLink" title="fancy" onclick="applyTheme(this)">Apply</a>
-                                    <% } %>
+
                                 </td>
                                 <td>
-                                    <div class="thumbnail"><img title="modern" onclick="applyTheme(this)" src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-modern.png")%>" /></div>
-                                    <% if(jagg.getUserTheme() != "modern") { %>
-                                        <a class="themeSelectionLink" title="modern" onclick="applyTheme(this)">Apply</a>
-                                    <% } %>
+                                    <div class="thumbnail <% if(jagg.getUserTheme() == "modern") { %>currentTheme<% } %>">
+                                        <a title="modern" class="badge themeLabel" <% if(jagg.getUserTheme() != "modern") { %>onclick="applyTheme(this)"<% } %>>
+                                            <img src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-modern.png")%>" />
+                                            <br /><div class="themeName">Modern Theme</div>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         </table>

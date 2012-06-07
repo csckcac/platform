@@ -167,8 +167,11 @@ div div.accordion-inner {
     color:#444 !important;
     margin-left:5px;
 }
-.themeSelection{
+.themeSelection,.userInfoSection{
     padding:20px;
+}
+.themeSelection{
+    width:400px;
 }
 .navbar .navbar-inner .nav.actions a.themeSelectionLink {
     margin:5px;
@@ -202,6 +205,16 @@ input.error{
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(218, 68, 74, 0.6);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(218, 68, 74, 0.6);
 }
-.page-content div.nav-collapse{
-    display:none;
+.currentTheme{
+    border:solid 2px #0099ff;
+}
+.themeLabel{
+    border-radius:0;
+}
+.currentTheme a.themeLabel{
+    background-color:#3A87AD;
+    cursor:default;
+}
+.currentTheme,.currentTheme a,.currentTheme img{
+    cursor:default !important;
 }

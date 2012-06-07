@@ -11,7 +11,7 @@ $(document).ready(function() {
             password:$('#newPassword').val()
         }, function (result) {
             if (result.error == false) {
-                jagg.message({content:"User added success",type:"info",cbk:function(){location.href = context;}});
+                jagg.message({content:"User added successfully. You can now sign into the API store using the new user account.",type:"info",cbk:function(){location.href = context;}});
 
             } else {
                 jagg.message({content:result.message,type:"error"});

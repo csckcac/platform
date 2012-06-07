@@ -95,6 +95,14 @@
         Base framework issues</a></li>
 </ul>
 
+    <h2>Release 1.0.0-beta</h2>
+    <p>This release contains a number of bug fixes.</p>
+    <p>ChangeLog</p>
+    <ol>
+        <li>CARBON-12606 - Added roles per publishing, un publishing and listing of servers(users
+            who have permission for publishing will have edit, delete permission of servers).</li>
+    </ol>
+
     <h2>Release 1.0.0-alpha</h2>
     <p>This release contains a number of bug fixes.</p>
     <p>ChangeLog</p>
@@ -105,19 +113,18 @@
             the messages in the thrift buffers</li>
         <li>CARBON-12485 - Removed the unwanted features such as VFS, JMS etc..</li>
         <li>CARBON-12549 - CSG Contents are not showing when logged as admin to Stratos CSG, 
-            errors are throwing when logged as seperate user.</li>
+            errors are throwing when logged as separate user.</li>
         <li>CARBON-12577 - Fixed the CSG user guide.</li>
         <li>CARBON-12603 - Added a 'What's this ?' help button which gives more information about
             CSG server URL.</li>
         <li>CARBON-12604 - Fixed the CSG server to have a default user, 'csguser'.</li>
-        <li>CARBON-12606 - Added roles per publishing, un publishing and listng of servers.</li>
         <li>CARBON-12607 - Added a link to the tool section for the EPRs of the CSG service.</li>
         <li>CARBON-12630 - CSG Agent should not allow users to delete a server when there are services
             published onto it.</li>
         <li>CARBON-12782 - Updated the documentation to include information about the 'csguser'.</li>
         <li>CARBON-12872 - Added integration tests for CSG.</li>
         <li>CARBON-12940 - Added all csg.properties into an appendix.</li>
-	<li>CARBON-13026 - Create proper theme for CSG service (CSG Stratos service theme
+	    <li>CARBON-13026 - Create proper theme for CSG service (CSG Stratos service theme
             + html page for IS for CSG service).</li>
         <li>CARBON-13027 - Fixed issue when clicking Registry browser.</li>
         <li>CARBON-13028 - Source packs for CSG products and CSG service.</li>

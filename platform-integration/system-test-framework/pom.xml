@@ -50,7 +50,7 @@
 
 
 
-        <!--  <repository>
+        <!--<repository>
           <id>central</id>
           <name>WSO2 Staging Maven2 Repository</name>
           <url>http://stagingrepo.wso2.com/</url>

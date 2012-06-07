@@ -49,11 +49,17 @@ public class CustomTestNGrReporter implements IReporter {
 
     private final XMLReporterConfig config = new XMLReporterConfig();
     private XMLStringBuffer rootBuffer;
-    ITestContext testContext = null;
+    ITestContext testRootContext = null;
+    ISuite testRootSuite=null;
     Exception exception = null;
 
     public CustomTestNGrReporter(ITestContext context, Exception e) {
-        testContext = context;
+        testRootContext = context;
+        exception = e;
+    }
+
+    public CustomTestNGrReporter(ISuite suite, Exception e) {
+        testRootSuite = suite;
         exception = e;
     }
 
@@ -120,7 +126,7 @@ public class CustomTestNGrReporter implements IReporter {
         xmlBuffer.push(XMLReporterConfig.TAG_SUITE, getSuiteAttributes(suite));
         writeSuiteGroups(xmlBuffer, suite);
         final ISuite iSuite = suite;
-        final ITestContext testContext2 = testContext;
+        final ITestContext testContext2 = testRootContext;
         final IResultMap resultMap = new ResultMap();
         CustomTestngResults results2 = new CustomTestngResults();
         ISuiteResult iSuiteResult = new ISuiteResult() {
@@ -129,7 +135,7 @@ public class CustomTestNGrReporter implements IReporter {
             }
 
             public ITestContext getTestContext() {
-                return testContext;
+                return testRootContext;
             }
         };
         final Map<String, ISuiteResult> results = new HashMap<String, ISuiteResult>();
@@ -146,14 +152,14 @@ public class CustomTestNGrReporter implements IReporter {
 
         ReportContextSetter contextSetter = new ReportContextSetter();
 
-        testContext = contextSetter.setContext(testContext2, resultMap, newSuite);
+        testRootContext = contextSetter.setContext(testContext2, resultMap, newSuite);
         ISuiteResult iSuiteResult2 = new ISuiteResult() {
             public String getPropertyFileName() {
                 return reportsuite.getXmlSuite().getFileName();
             }
 
             public ITestContext getTestContext() {
-                return testContext;
+                return testRootContext;
             }
         };
 

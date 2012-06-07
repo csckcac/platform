@@ -34,6 +34,7 @@ public class API {
     private String url;
     private String sandboxUrl;
     private String wsdlUrl;
+    private String wadlUrl;
     private String context;
     private String thumbnailUrl;
     private Set<String> tags = new LinkedHashSet<String>();
@@ -241,5 +242,13 @@ public class API {
 
     public void setAuthorizationPolicy(AuthorizationPolicy authorizationPolicy) {
         this.authorizationPolicy = authorizationPolicy;
+    }
+
+    public String getWadlUrl() {
+        return wadlUrl;
+    }
+
+    public void setWadlUrl(String wadlUrl) {
+        this.wadlUrl = wadlUrl;
     }
 }

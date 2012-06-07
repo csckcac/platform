@@ -46,6 +46,7 @@ import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
 import org.wso2.carbon.registry.extensions.utils.CommonUtil;
 import org.wso2.carbon.utils.component.xml.config.ManagementPermission;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -450,7 +451,7 @@ public class GovernanceUtils {
         if (RegistryContext.getBaseInstance() == null) {
             RegistryContext.getBaseInstance(null, false);
         }
-        return new UserRegistry(username, 0, registry, null,
+        return new UserRegistry(username, MultitenantConstants.SUPER_TENANT_ID, registry, null,
                 RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH);
     }
 

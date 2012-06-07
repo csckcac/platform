@@ -23,11 +23,10 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.governance.services.stub.AddServicesServiceStub;
-import org.wso2.carbon.integration.core.TestTemplate;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.registry.metadata.test.util.TestUtils;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.fail;
 
 /**
  * A test case which tests registry service get configuration operation
@@ -55,7 +54,7 @@ public class ServiceGetConfigurationTestCase {
         try {
             String serviceConfiguration = addServicesServiceStub.getServiceConfiguration();
 
-            if (serviceConfiguration.indexOf("<table name=\"Service Lifecycle\">") != -1) {
+            if (serviceConfiguration.indexOf("<table name=\"Overview\">") != -1) {
                 log.info("service configuration content found");
 
             } else {

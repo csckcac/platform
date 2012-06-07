@@ -47,9 +47,9 @@ public class VersionHandlingTestCase {
         r1.setContent("some content");
         clearResource("/version/r1");
         registry.put("/version/r1", r1);
+        registry.createVersion("/version/r1");
         registry.put("/version/r1", r1);
 
-        //registry.createVersion("/version/r1");
 
         String[] r1Versions = registry.getVersions("/version/r1");
         assertEquals(r1Versions.length, 1, "/version/r1 should have 1 version.");
@@ -57,9 +57,9 @@ public class VersionHandlingTestCase {
 
         Resource r1v2 = registry.get("/version/r1");
         r1v2.setContent("another content");
+        registry.createVersion("/version/r1");
         registry.put("/version/r1", r1v2);
 
-        //registry.createVersion("/version/r1");
 
         r1Versions = registry.getVersions("/version/r1");
         assertEquals(r1Versions.length, 2, "/version/r1 should have 2 version.");
@@ -78,10 +78,12 @@ public class VersionHandlingTestCase {
 
         Resource r12 = registry.get("/v2/r1");
         r12.setContent("content 2");
+        registry.createVersion("/v2/r1");
         registry.put("/v2/r1", r12);
 
         Resource dummy = registry.newResource();
         dummy.setContent("dummy".getBytes());
+        registry.createVersion("/v2/r1");
         registry.put("/v2/r1", dummy);
 
         String[] r1Versions = registry.getVersions("/v2/r1");
@@ -111,10 +113,12 @@ public class VersionHandlingTestCase {
 
         Resource r1v2 = registry.get("/v4/r1");
         r1v2.addProperty("p2", "v2");
+        registry.createVersion("/v4/r1");
         registry.put("/v4/r1", r1v2);
 
         Resource dummy = registry.newResource();
         dummy.setContent("dummy".getBytes());
+        registry.createVersion("/v4/r1");
         registry.put("/v4/r1", dummy);
 
         String[] r1Versions = registry.getVersions("/v4/r1");
@@ -185,10 +189,12 @@ public class VersionHandlingTestCase {
 
         Resource r1e1 = registry.get("/test/v10/r1");
         r1e1.setContent("content 2");
+        registry.createVersion("/test/v10/r1");
         registry.put("/test/v10/r1", r1e1);
 
         Resource r1e2 = registry.get("/test/v10/r1");
         r1e2.setContent("content 3");
+        registry.createVersion("/test/v10/r1");
         registry.put("/test/v10/r1", r1e2);
 
         String[] r1Versions = registry.getVersions("/test/v10/r1");
@@ -362,6 +368,7 @@ public class VersionHandlingTestCase {
         Resource r1 = registry.newResource();
         r1.setContent("r1c1");
         registry.put("/test/v13/r1", r1);
+        registry.createVersion("/test/v13/r1");
         registry.put("/test/v13/r1", r1);
 
         String[] r1Versions = registry.getVersions("/test/v13/r1");
@@ -370,6 +377,7 @@ public class VersionHandlingTestCase {
         assertEquals(r1e1.getPermanentPath(), r1Versions[0], "Permalink incorrect");
 
         r1e1.setContent("r1c2");
+        registry.createVersion("/test/v13/r1");
         registry.put("/test/v13/r1", r1e1);
 
         r1Versions = registry.getVersions("/test/v13/r1");

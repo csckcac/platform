@@ -81,13 +81,6 @@ public class FileSystemImportExportTestCase {
         String containUm2 = new String((byte[]) r2.getContent());
         assertTrue(containString(containUm2, "CREATE"), "Resource contain not found");
 
-
-        String[] r1Versions12 = registry.getVersions("/framework/dbscripts/mssql.sql");
-        assertTrue(versionCount(r1Versions12), "Resource should have atleaset 1 version.");
-
-        String[] r1Versions22 = registry.getVersions("/framework/dbscripts/mysql.sql");
-        assertTrue(versionCount(r1Versions22), "Resource should have atleaset 1 version.");
-
         r2.discard();
 
     }

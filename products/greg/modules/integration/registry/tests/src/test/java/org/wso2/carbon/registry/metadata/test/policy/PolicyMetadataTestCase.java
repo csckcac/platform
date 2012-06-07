@@ -17,16 +17,13 @@
 */
 package org.wso2.carbon.registry.metadata.test.policy;
 
-import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.CustomLifecyclesChecklistAdminServiceStub;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
-import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.LifecycleActions;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property;
-import org.wso2.carbon.integration.core.TestTemplate;
 import org.wso2.carbon.integration.framework.LoginLogoutUtil;
 import org.wso2.carbon.registry.info.stub.InfoAdminServiceStub;
 import org.wso2.carbon.registry.info.stub.beans.utils.xsd.Comment;
@@ -40,9 +37,7 @@ import org.wso2.carbon.registry.relations.stub.beans.xsd.AssociationTreeBean;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
 import org.wso2.carbon.registry.resource.stub.beans.xsd.VersionPath;
 
-import java.util.Collections;
-
-import static org.testng.Assert.*;
+import static org.testng.Assert.fail;
 
 /**
  * A test case which tests registry policy meta data operation
@@ -238,7 +233,7 @@ public class PolicyMetadataTestCase {
             versionPath = resourceAdminServiceStub.getVersionsBean(policyPath + resourceName).getVersionPaths();
             versionNoAfter = versionPath[0].getVersionNumber();
 
-            if (versionNoBefore != versionNoAfter - 1) {
+            if (versionNoBefore != versionNoAfter) {
                 fail("New Version has not been created: ");
                 log.error("New Version has not been created: ");
 

@@ -80,7 +80,7 @@
     %>
             <carbon:report
                     component="org.wso2.carbon.registry.activities"
-                    template="ActivityReportTemplate"
+                    template="Activity Search Report"
                     pdfReport="true"
                     htmlReport="true"
                     excelReport="true"

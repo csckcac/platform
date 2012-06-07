@@ -8,43 +8,49 @@ var provider = '<%=request.getParameter("provider")%>';
 var docName = '<%=request.getParameter("docName")%>';
 </script>
         <div class="alert alert-error" id="inlineError" style="display:none">
-                            <span id="inlineErrorSpan"></span>
-                        </div>
-        <div class="span10" style="margin:20px 0px 0px 40px;">
-			<div id="apiDeatils">
-				<h2><%=request.getParameter("docName")%></h2>
-			</div>
-		</div>
-        <div class="span8">
-            <textarea id="inlineEditor" style="width:100%;height:500px;"></textarea>
+            <span id="inlineErrorSpan"></span>
         </div>
-        <div class="span3">
-            <table class="table table-bordered table-striped">
+        <div id="layout-base" class="container content-section" style="padding:20px">
+            <div class="row">
+                <div class="span12">
+                    <div id="apiDeatils">
+                        <h2><%=request.getParameter("docName")%></h2>
+                    </div>
+                </div>
+                <div class="span8">
+                    <textarea id="inlineEditor" style="width:100%;height:500px;"></textarea>
+                </div>
+                <div class="span4">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>Version</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <code>
+                                    <%=request.getParameter("version")%></code>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <% if(mode=="edit"){%>
+                <div class="span11">
+                    <div class="form-actions">
+                        <button type="button" title="click 'Apply' button to apply the change to the Doc and stay in this tab" class="btn btn-primary" id="inline-apply-button" onclick="saveContent(provider,apiName,apiVersion,docName,'apply')">Apply</button>
+                        <button type="button" title="click 'Save' button to save the Doc and move away from this tab" class="btn btn-primary" id="inline-save-button" onclick="saveContent(provider,apiName,apiVersion,docName,'save')">Save</button>
+                        <button type="button" title="click 'Close' button to cancel and move away from this tab"  class="btn btn-primary" id="inline-cancel-button" onclick="window.close()">Close</button>
 
-        <thead>
-          <tr>
-            <th>Version</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <code><%=request.getParameter("version")%></code>
-            </td>
-          </tr>
+                    </div>
+                </div>
+                <%}%>
+    </div>
+</div>
 
-        </tbody>
-      </table>
-        </div>
-        <% if(mode=="edit"){%>
-        <div class="span11">
-            <div class="form-actions">
-                <button type="button" title="click 'Apply' button to apply the change to the Doc and stay in this tab" class="btn btn-primary" id="inline-apply-button" onclick="saveContent(provider,apiName,apiVersion,docName,'apply')">Apply</button>
-				<button type="button" title="click 'Save' button to save the Doc and move away from this tab" class="btn btn-primary" id="inline-save-button" onclick="saveContent(provider,apiName,apiVersion,docName,'save')">Save</button>
-				<button type="button" title="click 'Close' button to cancel and move away from this tab"  class="btn btn-primary" id="inline-cancel-button" onclick="window.close()">Close</button>
 
-            </div>
-        </div>
-        <%}%>
+
 
 <%});%>

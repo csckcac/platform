@@ -173,7 +173,7 @@
                     if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/resources/browse")) {
                         for (int i = 0; i < bean.getNames().length; i++) {
                             if (bean.getTypes()[i].equals("path")) {
-                                %><td><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&path=<%=artifact.getValuesB()[i].replace("&", "%26")%>"><%=artifact.getValuesA()[i]%></a></td><%
+                                %><td><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&path=<%=artifact.getValuesB()[i].replace("&", "%26")%>"><%= artifact.getValuesA()[i] != null ? artifact.getValuesA()[i] : "" %></a></td><%
                             } else {
                                 %><td><%= artifact.getValuesA()[i] != null ? artifact.getValuesA()[i] : "" %></td><%
                             }

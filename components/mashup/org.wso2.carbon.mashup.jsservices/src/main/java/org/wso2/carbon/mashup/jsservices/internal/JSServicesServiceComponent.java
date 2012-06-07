@@ -55,9 +55,9 @@ public class JSServicesServiceComponent {
                         public void run() {
                             try {
                                 if (!hostObjectsThatNeedServices.isEmpty()) {
-                                    log.warn("JS Deployer initialization is delayed due to the following unsatisfied Host Objects..");
+                                    log.debug("JS Deployer initialization is delayed due to the following unsatisfied Host Objects..");
                                     for (String configItem : hostObjectsThatNeedServices) {
-                                        log.warn("Waiting for required Host Object : " + configItem);
+                                        log.debug("Waiting for required Host Object : " + configItem);
                                     }
                                 } else {
                                     this.cancel();

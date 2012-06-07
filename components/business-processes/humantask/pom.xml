@@ -92,17 +92,17 @@
             <dependency>
                 <groupId>org.apache.xmlbeans.wso2</groupId>
                 <artifactId>xmlbeans</artifactId>
-                <version>2.3.0.wso2v1</version>
+                <version>${orbit.version.org.apache.xmlbeans.wso2.xmlbeans}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.geronimo.components.wso2</groupId>
                 <artifactId>geronimo-connector</artifactId>
-                <version>2.0.1.wso2v1</version>
+                <version>${orbit.version.org.apache.geronimo.components.wso2.geronimo-connector}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.geronimo.components.wso2</groupId>
                 <artifactId>geronimo-transaction</artifactId>
-                <version>2.0.1.wso2v1</version>
+                <version>${orbit.version.org.apache.geronimo.components.wso2.geronimo-transaction}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -171,7 +171,7 @@
     </dependencyManagement>
     <properties>
         <axis2.wso2.version.humantask>${axis2.wso2.version}</axis2.wso2.version.humantask>
-        <saxon-bps.wso2.version.humantask>9.0.0.x-wso2v1</saxon-bps.wso2.version.humantask>
+        <saxon-bps.wso2.version.humantask>${saxon-bps.wso2.version.human-task}</saxon-bps.wso2.version.humantask>
         <wso2carbon.version.humantask>${wso2carbon.version}</wso2carbon.version.humantask>
         <simple-json.version>1.1.wso2v1</simple-json.version>
     </properties>

@@ -313,35 +313,4 @@ public class WSDLTestCaseClient {
         }
 
     }
-
-    @Test(groups = {"wso2.greg"}, description = "Test adding multiple wsdl")
-    public void testMultipleWsdl() throws GovernanceException, IOException {
-        Wsdl wsdl;
-        WsdlManager wsdlManager = new WsdlManager(governance);
-        String wsdlFileLocation = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator
-                + "artifacts" + File.separator + "GREG" + File.separator + "wsdl" + File.separator + "Automated.wsdl";
-
-
-        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
-        for (Wsdl w : wsdlList) {
-            if (w.getQName().getLocalPart().contains("Automated")) {
-                wsdlManager.removeWsdl(w.getId());
-            }
-        }
-
-        try {
-            for (int i = 0; i <= 10000; i++) {
-                wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFileLocation).getBytes(),
-                        "AutomatedWsdl" + i + ".wsdl");
-                wsdlManager.addWsdl(wsdl);
-                System.out.println("Adding : AutomatedWsdl" + i + ".wsdl");
-                if (!wsdlManager.getWsdl(wsdl.getId()).getQName().getLocalPart().equalsIgnoreCase
-                        ("AutomatedWsdl" + i + ".wsdl")) {
-                    assertTrue("Wsdl not added..", false);
-                }
-            }
-        } catch (GovernanceException e) {
-            throw new GovernanceException("Error found while adding multiple Wsdl : " + e.getMessage());
-        }
-    }
 }

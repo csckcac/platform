@@ -286,38 +286,4 @@ public class SchemaTestCaseClient {
             }
         }
     }
-
-    @Test(groups = {"wso2.greg"}, description = "Adding large number of schemas")
-    public void testAddLargeNoOfSchemas() throws GovernanceException {
-        Schema schema;
-        String schemaContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<xsd:schema xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://www.company.org\" xmlns=\"http://www.company.org\" elementFormDefault=\"qualified\">\n" +
-                "    <xsd:complexType name=\"PersonType\">\n" +
-                "        <xsd:sequence>\n" +
-                "           <xsd:element name=\"Name\" type=\"xsd:string\"/>\n" +
-                "           <xsd:element name=\"SSN\" type=\"xsd:string\"/>\n" +
-                "        </xsd:sequence>\n" +
-                "    </xsd:complexType>\n" +
-                "</xsd:schema>";
-
-        SchemaManager schemaManager = new SchemaManager(governance);
-        Schema[] schemaList = schemaManager.getAllSchemas();
-        for (Schema s : schemaList) {
-            if (s.getQName().getLocalPart().contains("Automated")) {
-                schemaManager.removeSchema(s.getId());
-            }
-        }
-        try {
-            for (int i = 0; i <= 10000; i++) {
-                schema = schemaManager.newSchema(schemaContent.getBytes(), "AutomatedSchema" + i + ".xsd");
-                schemaManager.addSchema(schema);
-                System.out.println("Adding : AutomatedSchema" + i + ".xsd");
-                if (!schemaManager.getSchema(schema.getId()).getQName().getLocalPart().equalsIgnoreCase("AutomatedSchema" + i + ".xsd")) {
-                    assertTrue("Schema not added..", false);
-                }
-            }
-        } catch (GovernanceException e) {
-            throw new GovernanceException("Error found while adding multiple schemas : " + e.getMessage());
-        }
-    }
 }

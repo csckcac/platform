@@ -109,7 +109,8 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.contentsearch.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.core.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.proxy.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.governance:org.wso2.governance.styles.feature:${carbon.version}</featureArtifactDef>
+                                <!--removing to fix the stratos theam from standalone mode.-->
+                                <!--<featureArtifactDef>org.wso2.governance:org.wso2.governance.styles.feature:${carbon.version}</featureArtifactDef>-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.dashboardpopulator.server.feature:${carbon.version}</featureArtifactDef>
                             	<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.token.feature:${carbon.version}</featureArtifactDef>
@@ -295,10 +296,11 @@
                                     <id>org.wso2.carbon.discovery.proxy.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.governance.styles.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
+                                <!--removing to fix the stratos theam from standalone mode.-->
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.governance.styles.feature.group</id>-->
+                                    <!--<version>${carbon.version}</version>-->
+                                <!--</feature>-->
 				                <feature>
                                     <id>org.wso2.carbon.dashboard.feature.group</id>
                                     <version>${carbon.version}</version>

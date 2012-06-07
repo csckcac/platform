@@ -145,7 +145,7 @@ public class UserRegistrationService extends AbstractAdmin {
                     permissionList.add(permission);
                 }
                 userStoreManager.addRole(defaultRoleName, new String[]{userName},
-                                         new Permission[permissionList.size()]);
+                                         permissionList.toArray(new Permission[permissionList.size()]));
             } else {
                 userStoreManager.updateRoleListOfUser(userName, null, new String[]{defaultRoleName});
             }

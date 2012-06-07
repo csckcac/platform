@@ -52,10 +52,16 @@ public class UsageDataPersistenceManager {
     }
 
     public void scheduleUsageDataPersistenceTask() {
-        scheduler.scheduleWithFixedDelay(new UsageDataPersistenceTask(persistenceJobs, configuration),
-                configuration.getUsageTasksStartupDelayInMilliSeconds(),
-                configuration.getUsageTasksExecutionIntervalInMilliSeconds(),
-                TimeUnit.MILLISECONDS);
+        //we will schedule the usage data persistence task only if interval is not -1
+        if(configuration.getUsageTasksExecutionIntervalInMilliSeconds()>0){
+            scheduler.scheduleWithFixedDelay(new UsageDataPersistenceTask(persistenceJobs, configuration),
+                    configuration.getUsageTasksStartupDelayInMilliSeconds(),
+                    configuration.getUsageTasksExecutionIntervalInMilliSeconds(),
+                    TimeUnit.MILLISECONDS);
+            log.debug("Usage data persistence task was scheduled");
+        }else{
+            log.debug("Usage data persistence task is disabled");
+        }
     }
 
 

@@ -18,11 +18,14 @@ package org.wso2.carbon.usage.agent.persist;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.usage.agent.beans.BandwidthUsage;
 import org.wso2.carbon.usage.agent.config.UsageAgentConfiguration;
 import org.wso2.carbon.usage.agent.exception.UsageException;
 import org.wso2.carbon.usage.agent.util.PublisherUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
+import javax.swing.plaf.multi.MultiToolTipUI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Queue;
@@ -149,8 +152,10 @@ public class UsageDataPersistenceTask implements Runnable {
 
             for (BandwidthUsage usage : usages) {
                 try {
-                    // publish the usage entry
-                    PublisherUtils.publish(usage);
+                    // publish the usage entry if it is not the super-tenant
+                    if(MultitenantConstants.SUPER_TENANT_ID != usage.getTenantId()){
+                        PublisherUtils.publish(usage);
+                    }
                 } catch (UsageException e) {
                     log.error("Error in publishing bandwidth usage data", e);
                 }

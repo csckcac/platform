@@ -30,6 +30,7 @@ import org.wso2.carbon.event.core.Message;
 import org.wso2.carbon.event.core.exception.EventBrokerException;
 import org.wso2.carbon.usage.agent.beans.BandwidthUsage;
 import org.wso2.carbon.usage.agent.exception.UsageException;
+import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.NetworkUtils;
@@ -85,8 +86,10 @@ public class PublisherUtils {
 
         String tenantDomain = null;
         try {
-            tenantDomain = Util.getRealmService().getTenantManager().getTenant(tenantId).
-                    getDomain();
+            Tenant tenant = Util.getRealmService().getTenantManager().getTenant(tenantId);
+            if(tenant!=null){
+                tenantDomain = tenant.getDomain();
+            }
         } catch (org.wso2.carbon.user.api.UserStoreException e) {
             throw new UsageException("Failed to get tenant domain", e);
         }

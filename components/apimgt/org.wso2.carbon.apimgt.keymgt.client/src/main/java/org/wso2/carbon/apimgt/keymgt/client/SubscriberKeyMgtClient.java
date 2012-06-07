@@ -69,4 +69,8 @@ public class SubscriberKeyMgtClient {
                                String applicationName, String keyType) throws Exception {
         return subscriberServiceStub.getAccessToken(userId, apiInfoDTO, applicationName, keyType);
     }
+
+    public String getApplicationAccessKey(String userId, String applicationName, String keyType) throws Exception {
+        return subscriberServiceStub.getApplicationAccessToken(userId, applicationName, keyType);
+    }
 }

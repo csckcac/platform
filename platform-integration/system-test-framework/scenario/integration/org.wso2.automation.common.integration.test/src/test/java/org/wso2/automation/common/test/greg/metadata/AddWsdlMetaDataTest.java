@@ -403,22 +403,22 @@ public class AddWsdlMetaDataTest {
 
         String wsdlUrl = "https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
                 "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/" +
-                "artifacts/GREG/wsdl/clinicalNotesService.wsdl";
+                "artifacts/GREG/wsdl/Axis2Service_Wsdl_With_Wsdl_Imports.wsdl";
 
         Wsdl wsdl = wsdlManager.newWsdl(wsdlUrl);
         wsdlManager.addWsdl(wsdl);
 
         wsdlList = wsdlManager.getAllWsdls();
         for (Wsdl w : wsdlList) {
-            if (w.getQName().getLocalPart().contains("clinicalNotesService.wsdl")) {
+            if (w.getQName().getLocalPart().contains("Axis2Service_Wsdl_With_Wsdl_Imports.wsdl")) {
                 isMainWsdlFound = true;
             }
-            if (w.getQName().getLocalPart().contains("IClinicalNotes.wsdl")) {
+            if (w.getQName().getLocalPart().contains("Axis2ImportedWsdl.wsdl")) {
                 isImportWsdlFound = true;
             }
         }
-        assertTrue(isMainWsdlFound, "WSDL not found : clinicalNotesService.wsdl");
-        assertTrue(isImportWsdlFound, "Imported wsdl not found : IClinicalNotes.wsdl");
+        assertTrue(isMainWsdlFound, "WSDL not found : Axis2Service_Wsdl_With_Wsdl_Imports.wsdl");
+        assertTrue(isImportWsdlFound, "Imported wsdl not found : Axis2ImportedWsdl.wsdl");
     }
 
     @Test(groups = {"wso2.greg.metadata"}, description = "Add wsdl which has wsdl import via " +
@@ -430,16 +430,16 @@ public class AddWsdlMetaDataTest {
 
         String wsdlFileLocation = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator
                 + "artifacts" + File.separator + "GREG" + File.separator + "wsdl" + File.separator
-                + "clinicalNotesService.wsdl";
-        String registryLocation = "/clinicalNotesService.wsdl";
+                + "Axis2Service_Wsdl_With_Wsdl_Imports.wsdl";
+        String registryLocation = "/Axis2Service_Wsdl_With_Wsdl_Imports.wsdl";
         URL wsdlURL = new URL("file:///" + wsdlFileLocation);
 
         Wsdl[] wsdlList = wsdlManager.getAllWsdls();
         for (Wsdl w : wsdlList) {
-            if (w.getQName().getLocalPart().contains("clinicalNotesService.wsdl")) {
+            if (w.getQName().getLocalPart().contains("Axis2Service_Wsdl_With_Wsdl_Imports.wsdl")) {
                 wsdlManager.removeWsdl(w.getId());
             }
-            if (w.getQName().getLocalPart().contains("IClinicalNotes.wsdl")) {
+            if (w.getQName().getLocalPart().contains("Axis2ImportedWsdl.wsdl")) {
                 wsdlManager.removeWsdl(w.getId());
             }
         }
@@ -453,15 +453,15 @@ public class AddWsdlMetaDataTest {
 
         wsdlList = wsdlManager.getAllWsdls();
         for (Wsdl w : wsdlList) {
-            if (w.getQName().getLocalPart().contains("clinicalNotesService.wsdl")) {
+            if (w.getQName().getLocalPart().contains("Axis2Service_Wsdl_With_Wsdl_Imports.wsdl")) {
                 isMainWsdlFound = true;
             }
-            if (w.getQName().getLocalPart().contains("IClinicalNotes.wsdl")) {
+            if (w.getQName().getLocalPart().contains("Axis2ImportedWsdl.wsdl")) {
                 isImportWsdlFound = true;
             }
         }
-        assertTrue(isMainWsdlFound, "WSDL not found : clinicalNotesService.wsdl");
-        assertTrue(isImportWsdlFound, "Imported wsdl not found : IClinicalNotes.wsdl");
+        assertTrue(isMainWsdlFound, "WSDL not found : Axis2Service_Wsdl_With_Wsdl_Imports.wsdl");
+        assertTrue(isImportWsdlFound, "Imported wsdl not found : Axis2ImportedWsdl.wsdl");
     }
 
     @Test(groups = {"wso2.greg.metadata"}, description = "Add wsdl which has $ in wsdl name", priority = 10)

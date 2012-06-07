@@ -209,6 +209,10 @@
                                 <!-- reporting features -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.feature:${carbon.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.template.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.template.ui.feature:${carbon.version}
+                                </featureArtifactDef>
                                 <!-- end reporting features -->
 
                                 <featureArtifactDef>
@@ -396,6 +400,14 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.reporting.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.reporting.template.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.reporting.template.ui.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
 

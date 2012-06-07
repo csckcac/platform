@@ -62,6 +62,10 @@
                                     <arg line="-uri src/main/resources/OAuthService.wsdl -u -uw -o target/generated-code                                     -p org.wso2.carbon.identity.oauth.stub -ns2p http://oauth.identity.carbon.wso2.org=org.wso2.carbon.identity.oauth.stub,http://dto.oauth.identity.carbon.wso2.org/xsd=org.wso2.carbon.identity.oauth.stub.dto,http://oauth.identity.carbon.wso2.org/xsd=org.wso2.carbon.identity.oauth.stub.types,http://org.apache.axis2/xsd=org.wso2.carbon.identity.oauth.stub.types.axis2"/>
                                     <classpath refid="wsdl2java.classpath"/>
                                 </java>
+								<java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/main/resources/OAuth2Service.wsdl -u -uw -o target/generated-code                                     -p org.wso2.carbon.identity.oauth2.stub -ns2p http://oauth2.identity.carbon.wso2.org=org.wso2.carbon.identity.oauth2.stub,http://dto.oauth2.identity.carbon.wso2.org/xsd=org.wso2.carbon.identity.oauth2.stub.dto,http://oauth2.identity.carbon.wso2.org/xsd=org.wso2.carbon.identity.oauth2.stub.types,http://org.apache.axis2/xsd=org.wso2.carbon.identity.oauth2.stub.types.axis2"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+                                </java>
                             </tasks>
                         </configuration>
                     </execution>
@@ -98,6 +102,7 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
                             org.wso2.carbon.identity.oauth.stub.*;version="${carbon.platform.package.export.version}",
+							org.wso2.carbon.identity.oauth2.stub.*;version="${carbon.platform.package.export.version}",
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.identity.oauth.stub.*,

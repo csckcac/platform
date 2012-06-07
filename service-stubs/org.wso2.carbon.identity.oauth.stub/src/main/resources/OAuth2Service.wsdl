@@ -1,0 +1,165 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://oauth2.identity.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2187="http://dto.oauth2.identity.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://oauth2.identity.carbon.wso2.org">
+    <wsdl:documentation>OAuth2Service</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2188="http://dto.oauth2.identity.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://dto.oauth2.identity.carbon.wso2.org/xsd" />
+            <xs:element name="validateClientInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="clientId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="callbackURI" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="validateClientInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2188:OAuth2ClientValidationResponseDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authorize">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="authorizeDTO" nillable="true" type="ax2188:OAuth2AuthorizeReqDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authorizeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2188:OAuth2AuthorizeRespDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.oauth2.identity.carbon.wso2.org/xsd">
+            <xs:complexType name="OAuth2ClientValidationResponseDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="applicationName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="callbackURL" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="validClient" type="xs:boolean" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="OAuth2AuthorizeReqDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="callbackUrl" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="consumerKey" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="responseType" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="scopes" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="OAuth2AuthorizeRespDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="accessToken" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="authorizationCode" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="authorized" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="callbackURI" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="validityPeriod" type="xs:long" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="authorizeRequest">
+        <wsdl:part name="parameters" element="ns1:authorize" />
+    </wsdl:message>
+    <wsdl:message name="authorizeResponse">
+        <wsdl:part name="parameters" element="ns1:authorizeResponse" />
+    </wsdl:message>
+    <wsdl:message name="validateClientInfoRequest">
+        <wsdl:part name="parameters" element="ns1:validateClientInfo" />
+    </wsdl:message>
+    <wsdl:message name="validateClientInfoResponse">
+        <wsdl:part name="parameters" element="ns1:validateClientInfoResponse" />
+    </wsdl:message>
+    <wsdl:portType name="OAuth2ServicePortType">
+        <wsdl:operation name="authorize">
+            <wsdl:input message="tns:authorizeRequest" wsaw:Action="urn:authorize" />
+            <wsdl:output message="tns:authorizeResponse" wsaw:Action="urn:authorizeResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="validateClientInfo">
+            <wsdl:input message="tns:validateClientInfoRequest" wsaw:Action="urn:validateClientInfo" />
+            <wsdl:output message="tns:validateClientInfoResponse" wsaw:Action="urn:validateClientInfoResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="OAuth2ServiceSoap11Binding" type="tns:OAuth2ServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="authorize">
+            <soap:operation soapAction="urn:authorize" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="validateClientInfo">
+            <soap:operation soapAction="urn:validateClientInfo" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="OAuth2ServiceSoap12Binding" type="tns:OAuth2ServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="authorize">
+            <soap12:operation soapAction="urn:authorize" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="validateClientInfo">
+            <soap12:operation soapAction="urn:validateClientInfo" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="OAuth2ServiceHttpBinding" type="tns:OAuth2ServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="authorize">
+            <http:operation location="authorize" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="validateClientInfo">
+            <http:operation location="validateClientInfo" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="OAuth2Service">
+        <wsdl:port name="OAuth2ServiceHttpsSoap11Endpoint" binding="tns:OAuth2ServiceSoap11Binding">
+            <soap:address location="https://localhost:9443/services/OAuth2Service.OAuth2ServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="OAuth2ServiceHttpsSoap12Endpoint" binding="tns:OAuth2ServiceSoap12Binding">
+            <soap12:address location="https://localhost:9443/services/OAuth2Service.OAuth2ServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="OAuth2ServiceHttpsEndpoint" binding="tns:OAuth2ServiceHttpBinding">
+            <http:address location="https://localhost:9443/services/OAuth2Service.OAuth2ServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -18,6 +18,7 @@ package org.wso2.carbon.usage.agent.persist;
 import org.wso2.carbon.stratos.common.constants.UsageConstants;
 import org.wso2.carbon.usage.agent.beans.BandwidthUsage;
 import org.wso2.carbon.usage.agent.util.Util;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.lang.System;
 
@@ -34,7 +35,7 @@ public class RegistryUsagePersister {
      */
 
     public static void storeIncomingBandwidth(int tenantId, long size) {
-        if (size > 0) {
+        if ((MultitenantConstants.SUPER_TENANT_ID!=tenantId) && (size > 0)) {
             BandwidthUsage usage = new BandwidthUsage(
                     tenantId, UsageConstants.REGISTRY_INCOMING_BW, size);
             Util.addToPersistingControllerQueue(usage);
@@ -43,18 +44,16 @@ public class RegistryUsagePersister {
     //=============================================================
 
     public static void storeAddContent(int tenantId, long size) {
-        if (size > 0) {
+        if ((MultitenantConstants.SUPER_TENANT_ID!=tenantId) && (size > 0)) {
             BandwidthUsage usage = new BandwidthUsage(
                     tenantId, "ContentBandwidth-In", size);
             Util.addToPersistingControllerQueue(usage);
-            System.out.print("add content usage"+size);
         }
     }
     public static void storeDeleteContent(int tenantId, long size) {
-        if (size > 0) {
+        if ((MultitenantConstants.SUPER_TENANT_ID!=tenantId) && (size > 0)) {
             BandwidthUsage usage = new BandwidthUsage(
                     tenantId, "ContentBandwidth-Out", size);
-            System.out.print("add delete content"+size);
             Util.addToPersistingControllerQueue(usage);
         }
     }
@@ -65,7 +64,7 @@ public class RegistryUsagePersister {
      * @param size value of the outgoing bandwidth
      */
     public static void storeOutgoingBandwidth(int tenantId, long size) {
-        if (size > 0) {
+        if ((MultitenantConstants.SUPER_TENANT_ID!=tenantId) && (size > 0)) {
             BandwidthUsage usage = new BandwidthUsage(
                     tenantId, UsageConstants.REGISTRY_OUTGOING_BW, size);
             Util.addToPersistingControllerQueue(usage);

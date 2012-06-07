@@ -90,7 +90,7 @@
                             javax.servlet; version=2.4.0,
                             javax.servlet.http; version=2.4.0,
                             javax.xml.stream.*; version=1.0.1,
-                            org.wso2.carbon.identity.core.util.*;
+                            org.wso2.carbon.identity.core.*;
                             org.apache.http.client,
                             org.apache.commons.httpclient.*,
                             *;resolution:=optional

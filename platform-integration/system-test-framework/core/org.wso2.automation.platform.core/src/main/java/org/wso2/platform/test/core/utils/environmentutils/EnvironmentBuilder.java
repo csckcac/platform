@@ -328,7 +328,7 @@ public class EnvironmentBuilder {
         EnvironmentSetter setter = new EnvironmentSetter();
         frameworkSettings.setFrameworkSettings(setter.getDataSource(), setter.getEnvironmentSettings(),
                                                setter.getEnvironmentVariables(), setter.getSelenium(),
-                                               setter.getRavana(), setter.getDashboardVariables());
+                                               setter.getRavana(), setter.getDashboardVariables(),setter.getCoverageSettings());
         return frameworkSettings;
     }
 

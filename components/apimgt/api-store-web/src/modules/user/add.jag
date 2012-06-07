@@ -8,13 +8,16 @@ var addUser = function (username, password) {
         if (log.isDebugEnabled()) {
             log.debug("addUser");
         }
+
         return {
             error:false
         };
+
     } catch (e) {
         log.error(e.message);
         return {
-            error:e
+            error:e,
+            message:e.message.split(":")[1]
         };
     }
 };

@@ -237,6 +237,10 @@
             <groupId>com.hp.hpl.jena.wso2</groupId>
             <artifactId>arq</artifactId>
         </dependency>
+		<dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -368,6 +372,7 @@
                                 </importBundleDef>
                                 <importBundleDef>net.sf.saxon.wso2:saxon</importBundleDef>
 								<importBundleDef>org.wso2.carbon:org.wso2.carbon.scriptengine</importBundleDef>
+								<importBundleDef>com.google.code.gson:gson</importBundleDef>
                                 <importBundleDef>
                                     org.apache.geronimo.specs.wso2:geronimo-stax-api_1.0_spec
                                 </importBundleDef>

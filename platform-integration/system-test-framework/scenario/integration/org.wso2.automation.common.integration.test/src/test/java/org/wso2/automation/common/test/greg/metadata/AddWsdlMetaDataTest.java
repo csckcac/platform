@@ -35,6 +35,7 @@ import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
+import org.wso2.platform.test.core.utils.fileutils.FileManager;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
@@ -382,4 +383,135 @@ public class AddWsdlMetaDataTest {
         assertTrue(isPolicyFound, "Imported policy not found : EncrOnlyAnonymous.xml");
         assertTrue(isSchemaFound, "Imported schema not found : SampleSchema.xsd");
     }
+
+
+    @Test(groups = {"wso2.greg.metadata"}, description = "Add wsdl which has wsdl import via " +
+            "wsdl URL", priority = 8)
+    public void testAddWsdlWithWsdlImportViaUrl() throws GovernanceException {
+        boolean isMainWsdlFound = false;
+        boolean isImportWsdlFound = false;
+
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().contains("clinicalNotesService.wsdl")) {
+                wsdlManager.removeWsdl(w.getId());
+            }
+            if (w.getQName().getLocalPart().contains("IClinicalNotes.wsdl")) {
+                wsdlManager.removeWsdl(w.getId());
+            }
+        }
+
+        String wsdlUrl = "https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
+                "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/" +
+                "artifacts/GREG/wsdl/clinicalNotesService.wsdl";
+
+        Wsdl wsdl = wsdlManager.newWsdl(wsdlUrl);
+        wsdlManager.addWsdl(wsdl);
+
+        wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().contains("clinicalNotesService.wsdl")) {
+                isMainWsdlFound = true;
+            }
+            if (w.getQName().getLocalPart().contains("IClinicalNotes.wsdl")) {
+                isImportWsdlFound = true;
+            }
+        }
+        assertTrue(isMainWsdlFound, "WSDL not found : clinicalNotesService.wsdl");
+        assertTrue(isImportWsdlFound, "Imported wsdl not found : IClinicalNotes.wsdl");
+    }
+
+    @Test(groups = {"wso2.greg.metadata"}, description = "Add wsdl which has wsdl import via " +
+            "wsdl File Path", priority = 9)
+    public void testAddWsdlWithWsdlImportViaFilePath() throws GovernanceException, MalformedURLException, RemoteException, ResourceAdminServiceExceptionException {
+
+        boolean isMainWsdlFound = false;
+        boolean isImportWsdlFound = false;
+
+        String wsdlFileLocation = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator
+                + "artifacts" + File.separator + "GREG" + File.separator + "wsdl" + File.separator
+                + "clinicalNotesService.wsdl";
+        String registryLocation = "/clinicalNotesService.wsdl";
+        URL wsdlURL = new URL("file:///" + wsdlFileLocation);
+
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().contains("clinicalNotesService.wsdl")) {
+                wsdlManager.removeWsdl(w.getId());
+            }
+            if (w.getQName().getLocalPart().contains("IClinicalNotes.wsdl")) {
+                wsdlManager.removeWsdl(w.getId());
+            }
+        }
+
+        DataHandler wsdlDataHandler = new DataHandler(wsdlURL);
+        AdminServiceResourceAdmin adminServiceResourceAdmin =
+                new AdminServiceResourceAdmin(environment.getGreg().getBackEndUrl());
+
+        adminServiceResourceAdmin.addResource(environment.getGreg().getSessionCookie(), registryLocation,
+                "application/wsdl+xml", "desc", wsdlDataHandler);
+
+        wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().contains("clinicalNotesService.wsdl")) {
+                isMainWsdlFound = true;
+            }
+            if (w.getQName().getLocalPart().contains("IClinicalNotes.wsdl")) {
+                isImportWsdlFound = true;
+            }
+        }
+        assertTrue(isMainWsdlFound, "WSDL not found : clinicalNotesService.wsdl");
+        assertTrue(isImportWsdlFound, "Imported wsdl not found : IClinicalNotes.wsdl");
+    }
+
+    @Test(groups = {"wso2.greg.metadata"}, description = "Add wsdl which has $ in wsdl name", priority = 10)
+    public void testSpecialWsdlName() throws GovernanceException, IOException {
+        boolean isWsdl1Found = false;
+        boolean isWsdl2Found = false;
+        boolean isWsdl3Found = false;
+        Wsdl[] wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().contains("SpecialWsdlName")) {
+                wsdlManager.removeWsdl(w.getId());
+            }
+        }
+
+        String wsdlFileLocation = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator
+                + "artifacts" + File.separator + "GREG" + File.separator + "wsdl" + File.separator + "echo.wsdl";
+        try {
+            Wsdl wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFileLocation).getBytes(),
+                    "SpecialWsdlName$.wsdl");
+            wsdlManager.addWsdl(wsdl);
+
+            wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFileLocation).getBytes(),
+                    "$SpecialWsdlName.wsdl");
+            wsdlManager.addWsdl(wsdl);
+
+            wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFileLocation).getBytes(),
+                    "Special$WsdlName.wsdl");
+            wsdlManager.addWsdl(wsdl);
+
+        } catch (GovernanceException e) {
+            throw new GovernanceException("Exception occurred while adding wsdl which wsdl name has " +
+                    "special character $ : " + e.getMessage());
+
+        }
+        wsdlList = wsdlManager.getAllWsdls();
+        for (Wsdl w : wsdlList) {
+            if (w.getQName().getLocalPart().equalsIgnoreCase("SpecialWsdlName$.wsdl")) {
+                isWsdl1Found = true;
+            }
+            if (w.getQName().getLocalPart().equalsIgnoreCase("$SpecialWsdlName.wsdl")) {
+                isWsdl2Found = true;
+            }
+            if (w.getQName().getLocalPart().equalsIgnoreCase("Special$WsdlName.wsdl")) {
+                isWsdl3Found = true;
+            }
+        }
+        assertTrue(isWsdl1Found, "WSDL not found which has special character $ : SpecialWsdlName$.wsdl");
+        assertTrue(isWsdl2Found, "WSDL not found which has special character $ : $SpecialWsdlName.wsdl");
+        assertTrue(isWsdl3Found, "WSDL not found which has special character $ : Special$WsdlName.wsdl");
+
+    }
+
 }

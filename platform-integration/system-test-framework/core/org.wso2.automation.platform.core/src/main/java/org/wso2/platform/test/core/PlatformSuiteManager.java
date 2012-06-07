@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
-import org.wso2.platform.test.core.utils.emmautils.CodeCoverageUtils;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.reportutills.CustomTestngReportSetter;
 import org.wso2.platform.test.core.utils.serverutils.ServerManager;
@@ -40,7 +39,7 @@ public class PlatformSuiteManager implements ISuiteListener {
 
                 new UserPopulator().populateUsers(null);
             } else {
-                if (environmentBuilder.getFrameworkSettings().getCoverageSettings().getCoverageEnable()) {
+             /*   if (environmentBuilder.getFrameworkSettings().getCoverageSettings().getCoverageEnable()) {
                     for (Object carbonHomePath : environmentBuilder.getFrameworkSettings().getCoverageSettings().getCarbonHome().values()) {
                         CodeCoverageUtils.instrument(carbonHomePath.toString());
                         serverManager = new ServerManager(carbonHomePath.toString());
@@ -48,7 +47,7 @@ public class PlatformSuiteManager implements ISuiteListener {
                         serverList.add(serverManager);
                     }
                     CodeCoverageUtils.init();
-                }
+                }*/
 
                 if (suite.getParameter("server.list") != null) {
                     List<String> productList = Arrays.asList(suite.getParameter("server.list").split(","));
@@ -74,7 +73,7 @@ public class PlatformSuiteManager implements ISuiteListener {
      */
     public void onFinish(ISuite suite) {
         try {
-            if (serverList.size() != 0) {
+          /*  if (serverList.size() != 0) {
                 for (ServerManager server : serverList) {
                     server.shutdown();
                 }
@@ -87,7 +86,7 @@ public class PlatformSuiteManager implements ISuiteListener {
                 for (Object carbonHomePath : environmentBuilder.getFrameworkSettings().getCoverageSettings().getCarbonHome().values()) {
                     CodeCoverageUtils.generateReports(carbonHomePath.toString());
                 }
-            }
+            }*/
             stopMultipleServers(suite.getParameter("server.list"));
             if (suite.getParameter("server.list") != null) {
 

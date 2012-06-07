@@ -24,7 +24,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%
     String username = request.getParameter("username");
-    String error = "This profile is already stored in the registry or a profile does not exist for the given username or you don't have sufficient privileges.";
+    String error = "This profile is already stored in the registry or a profile does not exist for the given username or you don't have sufficient privileges to configure user profiles.";
 //    bean.setUserName(username);
     if (username != null) {
         username = RegistryConstants.PROFILES_PATH + username + RegistryConstants.PROFILE_RESOURCE_NAME;

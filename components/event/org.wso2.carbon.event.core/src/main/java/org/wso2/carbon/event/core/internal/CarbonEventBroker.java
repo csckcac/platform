@@ -17,9 +17,9 @@
 package org.wso2.carbon.event.core.internal;
 
 import org.apache.axiom.util.UIDGenerator;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.event.core.EventBroker;
 import org.wso2.carbon.event.core.Message;
-import org.wso2.carbon.event.core.util.EventBrokerConstants;
 import org.wso2.carbon.event.core.delivery.DeliveryManager;
 import org.wso2.carbon.event.core.exception.EventBrokerConfigurationException;
 import org.wso2.carbon.event.core.exception.EventBrokerException;
@@ -29,12 +29,12 @@ import org.wso2.carbon.event.core.subscription.EventDispatcher;
 import org.wso2.carbon.event.core.subscription.Subscription;
 import org.wso2.carbon.event.core.subscription.SubscriptionManager;
 import org.wso2.carbon.event.core.topic.TopicManager;
-import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.event.core.util.EventBrokerConstants;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 
-import java.util.List;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -185,7 +185,7 @@ public class CarbonEventBroker implements EventBroker {
                         topicName,
                         this.delivaryManager,
                         deliveryMode,
-                        CarbonContext.getCurrentContext().getTenantId());
+                        MultitenantConstants.SUPER_TENANT_ID);
         this.executor.execute(eventPublisher);
     }
 

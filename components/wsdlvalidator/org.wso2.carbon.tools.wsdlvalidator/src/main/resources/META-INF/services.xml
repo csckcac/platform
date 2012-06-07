@@ -21,7 +21,7 @@
 	   <transport>https</transport>
 	</transports>
     </service>
-    <parameter name="DoAuthentication" locked="true">true</parameter>
+    <parameter name="AuthorizationAction" locked="false">/permission/admin/manage/wsdl</parameter>
     <parameter name="adminService" locked="true">true</parameter>
     <parameter name="hiddenService" locked="true">true</parameter>
 </serviceGroup>

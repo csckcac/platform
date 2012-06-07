@@ -19,14 +19,14 @@
                        <span class="icon-bar"></span>
                        <span class="icon-bar"></span>
                    </a>
-                   <a class="brand" href="#"><a class="brand" style="position:absolute;"><img src="<%=site.context%>/site/themes/default/images/logo.png"
-                                                                                                       alt="API PROVIDER"></a></a>
+                   <a class="brand" style="position:absolute;" href="<%=jagg.getMappedUrl("/site/pages/index.jag")%>"><img src="<%=site.context%>/site/themes/default/images/logo.png"
+                                                                                                       alt="API PROVIDER"></a>
                        <%
                        if(reqUrl.indexOf(inlineUrl)>=0){%> <div class="nav-collapse" style="height:35px">  <%}else{%>
                        <div class="nav-collapse">
                        <ul class="nav pull-right">
                            <li class="dropdown">
-                             <a class="user-name dropdown-toggle" data-toggle="dropdown" id="userNameShow"><b class="caret"></b> <%=outputs.user.username%></a>
+                             <a class="user-name dropdown-toggle" data-toggle="dropdown" id="userNameShow"><%=outputs.user.username%> <b class="caret"></b></a>
                              <ul class="dropdown-menu">
                                <li><a onclick="logout()">Sign out</a></li>
                              </ul>

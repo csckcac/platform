@@ -17,6 +17,7 @@
 package org.wso2.carbon.humantask.core.store;
 
 import org.apache.axis2.context.ConfigurationContext;
+import org.wso2.carbon.humantask.core.HumanTaskConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
@@ -40,7 +41,7 @@ public class HumanTaskStoreManager {
     public HumanTaskStore createHumanTaskStoreForTenant(Integer tenantId, ConfigurationContext configContext) {
         HumanTaskStore taskStore = new HumanTaskStore(tenantId, configContext);
         taskStore.setHumanTaskDeploymentRepo(new File(CarbonUtils.getCarbonHome() +
-                File.separator + "repository" + File.separator + "humantask"));
+                File.separator + "repository" + File.separator + HumanTaskConstants.HUMANTASK_REPO_DIRECTORY));
         tenantTaskStoreMap.put(tenantId, taskStore);
 
         return taskStore;

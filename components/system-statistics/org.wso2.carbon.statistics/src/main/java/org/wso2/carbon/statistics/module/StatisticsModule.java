@@ -40,7 +40,7 @@ public class StatisticsModule implements Module {
                      AxisModule module) throws AxisFault {
 
         AxisConfiguration axisConfig = configContext.getAxisConfiguration();
-        StatisticsPersistenceUtils.retrieveSystemStatistics(axisConfig);
+//        StatisticsPersistenceUtils.retrieveSystemStatistics(axisConfig);
 
         {
             ResponseTimeProcessor responseTimeProcessor = new ResponseTimeProcessor();

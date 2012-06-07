@@ -135,7 +135,10 @@ public class SystemStatisticsDeploymentInterceptor implements AxisObserver {
     }
 
     public void moduleUpdate(AxisEvent axisEvent, AxisModule axisModule) {
-        // Nothing to implement
+        if(StatisticsConstants.STATISTISTICS_MODULE_NAME.equals(axisModule.getName()) &&
+           AxisEvent.MODULE_DEPLOY == axisEvent.getEventType()) {
+            StatisticsPersistenceUtils.retrieveSystemStatistics(axisModule.getParent());
+        }
     }
 
     public void addParameter(Parameter parameter) throws AxisFault {

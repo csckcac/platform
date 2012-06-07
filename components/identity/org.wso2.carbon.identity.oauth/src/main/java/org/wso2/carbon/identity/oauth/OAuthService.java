@@ -28,11 +28,7 @@ import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
 import org.wso2.carbon.identity.oauth.dao.OAuthConsumerDAO;
 import org.wso2.carbon.identity.oauth.dto.OAuthConsumerDTO;
-import org.wso2.carbon.identity.oauth.internal.OAuthServiceComponent;
-import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.net.URLEncoder;
@@ -459,12 +455,6 @@ public class OAuthService {
 	private String getOAuthSecretKey(String consumerKey) throws Exception {
         OAuthConsumerDAO dao = new OAuthConsumerDAO();
         return dao.getOAuthConsumerSecret(consumerKey);
-	}
-
-	private Registry getConfigSystemRegistry() throws RegistryException {
-		RegistryService registryService = OAuthServiceComponent.getRegistryService();
-		return registryService.getConfigSystemRegistry();
-
 	}
 
 }

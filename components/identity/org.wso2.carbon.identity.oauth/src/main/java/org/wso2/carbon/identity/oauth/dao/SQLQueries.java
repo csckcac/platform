@@ -23,7 +23,7 @@ package org.wso2.carbon.identity.oauth.dao;
  */
 public class SQLQueries {
 
-    public class OAuthAppDAOSQLQueries {
+    public static class OAuthAppDAOSQLQueries {
 
         public static final String ADD_OAUTH_APP = "INSERT INTO IDENTITY_OAUTH_CONSUMER_APPLICATIONS " +
                 "(CONSUMER_KEY, CONSUMER_SECRET, USERNAME, TENANT_ID, APP_NAME, OAUTH_VERSION, CALLBACK_URL) VALUES (?,?,?,?,?,?,?) ";
@@ -54,7 +54,7 @@ public class SQLQueries {
         public static final String REMOVE_APPLICATION = "DELETE FROM IDENTITY_OAUTH_CONSUMER_APPLICATIONS WHERE CONSUMER_KEY=?";
     }
 
-    public class OAuthConsumerDAOSQLQueries {
+    public static class OAuthConsumerDAOSQLQueries {
         public static final String GET_CONSUMER_SECRET = "SELECT CONSUMER_SECRET FROM IDENTITY_OAUTH_CONSUMER_APPLICATIONS " +
                 "WHERE CONSUMER_KEY=?";
 

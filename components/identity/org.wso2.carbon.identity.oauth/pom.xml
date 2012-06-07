@@ -72,6 +72,16 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth.common</artifactId>
+            <version>${identity.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.amber.wso2</groupId>
+            <artifactId>amber</artifactId>
+            <version>0.22.0.incubating-SNAPSHOT</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -107,6 +117,7 @@
                         </Import-Package>
 						<Export-Package>
 							org.wso2.carbon.identity.oauth.*,
+                            org.wso2.carbon.identity.oauth2.*,
                         </Export-Package>
 						<DynamicImport-Package>*</DynamicImport-Package>
 					</instructions>

@@ -237,7 +237,7 @@ public class OAuthConsumerDAO {
                 params.setAuthorizedbyUserName(resultSet.getString(8));
 
                 String tokenIssued = resultSet.getString(6);
-                if(Boolean.valueOf(true).equals(tokenIssued)){
+                if("true".equals(tokenIssued)){
                     params.setAccessTokenIssued(true);
                 }
             } else {

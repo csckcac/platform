@@ -4,7 +4,7 @@ import org.wso2.carbon.identity.core.IdentityRegistryResources;
 
 public final class OAuthConstants {
 
-    public class OAuthVersions {
+    public static class OAuthVersions {
         public static final String VERSION_1A = "OAuth-1.0a";
         public static final String VERSION_2 = "OAuth-2.0";
     }

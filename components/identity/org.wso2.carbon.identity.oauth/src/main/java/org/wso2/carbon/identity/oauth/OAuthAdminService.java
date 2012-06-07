@@ -26,10 +26,6 @@ import org.wso2.carbon.identity.core.model.OAuthAppDO;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
 import org.wso2.carbon.identity.oauth.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.identity.oauth.internal.OAuthServiceComponent;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
@@ -190,21 +186,6 @@ public class OAuthAdminService extends AbstractAdmin {
     public void removeOAuthApplicationData(String consumerKey) throws Exception {
         OAuthAppDAO dao = new OAuthAppDAO();
         dao.removeConsumerApplication(consumerKey);
-    }
-
-    /*
-      * (non-Javadoc)
-      *
-      * @see org.wso2.carbon.core.AbstractAdmin#getConfigUserRegistry()
-      */
-    protected Registry getConfigSystemRegistry() {
-        RegistryService registryService = OAuthServiceComponent.getRegistryService();
-        try {
-            return registryService.getConfigSystemRegistry();
-        } catch (RegistryException e) {
-            log.error("Eror occured while obtaining system config registry", e);
-            return null;
-        }
     }
 
     private String getLoggedInUser() {

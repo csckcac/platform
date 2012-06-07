@@ -34,87 +34,44 @@ import org.wso2.carbon.user.core.service.RealmService;
  */
 public class OAuthServiceComponent {
 	private static Log log = LogFactory.getLog(OAuthServiceComponent.class);
-	private static RegistryService registryService;
-	private static RealmService realmService;
 
-	/**
-	 * 
-	 * @return
-	 */
-	public static RegistryService getRegistryService() {
-		return registryService;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public static RealmService getRealmService() {
-		return realmService;
-	}
-
-	/**
-	 * 
-	 * @param context
-	 */
 	protected void activate(ComponentContext context) {
 		if (log.isDebugEnabled()) {
 			log.info("Identity OAuth bundle is activated");
 		}
 	}
 
-	/**
-	 * 
-	 * @param context
-	 */
 	protected void deactivate(ComponentContext context) {
 		if (log.isDebugEnabled()) {
 			log.info("Identity OAuth bundle is deactivated");
 		}
 	}
 
-	/**
-	 * 
-	 * @param registryService
-	 */
 	protected void setRegistryService(RegistryService registryService) {
 		if (log.isDebugEnabled()) {
 			log.info("RegistryService set in Identity OAuth bundle");
 		}
-		OAuthServiceComponent.registryService = registryService;
+		OAuthComponentServiceHolder.setRegistryService(registryService);
 	}
 
-	/**
-	 * 
-	 * @param registryService
-	 */
 	protected void unsetRegistryService(RegistryService registryService) {
 		if (log.isDebugEnabled()) {
 			log.info("RegistryService unset in Identity OAuth bundle");
 		}
-		registryService = null;
+		OAuthComponentServiceHolder.setRegistryService(null);
 	}
 
-	/**
-	 * 
-	 * @param realmService
-	 */
 	protected void setRealmService(RealmService realmService) {
 		if (log.isDebugEnabled()) {
 			log.info("Setting the Realm Service");
 		}
-		OAuthServiceComponent.realmService = realmService;
+        OAuthComponentServiceHolder.setRealmService(realmService);
 	}
 
-	/**
-	 * 
-	 * @param realmService
-	 */
 	protected void unsetRealmService(RealmService realmService) {
 		if (log.isDebugEnabled()) {
 			log.info("Unsetting the Realm Service");
 		}
-		OAuthServiceComponent.realmService = null;
+        OAuthComponentServiceHolder.setRealmService(null);
 	}
-
 }

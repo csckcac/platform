@@ -50,7 +50,7 @@
 							<goal>p2-feature-gen</goal>
 						</goals>
 						<configuration>
-							<id>org.wso2.carbon.identity.oauth.server</id>
+							<id>org.wso2.carbon.identity.oauth.common</id>
 							<propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>

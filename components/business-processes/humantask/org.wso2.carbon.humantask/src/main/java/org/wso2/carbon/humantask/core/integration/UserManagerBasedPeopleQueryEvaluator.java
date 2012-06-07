@@ -210,11 +210,6 @@ public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluato
     private UserRealm getUserRealm() {
         Integer tenantId = CarbonContextHolder.getThreadLocalCarbonContextHolder().getTenantId();
 
-        if (tenantId < 0) {
-            log.warn("Invalid Tenant Id " + tenantId);
-            return null;
-        }
-
         try {
             // TODO - add null check for the user realm.
             return this.registryService.getUserRealm(tenantId);

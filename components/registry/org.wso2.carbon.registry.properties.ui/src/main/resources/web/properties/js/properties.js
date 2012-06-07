@@ -13,9 +13,9 @@ function setProperty() {
     sessionAwareFunction(function() {
         var reason="";
         reason +=validateEmpty(document.getElementById('propName'), org_wso2_carbon_registry_properties_ui_jsi18n["property.name"]);
-        if (reason == "") {
-            reason +=validateEmpty(document.getElementById('propValue'), org_wso2_carbon_registry_properties_ui_jsi18n["property.value"]);
-        }
+//        if (reason == "") {
+//            reason +=validateEmpty(document.getElementById('propValue'), org_wso2_carbon_registry_properties_ui_jsi18n["property.value"]);
+//        }
         if (reason == "") {
             reason +=validateForInput(document.getElementById('propName'), org_wso2_carbon_registry_properties_ui_jsi18n["property.name"]);
         }
@@ -33,9 +33,9 @@ function setProperty() {
             }
 
             propertyValue = propertyValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-            if (propertyValue == "") {
-                reason = org_wso2_carbon_registry_properties_ui_jsi18n["property.value.cannot.contain.only.white.spaces"];
-            }
+//            if (propertyValue == "") {
+//                reason = org_wso2_carbon_registry_properties_ui_jsi18n["property.value.cannot.contain.only.white.spaces"];
+//            }
         }
 
         if(propertyName.startsWith("registry.")) {
@@ -99,17 +99,24 @@ function editProperty(rowid) {
         reason += validateEmpty(propertyName,org_wso2_carbon_registry_properties_ui_jsi18n["property.name"]);
         reason += validateForInput(propertyName,org_wso2_carbon_registry_properties_ui_jsi18n["property.name"]);
         var propertyValue = document.getElementById('propValue_'+rowid);
-        reason += validateEmpty(propertyValue,org_wso2_carbon_registry_properties_ui_jsi18n["property.value"]);
+//        reason += validateEmpty(propertyValue,org_wso2_carbon_registry_properties_ui_jsi18n["property.value"]);
         reason += validateForInput(propertyValue,org_wso2_carbon_registry_properties_ui_jsi18n["property.value"]);
 
         //Check for the previously entered property
-        var foundPropName = false;
+        var duplicatePropNameCount = 0;
         var allNodes = document.getElementById("propertiesList").getElementsByTagName("*");
 
         for (var i = 0; i < allNodes.length; i++) {
             if (YAHOO.util.Dom.hasClass(allNodes[i], "propEditNameSelector")) {
-                if(allNodes[i].value == propertyName.value && oldPropertyName.value != propertyName.value) reason += org_wso2_carbon_registry_properties_ui_jsi18n["duplicate.entry.please.choose.another.name"];
+                if(allNodes[i].value == propertyName.value) {
+                    duplicatePropNameCount = duplicatePropNameCount + 1;
+
+                }
             }
+        }
+
+        if(duplicatePropNameCount > 1) {
+            reason += org_wso2_carbon_registry_properties_ui_jsi18n["duplicate.entry.please.choose.another.name"];
         }
 
         if(reason==""){
@@ -133,7 +140,9 @@ function editProperty(rowid) {
                 }
             });
         }else{
-            CARBON.showWarningDialog(reason);
+            CARBON.showWarningDialog(reason, function() {
+                $('propName_' + rowid).value = $('oldPropName_'+rowid).value;
+            });
         }
     }, org_wso2_carbon_registry_properties_ui_jsi18n["session.timed.out"]);
     propertyOperationStarted = false;

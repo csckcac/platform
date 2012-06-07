@@ -94,7 +94,7 @@
                             <td><input type="text" id="propName"/></td>
                         </tr>
                         <tr>
-                            <td><fmt:message key="value"/><font color="red">*</font></td>
+                            <td><fmt:message key="value"/></td>
                             <td><input type="text" id="propValue"/></td>
                         </tr>
                         <tr>

@@ -33,4 +33,9 @@ public final class OAuthConstants {
     public static final String ACCESS_TOKEN_URL = "/access-token";
     public static final String REQUEST_TOKEN_URL = "/request-token";
     public static final String AUTHORIZE_TOKEN_URL = "/authorize-token";
+
+    public static final String OAUTH2_PARAMS = "oauth2Parameters";
+
+    public static final String OAUTH_ERROR_CODE = "oauthErrorCode";
+    public static final String OAUTH_ERROR_MESSAGE = "oauthErrorMsg";
 }

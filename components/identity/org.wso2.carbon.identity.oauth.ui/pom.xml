@@ -52,6 +52,16 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth.common</artifactId>
+            <version>${identity.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.amber.wso2</groupId>
+            <artifactId>amber</artifactId>
+            <version>0.22.0.incubating-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -75,7 +85,8 @@
                             javax.servlet; version=2.4.0,
                             javax.servlet.http; version=2.4.0,
                             javax.xml.stream.*; version=1.0.1,
-                            org.wso2.carbon.oauth.stub.*;version="${carbon.platform.package.import.version.range}",
+                            org.wso2.carbon.identity.oauth.stub.*;version="${carbon.platform.package.import.version.range}",
+                            org.wso2.carbon.identity.oauth2.stub.*;version="${carbon.platform.package.import.version.range}",
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>org.wso2.carbon.identity.oauth.ui.*</Export-Package>

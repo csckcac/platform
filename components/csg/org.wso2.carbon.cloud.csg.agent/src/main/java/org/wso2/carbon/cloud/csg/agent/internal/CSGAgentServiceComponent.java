@@ -22,11 +22,9 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.cloud.csg.agent.observer.CSGServiceObserver;
 import org.wso2.carbon.cloud.csg.common.CSGConstant;
-import org.wso2.carbon.cloud.csg.common.CSGUtils;
 import org.wso2.carbon.user.api.AuthorizationManager;
 import org.wso2.carbon.user.api.UserStoreManager;
 import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.user.mgt.UserMgtConstants;
@@ -68,7 +66,11 @@ public class CSGAgentServiceComponent {
         CSGServiceObserver observer = new CSGServiceObserver();
         axisConfig.addObservers(observer);
 
-        String[] optimizedList = UserCoreUtil.optimizePermissions(CSGUtils.getPermissionsList());
+        String[] publishOptimizedList = UserCoreUtil.optimizePermissions(
+                CSGConstant.CSG_PUBLISH_PERMISSION_LIST);
+
+        String[] unPublishOptimizedList = UserCoreUtil.optimizePermissions(
+                CSGConstant.CSG_UNPUBLISH_PERMISSION_LIST);
         try {
             // add the publish and un publish roles
             UserRealm realm = realmService.getBootstrapRealm();
@@ -77,9 +79,12 @@ public class CSGAgentServiceComponent {
                     UserMgtConstants.EXECUTE_ACTION);
             authorizationManager.clearRoleActionOnAllResources(CSGConstant.CSG_UNPUBLISH_ROLE_NAME,
                     UserMgtConstants.EXECUTE_ACTION);
-            for (String permission : optimizedList) {
+            for (String permission : publishOptimizedList) {
                 authorizationManager.authorizeRole(CSGConstant.CSG_PUBLISH_ROLE_NAME, permission,
                         UserMgtConstants.EXECUTE_ACTION);
+            }
+
+            for (String permission : unPublishOptimizedList) {
                 authorizationManager.authorizeRole(CSGConstant.CSG_UNPUBLISH_ROLE_NAME, permission,
                         UserMgtConstants.EXECUTE_ACTION);
             }

@@ -94,7 +94,7 @@
                 </tr>
                 </thead>
                 <%
-                    if(CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service")){
+                    if(CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_PUBLISH_SERVICE_PERMISSION_STRING)){
                 %>
                 <tbody>
                 <tr>
@@ -151,7 +151,7 @@
                             <tr>
                                 <%
                                     boolean isAuthorizedToManage =
-                                            CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service");
+                                            CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_PUBLISH_SERVICE_PERMISSION_STRING);
                                     if (isAuthorizedToManage) {
                                 %>
                                 <td><input type="button" name="publish"
@@ -193,7 +193,8 @@
         }
 
         function publishService(serviceToPublish, serviceAction) {
-            if (serviceAction == '<%=CSGConstant.CSG_SERVICE_ACTION_PUBLISH%>') {
+            if (serviceAction == '<%=CSGConstant.CSG_SERVICE_ACTION_PUBLISH%>' ||
+                serviceAction == '<%=CSGConstant.CSG_SERVICE_ACTION_AUTOMATIC%>') {
                 var serverName = document.getElementById('publish_to_csg_server_selector').value;
                 if (serverName == 'choose-server') {
                     CARBON.showWarningDialog("<fmt:message key="csg.invalid.selection.select.server"/>");

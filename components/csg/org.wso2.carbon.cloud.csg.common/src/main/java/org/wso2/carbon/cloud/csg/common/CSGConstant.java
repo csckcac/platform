@@ -254,26 +254,57 @@ public class CSGConstant {
 
     public static final String CSG_USER_PERMISSION_LIST = "csg-user-permission-list";
 
+    public static final String ADMIN_PERMISSION_STRING = "/permission/admin";
+
+    public static final String MANAGE_MEDIATION_PERMISSION_STRING =
+            "/permission/admin/manage/mediation";
+
+    public static final String MANAGE_SERVICE_PERMISSION_STRING =
+            "/permission/admin/manage/modify/service";
+
+    public static final String ADMIN_LOGIN_PERMISSION_STRING =
+            "/permission/admin/login";
+
+    public static final String ADMIN_PUBLISH_SERVICE_PERMISSION_STRING =
+            "/permission/admin/manage/publish";
+
+    public static final String ADMIN_UN_PUBLISH_SERVICE_PERMISSION_STRING =
+            "/permission/admin/manage/un-publish";
+
+    public static final String[] CSG_PUBLISH_PERMISSION_LIST = new String[]
+            {
+                    ADMIN_LOGIN_PERMISSION_STRING,
+                    MANAGE_SERVICE_PERMISSION_STRING,
+                    ADMIN_PUBLISH_SERVICE_PERMISSION_STRING,
+            };
+
+    public static final String[] CSG_UNPUBLISH_PERMISSION_LIST = new String[]
+            {
+                    ADMIN_LOGIN_PERMISSION_STRING,
+                    MANAGE_SERVICE_PERMISSION_STRING,
+                    ADMIN_UN_PUBLISH_SERVICE_PERMISSION_STRING,
+            };
+
     public static final String[] CSG_USER_DEFAULT_PERMISSION_LIST = new String[]
             {
-                    "/permission/admin/login",
-                    "/permission/admin/manage/mediation",
-                    "/permission/admin/manage/modify/service"
+                    ADMIN_LOGIN_PERMISSION_STRING,
+                    MANAGE_MEDIATION_PERMISSION_STRING,
+                    MANAGE_SERVICE_PERMISSION_STRING
             };
 
     public static final String CSG_ROLE_NAME = "csg-role-name";
 
     public static final String DEFAULT_CSG_ROLE_NAME = CSG_ROLE_NAME;
 
-    public static final String CSG_PUBLISH_ROLE_NAME = "Publish";
+    public static final String CSG_PUBLISH_ROLE_NAME = "publish";
 
-    public static final String CSG_UNPUBLISH_ROLE_NAME = "Unpublish";
-    
+    public static final String CSG_UNPUBLISH_ROLE_NAME = "un-publish";
+
     /**
      * Prevents instantiation of this class.
      */
-    private CSGConstant(){
-        
+    private CSGConstant() {
+
     }
-    
+
 }

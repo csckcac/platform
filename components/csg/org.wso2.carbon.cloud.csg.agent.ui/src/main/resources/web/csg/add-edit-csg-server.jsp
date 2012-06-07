@@ -239,7 +239,7 @@
 
     <div id="workArea">
         <%
-            if(CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service")){
+            if(CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_PERMISSION_STRING)){
         %>
         <form method="post" action="save-csg-server.jsp" name="csgServerForm">
             <table class="styledLeft" id="csgServerInfoTableId" width="60%">

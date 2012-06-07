@@ -302,7 +302,8 @@ public class CSGUtils {
     }
 
     public static String getContentType(Map<String, String> trpHeaders) {
-        // Following constant seems to be incorrectly deprecated, see source, HTTPConstants.CONTENT_TYPE
+        // Following constant seems to be incorrectly deprecated, see source,
+        // org.apache.axis2.transport.http.HTTPConstants.CONTENT_TYPE
         return trpHeaders.get(HTTPConstants.CONTENT_TYPE);
     }
 

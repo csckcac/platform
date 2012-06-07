@@ -27,6 +27,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.cloud.csg.agent.stub.types.carbon.CSGServerBean" %>
+<%@ page import="org.wso2.carbon.cloud.csg.common.CSGConstant" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
@@ -73,6 +74,9 @@
         <h2><fmt:message key="csg.add.edit.server"/></h2>
 
         <div id="workArea">
+            <%
+                if(CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_PERMISSION_STRING)){
+            %>
             <table class="styledLeft" cellspacing="1" id="csg_server_table_id" style="<%=csgServerTableStyle%>">
                 <thead>
                 <tr class="tableEvenRow">
@@ -118,6 +122,7 @@
             <script type="text/javascript">
                 alternateTableRows('csg_server_table_id', 'tableEvenRow', 'tableOddRow');
             </script>
+            <% }%>
         </div>
     </div>
 

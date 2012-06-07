@@ -80,7 +80,7 @@
     String parameters = "serviceTypeFilter=" + serviceTypeFilter +
             "&serviceSearchString=" + serviceSearchString;
     boolean isAuthorizedToManage =
-            CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service");
+            CarbonUIUtil.isUserAuthorized(request, CSGConstant.MANAGE_SERVICE_PERMISSION_STRING);
     try {
         client = new ServiceAdminClient(cookie, backendServerURL, configContext, request.getLocale());
         csgAgentAdminClient = new CSGAgentAdminClient(
@@ -130,7 +130,8 @@
 
     <div id="workArea">
     <%
-        if(CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service")){
+        if(CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_PUBLISH_SERVICE_PERMISSION_STRING) ||
+                CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_UN_PUBLISH_SERVICE_PERMISSION_STRING)) {
     %>
         <form action="service-list.jsp" name="searchForm">
 
@@ -243,7 +244,8 @@
                     </nobr>
                 </td>
                 <%
-                    if (serviceStatus.equals(CSGConstant.CSG_SERVICE_STATUS_UNPUBLISHED)) {
+                    if (serviceStatus.equals(CSGConstant.CSG_SERVICE_STATUS_UNPUBLISHED) &&
+                        CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_PUBLISH_SERVICE_PERMISSION_STRING)) {
                         // service is un published mode, let the user to publish
                 %>
                 <td><%=CSGConstant.CSG_SERVICE_STATUS_UNPUBLISHED%>
@@ -256,7 +258,8 @@
                 </td>
                 <td></td>
                 <%
-                } else if (serviceStatus.equals(CSGConstant.CSG_SERVICE_STATUS_PUBLISHED)) {
+                } else if (serviceStatus.equals(CSGConstant.CSG_SERVICE_STATUS_PUBLISHED) &&
+                        CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_UN_PUBLISH_SERVICE_PERMISSION_STRING)) {
                     // service in published stats, but user has select manual mode of operation
                 %>
                 <td><%=CSGConstant.CSG_SERVICE_STATUS_PUBLISHED%>
@@ -322,8 +325,9 @@
                     %>
                 </td>
                 <%
-                } else {
+                } else if (serviceStatus.equals(CSGConstant.CSG_SERVICE_STATUS_AUTO_MATIC)) {
                     // services is published, but user has selected automatic operation
+                    if (CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_UN_PUBLISH_SERVICE_PERMISSION_STRING)) {
                 %>
                 <td><%=CSGConstant.CSG_SERVICE_STATUS_PUBLISHED%>
                 </td>
@@ -367,7 +371,7 @@
                     } catch (Exception e) {
                         String msg = e.getMessage();
                         if (msg != null && !msg.equals("")) {
-                        // FIXME - due to some reason original error was not avilable so used the
+                        // FIXME - due to some reason original error was not available so used the
                         // following general message
                     %>
                     <span style="color: red; "><fmt:message key="csg.no.tool.reason"/>
@@ -382,11 +386,13 @@
                     %>
                 </td>
                 <%
+                        }
                     }
                 %>
             </tr>
             <%
             } else {
+                if(CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_PUBLISH_SERVICE_PERMISSION_STRING)){
             %>
             <tr>
                 <td>
@@ -397,13 +403,13 @@
                 <td>
                     <a href="#" class="icon-link"
                        style="background-image:url(../csg/images/publish.png);"
-                       onclick="goToPublishingOptions('<%=serviceName%>', '<%=CSGConstant.CSG_SERVICE_ACTION_PUBLISH%>')">
+                       onclick="goToPublishingOptions('<%=serviceName%>', '<%=CSGConstant.CSG_SERVICE_ACTION_AUTOMATIC%>')">
                         <fmt:message key="csg.service.publish"/></a>
                 </td>
                 <td></td>
             </tr>
-
             <%
+                                }
                             }
                         }
 

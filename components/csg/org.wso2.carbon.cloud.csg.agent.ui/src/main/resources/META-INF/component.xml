@@ -27,7 +27,6 @@
 			<order>6</order>
 			<style-class>home</style-class>
             <icon>../csg/images/csg.png</icon>
-            <require-permission>/permission/admin/manage/modify/service</require-permission>
         </menu>
 	</menus>
 </component>

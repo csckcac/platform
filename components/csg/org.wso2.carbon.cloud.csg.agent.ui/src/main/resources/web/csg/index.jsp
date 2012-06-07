@@ -20,6 +20,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.wso2.carbon.cloud.csg.common.CSGConstant" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
@@ -36,7 +37,6 @@
 
         <div id="workArea">
             <table width="100%">
-            <% if (CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service")) {%>
             <tr>
                 <td>
                     <table class="styledLeft" id="internal" width="100%">
@@ -45,12 +45,16 @@
                             <th><fmt:message key="csg.configuration"/></th>
                         </tr>
                         </thead>
+                        <% if (CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_PERMISSION_STRING)) {%>
                         <tr>
                             <td>
                                 <a class="icon-link" style="background-image:url(images/add-edit-service.png);"
                                    href="server-list.jsp"><fmt:message key="csg.add.edit.server"/></a>
                             </td>
                         </tr>
+                        <% } %>
+                        <% if (CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_PUBLISH_SERVICE_PERMISSION_STRING) ||
+                                CarbonUIUtil.isUserAuthorized(request, CSGConstant.ADMIN_UN_PUBLISH_SERVICE_PERMISSION_STRING)){ %>
                         <tr>
                             <td>
                                 <a class="icon-link"
@@ -58,11 +62,11 @@
                                    href="service-list.jsp"><fmt:message key="csg.publish.unpublish"/></a>
                             </td>
                         </tr>
+                        <% } %>
                     </table>
                 </td>
             </tr>
             </table>
-            <% } %>
         </div>
     </div>
     <script type="text/javascript">

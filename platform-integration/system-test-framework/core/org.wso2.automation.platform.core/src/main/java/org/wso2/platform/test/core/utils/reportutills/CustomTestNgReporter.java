@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-public class CustomTestNGrReporter implements IReporter {
+public class CustomTestNgReporter implements IReporter {
 
 
     private final XMLReporterConfig config = new XMLReporterConfig();
@@ -53,12 +53,12 @@ public class CustomTestNGrReporter implements IReporter {
     ISuite testRootSuite=null;
     Exception exception = null;
 
-    public CustomTestNGrReporter(ITestContext context, Exception e) {
+    public CustomTestNgReporter(ITestContext context, Exception e) {
         testRootContext = context;
         exception = e;
     }
 
-    public CustomTestNGrReporter(ISuite suite, Exception e) {
+    public CustomTestNgReporter(ISuite suite, Exception e) {
         testRootSuite = suite;
         exception = e;
     }

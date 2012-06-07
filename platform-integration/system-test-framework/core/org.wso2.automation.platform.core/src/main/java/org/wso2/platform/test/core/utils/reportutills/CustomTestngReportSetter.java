@@ -42,7 +42,7 @@ public class CustomTestngReportSetter {
         xmlSuites.add(suite);
         iSuites.add(context.getSuite());
         String out = ProductConstant.REPORT_LOCATION + File.separator + "reports" + File.separator + suite.getName();
-        CustomTestNGrReporter customTestNGrReporter = new CustomTestNGrReporter(context, e);
+        CustomTestNgReporter customTestNGrReporter = new CustomTestNgReporter(context, e);
         customTestNGrReporter.generateReport(xmlSuites, iSuites, out);
     }
 
@@ -60,7 +60,7 @@ public class CustomTestngReportSetter {
         xmlSuites.add(suite);
         iSuites.add(testSuite);
         String out = ProductConstant.REPORT_LOCATION + File.separator + "reports" + File.separator + suite.getName();
-        CustomTestNGrReporter customTestNGrReporter = new CustomTestNGrReporter(testSuite, e);
+        CustomTestNgReporter customTestNGrReporter = new CustomTestNgReporter(testSuite, e);
         customTestNGrReporter.generateReport(xmlSuites, iSuites, out);
     }
 }

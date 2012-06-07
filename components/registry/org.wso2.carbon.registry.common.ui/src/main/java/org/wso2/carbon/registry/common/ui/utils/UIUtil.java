@@ -27,6 +27,7 @@ import org.wso2.carbon.server.admin.ui.ServerAdminClient;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.ui.clients.RegistryAdminServiceClient;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -91,9 +92,10 @@ public class UIUtil {
             contextRoot = contextRoot.substring(0, contextRoot.length() - "carbon/".length());
         }
 
-        String tenantDomain = (String)request.getSession().getAttribute(RegistryConstants.TENANT_DOMAIN);
-        if (tenantDomain != null) {
-            contextRoot = "/"+ CarbonConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain + contextRoot;
+        String tenantDomain = (String)request.getSession().getAttribute(MultitenantConstants.TENANT_DOMAIN);
+        if (tenantDomain != null &&
+                !tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN)) {
+            contextRoot = "/"+ MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain + contextRoot;
         }
 
         return contextRoot;
@@ -149,14 +151,15 @@ public class UIUtil {
             String serverURL = CarbonUIUtil.getServerURL(context, session);
             String serverRoot = serverURL.substring(0, serverURL.length() - "services/".length());
             String tenantDomain = null;
-            if(request.getSession().getAttribute(CarbonConstants.TENANT_DOMAIN) != null) {
-                tenantDomain = 	(String)request.getSession().getAttribute(CarbonConstants.TENANT_DOMAIN);
+            if(request.getSession().getAttribute(MultitenantConstants.TENANT_DOMAIN) != null) {
+                tenantDomain = 	(String)request.getSession().getAttribute(MultitenantConstants.TENANT_DOMAIN);
             }
             else {
-                tenantDomain = (String)request.getAttribute(CarbonConstants.TENANT_DOMAIN);
+                tenantDomain = (String)request.getAttribute(MultitenantConstants.TENANT_DOMAIN);
             }
-            if (tenantDomain != null) {
-                return serverRoot + CarbonConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain +
+            if (tenantDomain != null &&
+                    !tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN)) {
+                return serverRoot + MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain +
                         "/registry/atom" + encodeRegistryPath(resourcePath).replaceAll(" ", "+");
             } else {
                 return serverRoot + "registry/atom" + encodeRegistryPath(resourcePath).replaceAll(" ", "+");

@@ -28,6 +28,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.indexing.indexer.Indexer;
 import org.wso2.carbon.registry.indexing.utils.IndexingUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.Date;
 import java.util.Map;
@@ -146,14 +147,15 @@ public class IndexingManager {
             log.debug("Submitting file " + path + " for Indexing");
         }
         getIndexer().addFile(new AsyncIndexer.File2Index(IndexingUtils.getByteContent(resource,
-                sourceURL), resource.getMediaType(), path, 0));
+                sourceURL), resource.getMediaType(), path, MultitenantConstants.SUPER_TENANT_ID));
 
 	//Here, we are checking whether a resource has a symlink associated to it, if so, we submit that symlink path
         //in the indexer. see CARBON-11510.
         String symlinkPath = resource.getProperty("registry.resource.symlink.path");
         if( symlinkPath != null)   {
             getIndexer().addFile(new AsyncIndexer.File2Index(IndexingUtils.getByteContent(resource,
-                sourceURL), resource.getMediaType(), symlinkPath, 0));
+                sourceURL), resource.getMediaType(), symlinkPath,
+                    MultitenantConstants.SUPER_TENANT_ID));
         }
     }
 

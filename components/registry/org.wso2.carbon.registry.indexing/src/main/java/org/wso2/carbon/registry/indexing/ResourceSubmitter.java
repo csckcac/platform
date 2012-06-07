@@ -26,6 +26,7 @@ import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.indexing.utils.IndexingUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -84,7 +85,8 @@ public class ResourceSubmitter implements Runnable {
                         continue;
                     }
                     if (logEntry.getAction() == (LogEntry.DELETE_RESOURCE)) {
-                        indexingManager.deleteFromIndex(logEntry.getResourcePath(), 0);
+                        indexingManager.deleteFromIndex(logEntry.getResourcePath(),
+                                MultitenantConstants.SUPER_TENANT_ID);
                         if (log.isDebugEnabled()) {
                             log.debug("Resource Deleted: Resource at " + path +
                                     " will be deleted from Indexing Server");
@@ -107,7 +109,8 @@ public class ResourceSubmitter implements Runnable {
                             }
                         } else if (logEntry.getAction() == (LogEntry.MOVE)) {
                             indexingManager.submitFileForIndexing(resourceToIndex, path, null);
-                            indexingManager.deleteFromIndex(logEntry.getActionData(), 0);
+                            indexingManager.deleteFromIndex(logEntry.getActionData(),
+                                    MultitenantConstants.SUPER_TENANT_ID);
                             if (log.isDebugEnabled()) {
                                 log.debug("Resource Moved: Resource at " + path +
                                         " has been submitted to the Indexing Server");

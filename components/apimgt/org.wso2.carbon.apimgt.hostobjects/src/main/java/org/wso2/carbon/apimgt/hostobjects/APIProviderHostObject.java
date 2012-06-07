@@ -216,6 +216,7 @@ public class APIProviderHostObject extends ScriptableObject {
             sandboxUrl = null;
         }
         String wsdl = (String) apiData.get("wsdl", apiData);
+        String wadl = (String) apiData.get("wadl", apiData);
         String tags = (String) apiData.get("tags", apiData);
 
         Set<String> tag = new HashSet<String>();
@@ -268,6 +269,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
             api.setDescription(description);
             api.setWsdlUrl(wsdl);
+            api.setWadlUrl(wadl);
             api.setLastUpdated(new Date());
             api.setUrl(endpoint);
             api.setSandboxUrl(sandboxUrl);
@@ -331,6 +333,7 @@ public class APIProviderHostObject extends ScriptableObject {
             sandboxUrl = null;
         }
         String wsdl = (String) apiData.get("wsdl", apiData);
+        String wadl = (String) apiData.get("wadl", apiData);
         String tags = (String) apiData.get("tags", apiData);
         Set<String> tag = new HashSet<String>();
         if (tags.indexOf(",") >= 0) {
@@ -391,6 +394,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
             api.setStatus(oldApi.getStatus());
             api.setWsdlUrl(wsdl);
+            api.setWadlUrl(wadl);
             api.setLastUpdated(new Date());
             api.setBusinessOwner(bizOwner);
             api.setBusinessOwnerEmail(bizOwnerEmail);
@@ -569,6 +573,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 myn.put(16, myn, checkValue(api.getBusinessOwnerEmail()));
                 myn.put(17, myn, checkValue(api.getTechnicalOwner()));
                 myn.put(18, myn, checkValue(api.getTechnicalOwnerEmail()));
+                myn.put(19, myn, checkValue(api.getWadlUrl()));
             }
         } catch (APIManagementException e) {
             log.error("Error from registry while getting API information for the api: " + apiName + "-" + version, e);

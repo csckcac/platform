@@ -28,10 +28,6 @@
             <style-class>manage</style-class>
             <icon>../oauth/images/oauth.gif</icon>
             <require-permission>/permission/admin/manage</require-permission>
-            <skip-authentication>
-                <skip-link>/oauth</skip-link>
-                <skip-link>/oauth2</skip-link>
-            </skip-authentication>
         </menu>
 	</menus>
 </component>

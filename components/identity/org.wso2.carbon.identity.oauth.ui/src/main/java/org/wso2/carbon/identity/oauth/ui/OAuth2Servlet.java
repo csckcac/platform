@@ -67,11 +67,23 @@ public class OAuth2Servlet extends HttpServlet {
             if (req.getParameter("oauth_user_name") != null && req.getParameter("oauth_user_password") != null) {
                 String redirectURL = handleResourceOwnerAuthorization(req, resp);
                 resp.sendRedirect(redirectURL);
+                return;
             }
             // requests coming for authorization.
-            if (req.getRequestURI().indexOf(OAuthConstants.AUTHORIZE_TOKEN_URL) > -1) {
+            if (req.getRequestURI().endsWith(OAuthConstants.AUTHORIZE_TOKEN_URL)) {
                 String redirectURL = handleOAuthAuthorizationRequest(req);
                 resp.sendRedirect(redirectURL);
+                return;
+            }
+
+            else {
+                HttpSession session = req.getSession();
+                session.setAttribute(OAuthConstants.OAUTH_ERROR_CODE, OAuth2ErrorCodes.INVALID_OAUTH_URL);
+                session.setAttribute(OAuthConstants.OAUTH_ERROR_MESSAGE, "Invalid OAuth request URL.");
+                String errorPageURL = CarbonUIUtil.getAdminConsoleURL(req) + "oauth/oauth-error.jsp";
+                errorPageURL = errorPageURL.replace("/oauth2/carbon/oauth/", "/carbon/oauth/");
+                resp.sendRedirect(errorPageURL);
+                return;
             }
         } catch (OAuthSystemException e) {
             log.error("Error when processing the authorization request.", e);
@@ -81,13 +93,14 @@ public class OAuth2Servlet extends HttpServlet {
             String errorPageURL = CarbonUIUtil.getAdminConsoleURL(req) + "oauth/oauth-error.jsp";
             errorPageURL = errorPageURL.replace("/oauth2/carbon/oauth/", "/carbon/oauth/");
             resp.sendRedirect(errorPageURL);
+            return;
         }
     }
 
     private String handleOAuthAuthorizationRequest(HttpServletRequest req) throws IOException, OAuthSystemException {
         OAuth2ClientValidationResponseDTO clientValidationResponseDTO = null;
         try {
-            // Extract the client_id and callback url from the request, because constructing and Amber
+            // Extract the client_id and callback url from the request, because constructing an Amber
             // Authz request can cause an OAuthProblemException exception. In that case, that error
             // needs to be passed back to client. Before that we need to validate the client_id and callback URL
             String clientId = req.getParameter("client_id");
@@ -126,6 +139,7 @@ public class OAuth2Servlet extends HttpServlet {
             params.setResponseType(oauthRequest.getResponseType());
             params.setScopes(oauthRequest.getScopes());
             params.setState(oauthRequest.getState());
+            params.setClientId(clientId);
 
             HttpSession session = req.getSession();
             session.setAttribute(OAuthConstants.OAUTH2_PARAMS, params);
@@ -198,7 +212,7 @@ public class OAuth2Servlet extends HttpServlet {
 
             OAuth2AuthorizeReqDTO authzReqDTO = new OAuth2AuthorizeReqDTO();
             authzReqDTO.setCallbackUrl(oauth2Params.getRedirectURI());
-            authzReqDTO.setConsumerKey(oauth2Params.getApplicationName());
+            authzReqDTO.setConsumerKey(oauth2Params.getClientId());
             authzReqDTO.setResponseType(oauth2Params.getResponseType());
             authzReqDTO.setScopes(oauth2Params.getScopes().toArray(new String[oauth2Params.getScopes().size()]));
             authzReqDTO.setUsername(req.getParameter("oauth_user_name"));

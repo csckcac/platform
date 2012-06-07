@@ -26,18 +26,19 @@ import java.util.Set;
  */
 public class OAuth2Parameters {
 
-    private String ApplicationName;
+    private String applicationName;
     private String redirectURI;
     private Set<String> scopes;
     private String state;
     private String responseType;
+    private String clientId;
 
     public String getApplicationName() {
-        return ApplicationName;
+        return applicationName;
     }
 
     public void setApplicationName(String applicationName) {
-        this.ApplicationName = applicationName;
+        this.applicationName = applicationName;
     }
 
     public String getRedirectURI() {
@@ -70,5 +71,13 @@ public class OAuth2Parameters {
 
     public void setResponseType(String responseType) {
         this.responseType = responseType;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 }

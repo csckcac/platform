@@ -24,4 +24,5 @@ public class OAuth2ErrorCodes {
     public static final String ACCESS_DENIED = "access_denied";
     public static final String INVALID_CALLBACK = "invalid_callback";
     public static final String INVALID_REQUEST = "invalid_request";
+    public static final String INVALID_OAUTH_URL = "invalid_request_url";
 }

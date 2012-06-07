@@ -52,7 +52,7 @@ public class MetaDataConcurrentTestClient {
         governance = new RegistryProvider().getGovernance(registryWS, userId);
     }
 
-    @Test(groups = {"wso2.greg"}, threadPoolSize = 10, invocationCount = 10,
+    @Test(groups = {"wso2.greg"}, threadPoolSize = 40, invocationCount = 100,
           description = "Update the service concurrently", priority = 1)
     public void testServiceConcurrentUpdate() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
@@ -82,7 +82,7 @@ public class MetaDataConcurrentTestClient {
         }
     }
 
-    @Test(threadPoolSize = 2, invocationCount = 6, timeOut = 10000, groups = {"wso2.greg"}, description =
+    @Test(threadPoolSize = 40, invocationCount = 100, groups = {"wso2.greg"}, description =
             "Concurrent wsdl update", priority = 3)
     public void testWsdlConcurrentUpdate() throws GovernanceException {
         WsdlManager wsdlManager = new WsdlManager(governance);
@@ -92,13 +92,12 @@ public class MetaDataConcurrentTestClient {
                 if (w.getQName().getLocalPart().contains("WithInlinePolicyAndSchema.wsdl")) {
                     w.addAttribute("version", "0.02");
                     wsdlManager.addWsdl(w);
-                    System.out.println("Concurrent update");
                     wsdlManager.updateWsdl(w);
                 }
             }
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception thrown while updating wsdl concurrently"
-                                          + e.getMessage());
+                                          + e);
         }
     }
 }

@@ -40,7 +40,6 @@ public class GRegGovernanceTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("GovernanceApiServiceListing", GovernanceApiServiceListing.class));
         suiteVariablesList.add(new SuiteVariables("GovernanceApiWsdl", GovernanceApiWsdl.class));
         suiteVariablesList.add(new SuiteVariables("LifeCycleServiceTestClient", LifeCycleServiceTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("MetaDataVolumeTestClient", MetaDataVolumeTestClient.class));
         suiteVariablesList.add(new SuiteVariables("PolicyImportServiceTestClient", PolicyImportServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("PolicyManagerAPITest", PolicyManagerAPITest.class));
         suiteVariablesList.add(new SuiteVariables("PolicyTestCaseClient", PolicyTestCaseClient.class));
@@ -55,6 +54,9 @@ public class GRegGovernanceTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("WSDLTestCaseClient", WSDLTestCaseClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLUpdateContentServiceTestClient", WSDLUpdateContentServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLWithSpecialCharTest", WSDLWithSpecialCharTest.class));
+
+        suiteVariablesList.add(new SuiteVariables("MetaDataVolumeTestClient", MetaDataVolumeTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("MetaDataConcurrentTestClient", MetaDataConcurrentTestClient.class));
 
 
         setServerList(ProductConstant.GREG_SERVER_NAME);

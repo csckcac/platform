@@ -90,7 +90,7 @@ public final class APIUtil {
             api.setStatus(getApiStatus(artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS)));
             api.setThumbnailUrl(artifact.getAttribute(APIConstants.API_OVERVIEW_THUMBNAIL_URL));
             api.setWsdlUrl(artifact.getAttribute(APIConstants.API_OVERVIEW_WSDL));
-            api.setWsdlUrl(artifact.getAttribute(APIConstants.API_OVERVIEW_WADL));
+            api.setWadlUrl(artifact.getAttribute(APIConstants.API_OVERVIEW_WADL));
             api.setTechnicalOwner(artifact.getAttribute(APIConstants.API_OVERVIEW_TEC_OWNER));
             api.setTechnicalOwnerEmail(artifact.getAttribute(APIConstants.API_OVERVIEW_TEC_OWNER_EMAIL));
             api.setBusinessOwner(artifact.getAttribute(APIConstants.API_OVERVIEW_BUSS_OWNER));

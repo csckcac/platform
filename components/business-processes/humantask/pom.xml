@@ -110,17 +110,6 @@
                 <version>${wso2carbon.version.humantask}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.batik.wso2</groupId>
-                <artifactId>batik</artifactId>
-                <version>1.7.0.wso2v1</version>
-            </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.apache.geronimo.specs</groupId>-->
-                <!--<artifactId>geronimo-jpa_2.0_spec</artifactId>-->
-                <!--<version>1.0</version>-->
-                <!--&lt;!&ndash; We don't need an orbit bundle, since this is a bundle &ndash;&gt;-->
-            <!--</dependency>-->
-            <dependency>
                 <groupId>org.apache.ws.commons.axiom.wso2</groupId>
                 <artifactId>axiom</artifactId>
                 <version>${orbit.version.axiom}</version>

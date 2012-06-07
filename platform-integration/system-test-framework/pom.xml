@@ -41,7 +41,12 @@
            </releases>
        </repository>
 
-        <!--
+        <repository>
+            <id>maven2-repository-jococo</id>
+            <name>Maven2 Repository</name>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+
                 <repository>
                     <id>maven2-repository</id>
                     <name>Maven2 Repository</name>
@@ -56,7 +61,7 @@
                     </releases>
                 </repository>
 
-        -->
+
 
         <!--  <repository>
           <id>central</id>

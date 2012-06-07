@@ -194,9 +194,10 @@
 
                     <div id="stateActions" class="controls"></div>
                 </div>
-
-
-                <div class="form-actions">
+                <div class="form-actions" style="display:none" id="saveMessage">
+                    <div class="btn loadingButton">Saving API. Please wait..</div>
+                </div>
+                <div class="form-actions" id="saveButtons">
                     <input type="submit" id="addNewAPIButton" name="addNewAPIButton" class="btn btn-primary" value="Create"/>
                     <input type="reset" class="btn btn-primary" value="Cancel" onclick="javascript:window.location.href='./'" />
                 </div>

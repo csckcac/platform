@@ -47,20 +47,22 @@ $(document).ready(function() {
 
     });
     var v = $("#addAPIForm").validate({
-                                          submitHandler: function(form) {
-                                              $(form).ajaxSubmit({
-                                                                     success:function(responseText,
-                                                                                      statusText,
-                                                                                      xhr, $form) {
-                                                                         var current = window.location.pathname;
-                                                                         if (current.indexOf(".jag") >= 0) {
-                                                                             location.href = "index.jag";
-                                                                         } else {
-                                                                             location.href = 'site/pages/index.jag';
-                                                                         }
-                                                                     }
-                                                                 });
-                                          }
-                                      });
+          submitHandler: function(form) {
+              $('#saveMessage').show();
+              $('#saveButtons').hide();
+              $(form).ajaxSubmit({
+                                     success:function(responseText,
+                                                      statusText,
+                                                      xhr, $form) {
+                                         var current = window.location.pathname;
+                                         if (current.indexOf(".jag") >= 0) {
+                                             location.href = "index.jag";
+                                         } else {
+                                             location.href = 'site/pages/index.jag';
+                                         }
+                                     }
+                                 });
+          }
+      });
 
 });

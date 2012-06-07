@@ -69,6 +69,7 @@ footer h3{
 .thumbnail{
     line-height:20px;
     text-align:center;
+    min-height:180px;
 }
 .thumbnail a{
     cursor:pointer;
@@ -185,4 +186,12 @@ a.powered-by-logo {
 }
 .user-name{
     cursor:pointer;
+}
+.loadingButton, .loadingButton:hover{
+    background-image:url(../images/ajax-loader-black.gif);
+    background-repeat:no-repeat;
+    background-position:10px center;
+    text-indent:30px;
+    padding:20px;
+    cursor:default;
 }

@@ -33,12 +33,12 @@ import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.usage.agent.persist.RegistryUsagePersister;
 import org.wso2.carbon.usage.agent.util.MonitoredReader;
 import org.wso2.carbon.usage.agent.util.MonitoredWriter;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.lang.System;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -51,7 +51,8 @@ public class RegistryUsageListener extends Handler {
     private static final Log log = LogFactory.getLog(RegistryUsageListener.class);
 
     public void put(RequestContext context) throws RegistryException {
-        if (CurrentSession.getCallerTenantId() == 0 || CurrentSession.getTenantId() == 0) {
+        if (CurrentSession.getCallerTenantId() == MultitenantConstants.SUPER_TENANT_ID ||
+                CurrentSession.getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
             // no limitations for the super tenant
             return;
         }
@@ -102,7 +103,8 @@ public class RegistryUsageListener extends Handler {
     }
 
     public void importResource(RequestContext context) throws RegistryException {
-        if (CurrentSession.getCallerTenantId() == 0 || CurrentSession.getTenantId() == 0) {
+        if (CurrentSession.getCallerTenantId() == MultitenantConstants.SUPER_TENANT_ID ||
+                CurrentSession.getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
             // no limitations for the super tenant
             return;
         }
@@ -155,7 +157,8 @@ public class RegistryUsageListener extends Handler {
     }
 
     public Resource get(RequestContext context) throws RegistryException {
-        if (CurrentSession.getCallerTenantId() == 0 || CurrentSession.getTenantId() == 0) {
+        if (CurrentSession.getCallerTenantId() == MultitenantConstants.SUPER_TENANT_ID ||
+                CurrentSession.getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
             // no limitations for the super tenant
             return null;
         }
@@ -213,7 +216,8 @@ public class RegistryUsageListener extends Handler {
     }
 
     public void dump(RequestContext requestContext) throws RegistryException {
-        if (CurrentSession.getCallerTenantId() == 0 || CurrentSession.getTenantId() == 0) {
+        if (CurrentSession.getCallerTenantId() == MultitenantConstants.SUPER_TENANT_ID ||
+                CurrentSession.getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
             // no limitations for the super tenant
             return;
         }
@@ -252,7 +256,8 @@ public class RegistryUsageListener extends Handler {
     }
 
     public void restore(RequestContext requestContext) throws RegistryException {
-        if (CurrentSession.getCallerTenantId() == 0 || CurrentSession.getTenantId() == 0) {
+        if (CurrentSession.getCallerTenantId() == MultitenantConstants.SUPER_TENANT_ID ||
+                CurrentSession.getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
             // no limitations for the super tenant
             return;
         }
@@ -302,7 +307,8 @@ public class RegistryUsageListener extends Handler {
     }
     //===========================================================================================
     public void delete(RequestContext context) throws RegistryException {
-        if (CurrentSession.getCallerTenantId() == 0 || CurrentSession.getTenantId() == 0) {
+        if (CurrentSession.getCallerTenantId() == MultitenantConstants.SUPER_TENANT_ID ||
+                CurrentSession.getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
             // no limitations for the super tenant
             return;
         }

@@ -364,10 +364,6 @@
             <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/etc/syslog-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/</outputDirectory>
         </file>
-        <file>
-            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
-        </file>
 	<file>
             <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/claim-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>

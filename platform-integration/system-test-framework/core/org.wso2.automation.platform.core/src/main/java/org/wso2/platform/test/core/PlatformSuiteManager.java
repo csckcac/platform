@@ -7,6 +7,7 @@ import org.testng.ISuite;
 import org.testng.ISuiteListener;
 import org.wso2.platform.test.core.utils.emmautils.CodeCoverageUtils;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
+import org.wso2.platform.test.core.utils.reportutills.CustomTestngReportSetter;
 import org.wso2.platform.test.core.utils.serverutils.ServerManager;
 
 import java.util.ArrayList;
@@ -62,6 +63,8 @@ public class PlatformSuiteManager implements ISuiteListener {
             }
         } catch (Exception e) {  /*cannot throw the exception */
             log.error(e);
+            CustomTestngReportSetter reportSetter = new CustomTestngReportSetter();
+            reportSetter.createReport(suite, e);
         }
     }
 
@@ -91,6 +94,8 @@ public class PlatformSuiteManager implements ISuiteListener {
             }
         } catch (Exception e) { /*cannot throw the exception */
             log.error(e);
+            CustomTestngReportSetter reportSetter = new CustomTestngReportSetter();
+            reportSetter.createReport(suite, e);
 
             Assert.fail("Fail to stop servers " + e.getMessage());
         }

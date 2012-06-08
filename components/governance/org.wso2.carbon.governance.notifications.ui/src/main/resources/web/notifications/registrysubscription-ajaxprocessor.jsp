@@ -114,7 +114,7 @@
                 <select id="notificationMethodList" disabled="disabled" onchange="changeVisibility()">
                     <option value="0"><fmt:message key="select"/></option>
                     <option value="1"><fmt:message key="email"/></option>
-                    <option value="2"><fmt:message key="html.plain.text"/></option>
+                    <option value="2"><fmt:message key="rest"/></option>
                     <option value="3"><fmt:message key="soap"/></option>
                     <option value="4"><fmt:message key="username"/></option>
                     <option value="5"><fmt:message key="role"/></option>
@@ -128,8 +128,11 @@
                 <div id="subscriptionDataEmail" style="display:none">
                    <fmt:message key="enter.email.prompt"/>&nbsp;<span class="required">*</span>
                 </div>
-                <div id="subscriptionDataHTMLSOAP" style="display:none">
+                <div id="subscriptionDataREST" style="display:none">
                     <fmt:message key="enter.url.prompt"/>&nbsp;<span class="required">*</span>
+                </div>
+                <div id="subscriptionDataSOAP" style="display:none">
+                    <fmt:message key="enter.endpoint.prompt"/>&nbsp;<span class="required">*</span>
                 </div>
                 <div id="subscriptionDataUserProfile" style="display:none">
 <%
@@ -182,7 +185,7 @@
                     <%
                         }
                     %>
-                    <fmt:message key="enter.role.prompt"/>&nbsp;<span class="required">*</span>
+                    <%--<fmt:message key="enter.role.prompt"/>&nbsp;<span class="required">*</span>--%>
                 </div>
                 <div id="subscriptionDataJMX" style="display:none"></div>
             </td>

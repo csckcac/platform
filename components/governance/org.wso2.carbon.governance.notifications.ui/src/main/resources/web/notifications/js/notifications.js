@@ -322,9 +322,13 @@ function changeVisibility() {
             $('subscribeButton').disabled = false;
             break;
         case "2":
+            $('subscriptionDataInputRecord').style.display = "";
+            $('subscriptionDataREST').style.display = "";
+            $('subscribeButton').disabled = false;
+            break;
         case "3":
             $('subscriptionDataInputRecord').style.display = "";
-            $('subscriptionDataHTMLSOAP').style.display = "";
+            $('subscriptionDataSOAP').style.display = "";
             $('subscribeButton').disabled = false;
             break;
         case "4":
@@ -363,7 +367,8 @@ function resetInputVisibility() {
     $('subscriptionInput').style.background = 'White';
     $('subscriptionDataInputRecord').style.display = "none";
     $('subscriptionDataEmail').style.display = "none";
-    $('subscriptionDataHTMLSOAP').style.display = "none";
+    $('subscriptionDataREST').style.display = "none";
+    $('subscriptionDataSOAP').style.display = "none";
     $('subscriptionDataUserProfile').style.display = "none";
     $('subscriptionDataRoleProfile').style.display = "none";
     $('subscriptionDataWorkList').style.display = "";

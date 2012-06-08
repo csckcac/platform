@@ -28,6 +28,8 @@ import org.wso2.carbon.apimgt.impl.dto.APIInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
+import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -45,6 +47,7 @@ public class APIMgtDAOTest extends TestCase {
         ServiceReferenceHolder.getInstance().setAPIManagerConfigurationService(
                 new APIManagerConfigurationServiceImpl(config));
         apiMgtDAO = new ApiMgtDAO();
+        IdentityTenantUtil.setRealmService(new TestRealmService());
     }
 
     public void testGetSubscribersOfProvider() throws Exception{
@@ -158,11 +161,11 @@ public class APIMgtDAOTest extends TestCase {
         apiInfoDTO.setVersion("V1.0.0");
         apiInfoDTO.setContext("/api2context");
 
-        apiMgtDAO.registerAccessToken("CON1","APPLICATION3","PRABATH",0,apiInfoDTO,"SANDBOX");
+        apiMgtDAO.registerAccessToken("CON1","APPLICATION3","PRABATH",MultitenantConstants.SUPER_TENANT_ID,apiInfoDTO,"SANDBOX");
         String key1 = apiMgtDAO.getAccessKeyForAPI("PRABATH", "APPLICATION3", apiInfoDTO, "SANDBOX");
         assertNotNull(key1);
 
-        apiMgtDAO.registerAccessToken("CON1","APPLICATION3","PRABATH",0,apiInfoDTO,"PRODUCTION");
+        apiMgtDAO.registerAccessToken("CON1","APPLICATION3","PRABATH",MultitenantConstants.SUPER_TENANT_ID,apiInfoDTO,"PRODUCTION");
         String key2 = apiMgtDAO.getAccessKeyForAPI("PRABATH", "APPLICATION3", apiInfoDTO, "PRODUCTION");
         assertNotNull(key2);
         
@@ -170,11 +173,11 @@ public class APIMgtDAOTest extends TestCase {
     }
 
     public void testRegisterApplicationAccessToken()throws  Exception{
-        apiMgtDAO.registerApplicationAccessToken("CON1","APPLICATION3","PRABATH",0,"SANDBOX");
+        apiMgtDAO.registerApplicationAccessToken("CON1","APPLICATION3","PRABATH",MultitenantConstants.SUPER_TENANT_ID,"SANDBOX");
         String key1 = apiMgtDAO.getAccessKeyForApplication("PRABATH", "APPLICATION3", "SANDBOX");
         assertNotNull(key1);
 
-        apiMgtDAO.registerApplicationAccessToken("CON1","APPLICATION4","PRABATH",0,"PRODUCTION");
+        apiMgtDAO.registerApplicationAccessToken("CON1","APPLICATION4","PRABATH",MultitenantConstants.SUPER_TENANT_ID,"PRODUCTION");
         String key2 = apiMgtDAO.getAccessKeyForApplication("PRABATH", "APPLICATION4", "PRODUCTION");
         assertNotNull(key2);
 
@@ -234,7 +237,7 @@ public class APIMgtDAOTest extends TestCase {
     	Subscriber subscriber1 = new Subscriber("LA_F");
     	subscriber1.setEmail("laf@wso2.com");
     	subscriber1.setSubscribedDate(new Date());
-    	subscriber1.setTenantId(0);
+    	subscriber1.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
     	apiMgtDAO.addSubscriber(subscriber1);
     	assertTrue(subscriber1.getId() > 0);
     	Subscriber subscriber2 = apiMgtDAO.getSubscriber(subscriber1.getId());
@@ -245,12 +248,12 @@ public class APIMgtDAOTest extends TestCase {
     	Subscriber subscriber1 = new Subscriber("LA_F2");
     	subscriber1.setEmail("laf@wso2.com");
     	subscriber1.setSubscribedDate(new Date());
-    	subscriber1.setTenantId(0);
+    	subscriber1.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
     	apiMgtDAO.addSubscriber(subscriber1);
     	assertTrue(subscriber1.getId() > 0);
     	subscriber1.setEmail("laf2@wso2.com");
     	subscriber1.setSubscribedDate(new Date());
-    	subscriber1.setTenantId(0);
+    	subscriber1.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
     	apiMgtDAO.updateSubscriber(subscriber1);
     	Subscriber subscriber2 = apiMgtDAO.getSubscriber(subscriber1.getId());
     	this.checkSubscribersEqual(subscriber1, subscriber2);

@@ -1645,6 +1645,7 @@ public class ApiMgtDAO {
         
         String deleteKeyMappingQuery = "DELETE FROM AM_SUBSCRIPTION_KEY_MAPPING WHERE SUBSCRIPTION_ID = ?";
         String deleteSubscriptionsQuery = "DELETE FROM AM_SUBSCRIPTION WHERE APPLICATION_ID = ?";
+        String deleteApplicationKeyQuery = "DELETE FROM AM_APPLICATION_KEY_MAPPING WHERE APPLICATION_ID = ?";
         String deleteApplicationQuery = "DELETE FROM AM_APPLICATION WHERE APPLICATION_ID = ?";
 
         try {
@@ -1668,6 +1669,11 @@ public class ApiMgtDAO {
             prepStmt.close();
             
             prepStmt = connection.prepareStatement(deleteSubscriptionsQuery);
+            prepStmt.setInt(1, application.getId());
+            prepStmt.execute();
+            prepStmt.close();
+
+            prepStmt = connection.prepareStatement(deleteApplicationKeyQuery);
             prepStmt.setInt(1, application.getId());
             prepStmt.execute();
             prepStmt.close();

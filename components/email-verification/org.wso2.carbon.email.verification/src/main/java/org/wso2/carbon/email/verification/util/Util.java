@@ -187,7 +187,7 @@ public class Util {
             // User is supposed to give where he wants to store the intermediate data.
             // But, here there is no tenant signing in happened yet.
             // So get the super tenant registry instance.
-            Registry registry = Util.getConfigSystemRegistry(0);
+            Registry registry = Util.getConfigSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
             Resource resource = registry.newResource();
             // store the redirector url
             resource.setProperty("redirectPath", serviceConfig.getRedirectPath());

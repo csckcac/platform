@@ -31,6 +31,7 @@ import org.wso2.carbon.identity.sso.saml.util.SAMLSSOUtil;
 import org.wso2.carbon.security.keystore.KeyStoreAdmin;
 import org.wso2.carbon.utils.AuthenticationObserver;
 import org.wso2.carbon.utils.TenantUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.crypto.SecretKey;
 import java.security.KeyStore;
@@ -81,7 +82,7 @@ public class SignKeyDataHolder implements X509Credential {
             int tenantID = SAMLSSOUtil.getRealmService().getTenantManager().
                     getTenantId(tenantDomain);
             initializeRegistry(tenantID);
-            if (tenantID != 0) {
+            if (tenantID != MultitenantConstants.SUPER_TENANT_ID) {
                 String keyStoreName = SAMLSSOUtil.generateKSNameFromDomainName(tenantDomain);
                 keyAlias = tenantDomain;
                 keyMan = KeyStoreManager.getInstance(SAMLSSOUtil.getRegistryService().

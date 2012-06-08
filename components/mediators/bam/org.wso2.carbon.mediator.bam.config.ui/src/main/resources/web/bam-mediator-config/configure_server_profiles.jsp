@@ -1,7 +1,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@ page import="org.wso2.carbon.mediator.bam.config.ui.BamServerProfileUtils" %>
-<%--<%@ page import="org.wso2.carbon.bam.mediationstats.data.publisher.ui.MediationStatPublisherAdminClient" %>--%>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <fmt:bundle basename="org.wso2.carbon.mediator.bam.config.ui.i18n.Resources">
@@ -39,10 +42,17 @@
         port = tmpPort;
     }
 
+    String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
+    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+    ConfigurationContext configContext =
+            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+
     String tmpServerProfileLocation = request.getParameter("txtServerProfileLocation");
     if(tmpServerProfileLocation != null && !tmpServerProfileLocation.equals("")){
         serverProfileLocation = tmpServerProfileLocation;
-        BamServerProfileUtils bamServerProfileUtils = new BamServerProfileUtils();
+
+        BamServerProfileUtils bamServerProfileUtils =
+                new BamServerProfileUtils(cookie, backendServerURL, configContext, request.getLocale());
         if(!bamServerProfileUtils.resourceAlreadyExists(serverProfileLocation)){
             bamServerProfileUtils.addResource(ip, port, userName, password, serverProfileLocation);
         }
@@ -54,8 +64,6 @@
 
             <%
         }
-
-        //System.out.println("$$$$$$$$$$$$$$$$$$$$$$$"+bamServerProfileUtils.getResource(serverProfileLocation));
     }
 
 

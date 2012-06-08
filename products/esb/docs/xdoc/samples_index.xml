@@ -361,7 +361,18 @@ logging into the console. </p>
             <li>
                 <a href="samples/misc_samples.html#Sample657">Sample 657: Distributed transaction management</a>
             </li>
-
+	   <li>
+                <a href="samples/misc_samples.html#Sample658">Sample 658:  Huge XML Message Processing with Smooks Mediator</a>
+           </li>
+	   <li>
+                <a href="samples/misc_samples.html#Sample659">Sample 659: Huge EDI Message Processing with Smooks Mediator</a>
+           </li>
+	   <li>
+                <a href="samples/misc_samples.html#Sample660">Sample 660: Apply Templates with Smooks Mediator</a>
+           </li>
+	   <li>
+                <a href="samples/misc_samples.html#Sample661">Sample 661: Database Routing with Smooks Mediator</a>
+           </li>
         </ul>
     </li>
     <li>

@@ -622,9 +622,8 @@
          <p>
            <strong>Objective:</strong>Demonstrate the use of the transaction mediator in a distributed transaction
          </p>
-       </div>
-
-        <p><strong>Prerequisites:</strong><br />
+	</div>
+         <p><strong>Prerequisites:</strong><br />
         Start the Synapse configuration numbered 267: i.e. wso2esb-samples -sn 267<br />
         Start the Axis2 server and deploy the SimpleStockQuoteService if not already done</p>
         <p>
@@ -641,6 +640,252 @@
         </p>
           <p>Invoke the client as follows.</p>
          <pre xml:space="preserve">ant stockquote -Daddurl=http://localhost:9000/services/SimpleStockQuoteService -Dtrpurl=http://localhost:8280/ -Dsymbol=SUN/</pre>
+	
+	<h2>
+         <a name="Sample658">Sample 658: Huge XML Message Processing with Smooks Mediator</a>
+       </h2>
+       <p>
+         &#xa0;
+       </p>
+    <p>
+        Here is the sample with smooks mediator.
+    </p>
+   <pre xml:space="preserve">&lt;definitions xmlns=&quot;http://ws.apache.org/ns/synapse&quot;&gt;
 
+    &lt;localEntry key=&quot;smooks-key&quot; src=&quot;file:repository/samples/resources/smooks/smooks-config-658.xml&quot;/&gt;
+    &lt;proxy name=&quot;SmooksSample&quot; transports=&quot;vfs&quot;&gt;
+         &lt;!--CHANGE--&gt;
+        &lt;parameter name=&quot;transport.vfs.FileURI&quot;&gt;file:///home/lakmali/dev/test/smooks/in&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.ContentType&quot;&gt;application/xml&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.FileNamePattern&quot;&gt;.*\.xml&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.PollInterval&quot;&gt;5&lt;/parameter&gt;
+        &lt;!--CHANGE--&gt;
+        &lt;parameter name=&quot;transport.vfs.MoveAfterProcess&quot;&gt;file:///home/lakmali/dev/test/smooks/original&lt;/parameter&gt;
+        &lt;!--CHANGE--&gt;
+        &lt;parameter name=&quot;transport.vfs.MoveAfterFailure&quot;&gt;file:///home/lakmali/dev/test/smooks/original&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.ActionAfterProcess&quot;&gt;MOVE&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.ActionAfterFailure&quot;&gt;MOVE&lt;/parameter&gt;
+        &lt;target&gt;
+            &lt;inSequence&gt;
+               &lt;smooks config-key=&quot;smooks-key&quot;&gt;
+                    &lt;input type=&quot;xml&quot;/&gt;
+                    &lt;output type=&quot;xml&quot;/&gt;
+                &lt;/smooks&gt;
+           &lt;/inSequence&gt;
+        &lt;/target&gt;
+    &lt;/proxy&gt;
+&lt;/definitions&gt;</pre>
+       <div>
+         <p>
+           <strong>Objective:</strong>Demonstrate XML Huge messages processing by Splitting and Routing.
+         </p>
+         <p>
+           <strong>Prerequisites:</strong></p>
+          
+         <p>Enable the vfs transport in axis2.xml by uncomenting the vfs transport sender and receiver configurations in the axis2.xml.</p>
+         <p>Edit the following configuration parameters of synapse_sample_658.xml found in the repository/samples directory</p>
+           <ul>
+               <li>transport.vfs.FileURI</li>
+               <li>transport.vfs.MoveAfterProcess</li>
+               <li>transport.vfs.ActionAfterFailure</li>
+           </ul>
+	 <p>Edit the following configuraion of smooks-config-658.xml found in the repository/samples/resources/smooks directory</p>
+	 <pre xml:space="preserve">&lt;file:destinationDirectoryPattern&gt;/home/lakmali/dev/test/smooks/orders&lt;/file:destinationDirectoryPattern&gt;</pre>
+         <p>
+           Start ESB with the sample configuration 658 (i.e. wso2esb-samples.sh -sn 658).
+         </p>
+         <p>Drop the huge input XML message in to the transport.vfs.FileURI parameter specified directory. The XML message should be 
+	in the format of input-message-658.xml file found in the repository/samples/resources/smooks directory.</p>
+	 <p>
+           The output can be observed on the &lt;file:destinationDirectoryPattern&gt; location.
+         </p>
+       </div>
+
+	<h2>
+         <a name="Sample659">Sample 659: Huge EDI Message Processing with Smooks Mediator</a>
+       </h2>
+       <p>
+         &#xa0;
+       </p>
+    <p>
+        Here is the sample with smooks mediator.
+    </p>
+   <pre xml:space="preserve">&lt;definitions xmlns=&quot;http://ws.apache.org/ns/synapse&quot;&gt;
+	&lt;localEntry key=&quot;smooks-key&quot; src=&quot;file:repository/samples/resources/smooks/smooks-config-659.xml&quot; /&gt;
+	&lt;proxy name=&quot;SmooksSample&quot; transports=&quot;vfs&quot; startOnLoad=&quot;true&quot; trace=&quot;disable&quot;&gt;
+		&lt;!--CHANGE--&gt;
+		&lt;parameter name=&quot;transport.vfs.FileURI&quot;&gt;file:///home/lakmali/dev/test/smooks/in&lt;/parameter&gt;
+		&lt;parameter name=&quot;transport.vfs.ContentType&quot;&gt;text/plain&lt;/parameter&gt;
+		&lt;parameter name=&quot;transport.vfs.FileNamePattern&quot;&gt;.*.txt&lt;/parameter&gt;
+		&lt;parameter name=&quot;transport.PollInterval&quot;&gt;5&lt;/parameter&gt;
+		&lt;!--CHANGE--&gt;
+		&lt;parameter name=&quot;transport.vfs.MoveAfterProcess&quot;&gt;file:///home/lakmali/dev/test/smooks/original&lt;/parameter&gt;
+		&lt;!--CHANGE--&gt;
+		&lt;parameter name=&quot;transport.vfs.MoveAfterFailure&quot;&gt;file:///home/lakmali/dev/test/smooks/original&lt;/parameter&gt;
+		&lt;parameter name=&quot;transport.vfs.ActionAfterProcess&quot;&gt;MOVE&lt;/parameter&gt;
+		&lt;parameter name=&quot;transport.vfs.ActionAfterFailure&quot;&gt;MOVE&lt;/parameter&gt;
+		&lt;target&gt;
+	    		&lt;inSequence&gt;
+			   &lt;smooks config-key=&quot;smooks-key&quot;&gt;
+			   	&lt;input type=&quot;text&quot; /&gt;
+				&lt;output type=&quot;xml&quot; /&gt;
+			   &lt;/smooks&gt;
+			&lt;/inSequence&gt;
+		&lt;/target&gt;
+	&lt;/proxy&gt;
+&lt;/definitions&gt;</pre>
+
+   <div>
+         <p>
+           <strong>Objective:</strong>Demonstrate EDI Huge messages processing by Splitting and Routing.
+         </p>
+         <p>
+           <strong>Prerequisites:</strong></p>
+          
+         <p>Enable the vfs transport in axis2.xml by uncomenting the vfs transport sender and receiver configurations in the axis2.xml.</p>
+	
+	 <p>Add the plain text builder to the messageBuilders section of the axis2.xml found in the repository/conf directory. 
+	Here is the sample configuration. </p>
+	 <pre xml:space="preserve">&lt;messageBuilder contentType=&quot;text/plain&quot; class=&quot;org.apache.axis2.format.PlainTextBuilder&quot;/&gt;</pre>
+         <p>Edit the following configuration parameters of synapse_sample_659.xml found in the repository/samples directory</p>
+           <ul>
+               <li>transport.vfs.FileURI</li>
+               <li>transport.vfs.MoveAfterProcess</li>
+               <li>transport.vfs.ActionAfterFailure</li>
+           </ul>
+	 <p>Edit the following configuraion of smooks-config-659.xml found in the repository/samples/resources/smooks directory</p>
+	 <pre xml:space="preserve">&lt;file:destinationDirectoryPattern&gt;/home/lakmali/dev/test/smooks/orders&lt;/file:destinationDirectoryPattern&gt;</pre>
+         <p>
+           Start ESB with the sample configuration 659 (i.e. wso2esb-samples.sh -sn 659).
+         </p>
+         <p>Drop the huge input EDI message in to the transport.vfs.FileURI parameter specified directory. The XML message should be
+	 in the format of input-message-659.txt file found in the repository/samples/resources/smooks directory.</p>
+	 <p>
+           The output can be observed on the &lt;file:destinationDirectoryPattern&gt; location.
+         </p>
+       </div>
+     <h2>
+         <a name="Sample660">Sample 660: Apply Templates with Smooks Mediator</a>
+    </h2>
+    <p>
+         &#xa0;
+    </p>
+    <p>
+        Here is the sample with smooks mediator.
+    </p>
+   <pre xml:space="preserve">&lt;definitions xmlns=&quot;http://ws.apache.org/ns/synapse&quot;&gt;
+
+    &lt;localEntry key=&quot;smooks-key&quot; src=&quot;file:repository/samples/resources/smooks/smooks-config-660.xml&quot;/&gt;
+
+    &lt;proxy name=&quot;SmooksSample&quot; transports=&quot;vfs&quot;&gt;
+        &lt;!--CHANGE--&gt;
+        &lt;parameter name=&quot;transport.vfs.FileURI&quot;&gt;file:///home/lakmali/dev/test/smooks/in&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.ContentType&quot;&gt;application/xml&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.FileNamePattern&quot;&gt;.*\.xml&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.PollInterval&quot;&gt;5&lt;/parameter&gt;
+        &lt;!--CHANGE--&gt;
+        &lt;parameter name=&quot;transport.vfs.MoveAfterProcess&quot;&gt;file:///home/lakmali/dev/test/smooks/original&lt;/parameter&gt;
+        &lt;!--CHANGE--&gt;
+        &lt;parameter name=&quot;transport.vfs.MoveAfterFailure&quot;&gt;file:///home/lakmali/dev/test/smooks/original&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.ActionAfterProcess&quot;&gt;MOVE&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.ActionAfterFailure&quot;&gt;MOVE&lt;/parameter&gt;
+        &lt;parameter name=&quot;Operation&quot;&gt;urn:placeOrder&lt;/parameter&gt;
+        &lt;target&gt;
+            &lt;inSequence&gt;
+                &lt;smooks config-key=&quot;smooks-key&quot;&gt;
+                    &lt;input type=&quot;xml&quot;/&gt;
+                    &lt;output type=&quot;xml&quot;/&gt;
+                &lt;/smooks&gt;
+		&lt;log level=&quot;full&quot;/&gt; &lt;!-- Full log to view the transformed message--&gt;
+              &lt;/inSequence&gt;
+            &lt;outSequence/&gt;
+        &lt;/target&gt;
+    &lt;/proxy&gt;
+&lt;/definitions&gt;</pre>
+    <div>
+         <p>
+           <strong>Objective:</strong>Demonstrate messages can be transformed using templates with Smooks mediator
+         </p>
+         <p>
+           <strong>Prerequisites:</strong></p>
+          
+         <p>Enable the vfs transport in axis2.xml by uncomenting the vfs transport sender and receiver configurations in the axis2.xml.</p>
+         <p>Edit the following configuration parameters of synapse_sample_660.xml found in the repository/samples directory</p>
+           <ul>
+               <li>transport.vfs.FileURI</li>
+               <li>transport.vfs.MoveAfterProcess</li>
+               <li>transport.vfs.ActionAfterFailure</li>
+           </ul>
+	 <p>
+           Start ESB with the sample configuration 660 (i.e. wso2esb-samples.sh -sn 660).
+         </p>
+         <p>Drop the input-message-660.xml file found in the repository/samples/resources/smooks directory to the transport.vfs.FileURI 
+	parameter specified directory.</p>
+	 <p>
+           Transformed message will be logged in the console to view the result. 
+         </p>
+       </div>
+    <h2>
+         <a name="Sample661">Sample 661: Database Routing with Smooks Mediator</a>
+    </h2>
+    <p>
+         &#xa0;
+    </p>
+    <p>
+        Here is the sample with smooks mediator.
+    </p>
+   <pre xml:space="preserve">&lt;definitions xmlns=&quot;http://ws.apache.org/ns/synapse&quot;&gt;
+   &lt;localEntry key=&quot;smooks-key&quot; src=&quot;file:repository/samples/resources/smooks/smooks-config-661.xml&quot; /&gt;
+   &lt;proxy name=&quot;SmooksSample&quot; transports=&quot;vfs&quot; startOnLoad=&quot;true&quot; trace=&quot;disable&quot;&gt;
+	&lt;!--CHANGE--&gt;
+        &lt;parameter name=&quot;transport.vfs.FileURI&quot;&gt;file:///home/lakmali/dev/test/smooks/in&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.ContentType&quot;&gt;application/xml&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.FileNamePattern&quot;&gt;.*\.xml&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.PollInterval&quot;&gt;5&lt;/parameter&gt;
+        &lt;!--CHANGE--&gt;
+        &lt;parameter name=&quot;transport.vfs.MoveAfterProcess&quot;&gt;file:///home/lakmali/dev/test/smooks/original&lt;/parameter&gt;
+        &lt;!--CHANGE--&gt;
+        &lt;parameter name=&quot;transport.vfs.MoveAfterFailure&quot;&gt;file:///home/lakmali/dev/test/smooks/original&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.ActionAfterProcess&quot;&gt;MOVE&lt;/parameter&gt;
+        &lt;parameter name=&quot;transport.vfs.ActionAfterFailure&quot;&gt;MOVE&lt;/parameter&gt;
+        &lt;parameter name=&quot;Operation&quot;&gt;urn:placeOrder&lt;/parameter&gt;
+	&lt;target&gt;
+ 		&lt;inSequence&gt;
+			&lt;smooks config-key=&quot;smooks-key&quot;&gt;
+			   	&lt;input type=&quot;xml&quot; /&gt;
+				&lt;output type=&quot;xml&quot; /&gt;
+			&lt;/smooks&gt;
+		&lt;/inSequence&gt;
+	&lt;/target&gt;
+  &lt;/proxy&gt;
+&lt;/definitions&gt;</pre>
+  <div>
+         <p>
+           <strong>Objective:</strong>Demonstrate messages can be routed to database with Smooks mediator
+         </p>
+         <p>
+           <strong>Prerequisites:</strong></p>
+          
+         <p>Enable the vfs transport in axis2.xml by uncomenting the vfs transport sender and receiver configurations in the axis2.xml.</p>
+         <p>Edit the following configuration parameters of synapse_sample_661.xml found in the repository/samples directory</p>
+           <ul>
+               <li>transport.vfs.FileURI</li>
+               <li>transport.vfs.MoveAfterProcess</li>
+               <li>transport.vfs.ActionAfterFailure</li>
+           </ul>
+	 <p>Run the CreateOrdersDB.sql script found in repository/samples/resources/smooks</p>
+
+	 <p>mysql&gt; source CreateOrdersDB.sql</p>
+	 
+	 <p>Add the mysql-connector-java-5.x.x.jar to the ESB_HOME/repository/components/lib directory</p>
+	 <p>
+           Start ESB with the sample configuration 661 (i.e. wso2esb-samples.sh -sn 661).
+         </p>
+         <p>Drop the input-message-661.xml file found in the repository/samples/resources/smooks directory 
+		to the transport.vfs.FileURI parameter specified directory.</p>
+	 <p>
+           The order and order-item records will be added to the ORDERS and ORDERITEMS tables.
+         </p>
+       </div>
 </body>
 </html>

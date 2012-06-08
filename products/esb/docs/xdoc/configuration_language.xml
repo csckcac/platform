@@ -572,12 +572,12 @@ style="width: 100%; font-size:small" class="data-table">
     <tr>
       <td>JMS</td>
       <td><tt>jms:/SimpleStockQuoteService?<br />
-           transport.jms.ConnectionFactoryJNDIName=QueueConnectionFactory&amp;<br
+           transport.jms.ConnectionFactoryJNDIName=QueueConnectionFactory&amp;<br
         />
-           java.naming.factory.initial=org.apache.activemq.jndi.ActiveMQInitialContextFactory&amp;<br
+           java.naming.factory.initial=org.apache.activemq.jndi.ActiveMQInitialContextFactory&amp;<br
         />
-           java.naming.provider.url=tcp://localhost:61616&amp;<br />
-           transport.jms.DestinationType=topic</tt></td>
+           java.naming.provider.url=tcp://localhost:61616&amp;<br />
+           transport.jms.DestinationType=topic</tt></td>
     </tr>
     <tr>
       <td>Mail</td>
@@ -1408,10 +1408,14 @@ attribute specifies whether the mediator should set or remove the header. If
 omitted, it defaults to a set-header. </p>
 
 <h4><a name="smooks">Smooks</a></h4>
-<pre xml:space="preserve"> &lt;smooks key="string"/&gt;</pre>
+<pre xml:space="preserve">
+		&lt;smooks [config-key=&quot;string&quot;] [persistence-unit=&quot;string&quot;]&gt;
+			&lt;input [type=&quot;|text|xml&quot;]  [regex=&quot;regex&quot;]/&gt;
+			&lt;output [type=&quot;|text|xml|java&quot;]  [regex=&quot;regex&quot;] [property=&quot;string&quot;] [action=&quot;string&quot;]/&gt;
+		&lt;/smooks&gt;</pre>
 
 <p>The &lt;smooks&gt; mediator can be used to perform complex content transformation efficiently
-using the Smooks framework for XML processing. The key attribute should point to a local entry
+using the Smooks framework. The key attribute should point to a local entry
 or a registry resource which contains a Smooks configuration file. For more information on Smooks
 transformation please visit the <a href="http://www.smooks.org">Smooks</a> website.</p>
 
@@ -2009,4 +2013,5 @@ loaded from.</p>
 
 </body>
 </html>
+
 

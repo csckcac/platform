@@ -308,6 +308,11 @@
                 <artifactId>org.wso2.carbon.event.core</artifactId>
                 <version>${wso2carbon.version}</version>
             </dependency>
+	    <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.agent</artifactId>
+                <version>${wso2carbon.version}</version>
+            </dependency>
    	    <dependency>
             	<groupId>org.wso2.carbon</groupId>
             	<artifactId>org.wso2.carbon.bam.core</artifactId>

@@ -127,7 +127,7 @@
 	 <!--Multitenancy related file -->
         <fileSet>
             <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/
+                ../p2-profile/target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
             <includes>

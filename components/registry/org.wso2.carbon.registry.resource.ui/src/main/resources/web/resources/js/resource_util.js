@@ -1163,7 +1163,7 @@ var customUIMediaTypeMap = null;
 var humanReadableMediaTypeMap = null;
 
 var mediaTypeResponse = "txt:text,wsdl:wsdl/xml,xsd:xsd/xml,iml:idea/proj";
-var collectionMediaTypeResponse = "synapse:application/vnd.apache.synapse,esb:application/vnd.wso2.esb,wsas:application/vnd.wso2.wsas,axis2:application/vnd.apache.axis2";
+var collectionMediaTypeResponse;
 var customUIMediaTypeResponse = "profiles:application/vnd.wso2-profiles+xml";
 var humanReadableMediaTypeResponse = "";
 
@@ -1201,7 +1201,7 @@ function fillCollectionMediaTypes() {
         method:'get',
         parameters:{random:getRandom()},
         onSuccess: function(transport) {
-            collectionMediaTypeResponse = transport.responseText || "synapse:application/vnd.apache.synapse,esb:application/vnd.wso2.esb,wsas:application/vnd.wso2.wsas,axis2:application/vnd.apache.axis2";
+            collectionMediaTypeResponse = transport.responseText || "";
 
             var mType = collectionMediaTypeResponse.split(',');
             for (var i = 0; i < mType.length; i++) {

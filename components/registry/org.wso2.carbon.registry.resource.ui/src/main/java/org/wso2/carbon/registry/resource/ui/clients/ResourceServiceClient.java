@@ -778,7 +778,7 @@ public class
         } catch (Exception e) {
             String msg = "Failed to get media type definitions from the back end server. Limited set of media types will be populated. " + e.getMessage();
             log.error(msg, e);
-            return "synapse:application/vnd.apache.synapse,esb:application/vnd.wso2.esb,wsas:application/vnd.wso2.wsas,axis2:application/vnd.apache.axis2";
+            return "";
         }
     }
 

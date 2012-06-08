@@ -17,6 +17,7 @@
 */
 package org.wso2.automation.common.test.greg.lifecycle;
 
+import org.apache.axis2.AxisFault;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -61,9 +62,13 @@ public class LifeCycleErrorHandling {
             throws LifeCycleManagementServiceExceptionException, RemoteException,
                    InterruptedException {
         String invalidLifeCycleConfiguration = lifeCycleConfiguration.replaceFirst("id=\"Commencement\">", "id=\"Commencement\"");
-
-        Assert.assertFalse(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, invalidLifeCycleConfiguration),
-                           "Life Cycle Added with invalid Syntax");
+        try {
+            Assert.assertFalse(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, invalidLifeCycleConfiguration),
+                               "Life Cycle Added with invalid Syntax");
+            Assert.fail("Life Cycle Added with invalid Syntax");
+        } catch (AxisFault e) {
+            Assert.assertTrue(e.getMessage().contains("Unable to initiate aspect. Unexpected '<' character"));
+        }
 
         Thread.sleep(2000);
     }

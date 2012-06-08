@@ -94,7 +94,7 @@ public class UIUtil {
 
         String tenantDomain = (String)request.getSession().getAttribute(MultitenantConstants.TENANT_DOMAIN);
         if (tenantDomain != null &&
-                !tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN)) {
+                !tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             contextRoot = "/"+ MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain + contextRoot;
         }
 
@@ -158,7 +158,7 @@ public class UIUtil {
                 tenantDomain = (String)request.getAttribute(MultitenantConstants.TENANT_DOMAIN);
             }
             if (tenantDomain != null &&
-                    !tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN)) {
+                    !tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
                 return serverRoot + MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain +
                         "/registry/atom" + encodeRegistryPath(resourcePath).replaceAll(" ", "+");
             } else {

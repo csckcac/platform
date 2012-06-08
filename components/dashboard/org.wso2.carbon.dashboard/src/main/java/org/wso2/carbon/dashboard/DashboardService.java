@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
@@ -34,8 +35,11 @@ import org.wso2.carbon.dashboard.common.DashboardConstants;
 import org.wso2.carbon.dashboard.common.LayoutConstants;
 import org.wso2.carbon.dashboard.common.bean.Gadget;
 import org.wso2.carbon.dashboard.common.bean.Tab;
-import org.wso2.carbon.registry.core.*;
+import org.wso2.carbon.registry.core.ActionConstants;
 import org.wso2.carbon.registry.core.Collection;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -52,7 +56,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 public class DashboardService extends AbstractAdmin {
 
@@ -1270,7 +1280,7 @@ public class DashboardService extends AbstractAdmin {
         String[] response = new String[0];
         String tDomain = getTenantDomain();
         String tPathWithDOmain = "";
-        if (tDomain != null || "".equals(tDomain)) {
+        if (!MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tDomain)) {
             tPathWithDOmain = "/t/" + tDomain;
         }
 

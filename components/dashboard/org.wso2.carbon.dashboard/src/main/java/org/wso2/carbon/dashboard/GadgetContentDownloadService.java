@@ -1,6 +1,7 @@
 package org.wso2.carbon.dashboard;
 
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.registry.app.Utils;
 import org.wso2.carbon.registry.core.Registry;
@@ -22,7 +23,7 @@ public class GadgetContentDownloadService extends AbstractAdmin {
             if (registry != null) {
                 return registry;
             } else {
-                if ("null".equals(tDomain)) {
+                if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tDomain)) {
                     // getting supper tenant registry
                     registry = Utils.getEmbeddedRegistryService().getRegistry(
                             CarbonConstants.REGISTRY_ANONNYMOUS_USERNAME, RegistryContext.getBaseInstance().getRealmService().

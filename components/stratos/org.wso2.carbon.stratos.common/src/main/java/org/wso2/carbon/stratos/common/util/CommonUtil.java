@@ -117,6 +117,14 @@ public class CommonUtil {
         return stratosConfig.getSuperAdminEmail();
     }
 
+    public static String getAdminUserName() {
+        return stratosConfig.getAdminUserName();
+    }
+    
+    public static String getAdminPassword() {
+        return stratosConfig.getAdminPassword();
+    }
+
     public static boolean isTenantActivationModerated() {
         return stratosConfig.isTenantActivationModerated();
     }

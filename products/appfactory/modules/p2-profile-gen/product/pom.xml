@@ -91,7 +91,7 @@
                                     org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.coordination.core.feature:${carbon.version}
+                                    org.wso2.carbon:org.wso2.carbon.coordination.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.unifiedendpoint.server.feature:${carbon.version}
@@ -198,7 +198,7 @@
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.coordination.core.feature.group</id>
+                                    <id>org.wso2.carbon.coordination.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>

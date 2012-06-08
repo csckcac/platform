@@ -114,6 +114,11 @@
             <artifactId>org.wso2.carbon.appfactory.userstore</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.appfactory.config.reader.xpath.ext</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -196,6 +201,7 @@
                                 </bundleDef>
                                 <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.login.ui</bundleDef>
                                 <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.userstore</bundleDef>
+                                <bundleDef>org.wso2.carbon.appfactory.config.reader.xpath.ext</bundleDef>
                             </bundles>
                             <importBundles>
                             </importBundles>

@@ -7,22 +7,22 @@
     <!--Application Management configurations-->
     <ApplicationMgt>
          <DefaultApplicationUserRole name="appFactoryUsers">
-            <Permission>/permission/login/</Permission>
+            <Permission>/permission/admin/login</Permission>
         </DefaultApplicationUserRole>
     </ApplicationMgt>
 
     <DefaultRoles>
         <Role name="developer">
-            <Permission>/permission/login/</Permission>
+            <Permission>/permission/admin/login</Permission>
         </Role>
         <Role name="devOps">
-            <Permission>/permission/login/</Permission>
+            <Permission>/permission/admin/login</Permission>
         </Role>
         <Role name="qa">
-            <Permission>/permission/login/</Permission>
+            <Permission>/permission/admin/login</Permission>
         </Role>
         <Role name="appOwner">
-            <Permission>/permission/login/</Permission>
+            <Permission>/permission/admin/login</Permission>
         </Role>
     </DefaultRoles>
 

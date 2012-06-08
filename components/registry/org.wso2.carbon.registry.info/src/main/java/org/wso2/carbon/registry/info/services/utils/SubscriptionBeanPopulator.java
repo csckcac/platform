@@ -414,7 +414,7 @@ public class SubscriptionBeanPopulator {
                         currentContext.setTenantId(callerTenantId, true);
                         String tenantDomain = currentContext.getTenantDomain();
                         if (tenantDomain != null &&
-                                !tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN)) {
+                                !tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
                             name = name + "@" + tenantDomain;
                         }
                     } finally {

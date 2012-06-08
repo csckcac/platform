@@ -118,7 +118,7 @@
                     <option value="3"><fmt:message key="soap"/></option>
                     <option value="4"><fmt:message key="username"/></option>
                     <option value="5"><fmt:message key="role"/></option>
-                    <option value="6"><fmt:message key="work"/></option>
+                    <option value="6"><fmt:message key="management.console"/></option>
                     <option value="7"><fmt:message key="jmx"/></option>
                 </select>
             </td>
@@ -185,8 +185,9 @@
                     <%
                         }
                     %>
-                    <%--<fmt:message key="enter.role.prompt"/>&nbsp;<span class="required">*</span>--%>
+                    <fmt:message key="enter.role.prompt"/>&nbsp;<span class="required">*</span>
                 </div>
+
                 <div id="subscriptionDataJMX" style="display:none"></div>
             </td>
             <td><input type="text" id="subscriptionInput" /></td>

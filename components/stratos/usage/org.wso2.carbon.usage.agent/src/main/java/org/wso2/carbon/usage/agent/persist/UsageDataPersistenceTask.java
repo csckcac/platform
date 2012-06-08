@@ -23,9 +23,7 @@ import org.wso2.carbon.usage.agent.beans.BandwidthUsage;
 import org.wso2.carbon.usage.agent.config.UsageAgentConfiguration;
 import org.wso2.carbon.usage.agent.exception.UsageException;
 import org.wso2.carbon.usage.agent.util.PublisherUtils;
-import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
-import javax.swing.plaf.multi.MultiToolTipUI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Queue;

@@ -21,13 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.bam.agent.conf.AgentConfiguration;
-import org.wso2.carbon.bam.agent.core.Agent;
-import org.wso2.carbon.bam.agent.core.AgentFactory;
-import org.wso2.carbon.bam.data.publisher.util.PublisherConfiguration;
-import org.wso2.carbon.bam.data.publisher.util.PublisherUtil;
 import org.wso2.carbon.bam.service.data.publisher.conf.RegistryPersistenceManager;
-import org.wso2.carbon.bam.service.data.publisher.publish.ServiceAgentUtil;
 import org.wso2.carbon.bam.service.data.publisher.util.ServiceStatisticsPublisherConstants;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.statistics.services.SystemStatisticsUtil;
@@ -49,6 +43,7 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * cardinality="1..1" policy="dynamic" bind="setRegistryService"
  * unbind="unsetRegistryService"
  */
+
 public class StatisticsServiceComponent {
 
     private static SystemStatisticsUtil systemStatisticsUtil;
@@ -57,7 +52,6 @@ public class StatisticsServiceComponent {
 //    private static ActivityQueue activityQueue;
 //    private static EventQueue eventQueue;
     private static Log log = LogFactory.getLog(StatisticsServiceComponent.class);
-    private static Agent agent;
 
     protected void activate(ComponentContext context) {
 
@@ -69,23 +63,10 @@ public class StatisticsServiceComponent {
             bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
                                           new ServiceStatisticsAxis2ConfigurationContextObserver(), null);
 
-            PublisherConfiguration configuration = PublisherUtil.readConfigurationFromAgentConfig();
-            ServiceAgentUtil.setPublisherConfiguration(configuration);
-
-            AgentConfiguration agentConfiguration = new AgentConfiguration();
-            agentConfiguration.setCorePoolSize(configuration.getCorePoolSize());
-            agentConfiguration.setEventQueueSize(configuration.getEventQueueSize());
-            agentConfiguration.setEvictionTimePeriod(configuration.getEvictionTimePeriod());
-            agentConfiguration.setMaxIdleConnections(configuration.getMaxIdleConnections());
-            agentConfiguration.setMaxPoolSize(configuration.getMaxPoolSize());
-            agentConfiguration.setMinIdleTimeInPool(configuration.getMinIdleTimeInPool());
-            agentConfiguration.setTaskQueueSize(configuration.getTaskQueueSize());
-
-            agent = AgentFactory.getAgent(agentConfiguration);
 
 
             //use event publisher as the serviceStatsProcessor
-//            StatsProcessor statsProcessor = new DataPublisher();
+//            StatsProcessor statsProcessor = new DataPublisher1();
 //            eventQueue = new EventQueue(statsProcessor, configuration);
 //            ServiceAgentUtil.setEventQueue(eventQueue);
 /*            serviceStatisticsQueue = new ServiceStatisticsQueue(statsProcessor, configuration);
@@ -110,13 +91,8 @@ public class StatisticsServiceComponent {
         if (log.isDebugEnabled()) {
             log.debug("BAM service statistics data publisher bundle is deactivated");
         }
-//        serviceStatisticsQueue.cleanup();
-        agent.shutdown();
     }
 
-    public static Agent getAgent() {
-        return agent;
-    }
 
     protected void setSystemStatisticsUtil(SystemStatisticsUtil systemStatisticsUtil) {
         this.systemStatisticsUtil = systemStatisticsUtil;

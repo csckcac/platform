@@ -16,107 +16,180 @@
 package org.wso2.carbon.bam.service.data.publisher.publish;
 
 
-import org.wso2.carbon.bam.agent.publish.EventReceiver;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
-import org.wso2.carbon.bam.data.publisher.util.PublisherConfiguration;
-import org.wso2.carbon.bam.service.Event;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
-import org.wso2.carbon.bam.service.data.publisher.conf.Property;
 import org.wso2.carbon.bam.service.data.publisher.data.BAMServerInfo;
+import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.data.EventData;
 import org.wso2.carbon.bam.service.data.publisher.data.PublishData;
-import org.wso2.carbon.bam.service.data.publisher.queue.ActivityQueue;
-import org.wso2.carbon.bam.service.data.publisher.queue.EventQueue;
-import org.wso2.carbon.bam.service.data.publisher.queue.ServiceStatisticsQueue;
-import org.wso2.carbon.bam.service.data.publisher.util.ServiceStatisticsPublisherConstants;
+import org.wso2.carbon.bam.service.data.publisher.util.StatisticsType;
 import org.wso2.carbon.statistics.services.util.SystemStatistics;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ServiceAgentUtil {
 
-    private static ServiceStatisticsQueue serviceStatsQueue;
-    private static ActivityQueue activityInStatsQueue;
-
-    private static EventQueue eventQueue;
-
-    private static PublisherConfiguration publisherConfiguration;
-
-    @Deprecated
-    public static void publishServiceStats(PublishData publishData) {
-        serviceStatsQueue.enqueue(publishData);
-    }
-
-    @Deprecated
-    public static void publishActivityStats(PublishData publishData) {
-        activityInStatsQueue.enqueue(publishData);
-    }
-
-    public static void setServiceStatisticQueue(ServiceStatisticsQueue serviceStatisticsQueue) {
-        serviceStatsQueue = serviceStatisticsQueue;
-    }
-
-    public static void setActivityInQueue(ActivityQueue activityInQueue) {
-        activityInStatsQueue = activityInQueue;
-    }
-
-    public static void setPublisherConfiguration(PublisherConfiguration configuration) {
-        publisherConfiguration = configuration;
-    }
-
-    public static PublisherConfiguration getPublisherConfiguration() {
-        return publisherConfiguration;
-    }
-
-    public static void setEventQueue(EventQueue queue) {
-        eventQueue = queue;
-    }
-
-    public static void publishEvent(PublishData data) {
-        eventQueue.enqueue(data);
-    }
-
-    public static EventReceiver constructEventReceiver(BAMServerInfo bamServerInfo) {
-        EventReceiver receiver = new EventReceiver();
-        receiver.setHttpTransportEnabled(bamServerInfo.isHttpTransportEnable());
-        receiver.setSocketTransportEnabled(bamServerInfo.isSocketTransportEnable());
-        receiver.setPassword(bamServerInfo.getBamPassword());
-        receiver.setPort(bamServerInfo.getPort());
-        receiver.setUserName(bamServerInfo.getBamUserName());
-        receiver.setUrl(bamServerInfo.getBamServerURL());
-        return receiver;
-    }
-
-    public static List<Event> makeEventList(PublishData publishData, EventingConfigData eventingConfigData) {
+    public static Event makeEventList(PublishData publishData,
+                                            EventingConfigData eventingConfigData) {
 
         EventData event = publishData.getEventData();
 
-        Map<String, ByteBuffer> correlationData = new HashMap<String, ByteBuffer>();
-        Map<String, ByteBuffer> metaData = new HashMap<String, ByteBuffer>();
-        Map<String, ByteBuffer> eventData = new HashMap<String, ByteBuffer>();
+        List<Object> correlationData = new ArrayList<Object>();
+        List<Object> metaData = new ArrayList<Object>();
+        List<Object> eventData = new ArrayList<Object>();
 
-        addEventData(eventData, event);
-        addMetaData(metaData, event);
-        addCorrelationData(correlationData, event);
+        StatisticsType statisticsType = findTheStatisticType(event);
 
-        addProperties(metaData, eventingConfigData);
+        addCommonEventData(event, eventData);
+
+        switch (statisticsType) {
+
+            case ACTIVITY_IN_ONLY:
+                addActivityInEventData(event, eventData);
+                addActivityInMetaData(event, metaData);
+                addActivityInCorrelationData(event, correlationData);
+                break;
+            case ACTIVITY_OUT_ONLY:
+                addActivityOutEventData(event, eventData);
+                addActivityOutCorrelationData(event, correlationData);
+                break;
+            case ACTIVITY_IN_OUT:
+                //In data
+                addActivityInEventData(event, eventData);
+                addActivityInMetaData(event, metaData);
+                addActivityInCorrelationData(event, correlationData);
+                //Out data -- Meta and correlation values come from In data
+                addActivityOutEventData(event, eventData);
+                break;
+            case ACTIVITY_IN_ONLY_SERVICE_STATS:
+                //In data
+                addActivityInEventData(event, eventData);
+                addActivityInMetaData(event, metaData);
+                addActivityInCorrelationData(event, correlationData);
+                //ServiceStats data -- Meta and correlation values come from In data
+                addStatisticEventData(event, eventData);
+                break;
+            case ACTIVITY_OUT_ONLY_SERVICE_STATS:
+                //Out data
+                addActivityOutEventData(event, eventData);
+                addActivityOutCorrelationData(event, correlationData);
+                //ServiceStats data
+                addStatisticEventData(event, eventData);
+                break;
+            case ACTIVITY_IN_OUT_SERVICE_STATS:
+                //In data
+                addActivityInEventData(event, eventData);
+                addActivityInMetaData(event, metaData);
+                addActivityInCorrelationData(event, correlationData);
+                //Out data
+                addActivityOutEventData(event, eventData);
+                //ServiceStats data
+                addStatisticEventData(event, eventData);
+                break;
+            case SERVICE_STATS:
+                addStatisticEventData(event, eventData);
+                addStatisticsMetaData(event,metaData);
+                break;
+        }
+
+
+/*        addProperties(metaData, eventingConfigData);*/
 
         Event publishEvent = new Event();
-        publishEvent.setCorrelation(correlationData);
-        publishEvent.setMeta(metaData);
-        publishEvent.setEvent(eventData);
+        publishEvent.setCorrelationData(correlationData);
+        publishEvent.setMetaData(metaData);
+        publishEvent.setEventData(eventData);
+        publishEvent.setStatisticsType(statisticsType);
 
-        ArrayList<Event> events = new ArrayList<Event>();
-        events.add(publishEvent);
-        return events;
+        return publishEvent;
     }
 
-    private static void addProperties(Map<String, ByteBuffer> metaData, EventingConfigData eventingConfigData) {
+    private static StatisticsType findTheStatisticType(EventData event) {
+        StatisticsType statisticsType = null;
+        if (event.getInMessageId() != null && event.getOutMessageId() == null &&
+            event.getSystemStatistics() == null) {
+            statisticsType = StatisticsType.ACTIVITY_IN_ONLY;
+        } else if (event.getInMessageId() != null && event.getOutMessageId() != null &&
+                   event.getSystemStatistics() == null) {
+            statisticsType = StatisticsType.ACTIVITY_IN_OUT;
+        } else if (event.getInMessageId() == null && event.getOutMessageId() != null &&
+                   event.getSystemStatistics() == null) {
+            statisticsType = StatisticsType.ACTIVITY_OUT_ONLY;
+        } else if (event.getInMessageId() != null && event.getOutMessageId() == null &&
+                   event.getSystemStatistics() != null) {
+            statisticsType = StatisticsType.ACTIVITY_IN_ONLY_SERVICE_STATS;
+        } else if (event.getInMessageId() == null && event.getOutMessageId() != null &&
+                   event.getSystemStatistics() != null) {
+            statisticsType = StatisticsType.ACTIVITY_OUT_ONLY_SERVICE_STATS;
+        } else if (event.getInMessageId() != null && event.getOutMessageId() != null &&
+                   event.getSystemStatistics() != null) {
+            statisticsType = StatisticsType.ACTIVITY_IN_OUT_SERVICE_STATS;
+        } else if (event.getInMessageId() == null && event.getOutMessageId() == null &&
+                   event.getSystemStatistics() != null) {
+            statisticsType = StatisticsType.SERVICE_STATS;
+        }
+        return statisticsType;
+    }
+
+    private static void addCommonEventData(EventData event, List<Object> eventData) {
+        eventData.add(event.getServiceName());
+        eventData.add(event.getOperationName());
+        eventData.add(event.getTimestamp());
+    }
+
+    private static void addActivityInMetaData(EventData event, List<Object> metaData) {
+        metaData.add(event.getRequestURL());
+        metaData.add(event.getRemoteAddress());
+        metaData.add(event.getContentType());
+        metaData.add(event.getUserAgent());
+        metaData.add(event.getHost());
+        metaData.add(event.getReferer());
+    }
+
+
+    private static void addActivityInEventData(EventData event, List<Object> eventData) {
+        eventData.add(event.getInMessageId());
+        eventData.add(event.getInMessageBody());
+    }
+
+    private static void addActivityInCorrelationData(EventData event,
+                                                     List<Object> correlationData) {
+        correlationData.add(event.getActivityId());
+    }
+
+    private static void addActivityOutEventData(EventData event, List<Object> eventData) {
+        eventData.add(event.getOutMessageId());
+        eventData.add(event.getOutMessageBody());
+    }
+
+    private static void addActivityOutCorrelationData(EventData event,
+                                                      List<Object> correlationData) {
+        correlationData.add(event.getActivityId());
+    }
+
+
+    private static void addStatisticEventData(EventData event, List<Object> eventData) {
+        SystemStatistics systemStatistics = event.getSystemStatistics();
+        eventData.add(systemStatistics.getCurrentInvocationResponseTime());
+        eventData.add(systemStatistics.getCurrentInvocationRequestCount());
+        eventData.add(systemStatistics.getCurrentInvocationResponseCount());
+        eventData.add(systemStatistics.getCurrentInvocationFaultCount());
+    }
+
+    private static void addStatisticsMetaData(EventData event, List<Object> metaData) {
+        metaData.add(event.getRequestURL());
+        metaData.add(event.getRemoteAddress());
+        metaData.add(event.getContentType());
+        metaData.add(event.getUserAgent());
+        metaData.add(event.getHost());
+        metaData.add(event.getReferer());
+    }
+
+/*
+    private static void addProperties(Map<String, ByteBuffer> metaData,
+                                      EventingConfigData eventingConfigData) {
         Property[] properties = eventingConfigData.getProperties();
         if (properties != null) {
             for (int i = 0; i < properties.length; i++) {
@@ -126,80 +199,9 @@ public class ServiceAgentUtil {
                 }
             }
         }
-    }
+    }*/
 
-    private static void addEventData(Map<String, ByteBuffer> eventData,
-                                     EventData eventInfo) {
 
-        SystemStatistics systemStatistics = eventInfo.getSystemStatistics();
-        if (systemStatistics != null) {
-            putDataIntoMap(eventData, ServiceStatisticsPublisherConstants.SERVER_NAME,
-                    systemStatistics.getServerName());
-            putDataIntoMap(eventData, ServiceStatisticsPublisherConstants.TOTAL_SYSTEM_AVG_RESPONSE_TIME,
-                    Double.toString(systemStatistics.getAvgResponseTime()));
-            putDataIntoMap(eventData, ServiceStatisticsPublisherConstants.TOTAL_SYSTEM_MIN_RESPONSE_TIME,
-                    Long.toString(systemStatistics.getMinResponseTime()));
-            putDataIntoMap(eventData, ServiceStatisticsPublisherConstants.TOTAL_SYSTEM_MAX_RESPONSE_TIME,
-                    Long.toString(systemStatistics.getMaxResponseTime()));
-            putDataIntoMap(eventData, ServiceStatisticsPublisherConstants.TOTAL_SYSTEM_REQUEST_COUNT,
-                    Integer.toString(systemStatistics.getTotalRequestCount()));
-            putDataIntoMap(eventData, ServiceStatisticsPublisherConstants.TOTAL_SYSTEM_RESPONSE_COUNT,
-                    Integer.toString(systemStatistics.getTotalResponseCount()));
-            putDataIntoMap(eventData, ServiceStatisticsPublisherConstants.RESPONSE_TIME,
-                    Long.toString(systemStatistics.getCurrentInvocationResponseTime()));
-            putDataIntoMap(eventData, ServiceStatisticsPublisherConstants.REQUEST_COUNT,
-                    Integer.toString(systemStatistics.getCurrentInvocationRequestCount()));
-            putDataIntoMap(eventData, ServiceStatisticsPublisherConstants.RESPONSE_COUNT,
-                    Integer.toString(systemStatistics.getCurrentInvocationResponseCount()));
-            putDataIntoMap(eventData, ServiceStatisticsPublisherConstants.FAULT_COUNT,
-                    Integer.toString(systemStatistics.getCurrentInvocationFaultCount()));
-        }
-
-        putDataIntoMap(eventData, BAMDataPublisherConstants.SERVICE_NAME,
-                eventInfo.getServiceName());
-        putDataIntoMap(eventData, BAMDataPublisherConstants.OPERATION_NAME,
-                eventInfo.getOperationName());
-        putDataIntoMap(eventData, BAMDataPublisherConstants.TIMESTAMP,
-                eventInfo.getTimestamp().toString());
-
-        putDataIntoMap(eventData, BAMDataPublisherConstants.IN_MSG_BODY,
-                eventInfo.getInMessageBody());
-        putDataIntoMap(eventData, BAMDataPublisherConstants.OUT_MSG_BODY,
-                eventInfo.getOutMessageBody());
-
-    }
-
-    private static void addMetaData(Map<String, ByteBuffer> metaData, EventData eventData) {
-
-        putDataIntoMap(metaData, BAMDataPublisherConstants.REMOTE_ADDRESS,
-                eventData.getRemoteAddress());
-        putDataIntoMap(metaData, BAMDataPublisherConstants.HOST,
-                eventData.getHost());
-        putDataIntoMap(metaData, BAMDataPublisherConstants.CONTENT_TYPE,
-                eventData.getContentType());
-        putDataIntoMap(metaData, BAMDataPublisherConstants.REFERER,
-                eventData.getReferer());
-        putDataIntoMap(metaData, BAMDataPublisherConstants.USER_AGENT,
-                eventData.getUserAgent());
-        putDataIntoMap(metaData, BAMDataPublisherConstants.REQUEST_URL,
-                eventData.getRequestURL());
-    }
-
-    private static void addCorrelationData(Map<String, ByteBuffer> correlationData,
-                                           EventData eventData) {
-        putDataIntoMap(correlationData, BAMDataPublisherConstants.MSG_ACTIVITY_ID,
-                eventData.getActivityId());
-        putDataIntoMap(correlationData, BAMDataPublisherConstants.IN_MSG_ID,
-                eventData.getInMessageId());
-        putDataIntoMap(correlationData, BAMDataPublisherConstants.OUT_MSG_ID,
-                eventData.getOutMessageId());
-    }
-
-    private static void putDataIntoMap(Map<String, ByteBuffer> data, String key, String value) {
-        if (value != null) {
-            data.put(key, ByteBuffer.wrap(value.getBytes()));
-        }
-    }
 
     public static void extractInfoFromHttpHeaders(EventData eventData, Object requestProperty) {
 

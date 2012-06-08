@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
 import org.wso2.carbon.bam.service.data.publisher.data.BAMServerInfo;
+import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.data.EventData;
 import org.wso2.carbon.bam.service.data.publisher.data.PublishData;
 import org.wso2.carbon.bam.service.data.publisher.internal.StatisticsServiceComponent;
@@ -144,9 +145,7 @@ public class StatisticsHandler extends AbstractHandler {
                     publishData.setBamServerInfo(bamServerInfo);
                 }
 
-//                ServiceAgentUtil.publishEvent(publishData);
-                StatisticsServiceComponent.getAgent().publish(ServiceAgentUtil.makeEventList(publishData, eventingConfigData),
-                        ServiceAgentUtil.constructEventReceiver(publishData.getBamServerInfo()));
+                Event event = ServiceAgentUtil.makeEventList(publishData, eventingConfigData);
             }
         } catch (Throwable ignore) {
             log.error("Error at SystemStatisticsHandler. " +

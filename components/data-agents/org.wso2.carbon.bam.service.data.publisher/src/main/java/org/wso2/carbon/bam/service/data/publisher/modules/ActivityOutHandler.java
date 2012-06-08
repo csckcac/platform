@@ -20,7 +20,11 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.soap.*;
+import org.apache.axiom.soap.SOAP11Constants;
+import org.apache.axiom.soap.SOAP12Constants;
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisService;
@@ -33,9 +37,9 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
 import org.wso2.carbon.bam.service.data.publisher.data.BAMServerInfo;
+import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.data.EventData;
 import org.wso2.carbon.bam.service.data.publisher.data.PublishData;
-import org.wso2.carbon.bam.service.data.publisher.internal.StatisticsServiceComponent;
 import org.wso2.carbon.bam.service.data.publisher.publish.ServiceAgentUtil;
 import org.wso2.carbon.bam.service.data.publisher.util.ActivityPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.CommonConstants;
@@ -127,9 +131,8 @@ public class ActivityOutHandler extends AbstractHandler {
                 // If service statistics is not enabled publish the event. Else let service stat
                 // handler do the job.
                 if (!eventingConfigData.isServiceStatsEnable()) {
-//                    ServiceAgentUtil.publishEvent(publishData);
-                    StatisticsServiceComponent.getAgent().publish(ServiceAgentUtil.makeEventList(publishData, eventingConfigData),
-                            ServiceAgentUtil.constructEventReceiver(publishData.getBamServerInfo()));
+                    Event  event = ServiceAgentUtil.makeEventList(
+                            publishData, eventingConfigData);
                 } else {
                     messageContext.setProperty(BAMDataPublisherConstants.PUBLISH_DATA, publishData);
                 }

@@ -110,13 +110,6 @@ public class MetaDataVolumeTestClient {
 
             artifact = artifactManager.newGovernanceArtifact(AXIOMUtil.stringToOM(governanceArtifactContent));
             artifactManager.addGenericArtifact(artifact);
-            Thread.sleep(200);
-            assertTrue(artifact.getQName().toString().contains("testEvent" + i),
-                       "artifact name not found");
-            assertTrue(artifact.getAttribute("details_name").contains("testEvent" + i),
-                       "Artifact detail name not found");
-            assertTrue(artifact.getAttribute("details_author").contains("testAuthor"),
-                       "Artifact Author not found");
         }
 
         //delete all artifacts
@@ -303,7 +296,7 @@ public class MetaDataVolumeTestClient {
                 schemaManager.removeSchema(s.getId());
             }
         }
-        log.info("Adding " + schemaCount + "of Schemas..");
+        log.info("Adding " + schemaCount + " of Schemas..");
         try {
             for (int i = 0; i <= schemaCount; i++) {
                 schema = schemaManager.newSchema(schemaContent.getBytes(), "AutomatedSchema" + i + ".xsd");
@@ -333,7 +326,7 @@ public class MetaDataVolumeTestClient {
                 wsdlManager.removeWsdl(w.getId());
             }
         }
-        log.info("Adding " + wsdlCount + "of WSDLs..");
+        log.info("Adding " + wsdlCount + " of WSDLs..");
         try {
             for (int i = 0; i <= wsdlCount; i++) {
                 wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFileLocation).getBytes(),

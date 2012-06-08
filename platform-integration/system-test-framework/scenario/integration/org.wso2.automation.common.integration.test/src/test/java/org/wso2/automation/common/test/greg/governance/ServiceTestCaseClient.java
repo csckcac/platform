@@ -17,14 +17,14 @@
 package org.wso2.automation.common.test.greg.governance;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.wso2.carbon.governance.api.endpoints.EndpointManager;
+import org.wso2.carbon.admin.service.registry.PropertiesAdminServiceClient;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.governance.api.endpoints.dataobjects.Endpoint;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
@@ -38,15 +38,27 @@ import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
 import org.wso2.carbon.registry.api.Association;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.properties.stub.beans.xsd.RetentionBean;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.UserInfo;
+import org.wso2.platform.test.core.utils.UserListCsvReader;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
+import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
+import org.wso2.carbon.registry.core.Comment;
 
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.rmi.RemoteException;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -58,13 +70,19 @@ public class ServiceTestCaseClient {
     private static final Log log = LogFactory.getLog(ServiceTestCaseClient.class);
     private Registry governance;
     private String configPath;
+    private static ManageEnvironment environment;
+    private static String backendURL;
+    private static int userId;
 
     @BeforeClass(groups = {"wso2.greg"})
-    public void initTest() throws RegistryException, AxisFault {
-        int userId = new GregUserIDEvaluator().getTenantID();
+    public void initTest()
+            throws RegistryException, RemoteException, LoginAuthenticationExceptionException {
+        userId = new GregUserIDEvaluator().getTenantID();
         WSRegistryServiceClient registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         governance = new RegistryProvider().getGovernance(registryWS, userId);
-
+        EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
+        environment = builder.build();
+        backendURL = environment.getGreg().getBackEndUrl();
         configPath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator +
                      "artifacts" + File.separator + "GREG" + File.separator + "services" +
                      File.separator + "service.metadata.xml";
@@ -661,9 +679,9 @@ public class ServiceTestCaseClient {
                                                               "WSDLImportWSDLTest"));
         service.addAttribute("interface_wsdlURL",
                              "https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
-                                     "system-test-framework/core/org.wso2.automation.platform.core/src/" +
-                                     "main/resources/artifacts/GREG/wsdl/" +
-                                     "Axis2Service_Wsdl_With_Wsdl_Imports.wsdl");
+                             "system-test-framework/core/org.wso2.automation.platform.core/src/" +
+                             "main/resources/artifacts/GREG/wsdl/" +
+                             "Axis2Service_Wsdl_With_Wsdl_Imports.wsdl");
 
         serviceManager.addService(service);
 
@@ -696,4 +714,77 @@ public class ServiceTestCaseClient {
         assertNull(serviceManager.getService(service.getId()));
     }
 
+    @Test(groups = {"wso2.greg"}, description = "delete service ", priority = 17)
+    public void testAddServiceWithAllCommunityFeatures() throws Exception {
+        ServiceManager serviceManager = new ServiceManager(governance);
+        String[] serviceIds = serviceManager.getAllServiceIds();
+
+        String serviceName = "ServiceWithAllCommunityFeatures";
+        if (serviceIds.length > 0) {
+            for (String serviceId : serviceIds) {
+                if (serviceManager.getService(serviceId).getQName().toString().contains(serviceName)) {
+                    serviceManager.removeService(serviceId);
+                }
+            }
+        }
+
+        Service service = serviceManager.newService(new QName("http://wso2.org/automation/test",
+                                                              serviceName));
+        serviceManager.addService(service);
+        String servicePath = service.getPath();
+        Service newService = serviceManager.getService(service.getId());
+
+        Assert.assertNotNull(newService);
+
+        governance.applyTag(servicePath, "TestTag");
+        assertTrue(governance.getTags(servicePath)[0].getTagName().equals("TestTag"));
+
+        Comment comment = new Comment();
+        comment.setText("TestComment");
+        governance.addComment(servicePath, comment);
+        assertTrue(governance.getComments(servicePath)[0].getText().contains("TestComment"));
+
+        governance.addAssociation(servicePath, servicePath, "depends");
+        governance.addAssociation(servicePath, servicePath, "usedBy");
+
+        assertTrue(governance.getAssociations(servicePath,
+                                              "depends")[0].getDestinationPath().contains(servicePath));
+        assertTrue(governance.getAssociations(servicePath,
+                                              "usedBy")[0].getDestinationPath().contains(servicePath));
+
+        governance.associateAspect(servicePath, "ServiceLifeCycle");
+
+
+        governance.invokeAspect(servicePath, "ServiceLifeCycle", "Promote");
+
+        List<String> aspects = governance.get(servicePath).getAspects();
+        assertTrue(aspects.get(0).contains("ServiceLifeCycle"));
+
+        ServiceManager serviceManagerGet = new ServiceManager(governance);
+        assertTrue(serviceManagerGet.getService(service.getId()).getLifecycleState().equals("Development"));
+
+        Resource resource = governance.get(servicePath);
+        resource.addProperty("Key1", "Value1");
+        governance.put(servicePath, resource);
+        assertTrue(governance.get(servicePath).getPropertyValues("Key1").get(0).contains("Value1"));
+
+        governance.rateResource(servicePath, 3);
+        assertTrue(governance.getAverageRating(servicePath) == 3);
+
+        PropertiesAdminServiceClient propertiesAdminServiceClient =
+                new PropertiesAdminServiceClient(backendURL, environment.getGreg().getSessionCookie());
+
+        //REGISTRY-921
+        propertiesAdminServiceClient.setRetentionProperties("/_system/governance" + servicePath, 
+                                                            "write", "05/12/2012", "06/18/2012");
+
+        UserInfo userInfo = UserListCsvReader.getUserInfo(userId);
+        RetentionBean retentionBean =
+                propertiesAdminServiceClient.getRetentionProperties("/_system/governance" + servicePath);
+        assertFalse(retentionBean.getDeleteLocked());
+        assertTrue(retentionBean.getWriteLocked());
+        assertTrue(retentionBean.getFromDate().equals("05/12/2012"));
+        assertTrue(retentionBean.getToDate().equals("06/18/2012"));
+        assertTrue(retentionBean.getUserName().contains(userInfo.getUserName()));
+    }
 }

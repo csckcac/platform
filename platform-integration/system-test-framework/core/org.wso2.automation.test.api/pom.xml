@@ -441,57 +441,62 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.dataservices.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.message.store.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.priority.executors.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.message.processor.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.eventing.eventsource.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.tenant.mgt.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.governance.list.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.governance.list.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.extensions.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.extensions.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.properties.stub</artifactId>
+            <version>${stub.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.governance.custom.lifecycles.checklist.stub</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${stub.version}</version>
         </dependency>
     </dependencies>
 </project>

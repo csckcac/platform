@@ -74,7 +74,7 @@ public class AddCustomLifeCycle {
         registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         Registry governance = new RegistryProvider().getGovernance(registry, userId);
 
-        String serviceName = "CustomLifeCycleTestService.xml";
+        String serviceName = "CustomLifeCycleTestService";
         servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName, governance);
         Thread.sleep(1000);
 
@@ -166,7 +166,7 @@ public class AddCustomLifeCycle {
 
 
     @AfterClass
-    public void cleanUp()
+    public void deleteLifeCycle()
             throws RegistryException, LifeCycleManagementServiceExceptionException,
                    RemoteException {
         if (servicePathDev != null) {

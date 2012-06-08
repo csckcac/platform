@@ -288,9 +288,12 @@ function subscribe(path) {
         }
     } else if ($('subscriptionDataJMX').style.display == "") {
         endpoint += "jmx://";
-    } else {
-        reason += validateUrl($('subscriptionURL'), org_wso2_carbon_registry_info_ui_jsi18n["web.service.url"]);
-        endpoint += $('subscriptionURL').value;
+    }else if($('subscriptionDataREST').style.display == ""){
+        reason += validateUrl($('subscriptionREST'), org_wso2_carbon_registry_info_ui_jsi18n["web.service.url"]);
+        endpoint += $('subscriptionREST').value;
+    }else {
+        reason += validateUrl($('subscriptionSOAP'), org_wso2_carbon_registry_info_ui_jsi18n["web.service.url"]);
+        endpoint += $('subscriptionSOAP').value;
     }
     if (reason == "") {
         switch (notification) {
@@ -508,9 +511,13 @@ function changeVisibility() {
             $('subscribeButton').disabled = false;
             break;
         case "2":
+            $('subscriptionDataInputRecord').style.display = "";
+            $('subscriptionDataREST').style.display = "";
+            $('subscribeButton').disabled = false;
+            break;
         case "3":
             $('subscriptionDataInputRecord').style.display = "";
-            $('subscriptionDataHTMLSOAP').style.display = "";
+            $('subscriptionDataSOAP').style.display = "";
             $('subscribeButton').disabled = false;
             break;
         case "4":
@@ -542,14 +549,17 @@ function changeVisibility() {
 function resetInputVisibility() {
     $('subscribeButton').disabled = true;
     $('subscriptionEmail').value = "";
-    $('subscriptionURL').value = "";
+    $('subscriptionREST').value = "";
+    $('subscriptionSOAP').value = "";
     $('subscriptionEmail').style.background = 'White';
-    $('subscriptionURL').style.background = 'White';
+    $('subscriptionREST').style.background = 'White';
+    $('subscriptionSOAP').style.background = 'White';
     $('subscriptionDataInputRecord').style.display = "none";
     $('subscriptionDataEmail').style.display = "none";
     $('digestDeliveryEmail').disabled = true;
     $('digestDeliveryEmail').value = "0";
-    $('subscriptionDataHTMLSOAP').style.display = "none";
+    $('subscriptionDataREST').style.display = "none";
+    $('subscriptionDataSOAP').style.display = "none";
     $('subscriptionDataUserProfile').style.display = "none";
     $('digestDeliveryUser').disabled = true;
     $('digestDeliveryUser').value = "0";

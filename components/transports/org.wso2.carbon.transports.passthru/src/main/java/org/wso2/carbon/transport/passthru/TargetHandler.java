@@ -248,9 +248,10 @@ public class TargetHandler implements NHttpClientHandler {
 
             TargetResponse response = TargetContext.getResponse(conn);
 
-            int responseRead = response.read(conn, decoder);
-
-            metrics.incrementBytesReceived(responseRead);
+			if (response != null) {
+				int responseRead = response.read(conn, decoder);
+				metrics.incrementBytesReceived(responseRead);
+			}
         } catch (IOException e) {
             logIOException(conn, e);
 

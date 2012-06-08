@@ -16,31 +16,36 @@
 
 package org.wso2.carbon.transport.passthru;
 
-import org.apache.axiom.om.util.UUIDGenerator;
+import java.net.InetAddress;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
 import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.om.util.UUIDGenerator;
 import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.impl.llom.soap11.SOAP11Factory;
-import org.apache.axis2.Constants;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
+import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.builder.BuilderUtil;
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.description.TransportOutDescription;
+import org.apache.axis2.engine.AxisEngine;
 import org.apache.axis2.transport.TransportUtils;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.transport.http.HTTPTransportUtils;
 import org.apache.axis2.util.MessageContextBuilder;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.engine.AxisEngine;
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpInetConnection;
 import org.apache.http.protocol.HTTP;
 import org.wso2.carbon.transport.passthru.config.SourceConfiguration;
-
-import java.util.*;
 
 /**
  * This is a worker thread for executing an incoming request in to the transport.
@@ -76,6 +81,7 @@ public class ServerWorker implements Runnable {
         if (log.isDebugEnabled()) {
             log.debug("Starting a new Server Worker instance");
         }
+        String method = request.getRequest().getRequestLine().getMethod();
         ConfigurationContext cfgCtx = sourceConfiguration.getConfigurationContext();        
         msgContext.setProperty(Constants.Configuration.HTTP_METHOD, request.getMethod());
 
@@ -109,6 +115,19 @@ public class ServerWorker implements Runnable {
                 }
             }
         }
+        
+        String servicePrefix = oriUri.substring(0, oriUri.indexOf(uri));
+        if (servicePrefix.indexOf("://") == -1) {
+            HttpInetConnection inetConn = (HttpInetConnection) request.getConnection();
+            InetAddress localAddr = inetConn.getLocalAddress();
+            if (localAddr != null) {
+                servicePrefix = (sourceConfiguration.isSsl() ? "https://" : "http://") +
+                        localAddr.getHostAddress() + ":" + inetConn.getLocalPort() + servicePrefix;
+            }
+        }
+       
+        msgContext.setProperty(PassThroughConstants.SERVICE_PREFIX, servicePrefix);
+
 
         msgContext.setTo(new EndpointReference(uri));
         msgContext.setProperty(PassThroughConstants.REST_URL_POSTFIX, uri);

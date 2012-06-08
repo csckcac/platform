@@ -19,8 +19,11 @@ package org.wso2.carbon.transport.passthru.config;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.transport.passthru.PassThroughConstants;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -114,9 +117,23 @@ public class PassThroughConfiguration {
         if (log.isDebugEnabled()) {
             log.debug("Loading the file '" + filePath + "' from classpath");
         }
+        
+        InputStream in  = null;
+        
+        //if we reach to this assume that the we may have to looking to the customer provided external location for the 
+        //given properties
+		if (System.getProperty(PassThroughConstants.CONF_LOCATION) != null) {
+			try {
+				in = new FileInputStream(System.getProperty(PassThroughConstants.CONF_LOCATION) + File.separator + filePath);
+			} catch (FileNotFoundException e) {
+				String msg = "Error loading properties from a file at from the System defined location: " + filePath;
+				log.warn(msg);
+			}
+		}
 
-        InputStream in = cl.getResourceAsStream(filePath);
+
         if (in == null) {
+        	in = cl.getResourceAsStream(filePath);
             if (log.isDebugEnabled()) {
                 log.debug("Unable to load file  '" + filePath + "'");
             }

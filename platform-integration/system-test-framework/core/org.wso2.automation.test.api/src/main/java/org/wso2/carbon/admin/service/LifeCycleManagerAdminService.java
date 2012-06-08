@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceExceptionException;
 import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceStub;
-import sun.text.normalizer.ICUBinary;
 
 import java.rmi.RemoteException;
 

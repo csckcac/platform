@@ -35,8 +35,10 @@ public class SmooksMediatorSerializer extends AbstractMediatorSerializer {
 
         smooks.addAttribute(fac.createOMAttribute("config-key", nullNS, smooksMediator.getConfigKey()));
         
-        smooks.addAttribute(fac.createOMAttribute("persistence-unit", nullNS, smooksMediator.getPersistenceUnitName()));
-
+        if (smooksMediator.getPersistenceUnitName() != null) {
+        	smooks.addAttribute(fac.createOMAttribute("persistence-unit", nullNS, smooksMediator.getPersistenceUnitName()));
+        }
+    
         smooks.addChild(createInput(smooksMediator.getInput()));
         smooks.addChild(createOutput(smooksMediator.getOutput()));
 

@@ -26,6 +26,12 @@ function submitActivityForm(page, pageNumber) {
         var userNameValue = userName.value;
         var pathValue = path.value;
 
+        if(fromDateValue!="" && toDateValue!="" && (fromDateValue == toDateValue)){
+            $('activityList').innerHTML="";
+            CARBON.showWarningDialog("From Data and To Date can't be same");
+            return true;
+        }
+
         if(fromDateValue=="" && toDateValue=="" && userNameValue =="" && pathValue =="" ){
             $('activityList').innerHTML="";
             CARBON.showWarningDialog("Please fill at least one field");

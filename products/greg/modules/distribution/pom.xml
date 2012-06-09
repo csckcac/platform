@@ -99,42 +99,42 @@
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.governance.samples.shutterbug</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${product.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.governance.samples.shutterbug.ui</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${product.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.carbon.governance.samples.lcm</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${product.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.carbon.governance.samples.lcm.notifications</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${product.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.carbon.registry.samples.custom.topics</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${product.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.carbon.registry.samples.custom.topics.ui</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${product.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.carbon.registry.samples.handler</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>${product.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>checkin-client</artifactId>
-            <version>${carbon.version}</version>
+            <version>${product.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>

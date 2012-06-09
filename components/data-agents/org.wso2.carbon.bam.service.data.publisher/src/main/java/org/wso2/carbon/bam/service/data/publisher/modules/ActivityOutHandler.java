@@ -40,6 +40,7 @@ import org.wso2.carbon.bam.service.data.publisher.data.BAMServerInfo;
 import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.data.EventData;
 import org.wso2.carbon.bam.service.data.publisher.data.PublishData;
+import org.wso2.carbon.bam.service.data.publisher.publish.EventPublisher;
 import org.wso2.carbon.bam.service.data.publisher.publish.ServiceAgentUtil;
 import org.wso2.carbon.bam.service.data.publisher.util.ActivityPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.CommonConstants;
@@ -131,8 +132,9 @@ public class ActivityOutHandler extends AbstractHandler {
                 // If service statistics is not enabled publish the event. Else let service stat
                 // handler do the job.
                 if (!eventingConfigData.isServiceStatsEnable()) {
-                    Event  event = ServiceAgentUtil.makeEventList(
-                            publishData, eventingConfigData);
+                    Event  event = ServiceAgentUtil.makeEventList(publishData);
+                    EventPublisher publisher = new EventPublisher();
+                    publisher.publish(event,eventingConfigData);
                 } else {
                     messageContext.setProperty(BAMDataPublisherConstants.PUBLISH_DATA, publishData);
                 }

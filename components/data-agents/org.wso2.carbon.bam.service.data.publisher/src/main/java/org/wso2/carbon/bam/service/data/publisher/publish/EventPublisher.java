@@ -15,6 +15,7 @@ import org.wso2.carbon.agent.conf.AgentConfiguration;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
+import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
 import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.util.ServiceStatisticsPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.StatisticsType;
@@ -32,7 +33,7 @@ public class EventPublisher {
 
     private static Log log = LogFactory.getLog(EventPublisher.class);
 
-    public void publish(Event event) {
+    public void publish(Event event, EventingConfigData configData) {
 
         List<Object> correlationData = event.getCorrelationData();
         List<Object> metaData = event.getMetaData();
@@ -45,9 +46,11 @@ public class EventPublisher {
 
         //create data publisher
         try {
-            streamDefForActivity = streamDefinitionForActivity();
 
-            DataPublisher dataPublisher = new DataPublisher("tcp://127.0.0.1:7611", "admin", "admin", agent);
+            DataPublisher dataPublisher = new DataPublisher(configData.getUrl(),
+                                                            configData.getUserName(),
+                                                            configData.getPassword(),
+                                                            agent);
 
             String streamId = null;
 
@@ -56,19 +59,19 @@ public class EventPublisher {
 
                 case ACTIVITY_STATS:
                     if (streamDefForActivity == null) {
-                        streamDefForActivity = streamDefinitionForActivity();
+                        streamDefForActivity = streamDefinitionForActivity(configData);
                     }
                     streamId = streamDefForActivity;
                     break;
                 case SERVICE_STATS:
                     if (streamDefForServiceStats == null) {
-                        streamDefForServiceStats = streamDefinitionForServiceStats();
+                        streamDefForServiceStats = streamDefinitionForServiceStats(configData);
                     }
                     streamId = streamDefForServiceStats;
                     break;
                 case ACTIVITY_SERVICE_STATS:
                     if (streamDefForActivityServiceStats == null) {
-                        streamDefForActivityServiceStats = streamDefinitionForActivityServiceStats();
+                        streamDefForActivityServiceStats = streamDefinitionForActivityServiceStats(configData);
                     }
                     streamId = streamDefForActivityServiceStats;
                     break;
@@ -90,13 +93,13 @@ public class EventPublisher {
 
     }
 
-    private String streamDefinitionForActivity() {
+    private String streamDefinitionForActivity(EventingConfigData configData) {
         String streamDefinition = null;
         try {
             EventStreamDefinition streamDef = new EventStreamDefinition(
-                    "org.wso2.bam.service.data.publisher", "1.0.0");
-            streamDef.setNickName("ServiceDataAgent");
-            streamDef.setDescription("Publish service statistics events");
+                    configData.getStreamName(), configData.getVersion());
+            streamDef.setNickName(configData.getNickName());
+            streamDef.setDescription(configData.getDescription());
 
             streamDef.setMetaData(setMetadata());
 
@@ -115,13 +118,13 @@ public class EventPublisher {
         return streamDefinition;
     }
 
-    private String streamDefinitionForServiceStats() {
+    private String streamDefinitionForServiceStats(EventingConfigData configData) {
         String streamDefinition = null;
         try {
             EventStreamDefinition streamDef = new EventStreamDefinition(
-                    "org.wso2.bam.service.data.publisher", "1.0.0");
-            streamDef.setNickName("ServiceDataAgent");
-            streamDef.setDescription("Publish service statistics events");
+                    configData.getStreamName(), configData.getVersion());
+            streamDef.setNickName(configData.getNickName());
+            streamDef.setDescription(configData.getDescription());
 
             streamDef.setMetaData(setMetadata());
 
@@ -139,13 +142,13 @@ public class EventPublisher {
         return streamDefinition;
     }
 
-    private String streamDefinitionForActivityServiceStats() {
+    private String streamDefinitionForActivityServiceStats(EventingConfigData configData) {
         String streamDefinition = null;
         try {
             EventStreamDefinition streamDef = new EventStreamDefinition(
-                    "org.wso2.bam.service.data.publisher", "1.0.0");
-            streamDef.setNickName("ServiceDataAgent");
-            streamDef.setDescription("Publish service statistics events");
+                    configData.getStreamName(), configData.getVersion());
+            streamDef.setNickName(configData.getNickName());
+            streamDef.setDescription(configData.getDescription());
 
             streamDef.setMetaData(setMetadata());
 

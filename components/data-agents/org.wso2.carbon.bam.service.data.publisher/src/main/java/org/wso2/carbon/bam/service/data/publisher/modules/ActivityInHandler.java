@@ -41,6 +41,7 @@ import org.wso2.carbon.bam.service.data.publisher.data.BAMServerInfo;
 import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.data.EventData;
 import org.wso2.carbon.bam.service.data.publisher.data.PublishData;
+import org.wso2.carbon.bam.service.data.publisher.publish.EventPublisher;
 import org.wso2.carbon.bam.service.data.publisher.publish.ServiceAgentUtil;
 import org.wso2.carbon.bam.service.data.publisher.util.ActivityPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.CommonConstants;
@@ -154,8 +155,9 @@ public class ActivityInHandler extends AbstractHandler {
                 publishData.setBamServerInfo(bamServerInfo);
 
                 if (isInOnlyMEP(messageContext)) {
-                    Event event = ServiceAgentUtil.makeEventList(
-                            publishData, eventingConfigData);
+                    Event event = ServiceAgentUtil.makeEventList(publishData);
+                    EventPublisher publisher = new EventPublisher();
+                    publisher.publish(event, eventingConfigData);
                 } else {
                     inMessageContext.setProperty(BAMDataPublisherConstants.PUBLISH_DATA, publishData);
                 }

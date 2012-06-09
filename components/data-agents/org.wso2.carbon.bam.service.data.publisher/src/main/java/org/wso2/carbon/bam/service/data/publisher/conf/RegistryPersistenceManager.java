@@ -102,6 +102,15 @@ public class RegistryPersistenceManager {
             String port = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
                                                    BAMDataPublisherConstants.BAM_SOCKET_PORT);
 
+            String streamName = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                                                         BAMDataPublisherConstants.STREAM_NAME);
+            String version = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                                                      BAMDataPublisherConstants.VERSION);
+            String description = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                                                          BAMDataPublisherConstants.DESCRIPTION);
+            String nickName = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
+                                                       BAMDataPublisherConstants.NICK_NAME);
+
             Properties properties = getAllConfigProperties(CommonConstants.SERVICE_PROPERTIES_REG_PATH);
 
             if (serviceStatsStatus != null && activityStatus != null && bamUrl != null && bamUserName != null &&
@@ -115,6 +124,10 @@ public class RegistryPersistenceManager {
                 eventingConfigData.setHttpTransportEnable(Boolean.parseBoolean(httpTransportEnable));
                 eventingConfigData.setSocketTransportEnable(Boolean.parseBoolean(socketTransportEnable));
                 eventingConfigData.setPort(Integer.parseInt(port));
+                eventingConfigData.setStreamName(streamName);
+                eventingConfigData.setVersion(version);
+                eventingConfigData.setDescription(description);
+                eventingConfigData.setNickName(nickName);
 
                 if (properties != null) {
                     List<Property> propertyDTOList = new ArrayList<Property>();
@@ -215,6 +228,16 @@ public class RegistryPersistenceManager {
                                     CommonConstants.SERVICE_COMMON_REG_PATH);
         updateConfigurationProperty(BAMDataPublisherConstants.BAM_SOCKET_PORT, eventingConfigData.getPort(),
                                     CommonConstants.SERVICE_COMMON_REG_PATH);
+
+        updateConfigurationProperty(BAMDataPublisherConstants.STREAM_NAME, eventingConfigData.getStreamName(),
+                                    CommonConstants.SERVICE_COMMON_REG_PATH);
+        updateConfigurationProperty(BAMDataPublisherConstants.VERSION, eventingConfigData.getVersion(),
+                                    CommonConstants.SERVICE_COMMON_REG_PATH);
+        updateConfigurationProperty(BAMDataPublisherConstants.NICK_NAME, eventingConfigData.getNickName(),
+                                    CommonConstants.SERVICE_COMMON_REG_PATH);
+        updateConfigurationProperty(BAMDataPublisherConstants.DESCRIPTION, eventingConfigData.getDescription(),
+                                    CommonConstants.SERVICE_COMMON_REG_PATH);
+
         Property[] propertiesDTO = eventingConfigData.getProperties();
         if (propertiesDTO != null) {
             Properties properties = new Properties();

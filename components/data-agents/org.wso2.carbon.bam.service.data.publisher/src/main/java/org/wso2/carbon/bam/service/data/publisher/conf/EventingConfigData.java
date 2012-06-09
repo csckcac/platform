@@ -27,10 +27,10 @@ public class EventingConfigData {
     private boolean isSocketTransportEnable;
     private int port;
 
-    private String streamName;
-    private String version;
-    private String nickName;
-    private String description;
+    private String streamName = "org.wso2.bam.service.data.publisher";
+    private String version = "1.0.0";
+    private String nickName = "ServiceDataAgent";
+    private String description = "Publish service statistics events";
 
     private Property[] properties;
 
@@ -119,9 +119,6 @@ public class EventingConfigData {
     }
 
     public void setUrl(String url) {
-        if (!url.endsWith("/")) {
-            url = url + "/";
-        }
         this.url = url;
     }
 

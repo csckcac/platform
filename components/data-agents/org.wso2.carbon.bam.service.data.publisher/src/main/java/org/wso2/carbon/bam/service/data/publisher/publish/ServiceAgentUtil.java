@@ -31,8 +31,7 @@ import java.util.List;
 
 public class ServiceAgentUtil {
 
-    public static Event makeEventList(PublishData publishData,
-                                            EventingConfigData eventingConfigData) {
+    public static Event makeEventList(PublishData publishData) {
 
         EventData event = publishData.getEventData();
 

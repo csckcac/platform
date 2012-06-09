@@ -143,9 +143,9 @@ public class StatisticsHandler extends AbstractHandler {
                     publishData.setBamServerInfo(bamServerInfo);
                 }
 
-                Event event = ServiceAgentUtil.makeEventList(publishData, eventingConfigData);
+                Event event = ServiceAgentUtil.makeEventList(publishData);
                 EventPublisher publisher = new EventPublisher();
-                publisher.publish(event);
+                publisher.publish(event, eventingConfigData);
             }
         } catch (Throwable ignore) {
             log.error("Error at SystemStatisticsHandler. " +

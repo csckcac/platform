@@ -359,7 +359,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     public void updateAPI(API api) throws APIManagementException {
         API oldApi = getAPI(api.getId());
         if (oldApi.getStatus().equals(api.getStatus())) {
-            createAPI(api);
+            updateApiArtifact(api);
             if (isAPIPublished(api)) {
                 publishToGateway(api);
             }
@@ -370,12 +370,26 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         }
     }
 
+    private void updateApiArtifact(API api) throws APIManagementException {
+        try {
+            String apiArtifactId = registry.get(APIUtil.getAPIPath(api.getId())).getUUID();
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                    APIConstants.API_KEY);
+            GenericArtifact artifact = artifactManager.getGenericArtifact(apiArtifactId);
+            GenericArtifact updateApiArtifact = APIUtil.createAPIArtifactContent(artifact, api);
+            artifactManager.updateGenericArtifact(updateApiArtifact);
+
+        } catch (RegistryException e) {
+            throw new APIManagementException("Failed to obtain id of the API artifact ", e);
+        }
+    }
+
     public void changeAPIStatus(API api, APIStatus status, String userId, 
                                 boolean updateGatewayConfig) throws APIManagementException {
         APIStatus currentStatus = api.getStatus();
         if (!currentStatus.equals(status)) {
             api.setStatus(status);
-            createAPI(api);
+            updateApiArtifact(api);
             if (updateGatewayConfig) {
                 if (status.equals(APIStatus.PUBLISHED) || status.equals(APIStatus.DEPRECATED) ||
                         status.equals(APIStatus.BLOCKED)) {

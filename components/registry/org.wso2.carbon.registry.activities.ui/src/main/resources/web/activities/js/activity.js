@@ -26,15 +26,15 @@ function submitActivityForm(page, pageNumber) {
         var userNameValue = userName.value;
         var pathValue = path.value;
 
-        if(fromDateValue!="" && toDateValue!="" && (fromDateValue == toDateValue)){
+        if(fromDateValue!="" && (fromDateValue == toDateValue)){
             $('activityList').innerHTML="";
-            CARBON.showWarningDialog("From Data and To Date can't be same");
+            CARBON.showWarningDialog(org_wso2_carbon_registry_activities_ui_jsi18n["from.date.equal.to.date"]);
             return true;
         }
 
         if(fromDateValue=="" && toDateValue=="" && userNameValue =="" && pathValue =="" ){
             $('activityList').innerHTML="";
-            CARBON.showWarningDialog("Please fill at least one field");
+            CARBON.showWarningDialog(org_wso2_carbon_registry_activities_ui_jsi18n["please.fill.at.least.one"]);
             return true;
         }
         reasonDiv.innerHTML = reason;

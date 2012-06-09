@@ -70,6 +70,11 @@ public class BAMDataPublisherConstants {
     public static final String ENABLE_SOCKET_TRANSPORT = "EnableSocket";
     public static final String BAM_SOCKET_PORT = "port";
 
+    public static final String STREAM_NAME = "streamName";
+    public static final String VERSION = "version";
+    public static final String NICK_NAME = "nickName";
+    public static final String DESCRIPTION = "description";
+
 
     public static final String SOAP_ENVELOP_NAMESPACE_URI = "soap_envelop_namespace";
 

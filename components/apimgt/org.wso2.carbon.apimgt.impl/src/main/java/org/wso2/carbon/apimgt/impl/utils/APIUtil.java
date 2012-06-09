@@ -214,6 +214,8 @@ public final class APIUtil {
             if (APIConstants.PUBLISHED.equals(apiStatus)){
                 artifact.setAttribute(APIConstants.API_OVERVIEW_IS_LATEST, "true");
             }
+
+            artifact.removeAttribute(APIConstants.API_URI_TEMPLATES);
             Set<URITemplate> uriTemplateSet = api.getUriTemplates();
             for (URITemplate uriTemplate : uriTemplateSet) {
                 artifact.addAttribute(APIConstants.API_URI_TEMPLATES,

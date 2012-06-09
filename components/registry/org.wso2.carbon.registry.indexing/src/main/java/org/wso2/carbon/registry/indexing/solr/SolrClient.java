@@ -16,44 +16,32 @@
 * under the License.
 */
 package org.wso2.carbon.registry.indexing.solr;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.axiom.om.util.Base64;
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthPolicy;
-import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrException;
-import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.SolrException.ErrorCode;
+import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
-import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.core.RegistryResources;
-import org.wso2.carbon.core.util.SignatureUtil;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.registry.indexing.AsyncIndexer.File2Index;
 import org.wso2.carbon.registry.indexing.indexer.Indexer;
 import org.wso2.carbon.registry.indexing.indexer.IndexerException;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class SolrClient {
 	
@@ -240,7 +228,13 @@ public class SolrClient {
 		try {
 			SolrQuery query = new SolrQuery(keywords);
             query.setRows(Integer.MAX_VALUE);
-			query.addFilterQuery("tenantId:" + tenantId);
+            //Solr does not allow to search with special characters ,
+            //Therefore this fix allow to contain "-" in super tenant id.
+            if(tenantId== MultitenantConstants.SUPER_TENANT_ID){
+                query.addFilterQuery("tenantId:" + "\\"+tenantId);
+            }else {
+                query.addFilterQuery("tenantId:" + tenantId);
+            }
 			QueryResponse queryresponse = server.query(query);
 			return queryresponse.getResults();
 		} catch (SolrServerException e) {

@@ -37,6 +37,7 @@ import org.wso2.carbon.apimgt.impl.dto.xsd.APIInfoDTO;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.keymgt.client.SubscriberKeyMgtClient;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 import org.wso2.carbon.user.mgt.stub.AddUserUserAdminExceptionException;
@@ -1335,7 +1336,7 @@ public class APIStoreHostObject extends ScriptableObject {
             subscriber.setSubscribedDate(new Date());
             //TODO : need to set the proper email
             subscriber.setEmail("");
-            subscriber.setTenantId(0);
+            subscriber.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
             APIConsumer apiConsumer = getAPIConsumer(thisObj);
             try {
                 apiConsumer.addSubscriber(subscriber);

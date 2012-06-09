@@ -45,52 +45,27 @@ public class ServiceAgentUtil {
         addCommonEventData(event, eventData);
 
         switch (statisticsType) {
-
-            case ACTIVITY_IN_ONLY:
-                addActivityInEventData(event, eventData);
-                addActivityInMetaData(event, metaData);
-                addActivityInCorrelationData(event, correlationData);
-                break;
-            case ACTIVITY_OUT_ONLY:
-                addActivityOutEventData(event, eventData);
-                addActivityOutCorrelationData(event, correlationData);
-                break;
-            case ACTIVITY_IN_OUT:
+            case ACTIVITY_STATS:
                 //In data
                 addActivityInEventData(event, eventData);
-                addActivityInMetaData(event, metaData);
-                addActivityInCorrelationData(event, correlationData);
+                addActivityMetaData(event, metaData);
+                addActivityCorrelationData(event, correlationData);
                 //Out data -- Meta and correlation values come from In data
                 addActivityOutEventData(event, eventData);
-                break;
-            case ACTIVITY_IN_ONLY_SERVICE_STATS:
-                //In data
-                addActivityInEventData(event, eventData);
-                addActivityInMetaData(event, metaData);
-                addActivityInCorrelationData(event, correlationData);
-                //ServiceStats data -- Meta and correlation values come from In data
-                addStatisticEventData(event, eventData);
-                break;
-            case ACTIVITY_OUT_ONLY_SERVICE_STATS:
-                //Out data
-                addActivityOutEventData(event, eventData);
-                addActivityOutCorrelationData(event, correlationData);
-                //ServiceStats data
-                addStatisticEventData(event, eventData);
-                break;
-            case ACTIVITY_IN_OUT_SERVICE_STATS:
-                //In data
-                addActivityInEventData(event, eventData);
-                addActivityInMetaData(event, metaData);
-                addActivityInCorrelationData(event, correlationData);
-                //Out data
-                addActivityOutEventData(event, eventData);
-                //ServiceStats data
-                addStatisticEventData(event, eventData);
                 break;
             case SERVICE_STATS:
                 addStatisticEventData(event, eventData);
                 addStatisticsMetaData(event,metaData);
+                break;
+            case ACTIVITY_SERVICE_STATS:
+                //In data
+                addActivityInEventData(event, eventData);
+                addActivityMetaData(event, metaData);
+                addActivityCorrelationData(event, correlationData);
+                //Out data
+                addActivityOutEventData(event, eventData);
+                //ServiceStats data
+                addStatisticEventData(event, eventData);
                 break;
         }
 
@@ -108,27 +83,15 @@ public class ServiceAgentUtil {
 
     private static StatisticsType findTheStatisticType(EventData event) {
         StatisticsType statisticsType = null;
-        if (event.getInMessageId() != null && event.getOutMessageId() == null &&
+        if ((event.getInMessageId() != null || event.getOutMessageId() != null) &&
             event.getSystemStatistics() == null) {
-            statisticsType = StatisticsType.ACTIVITY_IN_ONLY;
-        } else if (event.getInMessageId() != null && event.getOutMessageId() != null &&
-                   event.getSystemStatistics() == null) {
-            statisticsType = StatisticsType.ACTIVITY_IN_OUT;
-        } else if (event.getInMessageId() == null && event.getOutMessageId() != null &&
-                   event.getSystemStatistics() == null) {
-            statisticsType = StatisticsType.ACTIVITY_OUT_ONLY;
-        } else if (event.getInMessageId() != null && event.getOutMessageId() == null &&
-                   event.getSystemStatistics() != null) {
-            statisticsType = StatisticsType.ACTIVITY_IN_ONLY_SERVICE_STATS;
-        } else if (event.getInMessageId() == null && event.getOutMessageId() != null &&
-                   event.getSystemStatistics() != null) {
-            statisticsType = StatisticsType.ACTIVITY_OUT_ONLY_SERVICE_STATS;
-        } else if (event.getInMessageId() != null && event.getOutMessageId() != null &&
-                   event.getSystemStatistics() != null) {
-            statisticsType = StatisticsType.ACTIVITY_IN_OUT_SERVICE_STATS;
+            statisticsType = StatisticsType.ACTIVITY_STATS;
         } else if (event.getInMessageId() == null && event.getOutMessageId() == null &&
                    event.getSystemStatistics() != null) {
             statisticsType = StatisticsType.SERVICE_STATS;
+        } else if ((event.getInMessageId() != null || event.getOutMessageId() != null) &&
+                   event.getSystemStatistics() != null) {
+            statisticsType = StatisticsType.ACTIVITY_SERVICE_STATS;
         }
         return statisticsType;
     }
@@ -136,10 +99,10 @@ public class ServiceAgentUtil {
     private static void addCommonEventData(EventData event, List<Object> eventData) {
         eventData.add(event.getServiceName());
         eventData.add(event.getOperationName());
-        eventData.add(event.getTimestamp());
+        eventData.add(event.getTimestamp().getTime());
     }
 
-    private static void addActivityInMetaData(EventData event, List<Object> metaData) {
+    private static void addActivityMetaData(EventData event, List<Object> metaData) {
         metaData.add(event.getRequestURL());
         metaData.add(event.getRemoteAddress());
         metaData.add(event.getContentType());
@@ -154,19 +117,14 @@ public class ServiceAgentUtil {
         eventData.add(event.getInMessageBody());
     }
 
-    private static void addActivityInCorrelationData(EventData event,
-                                                     List<Object> correlationData) {
+    private static void addActivityCorrelationData(EventData event,
+                                                   List<Object> correlationData) {
         correlationData.add(event.getActivityId());
     }
 
     private static void addActivityOutEventData(EventData event, List<Object> eventData) {
         eventData.add(event.getOutMessageId());
         eventData.add(event.getOutMessageBody());
-    }
-
-    private static void addActivityOutCorrelationData(EventData event,
-                                                      List<Object> correlationData) {
-        correlationData.add(event.getActivityId());
     }
 
 

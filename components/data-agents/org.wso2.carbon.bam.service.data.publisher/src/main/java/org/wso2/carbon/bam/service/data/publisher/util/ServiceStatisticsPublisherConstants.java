@@ -21,14 +21,6 @@ public final class ServiceStatisticsPublisherConstants {
 
     public static final String BAM_SERVICE_STATISTICS_PUBLISHER_MODULE_NAME = "wso2bampublisherservicestats";
 
-    public static final String SERVER_NAME = "server_name";
-
-    public static final String TOTAL_SYSTEM_AVG_RESPONSE_TIME = "total_average_response_time";
-    public static final String TOTAL_SYSTEM_MIN_RESPONSE_TIME = "total_minimum_response_time";
-    public static final String TOTAL_SYSTEM_MAX_RESPONSE_TIME = "total_maximum_response_time";
-    public static final String TOTAL_SYSTEM_REQUEST_COUNT = "total_request_count";
-    public static final String TOTAL_SYSTEM_RESPONSE_COUNT = "total_response_count";
-
     public static final String RESPONSE_TIME = "response_time";
     public static final String REQUEST_COUNT = "request_count";
     public static final String RESPONSE_COUNT = "response_count";

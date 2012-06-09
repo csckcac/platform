@@ -31,6 +31,7 @@ import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.data.EventData;
 import org.wso2.carbon.bam.service.data.publisher.data.PublishData;
 import org.wso2.carbon.bam.service.data.publisher.internal.StatisticsServiceComponent;
+import org.wso2.carbon.bam.service.data.publisher.publish.EventPublisher;
 import org.wso2.carbon.bam.service.data.publisher.publish.ServiceAgentUtil;
 import org.wso2.carbon.bam.service.data.publisher.util.TenantEventConfigData;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
@@ -133,9 +134,6 @@ public class StatisticsHandler extends AbstractHandler {
                 eventData.setSystemStatistics(systemStatistics);
                 eventData.setServiceStatistics(serviceStatistics);
                 eventData.setOperationStatistics(operationStatistics);
-/*                eventData.setOperationName(axisOperation.getName().getLocalPart());
-                eventData.setServiceName(msgContext.getAxisService().getName());
-                eventData.setTimestamp(timestamp);*/
 
                 publishData.setEventData(eventData);
 
@@ -146,6 +144,8 @@ public class StatisticsHandler extends AbstractHandler {
                 }
 
                 Event event = ServiceAgentUtil.makeEventList(publishData, eventingConfigData);
+                EventPublisher publisher = new EventPublisher();
+                publisher.publish(event);
             }
         } catch (Throwable ignore) {
             log.error("Error at SystemStatisticsHandler. " +

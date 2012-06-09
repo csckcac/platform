@@ -19,13 +19,13 @@ package org.wso2.carbon.bpel.bam.publisher;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.bam.agent.publish.EventReceiver;
+import org.wso2.carbon.agent.DataPublisher;
 import org.wso2.carbon.bpel.bam.publisher.internal.BamPublisherServiceComponent;
 import org.wso2.carbon.bpel.bam.publisher.skeleton.BamServerInformation;
+import org.wso2.carbon.bpel.bam.publisher.util.BamPublisherUtils;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
 
 
@@ -49,17 +49,18 @@ public class ConfigurationContextObserverImpl extends AbstractAxis2Configuration
     private void createEventReceiverFromRegistry(){
         int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
         try {
+
             UserRegistry configSystemRegistry = BamPublisherServiceComponent.getRegistryService().
                     getConfigSystemRegistry(tenantId);
             BamServerInformation bamServerDataFromRegistry = BamPublisherUtils.
                     getBamServerDataFromRegistry(configSystemRegistry, tenantId);
             if (null != bamServerDataFromRegistry) {
-                EventReceiver eventReceiver = TenantBamAgentHolder.getInstance().getEventReceiver(tenantId);
-                if(null != eventReceiver) {
-                    BamPublisherUtils.configureEventReceiver(eventReceiver, bamServerDataFromRegistry);
+                DataPublisher dataPublisher = TenantBamAgentHolder.getInstance().getDataPublisher(tenantId);
+                if(null != dataPublisher) {
+                    BamPublisherUtils.configureBamDataPublisher(dataPublisher, bamServerDataFromRegistry);
                 }else {
-                    eventReceiver = BamPublisherUtils.createBamEventReceiver(bamServerDataFromRegistry);
-                    TenantBamAgentHolder.getInstance().addEventReceiver(tenantId, eventReceiver);
+                    dataPublisher = BamPublisherUtils.createBamDataPublisher(bamServerDataFromRegistry);
+                    TenantBamAgentHolder.getInstance().addDataPublisher(tenantId, dataPublisher);
                 }
             }
         } catch (RegistryException e) {
@@ -70,6 +71,6 @@ public class ConfigurationContextObserverImpl extends AbstractAxis2Configuration
     @Override
     public void terminatingConfigurationContext(ConfigurationContext configCtx) {
         int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
-        TenantBamAgentHolder.getInstance().removeEventReceiver(tenantId);
+        TenantBamAgentHolder.getInstance().removeDataPublisher(tenantId);
     }
 }

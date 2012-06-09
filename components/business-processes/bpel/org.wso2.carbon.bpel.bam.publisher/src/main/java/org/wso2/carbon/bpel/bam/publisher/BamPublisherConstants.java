@@ -17,6 +17,8 @@
 package org.wso2.carbon.bpel.bam.publisher;
 
 
+import java.lang.String;
+
 public class BamPublisherConstants {
     public static final String BAM_PUBLISHER_NS = "http://wso2.org/bps/monitoring/publisher";
 
@@ -27,12 +29,28 @@ public class BamPublisherConstants {
 
     public static final String BAM_KEY = "key";
     public static final String BAM_FROM = "from";
+    public static final String BAM_CATEGORY = "category";
     public static final String NAME_ATTR = "name";
+    public static final String TYPE_ATTR = "type";
     public static final String VARIABLE_ATTR = "variable";
     public static final String PART_ATTR = "part";
 
-    public static final String PROCESS_VARIABLE_NAME = "VariableName";
-    public static final String PROCESS_VARIABLE_VALUE = "VariableValue";
+    public static final String EVENT_VALUE_TYPE_PAYLOAD = "payloadData";
+    public static final String EVENT_VALUE_TYPE_META = "metaData";
+    public static final String EVENT_VALUE_TYPE_CORRELATION ="correlationData";
+
+    public static final String STREAM_NAME_ATTR = "streamName";
+    public static final String STREAM_VERSION_ATTR = "version";
+    public static final String STREAM_NICK_NAME_ATTR = "nickName";
+    public static final String STREAM_DESCRIPTION_ATTR = "description";
+
+
+
+
+
+
+//    public static final String PROCESS_VARIABLE_NAME = "VariableName";
+//    public static final String PROCESS_VARIABLE_VALUE = "VariableValue";
 
     public static final String CONFIG_RESOURCE_PATH =
             "repository/components/org.wso2.carbon.bpel.bam.publisher/bam_publisher_info";

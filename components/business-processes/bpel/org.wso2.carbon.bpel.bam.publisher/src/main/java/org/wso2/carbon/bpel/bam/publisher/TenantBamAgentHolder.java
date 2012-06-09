@@ -16,9 +16,10 @@
 
 package org.wso2.carbon.bpel.bam.publisher;
 
-import org.wso2.carbon.bam.agent.conf.AgentConfiguration;
-import org.wso2.carbon.bam.agent.core.Agent;
-import org.wso2.carbon.bam.agent.publish.EventReceiver;
+import org.wso2.carbon.agent.DataPublisher;
+import org.wso2.carbon.agent.conf.AgentConfiguration;
+import org.wso2.carbon.agent.Agent;
+
 
 
 import java.util.Map;
@@ -27,8 +28,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TenantBamAgentHolder {
     private static TenantBamAgentHolder instance;
 
-    private final Map<Integer, EventReceiver> tenantEventReceiverMap =
-            new ConcurrentHashMap<Integer, EventReceiver>();
+    private final Map<Integer, DataPublisher> tenantDataPublisherMap =
+            new ConcurrentHashMap<Integer, DataPublisher>();
 
     private static volatile Agent agent;
 
@@ -54,16 +55,16 @@ public class TenantBamAgentHolder {
         return agent;
     }
 
-    public EventReceiver getEventReceiver(Integer tenantId) {
-        return tenantEventReceiverMap.get(tenantId);
+    public  DataPublisher getDataPublisher(Integer tenantId) {
+        return tenantDataPublisherMap.get(tenantId);
     }
 
-    public void addEventReceiver(Integer tenantId, EventReceiver receiver) {
-        tenantEventReceiverMap.put(tenantId, receiver);
+    public void addDataPublisher(Integer tenantId, DataPublisher publisher) {
+        tenantDataPublisherMap.put(tenantId, publisher);
     }
 
-    public void removeEventReceiver(Integer tenantId) {
-        tenantEventReceiverMap.remove(tenantId);
+    public void removeDataPublisher(Integer tenantId) {
+        tenantDataPublisherMap.remove(tenantId);
     }
 
     public void removeAgent() {

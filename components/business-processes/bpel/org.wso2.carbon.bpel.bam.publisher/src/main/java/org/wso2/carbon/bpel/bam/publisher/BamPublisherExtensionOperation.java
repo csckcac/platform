@@ -20,26 +20,38 @@ package org.wso2.carbon.bpel.bam.publisher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ode.bpel.common.FaultException;
+import org.apache.ode.bpel.dd.TBamStreamDefinitions;
+import org.apache.ode.bpel.dd.TDeployment;
 import org.apache.ode.bpel.o.OProcess;
 import org.apache.ode.bpel.runtime.extension.AbstractSyncExtensionOperation;
 import org.apache.ode.bpel.runtime.extension.ExtensionContext;
 import org.apache.ode.store.DeploymentUnitDir;
 import org.apache.ode.utils.DOMUtils;
-
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.*;
-import org.wso2.carbon.bam.agent.core.Agent;
-import org.wso2.carbon.bam.agent.publish.EventReceiver;
-import org.wso2.carbon.bam.service.Event;
+import org.w3c.dom.NodeList;
+import org.wso2.carbon.agent.Agent;
+import org.wso2.carbon.agent.DataPublisher;
+import org.wso2.carbon.agent.commons.Attribute;
+import org.wso2.carbon.agent.commons.AttributeType;
+import org.wso2.carbon.agent.commons.Event;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
+import org.wso2.carbon.agent.commons.exception.WrongEventTypeException;
+import org.wso2.carbon.agent.exception.AgentException;
+import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 import org.wso2.carbon.bpel.bam.publisher.internal.BamPublisherServiceComponent;
-
 
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BamPublisherExtensionOperation extends AbstractSyncExtensionOperation {
     private static final Log log = LogFactory.getLog(BamPublisherExtensionOperation.class);
@@ -49,13 +61,17 @@ public class BamPublisherExtensionOperation extends AbstractSyncExtensionOperati
             throws FaultException {
 
         Integer tenantId = getTenantId(extensionContext);
-        EventReceiver eventReceiver = getBamEventReceiver(tenantId);
+        DataPublisher dataPublisher = getBamDataPublisher(tenantId);
         Agent agent = getBamAgent(tenantId);
-        if (null == eventReceiver) {
-            log.error("BAM Publisher Ext - EventReceiver not found for tenant id, " +
+
+        if (null == dataPublisher) {
+            log.error("BAM Publisher Ext Data Publisher not found for tenant id, " +
                       "please check registry configuration");
             return;
         }
+
+        String streamName = element.getAttribute(BamPublisherConstants.STREAM_NAME_ATTR);
+        String streamVersion = element.getAttribute(BamPublisherConstants.STREAM_VERSION_ATTR);
 
         NodeList list = element.getElementsByTagNameNS(BamPublisherConstants.BAM_PUBLISHER_NS,
                                                        BamPublisherConstants.BAM_KEY);
@@ -64,40 +80,233 @@ public class BamPublisherExtensionOperation extends AbstractSyncExtensionOperati
             return;
         }
 
-        int length = list.getLength();
-        Map<String, ByteBuffer> eventMap = new HashMap<String, ByteBuffer>();
-        for (int i = 0; i < length; i++) {
-            createEventDataMap(extensionContext, eventMap, list.item(i));
+
+        String eventStreamId = null;
+        try {
+            eventStreamId = dataPublisher.findEventStream(streamName, streamVersion);
+        } catch (AgentException e) {
+            log.error("Agent exception when finding event stream definition " + e.getMessage());
+            return;
+        } catch (StreamDefinitionException e) {
+            log.error("Stream definition exception when finding event stream definition " + e.getMessage());
+            return;
+        } catch (NoStreamDefinitionExistException e) {
+            log.debug("Stream is not defined");
         }
 
-        Event publishEvent = new Event();
-        publishEvent.setEvent(eventMap);
-        publishEvent.setMeta(createMetaDataMap(extensionContext));
-        publishEvent.setCorrelation(new HashMap<String, ByteBuffer>());
-        List<Event> events = new ArrayList<Event>();
-        events.add(publishEvent);
-        agent.publish(events, eventReceiver);
+        String streamDef = getEventStream(extensionContext, streamName, streamVersion);
+
+        if(eventStreamId == null) {
+            if(streamDef != null)
+                try {
+                    eventStreamId = dataPublisher.defineEventStream(streamDef);
+                } catch (AgentException e) {
+                    log.error("Agent exception " + e);
+                    return;
+                } catch (MalformedStreamDefinitionException e) {
+                    log.error("Malformed Stream Definition exception " + e);
+                    return;
+                } catch (StreamDefinitionException e) {
+                    log.error("Stream definition exception " + e);
+                    return;
+                } catch (WrongEventTypeException e) {
+                    log.error("Wrong event type definition " + e);
+                    return;
+                } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
+                    log.error("Different stream definition exists " + e);
+                    return;
+                }
+        }
+
+        try {
+            createEvent(streamDef, eventStreamId, extensionContext, dataPublisher, list);
+        } catch (MalformedStreamDefinitionException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (AgentException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     private Integer getTenantId(ExtensionContext context) {
-        DeploymentUnitDir du = new DeploymentUnitDir(new File(context.getDUDir()));
-        QName processIdQname = new QName(context.getProcessModel().getQName().getNamespaceURI(),
-                                         context.getProcessModel().getQName().getLocalPart() + "-"
-                                         + du.getStaticVersion());
-        return  BamPublisherServiceComponent.getBPELServer().
-                getMultiTenantProcessStore().getTenantId(processIdQname);
+            DeploymentUnitDir du = new DeploymentUnitDir(new File(context.getDUDir()));
+            QName processIdQname = new QName(context.getProcessModel().getQName().getNamespaceURI(),
+                                             context.getProcessModel().getQName().getLocalPart() + "-"
+                                             + du.getStaticVersion());
+            return  BamPublisherServiceComponent.getBPELServer().
+                    getMultiTenantProcessStore().getTenantId(processIdQname);
+        }
 
-    }
-
-    private EventReceiver getBamEventReceiver(Integer tenantId) {
-        EventReceiver eventReceiver = TenantBamAgentHolder.getInstance().getEventReceiver(tenantId);
-        return eventReceiver;
+    private DataPublisher getBamDataPublisher(Integer tenantId) {
+        DataPublisher dataPublisher = TenantBamAgentHolder.getInstance().getDataPublisher(tenantId);
+        return dataPublisher;
     }
 
     private Agent getBamAgent(Integer tenantId) {
         Agent agent = TenantBamAgentHolder.getInstance().getAgent(tenantId);
         return agent;
     }
+
+        /**
+         *
+         * @param context    ExtensionContext
+         * @param streamName   Name of the event stream definition
+         * @param streamVersion   Version of the event stream definition
+         * @return   event stream definition upon successful return of an string and null otherwise
+         */
+
+        private String getEventStream(ExtensionContext context, String streamName, String streamVersion) {
+            DeploymentUnitDir du = new DeploymentUnitDir(new File(context.getDUDir()));
+            List<TDeployment.Process> processList = du.getDeploymentDescriptor().getDeploy().getProcessList();
+
+            for(TDeployment.Process process : processList) {
+                if(process.getName().equals(context.getProcessModel().getName())) {
+                    List<TBamStreamDefinitions.Stream> streamList = process.getBamStreamDefinitions().getStreamList();
+                    for(TBamStreamDefinitions.Stream stream:streamList){
+                        String eventStreamName  = stream.getStreamName();
+                        String eventStreamVersion = stream.getStreamVersion();
+                        if(eventStreamName.equals(streamName) && eventStreamVersion.equals(streamVersion)){
+                            return stream.xmlText();
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+
+    private void createEvent(String eventStreamDefinition , String streamId ,ExtensionContext context,
+                              DataPublisher publisher, NodeList list)
+                        throws MalformedStreamDefinitionException, FaultException, AgentException {
+        EventStreamDefinition streamDefinition = EventConverter.convertFromJson(eventStreamDefinition);
+        List<Attribute> payloadData = streamDefinition.getPayloadData();
+        List<Attribute> correlationData = streamDefinition.getCorrelationData();
+        List<Attribute> metaData = streamDefinition.getMetaData();
+
+        HashMap<String, String> payloadDataMap = new HashMap<String, String>();
+        HashMap<String, String> metaDataMap = new HashMap<String, String>();
+        HashMap<String, String> correlationDataMap = new HashMap<String, String>();
+
+        int length = list.getLength();
+        if(length < 1) {
+            log.error("Key elements are not found under the bam:publish element");
+            return;
+        }
+
+        for(int i = 0; i < length; i++ ) {
+            Node node = list.item(i);
+            if(node.getNodeType() != Node.ELEMENT_NODE) {
+                log.info("Invalid xml node found for key");
+                continue;
+            }
+
+            NamedNodeMap attributeMap = node.getAttributes();
+            Node keyNode = attributeMap.getNamedItem(BamPublisherConstants.NAME_ATTR);
+            String keyValue = keyNode.getTextContent();
+
+            Node typeNode = attributeMap.getNamedItem(BamPublisherConstants.TYPE_ATTR);
+            String typeValue = typeNode.getTextContent();
+
+            Element fromElement = DOMUtils.findChildByName((Element) node,
+                                                                new QName(BamPublisherConstants.BAM_PUBLISHER_NS,
+                                                                    BamPublisherConstants.BAM_FROM));
+            if (null == fromElement) {
+                log.error("From Element not found with the key element");
+                return;
+            }
+
+            String variableName = DOMUtils.getAttribute(fromElement, BamPublisherConstants.VARIABLE_ATTR);
+            String partName = DOMUtils.getAttribute(fromElement, BamPublisherConstants.PART_ATTR);
+
+            if (variableName != null) {
+                Node variableNode = context.readVariable(variableName);
+                if (variableNode != null) {
+                    String xmlStr = "";
+                    if (partName != null && variableNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element partNode = DOMUtils.findChildByName((Element) variableNode, new QName(partName));
+                        if (partNode != null) {
+                            Element firstChildElement = DOMUtils.getFirstChildElement(partNode);
+                            xmlStr = DOMUtils.domToString(firstChildElement);
+                        }
+                    } else {
+                        xmlStr = DOMUtils.domToString(variableNode);
+                    }
+
+                    if(typeValue.equals(BamPublisherConstants.EVENT_VALUE_TYPE_PAYLOAD)) {
+                        payloadDataMap.put(keyValue, xmlStr);
+                    } else if(typeValue.equals(BamPublisherConstants.EVENT_VALUE_TYPE_CORRELATION)) {
+                        correlationDataMap.put(keyValue, xmlStr);
+                    } else if(typeValue.equals(BamPublisherConstants.EVENT_VALUE_TYPE_META)) {
+                        metaDataMap.put(keyValue, xmlStr);
+                    }
+                }
+            }
+        }
+        Object[] payloadDataArray = null;
+
+        int size = payloadDataMap.size();
+        if(size > 0) {
+            payloadDataArray = new Object[size];
+            for(int i = 0; i < size; i++) {
+                Attribute attribute = payloadData.get(i);
+                convertAndSetValue(payloadDataArray, i, attribute.getType(),
+                                   payloadDataMap.get(attribute.getName()));
+            }
+        }
+
+        Object[] metaDataArray = null;
+        size = metaDataMap.size();
+        if(size > 0 ) {
+            metaDataArray = new Object[size];
+            for(int i = 0; i < size; i++) {
+                Attribute attribute = metaData.get(i);
+                convertAndSetValue(metaDataArray, i, attribute.getType(),
+                                   metaDataMap.get(attribute.getName()));
+            }
+        }
+
+        Object[] correlationDataArray = null;
+        size = correlationDataMap.size();
+        if(size > 0) {
+           correlationDataArray = new Object[size];
+            for(int i = 0; i < size; i++) {
+                Attribute attribute = correlationData.get(i);
+                convertAndSetValue(correlationDataArray, i, attribute.getType(),
+                                   correlationDataMap.get(attribute.getName()));
+            }
+        }
+
+        Event event = new Event(streamId, System.currentTimeMillis(), metaDataArray,
+                                correlationDataArray, payloadDataArray);
+        publisher.publish(event);
+    }
+
+    private void convertAndSetValue(Object[] dataArray, int index, AttributeType type, String str) {
+        switch (type) {
+            case STRING:
+                // nothing to do
+                dataArray[index] = str;
+            case INT:
+                // convert to int
+                dataArray[index] = Integer.parseInt(str);
+
+            case DOUBLE:
+                // convert to double
+                dataArray[index] = Double.parseDouble(str);
+
+            case LONG:
+                dataArray[index] = Long.parseLong(str);
+
+            case FLOAT:
+                dataArray[index] = Float.parseFloat(str);
+
+            case BOOL:
+                dataArray[index] = Boolean.parseBoolean(str);
+        }
+    }
+
+
+
+
 
     private Map<String, ByteBuffer> createMetaDataMap(ExtensionContext ctx) {
         OProcess processModel = ctx.getProcessModel();
@@ -117,58 +326,63 @@ public class BamPublisherExtensionOperation extends AbstractSyncExtensionOperati
         return metaDataMap;
     }
 
-    /**
-     * Following is the xml structure that comes into this node for processing
-     * <bam:key name="key1">
-     * <bam:from part="part1" variable="variable">
-     * </bam:from>
-     * </bam:key>
-     *
-     * @param node
-     * @return EventMap
-     */
-    private void createEventDataMap(ExtensionContext extensionContext,
-                                    Map<String, ByteBuffer> eventMap, Node node)
-            throws FaultException {
 
-        if (node.getNodeType() != Node.ELEMENT_NODE) {
-            return;
-        }
 
-        NamedNodeMap attributeMap = node.getAttributes();
-        Node keyNode = attributeMap.getNamedItem(BamPublisherConstants.NAME_ATTR);
-        String keyValue = keyNode.getTextContent();
-        Element fromElement = DOMUtils.findChildByName((Element) node,
-                                       new QName(BamPublisherConstants.BAM_PUBLISHER_NS,
-                                             BamPublisherConstants.BAM_FROM));
-        if (null == fromElement) {
-            log.error("From Element not found with the key element");
-            return;
-        }
+        /**
+         * Following is the xml structure that comes into this node for processing
+         * <bam:key name="key1">
+         * <bam:from part="part1" variable="variable">
+         * </bam:from>
+         * </bam:key>
+         *
+         * @param node
+         * @return EventMap
+         */
+        private void createEventDataMap(ExtensionContext extensionContext,
+                                        DataPublisher publisher, HashMap<String, AttributeType> payloadMap,
+                                        HashMap<String, AttributeType> correlationMap,
+                                        HashMap<String, AttributeType> metaMap, Node node)
+                throws FaultException {
 
-        String variableName = DOMUtils.getAttribute(fromElement, BamPublisherConstants.VARIABLE_ATTR);
-        String partName = DOMUtils.getAttribute(fromElement, BamPublisherConstants.PART_ATTR);
-
-        if (variableName != null) {
-            Node variableNode = extensionContext.readVariable(variableName);
-            if (variableNode != null) {
-                String xmlStr = "";
-                if (partName != null && variableNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element partNode = DOMUtils.findChildByName((Element) variableNode, new QName(partName));
-                    if (partNode != null) {
-                        Element firstChildElement = DOMUtils.getFirstChildElement(partNode);
-                        xmlStr = DOMUtils.domToString(firstChildElement);
-                    }
-                } else {
-                    xmlStr = DOMUtils.domToString(variableNode);
-                }
-                eventMap.put(BamPublisherConstants.PROCESS_VARIABLE_VALUE,
-                             ByteBuffer.wrap(xmlStr.toString().getBytes()));
-                eventMap.put(BamPublisherConstants.PROCESS_VARIABLE_NAME,
-                             ByteBuffer.wrap(keyValue.getBytes()));
+            if (node.getNodeType() != Node.ELEMENT_NODE) {
+                return;
             }
+
+            NamedNodeMap attributeMap = node.getAttributes();
+            Node keyNode = attributeMap.getNamedItem(BamPublisherConstants.NAME_ATTR);
+            String keyValue = keyNode.getTextContent();
+            Element fromElement = DOMUtils.findChildByName((Element) node,
+                                           new QName(BamPublisherConstants.BAM_PUBLISHER_NS,
+                                                 BamPublisherConstants.BAM_FROM));
+            if (null == fromElement) {
+                log.error("From Element not found with the key element");
+                return;
+            }
+
+            String variableName = DOMUtils.getAttribute(fromElement, BamPublisherConstants.VARIABLE_ATTR);
+            String partName = DOMUtils.getAttribute(fromElement, BamPublisherConstants.PART_ATTR);
+
+            if (variableName != null) {
+                Node variableNode = extensionContext.readVariable(variableName);
+                if (variableNode != null) {
+                    String xmlStr = "";
+                    if (partName != null && variableNode.getNodeType() == Node.ELEMENT_NODE) {
+                        Element partNode = DOMUtils.findChildByName((Element) variableNode, new QName(partName));
+                        if (partNode != null) {
+                            Element firstChildElement = DOMUtils.getFirstChildElement(partNode);
+                            xmlStr = DOMUtils.domToString(firstChildElement);
+                        }
+                    } else {
+                        xmlStr = DOMUtils.domToString(variableNode);
+                    }
+//                    eventMap.put(BamPublisherConstants.PROCESS_VARIABLE_VALUE,
+//                                 ByteBuffer.wrap(xmlStr.toString().getBytes()));
+//                    eventMap.put(BamPublisherConstants.PROCESS_VARIABLE_NAME,
+//                                 ByteBuffer.wrap(keyValue.getBytes()));
+                }
+            }
+            return;
         }
-        return;
-    }
+
 
 }

@@ -1,19 +1,19 @@
-package org.wso2.carbon.bpel.bam.publisher;
+package org.wso2.carbon.bpel.bam.publisher.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.record.formula.functions.Even;
-import org.wso2.carbon.bam.agent.publish.EventReceiver;
+import org.wso2.carbon.agent.DataPublisher;
+import org.wso2.carbon.agent.commons.exception.AuthenticationException;
+import org.wso2.carbon.agent.exception.AgentException;
+import org.wso2.carbon.agent.exception.TransportException;
+import org.wso2.carbon.bpel.bam.publisher.BamPublisherConstants;
 import org.wso2.carbon.bpel.bam.publisher.skeleton.BamServerInformation;
-import org.wso2.carbon.bpel.bam.publisher.skeleton.BamServerInformationFault;
 import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 
-import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.net.MalformedURLException;
+
 
 public class BamPublisherUtils {
 
@@ -23,6 +23,7 @@ public class BamPublisherUtils {
                                                   BamServerInformation configData) {
         try {
             Resource resource = registry.newResource();
+            //org.wso2.carbon.core.util.CryptoUtil.
             resource.addProperty(BamPublisherConstants.BAM_SERVER_URL, configData.getServerURL());
             resource.addProperty(BamPublisherConstants.BAM_SERVER_USERNAME, configData.getUsername());
             resource.addProperty(BamPublisherConstants.BAM_SERVER_PASSWORD, configData.getPassword());
@@ -34,7 +35,7 @@ public class BamPublisherUtils {
             registry.put(BamPublisherConstants.CONFIG_RESOURCE_PATH, resource);
 
         } catch (RegistryException e) {
-            String msg = "Add Update bpel bam publisher resource failed for tenant Id " + tenantId;
+            String msg = "Add Update bpel bam publisher resource failed for tenant Id" + tenantId;
             log.error(msg, e);
         }
     }
@@ -68,24 +69,27 @@ public class BamPublisherUtils {
         return null;
     }
 
-    public static EventReceiver createBamEventReceiver(BamServerInformation configData) {
-        EventReceiver receiver = new EventReceiver();
-        receiver.setUrl(configData.getServerURL());
-        receiver.setPort(configData.getThriftPort());
-        receiver.setUserName(configData.getUsername());
-        receiver.setPassword(configData.getPassword());
-        receiver.setHttpTransportEnabled(configData.getEnableHTTPTransport());
-        receiver.setSocketTransportEnabled(configData.getEnableSocketTransport());
-        return receiver;
+    public static DataPublisher createBamDataPublisher(BamServerInformation configData) {
+        DataPublisher publisher = null;
+        try {
+             publisher = new DataPublisher(
+                                        configData.getServerURL(),
+                                        configData.getUsername(),
+                                        configData.getPassword());
+        } catch (MalformedURLException e) {
+            log.error("Event receiver URL provided is invalid" + e);
+        } catch (AgentException e) {
+            log.error("Error in creating data publisher" + e);
+        } catch (AuthenticationException e) {
+            log.error("Error in creating data publisher" + e);
+        } catch (TransportException e) {
+            log.error("Error in creating data publisher, Transport exception" + e);
+        }
+        return publisher;
+
     }
 
-    public static void configureEventReceiver(EventReceiver receiver,
+    public static void configureBamDataPublisher(DataPublisher publisher,
                                               BamServerInformation configData){
-        receiver.setHttpTransportEnabled(configData.getEnableHTTPTransport());
-        receiver.setSocketTransportEnabled(configData.getEnableSocketTransport());
-        receiver.setUserName(configData.getUsername());
-        receiver.setPassword(configData.getPassword());
-        receiver.setUrl(configData.getServerURL());
-        receiver.setPort(configData.getThriftPort());
     }
 }

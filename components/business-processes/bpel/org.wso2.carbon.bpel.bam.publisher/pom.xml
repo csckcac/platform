@@ -46,13 +46,8 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.bam.agent</artifactId>
-            <version>3.2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.bam.service</artifactId>
-            <version>3.2.3</version>
+            <artifactId>org.wso2.carbon.agent</artifactId>
+            <version>${carbon.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -61,6 +56,16 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
         <artifactId>org.wso2.carbon.bpel.bam.publisher.skeleton</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.bam.eventreceiver</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.1</version>
         </dependency>
     </dependencies>
 

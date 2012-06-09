@@ -3,22 +3,26 @@ package org.wso2.carbon.bpel.bam.publisher;
 import org.apache.commons.logging.Log;
 
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.bam.agent.publish.EventReceiver;
+
+import org.wso2.carbon.agent.DataPublisher;
 import org.wso2.carbon.bpel.bam.publisher.internal.BamPublisherServiceComponent;
 import org.wso2.carbon.bpel.bam.publisher.skeleton.BAMServerInfoManagementServiceSkeletonInterface;
 import org.wso2.carbon.bpel.bam.publisher.skeleton.BamServerInformation;
 import org.wso2.carbon.bpel.bam.publisher.skeleton.Fault;
+import org.wso2.carbon.bpel.bam.publisher.util.BamPublisherUtils;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.user.api.Tenant;
 
 public class BamServerInfoManagementServiceSkeleton extends AbstractAdmin implements
                                   BAMServerInfoManagementServiceSkeletonInterface{
     Log log = LogFactory.getLog(BamServerInfoManagementServiceSkeleton.class);
 
     public BamServerInformation getBamServerInformation() throws Fault {
+
+
+
         int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
         UserRegistry configSystemRegistry = null;
         try {
@@ -57,13 +61,13 @@ public class BamServerInfoManagementServiceSkeleton extends AbstractAdmin implem
         bamServerInformation.setThriftPort(thriftPort);
         BamPublisherUtils.addBamServerDataToRegistry(configSystemRegistry, tenantId,
                                                      bamServerInformation);
-        EventReceiver eventReceiver = TenantBamAgentHolder.getInstance().getEventReceiver(tenantId);
+        DataPublisher dataPublisher = TenantBamAgentHolder.getInstance().getDataPublisher(tenantId);
 
-        if(null == eventReceiver){
-            eventReceiver = BamPublisherUtils.createBamEventReceiver(bamServerInformation);
-            TenantBamAgentHolder.getInstance().addEventReceiver(tenantId, eventReceiver);
+        if(null == dataPublisher){
+            dataPublisher = BamPublisherUtils.createBamDataPublisher(bamServerInformation);
+            TenantBamAgentHolder.getInstance().addDataPublisher(tenantId, dataPublisher);
         }else {
-            BamPublisherUtils.configureEventReceiver(eventReceiver, bamServerInformation);
+            BamPublisherUtils.configureBamDataPublisher(dataPublisher, bamServerInformation);
         }
         return "Server Data Updated to the registry" ;
     }

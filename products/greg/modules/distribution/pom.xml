@@ -21,13 +21,13 @@
     <parent>
         <groupId>org.wso2.governance</groupId>
         <artifactId>governance-parent</artifactId>
-        <version>4.0.0-SNAPSHOT</version>
+        <version>4.5.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wso2greg</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.5.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>WSO2 Governance Registry - Distribution</name>
     <url>http://wso2.com/products/governance-registry</url>
@@ -130,6 +130,11 @@
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.carbon.registry.samples.handler</artifactId>
             <version>4.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.governance</groupId>
+            <artifactId>checkin-client</artifactId>
+            <version>${carbon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>

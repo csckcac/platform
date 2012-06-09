@@ -26,7 +26,45 @@ public class EventingConfigData {
     private boolean isHttpTransportEnable;
     private boolean isSocketTransportEnable;
     private int port;
+
+    private String streamName;
+    private String version;
+    private String nickName;
+    private String description;
+
     private Property[] properties;
+
+    public String getStreamName() {
+        return streamName;
+    }
+
+    public void setStreamName(String streamName) {
+        this.streamName = streamName;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Property[] getProperties() {
         return properties;

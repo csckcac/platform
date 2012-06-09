@@ -139,8 +139,8 @@ public class GenericArtifactManager {
      *
      * @throws GovernanceException if the operation failed.
      */
-    public String addGenericArtifact(GenericArtifact artifact) throws GovernanceException {
-        return manager.addGovernanceArtifact(artifact);
+    public void addGenericArtifact(GenericArtifact artifact) throws GovernanceException {
+         manager.addGovernanceArtifact(artifact);
     }
 
     /**

@@ -74,19 +74,14 @@ public class ManageGenericArtifactService extends RegistryAbstractAdmin implemen
                     configuration.getRelationshipDefinitions());
             GenericArtifact artifact = manager.newGovernanceArtifact(
                     new StAXOMBuilder(reader).getDocumentElement());
-            String returnPath = manager.addGenericArtifact(artifact);
+            manager.addGenericArtifact(artifact);
             if (lifecycleAttribute != null) {
                 String lifecycle = artifact.getAttribute(lifecycleAttribute);
                 if (lifecycle != null) {
                     artifact.attachLifecycle(lifecycle);
                 }
             }
-//            return RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + artifact.getPath();
-            if(returnPath.contains("An identical resource already exists in the defined path")){
-                return returnPath;
-            }else{
-                return RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + returnPath;
-            }
+            return RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + artifact.getPath();
         } catch (Exception e) {
             String msg = "Unable to add artifact. ";
             if (e instanceof RegistryException) {

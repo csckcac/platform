@@ -88,11 +88,6 @@
         <% if (request.getParameter("wsdlError") != null) { %>
             CARBON.showErrorDialog(decodeURIComponent("<%=request.getParameter("wsdlError")%>"));
         <% } %>
-        <% if (request.getParameter("duplicateWarning") != null) { %>
-             CARBON.showWarningDialog(decodeURIComponent("<%=request.getParameter("duplicateWarning")%>"),function(){
-                 window.history.back()
-             });
-        <% } %>
         function addEditArtifact(){
         sessionAwareFunction(function() {
             var versionElement = document.getElementById('id_Overview_Version');

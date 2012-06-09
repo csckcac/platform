@@ -32,6 +32,12 @@
     String password = request.getParameter("password");
     String httpTransport = request.getParameter("enableHttpTransport");
     String socketTransport = request.getParameter("enableSocketTransport");
+
+    String streamName = request.getParameter("stream_name");
+    String version = request.getParameter("version");
+    String nickName = request.getParameter("nick_name");
+    String description = request.getParameter("description");
+
     String[] propertyKeys = request.getParameterValues(PROPERTY_KEYS);
     String[] propertyValues = request.getParameterValues(PROPERTY_VALUES);
     String port = null;
@@ -102,12 +108,28 @@
             eventingConfigData.setProperties(properties.toArray(new Property[properties.size()]));
         }
 
+        if (streamName != null) {
+            eventingConfigData.setStreamName(streamName);
+        }
+
+        if (version != null) {
+            eventingConfigData.setVersion(version);
+        }
+
+        if (nickName != null) {
+            eventingConfigData.setNickName(nickName);
+        }
+
+        if (description != null) {
+            eventingConfigData.setDescription(description);
+        }
+
         try {
             client.setEventingConfigData(eventingConfigData);
 
 %>
 <script type="text/javascript">
-    jQuery(document).init(function() {
+    jQuery(document).init(function () {
         function handleOK() {
 
         }
@@ -159,6 +181,20 @@
     if (port == null) {
         port = String.valueOf(eventingConfigData.getPort());
     }
+
+    if (streamName == null) {
+        streamName = eventingConfigData.getStreamName();
+    }
+    if (version == null) {
+        version = eventingConfigData.getVersion();
+    }
+    if(nickName == null){
+        nickName = eventingConfigData.getNickName();
+    }
+    if(description == null){
+        description = eventingConfigData.getDescription();
+    }
+
     if (properties == null) {
         Property[] propertiesDTO = eventingConfigData.getProperties();
         if (propertiesDTO != null) {
@@ -187,24 +223,24 @@
     function addColumn() {
         rowNum++;
         /*var n =  + parseInt(trId.charAt(trId.length-1))+1;
-        jQuery("#"+trId+" td div.addIcon").remove();*/
+         jQuery("#"+trId+" td div.addIcon").remove();*/
         //alert(n);
         var sId = "propertyTable_" + rowNum;
         //alert(sId);
-        var tableContent = "<tr id=\""+ sId + "\">" +
-                "<td>\n" +
-                "                        <fmt:message key='property.name'/>\n" +
-                "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
-                "                    </td>\n" +
-                "                    <td>\n" +
-                "                        <fmt:message key='property.value'/>\n" +
-                "                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +
-                "                    </td>" +
-                "<td>\n" +
-                "                        <a onClick='javaScript:removeColumn(\""+ sId + "\")'" +
-        "style='background-image: url(../bampubsvcstat/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
-                "                    </td>" +
-                "</tr>";
+        var tableContent = "<tr id=\"" + sId + "\">" +
+                           "<td>\n" +
+                           "                        <fmt:message key='property.name'/>\n" +
+                           "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
+                           "                    </td>\n" +
+                           "                    <td>\n" +
+                           "                        <fmt:message key='property.value'/>\n" +
+                           "                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +
+                           "                    </td>" +
+                           "<td>\n" +
+                           "                        <a onClick='javaScript:removeColumn(\"" + sId + "\")'" +
+                           "style='background-image: url(../bampubsvcstat/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
+                           "                    </td>" +
+                           "</tr>";
 
         $("#propertyTable").append(tableContent);
     }
@@ -267,6 +303,32 @@
                     </td>
                 </tr>
 
+                <thead>
+                <tr>
+                    <th colspan="4">
+                        <fmt:message key="stream.definition.configuration"/>
+                    </th>
+                </tr>
+                </thead>
+
+                <tr>
+                    <td><fmt:message key="stream.name"/></td>
+                    <td><input type="text" name="stream_name" value="<%=streamName%>"/></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="version"/></td>
+                    <td><input type="text" name="version" value="<%=version%>"/></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="nick.name"/></td>
+                    <td><input type="text" name="nick_name" value="<%=nickName%>"/></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="description"/></td>
+                    <td><input type="text" name="description" value="<%=description%>"/></td>
+                </tr>
+
+
                     <%--                    <% if (isServiceStatsEnable || isMsgDumpingEnable) { %>--%>
                 <thead>
                 <tr>
@@ -326,6 +388,7 @@
                     </td>
                     <%}%>
                 </tr>
+
                 <thead>
                 <tr>
                     <th colspan="4">
@@ -335,31 +398,36 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <table id="propertyTable" width="100%" class="styledLeft" style="margin-left: 0px;">
+                    <table id="propertyTable" width="100%" class="styledLeft"
+                           style="margin-left: 0px;">
 
-                        <%  if (properties != null) {
+                        <% if (properties != null) {
                             int i = 1;
-                            for(Property property : properties) {
+                            for (Property property : properties) {
 
                         %>
                         <tr id="propertyTable_<%=i%>">
                             <td>
                                 <fmt:message key="property.name"/>
-                                <input type="text" name="<%=PROPERTY_KEYS%>" value="<%=property.getKey()%>">
+                                <input type="text" name="<%=PROPERTY_KEYS%>"
+                                       value="<%=property.getKey()%>">
                             </td>
                             <td>
                                 <fmt:message key="property.value"/>
-                                <input type="text" name="<%=PROPERTY_VALUES%>" value="<%=property.getValue()%>">
+                                <input type="text" name="<%=PROPERTY_VALUES%>"
+                                       value="<%=property.getValue()%>">
                             </td>
                             <% if (i == 1) { %>
                             <td>
                                 <a onClick='javaScript:addColumn()' style='background-image:
-                                url(../bampubsvcstat/images/add.gif);'class='icon-link addIcon'>Add Property</a>
+                                url(../bampubsvcstat/images/add.gif);' class='icon-link addIcon'>Add
+                                                                                                 Property</a>
                             </td>
-                            <% } else {  %>
+                            <% } else { %>
                             <td>
                                 <a onClick='javaScript:removeColumn("propertyTable_<%=i%>")' style='background-image:
-                                url(../bampubsvcstat/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>
+                                url(../bampubsvcstat/images/delete.gif);' class='icon-link addIcon'>Remove
+                                                                                                    Property</a>
                             </td>
                             <% } %>
 
@@ -367,8 +435,8 @@
                         <script type="text/javascript">
                             rowNum++;
                         </script>
-                        <%  i++;
-                            }
+                        <% i++;
+                        }
                         } else { %>
                         >
                         <tr>
@@ -382,7 +450,9 @@
                             </td>
 
                             <td>
-                                <a onClick='javaScript:addColumn()' style='background-image: url(../bampubsvcstat/images/add.gif);'class='icon-link addIcon'>Add Property</a>
+                                <a onClick='javaScript:addColumn()'
+                                   style='background-image: url(../bampubsvcstat/images/add.gif);'
+                                   class='icon-link addIcon'>Add Property</a>
                             </td>
                         </tr>
 

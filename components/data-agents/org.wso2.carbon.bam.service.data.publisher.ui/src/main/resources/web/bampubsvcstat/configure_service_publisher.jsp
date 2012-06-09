@@ -19,7 +19,7 @@
 %><fmt:bundle basename="org.wso2.carbon.bam.service.data.publisher.ui.i18n.Resources">
 
 <carbon:breadcrumb
-        label="system.statistics"
+        label="bam.statistics"
         resourceBundle="org.wso2.carbon.bam.service.data.publisher.ui.i18n.Resources"
         topPage="true"
         request="<%=request%>"/>

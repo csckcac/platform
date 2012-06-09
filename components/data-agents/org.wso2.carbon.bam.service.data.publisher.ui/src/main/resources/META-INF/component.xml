@@ -20,7 +20,7 @@
     <!-- sample menu configuration -->
     <menus>
         <menu>
-            <id>bam_data_publisher_service_statistics_menu</id>
+            <id>bam_service_data_publisher_menu</id>
             <i18n-key>service.data.publisher.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.bam.service.data.publisher.ui.i18n.Resources</i18n-bundle>
             <parent-menu>configure_menu</parent-menu>

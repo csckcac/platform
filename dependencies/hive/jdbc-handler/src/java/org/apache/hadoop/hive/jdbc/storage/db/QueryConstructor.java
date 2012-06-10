@@ -108,12 +108,79 @@ public class QueryConstructor {
         return query.toString();
     }
 
-    public String constructSelectQueryForReading(DatabaseProperties dbProperties, JDBCSplit split) {
+    public String constructCountQuery(DatabaseProperties dbProperties) {
+
         StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(");
+        if(dbProperties.getFieldsNames()!=null){
+            query.append(dbProperties.getFieldsNames()[0]);
+        } else {
+            query.append("*");
+        }
+        query.append(") FROM ").append(dbProperties.getTableName());
+        return query.toString();
+    }
+
+    public String constructSelectQueryForReading(DatabaseProperties dbProperties, JDBCSplit split,
+                                                 DatabaseType databaseType) {
+        String query = null;
+        switch (databaseType) {
+
+            case MYSQL:
+            case H2:
+            case POSTGRESQL:
+                query = getQueryForMySql(dbProperties,split);
+                break;
+            case ORACLE:
+                query = getQueryForOracle(dbProperties,split);
+                break;
+            case SQLSERVER:
+                query = getQueryForMsSql(dbProperties,split);
+                break;
+        }
+        return query;
+    }
+
+    /**
+     * Sample query is like this -
+     SELECT * FROM (
+     SELECT TOP 150 * FROM (
+     SELECT TOP 200 fields
+     FROM table
+     ORDER BY column1  ASC)
+     ORDER by column1 DESC)
+     ORDER by column1 ASC
+     * @param dbProperties
+     * @param split
+     * @return
+     */
+    private String getQueryForMsSql(DatabaseProperties dbProperties, JDBCSplit split) {
+        String[] fieldNames = dbProperties.getFieldsNames();
+        StringBuilder query = new StringBuilder();
+
+        query.append("SELECT * FROM ( ");
+        query.append("SELECT TOP ").append(split.getLength()).append(" * FROM ( ");
+        query.append("SELECT TOP ").append(split.getEnd()).append(" ");
+        for (int i = 0; i < fieldNames.length; i++) {
+            query.append(fieldNames[i]);
+            if (i != fieldNames.length - 1) {
+                query.append(", ");
+            }
+        }
+        query.append(" FROM ");
+        query.append(dbProperties.getTableName());
+        query.append(" ORDER BY ").append(fieldNames[0]).append(" ASC ").append(")");
+        query.append(" ORDER BY ").append(fieldNames[0]).append(" DESC ").append(")");
+        query.append(" ORDER BY ").append(fieldNames[0]).append(" ASC");
+        return query.toString();
+    }
+
+    private String getQueryForMySql(DatabaseProperties dbProperties, JDBCSplit split) {
+        StringBuilder query = new StringBuilder();
+        String[] fieldNames = dbProperties.getFieldsNames();
 
         query.append("SELECT ");
 
-        String[] fieldNames = dbProperties.getFieldsNames();
         for (int i = 0; i < fieldNames.length; i++) {
             query.append(fieldNames[i]);
             if (i != fieldNames.length - 1) {
@@ -122,23 +189,47 @@ public class QueryConstructor {
         }
 
         query.append(" FROM ").append(dbProperties.getTableName());
-        query.append(" AS ").append(dbProperties.getTableName()); //in hsqldb this is necessary
+/*        query.append(" AS ").append(dbProperties.getTableName()); //in hsqldb this is necessary*/
 
         query.append(" LIMIT ").append(split.getLength());
         query.append(" OFFSET ").append(split.getStart());
         return query.toString();
     }
 
-    public String constructCountQuery(DatabaseProperties dbProperties) {
-
+    /**
+     * sample query is like this -
+     SELECT * FROM (
+     SELECT ROW_NUMBER() OVER(ORDER BY column1) LINENUM, column1, column2
+     FROM MyTable
+     ORDER BY column1
+     )
+     WHERE LINENUM BETWEEN 100 AND 200;
+     * @param dbProperties
+     * @param split
+     * @return
+     */
+    private String getQueryForOracle(DatabaseProperties dbProperties, JDBCSplit split){
+        String[] fieldNames = dbProperties.getFieldsNames();
         StringBuilder query = new StringBuilder();
-        query.append("SELECT COUNT(");
-        if(dbProperties.getFieldsNames()!=null){
-            query.append(dbProperties.getFieldsNames()[0]);
-        } else {
-             query.append("*");
+
+        query.append("SELECT * FROM ( SELECT ROW_NUMBER() OVER( ORDER BY ");
+        query.append(fieldNames[0]);
+        query.append(" ) LINENUM, ");
+        for (int i = 0; i < fieldNames.length; i++) {
+            query.append(fieldNames[i]);
+            if (i != fieldNames.length - 1) {
+                query.append(", ");
+            }
         }
-        query.append(") FROM ").append(dbProperties.getTableName());
+        query.append(" FROM ");
+        query.append(dbProperties.getTableName());
+        query.append(" ORDER BY ");
+        query.append(fieldNames[0]);
+        query.append(" )");
+        query.append(" WHERE LINENUM BETWEEN ");
+        query.append(split.getStart());
+        query.append(" AND ");
+        query.append(split.getEnd());
         return query.toString();
     }
 }

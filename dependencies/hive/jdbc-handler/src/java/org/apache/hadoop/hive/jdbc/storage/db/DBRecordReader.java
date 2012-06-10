@@ -1,6 +1,7 @@
 package org.apache.hadoop.hive.jdbc.storage.db;
 
 
+import org.apache.hadoop.hive.jdbc.storage.exception.UnsupportedDatabaseException;
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.ByteWritable;
 import org.apache.hadoop.io.DoubleWritable;
@@ -35,17 +36,27 @@ public class DBRecordReader implements RecordReader<LongWritable, MapWritable> {
     public DBRecordReader(JDBCSplit split, JobConf job, DatabaseProperties dbProperties) {
         DBManager dbManager = new DBManager();
         dbManager.configureDB(dbProperties);
+        DatabaseType databaseType = null;
         try {
             this.split = split;
             connection = dbManager.getConnection();
             connection.setAutoCommit(false);
             statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            if(dbProperties.getConnectionUrl()!=null){
+                String databaseName = dbProperties.getConnectionUrl().split(":")[1];
+                databaseType =  dbManager.getDatabaseType(databaseName);
+            }else {
+                databaseType = dbManager.getDatabaseName(connection);
+            }
             results = statement.executeQuery(
-                    new QueryConstructor().constructSelectQueryForReading(dbProperties,split));
+                    new QueryConstructor().constructSelectQueryForReading(dbProperties,split,
+                                                                          databaseType));
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (UnsupportedDatabaseException e) {
             e.printStackTrace();
         }
     }

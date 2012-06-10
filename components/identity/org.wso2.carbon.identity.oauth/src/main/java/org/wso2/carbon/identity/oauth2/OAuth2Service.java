@@ -21,6 +21,7 @@ package org.wso2.carbon.identity.oauth2;
 import com.google.gdata.client.authn.oauth.OAuthException;
 import org.apache.amber.oauth2.as.issuer.MD5Generator;
 import org.apache.amber.oauth2.as.issuer.OAuthIssuerImpl;
+import org.apache.amber.oauth2.common.error.OAuthError;
 import org.apache.amber.oauth2.common.message.types.ResponseType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,9 +31,8 @@ import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
 import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
 import org.wso2.carbon.identity.oauth.dao.OAuthAppDAO;
 import org.wso2.carbon.identity.oauth2.dao.TokenMgtDAO;
-import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeReqDTO;
-import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
-import org.wso2.carbon.identity.oauth2.dto.OAuth2ClientValidationResponseDTO;
+import org.wso2.carbon.identity.oauth2.dto.*;
+import org.wso2.carbon.identity.oauth2.util.OAuth2Constants;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 import java.sql.Timestamp;
@@ -63,11 +63,11 @@ public class OAuth2Service extends AbstractAdmin {
                     ", Client ID : " + authorizeDTO.getConsumerKey() +
                     ", Authorization Response Type : " + authorizeDTO.getResponseType() +
                     ", Requested callback URI : " + authorizeDTO.getCallbackUrl() +
-                    ", Requested Scope : " + authorizeDTO.getScopes());
+                    ", Requested Scope : " + OAuth2Util.buildScopeString(authorizeDTO.getScopes()));
         }
 
         OAuth2AuthorizeRespDTO respDTO = new OAuth2AuthorizeRespDTO();
-        boolean isAuthenticated = false;
+        boolean isAuthenticated;
 
         // authenticate user
         try {
@@ -117,8 +117,9 @@ public class OAuth2Service extends AbstractAdmin {
                 // Default Validity Period
                 long validityPeriod = 60 * 60;
 
-                tokenMgtDAO.storeAccessToken(accessToken, authorizeDTO.getConsumerKey(),
-                        authorizeDTO.getUsername(), timestamp, validityPeriod, scopeString, "Active");
+                tokenMgtDAO.storeAccessToken(accessToken, null, authorizeDTO.getConsumerKey(),
+                        authorizeDTO.getUsername(), timestamp, validityPeriod, scopeString,
+                        OAuth2Constants.TokenStates.TOKEN_STATE_ACTIVE);
 
                 if (log.isDebugEnabled()) {
                     log.debug("Issued AccessToken Code to user : " +
@@ -143,19 +144,20 @@ public class OAuth2Service extends AbstractAdmin {
 
     /**
      * Check Whether the provided client_id and the callback URL are valid.
-     * @param clientId client_id available in the request, Not null parameter.
+     *
+     * @param clientId    client_id available in the request, Not null parameter.
      * @param callbackURI callback_uri available in the request, can be null.
      * @return <code>OAuth2ClientValidationResponseDTO</code> bean with validity information,
-     * callback, App Name, Error Code and Error Message when appropriate.
+     *         callback, App Name, Error Code and Error Message when appropriate.
      */
     public OAuth2ClientValidationResponseDTO validateClientInfo(String clientId, String callbackURI) {
         OAuth2ClientValidationResponseDTO validationResponseDTO = new OAuth2ClientValidationResponseDTO();
-        
-        if(log.isDebugEnabled()){
-            log.debug("Validate Client information request for client_id : " + clientId + 
+
+        if (log.isDebugEnabled()) {
+            log.debug("Validate Client information request for client_id : " + clientId +
                     " and callback_uri " + callbackURI);
         }
-        
+
         try {
             OAuthAppDAO oAuthAppDAO = new OAuthAppDAO();
             OAuthAppDO appDO = oAuthAppDAO.getAppInformation(clientId);
@@ -176,10 +178,10 @@ public class OAuth2Service extends AbstractAdmin {
                 validationResponseDTO.setApplicationName(appDO.getApplicationName());
                 return validationResponseDTO;
             }
-            
-            if(log.isDebugEnabled()){
+
+            if (log.isDebugEnabled()) {
                 log.debug("Registered App found for the given Client Id : " + clientId + " ,App Name : " +
-                appDO.getApplicationName() + ", Callback URL : " + appDO.getCallbackUrl());
+                        appDO.getApplicationName() + ", Callback URL : " + appDO.getCallbackUrl());
             }
 
             // Valid Client with a callback url in the request. Check whether they are equal.
@@ -201,6 +203,38 @@ public class OAuth2Service extends AbstractAdmin {
             validationResponseDTO.setErrorCode(OAuth2ErrorCodes.SERVER_ERROR);
             validationResponseDTO.setErrorMsg("Error when processing the authorization request.");
             return validationResponseDTO;
+        }
+    }
+
+    public OAuth2AccessTokenRespDTO issueAccessToken(OAuth2AccessTokenReqDTO tokenReqDTO) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Access Token Request Received with the Client Id : " + tokenReqDTO.getClientId() +
+                    ", Grant Type : " + tokenReqDTO.getGrantType());
+        }
+
+        OAuth2AccessTokenRespDTO tokenRespDTO = new OAuth2AccessTokenRespDTO();
+
+        try {
+            boolean authenticateClient = OAuth2Util.authenticateClient(
+                    tokenReqDTO.getClientId(), tokenReqDTO.getClientSecret());
+            if (!authenticateClient) {
+                tokenRespDTO.setError(true);
+                tokenRespDTO.setErrorCode(OAuthError.TokenResponse.INVALID_CLIENT);
+                tokenRespDTO.setErrorMsg("Client Authentication Failed. " +
+                        "Provided client id or client secret is incorrect.");
+                return tokenRespDTO;
+            }
+
+            AccessTokenIssuer tokenIssuer = new AccessTokenIssuer();
+            return tokenIssuer.issue(tokenReqDTO);
+
+        } catch (Exception e) {
+            log.error("Error when issuing the access token. ", e);
+            tokenRespDTO.setError(false);
+            tokenRespDTO.setErrorCode(OAuth2ErrorCodes.SERVER_ERROR);
+            tokenRespDTO.setErrorMsg("Error when issuing the access token");
+            return tokenRespDTO;
         }
     }
 

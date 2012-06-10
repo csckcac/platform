@@ -22,6 +22,8 @@ import com.google.gdata.client.authn.oauth.OAuthException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
+import org.wso2.carbon.identity.oauth.IdentityOAuthAdminException;
+import org.wso2.carbon.identity.oauth.dao.OAuthConsumerDAO;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 /**
@@ -57,5 +59,37 @@ public class OAuth2Util {
             log.error("Error when authenticating the user for OAuth Authorization.", e);
             throw new OAuthException("Error when authenticating the user for OAuth Authorization.", e);
         }
+    }
+
+    /**
+     * Authenticate the OAuth Consumer
+     * @param clientId Consumer Key/Id
+     * @param clientSecretProvided Consumer Secret issued during the time of registration
+     * @return true, if the authentication is successful, false otherwise.
+     * @throws IdentityOAuthAdminException Error when looking up the credentials from the database
+     */
+    public static boolean authenticateClient(String clientId, String clientSecretProvided) throws IdentityOAuthAdminException {
+        OAuthConsumerDAO oAuthConsumerDAO = new OAuthConsumerDAO();
+        String clientSecret = oAuthConsumerDAO.getOAuthConsumerSecret(clientId);
+
+        if (clientSecret == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Provided Client ID : " + clientId + "is not valid.");
+            }
+            return false;
+        }
+
+        if (!clientSecret.equals(clientSecretProvided)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Provided the Client ID : " + clientId +" and Client Secret do not match with the issued credentials.");
+            }
+            return false;
+        }
+
+        if(log.isDebugEnabled()){
+            log.debug("Successfully authenticated the client with client id : " + clientId);
+        }
+
+        return true;
     }
 }

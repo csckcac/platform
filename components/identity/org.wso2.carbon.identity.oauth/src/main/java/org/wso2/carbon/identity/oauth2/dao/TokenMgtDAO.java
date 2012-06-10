@@ -25,10 +25,7 @@ import org.wso2.carbon.identity.core.persistence.JDBCPersistenceManager;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 
 /**
  * Data Access Layer functionality for Token management in OAuth 2.0 implementation. This includes
@@ -64,7 +61,7 @@ public class TokenMgtDAO {
         }
     }
 
-    public void storeAccessToken(String accessToken, String consumerKey, String authzUser,
+    public void storeAccessToken(String accessToken, String refreshToken, String consumerKey, String authzUser,
                                         Timestamp timeStamp, long validityPeriod, String scopeString, String tokenState) throws IdentityOAuth2Exception {
         Connection connection = null;
         PreparedStatement prepStmt = null;
@@ -72,12 +69,13 @@ public class TokenMgtDAO {
             connection = JDBCPersistenceManager.getInstance().getDBConnection();
             prepStmt = connection.prepareStatement(SQLQueries.STORE_ACCESS_TOKEN);
             prepStmt.setString(1, accessToken);
-            prepStmt.setString(2, consumerKey);
-            prepStmt.setString(3, authzUser);
-            prepStmt.setTimestamp(4, timeStamp);
-            prepStmt.setLong(5, validityPeriod);
-            prepStmt.setString(6, scopeString);
-            prepStmt.setString(7, tokenState);
+            prepStmt.setString(2, refreshToken);
+            prepStmt.setString(3, consumerKey);
+            prepStmt.setString(4, authzUser);
+            prepStmt.setTimestamp(5, timeStamp);
+            prepStmt.setLong(6, validityPeriod);
+            prepStmt.setString(7, scopeString);
+            prepStmt.setString(8, tokenState);
             prepStmt.execute();
             connection.commit();
         } catch (IdentityException e) {
@@ -88,6 +86,67 @@ public class TokenMgtDAO {
             log.error("Error when executing the SQL : " + SQLQueries.STORE_ACCESS_TOKEN);
             log.error(e.getMessage(), e);
             throw new IdentityOAuth2Exception("Error when storing the access code for consumer key : " + consumerKey);
+        } finally {
+            IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
+        }
+    }
+
+    public String[] validateAuthorizationCode(String consumerKey, String authorizationKey) throws IdentityOAuth2Exception {
+        String callbackURI = null;
+        String authorizedUser = null;
+        String scope =  null;
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+        ResultSet resultSet;
+
+        try {
+            connection = JDBCPersistenceManager.getInstance().getDBConnection();
+            prepStmt = connection.prepareStatement(SQLQueries.VALIDATE_AUTHZ_CODE);
+            prepStmt.setString(1, consumerKey);
+            prepStmt.setString(2, authorizationKey);
+            resultSet = prepStmt.executeQuery();
+
+            if (resultSet.next()) {
+                callbackURI = resultSet.getString(1);
+                authorizedUser = resultSet.getString(2);
+                scope = resultSet.getString(3);
+            }
+
+        } catch (IdentityException e) {
+            String errorMsg = "Error when getting an Identity Persistence Store instance.";
+            log.error(errorMsg, e);
+            throw new IdentityOAuth2Exception(errorMsg, e);
+        } catch (SQLException e) {
+            log.error("Error when executing the SQL : " + SQLQueries.VALIDATE_AUTHZ_CODE);
+            log.error(e.getMessage(), e);
+            throw new IdentityOAuth2Exception("Error when validating the authorization code", e);
+        } finally {
+            IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
+        }
+
+        return new String[]{callbackURI, authorizedUser, scope};
+    }
+
+    public void cleanUpAuthzCode(String authzCode) throws IdentityOAuth2Exception {
+        Connection connection = null;
+        PreparedStatement prepStmt = null;
+
+        try {
+            connection = JDBCPersistenceManager.getInstance().getDBConnection();
+            prepStmt = connection.prepareStatement(SQLQueries.REMOVE_AUTHZ_CODE);
+            prepStmt.setString(1, authzCode);
+
+            prepStmt.execute();
+            connection.commit();
+
+        }  catch (IdentityException e) {
+            String errorMsg = "Error when getting an Identity Persistence Store instance.";
+            log.error(errorMsg, e);
+            throw new IdentityOAuth2Exception(errorMsg, e);
+        } catch (SQLException e) {
+            log.error("Error when executing the SQL : " + SQLQueries.REMOVE_AUTHZ_CODE);
+            log.error(e.getMessage(), e);
+            throw new IdentityOAuth2Exception("Error when cleaning up the authorization code", e);
         } finally {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }

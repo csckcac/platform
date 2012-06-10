@@ -16,15 +16,10 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth.common;
+package org.wso2.carbon.identity.oauth2.util;
 
-public class OAuth2ErrorCodes {
-    public static final String UNAUTHORIZED_CLIENT = "unauthorized_client";
-    public static final String SERVER_ERROR = "server_error";
-    public static final String ACCESS_DENIED = "access_denied";
-    public static final String INVALID_CALLBACK = "invalid_callback";
-    public static final String INVALID_REQUEST = "invalid_request";
-    public static final String INVALID_OAUTH_URL = "invalid_request_url";
-    public static final String INVALID_CLIENT = "invalid_client";
-    public static final String INVALID_GRANT = "invalid_grant";
+public class OAuth2Constants {
+    public class TokenStates {
+        public final static String TOKEN_STATE_ACTIVE = "Active";
+    }
 }

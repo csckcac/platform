@@ -17,7 +17,7 @@
  -->
 <component xmlns="http://products.wso2.org/carbon">
 	<menus>
-		<menu>         
+		<menu>
             <id>oauth_menu</id>
             <i18n-key>identity.oauth</i18n-key>
             <i18n-bundle>org.wso2.carbon.identity.oauth.ui.i18n.Resources</i18n-bundle>

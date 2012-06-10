@@ -145,6 +145,11 @@
 
                                     document.oauthsign.submit();
                                 }
+
+                                function deny(){
+                                    document.getElementsByName("denied")[0].value = 'true';
+                                    document.oauthsign.submit();
+                                }
                             </script>
 
                             <table style="border:none !important;width: 100%" class="styledLeft">
@@ -166,6 +171,7 @@
                                        value="<%=URLEncoder.encode(forwardPage,"UTF-8")%>"/>
                                 <input type="hidden" name="css"
                                        value="<%=URLEncoder.encode(cssLocation,"UTF-8")%>"/>
+                                <input type="hidden" name="denied" id="denied" value="false"/>
                                 <%
                                     }
                                 %>
@@ -192,14 +198,8 @@
                                             <input name="adduser" type="button" class="button"
                                                    value="<fmt:message key='allow'/>"
                                                    onclick="validate();"/>
-                                            <%
-                                                String forwardUrl = "../../carbon/admin/index.jsp";
-                                                if (forwardPage != null) {
-                                                    forwardUrl = forwardPage;
-                                                }
-                                            %>
                                             <input type="button" class="button"
-                                                   onclick="javascript:location.href='<%=forwardUrl%>'"
+                                                   onclick="deny();"
                                                    value="<fmt:message key='deny'/>"/>
                                         </td>
                                     </tr>

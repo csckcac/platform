@@ -16,7 +16,7 @@
 *under the License.
 */
 
-package org.wso2.carbon.identity.oauth.ui;
+package org.wso2.carbon.identity.oauth.ui.endpoints;
 
 import org.apache.amber.oauth2.as.request.OAuthAuthzRequest;
 import org.apache.amber.oauth2.as.response.OAuthASResponse;
@@ -29,6 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
+import org.wso2.carbon.identity.oauth.ui.OAuth2Parameters;
+import org.wso2.carbon.identity.oauth.ui.OAuthConstants;
 import org.wso2.carbon.identity.oauth.ui.client.OAuth2ServiceClient;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AuthorizeReqDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2AuthorizeRespDTO;
@@ -46,9 +48,9 @@ import java.rmi.RemoteException;
 /**
  * This servlet handles the authorization endpoint and token endpoint.
  */
-public class OAuth2Servlet extends HttpServlet {
+public class OAuth2AuthzEndpoint extends HttpServlet {
 
-    private static final Log log = LogFactory.getLog(OAuth2Servlet.class);
+    private static final Log log = LogFactory.getLog(OAuth2AuthzEndpoint.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -63,6 +65,13 @@ public class OAuth2Servlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            // if the user has denied the authorization.
+            if("true".equals(req.getParameter("denied"))) {
+                String redirectURL = handleAuthzDenial(req, resp);
+                resp.sendRedirect(redirectURL);
+                return;
+            }
+
             // requests coming from the login page.
             if (req.getParameter("oauth_user_name") != null && req.getParameter("oauth_user_password") != null) {
                 String redirectURL = handleResourceOwnerAuthorization(req, resp);
@@ -75,6 +84,8 @@ public class OAuth2Servlet extends HttpServlet {
                 resp.sendRedirect(redirectURL);
                 return;
             }
+
+            // requests coming for
 
             else {
                 HttpSession session = req.getSession();
@@ -241,5 +252,16 @@ public class OAuth2Servlet extends HttpServlet {
             log.error("Error when invoking the OAuth2Service for client validation.");
             throw new OAuthSystemException(e.getMessage(), e);
         }
+    }
+
+    private String handleAuthzDenial(HttpServletRequest req, HttpServletResponse resp) throws OAuthSystemException {
+        OAuth2Parameters oauth2Params = (OAuth2Parameters) req.getSession().getAttribute(
+                OAuthConstants.OAUTH2_PARAMS);
+        OAuthProblemException oauthException = OAuthProblemException.error(
+                OAuth2ErrorCodes.ACCESS_DENIED, "User has denied Authorization.");
+        OAuthResponse response = OAuthASResponse.errorResponse(HttpServletResponse.SC_FOUND)
+                .error(oauthException)
+                .location(oauth2Params.getRedirectURI()).buildQueryMessage();
+        return response.getLocationUri();
     }
 }

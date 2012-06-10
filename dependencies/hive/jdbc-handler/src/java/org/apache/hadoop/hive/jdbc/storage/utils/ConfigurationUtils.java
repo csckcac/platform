@@ -55,6 +55,9 @@ public class ConfigurationUtils {
             } else {
                 //assign the meta table name
                 tableName = configuration.get(Constants.META_TABLE_NAME);
+                if(tableName.contains("default.")){
+                    tableName = tableName.replace("default.","");
+                }
             }
         }
         return tableName;
@@ -65,6 +68,9 @@ public class ConfigurationUtils {
         if (inputTableName == null) {
             //assign the meta table name
             inputTableName = configuration.get(Constants.META_TABLE_NAME);
+            if(inputTableName.contains("default.")){
+                inputTableName = inputTableName.replace("default.","");
+            }
         }
         return inputTableName.trim();
     }

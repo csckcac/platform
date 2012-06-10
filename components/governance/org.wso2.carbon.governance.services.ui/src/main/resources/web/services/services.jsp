@@ -106,9 +106,13 @@
 <%
     }
 } catch (Exception e) {
+        // HTML encoding the '<' and the '>'
+        String errMsg = e.getMessage().replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("'","&rsquo;");
+        // HTML encoding the '\'(backslash) on the pop-up
+        errMsg = errMsg.replaceAll("\\\\","\\\\\\\\");
 %>
 <script type="text/javascript">
-    CARBON.showErrorDialog('<%=e.getMessage()%>', function() {
+    CARBON.showErrorDialog('<%=errMsg%>', function() {
        window.history.back();
     });
 //    window.location = "../services/services.jsp?region=region3&item=governance_services_menu&wsdlError=" + encodeURIComponent("<%=e.getMessage()%>");

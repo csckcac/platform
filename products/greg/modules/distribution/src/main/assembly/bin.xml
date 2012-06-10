@@ -88,6 +88,7 @@
                <!-- <include>**/services-config.xml</include>-->
                <!--<include>**/process-config.xml</include>-->
                <!--<include>**/services-config.xsd</include>-->
+               <include>**/local.xsd</include>
 	       <include>**/lifecycle-config.xsd</include>
                <include>**/service-ui-config.xsd</include>
 	       <include>**/notifications-email-verification.xml</include>

@@ -27,11 +27,8 @@
         import="org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property" %>
 <%@ page
         import="org.wso2.carbon.governance.custom.lifecycles.checklist.ui.clients.LifecycleServiceClient" %>
-<%@ page
-        import="org.wso2.carbon.governance.custom.lifecycles.checklist.ui.clients.UserAdminServiceClient" %>
 <%@ page import="org.wso2.carbon.registry.common.utils.RegistryUtil" %>
 <%@ page import="org.wso2.carbon.registry.core.RegistryConstants" %>
-<%@ page import="org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="java.util.List" %>
@@ -143,16 +140,13 @@
         return;
 
     LifecycleBean bean;
-    FlaggedName[] roleNames;
+    String[] roleNames;
     try {
         LifecycleServiceClient lifecycleServiceClient = new LifecycleServiceClient(config, session);
-        UserAdminServiceClient userMgtServiceClient = new UserAdminServiceClient(config, session);
 
         bean = lifecycleServiceClient.getLifecycleBean(path);
-        roleNames = userMgtServiceClient.getRoleListOfUser((String) session.getAttribute("logged-user"));
     } catch (Exception e) {
         bean = null;
-        roleNames = null;
     }
 
     if (bean != null) {
@@ -160,6 +154,7 @@
             return;
         }
         Property[] lifecycleProps = bean.getLifecycleProperties();
+        roleNames =  bean.getRolesOfUser();
         if (lifecycleProps == null) {
             lifecycleProps = new Property[0];
         }
@@ -325,10 +320,10 @@
                 String[] propValues = property.getValues();
 
                 if(propName.startsWith(prefix) && propName.endsWith(permissionSuffix)){
-                    for (FlaggedName role : roleNames) {
+                    for (String role : roleNames) {
                         for (String propValue : propValues) {
                             String key = propName.replace(prefix,"").replace(permissionSuffix,"");
-                            if(role.getSelected() && propValue.equals(role.getItemName())){
+                            if(propValue.equals(role)){
                                 permissionList.add(key);
                             }else if(propValue.startsWith(prefix) && propValue.endsWith(permissionSuffix)){
                                 permissionList.add(key);

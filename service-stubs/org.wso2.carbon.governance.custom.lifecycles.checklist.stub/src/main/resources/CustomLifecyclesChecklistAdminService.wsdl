@@ -32,6 +32,7 @@
                     <xs:element minOccurs="0" name="mounted" type="xs:boolean" />
                     <xs:element minOccurs="0" name="pathWithVersion" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="putAllowed" type="xs:boolean" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="rolesOfUser" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="showAddDelete" type="xs:boolean" />
                     <xs:element minOccurs="0" name="versionView" type="xs:boolean" />
                 </xs:sequence>
@@ -334,44 +335,44 @@
         </wsdl:operation>
         <wsdl:operation name="invokeAspectWithParams">
             <http:operation location="invokeAspectWithParams" />
-            <wsdl:input> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="getLifecycleBean"> 
-            <http:operation location="getLifecycleBean" /> 
-            <wsdl:input> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:input> 
-            <wsdl:output> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:output> 
-        </wsdl:operation> 
-        <wsdl:operation name="addAspect"> 
-            <http:operation location="addAspect" /> 
-            <wsdl:input> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="getAllDependencies"> 
-            <http:operation location="getAllDependencies" /> 
-            <wsdl:input> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:input> 
-            <wsdl:output> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:output> 
-        </wsdl:operation> 
-    </wsdl:binding> 
-    <wsdl:service name="CustomLifecyclesChecklistAdminService"> 
-        <wsdl:port name="CustomLifecyclesChecklistAdminServiceHttpsSoap11Endpoint" binding="ns:CustomLifecyclesChecklistAdminServiceSoap11Binding"> 
-            <soap:address location="https://10.100.0.32:9443/services/CustomLifecyclesChecklistAdminService.CustomLifecyclesChecklistAdminServiceHttpsSoap11Endpoint/" /> 
-        </wsdl:port> 
-        <wsdl:port name="CustomLifecyclesChecklistAdminServiceHttpsSoap12Endpoint" binding="ns:CustomLifecyclesChecklistAdminServiceSoap12Binding"> 
-            <soap12:address location="https://10.100.0.32:9443/services/CustomLifecyclesChecklistAdminService.CustomLifecyclesChecklistAdminServiceHttpsSoap12Endpoint/" /> 
-        </wsdl:port> 
-        <wsdl:port name="CustomLifecyclesChecklistAdminServiceHttpsEndpoint" binding="ns:CustomLifecyclesChecklistAdminServiceHttpBinding"> 
-            <http:address location="https://10.100.0.32:9443/services/CustomLifecyclesChecklistAdminService.CustomLifecyclesChecklistAdminServiceHttpsEndpoint/" /> 
-        </wsdl:port> 
-    </wsdl:service> 
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getLifecycleBean">
+            <http:operation location="getLifecycleBean" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addAspect">
+            <http:operation location="addAspect" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllDependencies">
+            <http:operation location="getAllDependencies" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CustomLifecyclesChecklistAdminService">
+        <wsdl:port name="CustomLifecyclesChecklistAdminServiceHttpsSoap11Endpoint" binding="ns:CustomLifecyclesChecklistAdminServiceSoap11Binding">
+            <soap:address location="https://10.100.0.32:9443/services/CustomLifecyclesChecklistAdminService.CustomLifecyclesChecklistAdminServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="CustomLifecyclesChecklistAdminServiceHttpsSoap12Endpoint" binding="ns:CustomLifecyclesChecklistAdminServiceSoap12Binding">
+            <soap12:address location="https://10.100.0.32:9443/services/CustomLifecyclesChecklistAdminService.CustomLifecyclesChecklistAdminServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="CustomLifecyclesChecklistAdminServiceHttpsEndpoint" binding="ns:CustomLifecyclesChecklistAdminServiceHttpBinding">
+            <http:address location="https://10.100.0.32:9443/services/CustomLifecyclesChecklistAdminService.CustomLifecyclesChecklistAdminServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
 </wsdl:definitions>

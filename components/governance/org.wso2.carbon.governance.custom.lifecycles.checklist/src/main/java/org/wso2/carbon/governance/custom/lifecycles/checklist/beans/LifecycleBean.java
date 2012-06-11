@@ -45,6 +45,16 @@ public class LifecycleBean {
 
     private String mediaType;
 
+    private String[] rolesOfUser;
+
+    public String[] getRolesOfUser() {
+        return rolesOfUser;
+    }
+
+    public void setRolesOfUser(String[] rolesOfUser) {
+        this.rolesOfUser = rolesOfUser;
+    }
+
     public boolean isLoggedIn() {
         return loggedIn;
     }

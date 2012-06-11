@@ -25,6 +25,7 @@ import org.wso2.carbon.registry.common.utils.UserUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
+import org.wso2.carbon.user.core.UserRealm;
 
 import java.util.*;
 
@@ -39,6 +40,7 @@ public class LifecycleBeanPopulator {
 
         LifecycleBean lifecycleBean;
         ResourcePath resourcePath = new ResourcePath(path);
+        UserRealm userRealm;
 
         try {
             Resource resource = registry.get(path);
@@ -148,6 +150,12 @@ public class LifecycleBeanPopulator {
                         UserUtil.isPutAllowed(registry.getUserName(), resourcePath.getPath(), registry));
                 lifecycleBean.setLoggedIn(!RegistryConstants.ANONYMOUS_USER.equals(registry.getUserName()));
                 lifecycleBean.setShowAddDelete(true);
+
+//                This is to add the roles of the current user. We are using this to enable disable actions in UI
+                userRealm = registry.getUserRealm();
+                String[] rolesList = userRealm.getUserStoreManager().getRoleListOfUser(registry.getUserName());
+                lifecycleBean.setRolesOfUser(rolesList);
+
                 resource.discard();
             }
             else {

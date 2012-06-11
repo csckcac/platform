@@ -60,6 +60,9 @@
         {
           for (UserFieldDTO field : fieldDTOs) {
             String value = request.getParameter(field.getClaimUri());
+            if(value == null){
+                value = "";
+            }
             field.setFieldValue(value);   
           }
         }

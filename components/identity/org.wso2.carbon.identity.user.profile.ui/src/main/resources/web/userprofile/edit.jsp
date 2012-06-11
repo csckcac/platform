@@ -215,8 +215,8 @@
 		                    %>
 		                    <tr>
 		                        <td class="leftCol-small"><%=userFields[i].getDisplayName()%> <%
-     if (userFields[i].getRequired()) {
- %>
+                                    if (userFields[i].getRequired()) {
+                                    %>
 		                            &nbsp;<span class="required">*</span>
 		                            <%
 		                                }
@@ -224,12 +224,20 @@
 		                        </td>
 		                        <%
 		                            if (userFields[i].getFieldValue() != null) {
-		                                                if (!readOnlyUserStore) {
-		                        %>
+                                    if (!readOnlyUserStore) {
+
+                                        if(!"http://wso2.org/claims/accountStatus".equals(userFields[i].getClaimUri())){
+		                         %>
 		                                <td><input id="<%=userFields[i].getClaimUri()%>" name="<%=userFields[i].getClaimUri()%>"
-		                                   class="text-box-big" type="text" value="<%=userFields[i].getFieldValue()%>"></td>
+		                                   class="text-box-big" type="text" value="<%=userFields[i].getFieldValue()%>"  ></td>
 		                         <%
-		                             } else {
+                                        } else {
+                                 %>
+		                                <td><input id="<%=userFields[i].getClaimUri()%>" name="<%=userFields[i].getClaimUri()%>"
+		                                   class="text-box-big" type="checkbox" value="locked" <%if("locked".equals(userFields[i].getFieldValue())){%> checked="checked" <%}%> ></td>
+                                 <%
+                                        }
+                                    } else {
 		                         %>
 		                              <td><%=CharacterEncoder.getSafeText(userFields[i].getFieldValue())%></td>
 		                          <%
@@ -238,11 +246,19 @@
 		                          %>
 		                            <%
 		                                if (!readOnlyUserStore) {
+                                            if(!"http://wso2.org/claims/accountStatus".equals(userFields[i].getClaimUri())){
 		                            %>
 		                                 <td><input id="<%=userFields[i].getClaimUri()%>" name="<%=userFields[i].getClaimUri()%>"
-		                                   class="text-box-big" type="text"></td>
+		                                   class="text-box-big" type="text" ></td>
 		                            <%
-		                                }
+                                                } else {
+                                    %>
+ 		                                 <td><input id="<%=userFields[i].getClaimUri()%>" name="<%=userFields[i].getClaimUri()%>"
+		                                   class="text-box-big" type="checkbox" value="locked" ></td>
+
+                                    <%
+                                                }
+                                            }
 		                                                }
 		                            %>
 		                    </tr>

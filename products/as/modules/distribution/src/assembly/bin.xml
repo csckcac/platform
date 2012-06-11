@@ -77,22 +77,22 @@
 		 <!--  copying mashup samples -->
         <fileSet>
             <directory>../samples/mashupSamples/RdfDocQueryService</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/RdfDocQueryService</outputDirectory>
         </fileSet>
         
         <fileSet>
             <directory>../samples/mashupSamples/SparqlEndPointService</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/SparqlEndPointService</outputDirectory>
         </fileSet>
         
         <fileSet>
             <directory>../samples/mashupSamples/digit2image</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/digit2image</outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../samples/mashupSamples/exchangeRate</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/exchangeRate</outputDirectory>
         </fileSet>
 
         <!--fileSet>
@@ -107,42 +107,42 @@
 
         <fileSet>
             <directory>../samples/mashupSamples/storexml</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/storexml</outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../samples/mashupSamples/sudoku</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/sudoku</outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../samples/mashupSamples/tomatoTube</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/tomatoTube</outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../samples/mashupSamples/TwitterMap</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/TwitterMap</outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../samples/mashupSamples/upgradeChecker</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/upgradeChecker</outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../samples/mashupSamples/yahooGeoCode</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/yahooGeoCode</outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../samples/mashupSamples/gmapsAPIKey</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/gmapsAPIKey</outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>../samples/mashupSamples/version</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jsservices/admin</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples/version</outputDirectory>
             <excludes>
                 <exclude>**/version.xml</exclude>
             </excludes>

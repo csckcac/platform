@@ -25,4 +25,7 @@
     </service>
     <parameter name="adminService" locked="true">true</parameter>
     <parameter name="hiddenService" locked="true">true</parameter>
+    <parameter name="AuthorizationAction" locked="false">
+        /permission/admin/login
+    </parameter>
 </serviceGroup>

@@ -1,4 +1,3 @@
-package org.wso2.automation.common.test.greg.governance;
 /*
 *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -16,6 +15,8 @@ package org.wso2.automation.common.test.greg.governance;
 *specific language governing permissions and limitations
 *under the License.
 */
+
+package org.wso2.automation.common.test.greg.governance;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
@@ -62,7 +63,7 @@ public class WSDLManagerAPITest {
         WSRegistryServiceClient registryWS = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         Registry governance = new RegistryProvider().getGovernance(registryWS, userId);
         wsdlManager = new WsdlManager(governance);
-//       endpointManager = new EndpointManager(governance);
+        endpointManager = new EndpointManager(governance);
         schemaManager = new SchemaManager(governance);
     }
 
@@ -77,7 +78,7 @@ public class WSDLManagerAPITest {
     }
 
     @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testNewWsdl"}, description = "Testing " +
-            "addWsdl API method", priority = 2)
+                                                                                        "addWsdl API method", priority = 2)
     public void testAddWsdl() throws GovernanceException {
         try {
 
@@ -88,7 +89,7 @@ public class WSDLManagerAPITest {
     }
 
     @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testAddWsdl"}, description = "Testing " +
-            "getAllWsdls API method", priority = 3)
+                                                                                        "getAllWsdls API method", priority = 3)
     public void testGetAllWsdl() throws GovernanceException {
         boolean isWsdlFound = false;
         try {
@@ -102,11 +103,11 @@ public class WSDLManagerAPITest {
             }
         }
         assertTrue(isWsdlFound, "Return object of getAllWsdls" +
-                " method doesn't have all information ");
+                                " method doesn't have all information ");
     }
 
     @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testAddWsdl"}, description = "Testing " +
-            "getWsdl API method", priority = 4)
+                                                                                        "getWsdl API method", priority = 4)
     public void testGetWsdl() throws GovernanceException {
         Wsdl localWsdlObj = null;
         for (Wsdl w : wsdlArray) {
@@ -125,7 +126,7 @@ public class WSDLManagerAPITest {
     }
 
     @Test(groups = {"wso2.greg.api"}, dependsOnMethods = {"testAddWsdl"}, description = "Testing " +
-            "getWsdl API method", priority = 5)
+                                                                                        "getWsdl API method", priority = 5)
     public void testUpdateWsdl() throws GovernanceException {
         String lcName = "ServiceLifeCycle";
         boolean isLCFound = false;
@@ -166,13 +167,13 @@ public class WSDLManagerAPITest {
     public void testAddWSDLContentWithName() throws GovernanceException, IOException {
         cleanWSDL();
         String wsdlFileLocation = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator
-                + "artifacts" + File.separator + "GREG" + File.separator + "wsdl" +File.separator +"Automated.wsdl";
+                                  + "artifacts" + File.separator + "GREG" + File.separator + "wsdl" + File.separator + "Automated.wsdl";
         try {
             Wsdl wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFileLocation).getBytes(), "AutomatedSample.wsdl");
             wsdlManager.addWsdl(wsdl);
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WsdlManager:newWsdl method " +
-                    "which have Inline wsdl content and wsdl Name" + e.getMessage());
+                                          "which have Inline wsdl content and wsdl Name" + e.getMessage());
         }
     }
 
@@ -180,7 +181,7 @@ public class WSDLManagerAPITest {
     public void testAddWSDLContentWithoutName() throws GovernanceException, IOException {
         cleanWSDL();
         String wsdlFileLocation = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator
-                + "artifacts" + File.separator + "GREG" + File.separator + "wsdl" +File.separator +"Automated.wsdl";
+                                  + "artifacts" + File.separator + "GREG" + File.separator + "wsdl" + File.separator + "Automated.wsdl";
         try {
             boolean isWSDLFound = false;
             Wsdl wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFileLocation).getBytes());
@@ -194,7 +195,7 @@ public class WSDLManagerAPITest {
             assertTrue(isWSDLFound, "WsdlManager:newWsdl method doesn't not execute with inline wsdl content");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WsdlManager:newWsdl method " +
-                    "which have Inline wsdl content" + e.getMessage());
+                                          "which have Inline wsdl content" + e.getMessage());
         }
     }
 
@@ -204,7 +205,7 @@ public class WSDLManagerAPITest {
             cleanWSDL();
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WsdlManager:removeWsdl method " +
-                    ":" + e.getMessage());
+                                          ":" + e.getMessage());
         }
     }
 
@@ -229,7 +230,7 @@ public class WSDLManagerAPITest {
             assertTrue(wsdlObj.getQName().getLocalPart().equalsIgnoreCase(wsdlName), "WSDL:getQName API method thrown error");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WSDL:getQName method " +
-                    ":" + e.getMessage());
+                                          ":" + e.getMessage());
         }
     }
 
@@ -240,14 +241,16 @@ public class WSDLManagerAPITest {
             assertTrue(wsdlObj.getUrl().equalsIgnoreCase(sampleWsdlURL), "WSDL:getQName API method thrown error");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WSDL:getQName method " +
-                    ":" + e.getMessage());
+                                          ":" + e.getMessage());
         }
     }
 
     //    https://wso2.org/jira/browse/CARBON-13305
-    @Test(groups = {"wso2.greg.api"}, description = "Testing attachEndpoint method in WSDL object", priority = 12)
+    @Test(groups = {"wso2.greg.api"}, description = "Testing attachEndpoint method in WSDL object",
+          priority = 12, enabled = false)
     public void testAttachEndpoint() throws GovernanceException {
         Endpoint endpoint = endpointManager.newEndpoint("http://localhost:9763/services/TestEndPointManager");
+        endpointManager.addEndpoint(endpoint);
         try {
             wsdlObj.attachEndpoint(endpoint);
         } catch (GovernanceException e) {
@@ -271,14 +274,14 @@ public class WSDLManagerAPITest {
         }
     }
 
-//https://wso2.org/jira/browse/CARBON-13308
-
-
-    @Test(groups = {"wso2.greg.api"}, description = "Testing attachSchema method in WSDL object", priority = 13)
+    //https://wso2.org/jira/browse/CARBON-13308
+    @Test(groups = {"wso2.greg.api"}, description = "Testing attachSchema method in WSDL object",
+          priority = 13, enabled = false)
     public void testAttachSchema() throws GovernanceException {
         Schema schema = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/carbon/platform/trunk/" +
-                "platform-integration/system-test-framework/core/org.wso2.automation.platform.core/" +
-                "src/main/resources/artifacts/GREG/schema/calculator.xsd");
+                                                "platform-integration/system-test-framework/core/org.wso2.automation.platform.core/" +
+                                                "src/main/resources/artifacts/GREG/schema/calculator.xsd");
+        schemaManager.addSchema(schema);
         try {
             wsdlObj.attachSchema(schema);
         } catch (GovernanceException e) {
@@ -286,7 +289,9 @@ public class WSDLManagerAPITest {
         }
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing GetAttachSchema method in WSDL object", priority = 14)
+    //https://wso2.org/jira/browse/CARBON-13308
+    @Test(groups = {"wso2.greg.api"}, description = "Testing GetAttachSchema method in WSDL object",
+          priority = 14, enabled = false)
     public void testGetAttachSchema() throws GovernanceException {
         boolean isSchemaFound = false;
         try {
@@ -299,11 +304,13 @@ public class WSDLManagerAPITest {
             assertTrue(isSchemaFound, "Error occurred while executing getAttachedSchemas API method with WSDL object.");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing getAttachedSchemas API " +
-                    "method with WSDL object" + e.getMessage());
+                                          "method with WSDL object" + e.getMessage());
         }
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing GetAttachSchema method in WSDL object", priority = 15)
+    //https://wso2.org/jira/browse/CARBON-13308
+    @Test(groups = {"wso2.greg.api"}, description = "Testing GetAttachSchema method in WSDL object",
+          priority = 15, enabled = false)
     public void testDetachSchema() throws GovernanceException {
         try {
             Schema[] schema = wsdlObj.getAttachedSchemas();
@@ -320,7 +327,7 @@ public class WSDLManagerAPITest {
             }
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing detachSchema API " +
-                    "method with WSDL object" + e.getMessage());
+                                          "method with WSDL object" + e.getMessage());
         }
     }
 
@@ -332,12 +339,12 @@ public class WSDLManagerAPITest {
                 if (w.getQName().getLocalPart().equalsIgnoreCase(wsdlName)) {
                     OMElement omElement = w.getWsdlElement();
                     assertTrue(omElement.getFirstElement().toString().contains("Do Not Call List Service"),
-                            "Error occurred while executing getWsdlElement API method with WSDL object");
+                               "Error occurred while executing getWsdlElement API method with WSDL object");
                 }
             }
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing getWsdlElement API " +
-                    "method with WSDL object" + e.getMessage());
+                                          "method with WSDL object" + e.getMessage());
         }
     }
 

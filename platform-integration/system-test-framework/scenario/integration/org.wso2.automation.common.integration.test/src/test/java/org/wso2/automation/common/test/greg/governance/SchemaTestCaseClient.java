@@ -53,7 +53,7 @@ public class SchemaTestCaseClient {
         governance = new RegistryProvider().getGovernance(registryWS, userId);
     }
 
-    @Test(groups = {"wso2.greg"}, priority = 1)
+    @Test(groups = {"wso2.greg"})
     public void testAddSchema() throws Exception {
         log.info("############## testAddSchema started ...###################");
         SchemaManager schemaManager = new SchemaManager(governance);
@@ -70,7 +70,7 @@ public class SchemaTestCaseClient {
 
         // change the target namespace and check
         String oldSchemaPath = newSchema.getPath();
-        Assert.assertEquals(oldSchemaPath, "/trunk/schemas/org/bar/purchasing/purchasing.xsd");
+        Assert.assertEquals(oldSchemaPath, "/trunk/schemas/org/wso2/ww2/schema_test/purchasing.xsd");
         Assert.assertTrue(governance.resourceExists("/trunk/schemas/org/bar/purchasing/purchasing.xsd"));
 
         OMElement schemaElement = newSchema.getSchemaElement();

@@ -54,11 +54,8 @@ import org.wso2.carbon.registry.core.Comment;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.rmi.RemoteException;
-import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;

@@ -34,10 +34,7 @@ import org.wso2.carbon.identity.user.registration.dto.OpenIDDTO;
 import org.wso2.carbon.identity.user.registration.dto.UserDTO;
 import org.wso2.carbon.identity.user.registration.dto.UserFieldDTO;
 import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.user.core.Permission;
-import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.UserStoreManager;
+import org.wso2.carbon.user.core.*;
 import org.wso2.carbon.user.core.claim.Claim;
 import org.wso2.carbon.user.mgt.UserMgtConstants;
 
@@ -73,6 +70,9 @@ public class UserRegistrationService {
         for (Claim claim : claims) {
             if (claim.getDisplayTag() != null
                     && !IdentityConstants.PPID_DISPLAY_VALUE.equals(claim.getDisplayTag())) {
+                if(UserCoreConstants.ClaimTypeURIs.ACCOUNT_STATUS.equals(claim.getClaimUri())){
+                    continue;
+                }
                 claimList.add(getUserFieldDTO(claim.getClaimUri(), claim.getDisplayTag(),
                         claim.isRequired(), claim.getDisplayOrder(), claim.getRegEx()));
             }

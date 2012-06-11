@@ -97,7 +97,7 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
 
             ServiceManager serviceManager = new ServiceManager(registry);
             Service service = serviceManager.newService(serviceElement);
-            String lifeCycleName = service.getAttribute("serviceLifecycle_lifecycleName");
+//            String lifeCycleName = service.getAttribute("serviceLifecycle_lifecycleName");
 
             if ("Edit".equals(operation)) {
                 // this is an edit operation, retrieve the old namespace and name
@@ -148,8 +148,9 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
                     newResource.setDescription(oldResource.getDescription());
                     registry.put(service.getPath(),newResource);
 
-                    Resource serviceResource = registry.get(service.getPath());
-                    String oldLifeCycleName = serviceResource.getProperty("registry.LC.name");
+//                    Resource serviceResource = registry.get(service.getPath());
+//                    String oldLifeCycleName = serviceResource.getProperty("registry.LC.name");
+/*
                     if (lifeCycleName == null) {
                         removeAspect(registry, service.getPath(), oldLifeCycleName);
                     } else {
@@ -164,6 +165,7 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
                             registry.associateAspect(service.getPath(), lifeCycleName);
                         }
                     }
+*/
                     return currentPath;
                 }
             }
@@ -179,9 +181,9 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
             }
 
             serviceManager.addService(service);
-            if (lifeCycleName != null) {
-                registry.associateAspect(service.getPath(), lifeCycleName);
-            }
+//            if (lifeCycleName != null) {
+//                registry.associateAspect(service.getPath(), lifeCycleName);
+//            }
 
         } catch (Exception e) {
             String msg =  "Unable to add service. ";

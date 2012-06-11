@@ -40,7 +40,7 @@ public class QueryTest {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, RegistryException {
-        int tenantId = new GregUserIDEvaluator().getTenantID();
+        int tenantId = 0; //Must be super admin to execute query
         registry = new GregRemoteRegistryProvider().getRegistry(tenantId);
         removeResource();
     }

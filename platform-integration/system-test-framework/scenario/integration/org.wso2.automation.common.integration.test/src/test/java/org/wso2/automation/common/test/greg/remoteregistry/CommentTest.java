@@ -48,7 +48,7 @@ public class CommentTest {
         int tenantId = new GregUserIDEvaluator().getTenantID();
         registry = new GregRemoteRegistryProvider().getRegistry(tenantId);
         //Tenant Details
-        UserInfo userInfo = UserListCsvReader.getUserInfo(4);
+        UserInfo userInfo = UserListCsvReader.getUserInfo(tenantId);
 
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
 

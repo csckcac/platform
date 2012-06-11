@@ -62,7 +62,7 @@ public class ContinuousOperations {
                 assertEquals(new String((byte[]) resource1.getContent()),
                         new String((byte[]) res1.getContent()), "File content is not matching");
                 registry.delete(path);
-                               assertTrue(registry.resourceExists(path), "Resource not found at the path");
+                assertFalse(registry.resourceExists(path), "Resource not found at the path");
                 res1.discard();
                 resource1.discard();
                 Thread.sleep(100);

@@ -1262,6 +1262,15 @@ public class APIStoreHostObject extends ScriptableObject {
         }
         return null;
     }
+    private static String getAppKey(Application app, String keyType) {
+        List<APIKey> apiKeys = app.getKeys();
+        for (APIKey key : apiKeys) {
+            if (keyType.equals(key.getType())) {
+                return key.getKey();
+            }
+        }
+        return null;
+    }
 
     public static NativeArray jsFunction_getAllSubscriptions(Context cx,
                                                           Scriptable thisObj, Object[] args, Function funObj)
@@ -1284,6 +1293,8 @@ public class APIStoreHostObject extends ScriptableObject {
                 NativeObject appObj = new NativeObject();
                 appObj.put("id", appObj, subscribedAPI.getApplication().getId());
                 appObj.put("name", appObj, subscribedAPI.getApplication().getName());
+                appObj.put("prodKey", appObj, getAppKey(subscribedAPI.getApplication(), APIConstants.API_KEY_TYPE_PRODUCTION));
+                appObj.put("sandboxKey", appObj, getAppKey(subscribedAPI.getApplication(), APIConstants.API_KEY_TYPE_SANDBOX));
                 addAPIObj(subscribedAPI, apisArray, thisObj);
                 appObj.put("subscriptions", appObj, apisArray);
                 appsObj.put(i++, appsObj, appObj);

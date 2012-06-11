@@ -63,12 +63,26 @@
         try {
             var result = getUsers(applicationKey);
             if( result != null) {
-                return result;
+                var userNameArray = result.*::["return"].text();
+                return userNameArray;
             } else {
                 throw "Error while retrieving users of application";
             }
         } catch(e) {
             throw "Error while retrieving users of application";
+        }
+    }
+
+    function getUserInfo(applicationKey) {
+        try {
+            var result = getUsersInfoOfApplication(applicationKey);
+            if( result != null) {
+                return result;
+            } else {
+                throw "Error while retrieving user infomation";
+            }
+        } catch(e) {
+        throw "Error while retrieving users infomation";
         }
     }
 

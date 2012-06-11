@@ -25,7 +25,8 @@
     var WS_ACTIVATE_USER = "WebServiceEndPoints.ActivateUser";
     var WS_GET_ALL_APPS = "WebServiceEndPoints.GetAllApps";
     var WS_EMAIL_VERIFICATION = "WebServiceEndPoints.EmailVerificationService";
-    var WS_USER_OF_APP = "WebServiceEndPoints.GetUsersOfApplication";
+    var WS_USERS_OF_APP = "WebServiceEndPoints.GetUsersOfApplication";
+    var WS_USERS_INFO_OF_APP = "WebServiceEndPoints.GetUsersInfoOfApplication";
     var WS_CREATE_REPO = "WebServiceEndPoints.CreateRepo";
     var WS_GET_ROLE_OF_USER_FOR_APP = "WebServiceEndPoints.GetRolesOfUserForApplication";
     var WS_GET_AUTH_COOKIE = "WebServiceEndPoints.GetAuthCookie";

@@ -125,12 +125,13 @@
         var options = new Array();
         options.useSOAP = 1.1;
         options.timeout = 1000000;
-        options.action = "urn:process";
+        options.action = "urn:GetUsersOfApplication";
+        options["HTTPHeaders"] = [ { name : "Cookie", value :getAdminCookie() }];
 
-        var payload = '<p:getUserListForApplication xmlns:p="http://services.mgt.tenant.carbon.wso2.org"><applicationKey xmlns="http://services.mgt.tenant.carbon.wso2.org">' + applicationKey + '</applicationKey></p:getUserListForApplication>';
+        var payload='<p:GetUsersOfApplication xmlns:p="http://service.mgt.application.appfactory.carbon.wso2.org"><p:applicationId>'+applicationKey+'</p:applicationId></p:GetUsersOfApplication>';
         var result;
         try {
-            var endPoint = getProperty(WS_USER_OF_APP);
+            var endPoint = getProperty(WS_USERS_OF_APP);
             request.open(options, endPoint, false);
             request.send(payload);
             result = request.responseE4X;
@@ -140,6 +141,32 @@
         } catch (e) {
             log.error("Error while retrieving users of application \n"+e.message);
             throw "Error while retrieving users of application";
+        }
+        return result;
+    }
+
+    function getUsersInfoOfApplication(applicationKey) {
+        var ws = require('ws');
+        var request = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.2;
+        options.timeout = 1000000;
+        options.action = "urn:getUserInfo";
+        options["HTTPHeaders"] = [ { name : "Cookie", value :getAdminCookie() }];
+
+        var payload='<p:getUserInfo xmlns:p="http://service.mgt.application.appfactory.carbon.wso2.org"><p:applicationId>'+applicationKey+'</p:applicationId></p:getUserInfo>';
+        var result;
+        try {
+    var endPoint = getProperty(WS_USERS_INFO_OF_APP);
+    request.open(options, endPoint, false);
+    request.send(payload);
+    result = request.responseE4X;
+            if(log.isDebugEnabled()){
+                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+            }
+        } catch (e) {
+            log.error("Error while retrieving user info \n"+e.message);
+            throw "Error while retrieving user info";
         }
         return result;
     }

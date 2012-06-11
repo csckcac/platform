@@ -109,7 +109,9 @@
                         if(adminPrivilege) {
                     %>
                     <div class="content-box" id="admin">
-                        <h3>Admin Portal</h3>
+                       <%
+                            include('user_list.jag');
+                        %>
                         <table class="styledLeft">
                             <tr>
                                 <td class="buttonRow">

@@ -45,8 +45,12 @@
 
         <CreateRepo>http://localhost:9763/services/IDTMESVNService/createRepository</CreateRepo>
 
-        <GetUsersOfApplication>http://localhost:9763/services/UserMgtService/getUserListForApplication
+        <GetUsersOfApplication>https://localhost:9443/services/ApplicationManagementService/getUsersOfApplication
         </GetUsersOfApplication>
+
+        <GetUsersInfoOfApplication>
+            https://localhost:9443/services/ApplicationManagementService/getUserInfo
+        </GetUsersInfoOfApplication>
 
         <EmailVerificationService>https://localhost:9443/services/EmailVerificationService
         </EmailVerificationService>

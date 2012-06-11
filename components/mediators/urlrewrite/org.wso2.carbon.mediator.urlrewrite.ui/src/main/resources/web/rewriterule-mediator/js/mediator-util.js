@@ -390,6 +390,11 @@ function deleteAction(i) {
 			}
 		}
 	}
+	var nsCount = document.getElementById("actionCount");
+	if(nsCount != null){
+		  nsCount =  nsCount -1;
+		  document.getElementById("actionCount").value =nsCount;
+	}
 }
 
 function getSelectedValue(id) {

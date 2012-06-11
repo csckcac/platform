@@ -131,10 +131,9 @@ public class URLRulesMediator extends AbstractMediator {
 			    URLRewriteActions.TYPE_PREPEND.equals(type) ||
 			    URLRewriteActions.TYPE_SET.equals(type) ||
 			    URLRewriteActions.TYPE_REPLACE.equals(type)) {
-				if (value == null && xpath == null) {
-					throw new MediatorException("Set, Append, Prepend," + "Repalce actions need"
-					                            + "value attribute/xpath" + "attribute need to be"
-					                            + "specified");
+				if ((value == null && xpath == null) || (value != null && value.isEmpty())) {
+					throw new MediatorException("At URL rules definition if the action sets as (Set or Append or Prepend)," + "then repalced actions required "
+					                            + "value or xpath expression");
 
 				}
 				if (xpath != null) {

@@ -95,7 +95,8 @@ public class AttachmentMgtDAOConnectionFactoryImpl implements JPABasedAttachment
     @Override
     public void init() {
         if (transactionManager == null) {
-            log.warn("transactionManager is not initialized before initializing entityManager");
+            log.debug("Transaction-Manager is not initialized before initializing entityManager. So internal " +
+                      "transaction-manager in entity manager will be used.");
         }
 
         JPAVendorAdapter vendorAdapter = getJPAVendorAdapter();

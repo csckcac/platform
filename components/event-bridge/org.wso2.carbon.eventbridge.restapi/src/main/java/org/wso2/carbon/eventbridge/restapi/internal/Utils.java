@@ -1,5 +1,7 @@
 package org.wso2.carbon.eventbridge.restapi.internal;
 
+import org.wso2.carbon.eventbridge.core.engine.Engine;
+import org.wso2.carbon.eventbridge.core.receiver.AbstractEventReceiver;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 
 /**
@@ -18,7 +20,12 @@ import org.wso2.carbon.identity.authentication.AuthenticationService;
  * limitations under the License.
  */
 public class Utils {
+
     private static AuthenticationService authenticationService;
+
+    private static Engine engine;
+
+    private static AbstractEventReceiver eventReceiver;
 
     public static AuthenticationService getAuthenticationService() {
         return authenticationService;
@@ -26,5 +33,21 @@ public class Utils {
 
     public static void setAuthenticationService(AuthenticationService authenticationService) {
         Utils.authenticationService = authenticationService;
+    }
+
+    public static Engine getEngine() {
+        return engine;
+    }
+
+    public static void setEngine(Engine engine) {
+        Utils.engine = engine;
+    }
+
+    public static AbstractEventReceiver getEventReceiver() {
+        return eventReceiver;
+    }
+
+    public static void setEventReceiver(AbstractEventReceiver eventReceiver) {
+        Utils.eventReceiver = eventReceiver;
     }
 }

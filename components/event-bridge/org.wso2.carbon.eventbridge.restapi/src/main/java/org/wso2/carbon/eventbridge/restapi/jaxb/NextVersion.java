@@ -1,4 +1,6 @@
-package org.wso2.carbon.eventbridge.restapi.rest;
+package org.wso2.carbon.eventbridge.restapi.jaxb;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -15,13 +17,15 @@ package org.wso2.carbon.eventbridge.restapi.rest;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class RestAPIException extends Exception{
+@XmlRootElement
+public class NextVersion {
 
-    public RestAPIException(String s) {
-        super(s);
+    private String uri;
+
+    public NextVersion() {
     }
 
-    public RestAPIException(String s, Throwable throwable) {
-        super(s, throwable);
+    public NextVersion(String uri) {
+        this.uri = uri;
     }
 }

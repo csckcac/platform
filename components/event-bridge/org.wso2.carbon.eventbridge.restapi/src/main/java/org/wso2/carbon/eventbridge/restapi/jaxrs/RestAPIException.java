@@ -1,8 +1,4 @@
-package org.wso2.carbon.eventbridge.restapi.rest;
-
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+package org.wso2.carbon.eventbridge.restapi.jaxrs;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -19,12 +15,13 @@ import java.util.Set;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class RestAPIApp extends Application {
-    @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> s = new HashSet<Class<?>>();
-        s.add(EventResource.class);
-        return s;
+public class RestAPIException extends Exception{
+
+    public RestAPIException(String s) {
+        super(s);
     }
 
+    public RestAPIException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
 }

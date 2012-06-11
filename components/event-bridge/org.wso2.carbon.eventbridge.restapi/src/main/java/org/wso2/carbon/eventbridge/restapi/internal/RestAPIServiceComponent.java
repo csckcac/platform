@@ -21,9 +21,11 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
+import org.wso2.carbon.eventbridge.core.engine.Engine;
 import org.wso2.carbon.eventbridge.restapi.RestAPIServlet;
-import org.wso2.carbon.eventbridge.restapi.rest.RestAPIApp;
-import org.wso2.carbon.eventbridge.restapi.rest.RestAPIContext;
+import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIApp;
+import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIContext;
+import org.wso2.carbon.eventbridge.restapi.rest.RestEventReceiver;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 
 import javax.servlet.ServletException;
@@ -37,6 +39,9 @@ import java.util.Hashtable;
  * @scr.reference name="org.wso2.carbon.identity.authentication.internal.AuthenticationServiceComponent"
  * interface="org.wso2.carbon.identity.authentication.AuthenticationService"
  * cardinality="1..1" policy="dynamic" bind="setAuthenticationService"  unbind="unsetAuthenticationService"
+ * @scr.reference name="eventbridge.core"
+ * interface="org.wso2.carbon.eventbridge.core.engine.Engine"
+ * cardinality="1..1" policy="dynamic" bind="setEngine"  unbind="unsetEngine"
  *
  */
 public class RestAPIServiceComponent {
@@ -46,6 +51,7 @@ public class RestAPIServiceComponent {
     private String path = "/bam";
 
     protected void activate(ComponentContext componentContext) {
+        Utils.setEventReceiver(new RestEventReceiver());
 
     }
 
@@ -77,5 +83,13 @@ public class RestAPIServiceComponent {
 
     protected void unsetAuthenticationService(AuthenticationService authenticationService) {
         Utils.setAuthenticationService(null);
+    }
+
+    protected void setEngine(Engine engine) {
+        Utils.setEngine(engine);
+    }
+
+    protected void unsetEngine(Engine engine) {
+        Utils.setEngine(null);
     }
 }

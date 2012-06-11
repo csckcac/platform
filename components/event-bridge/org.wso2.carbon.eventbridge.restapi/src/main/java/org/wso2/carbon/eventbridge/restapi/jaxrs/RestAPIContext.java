@@ -1,4 +1,4 @@
-package org.wso2.carbon.eventbridge.restapi.rest;
+package org.wso2.carbon.eventbridge.restapi.jaxrs;
 
 import org.apache.commons.codec.binary.Base64;
 import org.osgi.service.http.HttpContext;

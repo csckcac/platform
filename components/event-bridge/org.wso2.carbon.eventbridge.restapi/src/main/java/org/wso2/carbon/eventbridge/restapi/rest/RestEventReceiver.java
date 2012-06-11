@@ -1,12 +1,8 @@
-package org.wso2.carbon.eventbridge.restapi;
+package org.wso2.carbon.eventbridge.restapi.rest;
 
-import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
-import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
-import org.apache.cxf.jaxrs.utils.ResourceUtils;
-import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIApp;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
+import org.wso2.carbon.eventbridge.core.engine.Engine;
+import org.wso2.carbon.eventbridge.core.receiver.AbstractEventReceiver;
+import org.wso2.carbon.eventbridge.restapi.internal.Utils;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -23,11 +19,10 @@ import javax.servlet.ServletException;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class RestAPIServlet extends CXFNonSpringJaxrsServlet{
+public class RestEventReceiver extends AbstractEventReceiver{
+
     @Override
-    protected void createServerFromApplication(String cName, ServletConfig servletConfig) throws ServletException {
-        RestAPIApp app = new RestAPIApp();
-        JAXRSServerFactoryBean bean = ResourceUtils.createApplication(app, true);
-        bean.create();
+    protected Engine getEngine() {
+        return Utils.getEngine();
     }
 }

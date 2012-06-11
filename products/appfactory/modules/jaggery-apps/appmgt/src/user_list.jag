@@ -1,0 +1,28 @@
+<%
+    var applicationName = request.getParameter("applicationName");
+    var applicationKey = request.getParameter("applicationKey");
+%>
+<div id="middle">
+    <h3>User List</h3>
+
+    <div id="workArea">
+
+        <table id="table1">
+            <tr class="data" id="row5">
+            <<tr>
+            <td><strong>User Names</strong></td>
+            </tr>
+            <%
+                include('mgt/application_manager.jag');
+                var userNames = getUsersOfApplication(applicationKey);
+                for(var i in userNames) {
+            %>
+            <tr>
+                <td><%=userNames[i]%></td>
+            </tr>
+            <%
+                }
+            %>
+        </table>
+    </div>
+</div>

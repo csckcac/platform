@@ -28,7 +28,7 @@ public class GregUserIDEvaluator {
         if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             tenantId = 3;
         } else {
-            tenantId = 0;
+            tenantId = 3;
         }
         return tenantId;
     }

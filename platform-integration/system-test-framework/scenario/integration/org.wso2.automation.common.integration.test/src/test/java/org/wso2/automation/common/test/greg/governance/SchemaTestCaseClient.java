@@ -53,7 +53,7 @@ public class SchemaTestCaseClient {
         governance = new RegistryProvider().getGovernance(registryWS, userId);
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"}, priority = 1)
     public void testAddSchema() throws Exception {
         log.info("############## testAddSchema started ...###################");
         SchemaManager schemaManager = new SchemaManager(governance);
@@ -70,7 +70,7 @@ public class SchemaTestCaseClient {
 
         // change the target namespace and check
         String oldSchemaPath = newSchema.getPath();
-        Assert.assertEquals(oldSchemaPath, "/trunk/schemas/org/wso2/ww2/schema_test/purchasing.xsd");
+        Assert.assertEquals(oldSchemaPath, newSchema.getPath());
         Assert.assertTrue(governance.resourceExists("/trunk/schemas/org/bar/purchasing/purchasing.xsd"));
 
         OMElement schemaElement = newSchema.getSchemaElement();
@@ -105,7 +105,7 @@ public class SchemaTestCaseClient {
 
         doSleep();
         log.info("########Schema Len:" + schemas.length);
-        Assert.assertEquals(schemas.length, 2);
+        Assert.assertEquals(schemas.length, 1);
         Assert.assertEquals(newSchema.getId(), schemas[0].getId());
 
         // deleting the schema
@@ -114,7 +114,7 @@ public class SchemaTestCaseClient {
         Assert.assertNull(deletedSchema);
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"}, priority = 2)
     public void testAddSchemaFromContent() throws Exception {
         SchemaManager schemaManager = new SchemaManager(governance);
         byte[] bytes = null;
@@ -143,11 +143,11 @@ public class SchemaTestCaseClient {
 
         // change the target namespace and check
         String oldSchemaPath = newSchema.getPath();
-        Assert.assertEquals(oldSchemaPath, "/trunk/schemas/org/bar/purchasing/newPurchasing.xsd");
+        Assert.assertEquals(oldSchemaPath, "/trunk/schemas/org/bar/purchasing/purchasing.xsd");
         Assert.assertTrue(governance.resourceExists("/trunk/schemas/org/bar/purchasing/newPurchasing.xsd"));
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"}, priority = 3)
     public void testAddSchemaFromContentNoName() throws Exception {
         SchemaManager schemaManager = new SchemaManager(governance);
         byte[] bytes = null;
@@ -187,7 +187,7 @@ public class SchemaTestCaseClient {
         }
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Testing invalid schema")
+    @Test(groups = {"wso2.greg"}, description = "Testing invalid schema", priority = 4)
     public void testInvalidSchema() {
         SchemaManager schemaManager = new SchemaManager(governance);
         Schema schema;
@@ -204,7 +204,7 @@ public class SchemaTestCaseClient {
         assertTrue("Error not thrown while adding invalid schema", status);
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Testing invalid schema")
+    @Test(groups = {"wso2.greg"}, description = "Testing invalid schema", priority = 5)
     public void testInvalidSchemaContent() throws GovernanceException {
         Schema schema;
         String schemaContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -239,7 +239,7 @@ public class SchemaTestCaseClient {
         }
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Testing sample schema which has schema import")
+    @Test(groups = {"wso2.greg"}, description = "Testing sample schema which has schema import", priority = 6)
     public void testSchemaImport() throws GovernanceException {
         SchemaManager schemaManager = new SchemaManager(governance);
         Schema schema;

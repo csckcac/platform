@@ -408,29 +408,6 @@ public class ServiceTestCaseClient {
         assertTrue(status, "Invalid service added with special character - " + invalidCharacters);
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Service activate and deactivate", priority = 10)
-    public void testServiceStatus() throws Exception {
-        ServiceManager serviceManager = new ServiceManager(governance);
-
-        Service service = serviceManager.newService(new QName("http://bang.boom.com/mnm/beep",
-                                                              "WSO2AutomationActiveService"));
-        service.addAttribute("testAttribute", "serviceAttr");
-        serviceManager.addService(service);
-        String serviceId = service.getId();
-        assertTrue(service.isActive());
-        service.activate();
-        assertTrue(service.isActive());
-        service.deactivate();
-        assertFalse(service.isActive());
-
-        Service newService = serviceManager.getService(serviceId);
-        assertTrue(newService.getQName().toString().contains("WSO2AutomationActiveService"));
-        assertEquals(newService.getAttribute("testAttribute"), "serviceAttr");
-
-        serviceManager.removeService(service.getId());
-        assertNull(serviceManager.getService(service.getId()));
-    }
-
     @Test(groups = {"wso2.greg"}, description = "Add a wsdl to service with schema imports", priority = 11)
     public void testAttacheWsdlWithSchemaImports() throws Exception {
         // first put a WSDL

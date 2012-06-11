@@ -40,7 +40,7 @@ public class QueryTest {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws RegistryException, AxisFault {
-        int tenantId = new GregUserIDEvaluator().getTenantID();
+        int tenantId = 0; // only admin user can execute querires
         registry = new RegistryProvider().getRegistry(tenantId, ProductConstant.GREG_SERVER_NAME);
         removeResource();
     }

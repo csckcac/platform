@@ -74,7 +74,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
                         getConfValue(HiveConstants.HIVE_PASSWORD_KEY));*/
                 Statement stmt = con.createStatement(); // TODO: Use datasource
 
-                String[] cmdLines = script.split(";\\r?\\n|;\\r"); // Tokenize with ;[new-line]
+                String[] cmdLines = script.split(";\\r?\\n|;"); // Tokenize with ;[new-line]
 
                 List<QueryResult> queryResults = new ArrayList<QueryResult>();
                 for (String cmdLine : cmdLines) {

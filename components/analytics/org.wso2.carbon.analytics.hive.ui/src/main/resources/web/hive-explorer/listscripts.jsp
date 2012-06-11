@@ -71,13 +71,15 @@
                         for (String aName : scriptNames) {
                     %>
                     <tr>
-                        <td width="50%"> <label>
+                        <td width="40%"> <label>
                             <%=aName%>
                             </label>
                         </td>
-                        <td width="25%"><a href="../hive-explorer/hiveexplorer.jsp?mode=edit&scriptName=<%=aName%>"><img src="../hive-explorer/images/reports.png">Execute</a>
+                        <td width="20%"><a href="../hive-explorer/hiveexplorer.jsp?mode=edit&scriptName=<%=aName%>"><img src="../hive-explorer/images/reports.png">Edit</a>
                         </td>
-                        <td width="25%">
+                        <td width="20%"><a href="../hive-explorer/execute.jsp?scriptName=<%=aName%>"><img src="../hive-explorer/images/reports.png">Execute</a>
+                        </td>
+                        <td width="20%">
                         <a onclick="deleteRow('<%=aName%>','Do you want to delete')"
                                class="delete-icon-link" href="#">Delete</a>
                         </td>

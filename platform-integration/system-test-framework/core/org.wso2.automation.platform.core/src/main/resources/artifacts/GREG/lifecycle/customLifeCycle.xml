@@ -109,9 +109,9 @@
                             <execution forEvent="Promote"
                                        class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
                                 <parameter name="currentEnvironment"
-                                           value="/_system/governance/wso2/carbon/trunk/{@resourcePath}/{@resourceName}"/>
+                                           value="/_system/governance/trunk/services/{@resourcePath}/{@resourceName}"/>
                                 <parameter name="targetEnvironment"
-                                           value="/_system/governance/wso2/carbon/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="service.mediatype"
                                            value="application/vnd.wso2-service+xml"/>
                                 <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
@@ -165,9 +165,9 @@
                             <execution forEvent="Promote"
                                        class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
                                 <parameter name="currentEnvironment"
-                                           value="/_system/governance/wso2/carbon/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="targetEnvironment"
-                                           value="/_system/governance/wso2/carbon/branches/qa/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/branches/qa/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="service.mediatype"
                                            value="application/vnd.wso2-service+xml"/>
                                 <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
@@ -177,9 +177,9 @@
                             <execution forEvent="Demote"
                                        class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
                                 <parameter name="currentEnvironment"
-                                           value="/_system/governance/wso2/carbon/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="targetEnvironment"
-                                           value="/_system/governance/wso2/carbon/trunk/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/trunk/services/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="service.mediatype"
                                            value="application/vnd.wso2-service+xml"/>
                                 <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
@@ -220,17 +220,17 @@
                                 </console>
                             </js>
                         </data>
-                        <data name="transitionPermission">
+                        <data name="transitionPermission">clickCommencementCheckListclickCommencementCheckList
                             <permission forEvent="Promote" roles="managerrole"/>
                             <permission forEvent="Demote" roles="managerrole"/>
                             <permission forEvent="Abort" roles="devrole"/>
                         </data>
                     </datamodel>
-                    <transition event="Promote" target="QAed"/>
+                    <transition event="Promote" target="QA"/>
                     <transition event="Demote" target="Commencement"/>
                     <transition event="Abort" target="Halted"/>
                 </state>
-                <state id="QAed">
+                <state id="QA">
                     <datamodel>
                         <data name="checkItems">
                             <item name="Service Configuration" forEvent="Promote,Demote">
@@ -243,9 +243,9 @@
                             <execution forEvent="Promote"
                                        class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
                                 <parameter name="currentEnvironment"
-                                           value="/_system/governance/wso2/carbon/branches/qa/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/branches/qa/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="targetEnvironment"
-                                           value="/_system/governance/wso2/carbon/branches/production/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/branches/production/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="service.mediatype"
                                            value="application/vnd.wso2-service+xml"/>
                                 <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
@@ -255,9 +255,9 @@
                             <execution forEvent="Demote"
                                        class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
                                 <parameter name="currentEnvironment"
-                                           value="/_system/governance/wso2/carbon/branches/qa/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/branches/qa/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="targetEnvironment"
-                                           value="/_system/governance/wso2/carbon/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="service.mediatype"
                                            value="application/vnd.wso2-service+xml"/>
                                 <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>
@@ -320,9 +320,9 @@
                             <execution forEvent="Demote"
                                        class="org.wso2.carbon.governance.registry.extensions.executors.ServiceVersionExecutor">
                                 <parameter name="currentEnvironment"
-                                           value="/_system/governance/wso2/carbon/branches/production/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/branches/production/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="targetEnvironment"
-                                           value="/_system/governance/wso2/carbon/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
+                                           value="/_system/governance/branches/development/{@resourcePath}/{@version}/{@resourceName}"/>
                                 <parameter name="service.mediatype"
                                            value="application/vnd.wso2-service+xml"/>
                                 <parameter name="wsdl.mediatype" value="application/wsdl+xml"/>

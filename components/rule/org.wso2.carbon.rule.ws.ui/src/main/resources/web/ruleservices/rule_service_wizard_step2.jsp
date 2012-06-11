@@ -94,12 +94,13 @@
     }
 
 
-
     String ruleScriptListDisplay = "display:none;";
+    String scriptListHeaderDisplay = "display:none;";
     if (scriptList != null && !scriptList.isEmpty()) {
         isInLined = false;
         isPath = true;
         ruleScriptListDisplay = "";
+        scriptListHeaderDisplay = "";
         //TODO check the scriptlist 0 val and select the type
 
     }
@@ -121,6 +122,22 @@
         topPage="false"
         request="<%=request%>"/>
 <style type="text/css">
+    .scriptListNameWrapper {
+        width: 700px;
+        overflow: hidden;
+    }
+
+    /*   .listTable tr td {
+        border-collapse: collapse;
+        margin-left: 2px;
+        width: 80%;
+        table-layout: fixed;
+        border: 1px solid #CCCCCC !important;
+    }
+    .listTable tr td {
+        border: 1px solid #CCCCCC !important;
+    }*/
+
     a.fact-selector-icon-link {
         background-image: url("../rule_service/images/facts-selector.gif");
         background-position: left top;
@@ -134,6 +151,14 @@
         padding-left: 20px;
         position: relative;
         white-space: nowrap;
+    }
+
+    .bordered-table {
+        border: 1px solid #CCCCCC;
+    }
+
+    td.hiddenMargin {
+        border: none !important;
     }
 </style>
 <script type="text/javascript">
@@ -320,180 +345,242 @@
     </tr>
 </table>
 
+    <%--
+    <table class="styledLeft">
+        <tr id="ruleScriptUploadTR" style="<%=ruleUploadDisplay%>">
+            <td><fmt:message key="rule.source.upload"/></td>
+            <td class="formRow">
+                <form method="post" name="ruleScriptUpload"
+                      action="../../fileupload/facts"
+                      enctype="multipart/form-data" target="_self">
+                    <table class="normal">
+                        <tr>
+                            <td>
+                                <input type="file" id="ruleFilename"
+                                       name="ruleFilename"
+                                       size="75"/>
+                            </td>
+                            <td class="buttonRow">
+                                <input type="hidden"
+                                       value="<%=serviceDescription.getName()%>"
+                                       name="ruleServiceName"/>
+                                    &lt;%&ndash;<input id="uploadedFileName" type="hidden" value="<%=path%>"/>&ndash;%&gt;
+                                <input name="upload" type="button"
+                                       class="button"
+                                       value="<fmt:message key="upload"/> "
+                                       onclick="validateRuleFileUpload();"/>
+                            </td>
+                        </tr>
 
-<table class="styledLeft">
+
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>--%>
+
+
+<table class="styledLeft bordered-table">
+<form method="post" name="ruleScriptUpload"
+      action="../../fileupload/facts"
+      enctype="multipart/form-data" target="_self">
     <tr id="ruleScriptUploadTR" style="<%=ruleUploadDisplay%>">
-        <td><fmt:message key="rule.source.upload"/></td>
-        <td class="formRow">
-            <form method="post" name="ruleScriptUpload"
-                  action="../../fileupload/facts"
-                  enctype="multipart/form-data" target="_self">
-                <table class="normal">
-                    <tr>
-                        <td>
-                            <input type="file" id="ruleFilename"
-                                   name="ruleFilename"
-                                   size="75"/>
-                        </td>
-                        <td class="buttonRow">
-                            <input type="hidden"
-                                   value="<%=serviceDescription.getName()%>"
-                                   name="ruleServiceName"/>
-                                <%--<input id="uploadedFileName" type="hidden" value="<%=path%>"/>--%>
-                            <input name="upload" type="button"
-                                   class="button"
-                                   value="<fmt:message key="upload"/> "
-                                   onclick="validateRuleFileUpload();"/>
-                        </td>
-                    </tr>
-
-
-                </table>
-            </form>
+        <td class="hiddenMargin">
+            <table class="normal">
+                <tr>
+                    <td><fmt:message key="rule.source.upload"/></td>
+                    <td>
+                        <input type="file" id="ruleFilename"
+                               name="ruleFilename"
+                               size="75"/>
+                    </td>
+                    <td class="buttonRow">
+                        <input type="hidden"
+                               value="<%=serviceDescription.getName()%>"
+                               name="ruleServiceName"/>
+                            <%--<input id="uploadedFileName" type="hidden" value="<%=path%>"/>--%>
+                        <input name="upload" type="button"
+                               class="button"
+                               value="<fmt:message key="upload"/> "
+                               onclick="validateRuleFileUpload();"/>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
-</table>
+
+</form>
+<form method="post" action="rule_service_wizard_step3.jsp" name="dataForm">
+    <tr id="ruleScriptKeyTR" style="<%=ruleKeyDisplay%>">
+        <td class="hiddenMargin">
+            <table class="normal">
+                <tr>
+                    <td><fmt:message key="rule.source.key"/></td>
+                    <td>
+                        <input class="longInput" type="text" name="ruleSourceKey"
+                               id="ruleSourceKey"/>
+                    </td>
+                    <td>
+                        <a href="#registryBrowserLink"
+                           class="registry-picker-icon-link"
+                           onclick="showResourceTree('ruleSourceKey',onRegistryResourceSelect,'/_system/config')"><fmt:message
+                                key="registry.config"/></a>
+                    </td>
+                    <td>
+                        <a href="#registryBrowserLink"
+                           class="registry-picker-icon-link"
+                           onclick="showResourceTree('ruleSourceKey',onRegistryResourceSelect,'/_system/governance')"><fmt:message
+                                key="registry.governance"/></a>
+                    </td>
+                    <td class="buttonRow">
+                        <input name="upload" type="button"
+                               class="button"
+                               value="<fmt:message key="add"/> "
+                               onclick="addRuleScript('ruleSourceKey', 'registry');"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr id="ruleScriptURLTR" style="<%=ruleURLDisplay%>">
+        <td class="hiddenMargin">
+            <table class="normal">
+                <tr>
+                    <td><fmt:message key="rule.source.url"/></td>
+                    <td>
+                        <input type="text" name="ruleSourceURL"
+                               id="ruleSourceURL" size="75"/>
+                    </td>
+                    <td class="buttonRow">
+                        <input name="upload" type="button"
+                               class="button"
+                               value="<fmt:message key="add"/> "
+                               onclick="addRuleScript('ruleSourceURL','url');"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr id="ruleScriptSourceTR" style="<%=ruleSourceDisplay%>">
+        <td class="hiddenMargin">
+            <table class="normal">
+                <tr>
+                    <td><fmt:message key="rule.source.inlined"/></td>
+                    <td><textarea cols="80" rows="15"
+                                  name="ruleSourceInlined"
+                                  id="ruleSourceInlined"><%=ruleValueZero%>
+                    </textarea></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr id="rulesetCreationTR" style="<%=rulesetCreationDisplay%>">
+        <td class="hiddenMargin">
+            <table class="normal">
+                <tr>
+                    <td><label><fmt:message
+                            key="rule.resource.type"/></label></td>
+                    <td>
+                        <select id="ruleResouceTypeID" name="ruleResouceType">
+                            <option id="regularID" value="<%=Constants.RULE_RESOURCE_TYPE_REGULAR%>">
+                                <fmt:message key="rule.resource.type.regular"/>
+                            </option>
+                            <option id="dtableID" value="<%=Constants.RULE_RESOURCE_TYPE_DTABLE%>">
+                                <fmt:message key="rule.resource.type.dtable"/>
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr id="ruleScriptList" style="<%=ruleScriptListDisplay%>">
+        <td class="hiddenMargin">
+            <table class="normal">
+                <tr>
+                    <td>
+                        <table id="ruleScriptListTable" class="styledInner" style="width:120%">
+                            <thead>
+                            <tr id="ruleScriptHeader" style="<%=scriptListHeaderDisplay%>">
+                                <th width="10%">Script Type</th>
+                                <th width="80%">Source</th>
+                                <th width="10%">Action</th>
+                            </tr>
+                            </thead>
+
+                            <tbody id="ruleScriptListTBody">
+
+                            <%
+                                int i = 1;
+                                List<String> paths = null;
+                                if (scriptList != null && !scriptList.isEmpty()) {
+                                    paths = new ArrayList<String>(scriptList.keySet());
+                                }
+
+                                if (paths != null && !paths.isEmpty()) {
+                                    for (String scriptName : paths) {
+                                        String sourceType = scriptList.get(scriptName);
 
 
-<table class="styledLeft">
-    <form method="post" action="rule_service_wizard_step3.jsp" name="dataForm">
-        <tr>
-            <td class="formRaw">
-                <table class="normal">
-                    <tr id="ruleScriptKeyTR" style="<%=ruleKeyDisplay%>">
-                        <td><fmt:message key="rule.source.key"/></td>
-                        <td>
-                            <input class="longInput" type="text" name="ruleSourceKey"
-                                   id="ruleSourceKey"/>
-                        </td>
-                        <td>
-                            <a href="#registryBrowserLink"
-                               class="registry-picker-icon-link"
-                               onclick="showResourceTree('ruleSourceKey',onRegistryResourceSelect,'/_system/config')"><fmt:message
-                                    key="registry.config"/></a>
-                        </td>
-                        <td>
-                            <a href="#registryBrowserLink"
-                               class="registry-picker-icon-link"
-                               onclick="showResourceTree('ruleSourceKey',onRegistryResourceSelect,'/_system/governance')"><fmt:message
-                                    key="registry.governance"/></a>
-                        </td>
-                        <td class="buttonRow">
-                            <input name="upload" type="button"
-                                   class="button"
-                                   value="<fmt:message key="add"/> "
-                                   onclick="addRuleScript('ruleSourceKey', 'registry');"/>
-                        </td>
-                    </tr>
-
-                    <tr id="ruleScriptURLTR" style="<%=ruleURLDisplay%>">
-                        <td><fmt:message key="rule.source.url"/></td>
-                        <td>
-                            <input type="text" name="ruleSourceURL"
-                                   id="ruleSourceURL" size="75"/>
-                        </td>
-                        <td class="buttonRow">
-                            <input name="upload" type="button"
-                                   class="button"
-                                   value="<fmt:message key="add"/> "
-                                   onclick="addRuleScript('ruleSourceURL','url');"/>
-                        </td>
-                    </tr>
-
-
-                    <tr id="ruleScriptSourceTR" style="<%=ruleSourceDisplay%>">
-                        <td><fmt:message key="rule.source.inlined"/></td>
-                        <td><textarea cols="80" rows="15"
-                                      name="ruleSourceInlined"
-                                      id="ruleSourceInlined"><%=ruleValueZero%>
-                        </textarea></td>
-                    </tr>
-
-                    <tr id="rulesetCreationTR" style="<%=rulesetCreationDisplay%>">
-                        <td><label><fmt:message
-                                key="rule.resource.type"/></label></td>
-                        <td>
-                            <select id="ruleResouceTypeID" name="ruleResouceType">
-                                <option id="regularID" value="<%=Constants.RULE_RESOURCE_TYPE_REGULAR%>">
-                                    <fmt:message key="rule.resource.type.regular"/>
-                                </option>
-                                <option id="dtableID" value="<%=Constants.RULE_RESOURCE_TYPE_DTABLE%>">
-                                    <fmt:message key="rule.resource.type.dtable"/>
-                                </option>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-
-         <tr id="ruleScriptList" style="<%=ruleScriptListDisplay%>">
-                        <td>
-                            <table id="ruleScriptListTable" class="styledInner">
-                                <thead>
-                                <tbody id="ruleScriptListTBody">
-                                <%
-                                    int i = 0;
-                                    List<String> paths = null;
-                                    if (scriptList != null && !scriptList.isEmpty()) {
-                                        paths = new ArrayList<String>(scriptList.keySet());
-                                    }
-
-                                    if (paths != null && !paths.isEmpty()) {
-                                        for (String scriptName : paths) {
-                                            String sourceType = scriptList.get(scriptName);
-
-
-                                %>
-                                <tr id="ruleScriptListRaw<%=i%>">
-                                    <td>
-                                        <%=sourceType%>
-                                    </td>
-                                    <td>
+                            %>
+                            <tr id="ruleScriptListRaw<%=i%>">
+                                <td>
+                                    <%=sourceType%>
+                                </td>
+                                <td>
+                                    <div class="scriptListNameWrapper">
                                         <label><%=scriptName%>
                                         </label>
-                                        <input type="hidden" name="ruleScriptName<%=i%>" id="ruleScriptName<%=i%>"
-                                               value="<%=scriptName%>"/>
-                                        <input type="hidden" name="ruleScriptSource<%=i%>" id="ruleScriptSource<%=i%>"
-                                               value="<%=sourceType%>"/>
-                                    </td>
+                                    </div>
+                                    <input type="hidden" name="ruleScriptName<%=i%>" id="ruleScriptName<%=i%>"
+                                           value="<%=scriptName%>"/>
+                                    <input type="hidden" name="ruleScriptSource<%=i%>" id="ruleScriptSource<%=i%>"
+                                           value="<%=sourceType%>"/>
+                                </td>
 
-                                    <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
-                                           onclick="deleteScript('ruleScriptList','<%=i%>','<%=sourceType%>','<%=scriptName%>')"><fmt:message
-                                            key="delete"/></a></td>
-                                </tr>
-                                <%
-                                            i++;
-                                        }
+                                <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
+                                       onclick="deleteScript('ruleScriptList','<%=i%>','<%=sourceType%>','<%=scriptName%>')"><fmt:message
+                                        key="delete"/></a></td>
+                            </tr>
+                            <%
+                                        i++;
+                                    }
 
-                                    } %>
-                                <input type="hidden" name="ruleScriptCount" id="ruleScriptCount"
-                                       value="<%=i%>"/>
-                                <input type="hidden" name="ruleScriptHiddenCount" id="ruleScriptHiddenCount"
-                                       value="<%=0%>"/>
-                                </tbody>
-                                </thead>
-                            </table>
-                        </td>
+                                } %>
+                            <input type="hidden" name="ruleScriptCount" id="ruleScriptCount"
+                                   value="<%=i%>"/>
+                            <input type="hidden" name="ruleScriptHiddenCount" id="ruleScriptHiddenCount"
+                                   value="<%=0%>"/>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table class="normal">
+                <tr>
+                    <td class="buttonRow">
+                        <input type="hidden" id="stepID" name="stepID" value="step2"/>
+                        <input type="hidden" id="ruleSourceType" name="ruleSourceType" value="inline"/>
+                        <input type="hidden" id="registryResourcePath" name="registryResourcePath" value="">
+                        <input type="hidden" id="ruleResourceURL" name="ruleResourceURL" value="">
+                        <input class="button" type="button" value="< <fmt:message key="back"/>"
+                               onclick="location.href = 'rule_service_wizard_step1.jsp'"/>
+                        <input class="button" type="button" onclick="validate()"
+                               value="<fmt:message key="next"/> >"/>
+                        <input class="button" type="button" value="<fmt:message key="cancel"/>"
+                               onclick="location.href = 'cancel_handler.jsp'"/>
 
-
-                    </tr>
-        <tr>
-            <td class="buttonRow">
-                <input type="hidden" id="stepID" name="stepID" value="step2"/>
-                <input type="hidden" id="ruleSourceType" name="ruleSourceType" value="inline"/>
-                <input type="hidden" id="registryResourcePath" name="registryResourcePath" value="">
-                <input type="hidden" id="ruleResourceURL" name="ruleResourceURL" value="">
-                <input class="button" type="button" value="< <fmt:message key="back"/>"
-                       onclick="location.href = 'rule_service_wizard_step1.jsp'"/>
-                <input class="button" type="button" onclick="validate()"
-                       value="<fmt:message key="next"/> >"/>
-                <input class="button" type="button" value="<fmt:message key="cancel"/>"
-                       onclick="location.href = 'cancel_handler.jsp'"/>
-
-            </td>
-        </tr>
-    </form>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</form>
 </table>
 
 

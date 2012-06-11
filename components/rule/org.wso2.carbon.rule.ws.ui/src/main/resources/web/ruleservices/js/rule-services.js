@@ -441,6 +441,8 @@ function addRuleScript(scriptType, ruleSourceType){
                        }
                    });
 
+    var scriptListTH =document.getElementById("ruleScriptHeader");
+        scriptListTH.style.display="";
 
 
     ruleScriptValue.value = "";
@@ -462,10 +464,15 @@ function addRuleScript(scriptType, ruleSourceType){
     typeTD.appendChild(createScriptLabel(ruleSourceType))
 
     var nameTD = document.createElement("td");
+    var nameTDWrapper = document.createElement("div");
    nameTD.appendChild(createScriptInput("ruleScriptName" + i,ruleScript));
-    nameTD.appendChild(createScriptInput("ruleScriptSource" + i,ruleSourceType));
-   nameTD.appendChild(createScriptLabel(ruleScript));
+    nameTD.appendChild(nameTDWrapper);
+
+    nameTDWrapper.className = "scriptListNameWrapper";
+    nameTDWrapper.appendChild(createScriptInput("ruleScriptSource" + i,ruleSourceType));
+   nameTDWrapper.appendChild(createScriptLabel(ruleScript));
    var deleteTD = document.createElement("td");
+    deleteTD.style.width = '200px';
     deleteTD.appendChild(createRuleDeleteLink("ruleScriptList", i));
 
     scriptRaw.appendChild(typeTD);
@@ -493,7 +500,6 @@ function validateRule(scriptType){
 function createRuleDeleteLink(category, i) {
     // Create the element:
     var factDeleteLink = document.createElement('a');
-
     // Set some properties:
     factDeleteLink.setAttribute("href", "#");
     factDeleteLink.style.paddingLeft = '40px';
@@ -534,8 +540,8 @@ function deleteScript(category, i, sourceType, scriptName) {
 
 function deleteScriptRaw(category, i, sourceType, scriptName) {
        var ruleScriptCount = document.getElementById("ruleScriptHiddenCount");
-    var i = ruleScriptCount.value;
-    var currentCount = parseInt(i);
+    var j = ruleScriptCount.value;
+    var currentCount = parseInt(j);
     currentCount = currentCount + 1;
 
     ruleScriptCount.value = currentCount;
@@ -558,8 +564,10 @@ function deleteScriptRaw(category, i, sourceType, scriptName) {
         if (parentTBody != undefined && parentTBody != null) {
             parentTBody.removeChild(propRow);
             if (!isContainRaw(parentTBody)) {
-                var factTable = document.getElementById("ruleScriptList");
-                factTable.style.display = "none";
+//                var factTable = document.getElementById("ruleScriptList");
+//                factTable.style.display = "none";
+                var scriptListTH =document.getElementById("ruleScriptHeader");
+                 scriptListTH.style.display="none";
             }
         }
     }

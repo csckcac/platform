@@ -44,7 +44,7 @@ public class TestResources {
     private static WSRegistryServiceClient registry = null;
     private static String password = null;
     private static String userName = null;
-    final int loopCount = 100000;
+    private final int loopCount = 100000;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws RegistryException, AxisFault {
@@ -246,80 +246,7 @@ public class TestResources {
         }
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Test add another resource", priority = 20)
-    private void testAddLargeSetOfResource() throws RegistryException {
-        Resource r1 = registry.newResource();
-        for (int index = 0; index <= loopCount; index++) {
-            String content = "this is my content2";
 
-            try {
-                r1.setContent(content.getBytes());
-                r1.setDescription("r2 file description");
-                r1.setProperty("key" + index, "value" + index);
-                r1.setProperty("key" + index + 1, "value" + index + 1);
-                String path = "/automation/test/r" + index;
-                try {
-                    registry.put(path, r1);
-                    System.out.println("put resource :" + index);
-                } catch (RegistryException e) {
-                    fail("Couldn't put content to path /automation/test/r" + index);
-                }
-
-                Resource r1_actual = registry.newResource();
-                try {
-                    r1_actual = registry.get("/automation/test/r" + index);
-                } catch (RegistryException e) {
-                    fail("Couldn't put content to path /automation/test/r" + index);
-                }
-
-                assertEquals(new String((byte[]) r1.getContent()),
-                             new String((byte[]) r1_actual.getContent()), "Content is not equal.");
-                assertEquals(userName, r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-                assertEquals("/automation/test/r" + index, r1_actual.getPath(), "Can not get Resource path");
-                assertEquals("/automation/test", r1_actual.getParentPath(), "Can not get Resource parent path");
-                assertEquals(r1.getDescription(),
-                             r1_actual.getDescription(), "Resource description is not equal");
-                assertEquals(userName, r1_actual.getAuthorUserName(), "Author is not equal");
-                assertEquals(r1.getProperty("key" + index),
-                             r1_actual.getProperty("key" + index), "Resource properties are equal");
-                assertEquals(r1.getProperty("key" + index + 1),
-                             r1_actual.getProperty("key" + index + 1), "Resource properties are equal");
-            } catch (RegistryException e) {
-                log.error("WS-API Add an Another Resource test - Failed:" + e);
-                throw new RegistryException("WS-API Add an Another Resource test-Failed:" + e);
-            }
-
-        }
-//        deleteResources("/automation");
-    }
-
-
-    @Test(groups = {"wso2.greg"}, description = "Test add another resource", priority = 21)
-    private void testDeleteLargeSetOfResource() throws Exception {
-
-        for (int index = 0; index <= loopCount-1; index++) {
-            String path = "/automation/test/r" + index;
-            for (String resourcePath : registry.getCollectionContent("/automation/test")) {
-                if (resourcePath.equals(path)) {
-                    registry.delete(path);
-                    System.out.println("Delete resource :" + index);
-                    break;
-                }
-            }
-            boolean resourceExists = true;
-            if(registry.getCollectionContent("/automation/test")==null)
-                break;
-            for (String resourcePath : registry.getCollectionContent("/automation/test")) {
-                if (resourcePath.equals(path)) {
-                    resourceExists = false;
-                    break;
-                }
-
-            }
-            assertTrue(resourceExists, "Resource" + path + " " +
-                                       "is not deleted");
-        }
-    }
 
 
     @Test(groups = {"wso2.greg"}, description = "set resource details", priority = 5)

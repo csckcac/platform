@@ -94,7 +94,7 @@
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>checkin-client</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${product.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.governance</groupId>
@@ -129,11 +129,6 @@
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.carbon.registry.samples.handler</artifactId>
-            <version>${product.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.governance</groupId>
-            <artifactId>checkin-client</artifactId>
             <version>${product.version}</version>
         </dependency>
         <dependency>

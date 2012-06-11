@@ -260,15 +260,15 @@
             <outputFileNameMapping>${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
 			<outputDirectory>${pom.artifactId}-${build.version}/samples/custom-ui/bin</outputDirectory>
             <includes>
-                <include>org.wso2.carbon:org.wso2.carbon.registry.samples.custom.topics:jar</include>
-                <include>org.wso2.carbon:org.wso2.carbon.registry.samples.custom.topics.ui:jar</include>
+                <include>org.wso2.governance:org.wso2.carbon.registry.samples.custom.topics:jar</include>
+                <include>org.wso2.governance:org.wso2.carbon.registry.samples.custom.topics.ui:jar</include>
             </includes>
         </dependencySet>
 	<dependencySet>
             <outputFileNameMapping>${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
 			<outputDirectory>${pom.artifactId}-${build.version}/samples/handler/bin</outputDirectory>
             <includes>
-                    <include>org.wso2.carbon:org.wso2.carbon.registry.samples.handler:jar</include>
+                    <include>org.wso2.governance:org.wso2.carbon.registry.samples.handler:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
@@ -284,8 +284,8 @@
             <outputFileNameMapping>${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
 			<outputDirectory>${pom.artifactId}-${build.version}/samples/distributed-LCM/bin</outputDirectory>
             <includes>
-				<include>org.wso2.carbon:org.wso2.carbon.governance.samples.lcm:jar</include>
-                                <include>org.wso2.carbon:org.wso2.carbon.governance.samples.lcm.notifications:jar</include>
+				<include>org.wso2.governance:org.wso2.carbon.governance.samples.lcm:jar</include>
+                                <include>org.wso2.governance:org.wso2.carbon.governance.samples.lcm.notifications:jar</include>
             </includes>
         </dependencySet>
         <!-- Those jar files are required to be in lib dir in jaxr sample -->

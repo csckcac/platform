@@ -150,6 +150,13 @@ public class PropertiesAdminService extends RegistryAbstractAdmin implements
      * @throws RegistryException
      */
     public boolean setRetentionProperties(String path, RetentionBean bean) throws RegistryException {
+
+        // Fixing REGISTRY-789  - disallowing setting retention properties for versioned resources
+        if(path.matches(".*;version:\\d$")) {
+            throw new RegistryException("User is not authorized to change retention properties" +
+                    " of resource versions. Resource path = " + path);
+        }
+
         UserRegistry registry = (UserRegistry) getRootRegistry();
         if (RegistryUtils.isRegistryReadOnly(registry.getRegistryContext())) {
             return false;

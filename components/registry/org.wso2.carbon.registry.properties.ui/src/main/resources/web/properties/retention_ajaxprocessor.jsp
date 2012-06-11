@@ -42,6 +42,10 @@
     try {
         bean = client.getRetentionProperties(request);
         readOnly = (bean == null) ? false : bean.getReadOnly();
+        // Fixing REGISTRY-789  - disallowing setting retention properties for versioned resources
+        if(path.matches(".*;version:\\d$")) {
+           readOnly = true;
+        }
     } catch (Exception e) {
         response.setStatus(500);
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -131,10 +135,10 @@
                     <td class="buttonRow">
                         <input type="button" id="#_1" value="<fmt:message key="reset"/>"
                                class="button" onclick="resetRetentionProperties()"
-                               <%=readOnly ? "disabled=\"true\"" : ""%>/>
+                               <%=readOnly ? "style=\"display:none\"" : ""%>/>
                         <input type="button" id="#_0" value="<fmt:message key="lock"/>"
                                class="button" onclick="setRetentionProperties()"
-                               <%=readOnly ? "disabled=\"true\"" : ""%>/>
+                               <%=readOnly ? "style=\"display:none\"" : ""%>/>
                     </td>
                 </tr>
                 </tbody>

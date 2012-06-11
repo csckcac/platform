@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverBackedSelenium;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -21,6 +22,7 @@ import org.wso2.platform.test.core.utils.seleniumutils.SeleniumScreenCapture;
 
 import java.net.MalformedURLException;
 import java.util.Calendar;
+import java.util.List;
 
 import static org.testng.Assert.assertTrue;
 
@@ -88,16 +90,20 @@ public class GRegLifeCyclePromoteTest {
         assertTrue(selenium.isTextPresent("Service List"), "Service List - Service List Text does not appear::");
         assertTrue(selenium.isTextPresent(SERVICE_NAME), "Service List - Service not found in the list::");
         // click on service name
-        driver.findElement(By.linkText(SERVICE_NAME)).click();
+
+
+        selectService(SERVICE_NAME);
+
         selenium.waitForPageToLoad("30000");
         assertTrue(selenium.isTextPresent(SERVICE_NAME), "Service Page - Service name not found:");
         assertTrue(driver.getPageSource().contains("1.0.0-SNAPSHOT"), "Service Page - Service version not found:");
-        selenium.select("name=Service_Lifecycle_Lifecycle-Name", "label=ServiceLifeCycle");
-        Thread.sleep(5000);
-        selenium.click("css=input.button.registryWriteOperation");
-        Thread.sleep(2000L);
-        selenium.waitForPageToLoad("30000");
-        assertTrue(selenium.isTextPresent("ServiceLifeCycle"), "Service Info - Service LC name not found");
+        //Add LifeCycle
+        selenium.click("id=lifecycleIconMinimized");
+        Thread.sleep(3000L);
+        selenium.click("link=Add Lifecycle");
+        Thread.sleep(4000L);
+        selenium.click("//div[3]/div[3]/form/table/tbody/tr[2]/td/input");
+        Thread.sleep(5000L);
         assertTrue(selenium.isTextPresent("Code Completed"), "Service Info - LC checklist items not available");
         log.info("LC has been assigned to " + SERVICE_NAME);
     }
@@ -180,6 +186,9 @@ public class GRegLifeCyclePromoteTest {
         driver.findElement(By.linkText("Services")).click();
         selenium.waitForPageToLoad("30000");
         deleteFromServiceList(SERVICE_NAME);
+        Thread.sleep(3000);
+        deleteFromServiceList(SERVICE_NAME);
+        Thread.sleep(3000);
         deleteFromWsdlList("echo.wsdl");
         new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegLifeCyclePromoteTest");
         new GregUserLogout().userLogout(driver);
@@ -204,39 +213,46 @@ public class GRegLifeCyclePromoteTest {
 
     private void deleteFromServiceList(String serviceName) throws InterruptedException {
         driver.findElement(By.linkText("Services")).click();
-        selenium.waitForPageToLoad("30000");
-        int rowCount = selenium.getXpathCount("//TABLE[@id='customTable']/TBODY/TR").intValue();
-        while (rowCount >= 0 && selenium.isTextPresent(serviceName)) {
-            if (selenium.getTable("customTable." + rowCount + ".0").contains(serviceName)) {
-                driver.findElement(By.xpath("//tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form[2]/table/tbody/tr["
-                                            + rowCount + "]/td[5]/a")).click();
-                Thread.sleep(SLEEP_TIME);
-                assertTrue(selenium.isTextPresent("Are you sure you want to delete"));
-                selenium.click("//button");
-                log.info("Deleting service - " + serviceName);
-                selenium.waitForPageToLoad("30000");
+        List<WebElement> serviceList;
+        serviceList = driver.findElement(By.id("customTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+        int count = 0;
+        for (WebElement service : serviceList) {
+            count++;
+            if (service.findElement(By.tagName("td")).getText().contains(serviceName)) {
+                driver.findElement(By.xpath("//tr[" + count + "]/td[5]/a")).click();
+                driver.findElement(By.xpath("//button")).click();
+                break;
             }
-            rowCount--;
         }
-        assertTrue(!selenium.isTextPresent(serviceName), "Service List - Service " + serviceName + "has not deleted");
+    }
+
+    private void selectService(String serviceName){
+        List<WebElement> serviceList;
+        serviceList = driver.findElement(By.id("customTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+        int count = 0;
+        for (WebElement service : serviceList) {
+            count++;
+            if (service.findElement(By.tagName("td")).getText().contains(serviceName)) {
+                driver.findElement(By.xpath("//tr[" + count + "]/td[2]/a")).click();
+                break;
+            }
+        }
+
     }
 
     private void deleteFromWsdlList(String wsdlName) throws InterruptedException {
         driver.findElement(By.linkText("WSDLs")).click();
         selenium.waitForPageToLoad("30000");
-        int rowCount = selenium.getXpathCount("//TABLE[@id='customTable']/TBODY/TR").intValue();
-        while (rowCount >= 0 && selenium.isTextPresent(wsdlName)) {
-            if (selenium.getTable("customTable." + rowCount + ".0").contains(wsdlName)) {
-                driver.findElement(By.xpath("//tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr["
-                                            + rowCount + "]/td[4]/a")).click();
-                Thread.sleep(SLEEP_TIME);
-                assertTrue(selenium.isTextPresent("Are you sure you want to delete"));
-                selenium.click("//button");
-                log.info("Deleting wsdl - " + wsdlName);
-                selenium.waitForPageToLoad("30000");
+        List<WebElement> wsdlList;
+        wsdlList = driver.findElement(By.id("customTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+        int count = 0;
+        for (WebElement service : wsdlList) {
+            count++;
+            if (service.findElement(By.tagName("td")).getText().contains(wsdlName)) {
+                driver.findElement(By.xpath("//tr[" + count + "]/td[4]/a")).click();
+                driver.findElement(By.xpath("//button")).click();
+                break;
             }
-            rowCount--;
         }
-        assertTrue(!selenium.isTextPresent(wsdlName), "WSDL List - WSDL " + wsdlName + "has not deleted");
     }
 }

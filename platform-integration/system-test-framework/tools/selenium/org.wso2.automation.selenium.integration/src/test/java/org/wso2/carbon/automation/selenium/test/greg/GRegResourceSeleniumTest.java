@@ -149,7 +149,7 @@ public class GRegResourceSeleniumTest {
             Thread.sleep(3000L);
             driver.findElement(By.xpath("//div[15]/div/div[3]/div[3]/form/table/tbody/tr[2]/td/input")).click();
             Thread.sleep(5000L);
-            assertEquals("resourceComment \n posted on 0m ago by admin",
+            assertEquals("resourceComment \n posted on 0m ago by testuser3",
                          selenium.getText("//div[4]/div/div[2]/table/tbody/tr/td/div"),
                          "Added comment failed :");
 

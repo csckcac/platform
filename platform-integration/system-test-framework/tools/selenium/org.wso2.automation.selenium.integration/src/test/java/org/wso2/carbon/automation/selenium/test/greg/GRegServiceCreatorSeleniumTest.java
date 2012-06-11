@@ -72,12 +72,10 @@ public class GRegServiceCreatorSeleniumTest {
             // verify Add Service page attributes
             assertTrue(selenium.isTextPresent("Add Service"));
             assertTrue(selenium.isTextPresent("Overview"));
-            assertTrue(selenium.isTextPresent("Service Lifecycle"));
             assertTrue(selenium.isTextPresent("Interface"));
             // Enter Service details
             selenium.type("id=id_Overview_Name", "testservice1");
             selenium.type("id=id_Overview_Namespace", "testservice123");
-            selenium.select("name=Service_Lifecycle_Lifecycle-Name", "label=ServiceLifeCycle");
             selenium.click("link=Add Contact");
             selenium.select("name=Contacts_Contact1", "label=Business Owner");
             selenium.type("id=id_Contacts_Contact1", "Aaaa");

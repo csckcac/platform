@@ -130,7 +130,7 @@ public class GRegCollectionSeleniumTest {
             driver.findElement(By.id("comment")).sendKeys(comment);
             driver.findElement(By.xpath("//div[12]/div/div[3]/div[3]/form/table/tbody/tr[2]/td/input")).click();
             Thread.sleep(5000L);
-            assertEquals("Collection Comment1 \n posted on 0m ago by admin",
+            assertEquals("Collection Comment1 \n posted on 0m ago by testuser3",
                          selenium.getText("//div[4]/div/div[2]/table/tbody/tr/td/div"),
                          "Added comment failed :");
 

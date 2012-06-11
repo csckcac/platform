@@ -32,6 +32,7 @@
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
     String hiveScript = request.getParameter("queries");
+    try{
     HiveExecutionClient client = new HiveExecutionClient(cookie, serverURL, configContext);
     QueryResult[] results = client.executeScript(hiveScript);
 %>
@@ -121,3 +122,21 @@
         </tbody>
     </table>
 </div>
+<%
+    }catch (Exception e){
+        %>
+<div id="returnedResults">
+    <table class="allResult">
+        <tbody>
+        <tr>
+            <td><b><font color="red">ERROR:</font></b></td>
+        </tr>
+         <tr>
+            <td><%=e.getMessage()%></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<%   }
+%>

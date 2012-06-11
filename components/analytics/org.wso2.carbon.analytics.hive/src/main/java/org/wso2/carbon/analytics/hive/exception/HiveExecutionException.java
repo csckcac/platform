@@ -16,13 +16,20 @@
 package org.wso2.carbon.analytics.hive.exception;
 
 public class HiveExecutionException extends Exception {
+private String message;
 
     public HiveExecutionException(String message) {
         super(message);
+        this.message = message;
     }
 
     public HiveExecutionException(String message, Throwable t) {
         super(message, t);
+        this.message = message;
+    }
+
+    public String getExceptionMessage(){
+        return this.message;
     }
 
 }

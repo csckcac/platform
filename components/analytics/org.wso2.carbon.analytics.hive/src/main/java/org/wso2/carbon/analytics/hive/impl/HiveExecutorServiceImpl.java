@@ -17,7 +17,6 @@ package org.wso2.carbon.analytics.hive.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.analytics.hive.HiveConstants;
 import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.conf.HiveConnectionManager;
 import org.wso2.carbon.analytics.hive.dto.QueryResult;
@@ -126,7 +125,7 @@ public class HiveExecutorServiceImpl implements HiveExecutorService {
 
 
             } catch (SQLException e) {
-                throw new HiveExecutionException("Error while executing Hive script..", e);
+                throw new HiveExecutionException("Error while executing Hive script.\n"+e.getMessage(), e);
             } finally {
                 if (null != con) {
                     try {

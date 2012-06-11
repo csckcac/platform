@@ -59,17 +59,17 @@ public class HiveExecutionClient {
         }
     }
 
-    public QueryResult[] executeScript(String script) {
+    public QueryResult[] executeScript(String script) throws RemoteException, HiveExecutionServiceHiveExecutionException {
         try {
             QueryResult[] res = stub.executeHiveScript(script);
             return res;
            // return generateDisplayString(res);
         } catch (RemoteException e) {
             log.error(e.getMessage(), e);
-            return null;
+            throw e;
         } catch (HiveExecutionServiceHiveExecutionException e) {
-            log.error(e.getFaultMessage(), e);
-            return null;
+            log.error(e.getFaultMessage().getHiveExecutionException().getExceptionMessage(), e);
+            throw new HiveExecutionServiceHiveExecutionException(e.getFaultMessage().getHiveExecutionException().getExceptionMessage());
         }
     }
 

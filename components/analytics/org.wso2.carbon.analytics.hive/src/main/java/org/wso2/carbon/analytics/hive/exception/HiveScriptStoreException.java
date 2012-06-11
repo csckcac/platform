@@ -17,12 +17,19 @@
 package org.wso2.carbon.analytics.hive.exception;
 
 public class HiveScriptStoreException extends Exception{
+private String message;
 
     public HiveScriptStoreException(String message) {
         super(message);
+        this.message = message;
     }
 
     public HiveScriptStoreException(String message, Throwable t) {
         super(message, t);
+        this.message = message;
+    }
+
+    public String  getExceptionMessage(){
+        return this.message;
     }
 }

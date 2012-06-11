@@ -17,13 +17,21 @@
 package org.wso2.carbon.analytics.hive.exception;
 
 public class HiveConnectionException extends Exception {
+private String message;
 
     public HiveConnectionException(String message) {
         super(message);
+        this.message = message;
+
     }
 
     public HiveConnectionException(String message, Throwable t) {
         super(message, t);
+        this.message = message;
+    }
+
+    public String  getExceptionMessage(){
+        return this.message;
     }
 
 }

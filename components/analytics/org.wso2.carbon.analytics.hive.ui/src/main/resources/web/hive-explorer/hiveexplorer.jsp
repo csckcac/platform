@@ -31,7 +31,6 @@
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
 
 <script type="text/javascript">
-
     YAHOO.util.Event.onDOMReady(function() {
         editAreaLoader.init({
             id : "allcommands"
@@ -219,6 +218,7 @@
 
 </script>
 
+
 <style type="text/css">
     .scrollable {
         border: 1px solid black;
@@ -245,6 +245,11 @@
 
 </style>
 
+<script type="text/javascript">
+     $(document).ready(function() {
+        document.getElementById('allcommands').focus();
+    });
+</script>
 
 <div id="middle">
     <%
@@ -297,24 +302,24 @@
                 <input type="hidden" value="<%=scriptName%>" name="scriptName" id="scriptName">
                 <% }
                 %>
-                <tr>
-                    <td>
-                        <table class="normal-nopadding">
-                            <tbody>
-                            <tr>
-                                <td class="leftCol-small">
-                                    <fmt:message key="script.type"/>
-                                </td>
-                                <td>
-                                    <select style="width:100px">
-                                        <option value="hive">Hive</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
+                <%--<tr>--%>
+                    <%--<td>--%>
+                        <%--<table class="normal-nopadding">--%>
+                            <%--<tbody>--%>
+                            <%--<tr>--%>
+                                <%--<td class="leftCol-small">--%>
+                                    <%--<fmt:message key="script.type"/>--%>
+                                <%--</td>--%>
+                                <%--<td>--%>
+                                    <%--<select style="width:100px">--%>
+                                        <%--<option value="hive">Hive</option>--%>
+                                    <%--</select>--%>
+                                <%--</td>--%>
+                            <%--</tr>--%>
+                            <%--</tbody>--%>
+                        <%--</table>--%>
+                    <%--</td>--%>
+                <%--</tr>--%>
                 <tr>
                     <td>
                         <table class="normal-nopadding">

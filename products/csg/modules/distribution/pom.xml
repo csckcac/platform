@@ -24,13 +24,13 @@
     <parent>
         <groupId>org.wso2.csg</groupId>
     	<artifactId>csg-parent</artifactId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.0-beta</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wso2csg</artifactId>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-beta</version>
     <packaging>pom</packaging>
     <name>WSO2 CSG - Distribution</name>
     <url>http://wso2.org/projects/csg/java</url>

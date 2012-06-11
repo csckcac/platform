@@ -50,14 +50,14 @@
     </p>
 
     <p>
-        You can download WSO2 CSG 1.0.0-alpha distribution from <a href="http://dist.wso2.org/downloads/csg/">Project
+        You can download WSO2 CSG 1.0.0-beta distribution from <a href="http://dist.wso2.org/downloads/csg/">Project
         Download Page</a> and give it a try.
     </p>
 
     <h2>Getting Started</h2>
       <p>Getting your integration project off the ground with WSO2 CSG is simple.</p>
       <ol>
-          <li><a href="http://dist.wso2.org/downloads/csg/">Download</a> WSO2 CSG 1.0.0-alpha</li>
+          <li><a href="http://dist.wso2.org/downloads/csg/">Download</a> WSO2 CSG 1.0.0-beta</li>
           <li>Read through the <a href="docs_index.html">Documentation Index</a></li>
           <li>Look at the <a href="release-notes.html">Release Notes</a> for the high level
               features</li>

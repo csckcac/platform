@@ -24,13 +24,13 @@
     <parent>
         <groupId>org.wso2.csg</groupId>
     	<artifactId>csg-features-parent</artifactId>
-        <version>1.0.0-alpha</version>
+        <version>1.0.0-beta</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wso2stratos-csg-features</artifactId>
-    <version>1.0.0-alpha</version>
+    <version>1.0.0-beta</version>
     <packaging>pom</packaging>
     <name>WSO2 Stratos CSG - Features Aggregator Module</name>
     <description>Features specific to the WSO2 CSG</description>

@@ -23,17 +23,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
       <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
-      <title>WSO2 CSG v1.0.0-alpha release</title>
+      <title>WSO2 CSG v1.0.0-beta release</title>
   </head>
   <body>
   <div id="header">
 </div>
 
 <div id="main-content">
-<h1>The WSO2 Cloud Services Gateway (CSG) 1.0.0-alpha release</h1>
+<h1>The WSO2 Cloud Services Gateway (CSG) 1.0.0-beta release</h1>
 
 <p>
-    The WSO2 CSG team is pleased to announce the release of version 1.0.0-alpha of
+    The WSO2 CSG team is pleased to announce the release of version 1.0.0-beta of
     the Cloud Services Gateway(CSG).
 </p>
 
@@ -46,7 +46,7 @@
 </p>
 
 <p>
-    WSO2 CSG 1.0.0-alpha is developed on top of the revolutionary
+    WSO2 CSG 1.0.0-beta is developed on top of the revolutionary
     <a href="http://wso2.org/projects/carbon">WSO2 Carbon platform</a>,
     an OSGi based framework that provides seamless modularity to your SOA via
     componentization.</p>
@@ -79,7 +79,7 @@
 
 <h2>Known Issues</h2>
 <p>
-    All the open issues pertaining to WSO2 CSG 1.0.0-alpha are reported at following
+    All the open issues pertaining to WSO2 CSG 1.0.0-beta are reported at following
     locations:
 </p>
 
@@ -101,6 +101,7 @@
     <ol>
         <li>CARBON-12606 - Added roles per publishing, un publishing and listing of servers(users
             who have permission for publishing will have edit, delete permission of servers).</li>
+        <li>CARBON-12345 - CSG breadcrumbs are messed up.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha</h2>

@@ -1,7 +1,7 @@
-Installing  WSO2 Cloud Services Gateway (CSG) 1.0.0-alpha
+Installing  WSO2 Cloud Services Gateway (CSG) 1.0.0-beta
 =========================================================
 
-WSO2 CSG 1.0.0-alpha can be run in standalone mode.
+WSO2 CSG 1.0.0-beta can be run in standalone mode.
 
 Standalone Mode
 ===============

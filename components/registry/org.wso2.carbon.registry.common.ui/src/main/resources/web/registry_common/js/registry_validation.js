@@ -91,7 +91,7 @@ function validateToFromDate(from, to) {
 
 function validateDate(fld,fldName){
     var error = "";
-    var allowed= /(0[1-9]|1[0-2]\/[0-2][0-9]|3[0-1]\/[1-2][0-9][0-9][0-9])/;
+    var allowed= /^((0[1-9]|1[0-2])\/([0-2][0-9]|3[0-1])\/[1-2][0-9][0-9][0-9])$/;
     if (allowed.test(fld.value)) {
         fld.style.background = 'White';
     }

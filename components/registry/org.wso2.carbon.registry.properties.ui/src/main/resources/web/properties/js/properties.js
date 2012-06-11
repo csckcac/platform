@@ -220,12 +220,13 @@ function setRetentionProperties() {
     propertyOperationStarted = true;
     sessionAwareFunction(function() {
         var reason="";
-        reason +=validateEmpty(document.getElementById('fromDate'), org_wso2_carbon_registry_properties_ui_jsi18n["from.date"]);
+        reason +=validateDate(document.getElementById('fromDate'), org_wso2_carbon_registry_properties_ui_jsi18n["from.date"]);
         if (reason == "") {
-            reason +=validateEmpty(document.getElementById('toDate'), org_wso2_carbon_registry_properties_ui_jsi18n["to.date"]);
+            reason +=validateDate(document.getElementById('toDate'), org_wso2_carbon_registry_properties_ui_jsi18n["to.date"]);
         }
-
-        reason += validateToFromDate(document.getElementById("fromDate"), document.getElementById("toDate"));
+        if (reason == "") {
+            reason += validateToFromDate(document.getElementById("fromDate"), document.getElementById("toDate"));
+        }
 
         if(reason!="") {
             CARBON.showWarningDialog(reason);

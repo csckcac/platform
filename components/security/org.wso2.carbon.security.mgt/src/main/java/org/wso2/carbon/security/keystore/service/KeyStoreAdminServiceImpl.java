@@ -20,12 +20,14 @@ package org.wso2.carbon.security.keystore.service;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.security.SecurityConfigException;
 import org.wso2.carbon.security.keystore.KeyStoreAdmin;
+import org.wso2.carbon.base.MultitenantConstants;
 
 public class KeyStoreAdminServiceImpl extends AbstractAdmin implements KeyStoreAdminInterface {
 
     public KeyStoreData[] getKeyStores() throws SecurityConfigException {
         KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
-        boolean isSuperTenant = super.getTenantDomain() == null ? true : false;
+        boolean isSuperTenant = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(
+                super.getTenantDomain()) ? true : false;
         return admin.getKeyStores(isSuperTenant);
     }
 

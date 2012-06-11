@@ -16,10 +16,16 @@
  ~ under the License.
  -->
 <component xmlns="http://products.wso2.org/carbon">
-	<httpGetRequestProcessors>
-		<processor>
-			<item>tryit</item>
-			<class>org.wso2.carbon.tryit.TryitRequestProcessor</class>
-		</processor>
-	</httpGetRequestProcessors>
+    <httpGetRequestProcessors>
+        <processor>
+            <item>tryit</item>
+            <class>org.wso2.carbon.tryit.TryitRequestProcessor</class>
+        </processor>
+    </httpGetRequestProcessors>
+    <ManagementPermissions>
+        <ManagementPermission>
+            <DisplayName>tryit</DisplayName>
+            <ResourceId>/permission/admin/manage/tryit</ResourceId>
+        </ManagementPermission>
+    </ManagementPermissions>
 </component>

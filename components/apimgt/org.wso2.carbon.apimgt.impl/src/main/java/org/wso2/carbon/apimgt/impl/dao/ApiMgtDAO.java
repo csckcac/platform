@@ -30,6 +30,7 @@ import org.wso2.carbon.apimgt.impl.dto.APIInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
+import org.wso2.carbon.apimgt.impl.utils.LRUCache;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
@@ -788,7 +789,7 @@ public class ApiMgtDAO {
                     "   ,SUBS.TIER_ID AS TIER_ID" +
                     "   ,APP.APPLICATION_ID AS APP_ID" +
                     "   ,SUBS.LAST_ACCESSED AS LAST_ACCESSED" +
-                    "   ,APP.NAME AS APP_NAME  " +
+                    "   ,APP.NAME AS APP_NAME " +
                     "FROM " +
                     "   AM_SUBSCRIBER SUB," +
                     "   AM_APPLICATION APP, " +
@@ -812,6 +813,7 @@ public class ApiMgtDAO {
             }
             
             Map<String,Set<SubscribedAPI>> map = new TreeMap<String, Set<SubscribedAPI>>();
+            LRUCache<Integer,Application> applicationCache = new LRUCache<Integer, Application>(100);
 
             while (result.next()) {
                 APIIdentifier apiIdentifier = new APIIdentifier(result.getString("API_PROVIDER"),
@@ -824,8 +826,17 @@ public class ApiMgtDAO {
                         APIConstants.SUBSCRIPTION_FIELD_LAST_ACCESS));
                 //setting NULL for subscriber. If needed, Subscriber object should be constructed &
                 // passed in
-                Application application = new Application(result.getString("APP_NAME"), subscriber);
-                application.setId(result.getInt("APP_ID"));
+                int applicationId = result.getInt("APP_ID");
+                Application application = applicationCache.get(applicationId);
+                if (application == null) {
+                    application = new Application(result.getString("APP_NAME"), subscriber);
+                    application.setId(result.getInt("APP_ID"));
+                    Set<APIKey> keys = getApplicationKeys(applicationId);
+                    for (APIKey key : keys) {
+                        application.addKey(key);
+                    }
+                    applicationCache.put(applicationId, application);
+                }
                 subscribedAPI.setApplication(application);
                 
                 int subscriptionId = result.getInt(APIConstants.SUBSCRIPTION_FIELD_SUBSCRIPTION_ID);
@@ -895,6 +906,40 @@ public class ApiMgtDAO {
             }
         } catch (SQLException e) {
             String msg = "Failed to get API keys for subscription: " + subscriptionId;
+            throw new APIManagementException(msg, e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(ps, connection, result);
+        }
+        return apiKeys;
+    }
+
+    private Set<APIKey> getApplicationKeys(int applicationId) throws APIManagementException {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet result = null;
+
+        String getKeysSql = "SELECT " +
+                " AKM.ACCESS_TOKEN AS ACCESS_TOKEN," +
+                " AKM.KEY_TYPE AS TOKEN_TYPE " +
+                "FROM" +
+                " AM_APPLICATION_KEY_MAPPING AKM " +
+                "WHERE" +
+                " AKM.APPLICATION_ID = ?";
+
+        Set<APIKey> apiKeys = new HashSet<APIKey>();
+        try {
+            connection = APIMgtDBUtil.getConnection();
+            PreparedStatement nestedPS = connection.prepareStatement(getKeysSql);
+            nestedPS.setInt(1, applicationId);
+            ResultSet nestedRS = nestedPS.executeQuery();
+            while (nestedRS.next()) {
+                APIKey apiKey = new APIKey();
+                apiKey.setKey(nestedRS.getString("ACCESS_TOKEN"));
+                apiKey.setType(nestedRS.getString("TOKEN_TYPE"));
+                apiKeys.add(apiKey);
+            }
+        } catch (SQLException e) {
+            String msg = "Failed to get keys for application: " + applicationId;
             throw new APIManagementException(msg, e);
         } finally {
             APIMgtDBUtil.closeAllConnections(ps, connection, result);

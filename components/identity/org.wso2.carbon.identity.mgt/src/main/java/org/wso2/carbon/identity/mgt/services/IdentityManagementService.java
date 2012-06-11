@@ -28,7 +28,6 @@ import org.wso2.carbon.identity.mgt.beans.VerificationBean;
 import org.wso2.carbon.identity.mgt.constants.IdentityMgtConstants;
 import org.wso2.carbon.identity.mgt.dto.*;
 import org.wso2.carbon.identity.mgt.internal.IdentityMgtServiceComponent;
-import org.wso2.carbon.identity.mgt.util.ClaimsMgtUtil;
 import org.wso2.carbon.identity.mgt.util.PasswordUtil;
 import org.wso2.carbon.captcha.mgt.beans.CaptchaInfoBean;
 import org.wso2.carbon.captcha.mgt.util.CaptchaUtil;
@@ -98,9 +97,11 @@ public class IdentityManagementService {
                         RegistryConstants.PATH_SEPARATOR +  tenantId +
                         RegistryConstants.PATH_SEPARATOR + userMgtBean.getUserId();
 
+                // delete any existing resource for this users.
                 if (registry.resourceExists(identityKeyMgtPath)) {
                     registry.delete(identityKeyMgtPath);
                 }
+                Utils.clearVerifiedChallenges(userMgtBean);
 
                 userKey = UUID.randomUUID().toString();
                 Resource resource = registry.newResource();
@@ -425,7 +426,6 @@ public class IdentityManagementService {
 
         if(challengesDTOs == null || challengesDTOs.length < 1){
             log.error("no challenges provided by user for verifications");
-            Utils.clearVerifiedChallenges(userMgtBean);
             bean.setError("no challenges provided by user for verifications");
             return bean;
         }
@@ -434,7 +434,6 @@ public class IdentityManagementService {
         
         if(!Utils.verifyUserId(userMgtBean)){
             log.warn("Invalid user is trying to verify user challenges");
-            Utils.clearVerifiedChallenges(userMgtBean);
             bean.setError("Invalid user is trying to verify user challenges");
             return bean;
         }
@@ -450,7 +449,6 @@ public class IdentityManagementService {
             int noOfChallenges = processor.getNoOfChallengeQuestions(userMgtBean.getUserId(), tenantId);
             String propertyId;
             if(noOfVerifiedChallenges == noOfChallenges - 1){
-                Utils.clearVerifiedChallenges(userMgtBean);
                 propertyId = IdentityMgtConstants.SECRET_KEY;
             } else {
                 propertyId = IdentityMgtConstants.USER_KEY;
@@ -474,9 +472,11 @@ public class IdentityManagementService {
                 registry.put(identityKeyMgtPath, resource);
                 if(IdentityMgtConstants.USER_KEY.equals(propertyId)){
                     Utils.setVerifiedChallenges(userMgtBean);
+                } else {
+                    Utils.clearVerifiedChallenges(userMgtBean); 
                 }
-
                 bean.setVerified(true);
+                bean.setKey(key);
             } catch (RegistryException e) {
                 log.error("Unexpected error has occurred", e);
                 bean.setError("Unexpected error has occurred");
@@ -484,8 +484,6 @@ public class IdentityManagementService {
             }
 
         }
-        
-        Utils.clearVerifiedChallenges(userMgtBean);
 
         return bean;
     }
@@ -497,7 +495,7 @@ public class IdentityManagementService {
      * @return verification results as been
      * @throws IdentityMgtException if any error occurs
      */
-    public boolean verifyPrimaryChallengeQuestion(UserMgtBean userMgtBean) throws Exception {
+    public boolean verifyPrimaryChallengeQuestion(UserMgtBean userMgtBean) throws IdentityMgtException {
 
 
         Utils.processUserId(userMgtBean);

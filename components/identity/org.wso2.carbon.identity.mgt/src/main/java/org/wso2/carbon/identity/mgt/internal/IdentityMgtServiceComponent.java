@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.mgt.IdentityMgtEventListener;
 import org.wso2.carbon.identity.mgt.IdentityMgtException;
 import org.wso2.carbon.identity.mgt.constants.IdentityMgtConstants;
 import org.wso2.carbon.identity.mgt.dto.ChallengeQuestionDTO;
+import org.wso2.carbon.identity.mgt.util.Utils;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -31,8 +32,11 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.api.ClaimManager;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.api.ClaimMapping;
+import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.listener.UserOperationEventListener;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 import java.util.ArrayList;
@@ -142,7 +146,7 @@ public class IdentityMgtServiceComponent {
                 Collection questionCollection = registry.newCollection();
                 registry.put(IdentityMgtConstants.IDENTITY_MANAGEMENT_PATH, questionCollection);
                 modifyClaims();
-                loadDefaultChallenges();                 
+                loadDefaultChallenges();
             }
         } catch (RegistryException e) {
             log.error("Error while creating registry collection for org.wso2.carbon.identity.mgt component");
@@ -202,6 +206,23 @@ public class IdentityMgtServiceComponent {
                                     toArray(new ChallengeQuestionDTO[questionSetDTOs.size()]));
         } catch (IdentityMgtException e) {
             log.error("Error while promoting default challenge questions", e);
+        }
+    }
+
+    private void processLockUsers() {
+
+        try{
+            UserStoreManager manager = realmService.getBootstrapRealm().getUserStoreManager();
+            String[] users = manager.getUserList(UserCoreConstants.ClaimTypeURIs.ACCOUNT_STATUS,
+                                                            UserCoreConstants.USER_LOCKED, null);
+
+            for(String user : users){
+                String userName = UserCoreUtil.getTenantLessUsername(user);
+                String tenantDomain = UserCoreUtil.getTenantDomain(realmService, user);
+                Utils.lockUserAccount(userName, Utils.getTenantId(tenantDomain));
+            }
+        } catch (Exception e) {
+            log.error("Error while locking user account of locked users", e);
         }
     }
 }

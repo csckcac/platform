@@ -390,8 +390,7 @@ public class ChallengeQuestionProcessor {
      * @throws org.wso2.carbon.user.api.UserStoreException
      */
     public boolean verifyPrimaryChallengeQuestion(String userName, int tenantId,
-                                                        UserChallengesDTO[] challengesDTOs)
-                                                            throws org.wso2.carbon.user.api.UserStoreException {
+                                                        UserChallengesDTO[] challengesDTOs) {
 
         boolean verification = false;
         try {

@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,10 +160,10 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
             log.debug("Pre add user is called in IdentityMgtEventListener");
         }
 
-        processUserChallenges(claims,false);
+        processUserChallenges(userName, claims, true, userStoreManager);
 
         //lock account and persist
-        lockUserAccount(userName, userStoreManager.getTenantId());
+        Utils.lockUserAccount(userName, userStoreManager.getTenantId());
         claims.put(UserCoreConstants.ClaimTypeURIs.ACCOUNT_STATUS, UserCoreConstants.USER_LOCKED);
         
         if(credential == null){
@@ -217,7 +218,7 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
             }
 
             if(UserCoreConstants.USER_LOCKED.equals(claimValue)){
-                lockUserAccount(userName, userStoreManager.getTenantId());
+                Utils.lockUserAccount(userName, userStoreManager.getTenantId());
             }
             return true;
 
@@ -226,16 +227,18 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
             List<String> challengesUri = processor.getQuestionProcessor().
                             getChallengeQuestionUris(userName, userStoreManager.getTenantId());
             if(challengesUri.contains(claimURI)){
-                if(claimValue != null){
-                    claimValue = claimValue.trim();
-                    String question = claimValue.substring(0,claimValue.indexOf(","));
-                    String answer = claimValue.substring(claimValue.indexOf(",")+ 1);
-                    if(question != null && answer != null){
-                        question = question.trim();
-                        answer = answer.trim();
-                        claimValue =question + "," + doHash(answer.toLowerCase());
-                        ((AbstractUserStoreManager) userStoreManager).
-                                doSetUserClaimValue(userName, claimURI, claimValue, profileName);
+                if(isNewAnswer(userName, claimURI, claimValue, userStoreManager)){
+                    if(claimValue != null){
+                        claimValue = claimValue.trim();
+                        String question = claimValue.substring(0,claimValue.indexOf(","));
+                        String answer = claimValue.substring(claimValue.indexOf(",")+ 1);
+                        if(question != null && answer != null){
+                            question = question.trim();
+                            answer = answer.trim();
+                            claimValue =question + "," + doHash(answer.toLowerCase());
+                            ((AbstractUserStoreManager) userStoreManager).
+                                    doSetUserClaimValue(userName, claimURI, claimValue, profileName);
+                        }
                     }
                 }
                 return false;
@@ -254,7 +257,9 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
 
             throw new UserStoreException("Primary challenges can not be modified");
 
-        } else if(claims.containsKey(UserCoreConstants.ClaimTypeURIs.ACCOUNT_STATUS)){
+        }
+
+        if(claims.containsKey(UserCoreConstants.ClaimTypeURIs.ACCOUNT_STATUS)){
 
             if(isLoggedInUser(userName)){
                 throw new UserStoreException("You are not authorized to change account status");
@@ -262,23 +267,14 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
 
             if(UserCoreConstants.USER_LOCKED.
                         equals(claims.get(UserCoreConstants.ClaimTypeURIs.ACCOUNT_STATUS))){
-                lockUserAccount(userName, userStoreManager.getTenantId());
+                Utils.lockUserAccount(userName, userStoreManager.getTenantId());
             }
-            return true;
         }
         
-        processUserChallenges(claims,false);
+        processUserChallenges(userName, claims, false, userStoreManager);
         return true;
 
     }
-
-    private void lockUserAccount(String userName, int tenantId){
-
-        IdentityCacheKey cacheKey = new IdentityCacheKey(tenantId, userName);
-        IdentityCacheEntry cacheEntry = new IdentityCacheEntry(-10);
-        cache.addToCache(cacheKey, cacheEntry);
-    }
-
 
     private void unlockUserAccount(String userName, int tenantId){
         
@@ -307,24 +303,21 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
     }
 
 
-    private void processUserChallenges(Map<String, String> claims, boolean primary)
-                                                                        throws UserStoreException {
+    private void processUserChallenges(String userName, Map<String, String> claims,
+                           boolean primary, UserStoreManager manager) throws UserStoreException {
 
-        String challengeUris = claims.get(UserCoreConstants.ClaimTypeURIs.CHALLENGES_URI);
+        String[] challengeUris = Utils.getChallengeUris();
+        List<String> selectedUris = new ArrayList<String>();
         if(challengeUris != null){
             Map<String, String> challengeMap = new HashMap<String, String>();
-            String[] challenges;
-
-            if(challengeUris.contains(",")){
-                challenges = challengeUris.split(",");
-            } else {
-                challenges = new String[]{challengeUris};
-            }
-
-            for(String challenge : challenges){
+            for(String challenge : challengeUris){
                 challenge = challenge.trim();
                 String challengeValue = claims.get(challenge);
                 if(challengeValue != null){
+                    selectedUris.add(challenge);
+                    if(!isNewAnswer(userName, challenge, challengeValue, manager)){
+                        continue;
+                    }
                     challengeValue = challengeValue.trim();
                     String question = challengeValue.
                         substring(0,challengeValue.indexOf(","));
@@ -354,6 +347,19 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
                 if(!"".equals(value)){
                     claims.put(UserCoreConstants.ClaimTypeURIs.PRIMARY_CHALLENGES, value);
                 }
+
+                String selectedUriString = "";
+                for(String uri :  selectedUris){
+                    if("".equals(selectedUriString)){
+                        selectedUriString = uri;
+                    } else {
+                        selectedUriString = selectedUriString + "," + uri;
+                    }
+                }
+
+                if(!"".equals(selectedUriString)){
+                    claims.put(UserCoreConstants.ClaimTypeURIs.CHALLENGES_URI, selectedUriString);
+                }
             }
         }
     }
@@ -375,5 +381,13 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
             log.error(e.getMessage(), e);
             throw new UserStoreException(e.getMessage(), e);
         }
+    }
+
+    private boolean isNewAnswer(String userName, String uri, String value, UserStoreManager manager)
+                                                                        throws UserStoreException {
+
+        String oldValue = manager.getUserClaimValue(userName, uri, null);
+        return !(oldValue != null && oldValue.equals(value));
+
     }
 }

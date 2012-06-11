@@ -2,9 +2,12 @@ package org.wso2.carbon.identity.mgt.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.caching.core.identity.IdentityCacheEntry;
+import org.wso2.carbon.caching.core.identity.IdentityCacheKey;
 import org.wso2.carbon.identity.mgt.IdentityMgtException;
 import org.wso2.carbon.identity.mgt.beans.UserMgtBean;
 import org.wso2.carbon.identity.mgt.beans.VerificationBean;
+import org.wso2.carbon.identity.mgt.cache.LoginAttemptCache;
 import org.wso2.carbon.identity.mgt.constants.IdentityMgtConstants;
 import org.wso2.carbon.identity.mgt.dto.UserEvidenceDTO;
 import org.wso2.carbon.identity.mgt.internal.IdentityMgtServiceComponent;
@@ -166,7 +169,7 @@ public class Utils {
                 registry.delete(identityKeyMgtPath);
             }
         } catch (RegistryException e) {
-            log.error("Error while processing userKey", e);
+            log.error("Error while clearing meta data in challenge verification process", e);
         }
     }
 
@@ -457,4 +460,18 @@ public class Utils {
 
         return userName;
     }
+
+    public static String[] getChallengeUris(){
+        //TODO
+        return new String[] {IdentityMgtConstants.DEFAULT_CHALLENGE_QUESTION_URI01,
+                                            IdentityMgtConstants.DEFAULT_CHALLENGE_QUESTION_URI02};
+    }
+
+    public static void lockUserAccount(String userName, int tenantId){
+
+        IdentityCacheKey cacheKey = new IdentityCacheKey(tenantId, userName);
+        IdentityCacheEntry cacheEntry = new IdentityCacheEntry(-10);
+        LoginAttemptCache.getCacheInstance().addToCache(cacheKey, cacheEntry);
+    }
+
 }

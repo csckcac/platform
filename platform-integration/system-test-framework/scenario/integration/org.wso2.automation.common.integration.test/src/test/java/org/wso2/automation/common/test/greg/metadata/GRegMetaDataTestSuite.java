@@ -37,7 +37,7 @@ public class GRegMetaDataTestSuite extends MasterTestSuite{
         suiteVariablesList.add(new SuiteVariables("AddWsdlMetaDataTest",
                                                   AddWsdlMetaDataTest.class));
         setServerList(ProductConstant.GREG_SERVER_NAME);
-        superSuite("GRegLifeCycleTestSuite", suiteVariablesList).run();
+        superSuite("GRegMetaDataTestSuite", suiteVariablesList).run();
 
     }
 

@@ -20,7 +20,6 @@ package org.wso2.carbon.security.config;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.util.UUIDGenerator;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisBinding;
@@ -256,13 +255,9 @@ public class SecurityServiceAdmin {
                     "/"+Resources.ServiceProperties.BINDINGS+
                     "/"+Resources.ServiceProperties.BINDING_XML_TAG+
                     PersistenceUtils.getXPathAttrPredicate(Resources.NAME, bindingName);
-            OMNode bindingPolicyUuidOM = serviceGroupFilePM.get(serviceGroupId, bindingElementPath +
+            serviceGroupFilePM.delete(serviceGroupId, bindingElementPath +
                     "/" + Resources.ServiceProperties.POLICY_UUID +
                     PersistenceUtils.getXPathTextPredicate(null, uuid));
-            if (bindingPolicyUuidOM != null) {
-                bindingPolicyUuidOM.detach();
-                serviceGroupFilePM.setMetaFileModification(serviceGroupId);
-            }
         }
         if (!transactionStarted) {
             serviceGroupFilePM.commitTransaction(serviceGroupId);

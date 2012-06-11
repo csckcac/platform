@@ -269,14 +269,12 @@ public class SecurityConfigAdmin {
                 serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
 
-            // at registry
-            String servicePath = RegistryResources.SERVICE_GROUPS
-                    + service.getAxisServiceGroup().getServiceGroupName()
-                    + RegistryResources.SERVICES + serviceName;               //todo temp var. remove this
             //persist
             String policyElementPath = serviceXPath+"/"+Resources.POLICIES+"/"+Resources.POLICY;
+            if (log.isDebugEnabled()) {
+                log.debug("Removing " + policyElementPath);
+            }
 
-            log.debug("Removing " + policyElementPath);
             if (!serviceGroupFilePM.elementExists(serviceGroupId, policyElementPath)) {
                 if(!transactionStarted1) {
                     serviceGroupFilePM.rollbackTransaction(serviceGroupId);
@@ -372,12 +370,20 @@ public class SecurityConfigAdmin {
                 for (Object tks : tkss) {
                     ((OMNode) tks).detach();
                 }
+
+                if ((roleElements == null || !roleElements.isEmpty() ) ||
+                        (kss == null || kss.isEmpty() ) ||
+                        (tkss == null || tkss.isEmpty() )) {
+                    serviceGroupFilePM.setMetaFileModification(serviceGroupId);
+                }
+
                 // remove the policy path parameter if it is set..
-                String paramXPath = servicePath+"/"+Resources.ParameterProperties.PARAMETER+
+                String paramXPath = serviceXPath+"/"+Resources.ParameterProperties.PARAMETER+
                         PersistenceUtils.getXPathAttrPredicate(
                                 Resources.NAME, SecurityConstants.SECURITY_POLICY_PATH);
                 if (serviceGroupFilePM.elementExists(serviceGroupId, paramXPath)) {
                     serviceGroupFilePM.delete(serviceGroupId, paramXPath);
+                    serviceGroupFilePM.setMetaFileModification(serviceGroupId);
                 }
                 if (!transactionStarted) {
                     serviceGroupFilePM.commitTransaction(serviceGroupId);
@@ -424,7 +430,7 @@ public class SecurityConfigAdmin {
                     axisConfig.notifyObservers(event, service);
 
                     persistenceFactory.getServicePM().setServiceProperty(service,
-                            RegistryResources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS, Boolean.TRUE.toString());
+                            Resources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS, Boolean.TRUE.toString());
 
                     for (String trans : transports) {
                         if (trans.endsWith("https")) {
@@ -771,9 +777,6 @@ public class SecurityConfigAdmin {
 //                persistParameter(serviceGroupId, pathParam, serviceXPath);
             }
 
-            // Collection coll =
-            // (Collection)registry.get(RegistryResources.TRANSPORTS);
-
             if (isHttpsTransportOnly(policy)) {
                 setServiceTransports(service.getName(), getHttpsTransports());
                 try {
@@ -782,12 +785,17 @@ public class SecurityConfigAdmin {
                         serviceGroupFilePM.beginTransaction(serviceGroupId);
                     }
 
-                    OMElement element = (OMElement) serviceGroupFilePM.get(serviceGroupId, serviceXPath);
-                    element.addAttribute(
-                            Resources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS, Boolean.FALSE.toString(), null);
-                    serviceGroupFilePM.setMetaFileModification(serviceGroupId);
-                    element.addAttribute(
-                            Resources.ServiceProperties.IS_UT_ENABLED, Boolean.TRUE.toString(), null);
+                    serviceGroupFilePM.put(serviceGroupId,
+                            OMAbstractFactory.getOMFactory().createOMAttribute(
+                                    Resources.ServiceProperties.IS_UT_ENABLED,
+                                    null, Boolean.TRUE.toString()),
+                            serviceXPath);
+                    serviceGroupFilePM.put(serviceGroupId,
+                            OMAbstractFactory.getOMFactory().createOMAttribute(
+                                    Resources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS,
+                                    null, Boolean.FALSE.toString()),
+                            serviceXPath);
+
                     List exposedTransports = serviceGroupFilePM.getAssociations(serviceGroupId, serviceXPath,
                             Resources.Associations.EXPOSED_TRANSPORTS);
 
@@ -801,7 +809,8 @@ public class SecurityConfigAdmin {
                             continue;
                         }
                         if (registry.resourceExists(transport)) {
-                            assoc.detach();
+                            assoc.detach();     //todo do this via a call to persistence layer
+                            serviceGroupFilePM.setMetaFileModification(serviceGroupId);
                         } else {
                             String msg = "Transport resource " + transport + " not available in Registry";
                             log.error(msg);
@@ -812,19 +821,18 @@ public class SecurityConfigAdmin {
                     if (!isExists) {
                         String transportResourcePath = RegistryResources.TRANSPORTS + "https" + "/listener";
                         if (registry.resourceExists(transportResourcePath)) {
-                            element.addChild(
+                            serviceGroupFilePM.put(serviceGroupId,
                                     PersistenceUtils.createAssociation(transportResourcePath,
-                                            Resources.Associations.EXPOSED_TRANSPORTS));
+                                            Resources.Associations.EXPOSED_TRANSPORTS),
+                                    serviceXPath);
                         } else {
                             String msg = "Transport resource " + transportResourcePath + " not available in Registry";
                             log.error(msg);
                             throw new AxisFault(msg);
                         }
                     }
-//                    registry.put(resource.getPath(), resource);
                     if (!transactionStarted) {
                         serviceGroupFilePM.commitTransaction(serviceGroupId);
-//                        registry.commitTransaction();
                     }
                 } catch (Exception e) {
                     String msg = "Service with name " + service.getName() + " not found.";
@@ -1356,7 +1364,6 @@ public class SecurityConfigAdmin {
             }
             data = new SecurityConfigData();
 
-            //todo how to get roles for a given service. Currently it does by checking authorization in service reg path - kasung
             //may be we don't need this in the new persistence model
             String serviceXPath = PersistenceUtils.getResourcePath(service);
             List roleElements = serviceGroupFilePM.getAll(serviceGroupId, serviceXPath + "/" + Resources.SecurityManagement.ROLE_XML_TAG);

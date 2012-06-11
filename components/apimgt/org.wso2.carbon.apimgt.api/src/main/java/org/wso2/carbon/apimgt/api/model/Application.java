@@ -17,18 +17,21 @@
 */
 package org.wso2.carbon.apimgt.api.model;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * This class represent the Application in api model
  */
-@SuppressWarnings("unused")
 public class Application {
+
     private int id;
     private String name;
     private Subscriber subscriber;
     private Set<SubscribedAPI> subscribedAPIs = new LinkedHashSet<SubscribedAPI>();
+    private List<APIKey> keys = new ArrayList<APIKey>();
 
     public Application(String name, Subscriber subscriber) {
         this.name = name;
@@ -64,6 +67,14 @@ public class Application {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<APIKey> getKeys() {
+        return keys;
+    }
+
+    public void addKey(APIKey key) {
+        keys.add(key);
     }
 
     @Override

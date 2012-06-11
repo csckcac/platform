@@ -419,7 +419,7 @@ public class DefaultLifeCycle extends Aspect {
                                 + " failed for action : " + customCodeBean.getEventName();
 
                         if(userMsg != null){
-                            message =  message + "Embedded error : " + userMsg;
+                            message =  message + " Embedded error : " + userMsg;
                         }
 
                         throw new RegistryException(message);
@@ -452,7 +452,7 @@ public class DefaultLifeCycle extends Aspect {
                         String message = "Execution failed for action : " + customCodeBean.getEventName();
 
                         if(userMsg != null){
-                            message =  message + "Embedded error : " + userMsg;
+                            message =  message + " Embedded error : " + userMsg;
                         }
                         throw new RegistryException(message);
                     }

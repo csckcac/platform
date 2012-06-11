@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
 public class SchemaTestCaseClient {
@@ -52,14 +53,14 @@ public class SchemaTestCaseClient {
         governance = new RegistryProvider().getGovernance(registryWS, userId);
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"}, priority = 1)
     public void testAddSchema() throws Exception {
         log.info("############## testAddSchema started ...###################");
         SchemaManager schemaManager = new SchemaManager(governance);
 
         Schema schema = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                "governance/org.wso2.carbon.governance.api/src/test/resources/" +
-                "test-resources/xsd/purchasing.xsd");
+                                                "governance/org.wso2.carbon.governance.api/src/test/resources/" +
+                                                "test-resources/xsd/purchasing.xsd");
         schema.addAttribute("creator", "it is me");
         schema.addAttribute("version", "0.01");
         schemaManager.addSchema(schema);
@@ -101,6 +102,7 @@ public class SchemaTestCaseClient {
                 return false;
             }
         });
+
         doSleep();
         log.info("########Schema Len:" + schemas.length);
         Assert.assertEquals(schemas.length, 2);
@@ -118,8 +120,8 @@ public class SchemaTestCaseClient {
         byte[] bytes = null;
         try {
             InputStream inputStream = new URL("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                    "governance/org.wso2.carbon.governance.api/src/test/resources/" +
-                    "test-resources/xsd/purchasing.xsd").openStream();
+                                              "governance/org.wso2.carbon.governance.api/src/test/resources/" +
+                                              "test-resources/xsd/purchasing.xsd").openStream();
             try {
                 bytes = IOUtils.toByteArray(inputStream);
             } finally {
@@ -135,7 +137,7 @@ public class SchemaTestCaseClient {
 
         Schema newSchema = schemaManager.getSchema(schema.getId());
         Assert.assertEquals(newSchema.getSchemaElement().toString(),
-                schema.getSchemaElement().toString());
+                            schema.getSchemaElement().toString());
         Assert.assertEquals(newSchema.getAttribute("creator"), "it is me");
         Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
 
@@ -151,8 +153,8 @@ public class SchemaTestCaseClient {
         byte[] bytes = null;
         try {
             InputStream inputStream = new URL("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                    "governance/org.wso2.carbon.governance.api/src/test/resources/" +
-                    "test-resources/xsd/purchasing.xsd").openStream();
+                                              "governance/org.wso2.carbon.governance.api/src/test/resources/" +
+                                              "test-resources/xsd/purchasing.xsd").openStream();
             try {
                 bytes = IOUtils.toByteArray(inputStream);
             } finally {
@@ -168,7 +170,7 @@ public class SchemaTestCaseClient {
 
         Schema newSchema = schemaManager.getSchema(schema.getId());
         Assert.assertEquals(newSchema.getSchemaElement().toString(),
-                schema.getSchemaElement().toString());
+                            schema.getSchemaElement().toString());
         Assert.assertEquals(newSchema.getAttribute("creator"), "it is me");
         Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
 
@@ -185,51 +187,53 @@ public class SchemaTestCaseClient {
         }
     }
 
-    @Test(groups = {"wso2.greg"}, expectedExceptions = {GovernanceException.class}, description = "Testing invalid schema")
-    public void testInvalidSchema() throws GovernanceException {
+    @Test(groups = {"wso2.greg"}, description = "Testing invalid schema")
+    public void testInvalidSchema() {
         SchemaManager schemaManager = new SchemaManager(governance);
         Schema schema;
+        boolean status = false;
         try {
             schema = schemaManager.newSchema("https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration" +
-                    "/system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts" +
-                    "/GREG/schema/XmlInvalidSchema.xsd");
-            assertTrue("Invalid schema added without any exceptions", false);
+                                             "/system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts" +
+                                             "/GREG/schema/XmlInvalidSchema.xsd");
+            schemaManager.addSchema(schema);
         } catch (GovernanceException e) {
-            throw new GovernanceException("Exception thrown while adding Invalid schema : " + e.getMessage());
+            status = true;
+            log.info("Failed to upload invalid schema file");
         }
-        schemaManager.addSchema(schema);
+        assertTrue("Error not thrown while adding invalid schema", status);
     }
 
     @Test(groups = {"wso2.greg"}, description = "Testing invalid schema")
     public void testInvalidSchemaContent() throws GovernanceException {
         Schema schema;
         String schemaContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<xsd:schema targetNamespace=\"http://OrderProcessingLib/bo\"\n" +
-                "            xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
-                "    <xsd:complexType>\n" +
-                "        <xsd:sequence>\n" +
-                "            <xsd:element minOccurs=\"0\" name=\"vendorID\"\n" +
-                "                         type=\"xsd:string\">\n" +
-                "            </xsd:element>\n" +
-                "            <xsd:element minOccurs=\"0\" name=\"deliveryCity\"\n" +
-                "                         type=\"xsd:string\">\n" +
-                "            </xsd:element>\n" +
-                "            <xsd:element minOccurs=\"0\" name=\"totalAmount\"\n" +
-                "                         type=\"xsd:double\">\n" +
-                "            </xsd:element>\n" +
-                "            <xsd:element minOccurs=\"0\" name=\"status\"\n" +
-                "                         type=\"xsd:string\">\n" +
-                "            </xsd:element>\n" +
-                "        </xsd:sequence>\n" +
-                "    </xsd:complexType>\n" +
-                "</xsd:schema>";
+                               "<xsd:schema targetNamespace=\"http://OrderProcessingLib/bo\"\n" +
+                               "            xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
+                               "    <xsd:complexType>\n" +
+                               "        <xsd:sequence>\n" +
+                               "            <xsd:element minOccurs=\"0\" name=\"vendorID\"\n" +
+                               "                         type=\"xsd:string\">\n" +
+                               "            </xsd:element>\n" +
+                               "            <xsd:element minOccurs=\"0\" name=\"deliveryCity\"\n" +
+                               "                         type=\"xsd:string\">\n" +
+                               "            </xsd:element>\n" +
+                               "            <xsd:element minOccurs=\"0\" name=\"totalAmount\"\n" +
+                               "                         type=\"xsd:double\">\n" +
+                               "            </xsd:element>\n" +
+                               "            <xsd:element minOccurs=\"0\" name=\"status\"\n" +
+                               "                         type=\"xsd:string\">\n" +
+                               "            </xsd:element>\n" +
+                               "        </xsd:sequence>\n" +
+                               "    </xsd:complexType>\n" +
+                               "</xsd:schema>";
 
         SchemaManager schemaManager = new SchemaManager(governance);
         try {
             schema = schemaManager.newSchema(schemaContent.getBytes(), "InvalidSchema.xsd");
             schemaManager.addSchema(schema);
             assertTrue("getAttribute(\"Schema Validation\") schema validation didn't executed",
-                    schema.getAttribute("Schema Validation").equalsIgnoreCase("invalid"));
+                       schema.getAttribute("Schema Validation").equalsIgnoreCase("invalid"));
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception thrown while adding Invalid schema : " + e.getMessage());
         }
@@ -241,12 +245,12 @@ public class SchemaTestCaseClient {
         Schema schema;
         try {
             schema = schemaManager.newSchema("https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
-                    "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/" +
-                    "GREG/schema/SchemaImportSample.xsd");
+                                             "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/" +
+                                             "GREG/schema/SchemaImportSample.xsd");
             schemaManager.addSchema(schema);
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception thrown while executing newSchema API method schema " +
-                    "which has schema import : " + e.getMessage());
+                                          "which has schema import : " + e.getMessage());
         }
         schema = schemaManager.getSchema(schema.getId());
         assertTrue("Schema does not added which has schema import", schema.getQName().getLocalPart()
@@ -265,8 +269,8 @@ public class SchemaTestCaseClient {
             }
         }
         schema = schemaManager.newSchema("https://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration/" +
-                "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/" +
-                "GREG/schema/SchemaImportSample.xsd");
+                                         "system-test-framework/core/org.wso2.automation.platform.core/src/main/resources/artifacts/" +
+                                         "GREG/schema/SchemaImportSample.xsd");
         schemaManager.addSchema(schema);
         try {
             schemaManager.addSchema(schema);

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012 WSO2, Inc. (http://wso2.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wso2.carbon.bam.eventreceiver.datastore;
 
 import me.prettyprint.cassandra.model.IndexedSlicesQuery;
@@ -25,13 +41,15 @@ import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 
 import java.util.*;
 
-
+/**
+ * Cassandra backend connector  and related operations
+ */
 public class CassandraConnector {
 
     public static final String CLUSTER_NAME = "Test Cluster";
     public static final String USERNAME_KEY = "username";
     public static final String PASSWORD_KEY = "password";
-    public static final String RPC_PORT = "9160";
+    public static final String RPC_PORT = "9171";
 
     public static final String USERNAME_VALUE = "admin";
     public static final String PASSWORD_VALUE = "admin";
@@ -83,6 +101,7 @@ public class CassandraConnector {
         credentials.put(PASSWORD_KEY, PASSWORD_VALUE);
 ////        String hostList = CSS_NODE0 + ":" + RPC_PORT + "," + CSS_NODE1 + ":" + RPC_PORT + ","
 ////                + CSS_NODE2 + ":" + RPC_PORT;                                                                                String
+
         String hostList = LOCAL_NODE + ":" + RPC_PORT;
         cluster = HFactory.createCluster(CLUSTER_NAME,
                                          new CassandraHostConfigurator(hostList), credentials);
@@ -395,6 +414,13 @@ public class CassandraConnector {
 //        mutator.execute();
 //    }
 
+    /**
+     * Returns stream definition for a given streamId
+     * @param tenantCluster     Cluster connection for the tenant.
+     * @param streamId              Stream ID
+     * @return  Stream definition
+     * @throws MalformedStreamDefinitionException
+     */
 
     public EventStreamDefinition getStreamDefinition(Cluster tenantCluster, String streamId)
             throws MalformedStreamDefinitionException {

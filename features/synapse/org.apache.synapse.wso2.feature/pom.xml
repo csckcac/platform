@@ -55,7 +55,7 @@
             <artifactId>saxon</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.opensymphony.wso2</groupId>
+            <groupId>org.quartz-scheduler.wso2</groupId>
             <artifactId>quartz</artifactId>
         </dependency>
         <dependency>
@@ -93,7 +93,7 @@
                                 <bundleDef>org.apache.synapse:synapse-extensions</bundleDef>
                                 <bundleDef>org.apache.synapse:synapse-tasks</bundleDef>
                                 <bundleDef>net.sf.saxon.wso2:saxon</bundleDef>
-                                <bundleDef>org.opensymphony.wso2:quartz</bundleDef>
+                                <bundleDef>org.quartz-scheduler.wso2:quartz</bundleDef>
                                 <bundleDef>org.wso2.uri.template:wso2-uri-templates</bundleDef>
                             </bundles>
                         </configuration>

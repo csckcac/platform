@@ -78,7 +78,7 @@
                 <version>${saxon.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.opensymphony.wso2</groupId>
+                <groupId>org.quartz-scheduler.wso2</groupId>
                 <artifactId>quartz</artifactId>
                 <version>${quartz.wso2.version}</version>
             </dependency>
@@ -87,7 +87,7 @@
 
     <properties>
         <saxon.wso2.version>8.9.0.wso2v1</saxon.wso2.version>
-        <quartz.wso2.version>1.6.0.wso2v2</quartz.wso2.version>
+        <quartz.wso2.version>2.1.1.wso2v1</quartz.wso2.version>
     </properties>
 
 </project>

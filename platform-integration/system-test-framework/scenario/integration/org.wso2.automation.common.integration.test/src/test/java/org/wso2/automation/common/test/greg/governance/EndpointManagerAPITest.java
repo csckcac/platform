@@ -117,8 +117,9 @@ public class EndpointManagerAPITest {
         Endpoint endpointObj;
         try {
             endpointObj = endpointManager.getEndpointByUrl(sampleEndPoint);
-            endpointObj.attachLifecycle("ServiceLifeCycle");
             endpointManager.updateEndpoint(endPointObj);
+            endpointObj.attachLifecycle("ServiceLifeCycle");
+
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing EndpointManager:updateEndpoint method" + e);
         }

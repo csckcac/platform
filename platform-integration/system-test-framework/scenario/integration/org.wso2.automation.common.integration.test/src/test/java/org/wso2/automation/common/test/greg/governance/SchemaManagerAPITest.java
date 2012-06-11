@@ -1,4 +1,4 @@
-package org.wso2.automation.common.test.greg.governance;/*
+/*
 *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *WSO2 Inc. licenses this file to you under the Apache License,
@@ -15,6 +15,7 @@ package org.wso2.automation.common.test.greg.governance;/*
 *specific language governing permissions and limitations
 *under the License.
 */
+package org.wso2.automation.common.test.greg.governance;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
@@ -157,13 +158,15 @@ public class SchemaManagerAPITest {
         }
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing getUrl API method with schema object", priority = 8)
+    //https://wso2.org/jira/browse/REGISTRY-762
+    @Test(groups = {"wso2.greg.api"}, description = "Testing getUrl API method with schema object",
+          priority = 8, enabled = false)
     public void testGetUrl() throws Exception {
         boolean isSchemaFound = false;
         Schema[] schema = schemaManager.getAllSchemas();
         try {
             for (Schema s : schema) {
-                if (!(s.getUrl() == null)) {
+                if ((s.getUrl() != null)) {
                     isSchemaFound = true;
                 }
             }

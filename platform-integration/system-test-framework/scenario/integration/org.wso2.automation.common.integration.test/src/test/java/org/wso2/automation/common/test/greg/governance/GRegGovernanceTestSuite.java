@@ -55,8 +55,8 @@ public class GRegGovernanceTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("WSDLUpdateContentServiceTestClient", WSDLUpdateContentServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLWithSpecialCharTest", WSDLWithSpecialCharTest.class));
 
-        suiteVariablesList.add(new SuiteVariables("MetaDataVolumeTestClient", MetaDataVolumeTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("MetaDataConcurrentTestClient", MetaDataConcurrentTestClient.class));
+//        suiteVariablesList.add(new SuiteVariables("MetaDataVolumeTestClient", MetaDataVolumeTestClient.class));
+//        suiteVariablesList.add(new SuiteVariables("MetaDataConcurrentTestClient", MetaDataConcurrentTestClient.class));
 
 
         setServerList(ProductConstant.GREG_SERVER_NAME);

@@ -60,7 +60,7 @@ public class EndpointServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "test adding an Endpoint to G-Reg", priority = 1)
-    private void testAddEndpoint() throws RegistryException {
+    public void testAddEndpoint() throws RegistryException {
         String endpoint_url = "http://ws.strikeiron.com/StrikeIron/donotcall2_5/DoNotCallRegistry";
         String endpoint_path = "/_system/governance/trunk/endpoints/com/strikeiron/ws/strikeiron/donotcall2_5/ep-DoNotCallRegistry";
         String property1 = "QA";
@@ -77,7 +77,7 @@ public class EndpointServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "test adding an WSDL with Endpoints to G-Reg", priority = 2)
-    private void testAddWsdlWithEndpoints() throws Exception {
+    public void testAddWsdlWithEndpoints() throws Exception {
         String wsdl_url = "http://people.wso2.com/~evanthika/wsdls/BizService.wsdl";
         String endpoint_path = "http://people.wso2.com:9763/services/BizService";
 
@@ -137,7 +137,7 @@ public class EndpointServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "Attach an Endpoint to a service ", priority = 4)
-    private void testAttachEndpointsToService() throws RegistryException {
+    public void testAttachEndpointsToService() throws RegistryException {
         String service_namespace = "http://wso2.com/test234/xxxxx";
         String service_name = "myServicxcde";
         String service_path = "/_system/governance/trunk/services/com/wso2/test234/xxxxx/myServicxcde";
@@ -185,17 +185,20 @@ public class EndpointServiceTestClient {
         EndpointManager endpointManager = new EndpointManager(governance);
         Endpoint ep1 = endpointManager.newEndpoint("http://wso2.automation.endpoint");
         endpointManager.addEndpoint(ep1);
-        assertTrue(endpointManager.getEndpoint(ep1.getId()).getQName().toString().contains("http://wso2.automation.endpoint"), "Endpoint not found");
+        assertTrue(endpointManager.getEndpoint(ep1.getId()).getQName().toString().
+                contains("http://wso2.automation.endpoint"), "Endpoint not found");
 
         //add same endpoint again
-        Endpoint ep2 = endpointManager.newEndpoint("http://wso2.automation.endpoint");
-        endpointManager.addEndpoint(ep2);
+        EndpointManager endpointManagerDuplicate = new EndpointManager(governance);
+        Endpoint ep2 = endpointManagerDuplicate.newEndpoint("http://wso2.automation.endpoint");
+        endpointManagerDuplicate.addEndpoint(ep2);
 
-        assertTrue(endpointManager.getEndpoint(ep2.getId()).getQName().toString().contains("http://wso2.automation.endpoint"), "Endpoint not found");
+        assertTrue(endpointManagerDuplicate.getEndpoint(ep1.getId()).getQName().toString().
+                contains("http://wso2.automation.endpoint"), "Endpoint not found");
 
         //delete endpoint
-        endpointManager.removeEndpoint(ep2.getId());
-        assertNull(endpointManager.getEndpoint(ep2.getId()), "Endpoint not removed");
+        endpointManagerDuplicate.removeEndpoint(ep1.getId());
+        assertNull(endpointManagerDuplicate.getEndpoint(ep1.getId()), "Endpoint not removed");
     }
 
     @Test(groups = {"wso2.greg"}, description = "Add jmx endpoints")

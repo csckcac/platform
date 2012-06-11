@@ -62,7 +62,7 @@ public class GenericGovernanceArtifactTestClient {
     @Test(groups = {"wso2.greg"}, description = "add new rxt file", priority = 1)
     public void testAddNewRxtFile() throws Exception {
         Resource resource = governance.newResource();
-        String governanceRegistryPath = "/_system/governance/event.rxt";
+        String fileName = "event.rxt";
 
         String rxtFilePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator +
                              "artifacts" + File.separator + "GREG" + File.separator + "rxt" +
@@ -71,8 +71,8 @@ public class GenericGovernanceArtifactTestClient {
         resource.setContent(FileManager.readFile(rxtFilePath + "event.rxt"));
 
         resource.setMediaType(RXT_MEDIA_TYPE);
-        governance.put(governanceRegistryPath, resource);
-        assertTrue(registryWS.resourceExists(governanceRegistryPath),
+        governance.put(fileName, resource);
+        assertTrue(governance.resourceExists(fileName),
                    "rxt resource doesn't exists");
 
         GovernanceArtifactConfiguration governanceArtifactConfiguration =
@@ -117,7 +117,6 @@ public class GenericGovernanceArtifactTestClient {
         artifact.setAttribute("rules_gender", "male");
         artifact.setAttribute("serviceLifecycle_lifecycleName", "ServiceLifeCycle");
         artifactManager.addGenericArtifact(artifact);
-        Thread.sleep(5000);
 
         artifact = artifactManager.getGenericArtifact(artifact.getId());
         assertTrue(artifact.getQName().toString().contains("testEvent1"), "artifact name not found");

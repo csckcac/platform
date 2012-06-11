@@ -43,7 +43,7 @@ public class AutoscalingJob implements Job {
             JobDetail jobDetail = jobExecutionContext.getJobDetail();
 
             if (log.isDebugEnabled()) {
-                log.debug("Executing Autoscaler task : " + jobDetail.getFullName());
+                log.debug("Executing Autoscaler task : " + jobDetail.getKey().getName());
             }
 
             Map mjdm = jobExecutionContext.getMergedJobDataMap();

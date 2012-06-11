@@ -37,6 +37,7 @@ import org.apache.synapse.task.TaskScheduler;
 import org.apache.synapse.task.service.TaskManagementService;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
 import org.wso2.carbon.mediator.autoscale.lbautoscale.util.ConfigHolder;
@@ -184,9 +185,9 @@ public class AutoscalerTaskServiceComponent {
             autoscalerTask.init(synapseEnv);
 
             // specify scheduler task details
-            JobDetail job = new JobDetail();
-            job.setName("autoscalerJob");
-            job.setJobClass(AutoscalingJob.class);
+            JobBuilder jobBuilder = JobBuilder.newJob(AutoscalingJob.class)
+                .withIdentity("autoscalerJob");
+            JobDetail job = jobBuilder.build();
 
             Map<String, Object> dataMap = job.getJobDataMap();
             dataMap.put(AutoscalingJob.AUTOSCALER_TASK, autoscalerTask);

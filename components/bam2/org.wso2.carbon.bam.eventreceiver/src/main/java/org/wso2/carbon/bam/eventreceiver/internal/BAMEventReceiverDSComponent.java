@@ -23,7 +23,8 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.agent.server.AgentServer;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
-import org.wso2.carbon.bam.eventreceiver.*;
+import org.wso2.carbon.bam.eventreceiver.BAMEventReceiverComponentManager;
+import org.wso2.carbon.bam.eventreceiver.datastore.CassandraConnector;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -51,6 +52,7 @@ public class BAMEventReceiverDSComponent {
         if (log.isDebugEnabled()) {
             log.debug("Starting the Bam Event Receiver Server component");
         }
+         initialize();
         BAMEventReceiverComponentManager.getInstance().init(registryService);
         ServiceReference serviceReference = componentContext.getBundleContext().getServiceReference(AgentServer.class.getName());
         if(serviceReference != null){
@@ -88,6 +90,18 @@ public class BAMEventReceiverDSComponent {
 
     protected void unsetRegistryService(RegistryService registryService) {
         registryService = null;
+    }
+
+     private void initialize() {
+        // Create BAM_AGENT_API_META_DATA if not existing as a super tenant key space
+        CassandraConnector connector = new CassandraConnector();
+        connector.createKeySpaceIfNotExisting(CassandraConnector.BAM_META_KEYSPACE, "admin", "admin");
+
+        // Create BAM meta column families if not existing
+        connector.createColumnFamily(null, CassandraConnector.BAM_META_STREAM_ID_CF, "admin", "admin");
+        connector.createColumnFamily(null, CassandraConnector.BAM_META_STREAM_ID_KEY_CF, "admin", "admin");
+        connector.createColumnFamily(null, CassandraConnector.BAM_META_STREAMID_TO_STREAM_ID_KEY, "admin", "admin");
+        connector.createColumnFamily(null, CassandraConnector.BAM_META_STREAM_DEF_CF, "admin", "admin");
     }
 
 }

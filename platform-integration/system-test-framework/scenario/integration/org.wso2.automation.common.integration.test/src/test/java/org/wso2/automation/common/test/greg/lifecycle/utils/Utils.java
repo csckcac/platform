@@ -19,6 +19,7 @@ package org.wso2.automation.common.test.greg.lifecycle.utils;
 
 import org.testng.Assert;
 import org.wso2.automation.common.test.greg.multitenancy.LifeCycleComparisonServiceTestClient;
+import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
 import org.wso2.carbon.governance.api.schema.SchemaManager;
@@ -29,6 +30,7 @@ import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.beans.xsd.LifecycleBean;
 import org.wso2.carbon.governance.custom.lifecycles.checklist.stub.util.xsd.Property;
+import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceExceptionException;
 import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -38,6 +40,7 @@ import org.wso2.platform.test.core.utils.fileutils.FileManager;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -86,6 +89,21 @@ public class Utils {
 
         return wsdl.getPath();
     }
+    
+    public static String addWSDL(String name, Registry governance, String serviceName)
+                throws IOException, RegistryException {
+            WsdlManager wsdlManager = new WsdlManager(governance);
+            Wsdl wsdl;
+            String wsdlFilePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
+                                  + File.separator + "wsdl" + File.separator;
+            wsdl = wsdlManager.newWsdl(FileManager.readFile(wsdlFilePath + "echo.wsdl")
+                                               .replaceFirst("wsdl:service name=\"echoyuSer1\"",
+                                                             "wsdl:service name=\""+serviceName+"\"").getBytes(), name);
+            wsdlManager.addWsdl(wsdl);
+            wsdl = wsdlManager.getWsdl(wsdl.getId());
+    
+            return wsdl.getPath();
+        }
 
     public static String addSchema(String name, Registry governance)
             throws IOException, RegistryException {
@@ -111,7 +129,7 @@ public class Utils {
 
             }
         }
-        Assert.assertTrue(stateFound,  key + " property not found");
+        Assert.assertTrue(stateFound, key + " property not found");
         return values;
     }
 
@@ -129,6 +147,45 @@ public class Utils {
         }
         Assert.assertTrue(stateFound, "LifeCycle State property not found");
         return state;
+    }
+
+    public static void createNewLifeCycle(String sessionCookie, String lifeCycleName
+            , LifeCycleManagerAdminService lifeCycleManagerAdminService)
+            throws IOException, LifeCycleManagementServiceExceptionException, InterruptedException {
+        String filePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
+                          + File.separator + "lifecycle" + File.separator + "customLifeCycle.xml";
+        String lifeCycleConfiguration = FileManager.readFile(filePath).replace("IntergalacticServiceLC", lifeCycleName);
+        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, lifeCycleConfiguration)
+                , "Adding New LifeCycle Failed");
+        Thread.sleep(2000);
+        lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(sessionCookie, lifeCycleName);
+        Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"" + lifeCycleName + "\""),
+                          "LifeCycleName Not Found in lifecycle configuration");
+
+        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
+        Assert.assertNotNull(lifeCycleList);
+        Assert.assertTrue(lifeCycleList.length > 0, "Life Cycle List length zero");
+        boolean found = false;
+        for (String lc : lifeCycleList) {
+            if (lifeCycleName.equalsIgnoreCase(lc)) {
+                found = true;
+            }
+        }
+        Assert.assertTrue(found, "Life Cycle list not contain newly added life cycle");
+
+    }
+
+    public static void deleteLifeCycleIfExist(String sessionCookie, String lifeCycleName
+            , LifeCycleManagerAdminService lifeCycleManagerAdminService)
+            throws LifeCycleManagementServiceExceptionException, RemoteException {
+        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
+        if (lifeCycleList != null && lifeCycleList.length > 0) {
+            for (String lc : lifeCycleList) {
+                if (lifeCycleName.equalsIgnoreCase(lc)) {
+                    lifeCycleManagerAdminService.deleteLifeCycle(sessionCookie, lifeCycleName);
+                }
+            }
+        }
     }
 
     public static String formatDate(Date date) {

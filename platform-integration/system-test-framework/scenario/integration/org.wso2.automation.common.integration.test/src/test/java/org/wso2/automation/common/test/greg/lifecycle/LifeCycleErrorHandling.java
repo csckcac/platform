@@ -22,9 +22,9 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.automation.common.test.greg.lifecycle.utils.Utils;
 import org.wso2.carbon.admin.service.LifeCycleManagerAdminService;
 import org.wso2.carbon.governance.lcm.stub.LifeCycleManagementServiceExceptionException;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
@@ -53,7 +53,7 @@ public class LifeCycleErrorHandling {
         lifeCycleConfiguration = FileManager.readFile(filePath);
         lifeCycleConfiguration = lifeCycleConfiguration.replaceFirst("IntergalacticServiceLC", ASPECT_NAME);
 
-        deleteLifeCycleIfExist();
+        Utils.deleteLifeCycleIfExist(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
 
     }
 
@@ -65,9 +65,10 @@ public class LifeCycleErrorHandling {
         try {
             Assert.assertFalse(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, invalidLifeCycleConfiguration),
                                "Life Cycle Added with invalid Syntax");
-            Assert.fail("Life Cycle Added with invalid Syntax");
+
         } catch (AxisFault e) {
-            Assert.assertTrue(e.getMessage().contains("Unable to initiate aspect. Unexpected '<' character"));
+            Assert.assertTrue(e.getMessage().contains("Unable to initiate aspect. Unexpected '<' character")
+                    , "Unable to initiate aspect. Unexpected '<' character not contain in message. " + e.getMessage());
         }
 
         Thread.sleep(2000);
@@ -101,18 +102,4 @@ public class LifeCycleErrorHandling {
         lifeCycleConfiguration = null;
     }
 
-    private void deleteLifeCycleIfExist()
-            throws LifeCycleManagementServiceExceptionException, RemoteException,
-                   InterruptedException {
-        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
-        if (lifeCycleList != null) {
-            for (String lifCycle : lifeCycleList) {
-                if (ASPECT_NAME.equalsIgnoreCase(lifCycle)) {
-                    lifeCycleManagerAdminService.deleteLifeCycle(sessionCookie, ASPECT_NAME);
-                    Thread.sleep(2000);
-                    break;
-                }
-            }
-        }
-    }
 }

@@ -43,11 +43,8 @@ import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
-import org.wso2.platform.test.core.utils.fileutils.FileManager;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
-import java.io.File;
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 
@@ -64,7 +61,10 @@ public class CustomLifeCycleTest {
     private final String ASPECT_NAME = "CustomServiceLC";
     private final String ACTION_PROMOTE = "Promote";
     private final String ACTION_ITEM_CLICK = "itemClick";
-    private String servicePathDev;
+    private String servicePathTrunk;
+    private String servicePathBranchDev;
+    private String servicePathBranchQA;
+    private String servicePathBranchProd;
 
     @BeforeClass
     public void init() throws Exception {
@@ -80,11 +80,11 @@ public class CustomLifeCycleTest {
         registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         Registry governance = new RegistryProvider().getGovernance(registry, userId);
 
-
-        servicePathDev = "/_system/governance" + Utils.addService("sns", serviceName, governance);
+        Utils.deleteLifeCycleIfExist(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
+        servicePathTrunk = "/_system/governance" + Utils.addService("sns", serviceName, governance);
         Thread.sleep(1000);
 
-        createNewLifeCycle();
+        Utils.createNewLifeCycle(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
         deleteRolesIfExist();
 
     }
@@ -95,12 +95,12 @@ public class CustomLifeCycleTest {
             throws RegistryException, InterruptedException,
                    CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    RegistryExceptionException {
-        registry.associateAspect(servicePathDev, ASPECT_NAME);
+        registry.associateAspect(servicePathTrunk, ASPECT_NAME);
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
-        Resource service = registry.get(servicePathDev);
-        Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
-        Assert.assertEquals(service.getPath(), servicePathDev, "Service path changed after adding life cycle. " + servicePathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        Resource service = registry.get(servicePathTrunk);
+        Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTrunk);
+        Assert.assertEquals(service.getPath(), servicePathTrunk, "Service path changed after adding life cycle. " + servicePathTrunk);
         Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.lifecycle.CustomServiceLC.state")[0], "Commencement",
                             "LifeCycle State Mismatched");
 
@@ -121,7 +121,7 @@ public class CustomLifeCycleTest {
         //Activity search
         Thread.sleep(1000 * 10);
         ActivityBean activityObj = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
-                , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
+                , servicePathTrunk, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivitySearchAdminService.FILTER_ASSOCIATE_ASPECT, 1);
         Assert.assertNotNull(activityObj, "Activity object null for Associate Aspect");
         Assert.assertNotNull(activityObj.getActivity(), "Activity list object null for Associate Aspect");
@@ -133,11 +133,11 @@ public class CustomLifeCycleTest {
         Assert.assertTrue(activity.contains("0m ago"), "current time not found on activity. " + activity);
     }
 
-    @Test(priority = 1, description = "Add LifeCycle to a service", dependsOnMethods = {"addLifeCycleToService"})
-    public void clickCheckList()
+    @Test(description = "Click Check List Item", dependsOnMethods = {"addLifeCycleToService"})
+    public void clickCommencementCheckList()
             throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
                    UserAdminException {
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
         String[] actions;
         LifecycleActions[] availableActions = lifeCycle.getAvailableActions();
         Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
@@ -145,63 +145,63 @@ public class CustomLifeCycleTest {
         Assert.assertNull(actions, "Available Action found");
 
         addRole("archrole");
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathDev, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "false", "false", "false", "false"});
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
         Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNull(actions, "Available Action found");
 
-        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathDev, ASPECT_NAME, ACTION_ITEM_CLICK,
+        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
                                            new String[]{"true", "true", "true", "true", "true", "true"});
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNotNull(actions, "Available Action Not found");
         Assert.assertEquals(actions.length, 1, "Action not found");
-        Assert.assertEquals(actions[0], "Abort", "AbortAction not found");
+        Assert.assertEquals(actions[0], "Abort", "Abort Action not found");
 
         addRole("managerrole");
-        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
         availableActions = lifeCycle.getAvailableActions();
         actions = availableActions[0].getActions();
         Assert.assertNotNull(actions, "Available Action Not found");
         Assert.assertEquals(actions.length, 2, "Action not found");
-        Assert.assertEquals(actions[0], "Promote", "AbortAction not found");
-        Assert.assertEquals(actions[1], "Abort", "AbortAction not found");
+        Assert.assertEquals(actions[0], "Promote", "Promote Action not found");
+        Assert.assertEquals(actions[1], "Abort", "Abort Action not found");
 
     }
 
-    @Test(priority = 2, description = "Add LifeCycle to a service", dependsOnMethods = {"clickCheckList"})
-    public void promoteService()
+    @Test(description = "Promote Service to Creation", dependsOnMethods = {"clickCommencementCheckList"})
+    public void promoteServiceToCreation()
             throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
                    RemoteException, RegistryException, RegistryExceptionException {
         Thread.sleep(1000);
         ArrayOfString[] parameters = new ArrayOfString[2];
         parameters[0] = new ArrayOfString();
-        parameters[0].setArray(new String[]{servicePathDev, "1.0.0"});
+        parameters[0].setArray(new String[]{servicePathTrunk, "1.0.0"});
 
         parameters[1] = new ArrayOfString();
         parameters[1].setArray(new String[]{"preserveOriginal", "true"});
 
-        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathDev, ASPECT_NAME,
+        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathTrunk, ASPECT_NAME,
                                                      ACTION_PROMOTE, null, parameters);
 
         Thread.sleep(500);
-        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathDev);
-        Resource service = registry.get(servicePathDev);
-        Assert.assertNotNull(service, "Service Not found on registry path " + servicePathDev);
-        Assert.assertEquals(service.getPath(), servicePathDev, "Service not in branches/testing. " + servicePathDev);
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        Resource service = registry.get(servicePathTrunk);
+        Assert.assertNotNull(service, "Service Not found on registry path " + servicePathTrunk);
+        Assert.assertEquals(service.getPath(), servicePathTrunk, "Service not in branches/testing. " + servicePathTrunk);
 
         Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.lifecycle.CustomServiceLC.state")[0]
                 , "Creation", "LifeCycle State Mismatched");
 
-        Assert.assertEquals(registry.get(servicePathDev).getPath(), servicePathDev, "Preserve original failed");
+        Assert.assertEquals(registry.get(servicePathTrunk).getPath(), servicePathTrunk, "Preserve original failed");
 
         //life cycle check list
         Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.0.item")[1],
-                            "name:Code Completed", "Code Completed Completed Check List Item Not Found");
+                            "name:Code Completed", "Code Completed Check List Item Not Found");
         Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.1.item")[1],
                             "name:WSDL Created", "WSDL Created Check List Item Not Found");
         Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.2.item")[1],
@@ -216,7 +216,7 @@ public class CustomLifeCycleTest {
         //activity search for trunk
         Thread.sleep(1000 * 10);
         ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
-                , servicePathDev, Utils.formatDate(Calendar.getInstance().getTime())
+                , servicePathTrunk, Utils.formatDate(Calendar.getInstance().getTime())
                 , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
         Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
         Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
@@ -230,43 +230,427 @@ public class CustomLifeCycleTest {
 
     }
 
+    @Test(description = "click check list in creation stage", dependsOnMethods = {"promoteServiceToCreation"})
+    public void clickCreationCheckList()
+            throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+                   UserAdminException {
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        String[] actions;
+        LifecycleActions[] availableActions = lifeCycle.getAvailableActions();
+        Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
+        actions = availableActions[0].getActions();
+        Assert.assertNull(actions, "Available Action found");
+
+        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+                                           new String[]{"true", "false", "false", "false", "false"});
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
+        availableActions = lifeCycle.getAvailableActions();
+        actions = availableActions[0].getActions();
+        Assert.assertNull(actions, "Available Action found");
+
+        //check demote action
+        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+                                           new String[]{"true", "true", "true", "true", "true", "false"});
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        availableActions = lifeCycle.getAvailableActions();
+        actions = availableActions[0].getActions();
+        Assert.assertNotNull(actions, "Available Action Not found");
+        Assert.assertEquals(actions.length, 1, "Action not found");
+        Assert.assertEquals(actions[0], "Demote", "Demote Action not found");
+
+        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathTrunk, ASPECT_NAME, ACTION_ITEM_CLICK,
+                                           new String[]{"true", "true", "true", "true", "true", "true"});
+
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathTrunk);
+        availableActions = lifeCycle.getAvailableActions();
+        actions = availableActions[0].getActions();
+        Assert.assertNotNull(actions, "Available Action Not found");
+        Assert.assertEquals(actions.length, 3, "Action not found");
+        Assert.assertEquals(actions[0], "Promote", "Promote Action not found");
+        Assert.assertEquals(actions[1], "Demote", "Demote Action not found");
+        Assert.assertEquals(actions[2], "Abort", "Abort Action not found");
+
+    }
+
+    @Test(description = "Promote Service to Development", dependsOnMethods = {"clickCreationCheckList"})
+    public void promoteServiceToDevelopment()
+            throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
+                   RemoteException, RegistryException, RegistryExceptionException {
+        Thread.sleep(1000);
+        ArrayOfString[] parameters = new ArrayOfString[2];
+        parameters[0] = new ArrayOfString();
+        parameters[0].setArray(new String[]{servicePathTrunk, "1.0.0"});
+
+        parameters[1] = new ArrayOfString();
+        parameters[1].setArray(new String[]{"preserveOriginal", "true"});
+
+        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathTrunk, ASPECT_NAME,
+                                                     ACTION_PROMOTE, null, parameters);
+
+        Thread.sleep(500);
+        servicePathBranchDev = "/_system/governance/branches/development/sns/1.0.0/" + serviceName;
+
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchDev);
+        Resource service = registry.get(servicePathBranchDev);
+        Assert.assertNotNull(service, "Service Not found on registry path " + servicePathBranchDev);
+        Assert.assertEquals(service.getPath(), servicePathBranchDev, "Service not in branches/testing. " + servicePathBranchDev);
+
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.lifecycle.CustomServiceLC.state")[0]
+                , "Development", "LifeCycle State Mismatched");
+
+        Assert.assertEquals(registry.get(servicePathTrunk).getPath(), servicePathTrunk, "Preserve original failed");
+
+        //life cycle check list
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.0.item")[1],
+                            "name:Effective Inspection Completed", "Effective Inspection Completed Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.1.item")[1],
+                            "name:Test Cases Passed", "Test Cases Passed Check List Item Not Found");
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.2.item")[1],
+                            "name:Smoke Test Passed", "Smoke Test Passed Check List Item Not Found");
+
+        //activity search for trunk
+        Thread.sleep(1000 * 10);
+        ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , servicePathTrunk, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+        Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
+        Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
+        String activity = activityObjTrunk.getActivity()[0];
+        Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
+        Assert.assertTrue(activity.contains("has updated the resource"),
+                          "Activity not found. has updated not contain in last activity. " + activity);
+        Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
+
+        //activity search for branch
+        Thread.sleep(1000 * 10);
+        activityObjTrunk = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , servicePathBranchDev, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+        Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
+        Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
+        activity = activityObjTrunk.getActivity()[0];
+        Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
+        Assert.assertTrue(activity.contains("has added the resource") || activity.contains("has updated the resource"),
+                          "Activity not found. has added not contain in activity. " + activity);
+        Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
+
+
+    }
+
+    @Test(description = "click check list in creation stage", dependsOnMethods = {"promoteServiceToDevelopment"})
+    public void clickDevelopmentCheckList()
+            throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+                   UserAdminException, InterruptedException {
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchDev);
+        String[] actions;
+        LifecycleActions[] availableActions = lifeCycle.getAvailableActions();
+        Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
+        actions = availableActions[0].getActions();
+        Assert.assertNull(actions, "Available Action found");
+
+        addRole("devrole");
+        Thread.sleep(500);
+        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathBranchDev, ASPECT_NAME, ACTION_ITEM_CLICK,
+                                           new String[]{"true", "false", "false"});
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchDev);
+        Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
+        availableActions = lifeCycle.getAvailableActions();
+        actions = availableActions[0].getActions();
+        Assert.assertNotNull(actions, "Available Action Not found");
+        Assert.assertEquals(actions.length, 1, "Action not found");
+        Assert.assertEquals(actions[0], "Abort", "Abort Action not found");
+
+
+        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathBranchDev, ASPECT_NAME, ACTION_ITEM_CLICK,
+                                           new String[]{"true", "true", "true"});
+
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchDev);
+        availableActions = lifeCycle.getAvailableActions();
+        actions = availableActions[0].getActions();
+        Assert.assertNotNull(actions, "Available Action Not found");
+        Assert.assertEquals(actions.length, 3, "Action not found");
+        Assert.assertEquals(actions[0], "Promote", "Promote Action not found");
+        Assert.assertEquals(actions[1], "Demote", "Demote Action not found");
+        Assert.assertEquals(actions[2], "Abort", "Abort Action not found");
+
+    }
+
+    @Test(description = "Promote Service to QA", dependsOnMethods = {"clickDevelopmentCheckList"})
+    public void promoteServiceToQA()
+            throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
+                   RemoteException, RegistryException, RegistryExceptionException {
+        Thread.sleep(1000);
+        ArrayOfString[] parameters = new ArrayOfString[2];
+        parameters[0] = new ArrayOfString();
+        parameters[0].setArray(new String[]{servicePathBranchDev, "1.0.0"});
+
+        parameters[1] = new ArrayOfString();
+        parameters[1].setArray(new String[]{"preserveOriginal", "true"});
+
+        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathBranchDev, ASPECT_NAME,
+                                                     ACTION_PROMOTE, null, parameters);
+
+        Thread.sleep(500);
+        servicePathBranchQA = "/_system/governance/branches/qa/sns/1.0.0/" + serviceName;
+
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchQA);
+        Resource service = registry.get(servicePathBranchQA);
+        Assert.assertNotNull(service, "Service Not found on registry path " + servicePathBranchQA);
+        Assert.assertEquals(service.getPath(), servicePathBranchQA, "Service not in branches/testing. " + servicePathBranchQA);
+
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.lifecycle.CustomServiceLC.state")[0]
+                , "QA", "LifeCycle State Mismatched");
+
+        Assert.assertEquals(registry.get(servicePathBranchDev).getPath(), servicePathBranchDev, "Preserve original failed");
+
+        //life cycle check list
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.0.item")[1],
+                            "name:Service Configuration", "Service Configuration Check List Item Not Found");
+
+        //activity search for trunk
+        Thread.sleep(1000 * 10);
+        ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , servicePathBranchDev, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+        Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
+        Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
+        String activity = activityObjTrunk.getActivity()[0];
+        Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
+        Assert.assertTrue(activity.contains("has updated the resource"),
+                          "Activity not found. has updated not contain in last activity. " + activity);
+        Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
+
+        //activity search for branch
+        Thread.sleep(1000 * 10);
+        activityObjTrunk = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , servicePathBranchQA, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+        Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
+        Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
+        activity = activityObjTrunk.getActivity()[0];
+        Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
+        Assert.assertTrue(activity.contains("has added the resource") || activity.contains("has updated the resource"),
+                          "Activity not found. has added not contain in activity. " + activity);
+        Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
+
+
+    }
+
+
+    @Test(description = "click check list in creation stage", dependsOnMethods = {"promoteServiceToQA"})
+    public void clickQACheckList()
+            throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+                   UserAdminException, InterruptedException {
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchQA);
+        String[] actions;
+        LifecycleActions[] availableActions = lifeCycle.getAvailableActions();
+        Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
+        actions = availableActions[0].getActions();
+        Assert.assertNull(actions, "Available Action found");
+
+        addRole("qarole");
+        Thread.sleep(500);
+
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchQA);
+        Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
+        availableActions = lifeCycle.getAvailableActions();
+        actions = availableActions[0].getActions();
+        Assert.assertNotNull(actions, "Available Action Not found");
+        Assert.assertEquals(actions.length, 1, "Action not found");
+        Assert.assertEquals(actions[0], "Abort", "Abort Action not found");
+
+
+        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathBranchQA, ASPECT_NAME, ACTION_ITEM_CLICK,
+                                           new String[]{"true"});
+
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchQA);
+        availableActions = lifeCycle.getAvailableActions();
+        actions = availableActions[0].getActions();
+        Assert.assertNotNull(actions, "Available Action Not found");
+        Assert.assertEquals(actions.length, 2, "Action not found");
+        Assert.assertEquals(actions[0], "Demote", "Demote Action not found");
+        Assert.assertEquals(actions[1], "Abort", "Abort Action not found");
+
+        addRole("techoprole");
+        Thread.sleep(500);
+
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchQA);
+        availableActions = lifeCycle.getAvailableActions();
+        actions = availableActions[0].getActions();
+        Assert.assertNotNull(actions, "Available Action Not found");
+        Assert.assertEquals(actions.length, 3, "Action not found");
+        Assert.assertEquals(actions[0], "Promote", "Promote Action not found");
+        Assert.assertEquals(actions[1], "Demote", "Demote Action not found");
+        Assert.assertEquals(actions[2], "Abort", "Abort Action not found");
+
+    }
+
+    @Test(description = "Promote Service to Production", dependsOnMethods = {"clickQACheckList"})
+    public void promoteServiceToProduction()
+            throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
+                   RemoteException, RegistryException, RegistryExceptionException {
+        Thread.sleep(1000);
+        ArrayOfString[] parameters = new ArrayOfString[2];
+        parameters[0] = new ArrayOfString();
+        parameters[0].setArray(new String[]{servicePathBranchQA, "1.0.0"});
+
+        parameters[1] = new ArrayOfString();
+        parameters[1].setArray(new String[]{"preserveOriginal", "true"});
+
+        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathBranchQA, ASPECT_NAME,
+                                                     ACTION_PROMOTE, null, parameters);
+
+        Thread.sleep(500);
+        servicePathBranchProd = "/_system/governance/branches/production/sns/1.0.0/" + serviceName;
+
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchProd);
+        Resource service = registry.get(servicePathBranchProd);
+        Assert.assertNotNull(service, "Service Not found on registry path " + servicePathBranchProd);
+        Assert.assertEquals(service.getPath(), servicePathBranchProd, "Service not in branches/testing. " + servicePathBranchProd);
+
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.lifecycle.CustomServiceLC.state")[0]
+                , "Launched", "LifeCycle State Mismatched");
+
+        Assert.assertEquals(registry.get(servicePathBranchQA).getPath(), servicePathBranchQA, "Preserve original failed");
+
+        //life cycle check list
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.custom_lifecycle.checklist.option.0.item")[1],
+                            "name:Service Configuration", "Service Configuration Check List Item Not Found");
+
+        //activity search for trunk
+        Thread.sleep(1000 * 10);
+        ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , servicePathBranchQA, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+        Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
+        Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
+        String activity = activityObjTrunk.getActivity()[0];
+        Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
+        Assert.assertTrue(activity.contains("has updated the resource"),
+                          "Activity not found. has updated not contain in last activity. " + activity);
+        Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
+
+        //activity search for branch
+        Thread.sleep(1000 * 10);
+        activityObjTrunk = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , servicePathBranchProd, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_ALL, 1);
+        Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
+        Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
+        activity = activityObjTrunk.getActivity()[0];
+        Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
+        Assert.assertTrue(activity.contains("has added the resource") || activity.contains("has updated the resource"),
+                          "Activity not found. has added not contain in activity. " + activity);
+        Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
+
+
+    }
+
+    @Test(description = "click check list in Launched Stage", dependsOnMethods = {"promoteServiceToProduction"})
+    public void clickLaunchedCheckList()
+            throws CustomLifecyclesChecklistAdminServiceExceptionException, RemoteException,
+                   UserAdminException, InterruptedException {
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchProd);
+        String[] actions;
+        LifecycleActions[] availableActions = lifeCycle.getAvailableActions();
+        Assert.assertEquals(availableActions.length, 1, "Available Action count mismatched");
+        availableActions = lifeCycle.getAvailableActions();
+        actions = availableActions[0].getActions();
+        Assert.assertNotNull(actions, "Available Action Not found");
+        Assert.assertEquals(actions.length, 1, "Action not found");
+        Assert.assertEquals(actions[0], "Abort", "Abort Action not found");
+
+
+        lifeCycleAdminService.invokeAspect(sessionCookie, servicePathBranchProd, ASPECT_NAME, ACTION_ITEM_CLICK,
+                                           new String[]{"true"});
+
+        Thread.sleep(500);
+        lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchQA);
+        availableActions = lifeCycle.getAvailableActions();
+        actions = availableActions[0].getActions();
+        Assert.assertNotNull(actions, "Available Action Not found");
+        Assert.assertEquals(actions.length, 3, "Action not found");
+        Assert.assertEquals(actions[0], "Promote", "Promote Action not found");
+        Assert.assertEquals(actions[1], "Demote", "Demote Action not found");
+        Assert.assertEquals(actions[2], "Abort", "Abort Action not found");
+
+    }
+
+    @Test(description = "Promote Service to Obsolete", dependsOnMethods = {"clickLaunchedCheckList"})
+    public void promoteServiceToObsolete()
+            throws InterruptedException, CustomLifecyclesChecklistAdminServiceExceptionException,
+                   RemoteException, RegistryException, RegistryExceptionException {
+        Thread.sleep(1000);
+        ArrayOfString[] parameters = new ArrayOfString[2];
+        parameters[0] = new ArrayOfString();
+        parameters[0].setArray(new String[]{servicePathBranchProd, "1.0.0"});
+
+        parameters[1] = new ArrayOfString();
+        parameters[1].setArray(new String[]{"preserveOriginal", "true"});
+
+        lifeCycleAdminService.invokeAspectWithParams(sessionCookie, servicePathBranchProd, ASPECT_NAME,
+                                                     ACTION_PROMOTE, null, parameters);
+
+        Thread.sleep(500);
+        servicePathBranchProd = "/_system/governance/branches/production/sns/1.0.0/" + serviceName;
+
+        LifecycleBean lifeCycle = lifeCycleAdminService.getLifecycleBean(sessionCookie, servicePathBranchProd);
+        Resource service = registry.get(servicePathBranchProd);
+        Assert.assertNotNull(service, "Service Not found on registry path " + servicePathBranchProd);
+        Assert.assertEquals(service.getPath(), servicePathBranchProd, "Service not in branches/testing. " + servicePathBranchProd);
+
+        Assert.assertEquals(Utils.getLifeCycleProperty(lifeCycle.getLifecycleProperties(), "registry.lifecycle.CustomServiceLC.state")[0]
+                , "Obsolete", "LifeCycle State Mismatched");
+
+        //activity search for production branch
+        Thread.sleep(1000 * 10);
+        ActivityBean activityObjTrunk = activitySearch.getActivities(sessionCookie, userInfo.getUserName()
+                , servicePathBranchProd, Utils.formatDate(Calendar.getInstance().getTime())
+                , "", ActivitySearchAdminService.FILTER_RESOURCE_UPDATE, 1);
+        Assert.assertNotNull(activityObjTrunk, "Activity object null in trunk");
+        Assert.assertNotNull(activityObjTrunk.getActivity(), "Activity list object null");
+        Assert.assertTrue((activityObjTrunk.getActivity().length > 0), "Activity list object null");
+        String activity = activityObjTrunk.getActivity()[0];
+        Assert.assertTrue(activity.contains(userInfo.getUserName()), "Activity not found. User name not found on last activity. " + activity);
+        Assert.assertTrue(activity.contains("has updated the resource"),
+                          "Activity not found. has updated not contain in last activity. " + activity);
+        Assert.assertTrue(activity.contains("0m ago"), "Activity not found. current time not found on last activity. " + activity);
+
+
+    }
+
+
     @AfterClass
     public void deleteLifeCycle()
             throws RegistryException, LifeCycleManagementServiceExceptionException,
                    RemoteException {
-        if (servicePathDev != null) {
-            registry.delete(servicePathDev);
+        if (servicePathTrunk != null) {
+            registry.delete(servicePathTrunk);
+        }
+
+        if (servicePathBranchDev != null) {
+            registry.delete(servicePathBranchDev);
+        }
+
+        if (servicePathBranchQA != null) {
+            registry.delete(servicePathBranchQA);
+        }
+
+        if (servicePathBranchProd != null) {
+            registry.delete(servicePathBranchProd);
         }
         Assert.assertTrue(lifeCycleManagerAdminService.deleteLifeCycle(sessionCookie, ASPECT_NAME),
                           "Life Cycle Deleted failed");
         registry = null;
         activitySearch = null;
         lifeCycleAdminService = null;
-    }
-
-    private void createNewLifeCycle()
-            throws IOException, LifeCycleManagementServiceExceptionException, InterruptedException {
-        String filePath = ProductConstant.getResourceLocations(ProductConstant.GREG_SERVER_NAME)
-                          + File.separator + "lifecycle" + File.separator + "customLifeCycle.xml";
-        String lifeCycleConfiguration = FileManager.readFile(filePath).replace("IntergalacticServiceLC", ASPECT_NAME);
-        Assert.assertTrue(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, lifeCycleConfiguration)
-                , "Adding New LifeCycle Failed");
-        Thread.sleep(2000);
-        lifeCycleConfiguration = lifeCycleManagerAdminService.getLifecycleConfiguration(sessionCookie, ASPECT_NAME);
-        Assert.assertTrue(lifeCycleConfiguration.contains("aspect name=\"CustomServiceLC\""),
-                          "LifeCycleName Not Found in lifecycle configuration");
-
-        String[] lifeCycleList = lifeCycleManagerAdminService.getLifecycleList(sessionCookie);
-        Assert.assertNotNull(lifeCycleList);
-        Assert.assertTrue(lifeCycleList.length > 0, "Life Cycle List length zero");
-        boolean found = false;
-        for (String lc : lifeCycleList) {
-            if (ASPECT_NAME.equalsIgnoreCase(lc)) {
-                found = true;
-            }
-        }
-        Assert.assertTrue(found, "Life Cycle list not contain newly added life cycle");
-
     }
 
     private void deleteRolesIfExist() {
@@ -277,6 +661,17 @@ public class CustomLifeCycleTest {
 
         if (userManger.roleNameExists("managerrole", sessionCookie)) {
             userManger.deleteRole(sessionCookie, "managerrole");
+        }
+
+        if (userManger.roleNameExists("devrole", sessionCookie)) {
+            userManger.deleteRole(sessionCookie, "devrole");
+        }
+
+        if (userManger.roleNameExists("qarole", sessionCookie)) {
+            userManger.deleteRole(sessionCookie, "qarole");
+        }
+        if (userManger.roleNameExists("techoprole", sessionCookie)) {
+            userManger.deleteRole(sessionCookie, "techoprole");
         }
     }
 

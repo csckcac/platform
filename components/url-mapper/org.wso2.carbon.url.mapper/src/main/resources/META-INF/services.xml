@@ -23,6 +23,6 @@
         </transports>
         <parameter name="ServiceClass">org.wso2.carbon.url.mapper.UrlMapperAdminService</parameter>
     </service>
-    <parameter name="adminService" locked="true">false</parameter>
+    <parameter name="adminService" locked="true">true</parameter>
     <parameter name="hiddenService" locked="true">true</parameter>
 </serviceGroup>

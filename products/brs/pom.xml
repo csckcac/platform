@@ -46,7 +46,6 @@
 
     <modules>
         <module>modules/styles</module>
-        <module>modules/samples</module>
         <module>modules/features</module>
         <module>modules/p2-profile</module>
         <module>modules/distribution</module>

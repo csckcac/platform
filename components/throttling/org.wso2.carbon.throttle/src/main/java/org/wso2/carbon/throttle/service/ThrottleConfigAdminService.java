@@ -549,7 +549,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                 sfpm.put(serviceGroupId, idElement.cloneOMElement(), operationXPath);
             }
             if (!isTransactionStarted) {
-                sfpm.beginTransaction(serviceGroupId);
+                sfpm.commitTransaction(serviceGroupId);
             }
             if (!registryTransactionStarted) {
                 registry.commitTransaction();
@@ -557,6 +557,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
         } catch (Exception e) {
             log.error("Error occured while saving the builtPolicy in registry", e);
+            sfpm.rollbackTransaction(serviceGroupId);
             throw new ThrottleComponentException("errorSavingPolicy");
         }
 
@@ -627,6 +628,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
             } catch (PersistenceException e) {
                 log.error("Error occured while removing assertion from file system", e);
+                sfpm.rollbackTransaction(serviceGroupId);
                 throw new ThrottleComponentException("errorDisablingAtRegistry");
             }
 
@@ -679,6 +681,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
             } catch (PersistenceException e) {
                 log.error("Error occured while removing assertion from registry", e);
+                sfpm.rollbackTransaction(serviceGroupId);
                 throw new ThrottleComponentException("errorDisablingAtRegistry");
             }
 
@@ -698,11 +701,11 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
         if (log.isDebugEnabled()) {
             log.debug("Disengaging globally engaged throttling");
         }
+        //get the throttle module from the current axis config
+        AxisModule module = this.axisConfig
+                .getModule(ThrottleComponentConstants.THROTTLE_MODULE);
         //disengage the throttling module
         try {
-            //get the throttle module from the current axis config
-            AxisModule module = this.axisConfig
-                    .getModule(ThrottleComponentConstants.THROTTLE_MODULE);
 
             boolean isTransactionStarted = mfpm.isTransactionStarted(module.getName());
             if (!isTransactionStarted) {
@@ -748,9 +751,11 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
         } catch (PersistenceException e) {
             log.error("Error occurred while removing global throttle from file system", e);
+            mfpm.rollbackTransaction(module.getName());
             throw new ThrottleComponentException("errorDisablingAtRegistry");
         } catch (AxisFault axisFault) {
             log.error("Error occurred while disengaging module from AxisService", axisFault);
+            mfpm.rollbackTransaction(module.getName());
             throw new ThrottleComponentException("errorDisablingThrottling", axisFault);
         }
     }

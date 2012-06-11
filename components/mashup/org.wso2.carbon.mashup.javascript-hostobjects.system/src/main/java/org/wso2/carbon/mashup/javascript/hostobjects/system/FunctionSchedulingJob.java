@@ -62,7 +62,7 @@ public class FunctionSchedulingJob implements Job {
             JobDetail jobDetail = jobExecutionContext.getJobDetail();
 
             if (log.isDebugEnabled()) {
-                log.debug("Executing Function scheduling task : " + jobDetail.getFullName());
+                log.debug("Executing Function scheduling task : " + jobDetail.getKey().getName());
             }
 
             Map mjdm = jobExecutionContext.getMergedJobDataMap();

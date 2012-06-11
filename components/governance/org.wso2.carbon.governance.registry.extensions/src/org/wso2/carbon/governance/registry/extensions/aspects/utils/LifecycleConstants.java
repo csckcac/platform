@@ -84,4 +84,14 @@ public class LifecycleConstants {
      * Defines the attribute name that is used to enable auditing
      */
     public static final String AUDIT = "audit";
+
+    /**
+     * Defines the custom validations message key
+     */
+    public static final String VALIDATIONS_MESSAGE_KEY = "validationsMessage";
+
+    /**
+     * Defines the custom validations message key
+     */
+    public static final String EXECUTOR_MESSAGE_KEY = "executorMessage";
 }

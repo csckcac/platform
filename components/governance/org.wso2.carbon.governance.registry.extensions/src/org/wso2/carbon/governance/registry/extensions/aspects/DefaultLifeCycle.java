@@ -375,13 +375,13 @@ public class DefaultLifeCycle extends Aspect {
         return !premSet.isEmpty();
     }
 
-    private boolean doAllCustomValidations(RequestContext context, String currentState) throws RegistryException{
+    private boolean doAllCustomValidations(RequestContext context, String currentState,String action) throws RegistryException{
         //doing the check item validations
         List<CheckItemBean> currentStateCheckItems = checkListItems.get(currentState);
         if (currentStateCheckItems != null) {
             for (CheckItemBean currentStateCheckItem : currentStateCheckItems) {
                 try {
-                    runCustomValidationsCode(context, currentStateCheckItem.getValidationBeans());
+                    runCustomValidationsCode(context, currentStateCheckItem.getValidationBeans(),action);
                 } catch (RegistryException registryException) {
                     throw new RegistryException("Validation failed for check item : "
                           + currentStateCheckItem.getName());
@@ -389,25 +389,41 @@ public class DefaultLifeCycle extends Aspect {
             }
         }
         //doing the transition validations
-        return runCustomValidationsCode(context, transitionValidations.get(currentState));
+        try {
+            return runCustomValidationsCode(context, transitionValidations.get(currentState),action);
+        } catch (RegistryException e) {
+            throw new RegistryException("Validation failed for check item : "
+                    + action);
+        }
     }
 
 //    This method is used to validate both checkitem validations and transition validations
-    private boolean runCustomValidationsCode(RequestContext context, List<CustomCodeBean> customCodeBeans)
+    private boolean runCustomValidationsCode(RequestContext context, List<CustomCodeBean> customCodeBeans,String action)
             throws RegistryException{
         if (customCodeBeans != null) {
             for (CustomCodeBean customCodeBean : customCodeBeans) {
-                CustomValidations customValidations = (CustomValidations) customCodeBean.getClassObeject();
+                if (customCodeBean.getEventName().equals(action)) {
+                    CustomValidations customValidations = (CustomValidations) customCodeBean.getClassObeject();
 
 //                logging
-                ((StatCollection)context.getProperty(LifecycleConstants.STAT_COLLECTION))
-                        .addValidations(customCodeBean.getClass().getName(),null);
-
-                if (!customValidations.validate(context)) {
                     ((StatCollection)context.getProperty(LifecycleConstants.STAT_COLLECTION))
-                            .addValidations(customCodeBean.getClass().getName(),getHistoryInfoElement("validation failed"));
-                    throw new RegistryException("Validation : " + customCodeBean.getClassObeject().getClass().getName()
-                            + " failed for action : " + customCodeBean.getEventName());
+                            .addValidations(customCodeBean.getClass().getName(),null);
+
+                    if (!customValidations.validate(context)) {
+                        ((StatCollection)context.getProperty(LifecycleConstants.STAT_COLLECTION))
+                                .addValidations(customCodeBean.getClass().getName(),getHistoryInfoElement("validation failed"));
+
+    //                    We have added this to add a custom message that should be displayed to the user
+                        String userMsg = (String) context.getProperty(LifecycleConstants.VALIDATIONS_MESSAGE_KEY);
+                        String message = "Validation : " + customCodeBean.getClassObeject().getClass().getName()
+                                + " failed for action : " + customCodeBean.getEventName();
+
+                        if(userMsg != null){
+                            message =  message + "Embedded error : " + userMsg;
+                        }
+
+                        throw new RegistryException(message);
+                    }
                 }
             }
         }
@@ -430,7 +446,15 @@ public class DefaultLifeCycle extends Aspect {
                     if (!customExecutor.execute(context,currentState,nextState)) {
                         ((StatCollection)context.getProperty(LifecycleConstants.STAT_COLLECTION))
                                 .addExecutors(customExecutor.getClass().getName(),getHistoryInfoElement("executor failed"));
-                        throw new RegistryException("Execution failed for action : " + customCodeBean.getEventName());
+
+//                        We have added this to display a custom message to the user
+                        String userMsg = (String) context.getProperty(LifecycleConstants.EXECUTOR_MESSAGE_KEY);
+                        String message = "Execution failed for action : " + customCodeBean.getEventName();
+
+                        if(userMsg != null){
+                            message =  message + "Embedded error : " + userMsg;
+                        }
+                        throw new RegistryException(message);
                     }
                 }
             }
@@ -573,7 +597,7 @@ public class DefaultLifeCycle extends Aspect {
 //                           transition validations go here
 //                           There is need to check the transition permissions again as well to avoid fraud
                         if (getTransitionPermission(roles, transitionPermission.get(currentState), eventName)) {
-                            if (doAllCustomValidations(requestContext, currentState)) {
+                            if (doAllCustomValidations(requestContext, currentState,eventName)) {
 //                              adding log
                                 statCollection.setActionType(LifecycleConstants.TRANSITION);
                                 if (resource.getProperty(
@@ -617,6 +641,9 @@ public class DefaultLifeCycle extends Aspect {
             String msg = "Failed to get the current user role :" + e.toString();
             log.error(msg);
             throw new RegistryException(msg);
+        }catch (RegistryException e){
+            log.error(e);
+            throw new RegistryException(e.getMessage());
         }
 //        We are getting the resource again because the users can change its properties from the executors
         if(requestContext.getResource() == null){

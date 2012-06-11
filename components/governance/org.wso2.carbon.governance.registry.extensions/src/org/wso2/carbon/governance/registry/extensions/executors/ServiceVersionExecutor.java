@@ -31,15 +31,16 @@ public class ServiceVersionExecutor implements Execution {
     //    from the old code
     private String serviceMediaType = "application/vnd.wso2-service+xml";
 
-//    To track whether we need to move comments,tags,ratings and all the associations.
+    //    To track whether we need to move comments,tags,ratings and all the associations.
     private boolean copyComments = false;
     private boolean copyTags = false;
     private boolean copyRatings = false;
     private boolean copyAllAssociations = false;
-    private boolean copyDependencies = false;
+    private boolean copyDependencies = true;
+    private boolean override = false;
 
     private Map parameterMap = new HashMap();
-    private List<String> otherDependencyList =  new ArrayList<String>();
+    private List<String> otherDependencyList = new ArrayList<String>();
 
     private OMElement historyOperation = null;
 
@@ -47,30 +48,35 @@ public class ServiceVersionExecutor implements Execution {
         //To change body of implemented methods use File | Settings | File Templates.
         this.parameterMap = parameterMap;
 
-        if(parameterMap.get(ExecutorConstants.SERVICE_MEDIATYPE)!= null){
+        if (parameterMap.get(ExecutorConstants.SERVICE_MEDIATYPE) != null) {
             serviceMediaType = parameterMap.get(ExecutorConstants.SERVICE_MEDIATYPE).toString();
         }
-        if(parameterMap.get(ExecutorConstants.COPY_COMMENTS) != null){
+        if (parameterMap.get(ExecutorConstants.COPY_COMMENTS) != null) {
             copyComments = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_COMMENTS));
         }
-        if(parameterMap.get(ExecutorConstants.COPY_TAGS) != null){
+        if (parameterMap.get(ExecutorConstants.COPY_TAGS) != null) {
             copyTags = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_TAGS));
         }
-        if(parameterMap.get(ExecutorConstants.COPY_RATINGS) != null){
+        if (parameterMap.get(ExecutorConstants.COPY_RATINGS) != null) {
             copyRatings = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_RATINGS));
         }
-        if(parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS) != null){
+        if (parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS) != null) {
             copyAllAssociations = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_ASSOCIATIONS));
         }
-        if(parameterMap.get(ExecutorConstants.COPY_DEPENDENCIES) != null){
+        if (parameterMap.get(ExecutorConstants.COPY_DEPENDENCIES) != null) {
             copyDependencies = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.COPY_DEPENDENCIES));
+        }
+        if (parameterMap.get(ExecutorConstants.OVERRIDE) != null) {
+            override = Boolean.parseBoolean((String) parameterMap.get(ExecutorConstants.OVERRIDE));
         }
 
     }
 
     public boolean execute(RequestContext requestContext, String currentState, String targetState) {
-//        for logging purposes
+//        To keep track of the registry transaction state
+        boolean transactionStatus = false;
 
+//        for logging purposes
         try {
             historyOperation = AXIOMUtil.stringToOM("<operation></operation>");
         } catch (XMLStreamException e) {
@@ -86,12 +92,11 @@ public class ServiceVersionExecutor implements Execution {
         Map<String, String> newPathMappings;
 
 //        Returning true since this executor is not compatible with collections
-        if(resource instanceof Collection){
+        if (resource instanceof Collection) {
             return true;
-        }
-        else if(resource.getMediaType() == null || "".equals(resource.getMediaType().trim())){
-            log.warn("The media-type of the resource '"+ resourcePath
-                    +"' is undefined. Hence exiting the service version executor.");
+        } else if (resource.getMediaType() == null || "".equals(resource.getMediaType().trim())) {
+            log.warn("The media-type of the resource '" + resourcePath
+                    + "' is undefined. Hence exiting the service version executor.");
             return true;
         } else if (!resource.getMediaType().equals(serviceMediaType)) {
 //            We have a generic copy executor to copy any resource type.
@@ -121,6 +126,9 @@ public class ServiceVersionExecutor implements Execution {
         }
 
         try {
+//            Starting a registry transaction
+            registry.beginTransaction();
+
             Resource newResource = registry.newResource();
 //            This loop is there to reformat the paths with the new versions.
             newPathMappings = getNewPathMappings(targetEnvironment, currentEnvironment, currentParameterMap);
@@ -190,7 +198,7 @@ public class ServiceVersionExecutor implements Execution {
                         if (!tempResource.getPath().equals(resourcePath)) {
 //                            adding logs
                             historyOperation.addChild(getHistoryInfoElement(newTempResourcePath + " created"));
-                            registry.put(newTempResourcePath,tempResource);
+                            registry.put(newTempResourcePath, tempResource);
 
 //                            Here we move all the comments,tags,ratings and all associations based on the configuration
 //                            These operations are done for the dependent resources here.
@@ -208,21 +216,29 @@ public class ServiceVersionExecutor implements Execution {
                         }
                     }
                 }
+//                We check whether there is a resource with the same name,namespace and version in this environment
+//                if so, we make it return false based on override flag.
+                if(registry.resourceExists(newPathMappings.get(resourcePath)) & !override){
+//                    This means that we should not do this operation and we should fail this
+                    String message = "A resource exists with the given verion";
+                    requestContext.setProperty(LifecycleConstants.EXECUTOR_MESSAGE_KEY,message);
+                    throw new RegistryException(message);
+                }
 
 //                This is to handle the original resource and put it to the new path
                 registry.put(newPathMappings.get(resourcePath), newResource);
                 historyOperation.addChild(getHistoryInfoElement(newPathMappings.get(resourcePath) + " created"));
 
-            }finally {
-                    CommonUtil.releaseUpdateLock();
-                }
+            } finally {
+                CommonUtil.releaseUpdateLock();
+            }
 //            Associating the new resource with the LC
-                String aspectName = resource.getProperty(ExecutorConstants.REGISTRY_LC_NAME);
-                registry.associateAspect(newPathMappings.get(resourcePath)
-                        , aspectName);
+            String aspectName = resource.getProperty(ExecutorConstants.REGISTRY_LC_NAME);
+            registry.associateAspect(newPathMappings.get(resourcePath)
+                    , aspectName);
 
-                makeDependencies(requestContext, currentParameterMap, newPathMappings);
-                makeOtherDependencies(requestContext, newPathMappings, otherDependencyList);
+            makeDependencies(requestContext, currentParameterMap, newPathMappings);
+            makeOtherDependencies(requestContext, newPathMappings, otherDependencyList);
 
 
 //           Here we are coping the comments,tags,rating and associations of the original resource
@@ -251,8 +267,21 @@ public class ServiceVersionExecutor implements Execution {
             newResource.setProperty(LifecycleConstants.REGISTRY_LIFECYCLE_HISTORY_ORIGINAL_PATH,
                     statCollection.getOriginalPath());
             statCollection.addExecutors(this.getClass().getName(), historyOperation);
+
+            transactionStatus = true;
         } catch (RegistryException e) {
             log.error("Failed to perform registry operation", e);
+            return false;
+        }finally {
+            try {
+                if(transactionStatus){
+                    registry.commitTransaction();
+                }else{
+                    registry.rollbackTransaction();
+                }
+            } catch (RegistryException e) {
+                log.error("Unable to finish the transaction", e);
+            }
         }
         return true;
     }
@@ -288,17 +317,17 @@ public class ServiceVersionExecutor implements Execution {
     private void updateNewPathMappings(String mediaType, String currentExpression, String targetExpression,
                                        Map<String, String> newPathMappingsMap, String resourcePath, String version) {
         boolean hasValue = false;
-        if(parameterMap.containsKey(mediaType + ":" + ExecutorConstants.CURRENT_ENVIRONMENT)){
+        if (parameterMap.containsKey(mediaType + ":" + ExecutorConstants.CURRENT_ENVIRONMENT)) {
             hasValue = true;
             currentExpression = (String) parameterMap.get(mediaType + ":" + ExecutorConstants.CURRENT_ENVIRONMENT);
         }
-        if(parameterMap.containsKey(mediaType + ":" + ExecutorConstants.TARGET_ENVIRONMENT)){
+        if (parameterMap.containsKey(mediaType + ":" + ExecutorConstants.TARGET_ENVIRONMENT)) {
             hasValue = true;
             targetExpression = (String) parameterMap.get(mediaType + ":" + ExecutorConstants.TARGET_ENVIRONMENT);
         }
         if (hasValue) {
-            String path = reformatPath(resourcePath,currentExpression,targetExpression,version);
-            newPathMappingsMap.put(resourcePath,path);
+            String path = reformatPath(resourcePath, currentExpression, targetExpression, version);
+            newPathMappingsMap.put(resourcePath, path);
         }
     }
 
@@ -331,7 +360,7 @@ public class ServiceVersionExecutor implements Execution {
 
         if (resourceContent.contains(pathSuffix)) {
             resourceContent = resourceContent.replace(pathSuffix, replacementValue);
-        }else{
+        } else {
             resourceContent = replacePathRecursively(resourceContent, pathSuffix,
                     replacementValue);
         }
@@ -341,19 +370,19 @@ public class ServiceVersionExecutor implements Execution {
     private String replacePathRecursively(String content, String value, String replacement) {
         String suffix = value.substring(value.indexOf(RegistryConstants.PATH_SEPARATOR) + 1);
         String replacementSuffix = replacement.replace(value.substring(0,
-                value.indexOf(RegistryConstants.PATH_SEPARATOR) + 1),"");
-        if(suffix.lastIndexOf(RegistryConstants.PATH_SEPARATOR) <= 0){
+                value.indexOf(RegistryConstants.PATH_SEPARATOR) + 1), "");
+        if (suffix.lastIndexOf(RegistryConstants.PATH_SEPARATOR) <= 0) {
             return content;
         }
-        if(content.contains(suffix)){
-            return content.replace(suffix,replacementSuffix);
-        }else{
-            replacePathRecursively(content,suffix,replacementSuffix);
+        if (content.contains(suffix)) {
+            return content.replace(suffix, replacementSuffix);
+        } else {
+            replacePathRecursively(content, suffix, replacementSuffix);
         }
         return content;
     }
 
-    private Map<String,String> getNewPathMappings(String targetEnvironment, String currentEnvironment
+    private Map<String, String> getNewPathMappings(String targetEnvironment, String currentEnvironment
             , Map<String, String> currentParameterMap) {
 
         Map<String, String> newPathMappingsMap = new HashMap<String, String>();
@@ -363,8 +392,8 @@ public class ServiceVersionExecutor implements Execution {
                     keyValueSet.getValue());
 //                This condition is there to check whether we need to move the resources
 //                The executor will not execute beyond this point, to all the resources that are not under the given environment prefix
-            if(path.equals(keyValueSet.getKey())){
-                log.info("Resource "+ path +" is not in the given environment");
+            if (path.equals(keyValueSet.getKey())) {
+                log.info("Resource " + path + " is not in the given environment");
                 otherDependencyList.add(path);
                 continue;
             }
@@ -381,7 +410,7 @@ public class ServiceVersionExecutor implements Execution {
         Set parameterMapKeySet = (Set) requestContext.getProperty("parameterNames");
         if (parameterMapKeySet == null) {
             if (serviceMediaType.equals(requestContext.getResource().getMediaType())) {
-                if(getServiceOMElement(requestContext.getResource()) != null){
+                if (getServiceOMElement(requestContext.getResource()) != null) {
                     currentParameterMap.put(requestContext.getResource().getPath(),
                             org.wso2.carbon.registry.common.utils.CommonUtil.getServiceVersion(
                                     getServiceOMElement(requestContext.getResource())));
@@ -396,26 +425,25 @@ public class ServiceVersionExecutor implements Execution {
                 currentParameterMap.put(key, (String) requestContext.getProperty(key));
             }
         }
-        if(currentParameterMap.isEmpty()){
+        if (currentParameterMap.isEmpty()) {
             if (serviceMediaType.equals(requestContext.getResource().getMediaType())) {
-                if(getServiceOMElement(requestContext.getResource()) != null){
+                if (getServiceOMElement(requestContext.getResource()) != null) {
                     currentParameterMap.put(requestContext.getResource().getPath(),
                             org.wso2.carbon.registry.common.utils.CommonUtil.getServiceVersion(
                                     getServiceOMElement(requestContext.getResource())));
 
 //                    add if any dependencies are available for this resource under the version of the service
-                    if(copyDependencies){
+                    if (copyDependencies) {
                         try {
-                            Association[] associations=
+                            Association[] associations =
                                     requestContext.getRegistry().getAllAssociations(requestContext.getResource().getPath());
-                            if(associations!=null && associations.length!=0){
-                                for (Association association:associations){
-                                    if(association.getAssociationType().equals(CommonConstants.DEPENDS)){
-                                        if(requestContext.getResource().getPath().equals(association.getSourcePath())){
+                            if (associations != null && associations.length != 0) {
+                                for (Association association : associations) {
+                                    if (association.getAssociationType().equals(CommonConstants.DEPENDS)) {
+                                        if (requestContext.getResource().getPath().equals(association.getSourcePath())) {
                                             currentParameterMap.put(association.getDestinationPath(),
-                                                    org.wso2.carbon.registry.common.utils.CommonUtil
-                                                            .getServiceVersion(getServiceOMElement(
-                                                                    requestContext.getResource())));
+                                                    org.wso2.carbon.registry.common.utils.CommonUtil.getServiceVersion(
+                                                            getServiceOMElement(requestContext.getResource())));
                                         }
                                     }
                                 }
@@ -436,8 +464,8 @@ public class ServiceVersionExecutor implements Execution {
     * When calculating the target path, we split the current path using the given current expression and then map the
     * path segments to the corresponding ones in the target path expression
     * */
-    private String reformatPath(String path, String currentExpression, String targetExpression,String newResourceVersion) {
-        TreeMap<Integer,String> indexMap = new TreeMap<Integer, String>();
+    private String reformatPath(String path, String currentExpression, String targetExpression, String newResourceVersion) {
+        TreeMap<Integer, String> indexMap = new TreeMap<Integer, String>();
 
         String returnPath = targetExpression;
         String prefix;
@@ -451,75 +479,75 @@ public class ServiceVersionExecutor implements Execution {
 
         String tempExpression = currentExpression;
 
-        while (indexMap.lastKey() < tempExpression.lastIndexOf(RegistryConstants.PATH_SEPARATOR)){
-            tempExpression = tempExpression.substring(0,tempExpression.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
-            path = path.substring(0,path.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
+        while (indexMap.lastKey() < tempExpression.lastIndexOf(RegistryConstants.PATH_SEPARATOR)) {
+            tempExpression = tempExpression.substring(0, tempExpression.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
+            path = path.substring(0, path.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
         }
 
-        prefix = currentExpression.substring(0,currentExpression.indexOf(indexMap.get(indexMap.higherKey(-1))));
+        prefix = currentExpression.substring(0, currentExpression.indexOf(indexMap.get(indexMap.higherKey(-1))));
 
-        if(!path.startsWith(prefix)){
+        if (!path.startsWith(prefix)) {
             return path;
         }
         path = path.replace(prefix, "");
 
-        while (true){
-            if(indexMap.firstKey() < 0){
+        while (true) {
+            if (indexMap.firstKey() < 0) {
                 indexMap.pollFirstEntry();
-            }else {
+            } else {
                 break;
             }
         }
 
-        while (true){
-            if(indexMap.size() == 0){
+        while (true) {
+            if (indexMap.size() == 0) {
                 break;
             }
             Map.Entry lastEntry = indexMap.pollLastEntry();
-            if(lastEntry.getValue().equals(ExecutorConstants.RESOURCE_PATH)){
+            if (lastEntry.getValue().equals(ExecutorConstants.RESOURCE_PATH)) {
                 String pathValue = path;
 
                 for (int i = 0; i < indexMap.size(); i++) {
 //                    pathValue = formatPath(pathValue.substring(path.indexOf(RegistryConstants.PATH_SEPARATOR)));
-                   pathValue = formatPath(pathValue.substring(pathValue.indexOf(RegistryConstants.PATH_SEPARATOR)));
+                    pathValue = formatPath(pathValue.substring(pathValue.indexOf(RegistryConstants.PATH_SEPARATOR)));
                 }
 
-                if(!pathValue.equals("")) {
-                    returnPath = returnPath.replace(ExecutorConstants.RESOURCE_PATH,formatPath(pathValue));
-                    path = path.replace(pathValue,"");
-                } else{
-                    returnPath = returnPath.replace("/"+ lastEntry.getValue(),"");
+                if (!pathValue.equals("")) {
+                    returnPath = returnPath.replace(ExecutorConstants.RESOURCE_PATH, formatPath(pathValue));
+                    path = path.replace(pathValue, "");
+                } else {
+                    returnPath = returnPath.replace("/" + lastEntry.getValue(), "");
                 }
 
                 continue;
             }
-            if(lastEntry.getValue().equals(ExecutorConstants.RESOURCE_VERSION)){
-                returnPath = returnPath.replace(ExecutorConstants.RESOURCE_VERSION,newResourceVersion);
-                if(path.contains("/")){
-                    path = path.substring(0,path.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
-                }else{
-                    path="";
+            if (lastEntry.getValue().equals(ExecutorConstants.RESOURCE_VERSION)) {
+                returnPath = returnPath.replace(ExecutorConstants.RESOURCE_VERSION, newResourceVersion);
+                if (path.contains("/")) {
+                    path = path.substring(0, path.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
+                } else {
+                    path = "";
                 }
                 continue;
             }
 
             String tempPath;
-            if(path.contains("/")){
-                tempPath=path.substring(path.lastIndexOf(RegistryConstants.PATH_SEPARATOR) + 1);
-            } else{
-                tempPath=path;
+            if (path.contains("/")) {
+                tempPath = path.substring(path.lastIndexOf(RegistryConstants.PATH_SEPARATOR) + 1);
+            } else {
+                tempPath = path;
             }
-            if(!tempPath.equals("")){
-                returnPath = returnPath.replace((String) lastEntry.getValue(),formatPath(tempPath));
-                if(path.contains("/")){
-                    path = path.substring(0,path.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
-                }else{
-                    path="";
+            if (!tempPath.equals("")) {
+                returnPath = returnPath.replace((String) lastEntry.getValue(), formatPath(tempPath));
+                if (path.contains("/")) {
+                    path = path.substring(0, path.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
+                } else {
+                    path = "";
                 }
-            }else{
-                returnPath = returnPath.replace("/"+ lastEntry.getValue(),"");
-                if(path.contains("/")){
-                    path = path.substring(0,path.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
+            } else {
+                returnPath = returnPath.replace("/" + lastEntry.getValue(), "");
+                if (path.contains("/")) {
+                    path = path.substring(0, path.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
                 }
             }
 
@@ -547,10 +575,10 @@ public class ServiceVersionExecutor implements Execution {
             for (Map.Entry<String, String> entry : oldPathNewPathMap.entrySet()) {
                 Association[] associations = registry.getAllAssociations(entry.getValue());
                 for (Association association : associations) {
-                    if(!(oldPathNewPathMap.containsValue(association.getSourcePath()))
-                            || !(oldPathNewPathMap.containsValue(association.getDestinationPath()))){
-                        registry.removeAssociation(association.getSourcePath(),association.getDestinationPath()
-                                ,association.getAssociationType());
+                    if (!(oldPathNewPathMap.containsValue(association.getSourcePath()))
+                            || !(oldPathNewPathMap.containsValue(association.getDestinationPath()))) {
+                        registry.removeAssociation(association.getSourcePath(), association.getDestinationPath()
+                                , association.getAssociationType());
                     }
                 }
             }
@@ -581,11 +609,11 @@ public class ServiceVersionExecutor implements Execution {
 
             for (Association association : associations) {
                 for (String dependency : otherDependencies) {
-                    if(association.getDestinationPath().equals(dependency)){
-                        registry.addAssociation(entry.getValue(),dependency,association.getAssociationType());
+                    if (association.getDestinationPath().equals(dependency)) {
+                        registry.addAssociation(entry.getValue(), dependency, association.getAssociationType());
                     }
-                    if(association.getSourcePath().equals(dependency)){
-                        registry.addAssociation(dependency,entry.getValue(),association.getAssociationType());
+                    if (association.getSourcePath().equals(dependency)) {
+                        registry.addAssociation(dependency, entry.getValue(), association.getAssociationType());
                     }
 
                 }

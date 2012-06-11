@@ -48,6 +48,11 @@ public class ExecutorConstants {
     public static final String COPY_ASSOCIATIONS = "copyAssociations";
 
     /**
+     * Defines the override key. This only works for services
+     */
+    public static final String OVERRIDE = "override";
+
+    /**
      * Defines the resource name key
      */
     public static final String RESOURCE_NAME = "{@resourceName}";

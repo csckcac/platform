@@ -20,14 +20,15 @@ package org.apache.synapse.task;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.quartz.CronTrigger;
-import org.quartz.SimpleTrigger;
+import org.quartz.CronScheduleBuilder;
 import org.quartz.Trigger;
-import org.quartz.TriggerUtils;
+import org.quartz.TriggerBuilder;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Random;
+
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * Default TriggerFactory ship with synapse utils
@@ -53,25 +54,42 @@ public class DefaultTaskTriggerFactory implements TaskTriggerFactory {
         long repeatInterval = taskDescription.getInterval();
         Date startTime = taskDescription.getStartTime();
         Date endTime = taskDescription.getEndTime();
+        String group = taskDescription.getGroup();
+
+        if (group == null || "".equals(group)) {
+            group = TaskDescription.DEFAULT_GROUP;
+        }
 
         Trigger trigger;
+
+        TriggerBuilder<Trigger> triggerBuilder = newTrigger()
+                .withIdentity(name + "-trigger-" + String.valueOf(RANDOM.nextLong()), group);
+
+        if (startTime != null) {
+            triggerBuilder.startAt(startTime);
+        } else {
+            triggerBuilder.startNow();
+        }
+
+        if (endTime != null) {
+            triggerBuilder.endAt(endTime);
+        }
+        
         if (cron == null || "".equals(cron)) {
             if (repeatCount >= 0) {
-                trigger = TriggerUtils.makeImmediateTrigger(repeatCount - 1, repeatInterval);
+                trigger = triggerBuilder.withSchedule(simpleSchedule()
+                .withIntervalInMilliseconds(repeatInterval)
+                .withRepeatCount(repeatCount - 1))
+                .build();
             } else {
-                trigger = TriggerUtils.makeImmediateTrigger(SimpleTrigger.REPEAT_INDEFINITELY,
-                        repeatInterval);
+                trigger = triggerBuilder.withSchedule(simpleSchedule()
+                .withIntervalInMilliseconds(repeatInterval)
+                .repeatForever())
+                .build();
             }
 
         } else {
-            CronTrigger cronTrigger = new CronTrigger();
-            try {
-                cronTrigger.setCronExpression(cron);
-                trigger = cronTrigger;
-            } catch (ParseException e) {
-                throw new SynapseTaskException("Error setting cron expression : " +
-                        e.getMessage() + cron, log);
-            }
+            trigger = triggerBuilder.withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();
         }
 
         if (trigger == null) {
@@ -79,21 +97,6 @@ public class DefaultTaskTriggerFactory implements TaskTriggerFactory {
                     taskDescription, log);
         }
 
-        if (startTime != null) {
-            trigger.setStartTime(startTime);
-        }
-        if (endTime != null) {
-            trigger.setEndTime(endTime);
-        }
-        // give the trigger a random name
-        trigger.setName(name + "-trigger-" + String.valueOf(RANDOM.nextLong()));
-        String group = taskDescription.getGroup();
-        if (group != null && !"".equals(group)) {
-            trigger.setGroup(group);
-        } else {
-            trigger.setGroup(TaskDescription.DEFAULT_GROUP);
-        }
-        trigger.setVolatility(taskDescription.isVolatility());
         return trigger;
     }
 }

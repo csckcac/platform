@@ -22,11 +22,8 @@ package org.apache.synapse.message.processors.sampler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.core.SynapseEnvironment;
-import org.apache.synapse.message.processors.AbstractMessageProcessor;
 import org.apache.synapse.message.processors.ScheduledMessageProcessor;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.SchedulerException;
+import org.quartz.*;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -39,7 +36,7 @@ public class SamplingProcessor extends ScheduledMessageProcessor{
     private AtomicBoolean active = new AtomicBoolean(true);
 
     private SamplingProcessorView view;
-
+    
     @Override
     public void init(SynapseEnvironment se) {
         super.init(se);
@@ -51,13 +48,20 @@ public class SamplingProcessor extends ScheduledMessageProcessor{
     }
 
     @Override
-    protected JobDetail getJobDetail() {
-        JobDetail jobDetail = new JobDetail();
-        jobDetail.setName(name + "-sampling-job");
-        jobDetail.setJobClass(SamplingJob.class);
-        return jobDetail;
+    protected JobBuilder getJobBuilder() {
+        JobBuilder jobBuilder = JobBuilder.newJob(SamplingJob.class)
+                .withIdentity(name + "-sampling-job", SCHEDULED_MESSAGE_PROCESSOR_GROUP);
+        return jobBuilder;
     }
 
+    @Override
+    protected JobDetail getJobDetail() {
+        JobDetail jobDetail;
+        JobBuilder jobBuilder = getJobBuilder();
+        jobDetail = jobBuilder.build();
+        return jobDetail;
+    }
+    
     @Override
     protected JobDataMap getJobDataMap() {
         JobDataMap jdm = new JobDataMap();
@@ -69,8 +73,8 @@ public class SamplingProcessor extends ScheduledMessageProcessor{
     @Override
     public void destroy() {
          try {
-            scheduler.deleteJob(name + "-sampling-job",
-                    ScheduledMessageProcessor.SCHEDULED_MESSAGE_PROCESSOR_GROUP);
+            scheduler.deleteJob(new JobKey(name + "-sampling-job",
+                    ScheduledMessageProcessor.SCHEDULED_MESSAGE_PROCESSOR_GROUP));
         } catch (SchedulerException e) {
             log.error("Error while destroying the task " + e);
         }

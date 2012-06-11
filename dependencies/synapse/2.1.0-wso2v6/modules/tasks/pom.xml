@@ -60,6 +60,7 @@
                         <Import-Package>
                             !javax.xml.namespace,
                             javax.xml.namespace; version=0.0.0,
+                            org.quartz.*;version="2.1.1",
                             *;resolution:=optional,
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
@@ -77,7 +78,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.opensymphony</groupId>
+            <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
             <version>${quartz.version}</version>
         </dependency>
@@ -95,7 +96,7 @@
     <properties>
         <!-- startup, quartz -->
         <commons-collections.version>3.1</commons-collections.version>
-        <quartz.version>1.6.0</quartz.version>
+        <quartz.version>2.1.1</quartz.version>
         <geronimo-spec.version>1.1</geronimo-spec.version>
     </properties>
 </project>

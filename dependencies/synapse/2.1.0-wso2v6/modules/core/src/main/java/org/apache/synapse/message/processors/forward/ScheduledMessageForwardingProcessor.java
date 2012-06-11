@@ -21,9 +21,7 @@ package org.apache.synapse.message.processors.forward;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.message.processors.ScheduledMessageProcessor;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.SchedulerException;
+import org.quartz.*;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -61,10 +59,17 @@ public class ScheduledMessageForwardingProcessor extends ScheduledMessageProcess
     }
 
     @Override
+    protected JobBuilder getJobBuilder() {
+        JobBuilder jobBuilder = JobBuilder.newJob(ForwardingJob.class)
+                .withIdentity(name + "-forward job", SCHEDULED_MESSAGE_PROCESSOR_GROUP);
+        return jobBuilder;
+    }
+
+    @Override
     protected JobDetail getJobDetail() {
-        JobDetail jobDetail = new JobDetail();
-        jobDetail.setName(name + "-forward job");
-        jobDetail.setJobClass(ForwardingJob.class);
+        JobDetail jobDetail;
+        JobBuilder jobBuilder = getJobBuilder();
+        jobDetail = jobBuilder.build();
         return jobDetail;
     }
 
@@ -131,8 +136,8 @@ public class ScheduledMessageForwardingProcessor extends ScheduledMessageProcess
     @Override
     public void destroy() {
          try {
-            scheduler.deleteJob(name + "-forward job",
-                    ScheduledMessageProcessor.SCHEDULED_MESSAGE_PROCESSOR_GROUP);
+            scheduler.deleteJob(new JobKey(name + "-forward job",
+                    ScheduledMessageProcessor.SCHEDULED_MESSAGE_PROCESSOR_GROUP));
         } catch (SchedulerException e) {
             log.error("Error while destroying the task " + e);
         }

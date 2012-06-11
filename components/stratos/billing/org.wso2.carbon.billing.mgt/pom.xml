@@ -59,7 +59,7 @@
                         </Export-Package>
                         <Import-Package>
                             org.wso2.carbon.rule.*,
-                            org.quartz.*; version=9.9.9,
+                            org.quartz.*; version=2.1.1,
                             org.apache.synapse.task.*,
                             org.wso2.carbon.stratos.common.*,
                             org.wso2.carbon.throttling.agent.client.*,

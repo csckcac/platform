@@ -71,7 +71,7 @@
                             org.wso2.carbon.billing.mgt.*,
                             org.wso2.carbon.registry.core.*;version=1.0.1,
                             org.wso2.carbon.registry.resource.*,
-                            org.quartz.*; version=9.9.9,
+                            org.quartz.*; version=2.1.1,
                             !javax.xml.namespace,
                             javax.xml.namespace; version=0.0.0,
                             javax.servlet; version=2.4.0,

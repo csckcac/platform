@@ -27,7 +27,6 @@ import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
-import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
@@ -402,6 +401,7 @@ public class SchemaUriProcessor {
             } else {
                 xsdResource = new ResourceImpl();
                 if (metaResource != null) {
+                    xsdResource.setUUID(metaResource.getUUID());
                     Properties properties = metaResource.getProperties();
                     if (properties != null) {
                         List<String> linkProperties = Arrays.asList(
@@ -472,7 +472,7 @@ public class SchemaUriProcessor {
             }
             boolean newSchemaUpload = !registry.resourceExists(schemaPath);
             saveToRepositorySafely(requestContext, schemaInfo.getOriginalURL(), schemaPath,
-                    xsdResource);
+                    xsdResource, schemaInfo.isMasterSchema());
 
             if (schemaInfo.isMasterSchema()) {
                 path = schemaPath;
@@ -523,12 +523,17 @@ public class SchemaUriProcessor {
 
     /**
      * Saves the resource iff the resource is not already existing in the repository
+     *
+     * @param context RequestContext
+     * @param url url of the resource
      * @param path: resource path
      * @param resource: resource object
+     * @param isMasterSchema Whether master schema or not
+     *
      * @throws org.wso2.carbon.registry.core.exceptions.RegistryException
      */
     private void saveToRepositorySafely(RequestContext context, String url, String path,
-                                        Resource resource) throws RegistryException {
+                                        Resource resource, boolean isMasterSchema) throws RegistryException {
 
         String schemaId = resource.getUUID();
 
@@ -545,7 +550,7 @@ public class SchemaUriProcessor {
             log.debug("A Resource already exists at given location. Overwriting resource content.");
         }
 
-        addSchemaToRegistry(context, path, url, resource, registry);
+        addSchemaToRegistry(context, path, url, resource, registry, isMasterSchema);
 
 //        if (!(resource instanceof Collection) &&
 //           ((ResourceImpl) resource).isVersionableChange()) {
@@ -566,24 +571,22 @@ public class SchemaUriProcessor {
      * @param url      the path from which the resource was imported from.
      * @param resource the resource to be added.
      * @param registry the registry instance to use.
+     * @param isMasterSchema Whether master schema or not
      *
      * @throws org.wso2.carbon.registry.core.exceptions.RegistryException if the operation failed.
      */
     protected void addSchemaToRegistry(RequestContext context, String path, String url,
-                                       Resource resource, Registry registry) throws RegistryException {
+                                       Resource resource, Registry registry, boolean isMasterSchema) throws RegistryException {
         String source = getSource(url);
         GenericArtifactManager genericArtifactManager = new GenericArtifactManager(systemGovernanceRegistry, "uri");
         GenericArtifact xsd = genericArtifactManager.newGovernanceArtifact(new QName(source));
+        if(isMasterSchema){
+            xsd.setId(resource.getUUID());
+        }
         xsd.setAttribute("overview_name", source);
         xsd.setAttribute("overview_uri", url);
         xsd.setAttribute("overview_type", HandlerConstants.XSD);
         genericArtifactManager.addGenericArtifact(xsd);
-//        Resource artifactResource = registry.get(
-//                RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
-//        artifactResource.setProperty(
-//                xsd.getId(), HandlerConstants.XSD_LOCATION + source);
-//        registry.put(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
-//                GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, artifactResource); //TODO
     }
 
     private String extractResourceFromURL(String wsdlURL, String suffix) {

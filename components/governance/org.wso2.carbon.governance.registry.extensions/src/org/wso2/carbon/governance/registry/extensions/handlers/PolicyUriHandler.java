@@ -21,7 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
-import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.registry.extensions.handlers.utils.HandlerConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
@@ -33,7 +32,6 @@ import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
 import org.wso2.carbon.registry.core.jdbc.handlers.Handler;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
-import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 import org.wso2.carbon.registry.extensions.utils.CommonUtil;
 
 import javax.xml.namespace.QName;
@@ -148,15 +146,11 @@ public class PolicyUriHandler extends Handler {
         String source = getSource(url);
         GenericArtifactManager genericArtifactManager = new GenericArtifactManager(systemGovernanceRegistry, "uri");
         GenericArtifact policy = genericArtifactManager.newGovernanceArtifact(new QName(source));
+        policy.setId(resource.getUUID());
         policy.setAttribute("overview_name", source);
         policy.setAttribute("overview_uri", url);
         policy.setAttribute("overview_type", HandlerConstants.POLICY);
         genericArtifactManager.addGenericArtifact(policy);
-//        Resource artifactResource = registry.get(
-//                RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
-//        artifactResource.setProperty(policy.getId(), HandlerConstants.POLICY_LOCATION + source);
-//        registry.put(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
-//                GovernanceConstants.GOVERNANCE_ARTIFACT_INDEX_PATH, artifactResource); //TODO
     }
 
     private String extractResourceFromURL(String policyURL, String suffix) {

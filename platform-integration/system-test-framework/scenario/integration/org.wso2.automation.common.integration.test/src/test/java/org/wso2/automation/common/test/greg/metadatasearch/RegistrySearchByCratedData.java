@@ -135,7 +135,7 @@ public class RegistrySearchByCratedData {
         }
     }
 
-    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search from valid date range")
+//    @Test(priority = 4, groups = {"wso2.greg"}, description = "Metadata search from valid date range")
     public void searchResourceWithInvalidDateFormat()
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();

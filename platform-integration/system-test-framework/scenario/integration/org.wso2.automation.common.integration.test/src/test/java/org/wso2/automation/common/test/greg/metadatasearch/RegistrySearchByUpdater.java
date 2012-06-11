@@ -150,8 +150,8 @@ public class RegistrySearchByUpdater {
 
     }
 
-    @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by Updater Name with invalid characters")
+//    @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
+//          description = "Metadata search by Updater Name with invalid characters")
     public void searchResourceByUpdaterNameWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();

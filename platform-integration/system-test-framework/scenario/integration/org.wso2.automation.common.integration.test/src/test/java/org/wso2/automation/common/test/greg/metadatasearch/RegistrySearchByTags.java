@@ -184,8 +184,8 @@ public class RegistrySearchByTags {
 
     }
 
-    @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
-          description = "Metadata search by tag with invalid characters")
+//    @Test(priority = 5, dataProvider = "invalidCharacter", groups = {"wso2.greg"},
+//          description = "Metadata search by tag with invalid characters")
     public void searchResourceByTagNameWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();

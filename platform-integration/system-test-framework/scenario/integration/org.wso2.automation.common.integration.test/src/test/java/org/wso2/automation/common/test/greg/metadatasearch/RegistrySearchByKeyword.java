@@ -150,9 +150,9 @@ public class RegistrySearchByKeyword {
 
     }
 
-    @Test(priority = 5, dataProvider = "invalidCharacter", dataProviderClass = Parameters.class,
-          groups = {"wso2.greg"},
-          description = "Metadata search by keywords with invalid characters")
+//    @Test(priority = 5, dataProvider = "invalidCharacter", dataProviderClass = Parameters.class,
+//          groups = {"wso2.greg"},
+//          description = "Metadata search by keywords with invalid characters")
     public void searchResourceByContentWithInvalidCharacter(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();

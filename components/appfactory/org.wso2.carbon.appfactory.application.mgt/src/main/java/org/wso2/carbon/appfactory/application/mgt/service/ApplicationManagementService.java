@@ -58,7 +58,7 @@ public class ApplicationManagementService extends AbstractAdmin {
 
     }
     
-    public String[] getUsersOfApplicaton(String applicationId ) throws ApplicationManagementException {
+    public String[] getUsersOfApplication(String applicationId ) throws ApplicationManagementException {
         TenantManager tenantManager = Util.getRealmService().getTenantManager();
         ArrayList<String> userList = new ArrayList<String>();
         try {
@@ -147,6 +147,22 @@ public class ApplicationManagementService extends AbstractAdmin {
             throw new ApplicationManagementException(msg, e);
         }
     }
+
+    public UserInfoBean[] getUserInfo(String applicationId) throws ApplicationManagementException {
+        String[] users = getUsersOfApplication(applicationId);
+        ArrayList<UserInfoBean> userInfoList = new ArrayList<UserInfoBean>();
+        if (users != null && users.length >0 ) {
+            for(int i = 0 ; i < users.length; i++ ) {
+                try {
+                    userInfoList.add(getUserInfoBean(users[i]));
+                } catch (ApplicationManagementException e) {
+                    String msg = "Error while getting info for user " + users[i]+ "\n Continue getting other users information";
+                    log.error(msg, e);
+                }
+            }
+        }
+        return userInfoList.toArray(new UserInfoBean[userInfoList.size()]);
+    }                   
 
     public String[] getAllApplications(String userName) throws ApplicationManagementException {
         String apps[] = new String[0];

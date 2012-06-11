@@ -80,13 +80,12 @@ public class HostUtil {
      * @throws UrlMapperException throws when error while retrieve from registry
      */
     public static boolean isMappingExist(String mappingName) throws UrlMapperException {
-        mappingName = UrlMapperConstants.HostProperties.FILE_SERPERATOR
-                + UrlMapperConstants.HostProperties.HOSTINFO + mappingName;
+        mappingName = mappingName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
         MappingData mappings[] = getAllMappingsFromRegistry();
         boolean isExist = false;
         if (mappings != null) {
             for (MappingData mapping : mappings) {
-                if (mappingName.equals(mapping.getMappingName())) {
+                if (mappingName.equalsIgnoreCase(mapping.getMappingName())) {
                     isExist = true;
                 }
             }
@@ -286,18 +285,18 @@ public class HostUtil {
      */
     public static void editHostInEngine(String webAppName, String newHost, String oldHost)
             throws UrlMapperException {
-        removeHostFromEngine(oldHost);
+        removeHost(oldHost);
         addWebAppToHost(newHost, webAppName);
     }
 
     /**
-     * remove the host from the engine
+     * remove the host from the engine and registry
      *
      * @param hostName name of the host to be removed
      * @throws UrlMapperException throws when error while removing
      *                            context or host from engine and from registry
      */
-    public static void removeHostFromEngine(String hostName)
+    public static void removeHost(String hostName)
             throws UrlMapperException {
         Container[] hosts = DataHolder.getInstance().getCarbonTomcatService().getTomcat()
                 .getEngine().findChildren();
@@ -319,6 +318,7 @@ public class HostUtil {
                         host.stop();
                         host.destroy();
                         engine.removeChild(host);
+                        deleteResourceToRegistry(host.getName());
                         log.info("Unloaded host from the engine: " + host);
                         break;
                     }

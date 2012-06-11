@@ -34,7 +34,7 @@ public class UrlMapperAdminService extends AbstractAdmin{
     public void addWebAppToHost(String hostName, String uri) throws UrlMapperException {
         //TODO have to figure out exception handling
         try {
-			hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
+ 			hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
 			HostUtil.addWebAppToHost(hostName, uri);
         } catch (Exception e) {
             log.error(e);  //To change body of catch statement use File | Settings | File Templates.
@@ -77,7 +77,7 @@ public class UrlMapperAdminService extends AbstractAdmin{
     }
 
     public void deleteHost(String hostName) throws UrlMapperException {
-        HostUtil.removeHostFromEngine(hostName);
+        HostUtil.removeHost(hostName);
     }
 
     public boolean isMappingExist(String mappingName) throws UrlMapperException {

@@ -15,6 +15,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.tenant.mgt.core.internal.TenantMgtCoreServiceComponent;
 
+
 /**
  * Tenant Core Util class - used by any service that needs to create a tenant.
  */
@@ -63,9 +64,9 @@ public class TenantCoreUtil {
                                                    StratosConstants.PATH_SEPARATOR + tenantId;
             try {
                 Resource origServiceRes = TenantMgtCoreServiceComponent.
-                        getGovernanceSystemRegistry(0).newResource();
+                        getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID).newResource();
                 origServiceRes.setContent(originatedService);
-                TenantMgtCoreServiceComponent.getGovernanceSystemRegistry(0).
+                TenantMgtCoreServiceComponent.getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID).
                         put(originatedServicePath, origServiceRes);
             } catch (RegistryException e) {
                 String msg = "Error in putting the originated service resource " +

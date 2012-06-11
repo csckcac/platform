@@ -29,14 +29,14 @@ public class BAMAgentCallback implements AgentCallback {
             domainName = WSO2_CARBON_STAND_ALONE;
         }
         cassandraConnector.insertEventDefinition(userName,userPassword,eventStreamDefinition);
-        cassandraConnector.createColumnFamily(domainName,eventStreamDefinition.getName(),userName,userPassword);
+        cassandraConnector.createEventStreamColumnFamily(domainName,eventStreamDefinition.getName(),userName,userPassword);
     }
 
     @Override
     public void receive(List<Event> events, String userName, String userPassword, String domainName) {
         for(Event event:events){
             try {
-                cassandraConnector.insertEvent(event,userName,userPassword);
+                cassandraConnector.insertEvent(event,userName,userPassword, domainName);
             } catch (MalformedStreamDefinitionException e) {
                 e.printStackTrace();
             }

@@ -39,7 +39,6 @@ public class CassandraConnector {
     public static final String LOCAL_NODE = "localhost";
 
 
-
     private static final String STREAM_NAME_KEY = "Name";
     private static final String STREAM_VERSION_KEY = "Version";
     private static final String STREAM_NICK_NAME_KEY = "Nick_Name";
@@ -48,8 +47,8 @@ public class CassandraConnector {
     public static final String BAM_META_KEYSPACE = "BAM_AGENT_API_META_DATA";
     public static final String BAM_META_STREAM_ID_CF = "AGENT_STREAM_ID";
     public static final String BAM_META_STREAM_DEF_CF = "AGENT_STREAM_DEF";
-    private static final String BAM_META_STREAM_ID_KEY_CF = "STREAM_DEF_ID_KEY";
-    private static final String BAM_META_STREAMID_TO_STREAM_ID_KEY = "STREAM_ID_TO_STREAM_ID_KEY";
+    public static final String BAM_META_STREAM_ID_KEY_CF = "STREAM_DEF_ID_KEY";
+    public static final String BAM_META_STREAMID_TO_STREAM_ID_KEY = "STREAM_ID_TO_STREAM_ID_KEY";
 
     public static final String BAM_EVENT_DATA_KEYSPACE = "BAM_EVENT_DATA";
     public static final String BAM_EVENT_DATA_STREAM_DEF_CF = "EVENT_STREAM_DEF";
@@ -86,7 +85,7 @@ public class CassandraConnector {
 ////                + CSS_NODE2 + ":" + RPC_PORT;                                                                                String
         String hostList = LOCAL_NODE + ":" + RPC_PORT;
         cluster = HFactory.createCluster(CLUSTER_NAME,
-                new CassandraHostConfigurator(hostList), credentials);
+                                         new CassandraHostConfigurator(hostList), credentials);
     }
 
     public Cluster getCassandraConnector(String userName, String userPassword) {
@@ -98,7 +97,7 @@ public class CassandraConnector {
 
         String hostList = getCassandraClusterHostPool();
         return HFactory.createCluster(CLUSTER_NAME,
-                new CassandraHostConfigurator(hostList), credentials);
+                                      new CassandraHostConfigurator(hostList), credentials);
     }
 
     private String getCassandraClusterHostPool() {
@@ -109,7 +108,8 @@ public class CassandraConnector {
         return LOCAL_NODE + ":" + RPC_PORT;
     }
 
-    public void createColumnFamily(String domainName, String streamName, String userName, String userPassword) {
+    public void createEventStreamColumnFamily(String domainName, String streamName, String userName,
+                                   String userPassword) {
         if (domainName != null) {
             userName = userName + "@" + domainName;
         }
@@ -120,9 +120,10 @@ public class CassandraConnector {
                 tenantCluster.describeKeyspace(keyspace.getKeyspaceName());
         List<ColumnFamilyDefinition> cfDef = keyspaceDef.getCfDefs();
         for (ColumnFamilyDefinition cfdef : cfDef) {
-            logger.info("Column Name: " + cfdef.getName());
             if (cfdef.getName().equals(eventStreamCfName)) {
-                logger.info("Column Family is already Exist");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Column Family" + eventStreamCfName + " is already Exist");
+                }
                 return;
             }
         }
@@ -131,12 +132,76 @@ public class CassandraConnector {
         tenantCluster.addColumnFamily(columnFamilyDefinition);
     }
 
+    public void createColumnFamily(String domainName, String columnFamilyName, String userName,
+                                   String userPassword) {
+        if (domainName != null) {
+            userName = userName + "@" + domainName;
+        }
+        Cluster tenantCluster = getCassandraConnector(userName, userPassword);
+        Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
+        KeyspaceDefinition keyspaceDef =
+                tenantCluster.describeKeyspace(keyspace.getKeyspaceName());
+        List<ColumnFamilyDefinition> cfDef = keyspaceDef.getCfDefs();
+        for (ColumnFamilyDefinition cfdef : cfDef) {
+            if (cfdef.getName().equals(columnFamilyName)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Column Family" + columnFamilyName + " is already Exist");
+                }
+                return;
+            }
+        }
+        ColumnFamilyDefinition columnFamilyDefinition = HFactory.
+                createColumnFamilyDefinition(BAM_EVENT_DATA_KEYSPACE, columnFamilyName);
+        tenantCluster.addColumnFamily(columnFamilyDefinition);
+    }
 
-    public void insertEvent(Event eventData, String userName, String userPassword) throws MalformedStreamDefinitionException {
+
+    public boolean createKeySpaceIfNotExisting(String keySpaceName, String userName,
+                                               String password) {
+
+        Cluster cluster = getCassandraConnector(userName, password);
+
+        KeyspaceDefinition keySpaceDef = cluster.describeKeyspace(keySpaceName);
+
+        if (keySpaceDef == null) {
+            cluster.addKeyspace(HFactory.createKeyspaceDefinition(keySpaceName));
+
+            keySpaceDef = cluster.describeKeyspace(keySpaceName);
+            //Sometimes it takes some time to make keySpaceDef!=null
+            int retryCount = 0;
+            while (keySpaceDef == null && retryCount < 100) {
+                try {
+                    Thread.sleep(100);
+                    keySpaceDef = cluster.describeKeyspace(keySpaceName);
+                    if (keySpaceDef != null) {
+                        break;
+                    }
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
+
+    public void insertEvent(Event eventData, String userName, String userPassword,
+                            String domainName) throws MalformedStreamDefinitionException {
         String sessionId[] = eventData.getStreamId().split("-");
         Cluster tenantCluster = getCassandraConnector(userName, userPassword);
         EventStreamDefinition eventStreamDef = getStreamDefinition(tenantCluster, eventData.getStreamId());
         String streamColumnFamily = sessionId[0].replace(".", "_");
+
+        if (domainName != null) {
+            userName = userName + "@" + domainName;
+        }
+
+        createKeySpaceIfNotExisting(BAM_EVENT_DATA_KEYSPACE, userName, userPassword);
 
         Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
         Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());
@@ -331,7 +396,8 @@ public class CassandraConnector {
 //    }
 
 
-    public EventStreamDefinition getStreamDefinition(Cluster tenantCluster, String streamId) throws MalformedStreamDefinitionException {
+    public EventStreamDefinition getStreamDefinition(Cluster tenantCluster, String streamId)
+            throws MalformedStreamDefinitionException {
         Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
         ColumnQuery<String, String, String> columnQuery =
                 HFactory.createStringColumnQuery(keyspace);
@@ -370,7 +436,8 @@ public class CassandraConnector {
      * @param streamId              Stream Id
      * @param eventStreamDefinition Event stream definition
      */
-    public void saveStreamDefinitionToStore(String domainName, String streamId, EventStreamDefinition eventStreamDefinition) {
+    public void saveStreamDefinitionToStore(String domainName, String streamId,
+                                            EventStreamDefinition eventStreamDefinition) {
         if (domainName == null) {
             domainName = WSO2_CARBON_STAND_ALONE;
         }
@@ -415,7 +482,8 @@ public class CassandraConnector {
      *
      */
 
-    public EventStreamDefinition getStreamDefinitionFromStore(String domainName, String streamId) throws MalformedStreamDefinitionException {
+    public EventStreamDefinition getStreamDefinitionFromStore(String domainName, String streamId)
+            throws MalformedStreamDefinitionException {
         if (domainName == null) {
             domainName = WSO2_CARBON_STAND_ALONE;
         }
@@ -435,12 +503,13 @@ public class CassandraConnector {
     /**
      * Retrun all stream definitions stored under one domain
      *
-     * @param domainName    Tenant domain name
-     * @return                             All stream definitions related to given tenant domain
+     * @param domainName Tenant domain name
+     * @return All stream definitions related to given tenant domain
      * @throws MalformedStreamDefinitionException
      *
      */
-    public Collection<EventStreamDefinition> getAllStreamDefinitionFromStore(String domainName) throws MalformedStreamDefinitionException {
+    public Collection<EventStreamDefinition> getAllStreamDefinitionFromStore(String domainName)
+            throws MalformedStreamDefinitionException {
         if (domainName == null) {
             domainName = WSO2_CARBON_STAND_ALONE;
         }
@@ -470,11 +539,13 @@ public class CassandraConnector {
 
     /**
      * Insert event definition to tenant event definition column family
-     * @param userName                         Tenant user name
-     * @param userPassword                  Tenant password
-     * @param eventStreamDefinition     Event stream definition
+     *
+     * @param userName              Tenant user name
+     * @param userPassword          Tenant password
+     * @param eventStreamDefinition Event stream definition
      */
-    public void insertEventDefinition(String userName, String userPassword, EventStreamDefinition eventStreamDefinition) {
+    public void insertEventDefinition(String userName, String userPassword,
+                                      EventStreamDefinition eventStreamDefinition) {
         Cluster tenantCluster = getCassandraConnector(userName, userPassword);
         Keyspace keyspace = HFactory.createKeyspace(BAM_EVENT_DATA_KEYSPACE, tenantCluster);
         Mutator<String> mutator = HFactory.createMutator(keyspace, new StringSerializer());

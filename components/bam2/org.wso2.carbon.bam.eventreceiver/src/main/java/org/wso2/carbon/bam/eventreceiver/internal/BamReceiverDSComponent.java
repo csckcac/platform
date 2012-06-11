@@ -7,6 +7,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.agent.server.AgentServer;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
+import org.wso2.carbon.bam.eventreceiver.datastore.CassandraConnector;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 import org.wso2.carbon.user.core.service.RealmService;
 
@@ -30,8 +31,11 @@ public class BamReceiverDSComponent {
         if (log.isDebugEnabled()) {
             log.debug("Starting the Bam Event Receiver Server component");
         }
+
+        initialize();
+
         ServiceReference serviceReference = componentContext.getBundleContext().getServiceReference(AgentServer.class.getName());
-        if(serviceReference != null){
+        if (serviceReference != null) {
             agentServer = (AgentServer) componentContext.getBundleContext().getService(serviceReference);
         }
 
@@ -58,6 +62,18 @@ public class BamReceiverDSComponent {
 
     protected void unsetAuthenticationService(AuthenticationService authenticationService) {
         this.authenticationService = null;
+    }
+
+    private void initialize() {
+        // Create BAM_AGENT_API_META_DATA if not existing as a super tenant key space
+        CassandraConnector connector = new CassandraConnector();
+        connector.createKeySpaceIfNotExisting(CassandraConnector.BAM_META_KEYSPACE, "admin", "admin");
+
+        // Create BAM meta column families if not existing 
+        connector.createColumnFamily(null, CassandraConnector.BAM_META_STREAM_ID_CF, "admin", "admin");
+        connector.createColumnFamily(null, CassandraConnector.BAM_META_STREAM_ID_KEY_CF, "admin", "admin");
+        connector.createColumnFamily(null, CassandraConnector.BAM_META_STREAMID_TO_STREAM_ID_KEY, "admin", "admin");
+        connector.createColumnFamily(null, CassandraConnector.BAM_META_STREAM_DEF_CF, "admin", "admin");
     }
 
 }

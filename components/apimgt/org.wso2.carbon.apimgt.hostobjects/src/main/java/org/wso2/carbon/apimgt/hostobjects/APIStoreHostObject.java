@@ -195,6 +195,35 @@ public class APIStoreHostObject extends ScriptableObject {
         }
     }
 
+    /*
+	 * getting key for a subscribed Application - args[] list String subscriberID, String
+	 * application name, String keyType
+	 */
+	public static String jsFunction_getApplicationKey(Context cx, Scriptable thisObj,
+			Object[] args, Function funObj) throws ScriptException {
+		int argsCount = args.length;
+        String methodName = "getApplicationKey";
+        if(argsCount != 3) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, methodName, argsCount, false);
+        }
+        if(!(args[0] instanceof String)) {
+            HostObjectUtil.invalidArgsError(hostObjectName, methodName, "1", "string", args[0], false);
+        }
+        if(!(args[1] instanceof String)) {
+            HostObjectUtil.invalidArgsError(hostObjectName, methodName, "2", "string", args[1], false);
+        }
+        if(!(args[2] instanceof String)) {
+            HostObjectUtil.invalidArgsError(hostObjectName, methodName, "3", "string", args[2], false);
+        }
+        try {
+            SubscriberKeyMgtClient keyMgtClient = getKeyManagementClient();
+            return keyMgtClient.getApplicationAccessKey((String) args[0], (String) args[1], (String) args[2]);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ScriptException(e);
+        }
+    }
+
 	public static NativeObject jsFunction_login(Context cx, Scriptable thisObj,
 			Object[] args, Function funObj) throws ScriptException,
 			APIManagementException {

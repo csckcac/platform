@@ -86,7 +86,7 @@
 	<version>${wso2carbon.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.opensymphony.wso2</groupId>
+            <groupId>org.quartz-scheduler.wso2</groupId>
             <artifactId>quartz</artifactId>
 	<version>${quartz.wso2.version}</version>
         </dependency>
@@ -184,7 +184,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.opensymphony.wso2:quartz</bundleDef>
+                                <bundleDef>org.quartz-scheduler.wso2:quartz</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.task</bundleDef>
                                 <bundleDef>org.mvel.wso2:mvel2</bundleDef>
                                 <bundleDef>joda-time.wso2:joda-time</bundleDef>

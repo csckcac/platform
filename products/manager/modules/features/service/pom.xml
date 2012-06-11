@@ -42,7 +42,7 @@
         <stratos.version>${project.version}</stratos.version>
         <wso2carbon.version>4.0.0-SNAPSHOT</wso2carbon.version>
 		<synapse.version>${version.synapse}</synapse.version>
-        <quartz.wso2.version>1.6.0.wso2v2</quartz.wso2.version>
+        <quartz.wso2.version>2.1.1.wso2v1</quartz.wso2.version>
     </properties>
 
 </project>

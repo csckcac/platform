@@ -75,7 +75,7 @@
             <artifactId>org.wso2.carbon.usage.agent</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.opensymphony.wso2</groupId>
+            <groupId>org.quartz-scheduler.wso2</groupId>
             <artifactId>quartz</artifactId>
         </dependency>
         <dependency>
@@ -197,7 +197,7 @@
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.throttling.agent.stub</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.usage.agent</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.stratos.landing.page.deployer</bundleDef>
-                                <bundleDef>org.opensymphony.wso2:quartz</bundleDef>                               
+                                <bundleDef>org.quartz-scheduler.wso2:quartz</bundleDef>                               
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.tenant.activity</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.task</bundleDef>
                                 <bundleDef>org.apache.synapse:synapse-tasks</bundleDef>

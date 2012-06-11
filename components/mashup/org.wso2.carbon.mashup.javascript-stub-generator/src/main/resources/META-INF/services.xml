@@ -15,18 +15,18 @@
   ~ limitations under the License.
   -->
 <serviceGroup>
-	<service name="JavaScriptStubGeneratorService">
-		<parameter name="ServiceClass" locked="false">org.wso2.carbon.mashup.javascript.stubgenerator.JSStubGenerator</parameter>
-	</service>
-  <Description>
-      This service facilitates the genaratin of JavaScript stubs
-      given a WSDL document or url to a WSDL.
-  </Description>
-  <transports>
-      <transport>https</transport>
-      <transport>http</transport>
-  </transports>
-	<parameter name="DoAuthentication" locked="true">false</parameter>
-	<parameter name="adminService" locked="true">true</parameter>
-  <parameter name="hiddenService" locked="true">true</parameter>
+    <service name="JavaScriptStubGeneratorService">
+        <parameter name="ServiceClass" locked="false">org.wso2.carbon.mashup.javascript.stubgenerator.JSStubGenerator
+        </parameter>
+    </service>
+    <Description>
+        This service facilitates the genaratin of JavaScript stubs
+        given a WSDL document or url to a WSDL.
+    </Description>
+    <transports>
+        <transport>https</transport>
+    </transports>
+    <parameter name="adminService" locked="true">true</parameter>
+    <parameter name="hiddenService" locked="true">true</parameter>
+    <parameter name="AuthorizationAction" locked="true">/permission/admin/manage/StubGenerator</parameter>
 </serviceGroup>

@@ -18,7 +18,7 @@ import org.wso2.carbon.eventbridge.core.exceptions.DifferentStreamDefinitionAlre
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public abstract class AbstractEventSubscriber implements EventSubscriber {
+public abstract class AbstractEventSubscriber implements EventSubscriber{
 
     private String constructNameVersionKey(String name, String version) {
         return name + "::" + version;

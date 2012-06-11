@@ -15,12 +15,12 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.agent.server.multiserver_oneclient;
+package org.wso2.carbon.eventbridge.core.oneserver_multiclient;
 
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.server.AgentCallback;
-import org.wso2.carbon.agent.server.KeyStoreUtil;
+import org.wso2.carbon.eventbridge.core.KeyStoreUtil;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
 import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
@@ -30,13 +30,13 @@ import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandle
 
 import java.util.List;
 
+
 /**
- * Server of single client multiple server test
+ * Server of multiple client single server test
  */
 public class AgentBackend {
     AbstractAgentServer agentServer;
     static int NO_OF_EVENTS = 100000;
-    static int NO_OF_SERVERS = 2;
     static int STABLE = 1000000;
     int offset = 0;
 
@@ -47,19 +47,12 @@ public class AgentBackend {
             NO_OF_EVENTS = Integer.parseInt(args[0]);
         }
 
-        if (args.length != 0 && args[1] != null) {
-            NO_OF_SERVERS = Integer.parseInt(args[1]);
-        }
-
         System.out.println("Event no=" + NO_OF_EVENTS);
-        System.out.println("Server no=" + NO_OF_SERVERS);
 
         KeyStoreUtil.setKeyStoreParams();
 
-        for (int i = 0; i < NO_OF_SERVERS; i++) {
-            AgentBackend server = new AgentBackend(i);
-            server.start();
-        }
+        AgentBackend server = new AgentBackend(0);
+        server.start();
     }
 
     public AgentBackend(int offset) {
@@ -71,14 +64,13 @@ public class AgentBackend {
         AgentServerConfiguration agentServerConfiguration = generateServerConf(offset);
         agentServer = new ThriftAgentServer(agentServerConfiguration, new AuthenticationHandler() {
             @Override
-            public boolean authenticate(String userName,
-                                        String password) {
+            public boolean authenticate(String userName, String password) {
                 return true;// allays authenticate to true
-
             }
         }, new InMemoryStreamDefinitionStore());
         agentServer.subscribe(assignAgentCallback());
         agentServer.start("localhost");
+
     }
 
     private AgentCallback assignAgentCallback() {
@@ -97,7 +89,7 @@ public class AgentBackend {
             public void receive(List<Event> eventList, String userName, String password,
                                 String domainName) {
                 addCount(eventList);
-                if (size <= STABLE && size > STABLE - 500) {
+                if (size <= STABLE && size > STABLE - 200) {
                     startTime = System.currentTimeMillis();
                 }
                 if (NO_OF_EVENTS <= (size - STABLE)) {

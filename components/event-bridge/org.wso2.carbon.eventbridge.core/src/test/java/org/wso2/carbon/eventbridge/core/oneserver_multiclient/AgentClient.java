@@ -15,7 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.agent.server.oneserver_multiclient;
+package org.wso2.carbon.eventbridge.core.oneserver_multiclient;
 
 import org.wso2.carbon.agent.Agent;
 import org.wso2.carbon.agent.DataPublisher;
@@ -26,7 +26,7 @@ import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
 import org.wso2.carbon.agent.commons.exception.WrongEventTypeException;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
-import org.wso2.carbon.agent.server.KeyStoreUtil;
+import org.wso2.carbon.eventbridge.core.KeyStoreUtil;
 
 import java.net.MalformedURLException;
 

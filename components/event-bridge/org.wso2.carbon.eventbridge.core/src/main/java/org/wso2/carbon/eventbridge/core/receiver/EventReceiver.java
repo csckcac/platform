@@ -24,7 +24,7 @@ import java.util.Collection;
  */
 public interface EventReceiver {
 
-    public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String name, String version)
+    public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String streamName, String streamVersion)
             throws StreamDefinitionNotFoundException;
 
     public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String streamId)

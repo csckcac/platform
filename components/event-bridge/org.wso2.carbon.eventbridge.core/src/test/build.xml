@@ -52,7 +52,7 @@
 
     <target name="MultiServerOneClient-Server" depends="compile">
         <echo>To customize add -Devents=xxx -Dservers=xx</echo>
-        <java classname="org.wso2.carbon.agent.server.multiserver_oneclient.AgentBackend"
+        <java classname="org.wso2.carbon.eventbridge.core.multiserver_oneclient.AgentBackend"
               classpathref="classpath" fork="true">
             <!--<jvmarg value="-Xdebug" />-->
             <!--<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005" />-->
@@ -62,7 +62,7 @@
     </target>
     <target name="MultiServerOneClient-Client" depends="compile">
         <echo>To customize add -Devents=xxx -Dservers=xx</echo>
-        <java classname="org.wso2.carbon.agent.server.multiserver_oneclient.AgentClient"
+        <java classname="org.wso2.carbon.eventbridge.core.multiserver_oneclient.AgentClient"
               classpathref="classpath" fork="true">
             <!--<jvmarg value="-Xdebug" />-->
             <!--<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005" />-->
@@ -72,14 +72,14 @@
     </target>
     <target name="OneServerMultiClient-Server" depends="compile">
         <echo>To customize add -Devents=xxx</echo>
-        <java classname="org.wso2.carbon.agent.server.oneserver_multiclient.AgentBackend"
+        <java classname="org.wso2.carbon.eventbridge.core.oneserver_multiclient.AgentBackend"
               classpathref="classpath" fork="true">
             <arg value="${events}"/>
         </java>
     </target>
     <target name="OneServerMultiClient-Client" depends="compile">
         <echo>To customize add -Devents=xxx -Dclients=xx</echo>
-        <java classname="org.wso2.carbon.agent.server.oneserver_multiclient.AgentClient"
+        <java classname="org.wso2.carbon.eventbridge.core.oneserver_multiclient.AgentClient"
               classpathref="classpath" fork="true">
             <!--<jvmarg value="-Xdebug" />-->
             <!--<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005" />-->

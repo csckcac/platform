@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.agent.server;
+package org.wso2.carbon.eventbridge.core;
 
 import junit.framework.TestCase;
 import org.wso2.carbon.agent.DataPublisher;

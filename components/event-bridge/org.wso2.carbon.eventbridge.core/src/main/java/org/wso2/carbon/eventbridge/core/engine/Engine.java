@@ -1,10 +1,8 @@
-package org.wso2.carbon.eventbridge.core.receiver;
+package org.wso2.carbon.eventbridge.core.engine;
 
 import org.wso2.carbon.eventbridge.core.beans.Credentials;
 import org.wso2.carbon.eventbridge.core.beans.Event;
 import org.wso2.carbon.eventbridge.core.beans.EventStreamDefinition;
-import org.wso2.carbon.eventbridge.core.engine.Engine;
-import org.wso2.carbon.eventbridge.core.engine.EventCommunication;
 import org.wso2.carbon.eventbridge.core.exceptions.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.eventbridge.core.exceptions.StreamDefinitionNotFoundException;
 import org.wso2.carbon.eventbridge.core.state.ReceiverState;
@@ -27,55 +25,34 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public abstract class AbstractEventReceiver implements EventCommunication {
-
-
-    // implement get
-    private String constructNameVersionKey(String name, String version) {
-        return name + "::" + version;
-    }
-
-    public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException {
-        String streamId = getEngine().getStreamId(state, credentials, streamName, streamVersion);
-        if (streamId == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist on " + credentials.getDomainName() + " for " + constructNameVersionKey(streamName, streamVersion));
-        }
-        return getEngine().getStreamDefinition(state, credentials, streamId);
+public class Engine implements EventCommunication{
+    @Override
+    public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String streamName, String streamVersion) throws StreamDefinitionNotFoundException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String streamId) throws StreamDefinitionNotFoundException {
-        EventStreamDefinition eventStreamDefinition = getEngine().getStreamDefinition(state, credentials, streamId);
-        if (eventStreamDefinition == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist on " + credentials.getDomainName() + " for " + streamId);
-        }
-        return eventStreamDefinition;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public Collection<EventStreamDefinition> getAllStreamDefinitions(ReceiverState state, Credentials credentials) {
-        return getEngine().getAllStreamDefinitions(state, credentials);
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public String getStreamId(ReceiverState state, Credentials credentials, String streamName, String streamVersion) throws StreamDefinitionNotFoundException {
-        String streamId = getEngine().getStreamId(state, credentials, streamName, streamVersion);
-        if (streamId == null) {
-            throw new StreamDefinitionNotFoundException("No stream id found for " + streamId + " " + streamVersion);
-        }
-        return streamId;
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void saveStreamDefinition(Credentials credentials, EventStreamDefinition eventStreamDefinition) throws DifferentStreamDefinitionAlreadyDefinedException {
-        getEngine().saveStreamDefinition(credentials, eventStreamDefinition);
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void receive(Credentials credentials, List<Event> eventList) {
-        getEngine().receive(credentials, eventList);
+        //To change body of implemented methods use File | Settings | File Templates.
     }
-
-    protected abstract Engine getEngine();
 }

@@ -15,7 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.agent.server;
+package org.wso2.carbon.eventbridge.core;
 
 import com.google.gson.Gson;
 import junit.framework.Assert;

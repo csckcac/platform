@@ -267,6 +267,14 @@ function ejbMediatorValidate() {
 		CARBON.showErrorDialog(ejbjsi18n["mediator.ejb.method.value.empty"]);
 		return false;
 	}
+	
+	var ejbJNDI = document.getElementById("jndiName");
+	
+	if (ejbJNDI && ejbJNDI.value == "") {
+		CARBON.showErrorDialog(ejbjsi18n["mediator.ejb.ejbJNDI.value.empty"]);
+		return false;
+	}
+	
 	return true;
 
 }

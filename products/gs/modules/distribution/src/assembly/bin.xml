@@ -60,8 +60,15 @@
 
         <!--  copying artifacts necessary for the initial gadget repository -->
         <fileSet>
-            <directory>../gadget-repo/service</directory>
+            <directory>../gadget-repo/product</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/gadget-repo</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../gs-themes</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/gs-themes</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>

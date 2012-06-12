@@ -664,6 +664,16 @@ function showSimpleSearch() {
         $('searchMinimized').style.display = "";
     }
 }
+function validateSimpleSearch(){
+
+    var searchText = document.forms["searchForm"]["criteria"].value;
+    if(searchText ==null || searchText ==""){
+        CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["validate.simple.search"]);
+        return false;
+    }
+    document.forms['searchForm'].submit();
+    return true;
+}
 
 
 /*function showSaveSearch() {

@@ -58,7 +58,7 @@
     </div>
     <div class="box1-mid-fill" id="searchMinimized" style="display:none"></div>
     <div class="box1-mid" id="searchExpanded">
-        <form action="../search/search.jsp" method="get" style="display:inline;" name="searchForm">
+        <form action="../search/search.jsp" method="get" style="display:inline;" name="searchForm" onsubmit="return validateSimpleSearch()">
             <table cellspacing="0" cellpadding="0" border="0" style="width: 100%;"
                    class="styledLeft">
                 <tbody>
@@ -79,9 +79,9 @@
                 </tr>
                 <tr>
                     <td class="buttonRow">
-                        <input type="button" class="button" 
+                        <input type="submit" class="button"
                                value="<fmt:message key="search"/>"
-                               onclick="document.forms['searchForm'].submit();"/>
+                               onclick="javascript:return validateSimpleSearch() ;"/>
                         <input type="button" class="button"
                                value="<fmt:message key="clear"/>"
                                onclick="$('criteria').value = '';"/>

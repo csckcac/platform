@@ -29,6 +29,7 @@
 <%@ page import="org.wso2.carbon.registry.common.ui.utils.UIUtil" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.registry.core.RegistryConstants" %>
+<script type="text/javascript" src="../search/js/search.js"></script>
 <link rel="stylesheet" type="text/css"
       href="../resources/css/registry.css"/>
     <carbon:breadcrumb label="search.results"
@@ -209,6 +210,6 @@
     function loadPagedList(page) {
         window.location = '<%="../search/search.jsp?region=region3&item=registry_search_menu&searchType=tag&criteria=" + request.getParameter("criteria")%>';
     }
-</script
+</script>
 
 

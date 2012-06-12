@@ -60,15 +60,16 @@ public class TemplateBuilderTest extends TestCase {
         
         BasicTemplateBuilder builder = new BasicTemplateBuilder(apiMappings, resourceMappings, handlerMappings);
         String output = builder.getConfigStringForTemplate();
-        String expected = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"TestAPI\" " +
-                "context=\"/test\" version=\"1.0.0\" version-type=\"url\"><resource url-mapping=\"/*\" " +
-                "methods=\"GET\"><inSequence><send><endpoint name=\"TestAPI_APIEndpoint_0\"><address " +
-                "uri=\"http://wso2.org\"/></endpoint></send></inSequence><outSequence><send/>" +
-                "</outSequence></resource><handlers><handler class=\"org.wso2.carbon.apimgt.usage.publisher." +
-                "APIMgtUsageHandler\"/><handler class=\"org.wso2.carbon.apimgt.handlers.security." +
-                "APIAuthenticationHandler\"/><handler class=\"org.wso2.carbon.apimgt.handlers.throttling." +
-                "APIThrottleHandler\"><property name=\"id\" value=\"A\"/><property name=\"policyKey\" " +
-                "value=\"conf:/basic-throttle-policy.xml\"/></handler></handlers></api>";
+        String expected = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"TestAPI\" context=\"/test\" " +
+                "version=\"1.0.0\" version-type=\"url\"><resource url-mapping=\"/*\" methods=\"GET\"><inSequence>" +
+                "<filter source=\"$ctx:AM_KEY_TYPE\" regex=\"PRODUCTION\"><then><send><endpoint name=\"TestAPI_APIEndpoint_0\">" +
+                "<address uri=\"http://wso2.org\"/></endpoint></send></then><else><sequence key=\"sandbox_key_error\"/>" +
+                "</else></filter></inSequence><outSequence><send/></outSequence></resource><handlers>" +
+                "<handler class=\"org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler\"/>" +
+                "<handler class=\"org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler\"/>" +
+                "<handler class=\"org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler\">" +
+                "<property name=\"id\" value=\"A\"/><property name=\"policyKey\" value=\"conf:/basic-throttle-policy.xml\"/>" +
+                "</handler></handlers></api>";
         assertEquals(expected, output);
     }
 

@@ -18,29 +18,34 @@
 package org.wso2.carbon.mediator.bam.config.services;
 
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.mediator.bam.config.RegistryAccess;
+import org.wso2.carbon.mediator.bam.config.RegistryManager;
 
 /**
  * Admin service class to access Registry
  */
 public class BamServerProfileConfigAdmin extends AbstractAdmin {
 
-    private RegistryAccess bamServerProfileUtils;
+    //private RegistryAccess bamServerProfileUtils;
+    private RegistryManager registryManager;
 
     public BamServerProfileConfigAdmin() {
-        bamServerProfileUtils = new RegistryAccess();
+        //bamServerProfileUtils = new RegistryAccess();
+        registryManager = new RegistryManager();
     }
 
     public void saveResourceString(String resourceString, String bamServerProfileLocation) {
-        bamServerProfileUtils.saveResourceString(resourceString, bamServerProfileLocation);
+        //bamServerProfileUtils.saveResourceString(resourceString, bamServerProfileLocation);
+        registryManager.saveResourceString(resourceString, bamServerProfileLocation);
     }
 
     public String getResourceString(String bamServerProfileLocation){
-        return bamServerProfileUtils.getResourceString(bamServerProfileLocation);
+        //return bamServerProfileUtils.getResourceString(bamServerProfileLocation);
+        return registryManager.getResourceString(bamServerProfileLocation);
     }
 
     public boolean resourceAlreadyExists(String bamServerProfileLocation){
-        return bamServerProfileUtils.resourceAlreadyExists(bamServerProfileLocation);
+        //return bamServerProfileUtils.resourceAlreadyExists(bamServerProfileLocation);
+        return registryManager.resourceAlreadyExists(bamServerProfileLocation);
     }
 
 }

@@ -20,11 +20,11 @@ package org.wso2.carbon.mediator.bam.config.ui;
 
 
 import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMElement;
 import org.apache.synapse.SynapseConstants;
 import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
-import org.apache.axiom.om.OMFactory;
+import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
+import org.wso2.carbon.mediator.bam.config.stream.StreamEntry;
 
 import javax.xml.namespace.QName;
 import java.util.Iterator;
@@ -113,6 +113,7 @@ public class MediatorConfigurationXml {
         OMElement streamElement = fac.createOMElement("stream", synNS);
 
         streamElement.addAttribute("name", streamConfiguration.getName(), nullNS);
+        streamElement.addAttribute("version", streamConfiguration.getVersion(), nullNS);
         streamElement.addAttribute("nickName", streamConfiguration.getNickname(), nullNS);
         streamElement.addAttribute("description", streamConfiguration.getDescription(), nullNS);
 

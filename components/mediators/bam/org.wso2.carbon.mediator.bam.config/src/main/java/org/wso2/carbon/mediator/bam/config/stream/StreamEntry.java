@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.mediator.bam.config.ui;
+package org.wso2.carbon.mediator.bam.config.stream;
 
 public class StreamEntry {
 

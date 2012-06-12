@@ -39,7 +39,12 @@ public class BamMediatorSerializer extends AbstractMediatorSerializer {
         serverProfileElement.addAttribute(fac.createOMAttribute("path", nullNS, bamMediator.getServerProfile()));
         bam.addChild(serverProfileElement);
 
-        OMElement propertiesElement = fac.createOMElement("properties", synNS);
+        OMElement streamConfigElement = fac.createOMElement("streamConfig", synNS);
+        streamConfigElement.addAttribute(fac.createOMAttribute("name", nullNS, bamMediator.getStreamName()));
+        streamConfigElement.addAttribute(fac.createOMAttribute("version", nullNS, bamMediator.getStreamVersion()));
+        bam.addChild(streamConfigElement);
+
+       /* OMElement propertiesElement = fac.createOMElement("properties", synNS);
         List<Property> properties = bamMediator.getProperties();
         if(properties != null){
             OMElement propertyElement;
@@ -50,7 +55,7 @@ public class BamMediatorSerializer extends AbstractMediatorSerializer {
                 propertiesElement.addChild(propertyElement);
             }
         }
-        bam.addChild(propertiesElement);
+        bam.addChild(propertiesElement);*/
 
         return bam;
     }

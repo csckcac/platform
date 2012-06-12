@@ -99,11 +99,17 @@
             <artifactId>org.wso2.carbon.mediator.bam.config.stub</artifactId>
             <version>${wso2carbon.version.bam-mediator-config-stub}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.mediator.bam.config</artifactId>
+            <version>${wso2carbon.version.bam-mediator-config}</version>
+        </dependency>
     </dependencies>
 
     <properties>
         <wso2carbon.version.bam-data-publishers>${wso2carbon.version}</wso2carbon.version.bam-data-publishers>
         <wso2carbon.version.bam-mediator-config-stub>${wso2carbon.version}</wso2carbon.version.bam-mediator-config-stub>
+        <wso2carbon.version.bam-mediator-config>${wso2carbon.version}</wso2carbon.version.bam-mediator-config>
     </properties>
 
 </project>

@@ -53,6 +53,8 @@
                             javax.xml.namespace; version=0.0.0,
                             org.apache.axiom.om; version=0.0.0,
                             org.wso2.carbon.bam.mediationstats.data.publisher.stub.*;version="${carbon.platform.package.import.version.range}",
+                            <!--org.wso2.carbon.registry.common.*;version="${carbon.platform.package.import.version.range}",
+                            org.wso2.carbon.registry.core.*;version="${carbon.platform.package.import.version.range}",-->
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>
@@ -93,10 +95,22 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.governance.api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.core</artifactId>
+            <version>${wso2carbon.version.registry-core}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.common</artifactId>
+            <version>${wso2carbon.version.registry-common}</version>
+        </dependency>
     </dependencies>
 
     <properties>
         <wso2carbon.version.bam-data-publishers>${wso2carbon.version}</wso2carbon.version.bam-data-publishers>
+        <wso2carbon.version.registry-core>${wso2carbon.version}</wso2carbon.version.registry-core>
+        <wso2carbon.version.registry-common>${wso2carbon.version}</wso2carbon.version.registry-common>
     </properties>
 
 </project>

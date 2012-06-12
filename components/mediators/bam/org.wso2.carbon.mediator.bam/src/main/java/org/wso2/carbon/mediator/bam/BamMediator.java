@@ -18,22 +18,8 @@ package org.wso2.carbon.mediator.bam;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseLog;
-import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.mediators.AbstractMediator;
-//import org.milyn.BAM;
-//import org.milyn.container.ExecutionContext;
-
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-
-
-
-
-
-
-
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
@@ -47,11 +33,7 @@ import org.wso2.carbon.agent.conf.AgentConfiguration;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-import org.wso2.carbon.utils.CarbonUtils;
-import java.io.File;
-
 import java.net.MalformedURLException;
-
 import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
 
 /**
@@ -64,11 +46,24 @@ public class BamMediator extends AbstractMediator {
     private static final String ADMIN_SERVICE_PARAMETER = "adminService";
     private static final String HIDDEN_SERVICE_PARAMETER = "hiddenService";
 
-    private String serverProfile = "";
+    /*private String serverProfile = "";
+    private String streamName = "org.wso2.carbon.mediator.bam.BamMediator";
+    private String streamVersion = "1.0.0";
     private String serverIp = "localhost";
     private String serverPort = "7611";
     private String userName = "admin";
-    private String password = "admin";
+    private String password = "admin";*/
+
+    private String serverProfile = "";
+    private String streamName = "";
+    private String streamVersion = "";
+    private String serverIp = "";
+    private String serverPort = "";
+    private String userName = "";
+    private String password = "";
+
+
+
     private List<Property> properties = null;
 
     private String streamId = null;
@@ -162,8 +157,8 @@ public class BamMediator extends AbstractMediator {
 
             //Define event stream
             streamId = dataPublisher.defineEventStream("{" +
-                                                       "  'name':'org.wso2.carbon.mediator.bam.BamMediator'," +
-                                                       "  'version':'1.0.0'," +
+                                                       "  'name':'" + this.streamName + "'," +
+                                                       "  'version':'"+ this.streamVersion + "'," +
                                                        "  'nickName': 'Log'," +
                                                        "  'description': 'log to bam'," +
                                                        "  'metaData':[" +
@@ -245,6 +240,22 @@ public class BamMediator extends AbstractMediator {
 
     public String getServerProfile(){
         return serverProfile;
+    }
+
+    public void setStreamName(String newValue){
+        this.streamName = newValue;
+    }
+
+    public String getStreamName(){
+        return this.streamName;
+    }
+
+    public void setStreamVersion(String newValue){
+        this.streamVersion = newValue;
+    }
+
+    public String getStreamVersion(){
+        return this.streamVersion;
     }
 
     public void setServerPort(String newValue) {

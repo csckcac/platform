@@ -230,6 +230,7 @@ public class APIUsageStatisticsClient {
                     APIAccessTime lastAccessTime = lastAccessTimes.get(apiName);
                     if (lastAccessTime == null || lastAccessTime.accessTime < accessTime.accessTime) {
                         lastAccessTimes.put(apiName, accessTime);
+                        break;
                     }
                 }
             }

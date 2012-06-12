@@ -70,8 +70,16 @@
 
 		<!--  copying jaggery samples-->
 		<fileSet>
-            <directory>../samples/jaggerySamples</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
+            <directory>../samples/jaggerySamples/docs</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/docs</outputDirectory>
+        </fileSet>
+		<fileSet>
+            <directory>../samples/jaggerySamples/sample</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/jaggerySamples/sample</outputDirectory>
+        </fileSet>
+		<fileSet>
+            <directory>../samples/jaggerySamples/taskmaster</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/jaggerySamples/taskmaster</outputDirectory>
         </fileSet>
 		
 		 <!--  copying mashup samples -->

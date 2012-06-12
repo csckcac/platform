@@ -110,7 +110,7 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.core.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.proxy.feature:${carbon.version}</featureArtifactDef>
                                 <!--removing to fix the stratos theam from standalone mode.-->
-                                <!--<featureArtifactDef>org.wso2.governance:org.wso2.governance.styles.feature:${carbon.version}</featureArtifactDef>-->
+                                <featureArtifactDef>org.wso2.governance:org.wso2.governance.styles.feature:4.5.0-SNAPSHOT</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.dashboardpopulator.server.feature:${carbon.version}</featureArtifactDef>
                             	<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.token.feature:${carbon.version}</featureArtifactDef>
@@ -130,7 +130,7 @@
 
                                 <!-- Features related to Cloud governance -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.governance:org.wso2.stratos.governance.ui.feature:${stratos.version}</featureArtifactDef>
+                                <!--<featureArtifactDef>org.wso2.governance:org.wso2.stratos.governance.ui.feature:${stratos.version}</featureArtifactDef>-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}</featureArtifactDef>
                                 <!-- GApp SSO features -->
@@ -297,10 +297,10 @@
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <!--removing to fix the stratos theam from standalone mode.-->
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.governance.styles.feature.group</id>-->
-                                    <!--<version>${carbon.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.governance.styles.feature.group</id>
+                                    <version>4.5.0-SNAPSHOT</version>
+                                </feature>
 				                <feature>
                                     <id>org.wso2.carbon.dashboard.feature.group</id>
                                     <version>${carbon.version}</version>
@@ -369,10 +369,10 @@
                                     <id>org.wso2.carbon.stratos.common.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.stratos.governance.ui.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
+                                <!--<feature>-->
+                                    <!--<id>org.wso2.stratos.governance.ui.feature.group</id>-->
+                                    <!--<version>${stratos.version}</version>-->
+                                <!--</feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.stratos.usage.agent.feature.group</id>
                                     <version>${stratos.version}</version>

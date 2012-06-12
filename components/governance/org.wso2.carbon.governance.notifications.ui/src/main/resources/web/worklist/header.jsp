@@ -79,85 +79,85 @@ under the License.
     <jsp:include page="view-notifications-ajaxprocessor.jsp" />
 </li>
 <li class="middle">|</li>
-<li class="right">
-    <a class="add-notification" id="addNotification">+</a>
-    <div id="notificationPopupAdd" class="notificationPopup" style="display:none">
-        <div class="popupPointer"></div>
-        <div class="popupBox">
-            <div class="title"><strong><fmt:message key="work.list.add.new.notifications"/></strong></div>
+<%--<li class="right">--%>
+    <%--<a class="add-notification" id="addNotification">+</a>--%>
+    <%--<div id="notificationPopupAdd" class="notificationPopup" style="display:none">--%>
+        <%--<div class="popupPointer"></div>--%>
+        <%--<div class="popupBox">--%>
+            <%--<div class="title"><strong><fmt:message key="work.list.add.new.notifications"/></strong></div>--%>
 
-            <table class="notificationAddTable">
-                <tr>
-                    <td><fmt:message key="work.list.role"/></td>
-                    <td>
-                        <select id="workListRoleInput">
-                            <%
-                                for (String role : roles) {
-                            %>
-                            <option><%=role%></option>
-                            <%
-                                }
-                            %>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <div><fmt:message key="work.list.description"/></div>
-                        <textarea id="workListDescriptionInput"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td><fmt:message key="work.list.priority"/></td>
-                    <td>
-                        <select id="workListPriorityInput">
-                            <%
-                                for (int i = 1; i < 11; i++) {
-                            %>
-                            <option <% if (i == 5) { %>selected="selected"<% } %> ><%=i%></option>
-                            <%
-                                }
-                            %>
-                        </select>
-                    </td>
-                </tr>
-            </table>
+            <%--<table class="notificationAddTable">--%>
+                <%--<tr>--%>
+                    <%--<td><fmt:message key="work.list.role"/></td>--%>
+                    <%--<td>--%>
+                        <%--<select id="workListRoleInput">--%>
+                            <%--<%--%>
+                                <%--for (String role : roles) {--%>
+                            <%--%>--%>
+                            <%--<option><%=role%></option>--%>
+                            <%--<%--%>
+                                <%--}--%>
+                            <%--%>--%>
+                        <%--</select>--%>
+                    <%--</td>--%>
+                <%--</tr>--%>
+                <%--<tr>--%>
+                    <%--<td colspan="2">--%>
+                        <%--<div><fmt:message key="work.list.description"/></div>--%>
+                        <%--<textarea id="workListDescriptionInput"></textarea>--%>
+                    <%--</td>--%>
+                <%--</tr>--%>
+                <%--<tr>--%>
+                    <%--<td><fmt:message key="work.list.priority"/></td>--%>
+                    <%--<td>--%>
+                        <%--<select id="workListPriorityInput">--%>
+                            <%--<%--%>
+                                <%--for (int i = 1; i < 11; i++) {--%>
+                            <%--%>--%>
+                            <%--<option <% if (i == 5) { %>selected="selected"<% } %> ><%=i%></option>--%>
+                            <%--<%--%>
+                                <%--}--%>
+                            <%--%>--%>
+                        <%--</select>--%>
+                    <%--</td>--%>
+                <%--</tr>--%>
+            <%--</table>--%>
 
-            <div class="title">
-                <input type="button" class="button notificationButton" value="<fmt:message key="work.list.create"/>" id="addNotificationCreateButton" />
-                <input type="button" value="<fmt:message key="work.list.cancel"/>" id="addNotificationCancelButton" />
-            </div>
-        </div>
-    </div>
-</li>
+            <%--<div class="title">--%>
+                <%--<input type="button" class="button notificationButton" value="<fmt:message key="work.list.create"/>" id="addNotificationCreateButton" />--%>
+                <%--<input type="button" value="<fmt:message key="work.list.cancel"/>" id="addNotificationCancelButton" />--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</li>--%>
 </fmt:bundle>
-<li class="middle">|
-<script type="text/javascript">
-    jQuery('#addNotification').click(
-            function(){
-                if(jQuery('#notificationPopupView').is(":visible")){
-                    jQuery('#notificationPopupView').hide();
-                }
-                jQuery('#notificationPopupAdd').toggle('slow');
-            }
-    );
-    jQuery('#addNotificationCancelButton').click(function(){
-        jQuery('#notificationPopupAdd').toggle('slow');
-    });
-    jQuery('#addNotificationCreateButton').click(function(){
-        createTask();
-		updateNotifications();
-        jQuery('#notificationPopupAdd').toggle('slow');
-    });
-	function updateNotifications(){
-        jQuery.ajax({
-            url:"../worklist/view-notifications-ajaxprocessor.jsp",
-            success:function(data){
-                jQuery('#view-notifications-container').html(data);
-            }
-        });
-    }
-</script>
+<%--<li class="middle">|--%>
+<%--<script type="text/javascript">--%>
+    <%--jQuery('#addNotification').click(--%>
+            <%--function(){--%>
+                <%--if(jQuery('#notificationPopupView').is(":visible")){--%>
+                    <%--jQuery('#notificationPopupView').hide();--%>
+                <%--}--%>
+                <%--jQuery('#notificationPopupAdd').toggle('slow');--%>
+            <%--}--%>
+    <%--);--%>
+    <%--jQuery('#addNotificationCancelButton').click(function(){--%>
+        <%--jQuery('#notificationPopupAdd').toggle('slow');--%>
+    <%--});--%>
+    <%--jQuery('#addNotificationCreateButton').click(function(){--%>
+        <%--createTask();--%>
+		<%--updateNotifications();--%>
+        <%--jQuery('#notificationPopupAdd').toggle('slow');--%>
+    <%--});--%>
+	<%--function updateNotifications(){--%>
+        <%--jQuery.ajax({--%>
+            <%--url:"../worklist/view-notifications-ajaxprocessor.jsp",--%>
+            <%--success:function(data){--%>
+                <%--jQuery('#view-notifications-container').html(data);--%>
+            <%--}--%>
+        <%--});--%>
+    <%--}--%>
+<%--</script>--%>
     <style>
         div.header-links a.add-notification{
             background-color:#63ba25;

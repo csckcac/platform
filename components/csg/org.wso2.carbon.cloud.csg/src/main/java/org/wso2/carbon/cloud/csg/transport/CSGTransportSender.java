@@ -221,7 +221,7 @@ public class CSGTransportSender extends AbstractTransportSender {
                 handleException("No permission to access the server buffers");
             }
 
-            boolean isOutIn = isWaitForResponse(msgContext);
+            boolean isOutIn = waitForSynchronousResponse(msgContext);
             if (isOutIn) {
                 available = new Semaphore(0, true);
                 CSGThriftServerHandler.getSemaphoreMap().put(requestMsgIdMsgId, available);
@@ -256,11 +256,6 @@ public class CSGTransportSender extends AbstractTransportSender {
         } catch (Exception e) {
             handleException("Could not process the request message", e);
         }
-    }
-
-    private boolean isWaitForResponse(MessageContext msgCtx) {
-        return msgCtx.getOperationContext() != null && WSDL2Constants.MEP_URI_OUT_IN.equals(
-                msgCtx.getOperationContext().getAxisOperation().getMessageExchangePattern());
     }
 
     private void handleSyncResponse(MessageContext msgCtx, Message message) throws AxisFault {
@@ -472,7 +467,7 @@ public class CSGTransportSender extends AbstractTransportSender {
         // csg://server1/SimpleStockQuoteService/operation1/argument1
         // 6 is the length(csg://) used this way for better performance
         String split[] = fullEPR.substring(6).split("/");
-        StringBuilder buf = new StringBuilder("csg://");
+        StringBuilder buf = new StringBuilder(CSGConstant.CSG_TRANSPORT_PREFIX);
         buf.append(split[0]).append("/").append(split[1]);
         return buf.toString();
     }

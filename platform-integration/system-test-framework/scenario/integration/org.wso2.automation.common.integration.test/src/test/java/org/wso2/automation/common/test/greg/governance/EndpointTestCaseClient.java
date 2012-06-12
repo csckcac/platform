@@ -461,31 +461,42 @@ public class EndpointTestCaseClient {
         endpointManager.addEndpoint(endpoint);
         try {
             endpoint = endpointManager.getEndpointByUrl(endpointURL);
-            assertTrue(endpoint.getUrl().equalsIgnoreCase(endpointURL), "Get Endpoint URL not matched " +
-                    "with the original");
+            assertTrue(endpoint.getUrl().equalsIgnoreCase(endpointURL), "Result of the getEndpointByUrl not matched. " +
+                    "Expected : https://localhost:8080/axis2/services/BizService    Found : " + endpoint.getUrl());
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception occurred while executing getEndpointByUrl API method"
                     + e.getMessage());
         }
 
         try {
-            endpointManager.getEndpointByUrl("https://localhost:8080/axis2/services/BizService");
-            assertFalse(true, "Result of the getEndpointByUrl not matched. " +
-                    "Expected : https://localhost:8080/axis2/services/BizService    Found : " + endpointURL);
+            endpoint = endpointManager.newEndpoint("https://localhost:8080/axis2/services/BizService");
+            endpointManager.addEndpoint(endpoint);
+            endpoint = endpointManager.getEndpointByUrl("https://localhost:8080/axis2/services/BizService");
+            assertFalse(endpoint.getUrl().equalsIgnoreCase("https://localhost:8080/axis2/services/BizService"),
+                    "Result of the getEndpointByUrl not matched. " +
+                            "Expected : https://localhost:8080/axis2/services/BizService    Found : " + endpoint.getUrl());
         } catch (GovernanceException e) {
         }
 
         try {
+            endpoint = endpointManager.newEndpoint("http://MyDomain:8080/axis2/services/BizService");
+            endpointManager.addEndpoint(endpoint);
+            endpoint = endpointManager.getEndpointByUrl("http://MyDomain:8080/axis2/services/BizService");
             endpointManager.getEndpointByUrl("http://MyDomain:8080/axis2/services/BizService");
-            assertFalse(true, "Result of the getEndpointByUrl not matched. " +
-                    "Expected : https://MyDomain:8080/axis2/services/BizService    Found : " + endpointURL);
+            assertFalse(endpoint.getUrl().equalsIgnoreCase("http://MyDomain:8080/axis2/services/BizService"),
+                    "Result of the getEndpointByUrl not matched. " +
+                            "Expected : https://MyDomain:8080/axis2/services/BizService    Found : " + endpoint.getUrl());
         } catch (GovernanceException e) {
         }
 
         try {
+            endpoint = endpointManager.newEndpoint("http://MyDomain:9883/axis2/services/BizService");
+            endpointManager.addEndpoint(endpoint);
+            endpoint = endpointManager.getEndpointByUrl("http://MyDomain:9883/axis2/services/BizService");
             endpointManager.getEndpointByUrl("http://MyDomain:9883/axis2/services/BizService");
-            assertFalse(true, "Result of the getEndpointByUrl not matched. " +
-                    "Expected : https://MyDomain:9883/axis2/services/BizService    Found : " + endpointURL);
+            assertFalse(endpoint.getUrl().equalsIgnoreCase("http://MyDomain:9883/axis2/services/BizService"),
+                    "Result of the getEndpointByUrl not matched. " +
+                            "Expected : https://MyDomain:9883/axis2/services/BizService    Found : " + endpoint.getUrl());
         } catch (GovernanceException e) {
         }
     }

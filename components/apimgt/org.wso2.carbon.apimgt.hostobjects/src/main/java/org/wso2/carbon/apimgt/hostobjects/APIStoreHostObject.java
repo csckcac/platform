@@ -732,7 +732,8 @@ public class APIStoreHostObject extends ScriptableObject {
         row.put("description", row, api.getDescription());
         row.put("rates", row, api.getRating());
         row.put("endpoint", row, api.getUrl());
-        row.put("wsdl", row, "http://appserver/services/echo?wsdl");
+        row.put("wsdl", row, api.getWsdlUrl());
+        row.put("wadl", row, api.getWadlUrl());
         row.put("updatedDate", row, api.getLastUpdated().toString());
         row.put("context",row, api.getContext());
         row.put("status", row, api.getStatus().getStatus());

@@ -22,7 +22,6 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
@@ -61,12 +60,8 @@ import org.wso2.carbon.apimgt.usage.client.dto.PerUserAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.hostobjects.file.FileHostObject;
-import org.wso2.carbon.hostobjects.web.RequestHostObject;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -243,7 +238,6 @@ public class APIProviderHostObject extends ScriptableObject {
         String contextVal = (String) apiData.get("context", apiData);
         String context = contextVal.startsWith("/") ? contextVal : ("/" + contextVal);
 
-        HttpServletRequest req = ((RequestHostObject) apiData.get("request", apiData)).getHttpServletRequest();
         NativeArray uriTemplateArr = (NativeArray) apiData.get("uriTemplateArr", apiData);
 
         String techOwner = (String) apiData.get("techOwner", apiData);
@@ -355,7 +349,6 @@ public class APIProviderHostObject extends ScriptableObject {
         APIProvider apiProvider = getAPIProvider(thisObj);
         try {
             API oldApi = apiProvider.getAPI(oldApiId);
-            HttpServletRequest req = ((RequestHostObject) apiData.get("request", apiData)).getHttpServletRequest();
 
             String tier = (String) apiData.get("tier", apiData);
             String contextVal = (String) apiData.get("context", apiData);
@@ -1383,34 +1376,6 @@ public class APIProviderHostObject extends ScriptableObject {
             }
         }
         return myn;
-    }
-
-    public static String jsFunction_getThumb(Context cx, Scriptable thisObj,
-                                             Object[] args,
-                                             Function funObj) {
-        String thumb = null;
-        if (args.length == 1 && isStringValues(args)) {
-            String providerName = args[0].toString();
-            String apiName = args[1].toString();
-            String version = args[2].toString();
-            String docName = args[3].toString();
-            String docType = args[4].toString();
-
-            APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
-            APIProvider apiProvider = getAPIProvider(thisObj);
-            try {
-                InputStream in = apiProvider.getIcon(apiId);
-                if (in != null) {
-                    thumb = IOUtils.toString(in);
-                }
-            } catch (APIManagementException e) {
-                log.error(e.getMessage(), e);
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-        return thumb;
-
     }
 
     public static NativeArray jsFunction_searchAllAPIs(Context cx, Scriptable thisObj,

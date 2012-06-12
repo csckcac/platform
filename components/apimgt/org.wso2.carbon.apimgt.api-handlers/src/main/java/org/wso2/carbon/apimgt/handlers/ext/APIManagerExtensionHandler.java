@@ -18,14 +18,13 @@ package org.wso2.carbon.apimgt.handlers.ext;
 
 import org.apache.synapse.Mediator;
 import org.apache.synapse.MessageContext;
-import org.apache.synapse.config.SynapseConfiguration;
-import org.apache.synapse.mediators.AbstractMediator;
+import org.apache.synapse.rest.AbstractHandler;
 import org.apache.synapse.rest.RESTConstants;
 
 import java.util.Map;
 
 /**
- * A simple extension mediator for the APIs deployed in the API gateway. This mediator first
+ * A simple extension handler for the APIs deployed in the API gateway. This handler first
  * looks for a sequence named WSO2AM--Ext--[Dir], where [Dir] could be either In or Out
  * depending on the direction of the message. If such a sequence is found, it is invoked.
  * Following that a more API specific extension sequence is looked up by using the name
@@ -33,18 +32,17 @@ import java.util.Map;
  * is also invoked. If no extension is found either at the global level or at the per API level
  * this mediator simply returns true.
  */
-public class APIManagerExtensionMediator extends AbstractMediator {
+public class APIManagerExtensionHandler extends AbstractHandler {
     
     private static final String EXT_SEQUENCE_PREFIX = "WSO2AM--Ext--";
     private static final String DIRECTION_IN = "In";
     private static final String DIRECTION_OUT = "Out";
 
-    public boolean mediate(MessageContext messageContext) {
+    public boolean mediate(MessageContext messageContext, String direction) {
         // In order to avoid a remote registry call occurring on each invocation, we
         // directly get the extension sequences from the local registry.
         Map localRegistry = messageContext.getConfiguration().getLocalRegistry();
 
-        String direction = messageContext.isResponse() ? DIRECTION_OUT : DIRECTION_IN;
         Object sequence = localRegistry.get(EXT_SEQUENCE_PREFIX + direction);
         if (sequence != null && sequence instanceof Mediator) {
             if (!((Mediator) sequence).mediate(messageContext)) {
@@ -59,5 +57,13 @@ public class APIManagerExtensionMediator extends AbstractMediator {
             return ((Mediator) sequence).mediate(messageContext);
         }
         return true;
+    }
+
+    public boolean handleRequest(MessageContext messageContext) {
+        return mediate(messageContext, DIRECTION_IN);    
+    }
+
+    public boolean handleResponse(MessageContext messageContext) {
+        return mediate(messageContext, DIRECTION_OUT);
     }
 }

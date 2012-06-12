@@ -819,7 +819,7 @@ public class ApiMgtDAO {
                 APIIdentifier apiIdentifier = new APIIdentifier(result.getString("API_PROVIDER"),
                         result.getString("API_NAME"), result.getString("API_VERSION"));
 
-                SubscribedAPI subscribedAPI = new SubscribedAPI(subscriber, apiIdentifier);                
+                SubscribedAPI subscribedAPI = new SubscribedAPI(subscriber, apiIdentifier);
                 subscribedAPI.setTier(new Tier(
                         result.getString(APIConstants.SUBSCRIPTION_FIELD_TIER_ID)));
                 subscribedAPI.setLastAccessed(result.getDate(

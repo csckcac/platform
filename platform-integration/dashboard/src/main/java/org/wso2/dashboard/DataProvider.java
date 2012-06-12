@@ -756,7 +756,7 @@ public class DataProvider {
 
 
             while (rst.next()) {
-                time = rst.getString("START_TIME").toString();
+                time = rst.getString("START_TIME");
 
             }
         } finally {
@@ -774,6 +774,9 @@ public class DataProvider {
 
                 }
             }
+        }
+        if(time == null) {
+            time = "N/A";
         }
         return time;
     }

@@ -38,6 +38,10 @@
                     <td colspan="2"><%=api.version%></td>
                 </tr>
                 <tr>
+                    <th>Status:</th>
+                    <td colspan="2"><%=api.status%></td>
+                </tr>
+                <tr>
                     <th>Updated:</th>
                     <td colspan="2"><%=api.updatedTime%></td>
                 </tr>

@@ -50,6 +50,6 @@ var docMappedUrl=jagg.getMappedUrl("/site/pages/doc-viewer.jag");
     </div>
     <%  } %>
     <% } %>
-    <% if(empty) { %><p>No documentations</p><% } %>
+    <% if(empty) { %><p>No documents have been associated with this API so far.</p><% } %>
 </div>
 <% }); %>

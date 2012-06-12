@@ -16,20 +16,8 @@
 
 package org.wso2.carbon.bam.eventreceiver.datastore;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import me.prettyprint.cassandra.model.IndexedSlicesQuery;
-import me.prettyprint.cassandra.serializers.BooleanSerializer;
-import me.prettyprint.cassandra.serializers.DoubleSerializer;
-import me.prettyprint.cassandra.serializers.FloatSerializer;
-import me.prettyprint.cassandra.serializers.IntegerSerializer;
-import me.prettyprint.cassandra.serializers.LongSerializer;
-import me.prettyprint.cassandra.serializers.StringSerializer;
+import me.prettyprint.cassandra.serializers.*;
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
@@ -42,7 +30,6 @@ import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.ColumnQuery;
 import me.prettyprint.hector.api.query.QueryResult;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.commons.Attribute;
@@ -50,7 +37,11 @@ import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.server.EventConverter;
+import org.wso2.carbon.agent.commons.utils.EventConverter;
+
+
+import java.util.*;
+//import org.wso2.carbon.agent.server.EventConverter;
 
 /**
  * Cassandra backend connector  and related operations
@@ -60,7 +51,7 @@ public class CassandraConnector {
     public static final String CLUSTER_NAME = "Test Cluster";
     public static final String USERNAME_KEY = "username";
     public static final String PASSWORD_KEY = "password";
-    public static final String RPC_PORT = "9171";
+    public static final String RPC_PORT = "9160";
 
     public static final String USERNAME_VALUE = "admin";
     public static final String PASSWORD_VALUE = "admin";
@@ -113,7 +104,9 @@ public class CassandraConnector {
 ////        String hostList = CSS_NODE0 + ":" + RPC_PORT + "," + CSS_NODE1 + ":" + RPC_PORT + ","
 ////                + CSS_NODE2 + ":" + RPC_PORT;                                                                                String
 
-        String hostList = LOCAL_NODE + ":" + RPC_PORT;
+
+        //String hostList = System.getProperty(ServerConstants.LOCAL_IP_ADDRESS) + ":" + RPC_PORT;
+         String hostList = getCassandraClusterHostPool();
         cluster = HFactory.createCluster(CLUSTER_NAME,
                                          new CassandraHostConfigurator(hostList), credentials);
     }

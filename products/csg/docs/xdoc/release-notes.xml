@@ -102,6 +102,7 @@
         <li>CARBON-12606 - Added roles per publishing, un publishing and listing of servers(users
             who have permission for publishing will have edit, delete permission of servers).</li>
         <li>CARBON-12345 - CSG breadcrumbs are messed up.</li>
+        <li>CARBON-12528 - Fixed the problem of one way clients go timeout.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha</h2>

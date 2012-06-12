@@ -24,7 +24,7 @@ import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyD
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
 import org.wso2.carbon.agent.server.AgentCallback;
-import org.wso2.carbon.agent.server.EventConverter;
+import org.wso2.carbon.agent.commons.utils.EventConverter;
 import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.agent.server.internal.authentication.session.AgentSession;

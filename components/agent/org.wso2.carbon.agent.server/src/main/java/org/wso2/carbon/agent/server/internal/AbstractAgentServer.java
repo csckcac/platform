@@ -28,7 +28,7 @@ import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.server.AgentCallback;
 import org.wso2.carbon.agent.server.AgentServer;
-import org.wso2.carbon.agent.server.EventConverter;
+import org.wso2.carbon.agent.commons.utils.EventConverter;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
 import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerException;

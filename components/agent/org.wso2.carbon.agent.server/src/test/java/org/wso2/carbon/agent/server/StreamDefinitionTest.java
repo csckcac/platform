@@ -25,7 +25,6 @@ import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyD
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
-import org.wso2.carbon.agent.commons.exception.WrongEventTypeException;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
@@ -37,7 +36,7 @@ public class StreamDefinitionTest extends TestCase {
     public void testSendingSameStreamDefinitions()
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   DifferentStreamDefinitionAlreadyDefinedException, WrongEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    InterruptedException, AgentServerException,
                    MalformedStreamDefinitionException,
                    StreamDefinitionException {
@@ -95,7 +94,7 @@ public class StreamDefinitionTest extends TestCase {
     public void testSendingSameStreamDefinitionWithAndWithoutVersion()
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   DifferentStreamDefinitionAlreadyDefinedException, WrongEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    InterruptedException, AgentServerException,
                    MalformedStreamDefinitionException,
                    StreamDefinitionException {
@@ -152,7 +151,7 @@ public class StreamDefinitionTest extends TestCase {
     public void testSendingSameStreamDefinitionWithAndWithoutVersion2()
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   DifferentStreamDefinitionAlreadyDefinedException, WrongEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    InterruptedException, AgentServerException,
                    MalformedStreamDefinitionException,
                    StreamDefinitionException {
@@ -210,7 +209,7 @@ public class StreamDefinitionTest extends TestCase {
     public void testSendingTwoDifferentStreamDefinitionsWithSameStreamId()
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   WrongEventTypeException,
+
                    InterruptedException, AgentServerException,
                    MalformedStreamDefinitionException,
                    StreamDefinitionException, DifferentStreamDefinitionAlreadyDefinedException {

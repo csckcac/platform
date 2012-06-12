@@ -171,4 +171,8 @@ public class EventStreamDefinition {
         result = 31 * result + (payloadData != null ? payloadData.hashCode() : 0);
         return result;
     }
+
+    public void addTag(String tag) {
+        //To change body of created methods use File | Settings | File Templates.
+    }
 }

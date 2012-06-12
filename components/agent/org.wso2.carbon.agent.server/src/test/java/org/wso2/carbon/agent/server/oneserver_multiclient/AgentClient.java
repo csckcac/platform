@@ -23,7 +23,6 @@ import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
 import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
-import org.wso2.carbon.agent.commons.exception.WrongEventTypeException;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.server.KeyStoreUtil;
@@ -42,7 +41,7 @@ public class AgentClient implements Runnable {
     public static void main(String[] args)
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   DifferentStreamDefinitionAlreadyDefinedException, WrongEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    InterruptedException {
         KeyStoreUtil.setTrustStoreParams();
         if (args.length != 0 && args[0] != null) {

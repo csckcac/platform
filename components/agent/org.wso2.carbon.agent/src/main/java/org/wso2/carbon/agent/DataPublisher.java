@@ -17,13 +17,14 @@
 
 package org.wso2.carbon.agent;
 
+import com.google.gson.Gson;
 import org.wso2.carbon.agent.commons.Event;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
 import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
 import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
-import org.wso2.carbon.agent.commons.exception.WrongEventTypeException;
 import org.wso2.carbon.agent.conf.DataPublisherConfiguration;
 import org.wso2.carbon.agent.conf.ReceiverConfiguration;
 import org.wso2.carbon.agent.exception.AgentException;
@@ -34,6 +35,7 @@ import org.wso2.carbon.agent.internal.publisher.client.EventPublisherFactory;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.internal.utils.AgentServerURL;
 
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -50,6 +52,7 @@ public class DataPublisher {
     private DataPublisherConfiguration dataPublisherConfiguration;
     private EventPublisher eventPublisher;
     private EventQueue<Event> eventQueue;
+    private Gson gson = new Gson();
 
     private ThreadPoolExecutor threadPool;
 
@@ -210,16 +213,44 @@ public class DataPublisher {
      * @throws AgentException
      * @throws DifferentStreamDefinitionAlreadyDefinedException
      *
-     * @throws WrongEventTypeException
      * @throws MalformedStreamDefinitionException
      *
      * @throws StreamDefinitionException
      */
     public String defineEventStream(String eventStreamDefinition)
             throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
-                   WrongEventTypeException, DifferentStreamDefinitionAlreadyDefinedException {
+                   DifferentStreamDefinitionAlreadyDefinedException {
         String sessionId = dataPublisherConfiguration.getSessionId();
         return eventPublisher.defineEventStream(sessionId, eventStreamDefinition);
+    }
+
+    /**
+     * Defining stream on which events will be published by this DataPublisher
+     *
+     * @param eventStreamDefinition on json format
+     * @return the stream id
+     * @throws AgentException
+     * @throws DifferentStreamDefinitionAlreadyDefinedException
+     *
+     * @throws MalformedStreamDefinitionException
+     *
+     * @throws StreamDefinitionException
+     */
+    public String defineEventStream(EventStreamDefinition eventStreamDefinition)
+            throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
+                   DifferentStreamDefinitionAlreadyDefinedException {
+        String sessionId = dataPublisherConfiguration.getSessionId();
+        String streamId = eventPublisher.defineEventStream(sessionId, gson.toJson(eventStreamDefinition));
+        try {
+            Field field = EventStreamDefinition.class.getDeclaredField("streamId");
+            field.setAccessible(true);
+            field.set(eventStreamDefinition, streamId);
+        } catch (NoSuchFieldException e) {
+
+        } catch (IllegalAccessException e) {
+
+        }
+        return streamId;
     }
 
     /**

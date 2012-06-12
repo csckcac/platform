@@ -25,6 +25,7 @@ import org.wso2.carbon.agent.commons.Attribute;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.agent.commons.utils.EventConverter;
 
 import java.util.ArrayList;
 import java.util.List;

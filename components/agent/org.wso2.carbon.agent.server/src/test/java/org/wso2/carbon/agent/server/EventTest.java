@@ -29,7 +29,6 @@ import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionExceptio
 import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
 import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
-import org.wso2.carbon.agent.commons.exception.WrongEventTypeException;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
@@ -42,7 +41,7 @@ public class EventTest extends TestCase {
     public void testSendingEvent()
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   DifferentStreamDefinitionAlreadyDefinedException, WrongEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    InterruptedException, AgentServerException,
                    MalformedStreamDefinitionException,
                    StreamDefinitionException {
@@ -85,7 +84,7 @@ public class EventTest extends TestCase {
     public void testSendingMultipleEventsOfSameType()
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   DifferentStreamDefinitionAlreadyDefinedException, WrongEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    InterruptedException, AgentServerException,
                    MalformedStreamDefinitionException,
                    StreamDefinitionException {
@@ -128,7 +127,7 @@ public class EventTest extends TestCase {
     public void testSendingMultipleEventsOfDifferentType()
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   DifferentStreamDefinitionAlreadyDefinedException, WrongEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    InterruptedException, AgentServerException,
                    MalformedStreamDefinitionException,
                    StreamDefinitionException {
@@ -225,7 +224,7 @@ public class EventTest extends TestCase {
     public void testRequestingEventStreamId()
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   DifferentStreamDefinitionAlreadyDefinedException, WrongEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    InterruptedException, AgentServerException,
                    MalformedStreamDefinitionException,
                    StreamDefinitionException, NoStreamDefinitionExistException {
@@ -269,7 +268,7 @@ public class EventTest extends TestCase {
     public void testSendingSecureEventsOfSameType()
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   DifferentStreamDefinitionAlreadyDefinedException, WrongEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    InterruptedException, AgentServerException,
                    MalformedStreamDefinitionException,
                    StreamDefinitionException {
@@ -312,7 +311,7 @@ public class EventTest extends TestCase {
     public void testSendingSecureEventsByDefiningAllUrls()
             throws MalformedURLException, AuthenticationException, TransportException,
                    AgentException, UndefinedEventTypeException,
-                   DifferentStreamDefinitionAlreadyDefinedException, WrongEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
                    InterruptedException, AgentServerException,
                    MalformedStreamDefinitionException,
                    StreamDefinitionException {

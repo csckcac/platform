@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.agent.server;
+package org.wso2.carbon.agent.commons.utils;
 
 
 import com.google.gson.Gson;

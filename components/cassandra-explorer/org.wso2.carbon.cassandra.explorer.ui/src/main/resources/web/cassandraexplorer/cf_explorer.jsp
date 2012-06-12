@@ -95,28 +95,55 @@
     }
 </script>
 <div id="middle">
-<table>
-    <tr>
-        <td>Page Size:</td>
-        <td width="40%">
-        <select id="ddlPageSize" onchange="loadPageSize('<%=keyspace%>','<%=columnFamily%>');">
-            <option>10</option>
-            <option>25</option>
-            <option>50</option>
-            <option>100</option>
-        </select>
-    </td>
-        <form>
-            <td>Row Key:</td>
-            <td><input type="text" name="rowid" id="rowid"/></td>
-            <td><input type="button" value="Explore Row "
-                       onclick="getDataForRow('<%=keyspace%>',
-                               '<%=columnFamily%>',document.getElementById('rowid').value);"/></td>
-        </form>
-    </tr>
-</table>
+<h2><fmt:message key="cassandra.cf"/> : <%=columnFamily%>
+</h2>
 
 <div id="workArea">
+<table class="styledLeft" id="userAdd" width="100%">
+    <thead>
+    </thead>
+    <tbody><tr>
+        <td class="formRaw">
+            <form>
+
+            <table class="normal" style="width:100%">
+                <tr>
+                    <td style="width:70px">Page Size:</td>
+                    <td>
+                        <select id="ddlPageSize" onchange="loadPageSize('<%=keyspace%>','<%=columnFamily%>');">
+                            <option>10</option>
+                            <option>25</option>
+                            <option>50</option>
+                            <option>100</option>
+                        </select>
+                    </td>
+                    <td>
+                        Total No of Rows : <%=cassandraExplorerAdminClient.getNoOfRows(keyspace,columnFamily)%>
+                    </td>
+                    <td style="width:400px; ">
+                        <table class="normal" style="width:420px;float: right">
+                            <tr>
+                                <td>Row Key:</td>
+                                <td><input type="text" name="rowid" id="rowid"/></td>
+                                <td style="text-align: right"><input type="button" value="Explore Row "
+                                                                     onclick="getDataForRow('<%=keyspace%>',
+                                                                             '<%=columnFamily%>',document.getElementById('rowid').value);"/></td>
+
+                            </tr>
+                        </table>
+                    </td>
+
+                </tr>
+            </table>
+            </form>
+
+        </td>
+    </tr>
+
+    </tbody></table>
+
+
+
 <%
     String[] rows = new String[0];
     String[] previousRows = new String[0];

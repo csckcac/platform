@@ -19,6 +19,7 @@
 package org.wso2.carbon.cassandra.explorer.ui;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
@@ -62,6 +63,7 @@ public class CassandraExplorerAdminClient {
         options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
         //options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
         options.setTimeOutInMilliSeconds(10000);
+        options.setProperty(org.apache.axis2.Constants.Configuration.CHARACTER_SET_ENCODING, "UTF-16");
     }
 
     /**
@@ -183,6 +185,11 @@ public class CassandraExplorerAdminClient {
     public String[] getColumnFamilies(String keyspace)
             throws CassandraExplorerAdminCassandraExplorerException, RemoteException {
         return explorerAdminStub.getColumnFamilies(keyspace);
+    }
+
+    public int getNoOfRows(String keyspace, String columnFamily)
+            throws CassandraExplorerAdminCassandraExplorerException, RemoteException {
+         return explorerAdminStub.getNoOfRows(keyspace,columnFamily);
     }
 
 }

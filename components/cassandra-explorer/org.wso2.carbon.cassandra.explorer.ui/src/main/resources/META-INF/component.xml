@@ -38,7 +38,7 @@
             <region>region1</region>
             <order>35</order>
             <style-class>manage</style-class>
-            <icon>../cassandraexplorer/images/explorer.png</icon>
+            <icon>../cassandraexplorer/images/connect.png</icon>
         </menu>
         <menu>
             <id>cassandra_explorer_list_keyspaces_menu</id>
@@ -49,7 +49,7 @@
             <region>region1</region>
             <order>40</order>
             <style-class>manage</style-class>
-            <icon>../cassandraexplorer/images/explorer.png</icon>
+            <icon>../cassandraexplorer/images/keyspaces_list.png</icon>
         </menu>
     </menus>
 </component>

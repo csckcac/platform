@@ -17,6 +17,8 @@
 -->
 
 <%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
+<%@ page
+        import="org.wso2.carbon.cassandra.explorer.stub.CassandraExplorerAdminCassandraExplorerException" %>
 <script type="text/javascript" src="js/cassandra_cf_explorer.js"></script>
 <script language="text/javascript" src="../admin/js/customControls.js"></script>
 
@@ -26,10 +28,10 @@
             = new CassandraExplorerAdminClient(config.getServletContext(), session);
     try{
      keyspaces = adminClient.getKeyspaces();
-    }catch (Exception e) { %>
+    }catch (CassandraExplorerAdminCassandraExplorerException e) { %>
 <script type="text/javascript">
     jQuery(document).ready(function () {
-        CARBON.showErrorDialog('<%=e.getMessage()%>', function () {
+        CARBON.showErrorDialog('Cannot Connect to Cassandra Cluster.<br> Please check connection details', function () {
             CARBON.closeWindow();
             location.href = "cassandra_connect.jsp";
         }, function () {
@@ -80,7 +82,7 @@
                 <tr class=<%=rowType%>>
                     <td>
                         <a href="#" onclick="viewExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
-                           style="background-image:url(images/explorer.png);" class="icon-link"><%=columnFamilies[i]%></a>
+                           style="background-image:url(images/column_familiy.png);" class="icon-link"><%=columnFamilies[i]%></a>
                     </td>
                 </tr>
                 <%

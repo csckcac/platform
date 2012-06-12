@@ -35,19 +35,19 @@
                     </td>
                 </tr>--%>
                 <tr>
-                    <td>Connection Url</td>
+                    <td class="leftCol-med labelField">Connection Url<span class="required">*</span></td>
                     <td><input type="text" name="connection_url" id="connection_url"/>
+                    </td>
                         <div class="sectionHelp">
                             Connection URL eg: localhost:9160.
                         </div>
-                    </td>
                 </tr>
                 <tr>
-                    <td>User Name</td>
+                    <td class="labelField">User Name</td>
                     <td><input type="text" name="user_name" id="username"/></td>
                 </tr>
                 <tr>
-                    <td>Password</td>
+                    <td class="labelField">Password</td>
                     <td><input type="password" name="password" id="password"/></td>
                 </tr>
             </table>

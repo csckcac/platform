@@ -18,6 +18,8 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
 <%@ page import="org.wso2.carbon.cassandra.explorer.stub.data.xsd.Column" %>
+<%@ page import="java.sql.Timestamp" %>
+<%@ page import="java.util.concurrent.TimeUnit" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
@@ -42,21 +44,21 @@
     CassandraExplorerAdminClient cassandraExplorerAdminClient
             = new CassandraExplorerAdminClient(config.getServletContext(), session);
 %>
-<fmt:bundle basename="org.wso2.carbon.cassandra.mgt.ui.i18n.Resources">
+<%--TODO refactor JSI bundle--%>
+<fmt:bundle basename="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources">
     <carbon:jsi18n
-            resourceBundle="org.wso2.carbon.cassandra.mgt.ui.i18n.JSResources"
+            resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
             request="<%=request%>" i18nObjectName="cassandrajsi18n"/>
     <carbon:breadcrumb
             label="cassandra.cf.row"
-            resourceBundle="org.wso2.carbon.cassandra.mgt.ui.i18n.Resources"
+            resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
             topPage="false"
             request="<%=request%>"/>
 
     <div id="middle">
-        <h2>
-            <h2><fmt:message key="cassandra.cf.row"/> : <%=rowID%>
-            </h2>
+        <h2><fmt:message key="cassandra.cf.row"/> : <%=rowID%>
         </h2>
+
         <div id="workArea">
             <div id="container">
                 <div id="dynamic"></div>
@@ -67,7 +69,7 @@
                 if (columnKey != null) {
                     columns = new Column[1];
                     columns[0] = cassandraExplorerAdminClient.getColumn(keyspace, columnFamily,
-                            rowID, columnKey);
+                                                                        rowID, columnKey);
                     if (columns[0] == null) {
             %>
             <script type="text/javascript">
@@ -84,16 +86,19 @@
                 } else {
                     columns = cassandraExplorerAdminClient.
                             getColumnsForRowName(keyspace, columnFamily, rowID, "", "",
-                                    1, false);
+                                                 1, false);
                 }
             %>
-            <script type="text/javascript" charset="utf-8">
+            <script type="text/javascript" charset="utf-16">
                 /* Data set */
                 var aDataSet = [
                     <%  if (columns != null && columns[0] != null) {
-          for (int i = 0; i < columns.length; i++) { %>
+          for (int i = 0; i < columns.length; i++) {
+
+          long timeInMilliSeconds = TimeUnit.MICROSECONDS.toMillis(columns[i].getTimeStamp());
+          %>
                     ['<%=columns[i].getName()%>', '<%=columns[i].getValue()%>',
-                        '<%=(new Date(columns[i].getTimeStamp())).toString()%>']
+                     '<%=(new Date(columns[i].getTimeStamp()/1000)).toString()%>']
                     <%if((i+1)!=columns.length){%>,
                     <% } %>
                     <% } %>
@@ -102,21 +107,21 @@
                 $(document).ready(function () {
                     $('#dynamic').html('<table cellpadding="10" cellspacing="0" border="0" class="display dataTable" id="example"></table>');
                     $('#example').dataTable({
-                                "sAjaxSource":"datatable_ajaxprocessor.jsp",
-                                "aoColumns":[
-                                    { "sTitle":"Column Name" },
-                                    { "sTitle":"Column Value" },
-                                    { "sTitle":"Time Stamp" }
-                                ],
-                                "sPaginationType":"full_numbers",
-                                "bProcessing": true,
-                                "bServerSide": true,
-                                "fnServerParams":function (aoData) {
-                                    aoData.push({ "name":"row_id", "value":'<%=rowID%>' },
-                                            {"name":"columnFamily", "value":'<%=columnFamily%>'},
-                                            {"name": "keySpace", "value": '<%=keyspace%>'});
-                                }
-                            }
+                                                "sAjaxSource":"datatable_ajaxprocessor.jsp",
+                                                "aoColumns":[
+                                                    { "sTitle":"Column Name" },
+                                                    { "sTitle":"Column Value" },
+                                                    { "sTitle":"Time Stamp" }
+                                                ],
+                                                "sPaginationType":"full_numbers",
+                                                "bProcessing":true,
+                                                "bServerSide":true,
+                                                "fnServerParams":function (aoData) {
+                                                    aoData.push({ "name":"row_id", "value":'<%=rowID%>' },
+                                                                {"name":"columnFamily", "value":'<%=columnFamily%>'},
+                                                                {"name":"keySpace", "value":'<%=keyspace%>'});
+                                                }
+                                            }
                     );
                 });
             </script>

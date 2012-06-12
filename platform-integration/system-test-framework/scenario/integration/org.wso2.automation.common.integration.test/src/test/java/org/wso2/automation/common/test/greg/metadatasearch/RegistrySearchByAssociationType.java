@@ -80,6 +80,7 @@ public class RegistrySearchByAssociationType {
 
     }
 
+    /*https://wso2.org/jira/browse/CARBON-13323*/
     @Test(priority = 1, groups = {"wso2.greg"}, description = "Metadata search by available AssociationType")
     public void searchResourceByAssociationType()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
@@ -92,10 +93,12 @@ public class RegistrySearchByAssociationType {
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result, "Result object null");
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Type");
 
         for (ResourceData resource : result.getResourceDataList()) {
+            Assert.assertNotNull(resource, "Resource object null");
             Association[] array = registry.getAssociations(resource.getResourcePath(), searchAssociationType);
             Assert.assertNotNull(array, "Association list null");
             Assert.assertTrue(array.length > 0);
@@ -121,9 +124,11 @@ public class RegistrySearchByAssociationType {
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result, "Result object null");
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Types");
         for (ResourceData resource : result.getResourceDataList()) {
+            Assert.assertNotNull(resource, "Resource object null");
             boolean associationTypeFound = false;
             for (Association association : registry.getAllAssociations(resource.getResourcePath())) {
                 if ("associationType1".equalsIgnoreCase(association.getAssociationType())
@@ -150,9 +155,11 @@ public class RegistrySearchByAssociationType {
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
+        Assert.assertNotNull(result, "Result object null");
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid Association Type pattern");
         for (ResourceData resource : result.getResourceDataList()) {
+            Assert.assertNotNull(resource, "Resource object null");
             boolean associationTypeFound = false;
             for (Association association : registry.getAllAssociations(resource.getResourcePath())) {
                 if (association.getAssociationType().contains("Type")) {

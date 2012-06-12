@@ -233,3 +233,7 @@ input.error{
 .accordion-heading a{
     font-weight:bold;
 }
+.api-info div.thumbnail{
+    padding:10px;
+    width:100px;
+}

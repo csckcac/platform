@@ -79,39 +79,49 @@ div.star-ratings img{
     margin-bottom:10px;
     width:200px;
 }
-
+.key-gen-section{
+    margin-bottom:10px;
+}
 /* Subscription accordion sections*/
-.accordion {
-  margin-bottom: 18px;
-}
-.accordion-group {
-  margin-bottom: 2px;
-  border: 1px solid #e5e5e5;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-.accordion-group a{
-    cursor:pointer;
-}
-.accordion-heading {
-  border-bottom: 0;
-}
-.accordion-heading .accordion-toggle {
-  display: block;
-  padding: 8px 15px;
-     background: -moz-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(255, 255, 255)), color-stop(50%, rgb(255, 255, 255)), color-stop(100%, rgb(240, 240, 240)));
-    background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
-    background: -o-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
-    background: -ms-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
-    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#ffffff',EndColorStr='#f0f0f0'); /* IE8 */
-      -ms-filter: progid: DXImageTransform.Microsoft.gradient(gradientType = 0, startColor = '#ffffff', endColoStr = '#f0f0f0'); /*Transparent back */
-}
-div div.accordion-inner {
-  border-top: none;
-    padding:0;
-}
+.data-title{
+    padding: 8px;
+    background-color: #f7f7f9;
+    border: 1px solid #e1e1e8;
+    /*Rounded corners */
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+
+    /*The shadow */
+    -moz-box-shadow: 3px 3px 2px #e1e1e8;
+    -webkit-box-shadow: 3px 3px 2px #e1e1e8;
+    box-shadow: 3px 3px 2px #e1e1e8;
+ }
+ .data-title div.row-fluid{
+     margin-top:10px;
+ }
+ .data-title-heading{
+     font-size:15px;
+     font-weight:bold;
+     color:#000;
+ }
+ .data-content{
+      padding: 8px;
+    background-color: #fff;
+     border:solid 1px #c7eaff;
+    /*Rounded corners */
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+
+    /*The shadow */
+    -moz-box-shadow: 3px 3px 2px #e1e1e8;
+    -webkit-box-shadow: 3px 3px 2px #e1e1e8;
+    box-shadow: 3px 3px 2px #e1e1e8;
+     margin-bottom:10px;
+
+ }
+ .service-name{
+     font-weight:bold;
+ }
 .application-api-listing {
     display:inline-block;
     padding: 9px 16px 9px;
@@ -143,17 +153,16 @@ div div.accordion-inner {
 .api-key-listing {
     display: inline-block;
     width:100%;
-    background: #efefef;
+    /*background: #efefef;*/
 }
 .api-key-sandbox{
-    padding:15px;
-    height:30px;
+    /*padding:15px;*/
+    padding:0 0 15px 0;
 }
 .api-key{
-    padding:15px;
-    background: #e0e0e0;
-    height:39px;
-    border-bottom:solid 1px #ccc;
+    padding:0 0 15px 0;
+    /*background: #e0e0e0;*/
+    /*border-bottom:solid 1px #ccc;*/
 }
 .api-key a{
 }
@@ -217,4 +226,14 @@ input.error{
 }
 .currentTheme,.currentTheme a,.currentTheme img{
     cursor:default !important;
+}
+.accordion-heading{
+   background:#d5dadd;
+}
+.accordion-heading a{
+    font-weight:bold;
+}
+.api-info div.thumbnail{
+    padding:10px;
+    width:100px;
 }

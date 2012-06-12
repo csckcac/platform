@@ -10,7 +10,7 @@ var jagg = jagg || {};
    jagg.messageDisplay = function (params) {
         $('#messageModal').html($('#confirmation-data').html());
         if(params.title == undefined){
-            $('#messageModal h3.modal-title').html('API Publisher');
+            $('#messageModal h3.modal-title').html('API Store');
         }else{
             $('#messageModal h3.modal-title').html(params.title);
         }
@@ -34,7 +34,7 @@ var jagg = jagg || {};
             return;
         }
         params.content = '<img src="'+siteRoot+'/images/'+params.type+'.png" align="center" hspace="10" /><span class="messageText">'+params.content+'</span>';
-        jagg.messageDisplay({content:params.content,title:"API Publisher - "+params.type,buttons:[
+        jagg.messageDisplay({content:params.content,title:"API Store - "+params.type,buttons:[
             {name:"OK",cssClass:"btn btn-primary",cbk:function() {
                 $('#messageModal').modal('hide');
                 if(params.cbk && typeof params.cbk == "function")

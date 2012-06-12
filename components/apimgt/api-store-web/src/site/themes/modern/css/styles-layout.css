@@ -181,6 +181,9 @@ h3{
      -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
           box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
 }
+.thumbnail-custom li.dropdown{
+    display:none;
+}
 .clouds a {
     color: #777;
     display:inline-block;

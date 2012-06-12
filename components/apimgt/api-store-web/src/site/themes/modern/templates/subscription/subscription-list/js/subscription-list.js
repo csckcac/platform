@@ -1,11 +1,5 @@
 $(document).ready(function () {
 
-    $('.subscription-list a.accordion-toggle').click(
-            function () {
-                $(this).parent().next().toggle('blind');
-            }
-    );
-
     $(".key-generate-button").click(function () {
         var elem = $(this);
         jagg.post("/site/blocks/subscription/subscription-add/ajax/subscription-add.jag", {
@@ -18,6 +12,23 @@ $(document).ready(function () {
             keytype:elem.attr("data-keytype")
         }, function (result) {
             if (result.error == false) {
+                window.location.reload();
+            } else {
+                $("#subscribe-button").html('Subscribe').addClass('green').removeClass('disabled').removeAttr('disabled');
+                jagg.message({content:result.message,type:"error"});
+            }
+        }, "json");
+
+        $(this).html('Please wait...').removeClass('green').addClass('disabled').attr('disabled', 'disabled');
+    });
+    $('.app-key-generate-button').click(function () {
+        var elem = $(this);
+        jagg.post("/site/blocks/subscription/subscription-add/ajax/subscription-add.jag", {
+            action:"generateApplicationKey",
+            application:elem.attr("data-application"),
+            keytype:elem.attr("data-keytype")
+        }, function (result) {
+            if (!result.error) {
                 window.location.reload();
             } else {
                 $("#subscribe-button").html('Subscribe').addClass('green').removeClass('disabled').removeAttr('disabled');

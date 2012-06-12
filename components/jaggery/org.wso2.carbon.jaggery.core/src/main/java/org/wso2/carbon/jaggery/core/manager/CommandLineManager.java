@@ -12,6 +12,8 @@ import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.jaggery.core.ScriptReader;
 import org.wso2.carbon.scriptengine.cache.CacheManager;
 import org.wso2.carbon.scriptengine.cache.ScriptCachingContext;
+import org.wso2.carbon.scriptengine.engine.JavaScriptHostObject;
+import org.wso2.carbon.scriptengine.engine.JavaScriptMethod;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
@@ -65,19 +67,17 @@ public final class CommandLineManager extends CommonManager {
             StAXOMBuilder builder = new StAXOMBuilder(inputStream);
             OMElement document = builder.getDocumentElement();
             Iterator itr = document.getChildrenWithLocalName("hostObject");
+            String msg = "Error while registering HostObject : ";
             while (itr.hasNext()) {
                 OMElement hostObject = (OMElement) itr.next();
+                String name = hostObject.getFirstChildWithName(new QName(null, "name")).getText();
                 String className = hostObject.getFirstChildWithName(new QName(null, "className")).getText();
-                String msg = "Error while registering the hostobject : " + className;
+                JavaScriptHostObject ho = new JavaScriptHostObject(name);
                 try {
-                    RHINO_ENGINE.defineClass((Class<Scriptable>) Class.forName(className));
-                } catch (IllegalAccessException e) {
-                    log.error(msg, e);
-                } catch (InstantiationException e) {
-                    log.error(msg, e);
-                } catch (InvocationTargetException e) {
-                    log.error(msg, e);
+                    ho.setClazz(Class.forName(className));
+                    RHINO_ENGINE.defineHostObject(ho);
                 } catch (ClassNotFoundException e) {
+                    msg += name + " " + e.getMessage();
                     log.error(msg, e);
                 }
             }
@@ -89,14 +89,10 @@ public final class CommandLineManager extends CommonManager {
     }
 
     private static void initGlobalProperties() {
-
-        try {
-            Method method = CommandLineManager.class.getDeclaredMethod(
-                    "print", Context.class, Scriptable.class, Object[].class, Function.class);
-            RHINO_ENGINE.defineFunction("print", method, ScriptableObject.PERMANENT);
-        } catch (NoSuchMethodException e) {
-            log.error("Error initializing global properties", e);
-        }
+        JavaScriptMethod method = new JavaScriptMethod("print");
+        method.setMethodName("print");
+        method.setClazz(CommandLineManager.class);
+        RHINO_ENGINE.defineMethod(method);
     }
 
     /**

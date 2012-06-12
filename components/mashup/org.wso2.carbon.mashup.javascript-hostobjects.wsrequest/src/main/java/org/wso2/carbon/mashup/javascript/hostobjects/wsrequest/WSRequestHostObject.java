@@ -268,7 +268,7 @@ public class WSRequestHostObject extends ScriptableObject {
                                        Function funObj) throws CarbonException, AxisFault {
         WSRequestHostObject wsRequest = (WSRequestHostObject) thisObj;
         Object payload;
-        QName operationName = null;
+        QName operationName = ServiceClient.ANON_OUT_IN_OP;
         if (wsRequest.wsdlMode && arguments.length != 2) {
             throw new CarbonException("When the openWSDL method of WSRequest is used the send " +
                     "function should be called with 2 parameters. The operation to invoke and " +

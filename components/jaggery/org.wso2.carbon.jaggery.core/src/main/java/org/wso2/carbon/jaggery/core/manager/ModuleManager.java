@@ -1,18 +1,28 @@
-package org.wso2.carbon.jaggery.core.modules;
+package org.wso2.carbon.jaggery.core.manager;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ScriptableObject;
+import org.wso2.carbon.scriptengine.engine.JavaScriptHostObject;
+import org.wso2.carbon.scriptengine.engine.JavaScriptMethod;
+import org.wso2.carbon.scriptengine.engine.JavaScriptModule;
+import org.wso2.carbon.scriptengine.engine.JavaScriptScript;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
-import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import java.io.*;
-import java.lang.reflect.Method;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,7 +43,7 @@ public class ModuleManager {
 
     private static final String MODULES_FILE = "modules.xml";
 
-    private final Map<String, JaggeryModule> modules = new HashMap<String, JaggeryModule>();
+    private final Map<String, JavaScriptModule> modules = new HashMap<String, JavaScriptModule>();
 
     private RhinoEngine engine = null;
     private String jaggeryDir = null;
@@ -63,7 +73,7 @@ public class ModuleManager {
         }
     }
 
-    public Map<String, JaggeryModule> getModules() {
+    public Map<String, JavaScriptModule> getModules() {
         return this.modules;
     }
 
@@ -80,15 +90,15 @@ public class ModuleManager {
                 String namespace = moduleOM.getAttributeValue(new QName(null, NAMESPACE));
                 boolean expose = "true".equalsIgnoreCase(moduleOM.getAttributeValue(new QName(null, EXPOSE)));
 
-                JaggeryModule jaggeryModule = new JaggeryModule(moduleName);
-                jaggeryModule.setNamespace(namespace);
-                jaggeryModule.setExpose(expose);
+                JavaScriptModule module = new JavaScriptModule(moduleName);
+                module.setNamespace(namespace);
+                module.setExpose(expose);
 
-                initHostObjects(moduleOM, runtime, jaggeryModule, custom);
-                initMethods(moduleOM, jaggeryModule, custom);
-                initScripts(moduleOM, cx, jaggeryModule, custom);
+                initHostObjects(moduleOM, module);
+                initMethods(moduleOM, module);
+                initScripts(moduleOM, cx, module, custom);
 
-                modules.put(moduleName, jaggeryModule);
+                modules.put(moduleName, module);
             }
         } catch (XMLStreamException e) {
             String msg = "Error while reading the modules.xml";
@@ -99,7 +109,7 @@ public class ModuleManager {
         }
     }
 
-    private void initScripts(OMElement moduleOM, Context cx, JaggeryModule jaggeryModule, boolean custom) throws ScriptException {
+    private void initScripts(OMElement moduleOM, Context cx, JavaScriptModule module, boolean custom) throws ScriptException {
         String name = null;
         String path = null;
         Iterator itr = moduleOM.getChildrenWithName(new QName(MODULE_NAMESPACE, "script"));
@@ -111,8 +121,7 @@ public class ModuleManager {
                         new QName(MODULE_NAMESPACE, NAME)).getText();
                 path = scriptOM.getFirstChildWithName(
                         new QName(MODULE_NAMESPACE, "path")).getText();
-                JaggeryScript jaggeryScript = new JaggeryScript(name);
-                jaggeryScript.setPath(path);
+                JavaScriptScript jaggeryScript = new JavaScriptScript(name);
 
                 Reader reader;
                 if (custom) {
@@ -125,11 +134,11 @@ public class ModuleManager {
                     } catch (ClassNotFoundException e) {
                         String msg = "Jaggery core scripts initializer cannot be found";
                         log.error(msg, e);
-                        throw new ScriptException(msg, e);
+                        throw new ScriptException(e);
                     }
                 }
                 jaggeryScript.setScript(cx.compileReader(reader, name, 1, null));
-                jaggeryModule.addScript(jaggeryScript);
+                module.addScript(jaggeryScript);
             } catch (FileNotFoundException e) {
                 String msg = "Error executing script. Script cannot be found, name : " + name + ", path : " + path;
                 log.error(msg, e);
@@ -146,7 +155,7 @@ public class ModuleManager {
         }
     }
 
-    private void initMethods(OMElement moduleOM, JaggeryModule jaggeryModule, boolean custom) throws ScriptException {
+    private void initMethods(OMElement moduleOM, JavaScriptModule module) throws ScriptException {
         String name = null;
         String className = null;
         Iterator itr = moduleOM.getChildrenWithName(new QName(MODULE_NAMESPACE, "method"));
@@ -158,35 +167,21 @@ public class ModuleManager {
                         new QName(MODULE_NAMESPACE, NAME)).getText();
                 className = methodOM.getFirstChildWithName(
                         new QName(MODULE_NAMESPACE, "className")).getText();
-                JaggeryMethod jaggeryMethod = new JaggeryMethod(name);
-                jaggeryMethod.setClassName(className);
-
-                Class clazz = Class.forName(className);
-                Method method = clazz.getDeclaredMethod(
-                        name, Context.class, Scriptable.class, Object[].class, Function.class);
-                jaggeryMethod.setMethod(method);
-                jaggeryModule.addMethod(jaggeryMethod);
-            } catch (NoSuchMethodException e) {
-                String msg = "Error registering method. Method cannot be found, name : " +
-                        name + ", class : " + className;
-                log.error(msg, e);
-                if(!custom) {
-                    throw new ScriptException(msg, e);
-                }
+                JavaScriptMethod method = new JavaScriptMethod(name);
+                method.setClazz(Class.forName(className));
+                method.setMethodName(name);
+                module.addMethod(method);
             } catch (ClassNotFoundException e) {
                 String msg = "Error registering method. Class cannot be found, name : " +
                         name + ", class : " + className;
                 log.error(msg, e);
-                if(!custom) {
-                    throw new ScriptException(msg, e);
-                }
             }
         }
     }
 
-    private void initHostObjects(OMElement moduleOM, ScriptableObject runtime,
-                                 JaggeryModule jaggeryModule, boolean custom) throws ScriptException {
+    private void initHostObjects(OMElement moduleOM, JavaScriptModule jaggeryModule) throws ScriptException {
         Iterator itr = moduleOM.getChildrenWithName(new QName(MODULE_NAMESPACE, "hostObject"));
+        String msg = "Error while adding HostObject : ";
         while (itr.hasNext()) {
             //process hostobject
             OMElement hostObjectOM = (OMElement) itr.next();
@@ -194,23 +189,13 @@ public class ModuleManager {
                     new QName(MODULE_NAMESPACE, NAME)).getText();
             String className = hostObjectOM.getFirstChildWithName(
                     new QName(MODULE_NAMESPACE, "className")).getText();
-            JaggeryHostObject jaggeryHostObject = new JaggeryHostObject(name);
-            jaggeryHostObject.setClassName(className);
-
-            HostObjectUtil.registerHostObject(engine, runtime, className);
-            Object obj = ScriptableObject.getProperty(runtime, name);
-            if (obj instanceof UniqueTag) {
-                String msg = "Error registering HostObject. Constructor cannot be found, name : " +
-                        name + ", class : " + className;
-                log.error(msg);
-                if(!custom) {
-                    throw new ScriptException(msg);
-                }
-            } else {
-                BaseFunction constructor = (BaseFunction) ScriptableObject.getProperty(runtime, name);
-                ScriptableObject.deleteProperty(runtime, name);
-                jaggeryHostObject.setConstructor(constructor);
-                jaggeryModule.addHostObject(jaggeryHostObject);
+            JavaScriptHostObject hostObject = new JavaScriptHostObject(name);
+            try {
+                hostObject.setClazz(Class.forName(className));
+                jaggeryModule.addHostObject(hostObject);
+            } catch (ClassNotFoundException e) {
+                msg += name + " " + e.getMessage();
+                log.error(msg, e);
             }
         }
     }

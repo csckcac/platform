@@ -416,10 +416,11 @@ public class JSDeployer extends AbstractDeployer {
              data from them at the initialize time.
              */
             ScriptableObject serviceScope = JavaScriptEngineUtils.getEngine().getRuntimeScope();
-            RhinoEngine.putContextProperty(MashupConstants.ACTIVE_SCOPE, serviceScope);
+            JavaScriptEngineUtils.setActiveScope(serviceScope);
             RhinoEngine.putContextProperty(MashupConstants.AXIS2_SERVICE, axisService);
             RhinoEngine.putContextProperty(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configCtx);
 
+            JavaScriptEngineUtils.initialize();
             // load the service java script file
             engine.evaluate(axisService);
 

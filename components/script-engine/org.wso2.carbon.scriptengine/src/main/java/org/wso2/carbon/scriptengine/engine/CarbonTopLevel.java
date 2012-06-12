@@ -18,38 +18,6 @@ public class CarbonTopLevel extends ImporterTopLevel {
 
     public CarbonTopLevel(Context context, boolean sealed) {
         super(context, sealed);
-        defineGlobalFunctions(context);
-    }
-
-    //TODO: need to remove this once the log is refactored @Nuwan
-    public static void log(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        String functionName = "log";
-        int argsCount = args.length;
-        if (argsCount < 1 || argsCount > 2) {
-            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
-        }
-        String msg = HostObjectUtil.serializeObject(args[0]);
-        String level = "info";
-        if (argsCount == 2) {
-            if (!(args[1] instanceof String)) {
-                HostObjectUtil.invalidArgsError(hostObjectName, functionName, "2", "string", args[1], false);
-            }
-            level = ((String) args[1]).toLowerCase();
-        }
-
-        if (level.equalsIgnoreCase("info")) {
-            log.info(msg);
-        } else if (level.equalsIgnoreCase("warn")) {
-            log.warn(msg);
-        } else if (level.equalsIgnoreCase("debug")) {
-            log.debug(msg);
-        } else if (level.equalsIgnoreCase("error")) {
-            log.error(msg);
-        } else if (level.equalsIgnoreCase("fatal")) {
-            log.fatal(msg);
-        } else {
-            throw new ScriptException("Unknown log level : " + level);
-        }
     }
 
     public static Object parse(Context cx, Scriptable thisObj, Object[] args, Function funObj)
@@ -79,21 +47,5 @@ public class CarbonTopLevel extends ImporterTopLevel {
             HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
         }
         return HostObjectUtil.serializeJSON(args[0]);
-    }
-
-    private void defineGlobalFunctions(Context cx) {
-        try {
-            Method method = CarbonTopLevel.class.getDeclaredMethod("log", Context.class,
-                    Scriptable.class, Object[].class, Function.class);
-            RhinoEngine.defineFunction(this, "log", method, ScriptableObject.PERMANENT);
-/*            method = CarbonTopLevel.class.getDeclaredMethod("stringify", Context.class,
-                    Scriptable.class, Object[].class, Function.class);
-            RhinoEngine.defineFunction(this, "stringify", method, ScriptableObject.PERMANENT);
-            method = CarbonTopLevel.class.getDeclaredMethod("parse", Context.class,
-                    Scriptable.class, Object[].class, Function.class);
-            RhinoEngine.defineFunction(this, "parse", method, ScriptableObject.PERMANENT);*/
-        } catch (NoSuchMethodException e) {
-            log.error(e);
-        }
     }
 }

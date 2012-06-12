@@ -26,6 +26,9 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Context;
 import org.wso2.carbon.mashup.javascript.hostobjects.hostobjectservice.service.HostObjectService;
 import org.wso2.carbon.mashup.utils.MashupConstants;
+import org.wso2.carbon.scriptengine.engine.JavaScriptHostObject;
+import org.wso2.carbon.scriptengine.engine.JavaScriptMethod;
+import org.wso2.carbon.scriptengine.engine.JavaScriptProperty;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 
 import java.lang.reflect.InvocationTargetException;
@@ -48,14 +51,11 @@ public class JavaScriptEngineUtils {
     public static void setEngine(RhinoEngine engine) throws AxisFault {
         JavaScriptEngineUtils.engine = engine;
         loadHostObjects();
-        try {
-            Method print = JavaScriptEngineUtils.class.getMethod("print", Context.class, Scriptable.class,
-                    Object[].class, Function.class);
-            engine.defineFunction("print", print, ScriptableObject.READONLY);
-        } catch (NoSuchMethodException e) {
-            log.error(e.getMessage(), e);
-            throw new AxisFault(e.getMessage(), e);
-        }
+        JavaScriptMethod method = new JavaScriptMethod("print");
+        method.setClazz(JavaScriptEngineUtils.class);
+        method.setMethodName("print");
+        method.setAttribute(ScriptableObject.DONTENUM);
+        engine.defineMethod(method);
     }
 
     /**
@@ -84,6 +84,24 @@ public class JavaScriptEngineUtils {
         return JavaScriptEngineUtils.engine;
     }
 
+    public static void initialize() {
+        ScriptableObject scope = getActiveScope();
+        Map<String, String> globalObjects = hostObjectService.getGlobalObjects();
+        Set<Map.Entry<String, String>> entries = globalObjects.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            String hostObject = entry.getKey();
+            String objectName = entry.getValue();
+            if ((objectName != null) && (!"".equals(objectName)) && (hostObject != null) && (!"".equals(hostObject))) {
+                Scriptable entryHostObject = RhinoEngine.newObject(hostObject, scope, new Object[0]);
+                JavaScriptProperty property = new JavaScriptProperty(objectName);
+                property.setValue(entryHostObject);
+                property.setAttribute(ScriptableObject.READONLY);
+                RhinoEngine.defineProperty(scope, property);
+            }
+        }
+
+    }
+
     public static void setHostObjectService(HostObjectService hostObjectService) {
         JavaScriptEngineUtils.hostObjectService = hostObjectService;
     }
@@ -92,16 +110,25 @@ public class JavaScriptEngineUtils {
         return (ScriptableObject) RhinoEngine.getContextProperty(MashupConstants.ACTIVE_SCOPE);
     }
 
+    public static void setActiveScope(ScriptableObject scope) {
+        Context cx = RhinoEngine.enterContext();
+        cx.evaluateString(scope, "new XML();", "XML() initialization", 0, null);
+        RhinoEngine.putContextProperty(MashupConstants.ACTIVE_SCOPE, scope);
+        RhinoEngine.exitContext();
+    }
+
     public static void loadHostObjects() throws AxisFault {
 
         if (hostObjectService != null) {
                 List<String> classes = hostObjectService.getHostObjectClasses();
                 for (String classStr : classes) {
                     try {
-                        engine.defineClass(loadClass(classStr));
-                    } catch (PrivilegedActionException e) {
-                        log.fatal(e);
-                        throw new AxisFault("Error occured while loading the host object :" + classStr, e);
+                        Class clazz = Class.forName(classStr);
+                        Method method = clazz.getMethod("getClassName");
+                        String name = (String) method.invoke(clazz.newInstance());
+                        JavaScriptHostObject hostObject = new JavaScriptHostObject(name);
+                        hostObject.setClazz(clazz);
+                        engine.defineHostObject(hostObject);
                     } catch (IllegalAccessException e) {
                         log.fatal(e);
                         throw new AxisFault("Error occured while loading the host object :" + classStr, e);
@@ -111,54 +138,12 @@ public class JavaScriptEngineUtils {
                     } catch (InvocationTargetException e) {
                         log.fatal(e);
                         throw new AxisFault("Error occured while loading the host object :" + classStr, e);
-                    }
-                }
-                Map<String,String> globalObjects = hostObjectService.getGlobalObjects();
-                Set<Map.Entry<String, String>> entries = globalObjects.entrySet();
-                for (Map.Entry<String, String> entry : entries) {
-                    String hostObject = entry.getKey();
-                    String objectName = entry.getValue();
-                    if ((objectName != null) && (!"".equals(objectName)) && (hostObject != null)
-                            && (!"".equals(hostObject))) {
-                        Scriptable entryHostObject = RhinoEngine.newObject(hostObject, engine.getRuntimeScope(), new Object[0]);
-                        engine.defineProperty(objectName, entryHostObject, ScriptableObject.READONLY);
-
-                        // If this is the system host object we need to inject a property called wwwURL
-                        // which would return the http url to a certain service. As the system object is a
-                        // global object and does not have a pointer to the service calling it there is no
-                        // other way to do it
-                        //todo system.wwwURL
-                        /*if ("system".equals(objectName) && "" != serviceName) {
-                            Object object = Context.getCurrentContext()
-                                    .getThreadLocal(MashupConstants.AXIS2_CONFIGURATION_CONTEXT);
-                            if (object instanceof ConfigurationContext) {
-                                ConfigurationContext configurationContext = (ConfigurationContext) object;
-                                AxisConfiguration configuration = configurationContext.getAxisConfiguration();
-                                TransportInDescription inDescription = configuration
-                                                .getTransportIn("http");
-                                if (inDescription != null) {
-                                    try {
-                                        String requestIP = Utils.getIpAddress(configuration);
-                                        EndpointReference endpointReference = inDescription.getReceiver()
-                                                .getEPRForService(serviceName, requestIP);
-
-                                        // Once we get the EPR for this service we need to inject it into
-                                        // the script
-                                        engine.getCx()
-                                                .evaluateString(engine, "system.wwwURL=\"" +
-                                                        endpointReference.getAddress() + "\"", "", 0, null);
-                                    } catch (SocketException e) {
-                                        log.error("Cannot get local IP address", e);
-                                    } catch (AxisFault axisFault) {
-                                        log.error(
-                                                "Error obtaining endpoint reference for service " +
-                                                        serviceName, axisFault);
-                                    }
-
-                                }
-                            }
-                        }*/
-
+                    } catch (ClassNotFoundException e) {
+                        log.fatal(e);
+                        throw new AxisFault("Error occured while loading the host object :" + classStr, e);
+                    } catch (NoSuchMethodException e) {
+                        log.fatal(e);
+                        throw new AxisFault("Error occured while loading the host object :" + classStr, e);
                     }
                 }
         }

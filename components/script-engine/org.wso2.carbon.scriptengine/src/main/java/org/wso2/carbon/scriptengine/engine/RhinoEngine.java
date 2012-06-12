@@ -2,9 +2,14 @@ package org.wso2.carbon.scriptengine.engine;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.FunctionObject;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.scriptengine.cache.CacheManager;
-import org.wso2.carbon.scriptengine.cache.CachingContext;
 import org.wso2.carbon.scriptengine.cache.ScriptCachingContext;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
@@ -12,6 +17,7 @@ import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * The <code>RhinoEngine</code> class acts as a global engine for executing JavaScript codes using Mozilla Rhino. Each engine instance
@@ -28,24 +34,12 @@ public class RhinoEngine {
     private static ContextFactory contextFactory;
 
     private CacheManager cacheManager;
-    private ScriptableObject engineScope;
+    private List<JavaScriptModule> modules = new ArrayList<JavaScriptModule>();
+    private JavaScriptModule globalModule = new JavaScriptModule("global");
 
     static {
         contextFactory = new CarbonContextFactory();
         ContextFactory.initGlobal(contextFactory);
-    }
-
-    /**
-     * This constructor gets an existing <code>RhinoEngine</code> instance and returns a new engine which has a clone of the existing engine
-     * scope as its scope. Then, any modifications to the scope of new engine instance will be independent of the existing one.
-     * <p>Same <code>CacheManager</code> instance of the existing engine will be used as the cache manager of the new object.
-     * @param engine An existing {@code RhinoEngine} instance
-     */
-    public RhinoEngine(RhinoEngine engine) {
-        this.cacheManager = engine.getCacheManager();
-        Context cx = enterContext();
-        setEngineScope(cx, (ScriptableObject) engine.getEngineScope());
-        exitContext();
     }
 
     /**
@@ -55,9 +49,6 @@ public class RhinoEngine {
      */
     public RhinoEngine(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
-        Context cx = enterContext();
-        setEngineScope(cx, removeUnsafeObjects(new CarbonTopLevel(cx, false)));
-        exitContext();
     }
 
     /**
@@ -73,94 +64,78 @@ public class RhinoEngine {
             log.error(msg);
             throw new ScriptException(msg);
         }
-        Context cx = enterContext();
-        setEngineScope(cx, (ScriptableObject) engine.getEngineScope());
-        exitContext();
     }
 
     /**
      * This method registers a hostobject in the engine scope.
-     * @param clazz Hostobject class
-     * @throws InvocationTargetException If specified class cannot be invoked
-     * @throws InstantiationException If the specified class cannot be instantiated
-     * @throws IllegalAccessException If the engine doesn't have access to the specified class
+     * @param scope The scope where hostobject will be defined
+     * @param hostObject HostObject to be defined
      */
-    public void defineClass(Class<Scriptable> clazz) throws InvocationTargetException,
-            InstantiationException, IllegalAccessException {
-        ScriptableObject.defineClass(engineScope, clazz);
+    public static void defineHostObject(ScriptableObject scope, JavaScriptHostObject hostObject)
+            throws ScriptException {
+        String msg = "Error while registering the hostobject : ";
+        Class clazz = hostObject.getClazz();
+        String className = clazz.getName();
+        try {
+            ScriptableObject.defineClass(scope, clazz);
+        } catch (InvocationTargetException e) {
+            log.error(msg + className, e);
+        } catch (InstantiationException e) {
+            log.error(msg + className, e);
+        } catch (IllegalAccessException e) {
+            log.error(msg + className, e);
+        }
     }
 
-    /**
-     * This method registers a hostobject in the specified scope.
-     * @param scope Scope to register the specified hostobject
-     * @param clazz Hostobject class
-     * @throws InvocationTargetException If specified class cannot be invoked
-     * @throws InstantiationException If the specified class cannot be instantiated
-     * @throws IllegalAccessException If the engine doesn't have access to the specified class
-     */
-    public static void defineClass(ScriptableObject scope, Class<Scriptable> clazz) throws InvocationTargetException,
-            InstantiationException, IllegalAccessException {
-        ScriptableObject.defineClass(scope, clazz);
-    }
-
-    /**
-     * This method registers a script object in the engine scope.
-     * @param script Script instance to be defined
-     */
-    public void defineScript(Script script) {
-        Context cx = RhinoEngine.enterContext();
-        script.exec(cx, engineScope);
-        RhinoEngine.exitContext();
-    }
-
-    /**
-     * This method registers a script object in the engine scope.
-     * @param scriptReader Reader instance to get the script content
-     * @throws ScriptException If an error occur while evaluating the script
-     */
-    public void defineScript(Reader scriptReader) throws ScriptException {
-        exec(scriptReader, engineScope, null);
+    public void defineHostObject(JavaScriptHostObject hostObject) {
+        globalModule.addHostObject(hostObject);
     }
 
     /**
      * This method registers the specified object in the specified scope.
      * @param scope The scope to register the bean object
-     * @param name Property name to register the bean
-     * @param object Bean object to be registered
-     * @param attribute Integer value specifying access level. i.e. READONLY | DONTENUM | PERMANENT. Refer {@link ScriptableObject}
+     * @param property Property to be defined
      */
-    public static void defineProperty(ScriptableObject scope, String name, Object object, int attribute) {
-        enterContext();
+    public static void defineProperty(ScriptableObject scope, JavaScriptProperty property) {
+        String name = property.getName();
+        Object object = property.getValue();
         if ((object instanceof Number) ||
                 (object instanceof String) ||
                 (object instanceof Boolean)) {
-            scope.defineProperty(name, object, attribute);
+            scope.defineProperty(name, object, property.getAttribute());
         } else {
             // Must wrap non-scriptable objects before presenting to Rhino
             Scriptable wrapped = Context.toObject(object, scope);
-            scope.defineProperty(name, wrapped, attribute);
+            scope.defineProperty(name, wrapped, property.getAttribute());
         }
+    }
+
+    public void defineProperty(JavaScriptProperty property) {
+        globalModule.addProperty(property);
+    }
+
+    public static void defineScript(ScriptableObject scope, JavaScriptScript script) {
+        Context cx = enterContext();
+        script.getScript().exec(cx, scope);
         exitContext();
     }
 
-    /**
-     * This method registers the specified object in the specified scope.
-     * @param name Property name to register the bean
-     * @param object Bean object to be registered
-     * @param attribute Integer value specifying access level. i.e. readonly,
-     */
-    public void defineProperty(String name, Object object, int attribute) {
-        enterContext();
-        if ((object instanceof Number) ||
-                (object instanceof String) ||
-                (object instanceof Boolean)) {
-            engineScope.defineProperty(name, object, attribute);
-        } else {
-            // Must wrap non-scriptable objects before presenting to Rhino
-            Scriptable wrapped = Context.toObject(object, engineScope);
-            engineScope.defineProperty(name, wrapped, attribute);
-        }
-        exitContext();
+    public void defineScript(JavaScriptScript script) {
+        globalModule.addScript(script);
+    }
+
+    public static void defineMethod(ScriptableObject scope, JavaScriptMethod method) throws ScriptException {
+        String name = method.getName();
+        FunctionObject f = new FunctionObject(name, method.getMethod(), scope);
+        scope.defineProperty(name, f, method.getAttribute());
+    }
+
+    public void defineMethod(JavaScriptMethod method) {
+        globalModule.addMethod(method);
+    }
+
+    public void defineModule(JavaScriptModule module) {
+        modules.add(module);
     }
 
     /**
@@ -292,37 +267,56 @@ public class RhinoEngine {
      * This clones the engine scope and returns.
      * @return Cloned scope
      */
-    public ScriptableObject getRuntimeScope() {
+    public ScriptableObject getRuntimeScope() throws ScriptException {
         Context cx = enterContext();
-        ScriptableObject global = removeUnsafeObjects(new CarbonTopLevel(cx, false));
-        ScriptableObject parentScope = (ScriptableObject) cx.newObject(global);
-        ScriptableObject scope = (ScriptableObject) cx.newObject(global);
-
-        parentScope.setPrototype(global);
-        parentScope.setParentScope(null);
-
-        scope.setPrototype(parentScope);
-        scope.setParentScope(parentScope);
-        copyEngineScope(engineScope, parentScope);
-
+        ScriptableObject scope = removeUnsafeObjects(new CarbonTopLevel(cx, false));
+        exposeModule(scope, globalModule);
+        for(JavaScriptModule module : modules) {
+            String name = module.getName();
+            ScriptableObject object = (ScriptableObject) newObject(scope);
+            exposeModule(object, module);
+            JavaScriptProperty property = new JavaScriptProperty(name);
+            property.setValue(object);
+            property.setAttribute(ScriptableObject.PERMANENT);
+            defineProperty(scope, property);
+        }
         exitContext();
         return scope;
     }
 
-    /**
-     * This method seals the engine scope. i.e. Any further modification to the engine scope will be voided.
-     */
-    public void sealEngine() {
-        engineScope.sealObject();
+    private void defineClass(ScriptableObject scope, Class clazz) {
+        try {
+            ScriptableObject.defineClass(scope, clazz);
+        } catch (IllegalAccessException e) {
+            log.error(e.getMessage(), e);
+        } catch (InstantiationException e) {
+            log.error(e.getMessage(), e);
+        } catch (InvocationTargetException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
-    /**
-     *
-     * @param constructor
-     * @param scope
-     * @param args
-     * @return
-     */
+    private void defineMethod(ScriptableObject scope, String name, Method method, int attribute) {
+        FunctionObject f = new FunctionObject(name, method, scope);
+        scope.defineProperty(name, f, attribute);
+    }
+    
+    private void exposeModule(ScriptableObject scope, JavaScriptModule module) throws ScriptException {
+        Context cx = enterContext();
+        for (JavaScriptHostObject hostObject : module.getHostObjects()) {
+            defineClass(scope, hostObject.getClazz());
+        }
+
+        for (JavaScriptMethod method : module.getMethods()) {
+            defineMethod(scope, method.getName(), method.getMethod(), method.getAttribute());
+        }
+
+        for (JavaScriptScript script : module.getScripts()) {
+            script.getScript().exec(cx, scope);
+        }
+        exitContext();
+    }
+
     public static Scriptable newObject(String constructor, ScriptableObject scope, Object[] args) {
         Context cx = enterContext();
         Scriptable obj = cx.newObject(scope, constructor, args);
@@ -335,23 +329,6 @@ public class RhinoEngine {
         Scriptable obj = cx.newObject(scope);
         exitContext();
         return obj;
-    }
-
-    public Scriptable newObject() {
-        Context cx = enterContext();
-        Scriptable obj = cx.newObject(getRuntimeScope());
-        exitContext();
-        return obj;
-    }
-
-    public void defineFunction(String jsName, Method method, int attribute) {
-        FunctionObject f = new FunctionObject(jsName, method, engineScope);
-        engineScope.defineProperty(jsName, f, attribute);
-    }
-
-    public static void defineFunction(ScriptableObject scope, String jsName, Method method, int attribute) {
-        FunctionObject f = new FunctionObject(jsName, method, scope);
-        scope.defineProperty(jsName, f, attribute);
     }
 
     public static void putContextProperty(Object key, Object value) {
@@ -382,16 +359,6 @@ public class RhinoEngine {
 
     public static void exitContext() {
         Context.exit();
-    }
-
-    private void setEngineScope(Context cx, ScriptableObject scope) {
-        engineScope = (ScriptableObject) cx.newObject(scope);
-        engineScope.setPrototype(scope);
-        engineScope.setParentScope(null);
-    }
-
-    private Scriptable getEngineScope() {
-        return engineScope;
     }
 
     private CacheManager getCacheManager() {

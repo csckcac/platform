@@ -215,34 +215,4 @@ public class HostObjectUtil {
         }
         return httpClient.executeMethod(method);
     }
-
-    public static void registerHostObject(RhinoEngine engine, String className) {
-        String msg = "Error while registering the hostobject : ";
-        try {
-            engine.defineClass((Class<Scriptable>) Class.forName(className));
-        } catch (IllegalAccessException e) {
-            log.error(msg + className, e);
-        } catch (InstantiationException e) {
-            log.error(msg + className, e);
-        } catch (InvocationTargetException e) {
-            log.error(msg + className, e);
-        } catch (ClassNotFoundException e) {
-            log.error(msg + className, e);
-        }
-    }
-
-    public static void registerHostObject(RhinoEngine engine, ScriptableObject scope, String className) {
-        String msg = "Error while registering the hostobject : ";
-        try {
-            engine.defineClass(scope, (Class<Scriptable>) Class.forName(className));
-        } catch (IllegalAccessException e) {
-            log.error(msg + className, e);
-        } catch (InstantiationException e) {
-            log.error(msg + className, e);
-        } catch (InvocationTargetException e) {
-            log.error(msg + className, e);
-        } catch (ClassNotFoundException e) {
-            log.error(msg + className, e);
-        }
-    }
 }

@@ -1,13 +1,12 @@
-package org.wso2.carbon.jaggery.core.modules;
+package org.wso2.carbon.scriptengine.engine;
 
 import org.mozilla.javascript.Script;
 
-public class JaggeryScript {
+public class JavaScriptScript {
     private String name = null;
-    private String path = null;
     private Script script = null;
 
-    public JaggeryScript(String name) {
+    public JavaScriptScript(String name) {
         this.name = name;
     }
 
@@ -17,14 +16,6 @@ public class JaggeryScript {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public Script getScript() {

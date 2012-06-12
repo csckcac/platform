@@ -104,8 +104,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             AxisService axisService = inMessage.getAxisService();
             ConfigurationContext configurationContext = inMessage.getConfigurationContext();
 
-            RhinoEngine.putContextProperty(MashupConstants.ACTIVE_SCOPE,
-                    JavaScriptEngineUtils.getEngine().getRuntimeScope());
+            JavaScriptEngineUtils.setActiveScope(JavaScriptEngineUtils.getEngine().getRuntimeScope());
+
             // Inject the incoming MessageContext to the Rhino Context. Some
             // host objects need access to the MessageContext. Eg: FileSystem,
             // WSRequest
@@ -122,6 +122,8 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
              */
             RhinoEngine.putContextProperty(MashupConstants.AXIS2_SERVICE, axisService);
             RhinoEngine.putContextProperty(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configurationContext);
+
+            JavaScriptEngineUtils.initialize();
 
             // JS Engine seems to need the Axis2 repository location to load the
             // imported scripts
@@ -383,7 +385,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     List innerParams = handleComplexTypeInRequest((XmlSchemaComplexType) schemaType,
                             complexTypePayload,
                             engine, innerParamNames);
-                    Scriptable scriptable = JavaScriptEngineUtils.getEngine().newObject();
+                    Scriptable scriptable = RhinoEngine.newObject(JavaScriptEngineUtils.getActiveScope());
                     for (int i = 0; i < innerParams.size(); i++) {
                         scriptable.put((String) innerParamNames.get(i), scriptable,
                                 innerParams.get(i));

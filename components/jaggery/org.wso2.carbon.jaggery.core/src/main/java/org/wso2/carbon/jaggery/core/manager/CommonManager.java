@@ -8,13 +8,8 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.hostobjects.stream.StreamHostObject;
 import org.wso2.carbon.jaggery.core.ScriptReader;
-import org.wso2.carbon.jaggery.core.modules.JaggeryHostObject;
-import org.wso2.carbon.jaggery.core.modules.JaggeryMethod;
-import org.wso2.carbon.jaggery.core.modules.JaggeryModule;
-import org.wso2.carbon.jaggery.core.modules.JaggeryScript;
-import org.wso2.carbon.jaggery.core.modules.ModuleManager;
 import org.wso2.carbon.scriptengine.cache.CacheManager;
-import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+import org.wso2.carbon.scriptengine.engine.*;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 
@@ -23,7 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -70,13 +65,13 @@ public class CommonManager {
             throw new ScriptException(msg);
         }
         this.moduleManager = new ModuleManager(this.engine, scriptsDir);
-        exposeDefaultModules();
+        exposeDefaultModules(this.engine, this.moduleManager.getModules());
     }
 
-    protected void initContext(JaggeryContext context) {
+    protected void initContext(JaggeryContext context) throws ScriptException {
         context.setManager(this);
-        context.setEngine(this.engine);
-        context.setScope(this.engine.getRuntimeScope());
+        context.setEngine(engine);
+        context.setScope(engine.getRuntimeScope());
         setJaggeryContext(context);
     }
 
@@ -84,20 +79,15 @@ public class CommonManager {
 
     }
 
-    private void exposeDefaultModules() {
-        Context cx = RhinoEngine.enterContext();
-        for (JaggeryModule module : this.moduleManager.getModules().values()) {
+    private static void exposeDefaultModules(RhinoEngine engine, Map<String, JavaScriptModule> modules) throws ScriptException {
+        for (JavaScriptModule module : modules.values()) {
             if (module.isExpose()) {
                 String namespace = module.getNamespace();
                 if (namespace == null || namespace.equals("")) {
                     //expose globally
-                    exposeModule(module);
+                    exposeModule(engine, module);
                 } else {
-                    ScriptableObject object = (ScriptableObject) this.engine.newObject();
-                    object.setPrototype(this.engine.getRuntimeScope());
-                    object.setParentScope(null);
-                    exposeModule(cx, module, object);
-                    this.engine.defineProperty(namespace, object, ScriptableObject.READONLY);
+                    engine.defineModule(module);
                 }
             }
         }
@@ -172,7 +162,7 @@ public class CommonManager {
         //ScriptableObject scope = context.getScope();
         CommonManager manager = context.getManager();
         ModuleManager moduleManager = manager.getModuleManager();
-        JaggeryModule module = moduleManager.getModules().get(moduleName);
+        JavaScriptModule module = moduleManager.getModules().get(moduleName);
 
         if (module == null) {
             String msg = "A module cannot be found with the specified name : " + moduleName;
@@ -183,43 +173,36 @@ public class CommonManager {
         ScriptableObject object = (ScriptableObject) RhinoEngine.newObject((ScriptableObject) thisObj);
         object.setPrototype(thisObj);
         object.setParentScope(null);
-        exposeModule(cx, module, object);
+        exposeModule(cx, object, module);
         manager.initModule(moduleName, object, context);
         return object;
     }
 
-    private static void exposeModule(Context cx, JaggeryModule module, ScriptableObject object) {
-        List<JaggeryHostObject> hostObjects = module.getJaggeryHostObjects();
-        for (JaggeryHostObject hostObject : hostObjects) {
-            RhinoEngine.defineProperty(
-                    object, hostObject.getName(), hostObject.getConstructor(), ScriptableObject.READONLY);
+    private static void exposeModule(Context cx, ScriptableObject object, JavaScriptModule module) throws ScriptException {
+        for (JavaScriptHostObject hostObject : module.getHostObjects()) {
+            RhinoEngine.defineHostObject(object, hostObject);
         }
 
-        List<JaggeryMethod> methods = module.getJaggeryMethods();
-        for (JaggeryMethod method : methods) {
-            RhinoEngine.defineFunction(object, method.getName(), method.getMethod(), ScriptableObject.READONLY);
+        for (JavaScriptMethod method : module.getMethods()) {
+            RhinoEngine.defineMethod(object, method);
         }
 
-        List<JaggeryScript> scripts = module.getJaggeryScripts();
-        for (JaggeryScript script : scripts) {
+        for (JavaScriptScript script : module.getScripts()) {
             script.getScript().exec(cx, object);
         }
     }
 
-    private void exposeModule(JaggeryModule module) {
-        List<JaggeryHostObject> hostObjects = module.getJaggeryHostObjects();
-        for (JaggeryHostObject hostObject : hostObjects) {
-            this.engine.defineProperty(hostObject.getName(), hostObject.getConstructor(), ScriptableObject.PERMANENT);
+    private static void exposeModule(RhinoEngine engine, JavaScriptModule module) {
+        for (JavaScriptHostObject hostObject : module.getHostObjects()) {
+            engine.defineHostObject(hostObject);
         }
 
-        List<JaggeryMethod> methods = module.getJaggeryMethods();
-        for (JaggeryMethod method : methods) {
-            this.engine.defineFunction(method.getName(), method.getMethod(), ScriptableObject.PERMANENT);
+        for (JavaScriptMethod method : module.getMethods()) {
+            engine.defineMethod(method);
         }
 
-        List<JaggeryScript> scripts = module.getJaggeryScripts();
-        for (JaggeryScript script : scripts) {
-            this.engine.defineScript(script.getScript());
+        for (JavaScriptScript script : module.getScripts()) {
+            engine.defineScript(script);
         }
     }
 

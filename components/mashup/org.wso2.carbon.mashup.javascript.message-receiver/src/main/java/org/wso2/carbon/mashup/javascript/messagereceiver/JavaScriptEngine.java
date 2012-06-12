@@ -127,6 +127,7 @@ public class JavaScriptEngine {
     private Object call(String method, AxisService service, Object args) throws AxisFault {
         Object functionArgs[];
         RhinoEngine engine = JavaScriptEngineUtils.getEngine();
+        ScriptableObject scope = JavaScriptEngineUtils.getActiveScope();
         Context cx = RhinoEngine.enterContext();
         try {
             // Handle JSON messages
@@ -155,7 +156,7 @@ public class JavaScriptEngine {
                 functionArgs = (Object[]) args;
             } else if (args != null) {
                 Object[] objects = {args};
-                args = RhinoEngine.newObject("XML", engine.getRuntimeScope(), objects);
+                args = RhinoEngine.newObject("XML", scope, objects);
                 functionArgs = new Object[]{args};
             } else {
                 functionArgs = new Object[0];
@@ -163,7 +164,6 @@ public class JavaScriptEngine {
 
             ConfigurationContext configurationContext = (ConfigurationContext) RhinoEngine.getContextProperty(
                     MashupConstants.AXIS2_CONFIGURATION_CONTEXT);
-            ScriptableObject scope = JavaScriptEngineUtils.getActiveScope();
             ScriptCachingContext sctx = MashupUtils.getScriptCachingContext(configurationContext, service);
 
             return engine.call(new MashupReader(service), method, functionArgs, scope, scope, sctx);
@@ -179,7 +179,7 @@ public class JavaScriptEngine {
         }
     }
 
-    public Object evaluateFunction(String func, Object[] args) {
+    public Object evaluateFunction(String func, Object[] args) throws ScriptException {
         func = "var x = " + func + ";";
         ScriptableObject scope = JavaScriptEngineUtils.getEngine().getRuntimeScope();
         Context cx = RhinoEngine.enterContext();

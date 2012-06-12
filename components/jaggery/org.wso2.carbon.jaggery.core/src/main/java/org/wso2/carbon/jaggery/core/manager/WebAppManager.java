@@ -3,19 +3,16 @@ package org.wso2.carbon.jaggery.core.manager;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.hostobjects.file.FileHostObject;
-import org.wso2.carbon.jaggery.core.ScriptParser;
 import org.wso2.carbon.jaggery.core.ScriptReader;
-import org.wso2.carbon.jaggery.core.modules.JaggeryHostObject;
-import org.wso2.carbon.jaggery.core.modules.JaggeryModule;
-import org.wso2.carbon.jaggery.core.modules.ModuleManager;
 import org.wso2.carbon.jaggery.core.plugins.WebAppFileManager;
 import org.wso2.carbon.scriptengine.cache.ScriptCachingContext;
+import org.wso2.carbon.scriptengine.engine.JavaScriptMethod;
+import org.wso2.carbon.scriptengine.engine.JavaScriptProperty;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
@@ -23,10 +20,11 @@ import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.lang.reflect.Method;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.net.JarURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
@@ -35,11 +33,6 @@ public class WebAppManager extends CommonManager {
 
     private static final Log log = LogFactory.getLog(WebAppManager.class);
     public static final String CORE_MODULE_NAME = "core";
-
-    private BaseFunction requestFunc = null;
-    private BaseFunction responseFunc = null;
-    private BaseFunction sessionFunc = null;
-    private BaseFunction applicationFunc = null;
 
     public WebAppManager(String jaggeryDir) throws ScriptException {
         super(jaggeryDir);
@@ -158,37 +151,15 @@ public class WebAppManager extends CommonManager {
 
     private void init() throws ScriptException {
         //define require() global method
-        try {
-            Method method = WebAppManager.class.getDeclaredMethod(
-                    "require", Context.class, Scriptable.class, Object[].class, Function.class);
-            getEngine().defineFunction("require", method, ScriptableObject.READONLY);
-        } catch (NoSuchMethodException e) {
-            log.error(e.getMessage(), e);
-            throw new ScriptException(e);
-        }
-        //define request, response, session constructors
-        List<JaggeryHostObject> hostObjects = getModuleManager().getModules().get(CORE_MODULE_NAME).getJaggeryHostObjects();
-        for (JaggeryHostObject hostObject : hostObjects) {
-            if ("Request".equals(hostObject.getName())) {
-                requestFunc = hostObject.getConstructor();
-            } else if ("Response".equals(hostObject.getName())) {
-                responseFunc = hostObject.getConstructor();
-            } else if ("Session".equals(hostObject.getName())) {
-                sessionFunc = hostObject.getConstructor();
-            } else if ("Application".equals(hostObject.getName())) {
-                applicationFunc = hostObject.getConstructor();
-            }
-            if ((requestFunc != null) && (responseFunc != null) && (sessionFunc != null) && (applicationFunc != null)) {
-                break;
-            }
-        }
+        JavaScriptMethod jsMethod = new JavaScriptMethod("require");
+        jsMethod.setMethodName("require");
+        jsMethod.setClazz(WebAppManager.class);
+        jsMethod.setAttribute(ScriptableObject.READONLY);
+        getEngine().defineMethod(jsMethod);
     }
 
-    protected void initContext(JaggeryContext context) {
+    protected void initContext(JaggeryContext context) throws ScriptException {
         super.initContext(context);
-        //define static properties
-        //ScriptableObject jaggery = (ScriptableObject) ScriptableObject.getProperty(
-        //        context.getScope(), CommonManager.JAGGERY_PREFIX);
         defineProperties(context, context.getScope());
     }
 
@@ -265,24 +236,29 @@ public class WebAppManager extends CommonManager {
         }
     }
 
-    private void defineProperties(JaggeryContext context, ScriptableObject jaggery) {
-        Context cx = RhinoEngine.enterContext();
+    private void defineProperties(JaggeryContext context, ScriptableObject scope) {
         WebAppContext ctx = (WebAppContext) context;
 
-        RhinoEngine.defineProperty(jaggery, "request",
-                requestFunc.construct(cx, jaggery, new Object[]{ctx.getServletRequest()}),
-                ScriptableObject.READONLY);
-        RhinoEngine.defineProperty(jaggery, "response",
-                responseFunc.construct(cx, jaggery, new Object[]{ctx.getServletResponse()}),
-                ScriptableObject.READONLY);
-        RhinoEngine.defineProperty(jaggery, "session",
-                sessionFunc.construct(cx, jaggery, new Object[]{ctx.getServletRequest().getSession()}),
-                ScriptableObject.READONLY);
-        RhinoEngine.defineProperty(jaggery, "application",
-                applicationFunc.construct(cx, jaggery, new Object[]{ctx.getServletConext()}),
-                ScriptableObject.READONLY);
+        JavaScriptProperty request = new JavaScriptProperty("request");
+        request.setValue(RhinoEngine.newObject("Request", scope, new Object[]{ctx.getServletRequest()}));
+        request.setAttribute(ScriptableObject.READONLY);
+        RhinoEngine.defineProperty(scope, request);
 
-        RhinoEngine.exitContext();
+        JavaScriptProperty response = new JavaScriptProperty("response");
+        response.setValue(RhinoEngine.newObject("Response", scope, new Object[]{ctx.getServletResponse()}));
+        response.setAttribute(ScriptableObject.READONLY);
+        RhinoEngine.defineProperty(scope, response);
+
+        JavaScriptProperty session = new JavaScriptProperty("session");
+        session.setValue(RhinoEngine.newObject("Session", scope, new Object[]{ctx.getServletRequest().getSession()}));
+        session.setAttribute(ScriptableObject.READONLY);
+        RhinoEngine.defineProperty(scope, session);
+
+        JavaScriptProperty application = new JavaScriptProperty("application");
+        application.setValue(RhinoEngine.newObject("Application", scope, new Object[]{ctx.getServletConext()}));
+        application.setAttribute(ScriptableObject.READONLY);
+        RhinoEngine.defineProperty(scope, application);
+
     }
 
     public JaggeryContext getJaggeryContext(OutputStream out, String scriptPath,

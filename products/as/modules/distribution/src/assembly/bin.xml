@@ -81,6 +81,16 @@
             <directory>../samples/jaggerySamples/taskmaster</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/jaggerySamples/taskmaster</outputDirectory>
         </fileSet>
+		<fileSet>
+            <directory>../samples/jaggerySamples</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/jaggerySamples</outputDirectory>
+			<excludes>
+			 <exclude>**/taskmaster/**</exclude>
+			 <exclude>**/jaggerySamples/**</exclude>
+			 <exclude>**/docs/**</exclude>
+			 </excludes>
+        </fileSet>
+		
 		
 		 <!--  copying mashup samples -->
         <fileSet>

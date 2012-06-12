@@ -77,7 +77,7 @@ public class RegistrySearchByCratedData {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid from date");
         log.info(result.getResourceDataList().length + " Records found");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(calender.before(resource.getCreatedOn()),
+            Assert.assertTrue(calender.getTime().before(resource.getCreatedOn().getTime()),
                               "Resource created date is a previous date of the mentioned date on From date");
 
 
@@ -101,7 +101,7 @@ public class RegistrySearchByCratedData {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid to date");
         log.info(result.getResourceDataList().length + " Records found");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(calender.after(resource.getCreatedOn()),
+            Assert.assertTrue(calender.getTime().after(resource.getCreatedOn().getTime()),
                               "Resource created date is a later date of the mentioned date on From date");
 
         }
@@ -129,7 +129,8 @@ public class RegistrySearchByCratedData {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid data range");
         log.info(result.getResourceDataList().length + " Records found");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(toCalender.after(resource.getCreatedOn()) && fromCalender.before(resource.getCreatedOn()),
+            Assert.assertTrue(toCalender.getTime().after(resource.getCreatedOn().getTime())
+                              && fromCalender.getTime().before(resource.getCreatedOn().getTime()),
                               "Resource created date is a not within the mentioned date range");
 
         }
@@ -185,7 +186,8 @@ public class RegistrySearchByCratedData {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid data range");
         log.info(result.getResourceDataList().length + " Records found");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertFalse((toCalender.after(resource.getCreatedOn()) && fromCalender.before(resource.getCreatedOn())),
+            Assert.assertFalse((toCalender.getTime().after(resource.getCreatedOn().getTime())
+                                && fromCalender.getTime().before(resource.getCreatedOn().getTime())),
                                "Resource created date is a not within the mentioned date range");
 
         }

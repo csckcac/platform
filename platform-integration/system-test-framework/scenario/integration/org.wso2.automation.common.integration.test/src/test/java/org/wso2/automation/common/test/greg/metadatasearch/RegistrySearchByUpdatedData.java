@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 import org.wso2.automation.common.test.greg.metadatasearch.bean.SearchParameterBean;
 import org.wso2.carbon.admin.service.RegistrySearchAdminService;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.search.stub.SearchAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.search.stub.beans.xsd.AdvancedSearchResultsBean;
@@ -34,6 +35,7 @@ import org.wso2.carbon.registry.search.stub.beans.xsd.CustomSearchParameterBean;
 import org.wso2.carbon.registry.search.stub.common.xsd.ResourceData;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
@@ -54,16 +56,19 @@ public class RegistrySearchByUpdatedData {
 
     private RegistrySearchAdminService searchAdminService;
     private WSRegistryServiceClient registry;
+    private String userName;
 
     @BeforeClass
     public void init()
             throws LoginAuthenticationExceptionException, RemoteException, RegistryException {
-        EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
+        final int userId = 3;
+        EnvironmentBuilder builder = new EnvironmentBuilder().greg(userId);
         EnvironmentVariables gregServer = builder.build().getGreg();
 
         sessionCookie = gregServer.getSessionCookie();
         searchAdminService = new RegistrySearchAdminService(gregServer.getBackEndUrl());
-        registry = new RegistryProvider().getRegistry(3, ProductConstant.GREG_SERVER_NAME);
+        registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
+        userName = UserListCsvReader.getUserInfo(userId).getUserName();
 
     }
 
@@ -76,8 +81,10 @@ public class RegistrySearchByUpdatedData {
         Calendar calender = Calendar.getInstance();
         calender.add(Calendar.YEAR, -1);
         paramBean.setUpdatedAfter(formatDate(calender.getTime()));
+
         ArrayOfString[] paramList = paramBean.getParameterList();
         log.info("From Date : " + formatDate(calender.getTime()));
+
 
         searchQuery.setParameterValues(paramList);
         AdvancedSearchResultsBean result = searchAdminService.getAdvancedSearchResults(sessionCookie, searchQuery);
@@ -85,9 +92,11 @@ public class RegistrySearchByUpdatedData {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid from date");
         log.info(result.getResourceDataList().length + " Records found");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(calender.before(registry.getMetaData(resource.getResourcePath()).getLastModified()),
-                              "Resource updated date is a previous date of the mentioned date on From date");
-
+            Resource rs = registry.get(resource.getResourcePath());
+            Assert.assertTrue(calender.getTime().before(rs.getLastModified()),
+                              "Resource updated date is a previous date of the mentioned date on From date:" +
+                              " Actual Date: " + formatDate(rs.getLastModified())
+                              + " Mentioned From Date : " + formatDate(calender.getTime()));
 
         }
 
@@ -96,12 +105,13 @@ public class RegistrySearchByUpdatedData {
     @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by updated date To")
     public void searchResourceByUpdatedDateTo()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
-                   RegistryException {
+                   RegistryException, InterruptedException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
         Calendar calender = Calendar.getInstance();
         log.info("To Date : " + formatDate(calender.getTime()));
         paramBean.setUpdatedBefore(formatDate(calender.getTime()));
+        paramBean.setUpdater(userName);
         ArrayOfString[] paramList = paramBean.getParameterList();
 
         searchQuery.setParameterValues(paramList);
@@ -109,9 +119,13 @@ public class RegistrySearchByUpdatedData {
         Assert.assertNotNull(result.getResourceDataList(), "No Record Found");
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid to date");
         log.info(result.getResourceDataList().length + " Records found");
+
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(calender.after(registry.getMetaData(resource.getResourcePath()).getLastModified()),
-                              "Resource updated date is a later date of the mentioned date on From date");
+            Resource rs = registry.get(resource.getResourcePath());
+            Assert.assertTrue(calender.getTime().after(rs.getLastModified()),
+                              resource.getResourcePath() + " Resource updated date is a later date of the mentioned date on From date. " +
+                              " Actual Date: " + formatDate(rs.getLastModified())
+                              + " Mentioned To Date : " + formatDate(calender.getTime()));
 
         }
     }
@@ -123,13 +137,15 @@ public class RegistrySearchByUpdatedData {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();
         SearchParameterBean paramBean = new SearchParameterBean();
         Calendar fromCalender = Calendar.getInstance();
-        fromCalender.add(Calendar.YEAR, -1);
+        fromCalender.add(Calendar.MONTH, -1);
         log.info("From Date : " + formatDate(fromCalender.getTime()));
         paramBean.setUpdatedAfter(formatDate(fromCalender.getTime()));
 
         Calendar toCalender = Calendar.getInstance();
         log.info("To Date : " + formatDate(toCalender.getTime()));
         paramBean.setUpdatedBefore(formatDate(toCalender.getTime()));
+
+        paramBean.setUpdater(userName);
 
         ArrayOfString[] paramList = paramBean.getParameterList();
 
@@ -139,8 +155,9 @@ public class RegistrySearchByUpdatedData {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid data range");
         log.info(result.getResourceDataList().length + " Records found");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertTrue(toCalender.after(registry.getMetaData(resource.getResourcePath()).getLastModified())
-                              && fromCalender.before(registry.getMetaData(resource.getResourcePath()).getLastModified()),
+            Resource rs = registry.get(resource.getResourcePath());
+            Assert.assertTrue(toCalender.getTime().after(rs.getLastModified())
+                              && fromCalender.getTime().before(rs.getLastModified()),
                               "Resource updated date is a not within the mentioned date range");
 
         }
@@ -198,8 +215,9 @@ public class RegistrySearchByUpdatedData {
         Assert.assertTrue((result.getResourceDataList().length > 0), "No Record Found. set valid data range");
         log.info(result.getResourceDataList().length + " Records found");
         for (ResourceData resource : result.getResourceDataList()) {
-            Assert.assertFalse((toCalender.after(registry.getMetaData(resource.getResourcePath()).getLastModified())
-                                && fromCalender.before(registry.getMetaData(resource.getResourcePath()).getLastModified())),
+            Resource rs = registry.get(resource.getResourcePath());
+            Assert.assertFalse((toCalender.getTime().after(rs.getLastModified())
+                                && fromCalender.getTime().before(rs.getLastModified())),
                                "Resource updated date is a not within the mentioned date range");
 
         }
@@ -249,7 +267,7 @@ public class RegistrySearchByUpdatedData {
         Assert.assertNull(result.getResourceDataList(), "Record Found");
     }
 
-//    @Test(priority = 8, groups = {"wso2.greg"}, dataProvider = "invalidCharacter",
+    //    @Test(priority = 8, groups = {"wso2.greg"}, dataProvider = "invalidCharacter",
 //          description = "Metadata search by invalid String for updated date")
     public void searchResourceByInvalidValueForUpdatedDate(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {

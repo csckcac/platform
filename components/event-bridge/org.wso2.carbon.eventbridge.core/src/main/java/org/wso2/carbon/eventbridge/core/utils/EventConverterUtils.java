@@ -26,9 +26,9 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class EventUtils {
+public class EventConverterUtils {
 
-    private static Log log = LogFactory.getLog(EventUtils.class);
+    private static Log log = LogFactory.getLog(EventConverterUtils.class);
 
     private static Gson gson = new Gson();
     /*
@@ -130,7 +130,11 @@ public class EventUtils {
                 if (event.getStreamId() == null || event.getStreamId().equals("")) {
                     String errorMsg = "Stream Id cannot be null or empty, for JSON : " + eventObjects.get(i).toString();
                     MalformedEventException malformedEventException = new MalformedEventException();
-                    log.error(errorMsg, malformedEventException);
+                    if (log.isDebugEnabled()) {
+                        log.error(errorMsg, malformedEventException);
+                    } else {
+                        log.error(errorMsg);
+                    }
                     throw malformedEventException;
                 }
                 eventList.add(event);
@@ -149,12 +153,22 @@ public class EventUtils {
     }
 
     public static List<Event> convertFromJson(String json, String streamName, String version) {
+        if ((streamName == null || streamName.equals("")) || ((version == null) || (version.equals("")))) {
+            String errorMsg = "Stream name or version cannot be null or empty";
+            MalformedEventException malformedEventException = new MalformedEventException();
+            if (log.isDebugEnabled()) {
+                log.error(errorMsg, malformedEventException);
+            } else {
+                log.error(errorMsg);
+            }
+            throw malformedEventException;
+        }
         List<Event> eventList = new ArrayList<Event>();
         try {
             JSONArray eventObjects = new JSONArray(json);
             for (int i = 0; i < eventObjects.length(); i++) {
                 Event event = gson.fromJson(eventObjects.get(i).toString(), Event.class);
-                event.setStreamId(constructStreamKey(streamName, version));
+                event.setStreamId(EventBridgeUtils.constructStreamKey(streamName, version));
                 eventList.add(event);
             }
         } catch (JSONException e) {
@@ -171,7 +185,4 @@ public class EventUtils {
 
     }
 
-    public static String constructStreamKey(String streamName, String version) {
-        return streamName + "::" + version;
-    }
 }

@@ -22,7 +22,7 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.wso2.carbon.eventbridge.core.engine.Engine;
-import org.wso2.carbon.eventbridge.restapi.RestAPIServlet;
+import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIServlet;
 import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIApp;
 import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIContext;
 import org.wso2.carbon.eventbridge.restapi.rest.RestEventReceiver;

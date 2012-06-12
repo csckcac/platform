@@ -1,10 +1,4 @@
-package org.wso2.carbon.eventbridge.core.subscriber;
-
-import org.wso2.carbon.eventbridge.core.beans.Credentials;
-import org.wso2.carbon.eventbridge.core.beans.Event;
-import org.wso2.carbon.eventbridge.core.exceptions.EventProcessingException;
-
-import java.util.List;
+package org.wso2.carbon.eventbridge.core.exceptions;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -21,7 +15,12 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface EventSubscriber {
+public class EventProcessingException extends Exception {
+    public EventProcessingException(String s) {
+        super(s);
+    }
 
-    public void receive(Credentials credentials, List<Event> eventList) throws EventProcessingException;
+    public EventProcessingException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
 }

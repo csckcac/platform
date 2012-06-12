@@ -24,8 +24,6 @@
         <eventSubscriber class=""/>
     </eventSubscriber>
 
-    <secureEventReceiverPort>7711</secureEventReceiverPort>
-    <eventReceiverPort>7611</eventReceiverPort>
     <StreamDefinitionStore>org.wso2.carbon.bam.eventreceiver.datastore.CassandraStreamDefinitionStore</StreamDefinitionStore>
 
     <!--<eventStreamDefinitions>

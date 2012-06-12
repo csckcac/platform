@@ -4,8 +4,12 @@ import org.wso2.carbon.eventbridge.core.beans.Credentials;
 import org.wso2.carbon.eventbridge.core.beans.Event;
 import org.wso2.carbon.eventbridge.core.beans.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.core.exceptions.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.eventbridge.core.exceptions.EventProcessingException;
+import org.wso2.carbon.eventbridge.core.exceptions.StreamDefinitionException;
 import org.wso2.carbon.eventbridge.core.exceptions.StreamDefinitionNotFoundException;
-import org.wso2.carbon.eventbridge.core.state.ReceiverState;
+import org.wso2.carbon.eventbridge.core.internal.Utils;
+import org.wso2.carbon.eventbridge.core.streamdefn.StreamDefinitionStore;
+import org.wso2.carbon.eventbridge.core.subscriber.EventSubscriber;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,34 +29,64 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class Engine implements EventCommunication{
+public class Engine implements EventSubscriber, StreamDefinitionStore, EventBridgeEngine {
     @Override
-    public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String streamName, String streamVersion) throws StreamDefinitionNotFoundException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamName, String streamVersion)
+            throws StreamDefinitionNotFoundException, StreamDefinitionException {
+        synchronized (Engine.class) {
+            return Utils.getStreamDefinitionStore().getStreamDefinition(credentials, streamName, streamVersion);
+        }
     }
 
     @Override
-    public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String streamId) throws StreamDefinitionNotFoundException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamId) throws StreamDefinitionNotFoundException, StreamDefinitionException {
+        synchronized (Engine.class) {
+            return Utils.getStreamDefinitionStore().getStreamDefinition(credentials, streamId);
+        }
     }
 
     @Override
-    public Collection<EventStreamDefinition> getAllStreamDefinitions(ReceiverState state, Credentials credentials) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Collection<EventStreamDefinition> getAllStreamDefinitions(Credentials credentials) throws StreamDefinitionException {
+        synchronized (Engine.class) {
+            return Utils.getStreamDefinitionStore().getAllStreamDefinitions(credentials);
+        }
     }
 
     @Override
-    public String getStreamId(ReceiverState state, Credentials credentials, String streamName, String streamVersion) throws StreamDefinitionNotFoundException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public String getStreamId(Credentials credentials, String streamName, String streamVersion) throws StreamDefinitionNotFoundException, StreamDefinitionException {
+        synchronized (Engine.class) {
+            return Utils.getStreamDefinitionStore().getStreamId(credentials, streamName, streamVersion);
+        }
+    }
+
+
+    @Override
+    public void saveStreamDefinition(Credentials credentials, EventStreamDefinition eventStreamDefinition) throws DifferentStreamDefinitionAlreadyDefinedException, StreamDefinitionException {
+        synchronized (Engine.class) {
+            Utils.getStreamDefinitionStore().saveStreamDefinition(credentials, eventStreamDefinition);
+        }
     }
 
     @Override
-    public void saveStreamDefinition(Credentials credentials, EventStreamDefinition eventStreamDefinition) throws DifferentStreamDefinitionAlreadyDefinedException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void receive(Credentials credentials, List<Event> eventList) throws EventProcessingException {
+        synchronized (Engine.class) {
+            for (EventSubscriber eventSubscriber : Utils.getEventSubscribers()) {
+                eventSubscriber.receive(credentials, eventList);
+            }
+        }
     }
 
     @Override
-    public void receive(Credentials credentials, List<Event> eventList) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void addEventSubscriber(EventSubscriber eventSubscriber) {
+        synchronized (Engine.class) {
+            Utils.addEventSubscriber(eventSubscriber);
+        }
+    }
+
+    @Override
+    public void removeEventSubscriber(EventSubscriber eventSubscriber) {
+        synchronized (Engine.class) {
+            Utils.removeEventSubscriber(eventSubscriber);
+        }
     }
 }

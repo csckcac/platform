@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.wso2.carbon.eventbridge.core.beans.Event;
 import org.wso2.carbon.eventbridge.core.exceptions.MalformedEventException;
-import org.wso2.carbon.eventbridge.core.utils.EventUtils;
+import org.wso2.carbon.eventbridge.core.utils.EventConverterUtils;
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 public class EventConversionTest extends TestCase{
 
     private String properJSON2 = "[\n" +
@@ -79,6 +80,25 @@ public class EventConversionTest extends TestCase{
             "\n" +
             "   ]";
 
+private String emptyStreamIdJSON = "[\n" +
+            "     {\n" +
+            "      \"streamId\" : \"\", \n" +
+            "      \"payloadData\" : [\"val1\", \"val2\"] ,\n" +
+            "      \"metaData\" : [\"val1\", \"val2\", \"val3\"] ,\n" +
+            "      \"correlationData\" : [\"val1\", \"val2\"],\n" +
+            "      \"timeStamp\" : 1312345432\n" +
+            "     }\n" +
+            "    ,\n" +
+            "     {\n" +
+            "      \"streamId\" : \"bar::2.1.0\", \n" +
+            "      \"payloadData\" : [\"val1\", \"val2\"] ,\n" +
+            "      \"metaData\" : [\"val1\", \"val2\", \"val3\"] ,\n" +
+            "      \"correlationData\" : [\"val1\", \"val2\"]\n" +
+            "     }\n" +
+            "\n" +
+            "   ]";
+
+
     private String emptyArrayJSON = "[\n" +
             "     {\n" +
             "      \"streamId\" : \"foo::1.0.0\", \n" +
@@ -100,7 +120,7 @@ public class EventConversionTest extends TestCase{
 
     @Test
     public void testConversion() {
-        List<Event> eventList = EventUtils.convertFromJson(properJSON);
+        List<Event> eventList = EventConverterUtils.convertFromJson(properJSON);
         assertEquals(2, eventList.size());
         Event event = eventList.get(0);
         assertEquals(event.getCorrelationData().length, 1);
@@ -112,23 +132,33 @@ public class EventConversionTest extends TestCase{
     @Test
     public void testNoStreamId() {
         try {
-            EventUtils.convertFromJson(noStreamIdJSON);
+            EventConverterUtils.convertFromJson(noStreamIdJSON);
         } catch (MalformedEventException e) {
             return;
         }
-        fail("Stream Id being null or empty should throw exception");
+        fail("Stream Id being null should throw exception");
+    }
+
+    @Test
+    public void testEmptyStreamId() {
+        try {
+            EventConverterUtils.convertFromJson(emptyStreamIdJSON);
+        } catch (MalformedEventException e) {
+            return;
+        }
+        fail("Stream Id being empty should throw exception");
     }
 
     @Test
     public void testEmptyEventArray() {
-        List<Event> eventList = EventUtils.convertFromJson(emptyArrayJSON);
+        List<Event> eventList = EventConverterUtils.convertFromJson(emptyArrayJSON);
         Event event = eventList.get(0);
         assertEquals(event.getPayloadData().length, 0);
     }
 
     @Test
-    public void testNoStreamIdConversion() {
-        List<Event> eventList = EventUtils.convertFromJson(properJSON, "foo", "1.0.0");
+    public void testRESTEventConversion() {
+        List<Event> eventList = EventConverterUtils.convertFromJson(properJSON2, "foo", "1.0.0");
         assertEquals(2, eventList.size());
         Event event = eventList.get(0);
         assertEquals(event.getCorrelationData().length, 1);
@@ -136,6 +166,49 @@ public class EventConversionTest extends TestCase{
         assertEquals(event.getMetaData().length, 3);
 
     }
+
+    @Test
+    public void testNullRESTEvents() {
+        try {
+            EventConverterUtils.convertFromJson(properJSON2, null, "1.0.0");
+        } catch (MalformedEventException e) {
+            return;
+        }
+        fail("Stream Id being null should throw exception");
+
+    }
+
+    @Test
+    public void testNullRESTEvents2() {
+        try {
+            EventConverterUtils.convertFromJson(properJSON2, "foo", null);
+        } catch (MalformedEventException e) {
+            return;
+        }
+        fail("Stream Id being null should throw exception");
+    }
+
+    @Test
+    public void testEmptyRESTEvents() {
+        try {
+            EventConverterUtils.convertFromJson(properJSON2, "", "1.0.0");
+        } catch (MalformedEventException e) {
+            return;
+        }
+        fail("Stream Id being empty should throw exception");
+    }
+
+    @Test
+    public void testEmptyRESTEvents2() {
+        try {
+            EventConverterUtils.convertFromJson(properJSON2, "foo", "");
+        } catch (MalformedEventException e) {
+            return;
+        }
+        fail("Stream Id being empty should throw exception");
+    }
+
+
 
 
 }

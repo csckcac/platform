@@ -1,9 +1,8 @@
-package org.wso2.carbon.eventbridge.restapi;
+package org.wso2.carbon.eventbridge.restapi.jaxrs;
 
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.apache.cxf.jaxrs.utils.ResourceUtils;
-import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIApp;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

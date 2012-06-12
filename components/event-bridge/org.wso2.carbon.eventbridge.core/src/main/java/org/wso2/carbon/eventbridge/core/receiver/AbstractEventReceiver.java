@@ -4,10 +4,13 @@ import org.wso2.carbon.eventbridge.core.beans.Credentials;
 import org.wso2.carbon.eventbridge.core.beans.Event;
 import org.wso2.carbon.eventbridge.core.beans.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.core.engine.Engine;
-import org.wso2.carbon.eventbridge.core.engine.EventCommunication;
+import org.wso2.carbon.eventbridge.core.subscriber.EventSubscriber;
 import org.wso2.carbon.eventbridge.core.exceptions.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.eventbridge.core.exceptions.EventProcessingException;
+import org.wso2.carbon.eventbridge.core.exceptions.StreamDefinitionException;
 import org.wso2.carbon.eventbridge.core.exceptions.StreamDefinitionNotFoundException;
-import org.wso2.carbon.eventbridge.core.state.ReceiverState;
+import org.wso2.carbon.eventbridge.core.streamdefn.StreamDefinitionStore;
+import org.wso2.carbon.eventbridge.core.utils.EventBridgeUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,26 +30,23 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public abstract class AbstractEventReceiver implements EventCommunication {
+public abstract class AbstractEventReceiver implements EventSubscriber, StreamDefinitionStore {
 
 
-    // implement get
-    private String constructNameVersionKey(String name, String version) {
-        return name + "::" + version;
-    }
-
-    public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException {
-        String streamId = getEngine().getStreamId(state, credentials, streamName, streamVersion);
+    @Override
+    public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamName, String streamVersion)
+            throws StreamDefinitionNotFoundException, StreamDefinitionException {
+        String streamId = getEngine().getStreamId(credentials, streamName, streamVersion);
         if (streamId == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist for " + credentials.getUsername() + " for " + constructNameVersionKey(streamName, streamVersion));
+            throw new StreamDefinitionNotFoundException("No definitions exist for " + credentials.getUsername()
+                    + " for " + EventBridgeUtils.constructStreamKey(streamName, streamVersion));
         }
-        return getEngine().getStreamDefinition(state, credentials, streamId);
+        return getEngine().getStreamDefinition( credentials, streamId);
     }
 
     @Override
-    public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String streamId) throws StreamDefinitionNotFoundException {
-        EventStreamDefinition eventStreamDefinition = getEngine().getStreamDefinition(state, credentials, streamId);
+    public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamId) throws StreamDefinitionNotFoundException, StreamDefinitionException {
+        EventStreamDefinition eventStreamDefinition = getEngine().getStreamDefinition(credentials, streamId);
         if (eventStreamDefinition == null) {
             throw new StreamDefinitionNotFoundException("No definitions exist on " + credentials.getUsername() + " for " + streamId);
         }
@@ -54,13 +54,13 @@ public abstract class AbstractEventReceiver implements EventCommunication {
     }
 
     @Override
-    public Collection<EventStreamDefinition> getAllStreamDefinitions(ReceiverState state, Credentials credentials) {
-        return getEngine().getAllStreamDefinitions(state, credentials);
+    public Collection<EventStreamDefinition> getAllStreamDefinitions(Credentials credentials) throws StreamDefinitionException {
+        return getEngine().getAllStreamDefinitions(credentials);
     }
 
     @Override
-    public String getStreamId(ReceiverState state, Credentials credentials, String streamName, String streamVersion) throws StreamDefinitionNotFoundException {
-        String streamId = getEngine().getStreamId(state, credentials, streamName, streamVersion);
+    public String getStreamId(Credentials credentials, String streamName, String streamVersion) throws StreamDefinitionNotFoundException, StreamDefinitionException {
+        String streamId = getEngine().getStreamId(credentials, streamName, streamVersion);
         if (streamId == null) {
             throw new StreamDefinitionNotFoundException("No stream id found for " + streamId + " " + streamVersion);
         }
@@ -68,12 +68,12 @@ public abstract class AbstractEventReceiver implements EventCommunication {
     }
 
     @Override
-    public void saveStreamDefinition(Credentials credentials, EventStreamDefinition eventStreamDefinition) throws DifferentStreamDefinitionAlreadyDefinedException {
+    public void saveStreamDefinition(Credentials credentials, EventStreamDefinition eventStreamDefinition) throws DifferentStreamDefinitionAlreadyDefinedException, StreamDefinitionException {
         getEngine().saveStreamDefinition(credentials, eventStreamDefinition);
     }
 
     @Override
-    public void receive(Credentials credentials, List<Event> eventList) {
+    public void receive(Credentials credentials, List<Event> eventList) throws EventProcessingException {
         getEngine().receive(credentials, eventList);
     }
 

@@ -25,7 +25,7 @@ import org.wso2.carbon.eventbridge.core.beans.Attribute;
 import org.wso2.carbon.eventbridge.core.beans.AttributeType;
 import org.wso2.carbon.eventbridge.core.beans.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.core.exceptions.MalformedStreamDefinitionException;
-import org.wso2.carbon.eventbridge.core.utils.EventStreamConverterUtils;
+import org.wso2.carbon.eventbridge.core.utils.StreamDefnConverterUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public class DefinitionConversionTest {
                             "}";
 
 
-        EventStreamDefinition eventStreamDefinition1 = EventStreamConverterUtils.convertFromJson(definition);
+        EventStreamDefinition eventStreamDefinition1 = StreamDefnConverterUtils.convertFromJson(definition);
         Assert.assertTrue(null != eventStreamDefinition1.getStreamId());
 //        System.out.println(gson.toJson(eventStreamDefinition1));
 
@@ -102,7 +102,7 @@ public class DefinitionConversionTest {
                             "}";
 
 
-        EventStreamDefinition eventStreamDefinition1 = EventStreamConverterUtils.convertFromJson(definition);
+        EventStreamDefinition eventStreamDefinition1 = StreamDefnConverterUtils.convertFromJson(definition);
         Assert.assertTrue(null != eventStreamDefinition1.getStreamId());
 //        System.out.println(gson.toJson(eventStreamDefinition1));
 

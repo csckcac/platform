@@ -59,6 +59,7 @@ public class GRegLifeCyclePromoteTest {
         selenium.waitForPageToLoad("30000");
         assertTrue(selenium.isTextPresent("WSO2 Governance Registry Home"));
         deleteFromServiceList(SERVICE_NAME);//delete wsdl and services if exists
+        Thread.sleep(5000);
         deleteFromWsdlList(SERVICE_NAME);
     }
 
@@ -214,26 +215,29 @@ public class GRegLifeCyclePromoteTest {
     private void deleteFromServiceList(String serviceName) throws InterruptedException {
         driver.findElement(By.linkText("Services")).click();
         List<WebElement> serviceList;
-        serviceList = driver.findElement(By.id("customTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
-        int count = 0;
-        for (WebElement service : serviceList) {
-            count++;
-            if (service.findElement(By.tagName("td")).getText().contains(serviceName)) {
-                driver.findElement(By.xpath("//tr[" + count + "]/td[5]/a")).click();
-                driver.findElement(By.xpath("//button")).click();
-                break;
+        if (!driver.findElement(By.id("customTable")).findElement(By.tagName("tr")).
+                findElement(By.tagName("th")).getText().contains("no Services added")) {
+            serviceList = driver.findElement(By.id("customTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+            int count = 0;
+            for (WebElement service : serviceList) {
+                count++;
+                if (service.findElement(By.tagName("td")).getText().contains(serviceName)) {
+                    driver.findElement(By.xpath("//tr[" + count + "]/td[5]/a")).click();
+                    driver.findElement(By.xpath("//button")).click();
+                    break;
+                }
             }
         }
     }
 
-    private void selectService(String serviceName){
+    private void selectService(String serviceName) {
         List<WebElement> serviceList;
         serviceList = driver.findElement(By.id("customTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
         int count = 0;
         for (WebElement service : serviceList) {
             count++;
             if (service.findElement(By.tagName("td")).getText().contains(serviceName)) {
-                driver.findElement(By.xpath("//tr[" + count + "]/td[2]/a")).click();
+                driver.findElement(By.xpath("//form[2]/table/tbody/tr[" + count + "]/td[2]/a")).click();
                 break;
             }
         }
@@ -244,14 +248,17 @@ public class GRegLifeCyclePromoteTest {
         driver.findElement(By.linkText("WSDLs")).click();
         selenium.waitForPageToLoad("30000");
         List<WebElement> wsdlList;
-        wsdlList = driver.findElement(By.id("customTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
-        int count = 0;
-        for (WebElement service : wsdlList) {
-            count++;
-            if (service.findElement(By.tagName("td")).getText().contains(wsdlName)) {
-                driver.findElement(By.xpath("//tr[" + count + "]/td[4]/a")).click();
-                driver.findElement(By.xpath("//button")).click();
-                break;
+        if (!driver.findElement(By.id("customTable")).findElement(By.tagName("tr")).
+                findElement(By.tagName("th")).getText().contains("no WSDLs added")) {
+            wsdlList = driver.findElement(By.id("customTable")).findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+            int count = 0;
+            for (WebElement service : wsdlList) {
+                count++;
+                if (service.findElement(By.tagName("td")).getText().contains(wsdlName)) {
+                    driver.findElement(By.xpath("//tr[" + count + "]/td[4]/a")).click();
+                    driver.findElement(By.xpath("//button")).click();
+                    break;
+                }
             }
         }
     }

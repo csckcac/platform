@@ -201,7 +201,7 @@
                                 </bundleDef>
                                 <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.login.ui</bundleDef>
                                 <bundleDef> org.wso2.carbon:org.wso2.carbon.appfactory.userstore</bundleDef>
-                                <bundleDef>org.wso2.carbon.appfactory.config.reader.xpath.ext</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.appfactory.config.reader.xpath.ext</bundleDef>
                             </bundles>
                             <importBundles>
                             </importBundles>

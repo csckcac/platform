@@ -94,8 +94,8 @@ public class PublisherUtils {
             throw new UsageException("Failed to get tenant domain", e);
         }
 
-        if (tenantDomain != null) {
-
+        if ((tenantDomain != null) &&
+                !(tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME))) {
             serverName = baseServerUrl + context + "t/" + tenantDomain;
 
         } else if (context.equals("/")) {

@@ -4,60 +4,87 @@
     var i, j, app, api, apis, key, lenI, clazz, lenJ, path, apps = outputs.applications, lenI = apps.length;
     for(i = 0; i < lenI; i++) {
         app = apps[i];
+        var str_i = String(i).replace('.','_');
     %>
-    <div class="subscription-list">
-        <div class="accordion-group">
-            <div class="accordion-heading">
-              <table cellspacing="0" cellpadding="0" style="margin:0" class="table">
-               <tr><td>
-               <a><%=app.name%></a></td>
-               <% if(app.prodKey==null && app.sandboxKey==null) { %>
-               <td>
-               <a class="app-key-generate-button small green" id="app-key-generate-button"
-                                        data-application="<%=app.name%>"
-                                        data-keytype="PRODUCTION">
-                                        Generate Production Key</a>
-               </td><td>
-               <a class="app-key-generate-button small green" id="app-key-generate-button"
-                                        data-application="<%=app.name%>"
-                                        data-keytype="SANDBOX">
-                                        Generate Sandbox Key</a>
-               </td>
-               <% }else if(app.prodKey!=null && app.sandboxKey==null) { %>
-                          <td>
-                           Production Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
-                           <div class="keyField" style="display:none;font-weight:bold"><%=app.prodKey%></div>
-                           </td><td><a class="app-key-generate-button small green" id="app-key-generate-button"
-                                        data-application="<%=app.name%>"
-                                        data-keytype="SANDBOX">
-                                        Generate Sandbox Key</a></td>
 
-               <% }else if(app.prodKey==null&&app.sandboxKey!=null) { %>
-               <td> <a class="app-key-generate-button small green" id="app-key-generate-button"
-                                        data-application="<%=app.name%>"
-                                        data-keytype="PRODUCTION">
-                                        Generate Production Key</a></td>
-               <td>
-                           Sandbox Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
-                           <div class="keyField" style="display:none;font-weight:bold"><%=app.sandboxKey%></div>
-                </td>
-                <%}else{%>
-                 <td>
-                           Production Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
-                           <div class="keyField" style="display:none;font-weight:bold"><%=app.prodKey%></div>
-                           </td>
-                <td>
-                           Sandbox Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
-                           <div class="keyField" style="display:none;font-weight:bold"><%=app.sandboxKey%></div>
-                </td>
-                <%}%>
-                </tr> </table>
+    <div class="data-title">
+        <div class="row-fluid">
+            <div class="span7">
+                <a data-toggle="collapse" data-target="#appDetails<%=str_i%>%>" class="data-title-heading">
+                    <%=app.name%>
+                </a>
             </div>
 
-            <div class="accordion-body">
-            <div class="accordion-inner">
-            <table cellspacing="0" cellpadding="0" style="margin:0" class="table">
-                <tbody>
+
+
+        <div class="span5">
+        <% if(app.prodKey==null && app.sandboxKey==null) { %>
+             <div class="key-gen-section">
+                 <a class="app-key-generate-button small green" id="app-key-generate-button"
+                    data-application="<%=app.name%>"
+                    data-keytype="PRODUCTION">
+                     Generate Production Key</a>
+
+             </div>
+             <div class="key-gen-section">
+                 <a class="app-key-generate-button small green" id="app-key-generate-button"
+                    data-application="<%=app.name%>"
+                    data-keytype="SANDBOX">
+                     Generate Sandbox Key</a>
+             </div>
+               <% }else if(app.prodKey!=null && app.sandboxKey==null) { %>
+
+
+             <div class="key-gen-section">
+                 Production Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show
+                 Key</a>
+
+                 <div class="keyField" style="display:none;font-weight:bold">
+                     <%=app.prodKey%>
+                 </div>
+             </div>
+
+             <div class="key-gen-section">
+                 <a class="app-key-generate-button small green" id="app-key-generate-button"
+                    data-application="<%=app.name%>"
+                    data-keytype="SANDBOX">
+                     Generate Sandbox Key</a>
+             </div>
+
+             <% }else if(app.prodKey==null&&app.sandboxKey!=null) { %>
+                <div class="key-gen-section">
+                       <a class="app-key-generate-button small green" id="app-key-generate-button"
+                                                data-application="<%=app.name%>"
+                                                data-keytype="PRODUCTION">
+                                                Generate Production Key</a>
+                </div>
+                <div class="key-gen-section">
+
+                           Sandbox Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
+                           <div class="keyField" style="display:none;font-weight:bold"><%=app.sandboxKey%></div>
+
+                 </div>
+
+                <%}else{%>
+
+                <div class="key-gen-section">
+                           Production Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
+                           <div class="keyField" style="display:none;font-weight:bold"><%=app.prodKey%></div>
+                </div>
+                <div class="key-gen-section">
+
+                           Sandbox Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
+                           <div class="keyField" style="display:none;font-weight:bold"><%=app.sandboxKey%></div>
+
+                 </div>
+
+                <%}%>
+            </div><!-- span -->
+        </div>
+    </div>
+
+    <div  class="data-content">
+                    <div class="row-fluid collapse in" id="appDetails<%=str_i%>">
                     <%
                     apis = app.subscriptions;
                     lenJ = apis.length;
@@ -69,61 +96,66 @@
 
                     %>
 
-                    <tr class="application-api <%=clazz%>">
-                        <td class="application-thumb">
+                    <div class="span3 application-thumb">
                              <a href="<%=path%>"><img alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/<%=jagg.getUserTheme()%>/images/api-default.png<% }%>"/></a>
-                        </td>
-                        <td>
+                        </div>
+                        <div class="span4">
                             <a href="<%=path%>" class="service-name"><%=api.name%>-<%=api.version%></a>
                             <div class="item-provider"><%=api.provider%></div>
-                        </td>
-                        <td class="api-key-cell">
-                        <div class="api-key-listing">
-                                <% if(prodKey) { %>
-                                <div class="api-key <% if(apis[j].hasMultipleEndpoints != "true"){ %>overrideSize<% } %>">
-                                Production Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
-                                    <div class="keyField" style="display:none;font-weight:bold"><%=prodKey%></div>
-                                </div>
-                                <% } else { %>
-                                <div class="api-key <% if(apis[j].hasMultipleEndpoints != "true"){ %>overrideSize<% } %>">
-                                    <a class="key-generate-button small green"
-                                        data-name="<%=api.name%>"
-                                        data-version="<%=api.version%>"
-                                        data-provider="<%=api.provider%>"
-                                        data-context="<%=api.context%>"
-                                        data-application="<%=app.name%>"
-                                        data-keytype="PRODUCTION"><span class="icon black small" data-icon="O"></span> Generate Production Key</a>
-                                </div>
-                                <% } %>
-                                <% if(apis[j].sandboxKey) { %>
-                                <div class="api-key-sandbox">
-                                     Sandbox Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
-                                    <div class="keyField" style="display:none;font-weight:bold"><%=apis[j].sandboxKey%></div>
-                                </div>
-                                <% } else { %>
-                                    <% if(apis[j].hasMultipleEndpoints == "true"){ %>
-                                    <div class="api-key-sandbox">
-                                    <a class="key-generate-button small green"
+                        </div>
+                        <div class="span5">
+                            <div class="api-key-listing">
+                                    <% if(prodKey) { %>
+                                    <div class="api-key <% if(apis[j].hasMultipleEndpoints != "true"){ %>overrideSize<% } %>">
+                                    Production Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
+                                        <div class="keyField" style="display:none;font-weight:bold"><%=prodKey%></div>
+                                    </div>
+                                    <% } else { %>
+                                    <div class="api-key <% if(apis[j].hasMultipleEndpoints != "true"){ %>overrideSize<% } %>">
+                                        <a class="key-generate-button small green"
                                             data-name="<%=api.name%>"
                                             data-version="<%=api.version%>"
                                             data-provider="<%=api.provider%>"
                                             data-context="<%=api.context%>"
                                             data-application="<%=app.name%>"
-                                            data-keytype="SANDBOX"><span class="icon black small" data-icon="O"></span> Generate Sandbox Key</a>
+                                            data-keytype="PRODUCTION"><span class="icon black small" data-icon="O"></span> Generate Production Key</a>
                                     </div>
                                     <% } %>
-                                <% } %>
+                                    <% if(apis[j].sandboxKey) { %>
+                                    <div class="api-key-sandbox">
+                                         Sandbox Key: <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
+                                        <div class="keyField" style="display:none;font-weight:bold"><%=apis[j].sandboxKey%></div>
+                                    </div>
+                                    <% } else { %>
+                                        <% if(apis[j].hasMultipleEndpoints == "true"){ %>
+                                        <div class="api-key-sandbox">
+                                        <a class="key-generate-button small green"
+                                                data-name="<%=api.name%>"
+                                                data-version="<%=api.version%>"
+                                                data-provider="<%=api.provider%>"
+                                                data-context="<%=api.context%>"
+                                                data-application="<%=app.name%>"
+                                                data-keytype="SANDBOX"><span class="icon black small" data-icon="O"></span> Generate Sandbox Key</a>
+                                        </div>
+                                        <% } %>
+                                    <% } %>
+                                </div>
                             </div>
-                        </div>
-                        </td>
-                    </tr>
+                        </div><!-- End span3 -->
                     <% } %>
-                </tbody>
-                </table>
-                </div>
-            </div>
-        </div>
+
     </div>
+
+
+
+
+
+
+
+
+
+
+
     <% } %>
     <% if(lenI==0){ %>
         <div class="alert alert-info">

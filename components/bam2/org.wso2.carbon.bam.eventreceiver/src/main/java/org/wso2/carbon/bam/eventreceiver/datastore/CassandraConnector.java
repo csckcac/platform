@@ -16,8 +16,20 @@
 
 package org.wso2.carbon.bam.eventreceiver.datastore;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import me.prettyprint.cassandra.model.IndexedSlicesQuery;
-import me.prettyprint.cassandra.serializers.*;
+import me.prettyprint.cassandra.serializers.BooleanSerializer;
+import me.prettyprint.cassandra.serializers.DoubleSerializer;
+import me.prettyprint.cassandra.serializers.FloatSerializer;
+import me.prettyprint.cassandra.serializers.IntegerSerializer;
+import me.prettyprint.cassandra.serializers.LongSerializer;
+import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
@@ -30,6 +42,7 @@ import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.ColumnQuery;
 import me.prettyprint.hector.api.query.QueryResult;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.commons.Attribute;
@@ -37,9 +50,7 @@ import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.server.internal.utils.EventConverter;
-
-import java.util.*;
+import org.wso2.carbon.agent.server.EventConverter;
 
 /**
  * Cassandra backend connector  and related operations

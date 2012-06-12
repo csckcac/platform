@@ -73,27 +73,27 @@ text to that will contain the original URL in an iframe.
 <pre style="text-indent: 1.93cm">Buildfile: build.xml
 
 clean:
-   [delete] Deleting directory /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/temp
-   [delete] Deleting directory /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/services
+   [delete] Deleting directory /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/temp
+   [delete] Deleting directory /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/services
 
 init:
-    [mkdir] Created dir: /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl/META-INF
-    [mkdir] Created dir: /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/temp/classes
-    [mkdir] Created dir: /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/services
-    [mkdir] Created dir: /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl/www/extensions/core
+    [mkdir] Created dir: /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl/META-INF
+    [mkdir] Created dir: /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/temp/classes
+    [mkdir] Created dir: /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/services
+    [mkdir] Created dir: /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl/www/extensions/core
 
 compile-all:
-    [javac] Compiling 4 source files to /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl
+    [javac] Compiling 4 source files to /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl
 
 build-service:
-     [copy] Copying 1 file to /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl/META-INF
-     [copy] Copying 2 files to /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl/www/extensions/core
-     [copy] Copying 1 file to /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl/www
-      [jar] Building jar: /home/user/wso2appserver-5.0-SNAPSHOT/samples/TinyURL/services/TinyURL.aar
+     [copy] Copying 1 file to /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl/META-INF
+     [copy] Copying 2 files to /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl/www/extensions/core
+     [copy] Copying 1 file to /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/temp/TinyUrl/www
+      [jar] Building jar: /home/user/wso2appserver-5.0.0-SNAPSHOT/samples/TinyURL/services/TinyURL.aar
 
 build-all:
      [echo] Copying the created aar files in to the repository
-     [copy] Copying 1 file to /home/user/wso2appserver-5.0-SNAPSHOT/repository/deployment/server/axis2services
+     [copy] Copying 1 file to /home/user/wso2appserver-5.0.0-SNAPSHOT/repository/deployment/server/axis2services
 
 BUILD SUCCESSFUL
 Total time: 2 seconds

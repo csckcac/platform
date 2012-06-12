@@ -37,8 +37,8 @@ href="release_notes.html">Release Note</a>]</p>
         to manage its source code. Instructions on Subversion use can be found at
         <a href="http://svnbook.red-bean.com/">http://svnbook.red-bean.com/</a>.</p>
 
-    <h2>Source code of the AppServer 5.0-SNAPSHOT release</h2>
-    <p>The following is a link to the online source tag of the WSO2 AppServer 5.0-SNAPSHOT release (Carbon 4.0.0-SNAPSHOT).</p>
+    <h2>Source code of the AppServer 5.0.0-SNAPSHOT release</h2>
+    <p>The following is a link to the online source tag of the WSO2 AppServer 5.0.0-SNAPSHOT release (Carbon 4.0.0-SNAPSHOT).</p>
 
     <p><a href="http://svn.wso2.org/repos/wso2/tags/carbon/3.2.0/">
         http://svn.wso2.org/repos/wso2/tags/carbon/3.2.0/</a></p>

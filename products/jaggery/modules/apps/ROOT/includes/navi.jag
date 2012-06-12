@@ -1,54 +1,54 @@
 <h5>Basic Syntax</h5>
     <ul>
-        <li id="html"><a href="/apidocs/html.jag">&lt;% %&gt;</a></li>
-        <li id ="html2"> <a href="/apidocs/html2.jag">&lt;%= %&gt;</a></li>
-        <li id="require"><a href="/apidocs/require.jag">require()</a></li>
-        <!--li id="code4"> <a href="/apidocs/j.jag">$j</a> </li-->
+        <li id="html"><a href="<%=context%>/apidocs/html.jag">&lt;% %&gt;</a></li>
+        <li id ="html2"> <a href="<%=context%>/apidocs/html2.jag">&lt;%= %&gt;</a></li>
+        <li id="require"><a href="<%=context%>/apidocs/require.jag">require()</a></li>
+        <!--li id="code4"> <a href="<%=context%>/apidocs/j.jag">$j</a> </li-->
     </ul>
 
     <h5>Built-ins</h5>
     <h6>Output</h6>
     <ul>
         <li id="print">
-            <a href="/apidocs/print.jag">print()</a>
+            <a href="<%=context%>/apidocs/print.jag">print()</a>
         </li>
         <li id="log">
-            <a href="/apidocs/log.jag">Log</a>
+            <a href="<%=context%>/apidocs/log.jag">Log</a>
         </li>
     </ul>
 
     <h6>Variables</h6>
     <ul>
         <li id="req">
-            <a href="/apidocs/request.jag">request</a>
+            <a href="<%=context%>/apidocs/request.jag">request</a>
         </li>
         <li id="res">
-            <a href="/apidocs/response.jag">response</a>
+            <a href="<%=context%>/apidocs/response.jag">response</a>
         </li>
         <li id="ses">
-            <a href="/apidocs/session.jag">session</a>
+            <a href="<%=context%>/apidocs/session.jag">session</a>
         </li>
         <li id="app">
-            <a href="/apidocs/application.jag">application</a>
+            <a href="<%=context%>/apidocs/application.jag">application</a>
         </li>
     </ul>
 
     <h6>Http Client</h6>
     <ul>
         <li id="get">
-            <a href="/apidocs/get.jag">get()</a>
+            <a href="<%=context%>/apidocs/get.jag">get()</a>
         </li>
         <li id="post">
-            <a href="/apidocs/post.jag">post()</a>
+            <a href="<%=context%>/apidocs/post.jag">post()</a>
         </li>
         <li id="put">
-            <a href="/apidocs/put.jag">put()</a>
+            <a href="<%=context%>/apidocs/put.jag">put()</a>
         </li>
         <li id="del">
-            <a href="/apidocs/del.jag">del()</a>
+            <a href="<%=context%>/apidocs/del.jag">del()</a>
         </li>
         <li id="xhr">
-            <a href="/apidocs/xhr.jag">XMLHTTPRequest</a>
+            <a href="<%=context%>/apidocs/xhr.jag">XMLHTTPRequest</a>
         </li>
 
     </ul>
@@ -56,37 +56,37 @@
     <h6>Utils</h6>
     <ul>
         <li id="urimatcher">
-            <a href="/apidocs/urimatcher.jag">URIMatcher</a>
+            <a href="<%=context%>/apidocs/urimatcher.jag">URIMatcher</a>
         </li>
         <li id="include">
-            <a href="/apidocs/include.jag">include()</a>
+            <a href="<%=context%>/apidocs/include.jag">include()</a>
         </li>
     </ul>
 
     <h6>Feed</h6>
         <ul>
             <li id="feed">
-                <a href="/apidocs/feed.jag">Feed</a>
+                <a href="<%=context%>/apidocs/feed.jag">Feed</a>
             </li>
             <li id="entry">
-                <a href="/apidocs/entry.jag">Entry</a>
+                <a href="<%=context%>/apidocs/entry.jag">Entry</a>
             </li>           
         </ul>
 
     <h6>File System</h6>
     <ul>
         <li id="file">
-            <a href="/apidocs/file.jag">File</a>
+            <a href="<%=context%>/apidocs/file.jag">File</a>
         </li>
     </ul>
 
     <h6>Data Storage</h6>
     <ul>
         <li id="rdb">
-            <a href="/apidocs/rdb.jag">Database</a>
+            <a href="<%=context%>/apidocs/rdb.jag">Database</a>
         </li>
         <li id="reg">
-            <a href="/apidocs/metadatastore.jag">MetadataStore</a>
+            <a href="<%=context%>/apidocs/metadatastore.jag">MetadataStore</a>
         </li>
     </ul>
 
@@ -96,17 +96,17 @@
 
     <ul>
         <li id="parse">
-            <a href="/apidocs/parse.jag">parse()</a>
+            <a href="<%=context%>/apidocs/parse.jag">parse()</a>
         </li>
         <li id="stringify">
-            <a href="/apidocs/stringify.jag">stringify()</a>
+            <a href="<%=context%>/apidocs/stringify.jag">stringify()</a>
         </li>
     </ul>
 
     <span class="sub">XML</span>
     <ul>
         <li id="xml">
-            <a href="/apidocs/xml.jag">XML</a>
+            <a href="<%=context%>/apidocs/xml.jag">XML</a>
         </li>
     </ul>
 
@@ -115,22 +115,22 @@
     <h6>Email</h6>
     <ul>
         <li id="email">
-            <a href="/apidocs/sender.jag">Sender</a>
+            <a href="<%=context%>/apidocs/sender.jag">Sender</a>
         </li>
     </ul>
 
     <h6>Web Services</h6>
     <ul>
         <li id="ws">
-            <a href="/apidocs/ws.jag">WSRequest</a>
+            <a href="<%=context%>/apidocs/ws.jag">WSRequest</a>
         </li>
         <li id="wsstub">
-            <a href="/apidocs/wsstub.jag">WSStub</a>
+            <a href="<%=context%>/apidocs/wsstub.jag">WSStub</a>
         </li>
     </ul>
     <h5>Configuration File</h5>
         <ul>
-            <li id="conf"><a href="/apidocs/jagconf.jag">jaggery.conf</a></li>
+            <li id="conf"><a href="<%=context%>/apidocs/jagconf.jag">jaggery.conf</a></li>
         </ul>
 
 

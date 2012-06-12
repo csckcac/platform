@@ -21,11 +21,11 @@ import com.google.gson.Gson;
 import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.wso2.carbon.agent.commons.Attribute;
-import org.wso2.carbon.agent.commons.AttributeType;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.server.internal.utils.EventConverter;
+import org.wso2.carbon.eventbridge.core.beans.Attribute;
+import org.wso2.carbon.eventbridge.core.beans.AttributeType;
+import org.wso2.carbon.eventbridge.core.beans.EventStreamDefinition;
+import org.wso2.carbon.eventbridge.core.exceptions.MalformedStreamDefinitionException;
+import org.wso2.carbon.eventbridge.core.utils.EventStreamConverterUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public class DefinitionConversionTest {
                             "}";
 
 
-        EventStreamDefinition eventStreamDefinition1 = EventConverter.convertFromJson(definition);
+        EventStreamDefinition eventStreamDefinition1 = EventStreamConverterUtils.convertFromJson(definition);
         Assert.assertTrue(null != eventStreamDefinition1.getStreamId());
 //        System.out.println(gson.toJson(eventStreamDefinition1));
 
@@ -102,7 +102,7 @@ public class DefinitionConversionTest {
                             "}";
 
 
-        EventStreamDefinition eventStreamDefinition1 = EventConverter.convertFromJson(definition);
+        EventStreamDefinition eventStreamDefinition1 = EventStreamConverterUtils.convertFromJson(definition);
         Assert.assertTrue(null != eventStreamDefinition1.getStreamId());
 //        System.out.println(gson.toJson(eventStreamDefinition1));
 

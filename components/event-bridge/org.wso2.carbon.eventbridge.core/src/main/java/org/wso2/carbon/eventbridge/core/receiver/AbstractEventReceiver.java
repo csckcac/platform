@@ -39,7 +39,7 @@ public abstract class AbstractEventReceiver implements EventCommunication {
             throws StreamDefinitionNotFoundException {
         String streamId = getEngine().getStreamId(state, credentials, streamName, streamVersion);
         if (streamId == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist on " + credentials.getDomainName() + " for " + constructNameVersionKey(streamName, streamVersion));
+            throw new StreamDefinitionNotFoundException("No definitions exist for " + credentials.getUsername() + " for " + constructNameVersionKey(streamName, streamVersion));
         }
         return getEngine().getStreamDefinition(state, credentials, streamId);
     }
@@ -48,7 +48,7 @@ public abstract class AbstractEventReceiver implements EventCommunication {
     public EventStreamDefinition getStreamDefinition(ReceiverState state, Credentials credentials, String streamId) throws StreamDefinitionNotFoundException {
         EventStreamDefinition eventStreamDefinition = getEngine().getStreamDefinition(state, credentials, streamId);
         if (eventStreamDefinition == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist on " + credentials.getDomainName() + " for " + streamId);
+            throw new StreamDefinitionNotFoundException("No definitions exist on " + credentials.getUsername() + " for " + streamId);
         }
         return eventStreamDefinition;
     }

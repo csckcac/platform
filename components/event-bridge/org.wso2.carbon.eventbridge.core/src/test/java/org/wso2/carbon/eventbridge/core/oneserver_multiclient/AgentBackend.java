@@ -17,101 +17,87 @@
 */
 package org.wso2.carbon.eventbridge.core.oneserver_multiclient;
 
-import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.server.AgentCallback;
-import org.wso2.carbon.eventbridge.core.KeyStoreUtil;
-import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
-import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
-import org.wso2.carbon.agent.server.exception.AgentServerException;
-import org.wso2.carbon.agent.server.internal.AbstractAgentServer;
-import org.wso2.carbon.agent.server.internal.ThriftAgentServer;
-import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
-
-import java.util.List;
-
-
 /**
  * Server of multiple client single server test
  */
 public class AgentBackend {
-    AbstractAgentServer agentServer;
-    static int NO_OF_EVENTS = 100000;
-    static int STABLE = 1000000;
-    int offset = 0;
-
-    public static void main(String[] args)
-            throws AgentServerException, InterruptedException {
-
-        if (0 != args.length && args[0] != null) {
-            NO_OF_EVENTS = Integer.parseInt(args[0]);
-        }
-
-        System.out.println("Event no=" + NO_OF_EVENTS);
-
-        KeyStoreUtil.setKeyStoreParams();
-
-        AgentBackend server = new AgentBackend(0);
-        server.start();
-    }
-
-    public AgentBackend(int offset) {
-        this.offset = offset;
-    }
-
-    public void start() throws AgentServerException, InterruptedException {
-
-        AgentServerConfiguration agentServerConfiguration = generateServerConf(offset);
-        agentServer = new ThriftAgentServer(agentServerConfiguration, new AuthenticationHandler() {
-            @Override
-            public boolean authenticate(String userName, String password) {
-                return true;// allays authenticate to true
-            }
-        }, new InMemoryStreamDefinitionStore());
-        agentServer.subscribe(assignAgentCallback());
-        agentServer.start("localhost");
-
-    }
-
-    private AgentCallback assignAgentCallback() {
-
-        return new AgentCallback() {
-            long startTime = -1;
-            int size = 0;
-            private EventStreamDefinition eventStreamDefinition;
-
-            public void definedEventStream(EventStreamDefinition eventStreamDefinition,
-                                           String userName, String password, String domainName) {
-                this.eventStreamDefinition = eventStreamDefinition;//not used here
-            }
-
-            @Override
-            public void receive(List<Event> eventList, String userName, String password,
-                                String domainName) {
-                addCount(eventList);
-                if (size <= STABLE && size > STABLE - 200) {
-                    startTime = System.currentTimeMillis();
-                }
-                if (NO_OF_EVENTS <= (size - STABLE)) {
-                    if (startTime != -1) {
-                        System.out.println("Total time in ms=" + (System.currentTimeMillis() - startTime));
-                    } else {
-                        System.out.println("Start time not set ");
-                    }
-                }
-            }
-
-            private synchronized void addCount(List<Event> eventList) {
-                size += eventList.size();
-            }
-        };
-    }
-
-    private AgentServerConfiguration generateServerConf(int offset) {
-        return new AgentServerConfiguration(7711 + offset, 7611 + offset);
-    }
-
-    public void stop() {
-        agentServer.stop();
-    }
+//    AbstractAgentServer agentServer;
+//    static int NO_OF_EVENTS = 100000;
+//    static int STABLE = 1000000;
+//    int offset = 0;
+//
+//    public static void main(String[] args)
+//            throws AgentServerException, InterruptedException {
+//
+//        if (0 != args.length && args[0] != null) {
+//            NO_OF_EVENTS = Integer.parseInt(args[0]);
+//        }
+//
+//        System.out.println("Event no=" + NO_OF_EVENTS);
+//
+//        KeyStoreUtil.setKeyStoreParams();
+//
+//        AgentBackend server = new AgentBackend(0);
+//        server.start();
+//    }
+//
+//    public AgentBackend(int offset) {
+//        this.offset = offset;
+//    }
+//
+//    public void start() throws AgentServerException, InterruptedException {
+//
+//        AgentServerConfiguration agentServerConfiguration = generateServerConf(offset);
+//        agentServer = new ThriftAgentServer(agentServerConfiguration, new AuthenticationHandler() {
+//            @Override
+//            public boolean authenticate(String userName, String password) {
+//                return true;// allays authenticate to true
+//            }
+//        }, new InMemoryStreamDefinitionStore());
+//        agentServer.subscribe(assignAgentCallback());
+//        agentServer.start("localhost");
+//
+//    }
+//
+//    private AgentCallback assignAgentCallback() {
+//
+//        return new AgentCallback() {
+//            long startTime = -1;
+//            int size = 0;
+//            private EventStreamDefinition eventStreamDefinition;
+//
+//            public void definedEventStream(EventStreamDefinition eventStreamDefinition,
+//                                           String userName, String password, String domainName) {
+//                this.eventStreamDefinition = eventStreamDefinition;//not used here
+//            }
+//
+//            @Override
+//            public void receive(List<Event> eventList, String userName, String password,
+//                                String domainName) {
+//                addCount(eventList);
+//                if (size <= STABLE && size > STABLE - 200) {
+//                    startTime = System.currentTimeMillis();
+//                }
+//                if (NO_OF_EVENTS <= (size - STABLE)) {
+//                    if (startTime != -1) {
+//                        System.out.println("Total time in ms=" + (System.currentTimeMillis() - startTime));
+//                    } else {
+//                        System.out.println("Start time not set ");
+//                    }
+//                }
+//            }
+//
+//            private synchronized void addCount(List<Event> eventList) {
+//                size += eventList.size();
+//            }
+//        };
+//    }
+//
+//    private AgentServerConfiguration generateServerConf(int offset) {
+//        return new AgentServerConfiguration(7711 + offset, 7611 + offset);
+//    }
+//
+//    public void stop() {
+//        agentServer.stop();
+//    }
 }

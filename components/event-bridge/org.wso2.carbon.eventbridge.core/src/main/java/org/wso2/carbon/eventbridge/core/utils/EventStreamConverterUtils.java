@@ -19,7 +19,7 @@ import org.wso2.carbon.eventbridge.core.exceptions.MalformedStreamDefinitionExce
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class EventConverterUtils {
+public class EventStreamConverterUtils {
 
     private static Gson gson = new Gson();
 

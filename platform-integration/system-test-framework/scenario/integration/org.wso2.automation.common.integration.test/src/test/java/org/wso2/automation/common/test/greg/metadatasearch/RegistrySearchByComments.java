@@ -100,12 +100,12 @@ public class RegistrySearchByComments {
         for (ResourceData resource : result.getResourceDataList()) {
             boolean commentFound = false;
             for (Comment comment : registry.getComments(resource.getResourcePath())) {
-                if ("TestAutomation".equalsIgnoreCase(comment.getText())) {
+                if (comment.getText().contains("TestAutomation")) {
                     commentFound = true;
                     break;
                 }
             }
-            Assert.assertTrue(commentFound, "Comment not found on Resource");
+            Assert.assertTrue(commentFound, "Comment not found on Resource. " + resource.getResourcePath());
 
         }
 
@@ -128,7 +128,7 @@ public class RegistrySearchByComments {
         for (ResourceData resource : result.getResourceDataList()) {
             boolean commentFound = false;
             for (Comment comment : registry.getComments(resource.getResourcePath())) {
-                if ("AutomationComment".equalsIgnoreCase(comment.getText()) || "Policy".equalsIgnoreCase(comment.getText())) {
+                if (comment.getText().contains("AutomationComment") || comment.getText().contains("Policy")) {
                     commentFound = true;
                     break;
                 }

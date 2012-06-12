@@ -182,6 +182,11 @@
     </dependencySets>
 
     <files>
+		<!-- Including syslog-config.xml file -->
+		<file>
+            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/syslog-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/</outputDirectory>
+        </file>
         <!-- copying event broker config file -->
         <file>
             <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml

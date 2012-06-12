@@ -227,7 +227,7 @@ public class APIUsageStatisticsClient {
                         providerAPI.getContext().equals(accessTime.context)) {
 
                     String apiName = accessTime.apiName + " (" + providerAPI.getId().getProviderName() + ")";
-                    APIAccessTime lastAccessTime = lastAccessTimes.get(accessTime.apiName);
+                    APIAccessTime lastAccessTime = lastAccessTimes.get(apiName);
                     if (lastAccessTime == null || lastAccessTime.accessTime < accessTime.accessTime) {
                         lastAccessTimes.put(apiName, accessTime);
                     }

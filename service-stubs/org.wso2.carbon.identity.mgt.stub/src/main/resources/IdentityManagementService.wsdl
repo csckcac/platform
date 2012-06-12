@@ -1,0 +1,1319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://services.mgt.identity.carbon.wso2.org" xmlns:ax2268="http://mgt.identity.carbon.wso2.org/xsd" xmlns:ax2263="http://dto.mgt.identity.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2266="http://beans.mgt.captcha.carbon.wso2.org/xsd" xmlns:ax2271="http://mail.mgt.identity.carbon.wso2.org/xsd" xmlns:ax2262="http://beans.mgt.identity.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.mgt.identity.carbon.wso2.org"> 
+    <wsdl:documentation>IdentityManagementService</wsdl:documentation> 
+    <wsdl:types> 
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.mgt.captcha.carbon.wso2.org/xsd"> 
+            <xs:complexType name="CaptchaInfoBean"> 
+                <xs:sequence> 
+                    <xs:element minOccurs="0" name="imagePath" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="secretKey" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="userAnswer" nillable="true" type="xs:string" /> 
+                </xs:sequence> 
+            </xs:complexType> 
+        </xs:schema> 
+        <xs:schema xmlns:ax2265="http://beans.mgt.identity.carbon.wso2.org/xsd" xmlns:ax2270="http://dto.mgt.identity.carbon.wso2.org/xsd" xmlns:ax2267="http://beans.mgt.captcha.carbon.wso2.org/xsd" xmlns:ax2269="http://mgt.identity.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.mgt.identity.carbon.wso2.org"> 
+            <xs:import namespace="http://beans.mgt.identity.carbon.wso2.org/xsd" /> 
+            <xs:import namespace="http://beans.mgt.captcha.carbon.wso2.org/xsd" /> 
+            <xs:import namespace="http://mgt.identity.carbon.wso2.org/xsd" /> 
+            <xs:import namespace="http://dto.mgt.identity.carbon.wso2.org/xsd" /> 
+            <xs:element name="verifyUser"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                        <xs:element minOccurs="0" name="captchaInfoBean" nillable="true" type="ax2267:CaptchaInfoBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="verifyUserResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2265:VerificationBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="IdentityMgtException"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="IdentityMgtException" nillable="true" type="ns:Exception" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:complexType name="Exception"> 
+                <xs:sequence> 
+                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" /> 
+                </xs:sequence> 
+            </xs:complexType> 
+            <xs:element name="verifyPrimaryChallengeQuestion"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="verifyPrimaryChallengeQuestionResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="IdentityMgtException"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="IdentityMgtException" nillable="true" type="ax2268:IdentityMgtException" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="verifyChallengeQuestion"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="verifyChallengeQuestionResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2265:VerificationBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="updateCredential"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                        <xs:element minOccurs="0" name="captchaInfoBean" nillable="true" type="ax2267:CaptchaInfoBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="updateCredentialResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="unlockUserAccount"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="unlockUserAccountResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="setChallengeQuestionsOfUser"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="setChallengeQuestions"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="challengeQuestionDTOs" nillable="true" type="ax2263:ChallengeQuestionDTO" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="processTemporaryPassword"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="processTemporaryPasswordResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="processPasswordRecovery"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="processPasswordRecoveryResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="processAccountRecovery"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="processAccountRecoveryResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="processAccountConfirmation"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="processAccountConfirmationResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getTemporaryPasswordData"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getTemporaryPasswordDataResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2263:RecoveryDataDTO" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getPrimaryQuestionsOfUser"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getPrimaryQuestionsOfUserResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2263:UserChallengesDTO" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getPasswordRecoveryData"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getPasswordRecoveryDataResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2263:RecoveryDataDTO" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getChallengeQuestionsOfUser"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getChallengeQuestionsOfUserResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2263:UserChallengesDTO" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getAllPromotedUserChallenge"> 
+                <xs:complexType> 
+                    <xs:sequence /> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getAllPromotedUserChallengeResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2263:UserChallengesSetDTO" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getAllChallengeQuestions"> 
+                <xs:complexType> 
+                    <xs:sequence /> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getAllChallengeQuestionsResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2263:ChallengeQuestionDTO" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getAccountRecoveryData"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getAccountRecoveryDataResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2263:RecoveryDataDTO" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getAccountConfirmationData"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="userMgtBean" nillable="true" type="ax2265:UserMgtBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="getAccountConfirmationDataResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2263:RecoveryDataDTO" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="generateRandomCaptcha"> 
+                <xs:complexType> 
+                    <xs:sequence /> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="generateRandomCaptchaResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2267:CaptchaInfoBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="confirmUserAccount"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="confirmationKey" nillable="true" type="xs:string" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+            <xs:element name="confirmUserAccountResponse"> 
+                <xs:complexType> 
+                    <xs:sequence> 
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2265:VerificationBean" /> 
+                    </xs:sequence> 
+                </xs:complexType> 
+            </xs:element> 
+        </xs:schema> 
+        <xs:schema xmlns:ax2272="http://mail.mgt.identity.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.mgt.identity.carbon.wso2.org/xsd"> 
+            <xs:import namespace="http://mail.mgt.identity.carbon.wso2.org/xsd" /> 
+            <xs:complexType name="UserChallengesDTO"> 
+                <xs:sequence> 
+                    <xs:element minOccurs="0" name="answer" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="order" type="xs:int" /> 
+                    <xs:element minOccurs="0" name="primary" type="xs:boolean" /> 
+                    <xs:element minOccurs="0" name="question" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="setId" nillable="true" type="xs:string" /> 
+                </xs:sequence> 
+            </xs:complexType> 
+            <xs:complexType name="UserEvidenceDTO"> 
+                <xs:sequence> 
+                    <xs:element minOccurs="0" name="claimUri" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="claimValue" nillable="true" type="xs:string" /> 
+                </xs:sequence> 
+            </xs:complexType> 
+            <xs:complexType name="ChallengeQuestionDTO"> 
+                <xs:sequence> 
+                    <xs:element minOccurs="0" name="order" type="xs:int" /> 
+                    <xs:element minOccurs="0" name="promoteQuestion" type="xs:boolean" /> 
+                    <xs:element minOccurs="0" name="question" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="questionSetId" nillable="true" type="xs:string" /> 
+                </xs:sequence> 
+            </xs:complexType> 
+            <xs:complexType name="RecoveryDataDTO"> 
+                <xs:sequence> 
+                    <xs:element minOccurs="0" name="confirmation" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="emailConfig" nillable="true" type="ax2272:EmailConfig" /> 
+                    <xs:element minOccurs="0" name="emailSent" type="xs:boolean" /> 
+                    <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="temporaryPassword" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" /> 
+                </xs:sequence> 
+            </xs:complexType> 
+            <xs:complexType name="UserChallengesSetDTO"> 
+                <xs:sequence> 
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="challengesDTOs" nillable="true" type="ax2263:UserChallengesDTO" /> 
+                    <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" /> 
+                </xs:sequence> 
+            </xs:complexType> 
+        </xs:schema> 
+        <xs:schema xmlns:ax2264="http://dto.mgt.identity.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.mgt.identity.carbon.wso2.org/xsd"> 
+            <xs:import namespace="http://dto.mgt.identity.carbon.wso2.org/xsd" /> 
+            <xs:complexType name="UserMgtBean"> 
+                <xs:sequence> 
+                    <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="recoveryType" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="secretKey" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" /> 
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="userChallenges" nillable="true" type="ax2263:UserChallengesDTO" /> 
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="userEvidenceDTOs" nillable="true" type="ax2263:UserEvidenceDTO" /> 
+                    <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="userKey" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="userPassword" nillable="true" type="xs:string" /> 
+                </xs:sequence> 
+            </xs:complexType> 
+            <xs:complexType name="VerificationBean"> 
+                <xs:sequence> 
+                    <xs:element minOccurs="0" name="error" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="redirectPath" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="verified" type="xs:boolean" /> 
+                </xs:sequence> 
+            </xs:complexType> 
+        </xs:schema> 
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mail.mgt.identity.carbon.wso2.org/xsd"> 
+            <xs:complexType name="EmailConfig"> 
+                <xs:sequence> 
+                    <xs:element minOccurs="0" name="configType" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="emailBody" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="emailFooter" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="redirectPath" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="subject" nillable="true" type="xs:string" /> 
+                    <xs:element minOccurs="0" name="targetEpr" nillable="true" type="xs:string" /> 
+                </xs:sequence> 
+            </xs:complexType> 
+        </xs:schema> 
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.identity.carbon.wso2.org/xsd"> 
+            <xs:complexType name="IdentityMgtException"> 
+                <xs:sequence /> 
+            </xs:complexType> 
+        </xs:schema> 
+    </wsdl:types> 
+    <wsdl:message name="getAllChallengeQuestionsRequest"> 
+        <wsdl:part name="parameters" element="ns:getAllChallengeQuestions" /> 
+    </wsdl:message> 
+    <wsdl:message name="getAllChallengeQuestionsResponse"> 
+        <wsdl:part name="parameters" element="ns:getAllChallengeQuestionsResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="IdentityMgtException"> 
+        <wsdl:part name="parameters" element="ns:IdentityMgtException" /> 
+    </wsdl:message> 
+    <wsdl:message name="getChallengeQuestionsOfUserRequest"> 
+        <wsdl:part name="parameters" element="ns:getChallengeQuestionsOfUser" /> 
+    </wsdl:message> 
+    <wsdl:message name="getChallengeQuestionsOfUserResponse"> 
+        <wsdl:part name="parameters" element="ns:getChallengeQuestionsOfUserResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="getTemporaryPasswordDataRequest"> 
+        <wsdl:part name="parameters" element="ns:getTemporaryPasswordData" /> 
+    </wsdl:message> 
+    <wsdl:message name="getTemporaryPasswordDataResponse"> 
+        <wsdl:part name="parameters" element="ns:getTemporaryPasswordDataResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="getPrimaryQuestionsOfUserRequest"> 
+        <wsdl:part name="parameters" element="ns:getPrimaryQuestionsOfUser" /> 
+    </wsdl:message> 
+    <wsdl:message name="getPrimaryQuestionsOfUserResponse"> 
+        <wsdl:part name="parameters" element="ns:getPrimaryQuestionsOfUserResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="updateCredentialRequest"> 
+        <wsdl:part name="parameters" element="ns:updateCredential" /> 
+    </wsdl:message> 
+    <wsdl:message name="updateCredentialResponse"> 
+        <wsdl:part name="parameters" element="ns:updateCredentialResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="processAccountConfirmationRequest"> 
+        <wsdl:part name="parameters" element="ns:processAccountConfirmation" /> 
+    </wsdl:message> 
+    <wsdl:message name="processAccountConfirmationResponse"> 
+        <wsdl:part name="parameters" element="ns:processAccountConfirmationResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="processAccountRecoveryRequest"> 
+        <wsdl:part name="parameters" element="ns:processAccountRecovery" /> 
+    </wsdl:message> 
+    <wsdl:message name="processAccountRecoveryResponse"> 
+        <wsdl:part name="parameters" element="ns:processAccountRecoveryResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="verifyPrimaryChallengeQuestionRequest"> 
+        <wsdl:part name="parameters" element="ns:verifyPrimaryChallengeQuestion" /> 
+    </wsdl:message> 
+    <wsdl:message name="verifyPrimaryChallengeQuestionResponse"> 
+        <wsdl:part name="parameters" element="ns:verifyPrimaryChallengeQuestionResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="IdentityMgtException"> 
+        <wsdl:part name="parameters" element="ns:IdentityMgtException" /> 
+    </wsdl:message> 
+    <wsdl:message name="getPasswordRecoveryDataRequest"> 
+        <wsdl:part name="parameters" element="ns:getPasswordRecoveryData" /> 
+    </wsdl:message> 
+    <wsdl:message name="getPasswordRecoveryDataResponse"> 
+        <wsdl:part name="parameters" element="ns:getPasswordRecoveryDataResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="processPasswordRecoveryRequest"> 
+        <wsdl:part name="parameters" element="ns:processPasswordRecovery" /> 
+    </wsdl:message> 
+    <wsdl:message name="processPasswordRecoveryResponse"> 
+        <wsdl:part name="parameters" element="ns:processPasswordRecoveryResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="processTemporaryPasswordRequest"> 
+        <wsdl:part name="parameters" element="ns:processTemporaryPassword" /> 
+    </wsdl:message> 
+    <wsdl:message name="processTemporaryPasswordResponse"> 
+        <wsdl:part name="parameters" element="ns:processTemporaryPasswordResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="getAccountConfirmationDataRequest"> 
+        <wsdl:part name="parameters" element="ns:getAccountConfirmationData" /> 
+    </wsdl:message> 
+    <wsdl:message name="getAccountConfirmationDataResponse"> 
+        <wsdl:part name="parameters" element="ns:getAccountConfirmationDataResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="setChallengeQuestionsOfUserRequest"> 
+        <wsdl:part name="parameters" element="ns:setChallengeQuestionsOfUser" /> 
+    </wsdl:message> 
+    <wsdl:message name="getAllPromotedUserChallengeRequest"> 
+        <wsdl:part name="parameters" element="ns:getAllPromotedUserChallenge" /> 
+    </wsdl:message> 
+    <wsdl:message name="getAllPromotedUserChallengeResponse"> 
+        <wsdl:part name="parameters" element="ns:getAllPromotedUserChallengeResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="setChallengeQuestionsRequest"> 
+        <wsdl:part name="parameters" element="ns:setChallengeQuestions" /> 
+    </wsdl:message> 
+    <wsdl:message name="getAccountRecoveryDataRequest"> 
+        <wsdl:part name="parameters" element="ns:getAccountRecoveryData" /> 
+    </wsdl:message> 
+    <wsdl:message name="getAccountRecoveryDataResponse"> 
+        <wsdl:part name="parameters" element="ns:getAccountRecoveryDataResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="confirmUserAccountRequest"> 
+        <wsdl:part name="parameters" element="ns:confirmUserAccount" /> 
+    </wsdl:message> 
+    <wsdl:message name="confirmUserAccountResponse"> 
+        <wsdl:part name="parameters" element="ns:confirmUserAccountResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="unlockUserAccountRequest"> 
+        <wsdl:part name="parameters" element="ns:unlockUserAccount" /> 
+    </wsdl:message> 
+    <wsdl:message name="unlockUserAccountResponse"> 
+        <wsdl:part name="parameters" element="ns:unlockUserAccountResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="generateRandomCaptchaRequest"> 
+        <wsdl:part name="parameters" element="ns:generateRandomCaptcha" /> 
+    </wsdl:message> 
+    <wsdl:message name="generateRandomCaptchaResponse"> 
+        <wsdl:part name="parameters" element="ns:generateRandomCaptchaResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="verifyChallengeQuestionRequest"> 
+        <wsdl:part name="parameters" element="ns:verifyChallengeQuestion" /> 
+    </wsdl:message> 
+    <wsdl:message name="verifyChallengeQuestionResponse"> 
+        <wsdl:part name="parameters" element="ns:verifyChallengeQuestionResponse" /> 
+    </wsdl:message> 
+    <wsdl:message name="verifyUserRequest"> 
+        <wsdl:part name="parameters" element="ns:verifyUser" /> 
+    </wsdl:message> 
+    <wsdl:message name="verifyUserResponse"> 
+        <wsdl:part name="parameters" element="ns:verifyUserResponse" /> 
+    </wsdl:message> 
+    <wsdl:portType name="IdentityManagementServicePortType"> 
+        <wsdl:operation name="getAllChallengeQuestions"> 
+            <wsdl:input message="ns:getAllChallengeQuestionsRequest" wsaw:Action="urn:getAllChallengeQuestions" /> 
+            <wsdl:output message="ns:getAllChallengeQuestionsResponse" wsaw:Action="urn:getAllChallengeQuestionsResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:getAllChallengeQuestionsIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="getChallengeQuestionsOfUser"> 
+            <wsdl:input message="ns:getChallengeQuestionsOfUserRequest" wsaw:Action="urn:getChallengeQuestionsOfUser" /> 
+            <wsdl:output message="ns:getChallengeQuestionsOfUserResponse" wsaw:Action="urn:getChallengeQuestionsOfUserResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:getChallengeQuestionsOfUserIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="getTemporaryPasswordData"> 
+            <wsdl:input message="ns:getTemporaryPasswordDataRequest" wsaw:Action="urn:getTemporaryPasswordData" /> 
+            <wsdl:output message="ns:getTemporaryPasswordDataResponse" wsaw:Action="urn:getTemporaryPasswordDataResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:getTemporaryPasswordDataIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPrimaryQuestionsOfUser"> 
+            <wsdl:input message="ns:getPrimaryQuestionsOfUserRequest" wsaw:Action="urn:getPrimaryQuestionsOfUser" /> 
+            <wsdl:output message="ns:getPrimaryQuestionsOfUserResponse" wsaw:Action="urn:getPrimaryQuestionsOfUserResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:getPrimaryQuestionsOfUserIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="updateCredential"> 
+            <wsdl:input message="ns:updateCredentialRequest" wsaw:Action="urn:updateCredential" /> 
+            <wsdl:output message="ns:updateCredentialResponse" wsaw:Action="urn:updateCredentialResponse" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="processAccountConfirmation"> 
+            <wsdl:input message="ns:processAccountConfirmationRequest" wsaw:Action="urn:processAccountConfirmation" /> 
+            <wsdl:output message="ns:processAccountConfirmationResponse" wsaw:Action="urn:processAccountConfirmationResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:processAccountConfirmationIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="processAccountRecovery"> 
+            <wsdl:input message="ns:processAccountRecoveryRequest" wsaw:Action="urn:processAccountRecovery" /> 
+            <wsdl:output message="ns:processAccountRecoveryResponse" wsaw:Action="urn:processAccountRecoveryResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:processAccountRecoveryIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyPrimaryChallengeQuestion"> 
+            <wsdl:input message="ns:verifyPrimaryChallengeQuestionRequest" wsaw:Action="urn:verifyPrimaryChallengeQuestion" /> 
+            <wsdl:output message="ns:verifyPrimaryChallengeQuestionResponse" wsaw:Action="urn:verifyPrimaryChallengeQuestionResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:verifyPrimaryChallengeQuestionIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPasswordRecoveryData"> 
+            <wsdl:input message="ns:getPasswordRecoveryDataRequest" wsaw:Action="urn:getPasswordRecoveryData" /> 
+            <wsdl:output message="ns:getPasswordRecoveryDataResponse" wsaw:Action="urn:getPasswordRecoveryDataResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:getPasswordRecoveryDataIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="processPasswordRecovery"> 
+            <wsdl:input message="ns:processPasswordRecoveryRequest" wsaw:Action="urn:processPasswordRecovery" /> 
+            <wsdl:output message="ns:processPasswordRecoveryResponse" wsaw:Action="urn:processPasswordRecoveryResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:processPasswordRecoveryIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="processTemporaryPassword"> 
+            <wsdl:input message="ns:processTemporaryPasswordRequest" wsaw:Action="urn:processTemporaryPassword" /> 
+            <wsdl:output message="ns:processTemporaryPasswordResponse" wsaw:Action="urn:processTemporaryPasswordResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:processTemporaryPasswordIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAccountConfirmationData"> 
+            <wsdl:input message="ns:getAccountConfirmationDataRequest" wsaw:Action="urn:getAccountConfirmationData" /> 
+            <wsdl:output message="ns:getAccountConfirmationDataResponse" wsaw:Action="urn:getAccountConfirmationDataResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:getAccountConfirmationDataIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="setChallengeQuestionsOfUser"> 
+            <wsdl:input message="ns:setChallengeQuestionsOfUserRequest" wsaw:Action="urn:setChallengeQuestionsOfUser" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:setChallengeQuestionsOfUserIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAllPromotedUserChallenge"> 
+            <wsdl:input message="ns:getAllPromotedUserChallengeRequest" wsaw:Action="urn:getAllPromotedUserChallenge" /> 
+            <wsdl:output message="ns:getAllPromotedUserChallengeResponse" wsaw:Action="urn:getAllPromotedUserChallengeResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:getAllPromotedUserChallengeIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="setChallengeQuestions"> 
+            <wsdl:input message="ns:setChallengeQuestionsRequest" wsaw:Action="urn:setChallengeQuestions" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:setChallengeQuestionsIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAccountRecoveryData"> 
+            <wsdl:input message="ns:getAccountRecoveryDataRequest" wsaw:Action="urn:getAccountRecoveryData" /> 
+            <wsdl:output message="ns:getAccountRecoveryDataResponse" wsaw:Action="urn:getAccountRecoveryDataResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:getAccountRecoveryDataIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="confirmUserAccount"> 
+            <wsdl:input message="ns:confirmUserAccountRequest" wsaw:Action="urn:confirmUserAccount" /> 
+            <wsdl:output message="ns:confirmUserAccountResponse" wsaw:Action="urn:confirmUserAccountResponse" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="unlockUserAccount"> 
+            <wsdl:input message="ns:unlockUserAccountRequest" wsaw:Action="urn:unlockUserAccount" /> 
+            <wsdl:output message="ns:unlockUserAccountResponse" wsaw:Action="urn:unlockUserAccountResponse" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="generateRandomCaptcha"> 
+            <wsdl:input message="ns:generateRandomCaptchaRequest" wsaw:Action="urn:generateRandomCaptcha" /> 
+            <wsdl:output message="ns:generateRandomCaptchaResponse" wsaw:Action="urn:generateRandomCaptchaResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:generateRandomCaptchaIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyChallengeQuestion"> 
+            <wsdl:input message="ns:verifyChallengeQuestionRequest" wsaw:Action="urn:verifyChallengeQuestion" /> 
+            <wsdl:output message="ns:verifyChallengeQuestionResponse" wsaw:Action="urn:verifyChallengeQuestionResponse" /> 
+            <wsdl:fault message="ns:IdentityMgtException" name="IdentityMgtException" wsaw:Action="urn:verifyChallengeQuestionIdentityMgtException" /> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyUser"> 
+            <wsdl:input message="ns:verifyUserRequest" wsaw:Action="urn:verifyUser" /> 
+            <wsdl:output message="ns:verifyUserResponse" wsaw:Action="urn:verifyUserResponse" /> 
+        </wsdl:operation> 
+    </wsdl:portType> 
+    <wsdl:binding name="IdentityManagementServiceSoap11Binding" type="ns:IdentityManagementServicePortType"> 
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" /> 
+        <wsdl:operation name="getChallengeQuestionsOfUser"> 
+            <soap:operation soapAction="urn:getChallengeQuestionsOfUser" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAllChallengeQuestions"> 
+            <soap:operation soapAction="urn:getAllChallengeQuestions" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getTemporaryPasswordData"> 
+            <soap:operation soapAction="urn:getTemporaryPasswordData" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPrimaryQuestionsOfUser"> 
+            <soap:operation soapAction="urn:getPrimaryQuestionsOfUser" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="updateCredential"> 
+            <soap:operation soapAction="urn:updateCredential" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="processAccountConfirmation"> 
+            <soap:operation soapAction="urn:processAccountConfirmation" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="processAccountRecovery"> 
+            <soap:operation soapAction="urn:processAccountRecovery" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyPrimaryChallengeQuestion"> 
+            <soap:operation soapAction="urn:verifyPrimaryChallengeQuestion" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPasswordRecoveryData"> 
+            <soap:operation soapAction="urn:getPasswordRecoveryData" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="processTemporaryPassword"> 
+            <soap:operation soapAction="urn:processTemporaryPassword" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="processPasswordRecovery"> 
+            <soap:operation soapAction="urn:processPasswordRecovery" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAccountConfirmationData"> 
+            <soap:operation soapAction="urn:getAccountConfirmationData" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="setChallengeQuestionsOfUser"> 
+            <soap:operation soapAction="urn:setChallengeQuestionsOfUser" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAllPromotedUserChallenge"> 
+            <soap:operation soapAction="urn:getAllPromotedUserChallenge" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="setChallengeQuestions"> 
+            <soap:operation soapAction="urn:setChallengeQuestions" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAccountRecoveryData"> 
+            <soap:operation soapAction="urn:getAccountRecoveryData" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="confirmUserAccount"> 
+            <soap:operation soapAction="urn:confirmUserAccount" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="unlockUserAccount"> 
+            <soap:operation soapAction="urn:unlockUserAccount" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="generateRandomCaptcha"> 
+            <soap:operation soapAction="urn:generateRandomCaptcha" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyUser"> 
+            <soap:operation soapAction="urn:verifyUser" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyChallengeQuestion"> 
+            <soap:operation soapAction="urn:verifyChallengeQuestion" style="document" /> 
+            <wsdl:input> 
+                <soap:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+    </wsdl:binding> 
+    <wsdl:binding name="IdentityManagementServiceSoap12Binding" type="ns:IdentityManagementServicePortType"> 
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" /> 
+        <wsdl:operation name="getChallengeQuestionsOfUser"> 
+            <soap12:operation soapAction="urn:getChallengeQuestionsOfUser" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAllChallengeQuestions"> 
+            <soap12:operation soapAction="urn:getAllChallengeQuestions" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getTemporaryPasswordData"> 
+            <soap12:operation soapAction="urn:getTemporaryPasswordData" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPrimaryQuestionsOfUser"> 
+            <soap12:operation soapAction="urn:getPrimaryQuestionsOfUser" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="updateCredential"> 
+            <soap12:operation soapAction="urn:updateCredential" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="processAccountConfirmation"> 
+            <soap12:operation soapAction="urn:processAccountConfirmation" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="processAccountRecovery"> 
+            <soap12:operation soapAction="urn:processAccountRecovery" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyPrimaryChallengeQuestion"> 
+            <soap12:operation soapAction="urn:verifyPrimaryChallengeQuestion" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPasswordRecoveryData"> 
+            <soap12:operation soapAction="urn:getPasswordRecoveryData" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="processTemporaryPassword"> 
+            <soap12:operation soapAction="urn:processTemporaryPassword" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="processPasswordRecovery"> 
+            <soap12:operation soapAction="urn:processPasswordRecovery" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAccountConfirmationData"> 
+            <soap12:operation soapAction="urn:getAccountConfirmationData" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="setChallengeQuestionsOfUser"> 
+            <soap12:operation soapAction="urn:setChallengeQuestionsOfUser" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAllPromotedUserChallenge"> 
+            <soap12:operation soapAction="urn:getAllPromotedUserChallenge" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="setChallengeQuestions"> 
+            <soap12:operation soapAction="urn:setChallengeQuestions" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAccountRecoveryData"> 
+            <soap12:operation soapAction="urn:getAccountRecoveryData" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="confirmUserAccount"> 
+            <soap12:operation soapAction="urn:confirmUserAccount" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="unlockUserAccount"> 
+            <soap12:operation soapAction="urn:unlockUserAccount" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="generateRandomCaptcha"> 
+            <soap12:operation soapAction="urn:generateRandomCaptcha" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyUser"> 
+            <soap12:operation soapAction="urn:verifyUser" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyChallengeQuestion"> 
+            <soap12:operation soapAction="urn:verifyChallengeQuestion" style="document" /> 
+            <wsdl:input> 
+                <soap12:body use="literal" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <soap12:body use="literal" /> 
+            </wsdl:output> 
+            <wsdl:fault name="IdentityMgtException"> 
+                <soap12:fault use="literal" name="IdentityMgtException" /> 
+            </wsdl:fault> 
+        </wsdl:operation> 
+    </wsdl:binding> 
+    <wsdl:binding name="IdentityManagementServiceHttpBinding" type="ns:IdentityManagementServicePortType"> 
+        <http:binding verb="POST" /> 
+        <wsdl:operation name="getChallengeQuestionsOfUser"> 
+            <http:operation location="getChallengeQuestionsOfUser" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAllChallengeQuestions"> 
+            <http:operation location="getAllChallengeQuestions" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="getTemporaryPasswordData"> 
+            <http:operation location="getTemporaryPasswordData" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPrimaryQuestionsOfUser"> 
+            <http:operation location="getPrimaryQuestionsOfUser" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="updateCredential"> 
+            <http:operation location="updateCredential" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="processAccountConfirmation"> 
+            <http:operation location="processAccountConfirmation" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="processAccountRecovery"> 
+            <http:operation location="processAccountRecovery" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyPrimaryChallengeQuestion"> 
+            <http:operation location="verifyPrimaryChallengeQuestion" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="getPasswordRecoveryData"> 
+            <http:operation location="getPasswordRecoveryData" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="processTemporaryPassword"> 
+            <http:operation location="processTemporaryPassword" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="processPasswordRecovery"> 
+            <http:operation location="processPasswordRecovery" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAccountConfirmationData"> 
+            <http:operation location="getAccountConfirmationData" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="setChallengeQuestionsOfUser"> 
+            <http:operation location="setChallengeQuestionsOfUser" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAllPromotedUserChallenge"> 
+            <http:operation location="getAllPromotedUserChallenge" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="setChallengeQuestions"> 
+            <http:operation location="setChallengeQuestions" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+        </wsdl:operation> 
+        <wsdl:operation name="getAccountRecoveryData"> 
+            <http:operation location="getAccountRecoveryData" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="confirmUserAccount"> 
+            <http:operation location="confirmUserAccount" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="unlockUserAccount"> 
+            <http:operation location="unlockUserAccount" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="generateRandomCaptcha"> 
+            <http:operation location="generateRandomCaptcha" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyUser"> 
+            <http:operation location="verifyUser" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+        <wsdl:operation name="verifyChallengeQuestion"> 
+            <http:operation location="verifyChallengeQuestion" /> 
+            <wsdl:input> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:input> 
+            <wsdl:output> 
+                <mime:content type="text/xml" part="parameters" /> 
+            </wsdl:output> 
+        </wsdl:operation> 
+    </wsdl:binding> 
+    <wsdl:service name="IdentityManagementService"> 
+        <wsdl:port name="IdentityManagementServiceHttpsSoap11Endpoint" binding="ns:IdentityManagementServiceSoap11Binding"> 
+            <soap:address location="https://localhost:9443/services/IdentityManagementService.IdentityManagementServiceHttpsSoap11Endpoint/" /> 
+        </wsdl:port> 
+        <wsdl:port name="IdentityManagementServiceHttpsSoap12Endpoint" binding="ns:IdentityManagementServiceSoap12Binding"> 
+            <soap12:address location="https://localhost:9443/services/IdentityManagementService.IdentityManagementServiceHttpsSoap12Endpoint/" /> 
+        </wsdl:port> 
+        <wsdl:port name="IdentityManagementServiceHttpsEndpoint" binding="ns:IdentityManagementServiceHttpBinding"> 
+            <http:address location="https://localhost:9443/services/IdentityManagementService.IdentityManagementServiceHttpsEndpoint/" /> 
+        </wsdl:port> 
+    </wsdl:service> 
+</wsdl:definitions>

@@ -1535,7 +1535,9 @@ public class APIStoreHostObject extends ScriptableObject {
 				try {
                     APIConsumer apiConsumer = getAPIConsumer(thisObj);
                     content = apiConsumer.getDocumentationContent(apiId,docName);
-                    log.info(content);
+                    if (log.isDebugEnabled()) {
+                        log.debug(content);
+                    }
                 } catch (Exception e) {
                     log.error("Error while getting Inline Document Content ", e);
                     return null;

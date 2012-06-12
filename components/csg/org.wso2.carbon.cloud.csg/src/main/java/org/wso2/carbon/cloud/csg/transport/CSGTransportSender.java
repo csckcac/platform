@@ -266,7 +266,8 @@ public class CSGTransportSender extends AbstractTransportSender {
             responseMsgCtx.setProperty(Constants.Configuration.MESSAGE_TYPE,
                     msgCtx.getProperty(Constants.Configuration.MESSAGE_TYPE));
 
-            responseMsgCtx.setProperty(Constants.Configuration.CONTENT_TYPE, msgCtx.getProperty(Constants.Configuration.CONTENT_TYPE));
+            responseMsgCtx.setProperty(Constants.Configuration.CONTENT_TYPE,
+                    msgCtx.getProperty(Constants.Configuration.CONTENT_TYPE));
                         
             String contentType = message.getContentType();
             if (contentType == null) {

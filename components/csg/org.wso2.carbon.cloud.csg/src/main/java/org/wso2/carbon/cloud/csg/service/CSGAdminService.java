@@ -197,6 +197,7 @@ public class CSGAdminService extends AbstractServiceBusAdmin {
         // https://issues.apache.org/jira/browse/AXIS2-4196
         String inSeq =
                 "<inSequence xmlns=\"" + SynapseConstants.SYNAPSE_NAMESPACE + "\">" +
+                        "<class name=\"org.wso2.carbon.cloud.csg.CSGMEPHandlingMediator\"/>" +
                         "<property name=\"transportNonBlocking\" scope=\"axis2\" action=\"remove\"/>" +
                         "<property name=\"preserveProcessedHeaders\" value=\"true\"/>";
 

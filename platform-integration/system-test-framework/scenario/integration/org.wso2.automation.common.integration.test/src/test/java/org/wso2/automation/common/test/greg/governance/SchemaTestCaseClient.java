@@ -53,25 +53,27 @@ public class SchemaTestCaseClient {
         governance = new RegistryProvider().getGovernance(registryWS, userId);
     }
 
-    @Test(groups = {"wso2.greg"}, priority = 1)
+    //https://wso2.org/jira/browse/REGISTRY-935
+    @Test(groups = {"wso2.greg"}, priority = 1, enabled = false)
     public void testAddSchema() throws Exception {
+
         log.info("############## testAddSchema started ...###################");
         SchemaManager schemaManager = new SchemaManager(governance);
 
-        Schema schema = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                                                "governance/org.wso2.carbon.governance.api/src/test/resources/" +
-                                                "test-resources/xsd/purchasing.xsd");
+        Schema schema = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/carbon/platform/trunk/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/xsd/purchasing.xsd");
         schema.addAttribute("creator", "it is me");
         schema.addAttribute("version", "0.01");
         schemaManager.addSchema(schema);
 
         Schema newSchema = schemaManager.getSchema(schema.getId());
         Assert.assertEquals(newSchema.getSchemaElement().toString(), schema.getSchemaElement().toString());
+        Assert.assertEquals(newSchema.getAttribute("creator"), "it is me");
+        Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
 
         // change the target namespace and check
         String oldSchemaPath = newSchema.getPath();
-        Assert.assertEquals(oldSchemaPath, newSchema.getPath());
-        Assert.assertTrue(governance.resourceExists("/trunk/schemas/org/bar/purchasing/purchasing.xsd"));
+        Assert.assertEquals(oldSchemaPath, schema.getPath());
+        Assert.assertTrue(governance.resourceExists(newSchema.getPath()));
 
         OMElement schemaElement = newSchema.getSchemaElement();
         schemaElement.addAttribute("targetNamespace", "http://ww2.wso2.org/schema-test", null);
@@ -96,13 +98,12 @@ public class SchemaTestCaseClient {
         Schema[] schemas = schemaManager.findSchemas(new SchemaFilter() {
             public boolean matches(Schema schema) throws GovernanceException {
                 if (schema.getAttribute("version").equals("0.01")) {
-                    log.info("########Schema name" + schema.getQName().toString() + "  schemaID : " + schema.getId());
+                    log.info("########Schema name" + schema.getQName().toString()+ "  schemaID : "+ schema.getId());
                     return true;
                 }
                 return false;
             }
         });
-
         doSleep();
         log.info("########Schema Len:" + schemas.length);
         Assert.assertEquals(schemas.length, 1);
@@ -143,7 +144,7 @@ public class SchemaTestCaseClient {
 
         // change the target namespace and check
         String oldSchemaPath = newSchema.getPath();
-        Assert.assertEquals(oldSchemaPath, "/trunk/schemas/org/bar/purchasing/purchasing.xsd");
+        Assert.assertEquals(oldSchemaPath,newSchema.getPath());
         Assert.assertTrue(governance.resourceExists("/trunk/schemas/org/bar/purchasing/newPurchasing.xsd"));
     }
 

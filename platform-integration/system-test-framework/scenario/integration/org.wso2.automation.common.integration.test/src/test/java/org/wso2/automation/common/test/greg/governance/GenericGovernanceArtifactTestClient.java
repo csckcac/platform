@@ -103,7 +103,7 @@ public class GenericGovernanceArtifactTestClient {
         assertTrue(governanceArtifactConfiguration.getKey().equals("events"));
     }
 
-    @Test(groups = {"wso2.greg"}, description = "add new rxt file", priority = 2)
+    @Test(groups = {"wso2.greg"}, description = "add new rxt file", priority = 2, enabled = false)
     public void testAddNewGenericArtifact() throws Exception {
         GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");
         GenericArtifact artifact = artifactManager.newGovernanceArtifact(new QName
@@ -165,7 +165,7 @@ public class GenericGovernanceArtifactTestClient {
         assertTrue(status, "Artifact not found");
     }
 
-    @Test(groups = {"wso2.greg"}, description = "add new rxt file", priority = 3)
+    @Test(groups = {"wso2.greg"}, description = "add new rxt file", priority = 3, enabled = false)
     public void testAddAnotherGenericArtifact() throws Exception {
         GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");
         String governanceArtifactContent = "<metadata xmlns=\"http://www.wso2" +
@@ -233,7 +233,7 @@ public class GenericGovernanceArtifactTestClient {
                    artifactManager.getGenericArtifact(artifact.getId()));
     }
 
-    @Test(groups = {"wso2.greg"}, description = "add new rxt file", priority = 4)
+    @Test(groups = {"wso2.greg"}, description = "add new rxt file", priority = 4, enabled = false)
     public void testAddInvalidContent() throws Exception {
         boolean status = false;
         GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");
@@ -251,7 +251,8 @@ public class GenericGovernanceArtifactTestClient {
         assertTrue(status, "Add Artifact - Invalid content added ");
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Test artifact dependencies and associations", priority = 6)
+    @Test(groups = {"wso2.greg"}, description = "Test artifact dependencies and associations",
+          priority = 6, enabled = false)
     public void testArtifactDependencies() throws Exception {
         GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");
         GenericArtifact artifact = artifactManager.newGovernanceArtifact(new QName
@@ -296,7 +297,8 @@ public class GenericGovernanceArtifactTestClient {
         assertNull("artifact exists", artifactManager.getGenericArtifact(artifact.getId()));
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Get LC state and LC name", priority = 7, enabled = false)
+    @Test(groups = {"wso2.greg"}, description = "Get LC state and LC name", priority = 7,
+          enabled = false)
     public void testArtifactLifeCycle() throws Exception {
         GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");
         GenericArtifact artifact = artifactManager.newGovernanceArtifact(new QName
@@ -336,7 +338,7 @@ public class GenericGovernanceArtifactTestClient {
         assertNull("artifact exists", artifactManager.getGenericArtifact(artifact.getId()));
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Get LC state and LC name", priority = 8)
+    @Test(groups = {"wso2.greg"}, description = "Get LC state and LC name", priority = 8, enabled = false)
     public void testUpdateArtifact() throws Exception {
         GenericArtifactManager artifactManager = new GenericArtifactManager(governance, "events");
         GenericArtifact artifact = artifactManager.newGovernanceArtifact(new QName

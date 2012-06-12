@@ -238,6 +238,7 @@ public class WSDLManagerAPITest {
     public void testGetURL() throws GovernanceException {
         try {
             wsdlObj = wsdlManager.newWsdl(sampleWsdlURL);
+            wsdlManager.addWsdl(wsdlObj);
             assertTrue(wsdlObj.getUrl().equalsIgnoreCase(sampleWsdlURL), "WSDL:getQName API method thrown error");
         } catch (GovernanceException e) {
             throw new GovernanceException("Error occurred while executing WSDL:getQName method " +
@@ -258,7 +259,9 @@ public class WSDLManagerAPITest {
         }
     }
 
-    @Test(groups = {"wso2.greg.api"}, description = "Testing getAttachEndpoint method in WSDL object", priority = 13)
+    // https://wso2.org/jira/browse/CARBON-13305
+    @Test(groups = {"wso2.greg.api"}, description = "Testing getAttachEndpoint method in WSDL object",
+          priority = 13, enabled = false)
     public void testGetAttachEndpoint() throws GovernanceException {
         boolean isEndpointFound = false;
         try {
@@ -338,7 +341,7 @@ public class WSDLManagerAPITest {
             for (Wsdl w : allWSDLs) {
                 if (w.getQName().getLocalPart().equalsIgnoreCase(wsdlName)) {
                     OMElement omElement = w.getWsdlElement();
-                    assertTrue(omElement.getFirstElement().toString().contains("Do Not Call List Service"),
+                    assertTrue(omElement.toString().contains("Do Not Call List Service"),
                                "Error occurred while executing getWsdlElement API method with WSDL object");
                 }
             }

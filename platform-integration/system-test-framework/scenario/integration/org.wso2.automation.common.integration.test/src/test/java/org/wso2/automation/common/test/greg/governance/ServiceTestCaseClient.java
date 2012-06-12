@@ -458,9 +458,13 @@ public class ServiceTestCaseClient {
         Service service = serviceManager.newService(new QName("http://bang.boom.com/mnm/beep",
                                                               "LCService"));
         service.addAttribute("testAttribute", "serviceAttr");
+        service.setAttribute("serviceLifecycle_lifecycleName", "ServiceLifeCycle");
+
         serviceManager.addService(service);
         String serviceId = service.getId();
+
         service.attachLifecycle("ServiceLifeCycle");
+
         assertEquals(service.getLifecycleName(), "ServiceLifeCycle");
         assertEquals(service.getLifecycleState(), "Development");
 

@@ -266,6 +266,9 @@ public class RuleServiceManagementHelper {
             return;
         }
 
+        // Clear rule script session
+        request.getSession().removeAttribute("ruleScript");
+
         String operationName = request.getParameter("operationName");
         Operation operation = ruleService.getOperation(operationName);
         NameSpacesInformationRepository repository =

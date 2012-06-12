@@ -18,7 +18,6 @@
 <%@ page import="org.wso2.carbon.rule.ws.ui.wizard.RuleServiceAdminClient" %>
 <%@ page import="org.wso2.carbon.rule.common.RuleService" %>
 <%@ page import="java.util.*" %>
-<%@ page import="org.wso2.carbon.rule.ws.ui.Test" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%

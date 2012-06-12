@@ -30,6 +30,7 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.Axis2Sender;
 import org.apache.synapse.rest.AbstractHandler;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
+import org.wso2.carbon.apimgt.handlers.Utils;
 import org.wso2.carbon.apimgt.handlers.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.handlers.security.oauth.OAuthAuthenticator;
 
@@ -120,15 +121,11 @@ public class APIAuthenticationHandler extends AbstractHandler implements Managed
         messageContext.setResponse(true);
         messageContext.setProperty("RESPONSE", "true");
         messageContext.setTo(null);
-
-        OMElement firstChild = messageContext.getEnvelope().getBody().getFirstElement();
-        if (firstChild != null) {
-            firstChild.insertSiblingAfter(getFaultPayload(e));
-            firstChild.detach();
+        if (messageContext.isDoingPOX() || messageContext.isDoingGET()) {
+            Utils.setFaultPayload(messageContext, getFaultPayload(e));
         } else {
-            messageContext.getEnvelope().getBody().addChild(getFaultPayload(e));
+            Utils.setSOAPFault(messageContext, "Client", "Authentication Failure", e.getMessage());
         }
-
         axis2MC.removeProperty("NO_ENTITY_BODY");
         Axis2Sender.sendBack(messageContext);
     }

@@ -37,6 +37,7 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.Axis2Sender;
 import org.apache.synapse.rest.AbstractHandler;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
+import org.wso2.carbon.apimgt.handlers.Utils;
 import org.wso2.carbon.apimgt.handlers.security.APISecurityUtils;
 import org.wso2.carbon.apimgt.handlers.security.AuthenticationContext;
 import org.wso2.carbon.apimgt.impl.APIConstants;
@@ -167,13 +168,11 @@ public class APIThrottleHandler extends AbstractHandler {
         messageContext.setResponse(true);
         messageContext.setProperty("RESPONSE", "true");
         messageContext.setTo(null);
-
-        OMElement firstChild = messageContext.getEnvelope().getBody().getFirstElement();
-        if (firstChild != null) {
-            firstChild.insertSiblingAfter(getFaultPayload());
-            firstChild.detach();
+        if (messageContext.isDoingPOX() || messageContext.isDoingGET()) {
+            Utils.setFaultPayload(messageContext, getFaultPayload());
         } else {
-            messageContext.getEnvelope().getBody().addChild(getFaultPayload());
+            Utils.setSOAPFault(messageContext, "Server", "Message Throttled Out",
+                    "You have exceeded your quota");
         }
         axis2MC.removeProperty("NO_ENTITY_BODY");
         Axis2Sender.sendBack(messageContext);

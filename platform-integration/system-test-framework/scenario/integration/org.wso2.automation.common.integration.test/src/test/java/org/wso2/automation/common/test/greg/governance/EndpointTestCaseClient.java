@@ -56,7 +56,7 @@ public class EndpointTestCaseClient {
     public void initTest() throws RegistryException, AxisFault {
         int userId = new GregUserIDEvaluator().getTenantID();
         WSRegistryServiceClient registryWS = new RegistryProvider().getRegistry(userId,
-                ProductConstant.GREG_SERVER_NAME);
+                                                                                ProductConstant.GREG_SERVER_NAME);
         governance = new RegistryProvider().getGovernance(registryWS, userId);
     }
 
@@ -90,8 +90,8 @@ public class EndpointTestCaseClient {
         WsdlManager wsdlManager = new WsdlManager(governance);
 
         Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                "governance/org.wso2.carbon.governance.api/src/test/resources" +
-                "/test-resources/wsdl/BizService.wsdl");
+                                        "governance/org.wso2.carbon.governance.api/src/test/resources" +
+                                        "/test-resources/wsdl/BizService.wsdl");
         wsdlManager.addWsdl(wsdl);
 
         Endpoint[] endpoints = wsdl.getAttachedEndpoints();
@@ -136,7 +136,7 @@ public class EndpointTestCaseClient {
         Service[] services = service.getAllServices();
         for (Service service1 : services) {
             if (service1.getQName().toString().contains("BizService") ||
-                    service1.getQName().toString().contains("abc")) {
+                service1.getQName().toString().contains("abc")) {
                 service.removeService(service1.getId());
             }
         }
@@ -280,8 +280,8 @@ public class EndpointTestCaseClient {
     @Test(groups = {"wso2.greg"})
     public void testServiceAddingEndpointsWithWsdl() throws Exception {
         String filePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator +
-                "artifacts" + File.separator + "GREG" + File.separator + "services" +
-                File.separator + "service.metadata.xml";
+                          "artifacts" + File.separator + "GREG" + File.separator + "services" +
+                          File.separator + "service.metadata.xml";
         File file = new File(filePath);
         FileInputStream fileInputStream = new FileInputStream(file);
         byte[] fileContents = new byte[(int) file.length()];
@@ -301,13 +301,13 @@ public class EndpointTestCaseClient {
         Service newService = serviceManager.getService(serviceId);
         Assert.assertEquals(newService.getAttribute("custom-attribute"), "custom-value");
         Assert.assertEquals(newService.getAttribute("endpoints_entry"),
-                ":http://localhost:8080/axis2/services/BizService");
+                            ":http://localhost:8080/axis2/services/BizService");
 
         // now we just add an endpoints
         WsdlManager wsdlManager = new WsdlManager(governance);
         Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components/" +
-                "governance/org.wso2.carbon.governance.api/src/test/resources/" +
-                "test-resources/wsdl/MyChangedBizService.wsdl");
+                                        "governance/org.wso2.carbon.governance.api/src/test/resources/" +
+                                        "test-resources/wsdl/MyChangedBizService.wsdl");
         wsdl.addAttribute("boom", "hahahaha");
 
         wsdlManager.addWsdl(wsdl);
@@ -328,15 +328,36 @@ public class EndpointTestCaseClient {
     // detach endpoints
     @Test(groups = {"wso2.greg"})
     public void testDetachEndpointsToService() throws Exception {
+
         ServiceManager serviceManager = new ServiceManager(governance);
+
+        Service[] serviceGet = serviceManager.getAllServices();
+        for (Service service : serviceGet) {
+            if (service.getQName().getLocalPart().contains("_myServicxcde")) {
+                serviceManager.removeService(service.getId());
+            }
+        }
+
         Service service = serviceManager.newService(new QName("http://wso2.com/test234/xxxxxx", "_myServicxcde"));
         serviceManager.addService(service);
 
         EndpointManager endpointManager = new EndpointManager(governance);
-        Endpoint ep1 = endpointManager.newEndpoint("http://endpoint1");
+
+        Endpoint endpoint1 = endpointManager.getEndpointByUrl("http://endpoint11");
+        if (endpoint1 != null) {
+            endpointManager.removeEndpoint(endpoint1.getId());
+        }
+
+
+        Endpoint endpoint2 = endpointManager.getEndpointByUrl("http://endpoint22");
+        if (endpoint2 != null) {
+            endpointManager.removeEndpoint(endpoint2.getId());
+        }
+
+        Endpoint ep1 = endpointManager.newEndpoint("http://endpoint11");
         endpointManager.addEndpoint(ep1);
 
-        Endpoint ep2 = endpointManager.newEndpoint("http://endpoint2");
+        Endpoint ep2 = endpointManager.newEndpoint("http://endpoint22");
         ep2.setAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR, "QA");
         endpointManager.addEndpoint(ep2);
 
@@ -352,12 +373,16 @@ public class EndpointTestCaseClient {
         String[] endpointValues = service.getAttributes("endpoints_entry");
 
         Assert.assertEquals(endpointValues.length, 2);
+
+        serviceManager.removeService(service.getId());
     }
 
     // add non http endpoints as attachments
     @Test(groups = {"wso2.greg"})
     public void testNonHttpEndpointsToService() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
+
+
         Service service = serviceManager.newService(new QName("http://wso2.com/doadf/spidf", "myServisdfcxcde"));
         serviceManager.addService(service);
 
@@ -388,20 +413,42 @@ public class EndpointTestCaseClient {
         String service_namespace = "http://wso2.org/atomation/test";
         String service_name = "myServiceExample";
 
+
         ServiceManager serviceManager = new ServiceManager(governance);
+
+        Service[] serviceGet = serviceManager.getAllServices();
+        for (Service service : serviceGet) {
+            if (service.getQName().getLocalPart().contains(service_name)) {
+                serviceManager.removeService(service.getId());
+            }
+        }
+
         Service service;
         service = serviceManager.newService(new QName(service_namespace, service_name));
         serviceManager.addService(service);
 
         EndpointManager endpointManager = new EndpointManager(governance);
-        Endpoint ep1 = endpointManager.newEndpoint("http://endpoint1xx");
+
+        Endpoint endpoint1 = endpointManager.getEndpointByUrl("http://endpoint11xx");
+        if (endpoint1 != null) {
+            endpointManager.removeEndpoint(endpoint1.getId());
+        }
+
+
+        Endpoint endpoint2 = endpointManager.getEndpointByUrl("http://endpoint22xx");
+        if (endpoint2 != null) {
+            endpointManager.removeEndpoint(endpoint2.getId());
+        }
+
+
+        Endpoint ep1 = endpointManager.newEndpoint("http://endpoint11xx");
         ep1.addAttribute("environment", "Dev");
-        ep1.addAttribute("URL", "http://endpoint1xx");
+        ep1.addAttribute("URL", "http://endpoint11xx");
         endpointManager.addEndpoint(ep1);
 
-        Endpoint ep2 = endpointManager.newEndpoint("http://endpoint2xx");
+        Endpoint ep2 = endpointManager.newEndpoint("http://endpoint22xx");
         ep2.addAttribute("environment", "QA");
-        ep2.addAttribute("URL", "http://endpoint2xx");
+        ep2.addAttribute("URL", "http://endpoint22xx");
         endpointManager.addEndpoint(ep2);
 
         service.attachEndpoint(ep1);
@@ -412,12 +459,12 @@ public class EndpointTestCaseClient {
 
         Endpoint[] endpoints = service.getAttachedEndpoints();
         assertEquals(2, endpoints.length);
-        assertEquals(endpoints[0].getAttribute("URL"), "http://endpoint1xx");
-        assertEquals(endpoints[1].getAttribute("URL"), "http://endpoint2xx");
+        assertEquals(endpoints[0].getAttribute("URL"), "http://endpoint11xx");
+        assertEquals(endpoints[1].getAttribute("URL"), "http://endpoint22xx");
         assertEquals(endpoints[0].getAttribute("environment"), "Dev");
         assertEquals(endpoints[1].getAttribute("environment"), "QA");
-        assertEquals("http://endpoint1xx", endpoints[0].getUrl());
-        assertEquals("http://endpoint2xx", endpoints[1].getUrl());
+        assertEquals("http://endpoint11xx", endpoints[0].getUrl());
+        assertEquals("http://endpoint22xx", endpoints[1].getUrl());
 
         //Detach Endpoint one
         service.detachEndpoint(ep1.getId());
@@ -430,7 +477,7 @@ public class EndpointTestCaseClient {
     }
 
     private Endpoint[] getAttachedEndpointsFromService(Service service) throws
-            GovernanceException {
+                                                                        GovernanceException {
         List<Endpoint> endpoints = new ArrayList<Endpoint>();
         try {
             String[] endpointValues = service.getAttributes("endpoints_entry");
@@ -461,43 +508,14 @@ public class EndpointTestCaseClient {
         endpointManager.addEndpoint(endpoint);
         try {
             endpoint = endpointManager.getEndpointByUrl(endpointURL);
-            assertTrue(endpoint.getUrl().equalsIgnoreCase(endpointURL), "Result of the getEndpointByUrl not matched. " +
-                    "Expected : https://localhost:8080/axis2/services/BizService    Found : " + endpoint.getUrl());
+            assertTrue(endpoint.getUrl().equalsIgnoreCase(endpointURL), "Get Endpoint URL not matched " +
+                                                                        "with the original");
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception occurred while executing getEndpointByUrl API method"
-                    + e.getMessage());
+                                          + e.getMessage());
         }
-
-        try {
-            endpoint = endpointManager.newEndpoint("https://localhost:8080/axis2/services/BizService");
-            endpointManager.addEndpoint(endpoint);
-            endpoint = endpointManager.getEndpointByUrl("https://localhost:8080/axis2/services/BizService");
-            assertFalse(endpoint.getUrl().equalsIgnoreCase("https://localhost:8080/axis2/services/BizService"),
-                    "Result of the getEndpointByUrl not matched. " +
-                            "Expected : https://localhost:8080/axis2/services/BizService    Found : " + endpoint.getUrl());
-        } catch (GovernanceException e) {
-        }
-
-        try {
-            endpoint = endpointManager.newEndpoint("http://MyDomain:8080/axis2/services/BizService");
-            endpointManager.addEndpoint(endpoint);
-            endpoint = endpointManager.getEndpointByUrl("http://MyDomain:8080/axis2/services/BizService");
-            endpointManager.getEndpointByUrl("http://MyDomain:8080/axis2/services/BizService");
-            assertFalse(endpoint.getUrl().equalsIgnoreCase("http://MyDomain:8080/axis2/services/BizService"),
-                    "Result of the getEndpointByUrl not matched. " +
-                            "Expected : https://MyDomain:8080/axis2/services/BizService    Found : " + endpoint.getUrl());
-        } catch (GovernanceException e) {
-        }
-
-        try {
-            endpoint = endpointManager.newEndpoint("http://MyDomain:9883/axis2/services/BizService");
-            endpointManager.addEndpoint(endpoint);
-            endpoint = endpointManager.getEndpointByUrl("http://MyDomain:9883/axis2/services/BizService");
-            endpointManager.getEndpointByUrl("http://MyDomain:9883/axis2/services/BizService");
-            assertFalse(endpoint.getUrl().equalsIgnoreCase("http://MyDomain:9883/axis2/services/BizService"),
-                    "Result of the getEndpointByUrl not matched. " +
-                            "Expected : https://MyDomain:9883/axis2/services/BizService    Found : " + endpoint.getUrl());
-        } catch (GovernanceException e) {
-        }
+        assertNotNull(endpointManager.getEndpointByUrl("https://localhost:8080/axis2/services/BizService"));
+        assertNull(endpointManager.getEndpointByUrl("http://MyDomain:8080/axis2/services/BizService"));
+        assertNull(endpointManager.getEndpointByUrl("http://MyDomain:9883/axis2/services/BizService"));
     }
 }

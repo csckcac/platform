@@ -250,6 +250,8 @@ public class ServiceTestCaseClient {
     public void testServiceRename() throws Exception {
         ServiceManager serviceManager = new ServiceManager(governance);
 
+        deleteServiceByName(serviceManager, "almdo");
+
         Service service = serviceManager.newService(new QName("http://banga.queek.queek/blaa", "sfosf"));
         serviceManager.addService(service);
 
@@ -271,11 +273,11 @@ public class ServiceTestCaseClient {
 
         OMElement contentElement = GovernanceUtils.buildOMElement(fileContents);
 
-        service = serviceManager.newService(contentElement);
-        serviceManager.addService(service);
+        Service service1 = serviceManager.newService(contentElement);
+        serviceManager.addService(service1);
 
-        service.setQName(new QName("http://doc.x.ge/yong", "almdo"));
-        serviceManager.updateService(service);
+        service1.setQName(new QName("http://doc.x.ge/yong", "almdo"));
+        serviceManager.updateService(service1);
 
         exactServiceCopy = serviceManager.getService(service.getId());
         qname = exactServiceCopy.getQName();
@@ -283,6 +285,17 @@ public class ServiceTestCaseClient {
         Assert.assertEquals(qname, new QName("http://doc.x.ge/yong", "almdo"));
         Assert.assertEquals(exactServiceCopy.getPath(), "/trunk/services/ge/x/doc/yong/almdo");
 
+        serviceManager.removeService(service.getId());
+
+    }
+
+    private void deleteServiceByName(ServiceManager serviceManager, String serviceName) throws GovernanceException {
+        Service[] serviceGet = serviceManager.getAllServices();
+        for (Service service : serviceGet) {
+            if (service.getQName().getLocalPart().contains(serviceName)) {
+                serviceManager.removeService(service.getId());
+            }
+        }
     }
 
     @Test(groups = {"wso2.greg"}, description = "delete service ", priority = 5)
@@ -354,6 +367,7 @@ public class ServiceTestCaseClient {
 
         Service service = serviceManager.newService(new QName("http://bang.boom.com/mnm/beep",
                                                               "Service1"));
+        deleteServiceByName(serviceManager, "Service1");
         service.addAttribute("testAttribute", "service1");
         serviceManager.addService(service);
         String serviceId = service.getId();
@@ -370,8 +384,8 @@ public class ServiceTestCaseClient {
         serviceManagerDuplicate.addService(duplicateService);
 
         Service newServiceDuplicate = serviceManagerDuplicate.getService(duplicateService.getId());
-        assertTrue(newServiceDuplicate.getQName().toString().contains("Service1"));
-        assertEquals(newServiceDuplicate.getAttribute("testAttributeDuplicate"), "duplicate2");
+        assertTrue(service.getQName().toString().contains("Service1"));
+        assertEquals(service.getAttribute("testAttributeDuplicate"), "duplicate2");
 
         //add duplicate service though same service manger.
 
@@ -512,6 +526,7 @@ public class ServiceTestCaseClient {
         service.addAttribute("testAttribute", "serviceAttr");
         serviceManager.addService(service);
         String serviceId = service.getId();
+
         int versionCountBefore = governance.getVersions(service.getPath()).length;
 
         //create service versions

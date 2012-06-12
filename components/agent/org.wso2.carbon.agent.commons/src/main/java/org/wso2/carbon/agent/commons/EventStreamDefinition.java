@@ -22,6 +22,7 @@ package org.wso2.carbon.agent.commons;
 
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -173,6 +174,32 @@ public class EventStreamDefinition {
     }
 
     public void addTag(String tag) {
-        //To change body of created methods use File | Settings | File Templates.
+        if (tags == null) {
+            tags = new ArrayList<String>();
+        }
+        tags.add(tag);
     }
+
+    public void addMetaData(String name, AttributeType type) {
+        if (metaData == null) {
+            metaData = new ArrayList<Attribute>();
+        }
+        metaData.add(new Attribute(name, type));
+    }
+
+    public void addCorrelationData(String name, AttributeType type) {
+        if (correlationData == null) {
+            correlationData = new ArrayList<Attribute>();
+        }
+        correlationData.add(new Attribute(name, type));
+    }
+
+    public void addPayloadData(String name, AttributeType type) {
+        if (payloadData == null) {
+            payloadData = new ArrayList<Attribute>();
+        }
+        payloadData.add(new Attribute(name, type));
+    }
+
+
 }

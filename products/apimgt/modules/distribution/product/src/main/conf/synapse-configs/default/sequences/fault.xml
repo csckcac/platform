@@ -22,20 +22,31 @@
         <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
         <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
     </log>
-    <payloadFactory>
-        <format>
-            <am:fault xmlns:am="http://wso2.org/apimanager">
-                <am:code>$1</am:code>
-                <am:type>Status report</am:type>
-                <am:message>Runtime Error</am:message>
-                <am:description>$2</am:description>
-            </am:fault>
-        </format>
-        <args>
-            <arg expression="$ctx:ERROR_CODE"/>
-            <arg expression="$ctx:ERROR_MESSAGE"/>
-        </args>
-    </payloadFactory>
+    <filter source="get-property('MESSAGE_FORMAT')" regex="soap1[1-2]">
+        <then>
+            <property name="SOAP_FAULT_CODE" value="Server"/>
+            <makefault>
+                <code expression="$ctx:SOAP_FAULT_CODE"/>
+                <reason expression="$ctx:ERROR_MESSAGE"/>
+            </makefault>
+        </then>
+        <else>
+            <payloadFactory>
+                <format>
+                    <am:fault xmlns:am="http://wso2.org/apimanager">
+                        <am:code>$1</am:code>
+                        <am:type>Status report</am:type>
+                        <am:message>Runtime Error</am:message>
+                        <am:description>$2</am:description>
+                    </am:fault>
+                </format>
+                <args>
+                    <arg expression="$ctx:ERROR_CODE"/>
+                    <arg expression="$ctx:ERROR_MESSAGE"/>
+                </args>
+            </payloadFactory>
+        </else>
+    </filter>
     <property name="HTTP_SC" value="500" scope="axis2"/>
     <property name="RESPONSE" value="true"/>
     <header name="To" action="remove"/>

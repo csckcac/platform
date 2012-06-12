@@ -17,27 +17,7 @@
   ~  under the License.
   -->
 <sequence xmlns="http://ws.apache.org/ns/synapse" name="sandbox_key_error">
-    <log level="full">
-        <property name="STATUS" value="Executing sandbox_key_error sequence"/>
-        <property name="ERROR_CODE" value="900900"/>
-        <property name="ERROR_MESSAGE" value="Sandbox key offered to the API with no sandbox endpoint"/>
-    </log>
-    <payloadFactory>
-        <format>
-            <am:fault xmlns:am="http://wso2.org/apimanager">
-                <am:code>900900</am:code>
-                <am:type>Status report</am:type>
-                <am:message>Runtime Error</am:message>
-                <am:description>Sandbox key offered to the API with no sandbox endpoint</am:description>
-            </am:fault>
-        </format>
-    </payloadFactory>
-    <property name="HTTP_SC" value="403" scope="axis2"/>
-    <property name="RESPONSE" value="true"/>
-    <header name="To" action="remove"/>
-    <property name="NO_ENTITY_BODY" scope="axis2" action="remove"/>
-    <property name="Authorization" scope="transport" action="remove"/>
-    <property name="Host" scope="transport" action="remove"/>
-    <property name="Accept" scope="transport" action="remove"/>
-    <send/>
+    <property name="ERROR_CODE" value="900900"/>
+    <property name="ERROR_MESSAGE" value="Sandbox key offered to the API with no sandbox endpoint"/>
+    <sequence key="fault"/>
 </sequence>

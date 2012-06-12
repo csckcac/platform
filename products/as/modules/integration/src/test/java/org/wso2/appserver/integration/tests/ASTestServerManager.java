@@ -85,6 +85,56 @@ public class ASTestServerManager extends TestServerManager {
         destPath = computeDestPath(carbonHome, "carbonapps", fileName);
         copySampleFile(sourcePath, destPath);
         log.info("Copying "+ sourcePath + " to " + destPath);
+        
+     // MS samples coping
+		// Mashup sample for Email Host Object
+		fileName = "emailTest.js";
+		sourcePath = computeMSSourcePath(fileName);
+		String destinationPath = computeMSDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+		log.info("MS samples coping");
+		// Mashup sample for File Host Object
+		fileName = "fileTest.js";
+		sourcePath = computeMSSourcePath(fileName);
+		destinationPath = computeMSDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+
+		// Mashup sample for Session Host Object
+		fileName = "sessionTest.js";
+		sourcePath = computeMSSourcePath(fileName);
+		destinationPath = computeMSDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+
+		// Mashup sample for Request Host Object
+		fileName = "requestTest.js";
+		sourcePath = computeMSSourcePath(fileName);
+		destinationPath = computeMSDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+
+		// Mashup sample for Scrapper Host Object
+		fileName = "scrapperTest.js";
+		sourcePath = computeMSSourcePath(fileName);
+		destinationPath = computeMSDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+
+		// Mashup sample for System Host Object
+		fileName = "systemTest.js";
+		sourcePath = computeMSSourcePath(fileName);
+		destinationPath = computeMSDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+		fileName = "concatscript.js";
+		sourcePath = computeMSSourcePath(fileName);
+		destinationPath =
+		                  computeMSDestPath(carbonHome, "systemTest.resources" + File.separator +
+		                                              fileName);
+		copySampleFile(sourcePath, destinationPath);
+
+		// Mashup sample for HttpClient Host Object
+		fileName = "httpClientTest.js";
+		sourcePath = computeMSSourcePath(fileName);
+		destinationPath = computeMSDestPath(carbonHome, fileName);
+		copySampleFile(sourcePath, destinationPath);
+		
     }
 
     private void copySampleFile(String sourcePath, String destPath) {
@@ -116,4 +166,33 @@ public class ASTestServerManager extends TestServerManager {
         }
         return deploymentPath + File.separator + fileName;
     }
+    
+ // for MS samples
+
+	private void copyMSSampleFile(String sourcePath, String destPath) {
+		File sourceFile = new File(sourcePath);
+		File destFile = new File(destPath);
+		try {
+			FileManipulator.copyFile(sourceFile, destFile);
+		} catch (IOException e) {
+			log.error("Error while copying the sample into MashupServer", e);
+		}
+	}
+
+	private String computeMSSourcePath(String fileName) {
+		String samplesDir = System.getProperty("ms.samples.dir");
+		return samplesDir + File.separator + fileName;
+	}
+
+	private String computeMSDestPath(String carbonHome, String fileName) {
+		String deploymentPath =
+		                        carbonHome + File.separator + "repository" + File.separator +
+		                                "deployment" + File.separator + "server" + File.separator +
+		                                "jsservices" + File.separator + "admin";
+		File depFile = new File(deploymentPath);
+		if (!depFile.exists() && !depFile.mkdir()) {
+			log.error("Error while creating the deployment folder : " + deploymentPath);
+		}
+		return deploymentPath + File.separator + fileName;
+	}
 }

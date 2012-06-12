@@ -1953,6 +1953,26 @@ public class ApiMgtDAO {
                 " AM_SUBSCRIPTION_KEY_MAPPING (SUBSCRIPTION_ID, ACCESS_TOKEN, KEY_TYPE)" +
                 " VALUES (?,?,?)";
 
+        String getApplicationDataQuery = "SELECT" +
+                " SUB.SUBSCRIPTION_ID AS SUBSCRIPTION_ID," +
+                " SUB.TIER_ID AS TIER_ID," +
+                " APP.APPLICATION_ID AS APPLICATION_ID," +
+                " API.CONTEXT AS CONTEXT," +
+                " AKM.ACCESS_TOKEN AS ACCESS_TOKEN," +
+                " AKM.KEY_TYPE AS KEY_TYPE " +
+                "FROM" +
+                " AM_SUBSCRIPTION SUB," +
+                " AM_APPLICATION APP," +
+                " AM_APPLICATION_KEY_MAPPING AKM, " +
+                " AM_API API " +
+                "WHERE" +
+                " API.API_PROVIDER = ?" +
+                " AND API.API_NAME = ?" +
+                " AND API.API_VERSION = ?" +
+                " AND AKM.APPLICATION_ID = APP.APPLICATION_ID" +
+                " AND SUB.APPLICATION_ID = APP.APPLICATION_ID" +
+                " AND API.API_ID = SUB.API_ID";
+
         try {
             // Retrieve all the existing subscription for the old version
             connection = APIMgtDBUtil.getConnection();
@@ -1963,6 +1983,7 @@ public class ApiMgtDAO {
             rs = prepStmt.executeQuery();
 
             List<SubscriptionInfo> subscriptionData = new ArrayList<SubscriptionInfo>();
+            Set<Integer> subscribedApplications = new HashSet<Integer>();
             while (rs.next()) {
                 SubscriptionInfo info = new SubscriptionInfo();
                 info.subscriptionId = rs.getInt("SUBSCRIPTION_ID");
@@ -2000,7 +2021,22 @@ public class ApiMgtDAO {
                 prepStmt.setString(3, info.tokenType);
                 prepStmt.execute();
                 prepStmt.close();
+                
+                subscribedApplications.add(info.applicationId);
             }
+
+            prepStmt = connection.prepareStatement(getApplicationDataQuery);
+            prepStmt.setString(1, provider);
+            prepStmt.setString(2, apiName);
+            prepStmt.setString(3, oldVersion);
+            rs = prepStmt.executeQuery();
+            while (rs.next()) {
+                int applicationId = rs.getInt("APPLICATION_ID");
+                if (!subscribedApplications.contains(applicationId)) {
+                    addSubscription(apiId, rs.getString("CONTEXT"), applicationId);
+                }
+            }
+
             connection.commit();
         } catch (SQLException e) {
             log.error("Error when executing the SQL queries");

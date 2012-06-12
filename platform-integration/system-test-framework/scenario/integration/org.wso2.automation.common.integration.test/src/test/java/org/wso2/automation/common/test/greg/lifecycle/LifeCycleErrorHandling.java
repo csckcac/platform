@@ -78,7 +78,7 @@ public class LifeCycleErrorHandling {
     public void createLifeCycleWithInvalidTagName()
             throws LifeCycleManagementServiceExceptionException, RemoteException,
                    InterruptedException {
-        String invalidLifeCycleConfiguration = lifeCycleConfiguration.replaceFirst("<configuration", "<confi");
+        String invalidLifeCycleConfiguration = lifeCycleConfiguration.replaceFirst("<configuration", "<config");
         invalidLifeCycleConfiguration = invalidLifeCycleConfiguration.replaceFirst("</configuration>", "</config>");
 
         Assert.assertFalse(lifeCycleManagerAdminService.addLifeCycle(sessionCookie, invalidLifeCycleConfiguration),

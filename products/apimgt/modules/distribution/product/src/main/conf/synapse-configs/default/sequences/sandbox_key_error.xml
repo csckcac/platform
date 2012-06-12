@@ -16,27 +16,23 @@
   ~  specific language governing permissions and limitations
   ~  under the License.
   -->
-<sequence xmlns="http://ws.apache.org/ns/synapse" name="fault">
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="sandbox_key_error">
     <log level="full">
-        <property name="STATUS" value="Executing default 'fault' sequence"/>
-        <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
-        <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
+        <property name="STATUS" value="Executing sandbox_key_error sequence"/>
+        <property name="ERROR_CODE" value="900900"/>
+        <property name="ERROR_MESSAGE" value="Sandbox key offered to the API with no sandbox endpoint"/>
     </log>
     <payloadFactory>
         <format>
             <am:fault xmlns:am="http://wso2.org/apimanager">
-                <am:code>$1</am:code>
+                <am:code>900900</am:code>
                 <am:type>Status report</am:type>
                 <am:message>Runtime Error</am:message>
-                <am:description>$2</am:description>
+                <am:description>Sandbox key offered to the API with no sandbox endpoint</am:description>
             </am:fault>
         </format>
-        <args>
-            <arg expression="$ctx:ERROR_CODE"/>
-            <arg expression="$ctx:ERROR_MESSAGE"/>
-        </args>
     </payloadFactory>
-    <property name="HTTP_SC" value="500" scope="axis2"/>
+    <property name="HTTP_SC" value="403" scope="axis2"/>
     <property name="RESPONSE" value="true"/>
     <header name="To" action="remove"/>
     <property name="NO_ENTITY_BODY" scope="axis2" action="remove"/>

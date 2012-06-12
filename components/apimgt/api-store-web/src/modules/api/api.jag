@@ -28,7 +28,9 @@ var getAPIDescription = function (api, username) {
                 bizOwner:api.bizOwner,
                 bizOwnerMail:api.bizOwnerMail,
                 techOwner:api.techOwner,
-                techOwnerMail:api.techOwnerMail
+                techOwnerMail:api.techOwnerMail,
+                wsdl:api.wsdl,
+                wadl:api.wadl
             }
         };
     } catch (e) {

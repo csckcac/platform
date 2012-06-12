@@ -12,6 +12,18 @@
     }
     %>
     </ul>
+    <% if(api.wsdl && api.wsdl != ""){ %>
+        <h6>WSDL:</h6>
+    <p>
+        <a href="<%=api.wsdl%>"><%=api.wsdl%> </a>
+    </p>
+    <% } %>
+    <% if(api.wadl && api.wadl != ""){ %>
+        <h6>WADL:</h6>
+    <p>
+        <a href="<%=api.wadl%>"><%=api.wadl%></a>
+    </p>
+        <% } %>
     <% if(api.description && api.description != ""){ %>
         <h6>Description:</h6>
     <p>

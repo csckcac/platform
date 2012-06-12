@@ -473,7 +473,7 @@ function addRuleScript(scriptType, ruleSourceType){
    nameTDWrapper.appendChild(createScriptLabel(ruleScript));
    var deleteTD = document.createElement("td");
     deleteTD.style.width = '200px';
-    deleteTD.appendChild(createRuleDeleteLink("ruleScriptList", i));
+    deleteTD.appendChild(createRuleDeleteLink("ruleScriptList", i, ruleSourceType, ruleScript));
 
     scriptRaw.appendChild(typeTD);
     scriptRaw.appendChild(nameTD);
@@ -497,7 +497,11 @@ function validateRule(scriptType){
     return true;
 }
 
-function createRuleDeleteLink(category, i) {
+function createRuleDeleteLink(category, i, ruleSourceType, ruleScript) {
+        // Create the element:
+   /* return jQuery(jQuery('<a style="width:40px" href="#" class="delete-icon-link">'+'yourtext'+'</a>')).click(function(){
+
+    });*/
     // Create the element:
     var factDeleteLink = document.createElement('a');
     // Set some properties:
@@ -505,9 +509,15 @@ function createRuleDeleteLink(category, i) {
     factDeleteLink.style.paddingLeft = '40px';
     factDeleteLink.className = "delete-icon-link";
     factDeleteLink.appendChild(document.createTextNode(ruleservicejsi18n["rule.action.delete"]));
-    factDeleteLink.onclick = function () {
-        deleteScript(category, i)
-    };
+ /*     jQuery(factDeleteLink).click(function(){
+       alert('hi');
+    });*/
+    jQuery(factDeleteLink).click(function(){
+        deleteScript(category, i, ruleSourceType, ruleScript);
+    });
+   /* factDeleteLink.onclick = function () {
+        deleteScript(category, i, ruleSourceType, ruleScript)
+    };*/
     return factDeleteLink;
 }
 
@@ -543,7 +553,6 @@ function deleteScriptRaw(category, i, sourceType, scriptName) {
     var j = ruleScriptCount.value;
     var currentCount = parseInt(j);
     currentCount = currentCount + 1;
-
     ruleScriptCount.value = currentCount;
 
     var propRow = document.getElementById(category + "Raw" + i);

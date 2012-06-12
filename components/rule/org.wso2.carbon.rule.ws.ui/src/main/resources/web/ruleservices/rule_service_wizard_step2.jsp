@@ -345,41 +345,6 @@
     </tr>
 </table>
 
-    <%--
-    <table class="styledLeft">
-        <tr id="ruleScriptUploadTR" style="<%=ruleUploadDisplay%>">
-            <td><fmt:message key="rule.source.upload"/></td>
-            <td class="formRow">
-                <form method="post" name="ruleScriptUpload"
-                      action="../../fileupload/facts"
-                      enctype="multipart/form-data" target="_self">
-                    <table class="normal">
-                        <tr>
-                            <td>
-                                <input type="file" id="ruleFilename"
-                                       name="ruleFilename"
-                                       size="75"/>
-                            </td>
-                            <td class="buttonRow">
-                                <input type="hidden"
-                                       value="<%=serviceDescription.getName()%>"
-                                       name="ruleServiceName"/>
-                                    &lt;%&ndash;<input id="uploadedFileName" type="hidden" value="<%=path%>"/>&ndash;%&gt;
-                                <input name="upload" type="button"
-                                       class="button"
-                                       value="<fmt:message key="upload"/> "
-                                       onclick="validateRuleFileUpload();"/>
-                            </td>
-                        </tr>
-
-
-                    </table>
-                </form>
-            </td>
-        </tr>
-    </table>--%>
-
-
 <table class="styledLeft bordered-table">
 <form method="post" name="ruleScriptUpload"
       action="../../fileupload/facts"
@@ -398,7 +363,6 @@
                         <input type="hidden"
                                value="<%=serviceDescription.getName()%>"
                                name="ruleServiceName"/>
-                            <%--<input id="uploadedFileName" type="hidden" value="<%=path%>"/>--%>
                         <input name="upload" type="button"
                                class="button"
                                value="<fmt:message key="upload"/> "
@@ -512,7 +476,7 @@
                             <tbody id="ruleScriptListTBody">
 
                             <%
-                                int i = 1;
+                                int i = 0   ;
                                 List<String> paths = null;
                                 if (scriptList != null && !scriptList.isEmpty()) {
                                     paths = new ArrayList<String>(scriptList.keySet());

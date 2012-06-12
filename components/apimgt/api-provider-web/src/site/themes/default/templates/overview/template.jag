@@ -33,6 +33,25 @@
                 <td>Tier Availability</td>
                 <td id="tierAvb"><%=api.availableTiers%></td>
             </tr>
+             <%
+            if(api.bizOwner!=''){%>
+             <tr>
+                <td>Business Owner</td>
+                <td id="bizOwnerData"><%=api.bizOwner%> <% if(api.bizOwnerMail!=''){%>
+                [<a href="mailto:<%=api.bizOwnerMail%>"><%=api.bizOwnerMail%></a>]
+                <%}%>
+                </td>
+            </tr>
+             <%
+             }if(api.techOwner!=''){%>
+             <tr>
+                <td>Technical Owner</td>
+                <td id="techOwnerData"><%=api.techOwner%><% if(api.techOwnerMail!=''){%>
+                [<a href="mailto:<%=api.techOwnerMail%>"><%=api.techOwnerMail%></a>]
+                <%}%>
+                </td>
+            </tr>
+            <%}%>
             </tbody>
         </table>
     </div>

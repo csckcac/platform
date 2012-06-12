@@ -52,7 +52,7 @@ var removeDocumentation = function (provider,apiName, version, docName, docType)
 };
 
 var copyDocumentation = function (docName, docType, summary) {
-    $('#newDoc .btn-primary').text('update');
+    $('#newDoc .btn-primary').text('Update');
     $('#newDoc').show('slow');
     $('#newDoc #docName').val(docName + '-copy');
     $('#newDoc #summary').val(summary);
@@ -65,7 +65,7 @@ var copyDocumentation = function (docName, docType, summary) {
 };
 
 var updateDocumentation = function (docName, docType, summary, docUrl) {
-    $('#newDoc .btn-primary').text('update');
+    $('#newDoc .btn-primary').text('Update');
     $('#newDoc').show('slow');
     $('#newDoc #docName').val(docName);
     $('#newDoc #summary').val(summary);

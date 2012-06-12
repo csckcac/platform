@@ -41,9 +41,9 @@ var docName = '<%=request.getParameter("docName")%>';
                 <% if(mode=="edit"){%>
                 <div class="span12">
                     <div style="padding:10px 0;">
-                        <button type="button" title="click 'Apply' button to apply the change to the Doc and stay in this tab" class="btn btn-primary" id="inline-apply-button" onclick="saveContent(provider,apiName,apiVersion,docName,'apply')">Apply</button>
-                        <button type="button" title="click 'Save' button to save the Doc and move away from this tab" class="btn btn-primary" id="inline-save-button" onclick="saveContent(provider,apiName,apiVersion,docName,'save')">Save</button>
-                        <button type="button" title="click 'Close' button to cancel and move away from this tab"  class="btn" id="inline-cancel-button" onclick="window.close()">Close</button>
+                        <button type="button" title="Apply the changes to the document and stay in this tab" class="btn btn-primary" id="inline-apply-button" onclick="saveContent(provider,apiName,apiVersion,docName,'apply')">Apply</button>
+                        <button type="button" title="Save the document and close this tab" class="btn btn-primary" id="inline-save-button" onclick="saveContent(provider,apiName,apiVersion,docName,'save')">Save and Close</button>
+                        <button type="button" title="Cancel all the unsaved changes and close this tab"  class="btn" id="inline-cancel-button" onclick="window.close()">Close</button>
 
                     </div>
                 </div>

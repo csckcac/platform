@@ -119,14 +119,16 @@ public class SaveDeleteFilterTest {
         boolean isFilterFound = false;
         searchAdminService.deleteFilter(sessionCookie, filterName);
         String[] filters = searchAdminService.getSavedFilters(sessionCookie);
-        for (String filter : filters) {
-            if (filterName.equalsIgnoreCase(filter)) {
-                isFilterFound = true;
-                break;
+        if (filters != null && filters.length > 0) {
+            for (String filter : filters) {
+                if (filterName.equalsIgnoreCase(filter)) {
+                    isFilterFound = true;
+                    break;
+                }
             }
-        }
 
-        Assert.assertFalse(isFilterFound, "Filter Deletion Failed");
+            Assert.assertFalse(isFilterFound, "Filter Deletion Failed");
+        }
 
     }
 

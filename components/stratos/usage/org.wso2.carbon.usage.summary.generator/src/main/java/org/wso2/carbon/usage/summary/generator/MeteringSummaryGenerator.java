@@ -15,7 +15,6 @@
  */
 package org.wso2.carbon.usage.summary.generator;
 
-import java.util.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bam.common.dataobjects.dimensions.*;
@@ -31,6 +30,8 @@ import org.wso2.carbon.stratos.common.constants.UsageConstants;
 import org.wso2.carbon.usage.meteringsummarygenerationds.stub.beans.xsd.BandwidthHourlyStatValue;
 import org.wso2.carbon.usage.meteringsummarygenerationds.stub.beans.xsd.BandwidthStatValue;
 import org.wso2.carbon.usage.summary.generator.client.UsageSummaryGeneratorClient;
+
+import java.util.Calendar;
 
 /**
  * 
@@ -100,14 +101,22 @@ public class MeteringSummaryGenerator extends AbstractSummaryGenerator {
             
             //Summarize
             BandwidthSummarizer summarizer = new BandwidthSummarizer(statValues);
-            
+
             //Write the summary back
-            client.getStub().addBandwidthStatHourlySummary(server.getId(), hd.getId(),
-                    UsageConstants.REGISTRY_BANDWIDTH, summarizer.regInBandwidth,
-                    summarizer.regOutBandwidth);
-            client.getStub().addBandwidthStatHourlySummary(server.getId(), hd.getId(),
-                    UsageConstants.SERVICE_BANDWIDTH, summarizer.svcInBandwidth,
-                    summarizer.svcOutBandwidth);
+            // Skip writing 0 values for summery tables
+            if (summarizer.regInBandwidth > 0 || summarizer.regOutBandwidth > 0) {
+                client.getStub().addBandwidthStatHourlySummary(server.getId(), hd.getId(),
+                        UsageConstants.REGISTRY_BANDWIDTH, summarizer.regInBandwidth,
+                        summarizer.regOutBandwidth);
+            }
+            if (summarizer.svcInBandwidth > 0 || summarizer.svcOutBandwidth > 0) {
+                client.getStub().addBandwidthStatHourlySummary(server.getId(), hd.getId(),
+                        UsageConstants.SERVICE_BANDWIDTH, summarizer.svcInBandwidth,
+                        summarizer.svcOutBandwidth);
+            }
+            // Here we will add one bandwidth without checking 0 or not since we need to get
+            // last summery generated time per given server
+            //Per one summery generation we must write at least one entry to table
             client.getStub().addBandwidthStatHourlySummary(server.getId(), hd.getId(),
                     UsageConstants.WEBAPP_BANDWIDTH, summarizer.webappInBandwidth,
                     summarizer.webappOutBandwidth);
@@ -148,14 +157,22 @@ public class MeteringSummaryGenerator extends AbstractSummaryGenerator {
                     server.getId(), start, end);
           //Summarize
             BandwidthSummarizer summarizer = new BandwidthSummarizer(statValues);
-            
-          //Write the summary back
-            client.getStub().addBandwidthStatDailySummary(server.getId(), dd.getId(),
-                    UsageConstants.REGISTRY_BANDWIDTH, summarizer.regInBandwidth,
-                    summarizer.regOutBandwidth);
-            client.getStub().addBandwidthStatDailySummary(server.getId(), dd.getId(),
-                    UsageConstants.SERVICE_BANDWIDTH, summarizer.svcInBandwidth,
-                    summarizer.svcOutBandwidth);
+
+            //Write the summary back
+            // Skip writing 0 values for summery tables
+            if (summarizer.regInBandwidth > 0 || summarizer.regOutBandwidth > 0) {
+                client.getStub().addBandwidthStatDailySummary(server.getId(), dd.getId(),
+                        UsageConstants.REGISTRY_BANDWIDTH, summarizer.regInBandwidth,
+                        summarizer.regOutBandwidth);
+            }
+            if (summarizer.svcInBandwidth > 0 || summarizer.svcOutBandwidth > 0) {
+                client.getStub().addBandwidthStatDailySummary(server.getId(), dd.getId(),
+                        UsageConstants.SERVICE_BANDWIDTH, summarizer.svcInBandwidth,
+                        summarizer.svcOutBandwidth);
+            }
+            // Here we will add one bandwidth without checking 0 or not since we need to get
+            // last summery generated time per given server
+            //Per one summery generation we must write at least one entry to table
             client.getStub().addBandwidthStatDailySummary(server.getId(), dd.getId(),
                     UsageConstants.WEBAPP_BANDWIDTH, summarizer.webappInBandwidth,
                     summarizer.webappOutBandwidth);

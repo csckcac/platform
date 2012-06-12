@@ -19,7 +19,6 @@
     <service name="UrlMapperAdminService" scope="transportsession">
         <transports>
             <transport>https</transport>
-            <transport>http</transport>
         </transports>
         <parameter name="ServiceClass">org.wso2.carbon.url.mapper.UrlMapperAdminService</parameter>
     </service>

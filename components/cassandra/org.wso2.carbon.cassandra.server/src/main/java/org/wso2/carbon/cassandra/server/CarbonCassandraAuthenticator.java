@@ -24,6 +24,7 @@ import org.apache.cassandra.config.ConfigurationException;
 import org.apache.cassandra.thrift.AuthenticationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.caching.core.CacheEntry;
 import org.wso2.carbon.caching.core.StringCacheEntry;
 import org.wso2.carbon.caching.core.StringCacheKey;
@@ -69,7 +70,7 @@ public class CarbonCassandraAuthenticator implements IAuthenticator {
      */
     public AuthenticatedUser authenticate(Map<? extends CharSequence, ? extends CharSequence> credentials) throws AuthenticationException {
 
-        String domainName = null;
+        String domainName = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
 
         CharSequence user = credentials.get(USERNAME_KEY);
         if (null == user) {

@@ -58,9 +58,7 @@ public class Result extends DataServiceConfigurationElement {
 	private String rdfBaseURI = ""; 
 
 	/* represents the role of the user */
-	private String userRole = ""; 
-
-	private List<UDT> udts = new ArrayList<UDT>();
+	private String userRole = "";
 
 	private List<ComplexElement> complexElements = new ArrayList<ComplexElement>();
 
@@ -98,23 +96,6 @@ public class Result extends DataServiceConfigurationElement {
 	public void addElement(Element element) {
 		this.elements.add(element);
 	}
-
-    public List<UDT> getUDTs() {
-		return udts;
-	}
-
-	public void setUDTs(List<UDT> udts) {
-		this.udts = udts;
-	}
-
-	public void removeUDT(UDT udt) {
-		this.udts.remove(udt);
-	}
-
-	public void addUDT(UDT udt) {
-		this.udts.add(udt);
-	}
-
 
 	public List<ComplexElement> getComplexElements() {
 		return complexElements;
@@ -225,17 +206,6 @@ public class Result extends DataServiceConfigurationElement {
 			}
 		}
 		return element;
-	}
-
-    public UDT removeUDT(String udtName) {
-		UDT udt = new UDT();
-		for (int a = 0; a < udts.size(); a++) {
-			udt = udts.get(a);
-			if (udt.getName().equals(udtName)) {
-				udt = udts.remove(a);
-			}
-		}
-		return udt;
 	}
 
 	public ComplexElement removeComplexElement(String elementName) {
@@ -565,9 +535,6 @@ public class Result extends DataServiceConfigurationElement {
 		}
 		for (CallQueryGroup callQueryGroup : this.getCallQueryGroups()) {
 			resEl.addChild(callQueryGroup.buildXML());
-		}
-        for (UDT udt : this.getUDTs()) {
-			resEl.addChild(udt.buildXML());
 		}
 		return resEl;
 	}

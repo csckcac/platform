@@ -527,35 +527,6 @@ public boolean isDTP() {
 		}
 	}
 
-    private void addUdtToComplexEl(ComplexElement complexEl, OMElement attributeEle) {
-		String name = attributeEle.getAttribute(new QName("name")).getAttributeValue();
-		OMAttribute columnAttr = attributeEle.getAttribute(new QName("column"));
-		OMAttribute queryParamattr = attributeEle.getAttribute(new QName("query-param"));
-		String column = null;
-		String queryParam = null;
-		if (columnAttr != null) {
-			column = columnAttr.getAttributeValue();
-		}
-		if (queryParamattr != null) {
-			queryParam = queryParamattr.getAttributeValue();
-		}
-		OMAttribute requiredRolesAttr = attributeEle.getAttribute(new QName("requiredRoles"));
-		String requiredRoles = null;
-		if (requiredRolesAttr != null) {
-			requiredRoles = requiredRolesAttr.getAttributeValue();
-		}
-
-        OMAttribute namespaceAttr = attributeEle.getAttribute(new QName("namespace"));
-		String namespace = null;
-		if (namespaceAttr != null) {
-			namespace = namespaceAttr.getAttributeValue();
-		}
-
-        UDT udt = new UDT("udt",column, name, requiredRoles,namespace);
-        complexEl.addUdt(udt);
-
-	}
-
 	private void addElementToComplexEl(ComplexElement complexEl, OMElement elementEle) {
 		OMAttribute nameattr = elementEle.getAttribute(new QName("name"));
 		String name = null;
@@ -651,12 +622,6 @@ public boolean isDTP() {
 			}
 		}
 
-        Iterator<OMElement> itrUdts = complexElementEl.getChildrenWithName(new QName("udt"));
-		while (itrUdts.hasNext()) {
-			OMElement attributeEle = itrUdts.next();
-			this.addUdtToComplexEl(complexEl, attributeEle);
-		}
-
 		Iterator<OMElement> itrAttributes = complexElementEl.getChildrenWithName(new QName("attribute"));
 		while (itrAttributes.hasNext()) {
 			OMElement attributeEle = itrAttributes.next();
@@ -724,7 +689,6 @@ public boolean isDTP() {
 		result.setAttributes(resultComplexEl.getAttributes());
 		result.setCallQueryGroups(resultComplexEl.getCallQueryGroups());
 		result.setComplexElements(resultComplexEl.getComplexElements());
-            result.setUDTs(resultComplexEl.getUDTs());
 		
 		return result;
 		} catch (Exception e) {

@@ -40,7 +40,6 @@ public class ComplexElement {
 	private List<Attribute> attributes;
 	private List<CallQueryGroup> callQueryGroups;
 	private List<ComplexElement> complexElements;
-    private List <UDT> udts;
 	private List<RDFResource> resources;
 	private String name;
 	private String namespace;
@@ -55,7 +54,6 @@ public class ComplexElement {
 		this.callQueryGroups = new ArrayList<CallQueryGroup>();
 		this.complexElements = new ArrayList<ComplexElement>();
 		this.resources = new ArrayList<RDFResource>();
-        this.udts = new ArrayList<UDT>();
 	}
 	
 	public ComplexElement() {
@@ -64,7 +62,6 @@ public class ComplexElement {
 		this.callQueryGroups = new ArrayList<CallQueryGroup>();
 		this.complexElements = new ArrayList<ComplexElement>();
 		this.resources = new ArrayList<RDFResource>();
-        this.udts = new ArrayList<UDT>();
 	}
 	
 	public void addCallQuery(CallQuery callQuery) {
@@ -95,14 +92,6 @@ public class ComplexElement {
 	
 	public void addResource(RDFResource resource) {
 		this.getResources().add(resource);
-	}
-
-	public List<UDT> getUDTs() {
-		return udts;
-	}
-
-    public void addUdt(UDT udt) {
-		this.getUDTs().add(udt);
 	}
 
 	public List<Element> getElements() {
@@ -194,17 +183,6 @@ public class ComplexElement {
 			}
 		}
 	}
-
-    public UDT removeUDT(String udtName) {
-		UDT udt = new UDT();
-		for (int a = 0; a < udts.size(); a++) {
-			udt = udts.get(a);
-			if (udt.getName().equals(udtName)) {
-				udt = udts.remove(a);
-			}
-		}
-		return udt;
-	}
 	
 	public List<CallQuery> getCallQueries() {
 		ArrayList<CallQuery> list = new ArrayList<CallQuery>();
@@ -256,9 +234,6 @@ public class ComplexElement {
 		}
 		for (ComplexElement complexElement : this.getComplexElements()) {
 			elementEl.addChild(complexElement.buildXML());
-		}
-        for (UDT udt : this.getUDTs()) {
-			elementEl.addChild(udt.buildXML());
 		}
 		return elementEl;
 	}

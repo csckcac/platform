@@ -35,12 +35,12 @@ function getGadgetsJSON(urls, callback) {
      }
      }
      json += ']}';    */
-
-    for (var url in urls) {
+    var ix;
+    for (ix=0; ix<urls.length; ix++) {
         var gadget = {};
         gadget["moduleId"] = 0;
         gadget["prefs"] = {};
-        gadget["url"] = urls[url];
+        gadget["url"] = urls[ix];
 
         jsonObj["gadgets"].push(gadget);
     }

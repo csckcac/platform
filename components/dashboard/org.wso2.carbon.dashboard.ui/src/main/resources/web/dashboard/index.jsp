@@ -161,7 +161,7 @@
             gadgetUrls = DashboardUiUtils.getGadgetUrlsToLayout(currentActiveTab, dashboardContentBean.getTabs());
 
             // We need to populate gadgets for this tab (On demand population)
-            dashboardServiceClient.populateDashboardTab(currentActiveTab);
+            //dashboardServiceClient.populateDashboardTab(currentActiveTab);
         }
 
 

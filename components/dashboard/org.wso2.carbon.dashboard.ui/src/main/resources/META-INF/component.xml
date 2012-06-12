@@ -16,7 +16,7 @@
  ~ under the License.
  -->
 <component xmlns="http://products.wso2.org/carbon">
-    <servlets>
+    <!--servlets>
         <servlet id="dashboardServerGadgetServlet">
             <servlet-name>dashboardServerGadgetServlet</servlet-name>
             <url-pattern>/registry/resource/_system/config/repository/dashboards/gadgets</url-pattern>
@@ -29,7 +29,7 @@
             <display-name>Gadget server gadget Content Servlet</display-name>
             <servlet-class>org.wso2.carbon.dashboard.ui.servlets.GadgetServlet</servlet-class>
         </servlet>
-    </servlets>
+    </servlets-->
     <framework-configuration>
         <bypass>
             <authentication>

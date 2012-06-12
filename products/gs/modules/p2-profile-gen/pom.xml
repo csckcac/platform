@@ -373,14 +373,14 @@
                                     <id>org.wso2.carbon.registry.social.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.gs.styles.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.gs.menu.feature.group</id>
                                     <version>${project.version}</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.stratos.gadget.styles.feature.group</id>
                                     <version>${stratos.version}</version>

@@ -25,6 +25,7 @@ import org.wso2.carbon.dashboard.stub.types.bean.Tab;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +42,7 @@ public class DashboardUiUtils {
         String response = "";
         try {
             String hostName = CarbonUtils.getServerConfiguration().getFirstProperty("HostName");
-            backendHttpPort=getBackendPort("http");
+            backendHttpPort = getBackendPort("http");
             // Removing the carbon part
             response = backendUrl.split("/carbon/")[0];
 
@@ -163,7 +164,7 @@ public class DashboardUiUtils {
                     - "services/".length());
             String themeRoot;
 
-            if (tenantDomain != null && !"".equals(tenantDomain)) {
+            if (tenantDomain != null && !"".equals(tenantDomain) && (!MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain))) {
 
                 themeRoot = serverRoot + "t/" + tenantDomain
                         + "/gs/resource"
@@ -272,23 +273,24 @@ public class DashboardUiUtils {
         return EMPTY_STRING;
     }
 
-    public static boolean isGadgetServer(){
-          return CarbonUtils.getServerConfiguration().getFirstProperty("Name").toLowerCase().replaceAll(" ", "").equals("wso2gadgetserver") ||
-          						CarbonUtils.getServerConfiguration().getFirstProperty("Name").toLowerCase().replaceAll(" ", "").equals("wso2stratosgadgetserver") ||
-          						CarbonUtils.getServerConfiguration().getFirstProperty("Name").toLowerCase().replaceAll(" ", "").equals("wso2stratosmanager");
+    public static boolean isGadgetServer() {
+        return CarbonUtils.getServerConfiguration().getFirstProperty("Name").toLowerCase().replaceAll(" ", "").equals("wso2gadgetserver") ||
+                CarbonUtils.getServerConfiguration().getFirstProperty("Name").toLowerCase().replaceAll(" ", "").equals("wso2stratosgadgetserver") ||
+                CarbonUtils.getServerConfiguration().getFirstProperty("Name").toLowerCase().replaceAll(" ", "").equals("wso2stratosmanager");
     }
 
     /**
      * Get the running transport port
+     *
      * @param transport [http/https]
      * @return port
      */
-    public static String getBackendPort(String transport){
+    public static String getBackendPort(String transport) {
         int port;
         String backendPort;
         try {
             port = CarbonUtils.getTransportProxyPort(DashboardUiContext.getConfigContext(), transport);
-             if (port == -1) {
+            if (port == -1) {
                 port = CarbonUtils.getTransportPort(DashboardUiContext.getConfigContext(), transport);
             }
             backendPort = Integer.toString(port);

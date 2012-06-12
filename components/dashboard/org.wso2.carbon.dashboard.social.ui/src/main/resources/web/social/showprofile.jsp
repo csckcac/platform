@@ -177,8 +177,11 @@
             </a>
             </strong></li>
             <li>|</li>
-            <li>
+<%--            <li>
                 <a href="javaScript:redirectToHttpsUrl('../admin/logout_action.jsp?IndexPageURL=/carbon/gsusermgt/middle.jsp', '<%=SocialUiUtils.getHttpsPort(backendServerURL)%>')">Sign-out</a>
+            </li>--%>
+            <li>
+                <a href="../admin/logout_action.jsp">Sign-out</a>
             </li>
         </ul>
     </div>

@@ -239,7 +239,7 @@
         <li>|</li>
         <!--li><a href="javaScript:redirectToHttpsUrl('../gsusermgt/login.jsp?action=signOut', '<%=DashboardUiUtils.getBackendPort("https")%>')">Sign-out</a></li-->
         <li>
-            <a href="javaScript:redirectToHttpsUrl('../admin/logout_action.jsp?IndexPageURL=/carbon/gsusermgt/middle.jsp', '<%=DashboardUiUtils.getBackendPort("https")%>')">Sign-out</a>
+            <a href="../admin/logout_action.jsp">Sign-out</a>
         </li>
 
         <li>|</li>

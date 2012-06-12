@@ -19,5 +19,6 @@
 <sequence xmlns="http://ws.apache.org/ns/synapse" name="sandbox_key_error">
     <property name="ERROR_CODE" value="900900"/>
     <property name="ERROR_MESSAGE" value="Sandbox key offered to the API with no sandbox endpoint"/>
+    <property name="CUSTOM_HTTP_SC" value="403"/>
     <sequence key="fault"/>
 </sequence>

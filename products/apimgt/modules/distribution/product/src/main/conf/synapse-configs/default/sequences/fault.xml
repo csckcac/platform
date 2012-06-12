@@ -47,7 +47,14 @@
             </payloadFactory>
         </else>
     </filter>
-    <property name="HTTP_SC" value="500" scope="axis2"/>
+    <filter xpath="$ctx:CUSTOM_HTTP_SC">
+        <then>
+            <property name="HTTP_SC" expression="$ctx:CUSTOM_HTTP_SC" scope="axis2"/>
+        </then>
+        <else>
+            <property name="HTTP_SC" value="500" scope="axis2"/>
+        </else>
+    </filter>
     <property name="RESPONSE" value="true"/>
     <header name="To" action="remove"/>
     <property name="NO_ENTITY_BODY" scope="axis2" action="remove"/>

@@ -133,7 +133,8 @@ public class EmailSender extends Thread {
             SuperTenantCarbonContext.getCurrentContext().getTenantDomain(true);
         }
         if (tenantDomain != null && targetEpr.indexOf("/carbon") > 0 &&
-            MultitenantUtils.getTenantDomainFromRequestURL(targetEpr) == null) {
+            MultitenantUtils.getTenantDomainFromRequestURL(targetEpr) == null &&
+                SuperTenantCarbonContext.getCurrentContext().getTenantId(true)!= MultitenantConstants.SUPER_TENANT_ID) {
             targetEpr = targetEpr.replace("/carbon", "/" +
                                                      MultitenantConstants.TENANT_AWARE_URL_PREFIX + "/" + tenantDomain + "/carbon");
         }

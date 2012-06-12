@@ -28,7 +28,8 @@ var getAllDocumentation = function (api) {
         log.error(e.message);
         return {
             error:e,
-            docs:null
+            docs:null,
+            message:e.message.split(":")[1]
         };
     }
 
@@ -59,7 +60,8 @@ var getInlineContent = function (api, docName) {
         log.error(e.message);
         return {
             error:e,
-            doc:null
+            doc:null,
+            message:e.message.split(":")[1]
         };
     }
 };

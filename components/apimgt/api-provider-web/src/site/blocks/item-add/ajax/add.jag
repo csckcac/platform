@@ -49,7 +49,7 @@ include("/jagg/jagg.jag");
         if (result.error==true) {
             obj = {
                 error:true,
-                message:msg.error.backendError(action)
+                message:result.message
             };
         } else {
             obj = {

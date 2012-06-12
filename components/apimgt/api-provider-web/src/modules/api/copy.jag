@@ -21,7 +21,8 @@ var copyAPI = function (api, newVersion) {
     } catch (e) {
         log.error(e.message);
         return {
-            error:e
+            error:e ,
+            message:e.message.split(":")[1]
         };
     }
 };

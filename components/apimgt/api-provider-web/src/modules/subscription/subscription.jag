@@ -25,7 +25,8 @@ var getSubscribersOfAPI = function (api) {
         log.error(e.message);
         return {
             error:e,
-            subscribers:null
+            subscribers:null,
+            message:e.message.split(":")[1]
         };
     }
 };
@@ -57,7 +58,8 @@ var getSubscribersOfProvider = function (username) {
         log.error(e.message);
         return {
             error:e,
-            subscribers:null
+            subscribers:null,
+            message:e.message.split(":")[1]
         };
     }
 };
@@ -88,7 +90,8 @@ var getSubscribedAPIs = function (username) {
         log.error(e.message);
         return {
             error:e,
-            apis:null
+            apis:null,
+            message:e.message.split(":")[1]
         };
     }
 };

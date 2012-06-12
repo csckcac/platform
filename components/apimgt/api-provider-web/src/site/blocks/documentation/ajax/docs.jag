@@ -22,10 +22,10 @@ include("/jagg/jagg.jag");
 
 
         result = mod.addDocumentation(apiData, docData);
-        if (result.error == "true") {
+        if (result.error) {
             obj = {
                 error:result.error,
-                message:msg.error.backendError(action)
+                message:result.message
             };
         } else {
             obj = {
@@ -43,10 +43,10 @@ include("/jagg/jagg.jag");
         docDetails.name = request.getParameter("docName");
         docDetails.content = request.getParameter("content");
         result = mod.addInlineContent(apiDetails, docDetails);
-        if (result.error == "true") {
+        if (result.error) {
             obj = {
                 error:result.error,
-                message:msg.error.backendError(action)
+                message:result.message
             };
         } else {
             obj = {
@@ -62,10 +62,10 @@ include("/jagg/jagg.jag");
         api.version = request.getParameter("version");
         docName = request.getParameter("docName");
         result = mod.getInlineContent(api, docName);
-        if (result.error == "true") {
+        if (result.error) {
             obj = {
                 error:result.error,
-                message:msg.error.backendError(action)
+                message:result.message
             };
         } else {
             obj = {
@@ -85,10 +85,10 @@ include("/jagg/jagg.jag");
         docInfo.name = request.getParameter("docName");
         docInfo.type = request.getParameter("docType");
         result = mod.removeDocumentation(apiInfo, docInfo);
-        if (result.error == "true") {
+        if (result.error) {
             obj = {
                 error:result.error,
-                message:msg.error.backendError(action)
+                message:result.message
             };
         } else {
             obj = {

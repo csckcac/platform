@@ -22,8 +22,8 @@ var updateAPI = function (api) {
     } catch (e) {
         log.error(e.message);
         return {
-            error:e
-
+            error:e,
+            message:e.message.split(":")[1]
         };
     }
 };

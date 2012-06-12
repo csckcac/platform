@@ -27,9 +27,9 @@
         <div class="row-fluid" id="newDoc" style="display:none;">
             <div class="span4">
                 <div class="control-group">
-                    <label class="control-label" for="docName">Name</label>
+                    <label class="control-label" for="docName">Name<span class="requiredAstrix">*</span></label>
                     <div class="controls">
-                        <input type="text" class="input-xlarge" id="docName"/>
+                        <input type="text" class="input-xlarge required" id="docName"/>
                     </div>
                 </div>
 

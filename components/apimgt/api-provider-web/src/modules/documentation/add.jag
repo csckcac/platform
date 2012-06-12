@@ -20,7 +20,8 @@ var addDocumentation = function (api, doc) {
         log.error(e.message);
         return {
             error:e,
-            docs:null
+            docs:null,
+            message:e.message.split(":")[1]
         };
     }
 };
@@ -40,7 +41,8 @@ var addInlineContent = function (api, doc) {
     } catch (e) {
         log.error(e.message);
         return {
-            error:e
+            error:e,
+            message:e.message.split(":")[1]
         };
     }
 };

@@ -40,7 +40,8 @@ var getAPI = function (api) {
         log.error(e.message);
         return {
             error:e,
-            api:null
+            api:null,
+            message:e.message.split(":")[1]
         };
     }
 };
@@ -76,7 +77,8 @@ var getAPIsByProvider = function (username) {
         log.error(e.message);
         return {
             error:e,
-            apis:null
+            apis:null,
+            message:e.message.split(":")[1]
         };
     }
 };
@@ -110,7 +112,8 @@ var getAllAPIs = function () {
         log.error(e.message);
         return {
             error:e,
-            apis:null
+            apis:null,
+            message:e.message.split(":")[1]
         };
     }
 };

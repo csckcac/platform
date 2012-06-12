@@ -165,6 +165,23 @@
                 <exclude>**/version.xml</exclude>
             </excludes>
         </fileSet>
+		
+		<fileSet>
+            <directory>../samples/mashupSamples</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/mashupSamples</outputDirectory>
+			<excludes>
+			 <exclude>**/digit2image/**</exclude>
+			 <exclude>**/exchangeRate/**</exclude>
+			 <exclude>**/gmapsAPIKey/**</exclude>
+			 <exclude>**/storexml/**</exclude>
+			 <exclude>**/sudoku/**</exclude>
+			 <exclude>**/tomatoTube/**</exclude>
+			 <exclude>**/TwitterMap/**</exclude>
+			 <exclude>**/upgradeChecker/**</exclude>
+			 <exclude>**/version/**</exclude>
+			 <exclude>**/yahooGeoCode/**</exclude>
+			 </excludes>
+        </fileSet>
 
         <!--  copying JAX-WS/JAX-RS samples and Axis2Module with pom.xml files-->
         <fileSet>

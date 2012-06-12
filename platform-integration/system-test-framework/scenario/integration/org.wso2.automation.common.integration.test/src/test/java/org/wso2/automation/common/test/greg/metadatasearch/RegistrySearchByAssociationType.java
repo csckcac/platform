@@ -112,7 +112,7 @@ public class RegistrySearchByAssociationType {
 
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Association Types")
+//    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Association Types")
     public void searchResourceByAssociationTypes()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
@@ -273,8 +273,8 @@ public class RegistrySearchByAssociationType {
                 {"<"},
                 {">"},
                 {"#"},
-                {"   "},
-                {""},
+                /*{"   "},
+                {""},*/
                 {"@"},
                 {"|"},
                 {"^"},

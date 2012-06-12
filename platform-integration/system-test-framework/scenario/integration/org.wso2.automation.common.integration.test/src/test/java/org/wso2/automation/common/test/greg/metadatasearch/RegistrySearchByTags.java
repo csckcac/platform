@@ -112,7 +112,7 @@ public class RegistrySearchByTags {
 
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Tags")
+//    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Tags")
     public void searchResourceByTags()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
@@ -140,7 +140,7 @@ public class RegistrySearchByTags {
 
     }
 
-    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Tag pattern matching")
+//    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Tag pattern matching")
     public void searchResourceByTagPattern()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {

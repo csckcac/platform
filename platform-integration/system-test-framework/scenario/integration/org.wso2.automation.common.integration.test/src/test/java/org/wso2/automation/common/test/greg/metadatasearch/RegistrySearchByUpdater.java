@@ -112,7 +112,7 @@ public class RegistrySearchByUpdater {
 
     }
 
-    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Updater Name pattern matching")
+//    @Test(priority = 3, groups = {"wso2.greg"}, description = "Metadata search by Updater Name pattern matching")
     public void searchResourceByUpdaterNamePattern()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {

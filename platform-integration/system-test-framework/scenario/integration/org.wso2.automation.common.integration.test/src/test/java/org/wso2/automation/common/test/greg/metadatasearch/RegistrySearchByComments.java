@@ -112,7 +112,7 @@ public class RegistrySearchByComments {
 
     }
 
-    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Comment")
+//    @Test(priority = 2, groups = {"wso2.greg"}, description = "Metadata search by available Comment")
     public void searchResourceByComments()
             throws SearchAdminServiceRegistryExceptionException, RemoteException,
                    RegistryException {
@@ -272,8 +272,8 @@ public class RegistrySearchByComments {
                 {"<"},
                 {">"},
                 {"#"},
-                {"   "},
-                {""},
+                /*{"   "},
+                {""},*/
                 {"@"},
                 {"|"},
                 {"^"},

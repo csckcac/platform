@@ -151,8 +151,8 @@ public class RegistrySearchByResourceNameTest {
                 {"<"},
                 {">"},
                 {"#"},
-                {"   "},
-                {""},
+                /*{"   "},
+                {""},*/
                 {"@"},
                 {"|"},
                 {"^"},

@@ -243,8 +243,8 @@ public class RegistrySearchByPropertyName {
                 {"<"},
                 {">"},
                 {"#"},
-                {"   "},
-                {""},
+                /*{"   "},
+                {""},*/
                 {"@"},
                 {"|"},
                 {"^"},

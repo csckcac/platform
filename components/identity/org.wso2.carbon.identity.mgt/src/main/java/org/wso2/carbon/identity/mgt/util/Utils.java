@@ -429,9 +429,9 @@ public class Utils {
         String userName = null;
         try {
             for(UserEvidenceDTO evidenceDTO : evidenceDTOs){
-                if(evidenceDTO.getClaimUri() != null && evidenceDTO.getClaimUri() != null){
+                if(evidenceDTO.getClaimUri() != null && evidenceDTO.getClaimValue() != null){
                     String[] userList = ClaimsMgtUtil.getUserList(tenantId,
-                                           evidenceDTO.getClaimUri(), evidenceDTO.getClaimUri());
+                                           evidenceDTO.getClaimUri(), evidenceDTO.getClaimValue());
                     if(userList != null && userList.length > 0){
                         if(userList.length == 1){
                             if(userName == null){
@@ -473,5 +473,9 @@ public class Utils {
         IdentityCacheEntry cacheEntry = new IdentityCacheEntry(-10);
         LoginAttemptCache.getCacheInstance().addToCache(cacheKey, cacheEntry);
     }
+    
+    public static void unlockUserAccount(String userName, int tenantId){
 
+        LoginAttemptCache.getCacheInstance().clearCacheEntry(userName, tenantId);
+    }
 }

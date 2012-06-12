@@ -106,6 +106,8 @@ public class IdentityMgtConstants {
 
     public static final String CAPTCHA_VERIFICATION_INTERNALLY = "captchaVerificationInternallyManaged";
 
+    public static final String TEMPORARY_PASSWORD_ARE_ALLOWED= "allowTemporaryPassword";
+
     public static final String DEFAULT_PASSWORD = "defaultPassword";
 
     public static final int DEFAULT_MAX_FAILED_LOGIN_ATTEMPT = 100;    

@@ -42,10 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This is an implementation of UserOperationEventListener.  This defines additional operations
@@ -61,6 +58,8 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
     private int maxLoginAttempts;
 
     private String defaultPassword;
+
+    private boolean allowTemporaryPassword;
 
     private RealmConfiguration realmConfig;
 
@@ -85,6 +84,11 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
                 defaultPassword = defaultPasswordProperty.trim();
             }
 
+            String  allowTemporaryPasswordProperty = realmConfig.
+                                    getUserStoreProperty(IdentityMgtConstants.MAX_FAILED_ATTEMPT);
+            if(allowTemporaryPasswordProperty != null){
+                allowTemporaryPassword = Boolean.parseBoolean(allowTemporaryPasswordProperty);
+            }
             processor = IdentityMgtServiceComponent.getRecoveryProcessor();
             
         } catch (Exception e) {
@@ -162,19 +166,26 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
 
         processUserChallenges(userName, claims, true, userStoreManager);
 
-        //lock account and persist
-        Utils.lockUserAccount(userName, userStoreManager.getTenantId());
-        claims.put(UserCoreConstants.ClaimTypeURIs.ACCOUNT_STATUS, UserCoreConstants.USER_LOCKED);
-        
-        if(credential == null){
+        if(credential == null || (credential instanceof String &&
+                                                    ((String)credential).trim().length() < 1)){
             if(log.isDebugEnabled()){
-                log.debug("Credentials are not null. Using default user password as credentials");
+                log.debug("Credentials are null. Using default user password as credentials");
             }
+
+            if(defaultPassword == null || defaultPassword.trim().length() < 1){
+                throw new UserStoreException("Default user password has not been properly configured");             
+            }
+
             ((AbstractUserStoreManager)userStoreManager).doAddUser(userName, defaultPassword,
                                                                         roleList, claims, profile);
+
             UserMgtBean bean = new UserMgtBean();
             bean.setUserId(userName);
-            bean.setRecoveryType(IdentityMgtConstants.RECOVERY_TYPE_TEMPORARY_PASSWORD);
+            if(allowTemporaryPassword){
+                bean.setRecoveryType(IdentityMgtConstants.RECOVERY_TYPE_TEMPORARY_PASSWORD);
+            } else {
+                bean.setRecoveryType(IdentityMgtConstants.RECOVERY_TYPE_PASSWORD_RESET);                 
+            }
             try {
                 processor.processRecoveryUsingEmail(bean, userStoreManager.getTenantId());
             } catch (IdentityMgtException e) {
@@ -182,6 +193,10 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
             }
 
             return false;
+        } else {
+            //lock account and persist
+            Utils.lockUserAccount(userName, userStoreManager.getTenantId());
+            claims.put(UserCoreConstants.ClaimTypeURIs.ACCOUNT_STATUS, UserCoreConstants.USER_LOCKED);
         }
         return true;
     }
@@ -201,6 +216,41 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
 
         return true;
 
+    }
+
+    @Override
+    public boolean doPreUpdateCredentialByAdmin(String userName, Object newCredential,
+                                    UserStoreManager userStoreManager) throws UserStoreException {
+
+        if(newCredential == null || (newCredential instanceof String &&
+                                                    ((String)newCredential).trim().length() < 1)){
+            if(log.isDebugEnabled()){
+                log.debug("Credentials are null. Using default user password as credentials");
+            }
+
+            if(defaultPassword == null || defaultPassword.trim().length() < 1){
+                throw new UserStoreException("Default user password has not been properly configured");
+            }
+
+            ((AbstractUserStoreManager)userStoreManager).doUpdateCredentialByAdmin(userName, defaultPassword);
+
+            UserMgtBean bean = new UserMgtBean();
+            bean.setUserId(userName);
+            if(allowTemporaryPassword){
+                bean.setRecoveryType(IdentityMgtConstants.RECOVERY_TYPE_TEMPORARY_PASSWORD);
+            } else {
+                bean.setRecoveryType(IdentityMgtConstants.RECOVERY_TYPE_PASSWORD_RESET);
+            }
+            try {
+                processor.processRecoveryUsingEmail(bean, userStoreManager.getTenantId());
+            } catch (IdentityMgtException e) {
+                log.error("Error while sending temporary password to user's email account");
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -268,22 +318,14 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
             if(UserCoreConstants.USER_LOCKED.
                         equals(claims.get(UserCoreConstants.ClaimTypeURIs.ACCOUNT_STATUS))){
                 Utils.lockUserAccount(userName, userStoreManager.getTenantId());
+            } else {
+                Utils.unlockUserAccount(userName, userStoreManager.getTenantId());
             }
         }
         
         processUserChallenges(userName, claims, false, userStoreManager);
         return true;
 
-    }
-
-    private void unlockUserAccount(String userName, int tenantId){
-        
-        cache.clearCacheEntry(userName, tenantId);
-        try {
-            Utils.persistAccountStatus(userName, tenantId, UserCoreConstants.USER_UNLOCKED);
-        } catch (IdentityMgtException e) {
-            log.error("Error while persisting user account status : LOCKED");
-        }
     }
 
     private boolean isLoggedInUser(String userName){
@@ -349,6 +391,11 @@ public class IdentityMgtEventListener extends AbstractUserOperationEventListener
                 }
 
                 String selectedUriString = "";
+                
+                if(selectedUris.size() == 0){
+                    selectedUris.addAll(Arrays.asList(challengeUris));
+                }
+
                 for(String uri :  selectedUris){
                     if("".equals(selectedUriString)){
                         selectedUriString = uri;

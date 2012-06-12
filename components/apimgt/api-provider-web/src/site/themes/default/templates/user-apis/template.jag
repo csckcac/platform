@@ -9,7 +9,7 @@
             <tr>
                 <th>API</th>
                 <th>Last Accessed</th>
-                <th>Actions</th>
+                <!--<th>Actions</th>-->
             </tr>
             </thead>
             <tbody id="userSubscribedAPIs">
@@ -23,9 +23,9 @@
             <tr>
             <td><i class="icon-user"></i><a href="<%=apiPath%>"><%=api.name%></a></td>
             <td><%=api.lastUpdatedDate%></td>
-            <td><i class="icon-edit"></i><a href="#">Stats</a>
+            <!--<td><i class="icon-edit"></i><a href="#">Stats</a>
                 <i class="icon-trash"></i><a href="#">Revoke Access</a>
-                <i class="icon-ban-circle"></i><a href="#">Block</a>
+                <i class="icon-ban-circle"></i><a href="#">Block</a> -->
             </td>
             </tr>
             <%}}%>

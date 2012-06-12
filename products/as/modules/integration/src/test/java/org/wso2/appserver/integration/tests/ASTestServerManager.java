@@ -92,7 +92,7 @@ public class ASTestServerManager extends TestServerManager {
 		sourcePath = computeMSSourcePath(fileName);
 		String destinationPath = computeMSDestPath(carbonHome, fileName);
 		copySampleFile(sourcePath, destinationPath);
-		log.info("MS samples coping");
+		log.info("coping mashup test cases");
 		// Mashup sample for File Host Object
 		fileName = "fileTest.js";
 		sourcePath = computeMSSourcePath(fileName);
@@ -135,6 +135,86 @@ public class ASTestServerManager extends TestServerManager {
 		destinationPath = computeMSDestPath(carbonHome, fileName);
 		copySampleFile(sourcePath, destinationPath);
 		
+		//jaggery samples 
+		log.info("coping jaggery test cases");
+		  // Copying jaggery configuration file
+        fileName = "jaggery.conf";
+        sourcePath = computeJaggerySourcePath(fileName);
+        destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //email host object
+    	fileName = "email.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //database host object
+    	fileName = "database.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //feed host object
+    	fileName = "feed.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //file host object
+    	fileName = "file.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //sample file to read
+    	fileName = "testfile.txt";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //log host object
+    	fileName = "log.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //wsrequest host object
+    	fileName = "wsrequest.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //request object
+    	fileName = "request.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //response object
+    	fileName = "response.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //session object
+    	fileName = "session.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //application object
+    	fileName = "application.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+        
+        //xmlhttprequest object
+    	fileName = "xmlhttprequest.jag";
+    	sourcePath = computeJaggerySourcePath(fileName);
+    	destinationPath = computeJaggeryDestPath(carbonHome, fileName);
+        copySampleFile(sourcePath, destinationPath);
+		
     }
 
     private void copySampleFile(String sourcePath, String destPath) {
@@ -175,7 +255,7 @@ public class ASTestServerManager extends TestServerManager {
 		try {
 			FileManipulator.copyFile(sourceFile, destFile);
 		} catch (IOException e) {
-			log.error("Error while copying the sample into MashupServer", e);
+			log.error("Error while copying the mashup sample into Application server", e);
 		}
 	}
 
@@ -195,4 +275,36 @@ public class ASTestServerManager extends TestServerManager {
 		}
 		return deploymentPath + File.separator + fileName;
 	}
+	
+	//for jaggery sample dir
+	
+	 private void copyJaggerySampleFile(String sourcePath, String destPath) {
+	        File sourceFile = new File(sourcePath);
+	        File destFile = new File(destPath);
+	        try {
+	            FileManipulator.copyFile(sourceFile, destFile);	           
+	        } catch (IOException e) {
+	            log.error("Error while copying the Jaggery sample into  App server", e);
+	        }
+	    }
+
+	    private String computeJaggerySourcePath(String fileName) {
+	        String samplesDir = System.getProperty("jaggery.samples.dir");
+	        log.info("compute Jaggery Source Path samplesDir : " + samplesDir+fileName);
+	        return samplesDir + File.separator + fileName;
+	        
+	    }
+
+	    private String computeJaggeryDestPath(String carbonHome, String fileName) {
+	    	String deploymentPath =
+                carbonHome + File.separator + "repository" + File.separator +
+                        "deployment" + File.separator + "server" + File.separator +
+                        "jaggeryapps" + File.separator + "testapp";
+	    	
+	    	File depFile = new File(deploymentPath);
+	        if (!depFile.exists() && !depFile.mkdir()) {
+	            log.error("Error while creating the deployment folder : " + deploymentPath);
+	        }
+	        return deploymentPath + File.separator + fileName;
+	    }
 }

@@ -20,6 +20,7 @@ package org.wso2.carbon.identity.authentication;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserRealmService;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -53,7 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public boolean authenticate(String username, String password) throws AuthenticationException {
         String tenantLessUsername = MultitenantUtils.getTenantAwareUsername(username);
         try {
-            int tenantID = 0;
+            int tenantID = MultitenantConstants.SUPER_TENANT_ID;
             if (username.contains("@")) {
                 tenantID = realmService.getTenantManager().getTenantId(username.substring(username.lastIndexOf("@") + 1));
             }

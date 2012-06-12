@@ -41,19 +41,19 @@ public class RetentionHandler extends Handler {
     }
 
     public void addAssociation(RequestContext requestContext) throws RegistryException {
-        verifyDependency(requestContext);
+        //verifyDependency(requestContext);
     }
 
     public void removeAssociation(RequestContext requestContext)
             throws RegistryException {
-        verifyDependency(requestContext);
+        //verifyDependency(requestContext);
     }
-
-    private void verifyDependency(RequestContext requestContext) throws RegistryException {
-        if ("depends".equals(requestContext.getAssociationType())) {
-            checkWriteLock(requestContext.getSourcePath(), requestContext);
-        }
-    }
+      // Adding this fix to solve REGISTRY-888
+//    private void verifyDependency(RequestContext requestContext) throws RegistryException {
+//        if ("depends".equals(requestContext.getAssociationType())) {
+//            checkWriteLock(requestContext.getSourcePath(), requestContext);
+//        }
+//    }
 
     public void restore(RequestContext requestContext) throws RegistryException {
         checkWriteLock(requestContext.getResourcePath().getPath(), requestContext);

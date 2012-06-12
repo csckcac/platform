@@ -48,42 +48,42 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
 
         if (functionName.getNamespaceURI() == null) {
             throw new NullPointerException("Undeclared namespace for " + functionName);
-        } else if (functionName.getNamespaceURI().equals(HTNameSpaces.HTD_NS)) {
+        } else if (HTNameSpaces.HTD_NS.equals(functionName.getNamespaceURI())) {
             String localPart = functionName.getLocalPart();
-            if (localPart.equals(XPath2Constants.FUNCTION_GET_POTENTIAL_OWNERS)) {
+            if (XPath2Constants.FUNCTION_GET_POTENTIAL_OWNERS.equals(localPart)) {
                 return new GetPotentialOwners();
             } else {
                 String errMsg = "This operation is not currently supported in this version of WSO2 BPS.";
-                if (localPart.equals(XPath2Constants.FUNCTION_GET_ACTUAL_OWNER)) {
+                if (XPath2Constants.FUNCTION_GET_ACTUAL_OWNER.equals(localPart)) {
                     throw new UnsupportedOperationException(errMsg);
 
-                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_BUSINESS_ADMINISTRATORS)) {
+                } else if (XPath2Constants.FUNCTION_GET_BUSINESS_ADMINISTRATORS.equals(localPart)) {
                     throw new UnsupportedOperationException(errMsg);
 
-                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_EXCLUDED_OWNERS)) {
+                } else if (XPath2Constants.FUNCTION_GET_EXCLUDED_OWNERS.equals(localPart)) {
                     throw new UnsupportedOperationException(errMsg);
 
-                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_INPUT)) {
+                } else if (XPath2Constants.FUNCTION_GET_INPUT.equals(localPart)) {
                     return new GetInput();
-                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_TASK_INITIATOR)) {
+                } else if (XPath2Constants.FUNCTION_GET_TASK_INITIATOR.equals(localPart)) {
                     throw new UnsupportedOperationException(errMsg);
 
-                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_TASK_PRIORITY)) {
+                } else if (XPath2Constants.FUNCTION_GET_TASK_PRIORITY.equals(localPart)) {
                     throw new UnsupportedOperationException(errMsg);
 
-                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_TASK_STAKEHOLDERS)) {
+                } else if (XPath2Constants.FUNCTION_GET_TASK_STAKEHOLDERS.equals(localPart)) {
                     throw new UnsupportedOperationException(errMsg);
 
-                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_LOGICAL_PEOPLE_GROUP)) {
+                } else if (XPath2Constants.FUNCTION_GET_LOGICAL_PEOPLE_GROUP.equals(localPart)) {
                     throw new UnsupportedOperationException(errMsg);
 
-                } else if (localPart.equals(XPath2Constants.FUNCTION_INTERSECT)) {
+                } else if (XPath2Constants.FUNCTION_INTERSECT.equals(localPart)) {
                     throw new UnsupportedOperationException(errMsg);
 
-                } else if (localPart.equals(XPath2Constants.FUNCTION_UNION)) {
+                } else if (XPath2Constants.FUNCTION_UNION.equals(localPart)) {
                     throw new UnsupportedOperationException(errMsg);
 
-                } else if (localPart.equals(XPath2Constants.FUNCTION_EXCEPT)) {
+                } else if (XPath2Constants.FUNCTION_EXCEPT.equals(localPart)) {
                     throw new UnsupportedOperationException(errMsg);
 
                 } else {

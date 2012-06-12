@@ -60,7 +60,7 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
 
         CommonTaskUtil.setTaskToMessage(task);
 
-        if (task.getType().equals(TaskType.TASK)) {
+        if (TaskType.TASK.equals(task.getType())) {
             CommonTaskUtil.processDeadlines(task,
                                             (TaskConfiguration) creationContext.getTaskConfiguration(),
                                             creationContext.getEvalContext());

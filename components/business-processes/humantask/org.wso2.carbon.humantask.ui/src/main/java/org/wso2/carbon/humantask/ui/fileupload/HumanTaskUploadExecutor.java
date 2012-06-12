@@ -92,7 +92,7 @@ public class HumanTaskUploadExecutor extends AbstractFileUploadExecutor {
                     int indexOfColon = fileName.lastIndexOf('\\') + 1;
                     fileName = fileName.substring(indexOfColon, fileName.length());
                 }
-                if (fieldData.getFileItem().getFieldName().equals("humantaskFileName")) {
+                if ("humantaskFileName".equals(fieldData.getFileItem().getFieldName())) {
                     SaveExtractReturn uploadedFiles = saveAndExtractUploadedFile(fieldData.getFileItem());
 
                     validateHumanTaskPackage(uploadedFiles.extractedFile);

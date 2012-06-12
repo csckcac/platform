@@ -68,7 +68,7 @@ public class HumanTaskUploader extends AbstractAdmin {
                 throw new AxisFault("Invalid file name. File name is not available");
             }
 
-            if (uploadedFile.getFileType().equals(HumanTaskConstants.HUMANTASK_PACKAGE_EXTENSION)) {
+            if (HumanTaskConstants.HUMANTASK_PACKAGE_EXTENSION.equals(uploadedFile.getFileType())) {
                 try {
                     writeResource(uploadedFile.getDataHandler(), humantaskTemp, fileName, humantaskDir);
                 } catch (IOException e) {

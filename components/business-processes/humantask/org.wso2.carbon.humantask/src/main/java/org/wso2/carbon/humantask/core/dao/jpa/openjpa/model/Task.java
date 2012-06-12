@@ -674,7 +674,7 @@ public class Task extends OpenJPAEntity implements TaskDAO {
         for (Iterator<GenericHumanRoleDAO> iterator = getHumanRoles().iterator();
              iterator.hasNext(); ) {
             GenericHumanRoleDAO ghr = iterator.next();
-            if (ghr.getType().equals(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER)) {
+            if (GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER.equals(ghr.getType())) {
                 for (OrganizationalEntityDAO orgEntity : ghr.getOrgEntities()) {
                     orgEntity.getGenericHumanRoles().clear();
                     orgEntity.setGenericHumanRoles(null);

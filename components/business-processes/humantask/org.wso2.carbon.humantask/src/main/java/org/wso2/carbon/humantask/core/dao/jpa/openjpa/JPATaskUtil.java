@@ -188,17 +188,17 @@ public final class JPATaskUtil {
 
 
     private static PresentationParameter.Type getTypeFromQName(QName type) {
-        if (type.getLocalPart().equalsIgnoreCase("string")) {
+        if ("string".equalsIgnoreCase(type.getLocalPart())) {
             return PresentationParameter.Type.XSD_STRING;
-        } else if (type.getLocalPart().equalsIgnoreCase("int")) {
+        } else if ("int".equalsIgnoreCase(type.getLocalPart())) {
             return PresentationParameter.Type.XSD_INT;
-        } else if (type.getLocalPart().equalsIgnoreCase("bool")) {
+        } else if ("bool".equalsIgnoreCase(type.getLocalPart())) {
             return PresentationParameter.Type.XSD_BOOL;
-        } else if (type.getLocalPart().equalsIgnoreCase("date")) {
+        } else if ("date".equalsIgnoreCase(type.getLocalPart())) {
             return PresentationParameter.Type.XSD_DATE;
-        } else if (type.getLocalPart().equalsIgnoreCase("decimal")) {
+        } else if ("decimal".equalsIgnoreCase(type.getLocalPart())) {
             return PresentationParameter.Type.XSD_DECIMALE;
-        } else if (type.getLocalPart().equalsIgnoreCase("double")) {
+        } else if ("double".equalsIgnoreCase(type.getLocalPart())) {
             return PresentationParameter.Type.XSD_DOUBLE;
         }
 

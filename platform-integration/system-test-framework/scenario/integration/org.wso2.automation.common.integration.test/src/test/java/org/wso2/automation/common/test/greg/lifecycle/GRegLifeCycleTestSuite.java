@@ -50,8 +50,10 @@ public class GRegLifeCycleTestSuite extends MasterTestSuite {
                                                   LifeCycleStateWhenUpdatingResource.class));
         suiteVariablesList.add(new SuiteVariables("AddCustomLifeCycle",
                                                   AddCustomLifeCycle.class));
-        suiteVariablesList.add(new SuiteVariables("CustomLifeCycleTest",
-                                                  CustomLifeCycleTest.class));
+        suiteVariablesList.add(new SuiteVariables("CustomLifeCyclePromoteTest",
+                                                  CustomLifeCyclePromoteTest.class));
+        suiteVariablesList.add(new SuiteVariables("CustomLifeCycleDemoteForWSDLTest",
+                                                  CustomLifeCycleDemoteForWSDLTest.class));
         suiteVariablesList.add(new SuiteVariables("LifeCycleErrorHandling",
                                                   LifeCycleErrorHandling.class));
         suiteVariablesList.add(new SuiteVariables("EditLifeCycleName",

@@ -48,7 +48,7 @@ import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 
-public class CustomLifeCycleTest {
+public class CustomLifeCyclePromoteTest {
     private String sessionCookie;
 
     private WSRegistryServiceClient registry;
@@ -79,13 +79,13 @@ public class CustomLifeCycleTest {
         userManger = new AdminServiceUserMgtService(gregServer.getBackEndUrl());
         registry = new RegistryProvider().getRegistry(userId, ProductConstant.GREG_SERVER_NAME);
         Registry governance = new RegistryProvider().getGovernance(registry, userId);
-
+        deleteRolesIfExist();
         Utils.deleteLifeCycleIfExist(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
         servicePathTrunk = "/_system/governance" + Utils.addService("sns", serviceName, governance);
         Thread.sleep(1000);
 
         Utils.createNewLifeCycle(sessionCookie, ASPECT_NAME, lifeCycleManagerAdminService);
-        deleteRolesIfExist();
+
 
     }
 

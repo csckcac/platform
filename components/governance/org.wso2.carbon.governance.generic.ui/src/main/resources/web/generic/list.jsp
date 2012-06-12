@@ -38,6 +38,7 @@
 <jsp:include page="../resources/resources-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../resources/js/resource_util.js"></script>
 <jsp:include page="../list/list-i18n-ajaxprocessor.jsp"/>
+<script type="text/javascript" src="../generic/js/genericpagi.js"/>
 
 <carbon:breadcrumb
             label="<%=request.getParameter("breadcrumb")%>"
@@ -117,7 +118,7 @@
  <p style="padding:5px">
  <a href="../generic/filter.jsp?list_region=<%=region%>&list_item=<%=item%>&dataNamespace=<%=dataNamespace%>&dataName=<%=dataName%>&singularLabel=<%=singularLabel%>&pluralLabel=<%=pluralLabel%>&key=<%=key%>&list_breadcrumb=<%=breadcrumb%>"><fmt:message key="filter.artifact.message"><fmt:param value="<%=singularLabel.toLowerCase()%>"/></fmt:message></a>
  </p>
- <%}%> 
+ <%}%>
 <form id="profilesEditForm">
 <table class="styledLeft" id="customTable">
            <%if(bean.getArtifacts() == null || bean.getArtifacts().length==0){%>
@@ -142,10 +143,10 @@
             }
             int itemsPerPage = (int)(RegistryConstants.ITEMS_PER_PAGE * 1.5);
             int numberOfPages;
-            if (bean.getNames().length % itemsPerPage == 0) {
-                numberOfPages = bean.getNames().length / itemsPerPage;
+            if (bean.getArtifacts().length % itemsPerPage == 0) {
+                numberOfPages = bean.getArtifacts().length / itemsPerPage;
             } else {
-                numberOfPages = bean.getNames().length / itemsPerPage + 1;
+                numberOfPages = bean.getArtifacts().length / itemsPerPage + 1;
             }
         %>
         <thead>
@@ -198,13 +199,13 @@
     </table>
     <table width="100%" style="text-align:center; padding-top: 10px; margin-bottom: -10px">
         <carbon:resourcePaginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
-                                  resourceBundle="org.wso2.carbon.governance.list.ui.i18n.Resources"
+                                  resourceBundle="org.wso2.carbon.governance.generic.ui.i18n.Resources"
                                   nextKey="next" prevKey="prev"
                                   paginationFunction="loadPagedList({0})" />
     <%}%>
     </table>
 </form>
-</div>    
+</div>
 </div>
     <script type="text/javascript">
     alternateTableRows('customTable','tableEvenRow','tableOddRow');

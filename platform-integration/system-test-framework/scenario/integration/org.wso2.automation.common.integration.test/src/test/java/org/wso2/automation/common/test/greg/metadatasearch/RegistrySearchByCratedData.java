@@ -234,8 +234,8 @@ public class RegistrySearchByCratedData {
         Assert.assertNull(result.getResourceDataList(), "Record Found");
     }
 
-    @Test(priority = 8, groups = {"wso2.greg"}, dataProvider = "invalidCharacter",
-          description = "Metadata search by invalid String for date")
+//    @Test(priority = 8, groups = {"wso2.greg"}, dataProvider = "invalidCharacter",
+//          description = "Metadata search by invalid String for date")
     public void searchResourceByInvalidValueForDate(String invalidInput)
             throws SearchAdminServiceRegistryExceptionException, RemoteException {
         CustomSearchParameterBean searchQuery = new CustomSearchParameterBean();

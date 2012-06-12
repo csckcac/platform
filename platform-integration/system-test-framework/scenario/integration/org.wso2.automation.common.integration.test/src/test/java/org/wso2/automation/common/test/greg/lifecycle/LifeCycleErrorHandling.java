@@ -67,8 +67,8 @@ public class LifeCycleErrorHandling {
                                "Life Cycle Added with invalid Syntax");
 
         } catch (AxisFault e) {
-            Assert.assertTrue(e.getMessage().contains("Unable to initiate aspect. Unexpected '<' character")
-                    , "Unable to initiate aspect. Unexpected '<' character not contain in message. " + e.getMessage());
+            Assert.assertTrue(e.getMessage().contains("Unable to initiate aspect. Unexpected")
+                    , "Unable to initiate aspect. Unexpected not contain in message. " + e.getMessage());
         }
 
         Thread.sleep(2000);

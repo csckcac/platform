@@ -53,7 +53,7 @@ import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
 import org.wso2.carbon.apimgt.usage.client.APIUsageStatisticsClient;
-import org.wso2.carbon.apimgt.usage.client.dto.*;
+import org.wso2.carbon.apimgt.usage.client.dto.APIResponseTimeDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.APIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.APIVersionLastAccessTimeDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.APIVersionUsageDTO;
@@ -67,19 +67,27 @@ import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class APIProviderHostObject extends ScriptableObject {
-    
+
     private static final Log log = LogFactory.getLog(APIProviderHostObject.class);
 
     private String username;
-    
+
     private APIProvider apiProvider;
 
     public String getClassName() {
@@ -95,14 +103,14 @@ public class APIProviderHostObject extends ScriptableObject {
         username = loggedUser;
         apiProvider = APIManagerFactory.getInstance().getAPIProvider(loggedUser);
     }
-    
+
     public String getUsername() {
         return username;
     }
 
     public static Scriptable jsConstructor(Context cx, Object[] args, Function Obj,
                                            boolean inNewExpr)
-            throws ScriptException, APIManagementException {
+            throws APIManagementException {
 
         int length = args.length;
         if (length == 1) {
@@ -121,10 +129,11 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static NativeObject jsFunction_login(Context cx, Scriptable thisObj,
-                                           Object[] args, Function funObj) throws ScriptException, APIManagementException {
+                                                Object[] args, Function funObj)
+            throws APIManagementException {
 
         if (args.length != 2 || !isStringValues(args)) {
-            throw new ScriptException("Invalid input parameters to the login method");
+            throw new APIManagementException("Invalid input parameters to the login method");
         }
 
         String username = (String) args[0];
@@ -142,7 +151,7 @@ public class APIProviderHostObject extends ScriptableObject {
             ServiceClient client = authAdminStub._getServiceClient();
             Options options = client.getOptions();
             options.setManageSession(true);
-            
+
             String host = new URL(url).getHost();
             if (!authAdminStub.login(username, password, host)) {
                 throw new APIManagementException("Authentication failed. Invalid username or password.");
@@ -154,7 +163,7 @@ public class APIProviderHostObject extends ScriptableObject {
             boolean authorized =
                     APIUtil.checkPermissionQuietly(username, APIConstants.Permissions.API_CREATE) ||
                     APIUtil.checkPermissionQuietly(username, APIConstants.Permissions.API_PUBLISH);
-            
+
             if (authorized) {
                 row.put("user", row, username);
                 row.put("sessionId", row, sessionCookie);
@@ -171,7 +180,8 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static String jsFunction_getAuthServerURL(Context cx, Scriptable thisObj,
-                                                     Object[] args, Function funObj) throws APIManagementException {
+                                                     Object[] args, Function funObj)
+            throws APIManagementException {
 
         APIManagerConfiguration config = HostObjectComponent.getAPIManagerConfiguration();
         String url = config.getFirstProperty(APIConstants.AUTH_MANAGER_URL);
@@ -187,6 +197,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
         return "https://" + System.getProperty("carbon.local.ip") + ":" + System.getProperty("mgt.transport.https.port");
     }
+
     /**
      * This method is to functionality of add a new API in API-Provider
      *
@@ -194,17 +205,17 @@ public class APIProviderHostObject extends ScriptableObject {
      * @param thisObj Scriptable object
      * @param args    Passing arguments
      * @param funObj  Function object
-     * @return true if the API was added successfully               
-     * @throws ScriptException Wrapped exception by org.wso2.carbon.scriptengine.exceptions.ScriptException
+     * @return true if the API was added successfully
+     * @throws APIManagementException Wrapped exception by org.wso2.carbon.apimgt.api.APIManagementException
      */
     public static boolean jsFunction_addAPI(Context cx, Scriptable thisObj,
                                             Object[] args,
-                                            Function funObj) throws ScriptException {
+                                            Function funObj) throws APIManagementException {
         if (args.length == 0) {
-            throw new ScriptException("Invalid number of input parameters.");
+            throw new APIManagementException("Invalid number of input parameters.");
         }
-        
-        boolean success = false;
+
+        boolean success;
         NativeObject apiData = (NativeObject) args[0];
         String provider = (String) apiData.get("provider", apiData);
         String name = (String) apiData.get("apiName", apiData);
@@ -241,67 +252,65 @@ public class APIProviderHostObject extends ScriptableObject {
         String bizOwnerEmail = (String) apiData.get("bizOwnerEmail", apiData);
         APIIdentifier apiId = new APIIdentifier(provider, name, version);
         APIProvider apiProvider = getAPIProvider(thisObj);
-        try {
-            if (apiProvider.isAPIAvailable(apiId)) {
-                throw new ScriptException("Failed saving the new API due to an API already exists " +
-                                          " with same name: " + name + " and version: "
-                                          + version + " for the provider: " + provider);
-            }
-            
-            API api = new API(apiId);
-            NativeArray uriMethodArr = (NativeArray) apiData.get("uriMethodArr", apiData);
-            if (uriTemplateArr.getLength() == uriMethodArr.getLength()) {
-                Set<URITemplate> uriTemplates = new HashSet<URITemplate>();
-                for (int i = 0; i < uriTemplateArr.getLength(); i++) {
-                    URITemplate templates = new URITemplate();
-                    templates.setUriTemplate((String) uriTemplateArr.get(i, uriTemplateArr));
-                    String uriMethods = (String) uriMethodArr.get(i, uriMethodArr);
-                    String[] uriMethodArray = uriMethods.split(",");
-                    for (String anUriMethod : uriMethodArray) {
-                        templates.addMethod(anUriMethod);
-                    }
-                    templates.setResourceURI(endpoint);
-                    templates.setResourceSandboxURI(sandboxUrl);
-                    uriTemplates.add(templates);
+        if (apiProvider.isAPIAvailable(apiId)) {
+            throw new APIManagementException("Error occurred while adding the API. A duplicate API already exists for " +
+                                             name + "-" + version);
+        }
+
+        API api = new API(apiId);
+        NativeArray uriMethodArr = (NativeArray) apiData.get("uriMethodArr", apiData);
+        if (uriTemplateArr.getLength() == uriMethodArr.getLength()) {
+            Set<URITemplate> uriTemplates = new HashSet<URITemplate>();
+            for (int i = 0; i < uriTemplateArr.getLength(); i++) {
+                URITemplate templates = new URITemplate();
+                templates.setUriTemplate((String) uriTemplateArr.get(i, uriTemplateArr));
+                String uriMethods = (String) uriMethodArr.get(i, uriMethodArr);
+                String[] uriMethodArray = uriMethods.split(",");
+                for (String anUriMethod : uriMethodArray) {
+                    templates.addMethod(anUriMethod);
                 }
-                api.setUriTemplates(uriTemplates);
+                templates.setResourceURI(endpoint);
+                templates.setResourceSandboxURI(sandboxUrl);
+                uriTemplates.add(templates);
             }
+            api.setUriTemplates(uriTemplates);
+        }
 
-            api.setDescription(description);
-            api.setWsdlUrl(wsdl);
-            api.setWadlUrl(wadl);
-            api.setLastUpdated(new Date());
-            api.setUrl(endpoint);
-            api.setSandboxUrl(sandboxUrl);
-            api.addTags(tag);
-            
-            Set<Tier> availableTier = new HashSet<Tier>();
-            String[] tierNames = tier.split(",");
-            for (String tierName : tierNames) {
-                availableTier.add(new Tier(tierName));
-            }
-            api.addAvailableTiers(availableTier);
-            api.setStatus(APIStatus.CREATED);
-            api.setContext(context);
-            api.setBusinessOwner(bizOwner);
-            api.setBusinessOwnerEmail(bizOwnerEmail);
-            api.setTechnicalOwner(techOwner);
-            api.setTechnicalOwnerEmail(techOwnerEmail);
+        api.setDescription(description);
+        api.setWsdlUrl(wsdl);
+        api.setWadlUrl(wadl);
+        api.setLastUpdated(new Date());
+        api.setUrl(endpoint);
+        api.setSandboxUrl(sandboxUrl);
+        api.addTags(tag);
 
+        Set<Tier> availableTier = new HashSet<Tier>();
+        String[] tierNames = tier.split(",");
+        for (String tierName : tierNames) {
+            availableTier.add(new Tier(tierName));
+        }
+        api.addAvailableTiers(availableTier);
+        api.setStatus(APIStatus.CREATED);
+        api.setContext(context);
+        api.setBusinessOwner(bizOwner);
+        api.setBusinessOwnerEmail(bizOwnerEmail);
+        api.setTechnicalOwner(techOwner);
+        api.setTechnicalOwnerEmail(techOwnerEmail);
+        try {
             checkFileSize(fileHostObject);
             apiProvider.addAPI(api);
 
             if (fileHostObject != null) {
                 api.setThumbnailUrl(apiProvider.addIcon(apiId, fileHostObject.getInputStream(),
-                        fileHostObject.getJavaScriptFile().getContentType()));
+                                                        fileHostObject.getJavaScriptFile().getContentType()));
                 apiProvider.updateAPI(api);
             }
             success = true;
 
         } catch (APIManagementException e) {
-            log.error("Error while adding the API: " + name + "-" + version, e);
+            throw new APIManagementException("Error while adding the API- " + name + "-" + version, e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            throw new APIManagementException(e.getMessage(), e);
         }
         return success;
 
@@ -309,14 +318,14 @@ public class APIProviderHostObject extends ScriptableObject {
 
     public static boolean jsFunction_updateAPI(Context cx, Scriptable thisObj,
                                                Object[] args,
-                                               Function funObj) throws ScriptException {
+                                               Function funObj) throws APIManagementException {
 
         if (args.length == 0) {
-            throw new ScriptException("Invalid number of input parameters.");
+            throw new APIManagementException("Invalid number of input parameters.");
         }
 
         NativeObject apiData = (NativeObject) args[0];
-        boolean success = false;
+        boolean success;
         String provider = (String) apiData.get("provider", apiData);
         String name = (String) apiData.get("apiName", apiData);
         String version = (String) apiData.get("version", apiData);
@@ -366,7 +375,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     String templateVal = (String) uriTemplateArr.get(i, uriTemplateArr);
                     String template = templateVal.startsWith("/") ? templateVal : ("/" + templateVal);
                     templates.setUriTemplate(template);
-                    String uriMethods=(String) uriMethodArr.get(i, uriMethodArr);
+                    String uriMethods = (String) uriMethodArr.get(i, uriMethodArr);
                     String[] uriMethodArray = uriMethods.split(",");
                     for (String anUriMethod : uriMethodArray) {
                         templates.addMethod(anUriMethod);
@@ -404,7 +413,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
             if (fileHostObject != null) {
                 api.setThumbnailUrl(apiProvider.addIcon(apiId, fileHostObject.getInputStream(),
-                        fileHostObject.getJavaScriptFile().getContentType()));
+                                                        fileHostObject.getJavaScriptFile().getContentType()));
             } else if (oldApi.getThumbnailUrl() != null) {
                 // retain the previously uploaded image
                 api.setThumbnailUrl(oldApi.getThumbnailUrl());
@@ -412,22 +421,23 @@ public class APIProviderHostObject extends ScriptableObject {
             apiProvider.updateAPI(api);
             success = true;
         } catch (APIManagementException e) {
-            log.error("Error while updating the API: " + name + "-" + version, e);
+            throw new APIManagementException("Error while updating the API- " + name + "-" + version, e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            throw new APIManagementException(e.getMessage(), e);
         }
         return success;
     }
 
     public static boolean jsFunction_updateAPIStatus(Context cx, Scriptable thisObj,
-                                               Object[] args,
-                                               Function funObj) throws ScriptException {
+                                                     Object[] args,
+                                                     Function funObj)
+            throws APIManagementException {
         if (args.length == 0) {
-            throw new ScriptException("Invalid number of input parameters.");
+            throw new APIManagementException("Invalid number of input parameters.");
         }
 
         NativeObject apiData = (NativeObject) args[0];
-        boolean success = false;
+        boolean success;
         String provider = (String) apiData.get("provider", apiData);
         String name = (String) apiData.get("apiName", apiData);
         String version = (String) apiData.get("version", apiData);
@@ -455,17 +465,17 @@ public class APIProviderHostObject extends ScriptableObject {
                     APIVersionComparator versionComparator = new APIVersionComparator();
                     for (API oldAPI : apiList) {
                         if (oldAPI.getId().getApiName().equals(name) &&
-                                versionComparator.compare(oldAPI, api) < 0 &&
-                                (oldAPI.getStatus().equals(APIStatus.PUBLISHED))) {
+                            versionComparator.compare(oldAPI, api) < 0 &&
+                            (oldAPI.getStatus().equals(APIStatus.PUBLISHED))) {
                             apiProvider.changeAPIStatus(oldAPI, APIStatus.DEPRECATED,
-                                    currentUser, publishToGateway);
+                                                        currentUser, publishToGateway);
                         }
                     }
                 }
             }
             success = true;
         } catch (APIManagementException e) {
-            log.error("Error while updating API status", e);
+            throw new APIManagementException("Error while updating API status", e);
         }
         return success;
     }
@@ -488,16 +498,16 @@ public class APIProviderHostObject extends ScriptableObject {
      * @param args    Passing arguments
      * @param funObj  Function object
      * @return a native array
-     * @throws ScriptException Wrapped exception by org.wso2.carbon.scriptengine.exceptions.ScriptException
+     * @throws APIManagementException Wrapped exception by org.wso2.carbon.apimgt.api.APIManagementException
      */
 
     public static NativeArray jsFunction_getAPI(Context cx, Scriptable thisObj,
                                                 Object[] args,
-                                                Function funObj) throws ScriptException {
+                                                Function funObj) throws APIManagementException {
         NativeArray myn = new NativeArray(0);
 
         if (args.length != 3 || !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters or their types.");
+            throw new APIManagementException("Invalid number of parameters or their types.");
         }
         String providerName = args[0].toString();
         String apiName = args[1].toString();
@@ -553,7 +563,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     List<String> utArr = new ArrayList<String>();
                     URITemplate ut = (URITemplate) i.next();
                     utArr.add(ut.getUriTemplate());
-                    utArr.add(ut.getMethodsAsString().replaceAll("\\s",","));
+                    utArr.add(ut.getMethodsAsString().replaceAll("\\s", ","));
 
                     NativeArray utNArr = new NativeArray(utArr.size());
                     for (int p = 0; p < utArr.size(); p++) {
@@ -576,9 +586,9 @@ public class APIProviderHostObject extends ScriptableObject {
                 myn.put(19, myn, checkValue(api.getWadlUrl()));
             }
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting API information for the api: " + apiName + "-" + version, e);
+            throw new APIManagementException("Error occurred while getting API information of the api- " + apiName + "-" + version, e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            throw new APIManagementException(e.getMessage(), e);
         }
         return myn;
     }
@@ -586,14 +596,14 @@ public class APIProviderHostObject extends ScriptableObject {
     public static NativeArray jsFunction_getSubscriberCountByAPIs(Context cx, Scriptable thisObj,
                                                                   Object[] args,
                                                                   Function funObj)
-            throws ScriptException {
+            throws APIManagementException {
         NativeArray myn = new NativeArray(0);
         String providerName = null;
         APIProvider apiProvider = getAPIProvider(thisObj);
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of input parameters.");
+        }
         try {
-            if (args.length == 0) {
-                throw new ScriptException("Invalid number of input parameters.");
-            }
             providerName = (String) args[0];
             if (providerName != null) {
                 List<API> apiSet;
@@ -612,7 +622,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     if (count == 0) {
                         continue;
                     }
-                    
+
                     String key = api.getId().getApiName() + " (" + api.getId().getProviderName() + ")";
                     Long currentCount = subscriptions.get(key);
                     if (currentCount != null) {
@@ -640,8 +650,8 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static NativeArray jsFunction_getTiers(Context cx, Scriptable thisObj,
-                                                                         Object[] args,
-                                                                         Function funObj) throws ScriptException {
+                                                  Object[] args,
+                                                  Function funObj) {
         NativeArray myn = new NativeArray(0);
         APIProvider apiProvider = getAPIProvider(thisObj);
         try {
@@ -663,22 +673,24 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getSubscriberCountByAPIVersions(Context cx, Scriptable thisObj,
-                                                                  Object[] args,
-                                                                  Function funObj) throws ScriptException {
+    public static NativeArray jsFunction_getSubscriberCountByAPIVersions(Context cx,
+                                                                         Scriptable thisObj,
+                                                                         Object[] args,
+                                                                         Function funObj)
+            throws APIManagementException {
         NativeArray myn = new NativeArray(0);
         String providerName = null;
         String apiName = null;
         APIProvider apiProvider = getAPIProvider(thisObj);
+        if (args.length == 0 || args.length == 1) {
+            throw new APIManagementException("Invalid number of input parameters.");
+        }
         try {
-            if (args.length == 0 || args.length == 1) {
-                throw new ScriptException("Invalid number of input parameters.");
-            }
             providerName = (String) args[0];
             apiName = (String) args[1];
             if (providerName != null && apiName != null) {
                 List<API> apiSet = apiProvider.getAPIsByProvider(providerName);
-                Map<String,Long> subscriptions = new TreeMap<String,Long>();
+                Map<String, Long> subscriptions = new TreeMap<String, Long>();
                 for (API api : apiSet) {
                     if (!api.getId().getApiName().equals(apiName) || api.getStatus() == APIStatus.CREATED) {
                         continue;
@@ -691,7 +703,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
 
                 int i = 0;
-                for (Map.Entry<String,Long> entry : subscriptions.entrySet()) {
+                for (Map.Entry<String, Long> entry : subscriptions.entrySet()) {
                     NativeObject row = new NativeObject();
                     row.put("apiVersion", row, entry.getKey());
                     row.put("count", row, entry.getValue().longValue());
@@ -701,14 +713,15 @@ public class APIProviderHostObject extends ScriptableObject {
             }
         } catch (APIManagementException e) {
             log.error("Error from registry while getting subscribers of the " +
-                    "provider: " + providerName + " and API: " + apiName, e);
+                      "provider: " + providerName + " and API: " + apiName, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         return myn;
     }
 
-    private static int getSubscriberCount(APIIdentifier apiId, Scriptable thisObj) throws APIManagementException {
+    private static int getSubscriberCount(APIIdentifier apiId, Scriptable thisObj)
+            throws APIManagementException {
         APIProvider apiProvider = getAPIProvider(thisObj);
         Set<Subscriber> subs = apiProvider.getSubscribersOfAPI(apiId);
         Set<String> subscriberNames = new HashSet<String>();
@@ -726,11 +739,12 @@ public class APIProviderHostObject extends ScriptableObject {
      * @param args    Passing arguments
      * @param funObj  Function object
      * @return a native array
-     * @throws ScriptException Wrapped exception by org.wso2.carbon.scriptengine.exceptions.ScriptException
+     * @throws APIManagementException Wrapped exception by org.wso2.carbon.apimgt.api.APIManagementException
      */
     public static NativeArray jsFunction_getAllAPIs(Context cx, Scriptable thisObj,
-                                                           Object[] args,
-                                                           Function funObj) throws ScriptException {
+                                                    Object[] args,
+                                                    Function funObj)
+            throws APIManagementException {
         NativeArray myn = new NativeArray(0);
         APIProvider apiProvider = getAPIProvider(thisObj);
         try {
@@ -752,9 +766,9 @@ public class APIProviderHostObject extends ScriptableObject {
                 i++;
             }
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting the APIs", e);
+            throw new APIManagementException("Error occurred while getting the APIs", e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            throw new APIManagementException(e.getMessage(), e);
         }
         return myn;
     }
@@ -767,14 +781,15 @@ public class APIProviderHostObject extends ScriptableObject {
      * @param args    Passing arguments
      * @param funObj  Function object
      * @return a native array
-     * @throws ScriptException Wrapped exception by org.wso2.carbon.scriptengine.exceptions.ScriptException
+     * @throws APIManagementException Wrapped exception by org.wso2.carbon.apimgt.api.APIManagementException
      */
     public static NativeArray jsFunction_getAPIsByProvider(Context cx, Scriptable thisObj,
                                                            Object[] args,
-                                                           Function funObj) throws ScriptException {
+                                                           Function funObj)
+            throws APIManagementException {
         NativeArray myn = new NativeArray(0);
         if (args.length == 0) {
-            throw new ScriptException("Invalid number of parameters.");
+            throw new APIManagementException("Invalid number of parameters.");
         }
         String providerName = (String) args[0];
         if (providerName != null) {
@@ -797,10 +812,10 @@ public class APIProviderHostObject extends ScriptableObject {
                     i++;
                 }
             } catch (APIManagementException e) {
-                log.error("Error from registry while getting all the APIs information for " +
-                        "the provider: " + providerName, e);
+                throw new APIManagementException("Error occurred while getting APIs for " +
+                                                 "the provider: " + providerName, e);
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                throw new APIManagementException(e.getMessage(), e);
             }
         }
         return myn;
@@ -808,14 +823,16 @@ public class APIProviderHostObject extends ScriptableObject {
 
     public static NativeArray jsFunction_getSubscribedAPIs(Context cx, Scriptable thisObj,
                                                            Object[] args,
-                                                           Function funObj) throws ScriptException {
+                                                           Function funObj)
+            throws APIManagementException {
         String userName = null;
         NativeArray myn = new NativeArray(0);
         APIProvider apiProvider = getAPIProvider(thisObj);
+
+        if (args.length != 1 || !isStringValues(args)) {
+            throw new APIManagementException("Invalid number of parameters or their types.");
+        }
         try {
-            if (args.length != 1 || !isStringValues(args)) {
-                throw new ScriptException("Invalid number of parameters or their types.");
-            }
             userName = (String) args[0];
             Subscriber subscriber = new Subscriber(userName);
             Set<API> apiSet = apiProvider.getSubscriberAPIs(subscriber);
@@ -833,24 +850,26 @@ public class APIProviderHostObject extends ScriptableObject {
                 i++;
             }
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting the subscribed APIs information " +
-                    "for the subscriber" + userName, e);
+            throw new APIManagementException("Error occurred while getting the subscribed APIs information " +
+                                             "for the subscriber-" + userName, e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            throw new APIManagementException(e.getMessage(), e);
         }
         return myn;
     }
 
     public static NativeArray jsFunction_getAllAPIUsageByProvider(Context cx, Scriptable thisObj,
-                                                                  Object[] args, Function funObj) throws ScriptException {
+                                                                  Object[] args, Function funObj)
+            throws APIManagementException {
 
         NativeArray myn = new NativeArray(0);
         String providerName = null;
         APIProvider apiProvider = getAPIProvider(thisObj);
+
+        if (args.length == 0) {
+            throw new APIManagementException("Invalid number of input parameters.");
+        }
         try {
-            if (args.length == 0) {
-                throw new ScriptException("Invalid number of input parameters.");
-            }
             providerName = (String) args[0];
             if (providerName != null) {
                 UserApplicationAPIUsage[] apiUsages = apiProvider.getAllAPIUsageByProvider(providerName);
@@ -872,24 +891,25 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
             }
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting subscribers of the provider: " + providerName, e);
+            throw new APIManagementException("Error occurred while getting subscribers of the provider: " + providerName, e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            throw new APIManagementException(e.getMessage(), e);
         }
         return myn;
     }
 
     public static NativeArray jsFunction_getAllDocumentation(Context cx, Scriptable thisObj,
-                                                             Object[] args, Function funObj) throws ScriptException {
+                                                             Object[] args, Function funObj)
+            throws APIManagementException {
         String apiName = null;
         String version = null;
         String providerName;
         NativeArray myn = new NativeArray(0);
         APIProvider apiProvider = getAPIProvider(thisObj);
+        if (args.length != 3 || !isStringValues(args)) {
+            throw new APIManagementException("Invalid number of parameters or their types.");
+        }
         try {
-            if (args.length != 3 || !isStringValues(args)) {
-                throw new ScriptException("Invalid number of parameters or their types.");
-            }
             providerName = args[0].toString();
             apiName = args[1].toString();
             version = args[2].toString();
@@ -921,10 +941,10 @@ public class APIProviderHostObject extends ScriptableObject {
             }
 
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting document information for the api: " +
-                    apiName + "-" + version, e);
+            throw new APIManagementException("Error occurred while getting documentation of the api - " +
+                                             apiName + "-" + version, e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            throw new APIManagementException(e.getMessage(), e);
         }
         return myn;
     }
@@ -932,7 +952,7 @@ public class APIProviderHostObject extends ScriptableObject {
     public static NativeArray jsFunction_getInlineContent(Context cx,
                                                           Scriptable thisObj, Object[] args,
                                                           Function funObj)
-            throws ScriptException, APIManagementException, UnsupportedEncodingException {
+            throws APIManagementException {
         String apiName;
         String version;
         String providerName;
@@ -941,7 +961,7 @@ public class APIProviderHostObject extends ScriptableObject {
         NativeArray myn = new NativeArray(0);
 
         if (args.length != 4 || !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters or their types.");
+            throw new APIManagementException("Invalid number of parameters or their types.");
         }
         providerName = args[0].toString();
         apiName = args[1].toString();
@@ -951,11 +971,8 @@ public class APIProviderHostObject extends ScriptableObject {
         APIProvider apiProvider = getAPIProvider(thisObj);
         try {
             content = apiProvider.getDocumentationContent(apiId, docName);
-            //log.info(content);
-            //log.info(URLEncoder.encode(content));
         } catch (Exception e) {
-            log.error("Error while getting Inline Document Content ", e);
-            return null;
+            throw new APIManagementException("Error while getting Inline Document Content ", e);
         }
         NativeObject row = new NativeObject();
         row.put("providerName", row, providerName);
@@ -970,15 +987,15 @@ public class APIProviderHostObject extends ScriptableObject {
     public static void jsFunction_addInlineContent(Context cx,
                                                    Scriptable thisObj, Object[] args,
                                                    Function funObj)
-            throws ScriptException, APIManagementException {
+            throws APIManagementException {
         String apiName;
         String version;
         String providerName;
         String docName;
         String docContent;
-        //log.info(isStringValues(args)+"args.length"+args.length);
+
         if (args.length != 5 || !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters or their types.");
+            throw new APIManagementException("Invalid number of parameters or their types.");
         }
         providerName = args[0].toString();
         apiName = args[1].toString();
@@ -991,16 +1008,20 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier apiId = new APIIdentifier(providerName, apiName,
                                                 version);
         APIProvider apiProvider = getAPIProvider(thisObj);
-        apiProvider.addDocumentationContent(apiId, docName, docContent);
+        try {
+            apiProvider.addDocumentationContent(apiId, docName, docContent);
+        } catch (APIManagementException e) {
+            throw new APIManagementException("Error occurred while adding the content of the documentation- " + docName, e);
+        }
     }
 
     public static boolean jsFunction_addDocumentation(Context cx, Scriptable thisObj,
                                                       Object[] args, Function funObj)
-            throws ScriptException {
+            throws APIManagementException {
         if (args.length < 5 || !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters or their types.");
+            throw new APIManagementException("Invalid number of parameters or their types.");
         }
-        boolean success = false;
+        boolean success;
         String providerName = args[0].toString();
         String apiName = args[1].toString();
         String version = args[2].toString();
@@ -1025,19 +1046,18 @@ public class APIProviderHostObject extends ScriptableObject {
             apiProvider.addDocumentation(apiId, doc);
             success = true;
         } catch (APIManagementException e) {
-            log.error("Error from registry while adding the document: " + docName +
-                    " for the api :" + apiName + "-" + version, e);
+            throw new APIManagementException("Error occurred while adding the document- " + docName, e);
         }
         return success;
     }
 
     public static boolean jsFunction_removeDocumentation(Context cx, Scriptable thisObj,
                                                          Object[] args, Function funObj)
-            throws ScriptException {
+            throws APIManagementException {
         if (args.length != 5 || !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters or their types.");
+            throw new APIManagementException("Invalid number of parameters or their types.");
         }
-        boolean success = false;
+        boolean success;
         String providerName = args[0].toString();
         String apiName = args[1].toString();
         String version = args[2].toString();
@@ -1051,19 +1071,19 @@ public class APIProviderHostObject extends ScriptableObject {
             apiProvider.removeDocumentation(apiId, docName, docType);
             success = true;
         } catch (APIManagementException e) {
-            log.error("Error from registry while removing the document: " + docName +
-                    " for the api:" + apiName + "-" + version, e);
+            throw new APIManagementException("Error occurred while removing the document- " + docName +
+                                             ".", e);
         }
         return success;
     }
 
     public static boolean jsFunction_createNewAPIVersion(Context cx, Scriptable thisObj,
                                                          Object[] args, Function funObj)
-            throws ScriptException {
+            throws APIManagementException {
 
-        boolean success = false;
+        boolean success;
         if (args.length != 4 || !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters or their types.");
+            throw new APIManagementException("Invalid number of parameters or their types.");
         }
         String providerName = args[0].toString();
         String apiName = args[1].toString();
@@ -1077,24 +1097,24 @@ public class APIProviderHostObject extends ScriptableObject {
             apiProvider.createNewAPIVersion(api, newVersion);
             success = true;
         } catch (APIManagementException e) {
-            log.error("Error from registry while creating a new api version: " + newVersion, e);
+            throw new APIManagementException("Error occurred while creating a new API version- " + newVersion, e);
         } catch (DuplicateAPIException e) {
-            log.error("Duplicate versioning error while create a new api version", e);
+            throw new APIManagementException("Error occurred while creating a new API version.A duplicate API already exists.", e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            throw new APIManagementException(e.getMessage(), e);
         }
         return success;
     }
 
     public static NativeArray jsFunction_getSubscribersOfAPI(Context cx, Scriptable thisObj,
                                                              Object[] args, Function funObj)
-            throws ScriptException {
+            throws APIManagementException {
         String apiName;
         String version;
         String providerName;
         NativeArray myn = new NativeArray(0);
         if (args.length != 3 || !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters or their types.");
+            throw new APIManagementException("Invalid number of parameters or their types.");
         }
 
         providerName = args[0].toString();
@@ -1119,14 +1139,15 @@ public class APIProviderHostObject extends ScriptableObject {
             }
 
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting subscribers for the API: " + apiName +
-                    "-" + version, e);
+            throw new APIManagementException("Error occurred while getting subscribers of the API- " + apiName +
+                                             "-" + version, e);
         }
         return myn;
     }
 
     public static String jsFunction_isContextExist(Context cx, Scriptable thisObj,
-                                                   Object[] args, Function funObj) throws ScriptException {
+                                                   Object[] args, Function funObj)
+            throws APIManagementException {
         Boolean contextExist = false;
         String context = (String) args[0];
         if (context != null) {
@@ -1137,7 +1158,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 log.error("Error from registry while checking the input context is already exist", e);
             }
         } else {
-            throw new ScriptException("Input context value is null");
+            throw new APIManagementException("Input context value is null");
         }
         return contextExist.toString();
     }
@@ -1183,8 +1204,9 @@ public class APIProviderHostObject extends ScriptableObject {
         return apiStatus;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionUsage(String providerName, String APIname)
-            throws ScriptException {
+    public static NativeArray jsFunction_getProviderAPIVersionUsage(String providerName,
+                                                                    String APIname)
+            throws APIManagementException {
         List<APIVersionUsageDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
@@ -1212,7 +1234,8 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIUsage(String providerName) throws ScriptException {
+    public static NativeArray jsFunction_getProviderAPIUsage(String providerName)
+            throws APIManagementException {
         List<APIUsageDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
@@ -1241,7 +1264,9 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIUserUsage(String providerName, String apiName) throws ScriptException {
+    public static NativeArray jsFunction_getProviderAPIUserUsage(String providerName,
+                                                                 String apiName)
+            throws APIManagementException {
         List<PerUserAPIUsageDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
@@ -1269,8 +1294,10 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionUserUsage(String providerName, String apiName,
-                                                                        String version) throws ScriptException {
+    public static NativeArray jsFunction_getProviderAPIVersionUserUsage(String providerName,
+                                                                        String apiName,
+                                                                        String version)
+            throws APIManagementException {
         List<PerUserAPIUsageDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
@@ -1298,7 +1325,8 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionUserLastAccess(String providerName) throws ScriptException {
+    public static NativeArray jsFunction_getProviderAPIVersionUserLastAccess(String providerName)
+            throws APIManagementException {
         List<APIVersionLastAccessTimeDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
@@ -1328,7 +1356,8 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIServiceTime(String providerName) throws ScriptException {
+    public static NativeArray jsFunction_getProviderAPIServiceTime(String providerName)
+            throws APIManagementException {
         List<APIResponseTimeDTO> list = null;
         try {
             APIUsageStatisticsClient client = new APIUsageStatisticsClient();
@@ -1373,7 +1402,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 InputStream in = apiProvider.getIcon(apiId);
                 if (in != null) {
                     thumb = IOUtils.toString(in);
-                }                
+                }
             } catch (APIManagementException e) {
                 log.error(e.getMessage(), e);
             } catch (IOException e) {
@@ -1385,12 +1414,13 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static NativeArray jsFunction_searchAllAPIs(Context cx, Scriptable thisObj,
-                                                    Object[] args,
-                                                    Function funObj) throws ScriptException {
+                                                       Object[] args,
+                                                       Function funObj)
+            throws APIManagementException {
         NativeArray myn = new NativeArray(0);
 
         if (args.length == 0) {
-            throw new ScriptException("Invalid number of parameters.");
+            throw new APIManagementException("Invalid number of parameters.");
         }
         String apiName = (String) args[0];
 
@@ -1399,7 +1429,7 @@ public class APIProviderHostObject extends ScriptableObject {
             //TODO : this regex pattern matching has to be moved to APIManager API implementation
             List<API> apiList = apiProvider.getAllAPIs();
             List<API> searchedList = new ArrayList<API>();
-            String regex = "[a-zA-Z0-9_.-|]*" + apiName.toUpperCase()+ "[a-zA-Z0-9_.-|]*";
+            String regex = "[a-zA-Z0-9_.-|]*" + apiName.toUpperCase() + "[a-zA-Z0-9_.-|]*";
             Pattern pattern;
             Matcher matcher;
             for (API api : apiList) {
@@ -1433,21 +1463,21 @@ public class APIProviderHostObject extends ScriptableObject {
 
             }
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting the APIs information for the searched API: " + apiName, e);
+            throw new APIManagementException("Error occurred while getting the searched API- " + apiName, e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            throw new APIManagementException(e.getMessage(), e);
         }
-        
+
         return myn;
     }
 
     public static NativeArray jsFunction_searchAPIs(Context cx, Scriptable thisObj,
                                                     Object[] args,
-                                                    Function funObj) throws ScriptException {
+                                                    Function funObj) throws APIManagementException {
         NativeArray myn = new NativeArray(0);
 
         if (args.length == 0) {
-            throw new ScriptException("Invalid number of parameters.");
+            throw new APIManagementException("Invalid number of parameters.");
         }
         String providerName = (String) args[0];
         String apiName = (String) args[1];
@@ -1458,7 +1488,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 //TODO : this regex pattern matching has to be moved to APIManager API implementation
                 List<API> apiList = apiProvider.getAPIsByProvider(providerName);
                 List<API> searchedList = new ArrayList<API>();
-                String regex = "[a-zA-Z0-9_.-|]*" + apiName.toUpperCase()+ "[a-zA-Z0-9_.-|]*";
+                String regex = "[a-zA-Z0-9_.-|]*" + apiName.toUpperCase() + "[a-zA-Z0-9_.-|]*";
                 Pattern pattern;
                 Matcher matcher;
                 for (API api : apiList) {
@@ -1491,9 +1521,9 @@ public class APIProviderHostObject extends ScriptableObject {
 
                 }
             } catch (APIManagementException e) {
-                log.error("Error from registry while getting the APIs information for the searched API: " + apiName, e);
+                throw new APIManagementException("Error occurred while getting the searched API- " + apiName, e);
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                throw new APIManagementException(e.getMessage(), e);
             }
         }
 
@@ -1501,8 +1531,8 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static boolean jsFunction_hasCreatePermission(Context cx, Scriptable thisObj,
-                                                Object[] args,
-                                                Function funObj) throws ScriptException {
+                                                         Object[] args,
+                                                         Function funObj) {
         APIProvider provider = getAPIProvider(thisObj);
         if (provider instanceof UserAwareAPIProvider) {
             try {
@@ -1516,8 +1546,8 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static boolean jsFunction_hasPublishPermission(Context cx, Scriptable thisObj,
-                                                         Object[] args,
-                                                         Function funObj) throws ScriptException {
+                                                          Object[] args,
+                                                          Function funObj) {
         APIProvider provider = getAPIProvider(thisObj);
         if (provider instanceof UserAwareAPIProvider) {
             try {
@@ -1533,10 +1563,10 @@ public class APIProviderHostObject extends ScriptableObject {
     public static NativeArray jsFunction_getLifeCycleEvents(Context cx, Scriptable thisObj,
                                                             Object[] args,
                                                             Function funObj)
-            throws ScriptException {
+            throws APIManagementException {
         NativeArray lifeCycles = new NativeArray(0);
         if (args.length == 0) {
-            throw new ScriptException("Invalid number of input parameters.");
+            throw new APIManagementException("Invalid number of input parameters.");
         }
         NativeObject apiData = (NativeObject) args[0];
         String provider = (String) apiData.get("provider", apiData);
@@ -1550,8 +1580,8 @@ public class APIProviderHostObject extends ScriptableObject {
             for (LifeCycleEvent lcEvent : lifeCycleEvents) {
                 NativeObject event = new NativeObject();
                 event.put("username", event, checkValue(lcEvent.getUserId()));
-                event.put("newStatus", event,lcEvent.getNewStatus()!=null?lcEvent.getNewStatus().toString():"");
-                event.put("oldStatus", event,lcEvent.getOldStatus()!=null?lcEvent.getOldStatus().toString():"");
+                event.put("newStatus", event, lcEvent.getNewStatus() != null ? lcEvent.getNewStatus().toString() : "");
+                event.put("oldStatus", event, lcEvent.getOldStatus() != null ? lcEvent.getOldStatus().toString() : "");
                 event.put("date", event, checkValue(lcEvent.getDate().toString()));
                 lifeCycles.put(i, lifeCycles, event);
                 i++;

@@ -414,7 +414,8 @@ public class ApiMgtDAO {
                 "   AND APP.APPLICATION_ID = APP.APPLICATION_ID" +
                 "   AND SUB.APPLICATION_ID = APP.APPLICATION_ID" +
                 "   AND APP.SUBSCRIBER_ID = SUBS.SUBSCRIBER_ID" +
-                "   AND API.API_ID = SUB.API_ID";
+                "   AND API.API_ID = SUB.API_ID" +
+                "   AND AKM.APPLICATION_ID=APP.APPLICATION_ID";
 
         String sqlQuery = "SELECT " +
                 "   IAT.VALIDITY_PERIOD, " +

@@ -35,10 +35,7 @@ import org.apache.axis2.client.async.AxisCallback;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.description.AxisBindingMessage;
-import org.apache.axis2.description.AxisEndpoint;
-import org.apache.axis2.description.AxisService;
-import org.apache.axis2.description.WSDL2Constants;
+import org.apache.axis2.description.*;
 import org.apache.axis2.transport.http.CommonsTransportHeaders;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.transport.http.HttpTransportProperties;
@@ -144,6 +141,8 @@ public class WSRequestHostObject extends ScriptableObject {
     static {
         try {
             configurationContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
+            configurationContext.getAxisConfiguration().addModule(new AxisModule(RAMPART));
+            configurationContext.getAxisConfiguration().addModule(new AxisModule(ADDRESSING));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

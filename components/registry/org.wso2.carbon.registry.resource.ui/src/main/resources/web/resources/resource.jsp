@@ -46,7 +46,23 @@
 <jsp:include page="../properties/properties-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../properties/js/properties.js"></script>
 <link rel="stylesheet" type="text/css" href="css/registry.css"/>
+
 <%
+    // the error message is been set in <code>org.wso2.carbon.registry.resource.ui.processors.AddResourceProcessor</code>
+    // and is been redirected by the java class. Previously, this was redirected to ../admin/error.jsp.
+    // the change is made as a fix for REGISTRY-805
+    String errorMsg = request.getParameter("errorMsg");
+    if( errorMsg != null) {
+%>
+       <script type="text/javascript" >
+            CARBON.showErrorDialog("<%=errorMsg %>", function(){
+               window.history.back();
+               return false;
+            });
+       </script>
+<%
+    }
+
     ResourceServiceClient client;
     boolean resourceExists = false;
     boolean isRoot = false;

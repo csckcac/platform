@@ -63,7 +63,7 @@ public class AddResourceProcessor extends AbstractFileUploadExecutor {
 
             CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.ERROR, request);
             response.sendRedirect(
-                    getContextRoot(request) + "/" + webContext + "/admin/error.jsp");
+                    getContextRoot(request) + "/" + webContext + "/resources/resource.jsp?errorMsg=" + msg);
 
             return false;
         }
@@ -81,7 +81,7 @@ public class AddResourceProcessor extends AbstractFileUploadExecutor {
                     if (errorRedirect == null) {
                         CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.ERROR, request);
                         response.sendRedirect(
-                                getContextRoot(request) + "/" + webContext + "/admin/error.jsp");
+                                getContextRoot(request) + "/" + webContext + "/resources/resource.jsp?errorMsg=" + msg);
                     } else {
                         response.sendRedirect(
                                 getContextRoot(request) + "/" + webContext + "/" + errorRedirect +
@@ -198,7 +198,7 @@ public class AddResourceProcessor extends AbstractFileUploadExecutor {
             if (errorRedirect == null) {
                 CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.ERROR, request);
                 response.sendRedirect(
-                        getContextRoot(request) + "/" + webContext + "/admin/error.jsp");
+                        getContextRoot(request) + "/" + webContext + "/resources/resource.jsp?errorMsg=" + msg);
             } else {
                 response.sendRedirect(
                         getContextRoot(request) + "/" + webContext + "/" + errorRedirect + (errorRedirect.indexOf("?")
@@ -238,7 +238,7 @@ public class AddResourceProcessor extends AbstractFileUploadExecutor {
         CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.ERROR, request);
         if (errorRedirect == null) {
             response.sendRedirect(
-                    getContextRoot(request) + "/" + webContext + "/admin/error.jsp");
+                    getContextRoot(request) + "/" + webContext + "/resources/resource.jsp?errorMsg=" + msg);
         } else {
             response.sendRedirect(
                     getContextRoot(request) + "/" + webContext + "/" + errorRedirect + (errorRedirect.indexOf("?")

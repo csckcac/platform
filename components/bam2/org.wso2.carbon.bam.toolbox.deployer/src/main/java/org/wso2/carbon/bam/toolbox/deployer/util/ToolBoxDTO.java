@@ -23,13 +23,10 @@ import java.util.ArrayList;
 public class ToolBoxDTO {
     private String name;
     private ArrayList<String> scriptNames;
-//    private ArrayList<String> gadgetNames;
-//    private ArrayList<Integer> tabIds;
     private ArrayList<DashBoardTabDTO> dashboardTabs;
     private String evenStreamDef;
     private String scriptsParentDirectory;
     private String gagetsParentDirectory;
-//    private String dashboardName;
 
     public ToolBoxDTO(String name) {
         this.name = name;

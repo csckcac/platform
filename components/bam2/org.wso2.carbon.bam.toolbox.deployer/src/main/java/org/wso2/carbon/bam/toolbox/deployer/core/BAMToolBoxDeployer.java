@@ -201,8 +201,6 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
 
 
     private String getTenantAdminName(int tenantId) throws BAMToolboxDeploymentException {
-        log.info("current tenant Id:" + tenantId);
-        log.info("supre tenant id: "+MultitenantConstants.SUPER_TENANT_ID);
         if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
             try {
                 return ServiceHolder.getUserRealm().getRealmConfiguration().getAdminUserName();

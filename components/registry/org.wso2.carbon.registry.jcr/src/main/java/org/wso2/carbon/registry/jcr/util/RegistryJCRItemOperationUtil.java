@@ -91,6 +91,16 @@ public class RegistryJCRItemOperationUtil {
 
     }
 
+    public static String getNodePathFromVersionName(String s) {
+        if (!s.contains("/")) {
+            return s;
+        }
+        return s.substring(0, s.lastIndexOf("/"))
+                + "/"
+                + s.split("/")[s.split("/").length - 1].split(";")[0];
+
+    }
+
 //    public static boolean isNodeVersionable(Session session, String path) throws RepositoryException {
 //
 //      if(  session.getNode(path).isNodeType("mix:versionable") ||

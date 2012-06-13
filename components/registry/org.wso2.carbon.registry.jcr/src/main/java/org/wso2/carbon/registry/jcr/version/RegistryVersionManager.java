@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO persist version history with versions inside them in repo tree
 public class RegistryVersionManager implements VersionManager {
 
     private static long versionCounter = 0;
@@ -51,19 +52,17 @@ public class RegistryVersionManager implements VersionManager {
 //        loadActivityNodes();
     }
 
-    private void loadActivityNodes() {
-
-
-        try {
-
-            if ((!(((RegistrySession) session).itemExists("/jcr:system")) && ((RegistrySession) session).itemExists("/jcr:system/jcr:activities"))) {
-                ((RegistrySession) session).getRootNode().addNode("jcr:system").addNode("jcr:activities");
-            }
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    private void loadActivityNodes() {
+//        try {
+//
+//            if ((!(((RegistrySession) session).itemExists("/jcr:system")) && ((RegistrySession) session).itemExists("/jcr:system/jcr:activities"))) {
+//                ((RegistrySession) session).getRootNode().addNode("jcr:system").addNode("jcr:activities");
+//            }
+//        } catch (RepositoryException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     private Version createVersionOnNode(String nodePath) throws RegistryException {
         String latestVersionPath = "";
@@ -82,7 +81,7 @@ public class RegistryVersionManager implements VersionManager {
             ((RegistryVersion) version).setVersionHistory(
                     (RegistryVersionHistory) versionHistories.get(nodePath));
         } else {
-            RegistryVersionHistory vh = new RegistryVersionHistory(session);
+            RegistryVersionHistory vh = new RegistryVersionHistory(session,nodePath);
             vh.getVersionList().add(version);
             ((RegistryVersion) version).setVersionHistory(vh);
             versionHistories.put(nodePath, vh);
@@ -206,24 +205,61 @@ public class RegistryVersionManager implements VersionManager {
     }
 
     public boolean isCheckedOut(String s) throws RepositoryException {
-        boolean isCheckedOut = false;
-//        if (!((Node) session.getItem(s)).isNodeType("mix:simpleVersionable")) {
-//            isCheckedOut = true;
-//        }
+        try {
+            String propVal1 = ((RegistrySession) session).getUserRegistry().get(s).getProperty("jcr:checkedOut");
+            String propVal2 = ((RegistrySession) session).getUserRegistry().get(s).getProperty("jcr:isCheckedOut");
+            if (propVal1.equals("true")
+                    || (propVal2.equals("true"))) {
+                return true;
+            }
+            if (propVal1.equals("false")
+                    || (propVal2.equals("false"))) {
+                return false;
+            }
 
-        Value propVal = ((Node) session.getItem(s)).getProperty("jcr:checkedOut").getValue();
-        Value propVal1 = ((Node) session.getItem(s)).getProperty("jcr:isCheckedOut").getValue();
-
-        if (propVal.getString().equals("true")
-                || (propVal1.getString().equals("true"))) {
-            isCheckedOut = true;
+        } catch (NullPointerException e) {
+            // isCheckout is false
+        } catch (RegistryException e) {
+            throw new RepositoryException(e.getMessage());
         }
-        return isCheckedOut;
+
+        return nonVersionableNodeChckoutCheck(s);
+    }
+
+    private boolean nonVersionableNodeChckoutCheck(String s) throws RepositoryException {
+        Node vParent = null;
+        try {
+            vParent = session.getNode(s).getParent();
+            while (!vParent.isNodeType("mix:simpleVersionable")) {
+                vParent = vParent.getParent();
+            }
+
+        } catch (ItemNotFoundException e) {
+            // root reached.
+        } catch (AccessDeniedException e) {
+            throw new AccessDeniedException("Access denied on node " + s);
+        } catch (PathNotFoundException e) {
+            throw new PathNotFoundException("No such path exists " + s);
+        }
+
+        try {
+            if (vParent != null && vParent.isNodeType("mix:simpleVersionable")) {
+                if (vParent.isCheckedOut()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        } catch (RepositoryException e) {
+            throw new RepositoryException(e.getMessage());
+        }
     }
 
     public VersionHistory getVersionHistory(String s) throws UnsupportedRepositoryOperationException, RepositoryException {
         if (versionHistories.get(s) == null) {
-           versionHistories.put(s, new RegistryVersionHistory(session));
+            versionHistories.put(s, new RegistryVersionHistory(session,s));
         }
 
         return versionHistories.get(s);
@@ -271,14 +307,16 @@ public class RegistryVersionManager implements VersionManager {
 
     public void restore(String s, String s1, boolean b) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
 
+        //s1 =null when it is root version
+        if (s1 == null) {
+            throw new VersionException("Cannot do restore opeartion on jcr:rootVersion ..!!!");
+        }
+
         // Check node is versionable
         if (!isNodeTypeVersionable(s)) {
             throw new UnsupportedRepositoryOperationException("Cannot do restore on non versionable nodes");
         }
 
-        if (s1 != null && s1.equals(getVersionHistory(s).getRootVersion().getName())) {
-            throw new VersionException("Cannot do restore opeartion on jcr:rootVersion ..!!!");
-        }
 
         try {
             RegistryJCRItemOperationUtil.validateSessionSaved((RegistrySession) session);
@@ -306,27 +344,24 @@ public class RegistryVersionManager implements VersionManager {
 
     }
 
-    private String getNodePathFromVersionName(String s) {
-        if (!s.contains("/")) {
-            return s;
-        }
-        return s.substring(0, s.lastIndexOf("/"))
-                + "/"
-                + s.split("/")[s.split("/").length - 1].split(";")[0];
-
-    }
+//    private String getNodePathFromVersionName(String s) {
+//        if (!s.contains("/")) {
+//            return s;
+//        }
+//        return s.substring(0, s.lastIndexOf("/"))
+//                + "/"
+//                + s.split("/")[s.split("/").length - 1].split(";")[0];
+//
+//    }
 
     public void restore(Version version, boolean b) throws VersionException, ItemExistsException, InvalidItemStateException, UnsupportedRepositoryOperationException, LockException, RepositoryException {
 
-        // Check node is versionable
-        if (!isNodeTypeVersionable(getNodePathFromVersionName(version.getName()))) {
-            throw new UnsupportedRepositoryOperationException("Cannot do restore on non versionable nodes");
-        }
-
-        if (version != null && version.getName().equals(getVersionHistory(
-                getNodePathFromVersionName(version.getName())).
-                getRootVersion().getName())) {
+        if (version != null && version.getName() == null) {
             throw new VersionException("Cannot do restore opeartion on jcr:rootVersion ..!!!");
+        }
+        // Check node is versionable
+        if (!isNodeTypeVersionable(RegistryJCRItemOperationUtil.getNodePathFromVersionName(version.getName()))) {
+            throw new UnsupportedRepositoryOperationException("Cannot do restore on non versionable nodes");
         }
 
 
@@ -334,26 +369,26 @@ public class RegistryVersionManager implements VersionManager {
             RegistryJCRItemOperationUtil.validateSessionSaved((RegistrySession) session);
             if ((version != null)
                     && isValidVersionName(
-                    getNodePathFromVersionName(version.getName()))
+                    RegistryJCRItemOperationUtil.getNodePathFromVersionName(version.getName()))
                     && (isVersionInNodeVersionHistory(
-                    getNodePathFromVersionName(version.getName()), version.getName()))
+                    RegistryJCRItemOperationUtil.getNodePathFromVersionName(version.getName()), version.getName()))
                     ) {
                 ((RegistrySession) session).getUserRegistry().restoreVersion(version.getName());
 //                version.getFrozenNode().setProperty("jcr:isCheckedOut", "false");
                 Resource resource = ((RegistrySession) session).getUserRegistry().
-                        get(getNodePathFromVersionName(version.getName()));
+                        get(RegistryJCRItemOperationUtil.getNodePathFromVersionName(version.getName()));
                 resource.setProperty("jcr:isCheckedOut", "false");
                 resource.setProperty("jcr:checkedOut", "false");
 
                 ((RegistrySession) session).getUserRegistry().put(
-                        getNodePathFromVersionName(version.getName()), resource);
+                        RegistryJCRItemOperationUtil.getNodePathFromVersionName(version.getName()), resource);
                 //create a new version at restore in simple versioning
-                createVersionOnNode(getNodePathFromVersionName(version.getName()));
+                createVersionOnNode(RegistryJCRItemOperationUtil.getNodePathFromVersionName(version.getName()));
 
             }
         } catch (VersionException e) {
             throw new VersionException("No such version in node's version history" +
-                    getNodePathFromVersionName(version.getName()));
+                    RegistryJCRItemOperationUtil.getNodePathFromVersionName(version.getName()));
         } catch (InvalidItemStateException e) {
             throw new InvalidItemStateException("Invalid Item state: operations are still unsaved");
         } catch (RegistryException e) {
@@ -364,7 +399,7 @@ public class RegistryVersionManager implements VersionManager {
 
     public void restore(String s, Version version, boolean b) throws PathNotFoundException, ItemExistsException, VersionException, ConstraintViolationException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
 
-        if (version != null && version.getName().equals(getVersionHistory(s).getRootVersion().getName())) {
+        if (version != null && version.getName() == null) {
             throw new VersionException("Cannot do restore opeartion on jcr:rootVersion ..!!!");
         }
 
@@ -392,12 +427,14 @@ public class RegistryVersionManager implements VersionManager {
                     ) {
                 ((RegistrySession) session).getUserRegistry().restoreVersion(version.getName());
                 Resource resource = ((RegistrySession) session).getUserRegistry().
-                        get(getNodePathFromVersionName(version.getName()));
+                                    get(RegistryJCRItemOperationUtil.getNodePathFromVersionName(version.getName()));
                 resource.setProperty("jcr:isCheckedOut", "false");
                 resource.setProperty("jcr:checkedOut", "false");
                 ((RegistrySession) session).getUserRegistry().put(
-                        getNodePathFromVersionName(version.getName()), resource);
-                createVersionOnNode(getNodePathFromVersionName(version.getName()));
+                                            RegistryJCRItemOperationUtil.
+                                            getNodePathFromVersionName(version.getName()), resource);
+                createVersionOnNode(RegistryJCRItemOperationUtil.
+                                            getNodePathFromVersionName(version.getName()));
 
             }
         } catch (VersionException e) {
@@ -410,20 +447,20 @@ public class RegistryVersionManager implements VersionManager {
 
     public void restoreByLabel(String s, String s1, boolean b) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
 
-        String verPAth = ((Node) ((RegistrySession) session).getItem("/jcr:system/jcr:gregVersionLabels")).getProperty(s1).getString();
-
         try {
+            String verPath = ((RegistrySession) session).getUserRegistry().get(
+                    RegistryJCRSpecificStandardLoderUtil.
+                            getSystemConfigVersionLabelPath((RegistrySession) session)).
+                    getProperty(s1);
+            ((RegistrySession) session).getUserRegistry().restoreVersion(verPath);
 
-            ((RegistrySession) session).getUserRegistry().restoreVersion(verPAth);
         } catch (RegistryException e) {
-            e.printStackTrace();
+            throw new RepositoryException(
+                  "Excepion occurred in registry level while restoring by label on : " + s);
         }
-
-
     }
 
     // TODO :All merging stuff
-
     public NodeIterator merge(String s, String s1, boolean b) throws NoSuchWorkspaceException, AccessDeniedException, MergeException, LockException, InvalidItemStateException, RepositoryException {
 
         return null;

@@ -163,6 +163,12 @@ public class RegistryNode implements Node {
             subCollection.setDescription(ntName);
             subCollection.setProperty("jcr:uuid", absPath);  //Here we use node's path as its identifier
 //            subCollection.setProperty("wso2.registry.jcr.versions", versionList);
+
+            if (ntName.equals("mix:simpleVersionable") || ntName.equals("mix:versionable")) {
+                subCollection.setProperty("jcr:checkedOut", "true");
+                subCollection.setProperty("jcr:isCheckedOut", "true");
+                subCollection.setProperty("jcr:frozenPrimaryType",ntName);
+            }
             registrySession.getUserRegistry().put(absPath, subCollection);
             subNode.setCollection(absPath);
             subNode.setPrimaryType(ntName);
@@ -270,6 +276,7 @@ public class RegistryNode implements Node {
             if (ntName.equals("mix:simpleVersionable") || ntName.equals("mix:versionable")) {
                 subCollection.setProperty("jcr:checkedOut", "true");
                 subCollection.setProperty("jcr:isCheckedOut", "true");
+                subCollection.setProperty("jcr:frozenPrimaryType",ntName);
             }
 
             if (ntName.startsWith("mix")) {
@@ -1234,7 +1241,7 @@ public class RegistryNode implements Node {
 
 
     }
-
+    //TODO overall, always do a registry get on a resource and do stuff other than using the ref
     public void addMixin(String s) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
         try {
             registrySession.getWorkspace().getNodeTypeManager().getNodeType(s);
@@ -1252,10 +1259,18 @@ public class RegistryNode implements Node {
                 resource.setProperty("jcr:checkedOut", "true");
                 resource.setProperty("jcr:isCheckedOut", "true");
             }
+
+            if(s.equals("mix:referenceable")) {
+             resource.setProperty("jcr:frozenUuid",nodePath);
+            }
+
 //                   validateNTPropertyDefs();
             registrySession.getUserRegistry().put(nodePath, resource);
 
-        } catch (NoSuchNodeTypeException e) {
+        }
+
+
+        catch (NoSuchNodeTypeException e) {
             String msg = "No such node type exists " + this;
             log.debug(msg);
             throw new NoSuchNodeTypeException(msg, e);
@@ -1439,7 +1454,7 @@ public class RegistryNode implements Node {
     }
 
     public void restoreByLabel(String s, boolean b) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
-
+        registrySession.getWorkspace().getVersionManager().restoreByLabel(nodePath,s,true);
     }
 
     public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
@@ -1514,11 +1529,11 @@ public class RegistryNode implements Node {
     public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
         Node par = null;
         String parent = "";
-        if (nodePath.equals(registrySession.getWorkspaceRootPath())) {
-            throw new ItemNotFoundException();
-        }
-
         try {
+
+            if (isNodeRoot()) {
+                throw new ItemNotFoundException("Node is already root: "+nodePath);
+            }
             if (!registrySession.getUserRegistry().resourceExists(nodePath)) {
                 throw new InvalidItemStateException();
             } else {
@@ -1532,9 +1547,26 @@ public class RegistryNode implements Node {
         } catch (InvalidItemStateException e) {
             throw new InvalidItemStateException();
         }
-
         return par;
     }
+
+    private boolean isNodeRoot() throws RegistryException{
+        try {
+            String parentPath = registrySession.getUserRegistry().get(nodePath).getParentPath();
+            if(!parentPath.endsWith("/")) {
+               parentPath=parentPath+"/";
+            }
+            if(parentPath.equals(registrySession.getWorkspaceRootPath())){
+              return true;
+            }else {
+              return false;
+            }
+        } catch (RegistryException e) {
+          throw new RegistryException(""+ e.getMessage());
+        }
+
+    }
+
 
     public int getDepth() throws RepositoryException {
 

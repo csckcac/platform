@@ -49,8 +49,12 @@ public class RegistryQueryObjectModel implements QueryObjectModel {
 
         this.source = source;
         this.constraint = constraint;
-        this.orderings = Arrays.copyOf(orderings, orderings.length);
-        this.columns = Arrays.copyOf(columns, columns.length);
+        if(orderings != null) {
+            this.orderings = Arrays.copyOf(orderings, orderings.length);
+        }
+        if(columns != null) {
+            this.columns = Arrays.copyOf(columns, columns.length);
+        }
         this.session = (RegistrySession) session;
 
     }

@@ -37,14 +37,16 @@ public class RegistryJCRSpecificStandardLoderUtil {
     private static List<String> nameSpaceURIList = new ArrayList<String>();
     private static boolean initialized = false;
     private static final String DEFAULT_REGISTRY_WORKSPACE_NAME = "default_workspace";
-    private static final String JCR_REGISTRY_WORKSPACE_ROOT = "/jcr_system/workspaces";
+    private static final String JCR_REGISTRY_WORKSPACE_ROOT = "/jcr_system2/workspaces";
     public static final String WORKSPACE_ROOT_PRIMARY_NODETYPE_NAME = "system_config";
     public static final String WORKSPACE_ROOT_PRIMARY_ITEM_NAME = "greg";
     public static final String JCR_SYSTEM_PERSIS_PROP_DEFS = "prop_defs";
     public static final String JCR_SYSTEM_PERSIS_CHILDNODE_DEFS = "child_defs";
     public static final String JCR_SYSTEM_CONFIG = "greg_jcr_config";
+    public static final String JCR_SYSTEM_VERSION_LABELS = "sys_ver_labels";
     private static final String JCR_SYSTEM_CONFIG_VERSION = "sys_versions";
     private static final String JCR_SYSTEM_CONFIG_NODE_TYPES = "sys_node_types";
+
 
 
     public static void init() throws ConstraintViolationException {
@@ -226,6 +228,7 @@ public class RegistryJCRSpecificStandardLoderUtil {
     public static void loadJCRSystemConfigs(UserRegistry userReg,String workspaceRoot) throws RegistryException {
         createSysBaseNodes(userReg,workspaceRoot);
         createSystemConfigVersion(userReg,workspaceRoot);
+        createSystemConfigVersionLabelStore(userReg,workspaceRoot);
 //        createSystemConfigNodeTypes(userReg,workspaceRoot);
     }
 
@@ -269,6 +272,19 @@ public class RegistryJCRSpecificStandardLoderUtil {
         }
     }
 
+     private static void createSystemConfigVersionLabelStore(UserRegistry userReg,String workspaceRoot) throws RegistryException {
+        String confVerPath = workspaceRoot
+                + JCR_SYSTEM_CONFIG
+                + "/"
+                + JCR_SYSTEM_VERSION_LABELS;
+          if (!userReg.resourceExists(confVerPath)) {
+            Resource resource = (CollectionImpl)userReg.newCollection();
+            resource.setDescription("sys:config-jcr-storage");
+            resource.setProperty("sys:config","true");
+            userReg.put(confVerPath, resource);
+        }
+    }
+
     private static void createSystemConfigNodeTypes(UserRegistry userReg,String workspaceRoot) throws RegistryException {
           String confVerPath = workspaceRoot
                 + JCR_SYSTEM_CONFIG
@@ -296,5 +312,11 @@ public class RegistryJCRSpecificStandardLoderUtil {
                 + JCR_SYSTEM_CONFIG_NODE_TYPES;
     }
 
+    public static String getSystemConfigVersionLabelPath(RegistrySession registrySession){
+       return   registrySession.getWorkspaceRootPath()
+                + JCR_SYSTEM_CONFIG
+                + "/"
+                + JCR_SYSTEM_VERSION_LABELS;
+    }
 
 }

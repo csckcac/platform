@@ -16,8 +16,11 @@
 
 package org.wso2.carbon.registry.jcr.version;
 
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.jcr.RegistrySession;
+import org.wso2.carbon.registry.jcr.util.RegistryJCRItemOperationUtil;
+import org.wso2.carbon.registry.jcr.util.RegistryJCRSpecificStandardLoderUtil;
 
 import javax.jcr.*;
 import javax.jcr.lock.Lock;
@@ -31,16 +34,17 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
 
+//TODO Should persist versions and version histories
 public class RegistryVersionHistory implements VersionHistory {
 
     private List<Version> versions = new ArrayList<Version>();
     private Map<String, List> versionLabels = new HashMap<String, List>();
     private Session session;
+    private String nodePath="";
 
-    public RegistryVersionHistory(Session session) {
-
+    public RegistryVersionHistory(Session session,String nodePath) {
         this.session = session;
-
+        this.nodePath = nodePath;
     }
 
     public List<Version> getVersionList() {
@@ -59,7 +63,7 @@ public class RegistryVersionHistory implements VersionHistory {
 
     public Version getRootVersion() throws RepositoryException {
 
-        return (new RegistryVersionIterator(versions)).nextVersion();
+        return createRootVersion();
     }
 
     public VersionIterator getAllLinearVersions() throws RepositoryException {
@@ -83,98 +87,120 @@ public class RegistryVersionHistory implements VersionHistory {
     }
 
     public Version getVersion(String s) throws VersionException, RepositoryException {
-
-        VersionIterator vit = new RegistryVersionIterator(versions);
         Version correctVersion = null;
-
-        while (vit.hasNext()) {
-            Version ver = vit.nextVersion();
+        for(Version ver:getVersionList()){
             if (ver.getName().equals(s)) {
                 correctVersion = ver;
                 break;
             }
         }
-
         return correctVersion;
     }
 
     public Version getVersionByLabel(String s) throws VersionException, RepositoryException {
 
-        VersionIterator it = getAllVersions();
-        Version v = null;
-        Version matchVersion = null;
-        while (it.hasNext()) {
+          try {
+            Resource res = ((RegistrySession) session).getUserRegistry().get(
+                    RegistryJCRSpecificStandardLoderUtil.
+                            getSystemConfigVersionLabelPath((RegistrySession) session));
+                 String versionId = res.getProperty(s);
+              if(versionId!= null) {
+                return getVersion(versionId);
+              } else {
+                 throw new VersionException("Version ID cannot be null..!!" + s);
+              }
 
-            v = it.nextVersion();
+        } catch (RegistryException e) {
+            throw new RepositoryException("Exception occurred in registry level " + s);
 
-            if (versionLabels.get(v.getName()).contains(s)) {
-                matchVersion = v;
-                break;
-            }
         }
-
-        return matchVersion;
-
     }
 
     public void addVersionLabel(String s, String s1, boolean b) throws LabelExistsVersionException, VersionException, RepositoryException {
 
         try {
-            ((RegistrySession) session).getUserRegistry().get("/jcr:system/jcr:gregVersionLabels").setProperty(s1, s);
+            Resource res = ((RegistrySession) session).getUserRegistry().get(
+                    RegistryJCRSpecificStandardLoderUtil.
+                            getSystemConfigVersionLabelPath((RegistrySession) session));
+            res.setProperty(s1, s);
+            ((RegistrySession) session).getUserRegistry().put(RegistryJCRSpecificStandardLoderUtil.
+                    getSystemConfigVersionLabelPath((RegistrySession) session), res);
         } catch (RegistryException e) {
-          throw new RepositoryException("Exception occurred in registry level " + s );
-        }
-
-        if ((versionLabels.get(s) != null)) {
-            versionLabels.get(s).add(s1);
-
-        } else if ((versionLabels.get(s) == null)) {
-            List ls = new ArrayList();
-            ls.add(s1);
-
-            versionLabels.put(s, ls);
+            throw new RepositoryException("Exception occurred in registry level " + s);
         }
     }
 
     public void removeVersionLabel(String s) throws VersionException, RepositoryException {
-
-        versionLabels.remove(s);
+        try {
+            Resource res = ((RegistrySession) session).getUserRegistry().get(
+                    RegistryJCRSpecificStandardLoderUtil.
+                            getSystemConfigVersionLabelPath((RegistrySession) session));
+            if (res.getProperty(s) != null) {
+                res.removeProperty(s);
+            }
+            ((RegistrySession) session).getUserRegistry().put(RegistryJCRSpecificStandardLoderUtil.
+                    getSystemConfigVersionLabelPath((RegistrySession) session), res);
+        } catch (RegistryException e) {
+            throw new RepositoryException("Exception occurred in registry level " + s);
+        }
     }
 
     public boolean hasVersionLabel(String s) throws RepositoryException {
 
-        boolean hasver = false;
-        VersionIterator it = getAllVersions();
-        Version v = null;
-
-        while (it.hasNext()) {
-            v = it.nextVersion();
-            if (hasVersionLabel(s)) {
-                hasver = true;
-                break;
+        try {
+            Resource res = ((RegistrySession) session).getUserRegistry().get(
+                    RegistryJCRSpecificStandardLoderUtil.
+                            getSystemConfigVersionLabelPath((RegistrySession) session));
+            if (res.getProperty(s) != null) {
+                return true;
+            } else {
+                return false;
             }
+        } catch (RegistryException e) {
+            throw new RepositoryException("Exception occurred in registry level " + s);
         }
+    }
 
-        return hasver;
+    private Version createRootVersion() {
+        return new RegistryVersion(null, System.currentTimeMillis(), null, session);
     }
 
     public boolean hasVersionLabel(Version version, String s) throws VersionException, RepositoryException {
 
-        return versionLabels.get(version.getName()).contains(s);
+        try {
+            Resource res = ((RegistrySession) session).getUserRegistry().get(
+                    RegistryJCRSpecificStandardLoderUtil.
+                            getSystemConfigVersionLabelPath((RegistrySession) session));
+            if (res.getProperty(s) != null && res.getProperty(s).equals(version.getName())) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (RegistryException e) {
+            throw new RepositoryException("Exception occurred in registry level " + s);
+        }
     }
 
     public String[] getVersionLabels() throws RepositoryException {
 
-        return new String[0];
+          try {
+            Resource res = ((RegistrySession) session).getUserRegistry().get(
+                    RegistryJCRSpecificStandardLoderUtil.
+                            getSystemConfigVersionLabelPath((RegistrySession) session));
+             Enumeration<String> labels = (Enumeration<String>)res.getProperties().propertyNames();
+            return Arrays.asList(labels).toArray(new String[0]);
+        } catch (RegistryException e) {
+            throw new RepositoryException("Exception occurred in registry level");
+        }
     }
 
     public String[] getVersionLabels(Version version) throws VersionException, RepositoryException {
-        return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new String[0];
     }
 
     public void removeVersion(String s) throws ReferentialIntegrityException, AccessDeniedException, UnsupportedRepositoryOperationException, VersionException, RepositoryException {
-
-
+         versions.remove(getVersion(s));
     }
 
     public Node addNode(String s) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException, RepositoryException {

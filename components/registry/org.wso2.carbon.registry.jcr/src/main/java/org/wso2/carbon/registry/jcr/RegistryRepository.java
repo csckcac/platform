@@ -18,6 +18,8 @@ package org.wso2.carbon.registry.jcr;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.registry.api.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -131,7 +133,7 @@ public class RegistryRepository implements Repository {
         keyMap.put(Repository.OPTION_UNFILED_CONTENT_SUPPORTED, "true");
         keyMap.put(Repository.OPTION_UPDATE_MIXIN_NODE_TYPES_SUPPORTED, "true");
         keyMap.put(Repository.OPTION_UPDATE_PRIMARY_NODE_TYPE_SUPPORTED, "true");
-        keyMap.put(Repository.OPTION_VERSIONING_SUPPORTED, "true");
+        keyMap.put(Repository.OPTION_VERSIONING_SUPPORTED, "false");  //TODO support full versioning future
         keyMap.put(Repository.OPTION_WORKSPACE_MANAGEMENT_SUPPORTED, "true");
         keyMap.put(Repository.OPTION_XML_EXPORT_SUPPORTED, "true");
         keyMap.put(Repository.OPTION_XML_IMPORT_SUPPORTED, "true");
@@ -171,20 +173,11 @@ public class RegistryRepository implements Repository {
         return workspaceMap;
     }
 
-//    public void addRegistryNodeTypes(RegistryNodeType nodeType) { //non JCR custom method
-//
-//        nodeTypesList.add(nodeType);
-//
-//    }
-
     public Map getAllLocks() {          //non JCR custom method
-
         return allLocks;
-
     }
 
     public String[] getDescriptorKeys() {
-
         return Arrays.copyOf(discriptorKeys, discriptorKeys.length);
     }
 
@@ -253,25 +246,19 @@ public class RegistryRepository implements Repository {
             if (userId != null) {
 
                 if (userId.equals("CONFIG_USER_REGISTRY")) {
-
-
                     userRegistry = registryService.getConfigUserRegistry(registrySimpleCredentials.getUserID(), new String(registrySimpleCredentials.getPassword()));
 
                 } else if (userId.equals("GOVERNANCE_USER_REGISTRY")) {
-
                     userRegistry = registryService.getGovernanceUserRegistry(registrySimpleCredentials.getUserID(), new String(registrySimpleCredentials.getPassword()));
 
                 } else if (userId.equals("ROOT_REGISTRY")) {
-
                     userRegistry = registryService.getRegistry(registrySimpleCredentials.getUserID(), new String(registrySimpleCredentials.getPassword()));
-                } else {
 
-                    userRegistry = registryService.getUserRegistry("admin");
-
+                    userRegistry = registryService.getUserRegistry(RegistryConstants.ADMIN_USER);
                 }
 
             } else {
-                userRegistry = registryService.getUserRegistry("admin");     //here we just return a registry which has admin previledges.
+                userRegistry = registryService.getUserRegistry(RegistryConstants.ADMIN_USER);     //here we just return a registry which has admin previledges.
             }
         } catch (RegistryException e) {
             e.printStackTrace();
@@ -317,9 +304,7 @@ public class RegistryRepository implements Repository {
         }
 
         try {
-
             //no credentials passed to the session.Problem of accessing credentials methods.. getAttruibute();;
-
             if (s.equals("CONFIG_USER_REGISTRY")) {
 
                 userRegistry = registryService.getConfigUserRegistry();
@@ -327,8 +312,7 @@ public class RegistryRepository implements Repository {
 
                 userRegistry = registryService.getGovernanceUserRegistry();
 
-            } else if (s.equals("ROOT_REGISTRY")) {
-
+            } else if (s.equals(RegistryConstants.ROOT_REGISTRY_INSTANCE)) {
                 userRegistry = registryService.getRegistry();
             } else if (s.equals("LOCAL_REPOSITORY")) {
 

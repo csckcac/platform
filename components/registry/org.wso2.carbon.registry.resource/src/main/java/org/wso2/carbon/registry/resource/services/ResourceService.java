@@ -49,6 +49,13 @@ public class ResourceService extends RegistryAbstractAdmin implements IResourceS
         }
         DescriptionUtil.setDescription(registry, path, description);
     }
+    public void updateMediaType(String path ,String mediaType) throws Exception {
+        UserRegistry registry = (UserRegistry) getRootRegistry();
+        if (RegistryUtils.isRegistryReadOnly(registry.getRegistryContext())) {
+            return;
+        }
+        MediaTypeUtil.updateMediaType(registry,path,mediaType);
+    }
 
     public CollectionContentBean getCollectionContent(String path) throws Exception {
         UserRegistry registry = (UserRegistry)getRootRegistry();

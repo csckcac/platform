@@ -224,8 +224,41 @@
         </tr>
         <tr>
             <td><fmt:message key="media.type1"/>:</td>
-            <td colspan="2"><% if (metadata.getMediaType() != null && metadata.getMediaType().length() != 0) { %><%=MediaTypesUtils.getHumanReadableMediaTypeFromMimeType(metadata.getMediaType())%><% } else { %>
-                <fmt:message key="unknown"/><% } %></td>
+            <td colspan="2">
+                     <div style="width:400px">
+                    <div id="toggleSaveMediaType_view" style="float:left;line-height: 25px;"><% if (metadata.getMediaType() != null && metadata.getMediaType().length() != 0) { %><%=MediaTypesUtils.getHumanReadableMediaTypeFromMimeType(metadata.getMediaType())%><% } else { %>
+                            <fmt:message key="unknown"/><% } %>
+                            </div>
+                            <input style="display:none;float:left" id="toggleSaveMediaType_edit" value="<% if (metadata.getMediaType() != null && metadata.getMediaType().length() != 0) { %><%=MediaTypesUtils.getHumanReadableMediaTypeFromMimeType(metadata.getMediaType())%><% } else { %><fmt:message key="unknown"/><% } %>" />
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                            <%
+                                if(Boolean.parseBoolean(metadata.getWriteLocked())){
+                            %>
+                            <a  id="toggleSaveMediaType_editBtn" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/edit.gif);"
+                               onclick="retentionError();">
+                                <fmt:message key="edit"/>
+                            </a>
+                            <%}else {%>
+                            <a id="toggleSaveMediaType_editBtn"  class="icon-link registryWriteOperation" style="background-image:url(../admin/images/edit.gif);"
+                               onclick="toggleSaveMediaType()">
+                                <fmt:message key="edit"/>
+                            </a>
+                            <%}%>
+
+                            <a  class="icon-link" style="background-image:url(../properties/images/save-button.gif);display:none" id="toggleSaveMediaType_saveBtn" onclick="updateMediaType('<%=metadata.getPath()%>' ,document.getElementById('toggleSaveMediaType_edit').value);">
+                                Save
+                            </a>
+                            &nbsp;
+                            &nbsp;
+                            <a class="icon-link" style="background-image:url(../admin/images/cancel.gif); display:none;"  id="toggleSaveMediaType_cancelBtn" onclick="toggleSaveMediaType()">
+                                Cancel
+                            </a>
+                         </div>
+
+            </td>
+
         </tr>
 
         <%  String permaLink = metadata.getPermalink();

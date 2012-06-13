@@ -3408,3 +3408,38 @@ function handleRelativeWindowOk(path, textBoxId, onOK) {
 function getRandom(){
     return Math.floor(Math.random() * 2000);
 }
+
+function toggleSaveMediaType() {
+    if (jQuery('#toggleSaveMediaType_view').is(":visible")) {
+        jQuery('#toggleSaveMediaType_view').hide();
+        jQuery('#toggleSaveMediaType_edit').show();
+        jQuery('#toggleSaveMediaType_editBtn').hide();
+        jQuery('#toggleSaveMediaType_saveBtn').show();
+        jQuery('#toggleSaveMediaType_cancelBtn').show();
+    } else {
+        jQuery('#toggleSaveMediaType_view').show();
+        jQuery('#toggleSaveMediaType_edit').hide();
+        jQuery('#toggleSaveMediaType_editBtn').show();
+        jQuery('#toggleSaveMediaType_saveBtn').hide();
+        jQuery('#toggleSaveMediaType_cancelBtn').hide();
+    }
+}
+
+function updateMediaType(resourcePath, mediaType) {
+    toggleSaveMediaType();
+    sessionAwareFunction(function () {
+        new Ajax.Request('../resources/update_mediatype_ajaxprocessor.jsp',
+            {
+                method:'post',
+                parameters:{resourcePath:resourcePath, mediaType:mediaType},
+                onSuccess:function () {
+                    $('toggleSaveMediaType_view').innerHTML = mediaType;
+                },
+                onFailure:function () {
+                    CARBON.showWarningDialog(transport.responseText);
+                    return false;
+                }
+            });
+    }, org_wso2_carbon_registry_resource_ui_jsi18n["session.timed.out"]);
+}
+

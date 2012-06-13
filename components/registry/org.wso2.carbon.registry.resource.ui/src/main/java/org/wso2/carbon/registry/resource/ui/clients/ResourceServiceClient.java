@@ -25,8 +25,8 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.registry.common.utils.RegistryUtil;
 import org.wso2.carbon.registry.common.utils.CommonUtil;
+import org.wso2.carbon.registry.common.utils.RegistryUtil;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.exceptions.ResourceNotFoundException;
@@ -817,5 +817,16 @@ public class
 
     public String getHumanReadableMediaType() throws Exception{
         return stub.getHumanReadableMediaTypes();
+    }
+    
+    public void  updateMediaType(String resourcePath, String mediaType) throws Exception{
+        try {
+            stub.updateMediaType(resourcePath,mediaType);
+        } catch (Exception e) {
+            String msg = "Failed update media type of  resource " +
+                    resourcePath + ". " + e.getMessage();
+            log.error(msg, e);
+            throw e;
+        }
     }
 }

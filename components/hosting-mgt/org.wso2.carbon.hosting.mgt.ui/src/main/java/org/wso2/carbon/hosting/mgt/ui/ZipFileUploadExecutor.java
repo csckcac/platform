@@ -17,7 +17,6 @@ package org.wso2.carbon.hosting.mgt.ui;
 
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
-import org.wso2.carbon.hosting.mgt.ui.client.ContainerMgtClient;
 import org.wso2.carbon.ui.CarbonUIMessage;
 import org.wso2.carbon.ui.transports.fileupload.AbstractFileUploadExecutor;
 import org.wso2.carbon.utils.FileItemData;
@@ -79,12 +78,6 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
             CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request, response,
                                                 "../" + webContext + "/hosting-mgt/index.jsp");
 
-            try {
-                ContainerMgtClient containerClient = new ContainerMgtClient(configurationContext, serverURL, cookie);
-                containerClient.createContainer("amila.com", "zone1", "template1");
-            } catch (Exception e) {
-                log.error("Error occurred while creating container", e);
-            }
             return true;
         } catch (Exception e) {
             msg = "Web application upload failed. " + e.getMessage();

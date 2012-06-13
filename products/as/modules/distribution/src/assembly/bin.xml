@@ -86,7 +86,7 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/samples/jaggerySamples</outputDirectory>
 			<excludes>
 			 <exclude>**/taskmaster/**</exclude>
-			 <exclude>**/jaggerySamples/**</exclude>
+			 <exclude>**/sample/**</exclude>
 			 <exclude>**/docs/**</exclude>
 			 </excludes>
         </fileSet>

@@ -54,15 +54,18 @@ $('#requireResubscriptionDiv').hide();
                     </select>
                  </div> <br/>
                  <div class="controls">
-                  <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue('#publishToGateway')" checked="true" value="true"> Push To Gateway
+                    <label class="checkbox">
+                        <input type="checkbox" id="publishToGateway" name="publishToGateway" onChange="checkValue('#publishToGateway')" checked="true" value="true"> Push To Gateway
+                    </label>
+                     <label class="checkbox" id="deprecateOldVersionsDiv" style="display:none;">
+                        <input type="checkbox" id="deprecateOldVersions" name="deprecateOldVersions" onChange="checkValue('#deprecateOldVersions')" value="false"> Deprecate Old Versions
+                     </label>
+
+                     <label class="checkbox" id="requireResubscriptionDiv" style="display:none;">
+                        <input type="checkbox" id="requireResubscription" name="requireResubscription" onChange="checkValue('#requireResubscription')"  checked="true" value="true"> Require Re-Subscription
+                     </label>
                  </div>
 
-                 <div class="controls" id="deprecateOldVersionsDiv" style="display:none;">
-                  <input type="checkbox" id="deprecateOldVersions" name="deprecateOldVersions" onChange="checkValue('#deprecateOldVersions')" value="false"> Deprecate Old Versions
-                 </div>
-                 <div class="controls" id="requireResubscriptionDiv" style="display:none;">
-                  <input type="checkbox" id="requireResubscription" name="requireResubscription" onChange="checkValue('#requireResubscription')"  checked="true" value="true"> Require Re-Subscription
-                 </div>
 
 
       </div>
@@ -76,21 +79,31 @@ $('#requireResubscriptionDiv').hide();
         var length = lcs.length;
         if (length == 0) {
         %>
-        <ul><li>No Life-cycles history data can be found for this API.</li></ul>
+        <span class="label label-info">No Life-cycles history data can be found for this API.</span>
  <%}%>
- <ul>
+
+        <table class="table table-bordered table-striped">
+  <thead>
+      <tr>
+        <th>Time</th>
+        <th>User</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+       <tbody>
         <%for(var j=0;j<length;j++){
         var lc=lcs[j];
         var path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + lc.username;
         %>
-        <li>
-        <b><%=lc.date%></b> - &nbsp;&nbsp;<i class="icon-user"></i><a href="<%=path%>"><%=lc.username%></a>&nbsp;&nbsp;
+        <tr>
+        <td><b><%=lc.date%></b></td><td><i class="icon-user"></i><a href="<%=path%>"><%=lc.username%></a></td><td>
         <%if(lc.oldStatus==""){%>created the API. <%}else{%>
         changed api status from '<%=lc.oldStatus%>' to '<%=lc.newStatus%>'.
         <%}%>
-        </li>
+        </td>
+        </tr>
         <%}%>
-        </ul>
+        </tbody></table>
         <%}%>
 
 </div></div>

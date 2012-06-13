@@ -135,8 +135,7 @@
                         <a href="javascript:editInlineContent('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','edit')"><i class="icon-edit"></i> Edit Content</a> |
                         <% }%>
                         <a href="javascript:updateDocumentation('<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')"><i class="icon-retweet"></i> Update</a> |
-                        <a href="javascript:removeDocumentation('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>')"><i class="icon-trash"></i> Delete</a> |
-                        <a href="javascript:copyDocumentation('<%=doc.name%>','<%=doc.type%>')"><i class="icon-book"></i> Copy</a>
+                        <a href="javascript:removeDocumentation('<%=api.provider%>','<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>')"><i class="icon-trash"></i> Delete</a>
                     </td>
                     <%}%>
                 </tr>

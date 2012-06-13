@@ -53,19 +53,6 @@ var removeDocumentation = function (provider,apiName, version, docName, docType)
     $('#messageModal').modal();
 };
 
-var copyDocumentation = function (docName, docType, summary) {
-    $('#newDoc .btn-primary').text('Update');
-    $('#newDoc').show('slow');
-    $('#newDoc #docName').val(docName + '-copy');
-    $('#newDoc #summary').val(summary);
-
-    for (var i = 1; i <= 6; i++) {
-        if ($('#optionsRadios' + i).val().toUpperCase().indexOf(docType.toUpperCase()) >= 0) {
-            $('#optionsRadios' + i).attr('checked', true)
-        }
-    }
-};
-
 var updateDocumentation = function (docName, docType, summary, docUrl) {
     $('#newDoc .btn-primary').text('Update');
     $('#newDoc').show('slow');

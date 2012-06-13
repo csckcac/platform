@@ -1,20 +1,22 @@
 package org.wso2.carbon.bam.service.data.publisher.publish;
 
 
-import com.google.gson.Gson;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.Agent;
 import org.wso2.carbon.agent.DataPublisher;
 import org.wso2.carbon.agent.commons.Attribute;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.agent.conf.AgentConfiguration;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
+import org.wso2.carbon.bam.service.data.publisher.conf.EventPublisherConfig;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
 import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.util.ServiceStatisticsPublisherConstants;
@@ -23,13 +25,16 @@ import org.wso2.carbon.bam.service.data.publisher.util.StatisticsType;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class EventPublisher {
 
 
-    private static String streamDefForActivity;
-    private static String streamDefForServiceStats;
-    private static String streamDefForActivityServiceStats;
+    private static EventStreamDefinition streamDefForActivity;
+    private static EventStreamDefinition streamDefForServiceStats;
+    private static EventStreamDefinition streamDefForActivityServiceStats;
+
+    boolean isStreamDefinitionAlreadyExist = false;
 
     private static Log log = LogFactory.getLog(EventPublisher.class);
 
@@ -40,41 +45,44 @@ public class EventPublisher {
         List<Object> payLoadData = event.getEventData();
         StatisticsType statisticsType = event.getStatisticsType();
 
+        String key = configData.getUrl() + "_" + configData.getUserName() + "_" + configData.getPassword();
+        EventPublisherConfig eventPublisherConfig = ServiceAgentUtil.getEventPublisherConfig(key);
 
-        AgentConfiguration agentConfiguration = new AgentConfiguration();
-        Agent agent = new Agent(agentConfiguration);
-
+        EventStreamDefinition streamDef = getStreamDefinition(configData, statisticsType);
+        String streamId = null;
         //create data publisher
         try {
 
-            DataPublisher dataPublisher = new DataPublisher(configData.getUrl(),
-                                                            configData.getUserName(),
-                                                            configData.getPassword(),
-                                                            agent);
+            if(eventPublisherConfig==null){
+                eventPublisherConfig = new EventPublisherConfig();
+                AgentConfiguration agentConfiguration = new AgentConfiguration();
+                DataPublisher dataPublisher = new DataPublisher(configData.getUrl(),
+                                                                configData.getUserName(),
+                                                                configData.getPassword());
+                eventPublisherConfig.setAgentConfiguration(agentConfiguration);
+                eventPublisherConfig.setDataPublisher(dataPublisher);
 
-            String streamId = null;
+                try {
+                    streamId = dataPublisher.findEventStream(configData.getStreamName(), configData.getVersion());
+                } catch (NoStreamDefinitionExistException e) {
+                    streamId = dataPublisher.defineEventStream(streamDef);
+                }
+                Map<EventStreamDefinition,String> defMap = eventPublisherConfig.getEventStreamDefinitionMap();
+                defMap.put(streamDef,streamId);
+                ServiceAgentUtil.getEventPublisherConfigMap().put(key,eventPublisherConfig);
+            }
+            Map<EventStreamDefinition,String> eventStreamDefinitionMap =
+                    eventPublisherConfig.getEventStreamDefinitionMap();
 
+            if(eventStreamDefinitionMap.containsKey(streamDef)){
+                isStreamDefinitionAlreadyExist =true;
+                streamId = eventStreamDefinitionMap.get(streamDef);
+            }
 
-            switch (statisticsType) {
-
-                case ACTIVITY_STATS:
-                    if (streamDefForActivity == null) {
-                        streamDefForActivity = streamDefinitionForActivity(configData);
-                    }
-                    streamId = streamDefForActivity;
-                    break;
-                case SERVICE_STATS:
-                    if (streamDefForServiceStats == null) {
-                        streamDefForServiceStats = streamDefinitionForServiceStats(configData);
-                    }
-                    streamId = streamDefForServiceStats;
-                    break;
-                case ACTIVITY_SERVICE_STATS:
-                    if (streamDefForActivityServiceStats == null) {
-                        streamDefForActivityServiceStats = streamDefinitionForActivityServiceStats(configData);
-                    }
-                    streamId = streamDefForActivityServiceStats;
-                    break;
+            DataPublisher dataPublisher = eventPublisherConfig.getDataPublisher();
+            if(!isStreamDefinitionAlreadyExist){
+                streamId = dataPublisher.defineEventStream(streamDef);
+                eventPublisherConfig.getEventStreamDefinitionMap().put(streamDef,streamId);
             }
 
             dataPublisher.publish(streamId, metaData.toArray(), correlationData.toArray(),
@@ -89,14 +97,47 @@ public class EventPublisher {
                       e);
         } catch (TransportException e) {
             log.error("Error occurred while sending the event", e);
+        } catch (StreamDefinitionException e) {
+            log.error("Error occurred while defining the event", e);
+        } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
+            log.error("Stream definition already exist", e);
+        } catch (MalformedStreamDefinitionException e) {
+            log.error("Malformed stream definition", e);
         }
 
     }
 
-    private String streamDefinitionForActivity(EventingConfigData configData) {
-        String streamDefinition = null;
+    private EventStreamDefinition getStreamDefinition(EventingConfigData configData,
+                                                      StatisticsType statisticsType) {
+        EventStreamDefinition streamDef= null;
+        switch (statisticsType) {
+
+            case ACTIVITY_STATS:
+                if (streamDefForActivity == null) {
+                    streamDefForActivity = streamDefinitionForActivity(configData);
+                }
+                streamDef = streamDefForActivity;
+                break;
+            case SERVICE_STATS:
+                if (streamDefForServiceStats == null) {
+                    streamDefForServiceStats = streamDefinitionForServiceStats(configData);
+                }
+                streamDef = streamDefForServiceStats;
+                break;
+            case ACTIVITY_SERVICE_STATS:
+                if (streamDefForActivityServiceStats == null) {
+                    streamDefForActivityServiceStats = streamDefinitionForActivityServiceStats(configData);
+                }
+                streamDef = streamDefForActivityServiceStats;
+                break;
+        }
+        return streamDef;
+    }
+
+    private EventStreamDefinition streamDefinitionForActivity(EventingConfigData configData) {
+        EventStreamDefinition streamDef = null;
         try {
-            EventStreamDefinition streamDef = new EventStreamDefinition(
+            streamDef = new EventStreamDefinition(
                     configData.getStreamName(), configData.getVersion());
             streamDef.setNickName(configData.getNickName());
             streamDef.setDescription(configData.getDescription());
@@ -110,18 +151,16 @@ public class EventPublisher {
             streamDef.setPayloadData(payLoadData);
 
             streamDef.setCorrelationData(setActivityCorrelationData());
-            Gson gson = new Gson();
-            streamDefinition = gson.toJson(streamDef);
         } catch (MalformedStreamDefinitionException e) {
             log.error("Malformed Stream Definition", e);
         }
-        return streamDefinition;
+        return streamDef;
     }
 
-    private String streamDefinitionForServiceStats(EventingConfigData configData) {
-        String streamDefinition = null;
+    private EventStreamDefinition streamDefinitionForServiceStats(EventingConfigData configData) {
+        EventStreamDefinition streamDef = null;
         try {
-            EventStreamDefinition streamDef = new EventStreamDefinition(
+            streamDef = new EventStreamDefinition(
                     configData.getStreamName(), configData.getVersion());
             streamDef.setNickName(configData.getNickName());
             streamDef.setDescription(configData.getDescription());
@@ -134,18 +173,16 @@ public class EventPublisher {
             streamDef.setPayloadData(payLoadData);
 
             streamDef.setCorrelationData(setActivityCorrelationData());
-            Gson gson = new Gson();
-            streamDefinition = gson.toJson(streamDef);
         } catch (MalformedStreamDefinitionException e) {
             log.error("Malformed Stream Definition", e);
         }
-        return streamDefinition;
+        return streamDef;
     }
 
-    private String streamDefinitionForActivityServiceStats(EventingConfigData configData) {
-        String streamDefinition = null;
+    private EventStreamDefinition streamDefinitionForActivityServiceStats(EventingConfigData configData) {
+        EventStreamDefinition streamDef = null;
         try {
-            EventStreamDefinition streamDef = new EventStreamDefinition(
+            streamDef = new EventStreamDefinition(
                     configData.getStreamName(), configData.getVersion());
             streamDef.setNickName(configData.getNickName());
             streamDef.setDescription(configData.getDescription());
@@ -160,12 +197,10 @@ public class EventPublisher {
             streamDef.setPayloadData(payLoadData);
 
             streamDef.setCorrelationData(setActivityCorrelationData());
-            Gson gson = new Gson();
-            streamDefinition = gson.toJson(streamDef);
         } catch (MalformedStreamDefinitionException e) {
             log.error("Malformed Stream Definition", e);
         }
-        return streamDefinition;
+        return streamDef;
     }
 
 

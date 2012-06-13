@@ -17,6 +17,7 @@ package org.wso2.carbon.bam.service.data.publisher.publish;
 
 
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
+import org.wso2.carbon.bam.service.data.publisher.conf.EventPublisherConfig;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
 import org.wso2.carbon.bam.service.data.publisher.data.BAMServerInfo;
 import org.wso2.carbon.bam.service.data.publisher.data.Event;
@@ -27,9 +28,22 @@ import org.wso2.carbon.statistics.services.util.SystemStatistics;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServiceAgentUtil {
+
+    private static Map<String,EventPublisherConfig> eventPublisherConfigMap =
+            new HashMap<String, EventPublisherConfig>();
+
+    public static EventPublisherConfig getEventPublisherConfig(String key) {
+        return eventPublisherConfigMap.get(key);
+    }
+
+    public static Map<String,EventPublisherConfig> getEventPublisherConfigMap(){
+         return eventPublisherConfigMap;
+    }
 
     public static Event makeEventList(PublishData publishData) {
 

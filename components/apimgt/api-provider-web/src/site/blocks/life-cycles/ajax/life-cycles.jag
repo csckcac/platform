@@ -15,7 +15,8 @@ include("/jagg/jagg.jag");
         apiData.status = request.getParameter("status");
         apiData.publishToGateway = request.getParameter("publishToGateway");
         apiData.deprecateOldVersions = request.getParameter("deprecateOldVersions");
-        apiData.makeKeysForwardCompatible = request.getParameter("makeKeysForwardCompatible");
+        var keyForward=request.getParameter("requireResubscription");
+        if(keyForward!=null && keyForward){apiData.makeKeysForwardCompatible='false';}else{apiData.makeKeysForwardCompatible='true';}
         result = mod.updateAPIStatus(apiData);
         if (result.error==true) {
             obj = {

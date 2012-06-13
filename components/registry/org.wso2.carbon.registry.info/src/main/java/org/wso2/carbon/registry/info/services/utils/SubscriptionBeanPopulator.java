@@ -193,8 +193,13 @@ public class SubscriptionBeanPopulator {
                         log.debug("path (invalid): " + testPath);
                         continue;
                     }
-                    testPath = testPath.substring(RegistryEventingConstants.TOPIC_PREFIX.length(),
-                            testPath.lastIndexOf(RegistryConstants.PATH_SEPARATOR));
+                    testPath = (testPath.substring(RegistryEventingConstants.TOPIC_PREFIX.length()+1,testPath.length()))
+                            .split(RegistryConstants.PATH_SEPARATOR,2)[1];
+
+                    if(!testPath.startsWith(RegistryConstants.PATH_SEPARATOR)){
+                        testPath=RegistryConstants.PATH_SEPARATOR+testPath;
+                    }
+
                 }
                 log.debug("path: " + testPath);
                 String username = null;
@@ -440,7 +445,7 @@ public class SubscriptionBeanPopulator {
                     throw new IllegalStateException("Subscription Id invalid");
                 }
                 subscription.setId(subscriptionId);
-                SubscriptionInstance subscriptionInstance = populate(path, subscription,delimiter);
+                SubscriptionInstance subscriptionInstance = populate(path,subscription,delimiter);
                 if (subscriptionInstance != null) {
                     subscriptionInstance.setOwner(userRegistry.getUserName());
                     subscriptionInstances.add(subscriptionInstance);

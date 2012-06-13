@@ -101,7 +101,10 @@
 
                                 <!-- registry related features-->
                                 <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.extensions.feature:${carbon.version}</featureArtifactDef-->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.server.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.ui.feature:${carbon.version}</featureArtifactDef>
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.common.feature:${carbon.version}</featureArtifactDef>
+                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.version}</featureArtifactDef>-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ui.menu.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.resource.properties.feature:${carbon.version}</featureArtifactDef>
 
@@ -127,7 +130,7 @@
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.ui.feature:${carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>
+                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>-->
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}</featureArtifactDef>
 
@@ -232,7 +235,15 @@
                                     <version>${carbon.version}</version>
                                 </feature-->
                                 <feature>
-                                    <id>org.wso2.carbon.registry.core.feature.group</id>
+                                    <id>org.wso2.carbon.registry.core.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.registry.core.ui.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.registry.core.common.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
@@ -382,10 +393,10 @@
                                     <id>org.wso2.carbon.admin.mgt.ui.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <feature>
+                                <!--feature>
                                     <id>org.wso2.carbon.captcha.mgt.server.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>
+                                </feature-->
                                 <feature>
                                     <id>org.wso2.carbon.stratos.usage.agent.feature.group</id>
                                     <version>${stratos.version}</version>

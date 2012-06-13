@@ -89,9 +89,12 @@ public class PersonManagerImpl implements PersonManager {
     public boolean savePerson(String userId, Person person) throws SocialDataException {
         try {
             userStoreManager = getUserStoreManager();
-            if (!userStoreManager.isExistingUser(userId)) {
+
+           if (!userStoreManager.isExistingUser(userId)) {
                 //TODO: Creating new user
-                userStoreManager.addUser(userId, "abcd123", new String[]{"admin"}, null, null);
+                //TODO: Below addUser function has to be done properly,until that it
+                //TODO: has been commented out.
+                //userStoreManager.addUser(userId, "abcd123", new String[]{"admin"}, null, null);
             }
             userStoreManager.setUserClaimValues(userId, retrieveClaimValues(person), null);
         } catch (UserStoreException e) {

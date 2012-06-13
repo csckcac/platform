@@ -88,13 +88,11 @@ div.star-ratings img{
     background-color: #d5dadd;
     border: 1px solid #e1e1e8;
     /*Rounded corners */
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+    -webkit-border-radius: 3px 3px 0px 0px;
+    border-radius: 3px 3px 0px 0px;
+    -moz-border-radius: 3px 3px 0px 0px;
 
     /*The shadow */
-    -moz-box-shadow: 3px 3px 2px #e1e1e8;
-    -webkit-box-shadow: 3px 3px 2px #e1e1e8;
-    box-shadow: 3px 3px 2px #e1e1e8;
     margin-top:10px;
  }
  .data-title div.row-fluid [class*="span"]{
@@ -108,19 +106,48 @@ div.star-ratings img{
  }
  .data-content{
     background-color: #fff;
-     border:solid 1px #D5DADD;
+    border:solid 1px #D5DADD;
     /*Rounded corners */
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-
-
+    -webkit-border-radius: 0 0 3px 3px;
+    -moz-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px;
      margin-bottom:10px;
-
  }
-.data-content div.row-fluid{
-    border-bottom:solid 1px #ddd;
+.data-content div.item-info{
+    line-height:25px;
 }
-.super-rows{
+.deprecated{
+    background:#eee;
+}
+.deprecatedLabel{
+    position:absolute;
+    margin-top:-20px;
+    margin-left:-20px;
+}
+.subscription-listing h3{
+    font-size:14px;
+    margin:0;
+    padding:0;
+}
+.api-section div.row-fluid [class*="span"]{
+    margin-left:0;
+}
+.api-section div.row-fluid{
+}
+.api-section div.thumbnail{
+    border:solid 1px rgba(82, 168, 236, 0.8);
+    padding:10px;
+}
+.api-section div.thumbnail:hover{
+     border-color: rgba(82, 168, 236, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+    outline: 0 none;
+}
+.super-section{
+    background:#efefef;
+    border-bottom:solid 1px #ccc;
+}
+.super-rows, .api-section{
     padding:8px;
 }
  .service-name{

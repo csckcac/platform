@@ -26,6 +26,11 @@
         for(i = from; i < to; i++) {
             api = apis[i];
             path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
+
+            var nameSubstring = api.name;
+            if(api.name.length > 12){
+                nameSubstring = api.name.substring(0,10);
+            }
         %>
         <li class="span2">
             <div class="thumbnail">
@@ -37,9 +42,10 @@
                     <% } %>
                 </a>
                 <h5>
-                    <a href="<%=path%>" class="label label-info">
-                        <%=api.name%>-v<%=api.version%> (<%=api.provider%>)
+                    <a href="<%=path%>" class="label label-info" title="<%=api.name%>-v<%=api.version%>">
+                        <%=nameSubstring%> - <span class="versionTxt">v<%=api.version%></span>
                     </a>
+                    <div>(<%=api.provider%>)</div>
                 </h5>
                 <div>
                     <a href="<%=path%>">

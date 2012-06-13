@@ -69,7 +69,7 @@ footer h3{
 .thumbnail{
     line-height:20px;
     text-align:center;
-    min-height:180px;
+    min-height:155px;
 }
 .thumbnail a{
     cursor:pointer;
@@ -194,4 +194,7 @@ a.powered-by-logo {
     text-indent:30px;
     padding:20px;
     cursor:default;
+}
+.versionTxt{
+    color:#000;
 }

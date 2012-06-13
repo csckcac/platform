@@ -274,6 +274,9 @@ public class RegistrySubscriptionManager implements SubscriptionManager {
                 }
                 // There might be updated subscription properties. Set them too.
                 Subscription currentSubscription = JavaUtil.getSubscription(subscriptionResource);
+                //Since the subscription renewal does not include name parameters setting up them
+                //https://wso2.org/jira/browse/ESBJAVA-1021
+                subscription.setTopicName(currentSubscription.getTopicName());                
                 Map<String, String> properties = currentSubscription.getProperties();
                 for (String key : properties.keySet()) {
                     subscriptionResource.removeProperty(key);

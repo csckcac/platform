@@ -157,7 +157,7 @@
         <wso2carbon.version.humantask>${wso2carbon.version}</wso2carbon.version.humantask>
         <wso2carbon.version.datasource>${wso2carbon.version}</wso2carbon.version.datasource>
 	<h2.engine.version>${version.h2.engine}</h2.engine.version>
-	<wso2.h2.orbit.version>${h2.engine.version}.wso2v1</wso2.h2.orbit.version>
+	<wso2.h2.orbit.version>${h2.engine.version}</wso2.h2.orbit.version>
 	<simple-json.version>1.1.wso2v1</simple-json.version>
     </properties>
 

@@ -171,7 +171,10 @@
             String eventName = subscription.getEventName();
             String owner = subscription.getOwner();
             String path = subscription.getTopic();
-            path = path.substring(RegistryEvent.TOPIC_PREFIX.length(), path.lastIndexOf("/"));
+            path = (path.substring(RegistryEvent.TOPIC_PREFIX.length()+1, path.length())).split("/",2)[1];
+            if(!path.startsWith("/")){
+                path="/"+path;
+            }
             String encodedPath = path;
             try {
                 encodedPath = encodedPath.replace("&", "%26");

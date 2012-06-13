@@ -335,7 +335,7 @@
         <dataservice-component.version>${wso2carbon.version}</dataservice-component.version>
         <synapse.version>2.1.0-wso2v6</synapse.version>
 	<rampart.mar.version>1.6.1-wso2v1</rampart.mar.version>
-        <wso2.h2.orbit.version>1.2.140.wso2v1</wso2.h2.orbit.version>
+        <wso2.h2.orbit.version>1.2.140.wso2v2</wso2.h2.orbit.version>
 	<axis2.version.bam>1.6.1.wso2v1</axis2.version.bam>
 	<log4j.version.bam>1.2.13</log4j.version.bam>
 	<axiom.version.bam>1.2.11.wso2v1</axiom.version.bam>

@@ -341,7 +341,7 @@
         <wss4j.version>1.5.9.wso2v1</wss4j.version>
         <neethi.version>${neethi.osgi.version}</neethi.version>
         <synapse.version>2.1.0-wso2v4</synapse.version>
-        <wso2.h2.orbit.version>1.2.140.wso2v1</wso2.h2.orbit.version>
+        <wso2.h2.orbit.version>1.2.140.wso2v2</wso2.h2.orbit.version>
         <log4j.version>1.2.13</log4j.version>
         <commons.logging.version>1.1</commons.logging.version>
         <axis2.wso2.version>1.6.1.wso2v1</axis2.wso2.version>

@@ -123,7 +123,7 @@ public class ActivityBeanPopulator {
                     return o2.getDate().compareTo(o1.getDate());
                 }
             });
-            if (list.contains("admin")) {
+            if (list.contains(userRegistry.getUserRealm().getRealmConfiguration().getAdminRoleName())) {
                 activityBean.setActivity(constructActivityStatements(userRegistry, logs));
             } else{
                 activityBean.setActivity(constructActivityStatementsfornormaluser(userRegistry,

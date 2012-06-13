@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:sample="http://wso2.org" xmlns:service.mgt.repository.svn.appfactory.carbon.wso2.org="http://service.mgt.repository.svn.appfactory.carbon.wso2.org" xmlns:services.mgt.tenant.carbon.wso2.org="http://services.mgt.tenant.carbon.wso2.org">
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:createApplicationProcess="http://wso2.org" xmlns:sample="http://wso2.org" xmlns:service.mgt.application.appfactory.carbon.wso2.org="http://service.mgt.application.appfactory.carbon.wso2.org" xmlns:service.mgt.repository.svn.appfactory.carbon.wso2.org="http://service.mgt.repository.svn.appfactory.carbon.wso2.org" xmlns:services.mgt.tenant.carbon.wso2.org="http://services.mgt.tenant.carbon.wso2.org">
   <process name="sample:CreateApplication">
     <active>true</active>
     <retired>false</retired>
@@ -9,12 +9,17 @@
     </provide>
     <invoke partnerLink="TenantMgtPL">
       <service name="services.mgt.tenant.carbon.wso2.org:TenantMgtAdminService" port="TenantMgtAdminServiceHttpSoap11Endpoint">
-      <endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/TenantMgtService.epr" />
+        <endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/TenantMgtService.epr" />
       </service>
     </invoke>
-    <invoke partnerLink="RepoMgtPL">
+    <invoke partnerLink="RepositoryMgtPL">
       <service name="service.mgt.repository.svn.appfactory.carbon.wso2.org:RepositoryManagementService" port="RepositoryManagementServiceHttpsSoap11Endpoint">
-         <endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/RepoManagementService.epr" />
+       <endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/RepoManagementService.epr" /> 
+      </service>
+    </invoke>
+    <invoke partnerLink="ApplicationMgtPL">
+      <service name="service.mgt.application.appfactory.carbon.wso2.org:ApplicationManagementService" port="ApplicationManagementServiceHttpsSoap11Endpoint">
+       <endpoint xmlns="http://wso2.org/bps/bpel/endpoint/config" endpointReference="./../../../../repository/conf/appfactory/endpoints/ApplicationManagementService.epr"/>
       </service>
     </invoke>
   </process>

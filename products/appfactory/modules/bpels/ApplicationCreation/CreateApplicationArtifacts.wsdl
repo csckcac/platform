@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://wso2.org" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:wsdl="http://services.mgt.tenant.carbon.wso2.org" xmlns:wsdl1="http://service.mgt.repository.svn.appfactory.carbon.wso2.org" name="CreateApplication" targetNamespace="http://wso2.org">
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://wso2.org" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:wsdl="http://services.mgt.tenant.carbon.wso2.org" xmlns:wsdl1="http://service.mgt.repository.svn.appfactory.carbon.wso2.org" xmlns:wsdl2="http://service.mgt.application.appfactory.carbon.wso2.org" name="CreateApplication" targetNamespace="http://wso2.org">
 
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      TYPE DEFINITION - List of types participating in this BPEL process 
@@ -7,14 +7,19 @@
      but you can define or import any XML Schema type and use them as part 
      of the message types.
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
-    <plnk:partnerLinkType name="TenantMgtPLType">
-    <plnk:role name="TenantMgtRole" portType="wsdl:TenantMgtAdminServicePortType"/>
+
+    <plnk:partnerLinkType name="TenantMgtPLT">
+    <plnk:role name="TenantMgr" portType="wsdl:TenantMgtAdminServicePortType"/>
   </plnk:partnerLinkType>
-    <plnk:partnerLinkType name="RepoMgtPLType">
-    <plnk:role name="RepoMgtRole" portType="wsdl1:RepositoryManagementServicePortType"/>
+    <plnk:partnerLinkType name="RepositoryMgtPLT">
+    <plnk:role name="RepositoryMgr" portType="wsdl1:RepositoryManagementServicePortType"/>
+  </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="ApplicationMgtPLT">
+    <plnk:role name="ApplicationMgr" portType="wsdl2:ApplicationManagementServicePortType"/>
   </plnk:partnerLinkType>
     <import location="TenantMgtAdminService.wsdl" namespace="http://services.mgt.tenant.carbon.wso2.org"/>
     <import location="RepositoryManagementService.wsdl" namespace="http://service.mgt.repository.svn.appfactory.carbon.wso2.org"/>
+    <import location="ApplicationManagementService.wsdl" namespace="http://service.mgt.application.appfactory.carbon.wso2.org"/>
     <types>
         <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://wso2.org">
 
@@ -60,7 +65,9 @@
             <input message="tns:CreateApplicationRequestMessage"/>
             <output message="tns:CreateApplicationResponseMessage"/>
         </operation>
-    </portType>   
+    </portType>
+  
+
 <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      PARTNER LINK TYPE DEFINITION
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
@@ -68,15 +75,10 @@
         <plnk:role name="CreateApplicationProvider" portType="tns:CreateApplication"/>
     </plnk:partnerLinkType>
     
-
-<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     BINDING DEFINITION - Defines the message format and protocol details
-     for a web service.
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <binding name="CreateApplicationBinding" type="tns:CreateApplication">
+    <binding name="NewBinding" type="tns:CreateApplication">
     	<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     	<operation name="process">
-    		<soap:operation soapAction="http://wso2.org/process"/>
+    		<soap:operation soapAction="http://wso2.org"/>
     		<input>
     			<soap:body use="literal"/>
     		</input>
@@ -85,14 +87,9 @@
     		</output>
     	</operation>
     </binding>
-
-<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     SERVICE DEFINITION - A service groups a set of ports into
-     a service unit.
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <service name="CreateApplication">
-    	<port binding="tns:CreateApplicationBinding" name="CreateApplicationPort">
-    		<soap:address location="http://localhost:8080/CreateApplication"/>
-    	</port>
+    	<port binding="tns:NewBinding" name="CreateApplicationPort">
+    		<soap:address location="http://wso2.org/appfactory"/>
+    </port>
     </service>
 </definitions>

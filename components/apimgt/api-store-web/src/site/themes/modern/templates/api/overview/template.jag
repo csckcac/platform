@@ -12,6 +12,18 @@
     }
     %>
     </ul>
+    <% if(api.wsdl && api.wsdl != ""){ %>
+        <h6>WSDL:</h6>
+    <p>
+        <a href="<%=api.wsdl%>"><%=api.wsdl%> </a>
+    </p>
+    <% } %>
+    <% if(api.wadl && api.wadl != ""){ %>
+        <h6>WADL:</h6>
+    <p>
+        <a href="<%=api.wadl%>"><%=api.wadl%></a>
+    </p>
+        <% } %>
     <% if(api.description && api.description != ""){ %>
         <h6>Description:</h6>
     <p>
@@ -19,30 +31,21 @@
     </p>
         <% } %>
 
-    <% if(api.bizOwner && api.bizOwner != ""){ %>
+    <% if(api.bizOwner&& api.bizOwner != ""){ %>
         <h6>Business Owner:</h6>
     <p>
-        <%=api.bizOwner%>
+        <%=api.bizOwner%> <% if(api.bizOwnerMail && api.bizOwnerMail!=""){%>
+           [<a href="mailto:<%=api.bizOwnerMail%>"><%=api.bizOwnerMail%></a>]
+        <%}%>
     </p>
     <% } %>
-     <% if(api.bizOwnerMail && api.bizOwnerMail != ""){ %>
-        <h6>Business Owner Email:</h6>
-    <p><a href="mailto:<%=api.bizOwnerMail%>">
-    <%=api.bizOwnerMail%></a>
-    </p>
-    <% } %>
-
-     <% if(api.techOwner && api.techOwner != ""){ %>
+    <% if(api.techOwner && api.techOwner != ""){ %>
         <h6>Technical Owner:</h6>
     <p>
         <%=api.techOwner%>
-    </p>
-    <% } %>
-
-    <% if(api.techOwnerMail && api.techOwnerMail != ""){ %>
-        <h6>Technical Owner Email:</h6>
-    <p><a href="mailto:<%=api.techOwnerMail%>">
-    <%=api.techOwnerMail%></a>
+        <% if(api.techOwnerMail && api.techOwnerMail!=""){%>
+           [<a href="mailto:<%=api.techOwnerMail%>"><%=api.techOwnerMail%></a>]
+        <%}%>
     </p>
     <% } %>
 

@@ -84,8 +84,8 @@ div.star-ratings img{
 }
 /* Subscription accordion sections*/
 .data-title{
-    padding: 8px;
-    background-color: #f7f7f9;
+    padding: 8px 8px 0 8px;
+    background-color: #d5dadd;
     border: 1px solid #e1e1e8;
     /*Rounded corners */
     -moz-border-radius: 3px;
@@ -95,30 +95,34 @@ div.star-ratings img{
     -moz-box-shadow: 3px 3px 2px #e1e1e8;
     -webkit-box-shadow: 3px 3px 2px #e1e1e8;
     box-shadow: 3px 3px 2px #e1e1e8;
+    margin-top:10px;
  }
- .data-title div.row-fluid{
-     margin-top:10px;
+ .data-title div.row-fluid [class*="span"]{
+    min-height:18px;
  }
  .data-title-heading{
-     font-size:15px;
-     font-weight:bold;
-     color:#000;
+     font-size:14px;
+     color:#444;
+     margin-bottom:5px;
+     display:block;
  }
  .data-content{
-      padding: 8px;
     background-color: #fff;
-     border:solid 1px #c7eaff;
+     border:solid 1px #D5DADD;
     /*Rounded corners */
     -moz-border-radius: 3px;
     border-radius: 3px;
 
-    /*The shadow */
-    -moz-box-shadow: 3px 3px 2px #e1e1e8;
-    -webkit-box-shadow: 3px 3px 2px #e1e1e8;
-    box-shadow: 3px 3px 2px #e1e1e8;
+
      margin-bottom:10px;
 
  }
+.data-content div.row-fluid{
+    border-bottom:solid 1px #ddd;
+}
+.super-rows{
+    padding:8px;
+}
  .service-name{
      font-weight:bold;
  }
@@ -150,19 +154,25 @@ div.star-ratings img{
 .application-api-listing div{
     padding-top:10px;
 }
+.keyListPadding{
+    padding:10px;
+}
 .api-key-listing {
     display: inline-block;
     width:100%;
     /*background: #efefef;*/
+        padding:5px;
+    height:90px;
+    /*background: #f3f5f6;*/
 }
 .api-key-sandbox{
-    /*padding:15px;*/
-    padding:0 0 15px 0;
+    padding:5px;
+    height:40px;
 }
 .api-key{
-    padding:0 0 15px 0;
-    /*background: #e0e0e0;*/
-    /*border-bottom:solid 1px #ccc;*/
+    padding:5px;
+    height:40px;
+    border-bottom:dotted 1px #ddd;
 }
 .api-key a{
 }

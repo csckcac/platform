@@ -49,3 +49,13 @@ function toggleKey(toggleButton){
         $(toggleButton).html('<span class="icon gray small" data-icon="O"></span> Hide Key');
     }
 }
+function collapseKeys(index,type){
+
+    if(type == 'super'){
+        $('#appDetails'+index+'_super').toggle();
+        //$('#appDetails'+index).toggle('fast');
+    }else{
+        //$('#appDetails'+index+'_super').hide('fast');
+        $('#appDetails'+index).toggle();
+    }
+}

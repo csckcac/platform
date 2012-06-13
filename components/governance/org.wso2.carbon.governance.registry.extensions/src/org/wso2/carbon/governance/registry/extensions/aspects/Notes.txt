@@ -3,17 +3,7 @@
      <configuration type="resource">/checklists/products</configuration>
 </aspect>
 
-=== proposed ===
-<aspect name="DistributedLifeCycle" class="org.wso2.carbon.governance.registry.extensions.aspects.DistributedLifeCycle">
-    <configuration type="resource">         resource/literal/file
-        <location>/checklists/products</location>
-        <registry-url>https://10.100.1.1</registry-url>
-        <registry-username>admin</registry-username>
-        <registry-password>admin</registry-password>
-    </configuration>
-</aspect>
-
-== Resource content == 
+== Resource content ==
 <lifecycle>
     <state name="Created">
         <checkitem>Testing option 1</checkitem>

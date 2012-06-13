@@ -679,7 +679,7 @@ public class DataProvider {
         return record;
     }
 
-    public static Map<String, String> getFailReason(int testCaseId)
+    public Map<String, String> getFailReason(int testCaseId)
             throws SQLException, IOException {
         Map<String, String> record = new Hashtable<String, String>();
         Statement st = null;
@@ -716,7 +716,7 @@ public class DataProvider {
 
     }
 
-    public static String getStackTrace(int exceptionId) throws SQLException, IOException {
+    public String getStackTrace(int exceptionId) throws SQLException, IOException {
         String record = "";
         Statement st = null;
         ResultSet rst = null;
@@ -788,7 +788,7 @@ public class DataProvider {
         return time;
     }
 
-    public static JSONObject getTimeHistory(int suite, String testClassName) throws SQLException {
+    public JSONObject getTimeHistory(int suite, String testClassName) throws SQLException {
 
         JSONObject record = new JSONObject();
         Statement st = null;

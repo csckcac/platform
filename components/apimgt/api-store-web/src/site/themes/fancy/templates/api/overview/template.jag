@@ -1,7 +1,7 @@
 <% jagg.template("api/overview", function(inputs, outputs, jagg) { %>
 <% var api = outputs.api, user = outputs.user; %>
 <div id="overview">
-    <h3>URLs:</h3>
+    <h6>URLs:</h6>
     <ul>
     <%
     var serverEndpoints = api.serverURL.split(",");

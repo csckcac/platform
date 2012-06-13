@@ -37,7 +37,7 @@ public class DataProvider {
 
     private static Connection connection = null;
 
-    private static final String jdbcUrl = getProperty("jdbc.url");
+    private static String jdbcUrl = getProperty("jdbc.url");
     private static final String userName = getProperty("db.user");
     private static final String password = getProperty("db.password");
     private static final String driver = getProperty("jdbc.driver");
@@ -49,6 +49,13 @@ public class DataProvider {
             synchronized (DataProvider.class) {
                 if (connection == null || connection.isClosed()) {
                     Class.forName(driver);
+                    if (jdbcUrl.contains("?")) {
+                        if (!jdbcUrl.contains("autoReconnect=")) {
+                            jdbcUrl = jdbcUrl.concat("&autoReconnect=true");
+                        }
+                    } else {
+                        jdbcUrl = jdbcUrl.concat("?autoReconnect=true");
+                    }
                     connection = DriverManager.getConnection(jdbcUrl, userName, password);
                 }
             }
@@ -748,7 +755,7 @@ public class DataProvider {
 
         Statement st = null;
         ResultSet rst = null;
-        String time ="";
+        String time = "";
         try {
             st = connection.createStatement();
             rst = st.executeQuery("SELECT min(WA_START_TIME) AS START_TIME FROM WA_TEST_SUITE_DETAIL " +
@@ -775,7 +782,7 @@ public class DataProvider {
                 }
             }
         }
-        if(time == null) {
+        if (time == null) {
             time = "N/A";
         }
         return time;

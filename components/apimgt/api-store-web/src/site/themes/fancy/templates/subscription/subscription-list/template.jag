@@ -17,7 +17,7 @@
                 <div class="row-fluid">
                     <div class="span6">
                         <a onclick="collapseKeys('<%=str_i%>','super')">
-                            <i class="icon-zoom-in"></i> Super Keys
+                            <i class="icon-zoom-in"></i> Master Keys
                         </a>
                     </div>
                     <div class="span6">
@@ -141,7 +141,7 @@
                     %>
                        <div class="row-fluid">
                         <div class="span3 keyListPadding">
-                             <a href="<%=path%>"><img alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/<%=jagg.getUserTheme()%>/images/api-default.png<% }%>"/></a>
+                             <a href="<%=path%>"><img alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/<%=jagg.getUserTheme()%>/images/api-default.png<% }%>" width="80"/></a>
                         </div>
                         <div class="span4 keyListPadding">
                             <a href="<%=path%>" class="service-name"><%=api.name%>-<%=api.version%></a>
@@ -187,7 +187,7 @@
                         </div><!-- End span -->
                     </div><!-- End row -->
                     <% } %>
-    </div><!-- data-contnet -->
+    </div><!-- data-content -->
 
 </div>
 

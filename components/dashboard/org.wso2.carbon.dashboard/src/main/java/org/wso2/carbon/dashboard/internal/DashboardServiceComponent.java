@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.dashboard.DashboardContext;
+import org.wso2.carbon.dashboard.DashboardDSService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -62,7 +63,9 @@ public class DashboardServiceComponent {
             acAdmin.authorizeRole(DashboardConstants.DASHBOARD_MANAGER_ROLE, "System", "login");
 
             log.info("Role '" + DashboardConstants.DASHBOARD_MANAGER_ROLE + "' added with login permissions.");*/
-
+             context.getBundleContext().registerService(
+                    DashboardDSService.class.getName(),
+                    new DashboardDSService(), null);
             log.debug("Dashboard Backend Component bundle is activated ");
 
         } catch (Exception e) {

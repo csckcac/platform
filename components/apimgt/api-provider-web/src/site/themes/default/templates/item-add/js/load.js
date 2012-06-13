@@ -72,3 +72,17 @@ $(document).ready(function() {
                                       });
 
 });
+
+function getContextValue() {
+    var context = $('#context').val();
+    var version = $('#version').val();
+    if (context != "" && version != "") {
+        if (context.charAt(0) != "/") {
+            context = "/" + context;
+        }
+        $('#contextForUrl').show('fast');
+        $('#contextForUrl').html(context + "/" + version);
+        $('#contextForUrlDefault').show('fast');
+        $('#contextForUrlDefault').html(context + "/" + version);
+    }
+}

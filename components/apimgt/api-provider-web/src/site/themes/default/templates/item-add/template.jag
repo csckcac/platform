@@ -23,14 +23,14 @@
                 <div class="control-group">
                     <label class="control-label" for="context">Context:<span class="requiredAstrix">*</span></label>
                     <div class="controls">
-                        <input type="text" class="input-xlarge required contextExists" id="context" name="context" />
+                        <input type="text" class="input-xlarge required contextExists" id="context" name="context" onchange="getContextValue()" />
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for="version">Version:<span class="requiredAstrix">*</span></label>
                     <div class="controls">
-                        <input type="text" class="input required" id="version" name="version"/>
+                        <input type="text" class="input required" id="version" name="version" onchange="getContextValue()"/>
                     </div>
                 </div>
 
@@ -121,18 +121,20 @@
                 </div>
 
                 <div class="control-group">
-                    <div class="controls">
+                        <label class="control-label" for="resourceTableDiv">API Resources: </label>
                         <div class="resourceTableDiv" id="resourceTableDiv" style="">
                             <table class="table table-bordered table-striped" id="resourceTable">
                                 <thead>
                                 <tr>
-                                    <th>URL Pattern</th>
-                                    <th>Resource Methods (HTTP Verbs)</th>
+                                    <th>Context</th>
+                                    <th>URL Patterns</th>
+                                    <th>Allowed HTTP Verbs</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr id="resourceRow">
+                                    <td><span id="contextForUrl" style="display:none;"></span></td>
                                     <td>
                                         <input type="text" class="input" id="uriTemplate" name="resourceTemplate"/>
                                     </td>
@@ -159,6 +161,7 @@
                                 </tr>
 
                                 <tr id="item-0">
+                                      <td ><span id="contextForUrlDefault" style="display:none;"></span></td>
                                     <td>
                                         <input type="text" class="input" id="uriTemplate" name="resourceTemplate" value="/*" disabled="disabled" />
                                     </td>
@@ -193,7 +196,7 @@
                     <br/>
 
                     <div id="stateActions" class="controls"></div>
-                </div>
+
                 <div class="form-actions" style="display:none" id="saveMessage">
                     <div class="btn loadingButton">Saving API. Please wait..</div>
                 </div>

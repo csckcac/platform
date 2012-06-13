@@ -205,6 +205,11 @@
 
                         </tr>
                         <tr>
+                            <td><fmt:message key="webapp.state"/></td>
+                            <td><%=webapp.getState()%>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><fmt:message key="last.modified.time"/></td>
                             <td><%= new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date(webapp.getLastModifiedTime()))%>
                             </td>

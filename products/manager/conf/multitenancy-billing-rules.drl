@@ -4,31 +4,31 @@ import org.wso2.carbon.billing.mgt.dataobjects.*;
 
 rule smallSubscription
 when
-$item: MultitenancyPackage(name == "multitenancy-small")
+$item: MultitenancyPackage(name == "SMB")
 $subItem: Item(parent == $item && name == "subscription")
 then
-$subItem.setCost(new Cash("$10"));
-$subItem.setCreditLimit(new Cash("$20"));
+$subItem.setCost(new Cash("$100"));
+$subItem.setCreditLimit(new Cash("$200"));
 end
 
 
 rule mediumSubscription
 when
-$item: MultitenancyPackage(name == "multitenancy-medium")
+$item: MultitenancyPackage(name == "Professional")
 $subItem: Item(parent == $item && name == "subscription")
 then
-$subItem.setCost(new Cash("$50"));
-$subItem.setCreditLimit(new Cash("$100"));
+$subItem.setCost(new Cash("$500"));
+$subItem.setCreditLimit(new Cash("$1000"));
 end
 
 
 rule largeSubscription
 when
-$item: MultitenancyPackage(name == "multitenancy-large")
+$item: MultitenancyPackage(name == "Enterprise")
 $subItem: Item(parent == $item && name == "subscription")
 then
-$subItem.setCost(new Cash("$100"));
-$subItem.setCreditLimit(new Cash("$200"));
+$subItem.setCost(new Cash("$2000"));
+$subItem.setCreditLimit(new Cash("$4000"));
 end
 
 

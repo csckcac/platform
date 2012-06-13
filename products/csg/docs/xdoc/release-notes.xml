@@ -103,6 +103,11 @@
             who have permission for publishing will have edit, delete permission of servers).</li>
         <li>CARBON-12345 - CSG breadcrumbs are messed up.</li>
         <li>CARBON-12528 - Fixed the problem of one way clients go timeout.</li>
+        <li>CARBON-12585 - Fixed the blank page when clicking the System log menu.</li>
+        <li>CARBON-12584 - Fixed the blank page when clicking the Transport statistics menu.</li>
+        <li>CARBON-12426 - Fixed the security token issue when CSG server goes away.</li>
+        <li>CARBON-12632 - Fixed the CSG service invocation using SOAP 1.2 endpoint.</li>
+        <li>CARBON-12579 - Fixed the incorrect doc link.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha</h2>

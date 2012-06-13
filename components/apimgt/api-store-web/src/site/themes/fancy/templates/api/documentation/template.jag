@@ -28,8 +28,11 @@ var docMappedUrl=jagg.getMappedUrl("/site/pages/doc-viewer.jag");
                 <div class="documentation">
                     <h6>Name:</h6>
                     <p><%=doc.name%></p>
-                    <div class="documentaion-body"><h6>Summary:</h6><p><%=doc.summary%></p>
-                    <%if(doc.sourceUrl){%>
+                    <div class="documentaion-body">
+                    <% if(doc.summary && doc.summary != ""){ %>
+                    <h6>Summary:</h6><p><%=doc.summary%></p>
+                    <%}%>
+                    <%if(doc.sourceUrl&& doc.sourceUrl!=""){%>
                     <h6>Documentation URL:</h6><p><a href="<%=doc.sourceUrl%>"><%=doc.sourceUrl%></a></p>
                     <%}else{
                     %>

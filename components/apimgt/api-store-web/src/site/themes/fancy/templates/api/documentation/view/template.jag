@@ -6,7 +6,11 @@
 <br/>
 <div class="documentation">
     <div class="span11">
-     <%=doc.content%>
+    <%var log=new Log(); log.info("contenttt"+doc.content);if(!doc.content && doc.content==""){%>
+    No document content have been added yet.
+    <%}else{%>
+    <%=doc.content%>
+    <%}%>
     </div>
     </div>
 </div>

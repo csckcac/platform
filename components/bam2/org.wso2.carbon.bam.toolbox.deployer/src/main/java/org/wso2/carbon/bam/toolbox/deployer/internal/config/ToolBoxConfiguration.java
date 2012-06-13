@@ -1,0 +1,244 @@
+/**
+ * Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.wso2.carbon.bam.toolbox.deployer.internal.config;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentException;
+import org.wso2.carbon.bam.toolbox.deployer.util.DashBoardTabDTO;
+
+import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class ToolBoxConfiguration {
+
+    private OMElement config;
+    private String toolboxName;
+
+    private static String SCRIPTS = "scripts";
+    private static String SCRIPT = "script";
+    private static String DASHBOARD = "dashboard";
+    private static String GADGETS = "gadgets";
+    private static String GADGET = "gadget";
+    private static String TAB = "tab";
+    private static String TAB_ID = "id";
+
+
+    private static final Log log = LogFactory.getLog(ToolBoxConfiguration.class);
+
+    public ToolBoxConfiguration(String name) {
+        this.toolboxName = name;
+        createRootElement();
+    }
+
+    public ToolBoxConfiguration(String name, OMElement config) {
+        this.toolboxName = name;
+        this.config = config;
+    }
+
+
+    public void addScript(String scriptName) throws BAMToolboxDeploymentException {
+        OMElement scripts;
+        Iterator iterator = config.getChildrenWithName(new QName(SCRIPTS));
+        if (iterator != null && iterator.hasNext()) {
+            scripts = (OMElement) iterator.next();
+            OMFactory fac = OMAbstractFactory.getOMFactory();
+            OMElement script = fac.createOMElement(new QName(SCRIPT));
+            script.setText(scriptName);
+            scripts.addChild(script);
+        } else {
+            throw new BAMToolboxDeploymentException("Cannot find " + SCRIPTS + "node in the " +
+                    "configuration file when adding script name: " + scriptName + " for tool box :" + toolboxName);
+        }
+    }
+
+    private void createRootElement() {
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        String ROOT = "toolbox";
+        config = fac.createOMElement(new QName(ROOT));
+        String NAME = "name";
+        config.addAttribute(NAME, this.toolboxName, null);
+
+        OMElement scripts = fac.createOMElement(new QName(SCRIPTS));
+        config.addChild(scripts);
+
+        OMElement dashboard = fac.createOMElement(new QName(DASHBOARD));
+        config.addChild(dashboard);
+
+//        OMElement gadgets = fac.createOMElement(new QName(GADGETS));
+//        dashboard.addChild(gadgets);
+//
+//        OMElement tab = fac.createOMElement(new QName(TAB_ID));
+//        gadgets.addChild(tab);
+    }
+
+    private void addGadget(String gadgetName, OMElement element) throws BAMToolboxDeploymentException {
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMElement gadgetElement = fac.createOMElement(new QName(GADGET));
+        gadgetElement.setText(gadgetName);
+        element.addChild(gadgetElement);
+    }
+
+    public void addGadgetToTab(int tabId, String gadgetName) throws BAMToolboxDeploymentException {
+        OMElement dashboard;
+        Iterator iterator = config.getChildrenWithName(new QName(DASHBOARD));
+        OMElement tabElement = null;
+        if (iterator != null && iterator.hasNext()) {
+            dashboard = (OMElement) iterator.next();
+
+            Iterator tabIterator = dashboard.getChildrenWithName(new QName(TAB));
+            while (tabIterator.hasNext()) {
+                OMElement aTab = (OMElement) tabIterator.next();
+                String strTabId = aTab.getAttribute(new QName(TAB_ID)).getAttributeValue();
+                if (strTabId != null) {
+                    int aTabId = Integer.parseInt(strTabId);
+                    if (aTabId == tabId) {
+                        tabElement = aTab;
+                        break;
+                    }
+                }
+            }
+            if (null == tabElement) {
+                OMFactory fac = OMAbstractFactory.getOMFactory();
+                tabElement = fac.createOMElement(new QName(TAB));
+                tabElement.addAttribute(TAB_ID, String.valueOf(tabId), null);
+                dashboard.addChild(tabElement);
+            }
+
+            addGadget(gadgetName, tabElement);
+        } else {
+            throw new BAMToolboxDeploymentException("Cannot find " + GADGETS + "node in the " +
+                    "configuration file when adding gadget name: " + gadgetName + " for tool box :" + toolboxName);
+        }
+    }
+
+    public String toString() {
+        return this.config.toString();
+    }
+
+    public ArrayList<String> getScriptNames() throws BAMToolboxDeploymentException {
+        if (null != config) {
+            ArrayList<String> scripts = new ArrayList<String>();
+            Iterator iterator = config.getChildrenWithName(new QName(SCRIPTS));
+            if (iterator != null && iterator.hasNext()) {
+                Iterator scriptIterator = ((OMElement) iterator.next()).getChildrenWithName(new QName(SCRIPT));
+                if (scriptIterator != null && scriptIterator.hasNext()) {
+                    while (scriptIterator.hasNext()) {
+                        OMElement script = (OMElement) scriptIterator.next();
+                        String scriptName = script.getText();
+                        scripts.add(scriptName);
+                    }
+                    return scripts;
+                } else {
+                    log.error("No scripts are found for tool box:" + this.toolboxName);
+                    throw new BAMToolboxDeploymentException("No scripts are found for tool box:" + this.toolboxName);
+                }
+            } else {
+                log.error("No scripts are found for tool box:" + this.toolboxName);
+                throw new BAMToolboxDeploymentException("No scripts are found for tool box:" + this.toolboxName);
+            }
+        } else {
+            log.error("Configuration has not been set for the tool box:" + this.toolboxName);
+            throw new BAMToolboxDeploymentException("Configuration has not been set for the tool box:" + this.toolboxName);
+        }
+    }
+
+//    public ArrayList<String> getGadgetNames() throws BAMToolboxDeploymentException {
+//        if (null != config) {
+//            ArrayList<String> gadgets = new ArrayList<String>();
+//            Iterator iterator = config.getChildrenWithName(new QName(GADGETS));
+//            if (iterator != null && iterator.hasNext()) {
+//                Iterator gadgetIterator = ((OMElement) iterator.next()).getChildrenWithName(new QName(GADGET));
+//                if (gadgetIterator != null && gadgetIterator.hasNext()) {
+//                    while (gadgetIterator.hasNext()) {
+//                        OMElement gadget = (OMElement) gadgetIterator.next();
+//                        String gadgetName = gadget.getText();
+//                        gadgets.add(gadgetName);
+//                    }
+//                    return gadgets;
+//                } else {
+//                    log.error("No gadgets are found for tool box:" + this.toolboxName);
+//                    throw new BAMToolboxDeploymentException("No gadgets are found for tool box:" + this.toolboxName);
+//                }
+//            } else {
+//                log.error("No gadgets are found for tool box:" + this.toolboxName);
+//                throw new BAMToolboxDeploymentException("No gadgets are found for tool box:" + this.toolboxName);
+//            }
+//        } else {
+//            log.error("Configuration has not been set for the tool box:" + this.toolboxName);
+//            throw new BAMToolboxDeploymentException("Configuration has not been set for the tool box:" + this.toolboxName);
+//        }
+//    }
+
+//    public int getTabId() throws BAMToolboxDeploymentException {
+//        if (null != config) {
+//            Iterator iterator = config.getChildrenWithName(new QName(TAB_ID));
+//            if (iterator != null && iterator.hasNext()) {
+//                OMElement tab = (OMElement) iterator.next();
+//                return Integer.parseInt(tab.getText());
+//            } else {
+//                throw new BAMToolboxDeploymentException("Cannot find " + TAB_ID +
+//                        "node in the configuration file for tool box:" + toolboxName);
+//            }
+//        } else {
+//            log.error("Configuration has not been set for the tool box:" + this.toolboxName);
+//            throw new BAMToolboxDeploymentException("Configuration has not been set for the tool box:" + this.toolboxName);
+//        }
+//    }
+
+    public ArrayList<DashBoardTabDTO> getDashboardTabs() throws BAMToolboxDeploymentException {
+        if (null != config) {
+            ArrayList<DashBoardTabDTO> tabs = new ArrayList<DashBoardTabDTO>();
+            Iterator dashboardIterator = config.getChildrenWithName(new QName(DASHBOARD));
+            if (null != dashboardIterator && dashboardIterator.hasNext()) {
+                OMElement dashBoadElement = (OMElement) dashboardIterator.next();
+                Iterator tabIterator = dashBoadElement.getChildrenWithName(new QName(TAB));
+                if (null != tabIterator && tabIterator.hasNext()) {
+                      while (tabIterator.hasNext()){
+                          OMElement tabElement = (OMElement)tabIterator.next();
+                          String tabId = tabElement.getAttributeValue(new QName(TAB_ID));
+
+                          DashBoardTabDTO tabDTO = new DashBoardTabDTO();
+                          tabDTO.setTabId(Integer.parseInt(tabId));
+
+                          Iterator gadgetIterator = tabElement.getChildrenWithName(new QName(GADGET));
+                          while (gadgetIterator.hasNext()){
+                              OMElement gadget = (OMElement)gadgetIterator.next();
+                              tabDTO.addGadget(gadget.getText());
+                          }
+                          tabs.add(tabDTO);
+                      }
+                }
+             return tabs;
+            } else {
+                log.error("No dashboard configuration is found for" +
+                        " tool box:" + this.toolboxName);
+                throw new BAMToolboxDeploymentException("No dashboard configuration " +
+                        "is found for tool box:" + this.toolboxName);
+            }
+        } else {
+            log.error("Configuration has not been set for the tool " +
+                    "box:" + this.toolboxName);
+            throw new BAMToolboxDeploymentException("Configuration has not been set " +
+                    "for the tool box:" + this.toolboxName);
+        }
+    }
+}

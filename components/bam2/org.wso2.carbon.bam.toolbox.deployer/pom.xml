@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>bam2</artifactId>
+        <groupId>org.wso2.carbon</groupId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>WSO2 Carbon - BAM2 Toolbox Deployer</name>
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>org.wso2.carbon.bam2.toolbox.deployer</artifactId>
+    <packaging>bundle</packaging>
+    <url>http://wso2.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.analytics.hive</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.dashboard</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+        </dependency>
+         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+                <version>1.0.10</version>
+                <executions>
+                    <execution>
+                        <id>generate-scr-scrdescriptor</id>
+                        <goals>
+                            <goal>scr</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.3</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Private-Package>
+                            org.wso2.carbon.bam.toolbox.deployer.internal,
+                             org.wso2.carbon.bam.toolbox.deployer.internal.*
+                        </Private-Package>
+                        <Export-Package>
+                            !org.wso2.carbon.bam.toolbox.deployer.internal,
+                            !org.wso2.carbon.bam.toolbox.deployer.internal.*,
+                            org.wso2.carbon.bam.toolbox.deployer.core.*,
+                             org.wso2.carbon.bam.toolbox.deployer.exception.*,
+                             org.wso2.carbon.bam.toolbox.deployer.util.*,
+                            org.wso2.carbon.bam.toolbox.deployer.*
+                        </Export-Package>
+                        <Import-Package>
+                            !javax.xml.namespace,
+                            javax.xml.namespace; version=0.0.0,
+                            *;resolution:=optional,
+                        </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <Axis2Deployer>ToolboxDeployer</Axis2Deployer>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

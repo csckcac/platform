@@ -118,6 +118,7 @@ public class JaggeryAppAdmin extends AbstractAdmin {
         webappMetadata.setContext(jaggeryApplication.getContextName());
         webappMetadata.setLastModifiedTime(jaggeryApplication.getLastModifiedTime());
         webappMetadata.setWebappFile(jaggeryApplication.getWebappFile().getName());
+        webappMetadata.setState(jaggeryApplication.getState());
 
         JaggeryApplication.Statistics statistics = jaggeryApplication.getStatistics();
         WebappStatistics stats = new WebappStatistics();
@@ -209,6 +210,7 @@ public class JaggeryAppAdmin extends AbstractAdmin {
             webappMetadata.setContext(((JaggeryApplication) webapp).getContextName());
             webappMetadata.setLastModifiedTime(((JaggeryApplication) webapp).getLastModifiedTime());
             webappMetadata.setWebappFile(((JaggeryApplication) webapp).getWebappFile().getName());
+            webappMetadata.setState(((JaggeryApplication) webapp).getState());
             WebappStatistics statistics = new WebappStatistics();
             statistics.setActiveSessions(((JaggeryApplication) webapp).getStatistics().getActiveSessions());
             webappMetadata.setStatistics(statistics);

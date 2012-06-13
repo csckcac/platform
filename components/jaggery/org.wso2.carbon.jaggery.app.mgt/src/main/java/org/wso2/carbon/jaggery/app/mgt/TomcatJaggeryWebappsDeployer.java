@@ -380,6 +380,7 @@ public class TomcatJaggeryWebappsDeployer {
             if (jaggeryConfigObj != null) {
                 setDisplayName(context, jaggeryConfigObj);
             }
+            webapp.setState("Started");
             webappsHolder.getStartedWebapps().put(filename, webapp);
             webappsHolder.getFaultyWebapps().remove(filename);
             registerApplicationEventListeners(applicationEventListeners, context);

@@ -68,7 +68,7 @@ public class JSServicesServiceComponent {
                             } catch (Exception ignored) {
                             }
                         }
-                    }, 5000, 10000);
+                    }, 2000, 2000);
                 } else {
                     bundleContext.removeServiceListener(listener);
                     Utils.registerDeployerServices(bundleContext);

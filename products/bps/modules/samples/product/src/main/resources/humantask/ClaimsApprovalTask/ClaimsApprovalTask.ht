@@ -63,7 +63,7 @@
                            responseOperation="approvalResponse"/>
 
             <htd:priority>
-                htd:getInput("ClaimApprovalRequest")/test10:prio
+                htd:getInput("ClaimApprovalRequest")/test10:priority
             </htd:priority>
 
             <htd:peopleAssignments>

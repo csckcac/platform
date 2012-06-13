@@ -2,9 +2,9 @@
 createTaskOutput = function() {
     var outputVal = getCheckedRadio();
     if(outputVal == 'approve') {
-		return '<ClaimApprovalResponse>true</ClaimApprovalResponse>';
-	}else if (outputVal == 'disapprove') {
-		return '<ClaimApprovalResponse>false</ClaimApprovalResponse>';
+		return '<sch:ClaimApprovalResponse xmlns:sch="http://www.example.com/claims/schema"><sch:approved>true</sch:approved></sch:ClaimApprovalResponse>';
+	} else if (outputVal == 'disapprove') {
+		return '<sch:ClaimApprovalResponse xmlns:sch="http://www.example.com/claims/schema"><sch:approved>false</sch:approved></sch:ClaimApprovalResponse>';
 	}
 };
 

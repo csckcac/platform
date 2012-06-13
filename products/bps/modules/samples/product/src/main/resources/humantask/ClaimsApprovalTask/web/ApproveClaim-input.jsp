@@ -7,7 +7,6 @@
         String customerLastName = "";
         String amount = "";
         String region = "";
-        String activateAt = "";
 
         OMElement requestElement = (OMElement) request.getAttribute("taskInput");
         String ns = "http://www.example.com/claims/schema";
@@ -43,12 +42,6 @@
             if(amountElement !=null){
                 amount = amountElement.getText();
             }
-
-            OMElement activateAtElement = requestElement.getFirstChildWithName(new QName(ns, "activateAt"));
-
-            if(activateAtElement !=null){
-                activateAt = activateAtElement.getText();
-            }
         }
     %>
 
@@ -76,11 +69,6 @@
     <tr>
         <td>Region</td>
         <td><%=region%>
-        </td>
-    </tr>
-    <tr>
-        <td>Activate At</td>
-        <td><%=activateAt%>
         </td>
     </tr>
 

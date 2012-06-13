@@ -137,6 +137,14 @@
 			<soap:address location="http://localhost:9763/services/ClaimServiceCB" />
 		</wsdl:port>
 
-    </wsdl:service>
+	</wsdl:service>
+
+	<plnk:partnerLinkType name="b4pPartnerLinkType">
+		<plnk:role name="hi" portType="tns:ClaimsHandlingPT" />
+		<plnk:role name="bpel" portType="tns:ClaimsHandlingCallbackPT" />
+	</plnk:partnerLinkType>
+	<plnk:partnerLinkType name="b4pNPartnerLinkType">
+		<plnk:role name="hi" portType="tns:ClaimApprovalReminderPT" />
+	</plnk:partnerLinkType>
 
 </wsdl:definitions>

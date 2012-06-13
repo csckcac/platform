@@ -416,6 +416,9 @@
             <th>
                 <nobr><fmt:message key="webapp.display.name"/></nobr>
             </th>
+            <th>
+                <nobr><fmt:message key="webapp.state"/></nobr>
+            </th>
             <th width="8%" style="text-align: right; padding-right: 5px; !important"><fmt:message
                     key="webapp.sessions"/></th>
             <th>
@@ -455,6 +458,8 @@
                 </a>
             </td>
             <td><%= (webapp.getDisplayName() != null ? webapp.getDisplayName() : "") %>
+            </td>
+            <td><%= (webapp.getState() != null ? webapp.getState() : "") %>
             </td>
             <td style="text-align: right; !important">
                 <%

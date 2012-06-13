@@ -103,9 +103,9 @@ public class Util {
             validator.validate(xmlFile);
         } catch (SAXException e) {
             if(lc) {
-                log.error("#### Lifecycle validation fails due to: " + e.getMessage());
+                log.error("Lifecycle validation fails due to: " + e.getMessage());
             } else {
-                log.error("#### RXT validation fails due to: " + e.getMessage());
+                log.error("RXT validation fails due to: " + e.getMessage());
             }
             return false;
         } catch (IOException e) {

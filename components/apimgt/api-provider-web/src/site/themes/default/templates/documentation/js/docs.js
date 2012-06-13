@@ -1,32 +1,36 @@
-var addNewDoc = function (provider) {
-    var apiName = $("#item-info h2")[0].innerHTML.split("-v")[0];
-    var version = $("#item-info h2")[0].innerHTML.split("-v")[1];
-    var docName = $("#docName").val();
-    var summary = $("#summary").val();
-    var docType = getRadioValue($('input[name=optionsRadios]:radio:checked'));
-    var sourceType = getRadioValue($('input[name=optionsRadios1]:radio:checked'));
-    var docUrl = $("#docUrl").val();
-    if(docUrl.indexOf("http")==-1){
-    docUrl="https://"+docUrl;
-    }
-    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"addDocumentation",
-        provider:provider,apiName:apiName, version:version,docName:docName,docType:docType,summary:summary,sourceType:sourceType,
-        docUrl:docUrl},
-              function (result) {
-                  if (!result.error) {
-                      clearDocs();
-                      $.cookie("tab", "docsLink");
-                      window.location.reload();
-                  } else {
-                      jagg.message({content:result.message,type:"error"});
-                  }
-              }, "json");
+$(document).ready(function() {
+    $("#addNewDoc").validate();
+    $('#saveDoc').click(function() {
+        if ($("#addNewDoc").valid()) {
+            var apiName = $("#item-info h2")[0].innerHTML.split("-v")[0];
+            var version = $("#item-info h2")[0].innerHTML.split("-v")[1];
+            var provider = $("#spanProvider").text();
+            var docName = $("#docName").val();
+            var summary = $("#summary").val();
+            var docType = getRadioValue($('input[name=optionsRadios]:radio:checked'));
+            var sourceType = getRadioValue($('input[name=optionsRadios1]:radio:checked'));
+            var docUrl = $("#docUrl").val();
+            if (docUrl.indexOf("http") == -1) {
+                docUrl = "https://" + docUrl;
+            }
+            jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"addDocumentation",
+                provider:provider,apiName:apiName, version:version,docName:docName,docType:docType,summary:summary,sourceType:sourceType,
+                docUrl:docUrl},
+                      function (result) {
+                          if (!result.error) {
+                              clearDocs();
+                              $.cookie("tab", "docsLink");
+                              window.location.reload();
+                          } else {
+                              jagg.message({content:result.message,type:"error"});
+                          }
+                      }, "json");
+        }
+    });
+});
 
 
-};
-
-
-var removeDocumentation = function (provider,apiName, version, docName, docType) {
+var removeDocumentation = function (provider, apiName, version, docName, docType) {
     $('#messageModal').html($('#confirmation-data').html());
     $('#messageModal h3.modal-title').html('Confirm Delete');
     $('#messageModal div.modal-body').html('\n\nAre you sure you want to delete the file <b>"' + docName + '</b>"?');
@@ -34,18 +38,18 @@ var removeDocumentation = function (provider,apiName, version, docName, docType)
     $('#messageModal a.btn-other').html('No');
     $('#messageModal a.btn-primary').click(function() {
         jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"removeDocumentation",provider:provider,
-                apiName:apiName, version:version,docName:docName,docType:docType},
-            function (result) {
-                if (!result.error) {
-                    $('#messageModal').modal('hide');
-                    $('#' + apiName + '-' + docName).remove();
-                    if ($('#docTable tr').length == 1) {
-                        $('#docTable').append($('<tr><td colspan="6">No documentation associated with the API</td></tr>'));
-                    }
-                } else {
-                    jagg.message({content:result.message,type:"error"});
-                }
-            }, "json");
+            apiName:apiName, version:version,docName:docName,docType:docType},
+                  function (result) {
+                      if (!result.error) {
+                          $('#messageModal').modal('hide');
+                          $('#' + apiName + '-' + docName).remove();
+                          if ($('#docTable tr').length == 1) {
+                              $('#docTable').append($('<tr><td colspan="6">No documentation associated with the API</td></tr>'));
+                          }
+                      } else {
+                          jagg.message({content:result.message,type:"error"});
+                      }
+                  }, "json");
     });
     $('#messageModal a.btn-other').click(function() {
         return;
@@ -58,7 +62,7 @@ var updateDocumentation = function (docName, docType, summary, docUrl) {
     $('#newDoc').show('slow');
     $('#newDoc #docName').val(docName);
     if (summary != "{}") {
-    $('#newDoc #summary').val(summary);
+        $('#newDoc #summary').val(summary);
     }
     if (docUrl != "{}") {
         $('#newDoc #docUrl').val(docUrl);
@@ -73,12 +77,12 @@ var updateDocumentation = function (docName, docType, summary, docUrl) {
     }
 };
 
-var editInlineContent = function (provider,apiName, version, docName,mode) {
+var editInlineContent = function (provider, apiName, version, docName, mode) {
     var current = window.location.pathname;
     if (current.indexOf("item-info.jag") >= 0) {
-        window.open("inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version+"&provider=" + provider+"&mode=" + mode);
+        window.open("inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version + "&provider=" + provider + "&mode=" + mode);
     } else {
-        window.open("site/pages/inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version+"&provider=" + provider+"&mode=" + mode);
+        window.open("site/pages/inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version + "&provider=" + provider + "&mode=" + mode);
     }
 
 };

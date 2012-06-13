@@ -24,6 +24,7 @@
             </div>
         </div>
         <!-- Row -->
+        <form id="addNewDoc">
         <div class="row-fluid" id="newDoc" style="display:none;">
             <div class="span4">
                 <div class="control-group">
@@ -76,13 +77,13 @@
                         <label class="control-label">Source</label>
                         <div class="controls">
                             <label class="radio">
-                                <input type="radio" name="optionsRadios1" id="optionsRadios7" value="inline" checked="">In-line
+                                <input type="radio" name="optionsRadios1" id="optionsRadios7" value="inline" onclick="javascript:$('#sourceUrlDoc').hide('slow')" checked="">In-line
                             </label>
                             <label class="radio">
-                                <input type="radio" name="optionsRadios1" id="optionsRadios8" value="url" onclick="javascript:$('#docUrl').toggle('slow')">URL
+                                <input type="radio" name="optionsRadios1" id="optionsRadios8" value="url" onclick="javascript:$('#sourceUrlDoc').toggle('slow')">URL
                             </label>
-                            <div class="controls">
-                                <input type="text" class="input" id="docUrl" style="display:none;">
+                            <div id="sourceUrlDoc" class="controls" style="display:none;">
+                             <span class="requiredAstrix">*</span> <input type="text" class="input required" id="docUrl">
                             </div>
                         </div>
                     </div>
@@ -91,12 +92,13 @@
 
             <div class="span12">
                 <div class="control-group">
-                    <button type="button" class="btn btn-primary" onclick="addNewDoc('<%=api.provider%>')">Add Document</button>
+                    <button type="button" class="btn btn-primary" id="saveDoc">Add Document</button>
                     <button class="btn" onclick='clearDocs()'>Cancel</button>
                 </div>
             </div>
 
         </div>
+        </form>
         <!-- Row -->
         <div class="row-fluid">
             <table class="table table-bordered" id="docTable">

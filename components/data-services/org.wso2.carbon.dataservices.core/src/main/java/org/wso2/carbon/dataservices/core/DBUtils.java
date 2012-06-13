@@ -33,7 +33,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.common.DBConstants.DBSFields;
 import org.wso2.carbon.dataservices.common.DBConstants.RDBMSEngines;
@@ -74,6 +73,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utility class for data services based operations.
@@ -81,6 +82,8 @@ import java.util.concurrent.TimeUnit;
 public class DBUtils {
 
     private static final Log log = LogFactory.getLog(DBUtils.class);
+
+    private static Pattern udtPattern = Pattern.compile("(.*?(\\[\\d\\]))");
 
     private static ScheduledExecutorService globalExecutorService = Executors
             .newSingleThreadScheduledExecutor();
@@ -775,7 +778,7 @@ public class DBUtils {
         }
         return connectionURL;
     }
-    
+
     public static boolean isUDT(ParamValue paramValue) {
         return paramValue != null && (paramValue.getValueType() == ParamValue.PARAM_VALUE_UDT);
     }
@@ -834,64 +837,18 @@ public class DBUtils {
     }
 
     /**
-     * This method traverse through the specified indices and recursively retrieves the value of
-     * the UDT attribute.
+     * Extracts the UDT column name from a given parameter name
      *
-     * @param indices Index pointing to the desired attribute of the UDT.
-     * @param value   Value of the UDT attribute.
-     * @param i       Index to keep track of the number of items process in the index list.
-     * @return Final value of the desired UDT attribute
-     * @throws SQLException     SQLException
-     * @throws DataServiceFault DataServiceFault.
+     * @param param User specified parameter name
+     * @return      UDT column name
      */
-    public static ParamValue getUDTAttributeValue(List<Integer> indices, ParamValue value,
-                                                  int i) throws SQLException, DataServiceFault {
-        if (DBUtils.isUDT(value)) {
-            try {
-                Object tempValue = value.getUdt().getAttributes()[indices.get(i)];
-                if (tempValue instanceof Struct) {
-                    value = new ParamValue((Struct) tempValue);
-                } else if (tempValue instanceof Array) {
-                    value = DBUtils.processSQLArray((Array) tempValue,
-                            new ParamValue(ParamValue.PARAM_VALUE_ARRAY));
-                } else {
-                    value = new ParamValue(String.valueOf(tempValue));
-                }
-            } catch (Exception e) {
-                throw new DataServiceFault("Unable to retrieve UDT attribute value referred by " +
-                        "the given index");
-            }
-        } else if (DBUtils.isSQLArray(value)) {
-            ParamValue processedParamValue = new ParamValue(ParamValue.PARAM_VALUE_ARRAY);
-            for (ParamValue param : value.getArrayValue()) {
-                if (DBUtils.isUDT(param)) {
-                    processedParamValue.getArrayValue().add(new ParamValue(
-                            String.valueOf(param.getUdt().getAttributes()[indices.get(i)])));
-                } else {
-                    processedParamValue.getArrayValue().add(param);
-                }
-            }
-            value = processedParamValue;
-        } else {
-            return value;
+    public static String extractUDTColumnName(String param) {
+        Matcher m = udtPattern.matcher(param);
+        if (m.find()) {
+            String tmp = m.group();
+            return tmp.substring(0, tmp.length() - 3).trim();
         }
-        i++;
-        if (i < indices.size()) {
-            return getUDTAttributeValue(indices, value, i);
-        }
-        return value;
-    }
-
-    public static ExternalParam getExParamObjectFromCollection(ExternalParamCollection params,
-                                                               String originalParam, String paramType,
-                                                               String param) {
-        ExternalParam exParam = params.getParam(paramType, param);
-        if (exParam == null) {
-            exParam = params.getParam(paramType,
-                    originalParam.substring(0, originalParam.substring(param.length(),
-                            originalParam.length()).indexOf("]") + param.length() + 1));
-        }
-        return exParam;
+        return null;
     }
 
 }

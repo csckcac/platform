@@ -1559,7 +1559,7 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
                                     String structType) throws SQLException, DataServiceFault {
         if (QueryTypes.OUT.equals(paramType)) {
             ((CallableStatement) sqlQuery).registerOutParameter(parameterIndex + 1, Types.STRUCT,
-                    structType);
+                    structType.toUpperCase());
         } else {
             throw new DataServiceFault("IN or INOUT operations are not supported for User " +
                     "Defined Types");

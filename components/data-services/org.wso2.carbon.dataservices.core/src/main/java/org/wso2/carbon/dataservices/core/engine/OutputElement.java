@@ -22,7 +22,6 @@ import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
 
 import javax.xml.stream.XMLStreamWriter;
-import java.sql.SQLException;
 import java.util.Set;
 
 /**
@@ -37,7 +36,7 @@ public abstract class OutputElement extends XMLWriterHelper{
     private String paramType;
 
     private String param;
-
+    
     public OutputElement(String namespace) {
         super(namespace);
     }
@@ -47,49 +46,27 @@ public abstract class OutputElement extends XMLWriterHelper{
      */
     public void execute(XMLStreamWriter xmlWriter, ExternalParamCollection params, int queryLevel)
             throws DataServiceFault {
-        ParamValue paramValue;
         if (this.getArrayName() == null) {
             this.executeElement(xmlWriter, params, queryLevel);
         } else {
-            ExternalParam exParam = this.getExternalParam(params);
-            if (exParam != null) {
-                paramValue = exParam.getValue();
-                String name = exParam.getName();
-                String type = exParam.getType();
+           ExternalParam exParam = this.getExternalParam(params);
+            if (exParam == null) {
+                throw new DataServiceFault("The array '" + this.getArrayName() +
+                        "' does not exist");
+            }
+            ParamValue paramValue = exParam.getValue();
+            String name = exParam.getName();
+            String type = exParam.getType();
 
-                if (DBUtils.isSQLArray(paramValue)) {
-                    ExternalParamCollection tmpParams;
-                    for (ParamValue value : paramValue.getArrayValue()) {
-                        tmpParams = new ExternalParamCollection();
-                        tmpParams.addParam(new ExternalParam(name, value, type));
-                        this.executeElement(xmlWriter, tmpParams, queryLevel);
-                    }
-                } else if (DBUtils.isUDT(paramValue)) {
-                    String indexString = this.getArrayName().substring(
-                            this.getArrayName().indexOf("["), this.getArrayName().length());
-                    ParamValue value;
-                    try {
-                        value = DBUtils.getUDTAttributeValue(DBUtils.getNestedIndices(indexString),
-                                paramValue, 0);
-                        if (DBUtils.isSQLArray(value)) {
-                            ExternalParamCollection tmpParams;
-                            for (ParamValue param : value.getArrayValue()) {
-                                tmpParams = new ExternalParamCollection();
-                                tmpParams.addParam(new ExternalParam(this.getArrayName().toLowerCase(),
-                                        param, type));
-                                this.executeElement(xmlWriter, tmpParams, queryLevel);
-                            }
-                        } else {
-                            this.executeElement(xmlWriter, params, queryLevel);
-                        }
-                    } catch (SQLException e) {
-                        //Let the flow continue.
-                    }
-                } else {
-                    this.execute(xmlWriter, params, queryLevel);
-                }
-            } else {
-                throw new DataServiceFault("The array '" + this.getArrayName() + "' does not exist");
+            if (!DBUtils.isSQLArray(paramValue)) {
+                throw new DataServiceFault("Parameter does not corresponding to an array");
+            }
+
+            ExternalParamCollection tmpParams;
+            for (ParamValue value : paramValue.getArrayValue()) {
+                tmpParams = new ExternalParamCollection();
+                tmpParams.addParam(new ExternalParam(name, value, type));
+                this.executeElement(xmlWriter, tmpParams, queryLevel);
             }
         }
     }
@@ -110,7 +87,8 @@ public abstract class OutputElement extends XMLWriterHelper{
         return paramName.toLowerCase();
     }
 
-    protected abstract void executeElement(XMLStreamWriter xmlWriter, ExternalParamCollection params,
+    protected abstract void executeElement(XMLStreamWriter xmlWriter,
+                                           ExternalParamCollection params,
                                            int queryLevel) throws DataServiceFault;
 
     /**

@@ -277,12 +277,6 @@ function dbreportMediatorValidate() {
                 return false;
             }
         } else {
-            field = document.getElementById('init_ctx');
-            if (field && field.value == "") {
-                CARBON.showErrorDialog(dbreportMediatorJsi18n["dbreport.initCtx.required"]);
-                return false;
-            }
-
             field = document.getElementById('data_source');
             if (field && field.value == "") {
                 CARBON.showErrorDialog(dbreportMediatorJsi18n["dbreport.dataSource.required"]);

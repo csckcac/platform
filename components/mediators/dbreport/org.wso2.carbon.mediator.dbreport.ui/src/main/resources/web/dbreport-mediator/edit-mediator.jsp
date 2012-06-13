@@ -184,7 +184,6 @@
             <tr id="mediator.dbr.inictx_row" <%=!isPool && isInline ? "" : "style=\"display:none;\""%>>
                 <td style="width:150px">
                     <fmt:message key="mediator.dbreport.contex"/>
-                    <font style="color: red; font-size: 8pt;"> *</font>
                 </td>
                 <td><input type="text" style="width:300px" name="init_ctx" id="init_ctx" value="<%=initCtx%>"/></td>
             </tr>

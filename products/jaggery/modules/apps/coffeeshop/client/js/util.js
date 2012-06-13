@@ -4,7 +4,7 @@ CoffeShopAppUtil = new function() {
             type: type,
             url: u,
             data: d,
-            dataType: "text",
+            dataType: "json",
             success: callback
         });
     };

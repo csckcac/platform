@@ -5,22 +5,35 @@ include("respond/respond.jag");
 
 var verb = request.getMethod();
 var orderid = request.getParameter('orderid');
+var data = request.getContent();
 
+var log = new Log();
+if(data != "") {
+	
+	if(data.id != "undefined") {
+		orderid = parse(data).id;
+	}
+}
+log.info("orderid " +verb+ orderid);
 if(verb == "GET" && orderid != null){
 	//is paid for order
+	log.info("checking pay " + orderid);
 	isPaid(orderid);
 	
-}else if (verb == "GET" && orderid != null){
+}else if (verb == "PUT" && orderid != null){
+	log.info("paid " + orderid);
 	pay(orderid);
 }
 
 function isPaid (orderid) {
+	
   //db processing
 var order = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");
+
 if(order.length != 0) {
 	print(order[0].PAY);
 } else {
-
+log.info("foooooooooo");
 	print({
 		"Infor" : "Sorry, Order is not exsiting"
 	});

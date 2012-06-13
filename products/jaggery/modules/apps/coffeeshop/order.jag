@@ -8,10 +8,24 @@ var orderid = request.getParameter('orderid');
 var order = request.getParameter('order');
 var status = request.getParameter('status');
 var addition = request.getParameter('addition');
-
+var data = request.getContent();
 var log = new Log();
-log.info("This is an INFO level log " + addition + orderid + verb + order +status);
+log.info("data " + data);
+if(data != "") {
+	
+	if(data.id != "undefined") {
+		orderid = parse(data).id;
+	}
+	if(data.addition != "undefined") {
+		addition = parse(data).addition;
+	}
+	if(data.status != "undefined") {
+		status = parse(data).status;
+	}
+}
 
+
+log.info("This is an INFO level log " + data + " :: " + addition + orderid + verb + order + status);
 
 if(verb == "DELETE" && orderid != null) {
 	deleteOrder(orderid);
@@ -20,7 +34,7 @@ if(verb == "DELETE" && orderid != null) {
 	viewOrder(orderid);
 
 } else if(verb == "PUT" && orderid != null && addition != null) {
-	log.info("This is an INFO level log addAddition " +orderid+ addition);
+	log.info("This is an INFO level log addAddition " + orderid + addition);
 	addAddition(orderid, addition);
 
 } else if(verb == "PUT" && orderid != null && status != null) {
@@ -44,12 +58,16 @@ function addOrder(orderName) {
 	var order = request.getParameter('order');
 
 	var price = db.query("SELECT COST FROM DRINKS WHERE DRINK ='" + order + "'");
-
+if(price.length != 0) {
 	db.query("INSERT INTO COFFEE_ORDER VALUES(" + ++orderIdx + ",'','" + order + "','" + price[0].COST + "','order',false)");
 	//order is been taken
 	var result = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID = " + orderIdx);
 	print(result[0]);
-
+} else {
+				print({
+					"Infor" : "Sorry, Coffee is not in shop"
+				});
+			}
 }
 
 function listAllOrders() {
@@ -84,7 +102,7 @@ function updateStatus(orderid, status) {
 }
 
 function addAddition(orderid, addition) {
-	log.info("This is an INFO level log addAddition " +orderid+ addition);
+	log.info("This is an INFO level log addAddition " + orderid + addition);
 	//adding addition
 	//db processing
 	var order = db.query("SELECT STATUS, COST FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");

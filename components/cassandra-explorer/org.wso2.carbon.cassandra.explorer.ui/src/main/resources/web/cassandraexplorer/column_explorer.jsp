@@ -15,11 +15,11 @@
 ~ specific language governing permissions and limitations
 ~ under the License.
 -->
-<%@ page import="org.wso2.carbon.cassandra.explorer.stub.data.xsd.Column" %>
-<%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
+<%@ page import="org.wso2.carbon.cassandra.explorer.stub.data.xsd.Column" %>
+<%@ page import="java.sql.Timestamp" %>
 <%@ page import="java.util.concurrent.TimeUnit" %>
-<%@ page import="org.wso2.carbon.cassandra.explorer.stub.data.xsd.Row" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 
@@ -27,7 +27,6 @@
 <script type="text/javascript" language="javascript" src="js/datatables/js/jquery.js"></script>
 <script type="text/javascript" language="javascript"
         src="js/datatables/js/jquery.dataTables.js"></script>
-<script type="text/javascript" language="javascript" src="js/cassandra_cf_explorer.js"></script>
 <link href="css/resetDataTables.css" rel="stylesheet" media="all"/>
 <style type="text/css" title="currentStyle">
     @import "js/datatables/css/demo_page.css";
@@ -40,6 +39,10 @@
     response.setHeader("Cache-Control", "no-cache");
     String keyspace = request.getParameter("keyspace");
     String columnFamily = request.getParameter("columnFamily");
+    String columnKey = request.getParameter("columnKey");
+    String rowID = request.getParameter("rowID");
+    CassandraExplorerAdminClient cassandraExplorerAdminClient
+            = new CassandraExplorerAdminClient(config.getServletContext(), session);
 %>
 <%--TODO refactor JSI bundle--%>
 <fmt:bundle basename="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources">
@@ -47,13 +50,13 @@
             resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
             request="<%=request%>" i18nObjectName="cassandrajsi18n"/>
     <carbon:breadcrumb
-            label="<%=request.getParameter("columnFamily")%>"
+            label="<%=request.getParameter("rowID")%>"
             resourceBundle="org.wso2.carbon.cassandra.explorer.ui.i18n.Resources"
             topPage="false"
             request="<%=request%>"/>
 
     <div id="middle">
-        <h2><fmt:message key="cassandra.cf"/> : <%=columnFamily%>
+        <h2><fmt:message key="cassandra.cf.row"/> : <%=rowID%>
         </h2>
 
         <div id="workArea">
@@ -61,23 +64,60 @@
                 <div id="dynamic"></div>
                 <div class="spacer"></div>
             </div>
+            <%
+                Column[] columns;
+                if (columnKey != null) {
+                    columns = new Column[1];
+                    columns[0] = cassandraExplorerAdminClient.getColumn(keyspace, columnFamily,
+                                                                        rowID, columnKey);
+                    if (columns[0] == null) {
+            %>
             <script type="text/javascript">
+                jQuery(document).ready(function () {
+                    CARBON.showInfoDialog('No Results found', function () {
+                        CARBON.closeWindow();
+                    }, function () {
+                        CARBON.closeWindow();
+                    });
+                });
+            </script>
+            <%
+                    }
+                } else {
+                    columns = cassandraExplorerAdminClient.
+                            getColumnsForRowName(keyspace, columnFamily, rowID, "", "",
+                                                 1, false);
+                }
+            %>
+            <script type="text/javascript" charset="utf-16">
+                /* Data set */
+                var aDataSet = [
+                    <%  if (columns != null && columns[0] != null) {
+          for (int i = 0; i < columns.length; i++) {
+
+          long timeInMilliSeconds = TimeUnit.MICROSECONDS.toMillis(columns[i].getTimeStamp());
+          %>
+                    ['<%=columns[i].getName()%>', '<%=columns[i].getValue()%>',
+                     '<%=(new Date(columns[i].getTimeStamp()/1000)).toString()%>']
+                    <%if((i+1)!=columns.length){%>,
+                    <% } %>
+                    <% } %>
+                ];
+                <%}%>
                 $(document).ready(function () {
                     $('#dynamic').html('<table cellpadding="10" cellspacing="0" border="0" class="display dataTable" id="example"></table>');
                     $('#example').dataTable({
-                                                "sAjaxSource":"row_datatable_ajaxprocessor.jsp",
+                                                "sAjaxSource":"column_datatable_ajaxprocessor.jsp",
                                                 "aoColumns":[
-                                                    { "sTitle":"Row ID" },
-                                                    { "sTitle":"Column 1" },
-                                                    { "sTitle":"Column 2" },
-                                                    { "sTitle":"Column 3" },
-                                                    { "sTitle":"    " }
+                                                    { "sTitle":"Column Name" },
+                                                    { "sTitle":"Column Value" },
+                                                    { "sTitle":"Time Stamp" }
                                                 ],
                                                 "sPaginationType":"full_numbers",
                                                 "bProcessing":true,
                                                 "bServerSide":true,
                                                 "fnServerParams":function (aoData) {
-                                                    aoData.push(
+                                                    aoData.push({ "name":"row_id", "value":'<%=rowID%>' },
                                                                 {"name":"columnFamily", "value":'<%=columnFamily%>'},
                                                                 {"name":"keySpace", "value":'<%=keyspace%>'});
                                                 }

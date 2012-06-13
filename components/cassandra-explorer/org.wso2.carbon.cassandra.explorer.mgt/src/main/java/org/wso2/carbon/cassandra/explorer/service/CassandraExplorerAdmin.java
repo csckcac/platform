@@ -33,13 +33,17 @@ import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.RangeSlicesQuery;
 import me.prettyprint.hector.api.query.SliceQuery;
-import org.apache.cassandra.thrift.InvalidRequestException;
 import org.wso2.carbon.cassandra.explorer.connection.ConnectionManager;
 import org.wso2.carbon.cassandra.explorer.data.Column;
 import org.wso2.carbon.cassandra.explorer.exception.CassandraExplorerException;
 import org.wso2.carbon.core.AbstractAdmin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * KeySpace Explorer for Cassandra
@@ -348,6 +352,140 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         return columnsList.toArray(columnArray);
     }
 
+    public org.wso2.carbon.cassandra.explorer.data.Row[] getRowPaginateSlice
+            (String keyspaceName, String columnFamily, int startingNo, int limit)
+            throws CassandraExplorerException {
+        Cluster cluster = ConnectionManager.getCluster();
+        Keyspace keyspace = ConnectionManager.getKeyspace(cluster, keyspaceName);
+
+        RangeSlicesQuery<String, String, String> rangeSlicesQuery =
+                HFactory.createRangeSlicesQuery(keyspace, stringSerializer, stringSerializer,
+                                                stringSerializer);
+        rangeSlicesQuery.setColumnFamily(columnFamily);
+        rangeSlicesQuery.setKeys("", "");
+        rangeSlicesQuery.setRange("", "", false, 3);
+        rangeSlicesQuery.setRowCount(startingNo + 1);
+
+        ArrayList<org.wso2.carbon.cassandra.explorer.data.Row> rowlist =
+                new ArrayList<org.wso2.carbon.cassandra.explorer.data.Row>();
+
+        QueryResult<OrderedRows<String, String, String>> result = rangeSlicesQuery.execute();
+        String endKey = "";
+        if (result.get().peekLast() != null) {
+            endKey = result.get().peekLast().getKey();
+        }
+        rangeSlicesQuery.setRowCount(limit);
+        rangeSlicesQuery.setKeys(endKey, "");
+        result = rangeSlicesQuery.execute();
+
+        for (Row cassandraRow : result.get().getList()) {
+            org.wso2.carbon.cassandra.explorer.data.Row row =
+                    new org.wso2.carbon.cassandra.explorer.data.Row();
+            row.setRowId(cassandraRow.getKey().toString());
+            List<HColumn<String, String>> hColumnsList = cassandraRow.getColumnSlice().getColumns();
+            Column[] columns = new Column[hColumnsList.size()];
+            for (int i = 0; i < hColumnsList.size(); i++) {
+                // we are sending only 3 columns max
+                if (i == 3) {
+                    break;
+                }
+                Column column = new Column();
+                column.setName(hColumnsList.get(i).getName());
+                column.setValue(cleanNonXmlChars(hColumnsList.get(i).getValue()));
+                columns[i] = column;
+            }
+            row.setColumns(columns);
+            rowlist.add(row);
+        }
+        org.wso2.carbon.cassandra.explorer.data.Row rows[] =
+                new org.wso2.carbon.cassandra.explorer.data.Row[rowlist.size()];
+        return rowlist.toArray(rows);
+
+    }
+
+    public org.wso2.carbon.cassandra.explorer.data.Row[] searchRows(String keyspaceName,
+                                                                    String columnFamily,
+                                                                    String searchKey,
+                                                                    int startingNo, int limit)
+            throws CassandraExplorerException {
+        Cluster cluster = ConnectionManager.getCluster();
+        Keyspace keyspace = ConnectionManager.getKeyspace(cluster, keyspaceName);
+
+        RangeSlicesQuery<String, String, String> rangeSlicesQuery =
+                HFactory.createRangeSlicesQuery(keyspace, stringSerializer, stringSerializer,
+                                                stringSerializer);
+        rangeSlicesQuery.setColumnFamily(columnFamily);
+        rangeSlicesQuery.setKeys("", "");
+        rangeSlicesQuery.setRange("", "", false, 3);
+        rangeSlicesQuery.setRowCount(Integer.MAX_VALUE);
+
+        ArrayList<org.wso2.carbon.cassandra.explorer.data.Row> rowlist =
+                new ArrayList<org.wso2.carbon.cassandra.explorer.data.Row>();
+
+        QueryResult<OrderedRows<String, String, String>> result = rangeSlicesQuery.execute();
+        for (Row cassandraRow : result.get().getList()) {
+            org.wso2.carbon.cassandra.explorer.data.Row row =
+                    new org.wso2.carbon.cassandra.explorer.data.Row();
+            //check if search key present in the row keys.
+            if ((cassandraRow.getKey().toString().contains(searchKey))) {
+                row.setRowId(cassandraRow.getKey().toString());
+                List<HColumn<String, String>> hColumnsList = cassandraRow.getColumnSlice().getColumns();
+                Column[] columns = new Column[hColumnsList.size()];
+                for (int i = 0; i < hColumnsList.size(); i++) {
+                    // we are sending only 3 columns max
+                    if (i == 3) {
+                        break;
+                    }
+                    Column column = new Column();
+                    column.setName(hColumnsList.get(i).getName());
+                    column.setValue(cleanNonXmlChars(hColumnsList.get(i).getValue()));
+                    columns[i] = column;
+                }
+                row.setColumns(columns);
+                rowlist.add(row);
+            }
+        }
+        if (rowlist.size() < limit) {
+            limit = rowlist.size();
+        }
+        org.wso2.carbon.cassandra.explorer.data.Row rows[] =
+                new org.wso2.carbon.cassandra.explorer.data.Row[limit];
+
+        for (int i = startingNo; i < limit; i++) {
+            rows[i] = rowlist.get(i);
+        }
+        return rows;
+    }
+
+    public int getNoOfRowSearchResults(String keyspaceName, String columnFamily
+            , String searchKey)
+            throws CassandraExplorerException {
+        Cluster cluster = ConnectionManager.getCluster();
+        Keyspace keyspace = ConnectionManager.getKeyspace(cluster, keyspaceName);
+
+        RangeSlicesQuery<String, String, String> rangeSlicesQuery =
+                HFactory.createRangeSlicesQuery(keyspace, stringSerializer, stringSerializer,
+                                                stringSerializer);
+        rangeSlicesQuery.setColumnFamily(columnFamily);
+        rangeSlicesQuery.setKeys("", "");
+        rangeSlicesQuery.setReturnKeysOnly();
+        rangeSlicesQuery.setRowCount(Integer.MAX_VALUE);
+
+        ArrayList<org.wso2.carbon.cassandra.explorer.data.Row> rowlist =
+                new ArrayList<org.wso2.carbon.cassandra.explorer.data.Row>();
+        QueryResult<OrderedRows<String, String, String>> result = rangeSlicesQuery.execute();
+
+        for (Row cassandraRow : result.get().getList()) {
+            org.wso2.carbon.cassandra.explorer.data.Row row =
+                    new org.wso2.carbon.cassandra.explorer.data.Row();
+            //check if search key present in the row keys.
+            if ((cassandraRow.getKey().toString().contains(searchKey))) {
+                rowlist.add(row);
+            }
+        }
+        return rowlist.size();
+    }
+
     public Column[] searchColumns(String keyspaceName, String columnFamily,
                                   String rowName, String searchKey, int startingNo, int limit)
             throws CassandraExplorerException {
@@ -388,8 +526,8 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         return columnArray;
     }
 
-    public int getNoSearchResults(String keyspaceName, String columnFamily,
-                                  String rowName, String searchKey)
+    public int getNoOfColumnSearchResults(String keyspaceName, String columnFamily,
+                                          String rowName, String searchKey)
             throws CassandraExplorerException {
         Cluster cluster = ConnectionManager.getCluster();
         Keyspace keyspace = ConnectionManager.getKeyspace(cluster, keyspaceName);
@@ -480,7 +618,8 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         return hColumnsList.size();
     }
 
-    public boolean connectToCassandraCluster(String clusterName, String connectionUrl, String userName, String password )
+    public boolean connectToCassandraCluster(String clusterName, String connectionUrl,
+                                             String userName, String password)
             throws CassandraExplorerException {
         Map<String, String> credentials = new HashMap<String, String>();
         if (connectionUrl == null || connectionUrl.isEmpty()) {

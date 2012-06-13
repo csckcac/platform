@@ -50,14 +50,14 @@
     noOfTotalColumns = cassandraExplorerAdminClient.getNoOfColumns(keyspace,columnFamily,rowId);
 
     if (searchKey != null && !searchKey.isEmpty()) {
-        columns = cassandraExplorerAdminClient.search(keyspace, columnFamily, rowId, searchKey,
+        columns = cassandraExplorerAdminClient.searchColumns(keyspace, columnFamily, rowId, searchKey,
                 displayStart, displayLenght);
-        noOfFilteredColumns = cassandraExplorerAdminClient.getNoOfFilteredResults(keyspace, columnFamily,
-                rowId, searchKey);
+        noOfFilteredColumns = cassandraExplorerAdminClient.getNoOfFilteredResultsoforColumns(keyspace, columnFamily,
+                                                                                             rowId, searchKey);
     }
      else{
          columns = cassandraExplorerAdminClient.
-            paginate(keyspace, columnFamily, rowId,displayStart,displayLenght);
+                 getPaginateSliceforColumns(keyspace, columnFamily, rowId, displayStart, displayLenght);
         noOfFilteredColumns =noOfTotalColumns;
     }
     int totalDisplayRecords =0;

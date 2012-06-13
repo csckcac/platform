@@ -27,6 +27,7 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.cassandra.explorer.stub.CassandraExplorerAdminCassandraExplorerException;
 import org.wso2.carbon.cassandra.explorer.stub.CassandraExplorerAdminStub;
 import org.wso2.carbon.cassandra.explorer.stub.data.xsd.Column;
+import org.wso2.carbon.cassandra.explorer.stub.data.xsd.Row;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.utils.ServerConstants;
 
@@ -144,8 +145,8 @@ public class CassandraExplorerAdminClient {
         return explorerAdminStub.getColumn(keyspace, columnFamily, rowName, columnName);
     }
 
-    public Column[] paginate(String keyspace, String columnFamily, String rowName,
-                             int startingNo, int limit)
+    public Column[] getPaginateSliceforColumns(String keyspace, String columnFamily, String rowName,
+                                               int startingNo, int limit)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
         return explorerAdminStub.getColumnPaginateSlice(keyspace, columnFamily, rowName, startingNo,
                                                         limit);
@@ -156,18 +157,39 @@ public class CassandraExplorerAdminClient {
         return explorerAdminStub.getNoOfColumns(keyspace, columnFamily, rowName);
     }
 
-    public Column[] search(String keyspace, String columnFamily, String rowName, String searchKey,
+    public Column[] searchColumns(String keyspace, String columnFamily, String rowName, String searchKey,
                            int startingNo, int limit)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
         return explorerAdminStub.searchColumns(keyspace, columnFamily, rowName, searchKey,
                                                startingNo, limit);
     }
 
-    public int getNoOfFilteredResults(String keyspace, String columnFamily, String rowName,
+    public int getNoOfFilteredResultsoforColumns(String keyspace, String columnFamily, String rowName,
                                       String searchKey)
             throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
-        return explorerAdminStub.getNoSearchResults(keyspace, columnFamily, rowName, searchKey);
+        return explorerAdminStub.getNoOfColumnSearchResults(keyspace, columnFamily, rowName, searchKey);
     }
+    public Row[] getPaginateSliceforRows(String keyspace, String columnFamily,
+                                         int startingNo, int limit)
+            throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
+        return explorerAdminStub.getRowPaginateSlice(keyspace, columnFamily, startingNo,
+                                                     limit);
+    }
+
+
+    public Row[] searchRows(String keyspace, String columnFamily, String searchKey,
+                            int startingNo, int limit)
+            throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
+        return explorerAdminStub.searchRows(keyspace, columnFamily, searchKey,
+                                            startingNo, limit);
+    }
+
+    public int getNoOfFilteredResultsoforRows(String keyspace, String columnFamily,
+                                                 String searchKey)
+            throws RemoteException, CassandraExplorerAdminCassandraExplorerException {
+        return explorerAdminStub.getNoOfRowSearchResults(keyspace, columnFamily, searchKey);
+    }
+
 
     public boolean connectToCassandraCluster(String clusterName, String connectionUrl,
                                              String userName,

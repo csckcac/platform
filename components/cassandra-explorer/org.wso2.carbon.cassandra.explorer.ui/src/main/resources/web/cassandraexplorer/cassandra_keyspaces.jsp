@@ -81,9 +81,17 @@
                         %>
                 <tr class=<%=rowType%>>
                     <td>
-                        <a href="#" onclick="viewExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
-                           style="background-image:url(images/column_familiy.png);" class="icon-link"><%=columnFamilies[i]%></a>
+                        <%=columnFamilies[i]%>
                     </td>
+                    <td width="30%">
+                        <a href="#" onclick="viewRowExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
+                           style="background-image:url(images/explorer.png);" class="icon-link">Row View</a>
+                    </td>
+                    <td width="30%">
+                        <a href="#" onclick="viewExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
+                           style="background-image:url(images/column_familiy.png);" class="icon-link">Summary View</a>
+                    </td>
+
                 </tr>
                 <%
                     }

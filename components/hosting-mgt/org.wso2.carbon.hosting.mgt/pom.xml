@@ -77,6 +77,9 @@
                             org.wso2.carbon.hosting.mgt.internal.HostingManagementActivator
                         </Bundle-Activator>
                         <Private-Package>org.wso2.carbon.hosting.mgt.*</Private-Package>
+                        <Export-Package>
+                            org.wso2.carbon.hosting.mgt.ui.service;version="${carbon.platform.package.export.version}"
+                        </Export-Package>
                         <Import-Package>
 			    org.wso2.carbon.hosting.wnagent.stub.*; version="${carbon.platform.package.import.version.range}",	
                             org.apache.axis2.*; version="${axis2.osgi.version.range.service-mgt}",

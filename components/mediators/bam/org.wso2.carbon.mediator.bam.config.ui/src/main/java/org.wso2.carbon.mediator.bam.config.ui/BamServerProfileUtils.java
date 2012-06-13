@@ -21,6 +21,8 @@ package org.wso2.carbon.mediator.bam.config.ui;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
+import org.wso2.carbon.mediator.bam.config.BamServerConfigXml;
+
 import java.rmi.RemoteException;
 import java.util.Locale;
 
@@ -38,9 +40,7 @@ public class BamServerProfileUtils {
 
     public void addResource(String ip, String port, String userName, String password,
                             String bamServerProfileLocation){
-        //String path = "/_system/governance/resource1.txt";
-
-        MediatorConfigurationXml mediatorConfigurationXml = new MediatorConfigurationXml();
+        BamServerConfigXml mediatorConfigurationXml = new BamServerConfigXml();
         OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, password);
         String stringStoreXml = storeXml.toString();
 
@@ -53,23 +53,6 @@ public class BamServerProfileUtils {
     }
 
     public String getResource(String bamServerProfileLocation){
-
-        //String path = "/_system/governance/resource1.txt";
-        /*Resource resource;
-        RemoteRegistryService rootRegService;
-        setSystemProperties();
-        rootRegService = initialize();
-        createRegistry(rootRegService);
-        try {
-            resource = registry.get(bamServerProfileLocation);
-            return new String((byte[])resource.getContent());
-
-            //System.out.println("##############################################" + new String((byte[])resource.getContent()));
-        } catch (RegistryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        return null;*/
-
         try {
             return client.getResourceString(bamServerProfileLocation);
         } catch (RemoteException e) {

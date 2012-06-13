@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.mediator.bam.config.ui;
+package org.wso2.carbon.mediator.bam.config;
 
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class MediatorConfigurationXml {
+public class BamServerConfigXml {
 
     private org.apache.axiom.om.OMFactory fac = OMAbstractFactory.getOMFactory();
     private org.apache.axiom.om.OMNamespace synNS = SynapseConstants.SYNAPSE_OMNAMESPACE;

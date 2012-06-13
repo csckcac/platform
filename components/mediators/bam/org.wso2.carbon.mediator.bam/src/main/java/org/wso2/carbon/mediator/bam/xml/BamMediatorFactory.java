@@ -23,17 +23,14 @@ import org.apache.synapse.Mediator;
 import org.apache.synapse.SynapseConstants;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMAttribute;
-import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
 import org.wso2.carbon.mediator.bam.BamMediator;
-import org.wso2.carbon.mediator.bam.BamServerConfig;
+import org.wso2.carbon.mediator.bam.config.BamServerConfig;
+import org.wso2.carbon.mediator.bam.config.BamServerConfigBuilder;
 import org.wso2.carbon.mediator.bam.config.RegistryManager;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
 public class BamMediatorFactory extends AbstractMediatorFactory {
@@ -73,7 +70,7 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
         }*/
 
 
-        BamServerConfig bamServerConfig = new BamServerConfig();
+        BamServerConfigBuilder bamServerConfigBuilder = new BamServerConfigBuilder();
         String resourceString;
 
         String serverProfilePath = this.getServerProfilePath(omElement);
@@ -96,9 +93,9 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
             resourceString = registryManager.getResourceString(realServerProfilePath);
             try {
                 OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes())).getDocumentElement();
-                boolean bamServerConfigCreated = bamServerConfig.createBamServerConfig(resourceElement);
+                boolean bamServerConfigCreated = bamServerConfigBuilder.createBamServerConfig(resourceElement);
                 if(bamServerConfigCreated){
-                    this.updateBamMediator(bamServerConfig, bam);
+                    this.updateBamMediator(bamServerConfigBuilder, bam);
                 }
 
             } catch (XMLStreamException e) {
@@ -174,7 +171,8 @@ public class BamMediatorFactory extends AbstractMediatorFactory {
             return null;
     }
 
-    private void updateBamMediator(BamServerConfig bamServerConfig, BamMediator bamMediator){
+    private void updateBamMediator(BamServerConfigBuilder bamServerConfigBuilder, BamMediator bamMediator){
+        BamServerConfig bamServerConfig=  bamServerConfigBuilder.getBamServerConfig();
         bamMediator.setUserName(bamServerConfig.getUsername());
         bamMediator.setPassword(bamServerConfig.getPassword());
         bamMediator.setServerIP(bamServerConfig.getIp());

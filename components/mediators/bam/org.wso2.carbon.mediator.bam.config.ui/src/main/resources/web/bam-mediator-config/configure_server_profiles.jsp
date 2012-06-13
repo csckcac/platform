@@ -147,6 +147,24 @@
 
             <tr>
                 <td>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Stream Name</td>
+                                <td>Stream Version</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
                     <input type="submit" value="Save"/>
                 </td>
             </tr>

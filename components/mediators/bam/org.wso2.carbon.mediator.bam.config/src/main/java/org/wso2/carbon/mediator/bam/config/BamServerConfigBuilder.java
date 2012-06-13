@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.mediator.bam;
+package org.wso2.carbon.mediator.bam.config;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
@@ -30,11 +30,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class BamServerConfig {
+public class BamServerConfigBuilder {
 
-    private String username, password, ip, port;
-    private List<StreamConfiguration> streamConfigurations = new ArrayList<StreamConfiguration>();
-
+    private BamServerConfig bamServerConfig = new BamServerConfig();
 
     public boolean createBamServerConfig(OMElement bamServerConfig){
         boolean credentialsOk = this.processCredentialElement(bamServerConfig);
@@ -104,8 +102,8 @@ public class BamServerConfig {
             OMAttribute userNameAttr = credentialElement.getAttribute(new QName("userName"));
             OMAttribute passwordAttr = credentialElement.getAttribute(new QName("password"));
             if(userNameAttr != null && passwordAttr != null && !userNameAttr.getAttributeValue().equals("") && !passwordAttr.getAttributeValue().equals("")){
-                this.username = userNameAttr.getAttributeValue();
-                this.password = passwordAttr.getAttributeValue();
+                this.bamServerConfig.setUsername(userNameAttr.getAttributeValue());
+                this.bamServerConfig.setPassword(passwordAttr.getAttributeValue());
             }
             else {
                 return false;
@@ -121,8 +119,8 @@ public class BamServerConfig {
             OMAttribute ipAttr = connectionElement.getAttribute(new QName("ip"));
             OMAttribute portAttr = connectionElement.getAttribute(new QName("port"));
             if(ipAttr != null && portAttr != null && !ipAttr.getAttributeValue().equals("") && !portAttr.getAttributeValue().equals("")){
-                this.ip = ipAttr.getAttributeValue();
-                this.port = portAttr.getAttributeValue();
+                this.bamServerConfig.setIp(ipAttr.getAttributeValue());
+                this.bamServerConfig.setPort(portAttr.getAttributeValue());
             }
             else {
                 return false;
@@ -289,43 +287,12 @@ public class BamServerConfig {
         return null;
     }
 
-    public String getUsername(){
-        return this.username;
+    public void setBamServerConfig(BamServerConfig bamServerConfig){
+        this.bamServerConfig = bamServerConfig;
     }
 
-    public String getPassword(){
-        return this.password;
+    public BamServerConfig getBamServerConfig(){
+        return this.bamServerConfig;
     }
 
-    public String getIp(){
-        return this.ip;
-    }
-
-    public String getPort(){
-        return this.port;
-    }
-    
-    public List<StreamConfiguration> getStreamConfigurations(){
-        return this.streamConfigurations;
-    }
-    
-    public List<StreamConfiguration> getStreamConfigurationsForStreamName(String streamName){
-        List<StreamConfiguration> outputStreamConfigurations = new ArrayList<StreamConfiguration>();
-        for (StreamConfiguration streamConfiguration : streamConfigurations) {
-            if(streamConfiguration.getName().equals(streamName)){
-                outputStreamConfigurations.add(streamConfiguration);
-            }
-        }
-        return outputStreamConfigurations;
-    }
-
-    public StreamConfiguration getAUniqueStreamConfiguration(String streamName, String streamVersion){
-        StreamConfiguration outputStreamConfiguration = new StreamConfiguration();
-        for (StreamConfiguration streamConfiguration : streamConfigurations) {
-            if(streamConfiguration.getName().equals(streamName) && streamConfiguration.getVersion().equals(streamVersion)){
-                outputStreamConfiguration = streamConfiguration;
-            }
-        }
-        return outputStreamConfiguration;
-    }
 }

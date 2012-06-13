@@ -17,8 +17,15 @@
 */
 package org.wso2.carbon.mediator.bam.config.services;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.mediator.bam.config.BamServerConfig;
+import org.wso2.carbon.mediator.bam.config.BamServerConfigBuilder;
 import org.wso2.carbon.mediator.bam.config.RegistryManager;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.ByteArrayInputStream;
 
 /**
  * Admin service class to access Registry
@@ -46,6 +53,36 @@ public class BamServerProfileConfigAdmin extends AbstractAdmin {
     public boolean resourceAlreadyExists(String bamServerProfileLocation){
         //return bamServerProfileUtils.resourceAlreadyExists(bamServerProfileLocation);
         return registryManager.resourceAlreadyExists(bamServerProfileLocation);
+    }
+    
+
+
+
+
+/*    public boolean insertBamServerConfig(BamServerConfigBuilder bamServerConfigBuilder, String bamServerConfigLocation){
+        if(registryManager.resourceAlreadyExists(bamServerConfigLocation)){
+            return false;
+        }
+        else{
+
+        }
+    }*/
+
+    public BamServerConfig getBamServerConfig(String bamServerConfigLocation){
+        String resourceString = registryManager.getResourceString(bamServerConfigLocation);
+        BamServerConfigBuilder bamServerConfigBuilder = new BamServerConfigBuilder();
+        try {
+            OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes())).getDocumentElement();
+            bamServerConfigBuilder.createBamServerConfig(resourceElement);
+            return bamServerConfigBuilder.getBamServerConfig();
+        } catch (XMLStreamException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return null;
+    }
+
+    public boolean bamServerConfigExists(String bamServerConfigLocation){
+        return registryManager.resourceAlreadyExists(bamServerConfigLocation);
     }
 
 }

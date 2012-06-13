@@ -35,6 +35,10 @@
     function inviteUserToApplication(applicationKey, requestersUsername, newUsername, newUserRole) {
         try {
             var result = addUserToApplication(applicationKey, requestersUsername, newUsername, newUserRole);
+            /*
+            var rolesOfUser = newUserRole.split(",");
+            var result = addUserToApplicationWS(applicationKey, requestersUsername, newUsername, rolesOfUser);
+            */
             if( result != null) {
                 return result;
             } else {

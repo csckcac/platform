@@ -57,6 +57,8 @@
 
         <AddUserToApplication>http://localhost:9763/services/AddUserToApplication/process
         </AddUserToApplication>
+
+        <AddUsertoApp>https://localhost:9443/services/ApplicationManagementService/AddUserToApplication</AddUsertoApp>
         <CreateApplication>http://localhost:9763/services/CreateApplication</CreateApplication>
         <CreateUser>http://localhost:9763/services/UserCreationProcess</CreateUser>
         <ActivateUser>http://localhost:9763/services/UserActivationProcess/process</ActivateUser>

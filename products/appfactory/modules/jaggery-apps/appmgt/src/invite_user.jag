@@ -5,14 +5,34 @@
     var applicationKey = request.getParameter("applicationKey");
     // userName variable is taken from template_header.jag
 %>
+
+<script type="text/javascript">
+    function setRoles(field)
+    {
+        var roles='';
+        alert("SSS");
+        for (i=0;i<field.length;i++) {
+            if (field[i].checked==true)	{
+                if(i==field.length-1) {
+                    roles = roles+field[i].value;
+                } else {
+                    roles = roles+field[i].value+",";
+                }
+            }
+        }
+        document.inviteUserForm.newUsersRoles.value = roles;
+        document.inviteUserForm.action = 'invite_user_submit.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>';
+        document.inviteUserForm.submit();
+    }
+</script>
+
 <div id="middle">
     <h2>Invite User to Application <%= applicationName%>
     </h2>
 
     <div id="workArea">
-        <form id='sampleform' method='post'
-              action="invite_user_submit.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>&userName=<%=userName%>">
-            <table class="styledLeft" id="table1">
+        <form id='inviteUserData' name='inviteUserForm' action="" method="post">
+        <table class="styledLeft" id="table1">
                 <thead>
                 <tr>
                     <th colspan="2">Please enter the following information.</th>
@@ -28,13 +48,19 @@
                         <input type='radio' name='role' value='developer' checked='true'/>developer<br />
                         <input type='radio' name='role' value='QA'/>QA<br />
                         <input type='radio' name='role' value='devOp'/>devOp
+
+                        <!--
+                        <input type="checkbox" name="role" value="developer" checked>Developer</br>
+                        <input type="checkbox" name="role" value="qa" checked>QA</br>
+                        <input type="checkbox" name="role" value="devOps" checked>DevOp</br>
+                        <input type="hidden" name="newUsersRoles" value="">  -->
                     </td>
                 </tr>
             </table>
             <table class="styledLeft">
                 <tr>
                     <td class="buttonRow">
-                        <input type='submit' name='Submit' value='Invite' class='button'/>
+                        <input type='submit' name='Submit' onclick="setRoles(document.inviteUserForm.role)" value='Invite' class='button'/>
                         <input type="button" onclick="location.href='application.jag?applicationName=<%=applicationName%>&applicationKey=<%=applicationKey%>'" value='Cancel' class='button'/>
                     </td>
                 </tr>

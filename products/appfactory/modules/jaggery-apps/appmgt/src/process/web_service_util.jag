@@ -91,6 +91,36 @@
         return result;
     }
 
+    function addUserToApplicationWS(applicationKey, requestersUsername, newUsername, newUserRole) {
+        var ws = require('ws');
+        var request = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.timeout = 1000000;
+        options.action = "urn:addUserToApplication";
+        options["HTTPHeaders"] = [ { name : "Cookie", value :getAdminCookie("localhost") }];
+
+        var payload = '<p:addUserToApplication xmlns:p="http://service.mgt.application.appfactory.carbon.wso2.org"><applicationId xmlns="http://service.mgt.application.appfactory.carbon.wso2.org">' + applicationKey + '</applicationId><userName xmlns="http://service.mgt.application.appfactory.carbon.wso2.org">' + newUsername + '</userName>';
+        for(var i=0; i< newUserRole.length ; i++ ) {
+            payload = payload + '<roles xmlns="http://service.mgt.application.appfactory.carbon.wso2.org">' + newUserRole[i] + '</roles>';
+        }
+        payload = payload + '</p:addUserToApplication>';
+
+        try {
+            var endPoint = getProperty(WS_ADD_USER_WS);
+            request.open(options, endPoint, false);
+            request.send(payload);
+            result = request.responseE4X;
+            if(log.isDebugEnabled()){
+                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+            }
+        } catch (e) {
+            log.error("Error while adding user to application \n"+e.message);
+            throw "Error while adding user to application";
+        }
+        return result;
+    }
+
     // get the roles of the logged in user for the given application
     function getRoles(applicationKey, userName) {
         var ws = require('ws');

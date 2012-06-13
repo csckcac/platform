@@ -23,8 +23,11 @@ jagg.block("api/api-info", {
 
             result = jagg.module("subscription").getAPISubscriptions(api, username);
             subscriptions = result.subscriptions;
+            if(applications!=null){
             lenI = applications.length;
+            }if(subscriptions!=null){
             lenJ = subscriptions.length;
+            }
             Label1:
                     for (i = 0; i < lenI; i++) {
                         application = applications[i];

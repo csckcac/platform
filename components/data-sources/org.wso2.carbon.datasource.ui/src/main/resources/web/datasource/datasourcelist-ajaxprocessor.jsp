@@ -15,20 +15,23 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
+<%@page import="java.util.Map.Entry"%>
 <%@ page import="org.apache.synapse.commons.datasource.DataSourceInformation" %>
 <%@ page import="org.wso2.carbon.datasource.ui.DatasourceManagementClient" %>
-<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%
-    List<String> dataSources = null;
+    Map <String,String> dataSources = null;
     DatasourceManagementClient client;
     try {
         client = DatasourceManagementClient.getInstance(config, session);
         dataSources = client.getAllDataSourceInformations();
 %>
-<% for (int i = 0; i < dataSources.size(); i++) { %>
-<% DataSourceInformation info = client.getDataSourceInformation(dataSources.get(i));%>
+<% for (Map.Entry<String,String> entry : dataSources.entrySet()) { %>
+<%if("Active".equalsIgnoreCase(entry.getValue())){ %>
+<% DataSourceInformation info = client.getDataSourceInformation(entry.getKey());%>
 <option value="<%=info.getDatasourceName()%>"><%=info.getDatasourceName()%></option>
+<%} %>
 <% } %>
 <%
 } catch (Throwable e) {

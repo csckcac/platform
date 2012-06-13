@@ -66,6 +66,7 @@
 
 <script type="text/javascript">
 
+/*
     function validateAndSaveConfiguration() {
 
         sessionAwareFunction(function() {
@@ -92,6 +93,7 @@
            });
         }, org_wso2_carbon_governance_services_ui_jsi18n["session.timed.out"]);
     }
+*/
 
     function SaveConfiguration() {
         sessionAwareFunction(function() {
@@ -150,7 +152,7 @@
                 </tr>
                 <tr>
                     <td class="buttonRow">
-                        <input class="button registryWriteOperation" type="button" onclick="validateAndSaveConfiguration()" value="<fmt:message key="save"/>"/>
+                        <input class="button registryWriteOperation" type="button" onclick="SaveConfiguration()" value="<fmt:message key="save"/>"/>
                         <input class="button registryNonWriteOperation" type="button" disabled="disabled" value="<fmt:message key="save"/>"/>
                         <input class="button" type="button" value="<fmt:message key="reset"/>" onclick="javascript: cancelSequence(); return false;"/>
                     </td>

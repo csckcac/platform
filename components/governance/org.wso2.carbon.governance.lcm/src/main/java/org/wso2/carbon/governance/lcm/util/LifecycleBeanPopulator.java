@@ -156,11 +156,14 @@ public class LifecycleBeanPopulator {
     }
 
     public static boolean deserializeLifecycleBean(String configuration,Registry registry) throws Exception {
-       OMElement configurationElement = AXIOMUtil.stringToOM(configuration);
+       OMElement configurationElement = CommonUtil.buildOMElement(configuration);
        return deserializeLifecycleBean(configurationElement,registry);
     }
 
     public static boolean deserializeLifecycleBean(OMElement configurationElement,Registry registry) throws Exception{
+        CommonUtil.validateOMContent(configurationElement,
+                CommonUtil.getAspectSchemaValidator(CommonUtil.getAspectSchemaLocation()));
+
         try {
             OMElement scxmlElement = null;
             OMElement lifecycleElement = null;
@@ -175,9 +178,9 @@ public class LifecycleBeanPopulator {
                     Resource resource = registry.get(resourcePath);
                     if (resource.getContent() != null) {
                         if(resource.getContent() instanceof String){
-                            lifecycleElement = AXIOMUtil.stringToOM((String) resource.getContent());
+                            lifecycleElement = CommonUtil.buildOMElement((String) resource.getContent());
                         }else if(resource.getContent() instanceof byte[]){
-                            lifecycleElement = AXIOMUtil.stringToOM(new String((byte[]) resource.getContent()));
+                            lifecycleElement = CommonUtil.buildOMElement(new String((byte[]) resource.getContent()));
                         }else{
                             String msg = "Could not find valid lifecycle configuration";
                             log.error(msg);
@@ -199,12 +202,9 @@ public class LifecycleBeanPopulator {
                 throw new RegistryException(msg);
             }
             scxmlElement = lifecycleElement.getFirstElement();
-            SCXMLParser.parse(new InputSource(new CharArrayReader((scxmlElement.toString()).toCharArray())), null);
-//            SCXML scxml = SCXMLParser.parse(new InputSource(new CharArrayReader((scxmlElement.toString()).toCharArray())), null);
-//
-//            if(scxml != null){
-//                return checkWhiteSpacesInConfig(scxmlElement);
-//            }
+
+            CommonUtil.validateOMContent(scxmlElement);
+
         } catch (RegistryException e) {
             throw e;
         } catch (Exception e) {

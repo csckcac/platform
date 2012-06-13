@@ -29,6 +29,7 @@ import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.generic.beans.ArtifactBean;
 import org.wso2.carbon.governance.generic.beans.ArtifactsBean;
 import org.wso2.carbon.governance.list.util.GovernanceArtifactFilter;
+import org.wso2.carbon.governance.services.util.Util;
 import org.wso2.carbon.registry.admin.api.governance.IManageGenericArtifactService;
 import org.wso2.carbon.registry.common.CommonConstants;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
@@ -271,6 +272,8 @@ public class ManageGenericArtifactService extends RegistryAbstractAdmin implemen
             return false;
         }
         try {
+            Util.validateOMContent(Util.buildOMElement(update));
+
             String path = GOVERNANCE_ARTIFACT_CONFIGURATION_PATH + key;
             Resource resource = registry.get(path);
             resource.setContent(update);

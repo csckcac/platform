@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.governance.services.util;
 
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -64,6 +65,8 @@ public class Util {
 
     private static RegistryService registryService;
 
+    private static Validator serviceSchemaValidator = null;
+
     public static synchronized void setRegistryService(RegistryService service) {
         if (registryService == null) {
             registryService = service;
@@ -78,55 +81,66 @@ public class Util {
         return new String((byte[])registry.get(RegistryConstants.GOVERNANCE_SERVICES_CONFIG_PATH + "service").getContent());
     }
 
-      public static boolean validateXMLConfigOnSchema(String xml, String schema) throws JaxenException, XMLStreamException, IOException, SAXException {
-        String serviceConfPath = "";
-         boolean isLC = false;
-        if ("service-ui-config".equalsIgnoreCase(schema)) {
-            serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
-                    "conf" + File.separator + "service-ui-config.xsd";
-        } else if ("lifecycle-config".equalsIgnoreCase(schema)) {
-            serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
-                    "conf" + File.separator + "lifecycle-config.xsd";
-            isLC = true;
-        }
-      return validateRXTContent(xml, serviceConfPath,isLC);
-    }
-
-    private static boolean validateRXTContent(String rxtContent, String xsdPath, boolean lc) throws IOException, SAXException, XMLStreamException, FileNotFoundException, JaxenException, UnsupportedEncodingException {
-        InputStream is = new ByteArrayInputStream(rxtContent.getBytes("utf-8"));
-        Source xmlFile = new StreamSource(is);
-        SchemaFactory schemaFactory = SchemaFactory
-                .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = schemaFactory.newSchema(new File(xsdPath));
-        Validator validator = schema.newValidator();
+//    The methods have been duplicated in several places because there is no common bundle to place them.
+//    We have to keep this inside different bundles so that users will not run in to problems if they uninstall some features
+    public static boolean validateOMContent(OMElement omContent, Validator validator) {
         try {
-            validator.validate(xmlFile);
-        } catch (SAXException e) {
-            if(lc) {
-                log.error("Lifecycle validation fails due to: " + e.getMessage());
-            } else {
-                log.error("RXT validation fails due to: " + e.getMessage());
+            InputStream is = new ByteArrayInputStream(omContent.toString().getBytes("utf-8"));
+            Source xmlFile = new StreamSource(is);
+            if (validator != null) {
+                validator.validate(xmlFile);
             }
+        } catch (SAXException e) {
+            log.error("Unable to validate the given xml configuration ",e);
+            return false;
+        } catch (UnsupportedEncodingException e) {
+            log.error("Unsupported content");
             return false;
         } catch (IOException e) {
-            throw new IOException("File not found " + e.getMessage());
+            log.error("Unable to validate the given file");
+            return false;
         }
         return true;
     }
 
+    public static Validator getSchemaValidator(String schemaPath){
 
-    public static OMElement getRXTContentOMElement(String xml) throws XMLStreamException, FileNotFoundException, UnsupportedEncodingException {
+        if (serviceSchemaValidator == null) {
+            try {
+                SchemaFactory schemaFactory = SchemaFactory
+                        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+                Schema schema = schemaFactory.newSchema(new File(schemaPath));
+                serviceSchemaValidator = schema.newValidator();
+            } catch (SAXException e) {
+                log.error("Unable to get a schema validator from the given file path : " + schemaPath);
+            }
+        }
+        return serviceSchemaValidator;
+    }
 
-        XMLStreamReader parser = null;
-        try {
-            parser = XMLInputFactory.newInstance().createXMLStreamReader(new ByteArrayInputStream(xml.getBytes("utf-8")));
-            StAXOMBuilder builder = new StAXOMBuilder(parser);
-            return builder.getDocumentElement();
-        } catch (XMLStreamException e) {
-            throw new XMLStreamException(e.getMessage());
-        } catch (UnsupportedEncodingException e) {
-            throw new UnsupportedEncodingException(e.getMessage());
+    public static String getServicesSchemaLocation(){
+        return CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "service-ui-config.xsd";
+    }
+
+    public static void validateOMContent(OMElement element) throws RegistryException {
+        if(!validateOMContent(element,getSchemaValidator(getServicesSchemaLocation()))){
+            String message = "Unable to validate the xml configuration";
+            log.error(message);
+            throw new RegistryException(message);
         }
     }
-  
+
+    public static OMElement buildOMElement(String payload) throws RegistryException {
+        OMElement element;
+        try {
+            element = AXIOMUtil.stringToOM(payload);
+            element.build();
+        } catch (Exception e) {
+            String message = "Unable to parse the XML configuration. Please validate the XML configuration";
+            log.error(message,e);
+            throw new RegistryException(message,e);
+        }
+        return element;
+    }
 }

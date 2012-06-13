@@ -29,7 +29,7 @@ import org.wso2.carbon.registry.common.eventing.RegistryEvent;
 
 public class AddRolePermissionUtil {
 
-    private static final Log log = LogFactory.getLog(AddUserPermissionUtil.class);
+    private static final Log log = LogFactory.getLog(AddRolePermissionUtil.class);
 
     public static void addRolePermission(
             UserRegistry userRegistry,

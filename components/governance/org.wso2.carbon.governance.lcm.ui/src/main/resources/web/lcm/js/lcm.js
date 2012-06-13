@@ -76,6 +76,7 @@ var lifecyleOperationStarted = false;
         lifecyleOperationStarted = false;
     }
 
+/*
      function saveAndValidateLC(lifecycleName, isNew,override) {
 
           var xmlContent = editAreaLoader.getValue("payload");
@@ -99,6 +100,7 @@ var lifecyleOperationStarted = false;
                 }
             });
      }
+*/
 
     function saveLC(lifecycleName, isNew,override) {
         if (lifecyleOperationStarted) {

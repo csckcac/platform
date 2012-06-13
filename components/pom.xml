@@ -441,6 +441,12 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.governance.services</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.governance.wsdltool.ui</artifactId>
             <version>${carbon.platform.version}</version>
         </dependency>

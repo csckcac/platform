@@ -30,10 +30,18 @@ import org.wso2.carbon.registry.core.config.StaticConfiguration;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ServerConstants;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,6 +55,9 @@ public class CommonUtil {
     public static final String searchLCMPropertiesQuery =
                     RegistryConstants.QUERIES_COLLECTION_PATH +
                     "/governance/searchLCMProperties";
+
+    private static Validator lifecycleSchemaValidator = null;
+    private static Validator aspectSchemaValidator = null;
 
     public static synchronized void setRegistryService(RegistryService service) {
         if (registryService == null) {
@@ -133,7 +144,10 @@ public class CommonUtil {
             throw new RegistryException("Could not update lifecycle name since it is already in use!");
 
         String newName = null;
-        OMElement element = AXIOMUtil.stringToOM(payload);
+        OMElement element = buildOMElement(payload);
+//        We have added an validation here too since someone can directly call this method
+        validateOMContent(element);
+
         if (element != null) {
             newName = element.getAttributeValue(new QName("name"));
         }
@@ -238,12 +252,12 @@ public class CommonUtil {
 
     public static boolean addLifecycle(String payload, Registry registry, Registry rootRegistry) throws RegistryException, XMLStreamException {
         String name;
-        OMElement element = AXIOMUtil.stringToOM(payload);
-        if (element != null) {
-            name = element.getAttributeValue(new QName("name"));
-        }
-        else
-            return false;
+        OMElement element = null;
+        element = buildOMElement(payload);
+
+//        We have added an validation here too since someone can directly call this method
+        validateOMContent(element);
+        name = element.getAttributeValue(new QName("name"));
 
         if (isLifecycleNameInUse(name, registry, rootRegistry))
             throw new RegistryException("The added lifecycle name is already in use!");
@@ -274,6 +288,27 @@ public class CommonUtil {
             throw new RegistryException(errorMsg.replaceAll("<","&lt;").replaceAll(">","&gt;"), e);
         }
         return true;
+    }
+
+    public static void validateOMContent(OMElement element) throws RegistryException {
+        if(!validateOMContent(element, getSCXMLSchemaValidator(getLifecycleSchemaLocation()))){
+            String message = "Unable to validate the lifecycle configuration";
+            log.error(message);
+            throw new RegistryException(message);
+        }
+    }
+
+    public static OMElement buildOMElement(String payload) throws RegistryException {
+        OMElement element;
+        try {
+            element = AXIOMUtil.stringToOM(payload);
+            element.build();
+        } catch (Exception e) {
+            String message = "Unable to parse the XML configuration. Please validate the XML configuration";
+            log.error(message,e);
+            throw new RegistryException(message,e);
+        }
+        return element;
     }
 
     public static boolean lifeCycleExists(String name, Registry registry) throws RegistryException {
@@ -462,7 +497,7 @@ public class CommonUtil {
                 return false;
             }
             else
-                throw new RegistryException("Lifecycle Configuration does not cantain the name attribute");
+                throw new RegistryException("Lifecycle Configuration does not contain the name attribute");
         }
 
         String sql = null;
@@ -510,4 +545,63 @@ public class CommonUtil {
     }
 
 
+//    The methods have been duplicated in several places because there is no common bundle to place them.
+//    We have to keep this inside different bundles so that users will not run in to problems if they uninstall some features
+    public static boolean validateOMContent(OMElement omContent, Validator validator) {
+        try {
+            InputStream is = new ByteArrayInputStream(omContent.toString().getBytes("utf-8"));
+            Source xmlFile = new StreamSource(is);
+            if (validator != null) {
+                validator.validate(xmlFile);
+            }
+        } catch (SAXException e) {
+            log.error("Unable to parse the XML configuration. Please validate the XML configuration",e);
+            return false;
+        } catch (UnsupportedEncodingException e) {
+            log.error("Unsupported content",e);
+            return false;
+        } catch (IOException e) {
+            log.error("Unable to parse the XML configuration. Please validate the XML configuration",e);
+            return false;
+        }
+        return true;
+    }
+
+    public static Validator getSCXMLSchemaValidator(String schemaPath){
+
+        if (lifecycleSchemaValidator == null) {
+            try {
+                SchemaFactory schemaFactory = SchemaFactory
+                        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+                Schema schema = schemaFactory.newSchema(new File(schemaPath));
+                lifecycleSchemaValidator = schema.newValidator();
+            } catch (SAXException e) {
+                log.error("Unable to get a schema validator from the given file path : " + schemaPath);
+            }
+        }
+        return lifecycleSchemaValidator;
+    }
+    public static Validator getAspectSchemaValidator(String schemaPath){
+
+        if (aspectSchemaValidator == null) {
+            try {
+                SchemaFactory schemaFactory = SchemaFactory
+                        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+                Schema schema = schemaFactory.newSchema(new File(schemaPath));
+                aspectSchemaValidator = schema.newValidator();
+            } catch (SAXException e) {
+                log.error("Unable to get a schema validator from the given file path : " + schemaPath);
+            }
+        }
+        return aspectSchemaValidator;
+    }
+
+    public static String getLifecycleSchemaLocation(){
+        return CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "lifecycle-config.xsd";
+    }
+    public static String getAspectSchemaLocation(){
+        return CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "local.xsd";
+    }
 }

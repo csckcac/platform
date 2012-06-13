@@ -229,11 +229,14 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
             return false;
         }
         try{
+            Util.validateOMContent(Util.buildOMElement(update));
+
             Resource resource = registry.get(RegistryConstants.GOVERNANCE_SERVICES_CONFIG_PATH + "service");
             resource.setContent(update);
             registry.put(RegistryConstants.GOVERNANCE_SERVICES_CONFIG_PATH + "service",resource);
             return true;
         }catch(Exception RegistryException){
+//            throw new RegistryException("Unable to save the xml configuration");
             return false;
         }
     }
@@ -311,10 +314,6 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
             systemRegistry.rollbackTransaction();
         }
         return lifecycleAspectsToAdd.toArray(new String[lifecycleAspectsToAdd.size()]);
-    }
-
-    public boolean validateXMLConfigOnSchema(String xml,String schema) throws Exception {
-        return Util.validateXMLConfigOnSchema(xml,schema);
     }
 
     private void removeAspect(Registry registry,String path,String aspect)throws Exception{

@@ -28,6 +28,7 @@ public class WebappMetadata {
     private WebappStatistics statistics;
     private boolean isFaulty;
     private String faultException;
+    private String state;
 
     public String getContext() {
         return context;
@@ -99,5 +100,13 @@ public class WebappMetadata {
 
     public void setFaultException(String faultException) {
         this.faultException = faultException;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getState() {
+        return state;
     }
 }

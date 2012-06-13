@@ -202,6 +202,7 @@ public class TomcatGenericWebappsDeployer {
             context.setReloadable(false);
             WebApplication webapp = new WebApplication(context, webappFile);
             webapp.setServletContextParameters(webContextParams);
+            webapp.setState("Started");
             webappsHolder.getStartedWebapps().put(filename, webapp);
             webappsHolder.getFaultyWebapps().remove(filename);
             registerApplicationEventListeners(applicationEventListeners, context);

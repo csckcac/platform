@@ -45,6 +45,7 @@ public class WebApplication {
     protected File webappFile;
     private long lastModifiedTime;
     private Exception faultReason;
+    private String state;
     private Map<String, Object> properties = new HashMap<String, Object>();
 
     // We need this variable to use in the Statistics inner class which is static
@@ -99,6 +100,14 @@ public class WebApplication {
 
     public long getLastModifiedTime() {
         return lastModifiedTime;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getState() {
+        return state;
     }
 
     public Exception getFaultReason() {
@@ -158,6 +167,7 @@ public class WebApplication {
         try {
             if (contextOfWepap.getAvailable()) {
                 contextOfWepap.stop();
+                this.setState("Stopped");
                 log.info("Stopped webapp: " + contextOfWepap);
                 return true;
             }
@@ -184,6 +194,7 @@ public class WebApplication {
         try {
             if (!contextOfWepap.getAvailable()) {
                 contextOfWepap.start();
+                this.setState("Started");
                 log.info("Started webapp: " + contextOfWepap);
                 return true;
             }

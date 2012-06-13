@@ -125,6 +125,7 @@ public class WebappAdmin extends AbstractAdmin {
         webappMetadata.setContext(webApplication.getContextName());
         webappMetadata.setLastModifiedTime(webApplication.getLastModifiedTime());
         webappMetadata.setWebappFile(webApplication.getWebappFile().getName());
+        webappMetadata.setState(webApplication.getState());
 
         WebApplication.Statistics statistics = webApplication.getStatistics();
         WebappStatistics stats = new WebappStatistics();
@@ -220,6 +221,7 @@ public class WebappAdmin extends AbstractAdmin {
             webappMetadata.setContext(webapp.getContextName());
             webappMetadata.setLastModifiedTime(webapp.getLastModifiedTime());
             webappMetadata.setWebappFile(webapp.getWebappFile().getName());
+            webappMetadata.setState(webapp.getState());
             WebappStatistics statistics = new WebappStatistics();
             statistics.setActiveSessions(webapp.getStatistics().getActiveSessions());
             webappMetadata.setStatistics(statistics);

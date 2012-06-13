@@ -1,0 +1,17 @@
+<%
+        include('process/web_service_util.jag');
+        include('config_reader.jag');
+
+        var applicationName = request.getParameter("applicationName");
+        var applicationSvnLocation = request.getParameter("applicationSvnLocation");
+        var stageName = request.getParameter("stageName");
+
+        try{
+            var deployedArtifact = invokeDeployToStage(applicationSvnLocation,applicationName,stageName);
+            print(deployedArtifact +" was successfully deployed");
+	    }catch(e){
+	        print(e.message);
+	    }
+
+
+%>

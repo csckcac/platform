@@ -6,7 +6,9 @@ var addNewDoc = function (provider) {
     var docType = getRadioValue($('input[name=optionsRadios]:radio:checked'));
     var sourceType = getRadioValue($('input[name=optionsRadios1]:radio:checked'));
     var docUrl = $("#docUrl").val();
-
+    if(docUrl.indexOf("http")==-1){
+    docUrl="https://"+docUrl;
+    }
     jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"addDocumentation",
         provider:provider,apiName:apiName, version:version,docName:docName,docType:docType,summary:summary,sourceType:sourceType,
         docUrl:docUrl},

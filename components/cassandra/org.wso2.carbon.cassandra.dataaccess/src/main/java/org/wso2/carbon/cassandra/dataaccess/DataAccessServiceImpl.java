@@ -244,7 +244,7 @@ public class DataAccessServiceImpl implements DataAccessService {
                 dataAccessComponentManager.getClusterConfiguration();
 
         String carbonCassandraRPCPort;
-        carbonCassandraRPCPort = System.getProperty("cassandra.rpcport");
+        carbonCassandraRPCPort = System.getProperty("cassandra.rpc_port");
         String cassandraHosts;
         int cassandraDefaultPort = 0;
 

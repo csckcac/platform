@@ -122,11 +122,12 @@
 
                 <div class="control-group">
                         <label class="control-label" for="resourceTableDiv">API Resources: </label>
+                        <div class="controls">
                         <div class="resourceTableDiv" id="resourceTableDiv" style="">
                             <table class="table table-bordered table-striped" id="resourceTable">
                                 <thead>
                                 <tr>
-                                    <th>Context</th>
+                                    <th>URL Prefix</th>
                                     <th>URL Patterns</th>
                                     <th>Allowed HTTP Verbs</th>
                                     <th></th>
@@ -134,7 +135,7 @@
                                 </thead>
                                 <tbody>
                                 <tr id="resourceRow">
-                                    <td><span id="contextForUrl" style="display:none;"></span></td>
+                                    <td><span id="contextForUrl">/{context}/{version}</span></td>
                                     <td>
                                         <input type="text" class="input" id="uriTemplate" name="resourceTemplate"/>
                                     </td>
@@ -161,7 +162,7 @@
                                 </tr>
 
                                 <tr id="item-0">
-                                      <td ><span id="contextForUrlDefault" style="display:none;"></span></td>
+                                      <td ><span id="contextForUrlDefault">/{context}/{version}</span></td>
                                     <td>
                                         <input type="text" class="input" id="uriTemplate" name="resourceTemplate" value="/*" disabled="disabled" />
                                     </td>
@@ -196,7 +197,7 @@
                     <br/>
 
                     <div id="stateActions" class="controls"></div>
-
+                    </div>
                 <div class="form-actions" style="display:none" id="saveMessage">
                     <div class="btn loadingButton">Saving API. Please wait..</div>
                 </div>

@@ -38,6 +38,7 @@
     
    <variables>
      <variable name="myVar" messageType="test:HelloMessage"/>
+ 	 <variable name="myResponseVar" messageType="test:HelloMessage"/>
      <variable name="tmpVar" type="xsd:string"/>
      <variable name="tmpDate" type="xsd:dateTime"/>
    </variables>
@@ -58,13 +59,13 @@
          </copy>
          <copy>
              <from>concat($tmpVar,' World')</from>
-             <to variable="myVar" part="TestPart"/>
+             <to variable="myResponseVar" part="TestPart"/>
          </copy>
       </assign>
        <reply name="end"  
               partnerLink="helloPartnerLink"
               portType="test:HelloPortType" 
               operation="hello"
-              variable="myVar"/>
+              variable="myResponseVar"/>
    </sequence>
 </process>

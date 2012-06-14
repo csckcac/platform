@@ -25,7 +25,7 @@ import org.wso2.carbon.identity.authentication.AuthenticationService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
- * @scr.component name="agentserverservice.component" immediate="true"
+ * @scr.component name="eventbridge.core" immediate="true"
  * @scr.reference name="org.wso2.carbon.identity.authentication.internal.AuthenticationServiceComponent"
  * interface="org.wso2.carbon.identity.authentication.AuthenticationService"
  * cardinality="1..1" policy="dynamic" bind="setAuthenticationService"  unbind="unsetAuthenticationService"

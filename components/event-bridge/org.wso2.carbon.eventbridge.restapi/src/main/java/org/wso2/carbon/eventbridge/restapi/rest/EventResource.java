@@ -4,10 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.eventbridge.core.beans.Event;
 import org.wso2.carbon.eventbridge.core.beans.EventStreamDefinition;
-import org.wso2.carbon.eventbridge.core.exceptions.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.eventbridge.core.exceptions.EventProcessingException;
-import org.wso2.carbon.eventbridge.core.exceptions.MalformedStreamDefinitionException;
-import org.wso2.carbon.eventbridge.core.exceptions.StreamDefinitionException;
+import org.wso2.carbon.eventbridge.core.exceptions.*;
 import org.wso2.carbon.eventbridge.core.utils.EventConverterUtils;
 import org.wso2.carbon.eventbridge.core.utils.StreamDefnConverterUtils;
 import org.wso2.carbon.eventbridge.restapi.internal.Utils;
@@ -67,10 +64,15 @@ public class EventResource {
             @PathParam("version") String version, String request, @HeaderParam("authorize") String authHeader) {
 
         try {
-            List<Event> eventList = EventConverterUtils.convertFromJson(request, eventStream, version);
+            String streamId = Utils.getEngine().getStreamId(RESTUtils.extractAuthHeaders(authHeader), eventStream, version);
+            List<Event> eventList = EventConverterUtils.convertFromJson(request, streamId);
             Utils.getEngine().receive(RESTUtils.extractAuthHeaders(authHeader), eventList);
             return Response.status(Response.Status.ACCEPTED).build();
         } catch (EventProcessingException e) {
+            throw new WebApplicationException(e);
+        } catch (StreamDefinitionException e) {
+            throw new WebApplicationException(e);
+        } catch (StreamDefinitionNotFoundException e) {
             throw new WebApplicationException(e);
         }
 
@@ -99,7 +101,7 @@ public class EventResource {
     @Path("/")
     @Produces(MediaType.TEXT_PLAIN)
     public String getSampleText() {
-        return "My Sample Text";
+        return "BAM REST API is now live! \n";
     }
 
 

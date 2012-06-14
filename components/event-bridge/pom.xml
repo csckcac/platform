@@ -34,7 +34,7 @@
     <modules>
         <module>org.wso2.carbon.eventbridge.core</module>
         <module>org.wso2.carbon.eventbridge.restapi</module>
-
+        <module>org.wso2.carbon.eventbridge.streamdefn.cassandra</module>
     </modules>
 
     <dependencyManagement>

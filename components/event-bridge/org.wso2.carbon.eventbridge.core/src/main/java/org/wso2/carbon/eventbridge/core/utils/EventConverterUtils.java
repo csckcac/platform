@@ -152,9 +152,42 @@ public class EventConverterUtils {
         return eventList;
     }
 
-    public static List<Event> convertFromJson(String json, String streamName, String version) {
-        if ((streamName == null || streamName.equals("")) || ((version == null) || (version.equals("")))) {
-            String errorMsg = "Stream name or version cannot be null or empty";
+//    public static List<Event> convertFromJson(String json, String streamName, String version) {
+//        if ((streamName == null || streamName.equals("")) || ((version == null) || (version.equals("")))) {
+//            String errorMsg = "Stream name or version cannot be null or empty";
+//            MalformedEventException malformedEventException = new MalformedEventException();
+//            if (log.isDebugEnabled()) {
+//                log.error(errorMsg, malformedEventException);
+//            } else {
+//                log.error(errorMsg);
+//            }
+//            throw malformedEventException;
+//        }
+//        List<Event> eventList = new ArrayList<Event>();
+//        try {
+//            JSONArray eventObjects = new JSONArray(json);
+//            for (int i = 0; i < eventObjects.length(); i++) {
+//                Event event = gson.fromJson(eventObjects.get(i).toString(), Event.class);
+//                event.setStreamId(EventBridgeUtils.constructStreamKey(streamName, version));
+//                eventList.add(event);
+//            }
+//        } catch (JSONException e) {
+//            String errorMsg = "Error converting JSON to event, for JSON : " + json;
+//            MalformedEventException malformedEventException = new MalformedEventException(errorMsg, e);
+//            if (log.isDebugEnabled()) {
+//                log.error(errorMsg, malformedEventException);
+//            } else {
+//                log.error(errorMsg);
+//            }
+//            throw malformedEventException;
+//        }
+//        return eventList;
+//
+//    }
+
+    public static List<Event> convertFromJson(String json, String streamId) {
+        if ((streamId == null || streamId.equals(""))) {
+            String errorMsg = "Stream name cannot be null or empty";
             MalformedEventException malformedEventException = new MalformedEventException();
             if (log.isDebugEnabled()) {
                 log.error(errorMsg, malformedEventException);
@@ -168,7 +201,7 @@ public class EventConverterUtils {
             JSONArray eventObjects = new JSONArray(json);
             for (int i = 0; i < eventObjects.length(); i++) {
                 Event event = gson.fromJson(eventObjects.get(i).toString(), Event.class);
-                event.setStreamId(EventBridgeUtils.constructStreamKey(streamName, version));
+                event.setStreamId(streamId);
                 eventList.add(event);
             }
         } catch (JSONException e) {

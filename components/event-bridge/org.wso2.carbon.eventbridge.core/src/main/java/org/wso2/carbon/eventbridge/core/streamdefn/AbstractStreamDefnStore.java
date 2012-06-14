@@ -69,7 +69,9 @@ public abstract class AbstractStreamDefnStore implements StreamDefinitionStore {
         try {
             existingDefinition = getStreamDefinition(credentials, eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
         } catch (StreamDefinitionNotFoundException e) {
-            saveStreamIdToStore(credentials, EventBridgeUtils.constructStreamKey(eventStreamDefinition.getName(), eventStreamDefinition.getVersion()), eventStreamDefinition.getStreamId());
+            saveStreamIdToStore(credentials,
+                    EventBridgeUtils.constructStreamKey(eventStreamDefinition.getName(), eventStreamDefinition.getVersion()),
+                    eventStreamDefinition.getStreamId());
             saveStreamDefinitionToStore(credentials, eventStreamDefinition.getStreamId(), eventStreamDefinition);
             return;
         } catch (StreamDefinitionException e) {
@@ -81,7 +83,15 @@ public abstract class AbstractStreamDefnStore implements StreamDefinitionStore {
     }
 
 
-
+    /**
+     * Store the unique stream Id key and the machine readable stream Id
+     * @param credentials username and password
+     * @param streamIdKey key consisting stream name and version
+     * @param streamId machine generated unique id to be used as stream id.
+     * This is done so that this id can be used regardless of the changes take place
+     * and will be unique forever for this stream name and version.
+     * @throws StreamDefinitionException exception to be thrown for an error by the implementer
+     */
     protected abstract void saveStreamIdToStore(Credentials credentials, String streamIdKey,
                                                 String streamId) throws StreamDefinitionException;
 

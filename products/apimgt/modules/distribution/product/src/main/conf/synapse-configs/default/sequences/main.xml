@@ -22,37 +22,38 @@
     <description>The default main sequence for API manager - Returns 404 Not Found</description>
     <in>
         <log level="custom">
-	    <property name="STATUS" value="Message dispatched to the main sequence. Invalid URL."/>
-	    <property name="RESOURCE" expression="fn:concat('/', $axis2:REST_URL_POSTFIX)"/>
- 	</log>
-	<property name="HTTP_SC" value="404" scope="axis2"/>
-	<property name="RESPONSE" value="true"/>
-	<header name="To" action="remove"/>
-	<payloadFactory>
-	    <format>
-		<am:fault xmlns:am="http://wso2.org/apimanager">
-		   <am:code>404</am:code>
-		   <am:type>Status report</am:type>
-		   <am:message>Not Found</am:message>	
-		   <am:description>The requested resource (/$1) is not available.</am:description>
-		</am:fault>
-	    </format>
-	    <args>
-		<arg expression="$axis2:REST_URL_POSTFIX"/>
-	    </args>
-	</payloadFactory>
-	<property name="NO_ENTITY_BODY" scope="axis2" action="remove"/>
-	<property name="messageType" value="application/xml" scope="axis2"/>
-	<property name="ContentType" scope="axis2" action="remove"/>
-	<property name="Authorization" scope="transport" action="remove"/>
-	<property name="Host" scope="transport" action="remove"/>
+            <property name="STATUS" value="Message dispatched to the main sequence. Invalid URL."/>
+            <property name="RESOURCE" expression="fn:concat('/', $axis2:REST_URL_POSTFIX)"/>
+        </log>
+        <property name="HTTP_SC" value="404" scope="axis2"/>
+        <property name="RESPONSE" value="true"/>
+        <header name="To" action="remove"/>
+        <payloadFactory>
+            <format>
+                <am:fault xmlns:am="http://wso2.org/apimanager">
+                    <am:code>404</am:code>
+                    <am:type>Status report</am:type>
+                    <am:message>Not Found</am:message>
+                    <am:description>The requested resource (/$1) is not available.</am:description>
+                </am:fault>
+            </format>
+            <args>
+                <arg expression="$axis2:REST_URL_POSTFIX"/>
+            </args>
+        </payloadFactory>
+        <property name="NO_ENTITY_BODY" scope="axis2" action="remove"/>
+        <property name="messageType" value="application/xml" scope="axis2"/>
+        <property name="ContentType" scope="axis2" action="remove"/>
+        <property name="Authorization" scope="transport" action="remove"/>
+        <property name="Host" scope="transport" action="remove"/>
         <property name="Accept" scope="transport" action="remove"/>
-	<send/>
+        <send/>
+        <drop/>
     </in>
     <out>
-	<log level="full">
-	    <property name="STATUS" value="Unexpected response message in out flow"/>
-	</log>
-	<drop/>
+        <log level="full">
+            <property name="STATUS" value="Unexpected response message in out flow"/>
+        </log>
+        <drop/>
     </out>
 </sequence>

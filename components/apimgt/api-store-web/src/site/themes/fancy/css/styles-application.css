@@ -93,7 +93,7 @@ div.star-ratings img{
     -moz-border-radius: 3px 3px 0px 0px;
 
     /*The shadow */
-    margin-top:10px;
+    margin-top:20px;
  }
  .data-title div.row-fluid [class*="span"]{
     min-height:18px;
@@ -170,8 +170,11 @@ width: 32.9%;
 .super-rows{
     padding:0 8px;
 }
+.keyItems [class*="span"]{
+    height:43px;
+}
 .api-section{
-    padding:8px;
+    padding:0 8px;
 }
  .service-name{
      font-weight:bold;

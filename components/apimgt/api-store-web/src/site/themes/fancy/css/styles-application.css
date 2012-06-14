@@ -116,6 +116,23 @@ div.star-ratings img{
 .data-content div.item-info{
     line-height:25px;
 }
+.subsApiListing .row-fluid .span4{
+width: 32.9%;
+}
+.data-content div.thumbnail div.container-fluid{
+    padding:0;
+}
+.subsApiListing{
+    padding:0 0 0 10px;
+}
+.subsApiListing div.container-fluid{
+    padding:0;
+    margin:0;
+}
+.thumbnailInsideLink{
+    display:block;
+    padding-right:10px;
+}
 .deprecated{
     background:#eee;
 }

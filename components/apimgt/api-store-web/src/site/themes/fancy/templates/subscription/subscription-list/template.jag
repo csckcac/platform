@@ -16,12 +16,13 @@
             </div>
             <div class="span6">
                 <div class="row-fluid">
-                    <div class="span6">
+                    <div class="span6"></div>
+                    <div class="span3">
                         <a onclick="collapseKeys('<%=str_i%>','super')">
                             <i class="icon-zoom-in"></i> Keys
                         </a>
                     </div>
-                    <div class="span6">
+                    <div class="span3">
                          <a onclick="collapseKeys('<%=str_i%>','')">
                             <i class="icon-zoom-in"></i> APIs</a>
                     </div>
@@ -43,10 +44,10 @@
         <div class="container-fluid">
         <% if(app.prodKey==null && app.sandboxKey==null) { %>
                         <div class="super-rows row-fluid">
-                            <div class="span3">
+                            <div class="span2">
                                 Production Key:
                             </div>
-                            <div class="span3">
+                            <div class="span4">
                             <a class="app-key-generate-button small green" id="app-key-generate-button"
                                data-application="<%=app.name%>"
                                data-keytype="PRODUCTION">
@@ -54,10 +55,10 @@
                             </div>
 
 
-                            <div class="span3">
+                            <div class="span2">
                                 Sandbox Key:
                             </div>
-                            <div class="span3">
+                            <div class="span4">
                                 <a class="app-key-generate-button small green" id="app-key-generate-button"
                                    data-application="<%=app.name%>"
                                    data-keytype="SANDBOX">
@@ -67,10 +68,10 @@
                <% }else if(app.prodKey!=null && app.sandboxKey==null) { %>
 
                         <div class="super-rows row-fluid">
-                            <div class="span3">
+                            <div class="span2">
                                 Production Key:
                             </div>
-                            <div class="span9">
+                            <div class="span4">
                                 <span class="icon black small" data-icon="a"></span>
                                 <a onclick="toggleKey(this)"> Show</a>
 
@@ -78,13 +79,11 @@
                                     <%=app.prodKey%>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="super-rows row-fluid">
-                            <div class="span3">
+                            <div class="span2">
                                 Sandbox Key:
                             </div>
-                            <div class="span9">
+                            <div class="span4">
                                 <a class="app-key-generate-button small green" id="app-key-generate-button"
                                data-application="<%=app.name%>"
                                data-keytype="SANDBOX">
@@ -94,17 +93,16 @@
 
              <% }else if(app.prodKey==null&&app.sandboxKey!=null) { %>
                         <div class="super-rows row-fluid">
-                            <div class="span3">Production Key:</div>
-                            <div class="span9">
+                            <div class="span2">Production Key:</div>
+                            <div class="span4">
                                 <a class="app-key-generate-button small green" id="app-key-generate-button"
                                    data-application="<%=app.name%>"
                                    data-keytype="PRODUCTION">
                                     Generate</a>
                             </div>
-                        </div>
-                        <div class="super-rows row-fluid">
-                            <div class="span3">Sandbox Key:</div>
-                            <div class="span9">
+
+                            <div class="span2">Sandbox Key:</div>
+                            <div class="span4">
                                 <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
                                 <div class="keyField" style="display:none;font-weight:bold">
                                 <%=app.sandboxKey%>
@@ -113,17 +111,17 @@
                         </div>
                 <%}else{%>
                         <div class="super-rows row-fluid">
-                            <div class="span3">Production Key:</div>
-                            <div class="span9">
+                            <div class="span2">Production Key:</div>
+                            <div class="span4">
                                 <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
                                 <div class="keyField" style="display:none;font-weight:bold">
                                     <%=app.prodKey%>
                                 </div>
                             </div>
-                        </div>
-                        <div class="super-rows row-fluid">
-                            <div class="span3">Sandbox Key:</div>
-                            <div class="span9">
+
+
+                            <div class="span2">Sandbox Key:</div>
+                            <div class="span4">
                                 <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
 
                                 <div class="keyField" style="display:none;font-weight:bold">
@@ -141,7 +139,7 @@
                             <div class="span12"><h3>APIs</h3></div>
                         </div>
                     </div>
-                    <div class="container-fluid">
+                    <div class="container-fluid subsApiListing">
                         <div class="row-fluid">
 
                     <%
@@ -157,19 +155,23 @@
                             apiName = api.name.substring(0,10)+ "..";
                         }
                     %>
-                        <div class="span6 keyListPadding">
+                        <div class="span4 keyListPadding">
                             <div class="thumbnail <% if(api.status == "DEPRECATED") { %>deprecated<% } %>">
                                 <div class="deprecatedLabel">
                                     <% if(api.status == "DEPRECATED") { %>
                                     <span class="label label-warning">Deprecated</span>
+                                    <% } else if(api.status == "RETIRED") { %>
+                                    <span class="label label-important">Retired</span>
+                                    <% }else if(api.status == "BLOCKED") { %>
+                                    <span class="label label-important">Blocked</span>
                                     <% } %>
                                 </div>
                                 <div class="container-fluid">
                                     <div class="row-fluid">
-                                        <div class="span6">
-                                            <a href="<%=path%>"><img alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/<%=jagg.getUserTheme()%>/images/api-default.png<% }%>"/></a>
+                                        <div class="span4">
+                                            <a href="<%=path%>" class="thumbnailInsideLink"><img width="70" alt="" src="<% if(api.thumburl) { %><%=api.thumburl%><% } else { %>/apistore/site/themes/<%=jagg.getUserTheme()%>/images/api-default.png<% }%>"/></a>
                                         </div>
-                                        <div class="span6">
+                                        <div class="span8">
                                             <a href="<%=path%>" class="service-name" title="<%=api.name%>-<%=api.version%>"><%=apiName%> - <%=api.version%></a>
                                             <div class="item-info"><%=api.provider%></div>
                                         </div>

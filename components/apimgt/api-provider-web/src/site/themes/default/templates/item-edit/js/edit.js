@@ -134,6 +134,17 @@ var deleteResource = function (id,rowNums) {
 
 };
 
+function setContextValue(version) {
+    var context = $('#context').val();
+    if (context != "") {
+        if (context.charAt(0) != "/") {
+            context = "/" + context;
+        }
+        $('#contextForUrl').html(context + "/" + version);
+        $('#contextForUrlDefault').html(context + "/" + version);
+    }
+}
+
 
 
 

@@ -51,7 +51,7 @@
             <div class="control-group">
                 <label class="control-label" for="context">Context:<span class="requiredAstrix">*</span></label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge required" id="context" name="context" value="<%=api.context%>"/>
+                    <input type="text" class="input-xlarge required" id="context" name="context" value="<%=api.context%>" onChange="setContextValue('<%=api.version%>')"/>
                 </div>
             </div>
 
@@ -139,20 +139,23 @@
             </div>
 
             <div class="control-group">
+                 <label class="control-label" for="resourceTableDiv">API Resources: </label>
                 <div class="controls">
 
                     <div class="resourceTableDiv" id="resourceTableDiv">
                         <table class="table table-bordered table-striped" id="resource-table">
                             <thead>
                             <tr>
-                                <th>Resource URI Template</th>
-                                <th>Resource Method</th>
-                                <th></th>
+                                 <th>URL Prefix</th>
+                                 <th>URL Patterns</th>
+                                 <th>Allowed HTTP Verbs</th>
+                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
 
                              <tr id="resourceRow">
+                                <td><span id="contextForUrl"><%=api.context%>/<%=api.version%></span></td>
                                 <td>
                                     <input type="text" class="input" id="uriTemplate" name="resourceTemplate"/>
 
@@ -178,6 +181,7 @@
                             for (i = 0; i < api.templates.length; i++) {
                             %>
                             <tr id="item-<%=String(i)%>">
+                                <td ><span id="contextForUrlDefault"><%=api.context%>/<%=api.version%></span></td>
                                 <td>
                                     <input type="text" class="input" id="uriTemplate" disabled="disabled" name="resourceTemplate" value="<%=api.templates[i][0]%>"/>
                                 </td>

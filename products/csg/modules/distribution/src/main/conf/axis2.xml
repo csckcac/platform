@@ -637,6 +637,8 @@
             <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
     </transportSender>
 
+    <transportSender name="csg" class="org.wso2.carbon.cloud.csg.transport.CSGTransportSender"/>
+
      <!-- uncomment this and configure to use connection pools for sending messages>
      <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender"/-->        
 

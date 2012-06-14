@@ -16,9 +16,6 @@
 
 package org.wso2.carbon.humantask.core.dao;
 
-import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.OrganizationalEntity;
-import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task;
-
 import java.util.Date;
 
 /**
@@ -72,12 +69,12 @@ public interface AttachmentDAO {
     /**
      * @return organizational entity who uploaded the attachment
      */
-    OrganizationalEntity getAttachedBy();
+    OrganizationalEntityDAO getAttachedBy();
 
     /**
      * @param attachedBy organizational entity who uploaded the attachment
      */
-    void setAttachedBy(OrganizationalEntity attachedBy);
+    void setAttachedBy(OrganizationalEntityDAO attachedBy);
 
     /**
      * @return value representation of the attachment
@@ -92,10 +89,10 @@ public interface AttachmentDAO {
     /**
      * @return the associated task for the attachment
      */
-    Task getTask();
+    TaskDAO getTask();
 
     /**
      * @param task Associated task for the attachment
      */
-    void setTask(Task task);
+    void setTask(TaskDAO task);
 }

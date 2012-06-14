@@ -19,6 +19,8 @@ package org.wso2.carbon.humantask.core.dao.jpa.openjpa.model;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.AttachmentDAO;
+import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -70,77 +72,91 @@ public class Attachment implements AttachmentDAO {
 
     @Column(name = "ATTACHED_BY")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private OrganizationalEntity attachedBy;  //TODO: We can do proper refactoring to this code by generalizing
-    //TODO:  OrganizationalEntity to OrganizationalEntityDAO. Then need to add more annotations as well.
+    private OrganizationalEntity attachedBy;
 
     @Column(name="VALUE")
     private String value;
 
     @ManyToOne
-    private Task task;     //TODO: We can do proper refactoring to this code by generalizing Task to TaskDAO. Then
-    //TODO: need to add more annotations as well.
+    private Task task;
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public String getContentType() {
         return contentType;
     }
 
+    @Override
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
+    @Override
     public String getAccessType() {
         return accessType;
     }
 
+    @Override
     public void setAccessType(String accessType) {
         this.accessType = accessType;
     }
 
+    @Override
     public Date getAttachedAt() {
         return new Date(attachedAt.getTime());
     }
 
+    @Override
     public void setAttachedAt(Date attachedAt) {
         this.attachedAt = new Date(attachedAt.getTime());
     }
 
-    public OrganizationalEntity getAttachedBy() {
+    @Override
+    public OrganizationalEntityDAO getAttachedBy() {
         return attachedBy;
     }
 
-    public void setAttachedBy(OrganizationalEntity attachedBy) {
-        this.attachedBy = attachedBy;
+    @Override
+    public void setAttachedBy(OrganizationalEntityDAO attachedBy) {
+        this.attachedBy = (OrganizationalEntity)attachedBy;
     }
 
+    @Override
     public String getValue() {
         return value;
     }
 
+    @Override
     public void setValue(String value) {
         this.value = value;
     }
 
+    @Override
     public Task getTask() {
         return task;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    @Override
+    public void setTask(TaskDAO task) {
+        this.task = (Task) task;
     }
 }

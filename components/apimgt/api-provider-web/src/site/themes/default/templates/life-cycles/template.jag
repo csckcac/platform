@@ -82,7 +82,7 @@ $('#requireResubscriptionDiv').hide();
         <span class="label label-info">No Life-cycles history data can be found for this API.</span>
  <%}%>
 
-        <table>
+        <table class="lifeCycleTable">
   <thead>
          </thead>
        <tbody>

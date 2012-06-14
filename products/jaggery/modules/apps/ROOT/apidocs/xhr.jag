@@ -65,7 +65,7 @@ include('/includes/topnavi.jag');
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "http://www.google.lk");
     xhr.send();
-    print(xhr.getResponseText());
+    print(xhr.responseText);
 %&gt
 </pre>
                 <%
@@ -74,7 +74,7 @@ include('/includes/topnavi.jag');
                 + '\n var xhr = new XMLHttpRequest();'
                 + '\n xhr.open("GET", "http://www.google.lk");'
                 + '\n xhr.send();'
-                + '\n print(xhr.getResponseText());'
+                + '\n print(xhr.responseText);'
                 + '\n %&gt';
 
                 var codeSnip = encodeURIComponent(xhrCode);
@@ -156,17 +156,12 @@ include('/includes/topnavi.jag');
                         </td>
                     </tr>
                             <tr>
-                                <td><code>readyState()</code></td>
-                                <td>String</td>
-                                <td>Retrieves the current state of the request operation.</td>
-                            </tr>
-                            <tr>
-                                <td><code>getStatusCode()</code></td>
+                                <td><code>status</code></td>
                                 <td>String</td>
                                 <td>Retrieves the HTTP status code of the request.</td>
                             </tr>
                             <tr>
-                                <td><code>readyState()</code></td>
+                                <td><code>readyState</code></td>
                                 <td>String</td>
                                 <td>Retrieves the friendly HTTP status of the request.
                                 Holds the status of the XMLHttprequest. Changes from 0 to 4
@@ -191,17 +186,17 @@ include('/includes/topnavi.jag');
                                     </td>
                                     </tr>
                             <tr>
-                                <td><code>getStatusText()</code></td>
+                                <td><code>statusText</code></td>
                                 <td>String</td>
                                 <td>Returns the status-text (e.g. "Not Found" or "OK")</td>
                             </tr>
                             <tr>
-                                <td><code>getResponseText()</code></td>
+                                <td><code>responseText</code></td>
                                 <td>String</td>
                                 <td>Retrieves the response body as a string.</td>
                             </tr>
                             <tr>
-                                <td><code>getResponseXML()</code></td>
+                                <td><code>responseXML</code></td>
                                 <td>XML</td>
                                 <td>Retrieves the response body as an E4X XML Object
                                 </td>

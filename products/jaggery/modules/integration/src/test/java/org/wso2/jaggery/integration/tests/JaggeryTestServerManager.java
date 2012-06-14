@@ -60,6 +60,23 @@ public class JaggeryTestServerManager extends TestServerManager {
 
     protected void copyArtifacts(String carbonHome) throws IOException {
 
+        String secVerifierDir = System.getProperty("sec.verifier.dir");
+        File srcFile = new File(secVerifierDir + File.separator + "SecVerifier.aar");
+
+        String deploymentPath = carbonHome + File.separator + "axis2services";
+        File depFile = new File(deploymentPath);
+        if (!depFile.exists() && !depFile.mkdir()) {
+            System.err.println("Error while creating the deployment folder : " + deploymentPath);
+        }
+        File dstFile = new File(depFile.getAbsolutePath() + File.separator + "SecVerifier.aar");
+        try {
+            log.info("Copying " + srcFile.getAbsolutePath() + " => " + dstFile.getAbsolutePath());
+            FileManipulator.copyFile(srcFile, dstFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("Error while creating the deployment folder : " + deploymentPath);
+        }
+
         // Copying jaggery configuration file
         String fileName = "jaggery.conf";
         String sourcePath = computeSourcePath(fileName);

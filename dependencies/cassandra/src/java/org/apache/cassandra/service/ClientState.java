@@ -227,8 +227,8 @@ public class ClientState
      * @return <String> the resolved keyspace name
      */
     public String resolveKeyspace(String keyspaceTobeResolved) {
-
-        return (prefix == null || keyspaceTobeResolved.startsWith(prefix)) ? keyspaceTobeResolved : (prefix + keyspaceTobeResolved);
+        //return (prefix == null || keyspaceTobeResolved.startsWith(prefix)) ? keyspaceTobeResolved : (prefix + keyspaceTobeResolved);
+        return (prefix.equals("carbon_super_") || keyspaceTobeResolved.startsWith(prefix)) ? keyspaceTobeResolved : (prefix + keyspaceTobeResolved);
     }
 
     /**

@@ -52,7 +52,7 @@
                             <publishArtifacts>true</publishArtifacts>
                             <publishArtifactRepository>true</publishArtifactRepository>
                             <featureArtifacts>
-                                <featureArtifactDef>
+                               <!-- <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.core.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -516,10 +516,17 @@
 				</featureArtifactDef>
 				<featureArtifactDef>
 				    org.wso2.dss:org.wso2.dataservices.styles.feature:${dss.version}
-				</featureArtifactDef>
-                <featureArtifactDef>
-                    org.wso2.carbon:org.wso2.carbon.gadgetgenwizard.feature:${carbon.version}
-                </featureArtifactDef>
+				</featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.explorer.feature:${carbon.version}
+                                </featureArtifactDef>
+  <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.version}
+                                </featureArtifactDef>
+
+
+
+
                             </featureArtifacts>
 							<categories>
 								<category>

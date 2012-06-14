@@ -8,7 +8,7 @@
         <version>4.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cassandra-explorer</artifactId>
+    <artifactId>cassandra-explorer-feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Cassandra Feature Aggregator Module</name>
     <url>http://wso2.org</url>

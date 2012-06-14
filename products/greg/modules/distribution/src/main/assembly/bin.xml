@@ -91,6 +91,7 @@
                <include>**/local.xsd</include>
 	       <include>**/lifecycle-config.xsd</include>
                <include>**/service-ui-config.xsd</include>
+               <include>**/rxt.xsd</include>
 	       <include>**/notifications-email-verification.xml</include>
                <!--<include>**/organization-*.xml</include>-->
                <!--<include>**/department-*.xml</include>-->

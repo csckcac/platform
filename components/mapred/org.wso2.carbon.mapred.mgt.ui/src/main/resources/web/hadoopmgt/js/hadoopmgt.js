@@ -61,6 +61,8 @@ jQuery(document).ready(function() {
                                          return;
                                      }
                                      jQuery('#hadoopForm').submit();
+                                     var key = jQuery.session("serviceKey");
+                                     jQuery.get("../hadoopmgt/hadoop_job_stats.jsp", {serviceName: "jobName"}, function (data){alert("Job Name: "+data);});
                                  }
             );
     jQuery('#nextButton').removeAttr("disabled");

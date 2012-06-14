@@ -68,12 +68,6 @@
 
 
 
-
-
-
-
-
-
 <%
     String jarPath = request.getParameter("hadoopJarPath");
     String className = request.getParameter("hadoopClassName");
@@ -82,8 +76,22 @@
     Cookie[] cookies = request.getCookies();
     String sessionID = null;
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_AUTH_TOKEN);
+    String key = null;
 	if (jarPath != null) {
       HadoopJobRunnerProxy proxy = new HadoopJobRunnerProxy(request);
-	  proxy.submitJob(jarPath, className, inFile+" "+outFile);
+	  key = proxy.submitJob(jarPath, className, inFile+" "+outFile);
+	  /*session.setAttribute("serviceKey", key);
+	  System.out.println("Job ID: "+proxy.getJobId(key));
+	  System.out.println("Job Name: "+proxy.getJobName(key));
+	  while(!proxy.isJobComplete(key)) {
+		  float[] progress = proxy.getProgress(key);
+		  System.out.println("Map: "+progress[0]*100/1+"% Reduce: "+progress[1]*100/1+"%");
+		  try {
+		    Thread.sleep(10000);
+		  } catch (InterruptedException e) {
+			  e.printStackTrace();
+		  }
+	  }
+	  System.out.println("Job Status: "+(proxy.isJobSuccessful(key)?"Successful":"Failed"));*/
 	}
 %>

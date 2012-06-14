@@ -37,8 +37,7 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 				try {
 					Thread.sleep((i+1)*WINDOW_UPER_BOUND);
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					LOG.warn(e.getMessage());
 				}
 				continue;
 			}
@@ -75,7 +74,6 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
         try {
 			confCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);  
 		} catch (AxisFault e) {
-			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
@@ -84,7 +82,6 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
         try {
 			authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl+"AuthenticationAdmin");
 		} catch (AxisFault e) {
-			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
@@ -96,17 +93,14 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 			isAuthenticated = authAdminStub.login(username, password, serviceHostName);
 			LOG.info("Logging in as admin");
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
 		} catch (LoginAuthenticationExceptionException e) {
-			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 		}
@@ -121,16 +115,18 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 		      groups.add(roleList[i]);
 		    }
 		    LOG.info("Retreived user roles");
+		    authAdminStub.logout();
 		} catch (UserStoreException e) {
-			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
 		} catch (org.wso2.carbon.user.api.UserStoreException e) {
-			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
+		} catch (LogoutAuthenticationExceptionException e) {
+			//e.printStackTrace();
+			LOG.warn(e.getMessage());
 		}
 		return groups;
 	}

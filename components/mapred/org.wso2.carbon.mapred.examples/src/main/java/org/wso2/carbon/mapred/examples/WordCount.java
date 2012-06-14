@@ -8,6 +8,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.JobID;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Mapper.Context;
@@ -20,7 +21,6 @@ import org.apache.commons.cli.*;
 import org.wso2.carbon.mapred.mgt.api.*;
 
 public class WordCount extends CarbonMapRedJob {
-	
 	public static class TokenizerMapper 
 	extends Mapper<Object, Text, Text, IntWritable>{
 
@@ -55,7 +55,6 @@ public class WordCount extends CarbonMapRedJob {
 
 	@Override
 	public void run(String[] args) {
-		String[] otherArgs = null;
 		Job job = null;
 		Configuration conf = getConfiguration();
 		try {
@@ -85,5 +84,6 @@ public class WordCount extends CarbonMapRedJob {
 			return;
 		}
 	}
+
 }
 

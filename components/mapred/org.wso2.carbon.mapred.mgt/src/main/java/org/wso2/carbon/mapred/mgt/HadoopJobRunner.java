@@ -1,18 +1,23 @@
 package org.wso2.carbon.mapred.mgt;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.activation.DataHandler;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
@@ -21,27 +26,34 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.tools.ant.taskdefs.condition.Http;
-import org.apache.xalan.xsltc.compiler.sym;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.context.*;
-import org.wso2.carbon.mapred.mgt.CarbonJobReporter.CarbonJobReporterMap;
-import org.wso2.carbon.mapred.mgt.CarbonJobReporter;
+import org.wso2.carbon.mapred.reporting.CarbonJobReporter.CarbonJobReporterMap;
+import org.wso2.carbon.mapred.reporting.CarbonJobReporter;
+import org.wso2.carbon.mapred.reporting.CarbonJobCoreReporter;
 import org.wso2.carbon.registry.api.Registry;
+import org.wso2.carbon.registry.api.RegistryService;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.jdbc.EmbeddedRegistry;
+import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
-import org.wso2.carbon.hadoop.security.HadoopCarbonSecurity;
 
 public class HadoopJobRunner extends AbstractAdmin {
 	private Log log = LogFactory.getLog(HadoopJobRunner.class);
 	public static final String HADOOP_CONFIG = System.getProperty(ServerConstants.CARBON_HOME)+File.separator+"repository"+File.separator+"conf"+File.separator+"etc"+File.separator+"hadoop.properties";
 	public static final String REG_JAR_PATH = "/job/jar/";
+	public static final String REG_JOB_STATS_PATH = "/job/stats/";
 	public static final String DEFAULT_HADOOP_JAR_PATH = ".";
+	public static final int MAX_FINAL_REPORTS = 20;
 	public static int DEFAULT_READ_LENGTH = 1024;
-	private static final String JOB_CONTEXT_UUID = "jobConttextUuid";
+	//private static final String JOB_CONTEXT_UUID = "jobConttextUuid";
 	
 	private static final String MAPRED_SITE = "mapred-site.xml";
 	private static final String CORE_SITE = "core-site.xml";
@@ -75,8 +87,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			try {
 				hadoopJobThread.wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage());
 			}
 		}
 		CarbonJobReporter reporter = hadoopJobThread.getCarbonJobReporter();
@@ -85,8 +96,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			try {
 				reporter.wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage());
 			}
 		}
 		return threadUuid.toString();
@@ -110,7 +120,11 @@ public class HadoopJobRunner extends AbstractAdmin {
 	
 	public boolean isJobSuccessul(String key) {
 		CarbonJobReporter jobReporter = getJobReporter(key);
-		return jobReporter.isJobSuccessful();
+		boolean status = jobReporter.isJobSuccessful();
+		if (status) {
+			removeJobReporter(key);
+		}
+		return status;
 	}
 	
 	public String getJobName(String key) {
@@ -128,9 +142,115 @@ public class HadoopJobRunner extends AbstractAdmin {
 		return jobReporter.getCounter(counterKey);
 	}
 	
+	public void attachFinalReport(String jsonEncodedReport) {
+		CarbonContext cc = CarbonContext.getCurrentContext();
+		String name = cc.getUsername();
+		Registry registry = cc.getRegistry(RegistryType.USER_CONFIGURATION);
+		HashMap<String, String> userJobMap = null;
+		try {
+			JSONObject jsonObj = new JSONObject(jsonEncodedReport);
+			if (registry.resourceExists(REG_JOB_STATS_PATH+jsonObj.getString("JobUser")) == false) {
+				Resource resource = registry.newResource();
+				userJobMap = new HashMap<String, String>();
+				userJobMap.put(jsonObj.getString("JobID"), jsonObj.toString());
+				byte[] serializedUserJobMap = serialize(userJobMap);
+				resource.setContent(serializedUserJobMap);
+				registry.put(REG_JOB_STATS_PATH+jsonObj.getString("JobUser"), resource);
+			} else {
+				Resource resource = registry.get(REG_JOB_STATS_PATH+jsonObj.getString("JobUser"));
+				byte[] serializedMap = (byte[])resource.getContent();
+				if (serializedMap == null) {
+					userJobMap = new HashMap<String, String>();
+					serializedMap = serialize(userJobMap);
+				}
+				userJobMap = (HashMap<String, String>)deSerialize(serializedMap);
+				userJobMap.put(jsonObj.getString("JobID"), jsonObj.toString());
+				registry.delete(REG_JOB_STATS_PATH+jsonObj.getString("JobUser"));
+				resource = registry.newResource();
+				byte[] serializedUserJobMap = serialize(userJobMap);
+				resource.setContent(serializedUserJobMap);
+				registry.put(REG_JOB_STATS_PATH+jsonObj.getString("JobUser"), resource);
+			}
+		} catch (RegistryException e) {
+			log.warn(e.getMessage());
+		} catch (JSONException e) {
+			log.warn(e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			log.warn(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			log.warn(e.getMessage());
+		} 
+	}
+	
+	public String[] getFinalReportsList(int offset) {
+		CarbonContext cc = CarbonContext.getCurrentContext();
+		Registry registry = cc.getRegistry(RegistryType.USER_CONFIGURATION);
+		String user = cc.getUsername();
+		try {
+			if (registry.resourceExists(REG_JOB_STATS_PATH+user) == false)
+				return null;
+			else {
+				Resource resource = registry.get(REG_JOB_STATS_PATH+user);
+				byte[] serializedMap = (byte[])resource.getContent();
+				if (serializedMap == null)
+					return null;
+				HashMap<String, String> jobMap = (HashMap<String, String>) deSerialize(serializedMap);
+				Set<String> keys = jobMap.keySet();
+				int setSize = keys.size();
+				if (setSize <= offset || offset < 0)
+					return null;
+				String[] jobIDArray = keys.toArray(new String[0]);
+				int arrayLimit = ((offset+MAX_FINAL_REPORTS)>=setSize)?setSize:offset+MAX_FINAL_REPORTS;
+				String[] partialJobIDArray = new String[arrayLimit];
+				for (int i=offset,j=0; i<arrayLimit; i++,j++) {
+					partialJobIDArray[j] = jobIDArray[i];
+				}
+				return partialJobIDArray;
+			}
+			
+		} catch (RegistryException e) {
+			log.warn(e.getMessage());
+		} catch (IOException e) {
+			log.warn(e.getMessage());
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			log.warn(e.getMessage());
+		}
+		return null;
+	}
+	
+	public String getJobFinalReport(String jobID) {
+		CarbonContext cc = CarbonContext.getCurrentContext();
+		Registry registry = cc.getRegistry(RegistryType.USER_CONFIGURATION);
+		try {
+			if (registry.resourceExists(REG_JOB_STATS_PATH+getCurrentUser()) == false)
+				return null;
+			else {
+				Resource resource = registry.get(REG_JOB_STATS_PATH+getCurrentUser());
+				byte[] serializedMap = (byte[]) resource.getContent();
+				HashMap<String, String> jobMap = (HashMap<String, String>) deSerialize(serializedMap);
+				return  jobMap.get(jobID);
+			}
+			
+		} catch (RegistryException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			log.warn(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			log.warn(e.getMessage());
+		}
+		return null;
+	}
+	
 	private CarbonJobReporter getJobReporter(String threadUuidString) {
 		UUID threadUuid = UUID.fromString(threadUuidString);
 		return CarbonJobReporterMap.getCarbonHadoopJobReporter(threadUuid);
+	}
+	
+	private void removeJobReporter(String threadUuidString) {
+		UUID threadUuid = UUID.fromString(threadUuidString);
+		CarbonJobReporterMap.removecarbonJobReporter(threadUuid);
 	}
 	
 	public void getJar(String jarPath) {
@@ -138,10 +258,9 @@ public class HadoopJobRunner extends AbstractAdmin {
 		Registry reg = cc.getRegistry(RegistryType.USER_CONFIGURATION);
 		Resource resource = null;
 		try {
-			resource = reg.get(REG_JAR_PATH+jarPath);
+			resource = reg.get(REG_JAR_PATH+getCurrentUser()+File.separator+jarPath);
 		} catch (RegistryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 			return;
 		}
 		try {
@@ -159,8 +278,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 			resIS.close();
 			fos.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 			return;
 		}
 	}
@@ -169,20 +287,17 @@ public class HadoopJobRunner extends AbstractAdmin {
 		CarbonContext cc = CarbonContext.getCurrentContext();
 		Registry reg = cc.getRegistry(RegistryType.USER_CONFIGURATION);
 		try {
-			if (reg.resourceExists(REG_JAR_PATH+friendlyName)) {
-				log.info("Deleting already exsiting "+REG_JAR_PATH+friendlyName);
-				reg.delete(REG_JAR_PATH+friendlyName);
+			if (reg.resourceExists(REG_JAR_PATH+getCurrentUser()+File.separator+friendlyName)) {
+				log.info("Deleting already exsiting "+REG_JAR_PATH+getCurrentUser()+File.separator+friendlyName);
+				reg.delete(REG_JAR_PATH+getCurrentUser()+File.separator+friendlyName);
 			}
 			Resource resource = reg.newResource();
 			resource.setContentStream(dataHandler.getInputStream());
-			String out = reg.put(REG_JAR_PATH+friendlyName, resource);
-			log.info(out);
+			String out = reg.put(REG_JAR_PATH+getCurrentUser()+File.separator+friendlyName, resource);
 		} catch (RegistryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 	}
 	
@@ -207,10 +322,17 @@ public class HadoopJobRunner extends AbstractAdmin {
 	        }
 	        result.discard();
 		} catch (RegistryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 		return paths;
+	}
+	
+	private String getCurrentUser() {
+		HttpSession session = getHttpSession();
+		if (session != null) {
+			return (String) session.getAttribute(ServerConstants.USER_LOGGED_IN);
+		}
+		return null;
 	}
 	
 	public static org.apache.hadoop.conf.Configuration getConf() {
@@ -239,5 +361,20 @@ public class HadoopJobRunner extends AbstractAdmin {
 		conf.set("hadoop.log.dir", "");
 		conf.set("mapred.tasktracker.carbon.proxy.user", "");
 		conf.set("hadoop.job.history.user.location", "");
+	}
+	
+	private Object deSerialize(byte[] serializedObj) throws IOException, ClassNotFoundException {
+		ByteArrayInputStream bis = new ByteArrayInputStream(serializedObj);
+		ObjectInputStream ois = new ObjectInputStream(bis);
+		Object obj = ois.readObject();
+		return obj;
+	}
+	
+	private byte[] serialize(Object obj) throws IOException {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(bos);
+		oos.writeObject(obj);
+		byte[] serializedObj = bos.toByteArray();
+		return serializedObj;
 	}
 }

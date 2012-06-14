@@ -26,6 +26,7 @@ import org.apache.hadoop.mapreduce.JobReporterRegistry;
 import org.apache.hadoop.mapreduce.JobReporter;
 
 import org.wso2.carbon.mapred.mgt.api.CarbonMapRedJob;
+import org.wso2.carbon.mapred.reporting.CarbonJobReporter;
 import org.wso2.carbon.hadoop.security.HadoopCarbonSecurity;
 import org.wso2.carbon.hadoop.security.HadoopCarbonMessageContext;
 
@@ -105,7 +106,7 @@ public class HadoopJobRunnerThread extends Thread {
 			carbonMapRedJob.setConfiguration(conf);
 			String[] newArgs = args.split(" ");
 			this.carbonJobReporter = new CarbonJobReporter();
-			JobReporterRegistry.setReporter(new Long(Thread.currentThread().getId()), carbonJobReporter);
+			JobReporterRegistry.setReporter(carbonJobReporter);
 			synchronized (this) {
 				this.notify();
 			}

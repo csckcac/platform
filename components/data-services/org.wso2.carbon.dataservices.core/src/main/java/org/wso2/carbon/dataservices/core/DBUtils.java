@@ -842,7 +842,7 @@ public class DBUtils {
      * @param param User specified parameter name
      * @return      UDT column name
      */
-    public static String extractUDTColumnName(String param) {
+    public static String extractUDTObjectName(String param) {
         Matcher m = udtPattern.matcher(param);
         if (m.find()) {
             String tmp = m.group();

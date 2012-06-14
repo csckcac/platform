@@ -213,20 +213,20 @@ public class StaticOutputElement extends OutputElement {
         return udtInfo;
     }
 
-     /**
+    /**
      * Checks whether this output element corresponds to a UDT and if so an object of UDT
      * class is populated.
      *
-     * @param param             Initial column name specified for the output element
-     * @return                  An instance of UDT class
+     * @param param Initial column name specified for the output element
+     * @return An instance of UDT class
      * @throws DataServiceFault If any error occurs while determining the nest indices of a UDT
      */
     private UDT processParamForUserDefinedObjects(String param) throws DataServiceFault {
-        String udtColumnName = DBUtils.extractUDTColumnName(param);
+        String udtColumnName = DBUtils.extractUDTObjectName(param);
         if (udtColumnName != null) {
             List<Integer> indices = DBUtils.getNestedIndices(param.substring(
                     udtColumnName.length() + 1, param.length()));
-           return new UDT(udtColumnName, indices);
+            return new UDT(udtColumnName, indices);
         }
         return null;
     }
@@ -311,26 +311,21 @@ public class StaticOutputElement extends OutputElement {
         }
         if (this.isUserDefinedObj()) {
             ParamValue processedParamValue;
-            exParam = params.getParam(this.getParamType(), this.getUDTInfo().getUDTColumnName());
+            exParam = params.getParam(this.getParamType(), this.getUDTInfo().getUDTObjName());
 
             /* Retrieves the value of a User Defined Object */
             ParamValue value = exParam.getValue();
             if (DBUtils.isUDT(value)) {
-                try {
-                    /* Retrieves value of the desired UDT attribute */
-                    processedParamValue = getUDTAttributeValue(this.getUDTInfo(), value,
-                            StaticOutputElement.UDT_ATTRIBUTE_INITIAL_INDEX);
+                /* Retrieves value of the desired UDT attribute */
+                processedParamValue = getUDTAttributeValue(value,
+                        StaticOutputElement.UDT_ATTRIBUTE_INITIAL_INDEX);
 
-                    return new ExternalParam(this.getParam(), processedParamValue,
-                            this.getParamType());
-                } catch (SQLException e) {
-                    throw new DataServiceFault(e, "Unable to retrieve UDT attribute value " +
-                            "referred by '" + this.getParam() + "'");
-                }
+                return new ExternalParam(this.getParam(), processedParamValue,
+                        this.getParamType());
             }
             if (DBUtils.isSQLArray(value)) {
                 processedParamValue = new ParamValue(ParamValue.PARAM_VALUE_ARRAY);
-                this.getExParamFromArray(processedParamValue, value);
+                this.getExternalParamFromArray(processedParamValue, value);
 
                 return new ExternalParam(this.getParam(), processedParamValue,
                         this.getParamType());
@@ -342,24 +337,20 @@ public class StaticOutputElement extends OutputElement {
     /**
      * Extracts out an External parameter object representing an Array type ParamValue object.
      *
-     * @param processedParamValue   Processed parameter value
-     * @param rawParamValue         Un processed parameter value
-     * @throws DataServiceFault     Throws when the process is confronted with issues while processing
-     *                              the UDT attributes.
+     * @param processedParamValue Processed parameter value
+     * @param rawParamValue       Un processed parameter value
+     * @throws DataServiceFault Throws when the process is confronted with issues while processing
+     *                          the UDT attributes.
      */
-    private void getExParamFromArray(ParamValue processedParamValue,
-                                     ParamValue rawParamValue) throws DataServiceFault {
+    private void getExternalParamFromArray(ParamValue processedParamValue,
+                                           ParamValue rawParamValue) throws DataServiceFault {
         for (ParamValue value : rawParamValue.getArrayValue()) {
             if (DBUtils.isUDT(value)) {
-                try {
-                    processedParamValue.getArrayValue().add(getUDTAttributeValue(this.getUDTInfo(),
-                            value, StaticOutputElement.UDT_ATTRIBUTE_INITIAL_INDEX));
-                } catch (SQLException e) {
-                    throw new DataServiceFault(e, "Unable to retrieve UDT attribute value " +
-                            "referred by '" + this.getParam() + "'");
-                }
-            } else if (DBUtils.isSQLArray(value)) {
-                this.getExParamFromArray(processedParamValue, value);
+                processedParamValue.getArrayValue().add(getUDTAttributeValue(value,
+                        StaticOutputElement.UDT_ATTRIBUTE_INITIAL_INDEX));
+            }
+            if (DBUtils.isSQLArray(value)) {
+                this.getExternalParamFromArray(processedParamValue, value);
             } else {
                 processedParamValue.getArrayValue().add(value);
             }
@@ -371,48 +362,61 @@ public class StaticOutputElement extends OutputElement {
      * This method traverse through the specified indices and recursively retrieves the value of
      * the UDT attribute.
      *
-     * @param udtInfo UDT metadata container
      * @param value   Value of the UDT attribute.
-     * @param i       Index to keep track of the number of items process in the index list.
+     * @param i       Index to keep track of the number of items process in the index list
      * @return Final value of the desired UDT attribute
-     * @throws SQLException     SQLException
      * @throws DataServiceFault DataServiceFault.
      */
-    private static ParamValue getUDTAttributeValue(UDT udtInfo, ParamValue value,
-                                                   int i) throws SQLException, DataServiceFault {
-        List<Integer> indices = udtInfo.getIndices();
+    private ParamValue getUDTAttributeValue(ParamValue value, int i) throws DataServiceFault {
+
+        if (this.getUDTInfo() == null) {
+            throw new DataServiceFault("Output element '" + this.getName() +
+                    "' cannot be resolved to a UDT");
+        }
+        List<Integer> indices = this.getUDTInfo().getIndices();
+
         if (DBUtils.isUDT(value)) {
+            Object tmpVal;
             try {
-                Object tempValue = value.getUdt().getAttributes()[indices.get(i)];
-                if (tempValue instanceof Struct) {
-                    value = new ParamValue((Struct) tempValue);
-                } else if (tempValue instanceof Array) {
-                    value = DBUtils.processSQLArray((Array) tempValue,
+                tmpVal = value.getUdt().getAttributes()[indices.get(i)];
+            } catch (SQLException e) {
+                throw new DataServiceFault(e, "Unable to retrieve UDT attribute value referred " +
+                        "by the given index");
+            }
+
+            if (tmpVal instanceof Struct) {
+                value = new ParamValue((Struct) tmpVal);
+            } else if (tmpVal instanceof Array) {
+                try {
+                    value = DBUtils.processSQLArray((Array) tmpVal,
                             new ParamValue(ParamValue.PARAM_VALUE_ARRAY));
-                } else {
-                    value = new ParamValue(String.valueOf(tempValue));
+                } catch (SQLException e) {
+                    throw new DataServiceFault(e, "Unable to process the SQL Array");
                 }
-            } catch (Exception e) {
-                throw new DataServiceFault("Unable to retrieve UDT attribute value referred by " +
-                        "the given index");
+            } else {
+                value = new ParamValue(String.valueOf(tmpVal));
             }
         } else if (DBUtils.isSQLArray(value)) {
             ParamValue processedParamValue = new ParamValue(ParamValue.PARAM_VALUE_ARRAY);
-            for (ParamValue param : value.getArrayValue()) {
-                if (DBUtils.isUDT(param)) {
-                    processedParamValue.getArrayValue().add(new ParamValue(
-                            String.valueOf(param.getUdt().getAttributes()[indices.get(i)])));
+            for (ParamValue paramVal : value.getArrayValue()) {
+                if (DBUtils.isUDT(paramVal)) {
+                    try {
+                        processedParamValue.getArrayValue().add(new ParamValue(
+                                String.valueOf(paramVal.getUdt().getAttributes()[indices.get(i)])));
+                    } catch (SQLException e) {
+                        throw new DataServiceFault(e, "Unable to retrieve UDT attribute value " +
+                                "referred by " + "the given index");
+                    }
                 } else {
-                    processedParamValue.getArrayValue().add(param);
+                    processedParamValue.getArrayValue().add(paramVal);
                 }
             }
             value = processedParamValue;
         } else {
             return value;
         }
-        i++;
-        if (i < indices.size()) {
-            return getUDTAttributeValue(udtInfo, value, i);
+        if (i <= indices.size()) {
+            return getUDTAttributeValue(value, i + 1);
         }
         return value;
     }
@@ -423,19 +427,20 @@ public class StaticOutputElement extends OutputElement {
     }
 
     /* Acts as a container for UDT related metadata */
+
     private class UDT {
 
-        private String udtColumnName;
+        private String udtObjName;
 
         private List<Integer> indices;
 
-        public UDT (String udtColumnName, List<Integer> indices) {
-            this.udtColumnName = udtColumnName;
+        public UDT(String udtObjName, List<Integer> indices) {
+            this.udtObjName = udtObjName;
             this.indices = indices;
         }
 
-        public String getUDTColumnName() {
-            return udtColumnName;
+        public String getUDTObjName() {
+            return udtObjName;
         }
 
         public List<Integer> getIndices() {

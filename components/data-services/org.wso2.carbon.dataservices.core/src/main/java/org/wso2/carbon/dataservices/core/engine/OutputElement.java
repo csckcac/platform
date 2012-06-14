@@ -71,22 +71,6 @@ public abstract class OutputElement extends XMLWriterHelper{
         }
     }
 
-    private ExternalParam getExternalParam(ExternalParamCollection params) {
-        ExternalParam exParam = params.getParam(this.getParamName());
-        if (exParam == null) {
-            exParam = params.getParam(this.getParamType(), this.getParam());
-        }
-        return exParam;
-    }
-
-    private String getParamName() {
-        String paramName = this.getArrayName();
-        if (paramName.contains("[")) {
-            paramName = paramName.substring(0, paramName.indexOf("["));
-        }
-        return paramName.toLowerCase();
-    }
-
     protected abstract void executeElement(XMLStreamWriter xmlWriter,
                                            ExternalParamCollection params,
                                            int queryLevel) throws DataServiceFault;
@@ -116,6 +100,35 @@ public abstract class OutputElement extends XMLWriterHelper{
 
     public String getParamType() {
         return paramType;
+    }
+
+    /**
+     * Extracts out the external parameter corresponds to the user defined object name from the
+     * external parameter collection
+     *
+     * @param params    External parameter collection
+     * @return          External parameter associated with the provided user defined object name
+     */
+    private ExternalParam getExternalParam(ExternalParamCollection params) {
+        ExternalParam exParam = params.getParam(getParamName(this.getArrayName()));
+        if (exParam == null) {
+            exParam = params.getParam(this.getParamType(), this.getParam());
+        }
+        return exParam;
+    }
+
+    /**
+     * Extracts User Defined Column name from the param name
+     *
+     * @param paramName Original parameter name
+     * @return          Column name corresponds to the User Defined object
+     */
+    private static String getParamName(String paramName) {
+        String udtObjName = DBUtils.extractUDTObjectName(paramName);
+        if (udtObjName != null) {
+            return udtObjName.toLowerCase();
+        }
+        return paramName.toLowerCase();
     }
 
 }

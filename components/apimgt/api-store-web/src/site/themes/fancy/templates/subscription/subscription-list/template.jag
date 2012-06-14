@@ -18,13 +18,13 @@
                 <div class="row-fluid">
                     <div class="span6"></div>
                     <div class="span3">
-                        <a onclick="collapseKeys('<%=str_i%>','super')">
-                            <i class="icon-zoom-in"></i> Keys
+                        <a onclick="collapseKeys('<%=str_i%>','super',this)">
+                            <i class="icon-minus"></i> Keys
                         </a>
                     </div>
                     <div class="span3">
-                         <a onclick="collapseKeys('<%=str_i%>','')">
-                            <i class="icon-zoom-in"></i> APIs</a>
+                         <a onclick="collapseKeys('<%=str_i%>','',this)">
+                            <i class="icon-minus"></i> APIs</a>
                     </div>
                 </div>
 

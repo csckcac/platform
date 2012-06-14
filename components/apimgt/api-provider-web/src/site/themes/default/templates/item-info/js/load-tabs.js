@@ -87,7 +87,7 @@ $(document).ready(function() {
                                                                         showDataLabels:true
                                                                     }
                                                                 },
-                                                                seriesColors: [ "#019d60", "#7ebe3a","#fdca19","#028a7a", "#cede3e", "#fa8216", "#e10718", "#aa1e52", "#e74d92", "#4e2e86"],
+                                                                seriesColors: [ "#ed3c3c", "#ffe03e", "#48ca48", "#49baff","#7d7dff", "#ff468b", "#de621d", "#cb68c9"],
                                                                 legend:{ show:true, location:'e' }
                                                             }
                                           );
@@ -126,7 +126,7 @@ $(document).ready(function() {
                                                                         showDataLabels:true
                                                                     }
                                                                 },
-                                                                seriesColors: [ "#cede3e", "#aa1e52", "#e74d92", "#4e2e86","#028a7a", "#019d60", "#fdca19", "#e10718","#7ebe3a", "#fa8216"],
+                                                                seriesColors: [ "#ed3c3c", "#ffe03e", "#48ca48", "#49baff","#7d7dff", "#ff468b", "#de621d", "#cb68c9"],
                                                                 legend:{ show:true, location:'e' }
                                                             }
                                           );
@@ -173,7 +173,7 @@ $(document).ready(function() {
                                                                         showDataLabels:true
                                                                     }
                                                                 },
-                                                                seriesColors: [ "#e10718", "#aa1e52","#fdca19", "#fa8216", "#e74d92", "#4e2e86","#7ebe3a", "#cede3e","#028a7a", "#019d60"],
+                                                                seriesColors: [ "#ed3c3c", "#ffe03e", "#48ca48", "#49baff","#7d7dff", "#ff468b", "#de621d", "#cb68c9"],
                                                                 legend:{ show:true, location:'e' }
                                                             }
                                           );
@@ -213,7 +213,7 @@ $(document).ready(function() {
                                                                         showDataLabels:true
                                                                     }
                                                                 },
-                                                                seriesColors: [ "#e74d92", "#cede3e","#fdca19", "#fa8216", "#e10718", "#4e2e86","#7ebe3a", "#aa1e52","#028a7a", "#019d60"],
+                                                                seriesColors:[ "#ed3c3c", "#ffe03e", "#48ca48", "#49baff","#7d7dff", "#ff468b", "#de621d", "#cb68c9"],
                                                                 legend:{ show:true, location:'e' }
                                                             }
                                           );

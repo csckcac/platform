@@ -123,8 +123,8 @@ public class TemplateEditorAdmin extends AbstractServiceBusAdmin {
         final Lock lock = getLock();
         try {
             lock.lock();
-            String[] configInfo = getMimeTypeResult(getConfigSystemRegistry());
-            String[] govInfo = getMimeTypeResult(getGovernanceRegistry());
+            String[] configInfo = getConfigSystemRegistry() != null?getMimeTypeResult(getConfigSystemRegistry()):new String[0];
+            String[] govInfo = getGovernanceRegistry() != null?getMimeTypeResult(getGovernanceRegistry()): new String[0];
             String[] info = new String[configInfo.length + govInfo.length];
             
             int ptr = 0;
@@ -161,8 +161,8 @@ public class TemplateEditorAdmin extends AbstractServiceBusAdmin {
 
     public int getDynamicTemplateCount() throws AxisFault {
         try {
-            String[] govList = getMimeTypeResult(getGovernanceRegistry());
-            String[] confList = getMimeTypeResult(getConfigSystemRegistry());
+            String[] govList = getGovernanceRegistry() !=null?getMimeTypeResult(getGovernanceRegistry()):new String[0];
+            String[] confList = getConfigSystemRegistry() != null?getMimeTypeResult(getConfigSystemRegistry()):new String[0];
             return confList.length + govList.length;
         } catch (Exception e) {
             return 0;

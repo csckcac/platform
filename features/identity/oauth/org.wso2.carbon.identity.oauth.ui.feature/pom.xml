@@ -36,10 +36,18 @@
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.identity.oauth.ui</artifactId>
 		</dependency>
-                <dependency>
-                        <groupId>org.wso2.carbon</groupId>
-                        <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
-                </dependency>
+        <dependency>
+			<groupId>org.wso2.carbon</groupId>
+			<artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.specs</groupId>
+			<artifactId>org.apache.servicemix.specs.jsr311-api-1.1.1</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf.wso2</groupId>
+			<artifactId>cxf-bundle</artifactId>
+		</dependency>
 	</dependencies>
 
     <build>
@@ -67,9 +75,12 @@
 							<bundles>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.identity.oauth.ui</bundleDef>
 								<bundleDef>org.wso2.carbon:org.wso2.carbon.identity.oauth.stub</bundleDef>
+								<bundleDef>org.apache.servicemix.specs:org.apache.servicemix.specs.jsr311-api-1.1.1</bundleDef>
+								<bundleDef>org.apache.cxf.wso2:cxf-bundle</bundleDef>
 							</bundles>
 							<importFeatures>
 								<importFeatureDef>org.wso2.carbon.core.ui:${wso2carbon.version}</importFeatureDef>
+								<!-- <importFeatureDef>org.wso2.carbon.jaxws.webapp.mgt.server:${wso2carbon.version}</importFeatureDef> -->
 							</importFeatures>
 						</configuration>
 					</execution>

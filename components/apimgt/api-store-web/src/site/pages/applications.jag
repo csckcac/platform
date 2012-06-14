@@ -40,12 +40,12 @@ var site = require("/site/conf/site.json");
                                                 {
                                                     "name":"api/recently-added",
                                                     "inputs":null
+                                                },
+                                                {
+                                                    "name":"api/top-rated",
+                                                    "inputs":null
                                                 }
                                             ]
-                                        },
-                                        {
-                                            "title":"Categories",
-                                            "body":null
                                         }
                                     ]
                                 }

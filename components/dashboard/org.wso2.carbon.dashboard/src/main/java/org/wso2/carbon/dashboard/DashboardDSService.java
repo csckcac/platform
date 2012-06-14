@@ -832,14 +832,21 @@ public class DashboardDSService extends AbstractAdmin {
             // Need not do any null checks for registry, as if so, we'll never
             // get here.
             registry.beginTransaction();
-            Resource userTabResource = registry.get(dashboardTabPath);
+            Resource userTabResource = null;
+            if(registry.resourceExists(dashboardTabPath)) {
+                userTabResource = registry.get(dashboardTabPath);
+            }else {
+                registry.put(dashboardTabPath,registry.newCollection());
+                userTabResource = registry.get(dashboardTabPath);
+            }
+
 
             // First generate the new Id
             String nextTabId = userTabResource
                     .getProperty(DashboardConstants.NEXT_TAB_ID);
             if (nextTabId == null) {
                 // This is the first tab after home [0]
-                nextTabId = "1";
+                nextTabId = "0";
             }
             // Persisting the updated counter
             userTabResource.setProperty(DashboardConstants.NEXT_TAB_ID, String
@@ -862,8 +869,13 @@ public class DashboardDSService extends AbstractAdmin {
             String currentTabLayout = userTabResource
                     .getProperty(DashboardConstants.CURRENT_TAB_LAYOUT);
             // Adding the new Tab
-            currentTabLayout = currentTabLayout + ","
-                    + String.valueOf(nextTabId);
+            if(null == currentTabLayout || "null".equals(currentTabLayout)){
+                currentTabLayout = String.valueOf(nextTabId);
+            }
+            else {
+                currentTabLayout = currentTabLayout + ","
+                        + String.valueOf(nextTabId);
+            }
             userTabResource.setProperty(DashboardConstants.CURRENT_TAB_LAYOUT,
                     currentTabLayout);
             registry.put(dashboardTabPath, userTabResource);

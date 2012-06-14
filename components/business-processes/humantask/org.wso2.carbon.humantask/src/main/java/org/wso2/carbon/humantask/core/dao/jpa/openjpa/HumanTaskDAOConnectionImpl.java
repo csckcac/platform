@@ -53,7 +53,6 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
                                              creationContext.getPeopleQueryEvaluator());
         JPATaskUtil.processPresentationElements(task, creationContext.getTaskConfiguration(),
                                                 creationContext);
-        task.setActivationTime(new Date());
         CommonTaskUtil.nominate(task, creationContext.getPeopleQueryEvaluator());
         task.setPriority(CommonTaskUtil.calculateTaskPriority(creationContext.getTaskConfiguration(),
                                                               creationContext.getEvalContext()));

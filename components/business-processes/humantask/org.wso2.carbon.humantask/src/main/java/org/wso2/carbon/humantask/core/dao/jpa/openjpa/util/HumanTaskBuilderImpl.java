@@ -13,6 +13,8 @@ import org.wso2.carbon.humantask.core.engine.HumanTaskException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.store.HumanTaskBaseConfiguration;
 
+import java.util.Date;
+
 /**
  * The builder class for creating Task Objects.
  */
@@ -75,6 +77,7 @@ public class HumanTaskBuilderImpl {
         task.setSkipable(false);
         task.setEscalated(false);
         task.setStatus(TaskStatus.CREATED);
+        task.setActivationTime(new Date());
 
         //Setting the attachments to the task
         try {

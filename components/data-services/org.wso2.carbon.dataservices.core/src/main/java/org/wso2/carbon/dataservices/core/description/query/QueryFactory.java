@@ -33,6 +33,7 @@ import org.wso2.carbon.dataservices.core.engine.CallQuery.WithParam;
 import org.wso2.carbon.dataservices.core.validation.Validator;
 import org.wso2.carbon.dataservices.core.validation.standard.*;
 
+import javax.sql.DataSource;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.sql.Connection;
@@ -307,8 +308,14 @@ public class QueryFactory {
                     CarbonDataSourceConfig carbonDSConfig =
                             (CarbonDataSourceConfig) dataService.getConfig(configId);
                     try {
-                        con = carbonDSConfig.getDataSource().getConnection();
-                        connectionURL = con.getMetaData().getURL();
+                        DataSource ds = carbonDSConfig.getDataSource();
+                        if (ds != null) {
+                            con = ds.getConnection();
+                            connectionURL = con.getMetaData().getURL();
+                        } else {
+                            throw new DataServiceFault("Data source referred by the name '" +
+                                    carbonDSConfig.getDataSourceName() + "' does not exist");
+                        }
                     } finally {
                         if (con != null) {
                             con.close();

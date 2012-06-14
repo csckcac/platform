@@ -93,7 +93,7 @@ div.star-ratings img{
     -moz-border-radius: 3px 3px 0px 0px;
 
     /*The shadow */
-    margin-top:10px;
+    margin-top:20px;
  }
  .data-title div.row-fluid [class*="span"]{
     min-height:18px;
@@ -115,6 +115,23 @@ div.star-ratings img{
  }
 .data-content div.item-info{
     line-height:25px;
+}
+.subsApiListing .row-fluid .span4{
+width: 32.9%;
+}
+.data-content div.thumbnail div.container-fluid{
+    padding:0;
+}
+.subsApiListing{
+    padding:0 0 0 10px;
+}
+.subsApiListing div.container-fluid{
+    padding:0;
+    margin:0;
+}
+.thumbnailInsideLink{
+    display:block;
+    padding-right:10px;
 }
 .deprecated{
     background:#eee;
@@ -143,12 +160,22 @@ div.star-ratings img{
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
     outline: 0 none;
 }
+.keyField{
+    padding-bottom:5px;
+}
 .super-section{
     background:#efefef;
     border-bottom:solid 1px #ccc;
+    padding-top:3px;
 }
-.super-rows, .api-section{
-    padding:8px;
+.super-rows{
+    padding:0 8px;
+}
+.keyItems [class*="span"]{
+    height:43px;
+}
+.api-section{
+    padding:3px 0 0 8px;
 }
  .service-name{
      font-weight:bold;

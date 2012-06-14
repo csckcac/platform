@@ -49,13 +49,22 @@ function toggleKey(toggleButton){
         $(toggleButton).html('<span class="icon gray small" data-icon="O"></span> Hide Key');
     }
 }
-function collapseKeys(index,type){
+function collapseKeys(index,type,link){
 
     if(type == 'super'){
+        if($('#appDetails'+index+'_super').is(":visible")){
+            $('i',link).removeClass('icon-minus').addClass('icon-plus');
+        }else{
+            $('i',link).removeClass('icon-plus').addClass('icon-minus');
+        }
         $('#appDetails'+index+'_super').toggle();
-        //$('#appDetails'+index).toggle('fast');
     }else{
-        //$('#appDetails'+index+'_super').hide('fast');
+        if($('#appDetails'+index).is(":visible")){
+            $('i',link).removeClass('icon-minus').addClass('icon-plus');
+        }else{
+            $('i',link).removeClass('icon-plus').addClass('icon-minus');
+        }
+
         $('#appDetails'+index).toggle();
     }
 }

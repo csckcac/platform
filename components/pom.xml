@@ -152,6 +152,7 @@
 		<module>gadget-ide</module>
 		<module>url-mapper</module>
 		<module>load-balancer</module>
+        <module>cassandra-explorer</module>
             </modules>
 	    <build>
 	        <plugins>

@@ -176,7 +176,6 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         /* check for existence of any ref cursors */
         this.checkRefCursor(this.getQueryParams());
         /* check for existence of any SQL Arrays */
-        this.checkSqlArrayType(this.getQueryParams());
         this.hasOutParams = this.getOutQueryParams().size() > 0;
         /* first a result should be available and then check the other necessary conditions */
         this.resultOnlyOutParams = this.calculateResultOnlyOutParams();
@@ -539,16 +538,6 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         }
     }
 
-    private void checkSqlArrayType(List<QueryParam> queryParams) {
-        for (QueryParam queryParam : queryParams) {
-            if (queryParam.getSqlType().equals(DBConstants.DataTypes.ARRAY)) {
-                this.currentSqlArray = queryParam;
-                this.hasSqlArrayType = true;
-                return;
-            }
-        }
-    }
-
     private String createSqlFromQueryString(String query) {
         List<String> values = this.getNamedParamNames();
         for (String val : values) {
@@ -646,8 +635,7 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         List<QueryParam> inOutQueryParams = new ArrayList<QueryParam>();
         for (QueryParam queryParam : queryParams) {
             if (queryParam.getType().endsWith(QueryTypes.OUT) && !queryParam.getSqlType().equals(
-                    DBConstants.DataTypes.ORACLE_REF_CURSOR) &&
-                    !queryParam.getSqlType().equals(DBConstants.DataTypes.ARRAY)) {
+                    DBConstants.DataTypes.ORACLE_REF_CURSOR)) {
                 inOutQueryParams.add(queryParam);
             }
         }
@@ -893,9 +881,6 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
                         if (this.arrayTypesEnabled()) {
                             this.getCurrentRefCursor().setOrdinal(this.getPrevRefCusorOrdinal());
                         }
-                    }
-                    if (this.hasSqlArrayType()) {
-                        rs = stmt.getArray(this.getCurrentSqlArray().getOrdinal()).getResultSet();
                     }
                 } else {
                     rs = this.getFirstRSOfStoredProc(stmt);
@@ -1157,8 +1142,18 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         return dataEntry;
     }
 
-    private ParamValue processSQLArray(Array arr, ParamValue paramValue) throws SQLException {
-        ResultSet rs = arr.getResultSet();
+    /**
+     * Processes a SQL Array instance and transform it into a ParamValue instance
+     *
+     * @param dataArray     SQLArray instance
+     * @param paramValue    Container into which the SQLArray elements should be populated
+     * @return              ParamValue instance containing all the elements of the corresponding
+     *                      SQLArray instance
+     * @throws SQLException When it fails to processes the result set produced by the SQLArray
+     *                      instance
+     */
+    private ParamValue processSQLArray(Array dataArray, ParamValue paramValue) throws SQLException {
+        ResultSet rs = dataArray.getResultSet();
         while (rs.next()) {
             Object arrayEl = rs.getObject(2);
             if (arrayEl instanceof Struct) {
@@ -2024,8 +2019,12 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
                 elementValue = cs.getObject(ordinal);
                 return new ParamValue(elementValue == null ? null : (Struct) elementValue);
             } else if (type.equals(DBConstants.DataTypes.ARRAY)) {
-                elementValue = cs.getArray(ordinal);
-                return new ParamValue(elementValue == null ? null : elementValue.toString());
+                Array dataArray = cs.getArray(ordinal);
+                ParamValue paramValue = new ParamValue(ParamValue.PARAM_VALUE_ARRAY);
+                if (dataArray != null) {
+                    this.processSQLArray(dataArray, paramValue);
+                }
+                return paramValue;
             } else {
                 throw new DataServiceFault("Unsupported data type: " + type);
             }

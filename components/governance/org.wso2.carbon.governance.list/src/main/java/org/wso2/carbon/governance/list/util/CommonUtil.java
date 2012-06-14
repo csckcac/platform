@@ -22,31 +22,27 @@ import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.xerces.parsers.SAXParser;
 import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
-import org.jgroups.stack.StateTransferInfo;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.util.List;
 
 public class CommonUtil {
@@ -232,7 +228,7 @@ public class CommonUtil {
         String serviceConfPath = "";
         if ("rxt-ui-config".equalsIgnoreCase(schema)) {
             serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
-                    "conf" + File.separator + "service-ui-config.xsd";
+                    "conf" + File.separator + "rxt.xsd";
         } else if ("lifecycle-config".equalsIgnoreCase(schema)) {
             serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
                     "conf" + File.separator + "lifecycle-config.xsd";
@@ -243,7 +239,7 @@ public class CommonUtil {
     private static boolean validateRXTContent(String rxtContent, String xsdPath) throws RegistryException {
         try {
         OMElement rxt = getRXTContentOMElement(rxtContent);
-        AXIOMXPath xpath = new AXIOMXPath("//content");
+        AXIOMXPath xpath = new AXIOMXPath("//artifactType");
         OMElement c1 = (OMElement) xpath.selectSingleNode(rxt);
         InputStream is = new ByteArrayInputStream(c1.toString().getBytes());
         Source xmlFile = new StreamSource(is);

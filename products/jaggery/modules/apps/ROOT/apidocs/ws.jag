@@ -63,6 +63,7 @@
             <pre class="prettyprint linenums">
 &lt%
     function invokeGetVersion(){
+	var log = new Log();
         var ws = require('ws');
 
         var version = new ws.WSRequest();
@@ -78,7 +79,7 @@
             version.send(payload);
             result = version.responseE4X;
         } catch (e) {
-            system.log(e.toString(),"error");
+            log.error(e.toString());
             return e.toString();
         }
         return result;
@@ -89,25 +90,26 @@
 </pre>
 <%
 var wsCode = '&lt%'
-+ '\n function invokeGetVersion(){'
-+ '\n var ws = require("ws");'
++ '\n function invokeGetVersion() {'
++ '\n	var log = new Log();'
++ '\n 	var ws = require("ws");'
 + '\n'
-+ '\n var version = new ws.WSRequest();'
-+ '\n var options = new Array();'
-+ '\n options.useSOAP = 1.2;'
-+ '\n options.action = "urn:getVersion";'
-+ '\n var payload = null;'
-+ '\n var result;'
++ '\n 	var version = new ws.WSRequest();'
++ '\n 	var options = new Array();'
++ '\n 	options.useSOAP = 1.2;'
++ '\n 	options.action = "urn:getVersion";'
++ '\n 	var payload = null;'
++ '\n 	var result;'
 + '\n'
-+ '\n try {'
-+ '\n version.open(options,"http://stratoslive.wso2.com/services/Version", false);'
-+ '\n version.send(payload);'
-+ '\n result = version.responseE4X;'
-+ '\n } catch (e) {'
-+ '\n log(e.toString(),"error");'
-+ '\n return e.toString();'
-+ '\n }'
-+ '\n return result;'
++ '\n 	try {'
++ '\n 		version.open(options,"http://stratoslive.wso2.com/services/Version", false);'
++ '\n 		version.send(payload);'
++ '\n 		result = version.responseE4X;'
++ '\n 	} catch (e) {'
++ '\n 		log.error(e.toString());'
++ '\n 		return e.toString();'
++ '\n	}'
++ '\n 	return result;'
 + '\n }'
 + '\n'
 + '\n print(invokeGetVersion());'

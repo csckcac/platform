@@ -62,6 +62,10 @@
             <artifactId>amber</artifactId>
             <version>0.22.0.incubating-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.cxf.wso2</groupId>
+            <artifactId>cxf-bundle</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

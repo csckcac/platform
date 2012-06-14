@@ -18,26 +18,38 @@
 
 package org.wso2.carbon.identity.oauth.ui.endpoints;
 
-import org.apache.amber.oauth2.as.request.OAuthTokenRequest;
-import org.apache.amber.oauth2.common.exception.OAuthProblemException;
+import org.apache.amber.oauth2.as.response.OAuthASResponse;
+import org.apache.amber.oauth2.common.error.OAuthError;
 import org.apache.amber.oauth2.common.exception.OAuthSystemException;
+import org.apache.amber.oauth2.common.message.OAuthResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
-public class OAuth2TokenEndpoint extends HttpServlet {
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            OAuthTokenRequest tokenRequest = new OAuthTokenRequest(req);
+@Path("/")
+public class OAuth2TokenEndpoint {
 
-        } catch (OAuthSystemException e) {
-            e.printStackTrace();
-        } catch (OAuthProblemException e) {
-            e.printStackTrace();
-        }
+    private static Log log = LogFactory.getLog(OAuth2TokenEndpoint.class);
+
+    @POST
+    @Path("/")
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("application/json")
+    public Response issueAccessToken(@Context HttpServletRequest request) throws OAuthSystemException {
+        log.info("Received a request : " + request.getRequestURI());
+        OAuthResponse response =
+                OAuthASResponse.errorResponse(HttpServletResponse.SC_BAD_REQUEST)
+                        .setError(OAuthError.TokenResponse.INVALID_CLIENT).setErrorDescription("client_id not found")
+                        .buildJSONMessage();
+        return Response.status(response.getResponseStatus()).entity(response.getBody()).build();
     }
+
 }

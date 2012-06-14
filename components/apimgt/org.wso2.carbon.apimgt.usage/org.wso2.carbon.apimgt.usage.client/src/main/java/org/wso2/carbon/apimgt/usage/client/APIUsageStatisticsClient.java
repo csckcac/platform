@@ -404,7 +404,10 @@ public class APIUsageStatisticsClient {
         List<APIResponseTime> responseTimeData = new ArrayList<APIResponseTime>();
         while (rowIterator.hasNext()) {
             OMElement rowElement = (OMElement) rowIterator.next();
-            responseTimeData.add(new APIResponseTime(rowElement));
+            if (rowElement.getFirstChildWithName(new QName(
+                    APIUsageStatisticsClientConstants.SERVICE_TIME)) != null) {
+                responseTimeData.add(new APIResponseTime(rowElement));
+            }
         }
         return responseTimeData;
     }

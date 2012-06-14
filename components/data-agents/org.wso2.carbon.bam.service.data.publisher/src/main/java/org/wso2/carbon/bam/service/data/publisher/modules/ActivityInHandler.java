@@ -155,7 +155,7 @@ public class ActivityInHandler extends AbstractHandler {
                 publishData.setBamServerInfo(bamServerInfo);
 
                 if (isInOnlyMEP(messageContext)) {
-                    Event event = ServiceAgentUtil.makeEventList(publishData);
+                    Event event = ServiceAgentUtil.makeEventList(publishData, eventingConfigData);
                     EventPublisher publisher = new EventPublisher();
                     publisher.publish(event, eventingConfigData);
                 } else {

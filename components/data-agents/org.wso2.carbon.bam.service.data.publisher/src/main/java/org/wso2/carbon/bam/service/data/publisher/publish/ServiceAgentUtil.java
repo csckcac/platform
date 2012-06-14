@@ -19,6 +19,7 @@ package org.wso2.carbon.bam.service.data.publisher.publish;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventPublisherConfig;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
+import org.wso2.carbon.bam.service.data.publisher.conf.Property;
 import org.wso2.carbon.bam.service.data.publisher.data.BAMServerInfo;
 import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.data.EventData;
@@ -45,7 +46,8 @@ public class ServiceAgentUtil {
          return eventPublisherConfigMap;
     }
 
-    public static Event makeEventList(PublishData publishData) {
+    public static Event makeEventList(PublishData publishData,
+                                      EventingConfigData eventingConfigData) {
 
         EventData event = publishData.getEventData();
 
@@ -56,6 +58,7 @@ public class ServiceAgentUtil {
         StatisticsType statisticsType = findTheStatisticType(event);
 
         addCommonEventData(event, eventData);
+        addPropertiesAsMetaData(eventingConfigData, metaData);
 
         switch (statisticsType) {
             case ACTIVITY_STATS:
@@ -92,6 +95,19 @@ public class ServiceAgentUtil {
         publishEvent.setStatisticsType(statisticsType);
 
         return publishEvent;
+    }
+
+    private static void addPropertiesAsMetaData(EventingConfigData eventingConfigData,
+                                                List<Object> metaData) {
+        Property[] properties = eventingConfigData.getProperties();
+        if (properties != null) {
+            for (int i = 0; i < properties.length; i++) {
+                Property property = properties[i];
+                if (property.getKey() != null && !property.getKey().isEmpty()) {
+                    metaData.add(property.getValue());
+                }
+            }
+        }
     }
 
     private static StatisticsType findTheStatisticType(EventData event) {

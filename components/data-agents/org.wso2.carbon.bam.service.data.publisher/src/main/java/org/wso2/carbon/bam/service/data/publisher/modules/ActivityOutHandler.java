@@ -132,7 +132,7 @@ public class ActivityOutHandler extends AbstractHandler {
                 // If service statistics is not enabled publish the event. Else let service stat
                 // handler do the job.
                 if (!eventingConfigData.isServiceStatsEnable()) {
-                    Event  event = ServiceAgentUtil.makeEventList(publishData);
+                    Event  event = ServiceAgentUtil.makeEventList(publishData, eventingConfigData);
                     EventPublisher publisher = new EventPublisher();
                     publisher.publish(event,eventingConfigData);
                 } else {

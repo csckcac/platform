@@ -18,6 +18,7 @@ import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventPublisherConfig;
 import org.wso2.carbon.bam.service.data.publisher.conf.EventingConfigData;
+import org.wso2.carbon.bam.service.data.publisher.conf.Property;
 import org.wso2.carbon.bam.service.data.publisher.data.Event;
 import org.wso2.carbon.bam.service.data.publisher.util.ServiceStatisticsPublisherConstants;
 import org.wso2.carbon.bam.service.data.publisher.util.StatisticsType;
@@ -142,7 +143,11 @@ public class EventPublisher {
             streamDef.setNickName(configData.getNickName());
             streamDef.setDescription(configData.getDescription());
 
-            streamDef.setMetaData(setMetadata());
+            List<Attribute> metaDataAttributeList = new ArrayList<Attribute>();
+            setUserAgentMetadata(metaDataAttributeList);
+            setPropertiesAsMetaData(metaDataAttributeList,configData);
+
+            streamDef.setMetaData(metaDataAttributeList);
 
             List<Attribute> payLoadData = new ArrayList<Attribute>();
             payLoadData = addCommonPayLoadData(payLoadData);
@@ -165,7 +170,11 @@ public class EventPublisher {
             streamDef.setNickName(configData.getNickName());
             streamDef.setDescription(configData.getDescription());
 
-            streamDef.setMetaData(setMetadata());
+            List<Attribute> metaDataAttributeList = new ArrayList<Attribute>();
+            setUserAgentMetadata(metaDataAttributeList);
+            setPropertiesAsMetaData(metaDataAttributeList,configData);
+
+            streamDef.setMetaData(metaDataAttributeList);
 
             List<Attribute> payLoadData = new ArrayList<Attribute>();
             payLoadData = addCommonPayLoadData(payLoadData);
@@ -187,7 +196,11 @@ public class EventPublisher {
             streamDef.setNickName(configData.getNickName());
             streamDef.setDescription(configData.getDescription());
 
-            streamDef.setMetaData(setMetadata());
+            List<Attribute> metaDataAttributeList = new ArrayList<Attribute>();
+            setUserAgentMetadata(metaDataAttributeList);
+            setPropertiesAsMetaData(metaDataAttributeList,configData);
+
+            streamDef.setMetaData(metaDataAttributeList);
 
             List<Attribute> payLoadData = new ArrayList<Attribute>();
             payLoadData = addCommonPayLoadData(payLoadData);
@@ -201,6 +214,19 @@ public class EventPublisher {
             log.error("Malformed Stream Definition", e);
         }
         return streamDef;
+    }
+
+    private void setPropertiesAsMetaData(List<Attribute> metaDataAttributeList,
+                                         EventingConfigData configData) {
+        Property[] properties = configData.getProperties();
+        if (properties != null) {
+            for (int i = 0; i < properties.length; i++) {
+                Property property = properties[i];
+                if (property.getKey() != null && !property.getKey().isEmpty()) {
+                    metaDataAttributeList.add(new Attribute(property.getKey(),AttributeType.STRING));
+                }
+            }
+        }
     }
 
 
@@ -248,8 +274,7 @@ public class EventPublisher {
         return payLoadData;
     }
 
-    private List<Attribute> setMetadata() {
-        List<Attribute> attributeList = new ArrayList<Attribute>();
+    private void setUserAgentMetadata(List<Attribute> attributeList) {
         attributeList.add(new Attribute(BAMDataPublisherConstants.REQUEST_URL,
                                         AttributeType.STRING));
         attributeList.add(new Attribute(BAMDataPublisherConstants.REMOTE_ADDRESS,
@@ -262,6 +287,5 @@ public class EventPublisher {
                                         AttributeType.STRING));
         attributeList.add(new Attribute(BAMDataPublisherConstants.REFERER,
                                         AttributeType.STRING));
-        return attributeList;
     }
 }

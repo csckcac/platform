@@ -464,10 +464,9 @@ public class Job extends JobContext {
     connect();
     info = jobClient.submitJobInternal(conf);
     //WSO2 Fix: Get JobReporter for this Thread and execute it.
-    JobReporter jobReporter = JobReporterRegistry.getReporter(new Long(Thread.currentThread().getId()));
+    JobReporter jobReporter = JobReporterRegistry.getReporter();
     jobReporter.setRunningJob(info);
-    Thread jobReporterThread = new Thread(jobReporter);
-    jobReporterThread.start();
+    jobReporter.init();
     state = JobState.RUNNING;
    }
   

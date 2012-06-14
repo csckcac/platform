@@ -82,6 +82,8 @@ public class JobStatus implements Writable, Cloneable {
   private int runState;
   private long startTime;
   private String user;
+  //WSO2 Fix:
+  private String originalUser;
   private JobPriority priority;
   private String schedulingInfo="NA";
   private String failureInfo = "NA";
@@ -390,5 +392,14 @@ public class JobStatus implements Writable, Cloneable {
   static int getOldNewJobRunState(
     org.apache.hadoop.mapreduce.JobStatus.State state) {
     return state.getValue();
+  }
+  
+  //WSO2 Fix:
+  public synchronized void setOriginalUser(String user) {
+	  this.originalUser = user;
+  }
+  
+  public synchronized String getOriginalUser() {
+	  return this.originalUser;
   }
 }

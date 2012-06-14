@@ -332,6 +332,11 @@ public class JobInProgress {
       this.jobtracker = jobtracker;
       this.status = new JobStatus(jobId, 0.0f, 0.0f, JobStatus.PREP);
       this.status.setUsername(jobInfo.getUser().toString());
+      //WSO2 Fix:
+      String originalUser = null;
+      if (jobInfo.getOriginalUser() != null)
+    	  originalUser = jobInfo.getOriginalUser().toString();
+      this.status.setOriginalUser(originalUser);
       this.jobtracker.getInstrumentation().addPrepJob(conf, jobId);
       this.startTime = jobtracker.getClock().getTime();
       status.setStartTime(startTime);

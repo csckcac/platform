@@ -35,6 +35,8 @@ import org.apache.hadoop.io.WritableUtils;
 class JobInfo implements Writable {
   private org.apache.hadoop.mapreduce.JobID id;
   private Text user;
+  //WSO2 Fix: Required by the reporting mechanism
+  private Text originalUser;
   private Path jobSubmitDir;
   public JobInfo() {}
   
@@ -79,5 +81,14 @@ class JobInfo implements Writable {
     id.write(out);
     user.write(out);
     WritableUtils.writeString(out, jobSubmitDir.toString());
+  }
+  
+  //WSO2 Fix: original user accessors
+  public void setOriginalUser(String user) {
+	  this.originalUser = new Text(user);
+  }
+  
+  public Text getOriginalUser() {
+	  return this.originalUser;
   }
 }

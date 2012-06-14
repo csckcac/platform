@@ -2880,6 +2880,13 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
       }
       userJobs.add(job);
     }
+    //WSO2 Fix:
+    try {
+    	JobCoreReporter coreReporter = JobCoreReporterFactory.getjobCoreReporter(job.getProfile(), job.getStatus(), this.getJobCounters(job.getJobID()), getConf());
+    	coreReporter.init(getConf());
+    } catch(IOException e) {
+    	e.printStackTrace();
+    }
   }
 
   ///////////////////////////////////////////////////////
@@ -3913,6 +3920,7 @@ public class JobTracker implements MRConstants, InterTrackerProtocol,
       }
       jobInfo = new JobInfo(jobId, new Text(conf.get("mapred.tasktracker.carbon.proxy.user", ugi.getShortUserName())),
         new Path(jobSubmitDir));
+      jobInfo.setOriginalUser(ugi.getShortUserName());
     }
     
     // Create the JobInProgress, do not lock the JobTracker since

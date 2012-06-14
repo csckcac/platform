@@ -105,7 +105,7 @@ include('/includes/topnavi.jag');
 %&gt
 						</pre><br/>
                  <span id="deploying"></span>
-                <li>Thats it! now point to  <code>{http://localhost:9443/helloapp/helloworld.jag}</code></li>
+                <li>Thats it! now point to  <code><a href="http://localhost:9763/helloapp/helloworld.jag" target="_blank">http://localhost:9763/helloapp/helloworld.jag</a></code></li>
             </ol>
             <p>Excited ?? check out the <a href="/documentation.jag">Jaggery API</a></p>
 
@@ -148,7 +148,7 @@ include('/includes/topnavi.jag');
 	            Jaggery Server is powered by WSO2 carbon OSGi Runtime
 	
 	            <br/> <br/>
-	            Management console can be accessed by <code>{https://localhost:9443/admin}</code>
+	            Management console can be accessed by <code><a href="https://localhost:9443/admin" target="_blank">https://localhost:9443/admin</a></code>
 	        </p>
 
 

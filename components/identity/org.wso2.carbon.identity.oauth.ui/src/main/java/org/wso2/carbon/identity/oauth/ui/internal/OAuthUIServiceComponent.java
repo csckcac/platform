@@ -39,6 +39,7 @@ import java.util.Hashtable;
 public class OAuthUIServiceComponent {
 
     private static final Log log = LogFactory.getLog(OAuthUIServiceComponent.class);
+    private static final String PATH = "/oauth2/token";
 
     protected void activate(ComponentContext context) {
         log.debug("Activating Identity OAuth UI bundle.");
@@ -81,24 +82,19 @@ public class OAuthUIServiceComponent {
     }
 
     protected void setHttpService(HttpService httpService){
-        try {
-            HttpServlet oauth2TokEndpointServlet = new OAuth2TokenEndpointServlet();
             Dictionary oauth2TokEndpointParams = new Hashtable();
             oauth2TokEndpointParams.put("javax.ws.rs.Application", OAuth2EndpointApp.class.getName());
             try {
-                httpService.registerServlet("/token", new OAuth2TokenEndpointServlet(), oauth2TokEndpointParams, null);
+                httpService.registerServlet(PATH, new OAuth2TokenEndpointServlet(), oauth2TokEndpointParams, null);
             } catch (Exception e) {
                 log.error("Error when registering the OAuth2TokenEndpointServlet via the HttpService.", e);
                 throw new RuntimeException("Error when registering the OAuth2TokenEndpointServlet via the HttpService.", e);
             }
             log.debug("Successfully registered an instance of OAuth2 Token Endpoint");
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
     }
 
     protected void unsetHttpService(HttpService httpService){
-        httpService.unregister("/token");
+        httpService.unregister("/oauth2/token");
     }
 
 }

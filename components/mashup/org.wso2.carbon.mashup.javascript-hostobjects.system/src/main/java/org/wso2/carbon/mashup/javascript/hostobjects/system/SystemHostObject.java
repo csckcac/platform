@@ -16,43 +16,56 @@
 
 package org.wso2.carbon.mashup.javascript.hostobjects.system;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.util.UUIDGenerator;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.description.AxisService;
-import org.apache.axis2.description.Parameter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.synapse.task.TaskDescription;
-import org.mozilla.javascript.*;
-import org.wso2.carbon.CarbonException;
-import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
-import org.wso2.carbon.mashup.utils.MashupUtils;
-import org.wso2.carbon.mashup.utils.MashupConstants;
-import org.wso2.carbon.scriptengine.engine.RhinoEngine;
-import org.wso2.carbon.scriptengine.exceptions.ScriptException;
-import org.wso2.carbon.utils.NetworkUtils;
-import org.quartz.SimpleTrigger;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Date;
-import java.util.Map;
-import java.util.ArrayList;
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.util.UUIDGenerator;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.Parameter;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.UniqueTag;
+import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
+import org.wso2.carbon.mashup.utils.MashupConstants;
+import org.wso2.carbon.mashup.utils.MashupUtils;
+import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import org.wso2.carbon.utils.NetworkUtils;
 
 /**
  * <p/>
@@ -338,21 +351,10 @@ public class SystemHostObject extends ScriptableObject {
         Date startTime = null;
         Date endTime = null;
         final Map<String, Object> resources = new HashMap<String, Object>();
-        final TaskDescription taskDescription = new TaskDescription();
-        final FunctionSchedulingManager functionSchedulingManager;
 
-        taskDescription.setGroup(FunctionSchedulingJob.MASHUP_GROUP);
-        taskDescription.setTaskClass(FunctionExecutionTask.class.getName());
-
-        OMElement propElem = FACTORY.createOMElement("property", TASK_OM_NAMESPACE);
-        OMNamespace nullNS = FACTORY.createOMNamespace("", "");
-        propElem.addAttribute("name", "axisService", nullNS);
-        propElem.addAttribute("value", axisService.getName(), nullNS);
-        taskDescription.addProperty(propElem);
-
-        resources.put(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configurationContext);
-
-
+        MSTaskInfoDTO msTaskInfo = new MSTaskInfoDTO();
+        Map<String, String> propertyMap = new HashMap<String, String>();
+        
         switch (argCount) {
 
             case 2://A javascript function and its execution frequency were passed
@@ -374,15 +376,16 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(FunctionSchedulingJob.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(FunctionSchedulingJob.FUNCTION_PARAMETERS, functionParams);
-                resources.put(FunctionSchedulingJob.AXIS_SERVICE, axisService);
-                resources.put(FunctionSchedulingJob.TASK_NAME, taskName);
+                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
+                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.TASK_NAME, taskName);
+                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
 
                 //Creating the trigger. There will be a one-to-one mapping between jobs and triggers in this implementation
-                taskDescription.setName(taskName);
-                taskDescription.setCount(SimpleTrigger.REPEAT_INDEFINITELY);
-                taskDescription.setInterval(frequency);
+                msTaskInfo.setName(taskName);
+                msTaskInfo.setTaskCount(MSTaskConstants.REPEAT_INDEFINITELY);
+                msTaskInfo.setTaskInterval(frequency);
                 break;
 
             case 3://A javascript function its execution frequency and parameters were passed
@@ -439,15 +442,16 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(FunctionSchedulingJob.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(FunctionSchedulingJob.FUNCTION_PARAMETERS, functionParams);
-                resources.put(FunctionSchedulingJob.AXIS_SERVICE, axisService);
-                resources.put(FunctionSchedulingJob.TASK_NAME, taskName);
+                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
+                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.TASK_NAME, taskName);
+                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
 
                 //Creating the trigger. There will be a one-to-one mapping between jobs and triggers in this implementation
-                taskDescription.setName(taskName);
-                taskDescription.setCount(SimpleTrigger.REPEAT_INDEFINITELY);
-                taskDescription.setInterval(frequency);
+                msTaskInfo.setName(taskName);
+                msTaskInfo.setTaskCount(MSTaskConstants.REPEAT_INDEFINITELY);
+                msTaskInfo.setTaskInterval(frequency);
                 break;
 
             case 4:// A javascript function, its execution frequnecy, function parameters and a start time is passed.
@@ -515,15 +519,16 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(FunctionSchedulingJob.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(FunctionSchedulingJob.FUNCTION_PARAMETERS, functionParams);
-                resources.put(FunctionSchedulingJob.AXIS_SERVICE, axisService);
-                resources.put(FunctionSchedulingJob.TASK_NAME, taskName);
+                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
+                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.TASK_NAME, taskName);
+                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
 
-                taskDescription.setName(taskName);
-                taskDescription.setCount(SimpleTrigger.REPEAT_INDEFINITELY);
-                taskDescription.setInterval(frequency);
-                taskDescription.setStartTime(startTime);
+                msTaskInfo.setName(taskName);
+                msTaskInfo.setTaskCount(MSTaskConstants.REPEAT_INDEFINITELY);
+                msTaskInfo.setTaskInterval(frequency);
+                msTaskInfo.setStartTime(MSTaskUtils.dateToCal(startTime));
 
                 break;
 
@@ -608,16 +613,17 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(FunctionSchedulingJob.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(FunctionSchedulingJob.FUNCTION_PARAMETERS, functionParams);
-                resources.put(FunctionSchedulingJob.AXIS_SERVICE, axisService);
-                resources.put(FunctionSchedulingJob.TASK_NAME, taskName);
+                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
+                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.TASK_NAME, taskName);
+                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
 
-                taskDescription.setName(taskName);
-                taskDescription.setCount(SimpleTrigger.REPEAT_INDEFINITELY);
-                taskDescription.setInterval(frequency);
-                taskDescription.setStartTime(startTime);
-                taskDescription.setEndTime(endTime);
+                msTaskInfo.setName(taskName);
+                msTaskInfo.setTaskCount(MSTaskConstants.REPEAT_INDEFINITELY);
+                msTaskInfo.setTaskInterval(frequency);
+                msTaskInfo.setStartTime(MSTaskUtils.dateToCal(startTime));
+                msTaskInfo.setEndTime(MSTaskUtils.dateToCal(endTime));
 
                 break;
 
@@ -702,26 +708,32 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(FunctionSchedulingJob.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(FunctionSchedulingJob.FUNCTION_PARAMETERS, functionParams);
-                resources.put(FunctionSchedulingJob.AXIS_SERVICE, axisService);
-                resources.put(FunctionSchedulingJob.TASK_NAME, taskName);
+                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
+                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.TASK_NAME, taskName);
+                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
 
-                taskDescription.setName(taskName);
-                taskDescription.setCount(SimpleTrigger.REPEAT_INDEFINITELY);
-                taskDescription.setInterval(frequency);
-                taskDescription.setStartTime(startTime);
-                taskDescription.setEndTime(endTime);
+                msTaskInfo.setName(taskName);
+                msTaskInfo.setTaskCount(MSTaskConstants.REPEAT_INDEFINITELY);
+                msTaskInfo.setTaskInterval(frequency);
+                msTaskInfo.setStartTime(MSTaskUtils.dateToCal(startTime));
+                msTaskInfo.setEndTime(MSTaskUtils.dateToCal(endTime));
 
                 break;
 
             default:
                 throw new CarbonException("Invalid number of parameters.");
         }
-
-        functionSchedulingManager = FunctionSchedulingManager.getInstance();
-
-        functionSchedulingManager.scheduleTask(taskDescription, resources, configurationContext);
+        
+        msTaskInfo.setRuntimeProperties(resources);
+        msTaskInfo.setTaskProperties(propertyMap);
+        MSTaskAdmin taskAdmin = new MSTaskAdmin();
+        try {
+			taskAdmin.scheduleTask(msTaskInfo);
+		} catch (AxisFault e) {
+			throw new CarbonException("Unable to create the scheduling task");
+		}
 
         return taskName;
     }
@@ -764,19 +776,17 @@ public class SystemHostObject extends ScriptableObject {
     private static void deleteJob(Object[] arguments, ConfigurationContext configCtx) {
         String taskName = (String) arguments[0];
 
-        FunctionSchedulingManager functionSchedulingManager;
-        functionSchedulingManager = FunctionSchedulingManager.getInstance();
-
-        functionSchedulingManager.deleteTask(taskName, configCtx);
-
-        if (log.isDebugEnabled()) {
-            log.info("Deleted the scheduled function execution with id " + taskName);
-        }
+        MSTaskAdmin taskAdmin = new MSTaskAdmin();
+        try {
+			taskAdmin.deleteTask(taskName);
+		} catch (AxisFault e) {
+			log.error("Unable to delete job : " + e.getFaultAction());
+		}
     }
 
     public static boolean jsFunction_isTaskActive(Context cx, Scriptable thisObj,
                                                   Object[] arguments, Function funObj)
-            throws CarbonException {
+            throws CarbonException, AxisFault {
 
         if (arguments[0] instanceof String) {
             ConfigurationContext configurationContext;
@@ -790,7 +800,9 @@ public class SystemHostObject extends ScriptableObject {
                 throw new CarbonException(
                         "Error obtaining the Service Meta Data : Axis2 ConfigurationContext");
             }
-            return FunctionSchedulingManager.getInstance().isTaskActive((String) arguments[0], configurationContext);
+            MSTaskAdmin taskAdmin = new MSTaskAdmin();
+            
+            return taskAdmin.isTaskScheduled((String) arguments[0]);
         } else {
             return false;
         }
@@ -976,18 +988,11 @@ public class SystemHostObject extends ScriptableObject {
         Object[] functionParams = null;
         long timeout = 0;
         Date currentTime = new Date();
+        
         final Map<String, Object> resources = new HashMap<String, Object>();
-        final TaskDescription taskDescription = new TaskDescription();
-        final FunctionSchedulingManager functionSchedulingManager;
 
-        taskDescription.setGroup(FunctionSchedulingJob.MASHUP_GROUP);
-        taskDescription.setTaskClass(FunctionExecutionTask.class.getName());
-
-        OMElement propElem = FACTORY.createOMElement("property", TASK_OM_NAMESPACE);
-        OMNamespace nullNS = FACTORY.createOMNamespace("", "");
-        propElem.addAttribute("name", "axisService", nullNS);
-        propElem.addAttribute("value", axisService.getName(), nullNS);
-        taskDescription.addProperty(propElem);
+        MSTaskInfoDTO msTaskInfo = new MSTaskInfoDTO();
+        Map<String, String> propertyMap = new HashMap<String, String>();
 
         resources.put(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configurationContext);
 
@@ -1012,15 +1017,17 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(FunctionSchedulingJob.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(FunctionSchedulingJob.FUNCTION_PARAMETERS, functionParams);
-                resources.put(FunctionSchedulingJob.AXIS_SERVICE, axisService);
-                resources.put(FunctionSchedulingJob.TASK_NAME, taskName);
-
+                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
+                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.TASK_NAME, taskName);
+                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
+                
                 //Creating the trigger. There will be a one-to-one mapping between jobs and triggers in this implementation
-                taskDescription.setName(taskName);
-                taskDescription.setCount(1);
-                taskDescription.setStartTime(new Date(currentTime.getTime() + timeout));
+                msTaskInfo.setName(taskName);
+                msTaskInfo.setTaskCount(1);
+                msTaskInfo.setStartTime(MSTaskUtils.dateToCal(new Date(currentTime.getTime() + timeout)));
+                
                 break;
 
             case 3://A javascript function its execution frequency and parameters were passed
@@ -1055,24 +1062,31 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(FunctionSchedulingJob.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(FunctionSchedulingJob.FUNCTION_PARAMETERS, functionParams);
-                resources.put(FunctionSchedulingJob.AXIS_SERVICE, axisService);
-                resources.put(FunctionSchedulingJob.TASK_NAME, taskName);
-
+                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
+                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.TASK_NAME, taskName);
+                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
+                
                 //Creating the trigger. There will be a one-to-one mapping between jobs and triggers in this implementation
-                taskDescription.setName(taskName);
-                taskDescription.setCount(1);
-                taskDescription.setStartTime(new Date(currentTime.getTime() + timeout));
+                msTaskInfo.setName(taskName);
+                msTaskInfo.setTaskCount(1);
+                msTaskInfo.setStartTime(MSTaskUtils.dateToCal(new Date(currentTime.getTime() + timeout)));
+
                 break;
 
             default:
                 throw new CarbonException("Invalid number of parameters.");
         }
 
-        functionSchedulingManager = FunctionSchedulingManager.getInstance();
-
-        functionSchedulingManager.scheduleTask(taskDescription, resources, configurationContext);
+        msTaskInfo.setRuntimeProperties(resources);
+        msTaskInfo.setTaskProperties(propertyMap);
+        MSTaskAdmin taskAdmin = new MSTaskAdmin();
+        try {
+			taskAdmin.scheduleTask(msTaskInfo);
+		} catch (AxisFault e) {
+			throw new CarbonException("Unable to create the scheduling task");
+		}
 
         return taskName;
 

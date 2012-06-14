@@ -17,9 +17,6 @@
 package org.wso2.carbon.mashup.javascript.hostobjects.system.multitenancy;
 
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.synapse.task.TaskConstants;
-import org.apache.synapse.task.TaskDescriptionRepository;
-import org.apache.synapse.task.TaskScheduler;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
 
 public class SystemHostObjectInitializer extends AbstractAxis2ConfigurationContextObserver {
@@ -28,20 +25,20 @@ public class SystemHostObjectInitializer extends AbstractAxis2ConfigurationConte
     public static final java.lang.String CARBON_TASK_REPOSITORY = "CARBON_TASK_REPOSITORY";
 
     public void createdConfigurationContext(ConfigurationContext configContext) {
-        TaskScheduler scheduler = (TaskScheduler)configContext.getProperty(SystemHostObjectInitializer.CARBON_TASK_SCHEDULER);
-        if (scheduler == null) {
-            scheduler = new TaskScheduler(TaskConstants.TASK_SCHEDULER);
-            scheduler.init(null);
-            configContext.setProperty(SystemHostObjectInitializer.CARBON_TASK_SCHEDULER, scheduler);
-        } else if(!scheduler.isInitialized()) {
-            scheduler.init(null);
-        }
-
-        if (configContext.getProperty(SystemHostObjectInitializer.CARBON_TASK_REPOSITORY) == null) {
-            TaskDescriptionRepository repository = new TaskDescriptionRepository();
-            configContext.setProperty(
-                    SystemHostObjectInitializer.CARBON_TASK_REPOSITORY, repository);
-        }
+//        TaskScheduler scheduler = (TaskScheduler)configContext.getProperty(SystemHostObjectInitializer.CARBON_TASK_SCHEDULER);
+//        if (scheduler == null) {
+//            scheduler = new TaskScheduler(TaskConstants.TASK_SCHEDULER);
+//            scheduler.init(null);
+//            configContext.setProperty(SystemHostObjectInitializer.CARBON_TASK_SCHEDULER, scheduler);
+//        } else if(!scheduler.isInitialized()) {
+//            scheduler.init(null);
+//        }
+//
+//        if (configContext.getProperty(SystemHostObjectInitializer.CARBON_TASK_REPOSITORY) == null) {
+//            TaskDescriptionRepository repository = new TaskDescriptionRepository();
+//            configContext.setProperty(
+//                    SystemHostObjectInitializer.CARBON_TASK_REPOSITORY, repository);
+//        }
     }
 
 }

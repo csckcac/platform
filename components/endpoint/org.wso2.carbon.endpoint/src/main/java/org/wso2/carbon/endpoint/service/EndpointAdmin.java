@@ -628,8 +628,8 @@ public class EndpointAdmin extends AbstractServiceBusAdmin {
         final Lock lock = getLock();
         try {
             lock.lock();
-            String[] configInfo = getMimeTypeResult(getConfigSystemRegistry());
-            String[] govInfo = getMimeTypeResult(getGovernanceRegistry());
+            String[] configInfo = getConfigSystemRegistry() != null ? getMimeTypeResult(getConfigSystemRegistry()):new String[0];
+            String[] govInfo = getGovernanceRegistry() !=null ?getMimeTypeResult(getGovernanceRegistry()):new String[0];
             String[] info = new String[configInfo.length + govInfo.length];
 
             int ptr = 0;
@@ -764,8 +764,8 @@ public class EndpointAdmin extends AbstractServiceBusAdmin {
     public int getDynamicEndpointCount() throws EndpointAdminException {
         org.wso2.carbon.registry.core.Registry registry;
         try {
-            String[] govList = getMimeTypeResult(getGovernanceRegistry());
-            String[] confList = getMimeTypeResult(getConfigSystemRegistry());
+            String[] govList = getGovernanceRegistry() != null? getMimeTypeResult(getGovernanceRegistry()) :new String[0];
+            String[] confList = getConfigSystemRegistry() != null ? getMimeTypeResult(getConfigSystemRegistry()):new String [0];
             return confList.length + govList.length;
         } catch (Exception e) {
             handleFault("Error while retrieving dynamic endpoint count", e);

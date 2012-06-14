@@ -45,7 +45,7 @@
             <table class="table" id="versionUserTable" style="display:none">
                   <tr>
                     <th>Version</th>
-                    <th>Number of Subscribers</th>
+                    <th>Number of Subscriptions</th>
                   </tr>
               </table>
         </div>

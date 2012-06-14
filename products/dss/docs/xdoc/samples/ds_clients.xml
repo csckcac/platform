@@ -69,7 +69,7 @@ the usage of streaming data, where a file of any size can be uploaded or downloa
                   # ant
               </li>
               <li>Running the secure sample sample client <br />
-                  # ant batch_request
+                  # ant secure_sample
               </li>
               <li>Running the file service application sample client <br />
                   # ant file_service_app

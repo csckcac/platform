@@ -124,9 +124,9 @@ public class SequenceAdmin extends AbstractServiceBusAdmin {
         final Lock lock = getLock();
         try {
             lock.lock();
-            String[] configInfo = getMimeTypeResult(getConfigSystemRegistry());
-            String[] govInfo = getMimeTypeResult(getGovernanceRegistry());
-            String[] info = new String[configInfo.length + govInfo.length];
+            String[] configInfo = getConfigSystemRegistry() !=null?getMimeTypeResult(getConfigSystemRegistry()):new String[0];
+            String[] govInfo = getGovernanceRegistry() != null ?getMimeTypeResult(getGovernanceRegistry()):new String[0];
+            String[] info = new String[(configInfo != null?configInfo.length:0) + (govInfo !=null?govInfo.length:0)];
             
             int ptr = 0;
             for (String aConfigInfo : configInfo) {
@@ -162,9 +162,9 @@ public class SequenceAdmin extends AbstractServiceBusAdmin {
 
     public int getDynamicSequenceCount() throws SequenceEditorException {
         try {
-            String[] govList = getMimeTypeResult(getGovernanceRegistry());
-            String[] confList = getMimeTypeResult(getConfigSystemRegistry());
-            return confList.length + govList.length;
+            String[] govList = getGovernanceRegistry() !=null ?getMimeTypeResult(getGovernanceRegistry()) : new String[0];
+            String[] confList = getConfigSystemRegistry() !=null ? getMimeTypeResult(getConfigSystemRegistry()) : new String[0];
+            return (confList  != null ?confList.length:0) + (govList != null ?govList.length:0);
         } catch (Exception e) {
             return 0;
         }

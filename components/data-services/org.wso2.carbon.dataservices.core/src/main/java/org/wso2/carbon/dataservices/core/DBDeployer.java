@@ -72,50 +72,50 @@ import java.util.*;
  * Represents the custom Axis2 deployer used in deploying data-services .dbs files.
  */
 public class DBDeployer extends AbstractDeployer {
-	
+
     public static final String HTTP_TRANSPORT = "http";
-	
+
 	public static final String HTTPS_TRANSPORT = "https";
-	
+
 	private static final Log log = LogFactory.getLog(DBDeployer.class);
-	
+
 	/**
 	 * Data Services directory name to be used in Axis2 service deployment
 	 */
 	public static final String DEPLOYMENT_FOLDER_NAME = "dataservices";
-	
+
 	/**
 	 * Current Axis2 AxisConfiguration
 	 */
 	private AxisConfiguration axisConfig;
-	
+
 	/**
 	 * Current Axis2 ConfigurationContext
 	 */
 	private ConfigurationContext configCtx;
-	
+
 	/**
 	 * Data Services repository directory
 	 */
 	private String repoDir;
-	
+
 	/**
 	 * Data Services file directory (i.e. '.dbs')
 	 */
 	private String extension;
-	
+
 	/**
 	 * used for REST processing
 	 */
 	private Map<String, AxisOperation> httpLocationTable;
-	
+
     /** cached transaction manager instance */
     private static TransactionManager cachedTransactionManager = null;
-	
+
 	public ConfigurationContext getConfigContext() {
 		return configCtx;
 	}
-	
+
 	/**
 	 * Deploys a data service with the given deployment data.
 	 */
@@ -142,13 +142,19 @@ public class DBDeployer extends AbstractDeployer {
 			/* during unit tests, this may occur */
 			log.warn("Init error at DBDeployer.deploy()", e);
 		}
-		
+
+        /* If there's already a faulty service corresponding to this particular service,
+           remove it */
+        if (isFaultyService(deploymentFileData)) {
+            this.axisConfig.removeFaultyService(deploymentFileData.getFile().getAbsolutePath());
+        }
+
 		String serviceHierarchy = Utils.getServiceHierarchy(
 				deploymentFileData.getAbsolutePath(), this.repoDir);
         if (serviceHierarchy == null){
             serviceHierarchy = "";
         }
-        
+
         /* state variable kept to check if the service was successfully deployed at the end */
 		boolean successfullyDeployed = false;
 		/* used to store the error message if there is a problem in deploying */
@@ -178,28 +184,20 @@ public class DBDeployer extends AbstractDeployer {
                     deploymentFileData.getFile().toURI().toURL(), deploymentFileData,
                     this.axisConfig);
 
-			
+
 			/* restore original service active value */
 			service.setActive(serviceActive);
-			
+
 			if (log.isDebugEnabled()) {
-			    log.debug(Messages.getMessage(DeploymentErrorMsgs.DEPLOYING_WS, 
+			    log.debug(Messages.getMessage(DeploymentErrorMsgs.DEPLOYING_WS,
 			    		deploymentFileData.getName(), deploymentFileData.getAbsolutePath()));
 		    }
 			/* finished deploying successfully */
 			successfullyDeployed = true;
 
-			/* the following section is to remove a faulty service, if there's one already
-			registered */
-            String faultyServiceFilePath = deploymentFileData.getFile().getAbsolutePath();
-            AxisService faultyService = CarbonUtils.getFaultyService(faultyServiceFilePath,
-                    this.configCtx);
-            if (faultyService != null) {
-            	this.axisConfig.removeFaultyService(faultyServiceFilePath);
-            }
 		} catch (DataServiceFault e) {
 			errorMessage = DBUtils.getStacktraceFromException(e);
-			log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_SERVICE, 
+			log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_SERVICE,
 					deploymentFileData.getName()), e);
 			/* if there is a request to re-schedule in the exception, do it .. */
 			if (DBConstants.FaultCodes.CONNECTION_UNAVAILABLE_ERROR.equals(e.getCode())) {
@@ -216,22 +214,22 @@ public class DBDeployer extends AbstractDeployer {
 				log.warn("Error in data service cleanup: " + e2.getMessage(), e2);
 			}
 			throw new DeploymentException(Messages.getMessage(
-					DeploymentErrorMsgs.INVALID_SERVICE, 
+					DeploymentErrorMsgs.INVALID_SERVICE,
 					deploymentFileData.getName()), e);
 		} catch (Throwable e) {
 			errorMessage = DBUtils.getStacktraceFromException(e);
-			log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_SERVICE, 
+			log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_SERVICE,
 					deploymentFileData.getName()), e);
 			throw new DeploymentException(Messages.getMessage(
-					DeploymentErrorMsgs.INVALID_SERVICE, 
+					DeploymentErrorMsgs.INVALID_SERVICE,
 					deploymentFileData.getName()), e);
 		} finally {
 			if (!successfullyDeployed)	{
-				String deploymentFilePath = deploymentFileData.getFile().getAbsolutePath();            	
+				String deploymentFilePath = deploymentFileData.getFile().getAbsolutePath();
 				/* Register the faulty service */
 				this.axisConfig.getFaultyServices().put(deploymentFilePath, errorMessage);
                 try {
-                	CarbonUtils.registerFaultyService(deploymentFilePath, 
+                	CarbonUtils.registerFaultyService(deploymentFilePath,
                     		DBConstants.DB_SERVICE_TYPE, configCtx);
                 } catch (Exception e) {
                     log.error("Cannot register faulty service with Carbon", e);
@@ -249,6 +247,24 @@ public class DBDeployer extends AbstractDeployer {
 		}
 	}
 
+    /**
+     * Checks whether the service that is being deployed is already marked as a faulty service
+     *
+     * @param deploymentFileData    DeploymentFileData instance corresponding to the service being
+     *                              deployed.
+     * @return                      Boolean representing the existence of the service as a faulty
+     *                              service
+     */
+    private boolean isFaultyService(DeploymentFileData deploymentFileData) {
+        String faultyServiceFilePath = deploymentFileData.getFile().getAbsolutePath();
+        AxisService faultyService = CarbonUtils.getFaultyService(faultyServiceFilePath,
+                this.configCtx);
+        if (faultyService != null) {
+            return true;
+        }
+        return false;
+    }
+
     private String getServiceNameFromDSContents(File file) throws Exception {
         StAXOMBuilder builder = new StAXOMBuilder(new FileInputStream(file.getAbsoluteFile()));
         OMElement serviceEl = builder.getDocumentElement();
@@ -262,18 +278,18 @@ public class DBDeployer extends AbstractDeployer {
     }
 
 
-		
+
 	/**
 	 * Creates a timer with a one minute delay, for re-deploying a data service.
 	 */
 	private void sheduleRedeploy(DeploymentFileData deploymentFileData, AxisService service) {
-		Runnable faultyServiceRectifier = new FaultyServiceRectifier(service, 
+		Runnable faultyServiceRectifier = new FaultyServiceRectifier(service,
 				deploymentFileData, configCtx);
 		/* Retry in one minute */
 		long retryIn = 1000 * 60;
 		DBUtils.scheduleTask(faultyServiceRectifier, retryIn);
 	}
-	
+
 	/**
 	 * Initializes the deployer.
 	 */
@@ -285,11 +301,11 @@ public class DBDeployer extends AbstractDeployer {
 		configCtx.setProperty(DBConstants.DB_SERVICE_REPO, this.repoDir);
 		configCtx.setProperty(DBConstants.DB_SERVICE_EXTENSION, this.extension);
 		configCtx.setProperty(DBConstants.DB_SERVICE_DEPLOYER, this);
-		
+
 		/* transaction manager looked up and cached for later use, rather than always doing the JNDI lookup */
         this.doExtractTransactionManager();
 	}
-	
+
     private void doExtractTransactionManager() {
     	if (cachedTransactionManager != null) {
     		return;
@@ -313,14 +329,14 @@ public class DBDeployer extends AbstractDeployer {
 						DBConstants.STANDARD_TRANSACTION_MANAGER_JNDI_NAME);
 			} catch (Exception e) {
 				if (log.isDebugEnabled()) {
-					log.debug("Cannot find transaction manager at: " + 
+					log.debug("Cannot find transaction manager at: " +
 				         DBConstants.STANDARD_TRANSACTION_MANAGER_JNDI_NAME, e);
 				}
 				/* we'll do the lookup later, maybe user provided a custom JNDI name */
 			}
 		}
     }
-    
+
     public static TransactionManager getCachedTransactionManager() {
     	return cachedTransactionManager;
     }
@@ -332,7 +348,7 @@ public class DBDeployer extends AbstractDeployer {
 	public String getRepoDir() {
 		return repoDir;
 	}
-	
+
 	public void setExtension(String extension) {
 		this.extension = extension;
 	}
@@ -353,14 +369,14 @@ public class DBDeployer extends AbstractDeployer {
 						canonicalServicePath)) {
 			    	return tmpDS;
 			    }
-			}		    
+			}
 		}
 		//throw new DataServiceFault("Data service at '" + servicePath + "' cannot be found");
 		return null;
 	}
-	
+
 	/**
-	 * Undeploys a service. 
+	 * Undeploys a service.
 	 */
 	public void undeploy(String servicePath) throws DeploymentException {
 		try {
@@ -380,7 +396,7 @@ public class DBDeployer extends AbstractDeployer {
                 this.axisConfig.removeFaultyService(servicePath);
 				return;
 			}
-			String serviceHierarchy = Utils.getServiceHierarchy(servicePath, this.repoDir);	        
+			String serviceHierarchy = Utils.getServiceHierarchy(servicePath, this.repoDir);
 	        if (serviceHierarchy == null){
 	            serviceHierarchy = "";
 	        }
@@ -391,7 +407,7 @@ public class DBDeployer extends AbstractDeployer {
 			if (serviceGroup == null) { /* must be a faulty service */
 				this.axisConfig.removeFaultyService(servicePath);
 			} else {
-				/* cleanup data service */				
+				/* cleanup data service */
 				dataService.cleanup();
 				this.axisConfig.removeService(serviceName);
 				/* if the service group is now empty, remove it as well */
@@ -410,9 +426,9 @@ public class DBDeployer extends AbstractDeployer {
 			throw new DeploymentException(msg, e);
 		}
 	}
-    
+
 	/**
-	 * Configuration files prior to multiple data source support did not have id attribute 
+	 * Configuration files prior to multiple data source support did not have id attribute
 	 * for config element. Adding that & saving.
 	 */
 	@SuppressWarnings("unchecked")
@@ -453,7 +469,7 @@ public class DBDeployer extends AbstractDeployer {
 			}
 			if (changed) {
 				if (log.isDebugEnabled()) {
-					log.debug("Converting " + configFilePath + 
+					log.debug("Converting " + configFilePath +
 							" to support multiple data sources.");
 				}
 				BufferedWriter out = new BufferedWriter(new FileWriter(configFilePath));
@@ -473,36 +489,36 @@ public class DBDeployer extends AbstractDeployer {
 			}
 		}
 	}
-	
+
 	/**
 	 * Creates an AxisOperation with the given data service operation object.
 	 * @see Operation
 	 * @see AxisOperation
 	 */
-	private AxisOperation createAxisOperationFromDSOperation(Operation operation, 
-			AxisBinding soap11Binding, AxisBinding soap12Binding, 
+	private AxisOperation createAxisOperationFromDSOperation(Operation operation,
+			AxisBinding soap11Binding, AxisBinding soap12Binding,
 			AxisBinding httpBinding) throws AxisFault {
 		String opName = operation.getName();
 		String requestName = operation.getRequestName();
-		
+
 		int index = opName.indexOf(":");
 		if (index > -1) {
 			opName = opName.substring(index + 1);
-		}		
+		}
 		boolean hasResult = operation.getCallQueryGroup().isHasResult()
-				|| operation.isReturnRequestStatus();	
+				|| operation.isReturnRequestStatus();
 		String description = operation.getDescription();
 		return createAxisOperation(requestName, opName, HTTPConstants.HTTP_METHOD_POST, hasResult,
 				soap11Binding, soap12Binding, httpBinding, description);
 	}
-	
+
 	/**
 	 * Creates an AxisOperation with the given data service resource object.
 	 * @see Operation
 	 * @see AxisOperation
 	 */
-	private AxisOperation createAxisOperationFromDSResource(Resource resource, 
-			AxisBinding soap11Binding, AxisBinding soap12Binding, 
+	private AxisOperation createAxisOperationFromDSResource(Resource resource,
+			AxisBinding soap11Binding, AxisBinding soap12Binding,
 			AxisBinding httpBinding) {
 		ResourceID resourceId = resource.getResourceId();
 		String method = resourceId.getMethod();
@@ -510,15 +526,15 @@ public class DBDeployer extends AbstractDeployer {
 		String requestName = resource.getRequestName();
 		String description = resource.getDescription();
 		boolean hasResult = resource.getCallQueryGroup().isHasResult()
-				|| resource.isReturnRequestStatus();		
-		return createAxisOperation(requestName, path, method, hasResult, soap11Binding, 
+				|| resource.isReturnRequestStatus();
+		return createAxisOperation(requestName, path, method, hasResult, soap11Binding,
 				soap12Binding, httpBinding, description);
 	}
-	
+
 	/**
 	 * Utility method for creating AxisOperation objects.
 	 */
-	private AxisOperation createAxisOperation(String operationName, String httpLocation, 
+	private AxisOperation createAxisOperation(String operationName, String httpLocation,
 			String method, boolean hasResult,
 			AxisBinding soap11Binding, AxisBinding soap12Binding, AxisBinding httpBinding,
 			String description) {
@@ -549,7 +565,7 @@ public class DBDeployer extends AbstractDeployer {
 		// Create a default HTTP Binding operation
 		AxisBindingOperation httpBindingOperation = createDefaultHTTPBindingOperation(
 				axisOperation, httpLocation, method, httpBinding);
-		
+
 		String httpLocationString = WSDLUtil.getConstantFromHTTPLocation(httpLocation, method);
 		this.httpLocationTable.put(httpLocationString, axisOperation);
 
@@ -578,24 +594,24 @@ public class DBDeployer extends AbstractDeployer {
                         WSDLConstants.MESSAGE_LABEL_OUT_VALUE, false);
 			}
 		}
-		
+
 		AxisMessage faultMessage = new AxisMessage();
 		faultMessage.setName(DBConstants.DS_FAULT_ELEMENT);
 		faultMessage.setElementQName(new QName(DBConstants.WSO2_DS_NAMESPACE,
                 DBConstants.DS_FAULT_ELEMENT));
 		axisOperation.setFaultMessages(faultMessage);
-		
+
 		createAxisBindingMessage(soap11BindingOperation, faultMessage,
                 WSDLConstants.MESSAGE_LABEL_FAULT_VALUE, true);
 		createAxisBindingMessage(soap12BindingOperation, faultMessage,
                 WSDLConstants.MESSAGE_LABEL_FAULT_VALUE, true);
 		createAxisBindingMessage(httpBindingOperation, faultMessage,
                 WSDLConstants.MESSAGE_LABEL_FAULT_VALUE, true);
-		
+
 		axisOperation.setDocumentation(description);
 		return axisOperation;
 	}
-	
+
 	/**
 	 * Creates a schema from a DataService object, to be used later in WSDL generation.
 	 */
@@ -603,12 +619,12 @@ public class DBDeployer extends AbstractDeployer {
 	private void createDSSchema(AxisService axisService, DataService dataService)
 			throws DataServiceFault {
 		NamespaceMap map = new NamespaceMap();
-		map.put(Java2WSDLConstants.DEFAULT_SCHEMA_NAMESPACE_PREFIX, 
+		map.put(Java2WSDLConstants.DEFAULT_SCHEMA_NAMESPACE_PREFIX,
 				Java2WSDLConstants.URI_2001_SCHEMA_XSD);
 		axisService.setNamespaceMap(map);
 		DataServiceDocLitWrappedSchemaGenerator.populateServiceSchema(axisService);
 	}
-	
+
 	/**
 	 * Validate the data service to see if the data service is invalid.
 	 */
@@ -617,7 +633,7 @@ public class DBDeployer extends AbstractDeployer {
 		this.validateRequestQueryParams(dataService);
 		this.validateRequestQueryResults(dataService);
 	}
-	
+
 	/**
 	 * Check call-queries of callable requests (i.e. operations, resources) to see if the queries
 	 * exists.
@@ -626,17 +642,17 @@ public class DBDeployer extends AbstractDeployer {
 		for (CallableRequest cr : dataService.getCallableRequests().values()) {
 			for (CallQuery callQuery : cr.getCallQueryGroup().getCallQueries()) {
 				if (callQuery.getQuery() == null) {
-					DataServiceFault dsf = new DataServiceFault("Invalid DBS", 
-							"Call query with id: " + callQuery.getQueryId() + 
-							" doesn't exist as referenced by the operation/resource: " + 
+					DataServiceFault dsf = new DataServiceFault("Invalid DBS",
+							"Call query with id: " + callQuery.getQueryId() +
+							" doesn't exist as referenced by the operation/resource: " +
 							cr.getRequestName());
 					dsf.setSourceDataService(dataService);
 					throw dsf;
 				}
-			}			
+			}
 		}
 	}
-	
+
 	/**
 	 * Check query-params if they exist in the query as mentioned in the 'with-params' in
 	 * operation/resource, the computational complexity of this code is not an issue, since this is
@@ -666,13 +682,13 @@ public class DBDeployer extends AbstractDeployer {
 										+ cr.getRequestName());
 						dsf.setSourceDataService(dataService);
 						throw dsf;
-					}				
+					}
 				}
-			}			
+			}
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Check if an request's query has a result, and if that result contain an element wrapper.
 	 */
 	private void validateRequestQueryResults(DataService dataService) throws DataServiceFault {
@@ -699,48 +715,48 @@ public class DBDeployer extends AbstractDeployer {
 			}
 		}
 	}
-	
+
 	/**
 	 * Creates AxisService from DBS.
 	 */
 	private AxisService createDBService(String configFilePath,
-			AxisConfiguration axisConfiguration) throws DataServiceFault {		
-		FileInputStream fis = null;		
+			AxisConfiguration axisConfiguration) throws DataServiceFault {
+		FileInputStream fis = null;
 		try {
 			/* convert to multiple config format */
 			convertConfigToMultipleDSFormat(configFilePath);
-			
+
 			fis = new FileInputStream(configFilePath);
 			OMElement dbsElement = (new StAXOMBuilder(fis)).getDocumentElement();
 			dbsElement.build();
-			
+
 			/* create the data service object from dbs */
 			DataService dataService = DataServiceFactory.createDataService(
 					dbsElement, configFilePath);
-			
+
 			/* validate the data service */
 			this.validateDataService(dataService);
-						
-			String serviceName = dataService.getName();						
+
+			String serviceName = dataService.getName();
 			String interfaceName = serviceName + WSDL2Constants.INTERFACE_PREFIX;
-			
+
 			AxisService axisService = new AxisService(serviceName);
             try {
                 axisService.setFileName(new URL("file://" + configFilePath));
             } catch (MalformedURLException e) {
                 throw new DataServiceFault(e);
             }
-			
+
 			/* set service target namespace */
 			axisService.setTargetNamespace(dataService.getServiceNamespace());
-			
+
 			/* Used by the container to find out what kind of a service this is. */
-			axisService.addParameter(new Parameter(DBConstants.AXIS2_SERVICE_TYPE, 
+			axisService.addParameter(new Parameter(DBConstants.AXIS2_SERVICE_TYPE,
 					DBConstants.DB_SERVICE_TYPE));
-			
+
 			/* save the data service object in the AxisService */
 			axisService.addParameter(DBConstants.DATA_SERVICE_OBJECT, dataService);
-			
+
 			/* set service description */
 			axisService.setDocumentation(dataService.getDescription());
 
@@ -785,18 +801,18 @@ public class DBDeployer extends AbstractDeployer {
 
 			/* create schema */
 			createDSSchema(axisService, dataService);
-			
+
 			/* set session scope type for boxcarring */
 			if (dataService.isBoxcarringEnabled()) {
 				axisService.setScope(Constants.SCOPE_TRANSPORT_SESSION);
 			}
-			
+
 			/* register JMX MBean */
 			this.registerMBean(dataService);
-			
+
 			/* set service status */
 			axisService.setActive(!dataService.isServiceInactive());
-			
+
 			return axisService;
 		} catch (FileNotFoundException e) {
 			throw new DataServiceFault(e, "Error reading service configuration file.");
@@ -814,7 +830,7 @@ public class DBDeployer extends AbstractDeployer {
 			}
 		}
 	}
-	
+
 	/**
 	 * Registers an MBean representing the given data service.
 	 */
@@ -824,7 +840,7 @@ public class DBDeployer extends AbstractDeployer {
 		if (server != null) {
 			try {
 				ObjectName objectName = new ObjectName(DBConstants.DATA_SERVICES_JMX_DOMAIN +
-			    		":section=Services,service=" + 
+			    		":section=Services,service=" +
 			    		dsMBean.getServiceName());
 				try {
 					server.unregisterMBean(objectName);
@@ -853,14 +869,14 @@ public class DBDeployer extends AbstractDeployer {
 		} else {
 			soap11InBindingMessage.setFault(false);
 			bindingOperation.addChild(label, soap11InBindingMessage);
-		}		
+		}
 	}
 
 	/**
 	 * Creates AxisBindingOperation and populates it with HTTP properties
 	 */
 	private AxisBindingOperation createDefaultHTTPBindingOperation(
-			AxisOperation axisOp, String httpLocation, String httpMethod, 
+			AxisOperation axisOp, String httpLocation, String httpMethod,
 			AxisBinding httpBinding) {
 		AxisBindingOperation httpBindingOperation = new AxisBindingOperation();
 		httpBindingOperation.setAxisOperation(axisOp);
@@ -874,9 +890,9 @@ public class DBDeployer extends AbstractDeployer {
 
 	/**
 	 * Creates AxisBindingOperation and populates it with SOAP 1.2 properties
-	 */	
+	 */
 	private AxisBindingOperation createDefaultSOAP12BindingOperation(
-			AxisOperation axisOp, String httpLocation, String inputAction, 
+			AxisOperation axisOp, String httpLocation, String inputAction,
 			AxisBinding soap12Binding) {
 		AxisBindingOperation soap12BindingOperation = new AxisBindingOperation();
 		soap12BindingOperation.setAxisOperation(axisOp);
@@ -890,12 +906,12 @@ public class DBDeployer extends AbstractDeployer {
 				inputAction);
 		return soap12BindingOperation;
 	}
-	
+
 	/**
 	 * Creates AxisBindingOperation and populates it with SOAP 1.1 properties
 	 */
-	private AxisBindingOperation createDefaultSOAP11BindingOperation(		
-			AxisOperation axisOp, String httpLocation, String inputAction, 
+	private AxisBindingOperation createDefaultSOAP11BindingOperation(
+			AxisOperation axisOp, String httpLocation, String inputAction,
 			AxisBinding soap11Binding) {
 		AxisBindingOperation soap11BindingOperation = new AxisBindingOperation();
 		soap11BindingOperation.setAxisOperation(axisOp);
@@ -910,7 +926,7 @@ public class DBDeployer extends AbstractDeployer {
 		return soap11BindingOperation;
 	}
 
-	
+
 	/**
 	 * Creates a AxisBinding and populates it with default SOAP 1.1 properties
 	 */
@@ -918,9 +934,9 @@ public class DBDeployer extends AbstractDeployer {
 		AxisBinding soap11Binding = new AxisBinding();
 		soap11Binding.setName(new QName(name + Java2WSDLConstants.BINDING_NAME_SUFFIX));
 		soap11Binding.setType(WSDL2Constants.URI_WSDL2_SOAP);
-		soap11Binding.setProperty(WSDL2Constants.ATTR_WSOAP_PROTOCOL, 
+		soap11Binding.setProperty(WSDL2Constants.ATTR_WSOAP_PROTOCOL,
 				WSDL2Constants.HTTP_PROTOCAL);
-		soap11Binding.setProperty(WSDL2Constants.ATTR_WSOAP_VERSION, 
+		soap11Binding.setProperty(WSDL2Constants.ATTR_WSOAP_VERSION,
 				SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
 		soap11Binding.setProperty(WSDL2Constants.INTERFACE_LOCAL_NAME, interfaceName);
 		soap11Binding.setProperty(WSDL2Constants.HTTP_LOCATION_TABLE, httpLocationTable);
@@ -938,7 +954,7 @@ public class DBDeployer extends AbstractDeployer {
 		httpBinding.setProperty(WSDL2Constants.HTTP_LOCATION_TABLE, httpLocationTable);
 		return httpBinding;
 	}
-	
+
 	/**
 	 * Creates a AxisBinding and populates it with default SOAP 1.2 properties
 	 */
@@ -946,9 +962,9 @@ public class DBDeployer extends AbstractDeployer {
 		AxisBinding soap12Binding = new AxisBinding();
 		soap12Binding.setName(new QName(name + Java2WSDLConstants.SOAP12BINDING_NAME_SUFFIX));
 		soap12Binding.setType(WSDL2Constants.URI_WSDL2_SOAP);
-		soap12Binding.setProperty(WSDL2Constants.ATTR_WSOAP_PROTOCOL, 
+		soap12Binding.setProperty(WSDL2Constants.ATTR_WSOAP_PROTOCOL,
 				WSDL2Constants.HTTP_PROTOCAL);
-		soap12Binding.setProperty(WSDL2Constants.ATTR_WSOAP_VERSION, 
+		soap12Binding.setProperty(WSDL2Constants.ATTR_WSOAP_VERSION,
 				SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
 		soap12Binding.setProperty(WSDL2Constants.INTERFACE_LOCAL_NAME, interfaceName);
 		soap12Binding.setProperty(WSDL2Constants.HTTP_LOCATION_TABLE, httpLocationTable);
@@ -958,8 +974,8 @@ public class DBDeployer extends AbstractDeployer {
 
 	/**
 	 * Creates a set of default endpoints for this service
-	 */	
-	private void createDefaultEndpoints(AxisService axisService, AxisBinding soap11Binding, 
+	 */
+	private void createDefaultEndpoints(AxisService axisService, AxisBinding soap11Binding,
 			AxisBinding soap12Binding, AxisBinding httpBinding) {
 		Map<String, TransportInDescription> transportsIn = axisConfig.getTransportsIn();
 		Iterator<TransportInDescription> iterator = transportsIn.values().iterator();
@@ -993,7 +1009,7 @@ public class DBDeployer extends AbstractDeployer {
 			soap11Endpoint.setTransportInDescription(transportInName);
 			soap11Endpoint.setProperty(WSDL2Constants.HTTP_LOCATION_TABLE, httpLocationTable);
 			axisService.addEndpoint(soap11EndpointName, soap11Endpoint);
-			
+
             /* setting soap11 endpoint as the default endpoint */
 			axisService.setEndpointName(soap11EndpointName);
 
@@ -1025,13 +1041,13 @@ public class DBDeployer extends AbstractDeployer {
 
 	/**
 	 * This method checks if the given data service has a corresponding "services.xml" is available,
-	 * if so, the AxisService representing the data service is applied the instructions from its 
+	 * if so, the AxisService representing the data service is applied the instructions from its
 	 * "services.xml".
 	 */
 	private AxisService handleServicesXML(String dbsPath, AxisServiceGroup axisServiceGroup,
 			AxisService axisService) throws DataServiceFault {
 		try {
-			String serviceXMLPath = dbsPath.substring(0, dbsPath.length() - 4) + 
+			String serviceXMLPath = dbsPath.substring(0, dbsPath.length() - 4) +
 							DBConstants.DBS_SERVICES_XML_SUFFIX;
 			File servicesXMLFile = new File(serviceXMLPath);
 			if (servicesXMLFile.exists()) {
@@ -1044,7 +1060,7 @@ public class DBDeployer extends AbstractDeployer {
 					wsdlServices.put(axisService.getName(), axisService);
 					ServiceGroupBuilder sgb = new ServiceGroupBuilder(documentElement,
 							wsdlServices, this.getConfigContext());
-					axisService = sgb.populateServiceGroup(axisServiceGroup).get(0);					
+					axisService = sgb.populateServiceGroup(axisServiceGroup).get(0);
 				} else if (documentElement.getLocalName().equals(DBConstants.AXIS2_SERVICE)) {
 					ServiceBuilder sb = new ServiceBuilder(this.getConfigContext(),
 							axisService);
@@ -1059,14 +1075,14 @@ public class DBDeployer extends AbstractDeployer {
 		}
 		return axisService;
 	}
-	
+
 	/**
 	 * Creates AxisService with the given deployment information.
 	 */
 	private AxisService processService(DeploymentFileData currentFile,
 			AxisServiceGroup axisServiceGroup, ConfigurationContext configCtx)
 			throws DataServiceFault {
-		AxisService axisService = createDBService(currentFile.getAbsolutePath(), 
+		AxisService axisService = createDBService(currentFile.getAbsolutePath(),
 				configCtx.getAxisConfiguration());
 		axisService.setParent(axisServiceGroup);
 		axisService.setClassLoader(axisConfig.getServiceClassLoader());

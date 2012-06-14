@@ -158,14 +158,10 @@
                         }
                     %>
                         <div class="span6 keyListPadding">
-                            <div class="thumbnail <% if(api.status == "deprecated") { %>deprecated<% } %>">
+                            <div class="thumbnail <% if(api.status == "DEPRECATED") { %>deprecated<% } %>">
                                 <div class="deprecatedLabel">
-                                    <% if(api.status == "deprecated") { %>
+                                    <% if(api.status == "DEPRECATED") { %>
                                     <span class="label label-warning">Deprecated</span>
-                                    <% } else if(api.status == "published") { %>
-                                    <span class="label label-success">Active</span>
-                                    <% } else { %>
-                                    <span class="label label-important">Blocked</span>
                                     <% } %>
                                 </div>
                                 <div class="container-fluid">
@@ -187,14 +183,6 @@
     </div><!-- data-contnet -->
 
 </div>
-
-
-
-
-
-
-
-
 
     <% } %>
     <% if(lenI==0){ %>

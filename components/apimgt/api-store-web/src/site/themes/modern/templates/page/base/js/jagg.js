@@ -33,7 +33,7 @@ var jagg = jagg || {};
             jagg.messageDisplay(params);
             return;
         }
-        params.content = '<img src="'+siteRoot+'/images/'+params.type+'.png" align="center" hspace="10" /><span class="messageText">'+params.content+'</span>';
+        params.content = '<table><tr><td><img src="'+siteRoot+'/images/'+params.type+'.png" align="center" hspace="10" /></td><td><span class="messageText">'+params.content+'</span></td></tr></table>';
         jagg.messageDisplay({content:params.content,title:"API Store - "+params.type,buttons:[
             {name:"OK",cssClass:"btn btn-primary",cbk:function() {
                 $('#messageModal').modal('hide');

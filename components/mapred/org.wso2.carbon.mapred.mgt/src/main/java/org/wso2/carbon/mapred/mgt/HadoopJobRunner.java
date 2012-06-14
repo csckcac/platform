@@ -102,44 +102,29 @@ public class HadoopJobRunner extends AbstractAdmin {
 		return threadUuid.toString();
 	}
 	
-	public float[] getProgress(String key) {
-		float[] progress = {-1, -1};
-		CarbonJobReporter jobReporter = getJobReporter(key);
-		if (jobReporter == null) {
-			return progress;
-		}
-		progress[0] = jobReporter.getMapProgress();
-		progress[1] = jobReporter.getReduceProgress();
-		return progress;
-	}
-	
-	public boolean isJobComplete(String key) {
-		CarbonJobReporter jobReporter = getJobReporter(key);
-		return jobReporter.isJobComplete();
-	}
-	
-	public boolean isJobSuccessul(String key) {
-		CarbonJobReporter jobReporter = getJobReporter(key);
-		boolean status = jobReporter.isJobSuccessful();
-		if (status) {
+	public String getJobStatus(String key) {
+		CarbonContext cc = CarbonContext.getCurrentContext();
+		if (key == null)
+			return null;
+		CarbonJobReporter reporter = getJobReporter(key);
+		if (reporter != null && reporter.isJobComplete()) {
 			removeJobReporter(key);
 		}
-		return status;
-	}
-	
-	public String getJobName(String key) {
-		CarbonJobReporter jobReporter = getJobReporter(key);
-		return jobReporter.getJobName();
-	}
-	
-	public String getJobId(String key) {
-		CarbonJobReporter jobReporter = getJobReporter(key);
-		return jobReporter.getJobId();
-	}
-	
-	public long getCounter(String key, Enum counterKey) {
-		CarbonJobReporter jobReporter = getJobReporter(key);
-		return jobReporter.getCounter(counterKey);
+		JSONObject jsonObj = new JSONObject();
+		try {
+			jsonObj.put("JobUser", cc.getUsername());
+			jsonObj.put("JobID", reporter.getJobId());
+			jsonObj.put("JobName", reporter.getJobName());
+			jsonObj.put("MapProgress", reporter.getMapProgress());
+			jsonObj.put("ReduceProgress", reporter.getReduceProgress());
+			jsonObj.put("FailureInfo", reporter.getFailureInfo());
+			jsonObj.put("JobStatus", reporter.getStatus());
+			jsonObj.put("JobCompleted", reporter.isJobComplete());
+			jsonObj.put("JobSuccessful", reporter.isJobSuccessful());
+		} catch (JSONException e) {
+			log.info(e.getMessage());
+		}
+		return jsonObj.toString();
 	}
 	
 	public void attachFinalReport(String jsonEncodedReport) {

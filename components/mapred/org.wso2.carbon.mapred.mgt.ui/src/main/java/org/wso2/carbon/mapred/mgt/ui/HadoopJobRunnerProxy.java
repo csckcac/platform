@@ -102,80 +102,20 @@ public class HadoopJobRunnerProxy {
 		}
 		return key;
 	}
-
-	public String getJobId(String key) {
-		String jobId = null;
-		try {
-			HadoopJobRunnerStub stub = new HadoopJobRunnerStub(configCtx,
-			"https://127.0.0.1:9443/services/HadoopJobRunner");
-			setupClientSession(stub);
-			jobId = stub.getJobId(key);
-		} catch (AxisFault af) {
-			af.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		return jobId;
-	}
 	
-	public String getJobName(String key) {
-		String jobName = null;
+	public String getJobStatus(String key) {
+		String jobStatus = null;
 		try {
 			HadoopJobRunnerStub stub = new HadoopJobRunnerStub(configCtx,
 			"https://127.0.0.1:9443/services/HadoopJobRunner");
 			setupClientSession(stub);
-			jobName = stub.getJobName(key);
+			jobStatus = stub.getJobStatus(key);
 		} catch (AxisFault af) {
 			af.printStackTrace();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		return jobName;
-	}
-	
-	public float[] getProgress(String key) {
-		float[] progress = {-1, -1};
-		try {
-			HadoopJobRunnerStub stub = new HadoopJobRunnerStub(configCtx,
-			"https://127.0.0.1:9443/services/HadoopJobRunner");
-			setupClientSession(stub);
-			progress = stub.getProgress(key);
-		} catch (AxisFault af) {
-			af.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		return progress;
-	}
-	
-	public boolean isJobComplete(String key) {
-		boolean isJobComplete = false;
-		try {
-			HadoopJobRunnerStub stub = new HadoopJobRunnerStub(configCtx,
-			"https://127.0.0.1:9443/services/HadoopJobRunner");
-			setupClientSession(stub);
-			isJobComplete = stub.isJobComplete(key);
-		} catch (AxisFault af) {
-			af.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		return isJobComplete;
-	}
-	
-	public boolean isJobSuccessful(String key) {
-		boolean isJobSuccessful = false;
-		try {
-			HadoopJobRunnerStub stub = new HadoopJobRunnerStub(configCtx,
-			"https://127.0.0.1:9443/services/HadoopJobRunner");
-			setupClientSession(stub);
-			isJobSuccessful = stub.isJobComplete(key);
-		} catch (AxisFault af) {
-			af.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		return isJobSuccessful;
+		return jobStatus;
 	}
 	
 	public String[] getFinalReportsList(int offset) {

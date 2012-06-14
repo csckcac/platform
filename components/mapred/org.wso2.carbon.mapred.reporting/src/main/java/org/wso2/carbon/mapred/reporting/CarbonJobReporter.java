@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.apache.hadoop.mapreduce.JobID;
+import org.apache.hadoop.mapred.JobStatus;
+import org.apache.hadoop.mapred.JobTracker;
 import org.apache.hadoop.mapred.RunningJob;
 import org.apache.hadoop.mapred.Counters;
 import org.apache.hadoop.mapreduce.JobReporter;
@@ -94,6 +96,26 @@ public class CarbonJobReporter extends JobReporter {
 			log.warn(e.getMessage());
 		}
 		updateTimestap();
+		return status;
+	}
+	
+	public String getFailureInfo() {
+		String info = null;
+		try {
+			info = runningJob.getFailureInfo();
+		} catch (IOException e) {
+			log.warn(e.getMessage());
+		}
+		return info;
+	}
+	
+	public String getStatus() {
+		String status = null;
+		try {
+			status = JobStatus.getJobRunState(runningJob.getJobState());
+		} catch (IOException e) {
+			log.warn(e.getMessage());
+		}
 		return status;
 	}
 	

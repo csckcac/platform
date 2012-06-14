@@ -143,6 +143,7 @@
 <module>autoscaler-service</module-->
 <module>tenantaware-load-balancer</module>
 <module>gadgetgen-wizard</module>
+<module>cassandra-explorer</module>
         <!-- Add new features above. You should also include your newly-added-feature/s in features/repository/pom.xml  -->
     </modules>
     <build>

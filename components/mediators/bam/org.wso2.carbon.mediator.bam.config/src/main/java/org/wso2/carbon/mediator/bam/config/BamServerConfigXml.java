@@ -38,14 +38,16 @@ public class BamServerConfigXml {
     private org.apache.axiom.om.OMNamespace nullNS;
     private OMElement serverProfileElement;
 
-    public OMElement buildServerProfile(String ip, String port, String userName, String password){
+    public OMElement buildServerProfile(String ip, String port, String userName, String password,
+                                        List<StreamConfiguration> streamConfigurations){
         serverProfileElement = this.serializeServerProfile();
         serverProfileElement.addChild(this.serializeConnection(ip, port));
         serverProfileElement.addChild(this.serializeCredential(userName, password));
+        serverProfileElement.addChild(this.serializeStreams(streamConfigurations));
         return serverProfileElement;
     }
 
-    public OMElement addStream(StreamConfiguration streamConfiguration){
+    /*public OMElement addStream(StreamConfiguration streamConfiguration){
         OMElement streamsElement = serverProfileElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "streams"));
         if(streamsElement == null){
@@ -61,7 +63,7 @@ public class BamServerConfigXml {
         else {
             return fac.createOMElement(new QName(""));
         }
-    }
+    }*/
     
     public boolean streamExists(StreamConfiguration streamConfiguration){
         String streamName = streamConfiguration.getName();
@@ -104,8 +106,14 @@ public class BamServerConfigXml {
         OMElement profileElement = fac.createOMElement("serverProfile", synNS);
         return profileElement;
     }
-    private OMElement serializeStreams(){
+
+    private OMElement serializeStreams(List<StreamConfiguration> streamConfigurations){
         OMElement streamsElement = fac.createOMElement("streams", synNS);
+        if(streamConfigurations != null){
+            for (StreamConfiguration streamConfiguration : streamConfigurations) {
+                streamsElement.addChild(this.serializeStream(streamConfiguration));
+            }
+        }
         return streamsElement;
     }
 
@@ -122,6 +130,7 @@ public class BamServerConfigXml {
         if(payloadElement == null){
             streamElement.addChild(serializePayload());
         }
+
         payloadElement = streamElement.getFirstChildWithName(
                 new QName(SynapseConstants.SYNAPSE_NAMESPACE, "payload"));
         List<StreamEntry> streamEntries = streamConfiguration.getEntries();

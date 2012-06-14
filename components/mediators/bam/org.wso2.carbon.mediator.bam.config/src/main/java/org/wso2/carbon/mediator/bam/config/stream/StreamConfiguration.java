@@ -20,16 +20,17 @@ package org.wso2.carbon.mediator.bam.config.stream;
 
 import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StreamConfiguration {
 
-    private String name;
-    private String nickname;
-    private String description;
-    private String version;
-    private List<StreamEntry> entries;
-    private List<Property> properties;
+    private String name = "";
+    private String nickname = "";
+    private String description = "";
+    private String version = "";
+    private List<StreamEntry> entries = new ArrayList<StreamEntry>();
+    private List<Property> properties = new ArrayList<Property>();
 
     public void setName(String name){
         this.name = name;

@@ -19,11 +19,20 @@
 package org.wso2.carbon.mediator.bam.config.ui;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
+import org.wso2.carbon.mediator.bam.config.BamServerConfig;
+import org.wso2.carbon.mediator.bam.config.BamServerConfigBuilder;
 import org.wso2.carbon.mediator.bam.config.BamServerConfigXml;
+import org.wso2.carbon.mediator.bam.config.stream.StreamConfiguration;
+import org.wso2.carbon.bam.mediationstats.data.publisher.stub.conf.Property;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.ByteArrayInputStream;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class BamServerProfileUtils {
@@ -40,8 +49,71 @@ public class BamServerProfileUtils {
 
     public void addResource(String ip, String port, String userName, String password,
                             String bamServerProfileLocation){
+
+        List<StreamConfiguration> scs = new ArrayList<StreamConfiguration>();
+        StreamConfiguration sc1 = new StreamConfiguration();
+        sc1.setName("org.wso2.carbon.mediator.bam.BamMediator100");
+        sc1.setVersion("1.0.1");
+        sc1.setNickname("Log1");
+        sc1.setDescription("Description1");
+        Property p1 = new Property();
+        Property p2 = new Property();
+        Property p3 = new Property();
+        p1.setKey("key11");
+        p1.setValue("val11");
+        p2.setKey("key12");
+        p2.setValue("val12");
+        p3.setKey("key13");
+        p3.setValue("val13");
+        sc1.getProperties().add(p1);
+        sc1.getProperties().add(p2);
+        sc1.getProperties().add(p3);
+        scs.add(sc1);
+
+        StreamConfiguration sc2 = new StreamConfiguration();
+        sc2.setName("org.wso2.carbon.mediator.bam.BamMediator200");
+        sc2.setVersion("1.0.2");
+        sc2.setNickname("Log2");
+        sc2.setDescription("Description2");
+        Property p21 = new Property();
+        Property p22 = new Property();
+        Property p23 = new Property();
+        p21.setKey("key21");
+        p21.setValue("val21");
+        p22.setKey("key22");
+        p22.setValue("val22");
+        p23.setKey("key23");
+        p23.setValue("val23");
+        sc2.getProperties().add(p21);
+        sc2.getProperties().add(p22);
+        sc2.getProperties().add(p23);
+        scs.add(sc2);
+
+        StreamConfiguration sc3 = new StreamConfiguration();
+        sc3.setName("org.wso2.carbon.mediator.bam.BamMediator300");
+        sc3.setVersion("1.0.3");
+        sc3.setNickname("Log3");
+        sc3.setDescription("Description3");
+        Property p31 = new Property();
+        Property p32 = new Property();
+        Property p33 = new Property();
+        p31.setKey("key31");
+        p31.setValue("val31");
+        p32.setKey("key32");
+        p32.setValue("val32");
+        p33.setKey("key33");
+        p33.setValue("val33");
+        sc3.getProperties().add(p31);
+        sc3.getProperties().add(p32);
+        sc3.getProperties().add(p33);
+        scs.add(sc3);
+
+
+
+
+
         BamServerConfigXml mediatorConfigurationXml = new BamServerConfigXml();
-        OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, password);
+        OMElement storeXml = mediatorConfigurationXml.buildServerProfile(ip, port, userName, password, scs);
         String stringStoreXml = storeXml.toString();
 
         try {
@@ -52,10 +124,18 @@ public class BamServerProfileUtils {
 
     }
 
-    public String getResource(String bamServerProfileLocation){
+    public BamServerConfig getResource(String bamServerProfileLocation){
         try {
-            return client.getResourceString(bamServerProfileLocation);
+            String resourceString =  client.getResourceString(bamServerProfileLocation);
+            OMElement resourceElement = new StAXOMBuilder(new ByteArrayInputStream(resourceString.getBytes())).getDocumentElement();
+
+            BamServerConfigBuilder bamServerConfigBuilder = new BamServerConfigBuilder();
+            bamServerConfigBuilder.createBamServerConfig(resourceElement);
+            BamServerConfig bamServerConfig = bamServerConfigBuilder.getBamServerConfig();
+            return bamServerConfig;
         } catch (RemoteException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (XMLStreamException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return null;
@@ -68,5 +148,12 @@ public class BamServerProfileUtils {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return true;
+    }
+
+    public boolean isNotNullOrEmpty(String string){
+        if(string != null && !string.equals("")){
+            return true;
+        }
+        return false;
     }
 }

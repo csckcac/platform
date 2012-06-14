@@ -20,8 +20,8 @@ package org.wso2.carbon.mediator.bam.config.stream;
 
 public class StreamEntry {
 
-    private String name;
-    private String type;
+    private String name = "";
+    private String type = "";
 
     public void setName(String name){
         this.name = name;

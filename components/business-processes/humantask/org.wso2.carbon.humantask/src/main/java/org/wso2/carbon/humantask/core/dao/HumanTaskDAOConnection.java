@@ -23,8 +23,8 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 /**
- * The human task dao connection interface.
- * This will be used though out the human task implementation to make the logic neutral of the database implementation.
+ * This interface will be used through out the human task engine implementation to make the logic
+ * neutral of the underlying database ORM model.
  */
 public interface HumanTaskDAOConnection {
 
@@ -229,14 +229,14 @@ public interface HumanTaskDAOConnection {
 
 
     /**
-     * Creates a new EventDAO object.
+     * Creates a new EventDAO object from the underlying dao implementation.
      * @param task TaskDAO
      * @return EventDAO
      */
     EventDAO createNewEventObject(TaskDAO task);
 
     /**
-     * Create an Attachment
+     * Create an Attachment object from the underlying dao implementation.
      *
      * @return AttachmentDAO
      */

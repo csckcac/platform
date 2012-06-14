@@ -72,12 +72,11 @@ public class ExcelQuery extends Query {
         this.hasHeader = hasHeader;
         this.startingRow = startingRow;
         this.maxRowCount = maxRowCount;
-        if (!DBUtils.isRegistryPath(config.getExcelDataSourcePath())) {
-            try {
-                this.columnMappings = DBUtils.createColumnMappings(this.getHeader());
-            } catch (Exception e) {
-                throw new DataServiceFault(e, "Error in creating Excel column mappings.");
-            }
+        
+        try {
+            this.columnMappings = DBUtils.createColumnMappings(this.getHeader());
+        } catch (Exception e) {
+            throw new DataServiceFault(e, "Error in creating Excel column mappings.");
         }
     }
 

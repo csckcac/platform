@@ -82,14 +82,11 @@ public class CSVConfig extends Config {
         } else {
             this.hasHeader = false;
         }
-
-
-        if (!DBUtils.isRegistryPath(this.getCsvDataSourcePath())) {
-            try {
-                this.columnMappings = DBUtils.createColumnMappings(this.getHeader());
-            } catch (IOException e) {
-                throw new DataServiceFault("Error in creating CSV column mappings.");
-            }
+        
+        try {
+            this.columnMappings = DBUtils.createColumnMappings(this.getHeader());
+        } catch (IOException e) {
+            throw new DataServiceFault("Error in creating CSV column mappings.");
         }
     }
 

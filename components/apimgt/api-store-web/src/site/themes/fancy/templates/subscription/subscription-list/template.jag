@@ -44,10 +44,8 @@
         <div class="container-fluid">
         <% if(app.prodKey==null && app.sandboxKey==null) { %>
                         <div class="super-rows row-fluid">
-                            <div class="span2">
-                                Production Key:
-                            </div>
-                            <div class="span4">
+                            <div class="span6">
+                                Production Key:&nbsp;&nbsp;
                             <a class="app-key-generate-button small green" id="app-key-generate-button"
                                data-application="<%=app.name%>"
                                data-keytype="PRODUCTION">
@@ -55,10 +53,8 @@
                             </div>
 
 
-                            <div class="span2">
-                                Sandbox Key:
-                            </div>
-                            <div class="span4">
+                            <div class="span6">
+                                Sandbox Key:&nbsp;&nbsp;
                                 <a class="app-key-generate-button small green" id="app-key-generate-button"
                                    data-application="<%=app.name%>"
                                    data-keytype="SANDBOX">
@@ -68,22 +64,18 @@
                <% }else if(app.prodKey!=null && app.sandboxKey==null) { %>
 
                         <div class="super-rows row-fluid">
-                            <div class="span2">
-                                Production Key:
-                            </div>
-                            <div class="span4">
+                            <div class="span6">
+                                Production Key:&nbsp;&nbsp;
                                 <span class="icon black small" data-icon="a"></span>
-                                <a onclick="toggleKey(this)"> Show</a>
+                                <a onclick="toggleKey(this)"> Show Key</a>
 
                                 <div class="keyField" style="display:none;font-weight:bold">
                                     <%=app.prodKey%>
                                 </div>
                             </div>
 
-                            <div class="span2">
-                                Sandbox Key:
-                            </div>
-                            <div class="span4">
+                            <div class="span6">
+                                Sandbox Key:&nbsp;&nbsp;
                                 <a class="app-key-generate-button small green" id="app-key-generate-button"
                                data-application="<%=app.name%>"
                                data-keytype="SANDBOX">
@@ -93,16 +85,14 @@
 
              <% }else if(app.prodKey==null&&app.sandboxKey!=null) { %>
                         <div class="super-rows row-fluid">
-                            <div class="span2">Production Key:</div>
-                            <div class="span4">
+                            <div class="span6">Production Key:&nbsp;&nbsp;
                                 <a class="app-key-generate-button small green" id="app-key-generate-button"
                                    data-application="<%=app.name%>"
                                    data-keytype="PRODUCTION">
                                     Generate</a>
                             </div>
 
-                            <div class="span2">Sandbox Key:</div>
-                            <div class="span4">
+                            <div class="span6">Sandbox Key:&nbsp;&nbsp;
                                 <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
                                 <div class="keyField" style="display:none;font-weight:bold">
                                 <%=app.sandboxKey%>
@@ -111,8 +101,7 @@
                         </div>
                 <%}else{%>
                         <div class="super-rows row-fluid">
-                            <div class="span2">Production Key:</div>
-                            <div class="span4">
+                            <div class="span6">Production Key:&nbsp;&nbsp;
                                 <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
                                 <div class="keyField" style="display:none;font-weight:bold">
                                     <%=app.prodKey%>
@@ -120,8 +109,7 @@
                             </div>
 
 
-                            <div class="span2">Sandbox Key:</div>
-                            <div class="span4">
+                            <div class="span6">Sandbox Key:&nbsp;&nbsp;
                                 <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
 
                                 <div class="keyField" style="display:none;font-weight:bold">

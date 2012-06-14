@@ -15,7 +15,7 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  --%>
-<%@ page contentType="application/xml;charset=UTF-8" language="java" %>
+<%@ page contentType="application/xml;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <?xml-stylesheet type="text/xsl"
     href="../resources/xslt/annotated-<%=request.getParameter("type")%>.xsl"?>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>

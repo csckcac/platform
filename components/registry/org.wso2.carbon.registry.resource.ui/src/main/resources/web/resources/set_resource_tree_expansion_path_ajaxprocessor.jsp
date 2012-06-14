@@ -15,6 +15,7 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
+<%@ page contentType="application/xml;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%
     session.setAttribute("resource-tree-expansion-path", request.getParameter("path"));
 %>

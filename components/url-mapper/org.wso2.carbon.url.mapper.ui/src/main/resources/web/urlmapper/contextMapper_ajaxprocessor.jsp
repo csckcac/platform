@@ -48,11 +48,21 @@
 	if (requestType.equalsIgnoreCase("edit")) {
 		try {
 			if (carbonEndpoint.contains("services")) {
-				hostAdmin.editServiceDomain(usergivenEndpoint,oldHost);
+                if (hostAdmin.isMappingExist(usergivenEndpoint)) {
+                     %>Failed to add URL Mapping. Mapping already exist.<%
+                } else {
+                    hostAdmin.editServiceDomain(usergivenEndpoint,oldHost);
+                    %>URL Mapping successfully edited.<%
+                }
 			} else {
-				hostAdmin.editHost(carbonEndpoint,usergivenEndpoint, oldHost);
+			    if (hostAdmin.isMappingExist(usergivenEndpoint)) {
+                     %>Failed to add URL Mapping. Mapping already exist.<%
+                } else {
+                    hostAdmin.editHost(carbonEndpoint,usergivenEndpoint, oldHost);
+                    %>URL Mapping successfully edited.<%
+				}
 			}
-			%>URL Mapping successfully edited.<%
+
 	} catch (Exception e) {
 			%>Failed to edit URL Mapping<%
 	}

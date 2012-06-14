@@ -74,16 +74,25 @@
 		topPage="true" request="<%=request%>" />
 		<div id="middle">
 		<script type="text/javascript">
-			function    showSucessMessage(msg,myepr) {
+			function    showSucessMessage(msg,myepr,inputVal) {
 				var failMsg = new RegExp("Failed to add URL Mapping.");
+                var hostPrefix = new RegExp("wso2.com");
+                msg += ": " + inputVal;
             	if (msg.match(failMsg)) //if match sucess 
-				{	
-            		CARBON.showErrorDialog(msg);
+				{
+                    msg += ".wso2.com"; // + "\n" + "Please try below:"
+                                //+ inputVal + "app" + ".wso2.com" + inputVal + "123" + ".wso2.com";
+                    CARBON.showErrorDialog(msg);
+				} else if (!msg.match(hostPrefix)) {
+                    msg += ".wso2.com";
+                    CARBON.showInfoDialog(msg, function(){
+                                            document.location.href = "index.jsp?&carbonEndpoint=" + myepr;
+                    });
 				} else {
-            		CARBON.showInfoDialog(msg, function(){
-   		  				document.location.href = "index.jsp?&carbonEndpoint=" + myepr;  				 
-   		  			 });
-				}
+                    CARBON.showInfoDialog(msg, function(){
+                    document.location.href = "index.jsp?&carbonEndpoint=" + myepr;
+                    });
+                }
 			}
 		</script>
 		<script type="text/javascript">
@@ -97,7 +106,7 @@
                                 url: "contextMapper_ajaxprocessor.jsp",
                                 data: "type=add&carbonEndpoint=" + myepr + "&userEndpoint=" + inputVal + "&endpointType=Endpoint_1",
                                 success: function(msg){
-                                    showSucessMessage(msg,myepr);
+                                    showSucessMessage(msg,myepr,inputVal);
                                 }
                             });
             } else {
@@ -109,7 +118,7 @@
 
  <script type="text/javascript">
    function edit(myepr,host){
-        CARBON.showInputDialog("Enter URL Mapping name :\n",function(inputVal){
+        CARBON.showInputDialog("The Mapping you are editing is: " + host + "\n",function(inputVal){
         var reason = checkMappingAvailability(inputVal);
         if(reason == "") {
             jQuery.ajax({
@@ -117,7 +126,7 @@
                             url: "contextMapper_ajaxprocessor.jsp",
                             data: "type=edit&carbonEndpoint=" + myepr + "&userEndpoint=" + inputVal +  "&oldHost=" + host + "&endpointType=Endpoint_1",
                             success: function(msg){
-                            	showSucessMessage(msg,myepr);	
+                            	showSucessMessage(msg,myepr,inputVal);
                             }
                         });
         } else {
@@ -128,13 +137,13 @@
 </script> 
  <script type="text/javascript">
    function deleteHost(myepr,host){
-	   CARBON.showConfirmationDialog('<fmt:message key="select.webapps.to.be.deleted"/>',function(){
+	   CARBON.showConfirmationDialog('<fmt:message key="select.webapps.to.be.deleted"/>' + " " + host + "?",function(){
             jQuery.ajax({
                             type: "POST",
                             url: "contextMapper_ajaxprocessor.jsp",
                             data: "type=delete&carbonEndpoint=" + myepr +"&userEndpoint=" + host + "&endpointType=Endpoint_1",
                             success: function(msg){
-                            	showSucessMessage(msg,myepr);
+                            	showSucessMessage(msg,myepr,host);
                             }
                         });
         });

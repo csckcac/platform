@@ -1958,19 +1958,15 @@ public class ApiMgtDAO {
                 " SUB.SUBSCRIPTION_ID AS SUBSCRIPTION_ID," +
                 " SUB.TIER_ID AS TIER_ID," +
                 " APP.APPLICATION_ID AS APPLICATION_ID," +
-                " API.CONTEXT AS CONTEXT," +
-                " AKM.ACCESS_TOKEN AS ACCESS_TOKEN," +
-                " AKM.KEY_TYPE AS KEY_TYPE " +
+                " API.CONTEXT AS CONTEXT " +
                 "FROM" +
                 " AM_SUBSCRIPTION SUB," +
                 " AM_APPLICATION APP," +
-                " AM_APPLICATION_KEY_MAPPING AKM, " +
                 " AM_API API " +
                 "WHERE" +
                 " API.API_PROVIDER = ?" +
                 " AND API.API_NAME = ?" +
                 " AND API.API_VERSION = ?" +
-                " AND AKM.APPLICATION_ID = APP.APPLICATION_ID" +
                 " AND SUB.APPLICATION_ID = APP.APPLICATION_ID" +
                 " AND API.API_ID = SUB.API_ID";
 
@@ -1997,10 +1993,6 @@ public class ApiMgtDAO {
             }
             prepStmt.close();
             rs.close();
-
-            if (subscriptionData.size() == 0) {
-                return;
-            }
             
             Map<Integer,Integer> subscriptionIdMap = new HashMap<Integer, Integer>();
             APIIdentifier apiId = new APIIdentifier(provider, apiName, newVersion);

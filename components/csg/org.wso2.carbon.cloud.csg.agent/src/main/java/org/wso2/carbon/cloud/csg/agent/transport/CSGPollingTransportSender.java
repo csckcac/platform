@@ -61,9 +61,15 @@ public class CSGPollingTransportSender extends AbstractTransportSender {
         thriftMsg.setMessageId(relatesTo);
         thriftMsg.setSoapAction(msgCtx.getSoapAction());        
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        
+
         try {
-            msgCtx.getEnvelope().serialize(out);
+            if (msgCtx.isDoingREST()) {
+                // result comes as the body of envelope
+                msgCtx.getEnvelope().getBody().getFirstElement().serialize(out);
+            } else {
+                msgCtx.getEnvelope().serialize(out);
+            }
+            // handle other cases MTOM, SWA if required
         } catch (XMLStreamException e) {
             handleException("Cloud not serialize the request message", e);
         }

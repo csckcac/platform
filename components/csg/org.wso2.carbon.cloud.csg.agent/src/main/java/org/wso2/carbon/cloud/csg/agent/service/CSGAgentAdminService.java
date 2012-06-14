@@ -666,17 +666,16 @@ public class CSGAgentAdminService extends AbstractAdmin {
                     serviceAdmin.getServiceData(service.getName());
 
             if (serviceAdminMetaData.isActive()) {
-                String wsdlLocation = serviceAdminMetaData.getWsdlURLs()[0];
-                OMNode wsdNode =
-                        CSGAgentUtils.getOMElementFromURI(wsdlLocation);
-                OMElement wsdlElement;
-                if (wsdNode instanceof OMElement) {
-                    wsdlElement = (OMElement) wsdNode;
+                OMElement wsdlElement = getWSDLElement(serviceAdminMetaData.getWsdlURLs()[0]);
+                String wsdlString = wsdlElement.toStringWithConsume();
+                if (wsdlString.contains("Unable to generate WSDL 1.1 for this service") ||
+                        wsdlString.contains("error")) {
+                    // axis2 doesn't generate a WSDL for WSDL 1.1 for REST service if useoriginalwsdl
+                    // parameter is not given
+                    privateServiceMetaData.setInLineWSDL(null);
                 } else {
-                    throw new CSGException("Invalid instance type detected when parsing the WSDL '"
-                            + wsdlLocation + "'. Required OMElement type!");
+                    privateServiceMetaData.setInLineWSDL(wsdlElement.toStringWithConsume());
                 }
-                privateServiceMetaData.setInLineWSDL(wsdlElement.toStringWithConsume());
             }
 
             if (hasInOutOperations(service)) {
@@ -742,8 +741,6 @@ public class CSGAgentAdminService extends AbstractAdmin {
 
 
     private void loggingToRemoteCSGServer(CSGServerBean csgServer) throws CSGException {
-
-
         String authServerUrl = "https://" + csgServer.getHost() + ":" + csgServer.getPort() +
                 "/services/AuthenticationAdmin";
         AuthenticationClient authClient = new AuthenticationClient();
@@ -754,5 +751,18 @@ public class CSGAgentAdminService extends AbstractAdmin {
                 csgServer.getHost(),
                 csgServer.getDomainName());
 
+    }
+
+    private OMElement getWSDLElement(String wsdlLocation) throws CSGException {
+        OMNode wsdNode =
+                CSGAgentUtils.getOMElementFromURI(wsdlLocation);
+        OMElement wsdlElement;
+        if (wsdNode instanceof OMElement) {
+            wsdlElement = (OMElement) wsdNode;
+        } else {
+            throw new CSGException("Invalid instance type detected when parsing the WSDL '"
+                    + wsdlLocation + "'. Required OMElement type!");
+        }
+        return wsdlElement;
     }
 }

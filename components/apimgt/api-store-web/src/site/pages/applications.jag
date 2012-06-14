@@ -36,14 +36,9 @@ var site = require("/site/conf/site.json");
                                     "classes":"cat_and_charts",
                                     "tabs":[
                                         {
-                                            "title":"Top Charts",
                                             "body":[
                                                 {
                                                     "name":"api/recently-added",
-                                                    "inputs":null
-                                                },
-                                                {
-                                                    "name":"api/top-rated",
                                                     "inputs":null
                                                 }
                                             ]

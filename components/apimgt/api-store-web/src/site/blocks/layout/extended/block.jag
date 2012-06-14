@@ -25,7 +25,6 @@ jagg.block("layout/extended", {
                         "classes":"cat_and_charts",
                         "tabs":[
                             {
-                                "title":"Top Charts",
                                 "body":[
                                     {
                                         "name":"api/recently-added",
@@ -36,10 +35,6 @@ jagg.block("layout/extended", {
                                         "inputs":null
                                     }
                                 ]
-                            },
-                            {
-                                "title":"Categories",
-                                "body":null
                             }
                         ]
                     }

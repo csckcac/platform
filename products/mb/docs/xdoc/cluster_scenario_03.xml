@@ -107,6 +107,9 @@
           option -f.  Eg: "./cassandra -f"
       </p>
 
+      <p>
+          <b>Configuring Zookeeper Cluster</b>
+      </p>
       <p> Then we need to configure the Zoo Keeper Servers to create a ring within among all broker nodes. We can do it by
        adding client port address to the "zoo.cfg" which is located at "wso2mb-2.0.0-SNAPSHOT/repository/conf/etc " . </p>
 
@@ -117,9 +120,25 @@
            clientPort=2181
           <b>start_zk_server=true</b>
           <b>clientPortAddress=192.168.0.101</b>
-        </pre>
+          <b>server.1=192.168.0.100:2888:3888</b>
+          <b>server.2=192.168.0.101:2888:3888</b>
+          <b>server.3=192.168.0.102:2888:3888</b>
+      </pre>
+
+      <p> Above zoo.cfg file is for the server 192.168.0.101. You can copy the same zoo.cfg file to other two servers
+      and change the entry "clientPortAddress" to the ip of that particular server.</p>
+
+      <p> Then you need to create file "myid" in the data directory (repository/data/zookeeper) of each server. In that file
+      you need to specify the id of the server.</p>
+
       <p>
-          <b>You need to change this entry in each of the message broker servers appropriately.</b>
+          eg: Id of the the server 192.168.0.100 will be "1". You need only to have the number 1 in that myid file.
+      </p>
+
+      <p>You can find more information on this in  <a href="http://zookeeper.apache.org/doc/r3.3.3/zookeeperAdmin.html#sc_zkMulitServerSetup">zookeeper clustering setup guide</a></p>
+
+      <p>
+          <b>You need to do above configuration in each of the message broker servers appropriately.</b>
       </p>
 
       <p>

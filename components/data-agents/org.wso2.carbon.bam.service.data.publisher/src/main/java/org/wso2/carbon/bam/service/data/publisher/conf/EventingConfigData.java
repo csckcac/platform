@@ -23,9 +23,6 @@ public class EventingConfigData {
     private String url;
     private String userName;
     private String password;
-    private boolean isHttpTransportEnable;
-    private boolean isSocketTransportEnable;
-    private int port;
 
     private String streamName = "org.wso2.bam.service.data.publisher";
     private String version = "1.0.0";
@@ -72,30 +69,6 @@ public class EventingConfigData {
 
     public void setProperties(Property[] properties) {
         this.properties = properties;
-    }
-
-    public boolean isHttpTransportEnable() {
-        return isHttpTransportEnable;
-    }
-
-    public void setHttpTransportEnable(boolean httpTransportEnable) {
-        isHttpTransportEnable = httpTransportEnable;
-    }
-
-    public boolean isSocketTransportEnable() {
-        return isSocketTransportEnable;
-    }
-
-    public void setSocketTransportEnable(boolean socketTransportEnable) {
-        isSocketTransportEnable = socketTransportEnable;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
     }
 
     public boolean isServiceStatsEnable() {

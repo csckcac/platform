@@ -196,9 +196,6 @@ public class ServiceAgentUtil {
         bamServerInfo.setBamServerURL(eventingConfigData.getUrl());
         bamServerInfo.setBamUserName(eventingConfigData.getUserName());
         bamServerInfo.setBamPassword(eventingConfigData.getPassword());
-        bamServerInfo.setHttpTransportEnable(eventingConfigData.isHttpTransportEnable());
-        bamServerInfo.setSocketTransportEnable(eventingConfigData.isSocketTransportEnable());
-        bamServerInfo.setPort(eventingConfigData.getPort());
         return bamServerInfo;
     }
 }

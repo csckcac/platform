@@ -28,8 +28,8 @@
 		<parameter name="ServiceClass">
             org.wso2.carbon.bam.service.data.publisher.services.ServiceDataPublisherAdmin
         </parameter>
-<!--		<parameter name="adminService" locked="true">true</parameter>-->
-<!--		<parameter name="AuthorizationAction" locked="true">/permission/admin/manage</parameter>-->
+		<parameter name="adminService" locked="true">true</parameter>
+		<parameter name="AuthorizationAction" locked="true">/permission/admin/manage</parameter>
 	</service>
-<!--	<parameter name="hiddenService" locked="true">true</parameter>-->
+	<parameter name="hiddenService" locked="true">true</parameter>
 </serviceGroup>

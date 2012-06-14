@@ -74,9 +74,6 @@ public class RegistryPersistenceManager {
         eventingConfigData.setUrl(EMPTY_STRING);
         eventingConfigData.setPassword(EMPTY_STRING);
         eventingConfigData.setUserName(EMPTY_STRING);
-        eventingConfigData.setHttpTransportEnable(false);
-        eventingConfigData.setSocketTransportEnable(true);
-        eventingConfigData.setPort(7611);
         eventingConfigData.setProperties(new Property[0]);
 
         // then load it from registry
@@ -121,9 +118,6 @@ public class RegistryPersistenceManager {
                 eventingConfigData.setUrl(bamUrl);
                 eventingConfigData.setUserName(bamUserName);
                 eventingConfigData.setPassword(bamPassword);
-                eventingConfigData.setHttpTransportEnable(Boolean.parseBoolean(httpTransportEnable));
-                eventingConfigData.setSocketTransportEnable(Boolean.parseBoolean(socketTransportEnable));
-                eventingConfigData.setPort(Integer.parseInt(port));
                 eventingConfigData.setStreamName(streamName);
                 eventingConfigData.setVersion(version);
                 eventingConfigData.setDescription(description);
@@ -221,12 +215,6 @@ public class RegistryPersistenceManager {
         updateConfigurationProperty(BAMDataPublisherConstants.BAM_USER_NAME, eventingConfigData.getUserName(),
                                     CommonConstants.SERVICE_COMMON_REG_PATH);
         updateConfigurationProperty(BAMDataPublisherConstants.BAM_PASSWORD, eventingConfigData.getPassword(),
-                                    CommonConstants.SERVICE_COMMON_REG_PATH);
-        updateConfigurationProperty(BAMDataPublisherConstants.ENABLE_HTTP_TRANSPORT, eventingConfigData.isHttpTransportEnable(),
-                                    CommonConstants.SERVICE_COMMON_REG_PATH);
-        updateConfigurationProperty(BAMDataPublisherConstants.ENABLE_SOCKET_TRANSPORT, eventingConfigData.isSocketTransportEnable(),
-                                    CommonConstants.SERVICE_COMMON_REG_PATH);
-        updateConfigurationProperty(BAMDataPublisherConstants.BAM_SOCKET_PORT, eventingConfigData.getPort(),
                                     CommonConstants.SERVICE_COMMON_REG_PATH);
 
         updateConfigurationProperty(BAMDataPublisherConstants.STREAM_NAME, eventingConfigData.getStreamName(),

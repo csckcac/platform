@@ -21,34 +21,6 @@ public class BAMServerInfo {
     private String bamUserName;
     private String bamPassword;
 
-    private boolean isHttpTransportEnable;
-    private boolean isSocketTransportEnable;
-    private int port;
-
-    public boolean isHttpTransportEnable() {
-        return isHttpTransportEnable;
-    }
-
-    public void setHttpTransportEnable(boolean httpTransportEnable) {
-        isHttpTransportEnable = httpTransportEnable;
-    }
-
-    public boolean isSocketTransportEnable() {
-        return isSocketTransportEnable;
-    }
-
-    public void setSocketTransportEnable(boolean socketTransportEnable) {
-        isSocketTransportEnable = socketTransportEnable;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public String getBamServerURL() {
         return bamServerURL;
     }

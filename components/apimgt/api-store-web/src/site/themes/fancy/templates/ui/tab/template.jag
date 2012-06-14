@@ -16,9 +16,9 @@
             clazz = "";
         }
     %>
-        <!--<li class="<%=clazz%>">
+        <li class="<%=clazz%>">
             <a href="#tab<%=String(i)%>"><%=tab.title%></a>
-        </li>-->
+        </li>
     <% } %>
     </ul>
     <div class="corner-maker-left"></div>

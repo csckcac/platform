@@ -60,7 +60,8 @@ the top of the page, and create a new application. Provide any name you prefer.
 
 10. Now click on the "APIs" tab at the top of the page, select the "TwitterSearch" API and subscribe to
 it using the newly created application. Go to the "My Subscriptions" tab. Click
-on the "Generate Production Key" button followed by the "Show Key" button to obtain an Application key.
+on the "Generate" option in-front of the label "Production Key" and then select the "Show Key" option
+to obtain an Application key.
 
 11. Now we are ready to invoke the API. Copy and paste following into a new console window & execute it.
 

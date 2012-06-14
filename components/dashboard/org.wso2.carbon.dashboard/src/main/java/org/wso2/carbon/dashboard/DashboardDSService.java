@@ -833,10 +833,10 @@ public class DashboardDSService extends AbstractAdmin {
             // get here.
             registry.beginTransaction();
             Resource userTabResource = null;
-            if(registry.resourceExists(dashboardTabPath)) {
+            if (registry.resourceExists(dashboardTabPath)) {
                 userTabResource = registry.get(dashboardTabPath);
-            }else {
-                registry.put(dashboardTabPath,registry.newCollection());
+            } else {
+                registry.put(dashboardTabPath, registry.newCollection());
                 userTabResource = registry.get(dashboardTabPath);
             }
 
@@ -869,10 +869,9 @@ public class DashboardDSService extends AbstractAdmin {
             String currentTabLayout = userTabResource
                     .getProperty(DashboardConstants.CURRENT_TAB_LAYOUT);
             // Adding the new Tab
-            if(null == currentTabLayout || "null".equals(currentTabLayout)){
+            if (null == currentTabLayout || "null".equals(currentTabLayout)) {
                 currentTabLayout = String.valueOf(nextTabId);
-            }
-            else {
+            } else {
                 currentTabLayout = currentTabLayout + ","
                         + String.valueOf(nextTabId);
             }
@@ -895,6 +894,72 @@ public class DashboardDSService extends AbstractAdmin {
         }
 
         return response;
+    }
+
+    private void addHomeTab(String userId,
+                            String dashboardName) {
+        Integer response = 0;
+
+        String dashboardTabPath;
+        if ((dashboardName == null) || ("null".equals(dashboardName))) {
+            dashboardTabPath = DashboardConstants.USER_DASHBOARD_REGISTRY_ROOT
+                    + userId + DashboardConstants.REGISTRY_PRODUCT_ID_PATH
+                    + DashboardConstants.TAB_PATH;
+        } else {
+            dashboardTabPath = DashboardConstants.SYSTEM_DASHBOARDS_REGISTRY_ROOT
+                    + dashboardName + DashboardConstants.TAB_PATH;
+        }
+
+        Registry registry = null;
+        try {
+            registry = getConfigSystemRegistry();
+            // Need not do any null checks for registry, as if so, we'll never
+            // get here.
+            registry.beginTransaction();
+            Resource userTabResource = null;
+            if (registry.resourceExists(dashboardTabPath)) {
+                userTabResource = registry.get(dashboardTabPath);
+            }
+
+
+            String nextTabId = "0";
+            Resource newTab = registry.newCollection();
+
+            // Storing the name of the tab
+
+            String tabTitle = "Tab " + nextTabId;
+            newTab.setProperty(DashboardConstants.TAB_TITLE, tabTitle);
+
+            String newTabPath = dashboardTabPath + nextTabId;
+            registry.put(newTabPath, newTab);
+
+            // Retrieving the current tab layout
+            String currentTabLayout = userTabResource
+                    .getProperty(DashboardConstants.CURRENT_TAB_LAYOUT);
+            // Adding the new Tab
+            if (null == currentTabLayout || "null".equals(currentTabLayout)) {
+                currentTabLayout = String.valueOf(nextTabId);
+            } else {
+                currentTabLayout = currentTabLayout + ","
+                        + String.valueOf(nextTabId);
+            }
+            userTabResource.setProperty(DashboardConstants.CURRENT_TAB_LAYOUT,
+                    currentTabLayout);
+            registry.put(dashboardTabPath, userTabResource);
+
+            // Done
+            response = Integer.parseInt(nextTabId);
+            registry.commitTransaction();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            if (registry != null) {
+                try {
+                    registry.rollbackTransaction();
+                } catch (Exception ex) {
+                    log.error(ex.getMessage(), e);
+                }
+            }
+        }
     }
 
     /**
@@ -945,14 +1010,6 @@ public class DashboardDSService extends AbstractAdmin {
      * @return Boolean indicating success/failure
      */
     public Boolean removeTab(String userId, String tabId, String dashboardName) {
-
-
-
-        if ("0".equals(tabId)) {
-            // We don't allow the Home tab to be removed
-            return false;
-        }
-
         Boolean response = false;
 
         String dashboardTabPath;
@@ -1022,6 +1079,9 @@ public class DashboardDSService extends AbstractAdmin {
             response = true;
             if (transactionStarted) {
                 registry.commitTransaction();
+            }
+            if ("0".equals(tabId)) {
+                addHomeTab(userId, dashboardName);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -1210,7 +1270,6 @@ public class DashboardDSService extends AbstractAdmin {
     }
 
 
-
     private String getHttpServerRoot(String backendServerURL) {
         String response = "";
         try {
@@ -1225,7 +1284,7 @@ public class DashboardDSService extends AbstractAdmin {
             } else {
                 response = "http://" + newUrl.getHost() + ":" + getBackendHttpPort() + newUrl.getPath();
             }
-            
+
             if (hostName != null && !hostName.equals("")) {
                 if (!"".equals(newUrl.getPath())) {
                     response = "http://" + hostName + ":" + getBackendHttpPort() + newUrl.getPath();
@@ -1775,6 +1834,7 @@ public class DashboardDSService extends AbstractAdmin {
     /**
      * Populating Gadget resources to registry for the given tenant
      * (On demand  Gadget population)
+     *
      * @param tabId
      * @return boolean
      * @throws AxisFault
@@ -1854,7 +1914,7 @@ public class DashboardDSService extends AbstractAdmin {
         Collection defaultGadgetCollection = registry.newCollection();
         try {
             registry.beginTransaction();
-            if(!registry.resourceExists(registryGadgetPath)){
+            if (!registry.resourceExists(registryGadgetPath)) {
 
                 registry.put(registryGadgetPath, defaultGadgetCollection);
             }
@@ -1941,8 +2001,10 @@ public class DashboardDSService extends AbstractAdmin {
 
     /**
      * Setting read permission for anonymous user
+     *
      * @param fileRegistryPath
      * @throws org.wso2.carbon.user.api.UserStoreException
+     *
      */
     private void setAnonymousReadPermission(String fileRegistryPath)
             throws org.wso2.carbon.user.api.UserStoreException {

@@ -60,13 +60,13 @@ the top of the page, and create a new application. Provide any name you prefer.
 
 10. Now click on the "APIs" tab at the top of the page, select the "TwitterSearch" API and subscribe to
 it using the newly created application. Go to the "My Subscriptions" tab. Click
-on the "Generate Production Key" button followed by the "Show Key" button to obtain an API key.
+on the "Generate Production Key" button followed by the "Show Key" button to obtain an Application key.
 
 11. Now we are ready to invoke the API. Copy and paste following into a new console window & execute it.
 
 curl -k -d "q=wso2&count=5" -H "Authorization :Bearer 9nEQnijLZ0Gi0gZ6a3pZICktVUca" https://localhost:8243/twitter/1.0.0/search.atom
 
-(** NOTE: Replace the string '9nEQnijLZ0Gi0gZ6a3pZICktVUca' with the API key you generated earlier)
+(** NOTE: Replace the string '9nEQnijLZ0Gi0gZ6a3pZICktVUca' with the Application key you generated earlier)
 
 You should be able to see search results from Twitter on you console.
 eg:

@@ -250,5 +250,17 @@
             <outputDirectory>wso2mb-${pom.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/cloud-services-desc.xml</source>
+            <outputDirectory>wso2mb-${pom.version}/repository/conf/multitenancy</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/conf/multitenancy-packages.xml</source>
+            <outputDirectory>wso2mb-${pom.version}/repository/conf/multitenancy</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
     </files>
 </assembly>

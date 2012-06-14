@@ -26,6 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -131,6 +132,7 @@ public final class CommandLineManager extends CommonManager {
 
         JaggeryContext jaggeryContext = CommonManager.getJaggeryContext();
         Stack<String> includesCallstack = jaggeryContext.getIncludesCallstack();
+        Map<String, Boolean> includedScripts = jaggeryContext.getIncludedScripts();
         String parent = includesCallstack.lastElement();
         String fileURL = (String) args[0];
 
@@ -148,9 +150,13 @@ public final class CommandLineManager extends CommonManager {
             fileURL = FilenameUtils.getFullPath(parent) + fileURL;
         }
         fileURL = FilenameUtils.normalize(fileURL);
+        if (includesCallstack.search(fileURL) != -1) {
+            return;
+        }
         ScriptReader source = null;
         try {
             source = new ScriptReader(new FileInputStream(fileURL));
+            includedScripts.put(fileURL, true);
             includesCallstack.push(fileURL);
             engine.exec(source, scope, null);
             includesCallstack.pop();
@@ -159,4 +165,55 @@ public final class CommandLineManager extends CommonManager {
             throw new ScriptException(e);
         }
     }
+
+    public static void include_once(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        String functionName = "include_once";
+        int argsCount = args.length;
+        if (argsCount != 1) {
+            HostObjectUtil.invalidNumberOfArgs(HOST_OBJECT_NAME, functionName, argsCount, false);
+        }
+        if (!(args[0] instanceof String)) {
+            HostObjectUtil.invalidArgsError(HOST_OBJECT_NAME, functionName, "1", "string", args[0], false);
+        }
+
+        JaggeryContext jaggeryContext = CommonManager.getJaggeryContext();
+        Stack<String> includesCallstack = jaggeryContext.getIncludesCallstack();
+        Map<String, Boolean> includedScripts = jaggeryContext.getIncludedScripts();
+        String parent = includesCallstack.lastElement();
+        String fileURL = (String) args[0];
+
+        if (isHTTP(fileURL) || isHTTP(parent)) {
+            CommonManager.include_once(cx, thisObj, args, funObj);
+            return;
+        }
+
+        ScriptableObject scope = jaggeryContext.getScope();
+        RhinoEngine engine = jaggeryContext.getEngine();
+
+        if (fileURL.startsWith("/")) {
+            fileURL = includesCallstack.firstElement() + fileURL;
+        } else {
+            fileURL = FilenameUtils.getFullPath(parent) + fileURL;
+        }
+        fileURL = FilenameUtils.normalize(fileURL);
+        if (includesCallstack.search(fileURL) != -1) {
+            return;
+        }
+        if (includedScripts.get(fileURL) != null) {
+            return;
+        }
+
+        try {
+            ScriptReader source = new ScriptReader(new FileInputStream(fileURL));
+            includedScripts.put(fileURL, true);
+            includesCallstack.push(fileURL);
+            engine.exec(source, scope, null);
+            includesCallstack.pop();
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage(), e);
+            throw new ScriptException(e);
+        }
+    }
+
 }

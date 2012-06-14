@@ -4,6 +4,9 @@ import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 public class JaggeryContext {
@@ -14,6 +17,8 @@ public class JaggeryContext {
     private OutputStream outputStream = null;
     private CommonManager manager = null;
     private Stack<String> includesCallstack = new Stack<String>();
+    private Map<String, Boolean> includedScripts = new HashMap<String, Boolean>();
+
 
     public int getEnvironment() {
         return environment;
@@ -65,5 +70,9 @@ public class JaggeryContext {
 
     public Stack<String> getIncludesCallstack() {
         return includesCallstack;
+    }
+
+    public Map<String, Boolean> getIncludedScripts() {
+        return includedScripts;
     }
 }

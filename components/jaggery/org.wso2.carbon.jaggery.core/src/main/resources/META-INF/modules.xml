@@ -80,6 +80,10 @@
             <className>org.wso2.carbon.jaggery.core.manager.WebAppManager</className>
             <name>include</name>
         </method>
+        <method>
+            <className>org.wso2.carbon.jaggery.core.manager.WebAppManager</className>
+            <name>include_once</name>
+        </method>
         <!--method>
             <className>org.wso2.carbon.scriptengine.engine.CarbonTopLevel</className>
             <name>log</name>

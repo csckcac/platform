@@ -41,15 +41,15 @@ function saveContent(provider, apiName, apiVersion, docName, mode) {
                       jagg.message({content:result.message,type:"error"});
                   } else {
                       if (mode == "save") {
-                          $('#messageModal').html($('#confirmation-data').html());
+                         /* $('#messageModal').html($('#confirmation-data').html());
                           $('#messageModal h3.modal-title').html('Document Content Addition Successful');
                           $('#messageModal div.modal-body').html('\n\n Successfully saved the documentation content and you will be moved away from this tab.');
                           $('#messageModal a.btn-primary').html('OK');
                           $('#messageModal a.btn-other').hide();
-                          $('#messageModal a.btn-primary').click(function() {
+                          $('#messageModal a.btn-primary').click(function() {*/
                               window.close();
-                          });
-                          $('#messageModal').modal();
+                          /*});
+                          $('#messageModal').modal();*/
                       } else {
                           $('#messageModal').html($('#confirmation-data').html());
                           $('#messageModal h3.modal-title').html('Document Content Addition Successful');

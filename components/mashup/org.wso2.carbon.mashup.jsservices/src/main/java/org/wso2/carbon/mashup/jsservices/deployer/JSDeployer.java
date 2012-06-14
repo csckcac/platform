@@ -16,10 +16,23 @@
 
 package org.wso2.carbon.mashup.jsservices.deployer;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNode;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.TreeMap;
+
+import javax.xml.namespace.QName;
+
 import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axis2.AxisFault;
@@ -47,35 +60,28 @@ import org.apache.axis2.description.java2wsdl.Java2WSDLConstants;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.apache.axis2.wsdl.WSDLUtil;
 import org.apache.axis2.wsdl.WSDLConstants;
+import org.apache.axis2.wsdl.WSDLUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.task.TaskConstants;
-import org.apache.synapse.task.TaskDescriptionRepository;
-import org.apache.synapse.task.TaskScheduler;
 import org.apache.ws.commons.schema.XmlSchemaElement;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.mashup.javascript.hostobjects.system.MSTaskAdmin;
 import org.wso2.carbon.mashup.javascript.hostobjects.system.multitenancy.SystemHostObjectInitializer;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngine;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptReceiver;
-import org.wso2.carbon.mashup.javascript.hostobjects.system.FunctionSchedulingManager;
 import org.wso2.carbon.mashup.jsservices.JSConstants;
 import org.wso2.carbon.mashup.jsservices.JSUtils;
 import org.wso2.carbon.mashup.utils.MashupConstants;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.javascript.xmlimpl.XML;
-import org.wso2.javascript.xmlimpl.XMLList;
-import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
-
-import javax.xml.namespace.QName;
-import java.io.*;
-
-import java.util.*;
 
 /**
  * This is a custom Axis2 deployer written for deploying JavaScript services.i.e. This deployer will
@@ -291,9 +297,13 @@ public class JSDeployer extends AbstractDeployer {
             }
             if (service != null) {
                 // Unscheduling all the functions scheduled by this service
-                FunctionSchedulingManager functionSchedulingManager =
-                        FunctionSchedulingManager.getInstance();
-                functionSchedulingManager.deleteTasks(service.getName(), configCtx);
+                
+                MSTaskAdmin taskAdmin = new MSTaskAdmin();
+                try {
+        			taskAdmin.deleteTask(service.getName());
+        		} catch (AxisFault e) {
+        			log.error("Unable to delete job : " + e.getFaultAction());
+        		}
 
                 /*
                 If a mashup had specified a function to be called on undeployment

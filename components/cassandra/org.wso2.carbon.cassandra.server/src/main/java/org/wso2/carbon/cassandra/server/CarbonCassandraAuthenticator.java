@@ -136,7 +136,7 @@ public class CarbonCassandraAuthenticator implements IAuthenticator {
 		}
 		return false;
 	}
-	
+
     public void validateConfiguration() throws ConfigurationException {
         CassandraServerComponentManager manager = CassandraServerComponentManager.getInstance();
         authenticationService = manager.getAuthenticationService();

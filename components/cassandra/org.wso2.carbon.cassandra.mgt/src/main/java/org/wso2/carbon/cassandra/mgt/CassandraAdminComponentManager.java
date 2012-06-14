@@ -20,11 +20,13 @@ package org.wso2.carbon.cassandra.mgt;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
  * Keeps the runtime objects required by the operation of the cassandra admin service
@@ -41,6 +43,8 @@ public class CassandraAdminComponentManager {
     private RealmService realmService;
 
     private boolean initialized = false;
+    private ConfigurationContextService configCtxService;
+    private ServerConfigurationService serverConfigurationService;
 
     public static CassandraAdminComponentManager getInstance() {
         return ourInstance;
@@ -54,16 +58,31 @@ public class CassandraAdminComponentManager {
      *
      * @param dataAccessService client for accessing cassandra
      * @param realmService      Access the user realm
+     * @param configCtxService
+     * @param serverConfigurationService
      */
-    public void init(DataAccessService dataAccessService, RealmService realmService) {
+    public void init(DataAccessService dataAccessService, RealmService realmService,
+                     ConfigurationContextService configCtxService,
+                     ServerConfigurationService serverConfigurationService) {
         this.dataAccessService = dataAccessService;
         this.realmService = realmService;
+        this.configCtxService = configCtxService;
+        this.serverConfigurationService = serverConfigurationService;
         this.initialized = true;
     }
 
     public DataAccessService getDataAccessService() throws CassandraServerManagementException {
         assertInitialized();
         return dataAccessService;
+    }
+
+    public ConfigurationContextService getConfigurationContextService() throws CassandraServerManagementException {
+        assertInitialized();
+        return configCtxService;
+    }
+
+    public ServerConfigurationService getServerConfigurationService(){
+        return serverConfigurationService;
     }
 
     public boolean isInitialized() {

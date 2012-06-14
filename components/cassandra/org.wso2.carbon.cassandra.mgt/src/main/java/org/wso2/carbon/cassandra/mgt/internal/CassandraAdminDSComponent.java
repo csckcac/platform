@@ -25,6 +25,7 @@ import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
 import org.wso2.carbon.cassandra.mgt.CassandraAdminComponentManager;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 
 /**
  * @scr.component name="org.wso2.carbon.cassandra.mgt.component" immediate="true"
@@ -36,6 +37,9 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * @scr.reference name="org.wso2.carbon.configCtx"
  * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
  * policy="dynamic" bind="setConfigurationContext" unbind="unsetConfigurationContext"
+ * @scr.reference name="org.wso2.carbon.base.api.ServerConfigurationService"
+ * interface="org.wso2.carbon.base.api.ServerConfigurationService"
+ * cardinality="1..1" policy="dynamic"  bind="setServerConfiguration" unbind="unsetServerConfiguration"
  */
 public class CassandraAdminDSComponent {
 
@@ -44,12 +48,14 @@ public class CassandraAdminDSComponent {
     private DataAccessService dataAccessService;
     private RealmService realmService;
     private static ConfigurationContextService configCtxService;
+    private ServerConfigurationService serverConfigurationService;
 
     protected void activate(ComponentContext componentContext) {
         if (log.isDebugEnabled()) {
             log.debug("Cassandra Admin bundle is activated.");
         }
-        CassandraAdminComponentManager.getInstance().init(dataAccessService, realmService);
+        CassandraAdminComponentManager.getInstance().init(dataAccessService, realmService,
+                configCtxService,serverConfigurationService);
     }
 
     protected void deactivate(ComponentContext componentContext) {
@@ -90,7 +96,12 @@ public class CassandraAdminDSComponent {
 	public static ConfigurationContextService getConfigCtxService() {
 		return configCtxService;
 	}
-    
-    
-    
+
+    public void unsetServerConfiguration(ServerConfigurationService serverConfigService){
+        this.serverConfigurationService = null;
+    }
+
+    public void setServerConfiguration(ServerConfigurationService serverConfigService){
+        this.serverConfigurationService = serverConfigService;
+    }
 }

@@ -32,7 +32,7 @@ public class MultitenantClusterRepository implements ClusterRepository {
     private Map<Integer, BasicClusterRepository> clusters = new HashMap<Integer, BasicClusterRepository>();
 
     /**
-     * Get the <code>ClusterRepository</code> of the current tenant and retrieve the hector cluster with the given mame
+     * Get the <code>ClusterRepository</code> of the current tenant and retrieve the hector cluster with the given name
      *
      * @param owner       Owners of the hector cluster
      * @param clusterName name of the hector cluster

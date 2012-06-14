@@ -34,7 +34,7 @@ public class ClusterConfiguration {
 
     private static final Log log = LogFactory.getLog(ClusterConfiguration.class);
 
-    private static final String DEFAULT_CLUSTER_NAME = "ClusterOne";
+    private static final String DEFAULT_CLUSTER_NAME = "Test Cluster";
     private static final int DEFAULT_AUTO_DISCOVERY_INTERVAL = 30;
     private static final String DEPLOYMENT_EMBEDDED = "embedded";
     private static final String DEPLOYMENT_EXTERNAL = "external";

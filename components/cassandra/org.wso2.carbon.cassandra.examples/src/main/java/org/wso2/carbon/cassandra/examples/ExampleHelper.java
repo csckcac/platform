@@ -45,7 +45,7 @@ public class ExampleHelper {
                 new HashMap<String, String>();
         credentials.put(USERNAME_KEY, "admin");
         credentials.put(PASSWORD_KEY, "admin");
-        return HFactory.createCluster("ClusterOne",
+        return HFactory.createCluster("Test Cluster",
                 new CassandraHostConfigurator("localhost:9160"), credentials);
     }
 }

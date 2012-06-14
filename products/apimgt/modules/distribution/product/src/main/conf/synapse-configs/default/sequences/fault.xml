@@ -45,6 +45,9 @@
                     <arg expression="$ctx:ERROR_MESSAGE"/>
                 </args>
             </payloadFactory>
+            <filter source="$axis2:messageType" regex=".*urlencoded.*">
+                <property name="messageType" scope="axis2" value="application/xml"/>
+            </filter>
         </else>
     </filter>
     <filter xpath="$ctx:CUSTOM_HTTP_SC">

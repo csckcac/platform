@@ -15,7 +15,7 @@
 	<content>
 		<table name="Details">
 			<field type="text" required="true">
-				<name lable="name">Name</name>
+				<name label="name">Name</name>
 			</field>
 			<field type="text" required="true">
 				<name label="id">ID</name>

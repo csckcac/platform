@@ -34,6 +34,7 @@
     <li><a href="#configurableArtifacts">Configurable Governance Artifacts</a></li>
     <li><a href="#configuringServices">Configuring Services</a></li>
     <li><a href="#configLanguage">XML Language for Customizing Configurable Governance Artifacts</a></li>
+    <li><a href="#deployingRXT">Deploying a Configurable Governance Artifact</a></li>
     <li><a href="#govArtifacts">Storing Governance Artifacts in GReg</a></li>
     <li><a href="#service">Adding Services</a></li>
     <li><a href="#policy">Adding Policies</a></li>
@@ -372,6 +373,20 @@ With this configuration following link will be displayed in the UI initially.
     &lt;/field&gt;
     </code>
 </p>
+
+<a name="deployingRXT"></a>
+<h2>Deploying a Configurable Governance Artifact</h2>
+<p>
+    Once a Registry extension file is created, it is needed to get uploaded. Follow the instructions below to deploy the extension
+    file in the WSO2 Governance Registry.
+</p>
+
+<ul>
+    <li>Start up the WSO2 Governance Registry.</li>
+    <li>Go to Main->Browse->Detail to view and add the registry extension file to /_system/governance/repository/components/org.wso2.carbon.governance/types.</li>
+    <li>Sign-out and Sign-in.</li>
+    <li>Now you can see the newly added extension type in the "Metadata Add" and "List" panes.</li>
+</ul>
 
 <a name="govArtifacts"></a>
     <h2>Storing Governance Artifacts in GReg</h2>

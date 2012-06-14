@@ -46,6 +46,10 @@
         }
 
     }
+
+    function cancelDeploy(){
+        location.href = "../bam-toolbox/list.bar";
+    }
 </script>
 
   <%--<script type="text/javascript">--%>
@@ -102,7 +106,7 @@
                                    onclick="javascript:deployToolBox();"/>
                             <input type="button" value="<fmt:message key="cancel"/>"
                                    name="cancel" class="button"
-                                   onclick="javascript:cancelTableData();"/>
+                                   onclick="javascript:cancelDeploy();"/>
                         </td>
                     </tr>
                     </tbody>

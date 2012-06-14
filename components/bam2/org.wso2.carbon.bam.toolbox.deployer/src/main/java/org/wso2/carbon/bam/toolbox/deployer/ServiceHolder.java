@@ -41,6 +41,7 @@ public class ServiceHolder {
 
     public static void setConfigurationContextService(ConfigurationContextService configurationContextService) {
         ServiceHolder.configurationContextService = configurationContextService;
+//        triggerInitialDeployments();
     }
 
     public static Registry getRegistry(int tenantId) throws RegistryException {
@@ -49,10 +50,12 @@ public class ServiceHolder {
 
     public static void setRegistryService(RegistryService registryService) {
         ServiceHolder.registryService = registryService;
+//         triggerInitialDeployments();
     }
 
     public static void setUserRealm(UserRealm realmService) {
         ServiceHolder.userRealm = realmService;
+//         triggerInitialDeployments();
     }
 
     public static UserRealm getUserRealm() {
@@ -65,6 +68,7 @@ public class ServiceHolder {
 
     public static void setRealmService(RealmService realmService) {
         ServiceHolder.realmService = realmService;
+        // triggerInitialDeployments();
     }
 
     public static DashboardDSService getDashboardService() {
@@ -73,7 +77,29 @@ public class ServiceHolder {
 
     public static void setDashboardService(DashboardDSService dashboardService) {
         ServiceHolder.dashboardService = dashboardService;
+         //triggerInitialDeployments();
     }
+
+//    private static boolean isLoadedAllServices() {
+//        if (
+//                null != registryService &&
+//                        null != configurationContextService &&
+//                        null != dashboardService &&  //TODO - there is a possiblity dashboard service is not registered
+//                        null != realmService &&
+//                        null != userRealm) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    private static void triggerInitialDeployments() {
+//        if (isLoadedAllServices()) {
+//            for (BAMToolBoxDeployer deployerInstance : BAMToolBoxDeployer.pausedDeployments) {
+//                deployerInstance.doInitialUnDeployments();
+//            }
+//        }
+//    }
 }
 
 

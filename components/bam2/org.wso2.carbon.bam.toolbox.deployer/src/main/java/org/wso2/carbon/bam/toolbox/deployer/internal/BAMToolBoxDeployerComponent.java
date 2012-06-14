@@ -32,7 +32,7 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * @scr.reference name="registry.service"
  * interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
-* @scr.reference name="config.context.service"
+ * @scr.reference name="config.context.service"
  * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="0..1" policy="dynamic"
  * bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
  * @scr.reference name="user.realm.delegating"
@@ -51,51 +51,51 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * unbind="unsetDashboardService"
  */
 
-public class BAMToolBoxDeployerComponent{
+public class BAMToolBoxDeployerComponent {
     private static final Log log = LogFactory.getLog(BAMToolBoxDeployerComponent.class);
 
     protected void activate(ComponentContext context) {
-            log.info("Successfully registered BAM Toolbox Deployer");
+        log.info("Successfully Started BAM Toolbox Deployer");
     }
 
-    protected void setConfigurationContextService(ConfigurationContextService contextService){
-         ServiceHolder.setConfigurationContextService(contextService);
+    protected void setConfigurationContextService(ConfigurationContextService contextService) {
+        ServiceHolder.setConfigurationContextService(contextService);
     }
 
-    protected void  unsetConfigurationContextService(ConfigurationContextService contextService){
-       ServiceHolder.setConfigurationContextService(null);
+    protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
+        ServiceHolder.setConfigurationContextService(null);
     }
 
-    protected void setRegistryService(RegistryService registryService){
+    protected void setRegistryService(RegistryService registryService) {
         ServiceHolder.setRegistryService(registryService);
     }
 
-    protected void unsetRegistryService(RegistryService registryService){
+    protected void unsetRegistryService(RegistryService registryService) {
         ServiceHolder.setRegistryService(null);
     }
 
-    protected void setUserRealm(UserRealm userRealm){
+    protected void setUserRealm(UserRealm userRealm) {
         ServiceHolder.setUserRealm(userRealm);
     }
 
-    protected void unsetUserRealm(UserRealm userRealm){
+    protected void unsetUserRealm(UserRealm userRealm) {
         ServiceHolder.setUserRealm(userRealm);
 
     }
 
-    protected void setRealmService(RealmService realmService){
+    protected void setRealmService(RealmService realmService) {
         ServiceHolder.setRealmService(realmService);
     }
 
-    protected void unsetRealmService(RealmService realmService){
+    protected void unsetRealmService(RealmService realmService) {
         ServiceHolder.setRealmService(null);
     }
 
-    protected void setDashboardService(DashboardDSService dashboardService){
+    protected void setDashboardService(DashboardDSService dashboardService) {
         ServiceHolder.setDashboardService(dashboardService);
     }
 
-    protected void unsetDashboardService(DashboardDSService dashboardService){
+    protected void unsetDashboardService(DashboardDSService dashboardService) {
         ServiceHolder.setDashboardService(null);
     }
 }

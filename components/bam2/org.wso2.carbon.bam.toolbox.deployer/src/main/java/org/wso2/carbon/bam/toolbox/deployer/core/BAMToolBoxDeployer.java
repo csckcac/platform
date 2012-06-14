@@ -11,8 +11,10 @@ import org.wso2.carbon.bam.toolbox.deployer.BAMToolBoxDeployerConstants;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.bam.toolbox.deployer.deploy.BAMArtifactDeployerManager;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentException;
+import org.wso2.carbon.bam.toolbox.deployer.internal.ServerStartUpInspector;
 import org.wso2.carbon.bam.toolbox.deployer.internal.config.ToolBoxConfigurationManager;
 import org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxDTO;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.user.api.Tenant;
 import org.wso2.carbon.user.core.UserStoreException;
@@ -46,10 +48,33 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
 
     private static final Log log = LogFactory.getLog(BAMToolBoxDeployer.class);
 
+
+    private static BAMToolBoxDeployer pausedDeployments = new BAMToolBoxDeployer();
+    private ArrayList<DeploymentFileData> pausedDeploymentFileDatas = new ArrayList<DeploymentFileData>();
+
     @Override
     public void init(ConfigurationContext configurationContext) {
         this.configurationContext = configurationContext;
         createHotDeployementFolderIfNotExists();
+        CarbonContext.getCurrentContext().getTenantId();
+
+        if (!ServerStartUpInspector.isServerStarted()) {
+            if (getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
+                pausedDeployments = this;
+                int port = CarbonUtils.getTransportPort(configurationContext, "https");
+                ServerStartUpInspector inspector = new ServerStartUpInspector();
+                inspector.setPort(port);
+                inspector.start();
+
+            }
+        } else {
+            doInitialUnDeployments();
+        }
+
+
+    }
+
+    public void doInitialUnDeployments() {
         try {
             ArrayList<String> allTools = ToolBoxConfigurationManager.getInstance().getAllToolBoxNames(getTenantId());
             ArrayList<String> availArtifacts = getAllBAMArtifacts();
@@ -80,31 +105,35 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
      * @throws DeploymentException
      */
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {
-        String path = deploymentFileData.getAbsolutePath();
-        File toolBox = new File(path);
-        String destDir = toolBox.getParent();
-        ToolBoxConfigurationManager manager = ToolBoxConfigurationManager.getInstance();
-        try {
-            ArrayList<String> allTools = manager.getAllToolBoxNames(getTenantId());
-            if (!allTools.contains(toolBox.getName().replaceAll("." + BAMToolBoxDeployerConstants.BAM_ARTIFACT_EXT, ""))) {
-                log.info("Deploying file:" + path);
-                BAMArtifactProcessor processor = BAMArtifactProcessor.getInstance();
-                String barDir = processor.extractBAMArtifact(path, destDir + "/temp");
+        if (ServerStartUpInspector.isServerStarted()) {
+            String path = deploymentFileData.getAbsolutePath();
+            File toolBox = new File(path);
+            String destDir = toolBox.getParent();
+            ToolBoxConfigurationManager manager = ToolBoxConfigurationManager.getInstance();
+            try {
+                ArrayList<String> allTools = manager.getAllToolBoxNames(getTenantId());
+                if (!allTools.contains(toolBox.getName().replaceAll("." + BAMToolBoxDeployerConstants.BAM_ARTIFACT_EXT, ""))) {
+                    log.info("Deploying file:" + path);
+                    BAMArtifactProcessor processor = BAMArtifactProcessor.getInstance();
+                    String barDir = processor.extractBAMArtifact(path, destDir + "/temp");
 
-                ToolBoxDTO aTool = processor.getToolBoxDTO(barDir);
+                    ToolBoxDTO aTool = processor.getToolBoxDTO(barDir);
 
-                int tenantId = getTenantId();
-                BAMArtifactDeployerManager.getInstance().deploy(aTool, tenantId, getTenantAdminName(tenantId));
+                    int tenantId = getTenantId();
+                    BAMArtifactDeployerManager.getInstance().deploy(aTool, tenantId, getTenantAdminName(tenantId));
 
-                manager.addNewToolBoxConfiguration(aTool, getTenantId());
+                    manager.addNewToolBoxConfiguration(aTool, getTenantId());
 
-                String repoPath = this.configurationContext.getAxisConfiguration().getRepository().getPath();
-                removeTempFiles(new File(repoPath + File.separator + this.directory + "/temp"));
-                log.info("Deployed successfully file: " + path);
+                    String repoPath = this.configurationContext.getAxisConfiguration().getRepository().getPath();
+                    removeTempFiles(new File(repoPath + File.separator + this.directory + "/temp"));
+                    log.info("Deployed successfully file: " + path);
+                }
+            } catch (BAMToolboxDeploymentException e) {
+                log.error("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
+                throw new BAMToolboxDeploymentException("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
             }
-        } catch (BAMToolboxDeploymentException e) {
-            log.error("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
-            throw new BAMToolboxDeploymentException("Error while deploying bam  artifact :" + deploymentFileData.getAbsolutePath(), e);
+        } else {
+            this.pausedDeploymentFileDatas.add(deploymentFileData);
         }
 
     }
@@ -221,6 +250,18 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
             }
         }
     }
+
+    public ArrayList<DeploymentFileData> getPausedDeploymentFileDatas() {
+        return pausedDeploymentFileDatas;
+    }
+
+
+    public static BAMToolBoxDeployer getPausedDeployments() {
+        return pausedDeployments;
+    }
+
+
+
 }
 
 

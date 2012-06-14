@@ -166,6 +166,7 @@ width: 32.9%;
 .super-section{
     background:#efefef;
     border-bottom:solid 1px #ccc;
+    padding-top:3px;
 }
 .super-rows{
     padding:0 8px;
@@ -174,7 +175,7 @@ width: 32.9%;
     height:43px;
 }
 .api-section{
-    padding:0 8px;
+    padding:3px 0 0 8px;
 }
  .service-name{
      font-weight:bold;

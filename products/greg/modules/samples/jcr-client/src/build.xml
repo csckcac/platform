@@ -24,7 +24,7 @@
 
 	<path id="client.class.path">
 		<fileset dir="${registry.home}/lib">
-			<include name="*.jar" />
+			<include name="org.wso2.carbon.securevault*.jar" />
 		</fileset>
 		<fileset dir="${dest.dir.lib}">
 			<include name="*.jar" />

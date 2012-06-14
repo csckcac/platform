@@ -377,6 +377,13 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                     APIConstants.API_KEY);
             GenericArtifact artifact = artifactManager.getGenericArtifact(apiArtifactId);
             GenericArtifact updateApiArtifact = APIUtil.createAPIArtifactContent(artifact, api);
+            String artifactPath = GovernanceUtils.getArtifactPath(registry, updateApiArtifact.getId());
+            Set<String> tagSet = api.getTags();
+            if (tagSet != null && tagSet.size() > 0) {
+                for (String tag : tagSet) {
+                    registry.applyTag(artifactPath, tag);
+                }
+            }
             artifactManager.updateGenericArtifact(updateApiArtifact);
 
         } catch (RegistryException e) {

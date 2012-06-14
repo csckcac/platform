@@ -57,12 +57,6 @@ public class DashboardClient {
         try {
 
             int tabId = service.addNewTab(userId, tabTitle, "bam");
-//            if (tabId != 0) {
-//                String tab0 = ((DashboardServiceStub) stub).getGadgetLayout(userId, "0", "bam");
-//                if (null == tab0) {
-//                    ((DashboardServiceStub) stub).removeTab(userId, "0", "bam");
-//                }
-//            }
             return tabId;
         } catch (Exception e) {
             log.error("Exception while adding a new gadget", e);

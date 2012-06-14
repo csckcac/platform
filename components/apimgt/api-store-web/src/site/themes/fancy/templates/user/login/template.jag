@@ -36,7 +36,7 @@
                                     <div class="thumbnail <% if(jagg.getUserTheme() == "fancy") { %>currentTheme<% } %>">
                                         <a title="fancy" class="badge themeLabel" <% if(jagg.getUserTheme() != "fancy") { %>onclick="applyTheme(this)"<% } %>>
                                             <img src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-fancy.png")%>" />
-                                            <br /><div class="themeName">Fancy Theme</div>
+                                            <br /><div class="themeName">Fancy</div>
                                         </a>
                                     </div>
 
@@ -45,7 +45,7 @@
                                     <div class="thumbnail <% if(jagg.getUserTheme() == "modern") { %>currentTheme<% } %>">
                                         <a title="modern" class="badge themeLabel" <% if(jagg.getUserTheme() != "modern") { %>onclick="applyTheme(this)"<% } %>>
                                             <img src="<%=jagg.getAbsoluteUrl("/site/themes/"+jagg.getUserTheme()+"/images/thumb-modern.png")%>" />
-                                            <br /><div class="themeName">Modern Theme</div>
+                                            <br /><div class="themeName">Modern</div>
                                         </a>
                                     </div>
                                 </td>

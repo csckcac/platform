@@ -51,6 +51,12 @@
             <version>${wso2carbon.version.bam2}</version>
             <type>zip</type>
 	 </dependency>
+         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.bam.toolbox.deployer.server.feature</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+            <type>zip</type>
+	 </dependency>
     </dependencies>
 
     <build>

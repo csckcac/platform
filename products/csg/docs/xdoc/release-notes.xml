@@ -108,6 +108,7 @@
         <li>CARBON-12426 - Fixed the security token issue when CSG server goes away.</li>
         <li>CARBON-12632 - Fixed the CSG service invocation using SOAP 1.2 endpoint.</li>
         <li>CARBON-12579 - Fixed the incorrect doc link.</li>
+        <li>CARBON-13444 - Back end REST services can be published.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha</h2>
@@ -136,8 +137,8 @@
         <li>CARBON-13027 - Fixed issue when clicking Registry browser.</li>
         <li>CARBON-13028 - Source packs for CSG products and CSG service.</li>
         <li>CARBON-13029 - Add extra Items in required the run CSG service in Stratos.</li>
-	<li>CARBON-13312 - Unable to delete a CSG server (defined using CSG Agent) in BRS.</li>
-	<li>CARBON-13326 - Unable to define a CSG server (defined using CSG Agent) in ESB.</li>
+	    <li>CARBON-13312 - Unable to delete a CSG server (defined using CSG Agent) in BRS.</li>
+	    <li>CARBON-13326 - Unable to define a CSG server (defined using CSG Agent) in ESB.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha RC3</h2>

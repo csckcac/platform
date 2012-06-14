@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<html>
+    <head>
+        <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"/>
+        <title>Url Mappings for webapps - User Guide</title>
+        <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+    </head>
+
+    <body>
+        <h1>Url Mappings for webapps - User Guide</h1>
+        <p>This page contains information on how to shorten your url of your hosted web application in our app server.
+            If you deploy a web
+            application with us, to access your web application, you need to enter:
+            <b>https://ip:port/webappname</b> in your browser. If webapp is deployed in a tenant, then:
+            <b>https://ip:port/webapps/t/tenant_domain/webappname</b></p>
+        <p>But, now we provide a way to access your webapp with a short url like
+            <span style="font-weight: bold;"> https://appid.wso2.com:port/ </span>
+            in any case whether you are having tenant or not. All what you need to do is to create
+            a appid through your webapp information's page.</p>
+        <p>So, simply you are going to own your domain for your hosted web application</p>
+        <pre>
+        <b>https://ip:port/webapps/t/tenant_domain/webappname ==> https://appid.wso2.com:port</b>
+        </pre>
+        <p><img alt="" src="images/web_info.png" /></p>
+            <p>Figure 1: urlmappings in webapp information page.</p>
+        <p>Once the webapp information page appears, when u click on <img alt="" src="images/url.png" />
+            will have the options to control over your url mappings such as add, edit, delete.</p>
+        <p><img alt="" src="images/add.png" /></p>
+        <p>Figure 2: adding a urlmapping to webapp</p>
+        <p>Once you have created url mapping for your webapp for example :- <b>appid = "exampleapp"</b>,
+            then your domain will be <b>"exampleapp.wso2.com"</b>. So, regardless of whether you are a tenant or not,
+            you can access your web application by entering the url <b>"https://exampleapp.wso2.com:port"</b>.
+            The following image depicts how your web application is accessed through the short url.</p>
+        <p>Also, to access your own domain, you need to have a cname.
+            In case cname is not available with you at the moment,
+            then you can use /etc/hosts to put your domain entries pointing to your local ip. This can be applicable
+            only for testing purposes.</p>
+        <p><img alt="" src="images/context.png"/></p>
+        <p>Figure 3: accessing web application with shorten url.</p>
+        <h1>Url Mappings for Services - User Guide</h1>
+        <p>You can follow the above procedure to access your "wsdl" with the short urls.</p>
+        <p><img alt="" src="images/service_dash.png"/></p>
+        <p>Figure 4: url mappings in services-dashboard</p>
+        <p>Then, you can access your wsdl using <b>https://appid.wso2.com:port/?wsdl</b></p>
+    </body>
+</html>

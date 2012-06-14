@@ -82,21 +82,16 @@ $('#requireResubscriptionDiv').hide();
         <span class="label label-info">No Life-cycles history data can be found for this API.</span>
  <%}%>
 
-        <table class="table table-bordered table-striped">
+        <table>
   <thead>
-      <tr>
-        <th>Time</th>
-        <th>User</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+         </thead>
        <tbody>
         <%for(var j=0;j<length;j++){
         var lc=lcs[j];
         var path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + lc.username;
         %>
         <tr>
-        <td><b><%=lc.date%></b></td><td><i class="icon-user"></i><a href="<%=path%>"><%=lc.username%></a></td><td>
+        <td><i class="icon-info-sign"></i> <b><%=lc.date%></b></td><td>&nbsp;&nbsp;&nbsp;<i class="icon-user"></i><a href="<%=path%>"><%=lc.username%></a></td><td>&nbsp;&nbsp;&nbsp;
         <%if(lc.oldStatus==""){%>created the API. <%}else{%>
         changed api status from '<%=lc.oldStatus%>' to '<%=lc.newStatus%>'.
         <%}%>

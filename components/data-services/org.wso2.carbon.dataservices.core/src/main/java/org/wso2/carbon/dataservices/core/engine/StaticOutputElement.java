@@ -114,10 +114,6 @@ public class StaticOutputElement extends OutputElement {
     /* If this element corresponds to a UDT then that UDT's metadata */
     private UDT udtInfo;
 
-    /* Initial index of UDT attributes */
-    public static final int UDT_ATTRIBUTE_INITIAL_INDEX = 0;
-
-
     public StaticOutputElement(DataService dataService, String name,
                                String param, String originalParam, String paramType,
                                String elementType, String namespace, QName xsdType,
@@ -318,7 +314,7 @@ public class StaticOutputElement extends OutputElement {
             if (DBUtils.isUDT(value)) {
                 /* Retrieves value of the desired UDT attribute */
                 processedParamValue = getUDTAttributeValue(value,
-                        StaticOutputElement.UDT_ATTRIBUTE_INITIAL_INDEX);
+                        DBConstants.UDT_ATTRIBUTE_INITIAL_INDEX);
 
                 return new ExternalParam(this.getParam(), processedParamValue,
                         this.getParamType());
@@ -347,7 +343,7 @@ public class StaticOutputElement extends OutputElement {
         for (ParamValue value : rawParamValue.getArrayValue()) {
             if (DBUtils.isUDT(value)) {
                 processedParamValue.getArrayValue().add(getUDTAttributeValue(value,
-                        StaticOutputElement.UDT_ATTRIBUTE_INITIAL_INDEX));
+                        DBConstants.UDT_ATTRIBUTE_INITIAL_INDEX));
             }
             if (DBUtils.isSQLArray(value)) {
                 this.getExternalParamFromArray(processedParamValue, value);

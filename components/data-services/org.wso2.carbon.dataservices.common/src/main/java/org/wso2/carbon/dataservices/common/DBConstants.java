@@ -72,20 +72,8 @@ public final class DBConstants {
     public static final String REQUEST_STATUS_SUCCESSFUL_MESSAGE = "SUCCESSFUL";
     public static final String REQUEST_STATUS_WRAPPER_ELEMENT = "REQUEST_STATUS";
     public static final String DATA_SERVICE_NAME = "dataServiceName";
-
-    /**
-     * Properties used for data service scheduled tasks.
-     */
-    public static final class DSTaskProperties {
-    	
-    	private DSTaskProperties() {
-            throw new AssertionError();
-        }
-    	
-    	public static String DATA_SERVICE_NAME = "DATA_SERVICE_NAME";
-    	public static String DATA_SERVICE_OPERATION_NAME = "DATA_SERVICE_OPERATION_NAME";
-    	
-    }
+    /* Initial index of UDT attributes */
+    public static final int UDT_ATTRIBUTE_INITIAL_INDEX = 0;
     
     /**
      * Codes to be used as fault codes.

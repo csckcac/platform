@@ -152,7 +152,6 @@
                             query.updateProperty(DBConstants.RDBMS.MAX_FIELD_SIZE, maxFieldSize);
                             query.updateProperty(DBConstants.RDBMS.MAX_ROWS, maxRows);
                         } else {
-                            query.addProperty(DBConstants.RDBMS.QUERY_TIMEOUT, timeout);
                             query.addProperty(DBConstants.RDBMS.FETCH_DIRECTION, fetchDirection);
                             query.addProperty(DBConstants.RDBMS.FORCE_STORED_PROC, forceStoredProc);
                             query.addProperty(DBConstants.RDBMS.FORCE_JDBC_BATCH_REQUESTS, forceJDBCBatchRequests);
@@ -372,54 +371,59 @@
             String cookie = (String) session.getAttribute(org.wso2.carbon.utils.ServerConstants.ADMIN_SERVICE_COOKIE);
             DataServiceAdminClient client = new DataServiceAdminClient(cookie,backendServerURL,configContext);
             boolean isColumnAvailable = false;
-            if (sql != null && sql.trim().length() > 0)  {
-            	columnNames = client.getColumnNames(sql);
-            	if ((columnNames != null) && ( columnNames.length > 0))  {
-            		if (columnNames[0].equals("ALL")) {
-               		 String message = "Please Enter column names to generate the response";
-                     CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
-               		} else {
-               			Query autoResponseQuery = dataService.getQuery(queryId);
-                     	Result res = autoResponseQuery.getResult();
-                     	isAutoResponse = true;
-                     	if (res == null){
-                     		res = new Result(); 
-                        	    res.setResultWrapper("Entries");
-                        	    res.setRowName("Entry");
-                        	    autoResponseQuery.setResult(res);
-                     	}
-                        List<Element> ele = res.getElements();
-                        for (Element e : ele) {
-                            for (String name : columnNames) {
-                                if (e.getName().equals(name)) {
-                                    isColumnAvailable = true;
+            Config con = dataService.getConfig(datasource);
+            if (con != null && "Cassandra".equals(con.getDataSourceType())) {
+                String message = "Generate response feature is not supported for Cassandra datasources";
+                CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.WARNING, request);
+            } else {
+                if (sql != null && sql.trim().length() > 0)  {
+                    columnNames = client.getColumnNames(sql);
+                    if ((columnNames != null) && ( columnNames.length > 0))  {
+                        if (columnNames[0].equals("ALL")) {
+                         String message = "Please Enter column names to generate the response";
+                         CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
+                        } else {
+                            Query autoResponseQuery = dataService.getQuery(queryId);
+                            Result res = autoResponseQuery.getResult();
+                            isAutoResponse = true;
+                            if (res == null){
+                                res = new Result();
+                                    res.setResultWrapper("Entries");
+                                    res.setRowName("Entry");
+                                    autoResponseQuery.setResult(res);
+                            }
+                            List<Element> ele = res.getElements();
+                            for (Element e : ele) {
+                                for (String name : columnNames) {
+                                    if (e.getName().equals(name)) {
+                                        isColumnAvailable = true;
+                                    }
                                 }
                             }
-                        }
-                        if (!isColumnAvailable) {
-                           for (String name : columnNames) {
-                     		  Element el = new Element();
-                     		  el.setDataSourceType("column");
-                               el.setDataSourceValue(name);
-                               el.setName(name);
-                               el.setxsdType("xs:string");
-                               res.addElement(el);
-                     	    }
-                        } else {
-                             String message = "Result is already added";
-                             CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
-                        }
+                            if (!isColumnAvailable) {
+                               for (String name : columnNames) {
+                                  Element el = new Element();
+                                  el.setDataSourceType("column");
+                                   el.setDataSourceValue(name);
+                                   el.setName(name);
+                                   el.setxsdType("xs:string");
+                                   res.addElement(el);
+                                }
+                            } else {
+                                 String message = "Result is already added";
+                                 CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
+                            }
 
-               		}
-                 } else {
-                	 String message = "SQL query is not applicable to automate the response";
-                     CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
-                 }
-            } else {
-            	String message = "SQL query is not applicable to automate the response";
-                CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
+                        }
+                     } else {
+                         String message = "SQL query is not applicable to automate the response";
+                         CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
+                     }
+                } else {
+                    String message = "SQL query is not applicable to automate the response";
+                    CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
+                }
             }
-           
         } catch(AxisFault e){
             CarbonError carbonError = new CarbonError();
             carbonError.addError("Error occurred while saving data service configuration.");

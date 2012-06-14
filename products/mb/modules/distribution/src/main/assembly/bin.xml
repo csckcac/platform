@@ -28,6 +28,7 @@
             <excludes>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/*.bat</exclude>
+                <exclude>**/log4j.properties</exclude>
                 <exclude>**/conf/axis2/axis2.xml</exclude>
                 <exclude>**/services/sample01.aar</exclude>
                 <exclude>**/repository/services/version/**</exclude>
@@ -174,6 +175,12 @@
          <file>
             <source>src/main/resources/wso2server.sh</source>
             <outputDirectory>wso2mb-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>755</fileMode>
+        </file>
+        <file>
+            <source>src/main/resources/log4j.properties</source>
+            <outputDirectory>wso2mb-${pom.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>755</fileMode>
         </file>

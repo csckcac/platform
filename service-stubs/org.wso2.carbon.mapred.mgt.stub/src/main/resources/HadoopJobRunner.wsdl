@@ -1,4 +1,3 @@
-
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://mgt.mapred.carbon.wso2.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2175="http://conf.hadoop.apache.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.mapred.carbon.wso2.org">
     <wsdl:documentation>HadoopJobRunner</wsdl:documentation>
     <wsdl:types>
@@ -35,70 +34,14 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="isJobSuccessul">
+            <xs:element name="getJobStatus">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="isJobSuccessulResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="isJobComplete">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="isJobCompleteResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getProgress">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getProgressResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:float" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getJobName">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getJobNameResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getJobId">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getJobIdResponse">
+            <xs:element name="getJobStatusResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
@@ -152,21 +95,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getCounter">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="counterKey" nillable="true" type="xs:anyType" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getCounterResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:long" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
             <xs:element name="getConf">
                 <xs:complexType>
                     <xs:sequence />
@@ -214,32 +142,14 @@
     <wsdl:message name="sanitizeConfigurationRequest">
         <wsdl:part name="parameters" element="ns1:sanitizeConfiguration" />
     </wsdl:message>
-    <wsdl:message name="getJobNameRequest">
-        <wsdl:part name="parameters" element="ns1:getJobName" />
-    </wsdl:message>
-    <wsdl:message name="getJobNameResponse">
-        <wsdl:part name="parameters" element="ns1:getJobNameResponse" />
-    </wsdl:message>
-    <wsdl:message name="getProgressRequest">
-        <wsdl:part name="parameters" element="ns1:getProgress" />
-    </wsdl:message>
-    <wsdl:message name="getProgressResponse">
-        <wsdl:part name="parameters" element="ns1:getProgressResponse" />
-    </wsdl:message>
-    <wsdl:message name="isJobCompleteRequest">
-        <wsdl:part name="parameters" element="ns1:isJobComplete" />
-    </wsdl:message>
-    <wsdl:message name="isJobCompleteResponse">
-        <wsdl:part name="parameters" element="ns1:isJobCompleteResponse" />
-    </wsdl:message>
-    <wsdl:message name="getJobIdRequest">
-        <wsdl:part name="parameters" element="ns1:getJobId" />
-    </wsdl:message>
-    <wsdl:message name="getJobIdResponse">
-        <wsdl:part name="parameters" element="ns1:getJobIdResponse" />
-    </wsdl:message>
     <wsdl:message name="getJarRequest">
         <wsdl:part name="parameters" element="ns1:getJar" />
+    </wsdl:message>
+    <wsdl:message name="getJobStatusRequest">
+        <wsdl:part name="parameters" element="ns1:getJobStatus" />
+    </wsdl:message>
+    <wsdl:message name="getJobStatusResponse">
+        <wsdl:part name="parameters" element="ns1:getJobStatusResponse" />
     </wsdl:message>
     <wsdl:message name="getJarListRequest">
         <wsdl:part name="parameters" element="ns1:getJarList" />
@@ -255,18 +165,6 @@
     </wsdl:message>
     <wsdl:message name="getConfResponse">
         <wsdl:part name="parameters" element="ns1:getConfResponse" />
-    </wsdl:message>
-    <wsdl:message name="isJobSuccessulRequest">
-        <wsdl:part name="parameters" element="ns1:isJobSuccessul" />
-    </wsdl:message>
-    <wsdl:message name="isJobSuccessulResponse">
-        <wsdl:part name="parameters" element="ns1:isJobSuccessulResponse" />
-    </wsdl:message>
-    <wsdl:message name="getCounterRequest">
-        <wsdl:part name="parameters" element="ns1:getCounter" />
-    </wsdl:message>
-    <wsdl:message name="getCounterResponse">
-        <wsdl:part name="parameters" element="ns1:getCounterResponse" />
     </wsdl:message>
     <wsdl:message name="getFinalReportsListRequest">
         <wsdl:part name="parameters" element="ns1:getFinalReportsList" />
@@ -289,24 +187,12 @@
         <wsdl:operation name="sanitizeConfiguration">
             <wsdl:input message="tns:sanitizeConfigurationRequest" wsaw:Action="urn:sanitizeConfiguration" />
         </wsdl:operation>
-        <wsdl:operation name="getJobName">
-            <wsdl:input message="tns:getJobNameRequest" wsaw:Action="urn:getJobName" />
-            <wsdl:output message="tns:getJobNameResponse" wsaw:Action="urn:getJobNameResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="getProgress">
-            <wsdl:input message="tns:getProgressRequest" wsaw:Action="urn:getProgress" />
-            <wsdl:output message="tns:getProgressResponse" wsaw:Action="urn:getProgressResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="isJobComplete">
-            <wsdl:input message="tns:isJobCompleteRequest" wsaw:Action="urn:isJobComplete" />
-            <wsdl:output message="tns:isJobCompleteResponse" wsaw:Action="urn:isJobCompleteResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="getJobId">
-            <wsdl:input message="tns:getJobIdRequest" wsaw:Action="urn:getJobId" />
-            <wsdl:output message="tns:getJobIdResponse" wsaw:Action="urn:getJobIdResponse" />
-        </wsdl:operation>
         <wsdl:operation name="getJar">
             <wsdl:input message="tns:getJarRequest" wsaw:Action="urn:getJar" />
+        </wsdl:operation>
+        <wsdl:operation name="getJobStatus">
+            <wsdl:input message="tns:getJobStatusRequest" wsaw:Action="urn:getJobStatus" />
+            <wsdl:output message="tns:getJobStatusResponse" wsaw:Action="urn:getJobStatusResponse" />
         </wsdl:operation>
         <wsdl:operation name="getJarList">
             <wsdl:input message="tns:getJarListRequest" wsaw:Action="urn:getJarList" />
@@ -318,14 +204,6 @@
         <wsdl:operation name="getConf">
             <wsdl:input message="tns:getConfRequest" wsaw:Action="urn:getConf" />
             <wsdl:output message="tns:getConfResponse" wsaw:Action="urn:getConfResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="isJobSuccessul">
-            <wsdl:input message="tns:isJobSuccessulRequest" wsaw:Action="urn:isJobSuccessul" />
-            <wsdl:output message="tns:isJobSuccessulResponse" wsaw:Action="urn:isJobSuccessulResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="getCounter">
-            <wsdl:input message="tns:getCounterRequest" wsaw:Action="urn:getCounter" />
-            <wsdl:output message="tns:getCounterResponse" wsaw:Action="urn:getCounterResponse" />
         </wsdl:operation>
         <wsdl:operation name="getFinalReportsList">
             <wsdl:input message="tns:getFinalReportsListRequest" wsaw:Action="urn:getFinalReportsList" />
@@ -364,35 +242,8 @@
                 <soap:body use="literal" />
             </wsdl:input>
         </wsdl:operation>
-        <wsdl:operation name="isJobComplete">
-            <soap:operation soapAction="urn:isJobComplete" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getProgress">
-            <soap:operation soapAction="urn:getProgress" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getJobName">
-            <soap:operation soapAction="urn:getJobName" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getJobId">
-            <soap:operation soapAction="urn:getJobId" style="document" />
+        <wsdl:operation name="getJobStatus">
+            <soap:operation soapAction="urn:getJobStatus" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -429,24 +280,6 @@
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
-        </wsdl:operation>
-        <wsdl:operation name="isJobSuccessul">
-            <soap:operation soapAction="urn:isJobSuccessul" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getCounter">
-            <soap:operation soapAction="urn:getCounter" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getFinalReportsList">
             <soap:operation soapAction="urn:getFinalReportsList" style="document" />
@@ -490,35 +323,8 @@
                 <soap12:body use="literal" />
             </wsdl:input>
         </wsdl:operation>
-        <wsdl:operation name="isJobComplete">
-            <soap12:operation soapAction="urn:isJobComplete" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getProgress">
-            <soap12:operation soapAction="urn:getProgress" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getJobName">
-            <soap12:operation soapAction="urn:getJobName" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getJobId">
-            <soap12:operation soapAction="urn:getJobId" style="document" />
+        <wsdl:operation name="getJobStatus">
+            <soap12:operation soapAction="urn:getJobStatus" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -555,24 +361,6 @@
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
-        </wsdl:operation>
-        <wsdl:operation name="isJobSuccessul">
-            <soap12:operation soapAction="urn:isJobSuccessul" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getCounter">
-            <soap12:operation soapAction="urn:getCounter" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getFinalReportsList">
             <soap12:operation soapAction="urn:getFinalReportsList" style="document" />
@@ -616,35 +404,8 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
         </wsdl:operation>
-        <wsdl:operation name="isJobComplete">
-            <http:operation location="isJobComplete" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getProgress">
-            <http:operation location="getProgress" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getJobName">
-            <http:operation location="getJobName" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getJobId">
-            <http:operation location="getJobId" />
+        <wsdl:operation name="getJobStatus">
+            <http:operation location="getJobStatus" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
@@ -682,24 +443,6 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
         </wsdl:operation>
-        <wsdl:operation name="isJobSuccessul">
-            <http:operation location="isJobSuccessul" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getCounter">
-            <http:operation location="getCounter" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
         <wsdl:operation name="getFinalReportsList">
             <http:operation location="getFinalReportsList" />
             <wsdl:input>
@@ -712,13 +455,14 @@
     </wsdl:binding>
     <wsdl:service name="HadoopJobRunner">
         <wsdl:port name="HadoopJobRunnerHttpsSoap11Endpoint" binding="tns:HadoopJobRunnerSoap11Binding">
-            <soap:address location="https://10.216.163.29:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsSoap11Endpoint/" />
+            <soap:address location="https://10.216.53.50:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="HadoopJobRunnerHttpsSoap12Endpoint" binding="tns:HadoopJobRunnerSoap12Binding">
-            <soap12:address location="https://10.216.163.29:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsSoap12Endpoint/" />
+            <soap12:address location="https://10.216.53.50:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="HadoopJobRunnerHttpsEndpoint" binding="tns:HadoopJobRunnerHttpBinding">
-            <http:address location="https://10.216.163.29:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsEndpoint/" />
+            <http:address location="https://10.216.53.50:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
+

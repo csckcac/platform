@@ -27,7 +27,7 @@
     response.setHeader("Cache-Control", "no-cache");
     String keyspace = request.getParameter("keySpace");
     String columnFamily = request.getParameter("columnFamily");
-  //  String rowId = request.getParameter("row_id");
+    //  String rowId = request.getParameter("row_id");
     String startKey = request.getParameter("startKey");
     String endKey = request.getParameter("endKey");
     boolean isReversed = Boolean.valueOf(request.getParameter("isReversed"));
@@ -52,50 +52,53 @@
 
     if (searchKey != null && !searchKey.isEmpty()) {
         rows = cassandraExplorerAdminClient.searchRows(keyspace, columnFamily, searchKey,
-                displayStart, displayLenght);
+                                                       displayStart, displayLenght);
         noOfFilteredRows = cassandraExplorerAdminClient.getNoOfFilteredResultsoforRows(keyspace,
                                                                                        columnFamily,
                                                                                        searchKey);
-    }
-     else{
-         rows = cassandraExplorerAdminClient.
-            getPaginateSliceforRows(keyspace, columnFamily,displayStart,displayLenght);
+    } else {
+        rows = cassandraExplorerAdminClient.
+                getPaginateSliceforRows(keyspace, columnFamily, displayStart, displayLenght);
         noOfFilteredRows = noOfTotalRows;
     }
-    int totalDisplayRecords =0;
-    if(rows !=null){
-         totalDisplayRecords = rows.length;
+    int totalDisplayRecords = 0;
+    if (rows != null) {
+        totalDisplayRecords = rows.length;
     }
     response.getWriter().print("{");
-    response.getWriter().print("\"sEcho\":"+echoValue+",");
+    response.getWriter().print("\"sEcho\":" + echoValue + ",");
     response.getWriter().print("\"iTotalRecords\":" + noOfTotalRows + ",");
     response.getWriter().print("\"iTotalDisplayRecords\":" + noOfFilteredRows + ",");
     response.getWriter().print("\"aaData\":");
 
     response.getWriter().print("[");
-    if (rows != null && rows[0] != null) {
+    if (rows != null) {
         for (int i = 0; i < rows.length; i++) {
-            response.getWriter().print("[");
-            response.getWriter().print("\""+ rows[i].getRowId() + "\",");
-            for(int j=0 ; j <rows[i].getColumns().length; j++){
-                response.getWriter().print("\""+ rows[i].getColumns()[j].getValue() + "\"");
-                response.getWriter().print(",");
-                /*if ((j + 1) != rows[i].getColumns().length) {
+                response.getWriter().print("[");
+            if (rows[i] != null) {
+                response.getWriter().print("\"" + rows[i].getRowId() + "\",");
+                for (int j = 0; j < rows[i].getColumns().length; j++) {
+                    response.getWriter().print("\"" + rows[i].getColumns()[j].getValue() + "\"");
                     response.getWriter().print(",");
-                }*/
+                    /*if ((j + 1) != rows[i].getColumns().length) {
+                        response.getWriter().print(",");
+                    }*/
+                }
+                if (rows[i].getColumns().length < 3) {
+                    for (int k = 0; k < 3 - rows[i].getColumns().length; k++) {
+                        response.getWriter().print("\" \"");
+                        response.getWriter().print(",");
+                    }
+                }
+                response.getWriter().print("\"<a class=\\\"view-icon-link\\\" href=\\\"#\\\" \\\" onclick=\\\"getDataPageForRow(\'" + keyspace + "\',\'" + columnFamily + "\',\'" + rows[i].getRowId() + "\')\\\">View more</a>\"");
             }
-            if(rows[i].getColumns().length <3){
-               for(int k=0; k<3-rows[i].getColumns().length;k++){
-                   response.getWriter().print("\" \"");
-                       response.getWriter().print(",");
-               }
-            }
-            response.getWriter().print("\"<a class=\\\"view-icon-link\\\" href=\\\"#\\\" \\\" onclick=\\\"getDataPageForRow(\'"+keyspace+"\',\'"+columnFamily+"\',\'"+rows[i].getRowId()+"\')\\\">View more</a>\"");
-            response.getWriter().print("]");
+                response.getWriter().print("]");
+
             if ((i + 1) != rows.length) {
                 response.getWriter().print(",");
             }
         }
+
     }
     response.getWriter().print("]");
     response.getWriter().print("}");

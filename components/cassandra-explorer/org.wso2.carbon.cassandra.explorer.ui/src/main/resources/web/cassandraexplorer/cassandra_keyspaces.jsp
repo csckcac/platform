@@ -26,9 +26,9 @@
     String[] keyspaces = new String[0];
     CassandraExplorerAdminClient adminClient
             = new CassandraExplorerAdminClient(config.getServletContext(), session);
-    try{
-     keyspaces = adminClient.getKeyspaces();
-    }catch (CassandraExplorerAdminCassandraExplorerException e) { %>
+    try {
+        keyspaces = adminClient.getKeyspaces();
+    } catch (CassandraExplorerAdminCassandraExplorerException e) { %>
 <script type="text/javascript">
     jQuery(document).ready(function () {
         CARBON.showErrorDialog('Cannot Connect to Cassandra Cluster.<br> Please check connection details', function () {
@@ -40,12 +40,13 @@
         });
     });
 </script>
-   <% }
+<% }
 %>
 <script>
     jQuery(document).ready(function () {
         initSections("");
     });
+
 </script>
 <style>
     .sectionSeperator {
@@ -71,29 +72,31 @@
             <table width="100%" id="internal" class="styledLeft">
                 <tbody>
                 <% String[] columnFamilies = adminClient.getColumnFamilies(keyspace);
-                    for (int i = 0; i < columnFamilies.length; i++) {
-                        String rowType;
-                        if (i + 1 % 2 == 0) {
-                            rowType = "tableEvenRow";
-                        } else {
-                            rowType = "tableOddRow";
-                        }
-                        %>
+                    if (columnFamilies != null) {
+                        for (int i = 0; i < columnFamilies.length; i++) {
+                            String rowType;
+                            if (i + 1 % 2 == 0) {
+                                rowType = "tableEvenRow";
+                            } else {
+                                rowType = "tableOddRow";
+                            }
+                %>
                 <tr class=<%=rowType%>>
                     <td>
-                        <%=columnFamilies[i]%>
+                        <a href="#"
+                           onclick="viewRowExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
+                           style="background-image:url(images/column_familiy.png);"
+                           class="icon-link"><%=columnFamilies[i]%>
+                        </a>
                     </td>
-                    <td width="30%">
-                        <a href="#" onclick="viewRowExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
-                           style="background-image:url(images/explorer.png);" class="icon-link">Row View</a>
-                    </td>
-                    <td width="30%">
+                    <%--<td width="30%">
                         <a href="#" onclick="viewExplorer('<%=keyspace%>','<%=columnFamilies[i]%>')"
                            style="background-image:url(images/column_familiy.png);" class="icon-link">Summary View</a>
-                    </td>
+                    </td>--%>
 
                 </tr>
                 <%
+                        }
                     }
                 %>
                 </tbody>

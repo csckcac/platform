@@ -20,6 +20,8 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
 <%@ page import="org.wso2.carbon.cassandra.explorer.stub.data.xsd.Column" %>
+<%@ page import="org.json.simple.JSONObject" %>
+<%@ page import="org.codehaus.jackson.JsonEncoding" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%
@@ -47,39 +49,40 @@
     int noOfTotalColumns;
     int noOfFilteredColumns;
 
-    noOfTotalColumns = cassandraExplorerAdminClient.getNoOfColumns(keyspace,columnFamily,rowId);
+    noOfTotalColumns = cassandraExplorerAdminClient.getNoOfColumns(keyspace, columnFamily, rowId);
 
     if (searchKey != null && !searchKey.isEmpty()) {
         columns = cassandraExplorerAdminClient.searchColumns(keyspace, columnFamily, rowId, searchKey,
-                displayStart, displayLenght);
+                                                             displayStart, displayLenght);
         noOfFilteredColumns = cassandraExplorerAdminClient.getNoOfFilteredResultsoforColumns(keyspace, columnFamily,
                                                                                              rowId, searchKey);
+    } else {
+        columns = cassandraExplorerAdminClient.
+                getPaginateSliceforColumns(keyspace, columnFamily, rowId, displayStart, displayLenght);
+        noOfFilteredColumns = noOfTotalColumns;
     }
-     else{
-         columns = cassandraExplorerAdminClient.
-                 getPaginateSliceforColumns(keyspace, columnFamily, rowId, displayStart, displayLenght);
-        noOfFilteredColumns =noOfTotalColumns;
-    }
-    int totalDisplayRecords =0;
-    if(columns!=null){
-         totalDisplayRecords = columns.length;
+    int totalDisplayRecords = 0;
+    if (columns != null) {
+        totalDisplayRecords = columns.length;
     }
     response.getWriter().print("{");
-    response.getWriter().print("\"sEcho\":"+echoValue+",");
+    response.getWriter().print("\"sEcho\":" + echoValue + ",");
     response.getWriter().print("\"iTotalRecords\":" + noOfTotalColumns + ",");
     response.getWriter().print("\"iTotalDisplayRecords\":" + noOfFilteredColumns + ",");
     response.getWriter().print("\"aaData\":");
 
     response.getWriter().print("[");
-    if (columns != null && columns[0] != null) {
+    if (columns != null) {
         for (int i = 0; i < columns.length; i++) {
-            response.getWriter().print("[");
-            response.getWriter().print("\""+columns[i].getName() + "\",");
-            response.getWriter().print("\""+columns[i].getValue() + "\",");
-            response.getWriter().print("\""+(new Date(columns[i].getTimeStamp())).toString()+"\"");
-            response.getWriter().print("]");
-            if ((i + 1) != columns.length) {
-                response.getWriter().print(",");
+            if (columns[i] != null) {
+                response.getWriter().print("[");
+                response.getWriter().print("\"" + columns[i].getName() + "\",");
+                response.getWriter().print("\"" + columns[i].getValue() + "\",");
+                response.getWriter().print("\"" + (new Date(columns[i].getTimeStamp())).toString() + "\"");
+                response.getWriter().print("]");
+                if ((i + 1) != columns.length) {
+                    response.getWriter().print(",");
+                }
             }
         }
     }

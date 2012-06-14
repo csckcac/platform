@@ -448,11 +448,17 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         if (rowlist.size() < limit) {
             limit = rowlist.size();
         }
+
+        // To render last paginate result set. Eg: if 270 results are there to render last 70
+        // results
+        if ((limit + startingNo) > rowlist.size()) {
+            limit = rowlist.size() - startingNo;
+        }
         org.wso2.carbon.cassandra.explorer.data.Row rows[] =
                 new org.wso2.carbon.cassandra.explorer.data.Row[limit];
 
-        for (int i = startingNo; i < limit; i++) {
-            rows[i] = rowlist.get(i);
+        for (int i = 0; i < limit; i++) {
+            rows[i] = rowlist.get(startingNo + i);
         }
         return rows;
     }
@@ -520,8 +526,8 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         }
 
         Column[] columnArray = new Column[limit];
-        for (int i = startingNo; i < limit; i++) {
-            columnArray[i] = columnsList.get(i);
+        for (int i = 0; i < limit; i++) {
+            columnArray[i] = columnsList.get(startingNo + i);
         }
         return columnArray;
     }

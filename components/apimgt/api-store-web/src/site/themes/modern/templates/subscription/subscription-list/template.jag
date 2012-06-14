@@ -18,7 +18,7 @@
                 <div class="row-fluid">
                     <div class="span6">
                         <a onclick="collapseKeys('<%=str_i%>','super')">
-                            <i class="icon-zoom-in"></i> Super Keys
+                            <i class="icon-zoom-in"></i> Keys
                         </a>
                     </div>
                     <div class="span6">
@@ -44,7 +44,7 @@
         <% if(app.prodKey==null && app.sandboxKey==null) { %>
                         <div class="super-rows row-fluid">
                             <div class="span3">
-                                Production Master Key:
+                                Production Key:
                             </div>
                             <div class="span3">
                             <a class="app-key-generate-button small green" id="app-key-generate-button"
@@ -55,7 +55,7 @@
 
 
                             <div class="span3">
-                                Sandbox Master Key:
+                                Sandbox Key:
                             </div>
                             <div class="span3">
                                 <a class="app-key-generate-button small green" id="app-key-generate-button"
@@ -68,7 +68,7 @@
 
                         <div class="super-rows row-fluid">
                             <div class="span3">
-                                Production Master Key:
+                                Production Key:
                             </div>
                             <div class="span9">
                                 <span class="icon black small" data-icon="a"></span>
@@ -82,7 +82,7 @@
 
                         <div class="super-rows row-fluid">
                             <div class="span3">
-                                Sandbox Master Key:
+                                Sandbox Key:
                             </div>
                             <div class="span9">
                                 <a class="app-key-generate-button small green" id="app-key-generate-button"
@@ -94,7 +94,7 @@
 
              <% }else if(app.prodKey==null&&app.sandboxKey!=null) { %>
                         <div class="super-rows row-fluid">
-                            <div class="span3">Production Master Key:</div>
+                            <div class="span3">Production Key:</div>
                             <div class="span9">
                                 <a class="app-key-generate-button small green" id="app-key-generate-button"
                                    data-application="<%=app.name%>"
@@ -103,7 +103,7 @@
                             </div>
                         </div>
                         <div class="super-rows row-fluid">
-                            <div class="span3">Sandbox Master Key:</div>
+                            <div class="span3">Sandbox Key:</div>
                             <div class="span9">
                                 <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
                                 <div class="keyField" style="display:none;font-weight:bold">
@@ -113,7 +113,7 @@
                         </div>
                 <%}else{%>
                         <div class="super-rows row-fluid">
-                            <div class="span3">Production Master Key:</div>
+                            <div class="span3">Production Key:</div>
                             <div class="span9">
                                 <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
                                 <div class="keyField" style="display:none;font-weight:bold">
@@ -122,7 +122,7 @@
                             </div>
                         </div>
                         <div class="super-rows row-fluid">
-                            <div class="span3">Sandbox Master Key:</div>
+                            <div class="span3">Sandbox Key:</div>
                             <div class="span9">
                                 <span class="icon black small" data-icon="a"></span><a onclick="toggleKey(this)"> Show Key</a>
 

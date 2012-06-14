@@ -192,6 +192,19 @@
                                 </featureArtifactDef>
                                 <!-- end Analytics features -->
 
+				<!--BAM ToolBox Features -->
+				<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.bam.toolbox.deployer.feature:${carbon.version}
+                                </featureArtifactDef>
+				<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.bam.toolbox.deployer.server.feature:${carbon.version}
+                                </featureArtifactDef>
+				<featureArtifactDef>
+                                   org.wso2.carbon:org.wso2.carbon.bam.toolbox.deployer.ui.feature:${carbon.version}
+                                </featureArtifactDef>
+				<!--end BAM ToolBox Features -->
+
+
                                 <!-- Gadget IDE feature -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.gadget.ide.feature:${carbon.version}
                                 </featureArtifactDef>
@@ -398,6 +411,13 @@
                                 </feature>-->
                                 <!-- end Analytics features -->
 
+
+				<!--BAM ToolBox Features-->
+				<feature>
+                                    <id>org.wso2.carbon.bam.toolbox.deployer.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+				<!--end BAM ToolBox Feature-->
                                 <feature>
                                     <id>org.wso2.carbon.reporting.feature.group</id>
                                     <version>${carbon.version}</version>

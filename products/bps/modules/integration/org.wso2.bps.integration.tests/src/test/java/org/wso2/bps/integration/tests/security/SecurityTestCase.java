@@ -46,19 +46,20 @@ public class SecurityTestCase {
     private static final Log log = LogFactory.getLog(SecurityTestCase.class);
     private LoginLogoutUtil util = new LoginLogoutUtil();
 
+    private String[] group = {"admin"};
+    private String serviceName = "HelloService";
+    private String privateKeyStore = "wso2carbon.jks";
+    private String[] trustedKeyStore = {"wso2carbon.jks"};
 
-    @BeforeClass(groups = {"wso2.bps"})
-    public void init() {
+    private SecurityAdminServiceStub securityAdminServiceStub;
+    private InstanceManagementServiceStub instanceManagementServiceStub;
 
-    }
+    private DisableSecurityOnService disableSecurityOnService;
 
-    @Test(groups = {"wso2.bps"})
-    public void securityTest() throws Exception {
-        List<String> instanceIds = new ArrayList<String>();
-        String[] group = {"admin"};
-        String serviceName = "HelloService";
-        String privateKeyStore = "wso2carbon.jks";
-        String[] trustedKeyStore = {"wso2carbon.jks"};
+    private List<String> instanceIds = new ArrayList<String>();
+
+    @BeforeClass(groups = {"wso2.bps"}, description = "initializing partner service security test")
+    public void init() throws Exception {
 
 
         if (System.getProperty("bps.sample.location") == null) {
@@ -67,60 +68,147 @@ public class SecurityTestCase {
         }
 
         final String UPLOADER_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                            ":" + FrameworkSettings.HTTPS_PORT + "/services/BPELUploader";
+                ":" + FrameworkSettings.HTTPS_PORT + "/services/BPELUploader";
 
         final String SECURITY_ADMIN_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                                  ":" + FrameworkSettings.HTTPS_PORT + "/services/SecurityAdminService";
+                ":" + FrameworkSettings.HTTPS_PORT + "/services/SecurityAdminService";
 
         final String PACKAGE_MANAGEMENT_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                                      ":" + FrameworkSettings.HTTPS_PORT +
-                                                      "/services/BPELPackageManagementService";
+                ":" + FrameworkSettings.HTTPS_PORT +
+                "/services/BPELPackageManagementService";
 
         final String INSTANCE_MANAGEMENT_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                                       ":" + FrameworkSettings.HTTPS_PORT +
-                                                       "/services/InstanceManagementService";
+                ":" + FrameworkSettings.HTTPS_PORT +
+                "/services/InstanceManagementService";
 
 
         ClientConnectionUtil.waitForPort(FrameworkSettings.HTTPS_PORT);
         String loggedInSessionCookie = util.login();
 
-        InstanceManagementServiceStub instanceManagementServiceStub = new InstanceManagementServiceStub(INSTANCE_MANAGEMENT_SERVICE_URL);
+        instanceManagementServiceStub = new InstanceManagementServiceStub(INSTANCE_MANAGEMENT_SERVICE_URL);
         BPELUploaderStub bpelUploaderStub = new BPELUploaderStub(UPLOADER_SERVICE_URL);
-        SecurityAdminServiceStub securityAdminServiceStub = new SecurityAdminServiceStub(SECURITY_ADMIN_SERVICE_URL);
+        securityAdminServiceStub = new SecurityAdminServiceStub(SECURITY_ADMIN_SERVICE_URL);
         BPELPackageManagementServiceStub bpelPackageManagementServiceStub =
                 new BPELPackageManagementServiceStub(PACKAGE_MANAGEMENT_SERVICE_URL);
 
-        DisableSecurityOnService disableSecurityOnService = new DisableSecurityOnService();
+        disableSecurityOnService = new DisableSecurityOnService();
 
         setClientOptions(instanceManagementServiceStub, loggedInSessionCookie);
         setClientOptions(bpelUploaderStub, loggedInSessionCookie);
         setClientOptions(securityAdminServiceStub, loggedInSessionCookie);
         setClientOptions(bpelPackageManagementServiceStub, loggedInSessionCookie);
 
+    }
 
-        //Upto 3 security scenarios are tested due to CARBON-9342
-        for (int scenarioNum = 1; scenarioNum <= 3; scenarioNum++) {
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 01")
+    public void securityScenario01Test() throws Exception {
+        int scenarioNum = 1;
+        executeBPELSecurityScenario(scenarioNum);
+    }
 
-            ApplySecurity applySecurity = new ApplySecurity();
-            log.info("Scenarios Num: " + scenarioNum);
-            applySecurity.setServiceName(serviceName);
-            applySecurity.setUserGroupNames(group);
-            applySecurity.setPrivateStore(privateKeyStore);
-            applySecurity.setTrustedStores(trustedKeyStore);
-            applySecurity.setPolicyId("scenario" + scenarioNum);
-            securityAdminServiceStub.applySecurity(applySecurity);
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 02")
+    public void securityScenario02Test() throws Exception {
+        int scenarioNum = 2;
+        executeBPELSecurityScenario(scenarioNum);
+    }
 
-            SecurityClientUtils.runSecurityClient(scenarioNum, "HelloService", "http://ode/bpel/unit-test.wsdl/HelloPortType/TestIn", "<un:hello xmlns:un=\"http://ode/bpel/unit-test.wsdl\"><TestPart>Hello</TestPart></un:hello>", "Hello World");
-            disableSecurityOnService.setServiceName(serviceName);
-            securityAdminServiceStub.disableSecurityOnService(disableSecurityOnService);
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 03")
+    public void securityScenario03Test() throws Exception {
+        int scenarioNum = 3;
+        executeBPELSecurityScenario(scenarioNum);
+    }
 
-            List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
-            instanceIds.addAll(iids);
-            BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "COMPLETED", "tmpVar", ">Hello<", instanceIds);
-            BPSMgtUtils.deleteInstances(instanceManagementServiceStub, 1);
-            instanceIds.clear();
-        }
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 04")
+    public void securityScenario04Test() throws Exception {
+        int scenarioNum = 4;
+        executeBPELSecurityScenario(scenarioNum);
+    }
 
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 05")
+    public void securityScenario05Test() throws Exception {
+        int scenarioNum = 5;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 06")
+    public void securityScenario06Test() throws Exception {
+        int scenarioNum = 6;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 07")
+    public void securityScenario07Test() throws Exception {
+        int scenarioNum = 7;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 08")
+    public void securityScenario08Test() throws Exception {
+        int scenarioNum = 8;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 09")
+    public void securityScenario09Test() throws Exception {
+        int scenarioNum = 9;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 10")
+    public void securityScenario10Test() throws Exception {
+        int scenarioNum = 10;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 11")
+    public void securityScenario11Test() throws Exception {
+        int scenarioNum = 11;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 12")
+    public void securityScenario12Test() throws Exception {
+        int scenarioNum = 12;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 13")
+    public void securityScenario13Test() throws Exception {
+        int scenarioNum = 13;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 14")
+    public void securityScenario14Test() throws Exception {
+        int scenarioNum = 14;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "BPEL security test scenario 15")
+    public void securityScenario15Test() throws Exception {
+        int scenarioNum = 15;
+        executeBPELSecurityScenario(scenarioNum);
+    }
+
+    private void executeBPELSecurityScenario(int scenarioNum) throws Exception {
+        log.info("Scenarios Num: " + scenarioNum);
+        ApplySecurity applySecurity = new ApplySecurity();
+        applySecurity.setServiceName(serviceName);
+        applySecurity.setUserGroupNames(group);
+        applySecurity.setPrivateStore(privateKeyStore);
+        applySecurity.setTrustedStores(trustedKeyStore);
+        applySecurity.setPolicyId("scenario" + scenarioNum);
+        securityAdminServiceStub.applySecurity(applySecurity);
+
+        SecurityClientUtils.runSecurityClient(scenarioNum, "HelloService", "http://ode/bpel/unit-test.wsdl/HelloPortType/TestIn", "<un:hello xmlns:un=\"http://ode/bpel/unit-test.wsdl\"><TestPart>Hello</TestPart></un:hello>", "Hello World");
+        disableSecurityOnService.setServiceName(serviceName);
+        securityAdminServiceStub.disableSecurityOnService(disableSecurityOnService);
+
+        List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        instanceIds.addAll(iids);
+        BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "COMPLETED", "tmpVar", ">Hello<", instanceIds);
+        BPSMgtUtils.deleteInstances(instanceManagementServiceStub, 1);
+        instanceIds.clear();
     }
 
     private void setClientOptions(Stub serviceStub, String loggedInSessionCookie) {
@@ -128,7 +216,7 @@ public class SecurityTestCase {
         Options serviceClientOptions = serviceClient.getOptions();
         serviceClientOptions.setManageSession(true);
         serviceClientOptions.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-                                         loggedInSessionCookie);
+                loggedInSessionCookie);
 
     }
 }

@@ -24,14 +24,15 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.bps.integration.tests.SimpleAxis2ServerManager;
 import org.wso2.bps.integration.tests.util.BPSMgtUtils;
 import org.wso2.bps.integration.tests.util.BPSTestUtils;
 import org.wso2.bps.integration.tests.util.FrameworkSettings;
-import org.wso2.carbon.base.ServerConfigurationException;
 import org.wso2.carbon.bpel.stub.mgt.BPELPackageManagementServiceStub;
+import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementServiceStub;
 import org.wso2.carbon.bpel.stub.upload.BPELUploaderStub;
 import org.wso2.carbon.integration.framework.ClientConnectionUtil;
@@ -42,15 +43,13 @@ import org.wso2.carbon.security.mgt.stub.keystore.KeyStoreAdminServiceStub;
 import org.wso2.carbon.user.mgt.stub.UserAdminStub;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.rmi.RemoteException;
+import java.util.*;
 
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -62,21 +61,19 @@ import static org.testng.Assert.fail;
 public class PartnerServiceSecurityTestCase {
     private static final Log log = LogFactory.getLog(PartnerServiceSecurityTestCase.class);
     private LoginLogoutUtil util = new LoginLogoutUtil();
-
+    private HashMap<Integer, String> securityScenarios = new HashMap<Integer, String>();
+    private List<String> instanceIds = new ArrayList<String>();
+    private InstanceManagementServiceStub instanceManagementServiceStub;
+    private final String BPEL_PARTNER_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
+            ":" + FrameworkSettings.HTTPS_PORT +
+            "/services/SecurePartnerBPELServiceService";
 
     @BeforeClass(groups = {"wso2.bps"}, description = "initializing partner service security test")
-    public void init() throws ServerConfigurationException {
+    public void init() throws Exception {
 
 
         //start simple axis2 server - default port 9000
         SimpleAxis2ServerManager.startServer();
-
-    }
-
-    @Test(groups = {"wso2.bps"}, description = "partner service security test")
-    public void partnerServiceSecurityTest() throws Exception {
-        List<String> instanceIds = new ArrayList<String>();
-        HashMap<Integer, String> securityScenarios = new HashMap<Integer, String>();
 
         // Put security scenario name to the map
         securityScenarios.put(1, ">Basic Security Scenario - UsernameToken<");
@@ -88,29 +85,26 @@ public class PartnerServiceSecurityTestCase {
         securityScenarios.put(7, ">Encrypt only - Username Token Authentication<");
         securityScenarios.put(8, ">Sign and Encrypt - Username Token Authentication<");
         securityScenarios.put(9, ">SecureConversation - Sign only - Service as STS - " +
-                                 "Bootstrap policy - Sign and Encrypt , X509 Authentication<");
+                "Bootstrap policy - Sign and Encrypt , X509 Authentication<");
         securityScenarios.put(10, ">SecureConversation - Encrypt only - Service as STS - " +
-                                  "Bootstrap policy - Sign and Encrypt , X509 Authentication<");
+                "Bootstrap policy - Sign and Encrypt , X509 Authentication<");
         securityScenarios.put(11, ">SecureConversation - Sign and Encrypt - Service as STS - " +
-                                  "Bootstrap policy - Sign and Encrypt , X509 Authentication <");
+                "Bootstrap policy - Sign and Encrypt , X509 Authentication <");
         securityScenarios.put(12, ">SecureConversation - Sign Only - Service as STS - " +
-                                  "Bootstrap policy - Sign and Encrypt , Anonymous clients <");
+                "Bootstrap policy - Sign and Encrypt , Anonymous clients <");
         securityScenarios.put(13, ">SecureConversation - Encrypt Only - Service as STS - " +
-                                  "Bootstrap policy - Sign and Encrypt , Anonymous clients <");
+                "Bootstrap policy - Sign and Encrypt , Anonymous clients <");
         securityScenarios.put(14, ">SecureConversation - Encrypt Only - Service as STS - " +
-                                  "Bootstrap policy - Sign and Encrypt , Username Token Authentication <");
+                "Bootstrap policy - Sign and Encrypt , Username Token Authentication <");
         securityScenarios.put(15, ">SecureConversation - Sign and Encrypt - Service as STS - " +
-                                  "Bootstrap policy - Sign and Encrypt , Username Token Authentication <");
+                "Bootstrap policy - Sign and Encrypt , Username Token Authentication <");
 
 
-        String[] group = {"client"};
-        String serviceName = "SecurePartnerService";
-        String privateKeyStore = "service.jks";
-        String[] trustedKeyStore = {"service.jks"};
+//        String[] group = {"client"};
+//        String serviceName = "SecurePartnerService";
+//        String privateKeyStore = "service.jks";
+//        String[] trustedKeyStore = {"service.jks"};
 
-        final String BPEL_PARTNER_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                                ":" + FrameworkSettings.HTTPS_PORT +
-                                                "/services/SecurePartnerBPELServiceService";
 
         if (System.getProperty("bps.sample.location") == null) {
             log.info("System property: bps.sample.location cannot be null");
@@ -118,32 +112,32 @@ public class PartnerServiceSecurityTestCase {
         }
 
         final String UPLOADER_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                            ":" + FrameworkSettings.HTTPS_PORT + "/services/BPELUploader";
+                ":" + FrameworkSettings.HTTPS_PORT + "/services/BPELUploader";
 
         final String SECURITY_ADMIN_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                                  ":" + FrameworkSettings.HTTPS_PORT + "/services/SecurityAdminService";
+                ":" + FrameworkSettings.HTTPS_PORT + "/services/SecurityAdminService";
 
         final String PACKAGE_MANAGEMENT_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                                      ":" + FrameworkSettings.HTTPS_PORT +
-                                                      "/services/BPELPackageManagementService";
+                ":" + FrameworkSettings.HTTPS_PORT +
+                "/services/BPELPackageManagementService";
 
         final String INSTANCE_MANAGEMENT_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                                       ":" + FrameworkSettings.HTTPS_PORT +
-                                                       "/services/InstanceManagementService";
+                ":" + FrameworkSettings.HTTPS_PORT +
+                "/services/InstanceManagementService";
 
         final String USER_MANAGEMENT_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                                   ":" + FrameworkSettings.HTTPS_PORT +
-                                                   "/services/UserAdmin";
+                ":" + FrameworkSettings.HTTPS_PORT +
+                "/services/UserAdmin";
 
         final String KEY_STORE_MANAGEMENT_SERVICE_URL = "https://" + FrameworkSettings.HOST_NAME +
-                                                        ":" + FrameworkSettings.HTTPS_PORT +
-                                                        "/services/KeyStoreAdminService";
+                ":" + FrameworkSettings.HTTPS_PORT +
+                "/services/KeyStoreAdminService";
 
         ClientConnectionUtil.waitForPort(FrameworkSettings.HTTPS_PORT);
         String loggedInSessionCookie = util.login();
 
 
-        InstanceManagementServiceStub instanceManagementServiceStub = new InstanceManagementServiceStub(INSTANCE_MANAGEMENT_SERVICE_URL);
+        instanceManagementServiceStub = new InstanceManagementServiceStub(INSTANCE_MANAGEMENT_SERVICE_URL);
         BPELUploaderStub bpelUploaderStub = new BPELUploaderStub(UPLOADER_SERVICE_URL);
         SecurityAdminServiceStub securityAdminServiceStub = new SecurityAdminServiceStub(SECURITY_ADMIN_SERVICE_URL);
         UserAdminStub userAdminStub = new UserAdminStub(USER_MANAGEMENT_SERVICE_URL);
@@ -162,7 +156,7 @@ public class PartnerServiceSecurityTestCase {
 
 
         File serviceJks = new File(BPSTestUtils.BPEL_TEST_RESOURCE_LOCATION + File.separator + "partnerServices" +
-                                   File.separator + "service.jks");
+                File.separator + "service.jks");
 
         byte content[] = getBytesFromFile(serviceJks);
         String data = Base64.encode(content);
@@ -189,41 +183,133 @@ public class PartnerServiceSecurityTestCase {
         ConfigurationContext ctx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment" + File.separator + "client", null);
         ServiceClient sc = new ServiceClient(ctx, null);
         sc.engageModule("addressing");
+    }
 
-        Set scenarioSet = securityScenarios.entrySet();
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 01")
+    public void partnerServiceSecurityScenario01Test() throws Exception {
+        int scenario = 1;
+        executeSecurityScenario(scenario);
+    }
 
-        // Read security scenario hash map
-        for (Object aScenarioSet : scenarioSet) {
-            Map.Entry scenarioEntries = (Map.Entry) aScenarioSet;
-            log.info("Security Scenario :" + scenarioEntries.getKey() + ": ");
-            log.info("Security Scenario Name :" + scenarioEntries.getValue());
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 02")
+    public void partnerServiceSecurityScenario02Test() throws Exception {
+        int scenario = 2;
+        executeSecurityScenario(scenario);
+    }
 
-            String scenarioResponse = (String) scenarioEntries.getValue();
-            List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 0);
-            instanceIds.addAll(iids);
-            List<String> expectedOutput = new ArrayList<String>();
-            expectedOutput.add(scenarioResponse);
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 03")
+    public void partnerServiceSecurityScenario03Test() throws Exception {
+        int scenario = 3;
+        executeSecurityScenario(scenario);
+    }
 
-            BPSTestUtils.sendRequest(BPEL_PARTNER_SERVICE_URL,
-                                     "SecurePartnerBPELServiceOperation",
-                                     "<p:SecurePartnerBPELServiceRequest xmlns:p=\"http://www.example.org/messages\">\n" +
-                                     "            <p:param0>" + scenarioEntries.getKey() + "</p:param0>\n" +
-                                     "         </p:SecurePartnerBPELServiceRequest>",
-                                     1,
-                                     expectedOutput,
-                                     true);
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 04")
+    public void partnerServiceSecurityScenario04Test() throws Exception {
+        int scenario = 4;
+        executeSecurityScenario(scenario);
+    }
 
-            List<String> iidsAll = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
-            instanceIds.addAll(iidsAll);
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 05")
+    public void partnerServiceSecurityScenario05Test() throws Exception {
+        int scenario = 5;
+        executeSecurityScenario(scenario);
+    }
 
-            BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub, "COMPLETED", "SecurePartnerService" + scenarioEntries.getKey() + "Output", scenarioResponse, instanceIds);
-            BPSMgtUtils.deleteInstances(instanceManagementServiceStub, 1);
-            instanceIds.clear();
-        }
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 06")
+    public void partnerServiceSecurityScenario06Test() throws Exception {
+        int scenario = 6;
+        executeSecurityScenario(scenario);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 07")
+    public void partnerServiceSecurityScenario07Test() throws Exception {
+        int scenario = 7;
+        executeSecurityScenario(scenario);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 08")
+    public void partnerServiceSecurityScenario08Test() throws Exception {
+        int scenario = 8;
+        executeSecurityScenario(scenario);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 09")
+    public void partnerServiceSecurityScenario09Test() throws Exception {
+        int scenario = 9;
+        executeSecurityScenario(scenario);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 10")
+    public void partnerServiceSecurityScenario10Test() throws Exception {
+        int scenario = 10;
+        executeSecurityScenario(scenario);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 11")
+    public void partnerServiceSecurityScenario11Test() throws Exception {
+        int scenario = 11;
+        executeSecurityScenario(scenario);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 12")
+    public void partnerServiceSecurityScenario12Test() throws Exception {
+        int scenario = 12;
+        executeSecurityScenario(scenario);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 13")
+    public void partnerServiceSecurityScenario13Test() throws Exception {
+        int scenario = 13;
+        executeSecurityScenario(scenario);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 14")
+    public void partnerServiceSecurityScenario14Test() throws Exception {
+        int scenario = 14;
+        executeSecurityScenario(scenario);
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "partner service security test scenario 15")
+    public void partnerServiceSecurityScenario15Test() throws Exception {
+        int scenario = 15;
+        executeSecurityScenario(scenario);
+    }
+
+    @AfterClass(groups = {"wso2.bps"}, description = "Cleanup partner service security test")
+    public void cleanup() throws Exception {
         //stop simple axis2 server
         SimpleAxis2ServerManager.shutdown();
+    }
 
+    private void executeSecurityScenario(int scenario) throws InstanceManagementException,
+            RemoteException, InterruptedException, XMLStreamException {
+        String scenarioResponse = securityScenarios.get(scenario);
 
+        log.info("Security Scenario :" + scenario + ": ");
+        log.info("Security Scenario Name :" + scenarioResponse);
+
+        List<String> iids = BPSMgtUtils.listInstances(instanceManagementServiceStub, 0);
+        instanceIds.addAll(iids);
+        List<String> expectedOutput = new ArrayList<String>();
+        expectedOutput.add(scenarioResponse);
+
+        BPSTestUtils.sendRequest(BPEL_PARTNER_SERVICE_URL,
+                "SecurePartnerBPELServiceOperation",
+                "<p:SecurePartnerBPELServiceRequest xmlns:p=\"http://www.example.org/messages\">\n" +
+                        "            <p:param0>" + scenario + "</p:param0>\n" +
+                        "         </p:SecurePartnerBPELServiceRequest>",
+                1,
+                expectedOutput,
+                true);
+
+        List<String> iidsAll = BPSMgtUtils.listInstances(instanceManagementServiceStub, 1);
+        instanceIds.addAll(iidsAll);
+
+        BPSMgtUtils.getInstanceInfo(instanceManagementServiceStub,
+                "COMPLETED", "SecurePartnerService" + scenario + "Output", scenarioResponse,
+                instanceIds);
+        BPSMgtUtils.deleteInstances(instanceManagementServiceStub, 1);
+        instanceIds.clear();
     }
 
     private void setClientOptions(Stub serviceStub, String loggedInSessionCookie) {
@@ -231,14 +317,8 @@ public class PartnerServiceSecurityTestCase {
         Options serviceClientOptions = serviceClient.getOptions();
         serviceClientOptions.setManageSession(true);
         serviceClientOptions.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-                                         loggedInSessionCookie);
+                loggedInSessionCookie);
 
-    }
-
-
-    public void cleanup() throws Exception {
-        //stop simple axis2 server
-        SimpleAxis2ServerManager.shutdown();
     }
 
     private void addRoleWithUser(String roleName, String userName, UserAdminStub userAdminStub)
@@ -275,7 +355,7 @@ public class PartnerServiceSecurityTestCase {
         int offset = 0;
         int numRead;
         while (offset < bytes.length
-               && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
+                && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
             offset += numRead;
         }
 

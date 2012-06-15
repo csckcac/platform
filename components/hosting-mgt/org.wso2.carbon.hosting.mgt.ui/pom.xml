@@ -72,7 +72,6 @@
                         </Export-Package>
                         <Import-Package>
                             !org.wso2.carbon.hosting.mgt.ui.*,
-                            org.wso2.carbon.hosting.container.mgt.stub.*;version="${carbon.platform.package.import.version.range}",
                             org.wso2.carbon.hosting.mgt.stub.*;version="${carbon.platform.package.import.version.range}",
                             org.wso2.carbon.hosting.mgt.utils.xsd.*;version="${carbon.platform.package.import.version.range}",
                             *;resolution:=optional

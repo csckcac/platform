@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
 
-    private static final String[] ALLOWED_FILE_EXTENSIONS = new String[]{".war"};
+    private static final String[] ALLOWED_FILE_EXTENSIONS = new String[]{".zip"};
 
     public boolean execute(HttpServletRequest request,
                            HttpServletResponse response) throws CarbonException, IOException {

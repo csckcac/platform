@@ -23,7 +23,7 @@ import org.wso2.carbon.core.AbstractAdmin;
 public class ApplicationManagementService extends AbstractAdmin{
 
     private static final Log log = LogFactory.getLog(ApplicationManagementService.class);
-    public static final String FILE_DEPLOYMENT_FOLDER = "webapp";
+    public static final String FILE_DEPLOYMENT_FOLDER = "phpapps";
 
     /**
      * Upload the applications that will be deployed in the container

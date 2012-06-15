@@ -44,7 +44,7 @@ public class HostingAdminClient {
                              String backendServerURL,
                              ConfigurationContext configCtx,
                              Locale locale) throws AxisFault {
-        String serviceURL = backendServerURL + "ApplicationManagementServiceStub";
+        String serviceURL = backendServerURL + "ApplicationManagementService";
         bundle = ResourceBundle.getBundle(BUNDLE, locale);
 
         stub = new ApplicationManagementServiceStub(configCtx, serviceURL);

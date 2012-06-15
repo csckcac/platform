@@ -33,7 +33,7 @@
                 var jarinput = document.webappUploadForm.warFileName.value;
                 if (jarinput == '') {
                     CARBON.showWarningDialog('<fmt:message key="select.webapp.file"/>');
-                } else if (jarinput.lastIndexOf(".war") == -1) {
+                } else if (jarinput.lastIndexOf(".zip") == -1) {
                     CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
                 } else {
                     document.webappUploadForm.submit();
@@ -46,7 +46,7 @@
                     if (jarinput == '') {
                         CARBON.showWarningDialog('<fmt:message key="select.webapp.file"/>');
                         validFileNames = false; break;
-                    } else if (jarinput.lastIndexOf(".war") == -1) {
+                    } else if (jarinput.lastIndexOf(".zip") == -1) {
                         CARBON.showWarningDialog('<fmt:message key="invalid.webapp.file"/>');
                         validFileNames = false; break;
                     }
@@ -72,7 +72,7 @@
             newRow.id = 'file' + rows;
 
             var oCell = newRow.insertCell(-1);
-            oCell.innerHTML = '<label><fmt:message key="webapp.archive"/> (.war)<font color="red">*</font></label>';
+            oCell.innerHTML = '<label><fmt:message key="webapp.archive"/> (.zip)<font color="red">*</font></label>';
             oCell.className = "formRow";
 
             oCell = newRow.insertCell(-1);
@@ -99,13 +99,13 @@
                   enctype="multipart/form-data" target="_self">
                 <input type="hidden" name="errorRedirectionPage"
                             value="../carbon/hosting-mgt/upload.jsp?region=region1&item=webapps_add_menu"/>
-                <label style="font-weight:bold;">&nbsp;<fmt:message key="upload.new.webapp"/> (.war)</label>
+                <label style="font-weight:bold;">&nbsp;<fmt:message key="upload.new.webapp"/> (.zip)</label>
                 <br/><br/>
 
                 <table class="styledLeft" id="webappTbl">
                     <tr>
                         <td class="formRow">
-                            <label><fmt:message key="webapp.archive"/> (.war)<font color="red">*</font></label>
+                            <label><fmt:message key="webapp.archive"/> (.zip)<font color="red">*</font></label>
                         </td>
                         <td class="formRow">
                             <input type="file" name="warFileName" size="50"/>&nbsp;

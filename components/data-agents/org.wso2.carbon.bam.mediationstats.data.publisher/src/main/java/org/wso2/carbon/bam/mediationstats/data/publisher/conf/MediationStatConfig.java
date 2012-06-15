@@ -22,11 +22,45 @@ public class MediationStatConfig {
     private String url = "";
     private String userName = "";
     private String password = "";
-    private boolean isHttpTransportEnable;
-    private boolean isSocketTransportEnable;
-    private int port;
     private Property[] properties;
 
+    private String streamName = "org.wso2.carbon.bam.service.data.publisher";
+    private String version = "1.0.0";
+    private String nickName = "ServiceDataAgent";
+    private String description = "Publish service statistics events";
+
+
+    public String getStreamName() {
+        return streamName;
+    }
+
+    public void setStreamName(String streamName) {
+        this.streamName = streamName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     public Property[] getProperties() {
         return properties;
@@ -36,38 +70,11 @@ public class MediationStatConfig {
         this.properties = properties;
     }
 
-    public boolean isHttpTransportEnable() {
-        return isHttpTransportEnable;
-    }
-
-    public void setHttpTransportEnable(boolean httpTransportEnable) {
-        isHttpTransportEnable = httpTransportEnable;
-    }
-
-    public boolean isSocketTransportEnable() {
-        return isSocketTransportEnable;
-    }
-
-    public void setSocketTransportEnable(boolean socketTransportEnable) {
-        isSocketTransportEnable = socketTransportEnable;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public String getUrl() {
         return url;
     }
 
     public void setUrl(String url) {
-        if (!url.endsWith("/")) {
-            url = url + "/";
-        }
         this.url = url;
     }
 

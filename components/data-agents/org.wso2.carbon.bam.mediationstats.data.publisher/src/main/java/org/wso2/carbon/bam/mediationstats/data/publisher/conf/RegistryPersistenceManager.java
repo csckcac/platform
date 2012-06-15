@@ -56,9 +56,6 @@ public class RegistryPersistenceManager {
         mediationStatConfig.setUrl(EMPTY_STRING);
         mediationStatConfig.setUserName(EMPTY_STRING);
         mediationStatConfig.setPassword(EMPTY_STRING);
-        mediationStatConfig.setHttpTransportEnable(false);
-        mediationStatConfig.setSocketTransportEnable(true);
-        mediationStatConfig.setPort(7611);
         mediationStatConfig.setProperties(new Property[0]);
 
         // then load it from registry
@@ -69,9 +66,11 @@ public class RegistryPersistenceManager {
             String url = getConfigurationProperty(BAMDataPublisherConstants.BAM_URL);
             String userName = getConfigurationProperty(BAMDataPublisherConstants.BAM_USER_NAME);
             String password = getConfigurationProperty(BAMDataPublisherConstants.BAM_PASSWORD);
-            String httpTransportEnable = getConfigurationProperty(BAMDataPublisherConstants.ENABLE_HTTP_TRANSPORT);
-            String socketTransportEnable = getConfigurationProperty(BAMDataPublisherConstants.ENABLE_SOCKET_TRANSPORT);
-            String port = getConfigurationProperty(BAMDataPublisherConstants.BAM_SOCKET_PORT);
+
+            String streamName = getConfigurationProperty(BAMDataPublisherConstants.STREAM_NAME);
+            String version = getConfigurationProperty(BAMDataPublisherConstants.VERSION);
+            String description = getConfigurationProperty(BAMDataPublisherConstants.DESCRIPTION);
+            String nickName = getConfigurationProperty(BAMDataPublisherConstants.NICK_NAME);
 
             Properties properties = getAllConfigProperties(MediationDataPublisherConstants.MEDIATION_STATISTICS_PROPERTIES_REG_PATH);
 
@@ -86,11 +85,11 @@ public class RegistryPersistenceManager {
                 mediationStatConfig.setUrl(url);
                 mediationStatConfig.setUserName(userName);
                 mediationStatConfig.setPassword(password);
-                mediationStatConfig.setHttpTransportEnable(Boolean.parseBoolean(httpTransportEnable));
-                mediationStatConfig.setSocketTransportEnable(Boolean.parseBoolean(socketTransportEnable));
-                if (port != null) {
-                    mediationStatConfig.setPort(Integer.parseInt(port));
-                }
+
+                mediationStatConfig.setStreamName(streamName);
+                mediationStatConfig.setVersion(version);
+                mediationStatConfig.setDescription(description);
+                mediationStatConfig.setNickName(nickName);
 
                 if (properties != null) {
                     List<Property> propertyDTOList = new ArrayList<Property>();
@@ -203,12 +202,6 @@ public class RegistryPersistenceManager {
                                  eventConfig.getUserName());
             updateConfigProperty(BAMDataPublisherConstants.BAM_PASSWORD,
                                  eventConfig.getPassword());
-            updateConfigProperty(BAMDataPublisherConstants.ENABLE_HTTP_TRANSPORT,
-                                 eventConfig.isHttpTransportEnable());
-            updateConfigProperty(BAMDataPublisherConstants.ENABLE_SOCKET_TRANSPORT,
-                                 eventConfig.isSocketTransportEnable());
-            updateConfigProperty(BAMDataPublisherConstants.BAM_SOCKET_PORT,
-                                 eventConfig.getPort());
 
 
             Property[] propertiesDTO = eventConfig.getProperties();

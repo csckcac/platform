@@ -85,7 +85,7 @@ public class Publisher {
         if (properties != null) {
             for (int i = 0; i < properties.length; i++) {
                 Property property = properties[i];
-                if (property.getKey() != null && property.getKey() != "") {
+                if (property.getKey() != null && property.getKey().isEmpty()) {
                     //putDataIntoMap(metaData, property.getKey(), property.getValue());
                     metaDataKeySet.add(property.getKey());
                     metaDataValueSet.add(property.getValue());
@@ -133,7 +133,7 @@ public class Publisher {
 
         try {
             URL url = new URL(mediationStatConfig.getUrl());
-            String serverUrl = "tcp://"+url.getHost()+":7611";
+            String serverUrl = mediationStatConfig.getUrl();
             String userName = mediationStatConfig.getUserName();
             String passWord = mediationStatConfig.getPassword();
             Object[] metaData = metaDataKeySet.toArray();
@@ -147,7 +147,8 @@ public class Publisher {
 
 
                 dataPublisher.setAgent(agent);
-                EventStreamDefinition eventStreamDefinition = new EventStreamDefinition("org.wso2.esb.MediatorStatistics","1.3.0");
+                EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(
+                        "org.wso2.esb.MediatorStatistics","1.3.0");
                 eventStreamDefinition.setDescription("Some Desc");
                 for(int i = 0; i < metaData.length; i++){
                     eventStreamDefinition.addMetaData(metaData[i].toString(), AttributeType.STRING);

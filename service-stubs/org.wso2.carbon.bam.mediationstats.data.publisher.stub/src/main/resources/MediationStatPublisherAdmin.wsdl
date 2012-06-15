@@ -1,17 +1,18 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://services.publisher.data.mediationstats.bam.carbon.wso2.org" xmlns:ax2299="http://conf.publisher.data.mediationstats.bam.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.publisher.data.mediationstats.bam.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax29="http://conf.publisher.data.mediationstats.bam.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://services.publisher.data.mediationstats.bam.carbon.wso2.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.publisher.data.mediationstats.bam.carbon.wso2.org">
     <wsdl:documentation>MediationStatPublisherAdmin</wsdl:documentation>
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://conf.publisher.data.mediationstats.bam.carbon.wso2.org/xsd">
             <xs:complexType name="MediationStatConfig">
                 <xs:sequence>
+                    <xs:element minOccurs="0" name="description" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="enableMediationStats" type="xs:boolean" />
-                    <xs:element minOccurs="0" name="httpTransportEnable" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="nickName" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="port" type="xs:int" />
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax2299:Property" />
-                    <xs:element minOccurs="0" name="socketTransportEnable" type="xs:boolean" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax29:Property" />
+                    <xs:element minOccurs="0" name="streamName" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="version" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="Property">
@@ -21,7 +22,7 @@
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2300="http://conf.publisher.data.mediationstats.bam.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax210="http://conf.publisher.data.mediationstats.bam.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
             <xs:import namespace="http://conf.publisher.data.mediationstats.bam.carbon.wso2.org/xsd" />
             <xs:element name="getEventingConfigData">
                 <xs:complexType>
@@ -31,14 +32,14 @@
             <xs:element name="getEventingConfigDataResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2299:MediationStatConfig" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax29:MediationStatConfig" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="configureEventing">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="mediationStatConfig" nillable="true" type="ax2299:MediationStatConfig" />
+                        <xs:element minOccurs="0" name="mediationStatConfig" nillable="true" type="ax29:MediationStatConfig" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -118,13 +119,13 @@
     </wsdl:binding>
     <wsdl:service name="MediationStatPublisherAdmin">
         <wsdl:port name="MediationStatPublisherAdminHttpsSoap11Endpoint" binding="tns:MediationStatPublisherAdminSoap11Binding">
-            <soap:address location="https://localhost:8243/services/MediationStatPublisherAdmin.MediationStatPublisherAdminHttpsSoap11Endpoint" />
+            <soap:address location="https://kasunw:8243/services/MediationStatPublisherAdmin.MediationStatPublisherAdminHttpsSoap11Endpoint" />
         </wsdl:port>
         <wsdl:port name="MediationStatPublisherAdminHttpsSoap12Endpoint" binding="tns:MediationStatPublisherAdminSoap12Binding">
-            <soap12:address location="https://localhost:8243/services/MediationStatPublisherAdmin.MediationStatPublisherAdminHttpsSoap12Endpoint" />
+            <soap12:address location="https://kasunw:8243/services/MediationStatPublisherAdmin.MediationStatPublisherAdminHttpsSoap12Endpoint" />
         </wsdl:port>
         <wsdl:port name="MediationStatPublisherAdminHttpsEndpoint" binding="tns:MediationStatPublisherAdminHttpBinding">
-            <http:address location="https://localhost:8243/services/MediationStatPublisherAdmin.MediationStatPublisherAdminHttpsEndpoint" />
+            <http:address location="https://kasunw:8243/services/MediationStatPublisherAdmin.MediationStatPublisherAdminHttpsEndpoint" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

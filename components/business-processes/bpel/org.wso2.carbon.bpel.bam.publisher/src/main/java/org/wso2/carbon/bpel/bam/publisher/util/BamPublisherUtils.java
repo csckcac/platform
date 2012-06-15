@@ -23,17 +23,12 @@ public class BamPublisherUtils {
                                                   BamServerInformation configData) {
         try {
             Resource resource = registry.newResource();
-            //org.wso2.carbon.core.util.CryptoUtil.
-            resource.addProperty(BamPublisherConstants.BAM_SERVER_URL, configData.getServerURL());
+//            org.wso2.carbon.core.util.CryptoUtil.getDefaultCryptoUtil().encrypt(configData.getPassword().getBytes());
+
+            resource.addProperty(BamPublisherConstants.BAM_SERVER_URL, configData.getReceiverURL());
             resource.addProperty(BamPublisherConstants.BAM_SERVER_USERNAME, configData.getUsername());
             resource.addProperty(BamPublisherConstants.BAM_SERVER_PASSWORD, configData.getPassword());
-            resource.addProperty(BamPublisherConstants.BAM_SERVER_PORT, Integer.toString(configData.getThriftPort()));
-            resource.addProperty(BamPublisherConstants.BAM_SERVER_ENABLE_HTTP_TRANSPORT,
-                                 Boolean.toString(configData.getEnableHTTPTransport()));
-            resource.addProperty(BamPublisherConstants.BAM_SERVER_ENABLE_SOCKET_TRANSPORT,
-                                 Boolean.toString(configData.getEnableSocketTransport()));
             registry.put(BamPublisherConstants.CONFIG_RESOURCE_PATH, resource);
-
         } catch (RegistryException e) {
             String msg = "Add Update bpel bam publisher resource failed for tenant Id" + tenantId;
             log.error(msg, e);
@@ -46,17 +41,12 @@ public class BamPublisherUtils {
             if (registry.resourceExists(BamPublisherConstants.CONFIG_RESOURCE_PATH)) {
                 BamServerInformation bamServerInformation = new BamServerInformation();
                 Resource resource = registry.get(BamPublisherConstants.CONFIG_RESOURCE_PATH);
-                bamServerInformation.setServerURL(
+                bamServerInformation.setReceiverURL(
                         resource.getProperty(BamPublisherConstants.BAM_SERVER_URL));
                 bamServerInformation.setUsername(
                         resource.getProperty(BamPublisherConstants.BAM_SERVER_USERNAME));
                 bamServerInformation.setPassword(
                         resource.getProperty(BamPublisherConstants.BAM_SERVER_PASSWORD));
-                bamServerInformation.setThriftPort(
-                        Integer.parseInt(resource.getProperty(BamPublisherConstants.BAM_SERVER_PORT)));
-                bamServerInformation.setEnableSocketTransport(
-                        Boolean.parseBoolean(resource.getProperty(
-                                BamPublisherConstants.BAM_SERVER_ENABLE_SOCKET_TRANSPORT)));
                 return bamServerInformation;
             } else {
                 log.debug("Bam Server Config resource does not exist in the registry for tenant");
@@ -73,7 +63,7 @@ public class BamPublisherUtils {
         DataPublisher publisher = null;
         try {
              publisher = new DataPublisher(
-                                        configData.getServerURL(),
+                                        configData.getReceiverURL(),
                                         configData.getUsername(),
                                         configData.getPassword());
         } catch (MalformedURLException e) {

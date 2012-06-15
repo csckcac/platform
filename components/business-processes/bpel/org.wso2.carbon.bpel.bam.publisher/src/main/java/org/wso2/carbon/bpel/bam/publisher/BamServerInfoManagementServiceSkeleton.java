@@ -12,6 +12,7 @@ import org.wso2.carbon.bpel.bam.publisher.skeleton.Fault;
 import org.wso2.carbon.bpel.bam.publisher.util.BamPublisherUtils;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 
@@ -38,9 +39,8 @@ public class BamServerInfoManagementServiceSkeleton extends AbstractAdmin implem
        return bamServerDataFromRegistry;
     }
 
-    public String updateBamServerInformation(String serverURL, String username, String password,
-                    int thriftPort, boolean enableSocketTransport, boolean enableHTTPTransport)
-                        throws Fault {
+    public String updateBamServerInformation(String serverURL, String username, String password)
+            throws Fault {
         int tenantId = SuperTenantCarbonContext.getCurrentContext().getTenantId();
         UserRegistry configSystemRegistry = null;
         try {
@@ -53,12 +53,10 @@ public class BamServerInfoManagementServiceSkeleton extends AbstractAdmin implem
         }
 
         BamServerInformation bamServerInformation = new BamServerInformation();
-        bamServerInformation.setServerURL(serverURL);
+        bamServerInformation.setReceiverURL(serverURL);
         bamServerInformation.setUsername(username);
         bamServerInformation.setPassword(password);
-        bamServerInformation.setEnableSocketTransport(enableSocketTransport);
-        bamServerInformation.setEnableHTTPTransport(enableHTTPTransport);
-        bamServerInformation.setThriftPort(thriftPort);
+
         BamPublisherUtils.addBamServerDataToRegistry(configSystemRegistry, tenantId,
                                                      bamServerInformation);
         DataPublisher dataPublisher = TenantBamAgentHolder.getInstance().getDataPublisher(tenantId);

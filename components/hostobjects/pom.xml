@@ -41,7 +41,7 @@
         <module>org.wso2.carbon.hostobjects.db</module>
         <module>org.wso2.carbon.hostobjects.web</module>
         <module>org.wso2.carbon.hostobjects.xslt</module>
-        <module>org.wso2.carbon.hostobjects.extra</module>
+        <module>org.wso2.carbon.hostobjects.oauth</module>
         <module>org.wso2.carbon.hostobjects.email</module>
         <module>org.wso2.carbon.hostobjects.feed</module>
        

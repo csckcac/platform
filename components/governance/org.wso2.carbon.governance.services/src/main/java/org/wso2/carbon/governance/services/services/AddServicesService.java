@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.parsers.SAXParser;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
+import org.wso2.carbon.governance.api.exception.GovernanceException;
+import org.wso2.carbon.governance.api.services.ServiceFilter;
 import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
@@ -57,7 +59,7 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
     private static Map<String, Boolean> lifecycleAspects = new HashMap<String, Boolean>();
     private static final String TRUNK = "trunk";
 
-    public String addService(String info)throws RegistryException{
+    public String addService(String info) throws RegistryException {
         RegistryUtils.recordStatistics(info);
         Registry registry = getGovernanceRegistry();
         String currentPath = "";
@@ -76,7 +78,7 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
                 operation = operationElement.getText();
                 // and then remove the operation child,
                 operationElement.detach();
-            }  else {
+            } else {
                 operation = "Add";
             }
 
@@ -110,7 +112,7 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
                         currentPath = next.getText();
                         break;
                     }
-                }else{
+                } else {
                     currentPath = registry.getRegistryContext().getServicePath() +
                             CommonUtil.derivePathFragmentFromNamespace(currentNamespace) + currentName;
                 }
@@ -136,17 +138,17 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
                     Properties properties = oldResource.getProperties();
 
                     for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-                        if(newResource.getProperty((String) entry.getKey())== null){
-                            if(entry.getValue() instanceof List){
-                                newResource.setProperty((String)entry.getKey(),(List)entry.getValue());
-                            }else{
-                                newResource.setProperty((String)entry.getKey(),(String)entry.getValue());
+                        if (newResource.getProperty((String) entry.getKey()) == null) {
+                            if (entry.getValue() instanceof List) {
+                                newResource.setProperty((String) entry.getKey(), (List) entry.getValue());
+                            } else {
+                                newResource.setProperty((String) entry.getKey(), (String) entry.getValue());
                             }
                         }
                     }
 
                     newResource.setDescription(oldResource.getDescription());
-                    registry.put(service.getPath(),newResource);
+                    registry.put(service.getPath(), newResource);
 
 //                    Resource serviceResource = registry.get(service.getPath());
 //                    String oldLifeCycleName = serviceResource.getProperty("registry.LC.name");
@@ -171,10 +173,29 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
             }
 
             currentPath = registry.getRegistryContext().getServicePath() +
-                            CommonUtil.derivePathFragmentFromNamespace(currentNamespace) + currentName;
+                    CommonUtil.derivePathFragmentFromNamespace(currentNamespace) + currentName;
             currentPath = RegistryUtils.getRelativePathToOriginal(currentPath,
-                        RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH);
-            if (registry.resourceExists(currentPath)) {
+                    RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH);
+
+            // Check to see whether any services with same name,version,namespace exists in all env
+            final String ref_overview_name = service.getAttribute("overview_name");
+            final String ref_overview_version = service.getAttribute("overview_version");
+            final String ref_overview_namespace = service.getAttribute("overview_namespace");
+            Service[] result_services = serviceManager.findServices(new ServiceFilter() {
+                public boolean matches(Service _service) throws GovernanceException {
+                    String _overview_name = _service.getAttribute("overview_name");
+                    String _overview_version = _service.getAttribute("overview_version");
+                    String _overview_namespace = _service.getAttribute("overview_namespace");
+                    if ((_overview_name != null && _overview_name.equals(ref_overview_name)) &&
+                            (_overview_version != null && _overview_version.equals(ref_overview_version)) &&
+                            (_overview_namespace != null && _overview_namespace.equals(ref_overview_namespace))) {
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+            if (result_services.length > 0) {
                 String msg = "A resource with the given name and namespace exists";
                 log.warn(msg);
                 return msg;
@@ -186,20 +207,21 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
 //            }
 
         } catch (Exception e) {
-            String msg =  "Unable to add service. ";
+            String msg = "Unable to add service. ";
             if (e instanceof RegistryException) {
-                throw (RegistryException)e;
-            }else if (e instanceof OMException) {
+                throw (RegistryException) e;
+            } else if (e instanceof OMException) {
                 msg += "Unexpected character found in input-field name.";
                 log.error(msg, e);
-                throw new RegistryException( msg, e );
+                throw new RegistryException(msg, e);
             }
-            throw new RegistryException( msg + (e.getCause() instanceof SQLException ? "" : e.getCause().getMessage()), e);
+            throw new RegistryException(msg + (e.getCause() instanceof SQLException ? "" : e.getCause().getMessage()), e);
         }
 
         return currentPath;
     }
-    public String editService(String servicename)throws RegistryException{
+
+    public String editService(String servicename) throws RegistryException {
         Registry registry = getGovernanceRegistry();
         String path = servicename;
         // resource path is created to make sure the version page doesn't give null values
@@ -208,50 +230,53 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
             if (Boolean.parseBoolean(getRootRegistry().get(servicename).getProperty(RegistryConstants.REGISTRY_LINK))) {
                 return (new String((byte[]) getRootRegistry().get(servicename).getContent()));
             }
-            throw new RegistryException("Resource does not exist path : "+path);
+            throw new RegistryException("Resource does not exist path : " + path);
         }
         Resource resource = registry.get(path);
-        String serviceinfo = new String((byte[])resource.getContent());
+        String serviceinfo = new String((byte[]) resource.getContent());
         return serviceinfo;
     }
 
-    public String getServiceConfiguration()throws RegistryException{
-        try{
+    public String getServiceConfiguration() throws RegistryException {
+        try {
             Registry registry = getConfigSystemRegistry();
             return Util.getServiceConfig(registry);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
-    public boolean saveServiceConfiguration(String update) throws RegistryException{
+
+    public boolean saveServiceConfiguration(String update) throws RegistryException {
         Registry registry = getConfigSystemRegistry();
         if (RegistryUtils.isRegistryReadOnly(registry.getRegistryContext())) {
             return false;
         }
-        try{
+        try {
             Util.validateOMContent(Util.buildOMElement(update));
 
             Resource resource = registry.get(RegistryConstants.GOVERNANCE_SERVICES_CONFIG_PATH + "service");
             resource.setContent(update);
-            registry.put(RegistryConstants.GOVERNANCE_SERVICES_CONFIG_PATH + "service",resource);
+            registry.put(RegistryConstants.GOVERNANCE_SERVICES_CONFIG_PATH + "service", resource);
             return true;
-        }catch(Exception RegistryException){
+        } catch (Exception RegistryException) {
 //            throw new RegistryException("Unable to save the xml configuration");
             return false;
         }
     }
-    public String getServicePath()throws RegistryException{
-        try{
+
+    public String getServicePath() throws RegistryException {
+        try {
             Registry registry = getGovernanceRegistry();
             return registry.getRegistryContext().getServicePath();
-        }catch(Exception RegistryException){
+        } catch (Exception RegistryException) {
             return null;
         }
     }
+
     /* this method is useful when adding the service edit button, do a check before displaying service Edit button */
-    public boolean canChange(String path)throws Exception{
-        UserRegistry registry = (UserRegistry)getRootRegistry();
-        if(registry.getUserName() != null && registry.getUserRealm() != null){
+    public boolean canChange(String path) throws Exception {
+        UserRegistry registry = (UserRegistry) getRootRegistry();
+        if (registry.getUserName() != null && registry.getUserRealm() != null) {
             if (registry.getUserRealm().getAuthorizationManager().isUserAuthorized(
                     registry.getUserName(), path, ActionConstants.PUT)) {
                 Resource resource = registry.get(path);
@@ -265,9 +290,10 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
         }
         return false;
     }
+
     /* get available aspects */
-    public String[] getAvailableAspects()throws Exception{
-        UserRegistry registry = (UserRegistry)getGovernanceRegistry();
+    public String[] getAvailableAspects() throws Exception {
+        UserRegistry registry = (UserRegistry) getGovernanceRegistry();
         Registry systemRegistry = getConfigSystemRegistry();
         String[] aspectsToAdd = registry.getAvailableAspects();
         if (aspectsToAdd == null) {
@@ -289,9 +315,9 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
                 }
                 systemRegistry.put(tempResourcePath, systemRegistry.newResource());
                 systemRegistry.associateAspect(tempResourcePath, aspectToAdd);
-                Resource r  = systemRegistry.get(tempResourcePath);
+                Resource r = systemRegistry.get(tempResourcePath);
                 Properties props = r.getProperties();
-                Set keys  = props.keySet();
+                Set keys = props.keySet();
                 for (Object key : keys) {
                     String propKey = (String) key;
                     if (propKey.startsWith("registry.lifecycle.")
@@ -316,8 +342,8 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
         return lifecycleAspectsToAdd.toArray(new String[lifecycleAspectsToAdd.size()]);
     }
 
-    private void removeAspect(Registry registry,String path,String aspect)throws Exception{
-           try {
+    private void removeAspect(Registry registry, String path, String aspect) throws Exception {
+        try {
             /* set all the variables to the resource */
             Resource resource = registry.get(path);
             Properties props = resource.getProperties();
@@ -329,14 +355,14 @@ public class AddServicesService extends RegistryAbstractAdmin implements IManage
                 String propKey = (String) iKeys.next();
 
                 if (propKey.startsWith("registry.custom_lifecycle.checklist.")
-                    || propKey.startsWith("registry.LC.name")
-                    || propKey.startsWith("registry.lifecycle.")
-                    || propKey.startsWith("registry.Aspects")) {
+                        || propKey.startsWith("registry.LC.name")
+                        || propKey.startsWith("registry.lifecycle.")
+                        || propKey.startsWith("registry.Aspects")) {
                     propertiesToRemove.add(propKey);
                 }
             }
 
-            for(String propertyName : propertiesToRemove) {
+            for (String propertyName : propertiesToRemove) {
                 resource.removeProperty(propertyName);
             }
 

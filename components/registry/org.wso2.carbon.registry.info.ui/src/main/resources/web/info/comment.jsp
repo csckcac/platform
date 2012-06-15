@@ -96,7 +96,7 @@
   <% } %>
 
 </div>
-<% if (comment.isLoggedIn() && !comment.isVersionView() && comment.isPutAllowed()) { %>
+<% if (comment.isLoggedIn() && !comment.isVersionView()) { %>
 <div class="icon-link-ouside registryWriteOperation">
     <a class="icon-link registryWriteOperation" style="background-image:url(../admin/images/add.gif);"
        onclick="javascript:showHideCommon('add-comment-div');if($('add-comment-div').style.display!='none')$('comment').focus();">

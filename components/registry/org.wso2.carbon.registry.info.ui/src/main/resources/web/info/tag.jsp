@@ -81,7 +81,7 @@
     </div>
     <div class="box1-mid-fill" id="tagsMinimized" <% if (tags.length > 0) { %> style="display:none;" <% } %>></div>
     <div class="box1-mid" id="tagsExpanded" <% if (tags.length == 0) { %> style="display:none;height:auto;" <% } else { %> style="height:auto;" <% } %>>
-        <% if (tag.isLoggedIn() && !tag.isVersionView() && tag.isPutAllowed()) { %>
+        <% if (tag.isLoggedIn() && !tag.isVersionView()) { %>
         <div class="icon-link-ouside registryWriteOperation" id="tagAddDiv">
             <a class="icon-link registryWriteOperation" style="background-image:url(../admin/images/add.gif);"
                onclick="javascript:showHideCommon('tagAddTable');if($('tagAddTable').style.display!='none')$('tfTag').focus();">

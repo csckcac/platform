@@ -22,7 +22,8 @@ import org.wso2.carbon.agent.Agent;
 import org.wso2.carbon.agent.DataPublisher;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.commons.exception.*;
+import org.wso2.carbon.agent.commons.exception.AuthenticationException;
+import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.bam.data.publisher.util.BAMDataPublisherConstants;
@@ -33,9 +34,7 @@ import org.wso2.carbon.bam.mediationstats.data.publisher.util.MediationDataPubli
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.TenantMediationStatConfigData;
 import org.wso2.carbon.mediation.statistics.StatisticsRecord;
 
-
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -132,7 +131,6 @@ public class Publisher {
     private static void publishToAgent(List<String> eventData, List<String> metaDataKeySet,List<String> metaDataValueSet, MediationStatConfig mediationStatConfig) {
 
         try {
-            URL url = new URL(mediationStatConfig.getUrl());
             String serverUrl = mediationStatConfig.getUrl();
             String userName = mediationStatConfig.getUserName();
             String passWord = mediationStatConfig.getPassword();
@@ -148,8 +146,8 @@ public class Publisher {
 
                 dataPublisher.setAgent(agent);
                 EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(
-                        "org.wso2.esb.MediatorStatistics","1.3.0");
-                eventStreamDefinition.setDescription("Some Desc");
+                        mediationStatConfig.getStreamName(),mediationStatConfig.getVersion());
+                eventStreamDefinition.setDescription(mediationStatConfig.getDescription());
                 for(int i = 0; i < metaData.length; i++){
                     eventStreamDefinition.addMetaData(metaData[i].toString(), AttributeType.STRING);
                 }

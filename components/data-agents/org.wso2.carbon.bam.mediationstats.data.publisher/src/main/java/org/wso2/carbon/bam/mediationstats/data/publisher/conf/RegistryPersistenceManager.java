@@ -202,6 +202,14 @@ public class RegistryPersistenceManager {
                                  eventConfig.getUserName());
             updateConfigProperty(BAMDataPublisherConstants.BAM_PASSWORD,
                                  eventConfig.getPassword());
+            updateConfigProperty(BAMDataPublisherConstants.STREAM_NAME,
+                                 eventConfig.getStreamName());
+            updateConfigProperty(BAMDataPublisherConstants.VERSION,
+                                 eventConfig.getVersion());
+            updateConfigProperty(BAMDataPublisherConstants.NICK_NAME,
+                                 eventConfig.getNickName());
+            updateConfigProperty(BAMDataPublisherConstants.DESCRIPTION,
+                                 eventConfig.getDescription());
 
 
             Property[] propertiesDTO = eventConfig.getProperties();

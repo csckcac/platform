@@ -31,8 +31,6 @@
     <name>WSO2 Governance Registry - Samples</name>
     <modules>
         <module>shutterbug/src</module>
-        <module>distributed-LCM/src/org.wso2.carbon.governance.samples.lcm</module>
-        <module>distributed-LCM/src/org.wso2.carbon.governance.samples.lcm.notifications</module>
         <module>custom-ui/src/org.wso2.carbon.registry.samples.custom.topics</module>
         <module>custom-ui/src/org.wso2.carbon.registry.samples.custom.topics.ui</module>
         <module>handler/src</module>

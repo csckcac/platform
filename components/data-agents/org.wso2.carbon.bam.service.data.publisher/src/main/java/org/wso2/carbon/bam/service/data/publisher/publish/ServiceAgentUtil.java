@@ -58,7 +58,6 @@ public class ServiceAgentUtil {
         StatisticsType statisticsType = findTheStatisticType(event);
 
         addCommonEventData(event, eventData);
-        addPropertiesAsMetaData(eventingConfigData, metaData);
 
         switch (statisticsType) {
             case ACTIVITY_STATS:
@@ -86,7 +85,7 @@ public class ServiceAgentUtil {
         }
 
 
-/*        addProperties(metaData, eventingConfigData);*/
+        addPropertiesAsMetaData(eventingConfigData, metaData);
 
         Event publishEvent = new Event();
         publishEvent.setCorrelationData(correlationData);
@@ -174,19 +173,6 @@ public class ServiceAgentUtil {
         metaData.add(event.getReferer());
     }
 
-/*
-    private static void addProperties(Map<String, ByteBuffer> metaData,
-                                      EventingConfigData eventingConfigData) {
-        Property[] properties = eventingConfigData.getProperties();
-        if (properties != null) {
-            for (int i = 0; i < properties.length; i++) {
-                Property property = properties[i];
-                if (property.getKey() != null && property.getKey() != "") {
-                    putDataIntoMap(metaData, property.getKey(), property.getValue());
-                }
-            }
-        }
-    }*/
 
 
 

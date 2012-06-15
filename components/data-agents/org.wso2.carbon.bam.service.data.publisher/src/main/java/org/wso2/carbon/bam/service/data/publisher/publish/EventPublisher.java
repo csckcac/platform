@@ -86,8 +86,8 @@ public class EventPublisher {
                 eventPublisherConfig.getEventStreamDefinitionMap().put(streamDef,streamId);
             }
 
-            dataPublisher.publish(streamId, metaData.toArray(), correlationData.toArray(),
-                                  payLoadData.toArray());
+            dataPublisher.publish(streamId, getObjectArray(metaData), getObjectArray(correlationData),
+                                  getObjectArray(payLoadData));
 
         } catch (MalformedURLException e) {
             log.error("Malformed URL, please check the URL", e);
@@ -106,6 +106,13 @@ public class EventPublisher {
             log.error("Malformed stream definition", e);
         }
 
+    }
+
+    private Object[] getObjectArray(List<Object> list){
+        if(list.size()>0){
+            return list.toArray();
+        }
+        return null;
     }
 
     private EventStreamDefinition getStreamDefinition(EventingConfigData configData,
@@ -181,7 +188,6 @@ public class EventPublisher {
             payLoadData = addServiceStatsPayLoadData(payLoadData);
             streamDef.setPayloadData(payLoadData);
 
-            streamDef.setCorrelationData(setActivityCorrelationData());
         } catch (MalformedStreamDefinitionException e) {
             log.error("Malformed Stream Definition", e);
         }

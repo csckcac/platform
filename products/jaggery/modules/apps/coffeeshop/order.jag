@@ -11,11 +11,15 @@ var addition = request.getParameter('addition');
 var data = request.getContent();
 var log = new Log();
 log.info("data " + data);
-if(data != "") {
-	
-	if(data.id != "undefined") {
-		orderid = parse(data).id;
-	}
+var uriMatcher = new URIMatcher(request.getPathInfo());
+if(uriMatcher.match("/{orderid}/")) {
+	log.info("order ID" + uriMatcher.elements().orderid);
+	orderid = uriMatcher.elements().orderid;
+}
+
+
+
+if(data != "") {	
 	if(data.addition != "undefined") {
 		addition = parse(data).addition;
 	}
@@ -23,7 +27,6 @@ if(data != "") {
 		status = parse(data).status;
 	}
 }
-
 
 log.info("This is an INFO level log " + data + " :: " + addition + orderid + verb + order + status);
 
@@ -58,16 +61,16 @@ function addOrder(orderName) {
 	var order = request.getParameter('order');
 
 	var price = db.query("SELECT COST FROM DRINKS WHERE DRINK ='" + order + "'");
-if(price.length != 0) {
-	db.query("INSERT INTO COFFEE_ORDER VALUES(" + ++orderIdx + ",'','" + order + "','" + price[0].COST + "','order',false)");
-	//order is been taken
-	var result = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID = " + orderIdx);
-	print(result[0]);
-} else {
-				print({
-					"Infor" : "Sorry, Coffee is not in shop"
-				});
-			}
+	if(price.length != 0) {
+		db.query("INSERT INTO COFFEE_ORDER VALUES(" + ++orderIdx + ",'','" + order + "','" + price[0].COST + "','order',false)");
+		//order is been taken
+		var result = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID = " + orderIdx);
+		print(result[0]);
+	} else {
+		print({
+			"Infor" : "Sorry, Coffee is not in shop"
+		});
+	}
 }
 
 function listAllOrders() {
@@ -85,7 +88,6 @@ function listAllOrders() {
 function updateStatus(orderid, status) {
 	//db processing
 	var order = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + "'");
-	//print(order[0]);
 	//checking order is there
 	if(order.length != 0) {
 		//Order is existing

@@ -8,6 +8,12 @@ var orderid = request.getParameter('orderid');
 var data = request.getContent();
 
 var log = new Log();
+var uriMatcher = new URIMatcher(request.getPathInfo());
+
+if(uriMatcher.match("/{orderid}/")) {
+	log.info("order ID" + uriMatcher.elements().orderid);
+	orderid = uriMatcher.elements().orderid;
+}
 if(data != "") {
 	
 	if(data.id != "undefined") {
@@ -33,7 +39,6 @@ var order = db.query("SELECT * FROM COFFEE_ORDER WHERE ORDER_ID ='" + orderid + 
 if(order.length != 0) {
 	print(order[0].PAY);
 } else {
-log.info("foooooooooo");
 	print({
 		"Infor" : "Sorry, Order is not exsiting"
 	});

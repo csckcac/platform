@@ -24,8 +24,8 @@ function loadTiers() {
                           }
                       }
                   }
-              }, "json");}
-
+              }, "json");
+}
 
 
 $(document).ready(function() {
@@ -63,8 +63,8 @@ $(document).ready(function() {
                                                                              }
                                                                          } else {
                                                                              jagg.message({content:responseText.message,type:"error"});
-                                                                              $('#saveMessage').hide();
-                                                                              $('#saveButtons').show();
+                                                                             $('#saveMessage').hide();
+                                                                             $('#saveButtons').show();
                                                                          }
                                                                      }, dataType: 'json'
                                                                  });
@@ -80,13 +80,15 @@ function getContextValue() {
     if (context == "" && version != "") {
         $('#contextForUrl').html("/{context}/" + version);
         $('#contextForUrlDefault').html("/{context}/" + version);
-    }if (context != "" && version == "") {
+    }
+    if (context != "" && version == "") {
         if (context.charAt(0) != "/") {
             context = "/" + context;
         }
         $('#contextForUrl').html(context + "/{version}");
         $('#contextForUrlDefault').html(context + "/{version}");
-    }if (context != "" && version != "") {
+    }
+    if (context != "" && version != "") {
         if (context.charAt(0) != "/") {
             context = "/" + context;
         }

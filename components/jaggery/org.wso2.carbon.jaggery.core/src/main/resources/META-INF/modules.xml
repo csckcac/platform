@@ -34,10 +34,6 @@
             <name>File</name>
         </hostObject>
         <hostObject>
-            <className>org.wso2.carbon.hostobjects.extra.TwitterConnectHostObject</className>
-            <name>TwitterConnect</name>
-        </hostObject>
-        <hostObject>
             <className>org.wso2.carbon.hostobjects.feed.EntryHostObject</className>
             <name>Entry</name>
         </hostObject>
@@ -118,5 +114,15 @@
             <className>org.wso2.carbon.hostobjects.ws.WSStubHostObject</className>
             <name>WSStub</name>
         </hostObject>
+    </module>
+    <module name="oauth">
+        <hostObject>
+            <className>org.wso2.carbon.hostobjects.oauth.OAuthHostObject</className>
+            <name>OAuthProvider</name>
+        </hostObject>
+        <script>
+            <name>APIs</name>
+            <path>scripts/media_connect.js</path>
+        </script>
     </module>
 </modules>

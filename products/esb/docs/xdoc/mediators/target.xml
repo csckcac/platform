@@ -27,6 +27,10 @@ sequence will be executed and then endpoint will be executed.</p>
     &lt;endpoint ....../&gt;?
   &lt;/target&gt;  </pre>
 
+<p>*Note : Due to the limitation of the target implementation it allows to specify either 
+sequenceRef Or endpointRef or the sequence (inline) or endpoint (inline) at once no multiple elements can
+be represent at once</p>
+
 <h3>UI Configuration</h3>
 
 <p><img src="../target-mediator/docs/images/target_mediator_screenshot.jpg"

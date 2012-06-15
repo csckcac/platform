@@ -56,7 +56,7 @@
             <region>region1</region>
             <order>50</order>
             <style-class>tools</style-class>
-            <require-permission>/permission/protected/manage</require-permission>
+            <require-permission>//permission/admin</require-permission>
         </menu>
         <menu>
             <id>analytics_list</id>
@@ -68,7 +68,7 @@
             <order>60</order>
             <style-class>tools</style-class>
             <icon>../hive-explorer/images/list.gif</icon>
-            <require-permission>/permission/protected/manage</require-permission>
+            <require-permission>/permission/admin</require-permission>
         </menu>
         <menu>
             <id>analytics_configure</id>
@@ -79,7 +79,7 @@
             <region>region1</region>
             <order>20</order>
             <style-class>manage</style-class>
-            <require-permission>/permission/protected/manage</require-permission>
+            <require-permission>/permission/admin</require-permission>
         </menu>
 <!--        <menu>
             <id>script_add_main</id>
@@ -103,7 +103,7 @@
             <order>69</order>
             <style-class>tools</style-class>
             <icon>../hive-explorer/images/add.gif</icon>
-            <require-permission>/permission/protected/manage</require-permission>
+            <require-permission>/permission/admin</require-permission>
         </menu>
 
     </menus>

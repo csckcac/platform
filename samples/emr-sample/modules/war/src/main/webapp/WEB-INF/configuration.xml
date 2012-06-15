@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Currently this configuration file is not use.Constant.java class has the configuration details.There is already implemented class
+for reading this xml file called GetConfiguration -->
+<database>
+<cluster_host>127.0.0.1:9160</cluster_host>
+<cluster_name>ClusterOne</cluster_name>
+<keyspace>emr</keyspace>
+<username>admin@srinath.org</username>
+<password>admin1234</password>
+</database>

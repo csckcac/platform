@@ -21,7 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bam.mediationstats.data.publisher.conf.MediationStatConfig;
 import org.wso2.carbon.bam.mediationstats.data.publisher.data.MediationData;
-import org.wso2.carbon.bam.mediationstats.data.publisher.publish.DataPublisher;
+import org.wso2.carbon.bam.mediationstats.data.publisher.publish.Publisher;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.MediationDataPublisherConstants;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.PublisherUtils;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.TenantMediationStatConfigData;
@@ -155,7 +155,7 @@ public class BAMMediationStatisticsObserver implements MediationStatisticsObserv
             mediationData.setErrorMap(errorMap);
         }
 
-        DataPublisher.process(mediationData, tenantID);
+        Publisher.process(mediationData, tenantID);
     }
 
     @Override

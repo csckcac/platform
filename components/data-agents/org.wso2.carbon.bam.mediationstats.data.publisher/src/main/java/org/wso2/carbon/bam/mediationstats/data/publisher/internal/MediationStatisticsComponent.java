@@ -24,7 +24,7 @@ import org.wso2.carbon.bam.mediationstats.data.publisher.conf.RegistryPersistenc
 import org.wso2.carbon.bam.mediationstats.data.publisher.observer.BAMMediationStatisticsObserver;
 import org.wso2.carbon.bam.mediationstats.data.publisher.services.BAMMediationStatsPublisherAdmin;
 import org.wso2.carbon.bam.mediationstats.data.publisher.util.PublisherUtils;
-import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService;
 import org.wso2.carbon.mediation.statistics.MediationStatisticsStore;
 import org.wso2.carbon.mediation.statistics.services.MediationStatisticsService;
@@ -32,11 +32,11 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
- * @scr.component name="org.wso2.carbon.bam.data.publisher.mediationstats" immediate="true"
+ * @scr.component name="org.wso2.carbon.bam.mediationstats.data.publisher" immediate="true"
  * @scr.reference name="config.context.service" interface="org.wso2.carbon.utils.ConfigurationContextService"
  * cardinality="1..1" policy="dynamic" bind="setConfigurationContextService"
  * unbind="unsetConfigurationContextService"
- * @scr.reference name="server.configuration" interface="org.wso2.carbon.base.ServerConfiguration"
+ * @scr.reference name="server.configuration" interface="org.wso2.carbon.base.api.ServerConfigurationService"
  * cardinality="1..1" policy="dynamic" bind="setServerConfiguration"
  * unbind="unsetServerConfiguration"
  * @scr.reference name="org.wso2.carbon.registry.service"
@@ -59,7 +59,7 @@ public class MediationStatisticsComponent {
     private ServiceRegistration statAdminServiceRegistration;
     private MediationStatisticsService mediationStatisticsService;
     private ConfigurationContext configContext;
-    private ServerConfiguration serverConfiguration;
+    private ServerConfigurationService serverConfigurationService;
 
     protected void activate(ComponentContext ctxt) {
 
@@ -127,12 +127,12 @@ public class MediationStatisticsComponent {
         PublisherUtils.setSynapseEnvironmentService(null);
     }
 
-    protected void setServerConfiguration(ServerConfiguration serverConfig) {
-        this.serverConfiguration = serverConfig;
+    protected void setServerConfiguration(ServerConfigurationService serverConfigService) {
+        this.serverConfigurationService = serverConfigService;
     }
 
-    protected void unsetServerConfiguration(ServerConfiguration serverConfig) {
-        this.serverConfiguration = null;
+    protected void unsetServerConfiguration(ServerConfigurationService serverConfigService) {
+        this.serverConfigurationService = null;
     }
 
     protected void setMediationStatisticsService(

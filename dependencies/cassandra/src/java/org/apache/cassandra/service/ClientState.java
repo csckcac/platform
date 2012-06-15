@@ -216,6 +216,7 @@ public class ClientState
      * @return <String> the resolved keyspace name
      */
     public String getResolvedKeyspace() {
+
         return qualifiedKeyspace == null ? keyspace : qualifiedKeyspace;
     }
 
@@ -273,7 +274,7 @@ public class ClientState
                 prefix = prefix.replace("-", "z");
             }
             if (keyspace != null) {
-                qualifiedKeyspace = prefix + keyspace;
+                qualifiedKeyspace = prefix.equals("carbon_super_")?keyspace:prefix + keyspace;
             }
         }
     }

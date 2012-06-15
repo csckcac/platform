@@ -30,6 +30,7 @@ import org.apache.neethi.PolicyEngine;
 import org.apache.rampart.RampartMessageData;
 import org.apache.rampart.policy.model.CryptoConfig;
 import org.apache.rampart.policy.model.RampartConfig;
+import org.apache.ws.security.components.crypto.Merlin;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.core.common.AuthenticationException;
 import org.wso2.carbon.registry.core.*;
@@ -172,17 +173,17 @@ public class WSRegistryServiceClient implements Registry {
 		merlinProp.put("org.apache.ws.security.crypto.merlin.keystore.password", "wso2carbon");
 
 		CryptoConfig sigCryptoConfig = new CryptoConfig();
-		sigCryptoConfig.setProvider("org.apache.ws.security.components.crypto.Merlin");
+		sigCryptoConfig.setProvider(Merlin.class.getName());
 		sigCryptoConfig.setProp(merlinProp);
 
 		CryptoConfig encCryptoConfig = new CryptoConfig();
-		encCryptoConfig.setProvider("org.apache.ws.security.components.crypto.Merlin");
+		encCryptoConfig.setProvider(Merlin.class.getName());
 		encCryptoConfig.setProp(merlinProp);
 
 		RampartConfig rampartConfig = new RampartConfig();
 		rampartConfig.setEncryptionUser("wso2carbon");
 		rampartConfig.setUserCertAlias("wso2carbon");
-		rampartConfig.setPwCbClass("org.wso2.carbon.registry.ws.client.registry.PWCBHandler");
+		rampartConfig.setPwCbClass(PWCBHandler.class.getName());
 		rampartConfig.setSigCryptoConfig(sigCryptoConfig);
 		rampartConfig.setEncrCryptoConfig(encCryptoConfig);
 

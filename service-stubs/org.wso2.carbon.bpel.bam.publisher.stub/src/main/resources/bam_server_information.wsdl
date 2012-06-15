@@ -9,12 +9,9 @@
 	<xsd:element name="bamServerInformation">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="serverURL" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
+				<xsd:element name="receiverURL" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
 				<xsd:element name="username" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
 				<xsd:element name="password" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
-				<xsd:element name="thriftPort" type="xsd:int" minOccurs="0" maxOccurs="1"></xsd:element>
-        <xsd:element name="enableSocketTransport" type="xsd:boolean" minOccurs="0" maxOccurs="1"></xsd:element>
-        <xsd:element name="enableHTTPTransport" type="xsd:boolean" minOccurs="0" maxOccurs="1"></xsd:element>
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>

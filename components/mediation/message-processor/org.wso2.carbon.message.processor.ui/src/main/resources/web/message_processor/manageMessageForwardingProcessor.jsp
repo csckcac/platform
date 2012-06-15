@@ -92,7 +92,7 @@
 
     function addServiceParams() {
         addServiceParameter("interval", document.getElementById('retry_interval').value);
-        addServiceParameter("max.deliver.attempts", document.getElementById('max_delivery_attempts').value);
+        addServiceParameter("max.delivery.attempts", document.getElementById('max_delivery_attempts').value);
         addServiceParameter("axis2.repo", document.getElementById('axis2_repo').value);
         addServiceParameter("axis2.config", document.getElementById('axis2_config').value);
         addServiceParameter("message.processor.reply.sequence", document.getElementById('message_processor_reply_sequence').value);
@@ -292,10 +292,10 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><fmt:message key="max.deliver.attempts"/></td>
+                        <td><fmt:message key="max.delivery.attempts"/></td>
                         <td><input type="text" id="max_delivery_attempts" name="max_delivery_attempts"
                                    value="<%=((null!=processorData)&& processorData.getParams() != null
-                                        && !processorData.getParams().isEmpty()&&(processorData.getParams().get("max.deliver.attempts")!=null))?processorData.getParams().get("max.deliver.attempts"):""%>"
+                                        && !processorData.getParams().isEmpty()&&(processorData.getParams().get("max.delivery.attempts")!=null))?processorData.getParams().get("max.delivery.attempts"):""%>"
                                 />
                         </td>
                     </tr>

@@ -290,11 +290,14 @@
                    id="delete_link" class="icon-link"
                    style="background-image:url(../admin/images/delete.gif);"><fmt:message
                         key="delete"/></a>
-                <a href="#"
-                   onclick="deactivateRow(this.parentNode.parentNode.rowIndex)"
-                   id="deactivate_link" class="icon-link"
-                   style="background-image:url(../message_processor/images/deactivate.gif);"><fmt:message
-                        key="deactivate"/></a>
+                <span class="icon-text" style="background-image:url(../message_processor/images/activate.gif);">
+                    <fmt:message key="active"/>&nbsp;[</span>
+                <a href="#" class="icon-link" id="deactivate_link"
+                   style="background-image:none !important; margin-left: 0px !important; padding-left: 0px !important;"
+                   onclick="deactivateRow(this.parentNode.parentNode.rowIndex)"><fmt:message key="deactivate"/></a>
+                <span class="icon-text"
+                      style="background-image:none !important; margin-left: 0px !important; padding-left: 0px !important;">]</span>
+
             </td>
             <%
             } else if ("Scheduled Message Forwarding Processor".
@@ -308,11 +311,14 @@
                    id="delete_link" class="icon-link"
                    style="background-image:url(../admin/images/delete.gif);"><fmt:message
                         key="delete"/></a>
-                <a href="#"
-                   onclick="activateRow(this.parentNode.parentNode.rowIndex,true)"
-                   id="activate_link" class="icon-link"
-                   style="background-image:url(../message_processor/images/activate.gif);"><fmt:message
-                        key="activate"/></a>
+                <span class="icon-text" style="background-image:url(../message_processor/images/deactivate.gif);">
+                    <fmt:message key="inactive"/>&nbsp;[</span>
+                <a href="#" class="icon-link" id="activate_link"
+                   style="background-image:none !important; margin-left: 0px !important; padding-left: 0px !important;"
+                   onclick="activateRow(this.parentNode.parentNode.rowIndex,true)"><fmt:message key="activate"/></a>
+                <span class="icon-text"
+                      style="background-image:none !important; margin-left: 0px !important; padding-left: 0px !important;">]</span>
+
             </td>
             <%
             } else if ("Message Sampling Processor".
@@ -326,11 +332,15 @@
                    id="delete_link" class="icon-link"
                    style="background-image:url(../admin/images/delete.gif);"><fmt:message
                         key="delete"/></a>
-                <a href="#"
-                   onclick="activateRow(this.parentNode.parentNode.rowIndex)"
-                   id="activate_link" class="icon-link"
-                   style="background-image:url(../message_processor/images/activate.gif);"><fmt:message
-                        key="activate"/></a>
+                 <span class="icon-text"
+                       style="background-image:url(../message_processor/images/deactivate.gif);">
+                    <fmt:message key="inactive"/>&nbsp;[</span>
+                <a href="#" class="icon-link" id="activate_link"
+                   style="background-image:none !important; margin-left: 0px !important; padding-left: 0px !important;"
+                   onclick="activateRow(this.parentNode.parentNode.rowIndex)"><fmt:message key="activate"/></a>
+                <span class="icon-text"
+                      style="background-image:none !important; margin-left: 0px !important; padding-left: 0px !important;">]</span>
+
             </td>
             <%} else { %>
             <td><a onclick="editRow('<%= type%>', this.parentNode.parentNode.rowIndex)" href="#"

@@ -46,6 +46,7 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.stream.XMLStreamException;
 import java.io.*;
+import java.lang.String;
 import java.util.*;
 import java.net.URL;
 
@@ -158,7 +159,7 @@ public class WSRegistryServiceClient implements Registry {
 		return PolicyEngine.getPolicy(builder.getDocumentElement());
 	}
 
-	public void addSecurityOptions ( String policyPath, String keyStore) throws AxisFault, FileNotFoundException, XMLStreamException {
+	public void addSecurityOptions ( String policyPath, String keyStore,String userName, String password) throws AxisFault, FileNotFoundException, XMLStreamException {
 		ServiceClient client = stub._getServiceClient();
 
 		Policy policy = loadPolicy(policyPath);
@@ -189,8 +190,8 @@ public class WSRegistryServiceClient implements Registry {
 
 		Options options = client.getOptions();
 		options.setProperty(RampartMessageData.KEY_RAMPART_POLICY, policy);
-		options.setUserName("admin");
-		options.setPassword("admin");
+		options.setUserName(userName);
+		options.setPassword(password);
 
 		client.engageModule("rampart");
 	}

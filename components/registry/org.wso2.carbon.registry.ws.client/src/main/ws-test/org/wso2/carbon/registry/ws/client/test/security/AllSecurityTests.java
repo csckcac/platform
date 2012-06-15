@@ -20,7 +20,9 @@ package org.wso2.carbon.registry.ws.client.test.security;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllSecurityTests {
+public class AllSecurityTests ../p{
+
+
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(

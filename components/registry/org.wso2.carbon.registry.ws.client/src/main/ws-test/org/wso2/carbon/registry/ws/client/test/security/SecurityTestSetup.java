@@ -64,7 +64,7 @@ public class SecurityTestSetup extends TestCase {
             configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(axis2Repo, axis2Conf);
             authenticate(configContext, serverURL);
             registry = new WSRegistryServiceClient(serverURL, "admin", "admin", configContext);
-            registry.addSecurityOptions(policyPath, CARBON_HOME + "/resources/security/wso2carbon.jks");
+            registry.addSecurityOptions(policyPath, CARBON_HOME + "/resources/security/wso2carbon.jks",username,password);
             
         } catch (Exception e) {
             e.printStackTrace();

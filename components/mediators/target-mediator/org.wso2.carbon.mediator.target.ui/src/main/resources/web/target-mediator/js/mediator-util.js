@@ -56,21 +56,23 @@ function hideSeqRegistryOption(){
     hideElem('mediator.target.seq.reg');
     hideElem('mediator.target.seq.reg.link_1');
     hideElem('mediator.target.seq.reg.link_2');
-    setSeqValueType('anonymous')
+    setSeqValueType('anonymous');
+    disableEnableEndPointOnSequencRef('');
 }
 
 function showSeqRegistryOption(){
     showElem('mediator.target.seq.reg');
     showElem('mediator.target.seq.reg.link_1');
     showElem('mediator.target.seq.reg.link_2');
-    setSeqValueType('pickFromRegistry')
+    setSeqValueType('pickFromRegistry');
+    disableEnableEndPointOnSequencRef('mediator.target.seq.radio.reg');
 }
 
 function hideEpAnnonOption(){
     hideElem('mediator.target.seq.reg');
     hideElem('mediator.target.seq.reg.link_1');
     hideElem('mediator.target.seq.reg.link_2');
-}
+  }
 
 function hideEpRegistryOption(){
     hideElem('mediator.target.seq.reg');
@@ -176,6 +178,23 @@ function hideEpOps() {
 }
 
 
+function disableEnableEndPointOnSequencRef(selectOp){
+    var theObj = document.getElementById(selectOp);
+    document.getElementById('epOpNone').checked=false;
+    document.getElementById('epOpAnon').checked=false;
+    document.getElementById('epOpReg').checked=false;
+         
+    if(theObj != null && theObj.checked){
+      document.getElementById('epOpNone').disabled="true";
+      document.getElementById('epOpAnon').disabled="true";
+      document.getElementById('epOpReg').disabled="true";
+    }else{
+      document.getElementById('epOpNone').disabled="";
+      document.getElementById('epOpAnon').disabled="";
+      document.getElementById('epOpReg').disabled="";
+    }
+}
+
 //function dummyFunction(){
 //
 //}
@@ -183,4 +202,3 @@ function hideEpOps() {
 //function showReference(){
 //      document.getElementById('seq_ref_row').style.display = '';
 //}
-

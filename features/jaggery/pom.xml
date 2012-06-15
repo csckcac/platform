@@ -247,9 +247,10 @@
                 <artifactId>org.wso2.carbon.hostobjects.stream</artifactId>
                 <version>${hostobjects.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.hostobjects.extra</artifactId>
+                <artifactId>org.wso2.carbon.hostobjects.oauth</artifactId>
                 <version>${hostobjects.version}</version>
             </dependency>
             <dependency>

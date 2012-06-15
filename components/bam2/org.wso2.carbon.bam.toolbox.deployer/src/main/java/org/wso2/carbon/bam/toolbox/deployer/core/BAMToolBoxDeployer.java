@@ -242,7 +242,7 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
             TenantManager manager = ServiceHolder.getRealmService().getTenantManager();
             try {
                 Tenant tenant = manager.getTenant(tenantId);
-                return tenant.getRealmConfig().getAdminUserName() + "@" + tenant.getDomain();
+                return tenant.getRealmConfig().getAdminUserName();
             } catch (org.wso2.carbon.user.api.UserStoreException e) {
                 log.error(e.getMessage(), e);
                 throw new BAMToolboxDeploymentException("Error while obtaining " +

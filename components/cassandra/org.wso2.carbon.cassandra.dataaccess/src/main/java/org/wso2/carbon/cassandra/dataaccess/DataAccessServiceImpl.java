@@ -138,27 +138,6 @@ public class DataAccessServiceImpl implements DataAccessService {
         }
 
     /**
-     * Returns a Cassandra Keyspace for the current user
-     *
-     * @param cluster
-     * @param keyspaceName
-     * @return
-     */
-    public Keyspace getKeySpace(Cluster cluster, String keyspaceName) {
-        List<String> nodes = dataAccessComponentManager
-                .getClusterConfiguration().getNodes();
-        String hostIp = LOCAL_HOST_NAME;
-        for (String node : nodes) {
-            cluster = HFactory.getOrCreateCluster(cluster.getName(), node);
-            if (cluster != null) {
-                break;
-            }
-        }
-        Keyspace keyspace = HFactory.createKeyspace(keyspaceName, cluster);
-        return keyspace;
-    }
-
-    /**
      * Returns a Cassandra cluster for the current carbon user
      *
      * @return Not null <code> Cluster</code> instance

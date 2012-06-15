@@ -82,11 +82,4 @@ public interface DataAccessService {
      */
     void destroyAllClusters();
 
-    /**
-     *  get the KeySpace
-     * @param cluster
-     * @param keySpaceName
-     * @return
-     */
-    Keyspace getKeySpace(Cluster cluster,String keySpaceName);
 }

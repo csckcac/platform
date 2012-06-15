@@ -29,7 +29,6 @@
 <%@ page import="java.util.Iterator" %>
 <%--<jsp:include page="../dialog/display_messages.jsp"/>--%>
 <script type="text/javascript" src="js/cassandra_ui_util.js"></script>
-<script type="text/javascript" src=js/cassandra_cf_explorer.js></script>
 
 <fmt:bundle basename="org.wso2.carbon.cassandra.mgt.ui.i18n.Resources">
 <carbon:jsi18n
@@ -220,11 +219,6 @@
                                 <td>
                                      <input type="hidden" name="cfName<%=j%>" id="cfName<%=j%>"
                                            value="<%=name%>"/>
-                                    <a class="icon-link"
-                                       style="background-image:url('../cassandramgt/images/explorer.png');"
-                                       onclick="viewExplorer('<%=keyspace%>','<%=j%>');"
-                                       href="#"><fmt:message
-                                            key="cassandra.actions.explore"/></a>
                                     <a class="edit-icon-link"
                                        onclick="showShareCFEditor('<%=keyspace%>','<%=j%>');"
                                        href="#"><fmt:message

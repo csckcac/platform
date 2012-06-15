@@ -18,18 +18,18 @@
 <component xmlns="http://products.wso2.org/carbon">
     <menus>
         <menu>
-            <id>webapps_menu</id>
-            <i18n-key>webappmgt.services.menu</i18n-key>
+            <id>phpapps_menu</id>
+            <i18n-key>phpappmgt.services.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.hosting.mgt.ui.i18n.Resources</i18n-bundle>
             <parent-menu>manage_menu</parent-menu>
             <link>#</link>
             <region>region1</region>
             <order>3</order>
-            <icon>../hosting-mgt/images/webapps.gif</icon>
+            <icon>../hosting-mgt/images/phpapps.gif</icon>
             <style-class>home</style-class>
             <require-permission>/permission/admin/manage/manage/webapp</require-permission>
         </menu>
-        <menu>
+        <!--menu>
             <id>webapps_list_menu</id>
             <i18n-key>webappmgt.listservices.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.hosting.mgt.ui.i18n.Resources</i18n-bundle>
@@ -40,12 +40,12 @@
             <icon>../hosting-mgt/images/list.gif</icon>
             <style-class>home</style-class>
             <require-permission>/permission/admin/manage/manage/webapp</require-permission>
-        </menu>
+        </menu-->
         <menu>
             <id>webapps_add_menu</id>
-            <i18n-key>webappmgt.add.webapp.menu</i18n-key>
+            <i18n-key>phpappmgt.add.phpapp.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.hosting.mgt.ui.i18n.Resources</i18n-bundle>
-            <parent-menu>webapps_menu</parent-menu>
+            <parent-menu>phpapps_menu</parent-menu>
             <link>../hosting-mgt/upload.jsp</link>
             <region>region1</region>
             <order>10</order>

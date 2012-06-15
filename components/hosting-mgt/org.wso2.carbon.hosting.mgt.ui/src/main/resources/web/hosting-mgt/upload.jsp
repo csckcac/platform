@@ -89,6 +89,13 @@
         }
 
 
+        function listImages() {
+            var tableRow = document.getElementById(rowId);
+            tableRow.parentNode.deleteRow(tableRow.rowIndex);
+            alternateTableRows('webappTbl', 'tableEvenRow', 'tableOddRow');
+        }
+        
+
     </script>
 
     <div id="middle">
@@ -99,7 +106,7 @@
                   enctype="multipart/form-data" target="_self">
                 <input type="hidden" name="errorRedirectionPage"
                             value="../carbon/hosting-mgt/upload.jsp?region=region1&item=webapps_add_menu"/>
-                <label style="font-weight:bold;">&nbsp;<fmt:message key="upload.new.webapp"/> (.zip)</label>
+                <label style="font-weight:bold;">&nbsp;<fmt:message key="upload.new.phpapp"/> (.zip)</label>
                 <br/><br/>
 
                 <table class="styledLeft" id="webappTbl">
@@ -113,7 +120,41 @@
                         </td>
                     </tr>
                 </table>
+                <%  boolean noPHPAppdDeployed = true;
+                    String images[] = new String[5];
+                    images[0] = "image1";
+                    images[1] = "image2";
+                    images[2] = "image3";
+                    images[3] = "image4";
+                    images[4] = "image5";
+                    if(noPHPAppdDeployed){ //when three are no PHP apps for this tenant, we should create instance
+                        %>
+                        <table class="styledLeft">
+                            <tr>
+                                <td class="buttonRow">
+                                    <nobr>
+                                        <fmt:message key="image"/>
+                                        <label><font color="red">*</font></label>
+                                        <select name="images">
+                                            <option value="selectAImage" selected="selected">
+                                                <fmt:message key="select.image"/>
+                                            </option>
+                                            <%
+                                                for (String image : images) {
+                                                    %>
+                                                    <option value="<%= image%>"> <%= image%>  </option>
+                                                    <%
+                                                }
+                                            %>
+                                        </select>
+                                    </nobr>
+                                </td>
+                            </tr>
+                        </table>
 
+                <%
+                    }
+                %>
                 <table class="styledLeft">
                     <tr>
                         <td class="buttonRow">

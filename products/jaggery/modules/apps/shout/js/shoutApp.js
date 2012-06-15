@@ -62,10 +62,11 @@ ShoutApp = new function() {
 		if($('#shout_txt').val()==""){alert("Please type what to be share before click Shout.")}else{
 		ShoutAppUtil.makeRequest("/shout/twitter.jag?share="
 				+ $('#shout_txt').val(), "", function(html) {
-
+			$("#feed_scroll").html("loading..");
+			setInterval(ShoutApp.loadBack(),3000);
 		});
 		
-		ShoutApp.loadBack();
+		
 		}
 	}
 	

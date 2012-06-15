@@ -33,6 +33,7 @@ public class StreamDefnConverterUtils {
 
             String name = tempEventStreamDefinition.getName();
             String version = tempEventStreamDefinition.getVersion();
+            String streamId = tempEventStreamDefinition.getStreamId();
 
 
             if (version == null) {
@@ -42,7 +43,12 @@ public class StreamDefnConverterUtils {
                 throw new MalformedStreamDefinitionException("stream name is null");
             }
 
-            EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(name, version);
+            EventStreamDefinition eventStreamDefinition = null;
+            if (streamId == null) {
+                eventStreamDefinition = new EventStreamDefinition(name, version);
+            } else {
+                eventStreamDefinition = new EventStreamDefinition(name, version, streamId);
+            }
 
             eventStreamDefinition.setMetaData(tempEventStreamDefinition.getMetaData());
             eventStreamDefinition.setCorrelationData(tempEventStreamDefinition.getCorrelationData());

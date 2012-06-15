@@ -1,5 +1,15 @@
 package org.wso2.carbon.eventbridge.core.utils;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.eventbridge.core.beans.Attribute;
+import org.wso2.carbon.eventbridge.core.beans.AttributeType;
+import org.wso2.carbon.eventbridge.core.beans.Event;
+import org.wso2.carbon.eventbridge.core.beans.EventStreamDefinition;
+
+import java.io.IOException;
+import java.util.List;
+
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  * <p/>
@@ -17,7 +27,105 @@ package org.wso2.carbon.eventbridge.core.utils;
  */
 public class EventBridgeUtils {
 
+    private static Log log = LogFactory.getLog(EventBridgeUtils.class);
+
     public static String constructStreamKey(String streamName, String version) {
         return streamName + "::" + version;
+    }
+
+    public static String getStreamNameFromStreamKey(String streamKey) {
+        return streamKey.split("::")[0];
+    }
+
+    public static boolean equals(Event event1, Event event2, EventStreamDefinition streamDefinition) {
+        if (event1 == event2) return true;
+
+        List<Attribute> payloadDefinitions = streamDefinition.getPayloadData();
+        List<Attribute> correlationDefinitions = streamDefinition.getCorrelationData();
+        List<Attribute> metaDefinitions = streamDefinition.getMetaData();
+
+
+
+        try {
+            if (!(event1.getStreamId().equals(event2.getStreamId()))) { return false; }
+            if (!(event1.getTimeStamp() == event2.getTimeStamp() )) { return false; }
+
+            if (payloadDefinitions != null) {
+                for (int i = 0; i < payloadDefinitions.size(); i++) {
+                    Attribute attribute = payloadDefinitions.get(i);
+                    if (!compare(event1.getPayloadData()[i], event2.getPayloadData()[i], attribute.getType())) {
+                        return false;
+                    }
+
+                }
+            } else {
+               if (!(event1.getPayloadData() == event2.getPayloadData())) return false;
+            }
+
+            if (metaDefinitions != null) {
+                for (int i = 0; i < metaDefinitions.size(); i++) {
+                    Attribute attribute = metaDefinitions.get(i);
+                    if (!compare(event1.getMetaData()[i], event2.getMetaData()[i], attribute.getType())) {
+                        return false;
+                    }
+                }
+
+            } else {
+                if (!(event1.getMetaData() == event2.getMetaData())) return false;
+            }
+
+            if (correlationDefinitions != null) {
+                for (int i = 0; i < correlationDefinitions.size(); i++) {
+                    Attribute attribute = correlationDefinitions.get(i);
+                    if (!compare(event1.getCorrelationData()[i], event2.getCorrelationData()[i], attribute.getType())) {
+                        return false;
+                    }
+                }
+            } else {
+                if (!(event1.getCorrelationData() == event2.getCorrelationData())) return false;
+            }
+
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean compare(Object eventAttr1, Object eventAttr2,  AttributeType attributeType)
+            throws IOException {
+        switch (attributeType) {
+            case BOOL: {
+                if (eventAttr1 != eventAttr2) return false;
+                break;
+            }
+            case INT: {
+
+                Integer tempVal1 =
+                        (eventAttr1 instanceof Integer) ? (Integer) eventAttr1 : ((Double) eventAttr1).intValue();
+                Integer tempVal2 =
+                                        (eventAttr2 instanceof Integer) ? (Integer) eventAttr2 : ((Double) eventAttr2).intValue();
+
+                if (!tempVal1.equals(tempVal2)) return false;
+                break;
+            }
+            case DOUBLE: {
+                if (Double.compare((Double) eventAttr1, (Double) eventAttr2) != 0) return false;
+                break;
+            }
+            case FLOAT: {
+                if (Float.compare(((Double) eventAttr1).floatValue(), ((Double) eventAttr2).floatValue()) != 0) return false;
+                break;
+            }
+            case LONG: {
+                if (eventAttr1 != eventAttr2) return false;
+                break;
+            }
+            case STRING: {
+                return eventAttr1.equals(eventAttr2);
+            }
+        }
+        return true;
     }
 }

@@ -1,5 +1,15 @@
 package org.wso2.carbon.eventbridge.streamdefn.cassandra.Utils;
 
+import me.prettyprint.cassandra.serializers.*;
+import org.wso2.carbon.eventbridge.core.beans.Attribute;
+import org.wso2.carbon.eventbridge.core.beans.AttributeType;
+import org.wso2.carbon.eventbridge.streamdefn.cassandra.datastore.CassandraConnector;
+import org.wso2.carbon.eventbridge.streamdefn.cassandra.datastore.DataType;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.UUID;
+
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  * <p/>
@@ -17,6 +27,63 @@ package org.wso2.carbon.eventbridge.streamdefn.cassandra.Utils;
  */
 public class CassandraSDSUtils {
     public static String convertStreamNameToCFName(String streamName) {
+        int keySpaceLength = CassandraConnector.BAM_EVENT_DATA_KEYSPACE.length();
+        if ((streamName.length() + keySpaceLength) > 48) {
+            throw new RuntimeException("The stream name you provided is too long. This has caused the" +
+                    " generated key (\""+ streamName+"\") to go " +
+                    "beyond the allowed characters. of "+ (48 - keySpaceLength) );
+        }
         return streamName.replace(".", "_");
+    }
+
+    public static long getLong(ByteBuffer byteBuffer) throws IOException {
+        return longSerializer.fromByteBuffer(byteBuffer);
+    }
+
+    public static String getString(ByteBuffer byteBuffer) throws IOException {
+        return stringSerializer.fromByteBuffer(byteBuffer);
+    }
+
+    private final static StringSerializer stringSerializer = StringSerializer.get();
+    private final static IntegerSerializer integerSerializer = IntegerSerializer.get();
+    private final static LongSerializer longSerializer = LongSerializer.get();
+    private final static BooleanSerializer booleanSerializer = BooleanSerializer.get();
+    private final static FloatSerializer floatSerializer = FloatSerializer.get();
+    private final static DoubleSerializer doubleSerializer = DoubleSerializer.get();
+
+    public static Object getOriginalValueFromColumnValue(ByteBuffer byteBuffer, AttributeType attributeType)
+            throws IOException {
+        switch (attributeType) {
+            case BOOL: {
+                return booleanSerializer.fromByteBuffer(byteBuffer);
+            }
+            case INT: {
+                return integerSerializer.fromByteBuffer(byteBuffer);
+            }
+            case DOUBLE: {
+                return doubleSerializer.fromByteBuffer(byteBuffer);
+            }
+            case FLOAT: {
+                return floatSerializer.fromByteBuffer(byteBuffer);
+            }
+            case LONG: {
+                return longSerializer.fromByteBuffer(byteBuffer);
+            }
+            case STRING: {
+                return stringSerializer.fromByteBuffer(byteBuffer);
+            }
+        }
+        return null;
+    }
+
+
+
+
+    public static String getColumnName(DataType dataType, Attribute attribute) {
+        return dataType.name() + "." + attribute.getName();
+    }
+
+    public static String createRowKey(long timestamp, UUID uuid) {
+        return timestamp + "::" + uuid.toString();
     }
 }

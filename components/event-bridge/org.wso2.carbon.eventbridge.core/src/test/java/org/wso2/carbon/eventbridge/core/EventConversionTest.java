@@ -130,14 +130,12 @@ private String emptyStreamIdJSON = "[\n" +
 
     }
 
-    @Test
+    @Test(expected = MalformedEventException.class)
     public void testNoStreamId() {
         try {
             EventConverterUtils.convertFromJson(noStreamIdJSON);
         } catch (MalformedEventException e) {
-            return;
         }
-        fail("Stream Id being null should throw exception");
     }
 
     @Test(expected = MalformedEventException.class)
@@ -145,7 +143,6 @@ private String emptyStreamIdJSON = "[\n" +
         try {
             EventConverterUtils.convertFromJson(emptyStreamIdJSON);
         } catch (MalformedEventException e) {
-            return;
         }
     }
 

@@ -1,26 +1,21 @@
 package org.wso2.carbon.eventbridge.streamdefn.cassandra;
 
-import me.prettyprint.hector.api.Cluster;
+import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
 import me.prettyprint.hector.api.factory.HFactory;
-import org.cassandraunit.AbstractCassandraUnit4TestCase;
-import org.cassandraunit.dataset.DataSet;
-import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.junit.Test;
 import org.wso2.carbon.eventbridge.core.beans.Event;
 import org.wso2.carbon.eventbridge.core.beans.EventStreamDefinition;
-import org.wso2.carbon.eventbridge.core.exceptions.MalformedStreamDefinitionException;
+import org.wso2.carbon.eventbridge.core.exceptions.EventProcessingException;
 import org.wso2.carbon.eventbridge.core.exceptions.StreamDefinitionException;
 import org.wso2.carbon.eventbridge.core.utils.EventBridgeUtils;
 import org.wso2.carbon.eventbridge.core.utils.EventConverterUtils;
-import org.wso2.carbon.eventbridge.core.utils.StreamDefnConverterUtils;
+import org.wso2.carbon.eventbridge.streamdefn.cassandra.Utils.CassandraSDSUtils;
 import org.wso2.carbon.eventbridge.streamdefn.cassandra.datastore.CassandraConnector;
-import org.wso2.carbon.eventbridge.streamdefn.cassandra.datastore.ClusterFactory;
-import org.wso2.carbon.eventbridge.streamdefn.cassandra.internal.util.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 
 /**
@@ -38,88 +33,60 @@ import static junit.framework.Assert.fail;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class CassandraDefnStoreTest extends AbstractCassandraUnit4TestCase {
+public class CassandraDefnStoreTest extends BaseCassandraSDSTest {
 
 
+    @Test(expected = Exception.class)
+    public void createCFDuringStreamDefn() {
+        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+        ColumnFamilyDefinition columnFamilyDefinition =
+                HFactory.createColumnFamilyDefinition(CassandraConnector.BAM_EVENT_DATA_KEYSPACE,
+                        CassandraSDSUtils.convertStreamNameToCFName(streamDefinition1.getName()));
+        cluster.addColumnFamily(columnFamilyDefinition);
+    }
 
-    private String properEvent = "[\n" +
-            "     {\n" +
-            "      \"payloadData\" : [\"IBM\", 26.0, 848, 43.33, 2.3] ,\n" +
-            "      \"metaData\" : [\"123.233.0.1\"] ,\n" +
-            "      \"timeStamp\" : 1312345432\n" +
-            "     }\n" +
-            "    ,\n" +
-            "     {\n" +
-            "      \"streamId\" : \"bar::2.1.0\", \n" +
-            "      \"payloadData\" : [\"MSFT\", 22.0, 233, 22.22, 4.3] ,\n" +
-            "      \"metaData\" : [\"5.211.1.1\"] ,\n" +
-            "     }\n" +
-            "\n" +
-            "   ]";
+    @Test(expected = Exception.class)
+    public void tooLongStreamName() {
+        cassandraConnector.saveStreamIdToStore(getCluster(), tooLongStreamDefinition);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), tooLongStreamDefinition);
+    }
 
-    private String properandImproperEvent = "[\n" +
-            "     {\n" +
-            "      \"payloadData\" : [\"IBM\", 26.0, 848, 43.33, 2.3] ,\n" +
-            "      \"metaData\" : [\"123.233.0.1\"] ,\n" +
-            "      \"timeStamp\" : 1312345432\n" +
-            "     }\n" +
-            "    ,\n" +
-            "     {\n" +
-            "      \"streamId\" : \"bar::2.1.0\", \n" +
-            "      \"payloadData\" : [\"MSFT\", 233, 22.22, 4.3] ,\n" +
-            "      \"metaData\" : [\"5.211.1.1\"] ,\n" +
-            "     }\n" +
-            "\n" +
-            "   ]";
+    @Test
+    public void checkEqualityofEventIdAndStreamDefnId() {
 
+        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
 
+        String retrievedStreamId = cassandraConnector.getStreamIdFromStore(getCluster(), streamDefinition1);
 
-    private String definition = "{" +
-                            "  'name':'org.wso2.esb.MediatorStatistics'," +
-                            "  'version':'2.3.0'," +
-                            "  'nickName': 'Stock Quote Information'," +
-                            "  'description': 'Some Desc'," +
-                            "  'tags':['foo', 'bar']," +
-                            "  'metaData':[" +
-                            "          {'name':'ipAdd','type':'STRING'}" +
-                            "  ]," +
-                            "  'payloadData':[" +
-                            "          {'name':'symbol','type':'string'}," +
-                            "          {'name':'price','type':'double'}," +
-                            "          {'name':'volume','type':'int'}," +
-                            "          {'name':'max','type':'double'}," +
-                            "          {'name':'min','type':'double'}" +
-                            "  ]" +
-                            "}";
-    private CassandraConnector cassandraConnector;
+        List<Event> eventList = EventConverterUtils.convertFromJson(CassandraTestConstants.properEvent, retrievedStreamId);
 
-    private EventStreamDefinition streamDefinition;
-
-    private Cluster cluster;
-
-    @Override
-    public void before() throws Exception {
-        EmbeddedCassandraServerHelper.startEmbeddedCassandra("cassandra.yaml");
-        cluster = HFactory.getOrCreateCluster("TestCluster", "localhost:9171");
-        Utils.setCassandraConnector(new CassandraConnector());
-        ClusterFactory.initCassandraKeySpaces(getCluster());
-        cassandraConnector = Utils.getCassandraConnector();
-        try {
-            streamDefinition = StreamDefnConverterUtils.convertFromJson(definition);
-        } catch (MalformedStreamDefinitionException e) {
-            fail();
+        for (Event event : eventList) {
+            assertEquals(event.getStreamId(), streamDefinition1.getStreamId());
         }
     }
 
-    @Override
-    public Cluster getCluster() {
-        return cluster;
+    @Test
+    public void saveSameStreamMultipleTimes() {
+        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+
+        String firstTimeStreamId1 = cassandraConnector.getStreamIdFromStore(getCluster(), streamDefinition1);
+
+        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+
+        String secondTimeStreamId1 = cassandraConnector.getStreamIdFromStore(getCluster(), streamDefinition1);
+
+        assertEquals(firstTimeStreamId1, secondTimeStreamId1);
+        assertEquals(streamDefinition1.getStreamId(), firstTimeStreamId1 );
+        assertEquals(streamDefinition1.getStreamId(), secondTimeStreamId1);
+
+
+
     }
 
-    @Override
-    public DataSet getDataSet() {
-        return null;
-    }
 
 
 
@@ -127,57 +94,186 @@ public class CassandraDefnStoreTest extends AbstractCassandraUnit4TestCase {
     public void checkHappyPathStreamStoreOperations() {
 
         String streamIdKey = EventBridgeUtils
-                .constructStreamKey(streamDefinition.getName(), streamDefinition.getVersion());
-        cassandraConnector.saveStreamIdToStore(getCluster(), streamIdKey
-                , streamDefinition.getStreamId());
-        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition.getStreamId(), streamDefinition);
+                .constructStreamKey(streamDefinition1.getName(), streamDefinition1.getVersion());
+        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
 
-        String streamIdFromStore = cassandraConnector.getStreamIdFromStore(getCluster(), streamIdKey);
-        assertEquals(streamDefinition.getStreamId(), streamIdFromStore);
+        String retrievedStreamId = cassandraConnector.getStreamIdFromStore(getCluster(), streamDefinition1);
+        assertEquals(streamDefinition1.getStreamId(), retrievedStreamId);
 
-        String retrievedStreamId = cassandraConnector.getStreamKeyFromStreamId(getCluster(), streamIdFromStore);
-        assertEquals(retrievedStreamId, streamIdKey);
+        String retrievedStreamIdKey = cassandraConnector.getStreamKeyFromStreamId(getCluster(), retrievedStreamId);
+        assertEquals(retrievedStreamIdKey, streamIdKey);
 
         EventStreamDefinition streamDefinitionFromStore = null;
         try {
-            streamDefinitionFromStore = cassandraConnector.getStreamDefinitionFromStore(getCluster(), retrievedStreamId);
+            streamDefinitionFromStore =
+                    cassandraConnector.getStreamDefinitionFromStore(getCluster(), retrievedStreamId);
         } catch (StreamDefinitionException e) {
             fail();
         }
-        assertEquals(streamDefinition, streamDefinitionFromStore);
-        List<Event> eventList = EventConverterUtils.convertFromJson(properEvent, streamIdFromStore);
+        assertEquals(streamDefinition1, streamDefinitionFromStore);
+        List<Event> eventList = EventConverterUtils.convertFromJson(CassandraTestConstants.properEvent, retrievedStreamId);
         try {
             for (Event event : eventList) {
-                cassandraConnector.insertEvent(cluster, event );
+                cassandraConnector.insertEvent(cluster, event);
             }
-        } catch (MalformedStreamDefinitionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
-        } catch (StreamDefinitionException e) {
-            e.printStackTrace();
-            fail();
+        }
+    }
+
+    @Test
+    public void insertMixOfWronglyFormedAndCorrectlyFormedEvents() {
+        String streamIdKey = EventBridgeUtils
+                .constructStreamKey(streamDefinition1.getName(), streamDefinition1.getVersion());
+        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+
+        String retrievedStreamId = cassandraConnector.getStreamIdFromStore(getCluster(), streamIdKey);
+        List<Event> eventList = EventConverterUtils.convertFromJson(CassandraTestConstants.properandImproperEvent, retrievedStreamId);
+        List<String> insertedEvents = new ArrayList<String>();
+        for (Event event : eventList) {
+            try {
+                String rowKey = cassandraConnector.insertEvent(cluster, event);
+                // inserts row key only if event is valid, i.e. only proper events will add a row key
+                insertedEvents.add(rowKey);
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        assertEquals(2, insertedEvents.size());
+
+    }
+
+    @Test
+    public void insertEventsFromTwoVersions() {
+        // save stream defn 1
+        String streamIdKey1 = EventBridgeUtils
+                .constructStreamKey(streamDefinition1.getName(), streamDefinition1.getVersion());
+        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+
+        // save stream defn 2
+        String streamIdKey2 = EventBridgeUtils
+                .constructStreamKey(streamDefinition2.getName(), streamDefinition2.getVersion());
+        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition2);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition2);
+
+
+        List<Event> eventList = new ArrayList<Event>();
+        // retrieve stream id 1
+        String retrievedStreamId1 = cassandraConnector.getStreamIdFromStore(getCluster(), streamIdKey1);
+        eventList.addAll(EventConverterUtils.convertFromJson(CassandraTestConstants.multipleProperEvent1, retrievedStreamId1));
+
+        // retrieve stream id 2
+        String retrievedStreamId2 = cassandraConnector.getStreamIdFromStore(getCluster(), streamIdKey2);
+        eventList.addAll(EventConverterUtils.convertFromJson(CassandraTestConstants.multipleProperEvent2, retrievedStreamId2));
+
+
+        Map<String, Event> insertedEvents = new HashMap<String, Event>();
+        for (Event event : eventList) {
+            try {
+                String rowKey = cassandraConnector.insertEvent(cluster, event);
+                // inserts row key only if event is valid, i.e. only proper events will add a row key
+                insertedEvents.put(rowKey, event);
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        assertEquals(4, insertedEvents.size());
+
+        Map<String, Event> retrievedEvents = new HashMap<String, Event>();
+
+        for (Map.Entry<String, Event> eventProps : insertedEvents.entrySet()) {
+            try {
+                retrievedEvents.put(eventProps.getKey(),
+                        cassandraConnector.getEvent(cluster, eventProps.getValue().getStreamId(), eventProps.getKey()));
+            } catch (EventProcessingException e) {
+                e.printStackTrace();
+                fail();
+            }
+        }
+
+
+        for (Map.Entry<String, Event> rowKeyAndEvent : retrievedEvents.entrySet()) {
+            Event retrievedEvent = rowKeyAndEvent.getValue();
+            Event originialEvent = insertedEvents.get(rowKeyAndEvent.getKey());
+            System.out.println("Retrieved Event : " + retrievedEvent + "\n Original Event : " + originialEvent + "\n\n");
+            if (streamDefinition1.getStreamId().equals(originialEvent.getStreamId())) {
+                assertTrue(EventBridgeUtils.equals(originialEvent, retrievedEvent, streamDefinition1));
+            } else if (streamDefinition2.getStreamId().equals(originialEvent.getStreamId())) {
+                assertTrue(EventBridgeUtils.equals(originialEvent, retrievedEvent, streamDefinition2));
+
+
+            }
+        }
+    }
+
+
+    @Test
+    public void insertEventsFromMultipleStreams() {
+        // save stream defn 1
+        String streamIdKey1 = EventBridgeUtils
+                .constructStreamKey(streamDefinition1.getName(), streamDefinition1.getVersion());
+        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition1);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition1);
+
+        // save stream defn 3
+        String streamIdKey2 = EventBridgeUtils
+                .constructStreamKey(streamDefinition3.getName(), streamDefinition3.getVersion());
+        cassandraConnector.saveStreamIdToStore(getCluster(), streamDefinition3);
+        cassandraConnector.saveStreamDefinitionToStore(getCluster(), streamDefinition3);
+
+
+        List<Event> eventList = new ArrayList<Event>();
+        // retrieve stream id 1
+        String retrievedStreamId1 = cassandraConnector.getStreamIdFromStore(getCluster(), streamIdKey1);
+        eventList.addAll(EventConverterUtils.convertFromJson(CassandraTestConstants.multipleProperEvent1, retrievedStreamId1));
+
+        // retrieve stream id 3
+        String retrievedStreamId2 = cassandraConnector.getStreamIdFromStore(getCluster(), streamIdKey2);
+        eventList.addAll(EventConverterUtils.convertFromJson(CassandraTestConstants.multipleProperEvent3, retrievedStreamId2));
+
+
+        Map<String, Event> insertedEvents = new HashMap<String, Event>();
+        for (Event event : eventList) {
+            try {
+                String rowKey = cassandraConnector.insertEvent(cluster, event);
+                // inserts row key only if event is valid, i.e. only proper events will add a row key
+                insertedEvents.put(rowKey, event);
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        assertEquals(4, insertedEvents.size());
+
+        Map<String, Event> retrievedEvents = new HashMap<String, Event>();
+
+        for (Map.Entry<String, Event> eventProps : insertedEvents.entrySet()) {
+            try {
+                retrievedEvents.put(eventProps.getKey(),
+                        cassandraConnector.getEvent(cluster, eventProps.getValue().getStreamId(), eventProps.getKey()));
+            } catch (EventProcessingException e) {
+                e.printStackTrace();
+                fail();
+            }
+        }
+
+
+        for (Map.Entry<String, Event> rowKeyAndEvent : retrievedEvents.entrySet()) {
+            Event retrievedEvent = rowKeyAndEvent.getValue();
+            Event originialEvent = insertedEvents.get(rowKeyAndEvent.getKey());
+            System.out.println("Retrieved Event : " + retrievedEvent + "\n Original Event : " + originialEvent + "\n\n");
+            if (streamDefinition1.getStreamId().equals(originialEvent.getStreamId())) {
+                assertTrue(EventBridgeUtils.equals(originialEvent, retrievedEvent, streamDefinition1));
+            } else if (streamDefinition2.getStreamId().equals(originialEvent.getStreamId())) {
+                assertTrue(EventBridgeUtils.equals(originialEvent, retrievedEvent, streamDefinition3));
+
+
+            }
         }
 
     }
 
-    @Test
-    public void insertWronglyFormedEvents() {
-
-    }
-
-    private void createSampleEventList(String streamId)  {
-        List<Event> eventList = new ArrayList<Event>();
-//        Event event1
-
-    }
-
-    @Test
-    public void getExistingStreamDefinition() {
-
-
-    }
-
-    public void g() {
-
-    }
 }

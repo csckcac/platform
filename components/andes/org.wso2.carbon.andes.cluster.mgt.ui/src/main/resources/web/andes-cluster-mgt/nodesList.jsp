@@ -145,15 +145,9 @@
         <table class="styledLeft">
             <thead>
             <tr>
+                <th rowspan="2"><fmt:message key='node.id'/></th>
                 <th rowspan="2"><fmt:message key='node.host'/></th>
-                <th rowspan="2"><fmt:message key='node.ip'/></th>
-                <th rowspan="2"><fmt:message key='node.zookeeperID'/></th>
-                <th colspan="3" align="middle"><fmt:message key='node.messaging'/></th>
-            </tr>
-            <tr>
-                <th><fmt:message key='node.queues'/></th>
-                <th><fmt:message key='node.topics'/></th>
-                <th></th>
+                <th colspan="3" align="middle"><fmt:message key='node.queue.workers'/></th>
             </tr>
             </thead>
             <tbody>
@@ -164,36 +158,23 @@
                     if (aNodeDetail != null) {
                         String nodeId = aNodeDetail.getNodeId();
                         String hostName = aNodeDetail.getHostName();
-                        String IPAddress = aNodeDetail.getIpAddress();
-                        String ZookeeperID = aNodeDetail.getZookeeperID();
+                        String ipAddress = aNodeDetail.getIpAddress();
+                        String zookeeperID = aNodeDetail.getZookeeperID();
                         index++;
 
             %>
             <tr>
                 <td>
-                    <%=hostName%>
+                    <%=zookeeperID%>
                 </td>
                 <td>
-                    <%=IPAddress %>
-                </td>
-                <td>
-                    <%=ZookeeperID %>
+                    <%=ipAddress %>
                 </td>
                 <td align="right">
-                    <a href="queue_List.jsp?hostName=<%=hostName%>&IPAddress=<%=IPAddress%>"><abbr
+                    <a href="queue_List.jsp?hostName=<%=hostName%>&IPAddress=<%=ipAddress%>"><abbr
                             id="queueLinkCell<%=index%>"><%=aNodeDetail.getNumOfQueues() %>
                     </abbr>
                     </a>
-                </td>
-                <td align="right">
-                    <a href="topic_List.jsp?hostName=<%=hostName%>&IPAddress=<%=IPAddress%>"><abbr
-                            id="topicLinkCell<%=index%>"><%=aNodeDetail.getNumOfTopics() %>
-                    </abbr>
-                    </a>
-                </td>
-                <td>
-                    <a style="background-image: url(images/refresh.gif);"
-                       class="icon-link" onclick="updateNumOfTopicsAndQueues('<%=hostName%>','<%=index%>')"></a>
                 </td>
             </tr>
             <%

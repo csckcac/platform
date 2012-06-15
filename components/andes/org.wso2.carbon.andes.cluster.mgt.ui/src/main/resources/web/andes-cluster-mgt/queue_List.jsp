@@ -105,7 +105,7 @@
 
     <div id="middle">
         <h2><fmt:message key="queues.list"/></h2>
-        <h2>Node Name: <%=requestedHostName%> IP Address: <%=IPAddressOfHost%></h2>
+        <h2><fmt:message key="node.id"/>: <%=requestedHostName%>  <fmt:message key="node.ip"/>: <%=IPAddressOfHost%></h2>
         <div id="workArea">
 
         <%

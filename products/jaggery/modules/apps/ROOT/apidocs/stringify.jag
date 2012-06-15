@@ -104,15 +104,15 @@ var urlString = '../tryitframe.jag?code='+codeSnip;
 </button>
 </p>
 
-<div id="pageLinks">
-<a class="navilink" href="#overview">Overview</a>
-    <%if(hasMembers) {%>
-<a class="navilink" href="#members">Members</a>
+    <div id="pageLinks">
+        <a class="navilink" href="#overview">Overview</a>
+        <%if(hasParams) {%>
+        <a class="navilink" href="#parameters">Parameters</a>
         <%}%>
-        <%if(hasOps) {%>
-<a class="navilink" href="#operations">Operations</a>
-            <%}%>
-</div>
+        <%if(hasRets) {%>
+        <a class="navilink" href="#returnVals">Return values</a>
+        <%}%>
+    </div>
 
     <section id="overview">
 

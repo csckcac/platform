@@ -1,5 +1,4 @@
 <%
-	//session.invalidate();
 	var oauth = require("oauth");
 	var twitter = session.get('cnt');
 	var accessToken = session.get('atoken');

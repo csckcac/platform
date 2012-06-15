@@ -134,7 +134,12 @@ public class Target {
                 if (log.isDebugEnabled()) {
                     log.debug("Sending using the endpoint named : " + endpointRef);
                 }
-                epr.send(synCtx);
+				if (!epr.isInitialized()) {
+					epr.init(synCtx.getEnvironment()); // initializing registry
+													   // base endpoint configuration
+				}
+				epr.send(synCtx);
+                //epr.destroy();
             } else {
                 handleException("Couldn't find the endpoint named : " + endpointRef);
             }

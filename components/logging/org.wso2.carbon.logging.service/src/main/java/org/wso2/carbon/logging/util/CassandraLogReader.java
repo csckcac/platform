@@ -51,6 +51,7 @@ import org.wso2.carbon.logging.service.data.CassandraConfig;
 import org.wso2.carbon.logging.service.data.LogEvent;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 public class CassandraLogReader {
 
@@ -108,7 +109,7 @@ public class CassandraLogReader {
 	private boolean isSuperTenantUser() {
 		CarbonContext carbonContext = CarbonContext.getCurrentContext();
 		int tenantId = carbonContext.getTenantId();
-		if (tenantId == LoggingConstants.SUPER_TENANT_ID) {
+		if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
 			return true;
 		} else {
 			return false;
@@ -413,7 +414,7 @@ public class CassandraLogReader {
 		int tenantId;
 		TenantManager tenantManager = LoggingServiceComponent.getTenantManager();
 		if (tenantDomain == null || tenantDomain.equals("")) {
-			tenantId = LoggingConstants.SUPER_TENANT_ID;
+			tenantId =  MultitenantConstants.SUPER_TENANT_ID;
 		} else {
 
 			try {

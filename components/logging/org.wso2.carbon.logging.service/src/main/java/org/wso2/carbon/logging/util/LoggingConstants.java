@@ -52,7 +52,7 @@ public final class LoggingConstants {
     public static final String WSO2CARBON_SYS_LOG_APPENDER = "CARBON_SYS_LOG";
 
 	public static final int MEMORY_APPENDER_BUFFER_SZ = 200;
-	public static final int SUPER_TENANT_ID = 0;
+	
 
     public static final class SyslogProperties {
     	public static final String LOG_INDEX_URL = "log.index.url";

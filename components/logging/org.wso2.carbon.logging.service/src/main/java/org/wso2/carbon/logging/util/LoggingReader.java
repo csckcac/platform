@@ -59,6 +59,7 @@ import org.wso2.carbon.logging.service.data.SyslogData;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /**
  * This is the Log Reader class to read log messages from remote/local file
@@ -496,7 +497,7 @@ public class LoggingReader {
 	public boolean isSuperTenantUser() {
 		CarbonContext carbonContext = CarbonContext.getCurrentContext();
 		int tenantId = carbonContext.getTenantId();
-		if (tenantId == LoggingConstants.SUPER_TENANT_ID) {
+		if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
 			return true;
 		} else {
 			return false;
@@ -984,7 +985,7 @@ public class LoggingReader {
 		int tenantId;
 		TenantManager tenantManager = LoggingServiceComponent.getTenantManager();
 		if (tenantDomain == null || tenantDomain.equals("")) {
-			tenantId = LoggingConstants.SUPER_TENANT_ID;
+			tenantId =  MultitenantConstants.SUPER_TENANT_ID;
 		} else {
 
 			try {

@@ -41,9 +41,8 @@ import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyD
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
 import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
-import org.wso2.carbon.agent.commons.exception.WrongEventTypeException;
 import org.wso2.carbon.agent.exception.AgentException;
-import org.wso2.carbon.agent.server.internal.utils.EventConverter;
+import org.wso2.carbon.agent.commons.utils.EventConverter;
 import org.wso2.carbon.bpel.bam.publisher.internal.BamPublisherServiceComponent;
 
 import javax.xml.namespace.QName;
@@ -108,9 +107,6 @@ public class BamPublisherExtensionOperation extends AbstractSyncExtensionOperati
                     return;
                 } catch (StreamDefinitionException e) {
                     log.error("Stream definition exception " + e);
-                    return;
-                } catch (WrongEventTypeException e) {
-                    log.error("Wrong event type definition " + e);
                     return;
                 } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
                     log.error("Different stream definition exists " + e);
@@ -254,13 +250,12 @@ public class BamPublisherExtensionOperation extends AbstractSyncExtensionOperati
         }
 
         Object[] metaDataArray = null;
-        size = metaDataMap.size();
         if(size > 0 ) {
             metaDataArray = new Object[size];
             for(int i = 0; i < size; i++) {
                 Attribute attribute = metaData.get(i);
                 convertAndSetValue(metaDataArray, i, attribute.getType(),
-                                   metaDataMap.get(attribute.getName()));
+                    metaDataMap.get(attribute.getName()));
             }
         }
 
@@ -304,10 +299,6 @@ public class BamPublisherExtensionOperation extends AbstractSyncExtensionOperati
         }
     }
 
-
-
-
-
     private Map<String, ByteBuffer> createMetaDataMap(ExtensionContext ctx) {
         OProcess processModel = ctx.getProcessModel();
         DeploymentUnitDir du = new DeploymentUnitDir(new File(ctx.getDUDir()));
@@ -325,64 +316,4 @@ public class BamPublisherExtensionOperation extends AbstractSyncExtensionOperati
                 Integer.toString(tenantId).getBytes()));
         return metaDataMap;
     }
-
-
-
-        /**
-         * Following is the xml structure that comes into this node for processing
-         * <bam:key name="key1">
-         * <bam:from part="part1" variable="variable">
-         * </bam:from>
-         * </bam:key>
-         *
-         * @param node
-         * @return EventMap
-         */
-        private void createEventDataMap(ExtensionContext extensionContext,
-                                        DataPublisher publisher, HashMap<String, AttributeType> payloadMap,
-                                        HashMap<String, AttributeType> correlationMap,
-                                        HashMap<String, AttributeType> metaMap, Node node)
-                throws FaultException {
-
-            if (node.getNodeType() != Node.ELEMENT_NODE) {
-                return;
-            }
-
-            NamedNodeMap attributeMap = node.getAttributes();
-            Node keyNode = attributeMap.getNamedItem(BamPublisherConstants.NAME_ATTR);
-            String keyValue = keyNode.getTextContent();
-            Element fromElement = DOMUtils.findChildByName((Element) node,
-                                           new QName(BamPublisherConstants.BAM_PUBLISHER_NS,
-                                                 BamPublisherConstants.BAM_FROM));
-            if (null == fromElement) {
-                log.error("From Element not found with the key element");
-                return;
-            }
-
-            String variableName = DOMUtils.getAttribute(fromElement, BamPublisherConstants.VARIABLE_ATTR);
-            String partName = DOMUtils.getAttribute(fromElement, BamPublisherConstants.PART_ATTR);
-
-            if (variableName != null) {
-                Node variableNode = extensionContext.readVariable(variableName);
-                if (variableNode != null) {
-                    String xmlStr = "";
-                    if (partName != null && variableNode.getNodeType() == Node.ELEMENT_NODE) {
-                        Element partNode = DOMUtils.findChildByName((Element) variableNode, new QName(partName));
-                        if (partNode != null) {
-                            Element firstChildElement = DOMUtils.getFirstChildElement(partNode);
-                            xmlStr = DOMUtils.domToString(firstChildElement);
-                        }
-                    } else {
-                        xmlStr = DOMUtils.domToString(variableNode);
-                    }
-//                    eventMap.put(BamPublisherConstants.PROCESS_VARIABLE_VALUE,
-//                                 ByteBuffer.wrap(xmlStr.toString().getBytes()));
-//                    eventMap.put(BamPublisherConstants.PROCESS_VARIABLE_NAME,
-//                                 ByteBuffer.wrap(keyValue.getBytes()));
-                }
-            }
-            return;
-        }
-
-
 }

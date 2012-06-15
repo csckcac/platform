@@ -12,7 +12,7 @@
     <artifactId>org.wso2.carbon.eventbridge.receiver.thrift</artifactId>
 
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - Thrift Receiver</name>
+    <name>WSO2 Carbon - Event Bridge Thrift Receiver</name>
     <description>
         org.wso2.carbon.eventbridge.receiver.thrift is used relieve the dispatch the events sent by Agent
     </description>
@@ -30,58 +30,18 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.commons</artifactId>
+            <artifactId>org.wso2.carbon.eventbridge.commons</artifactId>
             <version>${wso2carbon.version.agent}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.commons.thrift</artifactId>
+            <artifactId>org.wso2.carbon.eventbridge.commons.thrift</artifactId>
             <version>${wso2carbon.version.agent}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.server</artifactId>
+            <artifactId>org.wso2.carbon.eventbridge.core</artifactId>
             <version>${wso2carbon.version.agent}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava.wso2</groupId>
-            <artifactId>guava</artifactId>
-            <version>${google.guava.wso2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent</artifactId>
-            <version>${wso2carbon.version.agent}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.core.common</artifactId>
-            <version>${wso2carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.authenticator.proxy</artifactId>
-            <version>${wso2carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
-            <version>${wso2carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.identity.authentication</artifactId>
-            <version>${wso2carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.6.4</version>
         </dependency>
     </dependencies>
     <build>
@@ -108,13 +68,13 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.eventbridge.core.internal,
-                            org.wso2.carborg.wso2.carbon.eventbridge.corerver.internal.*
+                            org.wso2.carbon.eventbridge.receiver.thrift.internal,
+                            org.wso2.carbon.eventbridge.receiver.thrift.internal.internal.*
                         </Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.eventbridge.core.internal,
-                            org.wso2.carborg.wso2.carbon.eventbridge.corerver.internal.*,
-                            org.wso2.carbon.agent.server.*
+                            !org.wso2.carbon.eventbridge.receiver.thrift.internal,
+                            !org.wso2.carbon.eventbridge.receiver.thrift.internal.*,
+                            org.wso2.carbon.eventbridge.receiver.thrift.*
                         </Export-Package>
                         <Import-Package>org.osgi.framework,*;resolution:=optional</Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

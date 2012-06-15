@@ -18,10 +18,10 @@
 package org.wso2.carbon.eventbridge.agent.thrift.internal.publisher.client;
 
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.eventbridge.agent.thrift.Agent;
 import org.wso2.carbon.eventbridge.agent.thrift.conf.DataPublisherConfiguration;
 import org.wso2.carbon.eventbridge.agent.thrift.internal.EventQueue;
+import org.wso2.carbon.eventbridge.commons.Event;
 
 public class EventPublisherFactory {
     public static EventPublisher getEventPublisher(

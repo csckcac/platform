@@ -16,14 +16,14 @@
 * under the License.
 */
 
-package org.wso2.carbon.eventbridge.receiver.thrift.internal.service;
+package org.wso2.carbon.eventbridge.receiver.thrift.service;
 
 import org.apache.thrift.TException;
-import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
-import org.wso2.carbon.agent.commons.exception.SessionTimeoutException;
-import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
+import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.eventbridge.commons.exception.SessionTimeoutException;
+import org.wso2.carbon.eventbridge.commons.exception.UndefinedEventTypeException;
 import org.wso2.carbon.eventbridge.commons.thrift.data.ThriftEventBundle;
 import org.wso2.carbon.eventbridge.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.eventbridge.commons.thrift.exception.ThriftMalformedStreamDefinitionException;
@@ -33,7 +33,7 @@ import org.wso2.carbon.eventbridge.commons.thrift.exception.ThriftUndefinedEvent
 import org.wso2.carbon.eventbridge.commons.thrift.service.general.ThriftEventTransmissionService;
 import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventConverter;
-import org.wso2.carbon.eventbridge.receiver.thrift.internal.converter.ThriftEventConverter;
+import org.wso2.carbon.eventbridge.receiver.thrift.converter.ThriftEventConverter;
 
 /**
  * The client implementation for ThriftEventReceiverService

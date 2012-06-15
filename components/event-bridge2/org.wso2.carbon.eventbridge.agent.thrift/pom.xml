@@ -26,12 +26,12 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon</groupId>
-    <artifactId>org.wso2.carbon.agent.thrift</artifactId>
+    <artifactId>org.wso2.carbon.eventbridge.agent.thrift</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - Thrift Agent Client</name>
+    <name>WSO2 Carbon - Event Bridge Thrift Agent</name>
     <description>
-        org.wso2.carbon.agent.commons is the common objects used both by
-        org.wso2.carbon.agent and org.wso2.carbon.agent.server
+        org.wso2.carbon.eventbridge.agent.thrift is the client agent that sends events to
+        Thrift Event Receiver
     </description>
     <url>http://wso2.org</url>
 
@@ -51,12 +51,12 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.commons</artifactId>
+            <artifactId>org.wso2.carbon.eventbridge.commons</artifactId>
             <version>${wso2carbon.version.agent}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.commons.thrift</artifactId>
+            <artifactId>org.wso2.carbon.eventbridge.commons.thrift</artifactId>
             <version>${wso2carbon.version.agent}</version>
         </dependency>
         <dependency>
@@ -89,10 +89,10 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
 
-                        <Private-Package>org.wso2.carbon.agent.internal.*</Private-Package>
+                        <Private-Package>org.wso2.carbon.eventbridge.agent.thrift.internal.*</Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.agent.internal,
-                            org.wso2.carbon.agent.*
+                            !org.wso2.carbon.eventbridge.agent.thrift.internal,
+                            org.wso2.carbon.eventbridge.agent.thrift.*
                         </Export-Package>
 
                         <Import-Package>org.osgi.framework, *;resolution:=optional</Import-Package>

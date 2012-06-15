@@ -19,9 +19,9 @@
  */
 package org.wso2.carbon.eventbridge.core;
 
-import org.wso2.carbon.agent.commons.Credentials;
-import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.eventbridge.commons.Credentials;
+import org.wso2.carbon.eventbridge.commons.Event;
+import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 
 import java.util.List;
 

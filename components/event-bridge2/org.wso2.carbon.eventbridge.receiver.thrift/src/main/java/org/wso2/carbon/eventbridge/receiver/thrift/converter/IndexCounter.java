@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.eventbridge.receiver.thrift.internal.converter;
+package org.wso2.carbon.eventbridge.receiver.thrift.converter;
 
 /**
  * Counter used to dematerialise event bundle

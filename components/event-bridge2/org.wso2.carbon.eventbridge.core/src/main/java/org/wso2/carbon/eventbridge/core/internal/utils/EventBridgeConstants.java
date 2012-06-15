@@ -27,19 +27,17 @@ public final class EventBridgeConstants {
     private EventBridgeConstants(){ }
 
     public static final int NO_OF_WORKER_THREADS = 10;
-    public static final int EVENT_CAPACITY = 10000;
 
+    public static final int EVENT_CAPACITY = 10000;
     public static final String AGENT_SERVER_CONF = "agent-server-config.xml";
+
     public static final String AGENT_SERVER_CONF_NAMESPACE = "http://wso2.org/carbon/agent";
     public static final String AGENT_SERVER_CONF_ELE_ROOT = "agentServerConfiguration";
 
-    public static final String SECURE_EVENT_RECEIVER_PORT = "secureEventReceiverPort";
-    public static final String EVENT_RECEIVER_PORT = "eventReceiverPort";
     public static final String STREAM_DEFINITION_STORE = "StreamDefinitionStore";
     public static final String EVENT_STREAM_DEFINITIONS = "eventStreamDefinitions";
     public static final String DOMAIN_NAME = "domainName";
-
-    public static final int CARBON_DEFAULT_PORT_OFFSET = 0;
-    public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
     public static final int CLIENT_TIMEOUT_MS = 30000;
+
+    public static final String DEFAULT_DEFINITION_STORE = "org.wso2.carbon.eventbridge.core.datastore.InMemoryStreamDefinitionStore" ;
 }

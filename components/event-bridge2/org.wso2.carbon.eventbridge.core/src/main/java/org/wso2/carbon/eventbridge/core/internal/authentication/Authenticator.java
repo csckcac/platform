@@ -21,7 +21,7 @@ package org.wso2.carbon.eventbridge.core.internal.authentication;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.commons.exception.AuthenticationException;
+import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.AgentSession;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.SessionCache;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeConstants;

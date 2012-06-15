@@ -57,8 +57,6 @@ public final class AgentConstants {
     public static final String DEFAULT_DEFINITION_STORE = "org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore";
 //    public static final String DEFAULT_DEFINITION_STORE = "org.wso2.carbon.bam.eventreceiver.datastore.CassandraStreamDefinitionStore";
     public static final int AGENT_RECONNECTION_TIMES = 3;
-    public static final int SECURE_EVENT_RECEIVER_PORT_OFFSET = 100;
-    public static final int DEFAULT_RECEIVER_PORT = 7611;
 
     public static final long DEFAULT_KEEP_ALIVE_TIME = 20;
 

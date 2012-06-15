@@ -19,10 +19,10 @@ package org.wso2.carbon.eventbridge.receiver.thrift.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.agent.internal.utils.AgentConstants;
+import org.wso2.carbon.base.api.ServerConfigurationService;
+import org.wso2.carbon.eventbridge.commons.thrift.utils.CommonThriftConstants;
 import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
 import org.wso2.carbon.eventbridge.core.exception.EventBridgeException;
-import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.eventbridge.receiver.thrift.ThriftEventReceiverFactory;
 import org.wso2.carbon.eventbridge.receiver.thrift.conf.ThriftEventReceiverConfiguration;
 import org.wso2.carbon.eventbridge.receiver.thrift.internal.utils.ThriftEventReceiverBuilder;
@@ -56,7 +56,7 @@ public class ThriftEventReceiverDS {
     protected void activate(ComponentContext context) {
 
         try {
-            ThriftEventReceiverConfiguration thriftEventReceiverConfiguration = new ThriftEventReceiverConfiguration(AgentConstants.DEFAULT_RECEIVER_PORT + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, AgentConstants.DEFAULT_RECEIVER_PORT);
+            ThriftEventReceiverConfiguration thriftEventReceiverConfiguration = new ThriftEventReceiverConfiguration(CommonThriftConstants.DEFAULT_RECEIVER_PORT + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, CommonThriftConstants.DEFAULT_RECEIVER_PORT);
             ThriftEventReceiverBuilder.populateConfigurations(serverConfiguration, thriftEventReceiverConfiguration, eventBridgeReceiverService.getInitialConfig());
 
             if (eventReceiver == null) {

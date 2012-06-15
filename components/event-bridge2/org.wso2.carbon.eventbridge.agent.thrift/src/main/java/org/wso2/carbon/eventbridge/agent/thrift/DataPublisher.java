@@ -18,22 +18,22 @@
 package org.wso2.carbon.eventbridge.agent.thrift;
 
 import com.google.gson.Gson;
-import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.commons.exception.AuthenticationException;
-import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
-import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.eventbridge.agent.thrift.conf.DataPublisherConfiguration;
 import org.wso2.carbon.eventbridge.agent.thrift.conf.ReceiverConfiguration;
 import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.TransportException;
+import org.wso2.carbon.eventbridge.commons.exception.TransportException;
 import org.wso2.carbon.eventbridge.agent.thrift.internal.EventQueue;
 import org.wso2.carbon.eventbridge.agent.thrift.internal.publisher.client.EventPublisher;
 import org.wso2.carbon.eventbridge.agent.thrift.internal.publisher.client.EventPublisherFactory;
-import org.wso2.carbon.eventbridge.agent.thrift.internal.utils.AgentConstants;
 import org.wso2.carbon.eventbridge.agent.thrift.internal.utils.AgentServerURL;
+import org.wso2.carbon.eventbridge.commons.Event;
+import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
+import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.eventbridge.commons.exception.StreamDefinitionException;
+import org.wso2.carbon.eventbridge.commons.thrift.utils.CommonThriftConstants;
 
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
@@ -68,8 +68,8 @@ public class DataPublisher {
      * @param password    password
      * @throws java.net.MalformedURLException
      * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException
-     * @throws org.wso2.carbon.agent.commons.exception.AuthenticationException
-     * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.TransportException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.AuthenticationException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.TransportException
      */
     public DataPublisher(String receiverUrl, String userName, String password)
             throws MalformedURLException, AgentException, AuthenticationException,
@@ -88,8 +88,8 @@ public class DataPublisher {
      * @param password          password
      * @throws java.net.MalformedURLException
      * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException
-     * @throws org.wso2.carbon.agent.commons.exception.AuthenticationException
-     * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.TransportException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.AuthenticationException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.TransportException
      */
     public DataPublisher(String authenticationUrl, String receiverUrl, String userName,
                          String password)
@@ -111,8 +111,8 @@ public class DataPublisher {
      * @param agent       the underlining agent
      * @throws java.net.MalformedURLException
      * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException
-     * @throws org.wso2.carbon.agent.commons.exception.AuthenticationException
-     * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.TransportException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.AuthenticationException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.TransportException
      */
     public DataPublisher(String receiverUrl, String userName,
                          String password, Agent agent)
@@ -127,7 +127,7 @@ public class DataPublisher {
         } else {
             this.start(new ReceiverConfiguration(userName, password,
                                                  receiverURL.getHost(), receiverURL.getPort(),
-                                                 receiverURL.getHost(), receiverURL.getPort() + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverURL.isSecured()),
+                                                 receiverURL.getHost(), receiverURL.getPort() + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverURL.isSecured()),
                        agent);
         }
 
@@ -145,8 +145,8 @@ public class DataPublisher {
      * @param agent             the underlining agent
      * @throws java.net.MalformedURLException
      * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException
-     * @throws org.wso2.carbon.agent.commons.exception.AuthenticationException
-     * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.TransportException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.AuthenticationException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.TransportException
      */
     public DataPublisher(String authenticationUrl, String receiverUrl, String userName,
                          String password, Agent agent)
@@ -170,8 +170,8 @@ public class DataPublisher {
      *
      * @param agent the underlining agent
      * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException
-     * @throws org.wso2.carbon.agent.commons.exception.AuthenticationException
-     * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.TransportException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.AuthenticationException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.TransportException
      */
     public void setAgent(Agent agent)
             throws AgentException, AuthenticationException, TransportException {
@@ -211,11 +211,11 @@ public class DataPublisher {
      * @param eventStreamDefinition on json format
      * @return the stream id
      * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException
-     * @throws org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException
      *
-     * @throws org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException
      *
-     * @throws org.wso2.carbon.agent.commons.exception.StreamDefinitionException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.StreamDefinitionException
      */
     public String defineEventStream(String eventStreamDefinition)
             throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
@@ -230,11 +230,11 @@ public class DataPublisher {
      * @param eventStreamDefinition on json format
      * @return the stream id
      * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException
-     * @throws org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException
      *
-     * @throws org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException
      *
-     * @throws org.wso2.carbon.agent.commons.exception.StreamDefinitionException
+     * @throws org.wso2.carbon.eventbridge.commons.exception.StreamDefinitionException
      */
     public String defineEventStream(EventStreamDefinition eventStreamDefinition)
             throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,

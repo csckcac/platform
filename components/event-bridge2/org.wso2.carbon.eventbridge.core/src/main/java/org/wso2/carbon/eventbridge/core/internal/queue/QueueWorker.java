@@ -19,7 +19,7 @@ package org.wso2.carbon.eventbridge.core.internal.queue;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.commons.Event;
+import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.core.AgentCallback;
 import org.wso2.carbon.eventbridge.core.exception.EventConversionException;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventComposite;

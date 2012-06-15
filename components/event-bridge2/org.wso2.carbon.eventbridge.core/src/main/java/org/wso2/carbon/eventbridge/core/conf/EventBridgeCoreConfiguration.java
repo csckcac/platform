@@ -19,20 +19,20 @@
  */
 package org.wso2.carbon.eventbridge.core.conf;
 
-import org.wso2.carbon.agent.internal.utils.AgentConstants;
+import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeConstants;
 
 /**
  * configuration details related to EventReceiver
  */
 public class EventBridgeCoreConfiguration {
-    private String streamDefinitionStoreName = AgentConstants.DEFAULT_DEFINITION_STORE;
+    private String streamDefinitionStoreName = EventBridgeConstants.DEFAULT_DEFINITION_STORE;
 
 
-    public void setStreamDefinitionStoreName(String eventDefStoreName){
+    public void setStreamDefinitionStoreName(String eventDefStoreName) {
         streamDefinitionStoreName = eventDefStoreName;
     }
 
-    public String getStreamDefinitionStoreName(){
+    public String getStreamDefinitionStoreName() {
         return streamDefinitionStoreName;
     }
 }

@@ -17,12 +17,12 @@
 package org.wso2.carbon.eventbridge.core;
 
 import org.apache.axiom.om.OMElement;
-import org.wso2.carbon.agent.commons.exception.AuthenticationException;
-import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
-import org.wso2.carbon.agent.commons.exception.SessionTimeoutException;
-import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
+import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.eventbridge.commons.exception.SessionTimeoutException;
+import org.wso2.carbon.eventbridge.commons.exception.UndefinedEventTypeException;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventConverter;
 
 /**

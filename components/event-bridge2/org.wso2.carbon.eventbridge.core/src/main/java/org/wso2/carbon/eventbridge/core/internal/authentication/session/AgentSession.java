@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.eventbridge.core.internal.authentication.session;
 
-import org.wso2.carbon.agent.commons.Credentials;
+import org.wso2.carbon.eventbridge.commons.Credentials;
 
 /**
  * Agent Client's session

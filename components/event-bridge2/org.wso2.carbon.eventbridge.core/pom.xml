@@ -9,11 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>org.wso2.carbon.agent.server</artifactId>
+    <artifactId>org.wso2.carbon.eventbridge.core</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - Agent Server</name>
+    <name>WSO2 Carbon - Event Bridge Core </name>
     <description>
-        org.wso2.carbon.agent.server is used relieve the dispatch the events sent by Agent
+        org.wso2.carbon.eventBridge.core is used relieve the dispatch the events sent by Agents
     </description>
     <url>http://wso2.org</url>
 
@@ -29,23 +29,13 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.commons</artifactId>
-            <version>${wso2carbon.version.agent}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent.commons.thrift</artifactId>
+            <artifactId>org.wso2.carbon.eventbridge.commons</artifactId>
             <version>${wso2carbon.version.agent}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava.wso2</groupId>
             <artifactId>guava</artifactId>
             <version>${google.guava.wso2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.agent</artifactId>
-            <version>${wso2carbon.version.agent}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -66,11 +56,6 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.authentication</artifactId>
             <version>${wso2carbon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -103,12 +88,12 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
                             org.wso2.carbon.eventbridge.core.internal,
-                            org.wso2.carborg.wso2.carbon.eventbridge.corerver.internal.*
+                            org.wso2.carbon.eventbridge.core.internal.*
                         </Private-Package>
                         <Export-Package>
                             !org.wso2.carbon.eventbridge.core.internal,
-                            org.wso2.carborg.wso2.carbon.eventbridge.corerver.internal.*,
-                            org.wso2.carbon.agent.server.*
+                            !org.wso2.carbon.eventbridge.core.internal.*,
+                            org.wso2.carbon.eventbridge.core.*
                         </Export-Package>
                         <Import-Package>org.osgi.framework,*;resolution:=optional</Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

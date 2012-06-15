@@ -19,7 +19,7 @@
  */
 
 
-package org.wso2.carbon.eventbridge.agent.thrift.exception;
+package org.wso2.carbon.eventbridge.commons.exception;
 
 public class TransportException extends Exception {
 

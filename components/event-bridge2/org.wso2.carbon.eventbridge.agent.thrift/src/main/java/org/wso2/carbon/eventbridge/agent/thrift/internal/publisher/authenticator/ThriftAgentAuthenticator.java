@@ -24,10 +24,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.thrift.TException;
-import org.wso2.carbon.agent.commons.exception.AuthenticationException;
+import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentAuthenticatorException;
+import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
 import org.wso2.carbon.eventbridge.commons.thrift.exception.ThriftAuthenticationException;
 import org.wso2.carbon.eventbridge.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentAuthenticatorException;
 
 /**
  * Authenticates all data publishers

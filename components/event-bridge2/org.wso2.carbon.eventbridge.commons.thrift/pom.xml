@@ -9,12 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>org.wso2.carbon.agent.commons.thrift</artifactId>
+    <artifactId>org.wso2.carbon.eventbridge.commons.thrift</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - Agent Thrift Commons</name>
+    <name>WSO2 Carbon - Event Bridge Thrift Commons</name>
     <description>
         org.wso2.carbon.agent.commons.thrift is the common thrift objects used in Agent and
-        Agent Server communication
+        Thrift Event Receiver
     </description>
     <url>http://wso2.org</url>
 
@@ -61,7 +61,7 @@
 
                         <!--<Private-Package>org.wso2.carbon.agent.commons.internal.*</Private-Package>-->
                         <Export-Package>
-                            org.wso2.carbon.agent.commons.thrift.*
+                            org.wso2.carbon.eventbridge.commons.thrift.*
                         </Export-Package>
 
                         <Import-Package>org.osgi.framework, *;resolution:=optional</Import-Package>

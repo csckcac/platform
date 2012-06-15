@@ -17,7 +17,7 @@
 */
 package org.wso2.carbon.eventbridge.core.internal;
 
-import org.wso2.carbon.agent.commons.AttributeType;
+import org.wso2.carbon.eventbridge.commons.AttributeType;
 
 import java.util.HashMap;
 import java.util.Map;

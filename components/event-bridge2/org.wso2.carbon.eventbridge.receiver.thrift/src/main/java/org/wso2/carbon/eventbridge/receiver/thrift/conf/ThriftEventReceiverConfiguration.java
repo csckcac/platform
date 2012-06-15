@@ -19,14 +19,14 @@
  */
 package org.wso2.carbon.eventbridge.receiver.thrift.conf;
 
-import org.wso2.carbon.agent.internal.utils.AgentConstants;
+import org.wso2.carbon.eventbridge.commons.thrift.utils.CommonThriftConstants;
 
 /**
  * configuration details related to EventReceiver
  */
 public class ThriftEventReceiverConfiguration {
-    private int secureEventReceiverPort = AgentConstants.DEFAULT_RECEIVER_PORT + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET;
-    private int eventReceiverPort = AgentConstants.DEFAULT_RECEIVER_PORT;
+    private int secureEventReceiverPort = CommonThriftConstants.DEFAULT_RECEIVER_PORT + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET;
+    private int eventReceiverPort = CommonThriftConstants.DEFAULT_RECEIVER_PORT;
 
     public ThriftEventReceiverConfiguration(int defaultSslPort, int defaultPort) {
         secureEventReceiverPort = defaultSslPort;

@@ -23,11 +23,11 @@ package org.wso2.carbon.eventbridge.agent.thrift.internal.publisher.authenticato
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.wso2.carbon.agent.commons.exception.AuthenticationException;
 import org.wso2.carbon.eventbridge.agent.thrift.conf.DataPublisherConfiguration;
 import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentAuthenticatorException;
 import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentException;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.TransportException;
+import org.wso2.carbon.eventbridge.commons.exception.TransportException;
+import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
 
 /**
  * Authenticates all data publishers

@@ -17,8 +17,8 @@
 */
 package org.wso2.carbon.eventbridge.core.datastore;
 
-import org.wso2.carbon.agent.commons.Credentials;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.eventbridge.commons.Credentials;
+import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 
 import java.util.Collection;
 import java.util.HashMap;

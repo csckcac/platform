@@ -15,22 +15,10 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+package org.wso2.carbon.eventbridge.commons.thrift.utils;
 
-package org.wso2.carbon.eventbridge.core.internal.utils;
+public class CommonThriftConstants {
 
-
-import org.wso2.carbon.eventbridge.commons.Event;
-import org.wso2.carbon.eventbridge.core.internal.EventStreamTypeHolder;
-
-import java.util.List;
-
-/**
- * the util class that converts Events and its definitions in to various forms
- */
-public interface EventConverter {
-
-
-    public List<Event> toEventList(Object eventBundle,
-                                   EventStreamTypeHolder eventStreamTypeHolder) ;
-
+    public static final int SECURE_EVENT_RECEIVER_PORT_OFFSET = 100;
+    public static final int DEFAULT_RECEIVER_PORT = 7611;
 }

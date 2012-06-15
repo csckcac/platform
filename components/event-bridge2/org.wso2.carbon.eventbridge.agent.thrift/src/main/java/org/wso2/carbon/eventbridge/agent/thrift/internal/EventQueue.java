@@ -17,7 +17,7 @@
 */
 package org.wso2.carbon.eventbridge.agent.thrift.internal;
 
-import org.wso2.carbon.agent.commons.Event;
+import org.wso2.carbon.eventbridge.commons.Event;
 
 import java.util.concurrent.LinkedBlockingQueue;
 

@@ -19,15 +19,15 @@ package org.wso2.carbon.eventbridge.core;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.commons.Credentials;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.commons.exception.AuthenticationException;
-import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
-import org.wso2.carbon.agent.commons.exception.SessionTimeoutException;
-import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
-import org.wso2.carbon.agent.commons.utils.EventDefinitionConverter;
+import org.wso2.carbon.eventbridge.commons.Credentials;
+import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
+import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.eventbridge.commons.exception.SessionTimeoutException;
+import org.wso2.carbon.eventbridge.commons.exception.UndefinedEventTypeException;
+import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverter;
 import org.wso2.carbon.eventbridge.core.datastore.AbstractStreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.datastore.StreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
@@ -114,11 +114,7 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
 
     public String login(String username, String password) throws AuthenticationException {
         log.info(username + " connected");
-        try {
-            return Authenticator.getInstance().authenticate(username, password);
-        } catch (AuthenticationException e) {
-            throw new AuthenticationException(username + " is not authorised to access the server " + e.getErrorMessage());
-        }
+        return Authenticator.getInstance().authenticate(username, password);
     }
 
     public void logout(String sessionId) throws Exception {

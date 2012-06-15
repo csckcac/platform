@@ -16,14 +16,14 @@
 * under the License.
 */
 
-package org.wso2.carbon.eventbridge.receiver.thrift.internal.converter;
+package org.wso2.carbon.eventbridge.receiver.thrift.converter;
 
 
 import com.google.gson.Gson;
-import org.wso2.carbon.agent.commons.AttributeType;
-import org.wso2.carbon.agent.commons.Event;
+import org.wso2.carbon.eventbridge.commons.AttributeType;
+import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.commons.thrift.data.ThriftEventBundle;
-import org.wso2.carbon.agent.commons.utils.EventDefinitionConverter;
+import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverter;
 import org.wso2.carbon.eventbridge.core.exception.EventConversionException;
 import org.wso2.carbon.eventbridge.core.internal.EventStreamTypeHolder;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventConverter;

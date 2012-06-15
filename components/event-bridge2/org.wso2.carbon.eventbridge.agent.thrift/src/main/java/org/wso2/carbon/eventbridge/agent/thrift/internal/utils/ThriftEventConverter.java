@@ -22,9 +22,9 @@ package org.wso2.carbon.eventbridge.agent.thrift.internal.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.commons.Event;
+import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.commons.thrift.data.ThriftEventBundle;
-import org.wso2.carbon.agent.commons.utils.EventDefinitionConverter;
+import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverter;
 
 import java.util.LinkedList;
 

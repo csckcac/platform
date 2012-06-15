@@ -26,17 +26,17 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
+import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.eventbridge.commons.exception.TransportException;
 import org.wso2.carbon.eventbridge.commons.thrift.service.general.ThriftEventTransmissionService;
 import org.wso2.carbon.eventbridge.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
-import org.wso2.carbon.agent.exception.TransportException;
-import org.wso2.carbon.agent.internal.utils.AgentConstants;
+import org.wso2.carbon.eventbridge.commons.thrift.utils.CommonThriftConstants;
 import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
 import org.wso2.carbon.eventbridge.core.exception.EventBridgeException;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeConstants;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.eventbridge.receiver.thrift.conf.ThriftEventReceiverConfiguration;
-import org.wso2.carbon.eventbridge.receiver.thrift.internal.service.ThriftEventTransmissionServiceImpl;
-import org.wso2.carbon.eventbridge.receiver.thrift.internal.service.ThriftSecureEventTransmissionServiceImpl;
+import org.wso2.carbon.eventbridge.receiver.thrift.service.ThriftEventTransmissionServiceImpl;
+import org.wso2.carbon.eventbridge.receiver.thrift.service.ThriftSecureEventTransmissionServiceImpl;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -73,7 +73,7 @@ public class ThriftEventReceiver {
     public ThriftEventReceiver(int receiverPort,
                                EventBridgeReceiverService eventBridgeReceiverService) {
         this.eventBridgeReceiverService = eventBridgeReceiverService;
-        this.thriftEventReceiverConfiguration = new ThriftEventReceiverConfiguration(receiverPort + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverPort);
+        this.thriftEventReceiverConfiguration = new ThriftEventReceiverConfiguration(receiverPort + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverPort);
     }
 
     /**

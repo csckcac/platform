@@ -109,6 +109,9 @@
         <li>CARBON-12632 - Fixed the CSG service invocation using SOAP 1.2 endpoint.</li>
         <li>CARBON-12579 - Fixed the incorrect doc link.</li>
         <li>CARBON-13444 - Back end REST services can be published.</li>
+        <li>CARBON-12507 - Fixed the Jar service publishing.</li>
+        <li>CARBON-12435 - Fixed module adding to a service.</li>
+        <li>CARBON-12439 - Fixed the info message when configuring RM.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha</h2>

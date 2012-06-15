@@ -24,7 +24,7 @@ public class EventingConfigData {
     private String userName;
     private String password;
 
-    private String streamName = "org.wso2.bam.service.data.publisher";
+    private String streamName = "org.wso2.carbon.bam.service.data.publisher";
     private String version = "1.0.0";
     private String nickName = "ServiceDataAgent";
     private String description = "Publish service statistics events";

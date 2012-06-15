@@ -48,9 +48,7 @@ public class StatisticsServiceComponent {
 
     private static SystemStatisticsUtil systemStatisticsUtil;
     private static ConfigurationContext configurationContext;
-//    private static ServiceStatisticsQueue serviceStatisticsQueue;
-//    private static ActivityQueue activityQueue;
-//    private static EventQueue eventQueue;
+
     private static Log log = LogFactory.getLog(StatisticsServiceComponent.class);
 
     protected void activate(ComponentContext context) {
@@ -63,17 +61,6 @@ public class StatisticsServiceComponent {
             bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
                                           new ServiceStatisticsAxis2ConfigurationContextObserver(), null);
 
-
-
-            //use event publisher as the serviceStatsProcessor
-//            StatsProcessor statsProcessor = new DataPublisher1();
-//            eventQueue = new EventQueue(statsProcessor, configuration);
-//            ServiceAgentUtil.setEventQueue(eventQueue);
-/*            serviceStatisticsQueue = new ServiceStatisticsQueue(statsProcessor, configuration);
-            ServiceAgentUtil.setServiceStatisticQueue(serviceStatisticsQueue);
-
-            activityQueue = new ActivityQueue(statsProcessor);
-            ServiceAgentUtil.setActivityInQueue(activityQueue);*/
 
             new RegistryPersistenceManager().load();
 

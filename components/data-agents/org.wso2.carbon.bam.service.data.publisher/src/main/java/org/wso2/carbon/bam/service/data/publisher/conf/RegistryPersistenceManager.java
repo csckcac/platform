@@ -92,12 +92,6 @@ public class RegistryPersistenceManager {
                                                           BAMDataPublisherConstants.BAM_USER_NAME);
             String bamPassword = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
                                                           BAMDataPublisherConstants.BAM_PASSWORD);
-            String httpTransportEnable = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
-                                                                  BAMDataPublisherConstants.ENABLE_HTTP_TRANSPORT);
-            String socketTransportEnable = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
-                                                                    BAMDataPublisherConstants.ENABLE_SOCKET_TRANSPORT);
-            String port = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
-                                                   BAMDataPublisherConstants.BAM_SOCKET_PORT);
 
             String streamName = getConfigurationProperty(CommonConstants.SERVICE_COMMON_REG_PATH,
                                                          BAMDataPublisherConstants.STREAM_NAME);

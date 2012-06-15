@@ -22,6 +22,7 @@
 <%@ page import="org.wso2.carbon.cassandra.explorer.stub.data.xsd.Column" %>
 <%@ page import="org.json.simple.JSONObject" %>
 <%@ page import="org.codehaus.jackson.JsonEncoding" %>
+<%@ page import="org.json.simple.JSONArray" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%
@@ -65,29 +66,24 @@
     if (columns != null) {
         totalDisplayRecords = columns.length;
     }
-    response.getWriter().print("{");
-    response.getWriter().print("\"sEcho\":" + echoValue + ",");
-    response.getWriter().print("\"iTotalRecords\":" + noOfTotalColumns + ",");
-    response.getWriter().print("\"iTotalDisplayRecords\":" + noOfFilteredColumns + ",");
-    response.getWriter().print("\"aaData\":");
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("sEcho",echoValue);
+    jsonObject.put("iTotalRecords",noOfTotalColumns);
+    jsonObject.put("iTotalDisplayRecords",noOfFilteredColumns);
 
-    response.getWriter().print("[");
+    JSONArray valuesArray = new JSONArray();
     if (columns != null) {
         for (int i = 0; i < columns.length; i++) {
             if (columns[i] != null) {
-                response.getWriter().print("[");
-                response.getWriter().print("\"" + columns[i].getName() + "\",");
-                response.getWriter().print("\"" + columns[i].getValue() + "\",");
-                response.getWriter().print("\"" + (new Date(columns[i].getTimeStamp())).toString() + "\"");
-                response.getWriter().print("]");
-                if ((i + 1) != columns.length) {
-                    response.getWriter().print(",");
+                JSONArray columnValueArray = new JSONArray();
+                columnValueArray.add( columns[i].getName());
+                columnValueArray.add(columns[i].getValue());
+                columnValueArray.add((new Date(columns[i].getTimeStamp())).toString());
+                valuesArray.add(columnValueArray);
                 }
             }
-        }
     }
-    response.getWriter().print("]");
-    response.getWriter().print("}");
-    // [{ name: "foo", value : "bar"}, ...... ]
-    //response.getWriter().print("");
+    jsonObject.put("aaData",valuesArray);
+    response.getWriter().print(jsonObject.toJSONString());
+
 %>

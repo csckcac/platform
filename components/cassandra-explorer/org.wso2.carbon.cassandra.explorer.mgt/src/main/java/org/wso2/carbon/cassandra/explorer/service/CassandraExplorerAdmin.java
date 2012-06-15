@@ -33,11 +33,13 @@ import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.RangeSlicesQuery;
 import me.prettyprint.hector.api.query.SliceQuery;
+import org.apache.commons.codec.binary.Hex;
 import org.wso2.carbon.cassandra.explorer.connection.ConnectionManager;
 import org.wso2.carbon.cassandra.explorer.data.Column;
 import org.wso2.carbon.cassandra.explorer.exception.CassandraExplorerException;
 import org.wso2.carbon.core.AbstractAdmin;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -280,7 +282,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
 
         if (hColumn != null) {
             Column column = new Column();
-            column.setName((String) hColumn.getName());
+            column.setName((cleanNonXmlChars(hColumn.getName().toString())));
             column.setValue(cleanNonXmlChars(hColumn.getValue().toString()));
             column.setTimeStamp(hColumn.getClock());
             return column;
@@ -390,7 +392,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                     break;
                 }
                 Column column = new Column();
-                column.setName(hColumnsList.get(i).getName());
+                column.setName(cleanNonXmlChars(hColumnsList.get(i).getName()));
                 column.setValue(cleanNonXmlChars(hColumnsList.get(i).getValue()));
                 columns[i] = column;
             }
@@ -437,7 +439,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                         break;
                     }
                     Column column = new Column();
-                    column.setName(hColumnsList.get(i).getName());
+                    column.setName(cleanNonXmlChars(hColumnsList.get(i).getName()));
                     column.setValue(cleanNonXmlChars(hColumnsList.get(i).getValue()));
                     columns[i] = column;
                 }
@@ -512,7 +514,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
 
         for (HColumn hColumn : hColumnsList) {
             Column column = new Column();
-            column.setName(hColumn.getName().toString());
+            column.setName(cleanNonXmlChars(hColumn.getName().toString()));
             column.setValue(cleanNonXmlChars(hColumn.getValue().toString()));
             column.setTimeStamp(hColumn.getClock());
 
@@ -552,10 +554,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
 
         for (HColumn hColumn : hColumnsList) {
             Column column = new Column();
-            column.setName(hColumn.getName().toString());
-            column.setValue(cleanNonXmlChars(hColumn.getValue().toString()));
-            column.setTimeStamp(hColumn.getClock());
-
             if ((column.getName().contains(searchKey) || column.getValue().contains(searchKey))) {
                 columnsList.add(column);
             }
@@ -597,7 +595,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
 
         for (HColumn hColumn : hColumnsList) {
             Column column = new Column();
-            column.setName(hColumn.getName().toString());
+            column.setName(cleanNonXmlChars(hColumn.getName().toString()));
             column.setValue(cleanNonXmlChars(hColumn.getValue().toString()));
             column.setTimeStamp(hColumn.getClock());
             columnsList.add(column);
@@ -678,8 +676,13 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
     private String cleanNonXmlChars(String value) {
         String parsedString = "";
         if (value != null) {
-            parsedString = value.replaceAll("[\\x00-\\x09\\x0B\\x0C\\x0E-\\x1F\\x7F]", "");
+            parsedString = value.replaceAll("[\\x00-\\x09\\x0B\\x0C\\x0E-\\x1F\\x7F]", " ");
+        }
+        if (parsedString.trim().isEmpty()) {
+            parsedString = "***Non displayable value***";
+
         }
         return parsedString;
     }
+
 }

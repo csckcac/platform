@@ -21,6 +21,8 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="org.wso2.carbon.cassandra.explorer.stub.data.xsd.Row" %>
+<%@ page import="org.json.simple.JSONObject" %>
+<%@ page import="org.json.simple.JSONArray" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%
@@ -65,43 +67,34 @@
     if (rows != null) {
         totalDisplayRecords = rows.length;
     }
-    response.getWriter().print("{");
-    response.getWriter().print("\"sEcho\":" + echoValue + ",");
-    response.getWriter().print("\"iTotalRecords\":" + noOfTotalRows + ",");
-    response.getWriter().print("\"iTotalDisplayRecords\":" + noOfFilteredRows + ",");
-    response.getWriter().print("\"aaData\":");
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("sEcho", echoValue);
+    jsonObject.put("iTotalRecords",noOfTotalRows);
+    jsonObject.put("iTotalDisplayRecords", noOfFilteredRows);
 
-    response.getWriter().print("[");
+    JSONArray dataArray = new JSONArray();
     if (rows != null) {
         for (int i = 0; i < rows.length; i++) {
-                response.getWriter().print("[");
             if (rows[i] != null) {
-                response.getWriter().print("\"" + rows[i].getRowId() + "\",");
+                JSONArray valueArray = new JSONArray();
+                valueArray.add(rows[i].getRowId());
+                Column[] columns = rows[i].getColumns();
                 for (int j = 0; j < rows[i].getColumns().length; j++) {
-                    response.getWriter().print("\"" + rows[i].getColumns()[j].getValue() + "\"");
-                    response.getWriter().print(",");
-                    /*if ((j + 1) != rows[i].getColumns().length) {
-                        response.getWriter().print(",");
-                    }*/
+                    valueArray.add(columns[j].getValue());
                 }
                 if (rows[i].getColumns().length < 3) {
                     for (int k = 0; k < 3 - rows[i].getColumns().length; k++) {
-                        response.getWriter().print("\" \"");
-                        response.getWriter().print(",");
+                        valueArray.add("No data");
                     }
                 }
-                response.getWriter().print("\"<a class=\\\"view-icon-link\\\" href=\\\"#\\\" \\\" onclick=\\\"getDataPageForRow(\'" + keyspace + "\',\'" + columnFamily + "\',\'" + rows[i].getRowId() + "\')\\\">View more</a>\"");
-            }
-                response.getWriter().print("]");
-
-            if ((i + 1) != rows.length) {
-                response.getWriter().print(",");
+                valueArray.add("<a class=\"view-icon-link\" href=\"#\" \" onclick=\"" +
+                               "getDataPageForRow(\'" + keyspace + "\',\'" + columnFamily + "\',\'"
+                               + rows[i].getRowId() + "\')\">View more</a>");
+                dataArray.add(valueArray);
             }
         }
 
     }
-    response.getWriter().print("]");
-    response.getWriter().print("}");
-    // [{ name: "foo", value : "bar"}, ...... ]
-    //response.getWriter().print("");
+    jsonObject.put("aaData", dataArray);
+    response.getWriter().print(jsonObject.toJSONString());
 %>

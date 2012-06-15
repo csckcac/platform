@@ -1,4 +1,3 @@
-
 <!--
 ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 ~
@@ -19,6 +18,7 @@
 <%@ page import="org.wso2.carbon.cassandra.explorer.ui.CassandraExplorerAdminClient" %>
 <%@ page
         import="org.wso2.carbon.cassandra.explorer.stub.CassandraExplorerAdminCassandraExplorerException" %>
+<%@ page import="java.net.SocketTimeoutException" %>
 
 <%
     CassandraExplorerAdminClient adminClient =
@@ -29,14 +29,14 @@
     String password = request.getParameter("password");
     //Connection URL is being reused as ClusterName since it should be unique
     boolean isConnectionSuccess = false;
-    try{
-    isConnectionSuccess = adminClient.connectToCassandraCluster(connectionUrl, connectionUrl,userName, password);
-    } catch (CassandraExplorerAdminCassandraExplorerException exception) {    %>
-
+    try {
+        isConnectionSuccess = adminClient.connectToCassandraCluster(connectionUrl, connectionUrl, userName, password);
+    } catch (Exception exception) { %>
 <script type="text/javascript">
     location.href = "cassandra_connect.jsp";
 </script>
-  <%  }
+<% }
+
     if (isConnectionSuccess) {
 %>
 <script type="text/javascript">

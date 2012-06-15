@@ -64,46 +64,9 @@
                 <div id="dynamic"></div>
                 <div class="spacer"></div>
             </div>
-            <%
-                Column[] columns;
-                if (columnKey != null) {
-                    columns = new Column[1];
-                    columns[0] = cassandraExplorerAdminClient.getColumn(keyspace, columnFamily,
-                                                                        rowID, columnKey);
-                    if (columns[0] == null) {
-            %>
-            <script type="text/javascript">
-                jQuery(document).ready(function () {
-                    CARBON.showInfoDialog('No Results found', function () {
-                        CARBON.closeWindow();
-                    }, function () {
-                        CARBON.closeWindow();
-                    });
-                });
-            </script>
-            <%
-                    }
-                } else {
-                    columns = cassandraExplorerAdminClient.
-                            getColumnsForRowName(keyspace, columnFamily, rowID, "", "",
-                                                 1, false);
-                }
-            %>
+
             <script type="text/javascript" charset="utf-16">
                 /* Data set */
-                var aDataSet = [
-                    <%  if (columns != null && columns[0] != null) {
-          for (int i = 0; i < columns.length; i++) {
-
-          long timeInMilliSeconds = TimeUnit.MICROSECONDS.toMillis(columns[i].getTimeStamp());
-          %>
-                    ['<%=columns[i].getName()%>', '<%=columns[i].getValue()%>',
-                     '<%=(new Date(columns[i].getTimeStamp()/1000)).toString()%>']
-                    <%if((i+1)!=columns.length){%>,
-                    <% } %>
-                    <% } %>
-                ];
-                <%}%>
                 $(document).ready(function () {
                     $('#dynamic').html('<table cellpadding="10" cellspacing="0" border="0" class="display dataTable" id="example"></table>');
                     $('#example').dataTable({

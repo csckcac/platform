@@ -28,15 +28,8 @@
     String url = request.getParameter("url");
     String userName = request.getParameter("user_name");
     String password = request.getParameter("password");
-    String httpTransport = request.getParameter("enableHttpTransport");
-    String socketTransport = request.getParameter("enableSocketTransport");
     String[] propertyKeys = request.getParameterValues(PROPERTY_KEYS);
     String[] propertyValues = request.getParameterValues(PROPERTY_VALUES);
-
-    String port = null;
-    if (socketTransport != null) {
-        port = request.getParameter("port");
-    }
 
     List<Property> properties = null;
     if (propertyKeys != null) {
@@ -74,19 +67,6 @@
         }
         if (password != null) {
             mediationStatConfig.setPassword(password);
-        }
-        if (httpTransport != null) {
-            mediationStatConfig.setHttpTransportEnable(true);
-        } else {
-            mediationStatConfig.setHttpTransportEnable(false);
-        }
-        if (socketTransport != null) {
-            mediationStatConfig.setSocketTransportEnable(true);
-            if (port != null) {
-                mediationStatConfig.setPort(Integer.parseInt(port));
-            }
-        } else {
-            mediationStatConfig.setSocketTransportEnable(false);
         }
 
         if (properties != null) {
@@ -135,8 +115,6 @@
     }
 
     boolean isMediationStatsEnable = mediationStatConfig.getEnableMediationStats();
-    boolean isHttpTransportEnable = mediationStatConfig.getHttpTransportEnable();
-    boolean isSocketTransportEnable = mediationStatConfig.getSocketTransportEnable();
 
     if (url == null) {
         url = mediationStatConfig.getUrl();
@@ -146,9 +124,6 @@
     }
     if (password == null) {
         password = mediationStatConfig.getPassword();
-    }
-    if (port == null) {
-        port = String.valueOf(mediationStatConfig.getPort());
     }
     if (properties == null) {
         Property[] propertiesDTO = mediationStatConfig.getProperties();
@@ -255,46 +230,6 @@
                 <tr>
                     <td><fmt:message key="password"/></td>
                     <td><input type="text" name="password" value="<%=password%>"/></td>
-                </tr>
-
-                <thead>
-                <tr>
-                    <th colspan="4">
-                        <fmt:message key="publisher.transport"/>
-                    </th>
-                </tr>
-                </thead>
-                <tr>
-                    <td>
-                        <% if (isHttpTransportEnable) { %>
-                        <input type="checkbox" name="enableHttpTransport" checked="true"/>
-                        <% } else { %>
-                        <input type="checkbox" name="enableHttpTransport"/>
-                        <% } %>
-                        <fmt:message key="http.transport"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <%if (isSocketTransportEnable) { %>
-                        <input type="checkbox" name="enableSocketTransport"
-                               onclick="showHideDiv('socketPortId')" checked="true"/>
-                        <fmt:message key="socket.transport"/>
-                    </td>
-                    <td id="socketPortId">
-                        <fmt:message key="port"/>
-                        <input type="text" name="port" value="<%=port%>"/>
-                    </td>
-                    <%} else { %>
-                    <input type="checkbox" name="enableSocketTransport"
-                           onclick="showHideDiv('socketPortId')"/>
-                    <fmt:message key="socket.transport"/>
-                    </td>
-                    <td id="socketPortId" style="display: none">
-                        <fmt:message key="port"/>
-                        <input type="text" name="port" value="<%=port%>"/>
-                    </td>
-                    <%}%>
                 </tr>
 
                 <thead>

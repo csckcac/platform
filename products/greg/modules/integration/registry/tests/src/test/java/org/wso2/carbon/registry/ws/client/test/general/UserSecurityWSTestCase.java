@@ -58,7 +58,7 @@ public class UserSecurityWSTestCase extends TestSetup {
                         FrameworkSettings.CARBON_HOME + TestSetup.POLICY_FILE_PATH,
                         FrameworkSettings.CARBON_HOME + File.separator +
                                 "repository" + File.separator + "resources"
-                                + File.separator + "security" + File.separator + "wso2carbon.jks");
+                                + File.separator + "security" + File.separator + "wso2carbon.jks",userName,password);
             }
         } catch (Exception e) {
             fail("everyone role was not able to authenticate - check permissions");

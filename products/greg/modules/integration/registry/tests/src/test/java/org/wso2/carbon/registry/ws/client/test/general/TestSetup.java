@@ -41,6 +41,8 @@ public class TestSetup {
 
     protected static Registry registry = null;
     static boolean isInitialized = false;
+    protected String userName ="admin";
+    protected String password ="admin";
 
     private static final Log log = LogFactory.getLog(TestSetup.class);
     public static final String POLICY_FILE_PATH = File.separator + "repository" + File.separator +
@@ -64,7 +66,7 @@ public class TestSetup {
                         FrameworkSettings.CARBON_HOME + TestSetup.POLICY_FILE_PATH,
                         FrameworkSettings.CARBON_HOME + File.separator +
                                 "repository" + File.separator + "resources"
-                                + File.separator + "security" + File.separator + "wso2carbon.jks");
+                                + File.separator + "security" + File.separator + "wso2carbon.jks",userName,password);
             }
 
         } catch (Exception e) {

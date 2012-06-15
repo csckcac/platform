@@ -48,26 +48,42 @@ PRGDIR=`dirname "$PRG"`
 
 # ----- Process the input command ----------------------------------------------
 BPEL_DEP_DIR=$PRGDIR/../repository/deployment/server/bpel
-HT_DEP_DIR=$PRGDIR/../repository/deployment/server/humantask
+HT_DEP_DIR=$PRGDIR/../repository/deployment/server/humantasks
 BPEL_SAM_DIR=$PRGDIR/../repository/samples/bpel
 HT_SAM_DIR=$PRGDIR/../repository/samples/humantask
 SAMPLE=""
 
+if [ ! -e $BPEL_DEP_DIR ] ;then
+    mkdir -p $BPEL_DEP_DIR
+fi
+
+if [ ! -e $HT_DEP_DIR ] ;then
+    mkdir -p $HT_DEP_DIR
+fi
+
 if [ "$1" = "-s" ] || [ "$1" = "s" ]; then
-    SAMPLE=$2
-    if [ -e $BPEL_SAM_DIR/$SAMPLE ] ;then
-      cp -f $BPEL_SAM_DIR/$SAMPLE $BPEL_DEP_DIR/$SAMPLE
-      echo "sample copied to " $BPEL_DEP_DIR/$SAMPLE
-    else 
-	if [ -e $HT_SAM_DIR/$SAMPLE ];  then
-      	    cp -f $HT_SAM_DIR/$SAMPLE $HT_DEP_DIR/$SAMPLE
-      	    echo "sample copied to " $HT_DEP_DIR/$SAMPLE
-	else
-	    echo "*** Specified sample cannot be found  *** Please specify a valid sample with the -s option"
-      	    echo "Example, to run sample 0: wso2bps-samples.sh -s HelloWorld2.zip"
-     	    exit
-	fi
-    fi
+
+    for var in "$@"
+    do
+         if [ "$var" != "-s" ] && [ "$var" != "s" ]; then
+
+            SAMPLE=$var
+            if [ -e $BPEL_SAM_DIR/$SAMPLE ] ;then
+              cp -f $BPEL_SAM_DIR/$SAMPLE $BPEL_DEP_DIR/$SAMPLE
+              echo "sample copied to " $BPEL_DEP_DIR/$SAMPLE
+            else
+            if [ -e $HT_SAM_DIR/$SAMPLE ];  then
+                    cp -f $HT_SAM_DIR/$SAMPLE $HT_DEP_DIR/$SAMPLE
+                    echo "sample copied to " $HT_DEP_DIR/$SAMPLE
+            else
+                echo "*** Specified sample cannot be found  *** Please specify a valid sample with the -s option"
+                    echo "Example, to run sample 0: wso2bps-samples.sh -s HelloWorld2.zip"
+                    exit
+            fi
+            fi
+         fi
+    done
+
 else
     echo "Sample to be started is not specified. Please specify a sample to run"
     echo "Example, to run sample 0: wso2bps-samples.sh -s HelloWorld2.zip"

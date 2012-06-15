@@ -26,6 +26,7 @@ import org.wso2.carbon.andes.authentication.internal.AuthenticationServiceDataHo
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.login.AccountNotFoundException;
@@ -184,7 +185,7 @@ public class CarbonBasedPrincipalDatabase implements PrincipalDatabase {
         if (null != realmService) {
             try {
                 // Get tenant ID
-                int tenantID = 0;
+                int tenantID =  MultitenantConstants.SUPER_TENANT_ID;
                 int domainNameSeparatorIndex = username.indexOf(DOMAIN_NAME_SEPARATOR);
                 if (-1 != domainNameSeparatorIndex) { // Service case
                     String domainName = username.substring(domainNameSeparatorIndex + 1);

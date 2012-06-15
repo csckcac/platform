@@ -101,7 +101,7 @@ public class LoggingReader {
 			if (isSuperTenantUser()) {
 				logIndex = getLocalLogInfo();
 			} else {
-				throw new LogViewerException("Tenant-user cannot view local log informaiton");
+				return null;
 			}
 		}
 		return logIndex;

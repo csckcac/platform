@@ -50,12 +50,18 @@ public class LogViewer {
 
 	public PaginatedLogInfo getPaginatedLogInfo(int pageNumber, String tenantDomain,
 			String serviceName) throws Exception {
-		List<LogInfo> logInfoList = Arrays.asList(LoggingUtil.getLogsIndex(tenantDomain,
-				serviceName));
-		// Pagination
-		PaginatedLogInfo paginatedLogInfo = new PaginatedLogInfo();
-		DataPaginator.doPaging(pageNumber, logInfoList, paginatedLogInfo);
-		return paginatedLogInfo;
+		LogInfo[] logs = LoggingUtil.getLogsIndex(tenantDomain, serviceName);
+		if (logs != null) {
+			List<LogInfo> logInfoList = Arrays.asList(logs);
+			// Pagination
+			PaginatedLogInfo paginatedLogInfo = new PaginatedLogInfo();
+			DataPaginator.doPaging(pageNumber, logInfoList, paginatedLogInfo);
+			return paginatedLogInfo;
+		} else {
+			return null;
+		}
+		
+		
 	}
 
 	public DataHandler downloadLogFiles(String logFile, String tenantDomain, String serviceName)

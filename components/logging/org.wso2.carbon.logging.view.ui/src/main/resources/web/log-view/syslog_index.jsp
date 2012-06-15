@@ -102,22 +102,38 @@ private boolean isArchiveFile (String fileName) {
 		if (logViewerClient.isLogsConfigured(tenantDomain)) {
 			paginatedLogInfo = logViewerClient.getPaginatedLogInfo(pageNumber,
 					tenantDomain, serviceName);
-			logInfo = paginatedLogInfo.getLogInfo();
-			numberOfPages = paginatedLogInfo.getNumberOfPages();
-			//logMessages = logViewerClient.getTenentLogs();
+			if (paginatedLogInfo != null) {
+				logInfo = paginatedLogInfo.getLogInfo();
+				numberOfPages = paginatedLogInfo.getNumberOfPages();
+				//logMessages = logViewerClient.getTenentLogs();
 
-			//logMessages = logViewerClient.getLogs(type, keyword);
+				//logMessages = logViewerClient.getLogs(type, keyword);
 
-			for (int i = 0; i < logInfo.length; i++) {
-				String logFile = logInfo[i].getLogName();
-				String logDate = logInfo[i].getLogDate();
-				String logSize = logInfo[i].getLogDate();
+				for (int i = 0; i < logInfo.length; i++) {
+					String logFile = logInfo[i].getLogName();
+					String logDate = logInfo[i].getLogDate();
+					String logSize = logInfo[i].getLogDate();
+				}
 			}
+			else {
+					logViewerClient.getPaginatedLogInfo(pageNumber,
+							tenantDomain, serviceName);
+					CarbonUIMessage.sendCarbonUIMessage(
+							"Please configure syslog in order to view tenant specific logs.",
+							CarbonUIMessage.ERROR, request);
+		%>
+		<script type="text/javascript">
+			               location.href = "../admin/error.jsp";
+			        </script>
+		<%
+			return;
+				}
+			
 		} else {
 			logViewerClient.getPaginatedLogInfo(pageNumber,
 					tenantDomain, serviceName);
 			CarbonUIMessage.sendCarbonUIMessage(
-					"Syslog Configuration Properties are not properly configured",
+					"Please configure syslog in order to view tenant specific logs.",
 					CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">

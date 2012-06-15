@@ -56,10 +56,10 @@ public class RegistryEventingHandler extends Handler {
         } else {
             if (isNotCollection) {
                 event = new ResourceUpdatedEvent<String>("The resource at path " + relativePath + " was updated.");
-                ((ResourceUpdatedEvent)event).setResourcePath(path);
+                ((ResourceUpdatedEvent)event).setResourcePath(relativePath);
             } else {
                 event = new CollectionUpdatedEvent<String>("The collection at path " + relativePath + " was updated.");
-                ((CollectionUpdatedEvent)event).setResourcePath(path);
+                ((CollectionUpdatedEvent)event).setResourcePath(relativePath);
             }
             event.setParameter("RegistryOperation", "put");
             event.setTenantId(CurrentSession.getCallerTenantId());
@@ -223,11 +223,11 @@ public class RegistryEventingHandler extends Handler {
         if (isNotCollection) {
             event = new ResourceUpdatedEvent<String>("A rating of " + Integer.toString(rating) +
                     " was given to the resource at " + relativePath + ".");
-            ((ResourceUpdatedEvent)event).setResourcePath(path);
+            ((ResourceUpdatedEvent)event).setResourcePath(relativePath);
         } else {
             event = new CollectionUpdatedEvent<String>("A rating of " + Integer.toString(rating) +
                     " was given to the collection at " + relativePath + ".");
-            ((CollectionUpdatedEvent)event).setResourcePath(path);
+            ((CollectionUpdatedEvent)event).setResourcePath(relativePath);
         }
         event.setParameter("RegistryOperation", "rateResource");
         event.setParameter("Rating", Integer.toString(rating));
@@ -621,11 +621,11 @@ public class RegistryEventingHandler extends Handler {
         if (isNotCollection) {
             event = new ResourceUpdatedEvent<String>(
                     "The resource at path " + relativePath + " was restored.");
-            ((ResourceUpdatedEvent) event).setResourcePath(path);
+            ((ResourceUpdatedEvent) event).setResourcePath(relativePath);
         } else {
             event = new CollectionUpdatedEvent<String>(
                     "The collection at path " + relativePath + " was restored.");
-            ((CollectionUpdatedEvent) event).setResourcePath(path);
+            ((CollectionUpdatedEvent) event).setResourcePath(relativePath);
         }
         event.setParameter("RegistryOperation", "restore");
         event.setTenantId(CurrentSession.getCallerTenantId());

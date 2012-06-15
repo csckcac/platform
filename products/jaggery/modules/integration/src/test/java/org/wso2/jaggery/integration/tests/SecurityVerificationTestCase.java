@@ -18,18 +18,6 @@
 
 package org.wso2.jaggery.integration.tests;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.Test;
-import org.wso2.carbon.integration.framework.ClientConnectionUtil;
 import org.wso2.carbon.integration.framework.SecurityVerificationTest;
 
 
@@ -38,37 +26,8 @@ import org.wso2.carbon.integration.framework.SecurityVerificationTest;
  */
 
 public class SecurityVerificationTestCase extends SecurityVerificationTest {
-    private static final Log log = LogFactory.getLog(SecurityVerificationTestCase.class);
-    private int httpPort = 9763;
+     public SecurityVerificationTestCase() {
 
-    public SecurityVerificationTestCase() {
 
     }
-
-    public SecurityVerificationTestCase(int httpPort) {
-        this.httpPort = httpPort;
-    }
-
-    @Test(description = "Ensures that all Admin services are exposed only via HTTPS")
-    public void verifyAdminServiceSecurity() throws AxisFault {
-        ClientConnectionUtil.waitForPort(httpPort);
-        ServiceClient client = new ServiceClient(null, null);
-        Options opts = new Options();
-
-        EndpointReference epr =
-                new EndpointReference("http://localhost:" + httpPort
-                        + "/admin/services/SecurityVerifierService");
-        opts.setTo(epr);
-
-        client.setOptions(opts);
-        client.sendRobust(createPayLoad());   // robust send. Will get reply only if there is a fault
-        log.info("sent the message");
-    }
-
-    private OMElement createPayLoad() {
-            OMFactory fac = OMAbstractFactory.getOMFactory();
-            OMNamespace omNs =
-                    fac.createOMNamespace("http://secverifier.integration.carbon.wso2.org", "ns");
-            return fac.createOMElement("verifyAdminServices", omNs);
-        }
 }

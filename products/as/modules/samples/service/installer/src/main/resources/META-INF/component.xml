@@ -28,6 +28,8 @@
             <style-class>manage</style-class>
             <icon>../appserver-installer/images/installer.gif</icon>
             <require-permission>/permission/admin/login</require-permission>
+			<require-cloud-deployment>true</require-cloud-deployment>
+			<require-not-super-tenant>true</require-not-super-tenant>
         </menu>
     </menus>
 </component>

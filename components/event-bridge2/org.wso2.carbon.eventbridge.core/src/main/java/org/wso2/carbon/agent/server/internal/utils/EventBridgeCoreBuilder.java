@@ -117,4 +117,18 @@ public final class EventBridgeCoreBuilder {
 
     }
 
+    public static void populateConfigurations(EventBridgeCoreConfiguration eventBridgeCoreConfiguration,
+                                              List<String[]> eventStreamDefinitions,
+                                              OMElement bridgeConfig)
+            throws EventBridgeConfigurationException {
+
+            if (bridgeConfig != null) {
+                if (!bridgeConfig.getQName().equals(
+                        new QName(EventBridgeConstants.AGENT_SERVER_CONF_NAMESPACE, EventBridgeConstants.AGENT_SERVER_CONF_ELE_ROOT))) {
+                    throw new EventBridgeConfigurationException("Invalid root element in agent server config");
+                }
+                EventBridgeCoreBuilder.populateEventStreamDefinitions(bridgeConfig, eventStreamDefinitions);
+                EventBridgeCoreBuilder.populateStreamDefinitionStore(bridgeConfig, eventBridgeCoreConfiguration);
+            }
+        }
 }

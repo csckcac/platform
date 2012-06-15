@@ -32,8 +32,8 @@ import org.wso2.carbon.eventbridge.receiver.thrift.internal.ThriftEventReceiver;
 import java.util.List;
 
 public class TestServer extends TestCase {
-    Logger log=Logger.getLogger(TestServer.class);
-    ThriftEventReceiver eventReceiver;
+    Logger log = Logger.getLogger(TestServer.class);
+    ThriftEventReceiver thriftEventReceiver;
 
     public void testServerTest() throws EventBridgeException, InterruptedException {
         TestServer testServer = new TestServer();
@@ -44,19 +44,22 @@ public class TestServer extends TestCase {
 
     public void start(int receiverPort) throws EventBridgeException {
         KeyStoreUtil.setKeyStoreParams();
-
-        eventReceiver = new ThriftEventReceiver(receiverPort, new AuthenticationHandler() {
+        EventBridge eventBridge = new EventBridge(new AuthenticationHandler() {
             @Override
-            public boolean authenticate(String userName, String password) {
+            public boolean authenticate(String userName,
+                                        String password) {
                 return true;// allays authenticate to true
-            }
-        },new InMemoryStreamDefinitionStore());
 
-        eventReceiver.subscribe(new AgentCallback() {
+            }
+        }, new InMemoryStreamDefinitionStore());
+
+        thriftEventReceiver = new ThriftEventReceiver(receiverPort, eventBridge);
+
+        eventBridge.subscribe(new AgentCallback() {
             int totalSize = 0;
 
             public void definedEventStream(EventStreamDefinition eventStreamDefinition,
-                                          Credentials credentials) {
+                                           Credentials credentials) {
                 log.info("EventStreamDefinition " + eventStreamDefinition);
             }
 
@@ -66,12 +69,12 @@ public class TestServer extends TestCase {
             }
 
         });
-        eventReceiver.start("localhost");
+        thriftEventReceiver.start("localhost");
         log.info("Test Server Started");
     }
 
     public void stop() {
-        eventReceiver.stop();
+        thriftEventReceiver.stop();
         log.info("Test Server Stopped");
     }
 }

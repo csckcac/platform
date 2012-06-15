@@ -23,7 +23,6 @@ import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.server.AgentCallback;
 import org.wso2.carbon.agent.server.exception.EventConversionException;
 import org.wso2.carbon.agent.server.internal.utils.EventComposite;
-import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -37,13 +36,11 @@ public class QueueWorker implements Runnable {
 
     private BlockingQueue<EventComposite> eventQueue;
     private List<AgentCallback> subscribers;
-    private EventConverter eventConverter;
 
     public QueueWorker(BlockingQueue<EventComposite> queue,
-                       List<AgentCallback> subscribers, EventConverter eventConverter) {
+                       List<AgentCallback> subscribers) {
         this.eventQueue = queue;
         this.subscribers = subscribers;
-        this.eventConverter = eventConverter;
     }
 
     public void run() {
@@ -58,7 +55,7 @@ public class QueueWorker implements Runnable {
             }
             EventComposite eventComposite = eventQueue.poll();
             try {
-                eventList = eventConverter.toEventList(eventComposite.getEventBundle(),
+                eventList = eventComposite.getEventConverter().toEventList(eventComposite.getEventBundle(),
                                                        eventComposite.getEventStreamTypeHolder());
                 if (log.isDebugEnabled()) {
                     log.debug("Dispatching event to " + subscribers.size() + " subscriber(s)");

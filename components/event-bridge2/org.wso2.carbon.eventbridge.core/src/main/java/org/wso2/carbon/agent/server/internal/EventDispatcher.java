@@ -31,6 +31,7 @@ import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.agent.server.internal.authentication.session.AgentSession;
 import org.wso2.carbon.agent.server.internal.queue.EventQueue;
 import org.wso2.carbon.agent.server.internal.utils.EventComposite;
+import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,9 +50,8 @@ public class EventDispatcher {
     private Map<String, EventStreamTypeHolder> eventStreamTypeCache = new HashMap<String, EventStreamTypeHolder>();
     private EventQueue eventQueue;
 
-    public EventDispatcher(AbstractStreamDefinitionStore streamDefinitionStore,
-                           org.wso2.carbon.agent.server.internal.utils.EventConverter eventConverter) {
-        this.eventQueue = new EventQueue(subscribers, eventConverter);
+    public EventDispatcher(AbstractStreamDefinitionStore streamDefinitionStore) {
+        this.eventQueue = new EventQueue(subscribers);
         this.streamDefinitionStore = streamDefinitionStore;
     }
 
@@ -96,10 +96,11 @@ public class EventDispatcher {
     }
 
 
-    public void publish(Object eventBundle, AgentSession agentSession)
+    public void publish(Object eventBundle, AgentSession agentSession,
+                        EventConverter eventConverter)
             throws UndefinedEventTypeException {
         try {
-            eventQueue.publish(new EventComposite(eventBundle, getStreamDefinitionHolder(agentSession.getCredentials()), agentSession));
+            eventQueue.publish(new EventComposite(eventBundle, getStreamDefinitionHolder(agentSession.getCredentials()), agentSession,eventConverter));
         } catch (StreamDefinitionNotFoundException e) {
             throw new UndefinedEventTypeException("No event stream definition exist " + e.getErrorMessage());
         }

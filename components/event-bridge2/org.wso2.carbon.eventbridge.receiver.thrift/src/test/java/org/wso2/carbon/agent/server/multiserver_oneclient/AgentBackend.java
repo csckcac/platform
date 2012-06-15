@@ -21,11 +21,12 @@ import org.wso2.carbon.agent.commons.Credentials;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.server.AgentCallback;
+import org.wso2.carbon.agent.server.EventBridge;
 import org.wso2.carbon.agent.server.KeyStoreUtil;
 import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.EventBridgeException;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
-import org.wso2.carbon.eventbridge.receiver.thrift.conf.ThriftReceiverConfiguration;
+import org.wso2.carbon.eventbridge.receiver.thrift.conf.ThriftEventReceiverConfiguration;
 import org.wso2.carbon.eventbridge.receiver.thrift.internal.ThriftEventReceiver;
 
 import java.util.List;
@@ -68,8 +69,8 @@ public class AgentBackend {
 
     public void start() throws EventBridgeException, InterruptedException {
 
-        ThriftReceiverConfiguration agentServerConfiguration = generateServerConf(offset);
-        thriftEventReceiver = new ThriftEventReceiver(agentServerConfiguration, new AuthenticationHandler() {
+        ThriftEventReceiverConfiguration thriftEventReceiverConfiguration = generateServerConf(offset);
+        EventBridge eventBridge =new EventBridge(new AuthenticationHandler() {
             @Override
             public boolean authenticate(String userName,
                                         String password) {
@@ -77,7 +78,8 @@ public class AgentBackend {
 
             }
         }, new InMemoryStreamDefinitionStore());
-        thriftEventReceiver.subscribe(assignAgentCallback());
+        thriftEventReceiver = new ThriftEventReceiver(thriftEventReceiverConfiguration, eventBridge);
+        eventBridge.subscribe(assignAgentCallback());
         thriftEventReceiver.start("localhost");
     }
 
@@ -115,8 +117,8 @@ public class AgentBackend {
         };
     }
 
-    private ThriftReceiverConfiguration generateServerConf(int offset) {
-        return new ThriftReceiverConfiguration(7711 + offset, 7611 + offset);
+    private ThriftEventReceiverConfiguration generateServerConf(int offset) {
+        return new ThriftEventReceiverConfiguration(7711 + offset, 7611 + offset);
     }
 
     public void stop() {

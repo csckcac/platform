@@ -27,12 +27,15 @@ public class EventComposite {
     private EventStreamTypeHolder eventStreamTypeHolder;
     private Object eventBundle;
     private AgentSession agentSession;
+    private EventConverter eventConverter;
 
     public EventComposite(Object eventBundle,
-                          EventStreamTypeHolder eventStreamTypeHolder, AgentSession agentSession) {
+                          EventStreamTypeHolder eventStreamTypeHolder, AgentSession agentSession,
+                          EventConverter eventConverter) {
         this.eventStreamTypeHolder = eventStreamTypeHolder;
         this.eventBundle = eventBundle;
         this.agentSession = agentSession;
+        this.eventConverter = eventConverter;
     }
 
     public EventStreamTypeHolder getEventStreamTypeHolder() {
@@ -45,5 +48,9 @@ public class EventComposite {
 
     public AgentSession getAgentSession() {
         return agentSession;
+    }
+
+    public EventConverter getEventConverter() {
+        return eventConverter;
     }
 }

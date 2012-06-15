@@ -22,7 +22,7 @@ package org.wso2.carbon.eventbridge.receiver.thrift.internal.converter;
 import com.google.gson.Gson;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
+import org.wso2.carbon.eventbridge.commons.thrift.data.ThriftEventBundle;
 import org.wso2.carbon.agent.commons.utils.EventDefinitionConverter;
 import org.wso2.carbon.agent.server.exception.EventConversionException;
 import org.wso2.carbon.agent.server.internal.EventStreamTypeHolder;

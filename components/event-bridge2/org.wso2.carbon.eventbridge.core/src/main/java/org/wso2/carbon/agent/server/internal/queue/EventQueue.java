@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.server.AgentCallback;
 import org.wso2.carbon.agent.server.internal.utils.EventBridgeConstants;
 import org.wso2.carbon.agent.server.internal.utils.EventComposite;
-import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -42,14 +41,12 @@ public class EventQueue {
 
     private ExecutorService executorService;
     private List<AgentCallback> subscribers;
-    private EventConverter eventConverter;
 
-    public EventQueue(List<AgentCallback> subscribers, EventConverter eventConverter) {
+    public EventQueue(List<AgentCallback> subscribers) {
         this.subscribers = subscribers;
         // Note : Using a fixed worker thread pool and a bounded queue to prevent the server dying if load is too high
         executorService = Executors.newFixedThreadPool(EventBridgeConstants.NO_OF_WORKER_THREADS);
         eventQueue = new ArrayBlockingQueue<EventComposite>(EventBridgeConstants.EVENT_CAPACITY);
-        this.eventConverter = eventConverter;
     }
 
     public void publish(EventComposite eventComposite) {
@@ -59,7 +56,7 @@ public class EventQueue {
             String logMessage = "Failure to insert event into queue";
             log.warn(logMessage);
         }
-        executorService.submit(new QueueWorker(eventQueue, subscribers, eventConverter));
+        executorService.submit(new QueueWorker(eventQueue, subscribers));
     }
 
     @Override

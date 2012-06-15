@@ -26,137 +26,66 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
-import org.wso2.carbon.agent.commons.Credentials;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.thrift.service.general.ThriftEventTransmissionService;
-import org.wso2.carbon.agent.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
-import org.wso2.carbon.agent.commons.utils.EventDefinitionConverter;
+import org.wso2.carbon.eventbridge.commons.thrift.service.general.ThriftEventTransmissionService;
+import org.wso2.carbon.eventbridge.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
-import org.wso2.carbon.agent.server.AgentCallback;
-import org.wso2.carbon.agent.server.EventReceiver;
-import org.wso2.carbon.agent.server.datastore.AbstractStreamDefinitionStore;
-import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
+import org.wso2.carbon.agent.server.EventBridgeReceiverService;
 import org.wso2.carbon.agent.server.exception.EventBridgeException;
-import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
-import org.wso2.carbon.agent.server.internal.EventDispatcher;
-import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
-import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
 import org.wso2.carbon.agent.server.internal.utils.EventBridgeConstants;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.eventbridge.receiver.thrift.conf.ThriftReceiverConfiguration;
-import org.wso2.carbon.eventbridge.receiver.thrift.internal.service.general.ThriftEventTransmissionServiceImpl;
-import org.wso2.carbon.eventbridge.receiver.thrift.internal.service.secure.ThriftSecureEventTransmissionServiceImpl;
-import org.wso2.carbon.eventbridge.receiver.thrift.internal.converter.ThriftEventConverter;
+import org.wso2.carbon.eventbridge.receiver.thrift.conf.ThriftEventReceiverConfiguration;
+import org.wso2.carbon.eventbridge.receiver.thrift.internal.service.ThriftEventTransmissionServiceImpl;
+import org.wso2.carbon.eventbridge.receiver.thrift.internal.service.ThriftSecureEventTransmissionServiceImpl;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Carbon based implementation of the agent server
  */
-public class ThriftEventReceiver implements EventReceiver {
+public class ThriftEventReceiver {
     private static final Log log = LogFactory.getLog(ThriftEventReceiver.class);
-    private EventDispatcher eventDispatcher;
-    private ThriftReceiverConfiguration agentServerConfiguration;
-    private StreamDefinitionStore streamDefinitionStore;
-
+    private EventBridgeReceiverService eventBridgeReceiverService;
+    private ThriftEventReceiverConfiguration thriftEventReceiverConfiguration;
     private TServer authenticationServer;
     private TServer eventReceiverServer;
-
 
     /**
      * Initialize Carbon Agent Server
      *
      * @param secureReceiverPort
      * @param receiverPort
-     * @param authenticationHandler
-     * @param streamDefinitionStore
+     * @param eventBridgeReceiverService
      */
     public ThriftEventReceiver(int secureReceiverPort, int receiverPort,
-                               AuthenticationHandler authenticationHandler,
-                               AbstractStreamDefinitionStore streamDefinitionStore) {
-        this.streamDefinitionStore = streamDefinitionStore;
-        Authenticator.getInstance().init(authenticationHandler);
-        this.eventDispatcher = new EventDispatcher(streamDefinitionStore, new ThriftEventConverter());
-        this.agentServerConfiguration = new ThriftReceiverConfiguration(secureReceiverPort, receiverPort);
+                               EventBridgeReceiverService eventBridgeReceiverService) {
+        this.eventBridgeReceiverService = eventBridgeReceiverService;
+        this.thriftEventReceiverConfiguration = new ThriftEventReceiverConfiguration(secureReceiverPort, receiverPort);
     }
 
     /**
      * Initialize Carbon Agent Server
      *
      * @param receiverPort
-     * @param authenticationHandler
-     * @param streamDefinitionStore
+     * @param eventBridgeReceiverService
      */
     public ThriftEventReceiver(int receiverPort,
-                               AuthenticationHandler authenticationHandler,
-                               AbstractStreamDefinitionStore streamDefinitionStore) {
-        this.streamDefinitionStore = streamDefinitionStore;
-        Authenticator.getInstance().init(authenticationHandler);
-        this.eventDispatcher = new EventDispatcher(streamDefinitionStore, new ThriftEventConverter());
-        this.agentServerConfiguration = new ThriftReceiverConfiguration(receiverPort + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverPort);
+                               EventBridgeReceiverService eventBridgeReceiverService) {
+        this.eventBridgeReceiverService = eventBridgeReceiverService;
+        this.thriftEventReceiverConfiguration = new ThriftEventReceiverConfiguration(receiverPort + AgentConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverPort);
     }
 
     /**
      * Initialize Carbon Agent Server
      *
-     * @param agentServerConfiguration
-     * @param authenticationHandler
-     * @param streamDefinitionStore
+     * @param thriftEventReceiverConfiguration
+     * @param eventBridgeReceiverService
      */
-    public ThriftEventReceiver(ThriftReceiverConfiguration agentServerConfiguration,
-                               AuthenticationHandler authenticationHandler,
-                               AbstractStreamDefinitionStore streamDefinitionStore) {
-        this.streamDefinitionStore = streamDefinitionStore;
-        Authenticator.getInstance().init(authenticationHandler);
-        this.eventDispatcher = new EventDispatcher(streamDefinitionStore, new ThriftEventConverter());
-        this.agentServerConfiguration = agentServerConfiguration;
-    }
-
-    /**
-     * CEP/BAM can subscribe for Event Streams
-     *
-     * @param agentCallback callbacks of the subscribers
-     */
-    public void subscribe(AgentCallback agentCallback) {
-        eventDispatcher.addCallback(agentCallback);
-    }
-
-    @Override
-    public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamName,
-                                                     String streamVersion)
-            throws StreamDefinitionNotFoundException {
-        return streamDefinitionStore.getStreamDefinition(credentials, streamName, streamVersion);
-    }
-
-    @Override
-    public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamId)
-            throws StreamDefinitionNotFoundException {
-        return streamDefinitionStore.getStreamDefinition(credentials, streamId);
-    }
-
-    @Override
-    public List<EventStreamDefinition> getAllStreamDefinition(Credentials credentials)
-            throws StreamDefinitionNotFoundException {
-        return new ArrayList<EventStreamDefinition>(streamDefinitionStore.getAllStreamDefinitions(credentials));
-    }
-
-    @Override
-    public void saveEventStreamDefinition(Credentials credentials, String eventStreamDefinition)
-            throws MalformedStreamDefinitionException,
-                   DifferentStreamDefinitionAlreadyDefinedException {
-        streamDefinitionStore.saveStreamDefinition(credentials, EventDefinitionConverter.convertFromJson(eventStreamDefinition));
-    }
-
-    @Override
-    public String getStreamId(Credentials credentials, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException {
-        return streamDefinitionStore.getStreamId(credentials, streamName, streamVersion);
+    public ThriftEventReceiver(ThriftEventReceiverConfiguration thriftEventReceiverConfiguration,
+                               EventBridgeReceiverService eventBridgeReceiverService) {
+        this.eventBridgeReceiverService = eventBridgeReceiverService;
+        this.thriftEventReceiverConfiguration = thriftEventReceiverConfiguration;
     }
 
     /**
@@ -167,13 +96,13 @@ public class ThriftEventReceiver implements EventReceiver {
      */
     public void start(String hostName)
             throws EventBridgeException {
-        startSecureEventTransmission(hostName, agentServerConfiguration.getSecureEventReceiverPort(), eventDispatcher);
-        startEventTransmission(agentServerConfiguration.getEventReceiverPort(), eventDispatcher);
+        startSecureEventTransmission(hostName, thriftEventReceiverConfiguration.getSecureEventReceiverPort(), eventBridgeReceiverService);
+        startEventTransmission(thriftEventReceiverConfiguration.getEventReceiverPort(), eventBridgeReceiverService);
     }
 
 
     private void startSecureEventTransmission(String hostName, int port,
-                                              EventDispatcher eventDispatcher)
+                                              EventBridgeReceiverService eventBridgeReceiverService)
             throws EventBridgeException {
         try {
 
@@ -193,7 +122,7 @@ public class ThriftEventReceiver implements EventReceiver {
                 }
             }
 
-            startSecureEventTransmission(hostName, port, keyStore, keyStorePassword, eventDispatcher);
+            startSecureEventTransmission(hostName, port, keyStore, keyStorePassword, eventBridgeReceiverService);
         } catch (TransportException e) {
             throw new EventBridgeException("Cannot start agent server on port " + port, e);
         } catch (UnknownHostException e) {
@@ -201,15 +130,9 @@ public class ThriftEventReceiver implements EventReceiver {
         }
     }
 
-
-    public List<AgentCallback> getSubscribers() {
-        return eventDispatcher.getSubscribers();
-    }
-
-
     protected void startSecureEventTransmission(String hostName, int port, String keyStore,
                                                 String keyStorePassword,
-                                                EventDispatcher eventDispatcher)
+                                                EventBridgeReceiverService eventBridgeReceiverService)
             throws TransportException, UnknownHostException {
         TSSLTransportFactory.TSSLTransportParameters params =
                 new TSSLTransportFactory.TSSLTransportParameters();
@@ -225,7 +148,7 @@ public class ThriftEventReceiver implements EventReceiver {
 
         ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl> processor =
                 new ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl>(
-                        new ThriftSecureEventTransmissionServiceImpl(eventDispatcher));
+                        new ThriftSecureEventTransmissionServiceImpl(eventBridgeReceiverService));
         authenticationServer = new TThreadPoolServer(
                 new TThreadPoolServer.Args(serverTransport).processor(processor));
         Thread thread = new Thread(new ServerThread(authenticationServer));
@@ -233,13 +156,13 @@ public class ThriftEventReceiver implements EventReceiver {
         thread.start();
     }
 
-    protected void startEventTransmission(int port, EventDispatcher eventDispatcher)
+    protected void startEventTransmission(int port, EventBridgeReceiverService eventBridgeReceiverService)
             throws EventBridgeException {
         try {
             TServerSocket serverTransport = new TServerSocket(port);
             ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl> processor =
                     new ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl>(
-                            new ThriftEventTransmissionServiceImpl(eventDispatcher));
+                            new ThriftEventTransmissionServiceImpl(eventBridgeReceiverService));
             eventReceiverServer = new TThreadPoolServer(
                     new TThreadPoolServer.Args(serverTransport).processor(processor));
             Thread thread = new Thread(new ServerThread(eventReceiverServer));

@@ -68,7 +68,7 @@
 	  </fileSet>-->
 	<fileSet>
             <directory>src/main/resources/carbon-home/resources/dashboard</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/dashboard</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
@@ -110,6 +110,22 @@
 		<include>**/cloud-services-desc.xml</include>
             </includes>
         </fileSet>
+       <fileSet>
+            <directory>../styles/product/src/main/resources/web/styles/css</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/admin</outputDirectory>
+            <includes>
+                <include>**/**.css</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../styles/product/src/main/resources/web/styles/images</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/images</outputDirectory>
+            <includes>
+                <include>**/**.gif</include>
+                <include>**/**.png</include>
+            </includes>
+        </fileSet>
+  
 
 	<!--<fileSet>
             <directory>carbon-home/resources/theme</directory>

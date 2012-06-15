@@ -26,7 +26,7 @@
             <region>region1</region>
 			<order>50</order>
 			<style-class>manage</style-class>
-            <require-permission>/permission/protected/manage</require-permission>
+            <require-permission>/permission/admin/bam/view</require-permission>
 		</menu>
         <menu>
 			<id>list_toolbox_menu</id>
@@ -38,7 +38,7 @@
 			<order>60</order>
             <icon>../bam-toolbox/images/list.gif</icon>
 			<style-class>manage</style-class>
-            <require-permission>/permission/protected/manage</require-permission>
+            <require-permission>/permission/admin/bam/view</require-permission>
 		</menu>
         <menu>
 			<id>add_toolbox_menu</id>
@@ -50,7 +50,7 @@
 			<order>70</order>
             <icon>../bam-toolbox/images/add.gif</icon>
 			<style-class>manage</style-class>
-            <require-permission>/permission/protected/manage</require-permission>
+            <require-permission>/permission/admin/bam/view</require-permission>
 		</menu>
 	</menus>
 

@@ -28,6 +28,12 @@
     String url = request.getParameter("url");
     String userName = request.getParameter("user_name");
     String password = request.getParameter("password");
+
+    String streamName = request.getParameter("stream_name");
+    String version = request.getParameter("version");
+    String nickName = request.getParameter("nick_name");
+    String description = request.getParameter("description");
+
     String[] propertyKeys = request.getParameterValues(PROPERTY_KEYS);
     String[] propertyValues = request.getParameterValues(PROPERTY_VALUES);
 
@@ -67,6 +73,22 @@
         }
         if (password != null) {
             mediationStatConfig.setPassword(password);
+        }
+
+        if (streamName != null) {
+            mediationStatConfig.setStreamName(streamName);
+        }
+
+        if (version != null) {
+            mediationStatConfig.setVersion(version);
+        }
+
+        if (nickName != null) {
+            mediationStatConfig.setNickName(nickName);
+        }
+
+        if (description != null) {
+            mediationStatConfig.setDescription(description);
         }
 
         if (properties != null) {
@@ -125,6 +147,20 @@
     if (password == null) {
         password = mediationStatConfig.getPassword();
     }
+
+    if (streamName == null) {
+        streamName = mediationStatConfig.getStreamName();
+    }
+    if (version == null) {
+        version = mediationStatConfig.getVersion();
+    }
+    if(nickName == null){
+        nickName = mediationStatConfig.getNickName();
+    }
+    if(description == null){
+        description = mediationStatConfig.getDescription();
+    }
+
     if (properties == null) {
         Property[] propertiesDTO = mediationStatConfig.getProperties();
         if (propertiesDTO != null) {
@@ -211,6 +247,31 @@
                     </td>
                 </tr>
 
+                <thead>
+                <tr>
+                    <th colspan="4">
+                        <fmt:message key="stream.definition.configuration"/>
+                    </th>
+                </tr>
+                </thead>
+
+                <tr>
+                    <td><fmt:message key="stream.name"/></td>
+                    <td><input type="text" name="stream_name" value="<%=streamName%>"/></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="version"/></td>
+                    <td><input type="text" name="version" value="<%=version%>"/></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="nick.name"/></td>
+                    <td><input type="text" name="nick_name" value="<%=nickName%>"/></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="description"/></td>
+                    <td><input type="text" name="description" value="<%=description%>"/></td>
+                </tr>
+
                     <%--                    <% if (isServiceStatsEnable || isMsgDumpingEnable) { %>--%>
                 <thead>
                 <tr>
@@ -229,7 +290,7 @@
                 </tr>
                 <tr>
                     <td><fmt:message key="password"/></td>
-                    <td><input type="text" name="password" value="<%=password%>"/></td>
+                    <td><input type="password" name="password" value="<%=password%>"/></td>
                 </tr>
 
                 <thead>

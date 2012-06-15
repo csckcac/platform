@@ -87,15 +87,17 @@
     rmParameterBean.setMaximumRetransmissionCount(maximumRetransmissionCount);
 
     try {
+        String msg;
         if (isRMEngaged){
             // TODO: Use a single service call to get this done
             stub.setParameters(serviceName, rmParameterBean);
             stub.enableRM(serviceName);
+            msg = resourceBundle.getString("successfully.applied.configuration");
         } else {
             stub.disableRM(serviceName);
+            msg = resourceBundle.getString("successfully.disable.configuration");
         }
 
-        String msg = resourceBundle.getString("successfully.applied.configuration");
         CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request);
     } catch (NumberFormatException e) {
         String msg = resourceBundle.getString("numbers.format.error");

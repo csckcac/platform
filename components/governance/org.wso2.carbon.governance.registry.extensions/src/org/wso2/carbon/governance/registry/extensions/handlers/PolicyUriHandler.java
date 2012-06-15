@@ -143,7 +143,7 @@ public class PolicyUriHandler extends Handler {
      */
     protected void addPolicyToRegistry(RequestContext context, String path, String url,
                                        Resource resource, Registry registry) throws RegistryException {
-        String source = getSource(url);
+        String source = getSource(path);
         GenericArtifactManager genericArtifactManager = new GenericArtifactManager(systemGovernanceRegistry, "uri");
         GenericArtifact policy = genericArtifactManager.newGovernanceArtifact(new QName(source));
         policy.setId(resource.getUUID());

@@ -910,7 +910,7 @@ public class WsdlUriProcessor {
             throws RegistryException {
         log.trace("Started saving resource");
 
-        String source = getSource(url);
+        String source = getSource(path);
         GenericArtifactManager genericArtifactManager = new GenericArtifactManager(systemGovernanceRegistry, "uri");
         GenericArtifact wsdl = genericArtifactManager.newGovernanceArtifact(new QName(source));
         if (isMasterWSDL){

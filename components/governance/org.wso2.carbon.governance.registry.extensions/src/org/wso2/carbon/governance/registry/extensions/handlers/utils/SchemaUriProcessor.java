@@ -577,7 +577,7 @@ public class SchemaUriProcessor {
      */
     protected void addSchemaToRegistry(RequestContext context, String path, String url,
                                        Resource resource, Registry registry, boolean isMasterSchema) throws RegistryException {
-        String source = getSource(url);
+        String source = getSource(path);
         GenericArtifactManager genericArtifactManager = new GenericArtifactManager(systemGovernanceRegistry, "uri");
         GenericArtifact xsd = genericArtifactManager.newGovernanceArtifact(new QName(source));
         if(isMasterSchema){

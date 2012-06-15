@@ -20,12 +20,12 @@ package org.wso2.carbon.agent.server.multiserver_oneclient;
 import org.wso2.carbon.agent.commons.Credentials;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
-import org.wso2.carbon.agent.server.AgentCallback;
-import org.wso2.carbon.agent.server.EventBridge;
+import org.wso2.carbon.eventbridge.core.AgentCallback;
+import org.wso2.carbon.eventbridge.core.EventBridge;
 import org.wso2.carbon.agent.server.KeyStoreUtil;
-import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
-import org.wso2.carbon.agent.server.exception.EventBridgeException;
-import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
+import org.wso2.carbon.eventbridge.core.datastore.InMemoryStreamDefinitionStore;
+import org.wso2.carbon.eventbridge.core.exception.EventBridgeException;
+import org.wso2.carbon.eventbridge.core.internal.authentication.AuthenticationHandler;
 import org.wso2.carbon.eventbridge.receiver.thrift.conf.ThriftEventReceiverConfiguration;
 import org.wso2.carbon.eventbridge.receiver.thrift.internal.ThriftEventReceiver;
 

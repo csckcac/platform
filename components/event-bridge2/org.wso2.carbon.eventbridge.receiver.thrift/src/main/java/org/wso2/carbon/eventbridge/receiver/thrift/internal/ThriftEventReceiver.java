@@ -30,9 +30,9 @@ import org.wso2.carbon.eventbridge.commons.thrift.service.general.ThriftEventTra
 import org.wso2.carbon.eventbridge.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
-import org.wso2.carbon.agent.server.EventBridgeReceiverService;
-import org.wso2.carbon.agent.server.exception.EventBridgeException;
-import org.wso2.carbon.agent.server.internal.utils.EventBridgeConstants;
+import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
+import org.wso2.carbon.eventbridge.core.exception.EventBridgeException;
+import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeConstants;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.eventbridge.receiver.thrift.conf.ThriftEventReceiverConfiguration;
 import org.wso2.carbon.eventbridge.receiver.thrift.internal.service.ThriftEventTransmissionServiceImpl;
@@ -91,7 +91,7 @@ public class ThriftEventReceiver {
     /**
      * To start the Agent server
      *
-     * @throws org.wso2.carbon.agent.server.exception.EventBridgeException
+     * @throws org.wso2.carbon.eventbridge.core.exception.EventBridgeException
      *          if the agent server cannot be started
      */
     public void start(String hostName)

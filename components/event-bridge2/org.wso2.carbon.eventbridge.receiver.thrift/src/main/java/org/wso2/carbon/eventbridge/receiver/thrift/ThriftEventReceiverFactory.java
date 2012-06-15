@@ -17,7 +17,7 @@
 */
 package org.wso2.carbon.eventbridge.receiver.thrift;
 
-import org.wso2.carbon.agent.server.EventBridgeReceiverService;
+import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
 import org.wso2.carbon.eventbridge.receiver.thrift.conf.ThriftEventReceiverConfiguration;
 import org.wso2.carbon.eventbridge.receiver.thrift.internal.ThriftEventReceiver;
 

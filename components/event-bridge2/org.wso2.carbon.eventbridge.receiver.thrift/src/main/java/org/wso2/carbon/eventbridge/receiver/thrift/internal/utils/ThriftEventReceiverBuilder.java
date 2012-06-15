@@ -20,7 +20,7 @@ package org.wso2.carbon.eventbridge.receiver.thrift.internal.utils;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.server.internal.utils.EventBridgeConstants;
+import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeConstants;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.eventbridge.receiver.thrift.conf.ThriftEventReceiverConfiguration;
 

@@ -27,7 +27,7 @@ import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
-import org.wso2.carbon.agent.server.exception.EventBridgeException;
+import org.wso2.carbon.eventbridge.core.exception.EventBridgeException;
 
 import java.net.MalformedURLException;
 

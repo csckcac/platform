@@ -108,12 +108,12 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.agent.server.internal,
-                            org.wso2.carbon.agent.server.internal.*
+                            org.wso2.carbon.eventbridge.core.internal,
+                            org.wso2.carborg.wso2.carbon.eventbridge.corerver.internal.*
                         </Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.agent.server.internal,
-                            !org.wso2.carbon.agent.server.internal.*,
+                            !org.wso2.carbon.eventbridge.core.internal,
+                            org.wso2.carborg.wso2.carbon.eventbridge.corerver.internal.*,
                             org.wso2.carbon.agent.server.*
                         </Export-Package>
                         <Import-Package>org.osgi.framework,*;resolution:=optional</Import-Package>

@@ -1,6 +1,6 @@
 CoffeeShopClient = new function() {
 	
-this.addOrder = function(orderName) {
+this.addOrder = function() {
 var orderName = $('#orderName').val();
 CoffeShopAppUtil.makeRequest("POST","/coffeeshop/orders/order.jag?", "order="+orderName, function(html) {	});
 console.log("Call add Order "+orderName);

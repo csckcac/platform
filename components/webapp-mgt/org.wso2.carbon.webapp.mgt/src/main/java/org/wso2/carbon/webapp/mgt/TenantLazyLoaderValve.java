@@ -21,10 +21,12 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.user.core.tenant.TenantManager;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
 
 /**
  * Handles lazily loading tenant artifacts if a tenant webapp request comes in
@@ -48,14 +50,14 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
         try{
             TenantManager tenantManager = DataHolder.getRealmService().getTenantManager();
             int tenantId = tenantManager.getTenantId(domain);
-            if(tenantId<0){
+            if(tenantId == MultitenantConstants.INVALID_TENANT_ID){
                 if(log.isDebugEnabled()){
                     log.debug("Tenant does not exist: " + domain);
                 }
                 return;
             }
         }catch(Exception e){
-            log.error("Error occurred while checking tenant existance", e);
+            log.error("Error occurred while checking tenant existence", e);
             return;
         }
 
@@ -65,7 +67,19 @@ public class TenantLazyLoaderValve implements CarbonTomcatValve {
         if (TenantAxisUtils.getLastAccessed(domain, serverConfigCtx) == -1) { // First time access
             try {
                 if (requestURI.indexOf("/" + WebappsConstants.WEBAPP_PREFIX + "/") != -1) {
-                    response.sendRedirect(request.getRequestURI());
+                    if (request.getParameterMap().size() > 0) {
+                        requestURI = requestURI + "?";
+                        Enumeration e = request.getParameterNames();
+                        while (e.hasMoreElements()) {
+                            String paramName = (String) e.nextElement();
+                            requestURI = requestURI + paramName + "=" +
+                                         request.getParameter(paramName);
+                            if (e.hasMoreElements()) {
+                                requestURI = requestURI + "&";
+                            }
+                        }
+                    }
+                    response.sendRedirect(requestURI);
                 } else {
                     request.getRequestDispatcher(requestURI).forward(request, response);
                 }

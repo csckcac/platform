@@ -31,6 +31,7 @@ import java.util.List;
  * the util class that converts Events and its definitions in to various forms
  */
 public final class EventConverter {
+    public final static String nullString="_null";
     private static Gson gson = new Gson();
 
     private EventConverter() {

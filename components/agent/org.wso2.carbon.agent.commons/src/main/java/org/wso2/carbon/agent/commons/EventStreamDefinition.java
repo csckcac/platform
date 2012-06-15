@@ -201,5 +201,18 @@ public class EventStreamDefinition {
         payloadData.add(new Attribute(name, type));
     }
 
-
+    @Override
+    public String toString() {
+        return "EventStreamDefinition{" +
+               "streamId='" + streamId + '\'' +
+               ", name='" + name + '\'' +
+               ", version='" + version + '\'' +
+               ", nickName='" + nickName + '\'' +
+               ", description='" + description + '\'' +
+               ", tags=" + tags +
+               ", metaData=" + metaData +
+               ", correlationData=" + correlationData +
+               ", payloadData=" + payloadData +
+               '}';
+    }
 }

@@ -57,7 +57,7 @@ public class TestServer extends TestCase {
 
             public void definedEventStream(EventStreamDefinition eventStreamDefinition,
                                            String userName, String password, String domainName) {
-                log.info("EventStreamDefinition " + userName);
+                log.info("EventStreamDefinition " + eventStreamDefinition);
             }
 
             @Override

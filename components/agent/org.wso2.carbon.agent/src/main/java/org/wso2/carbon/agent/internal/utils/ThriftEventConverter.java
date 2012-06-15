@@ -20,8 +20,11 @@
 
 package org.wso2.carbon.agent.internal.utils;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
+import org.wso2.carbon.agent.commons.utils.EventConverter;
 
 import java.util.LinkedList;
 
@@ -29,6 +32,7 @@ import java.util.LinkedList;
  * Util class used to convert Events to thrift format
  */
 public final class ThriftEventConverter {
+    private static Log log = LogFactory.getLog(ThriftEventConverter.class);
 
     private ThriftEventConverter(){ }
 
@@ -88,11 +92,13 @@ public final class ThriftEventConverter {
                         thriftEventBundle.setDoubleAttributeList(new LinkedList<Double>());
                     }
                     thriftEventBundle.addToDoubleAttributeList((Double) object);
-                } else {
+                } else if(object == null){
                     if (!thriftEventBundle.isSetStringAttributeList()) {
                         thriftEventBundle.setStringAttributeList(new LinkedList<String>());
                     }
-                    thriftEventBundle.addToStringAttributeList((String) object);
+                    thriftEventBundle.addToStringAttributeList(EventConverter.nullString);
+                } else {
+                    log.error("Undefined attribute type : " +object);
                 }
             }
         }

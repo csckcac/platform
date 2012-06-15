@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
+import org.wso2.carbon.agent.commons.utils.EventConverter;
 import org.wso2.carbon.agent.server.exception.EventConversionException;
 import org.wso2.carbon.agent.server.internal.EventStreamTypeHolder;
 
@@ -55,7 +56,12 @@ public final class ThriftEventConverter {
                         indexCounter.incrementLongCount();
                         break;
                     case STRING:
-                        objects[i] = thriftEventBundle.getStringAttributeList().get(indexCounter.getStringCount());
+                        String stringValue = thriftEventBundle.getStringAttributeList().get(indexCounter.getStringCount());
+                        if (stringValue.equals(EventConverter.nullString)) {
+                            objects[i] = null;
+                        } else {
+                            objects[i] = stringValue;
+                        }
                         indexCounter.incrementStringCount();
                         break;
                     case DOUBLE:

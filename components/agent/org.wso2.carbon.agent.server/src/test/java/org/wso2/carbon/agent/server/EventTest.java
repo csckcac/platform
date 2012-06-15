@@ -79,6 +79,47 @@ public class EventTest extends TestCase {
         Thread.sleep(3000);
         dataPublisher.stop();
         testServer.stop();
+    }    public void testSendingEventSendingNull()
+            throws MalformedURLException, AuthenticationException, TransportException,
+                   AgentException, UndefinedEventTypeException,
+                   DifferentStreamDefinitionAlreadyDefinedException,
+                   InterruptedException, AgentServerException,
+                   MalformedStreamDefinitionException,
+                   StreamDefinitionException {
+
+        TestServer testServer = new TestServer();
+        testServer.start(7625);
+        KeyStoreUtil.setTrustStoreParams();
+        Thread.sleep(2000);
+
+        //according to the convention the authentication port will be 7611+100= 7711 and its host will be the same
+        DataPublisher dataPublisher = new DataPublisher("tcp://localhost:7625", "admin", "admin");
+        String id1 = dataPublisher.defineEventStream("{" +
+                                                     "  'name':'org.wso2.esb.MediatorStatistics'," +
+                                                     "  'version':'2.3.0'," +
+                                                     "  'nickName': 'Stock Quote Information'," +
+                                                     "  'description': 'Some Desc'," +
+                                                     "  'tags':['foo', 'bar']," +
+                                                     "  'metaData':[" +
+                                                     "          {'name':'ipAdd','type':'STRING'}" +
+                                                     "  ]," +
+                                                     "  'correlationData':[" +
+                                                     "          {'name':'correlationId','type':'STRING'}" +
+                                                     "  ]," +
+                                                     "  'payloadData':[" +
+                                                     "          {'name':'symbol','type':'STRING'}," +
+                                                     "          {'name':'price','type':'DOUBLE'}," +
+                                                     "          {'name':'volume','type':'INT'}," +
+                                                     "          {'name':'max','type':'DOUBLE'}," +
+                                                     "          {'name':'min','type':'Double'}" +
+                                                     "  ]" +
+                                                     "}");
+
+        //In this case correlation data is null
+        dataPublisher.publish(id1, new Object[]{"127.0.0.1"}, new Object[]{"null"}, new Object[]{"IBM", 96.8, 300, 120.6, 70.4});
+        Thread.sleep(3000);
+        dataPublisher.stop();
+        testServer.stop();
     }
 
     public void testSendingMultipleEventsOfSameType()

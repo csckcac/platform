@@ -72,4 +72,12 @@ public class Attribute {
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Attribute{" +
+               "name='" + name + '\'' +
+               ", type=" + type +
+               '}';
+    }
 }

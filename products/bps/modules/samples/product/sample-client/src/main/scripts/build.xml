@@ -59,7 +59,10 @@
         </java>
     </target>
 
-    <path id="jar.classpath">
+
+
+    <target name="init">
+        <path id="javac.classpath">
         <pathelement path="../../lib"/>
         <fileset dir="lib">
             <include name="*.jar"/>
@@ -84,20 +87,6 @@
         <fileset dir="../../repository/components/lib">
             <include name="*.jar"/>
         </fileset>
-    </path>
-
-    <target name="init">
-        <mkdir dir="./../../work/temp/sampleClient"/>
-        <manifestclasspath property="tem.classpath" jarfile="pathing.jar">
-            <classpath refid="jar.classpath"/>
-        </manifestclasspath>
-        <jar destfile="pathing.jar" basedir="target\classes">
-            <manifest>
-                <attribute name="Class-Path" value="${tem.classpath}"/>
-            </manifest>
-        </jar>
-        <path id="javac.classpath">
-            <pathelement path="pathing.jar"/>
-        </path>
+    	</path>
     </target>
 </project>

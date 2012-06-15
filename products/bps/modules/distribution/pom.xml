@@ -280,6 +280,8 @@
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/TestWhile"/>
                                 <zip destfile="target/samples/bpel/TestXslTransform.zip"
                                      basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/TestXslTransform"/>
+                                <zip destfile="target/samples/bpel/ClaimsApprovalProcess.zip"
+                                     basedir="${basedir}/../samples/product/src/main/resources/bpel/2.0/ClaimsApprovalProcess"/>
 
                                 <!--  Copying Human Tasks Sample -->
 

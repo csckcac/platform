@@ -2021,13 +2021,14 @@ public class DashboardDSService extends AbstractAdmin {
     }
 
     protected Registry getConfigSystemRegistry() {
-        try {
-            return (Registry) SuperTenantCarbonContext.getCurrentContext(DashboardContext.getConfigContext().getAxisConfiguration()).
+            return (Registry) SuperTenantCarbonContext.getCurrentContext().
                     getRegistry(RegistryType.SYSTEM_CONFIGURATION);
-        } catch (DashboardException e) {
-            log.error(e.getMessage(), e);
-            return null;
-        }
+    }
+
+
+     protected Registry getConfigUserRegistry() {
+            return (Registry) SuperTenantCarbonContext.getCurrentContext().
+                    getRegistry(RegistryType.USER_CONFIGURATION);
     }
 
 }

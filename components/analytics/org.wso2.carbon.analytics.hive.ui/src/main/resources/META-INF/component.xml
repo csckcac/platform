@@ -56,7 +56,7 @@
             <region>region1</region>
             <order>50</order>
             <style-class>tools</style-class>
-            <require-permission>//permission/admin</require-permission>
+            <require-permission>/permission/admin</require-permission>
         </menu>
         <menu>
             <id>analytics_list</id>

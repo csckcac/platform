@@ -106,16 +106,16 @@
             <artifactId>org.wso2.governance.samples.shutterbug.ui</artifactId>
             <version>${product.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.governance</groupId>
-            <artifactId>org.wso2.carbon.governance.samples.lcm</artifactId>
-            <version>${product.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.governance</groupId>
-            <artifactId>org.wso2.carbon.governance.samples.lcm.notifications</artifactId>
-            <version>${product.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.governance</groupId>-->
+            <!--<artifactId>org.wso2.carbon.governance.samples.lcm</artifactId>-->
+            <!--<version>${product.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.wso2.governance</groupId>-->
+            <!--<artifactId>org.wso2.carbon.governance.samples.lcm.notifications</artifactId>-->
+            <!--<version>${product.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.wso2.governance</groupId>
             <artifactId>org.wso2.carbon.registry.samples.custom.topics</artifactId>

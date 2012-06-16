@@ -869,7 +869,7 @@ public class DashboardDSService extends AbstractAdmin {
             String currentTabLayout = userTabResource
                     .getProperty(DashboardConstants.CURRENT_TAB_LAYOUT);
             // Adding the new Tab
-            if (null == currentTabLayout || "null".equals(currentTabLayout)) {
+            if (null == currentTabLayout || "null".equals(currentTabLayout) || ("0".equalsIgnoreCase(currentTabLayout) && "0".equals(nextTabId))) {
                 currentTabLayout = String.valueOf(nextTabId);
             } else {
                 currentTabLayout = currentTabLayout + ","

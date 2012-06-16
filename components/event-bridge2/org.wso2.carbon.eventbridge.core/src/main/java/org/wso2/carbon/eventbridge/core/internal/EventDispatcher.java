@@ -33,7 +33,7 @@ import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.AgentSession;
 import org.wso2.carbon.eventbridge.core.internal.queue.EventQueue;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventComposite;
-import org.wso2.carbon.eventbridge.core.internal.utils.EventConverter;
+import org.wso2.carbon.eventbridge.core.EventConverter;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.eventbridge.core.internal.utils;
+package org.wso2.carbon.eventbridge.core;
 
 
 import org.wso2.carbon.eventbridge.commons.Event;

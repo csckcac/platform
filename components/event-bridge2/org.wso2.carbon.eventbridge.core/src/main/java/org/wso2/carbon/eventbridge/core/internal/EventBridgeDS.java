@@ -94,8 +94,8 @@ public class EventBridgeDS {
                         registerService(EventBridgeReceiverService.class.getName(), eventBridge, null);
                 subscriberServiceRegistration = context.getBundleContext().
                         registerService(EventBridgeSubscriberService.class.getName(), eventBridge, null);
-                eventBridgeRegistration =
-                        context.getBundleContext().registerService(EventBridge.class.getName(), eventBridge, null);
+//                eventBridgeRegistration =
+//                        context.getBundleContext().registerService(EventBridge.class.getName(), eventBridge, null);
                 log.info("Successfully deployed Agent Server ");
             }
         } catch (EventBridgeConfigurationException e) {
@@ -109,7 +109,7 @@ public class EventBridgeDS {
     protected void deactivate(ComponentContext context) {
         context.getBundleContext().ungetService(receiverServiceRegistration.getReference());
         context.getBundleContext().ungetService(subscriberServiceRegistration.getReference());
-        eventBridgeRegistration.unregister();
+//        eventBridgeRegistration.unregister();
         if (log.isDebugEnabled()) {
             log.debug("Successfully stopped agent server");
         }

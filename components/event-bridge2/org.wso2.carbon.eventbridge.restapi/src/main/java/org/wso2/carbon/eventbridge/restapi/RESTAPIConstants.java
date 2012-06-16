@@ -1,8 +1,4 @@
-package org.wso2.carbon.eventbridge.restapi.rest;
-
-import org.wso2.carbon.eventbridge.core.AbstractEventReceiver;
-import org.wso2.carbon.eventbridge.core.EventBridge;
-import org.wso2.carbon.eventbridge.restapi.internal.Utils;
+package org.wso2.carbon.eventbridge.restapi;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -19,11 +15,6 @@ import org.wso2.carbon.eventbridge.restapi.internal.Utils;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class RestEventReceiver extends AbstractEventReceiver {
-
-
-    @Override
-    public EventBridge getEventBridge() {
-        return Utils.getEventBridgeReceiver();
-    }
+public class RESTAPIConstants {
+    public static final String SESSION_ID = "session.id";
 }

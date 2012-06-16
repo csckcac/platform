@@ -22,9 +22,10 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.wso2.carbon.eventbridge.core.EventBridge;
+import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
+import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPISecureContext;
 import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIServlet;
 import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIApp;
-import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIContext;
 import org.wso2.carbon.eventbridge.restapi.rest.RestEventReceiver;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 
@@ -40,8 +41,8 @@ import java.util.Hashtable;
  * interface="org.wso2.carbon.identity.authentication.AuthenticationService"
  * cardinality="1..1" policy="dynamic" bind="setAuthenticationService"  unbind="unsetAuthenticationService"
  * @scr.reference name="eventbridge.core"
- * interface="org.wso2.carbon.eventbridge.core.EventBridge"
- * cardinality="1..1" policy="dynamic" bind="setEventBridge" unbind="unsetEventBridge"
+ * interface="org.wso2.carbon.eventbridge.core.EventBridgeReceiverService"
+ * cardinality="1..1" policy="dynamic" bind="setEventBridgeReceiverService" unbind="unsetEventBridgeReceiverService"
  *
  */
 public class RestAPIServiceComponent {
@@ -59,7 +60,7 @@ public class RestAPIServiceComponent {
         try {
             Dictionary<String, String> initParams = new Hashtable<String, String>();
             initParams.put("javax.ws.rs.Application", RestAPIApp.class.getName());
-            httpService.registerServlet(path, new RestAPIServlet(), initParams, new RestAPIContext());
+            httpService.registerServlet(path, new RestAPIServlet(), initParams, new RestAPISecureContext());
         } catch (ServletException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
@@ -85,11 +86,11 @@ public class RestAPIServiceComponent {
         Utils.setAuthenticationService(null);
     }
 
-    protected void setEventBridge(EventBridge eventBridge) {
-        Utils.setEngine(eventBridge);
+    protected void setEventBridgeReceiverService(EventBridgeReceiverService eventBridgeReceiverService) {
+        Utils.setEventBridgeReceiverService(eventBridgeReceiverService);
     }
 
-    protected void unsetEventBridge(EventBridge eventBridge) {
-        Utils.setEngine(null);
+    protected void unsetEventBridgeReceiverService(EventBridgeReceiverService eventBridgeReceiverService) {
+        Utils.setEventBridgeReceiverService(null);
     }
 }

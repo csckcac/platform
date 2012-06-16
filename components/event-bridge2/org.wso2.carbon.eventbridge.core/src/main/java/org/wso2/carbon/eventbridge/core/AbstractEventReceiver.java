@@ -1,16 +1,12 @@
 package org.wso2.carbon.eventbridge.core;
 
 import org.apache.axiom.om.OMElement;
-import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.commons.exception.*;
-import org.wso2.carbon.eventbridge.core.Utils.EventBridgeUtils;
-import org.wso2.carbon.eventbridge.core.definitionstore.StreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
-import org.wso2.carbon.eventbridge.core.internal.utils.EventConverter;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -27,8 +23,7 @@ import java.util.Collection;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public abstract class AbstractEventReceiver implements EventBridgeReceiverService,
-        StreamDefinitionStore{
+public abstract class AbstractEventReceiver implements EventBridgeReceiverService {
 
 
     @Override
@@ -61,51 +56,26 @@ public abstract class AbstractEventReceiver implements EventBridgeReceiverServic
     }
 
     @Override
+    public EventStreamDefinition getEventStreamDefinition(String sessionId, String streamName, String streamVersion)
+            throws SessionTimeoutException, StreamDefinitionNotFoundException, StreamDefinitionStoreException {
+        return getEventBridge().getEventStreamDefinition(sessionId, streamName, streamVersion);
+    }
+
+    @Override
+    public List<EventStreamDefinition> getAllEventStreamDefinitions(String sessionId) throws SessionTimeoutException {
+        return getEventBridge().getAllEventStreamDefinitions(sessionId);
+    }
+
+    @Override
+    public void saveEventStreamDefinition(String sessionId, EventStreamDefinition streamDefinition)
+            throws SessionTimeoutException, StreamDefinitionStoreException,
+            DifferentStreamDefinitionAlreadyDefinedException {
+        getEventBridge().saveEventStreamDefinition(sessionId, streamDefinition);
+    }
+
+    @Override
     public OMElement getInitialConfig() {
         return getEventBridge().getInitialConfig();
-    }
-
-    @Override
-    public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
-        String streamId = getEventBridge().getStreamId(credentials, streamName, streamVersion);
-        if (streamId == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist for " + credentials.getUsername()
-                    + " for " + EventBridgeUtils.constructStreamKey(streamName, streamVersion));
-        }
-        return getEventBridge().getStreamDefinition( credentials, streamId);
-    }
-
-    @Override
-    public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamId)
-            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
-        EventStreamDefinition eventStreamDefinition = getEventBridge().getStreamDefinition(credentials, streamId);
-        if (eventStreamDefinition == null) {
-            throw new StreamDefinitionNotFoundException("No definitions exist on " + credentials.getUsername() + " for " + streamId);
-        }
-        return eventStreamDefinition;
-    }
-
-    @Override
-    public Collection<EventStreamDefinition> getAllStreamDefinitions(Credentials credentials) {
-        return getEventBridge().getAllStreamDefinitions(credentials);
-    }
-
-    @Override
-    public String getStreamId(Credentials credentials, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
-        String streamId = getEventBridge().getStreamId(credentials, streamName, streamVersion);
-        if (streamId == null) {
-            throw new StreamDefinitionNotFoundException("No stream id found for " + streamId + " " + streamVersion);
-        }
-        return streamId;
-    }
-
-    @Override
-    public void saveStreamDefinition(Credentials credentials, EventStreamDefinition eventStreamDefinition)
-            throws DifferentStreamDefinitionAlreadyDefinedException,
-            StreamDefinitionStoreException {
-        getEventBridge().saveStreamDefinition(credentials, eventStreamDefinition);
     }
 
     protected abstract EventBridge getEventBridge();

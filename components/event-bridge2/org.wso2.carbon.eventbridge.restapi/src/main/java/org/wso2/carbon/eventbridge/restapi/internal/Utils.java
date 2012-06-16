@@ -1,7 +1,5 @@
 package org.wso2.carbon.eventbridge.restapi.internal;
 
-import org.wso2.carbon.eventbridge.core.AbstractEventReceiver;
-import org.wso2.carbon.eventbridge.core.EventBridge;
 import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 
@@ -24,10 +22,7 @@ public class Utils {
 
     private static AuthenticationService authenticationService;
 
-    private static EventBridgeReceiverService eventBridgeReceiverService;
-
-    private static AbstractEventReceiver eventReceiver;
-    private static EventBridge eventBridge;
+    private static EventBridgeReceiverService eventBridgeReceiver;
 
     public static AuthenticationService getAuthenticationService() {
         return authenticationService;
@@ -37,27 +32,11 @@ public class Utils {
         Utils.authenticationService = authenticationService;
     }
 
-    public static EventBridgeReceiverService getEventBridgeReceiverService() {
-        return eventBridgeReceiverService;
+    public static EventBridgeReceiverService getEventBridgeReceiver() {
+        return eventBridgeReceiver;
     }
 
-    public static void setEventBridgeReceiverService(EventBridgeReceiverService eventBridgeReceiverService) {
-        Utils.eventBridgeReceiverService = eventBridgeReceiverService;
-    }
-
-    public static AbstractEventReceiver getEventReceiver() {
-        return eventReceiver;
-    }
-
-    public static void setEventReceiver(AbstractEventReceiver eventReceiver) {
-        Utils.eventReceiver = eventReceiver;
-    }
-
-    public static void setEngine(EventBridge engine) {
-        Utils.eventBridge = engine;
-    }
-
-    public static EventBridge getEventBridge() {
-        return eventBridge;
+    public static void setEventBridgeReceiver(EventBridgeReceiverService eventBridgeReceiver) {
+        Utils.eventBridgeReceiver = eventBridgeReceiver;
     }
 }

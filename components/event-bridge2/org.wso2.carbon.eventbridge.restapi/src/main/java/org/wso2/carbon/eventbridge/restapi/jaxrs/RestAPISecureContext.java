@@ -1,8 +1,7 @@
 package org.wso2.carbon.eventbridge.restapi.jaxrs;
 
-import org.apache.commons.codec.binary.Base64;
 import org.osgi.service.http.HttpContext;
-import org.wso2.carbon.eventbridge.restapi.internal.Utils;
+import org.wso2.carbon.eventbridge.restapi.utils.RESTUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +23,7 @@ import java.net.URL;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class RestAPIContext implements HttpContext{
+public class RestAPISecureContext implements HttpContext {
 
     @Override
     public boolean handleSecurity(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -32,13 +31,17 @@ public class RestAPIContext implements HttpContext{
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
+
+        if (RESTUtils.isAuthenticated(request)) {
+            return true;
+        }
+
         if (request.getHeader("Authorization") == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
-        if (authenticated(request)) {
+        if (RESTUtils.authenticate(request)) {
             return true;
-
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
@@ -55,14 +58,5 @@ public class RestAPIContext implements HttpContext{
         return null;
     }
 
-    protected boolean authenticated(HttpServletRequest request) {
-        String authzHeader = request.getHeader("Authorization");
-        String usernameAndPassword = new String(Base64.decodeBase64(authzHeader.substring(6).getBytes()));
 
-        int userNameIndex = usernameAndPassword.indexOf(":");
-        String username = usernameAndPassword.substring(0, userNameIndex);
-        String password = usernameAndPassword.substring(userNameIndex + 1);
-
-        return Utils.getAuthenticationService().authenticate(username, password);
-    }
 }

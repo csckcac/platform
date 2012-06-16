@@ -17,13 +17,12 @@
 package org.wso2.carbon.eventbridge.core;
 
 import org.apache.axiom.om.OMElement;
-import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
-import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistException;
-import org.wso2.carbon.eventbridge.commons.exception.SessionTimeoutException;
-import org.wso2.carbon.eventbridge.commons.exception.UndefinedEventTypeException;
-import org.wso2.carbon.eventbridge.core.internal.utils.EventConverter;
+import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
+import org.wso2.carbon.eventbridge.commons.exception.*;
+import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
+import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
+
+import java.util.List;
 
 /**
  * this class represents as the interface between the agent server and agent
@@ -41,6 +40,16 @@ public interface EventBridgeReceiverService {
 
     public void publish(Object eventBundle, String sessionId, EventConverter eventConverter)
             throws UndefinedEventTypeException, SessionTimeoutException;
+
+
+    public EventStreamDefinition getEventStreamDefinition(String sessionId, String streamName, String streamVersion)
+            throws SessionTimeoutException, StreamDefinitionNotFoundException, StreamDefinitionStoreException;
+
+    public List<EventStreamDefinition> getAllEventStreamDefinitions(String sessionId) throws SessionTimeoutException;
+
+    public void saveEventStreamDefinition(String sessionId, EventStreamDefinition streamDefinition)
+            throws SessionTimeoutException, StreamDefinitionStoreException,
+            DifferentStreamDefinitionAlreadyDefinedException;
 
 
     public String login(String username, String password) throws AuthenticationException;

@@ -24,9 +24,9 @@ import org.wso2.carbon.eventbridge.commons.AttributeType;
 import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.commons.thrift.data.ThriftEventBundle;
 import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverterUtils;
+import org.wso2.carbon.eventbridge.core.EventConverter;
 import org.wso2.carbon.eventbridge.core.exception.EventConversionException;
 import org.wso2.carbon.eventbridge.core.internal.EventStreamTypeHolder;
-import org.wso2.carbon.eventbridge.core.internal.utils.EventConverter;
 
 import java.util.LinkedList;
 import java.util.List;

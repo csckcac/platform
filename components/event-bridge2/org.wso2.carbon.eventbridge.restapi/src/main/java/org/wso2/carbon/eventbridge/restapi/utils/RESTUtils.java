@@ -2,10 +2,12 @@ package org.wso2.carbon.eventbridge.restapi.utils;
 
 import org.apache.commons.codec.binary.Base64;
 import org.wso2.carbon.eventbridge.commons.Credentials;
+import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.eventbridge.restapi.RESTAPIConstants;
+import org.wso2.carbon.eventbridge.restapi.internal.Utils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpSession;
 
 /**
  * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -23,17 +25,10 @@ import java.util.Map;
  * limitations under the License.
  */
 public class RESTUtils {
-    public static Map<String,String> extractAuthHeaders(HttpServletRequest request) {
+
+    public static Credentials extractAuthHeaders(HttpServletRequest request) {
         String authzHeader = request.getHeader("Authorization");
-        String usernameAndPassword = new String(Base64.decodeBase64(authzHeader.substring(6).getBytes()));
-
-        int userNameIndex = usernameAndPassword.indexOf(":");
-        Map<String,String> credentials = new HashMap<String, String>();
-
-        credentials.put("username", usernameAndPassword.substring(0, userNameIndex));
-        credentials.put("password", usernameAndPassword.substring(userNameIndex + 1));
-
-        return credentials;
+        return extractAuthHeaders(authzHeader);
     }
 
     public static Credentials extractAuthHeaders(String authHeader) {
@@ -47,4 +42,25 @@ public class RESTUtils {
         return credentials;
     }
 
+    public static boolean authenticate(HttpServletRequest request) {
+        Credentials credentials = extractAuthHeaders(request);
+        try {
+            String sessionId = Utils.getEventBridgeReceiver().login(credentials.getUsername(), credentials.getPassword());
+            HttpSession session = request.getSession(true);
+            session.setAttribute(RESTAPIConstants.SESSION_ID, sessionId);
+            return true;
+        } catch (AuthenticationException e) {
+            return false;
+        }
+    }
+
+    public static boolean isAuthenticated(HttpServletRequest request) {
+        HttpSession session = request.getSession(true);
+        Object attribute = session.getAttribute(RESTAPIConstants.SESSION_ID);
+        return (attribute != null);
+    }
+
+    public static String getSessionId(HttpServletRequest request) {
+        return (String) request.getAttribute(RESTAPIConstants.SESSION_ID);
+    }
 }

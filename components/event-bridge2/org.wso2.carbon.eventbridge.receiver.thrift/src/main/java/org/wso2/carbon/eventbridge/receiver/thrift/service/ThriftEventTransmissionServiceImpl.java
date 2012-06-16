@@ -32,7 +32,7 @@ import org.wso2.carbon.eventbridge.commons.thrift.exception.ThriftSessionExpired
 import org.wso2.carbon.eventbridge.commons.thrift.exception.ThriftUndefinedEventTypeException;
 import org.wso2.carbon.eventbridge.commons.thrift.service.general.ThriftEventTransmissionService;
 import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
-import org.wso2.carbon.eventbridge.core.internal.utils.EventConverter;
+import org.wso2.carbon.eventbridge.core.EventConverter;
 import org.wso2.carbon.eventbridge.receiver.thrift.converter.ThriftEventConverter;
 
 /**

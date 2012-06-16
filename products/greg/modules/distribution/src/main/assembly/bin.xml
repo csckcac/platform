@@ -281,14 +281,14 @@
                     <include>org.apache.batik.wso2:batik:jar</include>
             </includes>
         </dependencySet>
-		<dependencySet>
-            <outputFileNameMapping>${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
-			<outputDirectory>${pom.artifactId}-${build.version}/samples/distributed-LCM/bin</outputDirectory>
-            <includes>
-				<include>org.wso2.governance:org.wso2.carbon.governance.samples.lcm:jar</include>
-                                <include>org.wso2.governance:org.wso2.carbon.governance.samples.lcm.notifications:jar</include>
-            </includes>
-        </dependencySet>
+		<!--<dependencySet>-->
+            <!--<outputFileNameMapping>${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>-->
+			<!--<outputDirectory>${pom.artifactId}-${build.version}/samples/distributed-LCM/bin</outputDirectory>-->
+            <!--<includes>-->
+				<!--<include>org.wso2.governance:org.wso2.carbon.governance.samples.lcm:jar</include>-->
+                                <!--<include>org.wso2.governance:org.wso2.carbon.governance.samples.lcm.notifications:jar</include>-->
+            <!--</includes>-->
+        <!--</dependencySet>-->
         <!-- Those jar files are required to be in lib dir in jaxr sample -->
         <dependencySet>
             <outputDirectory>${pom.artifactId}-${build.version}/samples/jaxr/lib</outputDirectory>
@@ -308,18 +308,18 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <file>
-            <source>../samples/distributed-LCM/src/org.wso2.carbon.governance.samples.lcm/README.txt</source>
-            <outputDirectory>${pom.artifactId}-${build.version}/samples/distributed-LCM/bin</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../samples/distributed-LCM/src/org.wso2.carbon.governance.samples.lcm/README.txt</source>
-            <outputDirectory>${pom.artifactId}-${build.version}/samples/distributed-LCM/src</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
+        <!--<file>-->
+            <!--<source>../samples/distributed-LCM/src/org.wso2.carbon.governance.samples.lcm/README.txt</source>-->
+            <!--<outputDirectory>${pom.artifactId}-${build.version}/samples/distributed-LCM/bin</outputDirectory>-->
+            <!--<filtered>true</filtered>-->
+            <!--<fileMode>644</fileMode>-->
+        <!--</file>-->
+        <!--<file>-->
+            <!--<source>../samples/distributed-LCM/src/org.wso2.carbon.governance.samples.lcm/README.txt</source>-->
+            <!--<outputDirectory>${pom.artifactId}-${build.version}/samples/distributed-LCM/src</outputDirectory>-->
+            <!--<filtered>true</filtered>-->
+            <!--<fileMode>644</fileMode>-->
+        <!--</file>-->
         <file>
             <source>../samples/handler/src/README.txt</source>
             <outputDirectory>${pom.artifactId}-${build.version}/samples/handler/bin</outputDirectory>

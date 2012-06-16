@@ -211,12 +211,33 @@
                            "                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +
                            "                    </td>" +
                            "<td>\n" +
-                           "                        <a onClick='javaScript:removeColumn(\"" + sId + "\")'" +
+                           "<a onClick='javaScript:removeColumn(\"" + sId + "\")'" +
                            "style='background-image: url(../bampubsvcstat/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
                            "                    </td>" +
                            "</tr>";
 
         $("#propertyTable").append(tableContent);
+    }
+
+    function addMetaData(){
+        var sId = "propertyTable_" + rowNum;
+        var propertyTable = "<table id=\"propertyTable\" width=\"100%\" class=\"styledLeft\""+
+                           " style=\"margin-left: 0px;\"><tr id=\"" + sId + "\">" +
+                           "<td>\n" +
+                           "                        <fmt:message key='property.name'/>\n" +
+                           "                        <input type=\"text\" name=\"<%=PROPERTY_KEYS%>\" value=\"\">\n" +
+                           "                    </td>\n" +
+                           "                    <td>\n" +
+                           "                        <fmt:message key='property.value'/>\n" +
+                           "                        <input type=\"text\" name=\"<%=PROPERTY_VALUES%>\" value=\"\">\n" +
+                           "                    </td>" +
+                           "<td>\n" +
+                           "<a onClick='javaScript:removeColumn(\"" + sId + "\")'" +
+                           "style='background-image: url(../bampubsvcstat/images/delete.gif);'class='icon-link addIcon'>Remove Property</a>\n" +
+                           "                    </td>" +
+                           "</tr></table>";
+
+        $("#propertyTablePlaceHolder").append(propertyTable);
     }
 
     function removeColumn(id) {
@@ -333,67 +354,64 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <table id="propertyTable" width="100%" class="styledLeft"
-                           style="margin-left: 0px;">
+                    <td id="propertyTablePlaceHolder" colspan="2">
 
-                        <% if (properties != null) {
-                            int i = 1;
+                        <% if (properties != null) { %>
+                        <table id="propertyTable" width="100%" class="styledLeft"
+                           style="margin-left: 0px;">
+                            <tr>
+                                <td colspan="3">
+                                    <a onClick='javaScript:addColumn()' style='background-image:
+                                    url(../bampubsvcstat/images/add.gif);' class='icon-link addIcon'>Add
+                                                                                                     Property</a>
+                                </td>
+                            </tr>
+                            <% int i = 1;
                             for (Property property : properties) {
 
-                        %>
-                        <tr id="propertyTable_<%=i%>">
-                            <td>
-                                <fmt:message key="property.name"/>
-                                <input type="text" name="<%=PROPERTY_KEYS%>"
-                                       value="<%=property.getKey()%>">
-                            </td>
-                            <td>
-                                <fmt:message key="property.value"/>
-                                <input type="text" name="<%=PROPERTY_VALUES%>"
-                                       value="<%=property.getValue()%>">
-                            </td>
-                            <% if (i == 1) { %>
-                            <td>
-                                <a onClick='javaScript:addColumn()' style='background-image:
-                                url(../bampubsvcstat/images/add.gif);' class='icon-link addIcon'>Add
-                                                                                                 Property</a>
-                            </td>
-                            <% } else { %>
-                            <td>
-                                <a onClick='javaScript:removeColumn("propertyTable_<%=i%>")' style='background-image:
-                                url(../bampubsvcstat/images/delete.gif);' class='icon-link addIcon'>Remove
-                                                                                                    Property</a>
-                            </td>
-                            <% } %>
+                            %>
+                            <tr id="propertyTable_<%=i%>">
+                                <td>
+                                    <fmt:message key="property.name"/>
+                                    <input type="text" name="<%=PROPERTY_KEYS%>"
+                                           value="<%=property.getKey()%>">
+                                </td>
+                                <td>
+                                    <fmt:message key="property.value"/>
+                                    <input type="text" name="<%=PROPERTY_VALUES%>"
+                                           value="<%=property.getValue()%>">
+                                </td>
 
-                        </tr>
-                        <script type="text/javascript">
-                            rowNum++;
-                        </script>
-                        <% i++;
-                        }
+                                <td>
+                                    <a onClick='javaScript:removeColumn("propertyTable_<%=i%>")' style='background-image:
+                                    url(../bampubsvcstat/images/delete.gif);' class='icon-link addIcon'>Remove
+                                                                                                        Property</a>
+                                </td>
+
+
+                            </tr>
+                            <script type="text/javascript">
+                                rowNum++;
+                            </script>
+                            <% i++;
+                            }
+                            %>
+
+                        </table>
+                        <%
                         } else { %>
-                        >
-                        <tr>
-                            <td>
-                                <fmt:message key="property.name"/>
-                                <input type="text" name="<%=PROPERTY_KEYS%>" value="">
-                            </td>
-                            <td>
-                                <fmt:message key="property.value"/>
-                                <input type="text" name="<%=PROPERTY_VALUES%>" value="">
-                            </td>
-
-                            <td>
-                                <a onClick='javaScript:addColumn()'
-                                   style='background-image: url(../bampubsvcstat/images/add.gif);'
-                                   class='icon-link addIcon'>Add Property</a>
-                            </td>
-                        </tr>
-
+                            <table width="100%" class="styledLeft" style="margin-left: 0px;">
+                                <tr>
+                                    <td colspan="3">
+                                    <a onClick='javaScript:addMetaData()'
+                                    style='background-image: url(../bampubsvcstat/images/add.gif);'
+                                    class='icon-link addIcon'>Add Property</a>
+                                    </td>
+                                </tr>
+                            </table>
 
                         <% } %>
-                    </table>
+                    </td>
                 </tr>
                 </tbody>
                 <tr>

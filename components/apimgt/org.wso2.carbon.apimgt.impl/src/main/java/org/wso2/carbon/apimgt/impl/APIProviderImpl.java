@@ -716,12 +716,16 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             //create the wsdl in registry . if  failed we ignore after logging the error.
             if (api.getWsdlUrl() != null && !"".equals(api.getWsdlUrl())) {
                 String path = APIUtil.createWSDL(api.getWsdlUrl(), api.getId().getProviderName());
-                registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);
+                if (path != null) {
+                    registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);
+                }
             }
 
             if (api.getUrl() !=null && !"".equals(api.getUrl())){
                 String path = APIUtil.createEndpoint(api.getUrl(), api.getId().getProviderName());
-                registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);
+                if (path != null) {
+                    registry.addAssociation(artifactPath, path, CommonConstants.ASSOCIATION_TYPE01);
+                }
             }
         } catch (RegistryException e) {
             handleException("Error while adding API", e);

@@ -16,11 +16,10 @@
 
 package org.wso2.carbon.eventbridge.streamdefn.cassandra.datastore;
 
-import me.prettyprint.cassandra.serializers.*;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
-import org.wso2.carbon.eventbridge.core.datastore.AbstractStreamDefinitionStore;
+import org.wso2.carbon.eventbridge.core.definitionstore.AbstractStreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 
 import java.util.Collection;
@@ -29,39 +28,6 @@ import java.util.Collection;
  * Cassandra based Event Stream Definition store implementation
  */
 public class CassandraStreamDefinitionStore extends AbstractStreamDefinitionStore {
-
-    private static final String STREAM_NAME_KEY = "Name";
-    private static final String STREAM_VERSION_KEY = "Version";
-    private static final String STREAM_NICK_NAME_KEY = "Nick_Name";
-    private static final String STREAM_DESCRIPTION_KEY = "Description";
-
-    public static final String BAM_META_KEYSPACE = "BAM_AGENT_API_META_DATA";
-    public static final String BAM_META_STREAM_ID_CF = "AGENT_STREAM_ID";
-    public static final String BAM_META_STREAM_DEF_CF = "AGENT_STREAM_DEF";
-    public static final String BAM_META_STREAM_ID_KEY_CF = "STREAM_DEF_ID_KEY";
-    public static final String BAM_META_STREAMID_TO_STREAM_ID_KEY = "STREAM_ID_TO_STREAM_ID_KEY";
-
-    public static final String BAM_EVENT_DATA_KEYSPACE = "BAM_EVENT_DATA";
-    public static final String BAM_EVENT_DATA_STREAM_DEF_CF = "EVENT_STREAM_DEF";
-
-    private static final String STREAM_ID_KEY = "STREAM_DEF_ID_KEY";
-    private static final String STREAM_ID = "STREAM_DEF_ID";
-    private static final String STREAM_DEF = "STREAM_DEF";
-    private static final String STREAM_DEF_DOMAIN = "STREAM_DEF_DOMAIN";
-
-    private final static StringSerializer stringSerializer = StringSerializer.get();
-    // private final static BytesArraySerializer bytesArraySerializer = BytesArraySerializer.get();
-    // private final static UUIDSerializer uuidSerializer = UUIDSerializer.get();
-    private final static IntegerSerializer integerSerializer = IntegerSerializer.get();
-    private final static LongSerializer longSerializer = LongSerializer.get();
-    private final static BooleanSerializer booleanSerializer = BooleanSerializer.get();
-    private final static FloatSerializer floatSerializer = FloatSerializer.get();
-    private final static DoubleSerializer doubleSerializer = DoubleSerializer.get();
-
-
-
-    private static final String DOMAIN_NAME = "DOMAIN_NAME";
-    private static final String WSO2_CARBON_STAND_ALONE = "WSO2-CARBON-STAND-ALONE";
 
     Logger log = Logger.getLogger(CassandraStreamDefinitionStore.class);
 

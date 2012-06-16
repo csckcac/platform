@@ -24,7 +24,6 @@ import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverterUtils;
 import org.wso2.carbon.eventbridge.core.Utils.EventBridgeUtils;
-import org.wso2.carbon.eventbridge.core.datastore.StreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 

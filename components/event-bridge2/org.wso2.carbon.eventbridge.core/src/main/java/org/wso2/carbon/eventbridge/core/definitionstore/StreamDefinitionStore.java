@@ -1,4 +1,4 @@
-package org.wso2.carbon.eventbridge.core.datastore;
+package org.wso2.carbon.eventbridge.core.definitionstore;
 
 import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;

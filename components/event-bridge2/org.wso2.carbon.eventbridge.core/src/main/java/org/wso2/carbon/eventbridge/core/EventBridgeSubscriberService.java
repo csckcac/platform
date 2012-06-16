@@ -17,7 +17,7 @@
 */
 package org.wso2.carbon.eventbridge.core;
 
-import org.wso2.carbon.eventbridge.core.datastore.StreamDefinitionStore;
+import org.wso2.carbon.eventbridge.core.definitionstore.StreamDefinitionStore;
 
 import java.util.List;
 

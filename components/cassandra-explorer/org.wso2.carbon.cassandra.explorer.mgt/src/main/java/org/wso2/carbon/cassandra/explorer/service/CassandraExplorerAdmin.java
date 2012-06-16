@@ -383,7 +383,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         for (Row cassandraRow : result.get().getList()) {
             org.wso2.carbon.cassandra.explorer.data.Row row =
                     new org.wso2.carbon.cassandra.explorer.data.Row();
-            row.setRowId(cassandraRow.getKey().toString());
+            row.setRowId(cleanNonXmlChars(cassandraRow.getKey().toString()));
             List<HColumn<String, String>> hColumnsList = cassandraRow.getColumnSlice().getColumns();
             Column[] columns = new Column[hColumnsList.size()];
             for (int i = 0; i < hColumnsList.size(); i++) {

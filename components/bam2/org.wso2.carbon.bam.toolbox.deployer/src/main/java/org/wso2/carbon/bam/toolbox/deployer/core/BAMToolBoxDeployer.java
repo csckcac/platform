@@ -159,7 +159,8 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
 
 
     private ArrayList<String> getAllBAMArtifacts() {
-        File dir = new File(CarbonUtils.getCarbonRepository() + this.directory);
+        String repoPath = this.configurationContext.getAxisConfiguration().getRepository().getPath();
+        File dir = new File(repoPath+ File.separator + this.directory);
         log.info(dir.getAbsolutePath());
         ArrayList<String> files = new ArrayList<String>();
 
@@ -259,7 +260,6 @@ public class BAMToolBoxDeployer extends AbstractDeployer {
     public static BAMToolBoxDeployer getPausedDeployments() {
         return pausedDeployments;
     }
-
 
 
 }

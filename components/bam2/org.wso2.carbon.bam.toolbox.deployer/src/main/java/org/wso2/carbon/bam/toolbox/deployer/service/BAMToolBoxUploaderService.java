@@ -6,6 +6,8 @@ import org.wso2.carbon.bam.toolbox.deployer.internal.config.ToolBoxConfiguration
 import org.wso2.carbon.bam.toolbox.deployer.util.ToolBoxStatusDTO;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.activation.DataHandler;
 import java.io.*;
@@ -31,8 +33,14 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
 
     public boolean uploadBAMToolBox(DataHandler toolbox, String toolboxName) throws BAMToolboxDeploymentException {
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
-        String repoPath = ServiceHolder.getConfigurationContextService()
+         String repoPath =  "";
+        if(tenantId == MultitenantConstants.SUPER_TENANT_ID){
+             repoPath = ServiceHolder.getConfigurationContextService()
                 .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
+        }else {
+            String tenantRepoPath = "/repository/tenants/"+tenantId;
+            repoPath = CarbonUtils.getCarbonHome()+ tenantRepoPath;
+        }
         File hotDeploymentDir = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER);
         if (hotDeploymentDir.exists()) {
             File destFile = new File(hotDeploymentDir + File.separator + toolboxName);
@@ -59,8 +67,14 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
 
         ToolBoxStatusDTO toolBoxStatusDTO = new ToolBoxStatusDTO();
 
-        String repoPath = ServiceHolder.getConfigurationContextService()
+        String repoPath =  "";
+        if(tenantId == MultitenantConstants.SUPER_TENANT_ID){
+             repoPath = ServiceHolder.getConfigurationContextService()
                 .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
+        }else {
+            String tenantRepoPath = "/repository/tenants/"+tenantId;
+            repoPath = CarbonUtils.getCarbonHome()+ tenantRepoPath;
+        }
         File hotDeploymentDir = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER);
 
         FilenameFilter filter = new FilenameFilter() {
@@ -142,9 +156,14 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
 
     public boolean undeployToolBox(String toolboxName) throws BAMToolboxDeploymentException {
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
-        String repoPath = ServiceHolder.getConfigurationContextService()
+         String repoPath =  "";
+        if(tenantId == MultitenantConstants.SUPER_TENANT_ID){
+             repoPath = ServiceHolder.getConfigurationContextService()
                 .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
-        File hotDeploymentDir = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER);
+        }else {
+            String tenantRepoPath = "/repository/tenants/"+tenantId;
+            repoPath = CarbonUtils.getCarbonHome()+ tenantRepoPath;
+        }
         File toolbox = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER +
                 File.separator + toolboxName + ".bar");
         if (toolbox.exists()) {

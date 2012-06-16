@@ -30,11 +30,11 @@ import java.util.List;
 /**
  * the util class that converts Events and its definitions in to various forms
  */
-public final class EventDefinitionConverter {
+public final class EventDefinitionConverterUtils {
     public final static String nullString="_null";
     private static Gson gson = new Gson();
 
-    private EventDefinitionConverter() {
+    private EventDefinitionConverterUtils() {
 
     }
 
@@ -71,7 +71,13 @@ public final class EventDefinitionConverter {
                 throw new MalformedStreamDefinitionException("stream name is null");
             }
 
-            EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(name, version);
+            String streamId = tempEventStreamDefinition.getStreamId();
+            EventStreamDefinition eventStreamDefinition;
+            if (streamId == null) {
+                eventStreamDefinition = new EventStreamDefinition(name, version);
+            } else {
+                eventStreamDefinition = new EventStreamDefinition(name, version, streamId);
+            }
 
             eventStreamDefinition.setMetaData(tempEventStreamDefinition.getMetaData());
             eventStreamDefinition.setCorrelationData(tempEventStreamDefinition.getCorrelationData());

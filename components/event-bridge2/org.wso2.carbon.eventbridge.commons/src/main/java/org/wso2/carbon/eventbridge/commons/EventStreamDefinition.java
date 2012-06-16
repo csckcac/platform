@@ -38,6 +38,17 @@ public class EventStreamDefinition {
     private List<Attribute> correlationData;
     private List<Attribute> payloadData;
 
+    public EventStreamDefinition(String name, String version, String streamId)
+            throws MalformedStreamDefinitionException {
+        this.name = name;
+        String versionPattern = "^\\d+\\.\\d+\\.\\d+$";
+        if (!version.matches(versionPattern)) {
+            throw new MalformedStreamDefinitionException("version " + version + " does not adhere to the format x.x.x ");
+        }
+        this.version = version;
+        this.streamId = streamId;
+    }
+
     public EventStreamDefinition(String name, String version)
             throws MalformedStreamDefinitionException {
         this.name = name;

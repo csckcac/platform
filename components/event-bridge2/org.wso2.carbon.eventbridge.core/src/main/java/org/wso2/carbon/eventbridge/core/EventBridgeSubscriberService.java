@@ -17,15 +17,11 @@
 */
 package org.wso2.carbon.eventbridge.core;
 
-import org.wso2.carbon.eventbridge.commons.Credentials;
-import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
-import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
+import org.wso2.carbon.eventbridge.core.datastore.StreamDefinitionStore;
 
 import java.util.List;
 
-public interface EventBridgeSubscriberService {
+public interface EventBridgeSubscriberService extends StreamDefinitionStore {
 
 
     /**
@@ -34,23 +30,6 @@ public interface EventBridgeSubscriberService {
      * @param agentCallback callbacks of the subscribers
      */
     public void subscribe(AgentCallback agentCallback);
-
-    public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamName,
-                                                     String streamVersion)
-            throws StreamDefinitionNotFoundException;
-
-    public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamId)
-            throws StreamDefinitionNotFoundException;
-
-    public List<EventStreamDefinition> getAllStreamDefinition(Credentials credentials)
-            throws StreamDefinitionNotFoundException;
-
-    public void saveEventStreamDefinition(Credentials credentials, String eventStreamDefinition)
-            throws MalformedStreamDefinitionException,
-                   DifferentStreamDefinitionAlreadyDefinedException;
-
-    public String getStreamId(Credentials credentials, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException;
 
     public List<AgentCallback> getSubscribers();
 }

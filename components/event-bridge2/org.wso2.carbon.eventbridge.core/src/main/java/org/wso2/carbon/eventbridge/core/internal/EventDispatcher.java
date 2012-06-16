@@ -24,11 +24,12 @@ import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.eventbridge.commons.exception.UndefinedEventTypeException;
-import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverter;
+import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverterUtils;
 import org.wso2.carbon.eventbridge.core.AgentCallback;
 import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
 import org.wso2.carbon.eventbridge.core.definitionstore.AbstractStreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
+import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.AgentSession;
 import org.wso2.carbon.eventbridge.core.internal.queue.EventQueue;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventComposite;
@@ -43,8 +44,6 @@ import java.util.Map;
  * Dispactches events  and their definitions subscribers
  */
 public class EventDispatcher {
-
-//    private static final Log log = LogFactory.getLog(EventDispatcher.class);
 
     private List<AgentCallback> subscribers = new ArrayList<AgentCallback>();
     private AbstractStreamDefinitionStore streamDefinitionStore;
@@ -64,8 +63,8 @@ public class EventDispatcher {
     public String defineEventStream(String streamDefinition, AgentSession agentSession)
             throws
             MalformedStreamDefinitionException,
-            DifferentStreamDefinitionAlreadyDefinedException {
-        EventStreamDefinition eventStreamDefinition = EventDefinitionConverter.convertFromJson(streamDefinition);
+            DifferentStreamDefinitionAlreadyDefinedException, StreamDefinitionStoreException {
+        EventStreamDefinition eventStreamDefinition = EventDefinitionConverterUtils.convertFromJson(streamDefinition);
 
         EventStreamDefinition existingEventStreamDefinition;
         try {
@@ -124,9 +123,12 @@ public class EventDispatcher {
 
     private void updateEventStreamTypeHolder(EventStreamTypeHolder eventStreamTypeHolder,
                                              EventStreamDefinition eventStreamDefinition) {
-        eventStreamTypeHolder.setMetaDataType(eventStreamDefinition.getStreamId(), EventDefinitionConverter.generateAttributeTypeArray(eventStreamDefinition.getMetaData()));
-        eventStreamTypeHolder.setCorrelationDataType(eventStreamDefinition.getStreamId(), EventDefinitionConverter.generateAttributeTypeArray(eventStreamDefinition.getCorrelationData()));
-        eventStreamTypeHolder.setPayloadDataType(eventStreamDefinition.getStreamId(), EventDefinitionConverter.generateAttributeTypeArray(eventStreamDefinition.getPayloadData()));
+        eventStreamTypeHolder.setMetaDataType(eventStreamDefinition.getStreamId(), EventDefinitionConverterUtils
+                .generateAttributeTypeArray(eventStreamDefinition.getMetaData()));
+        eventStreamTypeHolder.setCorrelationDataType(eventStreamDefinition.getStreamId(), EventDefinitionConverterUtils
+                .generateAttributeTypeArray(eventStreamDefinition.getCorrelationData()));
+        eventStreamTypeHolder.setPayloadDataType(eventStreamDefinition.getStreamId(), EventDefinitionConverterUtils
+                .generateAttributeTypeArray(eventStreamDefinition.getPayloadData()));
     }
 
     public List<AgentCallback> getSubscribers() {
@@ -135,7 +137,7 @@ public class EventDispatcher {
 
     public String findEventStreamId(Credentials credentials, String streamName,
                                     String streamVersion)
-            throws StreamDefinitionNotFoundException {
+            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
         try {
             return streamDefinitionStore.getStreamId(credentials, streamName, streamVersion);
         } catch (StreamDefinitionNotFoundException e) {
@@ -143,4 +145,5 @@ public class EventDispatcher {
         }
 
     }
+
 }

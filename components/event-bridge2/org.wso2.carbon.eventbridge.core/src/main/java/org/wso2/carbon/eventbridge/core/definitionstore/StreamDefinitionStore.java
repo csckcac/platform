@@ -1,9 +1,10 @@
-package org.wso2.carbon.eventbridge.core.definitionstore;
+package org.wso2.carbon.eventbridge.core.datastore;
 
 import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
+import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 
 import java.util.Collection;
 
@@ -26,18 +27,18 @@ public interface StreamDefinitionStore {
 
     public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamName,
                                                      String streamVersion)
-            throws StreamDefinitionNotFoundException;
+            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException;
 
     public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamId)
-            throws StreamDefinitionNotFoundException;
+            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException;
 
 
     public Collection<EventStreamDefinition> getAllStreamDefinitions(Credentials credentials);
 
     public String getStreamId(Credentials credentials, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException;
+            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException;
 
     public void saveStreamDefinition(Credentials credentials,
                                      EventStreamDefinition eventStreamDefinition)
-            throws DifferentStreamDefinitionAlreadyDefinedException;
+            throws DifferentStreamDefinitionAlreadyDefinedException, StreamDefinitionStoreException;
 }

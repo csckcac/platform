@@ -17,26 +17,34 @@
 */
 package org.wso2.carbon.eventbridge.core.definitionstore;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
 import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverter;
+import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverterUtils;
+import org.wso2.carbon.eventbridge.core.Utils.EventBridgeUtils;
+import org.wso2.carbon.eventbridge.core.datastore.StreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
+import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * The Event Stream Definition Store interface
  * Used to persist Event Stream Definitions at the Agent Server
  */
-public abstract class AbstractStreamDefinitionStore implements StreamDefinitionStore{
+public abstract class AbstractStreamDefinitionStore implements StreamDefinitionStore {
+
+    private Log log = LogFactory.getLog(AbstractStreamDefinitionStore.class);
 
     private String constructNameVersionKey(String name, String version) {
-        return name + "::" + version;
+        return EventBridgeUtils.constructStreamKey(name, version);
     }
 
     public EventStreamDefinition getStreamDefinition(Credentials credentials, String name, String version)
-            throws StreamDefinitionNotFoundException {
+            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
         String streamId = getStreamIdFromStore(credentials, constructNameVersionKey(name, version));
         if (streamId == null) {
             throw new StreamDefinitionNotFoundException("No definitions exist on " + credentials.getUsername() + " for " + constructNameVersionKey(name, version));
@@ -45,7 +53,7 @@ public abstract class AbstractStreamDefinitionStore implements StreamDefinitionS
     }
 
     public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamId)
-            throws StreamDefinitionNotFoundException {
+            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
         EventStreamDefinition eventStreamDefinition = getStreamDefinitionFromStore(credentials, streamId);
         if (eventStreamDefinition == null) {
             throw new StreamDefinitionNotFoundException("No definitions exist on " + credentials.getUsername() + " for " + streamId);
@@ -55,8 +63,8 @@ public abstract class AbstractStreamDefinitionStore implements StreamDefinitionS
 
     public void saveStreamDefinition(Credentials credentials,
                                      EventStreamDefinition eventStreamDefinition)
-            throws DifferentStreamDefinitionAlreadyDefinedException {
-        EventStreamDefinition existingDefinition = null;
+            throws DifferentStreamDefinitionAlreadyDefinedException, StreamDefinitionStoreException {
+        EventStreamDefinition existingDefinition;
         try {
             existingDefinition = getStreamDefinition(credentials, eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
         } catch (StreamDefinitionNotFoundException e) {
@@ -65,16 +73,24 @@ public abstract class AbstractStreamDefinitionStore implements StreamDefinitionS
             return;
         }
         if (!existingDefinition.equals(eventStreamDefinition)) {
-            throw new DifferentStreamDefinitionAlreadyDefinedException("Another Stream with same name and version exist :" + EventDefinitionConverter.convertToJson(existingDefinition));
+            throw new DifferentStreamDefinitionAlreadyDefinedException("Another Stream with same name and version exi" +
+                    "st :" + EventDefinitionConverterUtils
+                    .convertToJson(existingDefinition));
         }
     }
 
-    public Collection<EventStreamDefinition> getAllStreamDefinitions(Credentials credentials) {
-        return getAllStreamDefinitionsFromStore(credentials);
+    public Collection<EventStreamDefinition> getAllStreamDefinitions(Credentials credentials)
+    {
+        try {
+            return getAllStreamDefinitionsFromStore(credentials);
+        } catch (StreamDefinitionStoreException e) {
+            log.error("Error occured when trying to retrieve definitions. Returning empty list.");
+            return new ArrayList<EventStreamDefinition>();
+        }
     }
 
     public String getStreamId(Credentials credentials, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException {
+            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
         String streamId = getStreamIdFromStore(credentials, constructNameVersionKey(streamName, streamVersion));
         if (streamId == null) {
             throw new StreamDefinitionNotFoundException("No stream id found for " + streamId + " " + streamVersion);
@@ -83,17 +99,20 @@ public abstract class AbstractStreamDefinitionStore implements StreamDefinitionS
     }
 
     protected abstract void saveStreamIdToStore(Credentials credentials, String streamIdKey,
-                                                String streamId);
+                                                String streamId) throws StreamDefinitionStoreException;
 
     protected abstract void saveStreamDefinitionToStore(Credentials credentials, String streamId,
-                                                        EventStreamDefinition streamDefinition);
+                                                        EventStreamDefinition streamDefinition)
+            throws StreamDefinitionStoreException;
 
 
-    protected abstract String getStreamIdFromStore(Credentials credentials, String streamIdKey);
+    protected abstract String getStreamIdFromStore(Credentials credentials, String streamIdKey)
+            throws StreamDefinitionStoreException;
 
     public abstract EventStreamDefinition getStreamDefinitionFromStore(Credentials credentials,
-                                                                       String streamId);
+                                                                       String streamId)
+            throws StreamDefinitionStoreException;
 
     protected abstract Collection<EventStreamDefinition> getAllStreamDefinitionsFromStore(
-            Credentials credentials);
+            Credentials credentials) throws StreamDefinitionStoreException;
 }

@@ -21,17 +21,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
-import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
-import org.wso2.carbon.eventbridge.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistException;
-import org.wso2.carbon.eventbridge.commons.exception.SessionTimeoutException;
-import org.wso2.carbon.eventbridge.commons.exception.UndefinedEventTypeException;
-import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverter;
+import org.wso2.carbon.eventbridge.commons.exception.*;
+import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverterUtils;
 import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
+import org.wso2.carbon.eventbridge.core.datastore.StreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.definitionstore.AbstractStreamDefinitionStore;
-import org.wso2.carbon.eventbridge.core.definitionstore.StreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
+import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 import org.wso2.carbon.eventbridge.core.internal.EventDispatcher;
 import org.wso2.carbon.eventbridge.core.internal.authentication.AuthenticationHandler;
 import org.wso2.carbon.eventbridge.core.internal.authentication.Authenticator;
@@ -54,91 +50,95 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
     private OMElement initialConfig;
 
     public EventBridge(AuthenticationHandler authenticationHandler,
-                       AbstractStreamDefinitionStore streamDefinitionStore,
-                       EventBridgeConfiguration eventBridgeConfiguration) {
-        this.eventDispatcher = new EventDispatcher(streamDefinitionStore, eventBridgeConfiguration);
-        this.streamDefinitionStore = streamDefinitionStore;
-        authenticator = new Authenticator(authenticationHandler, eventBridgeConfiguration);
-    }
+                           AbstractStreamDefinitionStore streamDefinitionStore,
+                           EventBridgeConfiguration eventBridgeConfiguration) {
+            this.eventDispatcher = new EventDispatcher(streamDefinitionStore, eventBridgeConfiguration);
+            this.streamDefinitionStore = streamDefinitionStore;
+            authenticator = new Authenticator(authenticationHandler, eventBridgeConfiguration);
+        }
 
-    public EventBridge(AuthenticationHandler authenticationHandler,
-                       AbstractStreamDefinitionStore streamDefinitionStore) {
-        EventBridgeConfiguration eventBridgeConfiguration =new EventBridgeConfiguration();
-        this.eventDispatcher = new EventDispatcher(streamDefinitionStore, eventBridgeConfiguration);
-        this.streamDefinitionStore = streamDefinitionStore;
-        authenticator = new Authenticator(authenticationHandler, eventBridgeConfiguration);
-    }
+        public EventBridge(AuthenticationHandler authenticationHandler,
+                           AbstractStreamDefinitionStore streamDefinitionStore) {
+            EventBridgeConfiguration eventBridgeConfiguration =new EventBridgeConfiguration();
+            this.eventDispatcher = new EventDispatcher(streamDefinitionStore, eventBridgeConfiguration);
+            this.streamDefinitionStore = streamDefinitionStore;
+            authenticator = new Authenticator(authenticationHandler, eventBridgeConfiguration);
+        }
 
-    public String defineEventStream(String sessionId, String streamDefinition)
-            throws
+        public String defineEventStream(String sessionId, String streamDefinition)
+                throws
 
-            DifferentStreamDefinitionAlreadyDefinedException,
-            MalformedStreamDefinitionException, SessionTimeoutException {
-        AgentSession agentSession = authenticator.getSession(sessionId);
-        if (agentSession.getUsername() == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("session " + sessionId + " expired ");
+                DifferentStreamDefinitionAlreadyDefinedException,
+                MalformedStreamDefinitionException, SessionTimeoutException {
+            AgentSession agentSession = authenticator.getSession(sessionId);
+            if (agentSession.getUsername() == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("session " + sessionId + " expired ");
+                }
+                throw new SessionTimeoutException(sessionId + " expired");
             }
-            throw new SessionTimeoutException(sessionId + " expired");
-        }
-        try {
-            return eventDispatcher.defineEventStream(streamDefinition, agentSession);
-        } catch (MalformedStreamDefinitionException e) {
-            throw new MalformedStreamDefinitionException(e.getErrorMessage(), e);
-        } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
-            throw new DifferentStreamDefinitionAlreadyDefinedException(e.getErrorMessage(), e);
-        }
-    }
-
-    public String findEventStreamId(String sessionId, String streamName, String streamVersion)
-            throws NoStreamDefinitionExistException, SessionTimeoutException {
-        AgentSession agentSession = authenticator.getSession(sessionId);
-        if (agentSession.getUsername() == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("session " + sessionId + " expired ");
+            try {
+                return eventDispatcher.defineEventStream(streamDefinition, agentSession);
+            } catch (MalformedStreamDefinitionException e) {
+                throw new MalformedStreamDefinitionException(e.getErrorMessage(), e);
+            } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
+                throw new DifferentStreamDefinitionAlreadyDefinedException(e.getErrorMessage(), e);
+            } catch (StreamDefinitionStoreException e) {
+                throw new MalformedStreamDefinitionException(e.getErrorMessage(), e);
             }
-            throw new SessionTimeoutException(sessionId + " expired");
-        }
-        try {
-            return eventDispatcher.findEventStreamId(agentSession.getCredentials(), streamName,
-                                                     streamVersion);
-        } catch (StreamDefinitionNotFoundException e) {
-            throw new NoStreamDefinitionExistException(e.getErrorMessage(), e);
         }
 
-    }
-
-
-    public void publish(Object eventBundle, String sessionId, EventConverter eventConverter)
-            throws UndefinedEventTypeException, SessionTimeoutException {
-        AgentSession agentSession = authenticator.getSession(sessionId);
-        if (agentSession.getUsername() == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("session " + sessionId + " expired ");
+        public String findEventStreamId(String sessionId, String streamName, String streamVersion)
+                throws NoStreamDefinitionExistException, SessionTimeoutException {
+            AgentSession agentSession = authenticator.getSession(sessionId);
+            if (agentSession.getUsername() == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("session " + sessionId + " expired ");
+                }
+                throw new SessionTimeoutException(sessionId + " expired");
             }
-            throw new SessionTimeoutException(sessionId + " expired");
+            try {
+                return eventDispatcher.findEventStreamId(agentSession.getCredentials(), streamName,
+                                                         streamVersion);
+            } catch (StreamDefinitionNotFoundException e) {
+                throw new NoStreamDefinitionExistException(e.getErrorMessage(), e);
+            } catch (StreamDefinitionStoreException e) {
+                throw new NoStreamDefinitionExistException(e.getErrorMessage(), e);
+            }
+
         }
-        eventDispatcher.publish(eventBundle, agentSession, eventConverter);
-    }
 
 
-    public String login(String username, String password) throws AuthenticationException {
-        log.info(username + " connected");
-        return authenticator.authenticate(username, password);
-    }
+        public void publish(Object eventBundle, String sessionId, EventConverter eventConverter)
+                throws UndefinedEventTypeException, SessionTimeoutException {
+            AgentSession agentSession = authenticator.getSession(sessionId);
+            if (agentSession.getUsername() == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("session " + sessionId + " expired ");
+                }
+                throw new SessionTimeoutException(sessionId + " expired");
+            }
+            eventDispatcher.publish(eventBundle, agentSession, eventConverter);
+        }
 
-    public void logout(String sessionId) throws Exception {
-        log.info(sessionId + " disconnected");
-        authenticator.logout(sessionId);
-    }
 
-    public OMElement getInitialConfig() {
-        return initialConfig;
-    }
+        public String login(String username, String password) throws AuthenticationException {
+            log.info(username + " connected");
+            return authenticator.authenticate(username, password);
+        }
 
-    public void setInitialConfig(OMElement initialConfig) {
-        this.initialConfig = initialConfig;
-    }
+        public void logout(String sessionId) throws Exception {
+            log.info(sessionId + " disconnected");
+            authenticator.logout(sessionId);
+        }
+
+        public OMElement getInitialConfig() {
+            return initialConfig;
+        }
+
+        public void setInitialConfig(OMElement initialConfig) {
+            this.initialConfig = initialConfig;
+        }
 
     /**
      * CEP/BAM can subscribe for Event Streams
@@ -152,33 +152,42 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
     @Override
     public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamName,
                                                      String streamVersion)
-            throws StreamDefinitionNotFoundException {
-        return streamDefinitionStore.getStreamDefinition(credentials, streamName, streamVersion);
+            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
+            return streamDefinitionStore.getStreamDefinition(credentials, streamName, streamVersion);
+
     }
 
     @Override
     public EventStreamDefinition getStreamDefinition(Credentials credentials, String streamId)
-            throws StreamDefinitionNotFoundException {
-        return streamDefinitionStore.getStreamDefinition(credentials, streamId);
+            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
+            return streamDefinitionStore.getStreamDefinition(credentials, streamId);
+
     }
 
     @Override
-    public List<EventStreamDefinition> getAllStreamDefinition(Credentials credentials)
-            throws StreamDefinitionNotFoundException {
+    public List<EventStreamDefinition> getAllStreamDefinitions(Credentials credentials) {
         return new ArrayList<EventStreamDefinition>(streamDefinitionStore.getAllStreamDefinitions(credentials));
     }
 
-    @Override
-    public void saveEventStreamDefinition(Credentials credentials, String eventStreamDefinition)
+
+    public void saveStreamDefinition(Credentials credentials, String eventStreamDefinition)
             throws MalformedStreamDefinitionException,
-                   DifferentStreamDefinitionAlreadyDefinedException {
-        streamDefinitionStore.saveStreamDefinition(credentials, EventDefinitionConverter.convertFromJson(eventStreamDefinition));
+            DifferentStreamDefinitionAlreadyDefinedException, StreamDefinitionStoreException {
+            saveStreamDefinition(credentials, EventDefinitionConverterUtils.convertFromJson(eventStreamDefinition));
+    }
+
+
+
+    @Override
+    public void saveStreamDefinition(Credentials credentials, EventStreamDefinition eventStreamDefinition)
+            throws DifferentStreamDefinitionAlreadyDefinedException, StreamDefinitionStoreException {
+        streamDefinitionStore.saveStreamDefinition(credentials, eventStreamDefinition);
     }
 
     @Override
     public String getStreamId(Credentials credentials, String streamName, String streamVersion)
-            throws StreamDefinitionNotFoundException {
-        return streamDefinitionStore.getStreamId(credentials, streamName, streamVersion);
+            throws StreamDefinitionNotFoundException, StreamDefinitionStoreException {
+            return streamDefinitionStore.getStreamId(credentials, streamName, streamVersion);
     }
 
 

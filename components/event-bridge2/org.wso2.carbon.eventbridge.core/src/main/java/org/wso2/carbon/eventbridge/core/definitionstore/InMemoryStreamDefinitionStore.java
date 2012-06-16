@@ -19,6 +19,7 @@ package org.wso2.carbon.eventbridge.core.definitionstore;
 
 import org.wso2.carbon.eventbridge.commons.Credentials;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
+import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,13 +28,15 @@ import java.util.Map;
 /**
  * The in memory implementation of the Event Stream definition Store
  */
-public class InMemoryStreamDefinitionStore extends AbstractStreamDefinitionStore {
+public class InMemoryStreamDefinitionStore extends
+        AbstractStreamDefinitionStore {
 
     private Map<String, HashMap<String, EventStreamDefinition>> streamDefinitionStore = new HashMap<String, HashMap<String, EventStreamDefinition>>();
     private Map<String, HashMap<String, String>> streamIdStore = new HashMap<String, HashMap<String, String>>();
 
     @Override
-    protected void saveStreamIdToStore(Credentials credentials, String streamIdKey, String streamId) {
+    protected void saveStreamIdToStore(Credentials credentials, String streamIdKey, String streamId)
+            throws StreamDefinitionStoreException {
         if (!streamIdStore.containsKey(credentials.getDomainName())) {
             streamIdStore.put(credentials.getDomainName(), new HashMap<String, String>());
         }
@@ -43,7 +46,8 @@ public class InMemoryStreamDefinitionStore extends AbstractStreamDefinitionStore
     @Override
     protected void saveStreamDefinitionToStore(Credentials credentials,
                                                String streamId,
-                                               EventStreamDefinition streamDefinition) {
+                                               EventStreamDefinition streamDefinition)
+            throws StreamDefinitionStoreException {
         if (!streamDefinitionStore.containsKey(credentials.getDomainName())) {
             streamDefinitionStore.put(credentials.getDomainName(), new HashMap<String, EventStreamDefinition>());
         }
@@ -51,7 +55,8 @@ public class InMemoryStreamDefinitionStore extends AbstractStreamDefinitionStore
     }
 
     @Override
-    protected String getStreamIdFromStore(Credentials credentials, String streamIdKey) {
+    protected String getStreamIdFromStore(Credentials credentials, String streamIdKey)
+            throws StreamDefinitionStoreException {
         if (streamIdStore.get(credentials.getDomainName()) != null) {
             return streamIdStore.get(credentials.getDomainName()).get(streamIdKey);
         }
@@ -60,7 +65,7 @@ public class InMemoryStreamDefinitionStore extends AbstractStreamDefinitionStore
 
 
     public EventStreamDefinition getStreamDefinitionFromStore(Credentials credentials,
-                                                              String streamId) {
+                                                              String streamId) throws StreamDefinitionStoreException {
         if (streamDefinitionStore.get(credentials.getDomainName()) != null) {
             return streamDefinitionStore.get(credentials.getDomainName()).get(streamId);
         }

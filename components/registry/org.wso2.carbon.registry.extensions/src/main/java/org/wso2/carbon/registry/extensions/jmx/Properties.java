@@ -46,7 +46,11 @@ public class Properties implements PropertiesMBean {
                 output.add(e.getKey() + ":" + e.getValue());
             }
         } catch (RegistryException e) {
-            log.error("Unable to fetch all properties", e);
+            String msg = "Unable to fetch all properties.";
+            log.error(msg, e);
+            // we are unable to throw a customized exception or an exception with the cause or if
+            // not, JConsole needs additional Jars to marshall exceptions.
+            throw new RuntimeException(Utils.buildMessageForRuntimeException(e, msg));
         }
         return output.toArray(new String[output.size()]);
     }
@@ -55,8 +59,11 @@ public class Properties implements PropertiesMBean {
         try {
             return registry.get(path).getProperty(key);
         } catch (RegistryException e) {
-            log.error("Unable to fetch property value", e);
-            return "";
+            String msg = "Unable to fetch property value.";
+            log.error(msg, e);
+            // we are unable to throw a customized exception or an exception with the cause or if
+            // not, JConsole needs additional Jars to marshall exceptions.
+            throw new RuntimeException(Utils.buildMessageForRuntimeException(e, msg));
         }
     }
 
@@ -66,7 +73,11 @@ public class Properties implements PropertiesMBean {
             resource.setProperty(key, value);
             registry.put(path, resource);
         } catch (RegistryException e) {
-            log.error("Unable to fetch property value", e);
+            String msg = "Unable to set property value.";
+            log.error(msg, e);
+            // we are unable to throw a customized exception or an exception with the cause or if
+            // not, JConsole needs additional Jars to marshall exceptions.
+            throw new RuntimeException(Utils.buildMessageForRuntimeException(e, msg));
         }
     }
 
@@ -76,7 +87,11 @@ public class Properties implements PropertiesMBean {
             resource.removeProperty(key);
             registry.put(path, resource);
         } catch (RegistryException e) {
-            log.error("Unable to fetch property value", e);
+            String msg = "Unable to remove property.";
+            log.error(msg, e);
+            // we are unable to throw a customized exception or an exception with the cause or if
+            // not, JConsole needs additional Jars to marshall exceptions.
+            throw new RuntimeException(Utils.buildMessageForRuntimeException(e, msg));
         }
     }
 }

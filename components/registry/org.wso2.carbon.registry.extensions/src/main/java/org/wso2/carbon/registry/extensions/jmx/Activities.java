@@ -134,7 +134,11 @@ public class Activities implements ActivitiesMBean {
                 }
             }
         } catch (RegistryException e) {
-            log.error("An error occurred while reading audit logs", e);
+            String msg = "An error occurred while reading audit logs.";
+            log.error(msg, e);
+            // we are unable to throw a customized exception or an exception with the cause or if
+            // not, JConsole needs additional Jars to marshall exceptions.
+            throw new RuntimeException(Utils.buildMessageForRuntimeException(e, msg));
         }
         return activities.toArray(new String[activities.size()]);
     }

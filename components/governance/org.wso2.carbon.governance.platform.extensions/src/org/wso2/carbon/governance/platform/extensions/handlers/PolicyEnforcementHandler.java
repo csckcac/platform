@@ -54,7 +54,7 @@ public class PolicyEnforcementHandler extends Handler {
 
     private String sequencePath = null;
     private String registryURL = "https://localhost:9443/registry";
-    private String username = "admin";
+    private String username = null;
     private String password = "admin";
     private String enforcedPoliciesParameter = "security_enforcedPolicies";
     private String associationType = "depends";
@@ -89,6 +89,12 @@ public class PolicyEnforcementHandler extends Handler {
     }
 
     public void put(RequestContext requestContext) throws RegistryException {
+
+        if(username == null) {
+          username = requestContext.getUserName();
+        }
+
+        String _userName = requestContext.getUserName();
         if (sequencePath == null) {
             throw new RegistryException("The sequence path has not been defined");
         }

@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 import org.wso2.carbon.eventbridge.commons.AttributeType;
 import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.commons.thrift.data.ThriftEventBundle;
-import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverter;
+import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverterUtils;
 import org.wso2.carbon.eventbridge.core.exception.EventConversionException;
 import org.wso2.carbon.eventbridge.core.internal.EventStreamTypeHolder;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventConverter;
@@ -54,7 +54,7 @@ public final class ThriftEventConverter implements EventConverter {
                         break;
                     case STRING:
                         String stringValue = thriftEventBundle.getStringAttributeList().get(indexCounter.getStringCount());
-                        if (stringValue.equals(EventDefinitionConverter.nullString)) {
+                        if (stringValue.equals(EventDefinitionConverterUtils.nullString)) {
                             objects[i] = null;
                         } else {
                             objects[i] = stringValue;

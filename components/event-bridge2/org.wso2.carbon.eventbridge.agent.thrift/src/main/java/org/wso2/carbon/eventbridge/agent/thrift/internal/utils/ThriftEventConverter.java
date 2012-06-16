@@ -24,7 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.eventbridge.commons.Event;
 import org.wso2.carbon.eventbridge.commons.thrift.data.ThriftEventBundle;
-import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverter;
+import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverterUtils;
 
 import java.util.LinkedList;
 
@@ -96,7 +96,7 @@ public final class ThriftEventConverter {
                     if (!thriftEventBundle.isSetStringAttributeList()) {
                         thriftEventBundle.setStringAttributeList(new LinkedList<String>());
                     }
-                    thriftEventBundle.addToStringAttributeList(EventDefinitionConverter.nullString);
+                    thriftEventBundle.addToStringAttributeList(EventDefinitionConverterUtils.nullString);
                 } else {
                     log.error("Undefined attribute type : " +object);
                 }

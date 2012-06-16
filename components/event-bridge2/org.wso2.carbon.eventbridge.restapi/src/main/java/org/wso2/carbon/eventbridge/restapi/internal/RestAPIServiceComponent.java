@@ -21,12 +21,10 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
-import org.wso2.carbon.eventbridge.core.EventBridge;
 import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
+import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIApp;
 import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPISecureContext;
 import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIServlet;
-import org.wso2.carbon.eventbridge.restapi.jaxrs.RestAPIApp;
-import org.wso2.carbon.eventbridge.restapi.rest.RestEventReceiver;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 
 import javax.servlet.ServletException;
@@ -52,7 +50,6 @@ public class RestAPIServiceComponent {
     private String path = "/bam";
 
     protected void activate(ComponentContext componentContext) {
-        Utils.setEventReceiver(new RestEventReceiver());
 
     }
 
@@ -87,10 +84,10 @@ public class RestAPIServiceComponent {
     }
 
     protected void setEventBridgeReceiverService(EventBridgeReceiverService eventBridgeReceiverService) {
-        Utils.setEventBridgeReceiverService(eventBridgeReceiverService);
+        Utils.setEventBridgeReceiver(eventBridgeReceiverService);
     }
 
     protected void unsetEventBridgeReceiverService(EventBridgeReceiverService eventBridgeReceiverService) {
-        Utils.setEventBridgeReceiverService(null);
+        Utils.setEventBridgeReceiver(null);
     }
 }

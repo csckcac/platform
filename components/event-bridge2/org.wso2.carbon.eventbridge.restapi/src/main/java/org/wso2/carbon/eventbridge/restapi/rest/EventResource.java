@@ -11,7 +11,6 @@ import org.wso2.carbon.eventbridge.core.EventConverter;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 import org.wso2.carbon.eventbridge.core.internal.EventStreamTypeHolder;
 import org.wso2.carbon.eventbridge.restapi.internal.Utils;
-import org.wso2.carbon.eventbridge.restapi.jaxb.NextVersion;
 import org.wso2.carbon.eventbridge.restapi.utils.RESTUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 /**
@@ -64,13 +62,14 @@ public class EventResource {
     @Path("/{eventStream}/{version}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response publishEvent(
-            @PathParam("eventStream") String eventStream,
+            @PathParam("eventStream") String eventStreamName,
             @PathParam("version") String version, String requestBody,
             @Context HttpServletRequest request) {
 
         try {
             final String eventStreamId =
-                    Utils.getEventBridgeReceiver().findEventStreamId(RESTUtils.getSessionId(request), eventStream, version);
+                    Utils.getEventBridgeReceiver().findEventStreamId(RESTUtils.getSessionId(request), eventStreamName
+                            , version);
             Utils.getEventBridgeReceiver().publish(requestBody, RESTUtils.getSessionId(request),
                     new EventConverter() {
                         @Override
@@ -95,17 +94,21 @@ public class EventResource {
     @Path("/{eventStream}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public NextVersion defineEvent(@PathParam("eventStream") String eventStream,@HeaderParam("authorize") String authHeader,
-                                   String request, @Context UriInfo uriInfo) {
+    public Response defineEvent(@PathParam("eventStream") String eventStream,
+                                   String requestBody, @Context HttpServletRequest request) {
         try {
-            EventStreamDefinition eventStreamDefinition = EventDefinitionConverterUtils.convertFromJson(request);
-            Utils.getEventBridgeReceiver().saveStreamDefinition(RESTUtils.extractAuthHeaders(authHeader), eventStreamDefinition);
-            return new NextVersion(uriInfo.getPath() + eventStreamDefinition.getVersion());
+            EventStreamDefinition eventStreamDefinition = EventDefinitionConverterUtils.convertFromJson(requestBody);
+            Utils.getEventBridgeReceiver().saveEventStreamDefinition(RESTUtils.getSessionId(request),
+                    eventStreamDefinition);
+            return Response.status(Response.Status.ACCEPTED).build();
+
         } catch (MalformedStreamDefinitionException e) {
             throw new WebApplicationException(e);
         } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
             throw new WebApplicationException(e);
         } catch (StreamDefinitionStoreException e) {
+            throw new WebApplicationException(e);
+        } catch (SessionTimeoutException e) {
             throw new WebApplicationException(e);
         }
 

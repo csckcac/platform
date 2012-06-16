@@ -30,53 +30,53 @@ public abstract class AbstractEventReceiver implements EventBridgeReceiverServic
     public String defineEventStream(String sessionId, String streamDefinition)
             throws DifferentStreamDefinitionAlreadyDefinedException, MalformedStreamDefinitionException,
             SessionTimeoutException {
-        return getEventBridge().defineEventStream(sessionId, streamDefinition);
+        return getEventBridgeReceiver().defineEventStream(sessionId, streamDefinition);
     }
 
     @Override
     public String findEventStreamId(String sessionId, String streamName, String streamVersion)
             throws NoStreamDefinitionExistException, SessionTimeoutException {
-        return getEventBridge().findEventStreamId(sessionId, streamName, streamVersion);
+        return getEventBridgeReceiver().findEventStreamId(sessionId, streamName, streamVersion);
     }
 
     @Override
     public void publish(Object eventBundle, String sessionId, EventConverter eventConverter)
             throws UndefinedEventTypeException, SessionTimeoutException {
-        getEventBridge().publish(eventBundle, sessionId, eventConverter);
+        getEventBridgeReceiver().publish(eventBundle, sessionId, eventConverter);
     }
 
     @Override
     public String login(String username, String password) throws AuthenticationException {
-        return getEventBridge().login(username, password);
+        return getEventBridgeReceiver().login(username, password);
     }
 
     @Override
     public void logout(String sessionId) throws Exception {
-        getEventBridge().logout(sessionId);
+        getEventBridgeReceiver().logout(sessionId);
     }
 
     @Override
     public EventStreamDefinition getEventStreamDefinition(String sessionId, String streamName, String streamVersion)
             throws SessionTimeoutException, StreamDefinitionNotFoundException, StreamDefinitionStoreException {
-        return getEventBridge().getEventStreamDefinition(sessionId, streamName, streamVersion);
+        return getEventBridgeReceiver().getEventStreamDefinition(sessionId, streamName, streamVersion);
     }
 
     @Override
     public List<EventStreamDefinition> getAllEventStreamDefinitions(String sessionId) throws SessionTimeoutException {
-        return getEventBridge().getAllEventStreamDefinitions(sessionId);
+        return getEventBridgeReceiver().getAllEventStreamDefinitions(sessionId);
     }
 
     @Override
     public void saveEventStreamDefinition(String sessionId, EventStreamDefinition streamDefinition)
             throws SessionTimeoutException, StreamDefinitionStoreException,
             DifferentStreamDefinitionAlreadyDefinedException {
-        getEventBridge().saveEventStreamDefinition(sessionId, streamDefinition);
+        getEventBridgeReceiver().saveEventStreamDefinition(sessionId, streamDefinition);
     }
 
     @Override
     public OMElement getInitialConfig() {
-        return getEventBridge().getInitialConfig();
+        return getEventBridgeReceiver().getInitialConfig();
     }
 
-    protected abstract EventBridge getEventBridge();
+    protected abstract EventBridgeReceiverService getEventBridgeReceiver();
 }

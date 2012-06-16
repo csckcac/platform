@@ -1,7 +1,7 @@
 package org.wso2.carbon.eventbridge.restapi.rest;
 
 import org.wso2.carbon.eventbridge.core.AbstractEventReceiver;
-import org.wso2.carbon.eventbridge.core.EventBridge;
+import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
 import org.wso2.carbon.eventbridge.restapi.internal.Utils;
 
 /**
@@ -23,7 +23,7 @@ public class RestEventReceiver extends AbstractEventReceiver {
 
 
     @Override
-    public EventBridge getEventBridge() {
+    protected EventBridgeReceiverService getEventBridgeReceiver() {
         return Utils.getEventBridgeReceiver();
     }
 }

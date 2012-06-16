@@ -21,7 +21,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.eventbridge.core.conf.EventBridgeCoreConfiguration;
+import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
 import org.wso2.carbon.eventbridge.core.exception.EventBridgeConfigurationException;
 import org.wso2.carbon.utils.ServerConstants;
 
@@ -44,12 +44,13 @@ public final class EventBridgeCoreBuilder {
 
     private static final Log log = LogFactory.getLog(EventBridgeCoreBuilder.class);
 
-    private EventBridgeCoreBuilder() {}
+    private EventBridgeCoreBuilder() {
+    }
 
     public static OMElement loadConfigXML() throws EventBridgeConfigurationException {
 
         String carbonHome = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH);
-        String path = carbonHome + File.separator + EventBridgeConstants.AGENT_SERVER_CONF;
+        String path = carbonHome + File.separator + EventBridgeConstants.EVENT_BRIDGE_CONFIG_XML;
 
         // if the agent server config file not exists then simply return null.
         File eventBridgeConfigFile = new File(path);
@@ -67,12 +68,12 @@ public final class EventBridgeCoreBuilder {
             omElement.build();
             return omElement;
         } catch (FileNotFoundException e) {
-            String errorMessage = EventBridgeConstants.AGENT_SERVER_CONF
+            String errorMessage = EventBridgeConstants.EVENT_BRIDGE_CONFIG_XML
                                   + "cannot be found in the path : " + path;
             log.error(errorMessage, e);
             throw new EventBridgeConfigurationException(errorMessage, e);
         } catch (XMLStreamException e) {
-            String errorMessage = "Invalid XML for " + EventBridgeConstants.AGENT_SERVER_CONF
+            String errorMessage = "Invalid XML for " + EventBridgeConstants.EVENT_BRIDGE_CONFIG_XML
                                   + " located in the path : " + path;
             log.error(errorMessage, e);
             throw new EventBridgeConfigurationException(errorMessage, e);
@@ -91,14 +92,14 @@ public final class EventBridgeCoreBuilder {
     public static void populateEventStreamDefinitions(OMElement config,
                                                       List<String[]> eventStreamDefinitionList) {
         OMElement eventStreamDefinitions = config.getFirstChildWithName(
-                new QName(EventBridgeConstants.AGENT_SERVER_CONF_NAMESPACE,
-                          EventBridgeConstants.EVENT_STREAM_DEFINITIONS));
+                new QName(EventBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                          EventBridgeConstants.EVENT_STREAM_DEFINITIONS_ELEMENT));
 
         if (eventStreamDefinitions != null) {
             for (Iterator eventStreamDefinitionIterator = eventStreamDefinitions.getChildElements();
                  eventStreamDefinitionIterator.hasNext(); ) {
                 OMElement eventStreamDefinition = (OMElement) eventStreamDefinitionIterator.next();
-                String domainName=eventStreamDefinition.getAttributeValue(new QName(EventBridgeConstants.DOMAIN_NAME));
+                String domainName = eventStreamDefinition.getAttributeValue(new QName(EventBridgeConstants.DOMAIN_NAME_ATTRIBUTE));
 
                 eventStreamDefinitionList.add(new String[]{domainName, eventStreamDefinition.getText()});
             }
@@ -107,28 +108,63 @@ public final class EventBridgeCoreBuilder {
 
 
     public static void populateStreamDefinitionStore(OMElement config,
-                                                      EventBridgeCoreConfiguration eventBridgeCoreConfiguration){
+                                                     EventBridgeConfiguration eventBridgeConfiguration) {
         OMElement streamDefinitionStore = config.getFirstChildWithName(
-                new QName(EventBridgeConstants.AGENT_SERVER_CONF_NAMESPACE,
-                          EventBridgeConstants.STREAM_DEFINITION_STORE));
+                new QName(EventBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                          EventBridgeConstants.STREAM_DEFINITION_STORE_ELEMENT));
         if (streamDefinitionStore != null) {
-            eventBridgeCoreConfiguration.setStreamDefinitionStoreName(streamDefinitionStore.getText());
+            eventBridgeConfiguration.setStreamDefinitionStoreName(streamDefinitionStore.getText());
         }
 
     }
 
-    public static void populateConfigurations(EventBridgeCoreConfiguration eventBridgeCoreConfiguration,
+    public static void populateRuntimeParameters(OMElement config,
+                                                 EventBridgeConfiguration eventBridgeConfiguration) {
+        OMElement workerThreads = config.getFirstChildWithName(
+                new QName(EventBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                          EventBridgeConstants.WORKER_THREADS_ELEMENT));
+        if (workerThreads != null) {
+            try {
+                eventBridgeConfiguration.setWorkerThreads(Integer.parseInt(workerThreads.getText()));
+            } catch (NumberFormatException ignored) {
+
+            }
+        }
+        OMElement eventBufferCapacity = config.getFirstChildWithName(
+                new QName(EventBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                          EventBridgeConstants.EVENT_BUFFER_CAPACITY_ELEMENT));
+        if (eventBufferCapacity != null) {
+            try {
+                eventBridgeConfiguration.setEventBufferCapacity(Integer.parseInt(eventBufferCapacity.getText()));
+            } catch (NumberFormatException ignored) {
+
+            }
+        }
+        OMElement clientTimeout = config.getFirstChildWithName(
+                new QName(EventBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                          EventBridgeConstants.CLIENT_TIMEOUT_ELEMENT));
+        if (clientTimeout != null) {
+            try {
+                eventBridgeConfiguration.setClientTimeOut(Integer.parseInt(clientTimeout.getText()));
+            } catch (NumberFormatException ignored) {
+
+            }
+        }
+
+    }
+
+    public static void populateConfigurations(EventBridgeConfiguration eventBridgeConfiguration,
                                               List<String[]> eventStreamDefinitions,
                                               OMElement bridgeConfig)
             throws EventBridgeConfigurationException {
 
-            if (bridgeConfig != null) {
-                if (!bridgeConfig.getQName().equals(
-                        new QName(EventBridgeConstants.AGENT_SERVER_CONF_NAMESPACE, EventBridgeConstants.AGENT_SERVER_CONF_ELE_ROOT))) {
-                    throw new EventBridgeConfigurationException("Invalid root element in agent server config");
-                }
-                EventBridgeCoreBuilder.populateEventStreamDefinitions(bridgeConfig, eventStreamDefinitions);
-                EventBridgeCoreBuilder.populateStreamDefinitionStore(bridgeConfig, eventBridgeCoreConfiguration);
+        if (bridgeConfig != null) {
+            if (!bridgeConfig.getQName().equals(
+                    new QName(EventBridgeConstants.EVENT_BRIDGE_NAMESPACE, EventBridgeConstants.EVENT_BRIDGE_ROOT_ELEMENT))) {
+                throw new EventBridgeConfigurationException("Invalid root element in agent server config");
             }
+            EventBridgeCoreBuilder.populateEventStreamDefinitions(bridgeConfig, eventStreamDefinitions);
+            EventBridgeCoreBuilder.populateStreamDefinitionStore(bridgeConfig, eventBridgeConfiguration);
         }
+    }
 }

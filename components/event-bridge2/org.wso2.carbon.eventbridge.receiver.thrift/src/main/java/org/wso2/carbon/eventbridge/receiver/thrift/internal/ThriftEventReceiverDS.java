@@ -56,8 +56,9 @@ public class ThriftEventReceiverDS {
     protected void activate(ComponentContext context) {
 
         try {
-            ThriftEventReceiverConfiguration thriftEventReceiverConfiguration = new ThriftEventReceiverConfiguration(CommonThriftConstants.DEFAULT_RECEIVER_PORT + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, CommonThriftConstants.DEFAULT_RECEIVER_PORT);
-            ThriftEventReceiverBuilder.populateConfigurations(serverConfiguration, thriftEventReceiverConfiguration, eventBridgeReceiverService.getInitialConfig());
+            int portOffset = ThriftEventReceiverBuilder.readPortOffset(serverConfiguration);
+            ThriftEventReceiverConfiguration thriftEventReceiverConfiguration = new ThriftEventReceiverConfiguration(CommonThriftConstants.DEFAULT_RECEIVER_PORT + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET + portOffset, CommonThriftConstants.DEFAULT_RECEIVER_PORT + portOffset);
+            ThriftEventReceiverBuilder.populateConfigurations(portOffset, thriftEventReceiverConfiguration, eventBridgeReceiverService.getInitialConfig());
 
             if (eventReceiver == null) {
 

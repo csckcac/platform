@@ -37,26 +37,33 @@ public final class ThriftEventReceiverBuilder {
     }
 
 
-    private static void populatePorts(OMElement agentServerConfig,
-                                      ServerConfigurationService serverConfiguration,
+    private static void populatePorts(OMElement config,
+                                      int portOffset,
                                       ThriftEventReceiverConfiguration thriftEventReceiverConfiguration) {
-        int portOffSet = readPortOffset(serverConfiguration);
-        OMElement secureEventReceiverPort = agentServerConfig.getFirstChildWithName(
-                new QName(EventBridgeConstants.AGENT_SERVER_CONF_NAMESPACE,
-                          ThriftEventReceiverConstants.SECURE_EVENT_RECEIVER_PORT));
+        OMElement secureEventReceiverPort = config.getFirstChildWithName(
+                new QName(EventBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                          ThriftEventReceiverConstants.SECURE_PORT_ELEMENT));
         if (secureEventReceiverPort != null) {
-            thriftEventReceiverConfiguration.setSecureEventReceiverPort(Integer.parseInt(secureEventReceiverPort.getText()) + portOffSet);
+            try {
+                thriftEventReceiverConfiguration.setSecureEventReceiverPort(Integer.parseInt(secureEventReceiverPort.getText()) + portOffset);
+            } catch (NumberFormatException ignored) {
+
+            }
         }
-        OMElement receiverPort = agentServerConfig.getFirstChildWithName(
-                new QName(EventBridgeConstants.AGENT_SERVER_CONF_NAMESPACE,
-                          ThriftEventReceiverConstants.EVENT_RECEIVER_PORT));
+        OMElement receiverPort = config.getFirstChildWithName(
+                new QName(EventBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                          ThriftEventReceiverConstants.PORT_ELEMENT));
         if (receiverPort != null) {
-            thriftEventReceiverConfiguration.setEventReceiverPort(Integer.parseInt(receiverPort.getText()) + portOffSet);
+            try {
+                thriftEventReceiverConfiguration.setEventReceiverPort(Integer.parseInt(receiverPort.getText()) + portOffset);
+            } catch (NumberFormatException ignored) {
+
+            }
         }
     }
 
 
-    private static int readPortOffset(ServerConfigurationService serverConfiguration) {
+    public static int readPortOffset(ServerConfigurationService serverConfiguration) {
 
         String portOffset = serverConfiguration.getFirstProperty(ThriftEventReceiverConstants.CARBON_CONFIG_PORT_OFFSET_NODE);
 
@@ -68,11 +75,16 @@ public final class ThriftEventReceiverBuilder {
     }
 
 
-    public static void populateConfigurations(ServerConfigurationService serverConfiguration,
+    public static void populateConfigurations(int portOffset,
                                               ThriftEventReceiverConfiguration thriftEventReceiverConfiguration,
                                               OMElement initialConfig) {
         if (initialConfig != null) {
-            populatePorts(initialConfig, serverConfiguration, thriftEventReceiverConfiguration);
+            OMElement thriftReceiverConfig = initialConfig.getFirstChildWithName(
+                    new QName(EventBridgeConstants.EVENT_BRIDGE_NAMESPACE,
+                              ThriftEventReceiverConstants.THRIFT_EVENT_RECEIVER_ELEMENT));
+            if (thriftReceiverConfig != null) {
+                populatePorts(thriftReceiverConfig, portOffset, thriftEventReceiverConfiguration);
+            }
         }
     }
 }

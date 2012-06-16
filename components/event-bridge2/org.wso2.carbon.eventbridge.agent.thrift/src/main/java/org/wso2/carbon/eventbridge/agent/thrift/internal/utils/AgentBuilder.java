@@ -22,7 +22,6 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentConfigurationException;
 import org.wso2.carbon.utils.ServerConstants;
 
 import javax.xml.namespace.QName;
@@ -50,20 +49,20 @@ public final class AgentBuilder {
      * Helper method to load the agent config
      *
      * @return the Agent configuration
-     * @throws org.wso2.carbon.eventbridge.agent.thrift.exception.AgentConfigurationException
+     * @param agentConfiguration
      */
-    public static AgentConfiguration loadAgentConfiguration()
-            throws AgentConfigurationException {
+    public static AgentConfiguration loadAgentConfiguration(AgentConfiguration agentConfiguration)
+             {
 
         OMElement agentConfig = loadConfigXML();
         if (agentConfig != null) {
             if (!agentConfig.getQName().equals(
                     new QName(AgentConstants.AGENT_CONF_NAMESPACE, AgentConstants.AGENT_CONF_ELE_ROOT))) {
-                throw new AgentConfigurationException("Invalid root element in agent server config");
+                log.error("Invalid root element in agent config");
             }
             return buildAgentConfiguration(agentConfig);
         }
-        throw new AgentConfigurationException("Invalid agent config");
+       return agentConfiguration;
 
     }
 
@@ -72,7 +71,7 @@ public final class AgentBuilder {
      *
      * @return OMElement representation of the agent config
      */
-    private static OMElement loadConfigXML() throws AgentConfigurationException {
+    private static OMElement loadConfigXML()  {
 
         String carbonHome = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH);
         String path = carbonHome + File.separator + AgentConstants.AGENT_CONF;
@@ -96,12 +95,10 @@ public final class AgentBuilder {
             String errorMessage = AgentConstants.AGENT_CONF
                                   + "cannot be found in the path : " + path;
             log.error(errorMessage, e);
-            throw new AgentConfigurationException(errorMessage, e);
         } catch (XMLStreamException e) {
             String errorMessage = "Invalid XML for " + AgentConstants.AGENT_CONF
                                   + " located in the path : " + path;
             log.error(errorMessage, e);
-            throw new AgentConfigurationException(errorMessage, e);
         } finally {
             try {
                 if (inputStream != null) {
@@ -110,9 +107,9 @@ public final class AgentBuilder {
             } catch (IOException e) {
                 String errorMessage = "Can not close the input stream";
                 log.error(errorMessage, e);
-                throw new AgentConfigurationException(errorMessage, e);
             }
         }
+        return null;
     }
 
     private static AgentConfiguration buildAgentConfiguration(

@@ -28,8 +28,9 @@ import org.wso2.carbon.eventbridge.commons.exception.NoStreamDefinitionExistExce
 import org.wso2.carbon.eventbridge.commons.exception.SessionTimeoutException;
 import org.wso2.carbon.eventbridge.commons.exception.UndefinedEventTypeException;
 import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverter;
-import org.wso2.carbon.eventbridge.core.datastore.AbstractStreamDefinitionStore;
-import org.wso2.carbon.eventbridge.core.datastore.StreamDefinitionStore;
+import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
+import org.wso2.carbon.eventbridge.core.definitionstore.AbstractStreamDefinitionStore;
+import org.wso2.carbon.eventbridge.core.definitionstore.StreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.eventbridge.core.internal.EventDispatcher;
 import org.wso2.carbon.eventbridge.core.internal.authentication.AuthenticationHandler;
@@ -49,13 +50,23 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
     private static final Log log = LogFactory.getLog(EventBridge.class);
     private StreamDefinitionStore streamDefinitionStore;
     private EventDispatcher eventDispatcher;
+    private Authenticator authenticator;
     private OMElement initialConfig;
 
     public EventBridge(AuthenticationHandler authenticationHandler,
-                       AbstractStreamDefinitionStore streamDefinitionStore) {
-        this.eventDispatcher = new EventDispatcher(streamDefinitionStore);
+                       AbstractStreamDefinitionStore streamDefinitionStore,
+                       EventBridgeConfiguration eventBridgeConfiguration) {
+        this.eventDispatcher = new EventDispatcher(streamDefinitionStore, eventBridgeConfiguration);
         this.streamDefinitionStore = streamDefinitionStore;
-        Authenticator.getInstance().init(authenticationHandler);
+        authenticator = new Authenticator(authenticationHandler, eventBridgeConfiguration);
+    }
+
+    public EventBridge(AuthenticationHandler authenticationHandler,
+                       AbstractStreamDefinitionStore streamDefinitionStore) {
+        EventBridgeConfiguration eventBridgeConfiguration =new EventBridgeConfiguration();
+        this.eventDispatcher = new EventDispatcher(streamDefinitionStore, eventBridgeConfiguration);
+        this.streamDefinitionStore = streamDefinitionStore;
+        authenticator = new Authenticator(authenticationHandler, eventBridgeConfiguration);
     }
 
     public String defineEventStream(String sessionId, String streamDefinition)
@@ -63,7 +74,7 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
 
             DifferentStreamDefinitionAlreadyDefinedException,
             MalformedStreamDefinitionException, SessionTimeoutException {
-        AgentSession agentSession = Authenticator.getInstance().getSession(sessionId);
+        AgentSession agentSession = authenticator.getSession(sessionId);
         if (agentSession.getUsername() == null) {
             if (log.isDebugEnabled()) {
                 log.debug("session " + sessionId + " expired ");
@@ -81,8 +92,7 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
 
     public String findEventStreamId(String sessionId, String streamName, String streamVersion)
             throws NoStreamDefinitionExistException, SessionTimeoutException {
-        AgentSession agentSession = Authenticator.getInstance().
-                getSession(sessionId);
+        AgentSession agentSession = authenticator.getSession(sessionId);
         if (agentSession.getUsername() == null) {
             if (log.isDebugEnabled()) {
                 log.debug("session " + sessionId + " expired ");
@@ -101,7 +111,7 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
 
     public void publish(Object eventBundle, String sessionId, EventConverter eventConverter)
             throws UndefinedEventTypeException, SessionTimeoutException {
-        AgentSession agentSession = Authenticator.getInstance().getSession(sessionId);
+        AgentSession agentSession = authenticator.getSession(sessionId);
         if (agentSession.getUsername() == null) {
             if (log.isDebugEnabled()) {
                 log.debug("session " + sessionId + " expired ");
@@ -114,12 +124,12 @@ public class EventBridge implements EventBridgeSubscriberService, EventBridgeRec
 
     public String login(String username, String password) throws AuthenticationException {
         log.info(username + " connected");
-        return Authenticator.getInstance().authenticate(username, password);
+        return authenticator.authenticate(username, password);
     }
 
     public void logout(String sessionId) throws Exception {
         log.info(sessionId + " disconnected");
-        Authenticator.getInstance().logout(sessionId);
+        authenticator.logout(sessionId);
     }
 
     public OMElement getInitialConfig() {

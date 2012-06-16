@@ -26,8 +26,9 @@ public final class ThriftEventReceiverConstants {
 
     private ThriftEventReceiverConstants(){ }
 
-    public static final String SECURE_EVENT_RECEIVER_PORT = "secureEventReceiverPort";
-    public static final String EVENT_RECEIVER_PORT = "eventReceiverPort";
+    public static final String THRIFT_EVENT_RECEIVER_ELEMENT = "thriftEventReceiver";
+    public static final String SECURE_PORT_ELEMENT = "securePort";
+    public static final String PORT_ELEMENT = "port";
 
     public static final int CARBON_DEFAULT_PORT_OFFSET = 0;
     public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";

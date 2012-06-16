@@ -27,17 +27,20 @@ public final class EventBridgeConstants {
     private EventBridgeConstants(){ }
 
     public static final int NO_OF_WORKER_THREADS = 10;
-
-    public static final int EVENT_CAPACITY = 10000;
-    public static final String AGENT_SERVER_CONF = "agent-server-config.xml";
-
-    public static final String AGENT_SERVER_CONF_NAMESPACE = "http://wso2.org/carbon/agent";
-    public static final String AGENT_SERVER_CONF_ELE_ROOT = "agentServerConfiguration";
-
-    public static final String STREAM_DEFINITION_STORE = "StreamDefinitionStore";
-    public static final String EVENT_STREAM_DEFINITIONS = "eventStreamDefinitions";
-    public static final String DOMAIN_NAME = "domainName";
+    public static final int EVENT_BUFFER_CAPACITY = 10000;
     public static final int CLIENT_TIMEOUT_MS = 30000;
 
-    public static final String DEFAULT_DEFINITION_STORE = "org.wso2.carbon.eventbridge.core.datastore.InMemoryStreamDefinitionStore" ;
+    public static final String EVENT_BRIDGE_CONFIG_XML = "event-bridge-config.xml";
+    public static final String EVENT_BRIDGE_NAMESPACE = "http://wso2.org/carbon/eventbridge";
+
+    public static final String EVENT_BRIDGE_ROOT_ELEMENT = "eventBridgeConfiguration";
+    public static final String STREAM_DEFINITION_STORE_ELEMENT = "StreamDefinitionStore";
+    public static final String EVENT_STREAM_DEFINITIONS_ELEMENT = "eventStreamDefinitions";
+    public static final String DOMAIN_NAME_ATTRIBUTE = "domainName";
+
+    public static final String WORKER_THREADS_ELEMENT= "workerThreads";
+    public static final String EVENT_BUFFER_CAPACITY_ELEMENT= "eventBufferCapacity";
+    public static final String CLIENT_TIMEOUT_ELEMENT= "clientTimeoutMS";
+
+    public static final String DEFAULT_DEFINITION_STORE = "org.wso2.carbon.eventbridge.core.definitionstore.InMemoryStreamDefinitionStore" ;
 }

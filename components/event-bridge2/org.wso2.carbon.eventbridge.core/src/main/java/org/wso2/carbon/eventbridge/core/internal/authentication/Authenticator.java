@@ -22,9 +22,9 @@ package org.wso2.carbon.eventbridge.core.internal.authentication;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.eventbridge.commons.exception.AuthenticationException;
+import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.AgentSession;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.SessionCache;
-import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeConstants;
 
 import java.util.UUID;
 
@@ -35,21 +35,13 @@ public final class Authenticator {
 
     private static final Log log = LogFactory.getLog(Authenticator.class);
 
-    private static Authenticator instance = new Authenticator();
-    private static SessionCache sessionCache = new SessionCache(EventBridgeConstants.CLIENT_TIMEOUT_MS /1000);
+    private SessionCache sessionCache;
     private AuthenticationHandler authenticationHandler;
 
-
-    private Authenticator() {
-
-    }
-
-    public static Authenticator getInstance() {
-        return instance;
-    }
-
-    public void init(AuthenticationHandler authenticationHandler) {
+    public Authenticator(AuthenticationHandler authenticationHandler,
+                         EventBridgeConfiguration eventBridgeConfiguration) {
         this.authenticationHandler = authenticationHandler;
+        sessionCache = new SessionCache(eventBridgeConfiguration.getClientTimeOut() / 1000);
     }
 
     public String authenticate(String userName, String password) throws AuthenticationException {

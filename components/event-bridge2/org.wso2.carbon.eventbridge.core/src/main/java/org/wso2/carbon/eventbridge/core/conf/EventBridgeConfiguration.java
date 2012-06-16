@@ -24,9 +24,11 @@ import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeConstants;
 /**
  * configuration details related to EventReceiver
  */
-public class EventBridgeCoreConfiguration {
+public class EventBridgeConfiguration {
     private String streamDefinitionStoreName = EventBridgeConstants.DEFAULT_DEFINITION_STORE;
-
+    private int workerThreads = EventBridgeConstants.NO_OF_WORKER_THREADS;
+    private int eventBufferCapacity = EventBridgeConstants.EVENT_BUFFER_CAPACITY;
+    private int clientTimeOut = EventBridgeConstants.CLIENT_TIMEOUT_MS;
 
     public void setStreamDefinitionStoreName(String eventDefStoreName) {
         streamDefinitionStoreName = eventDefStoreName;
@@ -34,5 +36,29 @@ public class EventBridgeCoreConfiguration {
 
     public String getStreamDefinitionStoreName() {
         return streamDefinitionStoreName;
+    }
+
+    public int getWorkerThreads() {
+        return workerThreads;
+    }
+
+    public void setWorkerThreads(int workerThreads) {
+        this.workerThreads = workerThreads;
+    }
+
+    public int getEventBufferCapacity() {
+        return eventBufferCapacity;
+    }
+
+    public void setEventBufferCapacity(int eventBufferCapacity) {
+        this.eventBufferCapacity = eventBufferCapacity;
+    }
+
+    public int getClientTimeOut() {
+        return clientTimeOut;
+    }
+
+    public void setClientTimeOut(int clientTimeOut) {
+        this.clientTimeOut = clientTimeOut;
     }
 }

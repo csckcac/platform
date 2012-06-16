@@ -14,7 +14,9 @@
   ~ limitations under the License.
   -->
 
-<agentConfiguration xmlns="http://wso2.org/carbon/agent">
+
+
+<thriftAgentConfiguration xmlns="http://wso2.org/carbon/eventbridge/agent/thrift">
 
     <bufferedEventsSize>200</bufferedEventsSize>
 
@@ -32,7 +34,9 @@
 
     <maxMessageBundleSize>100</maxMessageBundleSize>
 
-    <trustStore>/home/suho/projects/wso2/trunk/graphite/products/cep/modules/distribution/product/target/wso2cep-1.0.0-SNAPSHOT/repository/resources/security/client-truststore.jks</trustStore>
+    <trustStore>
+        .../wso2cep-1.0.0-SNAPSHOT/repository/resources/security/client-truststore.jks
+    </trustStore>
     <trustStorePassword>wso2carbon</trustStorePassword>
 
-</agentConfiguration>
+</thriftAgentConfiguration>

@@ -21,16 +21,16 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.eventbridge.agent.thrift.Agent;
-import org.wso2.carbon.eventbridge.agent.thrift.exception.AgentConfigurationException;
+import org.wso2.carbon.eventbridge.agent.thrift.conf.AgentConfiguration;
 import org.wso2.carbon.eventbridge.agent.thrift.internal.utils.AgentBuilder;
 
 /**
  * @scr.component name="agentservice.component" immediate="true"
  */
-public class AgentServiceDS {
-    private static Log log = LogFactory.getLog(AgentServiceDS.class);
+public class AgentDS {
+    private static Log log = LogFactory.getLog(AgentDS.class);
     private Agent agent;
-    private ServiceRegistration agentServerService;
+    private ServiceRegistration serviceRegistration;
 
     /**
      * initialize the agent here.
@@ -38,19 +38,18 @@ public class AgentServiceDS {
      * @param context
      */
     protected void activate(ComponentContext context) {
-
-        try {
-            agentServerService = context.getBundleContext().
-                    registerService(Agent.class.getName(), new Agent(AgentBuilder.loadAgentConfiguration()), null);
+        if (agent == null) {
+            AgentConfiguration agentConfiguration = new AgentConfiguration();
+            agent = new Agent(AgentBuilder.loadAgentConfiguration(agentConfiguration));
+            serviceRegistration = context.getBundleContext().
+                    registerService(Agent.class.getName(), agent, null);
             log.info("Successfully deployed Agent Client");
-        } catch (AgentConfigurationException e) {
-            log.error("Can not create and start Agent ", e);
         }
     }
 
 
     protected void deactivate(ComponentContext context) {
-        context.getBundleContext().ungetService(agentServerService.getReference());
+        context.getBundleContext().ungetService(serviceRegistration.getReference());
         agent.shutdown();
         if (log.isDebugEnabled()) {
             log.debug("Successfully stopped agent");

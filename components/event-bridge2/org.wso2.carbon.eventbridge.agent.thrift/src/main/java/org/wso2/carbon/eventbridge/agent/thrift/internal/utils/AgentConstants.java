@@ -32,9 +32,9 @@ public final class AgentConstants {
     public static final String HOSTNAME_AND_PORT_SEPARATOR = ":";
     public static final String ENDPOINT_SEPARATOR = ",";
 
-    public static final String AGENT_CONF = "agent-config.xml";
-    public static final String AGENT_CONF_NAMESPACE = "http://wso2.org/carbon/agent";
-    public static final String AGENT_CONF_ELE_ROOT = "agentConfiguration";
+    public static final String AGENT_CONF = "thrift-agent-config.xml";
+    public static final String AGENT_CONF_NAMESPACE = "http://wso2.org/carbon/eventbridge/agent/thrift";
+    public static final String AGENT_CONF_ELE_ROOT = "thriftAgentConfiguration";
 
     public static final String BUFFERED_EVENTS_SIZE = "bufferedEventsSize";
     public static final String POOL_SIZE = "poolSize";
@@ -54,8 +54,6 @@ public final class AgentConstants {
     public static final String THRUST_STORE = "trustStore";
     public static final String THRUST_STORE_PASSWORD = "trustStorePassword";
 
-    public static final String DEFAULT_DEFINITION_STORE = "org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore";
-//    public static final String DEFAULT_DEFINITION_STORE = "org.wso2.carbon.bam.eventreceiver.datastore.CassandraStreamDefinitionStore";
     public static final int AGENT_RECONNECTION_TIMES = 3;
 
     public static final long DEFAULT_KEEP_ALIVE_TIME = 20;

@@ -24,9 +24,9 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.eventbridge.core.EventBridge;
 import org.wso2.carbon.eventbridge.core.EventBridgeReceiverService;
 import org.wso2.carbon.eventbridge.core.EventBridgeSubscriberService;
-import org.wso2.carbon.eventbridge.core.conf.EventBridgeCoreConfiguration;
-import org.wso2.carbon.eventbridge.core.datastore.AbstractStreamDefinitionStore;
-import org.wso2.carbon.eventbridge.core.datastore.InMemoryStreamDefinitionStore;
+import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
+import org.wso2.carbon.eventbridge.core.definitionstore.AbstractStreamDefinitionStore;
+import org.wso2.carbon.eventbridge.core.definitionstore.InMemoryStreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.EventBridgeConfigurationException;
 import org.wso2.carbon.eventbridge.core.internal.authentication.CarbonAuthenticationHandler;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeCoreBuilder;
@@ -57,24 +57,24 @@ public class EventBridgeDS {
     protected void activate(ComponentContext context) {
 
         try {
-            EventBridgeCoreConfiguration eventBridgeCoreConfiguration = new EventBridgeCoreConfiguration();
+            EventBridgeConfiguration eventBridgeConfiguration = new EventBridgeConfiguration();
             List<String[]> eventStreamDefinitions = new ArrayList<String[]>();
             initialConfig = EventBridgeCoreBuilder.loadConfigXML();
-            EventBridgeCoreBuilder.populateConfigurations(eventBridgeCoreConfiguration, eventStreamDefinitions, initialConfig);
+            EventBridgeCoreBuilder.populateConfigurations(eventBridgeConfiguration, eventStreamDefinitions, initialConfig);
 
             if (eventBridge == null) {
-                String definitionStoreName = eventBridgeCoreConfiguration.getStreamDefinitionStoreName();
+                String definitionStoreName = eventBridgeConfiguration.getStreamDefinitionStoreName();
                 AbstractStreamDefinitionStore streamDefinitionStore = null;
                 try {
                     streamDefinitionStore = (AbstractStreamDefinitionStore) Class.forName(definitionStoreName).newInstance();
                 } catch (Exception e) {
-                    log.warn("The stream definition store :" + definitionStoreName + " is cannot be created hence using org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore", e);
+                    log.warn("The stream definition store :" + definitionStoreName + " is cannot be created hence using org.wso2.carbon.agent.server.definitionstore.InMemoryStreamDefinitionStore", e);
                     //by default if used InMemoryStreamDefinitionStore
                     streamDefinitionStore = new InMemoryStreamDefinitionStore();
                 }
 
 
-                eventBridge = new EventBridge(new CarbonAuthenticationHandler(authenticationService), streamDefinitionStore);
+                eventBridge = new EventBridge(new CarbonAuthenticationHandler(authenticationService), streamDefinitionStore, eventBridgeConfiguration);
                 eventBridge.setInitialConfig(initialConfig);
 
                 //todo

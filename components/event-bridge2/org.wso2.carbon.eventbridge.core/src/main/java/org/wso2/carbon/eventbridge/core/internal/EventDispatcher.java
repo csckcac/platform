@@ -26,7 +26,8 @@ import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionEx
 import org.wso2.carbon.eventbridge.commons.exception.UndefinedEventTypeException;
 import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverter;
 import org.wso2.carbon.eventbridge.core.AgentCallback;
-import org.wso2.carbon.eventbridge.core.datastore.AbstractStreamDefinitionStore;
+import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
+import org.wso2.carbon.eventbridge.core.definitionstore.AbstractStreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.AgentSession;
 import org.wso2.carbon.eventbridge.core.internal.queue.EventQueue;
@@ -50,8 +51,9 @@ public class EventDispatcher {
     private Map<String, EventStreamTypeHolder> eventStreamTypeCache = new HashMap<String, EventStreamTypeHolder>();
     private EventQueue eventQueue;
 
-    public EventDispatcher(AbstractStreamDefinitionStore streamDefinitionStore) {
-        this.eventQueue = new EventQueue(subscribers);
+    public EventDispatcher(AbstractStreamDefinitionStore streamDefinitionStore,
+                           EventBridgeConfiguration eventBridgeConfiguration) {
+        this.eventQueue = new EventQueue(subscribers, eventBridgeConfiguration);
         this.streamDefinitionStore = streamDefinitionStore;
     }
 

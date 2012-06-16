@@ -20,7 +20,7 @@ package org.wso2.carbon.eventbridge.core.internal.queue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.eventbridge.core.AgentCallback;
-import org.wso2.carbon.eventbridge.core.internal.utils.EventBridgeConstants;
+import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventComposite;
 
 import java.util.List;
@@ -42,11 +42,12 @@ public class EventQueue {
     private ExecutorService executorService;
     private List<AgentCallback> subscribers;
 
-    public EventQueue(List<AgentCallback> subscribers) {
+    public EventQueue(List<AgentCallback> subscribers,
+                      EventBridgeConfiguration eventBridgeConfiguration) {
         this.subscribers = subscribers;
         // Note : Using a fixed worker thread pool and a bounded queue to prevent the server dying if load is too high
-        executorService = Executors.newFixedThreadPool(EventBridgeConstants.NO_OF_WORKER_THREADS);
-        eventQueue = new ArrayBlockingQueue<EventComposite>(EventBridgeConstants.EVENT_CAPACITY);
+        executorService = Executors.newFixedThreadPool(eventBridgeConfiguration.getWorkerThreads());
+        eventQueue = new ArrayBlockingQueue<EventComposite>(eventBridgeConfiguration.getEventBufferCapacity());
     }
 
     public void publish(EventComposite eventComposite) {

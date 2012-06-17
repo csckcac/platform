@@ -36,7 +36,7 @@
             <xs:element name="undeployToolBox">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="toolboxName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="toolboxNames" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -49,13 +49,30 @@
             </xs:element>
             <xs:element name="getDeployedToolBoxes">
                 <xs:complexType>
-                    <xs:sequence />
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="searchKey" nillable="true" type="xs:string" />
+                    </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="getDeployedToolBoxesResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" nillable="true" type="ax217:ToolBoxStatusDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="downloadToolBox">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="toolboxName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="downloadToolBoxResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:base64Binary" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -70,6 +87,12 @@
             </xs:complexType>
         </xs:schema>
     </wsdl:types>
+    <wsdl:message name="downloadToolBoxRequest">
+        <wsdl:part name="parameters" element="ns:downloadToolBox" />
+    </wsdl:message>
+    <wsdl:message name="downloadToolBoxResponse">
+        <wsdl:part name="parameters" element="ns:downloadToolBoxResponse" />
+    </wsdl:message>
     <wsdl:message name="uploadBAMToolBoxRequest">
         <wsdl:part name="parameters" element="ns:uploadBAMToolBox" />
     </wsdl:message>
@@ -92,6 +115,10 @@
         <wsdl:part name="parameters" element="ns:undeployToolBoxResponse" />
     </wsdl:message>
     <wsdl:portType name="BAMToolboxDepolyerServicePortType">
+        <wsdl:operation name="downloadToolBox">
+            <wsdl:input message="ns:downloadToolBoxRequest" wsaw:Action="urn:downloadToolBox" />
+            <wsdl:output message="ns:downloadToolBoxResponse" wsaw:Action="urn:downloadToolBoxResponse" />
+        </wsdl:operation>
         <wsdl:operation name="uploadBAMToolBox">
             <wsdl:input message="ns:uploadBAMToolBoxRequest" wsaw:Action="urn:uploadBAMToolBox" />
             <wsdl:output message="ns:uploadBAMToolBoxResponse" wsaw:Action="urn:uploadBAMToolBoxResponse" />
@@ -121,6 +148,15 @@
             <wsdl:fault name="BAMToolboxDepolyerServiceBAMToolboxDeploymentException">
                 <soap:fault use="literal" name="BAMToolboxDepolyerServiceBAMToolboxDeploymentException" />
             </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="downloadToolBox">
+            <soap:operation soapAction="urn:downloadToolBox" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getDeployedToolBoxes">
             <soap:operation soapAction="urn:getDeployedToolBoxes" style="document" />
@@ -161,6 +197,15 @@
                 <soap12:fault use="literal" name="BAMToolboxDepolyerServiceBAMToolboxDeploymentException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="downloadToolBox">
+            <soap12:operation soapAction="urn:downloadToolBox" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="getDeployedToolBoxes">
             <soap12:operation soapAction="urn:getDeployedToolBoxes" style="document" />
             <wsdl:input>
@@ -197,6 +242,15 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="downloadToolBox">
+            <http:operation location="downloadToolBox" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="getDeployedToolBoxes">
             <http:operation location="getDeployedToolBoxes" />
             <wsdl:input>
@@ -218,13 +272,13 @@
     </wsdl:binding>
     <wsdl:service name="BAMToolboxDepolyerService">
         <wsdl:port name="BAMToolboxDepolyerServiceHttpsSoap11Endpoint" binding="ns:BAMToolboxDepolyerServiceSoap11Binding">
-            <soap:address location="https://10.216.131.50:9443/services/BAMToolboxDepolyerService.BAMToolboxDepolyerServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://10.216.69.213:9443/services/BAMToolboxDepolyerService.BAMToolboxDepolyerServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="BAMToolboxDepolyerServiceHttpsSoap12Endpoint" binding="ns:BAMToolboxDepolyerServiceSoap12Binding">
-            <soap12:address location="https://10.216.131.50:9443/services/BAMToolboxDepolyerService.BAMToolboxDepolyerServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://10.216.69.213:9443/services/BAMToolboxDepolyerService.BAMToolboxDepolyerServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="BAMToolboxDepolyerServiceHttpsEndpoint" binding="ns:BAMToolboxDepolyerServiceHttpBinding">
-            <http:address location="https://10.216.131.50:9443/services/BAMToolboxDepolyerService.BAMToolboxDepolyerServiceHttpsEndpoint/" />
+            <http:address location="https://10.216.69.213:9443/services/BAMToolboxDepolyerService.BAMToolboxDepolyerServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

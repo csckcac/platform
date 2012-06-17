@@ -222,14 +222,7 @@ public class GovernanceEventingHandler extends Handler {
         String relativePath = RegistryUtils.getRelativePath(requestContext.getRegistryContext(),
                 path);
         resource = requestContext.getRepository().get(path);
-//        if(resource.getProperty("registry.subscription.available.property")!=null &&
-//                !resource.getProperty("registry.subscription.available.property").isEmpty()){
-//            relativeOldPath = resource.getProperty("registry.subscription.available.property");
-//            resource.removeProperty("registry.subscription.available.property");
-//            requestContext.setResource(resource);
-//            requestContext.getRegistry().put(path,resource);
-//            isEnvironmentChange=true;
-//        }
+
         if(resource.getProperty("registry.is.environment.change.property")!=null &&
                 !resource.getProperty("registry.is.environment.change.property").isEmpty()){
             isEnvironmentChange = Boolean.parseBoolean(resource.getProperty("registry.is.environment.change.property"));

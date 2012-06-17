@@ -91,6 +91,9 @@ public class ServiceManager {
         String serviceNamespace = CommonUtil.getServiceNamespace(content);
         if (serviceName != null && !serviceName.equals("")) {
             service.setQName(new QName(serviceNamespace, serviceName));
+        } else {
+            throw new GovernanceException("Unable to compute QName from given XML payload, " +
+                    "please ensure that the content passed in matches the configuration.");
         }
         return service;
     }

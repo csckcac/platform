@@ -127,6 +127,9 @@ public class GenericArtifactManager {
                         artifactNamespaceAttribute, artifactElementNamespace) : null;
         if (name != null && !name.equals("")) {
             genericArtifact.setQName(new QName(namespace, name));
+        } else {
+            throw new GovernanceException("Unable to compute QName from given XML payload, " +
+                    "please ensure that the content passed in matches the configuration.");
         }
         return genericArtifact;
     }

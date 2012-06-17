@@ -11,6 +11,10 @@ import org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub;
 import org.wso2.carbon.bam.toolbox.deployer.stub.BAMToolboxDepolyerServiceStub.ToolBoxStatusDTO;
 
 import javax.activation.DataHandler;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.rmi.RemoteException;
 
 /**
@@ -59,10 +63,10 @@ public class BAMToolBoxDeployerClient {
         }
     }
 
-    public ToolBoxStatusDTO getToolBoxStatus()
+    public ToolBoxStatusDTO getToolBoxStatus(String toolType, String search)
             throws BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException, RemoteException {
         try {
-            return stub.getDeployedToolBoxes();
+            return stub.getDeployedToolBoxes(toolType, search);
         } catch (RemoteException e) {
             log.error(e.getMessage(), e);
             throw e;
@@ -72,7 +76,7 @@ public class BAMToolBoxDeployerClient {
         }
     }
 
-    public boolean undeployToolBox(String toolName)
+    public boolean undeployToolBox(String[] toolName)
             throws RemoteException, BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException {
         try {
             return stub.undeployToolBox(toolName);
@@ -82,6 +86,38 @@ public class BAMToolBoxDeployerClient {
         } catch (BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException e) {
             log.error(e.getFaultMessage().getBAMToolboxDeploymentException());
             throw e;
+        }
+    }
+
+    public void downloadBAMTool(String toolName, HttpServletResponse response)
+            throws BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException {
+        try {
+            ServletOutputStream out = response.getOutputStream();
+            DataHandler downloadData = stub.downloadToolBox(toolName);
+            if (downloadData != null) {
+                String fileName = "";
+                if(!toolName.endsWith(".bar")){
+                    fileName = toolName+".bar";
+                }
+                else fileName = toolName;
+                response.setHeader("Content-Disposition", "fileName=" + fileName);
+                response.setContentType(downloadData.getContentType());
+                InputStream in = downloadData.getDataSource().getInputStream();
+                int nextChar;
+                while ((nextChar = in.read()) != -1) {
+                    out.write((char) nextChar);
+                }
+                out.flush();
+                in.close();
+            } else {
+                out.write("The requested service archive was not found on the server".getBytes());
+            }
+        } catch (RemoteException e) {
+               log.error(e.getMessage(), e);
+                throw new BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException(e);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException(e);
         }
     }
 

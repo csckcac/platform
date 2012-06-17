@@ -32,15 +32,15 @@
         String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
         BAMToolBoxDeployerClient client = new BAMToolBoxDeployerClient(cookie, serverURL, configContext);
-        String tool = request.getParameter("toolBoxName");
+        String tools = request.getParameter("toolBoxNames");
+        String[] allTool = tools.split(",");
         boolean success = false;
         try {
-            success = client.undeployToolBox(tool);
+            success = client.undeployToolBox(allTool);
         } catch (Exception e) {
     %>
     <script type="text/javascript">
-        location.href = "../bam-toolbox/listbar.jsp?message=Error while removing toolbox " +
-                '<%=tool%>'+"&undeploysuccess=false";
+        location.href = "../bam-toolbox/listbar.jsp?message=Error while removing toolbox&undeploysuccess=false";
     </script>
     <%
         }
@@ -48,15 +48,14 @@
 
     %>
     <script type="text/javascript">
-        location.href = "../bam-toolbox/listbar.jsp?message=Successfully removed the toolbox " + '<%=tool%>'+
+        location.href = "../bam-toolbox/listbar.jsp?message=Successfully removed the toolbox "+
                 "&undeploysuccess=true";
     </script>
     <%
     } else {
     %>
     <script type="text/javascript">
-        location.href = "../bam-toolbox/listbar.jsp?message=Error while removing toolbox " +
-                '<%=tool%>'+"&undeploysuccess=false";
+        location.href = "../bam-toolbox/listbar.jsp?message=Error while removing toolbox " +"&undeploysuccess=false";
     </script>
     <%
         }

@@ -188,6 +188,7 @@ public class GovernanceEventingHandler extends Handler {
         String stateKey = null;
         Properties props = resource.getProperties();
         String lcName = resource.getProperty("registry.LC.name");
+        boolean isEnvironmentChange=false;
         for (Object key : props.keySet()) {
             String propKey = (String)key;
             if (propKey.matches("registry\\p{Punct}lifecycle\\p{Punct}.*\\p{Punct}state")) {
@@ -221,6 +222,21 @@ public class GovernanceEventingHandler extends Handler {
         String relativePath = RegistryUtils.getRelativePath(requestContext.getRegistryContext(),
                 path);
         resource = requestContext.getRepository().get(path);
+//        if(resource.getProperty("registry.subscription.available.property")!=null &&
+//                !resource.getProperty("registry.subscription.available.property").isEmpty()){
+//            relativeOldPath = resource.getProperty("registry.subscription.available.property");
+//            resource.removeProperty("registry.subscription.available.property");
+//            requestContext.setResource(resource);
+//            requestContext.getRegistry().put(path,resource);
+//            isEnvironmentChange=true;
+//        }
+        if(resource.getProperty("registry.is.environment.change.property")!=null &&
+                !resource.getProperty("registry.is.environment.change.property").isEmpty()){
+            isEnvironmentChange = Boolean.parseBoolean(resource.getProperty("registry.is.environment.change.property"));
+            resource.removeProperty("registry.is.environment.change.property");
+            requestContext.setResource(resource);
+            requestContext.getRegistry().put(path,resource);
+        }
         if (resource == null) {
             return;
         }
@@ -243,7 +259,11 @@ public class GovernanceEventingHandler extends Handler {
         event.setParameter("LifecycleName", lcName);
         event.setParameter("OldLifecycleState", oldState);
         event.setParameter("NewLifecycleState", newState);
-        ((LifeCycleStateChangedEvent)event).setResourcePath(relativePath);
+        if(isEnvironmentChange){
+            ((LifeCycleStateChangedEvent)event).setResourcePath(relativeOldPath);
+        }else{
+            ((LifeCycleStateChangedEvent)event).setResourcePath(relativePath);
+        }
         event.setTenantId(CurrentSession.getCallerTenantId());
         try {
             notify(event, requestContext.getRegistry(), relativePath);

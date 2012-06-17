@@ -273,6 +273,7 @@ function tabActivator(tabId) {
 
     // Updating the global pointer
     currentActiveTab = tabId;
+    window.location = 'index.jsp?tab='+tabId+'&name=' + dashboardName;
     // Set the container view to default
     gadgets.container.setView("default");
 

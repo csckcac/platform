@@ -16,6 +16,7 @@
 package org.wso2.carbon.governance.api.test;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.policies.PolicyManager;
 import org.wso2.carbon.governance.api.policies.dataobjects.Policy;
@@ -31,6 +32,7 @@ import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 
@@ -56,6 +58,22 @@ public class ServiceTest extends BaseTestCase {
         String[] values = newService.getAttributes("testAttribute");
 
         assertEquals(values.length, 2);
+    }
+
+    public void testNewServiceContentXMLInvalid() throws GovernanceException,
+            XMLStreamException {
+        ServiceManager serviceManager = new ServiceManager(registry);
+        String content = "<metadata xmlns=\"http://www.wso2.org/governance/metadata\"><overview><namespace>UserA</namespace></overview></metadata>";
+        OMElement XMLContent = AXIOMUtil.stringToOM(content);
+        try {
+            serviceManager.newService(XMLContent);
+        } catch (GovernanceException e) {
+            assertEquals("Unable to compute QName from given XML payload, " +
+                    "please ensure that the content passed in matches the configuration.",
+                    e.getMessage());
+            return;
+        }
+        fail("An exception was expected to be thrown, but did not.");
     }
 
     public void testServiceSearch() throws Exception {

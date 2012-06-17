@@ -133,11 +133,11 @@
 
                 <tr>
                     <td class="buttonRow">
-                        <input type="button" id="#_1" value="<fmt:message key="reset"/>"
-                               class="button" onclick="resetRetentionProperties()"
-                               <%=readOnly ? "style=\"display:none\"" : ""%>/>
                         <input type="button" id="#_0" value="<fmt:message key="lock"/>"
                                class="button" onclick="setRetentionProperties()"
+                               <%=readOnly ? "style=\"display:none\"" : ""%>/>
+                        <input type="button" id="#_1" value="<fmt:message key="reset"/>"
+                               class="button" onclick="resetRetentionProperties()"
                                <%=readOnly ? "style=\"display:none\"" : ""%>/>
                     </td>
                 </tr>

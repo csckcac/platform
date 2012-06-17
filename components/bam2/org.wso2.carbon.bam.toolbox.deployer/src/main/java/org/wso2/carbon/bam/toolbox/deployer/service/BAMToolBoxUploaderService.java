@@ -10,6 +10,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -33,13 +34,13 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
 
     public boolean uploadBAMToolBox(DataHandler toolbox, String toolboxName) throws BAMToolboxDeploymentException {
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
-         String repoPath =  "";
-        if(tenantId == MultitenantConstants.SUPER_TENANT_ID){
-             repoPath = ServiceHolder.getConfigurationContextService()
-                .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
-        }else {
-            String tenantRepoPath = "/repository/tenants/"+tenantId;
-            repoPath = CarbonUtils.getCarbonHome()+ tenantRepoPath;
+        String repoPath = "";
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+            repoPath = ServiceHolder.getConfigurationContextService()
+                    .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
+        } else {
+            String tenantRepoPath = "/repository/tenants/" + tenantId;
+            repoPath = CarbonUtils.getCarbonHome() + tenantRepoPath;
         }
         File hotDeploymentDir = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER);
         if (hotDeploymentDir.exists()) {
@@ -62,18 +63,18 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
         }
     }
 
-    public ToolBoxStatusDTO getDeployedToolBoxes() throws BAMToolboxDeploymentException {
+    public ToolBoxStatusDTO getDeployedToolBoxes(String type, String searchKey) throws BAMToolboxDeploymentException {
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
 
         ToolBoxStatusDTO toolBoxStatusDTO = new ToolBoxStatusDTO();
 
-        String repoPath =  "";
-        if(tenantId == MultitenantConstants.SUPER_TENANT_ID){
-             repoPath = ServiceHolder.getConfigurationContextService()
-                .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
-        }else {
-            String tenantRepoPath = "/repository/tenants/"+tenantId;
-            repoPath = CarbonUtils.getCarbonHome()+ tenantRepoPath;
+        String repoPath = "";
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+            repoPath = ServiceHolder.getConfigurationContextService()
+                    .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
+        } else {
+            String tenantRepoPath = "/repository/tenants/" + tenantId;
+            repoPath = CarbonUtils.getCarbonHome() + tenantRepoPath;
         }
         File hotDeploymentDir = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER);
 
@@ -85,25 +86,35 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
 
         String[] toolsInDir = hotDeploymentDir.list(filter);
 
+        if (null == searchKey) searchKey = "";
+
         ToolBoxConfigurationManager configurationManager = ToolBoxConfigurationManager.getInstance();
         ArrayList<String> toolsInConf = configurationManager.getAllToolBoxNames(tenantId);
+        if (null == type || "".equals(type) || type.equals("1")) {
+            toolBoxStatusDTO.setDeployedTools(getDeployedTools(toolsInDir, toolsInConf, searchKey));
+            toolBoxStatusDTO.setToBeDeployedTools(getToBeDeployedTools(toolsInDir, toolsInConf, searchKey));
+            toolBoxStatusDTO.setToBeUndeployedTools(getToBeUnDeployedTools(toolsInDir, toolsInConf, searchKey));
 
-        toolBoxStatusDTO.setDeployedTools(getDeployedTools(toolsInDir, toolsInConf));
-        toolBoxStatusDTO.setToBeDeployedTools(getToBeDeployedTools(toolsInDir, toolsInConf));
-        toolBoxStatusDTO.setToBeUndeployedTools(getToBeUnDeployedTools(toolsInDir, toolsInConf));
+        } else if (type.equalsIgnoreCase("2")) {
+            toolBoxStatusDTO.setDeployedTools(getDeployedTools(toolsInDir, toolsInConf, searchKey));
+        } else if (type.equalsIgnoreCase("3")) {
+            toolBoxStatusDTO.setToBeDeployedTools(getToBeDeployedTools(toolsInDir, toolsInConf, searchKey));
+        } else {
+            toolBoxStatusDTO.setToBeUndeployedTools(getToBeUnDeployedTools(toolsInDir, toolsInConf, searchKey));
+        }
 
         return toolBoxStatusDTO;
     }
 
 
-    private String[] getDeployedTools(String[] toolsInDir, ArrayList<String> toolsInConf) {
+    private String[] getDeployedTools(String[] toolsInDir, ArrayList<String> toolsInConf, String searchKey) {
         ArrayList<String> deployedTools = new ArrayList<String>();
         if (null != toolsInDir) {
             for (String tool : toolsInDir) {
                 if (tool.endsWith(".bar")) {
                     tool = tool.replaceAll(".bar", "");
                 }
-                if (toolsInConf.contains(tool)) {
+                if ((searchKey.equals("") || searchKey.equals("*") || tool.equalsIgnoreCase(searchKey)) && toolsInConf.contains(tool)) {
                     deployedTools.add(tool);
                 }
             }
@@ -111,14 +122,14 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
         return deployedTools.toArray(new String[deployedTools.size()]);
     }
 
-    private String[] getToBeDeployedTools(String[] toolsInDir, ArrayList<String> toolsInConf) {
+    private String[] getToBeDeployedTools(String[] toolsInDir, ArrayList<String> toolsInConf, String searchKey) {
         ArrayList<String> toBedeployedTools = new ArrayList<String>();
         if (null != toolsInDir) {
             for (String tool : toolsInDir) {
                 if (tool.endsWith(".bar")) {
                     tool = tool.replaceAll(".bar", "");
                 }
-                if (!toolsInConf.contains(tool)) {
+                if ((searchKey.equals("") || searchKey.equals("*") || tool.equalsIgnoreCase(searchKey)) && !toolsInConf.contains(tool)) {
                     toBedeployedTools.add(tool);
                 }
             }
@@ -126,12 +137,12 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
         return toBedeployedTools.toArray(new String[toBedeployedTools.size()]);
     }
 
-    private String[] getToBeUnDeployedTools(String[] toolsInDir, ArrayList<String> toolsInConf) {
+    private String[] getToBeUnDeployedTools(String[] toolsInDir, ArrayList<String> toolsInConf, String searchKey) {
 
         ArrayList<String> toBeUndeployedTools = new ArrayList<String>();
         if (null != toolsInConf) {
             for (String tool : toolsInConf) {
-                String toolName  = tool;
+                String toolName = tool;
                 tool += ".bar";
                 if (null != toolsInDir) {
                     boolean exists = false;
@@ -141,38 +152,70 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
                             break;
                         }
                     }
-                    if (!exists){
+                    if ((searchKey.equals("") || searchKey.equals("*") || tool.equalsIgnoreCase(searchKey)) && !exists) {
                         toBeUndeployedTools.add(toolName);
                     }
-                }
-                else {
-                    toBeUndeployedTools.addAll(toolsInConf);
-                    break;
+                } else {
+                    if (searchKey.equals("") || searchKey.equals("*")) {
+                        toBeUndeployedTools.addAll(toolsInConf);
+                        break;
+                    } else {
+                        if (tool.equalsIgnoreCase(searchKey)) {
+                            toBeUndeployedTools.add(tool);
+                        }
+                    }
                 }
             }
         }
         return toBeUndeployedTools.toArray(new String[toBeUndeployedTools.size()]);
     }
 
-    public boolean undeployToolBox(String toolboxName) throws BAMToolboxDeploymentException {
-        int tenantId = CarbonContext.getCurrentContext().getTenantId();
-         String repoPath =  "";
-        if(tenantId == MultitenantConstants.SUPER_TENANT_ID){
-             repoPath = ServiceHolder.getConfigurationContextService()
-                .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
-        }else {
-            String tenantRepoPath = "/repository/tenants/"+tenantId;
-            repoPath = CarbonUtils.getCarbonHome()+ tenantRepoPath;
-        }
-        File toolbox = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER +
-                File.separator + toolboxName + ".bar");
-        if (toolbox.exists()) {
-            toolbox.delete();
+    public boolean undeployToolBox(String[] toolboxNames) throws BAMToolboxDeploymentException {
+        if (null != toolboxNames) {
+
+            int tenantId = CarbonContext.getCurrentContext().getTenantId();
+            String repoPath = "";
+            if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+                repoPath = ServiceHolder.getConfigurationContextService()
+                        .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
+            } else {
+                String tenantRepoPath = "/repository/tenants/" + tenantId;
+                repoPath = CarbonUtils.getCarbonHome() + tenantRepoPath;
+            }
+            for (String toolboxName : toolboxNames) {
+                if (null != toolboxName && !toolboxName.trim().equals("")) {
+                    File toolbox = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER +
+                            File.separator + toolboxName.trim() + ".bar");
+                    if (toolbox.exists()) {
+                        toolbox.delete();
+                    } else {
+                        throw new BAMToolboxDeploymentException("No Tool Box exists" +
+                                " in the deployment folder" + toolboxName);
+                    }
+                }
+            }
             return true;
         } else {
-            throw new BAMToolboxDeploymentException("No Tool Box exists" +
-                    " in the deployment folder" + toolboxName);
+            return true;
         }
 
     }
+
+
+    public DataHandler downloadToolBox(String toolboxName) {
+        int tenantId = CarbonContext.getCurrentContext().getTenantId();
+        String repoPath = "";
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+            repoPath = ServiceHolder.getConfigurationContextService()
+                    .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
+        } else {
+            String tenantRepoPath = "/repository/tenants/" + tenantId;
+            repoPath = CarbonUtils.getCarbonHome() + tenantRepoPath;
+        }
+        File toolbox = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER +
+                File.separator + toolboxName + ".bar");
+        FileDataSource datasource = new FileDataSource(toolbox);
+        return new DataHandler(datasource);
+    }
+
 }

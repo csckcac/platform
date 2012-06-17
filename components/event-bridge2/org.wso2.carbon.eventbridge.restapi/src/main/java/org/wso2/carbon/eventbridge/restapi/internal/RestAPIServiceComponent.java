@@ -47,7 +47,7 @@ public class RestAPIServiceComponent {
 
     private static Log log = LogFactory.getLog(RestAPIServiceComponent.class);
 
-    private String path = "/bam";
+    private String path = "/eventstreams";
 
     protected void activate(ComponentContext componentContext) {
 

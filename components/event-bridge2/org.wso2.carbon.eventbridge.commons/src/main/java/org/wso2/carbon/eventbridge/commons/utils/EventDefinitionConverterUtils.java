@@ -20,6 +20,7 @@ package org.wso2.carbon.eventbridge.commons.utils;
 
 
 import com.google.gson.Gson;
+import org.json.JSONArray;
 import org.wso2.carbon.eventbridge.commons.Attribute;
 import org.wso2.carbon.eventbridge.commons.AttributeType;
 import org.wso2.carbon.eventbridge.commons.EventStreamDefinition;
@@ -50,6 +51,8 @@ public final class EventDefinitionConverterUtils {
             return null;  //to improve performance
         }
     }
+
+
 
 
     public static EventStreamDefinition convertFromJson(String streamDefinition)
@@ -91,6 +94,15 @@ public final class EventDefinitionConverterUtils {
         } catch (RuntimeException e) {
             throw new MalformedStreamDefinitionException(" Malformed stream definition " + streamDefinition, e);
         }
+    }
+
+    public static String convertToJson(List<EventStreamDefinition> existingDefinitions) {
+        JSONArray jsonDefnArray = new JSONArray();
+        for (EventStreamDefinition existingDefinition : existingDefinitions) {
+            jsonDefnArray.put(convertToJson(existingDefinition));
+        }
+
+        return jsonDefnArray.toString();
     }
 
     public static String convertToJson(EventStreamDefinition existingDefinition) {

@@ -27,13 +27,13 @@ public class RestAPISecureContext implements HttpContext {
 
     @Override
     public boolean handleSecurity(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (!request.getScheme().equals("https")) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return false;
-        }
 
         if (RESTUtils.isAuthenticated(request)) {
             return true;
+        }
+        if (!request.getScheme().equals("https")) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return false;
         }
 
         if (request.getHeader("Authorization") == null) {

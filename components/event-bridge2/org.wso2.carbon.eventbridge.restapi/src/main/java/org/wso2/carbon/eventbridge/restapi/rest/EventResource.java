@@ -8,6 +8,7 @@ import org.wso2.carbon.eventbridge.commons.exception.*;
 import org.wso2.carbon.eventbridge.commons.utils.EventConverterUtils;
 import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverterUtils;
 import org.wso2.carbon.eventbridge.core.EventConverter;
+import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
 import org.wso2.carbon.eventbridge.core.internal.EventStreamTypeHolder;
 import org.wso2.carbon.eventbridge.restapi.internal.Utils;
@@ -94,7 +95,7 @@ public class EventResource {
     @Path("/{eventStream}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response defineEvent(@PathParam("eventStream") String eventStream,
+    public Response saveEventStreamDefn(@PathParam("eventStream") String eventStream,
                                    String requestBody, @Context HttpServletRequest request) {
         try {
             EventStreamDefinition eventStreamDefinition = EventDefinitionConverterUtils.convertFromJson(requestBody);
@@ -115,11 +116,47 @@ public class EventResource {
     }
 
     @GET
-    @Path("/")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getSampleText() {
-        return "BAM REST API is now live! \n";
+    @Path("/{eventStream}/{version}")
+    public Response getStreamDefinition(
+                @PathParam("eventStream") String eventStreamName,
+                @PathParam("version") String version,
+                @Context HttpServletRequest request) {
+
+            try {
+                Utils.getEventBridgeReceiver().getEventStreamDefinition(RESTUtils.getSessionId(request), eventStreamName, version);
+                return Response.status(Response.Status.ACCEPTED).build();
+
+            } catch (SessionTimeoutException e) {
+                throw new WebApplicationException(e);
+            } catch (StreamDefinitionStoreException e) {
+                throw new WebApplicationException(e);
+            } catch (StreamDefinitionNotFoundException e) {
+                throw new WebApplicationException(e);
+            }
+
+
     }
+
+    @GET
+    @Path("/")
+    public String getAllStreamDefinitions(
+                @Context HttpServletRequest request) {
+
+            try {
+                List<EventStreamDefinition> allEventStreamDefinitions =
+                        Utils.getEventBridgeReceiver().getAllEventStreamDefinitions(RESTUtils.getSessionId(request));
+                return EventDefinitionConverterUtils.convertToJson(allEventStreamDefinitions);
+
+            } catch (SessionTimeoutException e) {
+                throw new WebApplicationException(e);
+            }
+
+
+    }
+
+
+
+
 
 
 }

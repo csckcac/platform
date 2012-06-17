@@ -36,10 +36,9 @@ public class RESTUtils {
         String usernameAndPassword = new String(Base64.decodeBase64(authHeader.substring(6).getBytes()));
 
         int userNameIndex = usernameAndPassword.indexOf(":");
-        Credentials credentials = new Credentials(usernameAndPassword.substring(0, userNameIndex),
-                usernameAndPassword.substring(userNameIndex + 1));
 
-        return credentials;
+        return new Credentials(usernameAndPassword.substring(0, userNameIndex),
+                usernameAndPassword.substring(userNameIndex + 1));
     }
 
     public static boolean authenticate(HttpServletRequest request) {

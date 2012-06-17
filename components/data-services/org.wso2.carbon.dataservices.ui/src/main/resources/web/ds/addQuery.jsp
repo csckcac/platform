@@ -758,6 +758,9 @@
 				        <%--<option value="false">No</option>--%>
 				        <%--<% } %>--%>
 				        <%--</select> </td>--%>
+                <%
+                    if (!(datasourceType.equals("GDATA_SPREADSHEET") || datasourceType.equals("EXCEL"))) {
+                %>
                 <td>
                     <%
                         if (returnGeneratedKeys) {
@@ -780,6 +783,7 @@
                 <td><input type="text" name="keyColumns" id="keyColumns" value="<%=keyColumns%>"/>
                 </td>
             </tr>
+            <% } %>
             <% } %>
         </table>
     </td>

@@ -14,44 +14,50 @@
  *  limitations under the License.
  */
 
-function onTypeSelectionChange(benTypeElementName,nsLinkType) {
+function onTypeSelectionChange(benTypeElementName, nsLinkType) {
 	var propertyType = getSelectedValue(benTypeElementName);
-    if (propertyType != null) {
-        settypeBeanType(propertyType,benTypeElementName,nsLinkType);
-    }
+	if (propertyType != null) {
+		settypeBeanType(propertyType, benTypeElementName, nsLinkType);
+	}
 }
 
-
-function settypeBeanType(type,name,nsLinkType) {
-    var nsEditorButtonTD = document.getElementById(nsLinkType);
-    if (nsEditorButtonTD == null || nsEditorButtonTD == undefined) {
-        return;
-    }
-    if ("expression" == type) {
-    	nsEditorButtonTD.style.display="";
-    } else {
-    	nsEditorButtonTD.style.display="none";
-    }
+function settypeBeanType(type, name, nsLinkType) {
+	var nsEditorButtonTD = document.getElementById(nsLinkType);
+	if (nsEditorButtonTD == null || nsEditorButtonTD == undefined) {
+		return;
+	}
+	if ("expression" == type) {
+		nsEditorButtonTD.style.display = "";
+	} else {
+		nsEditorButtonTD.style.display = "none";
+	}
 }
-
 
 function getSelectedValue(id) {
-    var propertyType = document.getElementById(id);
-    var propertyType_indexstr = null;
-    var propertyType_value = null;
-    if (propertyType != null) {
-        propertyType_indexstr = propertyType.selectedIndex;
-        if (propertyType_indexstr != null) {
-            propertyType_value = propertyType.options[propertyType_indexstr].value;
-        }
-    }
-    return propertyType_value;
+	var propertyType = document.getElementById(id);
+	var propertyType_indexstr = null;
+	var propertyType_value = null;
+	if (propertyType != null) {
+		propertyType_indexstr = propertyType.selectedIndex;
+		if (propertyType_indexstr != null) {
+			propertyType_value = propertyType.options[propertyType_indexstr].value;
+		}
+	}
+	return propertyType_value;
 }
 
-
-
-function ejbMediatorValidate() {
-	//alert("call...");
-    return true;
+function beanMediatorValidate() {
+	var clazz = document.getElementById("clazz");
+	if (clazz && clazz.value == "") {
+		CARBON.showErrorDialog(beani18n["mediator.bean.clazz.value.empty"]);
+		return false;
+	} 
+		
+	var beanVar = document.getElementById("beanVar");
+	if (beanVar && beanVar.value == "") {
+		CARBON.showErrorDialog(beani18n["mediator.bean.beanVar.value.empty"]);
+		return false;
+	} 
+	return true;
 
 }

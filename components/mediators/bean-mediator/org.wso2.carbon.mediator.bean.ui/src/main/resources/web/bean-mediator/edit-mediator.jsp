@@ -81,7 +81,7 @@
 <fmt:bundle basename="org.wso2.carbon.mediator.bean.ui.i18n.Resources">
 	<carbon:jsi18n
 		resourceBundle="org.wso2.carbon.mediator.bean.ui.i18n.JSResources"
-		request="<%=request%>" i18nObjectName="logi18n" />
+		request="<%=request%>" i18nObjectName="beani18n" />
 	<div>
 		<script type="text/javascript"
 			src="../bean-mediator/js/mediator-util.js"></script>
@@ -145,8 +145,7 @@
 								name="beanVar" id="beanVar" /></td>
 						  </tr>
 						   <tr>
-							<td><fmt:message key="mediator.bean.property" /><span
-								class="required">*</span></td>
+							<td><fmt:message key="mediator.bean.property" /></td>
 							<td><input class="longInput" type="text" value="<%=property%>"
 								name="property" id="property" /></td>
 						  </tr>			

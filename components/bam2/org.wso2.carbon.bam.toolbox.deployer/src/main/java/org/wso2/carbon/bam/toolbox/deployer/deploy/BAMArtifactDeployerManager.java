@@ -32,8 +32,10 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.utils.MediaTypesUtils;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class BAMArtifactDeployerManager {
 
@@ -56,6 +58,7 @@ public class BAMArtifactDeployerManager {
 
     private void deployScripts(ToolBoxDTO toolBoxDTO) throws BAMToolboxDeploymentException {
         String scriptParent = toolBoxDTO.getScriptsParentDirectory();
+        ArrayList<String> scriptNameWithId = new ArrayList<String>();
         for (String aScript : toolBoxDTO.getScriptNames()) {
             String path = scriptParent + File.separator + aScript;
             File scriptFile = new File(path);
@@ -63,7 +66,8 @@ public class BAMArtifactDeployerManager {
             String scriptName = scriptFile.getName();
             scriptName = scriptName.split("\\.")[0];
             String content = getContent(scriptFile);
-
+            scriptName = scriptName +"_"+ getRandomArtifactId();
+            scriptNameWithId.add(scriptName);
             try {
                 HiveScriptStoreClient scriptStoreClient = HiveScriptStoreClient.getInstance();
                 scriptStoreClient.saveHiveScript(scriptName, content, null);
@@ -73,18 +77,25 @@ public class BAMArtifactDeployerManager {
                 log.error(e.getMessage(), e);
             }
         }
+        toolBoxDTO.setScriptNames(scriptNameWithId);
 
+    }
+
+    private static  int getRandomArtifactId(){
+         Random randomGenerator = new Random();
+         return randomGenerator.nextInt(1000);
     }
 
     private void deployGadget(ToolBoxDTO toolBoxDTO, String username) {
         try {
             DashboardClient dashboardClient = DashboardClient.getInstance();
+
             for (DashBoardTabDTO tabDTO : toolBoxDTO.getDashboardTabs()) {
                 int tabID = dashboardClient.addTab(username, tabDTO.getTabName());
                 tabDTO.setTabId(tabID);
                 for (String aGadget : tabDTO.getGadgets()) {
                     dashboardClient.addNewGadget(username, String.valueOf(tabID),
-                            "/registry/resource/_system/config/repository/dashboards/gadgets/" + aGadget);
+                            "/registry/resource/_system/config/repository/dashboards/gadgets/" +aGadget);
                 }
             }
         } catch (BAMComponentNotFoundException e) {
@@ -124,7 +135,7 @@ public class BAMArtifactDeployerManager {
         }
 
         if (canDeployGadgets()) {
-            transferGadgetsFilesToRegistry(new File(toolBoxDTO.getGagetsParentDirectory()), tenantId);
+            transferGadgetsFilesToRegistry(toolBoxDTO, tenantId);
             deployGadget(toolBoxDTO, username);
         }
 
@@ -149,8 +160,9 @@ public class BAMArtifactDeployerManager {
         }
     }
 
-    private void transferGadgetsFilesToRegistry(File rootDirectory, int tenantId) throws BAMToolboxDeploymentException {
+    private void transferGadgetsFilesToRegistry(ToolBoxDTO toolBoxDTO, int tenantId) throws BAMToolboxDeploymentException {
         try {
+            File rootDirectory = new File(toolBoxDTO.getGagetsParentDirectory());
             // Storing the root path for future reference
             String rootPath = rootDirectory.getAbsolutePath();
 
@@ -163,7 +175,7 @@ public class BAMArtifactDeployerManager {
                 if (!registry.resourceExists(gadgetsPath)) {
                     registry.put(gadgetsPath, registry.newCollection());
                 }
-                transferDirectoryContentToRegistry(rootDirectory, registry, rootPath, tenantId);
+                transferDirectoryContentToRegistry(rootDirectory, registry, rootPath, tenantId, toolBoxDTO);
                 registry.commitTransaction();
             } catch (Exception e) {
                 registry.rollbackTransaction();
@@ -177,8 +189,9 @@ public class BAMArtifactDeployerManager {
         }
     }
 
+
     private static void transferDirectoryContentToRegistry(File rootDirectory, Registry registry,
-                                                           String rootPath, int tenantId)
+                                                           String rootPath, int tenantId, ToolBoxDTO toolBoxDTO)
             throws FileNotFoundException, BAMToolboxDeploymentException {
 
         try {
@@ -197,10 +210,10 @@ public class BAMArtifactDeployerManager {
                     registry.put(directoryRegistryPath, newCollection);
 
                     // recurse
-                    transferDirectoryContentToRegistry(file, registry, rootPath, tenantId);
+                    transferDirectoryContentToRegistry(file, registry, rootPath, tenantId, toolBoxDTO);
                 } else {
                     // Add this to registry
-                    addToRegistry(rootPath, file, tenantId);
+                    addToRegistry(rootPath, file, tenantId, toolBoxDTO);
                 }
             }
         } catch (Exception e) {
@@ -210,14 +223,15 @@ public class BAMArtifactDeployerManager {
 
     }
 
-    private static void addToRegistry(String rootPath, File file, int tenantId) throws BAMToolboxDeploymentException {
+    private static void addToRegistry(String rootPath, File file, int tenantId, ToolBoxDTO toolBoxDTO) throws BAMToolboxDeploymentException {
         try {
             Registry registry = ServiceHolder.getRegistry(tenantId);
+            String gadgetSuffix = "_"+ getRandomArtifactId();
 
             // This path is used to store the file resource under registry
             String fileRegistryPath =
                     gadgetsPath + file.getAbsolutePath().substring(rootPath.length())
-                            .replaceAll("[/\\\\]+", "/");
+                            .replaceAll("[/\\\\]+", "/")+gadgetSuffix;
 
             // Adding the file to the Registry
 
@@ -228,6 +242,7 @@ public class BAMArtifactDeployerManager {
             } else {
                 fileResource.setMediaType(mediaType);
             }
+            toolBoxDTO.replaceGadgetName(file.getName(), file.getName()+gadgetSuffix);
             fileResource.setContentStream(new FileInputStream(file));
             registry.put(fileRegistryPath, fileResource);
 

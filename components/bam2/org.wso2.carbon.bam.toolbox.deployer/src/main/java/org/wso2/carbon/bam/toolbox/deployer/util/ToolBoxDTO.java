@@ -105,4 +105,16 @@ public class ToolBoxDTO {
          dashboardTabs.get(index).addGadget(gadgetName);
     }
 
+    public void replaceGadgetName(String oldName, String newName){
+       for (DashBoardTabDTO tabDTO : this.dashboardTabs){
+           ArrayList<String> newGadgetNames = new ArrayList<String>();
+           for (String aGadget: tabDTO.getGadgets()){
+              if(aGadget.equals(oldName)){
+                  newGadgetNames.add(newName);
+              }else {
+                  newGadgetNames.add(oldName);
+              }
+           }
+       }
+    }
 }

@@ -92,7 +92,7 @@ public class AuthnRequestProcessor {
             if (!isAuthencated && authMode.equals(SAMLSSOConstants.AuthnModes.USERNAME_PASSWORD)) {
                 RealmService realmService = SAMLSSOUtil.getRealmService();
                 TenantManager tenantManager = realmService.getTenantManager();
-                String tenantDomain = UserCoreUtil.getTenantDomain(realmService, authnReqDTO.getUsername());
+                String tenantDomain = MultitenantUtils.getTenantDomain(authnReqDTO.getUsername());
                 int tenantId = tenantManager.getTenantId(tenantDomain);
                 if (tenantId > 0) {
                     boolean isTenantActive = tenantManager.isTenantActive(tenantId);

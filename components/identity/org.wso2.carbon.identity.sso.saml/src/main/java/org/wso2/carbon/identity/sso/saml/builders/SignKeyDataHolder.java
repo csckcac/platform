@@ -79,7 +79,7 @@ public class SignKeyDataHolder implements X509Credential {
         Certificate[] certificates ;
 
         try {
-            String tenantDomain = UserCoreUtil.getTenantDomain(SAMLSSOUtil.getRealmService(), username);
+             String tenantDomain = TenantUtils.getTenantDomain(username);
             int tenantID = SAMLSSOUtil.getRealmService().getTenantManager().
                     getTenantId(tenantDomain);
             initializeRegistry(tenantID);

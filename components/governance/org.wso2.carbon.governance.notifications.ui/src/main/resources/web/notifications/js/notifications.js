@@ -371,7 +371,7 @@ function resetInputVisibility() {
     $('subscriptionDataSOAP').style.display = "none";
     $('subscriptionDataUserProfile').style.display = "none";
     $('subscriptionDataRoleProfile').style.display = "none";
-    $('subscriptionDataWorkList').style.display = "";
+    $('subscriptionDataWorkList').style.display = "none";
     $('subscriptionDataJMX').style.display = "";
     $('subscriptionDigestType').style.display = "none";
     $('subscriptionDigestTypeInput').value = 0;

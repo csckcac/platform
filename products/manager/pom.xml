@@ -332,15 +332,6 @@
         -->
     </repositories>
 
-
-    <!--<pluginRepositories>
-        <pluginRepository>
-            <id>tlc</id>
-            <name>TLC Repository</name>
-            <url>http://commons.ucalgary.ca/pub/m2</url>
-        </pluginRepository>
-    </pluginRepositories>-->
-
     <distributionManagement>
         <repository>
             <id>wso2-maven2-repository</id>

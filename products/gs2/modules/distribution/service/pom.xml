@@ -33,13 +33,13 @@
     <name>WSO2 Gadget Server - Distribution</name>
     <description>WSO2 Gadget Server Distribution</description>
 
-    <pluginRepositories>
+    <!--<pluginRepositories>
         <pluginRepository>
             <id>tlc</id>
             <name>TLC Repository</name>
             <url>http://commons.ucalgary.ca/pub/m2</url>
         </pluginRepository>
-    </pluginRepositories>
+    </pluginRepositories>-->
 
     <dependencies>
         <dependency>

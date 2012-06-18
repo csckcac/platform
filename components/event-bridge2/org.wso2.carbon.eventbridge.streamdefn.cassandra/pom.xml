@@ -146,6 +146,8 @@
                             org.wso2.carbon.eventbridge.streamdefn.cassandra.internal.*
                         </Private-Package>
                         <Export-Package>
+                            !org.wso2.carbon.eventbridge.streamdefn.cassandra.internal,
+                            !org.wso2.carbon.eventbridge.streamdefn.cassandra.internal.*,
                             org.wso2.carbon.eventbridge.streamdefn.cassandra.*
                         </Export-Package>
                         <Import-Package>org.osgi.framework,*;resolution:=optional</Import-Package>

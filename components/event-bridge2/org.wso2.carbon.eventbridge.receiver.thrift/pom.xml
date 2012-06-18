@@ -69,7 +69,7 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
                             org.wso2.carbon.eventbridge.receiver.thrift.internal,
-                            org.wso2.carbon.eventbridge.receiver.thrift.internal.internal.*
+                            org.wso2.carbon.eventbridge.receiver.thrift.internal.*
                         </Private-Package>
                         <Export-Package>
                             !org.wso2.carbon.eventbridge.receiver.thrift.internal,

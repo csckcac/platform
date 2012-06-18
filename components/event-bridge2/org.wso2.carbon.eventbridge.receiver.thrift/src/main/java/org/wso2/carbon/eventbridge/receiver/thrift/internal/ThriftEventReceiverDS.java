@@ -40,6 +40,10 @@ import java.net.URL;
  * @scr.reference name="configuration.context"
  * interface="org.wso2.carbon.utils.ConfigurationContextService"
  * cardinality="1..1" policy="dynamic"  bind="setConfigurationContext" unbind="unsetConfigurationContext"
+ * @scr.reference name="eventbridge.core"
+ * interface="org.wso2.carbon.eventbridge.core.EventBridgeReceiverService"
+ * cardinality="1..1" policy="dynamic" bind="setEventBridgeReceiverService" unbind="unsetEventBridgeReceiverService"
+ *
  */
 public class ThriftEventReceiverDS {
     private static final Log log = LogFactory.getLog(ThriftEventReceiverDS.class);
@@ -105,5 +109,12 @@ public class ThriftEventReceiverDS {
         this.configurationContext = null;
     }
 
+    protected void setEventBridgeReceiverService(EventBridgeReceiverService eventBridgeReceiverService) {
+        this.eventBridgeReceiverService=eventBridgeReceiverService;
+    }
+
+    protected void unsetEventBridgeReceiverService(EventBridgeReceiverService eventBridgeReceiverService) {
+        this.eventBridgeReceiverService=null;
+    }
 
 }

@@ -1035,7 +1035,8 @@ public class SystemHostObject extends ScriptableObject {
                 
                 //Creating the trigger. There will be a one-to-one mapping between jobs and triggers in this implementation
                 msTaskInfo.setName(taskName);
-                msTaskInfo.setTaskCount(1);
+                msTaskInfo.setTaskCount(0);
+                msTaskInfo.setTaskInterval(0);
                 msTaskInfo.setStartTime(MSTaskUtils.dateToCal(new Date(currentTime.getTime() + timeout)));
                 
                 break;
@@ -1078,7 +1079,8 @@ public class SystemHostObject extends ScriptableObject {
                 
                 //Creating the trigger. There will be a one-to-one mapping between jobs and triggers in this implementation
                 msTaskInfo.setName(taskName);
-                msTaskInfo.setTaskCount(1);
+                msTaskInfo.setTaskCount(0);
+                msTaskInfo.setTaskInterval(0);
                 msTaskInfo.setStartTime(MSTaskUtils.dateToCal(new Date(currentTime.getTime() + timeout)));
 
                 break;

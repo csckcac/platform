@@ -153,4 +153,7 @@ public class NhttpConstants {
     /** Ref X-Originating-IP Form 1*/
     public static final String HEADER_X_ORIGINATING_IP_FORM_2 = "X-IP";
 
+    /** This property can be used to set the HOST header sent from the client to synapse */
+    public static final String REQUEST_HOST_HEADER = "REQUEST_HOST_HEADER";
+
 }

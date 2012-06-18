@@ -238,8 +238,9 @@ public class Axis2HttpRequest {
                     if (!HTTPConstants.HEADER_HOST.equalsIgnoreCase((String) header)) {
                         httpRequest.setHeader((String) header, (String) value);
                     } else {
-                        if(msgContext.getProperty("REQUEST_HOST_HEADER") != null) {
-                            httpRequest.setHeader((String) header, (String)msgContext.getProperty("REQUEST_HOST_HEADER"));
+                        if(msgContext.getProperty(NhttpConstants.REQUEST_HOST_HEADER) != null) {
+                            httpRequest.setHeader((String) header,
+                                    (String)msgContext.getProperty(NhttpConstants.REQUEST_HOST_HEADER));
                         }
                     }
 

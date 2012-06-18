@@ -21,6 +21,7 @@ import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.registry.eventing.handlers.utils.events.*;
 import org.wso2.carbon.governance.registry.eventing.handlers.utils.events.CheckListItemCheckedEvent;
 import org.wso2.carbon.governance.registry.eventing.internal.Utils;
@@ -223,10 +224,10 @@ public class GovernanceEventingHandler extends Handler {
                 path);
         resource = requestContext.getRepository().get(path);
 
-        if(resource.getProperty("registry.is.environment.change.property")!=null &&
-                !resource.getProperty("registry.is.environment.change.property").isEmpty()){
-            isEnvironmentChange = Boolean.parseBoolean(resource.getProperty("registry.is.environment.change.property"));
-            resource.removeProperty("registry.is.environment.change.property");
+        if(resource.getProperty(GovernanceConstants.REGISTRY_IS_ENVIRONMENT_CHANGE)!=null &&
+                !resource.getProperty(GovernanceConstants.REGISTRY_IS_ENVIRONMENT_CHANGE).isEmpty()){
+            isEnvironmentChange = Boolean.parseBoolean(resource.getProperty(GovernanceConstants.REGISTRY_IS_ENVIRONMENT_CHANGE));
+            resource.removeProperty(GovernanceConstants.REGISTRY_IS_ENVIRONMENT_CHANGE);
             requestContext.setResource(resource);
             requestContext.getRegistry().put(path,resource);
         }

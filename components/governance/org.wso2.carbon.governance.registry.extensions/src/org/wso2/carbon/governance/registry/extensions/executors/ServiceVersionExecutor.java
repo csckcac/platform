@@ -256,7 +256,7 @@ public class ServiceVersionExecutor implements Execution {
 //           We avoid copying dependencies here because they are added to the new resources
             copyAllAssociations(registry, newPathMappings.get(resourcePath), resourcePath);
 
-            addSubscriptionAvailableProperty(newResource , resourcePath);
+            addSubscriptionAvailableProperty(newResource);
 
             requestContext.setResource(newResource);
             requestContext.setOldResource(resource);
@@ -288,8 +288,8 @@ public class ServiceVersionExecutor implements Execution {
         return true;
     }
 
-    private void addSubscriptionAvailableProperty(Resource newResource, String path) throws RegistryException {
-        newResource.setProperty("registry.is.environment.change.property","true");
+    private void addSubscriptionAvailableProperty(Resource newResource) throws RegistryException {
+        newResource.setProperty(ExecutorConstants.REGISTRY_IS_ENVIRONMENT_CHANGE,"true");
 
     }
 

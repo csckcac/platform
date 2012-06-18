@@ -215,19 +215,6 @@
            </modules>
         </profile>
          <!-- WSO2 Gadget Server profile  -->
-        <profile>
-            <id>product-ms</id>
-            <activation>
-                <property>
-                    <name>product</name>
-                    <value>ms</value>
-                </property>
-            </activation>
-            <modules>
-		<module>integration/security-verifier</module>
-                <module>ms</module>
-           </modules>
-        </profile>
 	<!--WSO2 API-MGT profile -->
 
 	<profile>
@@ -271,8 +258,7 @@
             <module>is</module>
             <module>esb</module>
             <module>greg</module>
-            <module>manager</module>	
-            <module>ms</module>
+            <module>manager</module>
             <module>dss</module>
             <module>bam2</module>
             <module>cep</module>

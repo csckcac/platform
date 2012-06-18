@@ -135,6 +135,10 @@ public class BillingService extends AbstractAdmin {
         List<OutstandingBalanceInfoBean> balanceBeans = billingEngine.getAllOutstandingBalanceInfoBeans(tenantDomain);
         return balanceBeans.toArray(new OutstandingBalanceInfoBean[balanceBeans.size()]);
     }
+    
+    public void makeAdjustment(int invoiceId, String amount) throws Exception{
+
+    }
 
     /**
      * Gets the past invoice for a given invoice id

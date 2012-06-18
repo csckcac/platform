@@ -30,7 +30,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.stratos.esb.samples</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>WSO2 Stratos ESB - Samples</name>
     <description>All the samples in WSO2 Enterprise Service Bus</description>

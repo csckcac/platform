@@ -31,7 +31,7 @@
     <groupId>com.acme.shoppingcart</groupId>
     <artifactId>shopping-cart-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <name>Shopping Cart - parent</name>
     <description>Shopping Cart - parent</description>
 

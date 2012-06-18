@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g 2012-05-01 20:46:18
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g 2012-05-24 10:52:12
 
     package org.apache.cassandra.cql3;
 
@@ -133,7 +133,7 @@ public class CqlParser extends Parser {
         
 
     public String[] getTokenNames() { return CqlParser.tokenNames; }
-    public String getGrammarFileName() { return "/opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g"; }
+    public String getGrammarFileName() { return "/media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g"; }
 
 
         private List<String> recognitionErrors = new ArrayList<String>();
@@ -168,7 +168,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "query"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:116:1: query returns [ParsedStatement stmnt] : st= cqlStatement ( ';' )* EOF ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:116:1: query returns [ParsedStatement stmnt] : st= cqlStatement ( ';' )* EOF ;
     public final ParsedStatement query() throws RecognitionException {
         ParsedStatement stmnt = null;
 
@@ -176,15 +176,15 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:119:5: (st= cqlStatement ( ';' )* EOF )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:119:7: st= cqlStatement ( ';' )* EOF
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:119:5: (st= cqlStatement ( ';' )* EOF )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:119:7: st= cqlStatement ( ';' )* EOF
             {
             pushFollow(FOLLOW_cqlStatement_in_query72);
             st=cqlStatement();
 
             state._fsp--;
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:119:23: ( ';' )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:119:23: ( ';' )*
             loop1:
             do {
                 int alt1=2;
@@ -197,7 +197,7 @@ public class CqlParser extends Parser {
 
                 switch (alt1) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:119:24: ';'
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:119:24: ';'
             	    {
             	    match(input,85,FOLLOW_85_in_query75); 
 
@@ -227,7 +227,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "cqlStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:122:1: cqlStatement returns [ParsedStatement stmt] : (st1= selectStatement | st2= insertStatement | st3= updateStatement | st4= batchStatement | st5= deleteStatement | st6= useStatement | st7= truncateStatement | st8= createKeyspaceStatement | st9= createColumnFamilyStatement | st10= createIndexStatement | st11= dropKeyspaceStatement | st12= dropColumnFamilyStatement | st13= dropIndexStatement | st14= alterTableStatement );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:122:1: cqlStatement returns [ParsedStatement stmt] : (st1= selectStatement | st2= insertStatement | st3= updateStatement | st4= batchStatement | st5= deleteStatement | st6= useStatement | st7= truncateStatement | st8= createKeyspaceStatement | st9= createColumnFamilyStatement | st10= createIndexStatement | st11= dropKeyspaceStatement | st12= dropColumnFamilyStatement | st13= dropIndexStatement | st14= alterTableStatement );
     public final ParsedStatement cqlStatement() throws RecognitionException {
         ParsedStatement stmt = null;
 
@@ -261,12 +261,12 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:124:5: (st1= selectStatement | st2= insertStatement | st3= updateStatement | st4= batchStatement | st5= deleteStatement | st6= useStatement | st7= truncateStatement | st8= createKeyspaceStatement | st9= createColumnFamilyStatement | st10= createIndexStatement | st11= dropKeyspaceStatement | st12= dropColumnFamilyStatement | st13= dropIndexStatement | st14= alterTableStatement )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:124:5: (st1= selectStatement | st2= insertStatement | st3= updateStatement | st4= batchStatement | st5= deleteStatement | st6= useStatement | st7= truncateStatement | st8= createKeyspaceStatement | st9= createColumnFamilyStatement | st10= createIndexStatement | st11= dropKeyspaceStatement | st12= dropColumnFamilyStatement | st13= dropIndexStatement | st14= alterTableStatement )
             int alt2=14;
             alt2 = dfa2.predict(input);
             switch (alt2) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:124:7: st1= selectStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:124:7: st1= selectStatement
                     {
                     pushFollow(FOLLOW_selectStatement_in_cqlStatement113);
                     st1=selectStatement();
@@ -278,7 +278,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:125:7: st2= insertStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:125:7: st2= insertStatement
                     {
                     pushFollow(FOLLOW_insertStatement_in_cqlStatement138);
                     st2=insertStatement();
@@ -290,7 +290,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:126:7: st3= updateStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:126:7: st3= updateStatement
                     {
                     pushFollow(FOLLOW_updateStatement_in_cqlStatement163);
                     st3=updateStatement();
@@ -302,7 +302,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:127:7: st4= batchStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:127:7: st4= batchStatement
                     {
                     pushFollow(FOLLOW_batchStatement_in_cqlStatement188);
                     st4=batchStatement();
@@ -314,7 +314,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 5 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:128:7: st5= deleteStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:128:7: st5= deleteStatement
                     {
                     pushFollow(FOLLOW_deleteStatement_in_cqlStatement214);
                     st5=deleteStatement();
@@ -326,7 +326,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 6 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:129:7: st6= useStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:129:7: st6= useStatement
                     {
                     pushFollow(FOLLOW_useStatement_in_cqlStatement239);
                     st6=useStatement();
@@ -338,7 +338,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 7 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:130:7: st7= truncateStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:130:7: st7= truncateStatement
                     {
                     pushFollow(FOLLOW_truncateStatement_in_cqlStatement267);
                     st7=truncateStatement();
@@ -350,7 +350,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 8 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:131:7: st8= createKeyspaceStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:131:7: st8= createKeyspaceStatement
                     {
                     pushFollow(FOLLOW_createKeyspaceStatement_in_cqlStatement290);
                     st8=createKeyspaceStatement();
@@ -362,7 +362,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 9 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:132:7: st9= createColumnFamilyStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:132:7: st9= createColumnFamilyStatement
                     {
                     pushFollow(FOLLOW_createColumnFamilyStatement_in_cqlStatement307);
                     st9=createColumnFamilyStatement();
@@ -374,7 +374,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 10 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:133:7: st10= createIndexStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:133:7: st10= createIndexStatement
                     {
                     pushFollow(FOLLOW_createIndexStatement_in_cqlStatement319);
                     st10=createIndexStatement();
@@ -386,7 +386,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 11 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:134:7: st11= dropKeyspaceStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:134:7: st11= dropKeyspaceStatement
                     {
                     pushFollow(FOLLOW_dropKeyspaceStatement_in_cqlStatement338);
                     st11=dropKeyspaceStatement();
@@ -398,7 +398,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 12 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:135:7: st12= dropColumnFamilyStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:135:7: st12= dropColumnFamilyStatement
                     {
                     pushFollow(FOLLOW_dropColumnFamilyStatement_in_cqlStatement356);
                     st12=dropColumnFamilyStatement();
@@ -410,7 +410,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 13 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:136:7: st13= dropIndexStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:136:7: st13= dropIndexStatement
                     {
                     pushFollow(FOLLOW_dropIndexStatement_in_cqlStatement370);
                     st13=dropIndexStatement();
@@ -422,7 +422,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 14 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:137:7: st14= alterTableStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:137:7: st14= alterTableStatement
                     {
                     pushFollow(FOLLOW_alterTableStatement_in_cqlStatement391);
                     st14=alterTableStatement();
@@ -449,7 +449,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "useStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:143:1: useStatement returns [UseStatement stmt] : K_USE ks= keyspaceName ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:143:1: useStatement returns [UseStatement stmt] : K_USE ks= keyspaceName ;
     public final UseStatement useStatement() throws RecognitionException {
         UseStatement stmt = null;
 
@@ -457,8 +457,8 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:144:5: ( K_USE ks= keyspaceName )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:144:7: K_USE ks= keyspaceName
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:144:5: ( K_USE ks= keyspaceName )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:144:7: K_USE ks= keyspaceName
             {
             match(input,K_USE,FOLLOW_K_USE_in_useStatement424); 
             pushFollow(FOLLOW_keyspaceName_in_useStatement428);
@@ -483,7 +483,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "selectStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:147:1: selectStatement returns [SelectStatement.RawStatement expr] : K_SELECT (sclause= selectClause | ( K_COUNT '(' sclause= selectClause ')' ) ) K_FROM cf= columnFamilyName ( K_USING K_CONSISTENCY K_LEVEL )? ( K_WHERE wclause= whereClause )? ( K_ORDER K_BY c= cident ( K_ASC | K_DESC )? )? ( K_LIMIT rows= INTEGER )? ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:147:1: selectStatement returns [SelectStatement.RawStatement expr] : K_SELECT (sclause= selectClause | ( K_COUNT '(' sclause= selectClause ')' ) ) K_FROM cf= columnFamilyName ( K_USING K_CONSISTENCY K_LEVEL )? ( K_WHERE wclause= whereClause )? ( K_ORDER K_BY c= cident ( K_ASC | K_DESC )? )? ( K_LIMIT rows= INTEGER )? ;
     public final SelectStatement.RawStatement selectStatement() throws RecognitionException {
         SelectStatement.RawStatement expr = null;
 
@@ -506,11 +506,11 @@ public class CqlParser extends Parser {
                 ColumnIdentifier orderBy = null;
             
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:5: ( K_SELECT (sclause= selectClause | ( K_COUNT '(' sclause= selectClause ')' ) ) K_FROM cf= columnFamilyName ( K_USING K_CONSISTENCY K_LEVEL )? ( K_WHERE wclause= whereClause )? ( K_ORDER K_BY c= cident ( K_ASC | K_DESC )? )? ( K_LIMIT rows= INTEGER )? )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:7: K_SELECT (sclause= selectClause | ( K_COUNT '(' sclause= selectClause ')' ) ) K_FROM cf= columnFamilyName ( K_USING K_CONSISTENCY K_LEVEL )? ( K_WHERE wclause= whereClause )? ( K_ORDER K_BY c= cident ( K_ASC | K_DESC )? )? ( K_LIMIT rows= INTEGER )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:5: ( K_SELECT (sclause= selectClause | ( K_COUNT '(' sclause= selectClause ')' ) ) K_FROM cf= columnFamilyName ( K_USING K_CONSISTENCY K_LEVEL )? ( K_WHERE wclause= whereClause )? ( K_ORDER K_BY c= cident ( K_ASC | K_DESC )? )? ( K_LIMIT rows= INTEGER )? )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:7: K_SELECT (sclause= selectClause | ( K_COUNT '(' sclause= selectClause ')' ) ) K_FROM cf= columnFamilyName ( K_USING K_CONSISTENCY K_LEVEL )? ( K_WHERE wclause= whereClause )? ( K_ORDER K_BY c= cident ( K_ASC | K_DESC )? )? ( K_LIMIT rows= INTEGER )?
             {
             match(input,K_SELECT,FOLLOW_K_SELECT_in_selectStatement462); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:16: (sclause= selectClause | ( K_COUNT '(' sclause= selectClause ')' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:16: (sclause= selectClause | ( K_COUNT '(' sclause= selectClause ')' ) )
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -528,7 +528,7 @@ public class CqlParser extends Parser {
             }
             switch (alt3) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:18: sclause= selectClause
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:18: sclause= selectClause
                     {
                     pushFollow(FOLLOW_selectClause_in_selectStatement468);
                     sclause=selectClause();
@@ -539,10 +539,10 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:41: ( K_COUNT '(' sclause= selectClause ')' )
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:41: ( K_COUNT '(' sclause= selectClause ')' )
                     {
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:41: ( K_COUNT '(' sclause= selectClause ')' )
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:42: K_COUNT '(' sclause= selectClause ')'
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:41: ( K_COUNT '(' sclause= selectClause ')' )
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:162:42: K_COUNT '(' sclause= selectClause ')'
                     {
                     match(input,K_COUNT,FOLLOW_K_COUNT_in_selectStatement473); 
                     match(input,86,FOLLOW_86_in_selectStatement475); 
@@ -568,7 +568,7 @@ public class CqlParser extends Parser {
 
             state._fsp--;
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:164:7: ( K_USING K_CONSISTENCY K_LEVEL )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:164:7: ( K_USING K_CONSISTENCY K_LEVEL )?
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -577,7 +577,7 @@ public class CqlParser extends Parser {
             }
             switch (alt4) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:164:9: K_USING K_CONSISTENCY K_LEVEL
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:164:9: K_USING K_CONSISTENCY K_LEVEL
                     {
                     match(input,K_USING,FOLLOW_K_USING_in_selectStatement508); 
                     match(input,K_CONSISTENCY,FOLLOW_K_CONSISTENCY_in_selectStatement510); 
@@ -589,7 +589,7 @@ public class CqlParser extends Parser {
 
             }
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:165:7: ( K_WHERE wclause= whereClause )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:165:7: ( K_WHERE wclause= whereClause )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -598,7 +598,7 @@ public class CqlParser extends Parser {
             }
             switch (alt5) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:165:9: K_WHERE wclause= whereClause
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:165:9: K_WHERE wclause= whereClause
                     {
                     match(input,K_WHERE,FOLLOW_K_WHERE_in_selectStatement527); 
                     pushFollow(FOLLOW_whereClause_in_selectStatement531);
@@ -612,7 +612,7 @@ public class CqlParser extends Parser {
 
             }
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:166:7: ( K_ORDER K_BY c= cident ( K_ASC | K_DESC )? )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:166:7: ( K_ORDER K_BY c= cident ( K_ASC | K_DESC )? )?
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -621,7 +621,7 @@ public class CqlParser extends Parser {
             }
             switch (alt7) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:166:9: K_ORDER K_BY c= cident ( K_ASC | K_DESC )?
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:166:9: K_ORDER K_BY c= cident ( K_ASC | K_DESC )?
                     {
                     match(input,K_ORDER,FOLLOW_K_ORDER_in_selectStatement544); 
                     match(input,K_BY,FOLLOW_K_BY_in_selectStatement546); 
@@ -631,7 +631,7 @@ public class CqlParser extends Parser {
                     state._fsp--;
 
                      orderBy = c; 
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:166:48: ( K_ASC | K_DESC )?
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:166:48: ( K_ASC | K_DESC )?
                     int alt6=3;
                     int LA6_0 = input.LA(1);
 
@@ -643,14 +643,14 @@ public class CqlParser extends Parser {
                     }
                     switch (alt6) {
                         case 1 :
-                            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:166:49: K_ASC
+                            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:166:49: K_ASC
                             {
                             match(input,K_ASC,FOLLOW_K_ASC_in_selectStatement555); 
 
                             }
                             break;
                         case 2 :
-                            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:166:57: K_DESC
+                            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:166:57: K_DESC
                             {
                             match(input,K_DESC,FOLLOW_K_DESC_in_selectStatement559); 
                              reversed = true; 
@@ -666,7 +666,7 @@ public class CqlParser extends Parser {
 
             }
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:167:7: ( K_LIMIT rows= INTEGER )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:167:7: ( K_LIMIT rows= INTEGER )?
             int alt8=2;
             int LA8_0 = input.LA(1);
 
@@ -675,7 +675,7 @@ public class CqlParser extends Parser {
             }
             switch (alt8) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:167:9: K_LIMIT rows= INTEGER
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:167:9: K_LIMIT rows= INTEGER
                     {
                     match(input,K_LIMIT,FOLLOW_K_LIMIT_in_selectStatement576); 
                     rows=(Token)match(input,INTEGER,FOLLOW_INTEGER_in_selectStatement580); 
@@ -710,7 +710,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "selectClause"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:178:1: selectClause returns [List<ColumnIdentifier> expr] : (ids= cidentList | '\\*' );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:178:1: selectClause returns [List<ColumnIdentifier> expr] : (ids= cidentList | '\\*' );
     public final List<ColumnIdentifier> selectClause() throws RecognitionException {
         List<ColumnIdentifier> expr = null;
 
@@ -718,7 +718,7 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:179:5: (ids= cidentList | '\\*' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:179:5: (ids= cidentList | '\\*' )
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -736,7 +736,7 @@ public class CqlParser extends Parser {
             }
             switch (alt9) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:179:7: ids= cidentList
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:179:7: ids= cidentList
                     {
                     pushFollow(FOLLOW_cidentList_in_selectClause616);
                     ids=cidentList();
@@ -748,7 +748,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:180:7: '\\*'
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:180:7: '\\*'
                     {
                     match(input,88,FOLLOW_88_in_selectClause626); 
                      expr = Collections.<ColumnIdentifier>emptyList();
@@ -770,7 +770,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "whereClause"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:183:1: whereClause returns [List<Relation> clause] : first= relation ( K_AND next= relation )* ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:183:1: whereClause returns [List<Relation> clause] : first= relation ( K_AND next= relation )* ;
     public final List<Relation> whereClause() throws RecognitionException {
         List<Relation> clause = null;
 
@@ -781,8 +781,8 @@ public class CqlParser extends Parser {
 
          clause = new ArrayList<Relation>(); 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:185:5: (first= relation ( K_AND next= relation )* )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:185:7: first= relation ( K_AND next= relation )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:185:5: (first= relation ( K_AND next= relation )* )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:185:7: first= relation ( K_AND next= relation )*
             {
             pushFollow(FOLLOW_relation_in_whereClause669);
             first=relation();
@@ -790,7 +790,7 @@ public class CqlParser extends Parser {
             state._fsp--;
 
              clause.add(first); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:185:46: ( K_AND next= relation )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:185:46: ( K_AND next= relation )*
             loop10:
             do {
                 int alt10=2;
@@ -803,7 +803,7 @@ public class CqlParser extends Parser {
 
                 switch (alt10) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:185:47: K_AND next= relation
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:185:47: K_AND next= relation
             	    {
             	    match(input,K_AND,FOLLOW_K_AND_in_whereClause674); 
             	    pushFollow(FOLLOW_relation_in_whereClause678);
@@ -837,7 +837,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "insertStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:188:1: insertStatement returns [UpdateStatement expr] : K_INSERT K_INTO cf= columnFamilyName '(' c1= cident ( ',' cn= cident )+ ')' K_VALUES '(' v1= term ( ',' vn= term )+ ')' ( usingClause[attrs] )? ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:188:1: insertStatement returns [UpdateStatement expr] : K_INSERT K_INTO cf= columnFamilyName '(' c1= cident ( ',' cn= cident )+ ')' K_VALUES '(' v1= term ( ',' vn= term )+ ')' ( usingClause[attrs] )? ;
     public final UpdateStatement insertStatement() throws RecognitionException {
         UpdateStatement expr = null;
 
@@ -858,8 +858,8 @@ public class CqlParser extends Parser {
                 List<Term> columnValues = new ArrayList<Term>();
             
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:201:5: ( K_INSERT K_INTO cf= columnFamilyName '(' c1= cident ( ',' cn= cident )+ ')' K_VALUES '(' v1= term ( ',' vn= term )+ ')' ( usingClause[attrs] )? )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:201:7: K_INSERT K_INTO cf= columnFamilyName '(' c1= cident ( ',' cn= cident )+ ')' K_VALUES '(' v1= term ( ',' vn= term )+ ')' ( usingClause[attrs] )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:201:5: ( K_INSERT K_INTO cf= columnFamilyName '(' c1= cident ( ',' cn= cident )+ ')' K_VALUES '(' v1= term ( ',' vn= term )+ ')' ( usingClause[attrs] )? )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:201:7: K_INSERT K_INTO cf= columnFamilyName '(' c1= cident ( ',' cn= cident )+ ')' K_VALUES '(' v1= term ( ',' vn= term )+ ')' ( usingClause[attrs] )?
             {
             match(input,K_INSERT,FOLLOW_K_INSERT_in_insertStatement714); 
             match(input,K_INTO,FOLLOW_K_INTO_in_insertStatement716); 
@@ -875,7 +875,7 @@ public class CqlParser extends Parser {
             state._fsp--;
 
              columnNames.add(c1); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:202:51: ( ',' cn= cident )+
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:202:51: ( ',' cn= cident )+
             int cnt11=0;
             loop11:
             do {
@@ -889,7 +889,7 @@ public class CqlParser extends Parser {
 
                 switch (alt11) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:202:53: ',' cn= cident
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:202:53: ',' cn= cident
             	    {
             	    match(input,89,FOLLOW_89_in_insertStatement743); 
             	    pushFollow(FOLLOW_cident_in_insertStatement747);
@@ -920,7 +920,7 @@ public class CqlParser extends Parser {
             state._fsp--;
 
              columnValues.add(v1); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:204:49: ( ',' vn= term )+
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:204:49: ( ',' vn= term )+
             int cnt12=0;
             loop12:
             do {
@@ -934,7 +934,7 @@ public class CqlParser extends Parser {
 
                 switch (alt12) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:204:51: ',' vn= term
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:204:51: ',' vn= term
             	    {
             	    match(input,89,FOLLOW_89_in_insertStatement786); 
             	    pushFollow(FOLLOW_term_in_insertStatement790);
@@ -957,7 +957,7 @@ public class CqlParser extends Parser {
             } while (true);
 
             match(input,87,FOLLOW_87_in_insertStatement797); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:205:9: ( usingClause[attrs] )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:205:9: ( usingClause[attrs] )?
             int alt13=2;
             int LA13_0 = input.LA(1);
 
@@ -966,7 +966,7 @@ public class CqlParser extends Parser {
             }
             switch (alt13) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:205:11: usingClause[attrs]
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:205:11: usingClause[attrs]
                     {
                     pushFollow(FOLLOW_usingClause_in_insertStatement809);
                     usingClause(attrs);
@@ -998,11 +998,11 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "usingClause"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:211:1: usingClause[Attributes attrs] : K_USING usingClauseObjective[attrs] ( ( K_AND )? usingClauseObjective[attrs] )* ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:211:1: usingClause[Attributes attrs] : K_USING usingClauseObjective[attrs] ( ( K_AND )? usingClauseObjective[attrs] )* ;
     public final void usingClause(Attributes attrs) throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:5: ( K_USING usingClauseObjective[attrs] ( ( K_AND )? usingClauseObjective[attrs] )* )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:7: K_USING usingClauseObjective[attrs] ( ( K_AND )? usingClauseObjective[attrs] )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:5: ( K_USING usingClauseObjective[attrs] ( ( K_AND )? usingClauseObjective[attrs] )* )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:7: K_USING usingClauseObjective[attrs] ( ( K_AND )? usingClauseObjective[attrs] )*
             {
             match(input,K_USING,FOLLOW_K_USING_in_usingClause839); 
             pushFollow(FOLLOW_usingClauseObjective_in_usingClause841);
@@ -1010,7 +1010,7 @@ public class CqlParser extends Parser {
 
             state._fsp--;
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:43: ( ( K_AND )? usingClauseObjective[attrs] )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:43: ( ( K_AND )? usingClauseObjective[attrs] )*
             loop15:
             do {
                 int alt15=2;
@@ -1023,9 +1023,9 @@ public class CqlParser extends Parser {
 
                 switch (alt15) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:45: ( K_AND )? usingClauseObjective[attrs]
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:45: ( K_AND )? usingClauseObjective[attrs]
             	    {
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:45: ( K_AND )?
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:45: ( K_AND )?
             	    int alt14=2;
             	    int LA14_0 = input.LA(1);
 
@@ -1034,7 +1034,7 @@ public class CqlParser extends Parser {
             	    }
             	    switch (alt14) {
             	        case 1 :
-            	            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:45: K_AND
+            	            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:212:45: K_AND
             	            {
             	            match(input,K_AND,FOLLOW_K_AND_in_usingClause846); 
 
@@ -1073,11 +1073,11 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "usingClauseDelete"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:215:1: usingClauseDelete[Attributes attrs] : K_USING usingClauseDeleteObjective[attrs] ( ( K_AND )? usingClauseDeleteObjective[attrs] )* ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:215:1: usingClauseDelete[Attributes attrs] : K_USING usingClauseDeleteObjective[attrs] ( ( K_AND )? usingClauseDeleteObjective[attrs] )* ;
     public final void usingClauseDelete(Attributes attrs) throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:5: ( K_USING usingClauseDeleteObjective[attrs] ( ( K_AND )? usingClauseDeleteObjective[attrs] )* )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:7: K_USING usingClauseDeleteObjective[attrs] ( ( K_AND )? usingClauseDeleteObjective[attrs] )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:5: ( K_USING usingClauseDeleteObjective[attrs] ( ( K_AND )? usingClauseDeleteObjective[attrs] )* )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:7: K_USING usingClauseDeleteObjective[attrs] ( ( K_AND )? usingClauseDeleteObjective[attrs] )*
             {
             match(input,K_USING,FOLLOW_K_USING_in_usingClauseDelete871); 
             pushFollow(FOLLOW_usingClauseDeleteObjective_in_usingClauseDelete873);
@@ -1085,7 +1085,7 @@ public class CqlParser extends Parser {
 
             state._fsp--;
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:49: ( ( K_AND )? usingClauseDeleteObjective[attrs] )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:49: ( ( K_AND )? usingClauseDeleteObjective[attrs] )*
             loop17:
             do {
                 int alt17=2;
@@ -1098,9 +1098,9 @@ public class CqlParser extends Parser {
 
                 switch (alt17) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:51: ( K_AND )? usingClauseDeleteObjective[attrs]
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:51: ( K_AND )? usingClauseDeleteObjective[attrs]
             	    {
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:51: ( K_AND )?
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:51: ( K_AND )?
             	    int alt16=2;
             	    int LA16_0 = input.LA(1);
 
@@ -1109,7 +1109,7 @@ public class CqlParser extends Parser {
             	    }
             	    switch (alt16) {
             	        case 1 :
-            	            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:51: K_AND
+            	            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:216:51: K_AND
             	            {
             	            match(input,K_AND,FOLLOW_K_AND_in_usingClauseDelete878); 
 
@@ -1148,13 +1148,13 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "usingClauseDeleteObjective"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:219:1: usingClauseDeleteObjective[Attributes attrs] : ( K_CONSISTENCY K_LEVEL | K_TIMESTAMP ts= INTEGER );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:219:1: usingClauseDeleteObjective[Attributes attrs] : ( K_CONSISTENCY K_LEVEL | K_TIMESTAMP ts= INTEGER );
     public final void usingClauseDeleteObjective(Attributes attrs) throws RecognitionException {
         Token ts=null;
         Token K_LEVEL2=null;
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:220:5: ( K_CONSISTENCY K_LEVEL | K_TIMESTAMP ts= INTEGER )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:220:5: ( K_CONSISTENCY K_LEVEL | K_TIMESTAMP ts= INTEGER )
             int alt18=2;
             int LA18_0 = input.LA(1);
 
@@ -1172,7 +1172,7 @@ public class CqlParser extends Parser {
             }
             switch (alt18) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:220:7: K_CONSISTENCY K_LEVEL
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:220:7: K_CONSISTENCY K_LEVEL
                     {
                     match(input,K_CONSISTENCY,FOLLOW_K_CONSISTENCY_in_usingClauseDeleteObjective903); 
                     K_LEVEL2=(Token)match(input,K_LEVEL,FOLLOW_K_LEVEL_in_usingClauseDeleteObjective905); 
@@ -1181,7 +1181,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:221:7: K_TIMESTAMP ts= INTEGER
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:221:7: K_TIMESTAMP ts= INTEGER
                     {
                     match(input,K_TIMESTAMP,FOLLOW_K_TIMESTAMP_in_usingClauseDeleteObjective916); 
                     ts=(Token)match(input,INTEGER,FOLLOW_INTEGER_in_usingClauseDeleteObjective920); 
@@ -1204,12 +1204,12 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "usingClauseObjective"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:224:1: usingClauseObjective[Attributes attrs] : ( usingClauseDeleteObjective[attrs] | K_TTL t= INTEGER );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:224:1: usingClauseObjective[Attributes attrs] : ( usingClauseDeleteObjective[attrs] | K_TTL t= INTEGER );
     public final void usingClauseObjective(Attributes attrs) throws RecognitionException {
         Token t=null;
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:225:5: ( usingClauseDeleteObjective[attrs] | K_TTL t= INTEGER )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:225:5: ( usingClauseDeleteObjective[attrs] | K_TTL t= INTEGER )
             int alt19=2;
             int LA19_0 = input.LA(1);
 
@@ -1227,7 +1227,7 @@ public class CqlParser extends Parser {
             }
             switch (alt19) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:225:7: usingClauseDeleteObjective[attrs]
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:225:7: usingClauseDeleteObjective[attrs]
                     {
                     pushFollow(FOLLOW_usingClauseDeleteObjective_in_usingClauseObjective940);
                     usingClauseDeleteObjective(attrs);
@@ -1238,7 +1238,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:226:7: K_TTL t= INTEGER
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:226:7: K_TTL t= INTEGER
                     {
                     match(input,K_TTL,FOLLOW_K_TTL_in_usingClauseObjective949); 
                     t=(Token)match(input,INTEGER,FOLLOW_INTEGER_in_usingClauseObjective953); 
@@ -1261,7 +1261,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "updateStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:229:1: updateStatement returns [UpdateStatement expr] : K_UPDATE cf= columnFamilyName ( usingClause[attrs] )? K_SET termPairWithOperation[columns] ( ',' termPairWithOperation[columns] )* K_WHERE wclause= whereClause ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:229:1: updateStatement returns [UpdateStatement expr] : K_UPDATE cf= columnFamilyName ( usingClause[attrs] )? K_SET termPairWithOperation[columns] ( ',' termPairWithOperation[columns] )* K_WHERE wclause= whereClause ;
     public final UpdateStatement updateStatement() throws RecognitionException {
         UpdateStatement expr = null;
 
@@ -1275,8 +1275,8 @@ public class CqlParser extends Parser {
                 Map<ColumnIdentifier, Operation> columns = new HashMap<ColumnIdentifier, Operation>();
             
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:240:5: ( K_UPDATE cf= columnFamilyName ( usingClause[attrs] )? K_SET termPairWithOperation[columns] ( ',' termPairWithOperation[columns] )* K_WHERE wclause= whereClause )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:240:7: K_UPDATE cf= columnFamilyName ( usingClause[attrs] )? K_SET termPairWithOperation[columns] ( ',' termPairWithOperation[columns] )* K_WHERE wclause= whereClause
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:240:5: ( K_UPDATE cf= columnFamilyName ( usingClause[attrs] )? K_SET termPairWithOperation[columns] ( ',' termPairWithOperation[columns] )* K_WHERE wclause= whereClause )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:240:7: K_UPDATE cf= columnFamilyName ( usingClause[attrs] )? K_SET termPairWithOperation[columns] ( ',' termPairWithOperation[columns] )* K_WHERE wclause= whereClause
             {
             match(input,K_UPDATE,FOLLOW_K_UPDATE_in_updateStatement987); 
             pushFollow(FOLLOW_columnFamilyName_in_updateStatement991);
@@ -1284,7 +1284,7 @@ public class CqlParser extends Parser {
 
             state._fsp--;
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:241:7: ( usingClause[attrs] )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:241:7: ( usingClause[attrs] )?
             int alt20=2;
             int LA20_0 = input.LA(1);
 
@@ -1293,7 +1293,7 @@ public class CqlParser extends Parser {
             }
             switch (alt20) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:241:9: usingClause[attrs]
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:241:9: usingClause[attrs]
                     {
                     pushFollow(FOLLOW_usingClause_in_updateStatement1001);
                     usingClause(attrs);
@@ -1312,7 +1312,7 @@ public class CqlParser extends Parser {
 
             state._fsp--;
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:242:44: ( ',' termPairWithOperation[columns] )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:242:44: ( ',' termPairWithOperation[columns] )*
             loop21:
             do {
                 int alt21=2;
@@ -1325,7 +1325,7 @@ public class CqlParser extends Parser {
 
                 switch (alt21) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:242:45: ',' termPairWithOperation[columns]
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:242:45: ',' termPairWithOperation[columns]
             	    {
             	    match(input,89,FOLLOW_89_in_updateStatement1019); 
             	    pushFollow(FOLLOW_termPairWithOperation_in_updateStatement1021);
@@ -1367,7 +1367,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "deleteStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:249:1: deleteStatement returns [DeleteStatement expr] : K_DELETE (ids= cidentList )? K_FROM cf= columnFamilyName ( usingClauseDelete[attrs] )? K_WHERE wclause= whereClause ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:249:1: deleteStatement returns [DeleteStatement expr] : K_DELETE (ids= cidentList )? K_FROM cf= columnFamilyName ( usingClauseDelete[attrs] )? K_WHERE wclause= whereClause ;
     public final DeleteStatement deleteStatement() throws RecognitionException {
         DeleteStatement expr = null;
 
@@ -1383,11 +1383,11 @@ public class CqlParser extends Parser {
                 List<ColumnIdentifier> columnsList = Collections.emptyList();
             
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:260:5: ( K_DELETE (ids= cidentList )? K_FROM cf= columnFamilyName ( usingClauseDelete[attrs] )? K_WHERE wclause= whereClause )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:260:7: K_DELETE (ids= cidentList )? K_FROM cf= columnFamilyName ( usingClauseDelete[attrs] )? K_WHERE wclause= whereClause
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:260:5: ( K_DELETE (ids= cidentList )? K_FROM cf= columnFamilyName ( usingClauseDelete[attrs] )? K_WHERE wclause= whereClause )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:260:7: K_DELETE (ids= cidentList )? K_FROM cf= columnFamilyName ( usingClauseDelete[attrs] )? K_WHERE wclause= whereClause
             {
             match(input,K_DELETE,FOLLOW_K_DELETE_in_deleteStatement1076); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:260:16: (ids= cidentList )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:260:16: (ids= cidentList )?
             int alt22=2;
             int LA22_0 = input.LA(1);
 
@@ -1396,7 +1396,7 @@ public class CqlParser extends Parser {
             }
             switch (alt22) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:260:18: ids= cidentList
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:260:18: ids= cidentList
                     {
                     pushFollow(FOLLOW_cidentList_in_deleteStatement1082);
                     ids=cidentList();
@@ -1416,7 +1416,7 @@ public class CqlParser extends Parser {
 
             state._fsp--;
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:262:7: ( usingClauseDelete[attrs] )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:262:7: ( usingClauseDelete[attrs] )?
             int alt23=2;
             int LA23_0 = input.LA(1);
 
@@ -1425,7 +1425,7 @@ public class CqlParser extends Parser {
             }
             switch (alt23) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:262:9: usingClauseDelete[attrs]
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:262:9: usingClauseDelete[attrs]
                     {
                     pushFollow(FOLLOW_usingClauseDelete_in_deleteStatement1109);
                     usingClauseDelete(attrs);
@@ -1463,7 +1463,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "batchStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:270:1: batchStatement returns [BatchStatement expr] : K_BEGIN K_BATCH ( usingClause[attrs] )? s1= batchStatementObjective ( ';' )? (sN= batchStatementObjective ( ';' )? )* K_APPLY K_BATCH ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:270:1: batchStatement returns [BatchStatement expr] : K_BEGIN K_BATCH ( usingClause[attrs] )? s1= batchStatementObjective ( ';' )? (sN= batchStatementObjective ( ';' )? )* K_APPLY K_BATCH ;
     public final BatchStatement batchStatement() throws RecognitionException {
         BatchStatement expr = null;
 
@@ -1477,12 +1477,12 @@ public class CqlParser extends Parser {
                 List<ModificationStatement> statements = new ArrayList<ModificationStatement>();
             
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:299:5: ( K_BEGIN K_BATCH ( usingClause[attrs] )? s1= batchStatementObjective ( ';' )? (sN= batchStatementObjective ( ';' )? )* K_APPLY K_BATCH )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:299:7: K_BEGIN K_BATCH ( usingClause[attrs] )? s1= batchStatementObjective ( ';' )? (sN= batchStatementObjective ( ';' )? )* K_APPLY K_BATCH
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:299:5: ( K_BEGIN K_BATCH ( usingClause[attrs] )? s1= batchStatementObjective ( ';' )? (sN= batchStatementObjective ( ';' )? )* K_APPLY K_BATCH )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:299:7: K_BEGIN K_BATCH ( usingClause[attrs] )? s1= batchStatementObjective ( ';' )? (sN= batchStatementObjective ( ';' )? )* K_APPLY K_BATCH
             {
             match(input,K_BEGIN,FOLLOW_K_BEGIN_in_batchStatement1166); 
             match(input,K_BATCH,FOLLOW_K_BATCH_in_batchStatement1168); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:299:23: ( usingClause[attrs] )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:299:23: ( usingClause[attrs] )?
             int alt24=2;
             int LA24_0 = input.LA(1);
 
@@ -1491,7 +1491,7 @@ public class CqlParser extends Parser {
             }
             switch (alt24) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:299:25: usingClause[attrs]
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:299:25: usingClause[attrs]
                     {
                     pushFollow(FOLLOW_usingClause_in_batchStatement1172);
                     usingClause(attrs);
@@ -1509,7 +1509,7 @@ public class CqlParser extends Parser {
 
             state._fsp--;
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:38: ( ';' )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:38: ( ';' )?
             int alt25=2;
             int LA25_0 = input.LA(1);
 
@@ -1518,7 +1518,7 @@ public class CqlParser extends Parser {
             }
             switch (alt25) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:38: ';'
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:38: ';'
                     {
                     match(input,85,FOLLOW_85_in_batchStatement1192); 
 
@@ -1528,7 +1528,7 @@ public class CqlParser extends Parser {
             }
 
              statements.add(s1); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:67: (sN= batchStatementObjective ( ';' )? )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:67: (sN= batchStatementObjective ( ';' )? )*
             loop27:
             do {
                 int alt27=2;
@@ -1541,14 +1541,14 @@ public class CqlParser extends Parser {
 
                 switch (alt27) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:69: sN= batchStatementObjective ( ';' )?
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:69: sN= batchStatementObjective ( ';' )?
             	    {
             	    pushFollow(FOLLOW_batchStatementObjective_in_batchStatement1201);
             	    sN=batchStatementObjective();
 
             	    state._fsp--;
 
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:96: ( ';' )?
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:96: ( ';' )?
             	    int alt26=2;
             	    int LA26_0 = input.LA(1);
 
@@ -1557,7 +1557,7 @@ public class CqlParser extends Parser {
             	    }
             	    switch (alt26) {
             	        case 1 :
-            	            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:96: ';'
+            	            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:300:96: ';'
             	            {
             	            match(input,85,FOLLOW_85_in_batchStatement1203); 
 
@@ -1597,7 +1597,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "batchStatementObjective"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:307:1: batchStatementObjective returns [ModificationStatement statement] : (i= insertStatement | u= updateStatement | d= deleteStatement );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:307:1: batchStatementObjective returns [ModificationStatement statement] : (i= insertStatement | u= updateStatement | d= deleteStatement );
     public final ModificationStatement batchStatementObjective() throws RecognitionException {
         ModificationStatement statement = null;
 
@@ -1609,7 +1609,7 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:308:5: (i= insertStatement | u= updateStatement | d= deleteStatement )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:308:5: (i= insertStatement | u= updateStatement | d= deleteStatement )
             int alt28=3;
             switch ( input.LA(1) ) {
             case K_INSERT:
@@ -1636,7 +1636,7 @@ public class CqlParser extends Parser {
 
             switch (alt28) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:308:7: i= insertStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:308:7: i= insertStatement
                     {
                     pushFollow(FOLLOW_insertStatement_in_batchStatementObjective1250);
                     i=insertStatement();
@@ -1648,7 +1648,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:309:7: u= updateStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:309:7: u= updateStatement
                     {
                     pushFollow(FOLLOW_updateStatement_in_batchStatementObjective1263);
                     u=updateStatement();
@@ -1660,7 +1660,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:310:7: d= deleteStatement
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:310:7: d= deleteStatement
                     {
                     pushFollow(FOLLOW_deleteStatement_in_batchStatementObjective1276);
                     d=deleteStatement();
@@ -1686,7 +1686,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "createKeyspaceStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:313:1: createKeyspaceStatement returns [CreateKeyspaceStatement expr] : K_CREATE K_KEYSPACE ks= keyspaceName K_WITH props= properties ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:313:1: createKeyspaceStatement returns [CreateKeyspaceStatement expr] : K_CREATE K_KEYSPACE ks= keyspaceName K_WITH props= properties ;
     public final CreateKeyspaceStatement createKeyspaceStatement() throws RecognitionException {
         CreateKeyspaceStatement expr = null;
 
@@ -1696,8 +1696,8 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:317:5: ( K_CREATE K_KEYSPACE ks= keyspaceName K_WITH props= properties )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:317:7: K_CREATE K_KEYSPACE ks= keyspaceName K_WITH props= properties
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:317:5: ( K_CREATE K_KEYSPACE ks= keyspaceName K_WITH props= properties )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:317:7: K_CREATE K_KEYSPACE ks= keyspaceName K_WITH props= properties
             {
             match(input,K_CREATE,FOLLOW_K_CREATE_in_createKeyspaceStatement1302); 
             match(input,K_KEYSPACE,FOLLOW_K_KEYSPACE_in_createKeyspaceStatement1304); 
@@ -1729,7 +1729,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "createColumnFamilyStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:321:1: createColumnFamilyStatement returns [CreateColumnFamilyStatement.RawStatement expr] : K_CREATE K_COLUMNFAMILY cf= columnFamilyName cfamDefinition[expr] ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:321:1: createColumnFamilyStatement returns [CreateColumnFamilyStatement.RawStatement expr] : K_CREATE K_COLUMNFAMILY cf= columnFamilyName cfamDefinition[expr] ;
     public final CreateColumnFamilyStatement.RawStatement createColumnFamilyStatement() throws RecognitionException {
         CreateColumnFamilyStatement.RawStatement expr = null;
 
@@ -1737,8 +1737,8 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:329:5: ( K_CREATE K_COLUMNFAMILY cf= columnFamilyName cfamDefinition[expr] )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:329:7: K_CREATE K_COLUMNFAMILY cf= columnFamilyName cfamDefinition[expr]
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:329:5: ( K_CREATE K_COLUMNFAMILY cf= columnFamilyName cfamDefinition[expr] )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:329:7: K_CREATE K_COLUMNFAMILY cf= columnFamilyName cfamDefinition[expr]
             {
             match(input,K_CREATE,FOLLOW_K_CREATE_in_createColumnFamilyStatement1345); 
             match(input,K_COLUMNFAMILY,FOLLOW_K_COLUMNFAMILY_in_createColumnFamilyStatement1347); 
@@ -1769,11 +1769,11 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "cfamDefinition"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:333:1: cfamDefinition[CreateColumnFamilyStatement.RawStatement expr] : '(' cfamColumns[expr] ( ',' ( cfamColumns[expr] )? )* ')' ( K_WITH cfamProperty[expr] ( K_AND cfamProperty[expr] )* )? ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:333:1: cfamDefinition[CreateColumnFamilyStatement.RawStatement expr] : '(' cfamColumns[expr] ( ',' ( cfamColumns[expr] )? )* ')' ( K_WITH cfamProperty[expr] ( K_AND cfamProperty[expr] )* )? ;
     public final void cfamDefinition(CreateColumnFamilyStatement.RawStatement expr) throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:5: ( '(' cfamColumns[expr] ( ',' ( cfamColumns[expr] )? )* ')' ( K_WITH cfamProperty[expr] ( K_AND cfamProperty[expr] )* )? )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:7: '(' cfamColumns[expr] ( ',' ( cfamColumns[expr] )? )* ')' ( K_WITH cfamProperty[expr] ( K_AND cfamProperty[expr] )* )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:5: ( '(' cfamColumns[expr] ( ',' ( cfamColumns[expr] )? )* ')' ( K_WITH cfamProperty[expr] ( K_AND cfamProperty[expr] )* )? )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:7: '(' cfamColumns[expr] ( ',' ( cfamColumns[expr] )? )* ')' ( K_WITH cfamProperty[expr] ( K_AND cfamProperty[expr] )* )?
             {
             match(input,86,FOLLOW_86_in_cfamDefinition1380); 
             pushFollow(FOLLOW_cfamColumns_in_cfamDefinition1382);
@@ -1781,7 +1781,7 @@ public class CqlParser extends Parser {
 
             state._fsp--;
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:29: ( ',' ( cfamColumns[expr] )? )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:29: ( ',' ( cfamColumns[expr] )? )*
             loop30:
             do {
                 int alt30=2;
@@ -1794,10 +1794,10 @@ public class CqlParser extends Parser {
 
                 switch (alt30) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:31: ',' ( cfamColumns[expr] )?
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:31: ',' ( cfamColumns[expr] )?
             	    {
             	    match(input,89,FOLLOW_89_in_cfamDefinition1387); 
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:35: ( cfamColumns[expr] )?
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:35: ( cfamColumns[expr] )?
             	    int alt29=2;
             	    int LA29_0 = input.LA(1);
 
@@ -1806,7 +1806,7 @@ public class CqlParser extends Parser {
             	    }
             	    switch (alt29) {
             	        case 1 :
-            	            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:35: cfamColumns[expr]
+            	            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:334:35: cfamColumns[expr]
             	            {
             	            pushFollow(FOLLOW_cfamColumns_in_cfamDefinition1389);
             	            cfamColumns(expr);
@@ -1829,7 +1829,7 @@ public class CqlParser extends Parser {
             } while (true);
 
             match(input,87,FOLLOW_87_in_cfamDefinition1396); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:335:7: ( K_WITH cfamProperty[expr] ( K_AND cfamProperty[expr] )* )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:335:7: ( K_WITH cfamProperty[expr] ( K_AND cfamProperty[expr] )* )?
             int alt32=2;
             int LA32_0 = input.LA(1);
 
@@ -1838,7 +1838,7 @@ public class CqlParser extends Parser {
             }
             switch (alt32) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:335:9: K_WITH cfamProperty[expr] ( K_AND cfamProperty[expr] )*
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:335:9: K_WITH cfamProperty[expr] ( K_AND cfamProperty[expr] )*
                     {
                     match(input,K_WITH,FOLLOW_K_WITH_in_cfamDefinition1406); 
                     pushFollow(FOLLOW_cfamProperty_in_cfamDefinition1408);
@@ -1846,7 +1846,7 @@ public class CqlParser extends Parser {
 
                     state._fsp--;
 
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:335:35: ( K_AND cfamProperty[expr] )*
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:335:35: ( K_AND cfamProperty[expr] )*
                     loop31:
                     do {
                         int alt31=2;
@@ -1859,7 +1859,7 @@ public class CqlParser extends Parser {
 
                         switch (alt31) {
                     	case 1 :
-                    	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:335:37: K_AND cfamProperty[expr]
+                    	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:335:37: K_AND cfamProperty[expr]
                     	    {
                     	    match(input,K_AND,FOLLOW_K_AND_in_cfamDefinition1413); 
                     	    pushFollow(FOLLOW_cfamProperty_in_cfamDefinition1415);
@@ -1898,7 +1898,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "cfamColumns"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:338:1: cfamColumns[CreateColumnFamilyStatement.RawStatement expr] : (k= cident v= comparatorType ( K_PRIMARY K_KEY )? | K_PRIMARY K_KEY '(' k= cident ( ',' c= cident )* ')' );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:338:1: cfamColumns[CreateColumnFamilyStatement.RawStatement expr] : (k= cident v= comparatorType ( K_PRIMARY K_KEY )? | K_PRIMARY K_KEY '(' k= cident ( ',' c= cident )* ')' );
     public final void cfamColumns(CreateColumnFamilyStatement.RawStatement expr) throws RecognitionException {
         ColumnIdentifier k = null;
 
@@ -1908,7 +1908,7 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:339:5: (k= cident v= comparatorType ( K_PRIMARY K_KEY )? | K_PRIMARY K_KEY '(' k= cident ( ',' c= cident )* ')' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:339:5: (k= cident v= comparatorType ( K_PRIMARY K_KEY )? | K_PRIMARY K_KEY '(' k= cident ( ',' c= cident )* ')' )
             int alt35=2;
             int LA35_0 = input.LA(1);
 
@@ -1926,7 +1926,7 @@ public class CqlParser extends Parser {
             }
             switch (alt35) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:339:7: k= cident v= comparatorType ( K_PRIMARY K_KEY )?
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:339:7: k= cident v= comparatorType ( K_PRIMARY K_KEY )?
                     {
                     pushFollow(FOLLOW_cident_in_cfamColumns1441);
                     k=cident();
@@ -1939,7 +1939,7 @@ public class CqlParser extends Parser {
                     state._fsp--;
 
                      expr.addDefinition(k, v); 
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:339:64: ( K_PRIMARY K_KEY )?
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:339:64: ( K_PRIMARY K_KEY )?
                     int alt33=2;
                     int LA33_0 = input.LA(1);
 
@@ -1948,7 +1948,7 @@ public class CqlParser extends Parser {
                     }
                     switch (alt33) {
                         case 1 :
-                            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:339:65: K_PRIMARY K_KEY
+                            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:339:65: K_PRIMARY K_KEY
                             {
                             match(input,K_PRIMARY,FOLLOW_K_PRIMARY_in_cfamColumns1450); 
                             match(input,K_KEY,FOLLOW_K_KEY_in_cfamColumns1452); 
@@ -1963,7 +1963,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:340:7: K_PRIMARY K_KEY '(' k= cident ( ',' c= cident )* ')'
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:340:7: K_PRIMARY K_KEY '(' k= cident ( ',' c= cident )* ')'
                     {
                     match(input,K_PRIMARY,FOLLOW_K_PRIMARY_in_cfamColumns1464); 
                     match(input,K_KEY,FOLLOW_K_KEY_in_cfamColumns1466); 
@@ -1974,7 +1974,7 @@ public class CqlParser extends Parser {
                     state._fsp--;
 
                      expr.setKeyAlias(k); 
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:340:62: ( ',' c= cident )*
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:340:62: ( ',' c= cident )*
                     loop34:
                     do {
                         int alt34=2;
@@ -1987,7 +1987,7 @@ public class CqlParser extends Parser {
 
                         switch (alt34) {
                     	case 1 :
-                    	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:340:63: ',' c= cident
+                    	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:340:63: ',' c= cident
                     	    {
                     	    match(input,89,FOLLOW_89_in_cfamColumns1477); 
                     	    pushFollow(FOLLOW_cident_in_cfamColumns1481);
@@ -2024,7 +2024,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "cfamProperty"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:343:1: cfamProperty[CreateColumnFamilyStatement.RawStatement expr] : (k= property '=' v= propertyValue | K_COMPACT K_STORAGE );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:343:1: cfamProperty[CreateColumnFamilyStatement.RawStatement expr] : (k= property '=' v= propertyValue | K_COMPACT K_STORAGE );
     public final void cfamProperty(CreateColumnFamilyStatement.RawStatement expr) throws RecognitionException {
         String k = null;
 
@@ -2032,7 +2032,7 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:344:5: (k= property '=' v= propertyValue | K_COMPACT K_STORAGE )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:344:5: (k= property '=' v= propertyValue | K_COMPACT K_STORAGE )
             int alt36=2;
             int LA36_0 = input.LA(1);
 
@@ -2050,7 +2050,7 @@ public class CqlParser extends Parser {
             }
             switch (alt36) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:344:7: k= property '=' v= propertyValue
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:344:7: k= property '=' v= propertyValue
                     {
                     pushFollow(FOLLOW_property_in_cfamProperty1508);
                     k=property();
@@ -2068,7 +2068,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:345:7: K_COMPACT K_STORAGE
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:345:7: K_COMPACT K_STORAGE
                     {
                     match(input,K_COMPACT,FOLLOW_K_COMPACT_in_cfamProperty1524); 
                     match(input,K_STORAGE,FOLLOW_K_STORAGE_in_cfamProperty1526); 
@@ -2091,7 +2091,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "createIndexStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:348:1: createIndexStatement returns [CreateIndexStatement expr] : K_CREATE K_INDEX (idxName= IDENT )? K_ON cf= columnFamilyName '(' id= cident ')' ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:348:1: createIndexStatement returns [CreateIndexStatement expr] : K_CREATE K_INDEX (idxName= IDENT )? K_ON cf= columnFamilyName '(' id= cident ')' ;
     public final CreateIndexStatement createIndexStatement() throws RecognitionException {
         CreateIndexStatement expr = null;
 
@@ -2102,12 +2102,12 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:352:5: ( K_CREATE K_INDEX (idxName= IDENT )? K_ON cf= columnFamilyName '(' id= cident ')' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:352:7: K_CREATE K_INDEX (idxName= IDENT )? K_ON cf= columnFamilyName '(' id= cident ')'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:352:5: ( K_CREATE K_INDEX (idxName= IDENT )? K_ON cf= columnFamilyName '(' id= cident ')' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:352:7: K_CREATE K_INDEX (idxName= IDENT )? K_ON cf= columnFamilyName '(' id= cident ')'
             {
             match(input,K_CREATE,FOLLOW_K_CREATE_in_createIndexStatement1551); 
             match(input,K_INDEX,FOLLOW_K_INDEX_in_createIndexStatement1553); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:352:24: (idxName= IDENT )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:352:24: (idxName= IDENT )?
             int alt37=2;
             int LA37_0 = input.LA(1);
 
@@ -2116,7 +2116,7 @@ public class CqlParser extends Parser {
             }
             switch (alt37) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:352:25: idxName= IDENT
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:352:25: idxName= IDENT
                     {
                     idxName=(Token)match(input,IDENT,FOLLOW_IDENT_in_createIndexStatement1558); 
 
@@ -2155,7 +2155,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "alterTableStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:356:1: alterTableStatement returns [AlterTableStatement expr] : K_ALTER K_COLUMNFAMILY cf= columnFamilyName ( K_ALTER id= cident K_TYPE v= comparatorType | K_ADD id= cident v= comparatorType | K_DROP id= cident | K_WITH props= properties ) ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:356:1: alterTableStatement returns [AlterTableStatement expr] : K_ALTER K_COLUMNFAMILY cf= columnFamilyName ( K_ALTER id= cident K_TYPE v= comparatorType | K_ADD id= cident v= comparatorType | K_DROP id= cident | K_WITH props= properties ) ;
     public final AlterTableStatement alterTableStatement() throws RecognitionException {
         AlterTableStatement expr = null;
 
@@ -2173,8 +2173,8 @@ public class CqlParser extends Parser {
                 props = new HashMap<String, String>();
             
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:367:5: ( K_ALTER K_COLUMNFAMILY cf= columnFamilyName ( K_ALTER id= cident K_TYPE v= comparatorType | K_ADD id= cident v= comparatorType | K_DROP id= cident | K_WITH props= properties ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:367:7: K_ALTER K_COLUMNFAMILY cf= columnFamilyName ( K_ALTER id= cident K_TYPE v= comparatorType | K_ADD id= cident v= comparatorType | K_DROP id= cident | K_WITH props= properties )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:367:5: ( K_ALTER K_COLUMNFAMILY cf= columnFamilyName ( K_ALTER id= cident K_TYPE v= comparatorType | K_ADD id= cident v= comparatorType | K_DROP id= cident | K_WITH props= properties ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:367:7: K_ALTER K_COLUMNFAMILY cf= columnFamilyName ( K_ALTER id= cident K_TYPE v= comparatorType | K_ADD id= cident v= comparatorType | K_DROP id= cident | K_WITH props= properties )
             {
             match(input,K_ALTER,FOLLOW_K_ALTER_in_alterTableStatement1614); 
             match(input,K_COLUMNFAMILY,FOLLOW_K_COLUMNFAMILY_in_alterTableStatement1616); 
@@ -2183,7 +2183,7 @@ public class CqlParser extends Parser {
 
             state._fsp--;
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:368:11: ( K_ALTER id= cident K_TYPE v= comparatorType | K_ADD id= cident v= comparatorType | K_DROP id= cident | K_WITH props= properties )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:368:11: ( K_ALTER id= cident K_TYPE v= comparatorType | K_ADD id= cident v= comparatorType | K_DROP id= cident | K_WITH props= properties )
             int alt38=4;
             switch ( input.LA(1) ) {
             case K_ALTER:
@@ -2215,7 +2215,7 @@ public class CqlParser extends Parser {
 
             switch (alt38) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:368:13: K_ALTER id= cident K_TYPE v= comparatorType
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:368:13: K_ALTER id= cident K_TYPE v= comparatorType
                     {
                     match(input,K_ALTER,FOLLOW_K_ALTER_in_alterTableStatement1634); 
                     pushFollow(FOLLOW_cident_in_alterTableStatement1638);
@@ -2234,7 +2234,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:369:13: K_ADD id= cident v= comparatorType
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:369:13: K_ADD id= cident v= comparatorType
                     {
                     match(input,K_ADD,FOLLOW_K_ADD_in_alterTableStatement1660); 
                     pushFollow(FOLLOW_cident_in_alterTableStatement1666);
@@ -2252,7 +2252,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:370:13: K_DROP id= cident
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:370:13: K_DROP id= cident
                     {
                     match(input,K_DROP,FOLLOW_K_DROP_in_alterTableStatement1693); 
                     pushFollow(FOLLOW_cident_in_alterTableStatement1698);
@@ -2265,7 +2265,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:371:13: K_WITH props= properties
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:371:13: K_WITH props= properties
                     {
                     match(input,K_WITH,FOLLOW_K_WITH_in_alterTableStatement1738); 
                     pushFollow(FOLLOW_properties_in_alterTableStatement1743);
@@ -2299,7 +2299,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "dropKeyspaceStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:378:1: dropKeyspaceStatement returns [DropKeyspaceStatement ksp] : K_DROP K_KEYSPACE ks= keyspaceName ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:378:1: dropKeyspaceStatement returns [DropKeyspaceStatement ksp] : K_DROP K_KEYSPACE ks= keyspaceName ;
     public final DropKeyspaceStatement dropKeyspaceStatement() throws RecognitionException {
         DropKeyspaceStatement ksp = null;
 
@@ -2307,8 +2307,8 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:382:5: ( K_DROP K_KEYSPACE ks= keyspaceName )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:382:7: K_DROP K_KEYSPACE ks= keyspaceName
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:382:5: ( K_DROP K_KEYSPACE ks= keyspaceName )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:382:7: K_DROP K_KEYSPACE ks= keyspaceName
             {
             match(input,K_DROP,FOLLOW_K_DROP_in_dropKeyspaceStatement1803); 
             match(input,K_KEYSPACE,FOLLOW_K_KEYSPACE_in_dropKeyspaceStatement1805); 
@@ -2334,7 +2334,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "dropColumnFamilyStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:385:1: dropColumnFamilyStatement returns [DropColumnFamilyStatement stmt] : K_DROP K_COLUMNFAMILY cf= columnFamilyName ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:385:1: dropColumnFamilyStatement returns [DropColumnFamilyStatement stmt] : K_DROP K_COLUMNFAMILY cf= columnFamilyName ;
     public final DropColumnFamilyStatement dropColumnFamilyStatement() throws RecognitionException {
         DropColumnFamilyStatement stmt = null;
 
@@ -2342,8 +2342,8 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:389:5: ( K_DROP K_COLUMNFAMILY cf= columnFamilyName )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:389:7: K_DROP K_COLUMNFAMILY cf= columnFamilyName
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:389:5: ( K_DROP K_COLUMNFAMILY cf= columnFamilyName )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:389:7: K_DROP K_COLUMNFAMILY cf= columnFamilyName
             {
             match(input,K_DROP,FOLLOW_K_DROP_in_dropColumnFamilyStatement1834); 
             match(input,K_COLUMNFAMILY,FOLLOW_K_COLUMNFAMILY_in_dropColumnFamilyStatement1836); 
@@ -2369,15 +2369,15 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "dropIndexStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:392:1: dropIndexStatement returns [DropIndexStatement expr] : K_DROP K_INDEX index= IDENT ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:392:1: dropIndexStatement returns [DropIndexStatement expr] : K_DROP K_INDEX index= IDENT ;
     public final DropIndexStatement dropIndexStatement() throws RecognitionException {
         DropIndexStatement expr = null;
 
         Token index=null;
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:396:5: ( K_DROP K_INDEX index= IDENT )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:397:7: K_DROP K_INDEX index= IDENT
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:396:5: ( K_DROP K_INDEX index= IDENT )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:397:7: K_DROP K_INDEX index= IDENT
             {
             match(input,K_DROP,FOLLOW_K_DROP_in_dropIndexStatement1871); 
             match(input,K_INDEX,FOLLOW_K_INDEX_in_dropIndexStatement1873); 
@@ -2399,7 +2399,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "truncateStatement"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:401:1: truncateStatement returns [TruncateStatement stmt] : K_TRUNCATE cf= columnFamilyName ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:401:1: truncateStatement returns [TruncateStatement stmt] : K_TRUNCATE cf= columnFamilyName ;
     public final TruncateStatement truncateStatement() throws RecognitionException {
         TruncateStatement stmt = null;
 
@@ -2407,8 +2407,8 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:405:5: ( K_TRUNCATE cf= columnFamilyName )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:405:7: K_TRUNCATE cf= columnFamilyName
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:405:5: ( K_TRUNCATE cf= columnFamilyName )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:405:7: K_TRUNCATE cf= columnFamilyName
             {
             match(input,K_TRUNCATE,FOLLOW_K_TRUNCATE_in_truncateStatement1908); 
             pushFollow(FOLLOW_columnFamilyName_in_truncateStatement1912);
@@ -2433,14 +2433,14 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "cident"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:409:1: cident returns [ColumnIdentifier id] : (t= ( IDENT | UUID | INTEGER ) | t= QUOTED_NAME );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:409:1: cident returns [ColumnIdentifier id] : (t= ( IDENT | UUID | INTEGER ) | t= QUOTED_NAME );
     public final ColumnIdentifier cident() throws RecognitionException {
         ColumnIdentifier id = null;
 
         Token t=null;
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:413:5: (t= ( IDENT | UUID | INTEGER ) | t= QUOTED_NAME )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:413:5: (t= ( IDENT | UUID | INTEGER ) | t= QUOTED_NAME )
             int alt39=2;
             int LA39_0 = input.LA(1);
 
@@ -2458,7 +2458,7 @@ public class CqlParser extends Parser {
             }
             switch (alt39) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:413:7: t= ( IDENT | UUID | INTEGER )
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:413:7: t= ( IDENT | UUID | INTEGER )
                     {
                     t=(Token)input.LT(1);
                     if ( input.LA(1)==INTEGER||input.LA(1)==IDENT||input.LA(1)==UUID ) {
@@ -2475,7 +2475,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:414:7: t= QUOTED_NAME
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:414:7: t= QUOTED_NAME
                     {
                     t=(Token)match(input,QUOTED_NAME,FOLLOW_QUOTED_NAME_in_cident1966); 
                      id = new ColumnIdentifier((t!=null?t.getText():null), true); 
@@ -2497,14 +2497,14 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "keyspaceName"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:418:1: keyspaceName returns [String id] : cfOrKsName[name, true] ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:418:1: keyspaceName returns [String id] : cfOrKsName[name, true] ;
     public final String keyspaceName() throws RecognitionException {
         String id = null;
 
          CFName name = new CFName(); 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:420:5: ( cfOrKsName[name, true] )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:420:7: cfOrKsName[name, true]
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:420:5: ( cfOrKsName[name, true] )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:420:7: cfOrKsName[name, true]
             {
             pushFollow(FOLLOW_cfOrKsName_in_keyspaceName2014);
             cfOrKsName(name, true);
@@ -2528,16 +2528,16 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "columnFamilyName"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:423:1: columnFamilyName returns [CFName name] : ( cfOrKsName[name, true] '.' )? cfOrKsName[name, false] ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:423:1: columnFamilyName returns [CFName name] : ( cfOrKsName[name, true] '.' )? cfOrKsName[name, false] ;
     public final CFName columnFamilyName() throws RecognitionException {
         CFName name = null;
 
          name = new CFName(); 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:425:5: ( ( cfOrKsName[name, true] '.' )? cfOrKsName[name, false] )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:425:7: ( cfOrKsName[name, true] '.' )? cfOrKsName[name, false]
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:425:5: ( ( cfOrKsName[name, true] '.' )? cfOrKsName[name, false] )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:425:7: ( cfOrKsName[name, true] '.' )? cfOrKsName[name, false]
             {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:425:7: ( cfOrKsName[name, true] '.' )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:425:7: ( cfOrKsName[name, true] '.' )?
             int alt40=2;
             int LA40_0 = input.LA(1);
 
@@ -2557,7 +2557,7 @@ public class CqlParser extends Parser {
             }
             switch (alt40) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:425:8: cfOrKsName[name, true] '.'
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:425:8: cfOrKsName[name, true] '.'
                     {
                     pushFollow(FOLLOW_cfOrKsName_in_columnFamilyName2048);
                     cfOrKsName(name, true);
@@ -2592,12 +2592,12 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "cfOrKsName"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:428:1: cfOrKsName[CFName name, boolean isKs] : (t= IDENT | t= QUOTED_NAME );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:428:1: cfOrKsName[CFName name, boolean isKs] : (t= IDENT | t= QUOTED_NAME );
     public final void cfOrKsName(CFName name, boolean isKs) throws RecognitionException {
         Token t=null;
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:429:5: (t= IDENT | t= QUOTED_NAME )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:429:5: (t= IDENT | t= QUOTED_NAME )
             int alt41=2;
             int LA41_0 = input.LA(1);
 
@@ -2615,7 +2615,7 @@ public class CqlParser extends Parser {
             }
             switch (alt41) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:429:7: t= IDENT
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:429:7: t= IDENT
                     {
                     t=(Token)match(input,IDENT,FOLLOW_IDENT_in_cfOrKsName2076); 
                      if (isKs) name.setKeyspace((t!=null?t.getText():null), false); else name.setColumnFamily((t!=null?t.getText():null), false); 
@@ -2623,7 +2623,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:430:7: t= QUOTED_NAME
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:430:7: t= QUOTED_NAME
                     {
                     t=(Token)match(input,QUOTED_NAME,FOLLOW_QUOTED_NAME_in_cfOrKsName2095); 
                      if (isKs) name.setKeyspace((t!=null?t.getText():null), true); else name.setColumnFamily((t!=null?t.getText():null), true); 
@@ -2645,7 +2645,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "cidentList"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:433:1: cidentList returns [List<ColumnIdentifier> items] : t1= cident ( ',' tN= cident )* ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:433:1: cidentList returns [List<ColumnIdentifier> items] : t1= cident ( ',' tN= cident )* ;
     public final List<ColumnIdentifier> cidentList() throws RecognitionException {
         List<ColumnIdentifier> items = null;
 
@@ -2656,8 +2656,8 @@ public class CqlParser extends Parser {
 
          items = new ArrayList<ColumnIdentifier>(); 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:435:5: (t1= cident ( ',' tN= cident )* )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:435:8: t1= cident ( ',' tN= cident )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:435:5: (t1= cident ( ',' tN= cident )* )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:435:8: t1= cident ( ',' tN= cident )*
             {
             pushFollow(FOLLOW_cident_in_cidentList2130);
             t1=cident();
@@ -2665,7 +2665,7 @@ public class CqlParser extends Parser {
             state._fsp--;
 
              items.add(t1); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:435:38: ( ',' tN= cident )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:435:38: ( ',' tN= cident )*
             loop42:
             do {
                 int alt42=2;
@@ -2678,7 +2678,7 @@ public class CqlParser extends Parser {
 
                 switch (alt42) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:435:39: ',' tN= cident
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:435:39: ',' tN= cident
             	    {
             	    match(input,89,FOLLOW_89_in_cidentList2135); 
             	    pushFollow(FOLLOW_cident_in_cidentList2139);
@@ -2712,14 +2712,14 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "term"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:439:1: term returns [Term term] : (t= ( STRING_LITERAL | UUID | IDENT | INTEGER | FLOAT ) | t= QMARK );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:439:1: term returns [Term term] : (t= ( STRING_LITERAL | UUID | IDENT | INTEGER | FLOAT ) | t= QMARK );
     public final Term term() throws RecognitionException {
         Term term = null;
 
         Token t=null;
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:440:5: (t= ( STRING_LITERAL | UUID | IDENT | INTEGER | FLOAT ) | t= QMARK )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:440:5: (t= ( STRING_LITERAL | UUID | IDENT | INTEGER | FLOAT ) | t= QMARK )
             int alt43=2;
             int LA43_0 = input.LA(1);
 
@@ -2737,7 +2737,7 @@ public class CqlParser extends Parser {
             }
             switch (alt43) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:440:7: t= ( STRING_LITERAL | UUID | IDENT | INTEGER | FLOAT )
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:440:7: t= ( STRING_LITERAL | UUID | IDENT | INTEGER | FLOAT )
                     {
                     t=(Token)input.LT(1);
                     if ( input.LA(1)==INTEGER||input.LA(1)==IDENT||input.LA(1)==UUID||(input.LA(1)>=STRING_LITERAL && input.LA(1)<=FLOAT) ) {
@@ -2754,7 +2754,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:441:7: t= QMARK
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:441:7: t= QMARK
                     {
                     t=(Token)match(input,QMARK,FOLLOW_QMARK_in_term2198); 
                      term = new Term((t!=null?t.getText():null), (t!=null?t.getType():0), ++currentBindMarkerIdx); 
@@ -2776,14 +2776,14 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "intTerm"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:444:1: intTerm returns [Term integer] : (t= INTEGER | t= QMARK );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:444:1: intTerm returns [Term integer] : (t= INTEGER | t= QMARK );
     public final Term intTerm() throws RecognitionException {
         Term integer = null;
 
         Token t=null;
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:445:5: (t= INTEGER | t= QMARK )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:445:5: (t= INTEGER | t= QMARK )
             int alt44=2;
             int LA44_0 = input.LA(1);
 
@@ -2801,7 +2801,7 @@ public class CqlParser extends Parser {
             }
             switch (alt44) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:445:7: t= INTEGER
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:445:7: t= INTEGER
                     {
                     t=(Token)match(input,INTEGER,FOLLOW_INTEGER_in_intTerm2268); 
                      integer = new Term((t!=null?t.getText():null), (t!=null?t.getType():0)); 
@@ -2809,7 +2809,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:446:7: t= QMARK
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:446:7: t= QMARK
                     {
                     t=(Token)match(input,QMARK,FOLLOW_QMARK_in_intTerm2280); 
                      integer = new Term((t!=null?t.getText():null), (t!=null?t.getType():0), ++currentBindMarkerIdx); 
@@ -2831,7 +2831,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "termPairWithOperation"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:449:1: termPairWithOperation[Map<ColumnIdentifier, Operation> columns] : key= cident '=' (value= term | c= cident ( '+' v= intTerm | (op= '-' )? v= intTerm ) ) ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:449:1: termPairWithOperation[Map<ColumnIdentifier, Operation> columns] : key= cident '=' (value= term | c= cident ( '+' v= intTerm | (op= '-' )? v= intTerm ) ) ;
     public final void termPairWithOperation(Map<ColumnIdentifier, Operation> columns) throws RecognitionException {
         Token op=null;
         ColumnIdentifier key = null;
@@ -2844,8 +2844,8 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:450:5: (key= cident '=' (value= term | c= cident ( '+' v= intTerm | (op= '-' )? v= intTerm ) ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:450:7: key= cident '=' (value= term | c= cident ( '+' v= intTerm | (op= '-' )? v= intTerm ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:450:5: (key= cident '=' (value= term | c= cident ( '+' v= intTerm | (op= '-' )? v= intTerm ) ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:450:7: key= cident '=' (value= term | c= cident ( '+' v= intTerm | (op= '-' )? v= intTerm ) )
             {
             pushFollow(FOLLOW_cident_in_termPairWithOperation2304);
             key=cident();
@@ -2853,7 +2853,7 @@ public class CqlParser extends Parser {
             state._fsp--;
 
             match(input,90,FOLLOW_90_in_termPairWithOperation2306); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:451:9: (value= term | c= cident ( '+' v= intTerm | (op= '-' )? v= intTerm ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:451:9: (value= term | c= cident ( '+' v= intTerm | (op= '-' )? v= intTerm ) )
             int alt47=2;
             switch ( input.LA(1) ) {
             case INTEGER:
@@ -2897,7 +2897,7 @@ public class CqlParser extends Parser {
 
             switch (alt47) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:451:11: value= term
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:451:11: value= term
                     {
                     pushFollow(FOLLOW_term_in_termPairWithOperation2320);
                     value=term();
@@ -2909,14 +2909,14 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:452:11: c= cident ( '+' v= intTerm | (op= '-' )? v= intTerm )
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:452:11: c= cident ( '+' v= intTerm | (op= '-' )? v= intTerm )
                     {
                     pushFollow(FOLLOW_cident_in_termPairWithOperation2336);
                     c=cident();
 
                     state._fsp--;
 
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:452:20: ( '+' v= intTerm | (op= '-' )? v= intTerm )
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:452:20: ( '+' v= intTerm | (op= '-' )? v= intTerm )
                     int alt46=2;
                     int LA46_0 = input.LA(1);
 
@@ -2934,7 +2934,7 @@ public class CqlParser extends Parser {
                     }
                     switch (alt46) {
                         case 1 :
-                            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:452:22: '+' v= intTerm
+                            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:452:22: '+' v= intTerm
                             {
                             match(input,92,FOLLOW_92_in_termPairWithOperation2340); 
                             pushFollow(FOLLOW_intTerm_in_termPairWithOperation2348);
@@ -2947,9 +2947,9 @@ public class CqlParser extends Parser {
                             }
                             break;
                         case 2 :
-                            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:453:22: (op= '-' )? v= intTerm
+                            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:453:22: (op= '-' )? v= intTerm
                             {
-                            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:453:24: (op= '-' )?
+                            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:453:24: (op= '-' )?
                             int alt45=2;
                             int LA45_0 = input.LA(1);
 
@@ -2958,7 +2958,7 @@ public class CqlParser extends Parser {
                             }
                             switch (alt45) {
                                 case 1 :
-                                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:453:24: op= '-'
+                                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:453:24: op= '-'
                                     {
                                     op=(Token)match(input,93,FOLLOW_93_in_termPairWithOperation2375); 
 
@@ -3006,15 +3006,15 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "property"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:464:1: property returns [String str] : p= ( COMPIDENT | IDENT ) ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:464:1: property returns [String str] : p= ( COMPIDENT | IDENT ) ;
     public final String property() throws RecognitionException {
         String str = null;
 
         Token p=null;
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:465:5: (p= ( COMPIDENT | IDENT ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:465:7: p= ( COMPIDENT | IDENT )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:465:5: (p= ( COMPIDENT | IDENT ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:465:7: p= ( COMPIDENT | IDENT )
             {
             p=(Token)input.LT(1);
             if ( input.LA(1)==IDENT||input.LA(1)==COMPIDENT ) {
@@ -3043,15 +3043,15 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "propertyValue"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:468:1: propertyValue returns [String str] : v= ( STRING_LITERAL | IDENT | INTEGER | FLOAT ) ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:468:1: propertyValue returns [String str] : v= ( STRING_LITERAL | IDENT | INTEGER | FLOAT ) ;
     public final String propertyValue() throws RecognitionException {
         String str = null;
 
         Token v=null;
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:469:5: (v= ( STRING_LITERAL | IDENT | INTEGER | FLOAT ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:469:7: v= ( STRING_LITERAL | IDENT | INTEGER | FLOAT )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:469:5: (v= ( STRING_LITERAL | IDENT | INTEGER | FLOAT ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:469:7: v= ( STRING_LITERAL | IDENT | INTEGER | FLOAT )
             {
             v=(Token)input.LT(1);
             if ( input.LA(1)==INTEGER||input.LA(1)==IDENT||(input.LA(1)>=STRING_LITERAL && input.LA(1)<=FLOAT) ) {
@@ -3080,7 +3080,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "properties"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:472:1: properties returns [Map<String, String> props] : k1= property '=' v1= propertyValue ( K_AND kn= property '=' vn= propertyValue )* ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:472:1: properties returns [Map<String, String> props] : k1= property '=' v1= propertyValue ( K_AND kn= property '=' vn= propertyValue )* ;
     public final Map<String, String> properties() throws RecognitionException {
         Map<String, String> props = null;
 
@@ -3095,8 +3095,8 @@ public class CqlParser extends Parser {
 
          props = new HashMap<String, String>(); 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:474:5: (k1= property '=' v1= propertyValue ( K_AND kn= property '=' vn= propertyValue )* )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:474:7: k1= property '=' v1= propertyValue ( K_AND kn= property '=' vn= propertyValue )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:474:5: (k1= property '=' v1= propertyValue ( K_AND kn= property '=' vn= propertyValue )* )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:474:7: k1= property '=' v1= propertyValue ( K_AND kn= property '=' vn= propertyValue )*
             {
             pushFollow(FOLLOW_property_in_properties2536);
             k1=property();
@@ -3110,7 +3110,7 @@ public class CqlParser extends Parser {
             state._fsp--;
 
              props.put(k1, v1); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:474:64: ( K_AND kn= property '=' vn= propertyValue )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:474:64: ( K_AND kn= property '=' vn= propertyValue )*
             loop48:
             do {
                 int alt48=2;
@@ -3123,7 +3123,7 @@ public class CqlParser extends Parser {
 
                 switch (alt48) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:474:65: K_AND kn= property '=' vn= propertyValue
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:474:65: K_AND kn= property '=' vn= propertyValue
             	    {
             	    match(input,K_AND,FOLLOW_K_AND_in_properties2547); 
             	    pushFollow(FOLLOW_property_in_properties2551);
@@ -3163,7 +3163,7 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "relation"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:477:1: relation returns [Relation rel] : (name= cident type= ( '=' | '<' | '<=' | '>=' | '>' ) t= term | name= cident K_IN '(' f1= term ( ',' fN= term )* ')' );
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:477:1: relation returns [Relation rel] : (name= cident type= ( '=' | '<' | '<=' | '>=' | '>' ) t= term | name= cident K_IN '(' f1= term ( ',' fN= term )* ')' );
     public final Relation relation() throws RecognitionException {
         Relation rel = null;
 
@@ -3178,7 +3178,7 @@ public class CqlParser extends Parser {
 
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:478:5: (name= cident type= ( '=' | '<' | '<=' | '>=' | '>' ) t= term | name= cident K_IN '(' f1= term ( ',' fN= term )* ')' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:478:5: (name= cident type= ( '=' | '<' | '<=' | '>=' | '>' ) t= term | name= cident K_IN '(' f1= term ( ',' fN= term )* ')' )
             int alt50=2;
             int LA50_0 = input.LA(1);
 
@@ -3222,7 +3222,7 @@ public class CqlParser extends Parser {
             }
             switch (alt50) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:478:7: name= cident type= ( '=' | '<' | '<=' | '>=' | '>' ) t= term
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:478:7: name= cident type= ( '=' | '<' | '<=' | '>=' | '>' ) t= term
                     {
                     pushFollow(FOLLOW_cident_in_relation2585);
                     name=cident();
@@ -3249,7 +3249,7 @@ public class CqlParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:479:7: name= cident K_IN '(' f1= term ( ',' fN= term )* ')'
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:479:7: name= cident K_IN '(' f1= term ( ',' fN= term )* ')'
                     {
                     pushFollow(FOLLOW_cident_in_relation2623);
                     name=cident();
@@ -3265,7 +3265,7 @@ public class CqlParser extends Parser {
                     state._fsp--;
 
                      rel.addInValue(f1); 
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:480:44: ( ',' fN= term )*
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:480:44: ( ',' fN= term )*
                     loop49:
                     do {
                         int alt49=2;
@@ -3278,7 +3278,7 @@ public class CqlParser extends Parser {
 
                         switch (alt49) {
                     	case 1 :
-                    	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:480:45: ',' fN= term
+                    	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:480:45: ',' fN= term
                     	    {
                     	    match(input,89,FOLLOW_89_in_relation2644); 
                     	    pushFollow(FOLLOW_term_in_relation2648);
@@ -3315,15 +3315,15 @@ public class CqlParser extends Parser {
 
 
     // $ANTLR start "comparatorType"
-    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:483:1: comparatorType returns [String str] : c= ( IDENT | STRING_LITERAL | K_TIMESTAMP ) ;
+    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:483:1: comparatorType returns [String str] : c= ( IDENT | STRING_LITERAL | K_TIMESTAMP ) ;
     public final String comparatorType() throws RecognitionException {
         String str = null;
 
         Token c=null;
 
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:484:5: (c= ( IDENT | STRING_LITERAL | K_TIMESTAMP ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:484:7: c= ( IDENT | STRING_LITERAL | K_TIMESTAMP )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:484:5: (c= ( IDENT | STRING_LITERAL | K_TIMESTAMP ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:484:7: c= ( IDENT | STRING_LITERAL | K_TIMESTAMP )
             {
             c=(Token)input.LT(1);
             if ( input.LA(1)==K_TIMESTAMP||input.LA(1)==IDENT||input.LA(1)==STRING_LITERAL ) {

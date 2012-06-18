@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.manager</groupId>
     <artifactId>wso2manager-parent</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Manager - Parent</name>
     <url>http://wso2.com/cloud/stratos/</url>
@@ -333,13 +333,13 @@
     </repositories>
 
 
-    <pluginRepositories>
+    <!--<pluginRepositories>
         <pluginRepository>
             <id>tlc</id>
             <name>TLC Repository</name>
             <url>http://commons.ucalgary.ca/pub/m2</url>
         </pluginRepository>
-    </pluginRepositories>
+    </pluginRepositories>-->
 
     <distributionManagement>
         <repository>
@@ -400,10 +400,10 @@
         <features-dashboard.war.version>1.0.0</features-dashboard.war.version>
         <carbon.version>4.0.0-SNAPSHOT</carbon.version>
 		<synapse.version>${version.synapse}</synapse.version>
-        <stratos.version>1.1.0-SNAPSHOT</stratos.version>
+        <stratos.version>2.0.0-SNAPSHOT</stratos.version>
         <eclipse.version>3.2.0</eclipse.version>
         <servlet-api.version>2.4</servlet-api.version>
-        <shoppingcart.version>1.1.0-SNAPSHOT</shoppingcart.version>
+        <shoppingcart.version>2.0.0-SNAPSHOT</shoppingcart.version>
     </properties>
 
 </project>

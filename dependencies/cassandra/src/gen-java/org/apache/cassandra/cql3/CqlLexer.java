@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g 2012-05-01 20:46:19
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g 2012-05-24 10:52:13
 
     package org.apache.cassandra.cql3;
 
@@ -155,15 +155,15 @@ public class CqlLexer extends Lexer {
         super(input,state);
 
     }
-    public String getGrammarFileName() { return "/opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g"; }
+    public String getGrammarFileName() { return "/media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g"; }
 
     // $ANTLR start "T__85"
     public final void mT__85() throws RecognitionException {
         try {
             int _type = T__85;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:50:7: ( ';' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:50:9: ';'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:50:7: ( ';' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:50:9: ';'
             {
             match(';'); 
 
@@ -182,8 +182,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__86;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:51:7: ( '(' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:51:9: '('
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:51:7: ( '(' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:51:9: '('
             {
             match('('); 
 
@@ -202,8 +202,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__87;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:52:7: ( ')' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:52:9: ')'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:52:7: ( ')' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:52:9: ')'
             {
             match(')'); 
 
@@ -222,8 +222,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__88;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:53:7: ( '\\*' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:53:9: '\\*'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:53:7: ( '\\*' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:53:9: '\\*'
             {
             match('*'); 
 
@@ -242,8 +242,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__89;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:54:7: ( ',' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:54:9: ','
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:54:7: ( ',' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:54:9: ','
             {
             match(','); 
 
@@ -262,8 +262,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__90;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:55:7: ( '=' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:55:9: '='
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:55:7: ( '=' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:55:9: '='
             {
             match('='); 
 
@@ -282,8 +282,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__91;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:56:7: ( '.' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:56:9: '.'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:56:7: ( '.' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:56:9: '.'
             {
             match('.'); 
 
@@ -302,8 +302,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__92;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:57:7: ( '+' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:57:9: '+'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:57:7: ( '+' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:57:9: '+'
             {
             match('+'); 
 
@@ -322,8 +322,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__93;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:58:7: ( '-' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:58:9: '-'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:58:7: ( '-' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:58:9: '-'
             {
             match('-'); 
 
@@ -342,8 +342,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__94;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:59:7: ( '<' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:59:9: '<'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:59:7: ( '<' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:59:9: '<'
             {
             match('<'); 
 
@@ -362,8 +362,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__95;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:60:7: ( '<=' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:60:9: '<='
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:60:7: ( '<=' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:60:9: '<='
             {
             match("<="); 
 
@@ -383,8 +383,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__96;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:61:7: ( '>=' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:61:9: '>='
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:61:7: ( '>=' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:61:9: '>='
             {
             match(">="); 
 
@@ -404,8 +404,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = T__97;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:62:7: ( '>' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:62:9: '>'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:62:7: ( '>' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:62:9: '>'
             {
             match('>'); 
 
@@ -424,8 +424,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_SELECT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:489:9: ( S E L E C T )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:489:16: S E L E C T
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:489:9: ( S E L E C T )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:489:16: S E L E C T
             {
             mS(); 
             mE(); 
@@ -449,8 +449,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_FROM;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:490:7: ( F R O M )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:490:16: F R O M
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:490:7: ( F R O M )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:490:16: F R O M
             {
             mF(); 
             mR(); 
@@ -472,8 +472,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_WHERE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:491:8: ( W H E R E )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:491:16: W H E R E
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:491:8: ( W H E R E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:491:16: W H E R E
             {
             mW(); 
             mH(); 
@@ -496,8 +496,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_AND;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:492:6: ( A N D )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:492:16: A N D
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:492:6: ( A N D )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:492:16: A N D
             {
             mA(); 
             mN(); 
@@ -518,8 +518,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_KEY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:493:6: ( K E Y )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:493:16: K E Y
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:493:6: ( K E Y )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:493:16: K E Y
             {
             mK(); 
             mE(); 
@@ -540,8 +540,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_INSERT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:494:9: ( I N S E R T )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:494:16: I N S E R T
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:494:9: ( I N S E R T )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:494:16: I N S E R T
             {
             mI(); 
             mN(); 
@@ -565,8 +565,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_UPDATE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:495:9: ( U P D A T E )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:495:16: U P D A T E
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:495:9: ( U P D A T E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:495:16: U P D A T E
             {
             mU(); 
             mP(); 
@@ -590,8 +590,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_WITH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:496:7: ( W I T H )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:496:16: W I T H
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:496:7: ( W I T H )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:496:16: W I T H
             {
             mW(); 
             mI(); 
@@ -613,8 +613,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_LIMIT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:497:8: ( L I M I T )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:497:16: L I M I T
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:497:8: ( L I M I T )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:497:16: L I M I T
             {
             mL(); 
             mI(); 
@@ -637,8 +637,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_USING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:498:8: ( U S I N G )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:498:16: U S I N G
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:498:8: ( U S I N G )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:498:16: U S I N G
             {
             mU(); 
             mS(); 
@@ -661,8 +661,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_CONSISTENCY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:499:14: ( C O N S I S T E N C Y )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:499:16: C O N S I S T E N C Y
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:499:14: ( C O N S I S T E N C Y )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:499:16: C O N S I S T E N C Y
             {
             mC(); 
             mO(); 
@@ -691,15 +691,15 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_LEVEL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:500:8: ( ( O N E | Q U O R U M | A L L | A N Y | L O C A L '_' Q U O R U M | E A C H '_' Q U O R U M | T W O | T H R E E ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:500:16: ( O N E | Q U O R U M | A L L | A N Y | L O C A L '_' Q U O R U M | E A C H '_' Q U O R U M | T W O | T H R E E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:500:8: ( ( O N E | Q U O R U M | A L L | A N Y | L O C A L '_' Q U O R U M | E A C H '_' Q U O R U M | T W O | T H R E E ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:500:16: ( O N E | Q U O R U M | A L L | A N Y | L O C A L '_' Q U O R U M | E A C H '_' Q U O R U M | T W O | T H R E E )
             {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:500:16: ( O N E | Q U O R U M | A L L | A N Y | L O C A L '_' Q U O R U M | E A C H '_' Q U O R U M | T W O | T H R E E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:500:16: ( O N E | Q U O R U M | A L L | A N Y | L O C A L '_' Q U O R U M | E A C H '_' Q U O R U M | T W O | T H R E E )
             int alt1=8;
             alt1 = dfa1.predict(input);
             switch (alt1) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:500:18: O N E
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:500:18: O N E
                     {
                     mO(); 
                     mN(); 
@@ -708,7 +708,7 @@ public class CqlLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:501:18: Q U O R U M
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:501:18: Q U O R U M
                     {
                     mQ(); 
                     mU(); 
@@ -720,7 +720,7 @@ public class CqlLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:502:18: A L L
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:502:18: A L L
                     {
                     mA(); 
                     mL(); 
@@ -729,7 +729,7 @@ public class CqlLexer extends Lexer {
                     }
                     break;
                 case 4 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:503:18: A N Y
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:503:18: A N Y
                     {
                     mA(); 
                     mN(); 
@@ -738,7 +738,7 @@ public class CqlLexer extends Lexer {
                     }
                     break;
                 case 5 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:504:18: L O C A L '_' Q U O R U M
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:504:18: L O C A L '_' Q U O R U M
                     {
                     mL(); 
                     mO(); 
@@ -756,7 +756,7 @@ public class CqlLexer extends Lexer {
                     }
                     break;
                 case 6 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:505:18: E A C H '_' Q U O R U M
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:505:18: E A C H '_' Q U O R U M
                     {
                     mE(); 
                     mA(); 
@@ -773,7 +773,7 @@ public class CqlLexer extends Lexer {
                     }
                     break;
                 case 7 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:506:18: T W O
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:506:18: T W O
                     {
                     mT(); 
                     mW(); 
@@ -782,7 +782,7 @@ public class CqlLexer extends Lexer {
                     }
                     break;
                 case 8 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:507:18: T H R E E
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:507:18: T H R E E
                     {
                     mT(); 
                     mH(); 
@@ -811,8 +811,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_USE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:510:6: ( U S E )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:510:16: U S E
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:510:6: ( U S E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:510:16: U S E
             {
             mU(); 
             mS(); 
@@ -833,8 +833,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_COUNT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:511:8: ( C O U N T )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:511:16: C O U N T
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:511:8: ( C O U N T )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:511:16: C O U N T
             {
             mC(); 
             mO(); 
@@ -857,8 +857,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_SET;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:512:6: ( S E T )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:512:16: S E T
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:512:6: ( S E T )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:512:16: S E T
             {
             mS(); 
             mE(); 
@@ -879,8 +879,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_BEGIN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:513:8: ( B E G I N )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:513:16: B E G I N
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:513:8: ( B E G I N )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:513:16: B E G I N
             {
             mB(); 
             mE(); 
@@ -903,8 +903,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_APPLY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:514:8: ( A P P L Y )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:514:16: A P P L Y
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:514:8: ( A P P L Y )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:514:16: A P P L Y
             {
             mA(); 
             mP(); 
@@ -927,8 +927,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_BATCH;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:515:8: ( B A T C H )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:515:16: B A T C H
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:515:8: ( B A T C H )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:515:16: B A T C H
             {
             mB(); 
             mA(); 
@@ -951,8 +951,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_TRUNCATE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:516:11: ( T R U N C A T E )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:516:16: T R U N C A T E
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:516:11: ( T R U N C A T E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:516:16: T R U N C A T E
             {
             mT(); 
             mR(); 
@@ -978,8 +978,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_DELETE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:517:9: ( D E L E T E )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:517:16: D E L E T E
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:517:9: ( D E L E T E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:517:16: D E L E T E
             {
             mD(); 
             mE(); 
@@ -1003,8 +1003,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_IN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:518:5: ( I N )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:518:16: I N
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:518:5: ( I N )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:518:16: I N
             {
             mI(); 
             mN(); 
@@ -1024,8 +1024,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_CREATE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:519:9: ( C R E A T E )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:519:16: C R E A T E
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:519:9: ( C R E A T E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:519:16: C R E A T E
             {
             mC(); 
             mR(); 
@@ -1049,10 +1049,10 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_KEYSPACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:520:11: ( ( K E Y S P A C E | S C H E M A ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:520:16: ( K E Y S P A C E | S C H E M A )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:520:11: ( ( K E Y S P A C E | S C H E M A ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:520:16: ( K E Y S P A C E | S C H E M A )
             {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:520:16: ( K E Y S P A C E | S C H E M A )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:520:16: ( K E Y S P A C E | S C H E M A )
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -1070,7 +1070,7 @@ public class CqlLexer extends Lexer {
             }
             switch (alt2) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:520:18: K E Y S P A C E
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:520:18: K E Y S P A C E
                     {
                     mK(); 
                     mE(); 
@@ -1084,7 +1084,7 @@ public class CqlLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:521:20: S C H E M A
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:521:20: S C H E M A
                     {
                     mS(); 
                     mC(); 
@@ -1114,10 +1114,10 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_COLUMNFAMILY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:522:15: ( ( C O L U M N F A M I L Y | T A B L E ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:522:16: ( C O L U M N F A M I L Y | T A B L E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:522:15: ( ( C O L U M N F A M I L Y | T A B L E ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:522:16: ( C O L U M N F A M I L Y | T A B L E )
             {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:522:16: ( C O L U M N F A M I L Y | T A B L E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:522:16: ( C O L U M N F A M I L Y | T A B L E )
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -1135,7 +1135,7 @@ public class CqlLexer extends Lexer {
             }
             switch (alt3) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:522:18: C O L U M N F A M I L Y
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:522:18: C O L U M N F A M I L Y
                     {
                     mC(); 
                     mO(); 
@@ -1153,7 +1153,7 @@ public class CqlLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:523:20: T A B L E
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:523:20: T A B L E
                     {
                     mT(); 
                     mA(); 
@@ -1182,8 +1182,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_INDEX;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:524:8: ( I N D E X )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:524:16: I N D E X
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:524:8: ( I N D E X )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:524:16: I N D E X
             {
             mI(); 
             mN(); 
@@ -1206,8 +1206,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_ON;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:525:5: ( O N )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:525:16: O N
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:525:5: ( O N )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:525:16: O N
             {
             mO(); 
             mN(); 
@@ -1227,8 +1227,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_DROP;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:526:7: ( D R O P )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:526:16: D R O P
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:526:7: ( D R O P )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:526:16: D R O P
             {
             mD(); 
             mR(); 
@@ -1250,8 +1250,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_PRIMARY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:527:10: ( P R I M A R Y )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:527:16: P R I M A R Y
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:527:10: ( P R I M A R Y )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:527:16: P R I M A R Y
             {
             mP(); 
             mR(); 
@@ -1276,8 +1276,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_INTO;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:528:7: ( I N T O )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:528:16: I N T O
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:528:7: ( I N T O )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:528:16: I N T O
             {
             mI(); 
             mN(); 
@@ -1299,8 +1299,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_VALUES;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:529:9: ( V A L U E S )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:529:16: V A L U E S
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:529:9: ( V A L U E S )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:529:16: V A L U E S
             {
             mV(); 
             mA(); 
@@ -1324,8 +1324,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_TIMESTAMP;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:530:12: ( T I M E S T A M P )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:530:16: T I M E S T A M P
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:530:12: ( T I M E S T A M P )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:530:16: T I M E S T A M P
             {
             mT(); 
             mI(); 
@@ -1352,8 +1352,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_TTL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:531:6: ( T T L )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:531:16: T T L
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:531:6: ( T T L )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:531:16: T T L
             {
             mT(); 
             mT(); 
@@ -1374,8 +1374,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_ALTER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:532:8: ( A L T E R )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:532:16: A L T E R
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:532:8: ( A L T E R )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:532:16: A L T E R
             {
             mA(); 
             mL(); 
@@ -1398,8 +1398,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_ADD;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:533:6: ( A D D )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:533:16: A D D
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:533:6: ( A D D )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:533:16: A D D
             {
             mA(); 
             mD(); 
@@ -1420,8 +1420,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_TYPE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:534:7: ( T Y P E )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:534:16: T Y P E
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:534:7: ( T Y P E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:534:16: T Y P E
             {
             mT(); 
             mY(); 
@@ -1443,8 +1443,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_COMPACT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:535:10: ( C O M P A C T )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:535:16: C O M P A C T
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:535:10: ( C O M P A C T )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:535:16: C O M P A C T
             {
             mC(); 
             mO(); 
@@ -1469,8 +1469,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_STORAGE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:536:10: ( S T O R A G E )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:536:16: S T O R A G E
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:536:10: ( S T O R A G E )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:536:16: S T O R A G E
             {
             mS(); 
             mT(); 
@@ -1495,8 +1495,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_ORDER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:537:8: ( O R D E R )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:537:16: O R D E R
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:537:8: ( O R D E R )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:537:16: O R D E R
             {
             mO(); 
             mR(); 
@@ -1519,8 +1519,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_BY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:538:5: ( B Y )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:538:16: B Y
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:538:5: ( B Y )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:538:16: B Y
             {
             mB(); 
             mY(); 
@@ -1540,8 +1540,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_ASC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:539:6: ( A S C )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:539:16: A S C
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:539:6: ( A S C )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:539:16: A S C
             {
             mA(); 
             mS(); 
@@ -1562,8 +1562,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = K_DESC;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:540:7: ( D E S C )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:540:16: D E S C
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:540:7: ( D E S C )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:540:16: D E S C
             {
             mD(); 
             mE(); 
@@ -1583,8 +1583,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "A"
     public final void mA() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:543:11: ( ( 'a' | 'A' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:543:13: ( 'a' | 'A' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:543:11: ( ( 'a' | 'A' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:543:13: ( 'a' | 'A' )
             {
             if ( input.LA(1)=='A'||input.LA(1)=='a' ) {
                 input.consume();
@@ -1607,8 +1607,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "B"
     public final void mB() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:544:11: ( ( 'b' | 'B' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:544:13: ( 'b' | 'B' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:544:11: ( ( 'b' | 'B' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:544:13: ( 'b' | 'B' )
             {
             if ( input.LA(1)=='B'||input.LA(1)=='b' ) {
                 input.consume();
@@ -1631,8 +1631,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "C"
     public final void mC() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:545:11: ( ( 'c' | 'C' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:545:13: ( 'c' | 'C' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:545:11: ( ( 'c' | 'C' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:545:13: ( 'c' | 'C' )
             {
             if ( input.LA(1)=='C'||input.LA(1)=='c' ) {
                 input.consume();
@@ -1655,8 +1655,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "D"
     public final void mD() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:546:11: ( ( 'd' | 'D' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:546:13: ( 'd' | 'D' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:546:11: ( ( 'd' | 'D' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:546:13: ( 'd' | 'D' )
             {
             if ( input.LA(1)=='D'||input.LA(1)=='d' ) {
                 input.consume();
@@ -1679,8 +1679,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "E"
     public final void mE() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:547:11: ( ( 'e' | 'E' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:547:13: ( 'e' | 'E' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:547:11: ( ( 'e' | 'E' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:547:13: ( 'e' | 'E' )
             {
             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                 input.consume();
@@ -1703,8 +1703,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "F"
     public final void mF() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:548:11: ( ( 'f' | 'F' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:548:13: ( 'f' | 'F' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:548:11: ( ( 'f' | 'F' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:548:13: ( 'f' | 'F' )
             {
             if ( input.LA(1)=='F'||input.LA(1)=='f' ) {
                 input.consume();
@@ -1727,8 +1727,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "G"
     public final void mG() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:549:11: ( ( 'g' | 'G' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:549:13: ( 'g' | 'G' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:549:11: ( ( 'g' | 'G' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:549:13: ( 'g' | 'G' )
             {
             if ( input.LA(1)=='G'||input.LA(1)=='g' ) {
                 input.consume();
@@ -1751,8 +1751,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "H"
     public final void mH() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:550:11: ( ( 'h' | 'H' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:550:13: ( 'h' | 'H' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:550:11: ( ( 'h' | 'H' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:550:13: ( 'h' | 'H' )
             {
             if ( input.LA(1)=='H'||input.LA(1)=='h' ) {
                 input.consume();
@@ -1775,8 +1775,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "I"
     public final void mI() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:551:11: ( ( 'i' | 'I' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:551:13: ( 'i' | 'I' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:551:11: ( ( 'i' | 'I' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:551:13: ( 'i' | 'I' )
             {
             if ( input.LA(1)=='I'||input.LA(1)=='i' ) {
                 input.consume();
@@ -1799,8 +1799,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "J"
     public final void mJ() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:552:11: ( ( 'j' | 'J' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:552:13: ( 'j' | 'J' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:552:11: ( ( 'j' | 'J' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:552:13: ( 'j' | 'J' )
             {
             if ( input.LA(1)=='J'||input.LA(1)=='j' ) {
                 input.consume();
@@ -1823,8 +1823,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "K"
     public final void mK() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:553:11: ( ( 'k' | 'K' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:553:13: ( 'k' | 'K' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:553:11: ( ( 'k' | 'K' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:553:13: ( 'k' | 'K' )
             {
             if ( input.LA(1)=='K'||input.LA(1)=='k' ) {
                 input.consume();
@@ -1847,8 +1847,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "L"
     public final void mL() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:554:11: ( ( 'l' | 'L' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:554:13: ( 'l' | 'L' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:554:11: ( ( 'l' | 'L' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:554:13: ( 'l' | 'L' )
             {
             if ( input.LA(1)=='L'||input.LA(1)=='l' ) {
                 input.consume();
@@ -1871,8 +1871,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "M"
     public final void mM() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:555:11: ( ( 'm' | 'M' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:555:13: ( 'm' | 'M' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:555:11: ( ( 'm' | 'M' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:555:13: ( 'm' | 'M' )
             {
             if ( input.LA(1)=='M'||input.LA(1)=='m' ) {
                 input.consume();
@@ -1895,8 +1895,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "N"
     public final void mN() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:556:11: ( ( 'n' | 'N' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:556:13: ( 'n' | 'N' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:556:11: ( ( 'n' | 'N' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:556:13: ( 'n' | 'N' )
             {
             if ( input.LA(1)=='N'||input.LA(1)=='n' ) {
                 input.consume();
@@ -1919,8 +1919,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "O"
     public final void mO() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:557:11: ( ( 'o' | 'O' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:557:13: ( 'o' | 'O' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:557:11: ( ( 'o' | 'O' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:557:13: ( 'o' | 'O' )
             {
             if ( input.LA(1)=='O'||input.LA(1)=='o' ) {
                 input.consume();
@@ -1943,8 +1943,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "P"
     public final void mP() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:558:11: ( ( 'p' | 'P' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:558:13: ( 'p' | 'P' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:558:11: ( ( 'p' | 'P' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:558:13: ( 'p' | 'P' )
             {
             if ( input.LA(1)=='P'||input.LA(1)=='p' ) {
                 input.consume();
@@ -1967,8 +1967,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "Q"
     public final void mQ() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:559:11: ( ( 'q' | 'Q' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:559:13: ( 'q' | 'Q' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:559:11: ( ( 'q' | 'Q' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:559:13: ( 'q' | 'Q' )
             {
             if ( input.LA(1)=='Q'||input.LA(1)=='q' ) {
                 input.consume();
@@ -1991,8 +1991,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "R"
     public final void mR() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:560:11: ( ( 'r' | 'R' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:560:13: ( 'r' | 'R' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:560:11: ( ( 'r' | 'R' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:560:13: ( 'r' | 'R' )
             {
             if ( input.LA(1)=='R'||input.LA(1)=='r' ) {
                 input.consume();
@@ -2015,8 +2015,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "S"
     public final void mS() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:561:11: ( ( 's' | 'S' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:561:13: ( 's' | 'S' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:561:11: ( ( 's' | 'S' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:561:13: ( 's' | 'S' )
             {
             if ( input.LA(1)=='S'||input.LA(1)=='s' ) {
                 input.consume();
@@ -2039,8 +2039,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "T"
     public final void mT() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:562:11: ( ( 't' | 'T' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:562:13: ( 't' | 'T' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:562:11: ( ( 't' | 'T' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:562:13: ( 't' | 'T' )
             {
             if ( input.LA(1)=='T'||input.LA(1)=='t' ) {
                 input.consume();
@@ -2063,8 +2063,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "U"
     public final void mU() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:563:11: ( ( 'u' | 'U' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:563:13: ( 'u' | 'U' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:563:11: ( ( 'u' | 'U' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:563:13: ( 'u' | 'U' )
             {
             if ( input.LA(1)=='U'||input.LA(1)=='u' ) {
                 input.consume();
@@ -2087,8 +2087,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "V"
     public final void mV() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:564:11: ( ( 'v' | 'V' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:564:13: ( 'v' | 'V' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:564:11: ( ( 'v' | 'V' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:564:13: ( 'v' | 'V' )
             {
             if ( input.LA(1)=='V'||input.LA(1)=='v' ) {
                 input.consume();
@@ -2111,8 +2111,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "W"
     public final void mW() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:565:11: ( ( 'w' | 'W' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:565:13: ( 'w' | 'W' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:565:11: ( ( 'w' | 'W' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:565:13: ( 'w' | 'W' )
             {
             if ( input.LA(1)=='W'||input.LA(1)=='w' ) {
                 input.consume();
@@ -2135,8 +2135,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "X"
     public final void mX() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:566:11: ( ( 'x' | 'X' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:566:13: ( 'x' | 'X' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:566:11: ( ( 'x' | 'X' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:566:13: ( 'x' | 'X' )
             {
             if ( input.LA(1)=='X'||input.LA(1)=='x' ) {
                 input.consume();
@@ -2159,8 +2159,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "Y"
     public final void mY() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:567:11: ( ( 'y' | 'Y' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:567:13: ( 'y' | 'Y' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:567:11: ( ( 'y' | 'Y' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:567:13: ( 'y' | 'Y' )
             {
             if ( input.LA(1)=='Y'||input.LA(1)=='y' ) {
                 input.consume();
@@ -2183,8 +2183,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "Z"
     public final void mZ() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:568:11: ( ( 'z' | 'Z' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:568:13: ( 'z' | 'Z' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:568:11: ( ( 'z' | 'Z' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:568:13: ( 'z' | 'Z' )
             {
             if ( input.LA(1)=='Z'||input.LA(1)=='z' ) {
                 input.consume();
@@ -2212,11 +2212,11 @@ public class CqlLexer extends Lexer {
             int c;
 
              StringBuilder b = new StringBuilder(); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:573:5: ( '\\'' (c=~ ( '\\'' ) | '\\'' '\\'' )* '\\'' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:573:7: '\\'' (c=~ ( '\\'' ) | '\\'' '\\'' )* '\\''
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:573:5: ( '\\'' (c=~ ( '\\'' ) | '\\'' '\\'' )* '\\'' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:573:7: '\\'' (c=~ ( '\\'' ) | '\\'' '\\'' )* '\\''
             {
             match('\''); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:573:12: (c=~ ( '\\'' ) | '\\'' '\\'' )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:573:12: (c=~ ( '\\'' ) | '\\'' '\\'' )*
             loop4:
             do {
                 int alt4=3;
@@ -2238,7 +2238,7 @@ public class CqlLexer extends Lexer {
 
                 switch (alt4) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:573:13: c=~ ( '\\'' )
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:573:13: c=~ ( '\\'' )
             	    {
             	    c= input.LA(1);
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='\uFFFF') ) {
@@ -2255,7 +2255,7 @@ public class CqlLexer extends Lexer {
             	    }
             	    break;
             	case 2 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:573:50: '\\'' '\\''
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:573:50: '\\'' '\\''
             	    {
             	    match('\''); 
             	    match('\''); 
@@ -2289,11 +2289,11 @@ public class CqlLexer extends Lexer {
             int c;
 
              StringBuilder b = new StringBuilder(); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:579:5: ( '\\\"' (c=~ ( '\\\"' ) | '\\\"' '\\\"' )* '\\\"' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:579:7: '\\\"' (c=~ ( '\\\"' ) | '\\\"' '\\\"' )* '\\\"'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:579:5: ( '\\\"' (c=~ ( '\\\"' ) | '\\\"' '\\\"' )* '\\\"' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:579:7: '\\\"' (c=~ ( '\\\"' ) | '\\\"' '\\\"' )* '\\\"'
             {
             match('\"'); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:579:12: (c=~ ( '\\\"' ) | '\\\"' '\\\"' )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:579:12: (c=~ ( '\\\"' ) | '\\\"' '\\\"' )*
             loop5:
             do {
                 int alt5=3;
@@ -2315,7 +2315,7 @@ public class CqlLexer extends Lexer {
 
                 switch (alt5) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:579:13: c=~ ( '\\\"' )
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:579:13: c=~ ( '\\\"' )
             	    {
             	    c= input.LA(1);
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='\uFFFF') ) {
@@ -2332,7 +2332,7 @@ public class CqlLexer extends Lexer {
             	    }
             	    break;
             	case 2 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:579:51: '\\\"' '\\\"'
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:579:51: '\\\"' '\\\"'
             	    {
             	    match('\"'); 
             	    match('\"'); 
@@ -2361,8 +2361,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:583:5: ( '0' .. '9' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:583:7: '0' .. '9'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:583:5: ( '0' .. '9' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:583:7: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -2377,8 +2377,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "LETTER"
     public final void mLETTER() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:587:5: ( ( 'A' .. 'Z' | 'a' .. 'z' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:587:7: ( 'A' .. 'Z' | 'a' .. 'z' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:587:5: ( ( 'A' .. 'Z' | 'a' .. 'z' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:587:7: ( 'A' .. 'Z' | 'a' .. 'z' )
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -2401,8 +2401,8 @@ public class CqlLexer extends Lexer {
     // $ANTLR start "HEX"
     public final void mHEX() throws RecognitionException {
         try {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:591:5: ( ( 'A' .. 'F' | 'a' .. 'f' | '0' .. '9' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:591:7: ( 'A' .. 'F' | 'a' .. 'f' | '0' .. '9' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:591:5: ( ( 'A' .. 'F' | 'a' .. 'f' | '0' .. '9' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:591:7: ( 'A' .. 'F' | 'a' .. 'f' | '0' .. '9' )
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='F')||(input.LA(1)>='a' && input.LA(1)<='f') ) {
                 input.consume();
@@ -2427,10 +2427,10 @@ public class CqlLexer extends Lexer {
         try {
             int _type = INTEGER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:5: ( ( '-' )? ( DIGIT )+ )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:7: ( '-' )? ( DIGIT )+
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:5: ( ( '-' )? ( DIGIT )+ )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:7: ( '-' )? ( DIGIT )+
             {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:7: ( '-' )?
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:7: ( '-' )?
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -2439,7 +2439,7 @@ public class CqlLexer extends Lexer {
             }
             switch (alt6) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:7: '-'
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:7: '-'
                     {
                     match('-'); 
 
@@ -2448,7 +2448,7 @@ public class CqlLexer extends Lexer {
 
             }
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:12: ( DIGIT )+
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:12: ( DIGIT )+
             int cnt7=0;
             loop7:
             do {
@@ -2462,7 +2462,7 @@ public class CqlLexer extends Lexer {
 
                 switch (alt7) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:12: DIGIT
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:595:12: DIGIT
             	    {
             	    mDIGIT(); 
 
@@ -2494,8 +2494,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = QMARK;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:599:5: ( '?' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:599:7: '?'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:599:5: ( '?' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:599:7: '?'
             {
             match('?'); 
 
@@ -2514,8 +2514,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = FLOAT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:607:5: ( INTEGER '.' INTEGER )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:607:7: INTEGER '.' INTEGER
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:607:5: ( INTEGER '.' INTEGER )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:607:7: INTEGER '.' INTEGER
             {
             mINTEGER(); 
             match('.'); 
@@ -2536,11 +2536,11 @@ public class CqlLexer extends Lexer {
         try {
             int _type = IDENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:611:5: ( LETTER ( LETTER | DIGIT | '_' )* )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:611:7: LETTER ( LETTER | DIGIT | '_' )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:611:5: ( LETTER ( LETTER | DIGIT | '_' )* )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:611:7: LETTER ( LETTER | DIGIT | '_' )*
             {
             mLETTER(); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:611:14: ( LETTER | DIGIT | '_' )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:611:14: ( LETTER | DIGIT | '_' )*
             loop8:
             do {
                 int alt8=2;
@@ -2553,7 +2553,7 @@ public class CqlLexer extends Lexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:
             	    {
             	    if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
             	        input.consume();
@@ -2589,11 +2589,11 @@ public class CqlLexer extends Lexer {
         try {
             int _type = COMPIDENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:5: ( IDENT ( ':' ( IDENT | INTEGER ) )+ )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:7: IDENT ( ':' ( IDENT | INTEGER ) )+
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:5: ( IDENT ( ':' ( IDENT | INTEGER ) )+ )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:7: IDENT ( ':' ( IDENT | INTEGER ) )+
             {
             mIDENT(); 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:13: ( ':' ( IDENT | INTEGER ) )+
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:13: ( ':' ( IDENT | INTEGER ) )+
             int cnt10=0;
             loop10:
             do {
@@ -2607,10 +2607,10 @@ public class CqlLexer extends Lexer {
 
                 switch (alt10) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:15: ':' ( IDENT | INTEGER )
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:15: ':' ( IDENT | INTEGER )
             	    {
             	    match(':'); 
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:19: ( IDENT | INTEGER )
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:19: ( IDENT | INTEGER )
             	    int alt9=2;
             	    int LA9_0 = input.LA(1);
 
@@ -2628,14 +2628,14 @@ public class CqlLexer extends Lexer {
             	    }
             	    switch (alt9) {
             	        case 1 :
-            	            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:20: IDENT
+            	            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:20: IDENT
             	            {
             	            mIDENT(); 
 
             	            }
             	            break;
             	        case 2 :
-            	            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:28: INTEGER
+            	            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:615:28: INTEGER
             	            {
             	            mINTEGER(); 
 
@@ -2673,8 +2673,8 @@ public class CqlLexer extends Lexer {
         try {
             int _type = UUID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:619:5: ( HEX HEX HEX HEX HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:619:7: HEX HEX HEX HEX HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:619:5: ( HEX HEX HEX HEX HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:619:7: HEX HEX HEX HEX HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX '-' HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX HEX
             {
             mHEX(); 
             mHEX(); 
@@ -2728,10 +2728,10 @@ public class CqlLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:627:5: ( ( ' ' | '\\t' | '\\n' | '\\r' )+ )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:627:7: ( ' ' | '\\t' | '\\n' | '\\r' )+
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:627:5: ( ( ' ' | '\\t' | '\\n' | '\\r' )+ )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:627:7: ( ' ' | '\\t' | '\\n' | '\\r' )+
             {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:627:7: ( ' ' | '\\t' | '\\n' | '\\r' )+
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:627:7: ( ' ' | '\\t' | '\\n' | '\\r' )+
             int cnt11=0;
             loop11:
             do {
@@ -2745,7 +2745,7 @@ public class CqlLexer extends Lexer {
 
                 switch (alt11) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:
             	    {
             	    if ( (input.LA(1)>='\t' && input.LA(1)<='\n')||input.LA(1)=='\r'||input.LA(1)==' ' ) {
             	        input.consume();
@@ -2786,10 +2786,10 @@ public class CqlLexer extends Lexer {
         try {
             int _type = COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:5: ( ( '--' | '//' ) ( . )* ( '\\n' | '\\r' ) )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:7: ( '--' | '//' ) ( . )* ( '\\n' | '\\r' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:5: ( ( '--' | '//' ) ( . )* ( '\\n' | '\\r' ) )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:7: ( '--' | '//' ) ( . )* ( '\\n' | '\\r' )
             {
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:7: ( '--' | '//' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:7: ( '--' | '//' )
             int alt12=2;
             int LA12_0 = input.LA(1);
 
@@ -2807,7 +2807,7 @@ public class CqlLexer extends Lexer {
             }
             switch (alt12) {
                 case 1 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:8: '--'
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:8: '--'
                     {
                     match("--"); 
 
@@ -2815,7 +2815,7 @@ public class CqlLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:15: '//'
+                    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:15: '//'
                     {
                     match("//"); 
 
@@ -2825,7 +2825,7 @@ public class CqlLexer extends Lexer {
 
             }
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:21: ( . )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:21: ( . )*
             loop13:
             do {
                 int alt13=2;
@@ -2841,7 +2841,7 @@ public class CqlLexer extends Lexer {
 
                 switch (alt13) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:21: .
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:631:21: .
             	    {
             	    matchAny(); 
 
@@ -2879,12 +2879,12 @@ public class CqlLexer extends Lexer {
         try {
             int _type = MULTILINE_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:635:5: ( '/*' ( . )* '*/' )
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:635:7: '/*' ( . )* '*/'
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:635:5: ( '/*' ( . )* '*/' )
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:635:7: '/*' ( . )* '*/'
             {
             match("/*"); 
 
-            // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:635:12: ( . )*
+            // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:635:12: ( . )*
             loop14:
             do {
                 int alt14=2;
@@ -2909,7 +2909,7 @@ public class CqlLexer extends Lexer {
 
                 switch (alt14) {
             	case 1 :
-            	    // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:635:12: .
+            	    // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:635:12: .
             	    {
             	    matchAny(); 
 
@@ -2936,460 +2936,460 @@ public class CqlLexer extends Lexer {
     // $ANTLR end "MULTILINE_COMMENT"
 
     public void mTokens() throws RecognitionException {
-        // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:8: ( T__85 | T__86 | T__87 | T__88 | T__89 | T__90 | T__91 | T__92 | T__93 | T__94 | T__95 | T__96 | T__97 | K_SELECT | K_FROM | K_WHERE | K_AND | K_KEY | K_INSERT | K_UPDATE | K_WITH | K_LIMIT | K_USING | K_CONSISTENCY | K_LEVEL | K_USE | K_COUNT | K_SET | K_BEGIN | K_APPLY | K_BATCH | K_TRUNCATE | K_DELETE | K_IN | K_CREATE | K_KEYSPACE | K_COLUMNFAMILY | K_INDEX | K_ON | K_DROP | K_PRIMARY | K_INTO | K_VALUES | K_TIMESTAMP | K_TTL | K_ALTER | K_ADD | K_TYPE | K_COMPACT | K_STORAGE | K_ORDER | K_BY | K_ASC | K_DESC | STRING_LITERAL | QUOTED_NAME | INTEGER | QMARK | FLOAT | IDENT | COMPIDENT | UUID | WS | COMMENT | MULTILINE_COMMENT )
+        // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:8: ( T__85 | T__86 | T__87 | T__88 | T__89 | T__90 | T__91 | T__92 | T__93 | T__94 | T__95 | T__96 | T__97 | K_SELECT | K_FROM | K_WHERE | K_AND | K_KEY | K_INSERT | K_UPDATE | K_WITH | K_LIMIT | K_USING | K_CONSISTENCY | K_LEVEL | K_USE | K_COUNT | K_SET | K_BEGIN | K_APPLY | K_BATCH | K_TRUNCATE | K_DELETE | K_IN | K_CREATE | K_KEYSPACE | K_COLUMNFAMILY | K_INDEX | K_ON | K_DROP | K_PRIMARY | K_INTO | K_VALUES | K_TIMESTAMP | K_TTL | K_ALTER | K_ADD | K_TYPE | K_COMPACT | K_STORAGE | K_ORDER | K_BY | K_ASC | K_DESC | STRING_LITERAL | QUOTED_NAME | INTEGER | QMARK | FLOAT | IDENT | COMPIDENT | UUID | WS | COMMENT | MULTILINE_COMMENT )
         int alt15=65;
         alt15 = dfa15.predict(input);
         switch (alt15) {
             case 1 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:10: T__85
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:10: T__85
                 {
                 mT__85(); 
 
                 }
                 break;
             case 2 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:16: T__86
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:16: T__86
                 {
                 mT__86(); 
 
                 }
                 break;
             case 3 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:22: T__87
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:22: T__87
                 {
                 mT__87(); 
 
                 }
                 break;
             case 4 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:28: T__88
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:28: T__88
                 {
                 mT__88(); 
 
                 }
                 break;
             case 5 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:34: T__89
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:34: T__89
                 {
                 mT__89(); 
 
                 }
                 break;
             case 6 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:40: T__90
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:40: T__90
                 {
                 mT__90(); 
 
                 }
                 break;
             case 7 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:46: T__91
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:46: T__91
                 {
                 mT__91(); 
 
                 }
                 break;
             case 8 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:52: T__92
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:52: T__92
                 {
                 mT__92(); 
 
                 }
                 break;
             case 9 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:58: T__93
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:58: T__93
                 {
                 mT__93(); 
 
                 }
                 break;
             case 10 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:64: T__94
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:64: T__94
                 {
                 mT__94(); 
 
                 }
                 break;
             case 11 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:70: T__95
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:70: T__95
                 {
                 mT__95(); 
 
                 }
                 break;
             case 12 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:76: T__96
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:76: T__96
                 {
                 mT__96(); 
 
                 }
                 break;
             case 13 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:82: T__97
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:82: T__97
                 {
                 mT__97(); 
 
                 }
                 break;
             case 14 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:88: K_SELECT
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:88: K_SELECT
                 {
                 mK_SELECT(); 
 
                 }
                 break;
             case 15 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:97: K_FROM
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:97: K_FROM
                 {
                 mK_FROM(); 
 
                 }
                 break;
             case 16 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:104: K_WHERE
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:104: K_WHERE
                 {
                 mK_WHERE(); 
 
                 }
                 break;
             case 17 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:112: K_AND
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:112: K_AND
                 {
                 mK_AND(); 
 
                 }
                 break;
             case 18 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:118: K_KEY
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:118: K_KEY
                 {
                 mK_KEY(); 
 
                 }
                 break;
             case 19 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:124: K_INSERT
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:124: K_INSERT
                 {
                 mK_INSERT(); 
 
                 }
                 break;
             case 20 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:133: K_UPDATE
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:133: K_UPDATE
                 {
                 mK_UPDATE(); 
 
                 }
                 break;
             case 21 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:142: K_WITH
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:142: K_WITH
                 {
                 mK_WITH(); 
 
                 }
                 break;
             case 22 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:149: K_LIMIT
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:149: K_LIMIT
                 {
                 mK_LIMIT(); 
 
                 }
                 break;
             case 23 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:157: K_USING
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:157: K_USING
                 {
                 mK_USING(); 
 
                 }
                 break;
             case 24 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:165: K_CONSISTENCY
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:165: K_CONSISTENCY
                 {
                 mK_CONSISTENCY(); 
 
                 }
                 break;
             case 25 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:179: K_LEVEL
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:179: K_LEVEL
                 {
                 mK_LEVEL(); 
 
                 }
                 break;
             case 26 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:187: K_USE
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:187: K_USE
                 {
                 mK_USE(); 
 
                 }
                 break;
             case 27 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:193: K_COUNT
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:193: K_COUNT
                 {
                 mK_COUNT(); 
 
                 }
                 break;
             case 28 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:201: K_SET
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:201: K_SET
                 {
                 mK_SET(); 
 
                 }
                 break;
             case 29 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:207: K_BEGIN
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:207: K_BEGIN
                 {
                 mK_BEGIN(); 
 
                 }
                 break;
             case 30 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:215: K_APPLY
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:215: K_APPLY
                 {
                 mK_APPLY(); 
 
                 }
                 break;
             case 31 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:223: K_BATCH
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:223: K_BATCH
                 {
                 mK_BATCH(); 
 
                 }
                 break;
             case 32 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:231: K_TRUNCATE
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:231: K_TRUNCATE
                 {
                 mK_TRUNCATE(); 
 
                 }
                 break;
             case 33 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:242: K_DELETE
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:242: K_DELETE
                 {
                 mK_DELETE(); 
 
                 }
                 break;
             case 34 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:251: K_IN
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:251: K_IN
                 {
                 mK_IN(); 
 
                 }
                 break;
             case 35 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:256: K_CREATE
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:256: K_CREATE
                 {
                 mK_CREATE(); 
 
                 }
                 break;
             case 36 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:265: K_KEYSPACE
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:265: K_KEYSPACE
                 {
                 mK_KEYSPACE(); 
 
                 }
                 break;
             case 37 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:276: K_COLUMNFAMILY
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:276: K_COLUMNFAMILY
                 {
                 mK_COLUMNFAMILY(); 
 
                 }
                 break;
             case 38 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:291: K_INDEX
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:291: K_INDEX
                 {
                 mK_INDEX(); 
 
                 }
                 break;
             case 39 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:299: K_ON
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:299: K_ON
                 {
                 mK_ON(); 
 
                 }
                 break;
             case 40 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:304: K_DROP
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:304: K_DROP
                 {
                 mK_DROP(); 
 
                 }
                 break;
             case 41 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:311: K_PRIMARY
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:311: K_PRIMARY
                 {
                 mK_PRIMARY(); 
 
                 }
                 break;
             case 42 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:321: K_INTO
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:321: K_INTO
                 {
                 mK_INTO(); 
 
                 }
                 break;
             case 43 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:328: K_VALUES
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:328: K_VALUES
                 {
                 mK_VALUES(); 
 
                 }
                 break;
             case 44 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:337: K_TIMESTAMP
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:337: K_TIMESTAMP
                 {
                 mK_TIMESTAMP(); 
 
                 }
                 break;
             case 45 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:349: K_TTL
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:349: K_TTL
                 {
                 mK_TTL(); 
 
                 }
                 break;
             case 46 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:355: K_ALTER
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:355: K_ALTER
                 {
                 mK_ALTER(); 
 
                 }
                 break;
             case 47 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:363: K_ADD
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:363: K_ADD
                 {
                 mK_ADD(); 
 
                 }
                 break;
             case 48 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:369: K_TYPE
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:369: K_TYPE
                 {
                 mK_TYPE(); 
 
                 }
                 break;
             case 49 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:376: K_COMPACT
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:376: K_COMPACT
                 {
                 mK_COMPACT(); 
 
                 }
                 break;
             case 50 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:386: K_STORAGE
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:386: K_STORAGE
                 {
                 mK_STORAGE(); 
 
                 }
                 break;
             case 51 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:396: K_ORDER
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:396: K_ORDER
                 {
                 mK_ORDER(); 
 
                 }
                 break;
             case 52 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:404: K_BY
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:404: K_BY
                 {
                 mK_BY(); 
 
                 }
                 break;
             case 53 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:409: K_ASC
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:409: K_ASC
                 {
                 mK_ASC(); 
 
                 }
                 break;
             case 54 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:415: K_DESC
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:415: K_DESC
                 {
                 mK_DESC(); 
 
                 }
                 break;
             case 55 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:422: STRING_LITERAL
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:422: STRING_LITERAL
                 {
                 mSTRING_LITERAL(); 
 
                 }
                 break;
             case 56 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:437: QUOTED_NAME
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:437: QUOTED_NAME
                 {
                 mQUOTED_NAME(); 
 
                 }
                 break;
             case 57 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:449: INTEGER
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:449: INTEGER
                 {
                 mINTEGER(); 
 
                 }
                 break;
             case 58 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:457: QMARK
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:457: QMARK
                 {
                 mQMARK(); 
 
                 }
                 break;
             case 59 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:463: FLOAT
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:463: FLOAT
                 {
                 mFLOAT(); 
 
                 }
                 break;
             case 60 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:469: IDENT
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:469: IDENT
                 {
                 mIDENT(); 
 
                 }
                 break;
             case 61 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:475: COMPIDENT
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:475: COMPIDENT
                 {
                 mCOMPIDENT(); 
 
                 }
                 break;
             case 62 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:485: UUID
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:485: UUID
                 {
                 mUUID(); 
 
                 }
                 break;
             case 63 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:490: WS
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:490: WS
                 {
                 mWS(); 
 
                 }
                 break;
             case 64 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:493: COMMENT
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:493: COMMENT
                 {
                 mCOMMENT(); 
 
                 }
                 break;
             case 65 :
-                // /opt/projects/carbon/trunkKernelOrbitPlatform/carbon/platform/trunk/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:501: MULTILINE_COMMENT
+                // /media/dev/carbon/trunk-new/graphite/dependencies/cassandra/src/java/org/apache/cassandra/cql3/Cql.g:1:501: MULTILINE_COMMENT
                 {
                 mMULTILINE_COMMENT(); 
 

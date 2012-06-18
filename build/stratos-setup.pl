@@ -127,6 +127,7 @@ $mb_enabled="false";
 $gs_enabled="false";
 $as_enabled="false";
 $dss_enabled="false";
+$hosting_enabled="false";
 
 
 if(-d $stratos_dir) {
@@ -203,6 +204,11 @@ if ($product_list ne '') {
     if (any { $_ eq 'dss'} @values) {
 		$dss_enabled="true";
     }
+
+    if (any { $_ eq 'hosting'} @values) {
+                $hosting_enabled="true";
+    }
+
 }
 
 # Common Configuration for all services
@@ -263,6 +269,57 @@ if ($manager_enabled eq 'true') {
 		print "SSO provider functionality is disabled\n";
 	}
 }
+
+
+if ($hosting_enabled eq 'true') {
+        print "\nSetting up the Stratos Hosting Service...\n\n";
+        print "Removing old files\n";
+        system "rm -rf $stratos_dir/wso2stratos-hosting-$stratos_version";
+        print "done\n";
+
+        print "Unzipping\n";
+        if ($packs_dir eq '') {
+                system "unzip -qu $carbon_dir/products/hosting/modules/distribution/service/target/wso2stratos-hosting-$stratos_version.zip -d $stratos_dir";
+        }
+        else {
+                system "unzip -qu $packs_dir/wso2stratos-hosting-$stratos_version.zip -d $stratos_dir";
+        }
+        print "unzipping done\n";
+
+
+        print "Copying mysql driver\n";
+        system "cp setup/stratos/jars/mysql-connector-java-5.1.12-bin.jar $stratos_dir/wso2stratos-hosting-$stratos_version/repository/components/lib";
+        print "done\n";
+
+        #print "Changing hosting service configuration files\n";
+    	#my $manager_base_dir = "setup/manager";
+    	#my $manager_target_dir = "setup_target/manager";
+    	#my $ret = config_manager($config_file, $manager_base_dir, $manager_target_dir, $sso_enabled, $dbuser, $dbpasswd);
+    	#if($ret == 0) {
+        #    die "Manager cofniguratin initialization failed \n";
+    	#}	
+        #print "done\n";
+
+        #print "Copying Manager configuration files\n";
+        system "cp setup_target/stratos/repository/conf/*.xml  $stratos_dir/wso2stratos-hosting-$stratos_version/repository/conf";
+        #system "cp setup_target/manager/repository/conf/*.xml  $stratos_dir/wso2stratos-manager-$stratos_version/repository/conf";
+        system "cp setup_target/manager/repository/conf/security/*.xml  $stratos_dir/wso2stratos-hosting-$stratos_version/repository/conf/security";
+        system "cp setup_target/manager/bin/*  $stratos_dir/wso2stratos-hosting-$stratos_version/bin";
+    if(-e "setup_target/manager/repository/conf/datasources.properties") {
+            system "cp setup_target/manager/repository/conf/datasources.properties  $stratos_dir/wso2stratos-hosting-$stratos_version/repository/conf";
+    }
+        #system "cp setup/manager/lib/home/index.html  $stratos_dir/wso2stratos-manager-$stratos_version/repository/deployment/server/webapps/STRATOS_ROOT/";
+        print "done\n";
+        #if ($sso_enabled eq 'true') {
+        #    print "SSO provider functionality is enabled\n";
+        #}
+        #else {
+        #    system "rm $stratos_dir/wso2stratos-manager-$stratos_version/repository/components/plugins/org.wso2.carbon.identity.authenticator.saml2.sso*";
+        #        print "SSO provider functionality is disabled\n";
+        #}
+}
+
+
 
 	
 #if ($is_enabled eq 'true') {

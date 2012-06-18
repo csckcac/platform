@@ -15,21 +15,21 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.eventbridge.core.internal;
+package org.wso2.carbon.eventbridge.core;
 
 import org.wso2.carbon.eventbridge.commons.AttributeType;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Event stream data type holder
  */
 public class EventStreamTypeHolder {
     private String domainName;
-    private Map<String, AttributeType[]> metaDataTypeMap = new HashMap<String, AttributeType[]>();
-    private Map<String, AttributeType[]> correlationDataTypeMap = new HashMap<String, AttributeType[]>();
-    private Map<String, AttributeType[]> payloadDataTypeMap = new HashMap<String, AttributeType[]>();
+    private Map<String, AttributeType[]> metaDataTypeMap = new ConcurrentHashMap<String, AttributeType[]>();
+    private Map<String, AttributeType[]> correlationDataTypeMap = new ConcurrentHashMap<String, AttributeType[]>();
+    private Map<String, AttributeType[]> payloadDataTypeMap = new ConcurrentHashMap<String, AttributeType[]>();
 
 //    public EventStreamTypeHolder(String username) {
 //        String[] userNameParts = username.split("@");

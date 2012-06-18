@@ -27,6 +27,8 @@ import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.AgentSession;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.SessionBean;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.SessionCache;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.util.UUID;
 
@@ -69,7 +71,11 @@ public final class Authenticator {
         if (isSuccessful) {
             String sessionId = UUID.randomUUID().toString();
 
-            sessionCache.getSession(new SessionBean(sessionId, new Credentials(userName, password)));
+            Credentials credentials = (MultitenantUtils.getTenantDomain(userName) == null) ?
+                    new Credentials(userName, password, MultitenantConstants.SUPER_TENANT_DOMAIN_NAME) :
+                    new Credentials(userName, password);
+
+            sessionCache.getSession(new SessionBean(sessionId, credentials));
 
             return sessionId;
         }

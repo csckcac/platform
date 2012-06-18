@@ -26,6 +26,8 @@ import org.wso2.carbon.eventbridge.commons.exception.MalformedStreamDefinitionEx
 import org.wso2.carbon.eventbridge.commons.exception.UndefinedEventTypeException;
 import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverterUtils;
 import org.wso2.carbon.eventbridge.core.AgentCallback;
+import org.wso2.carbon.eventbridge.core.EventConverter;
+import org.wso2.carbon.eventbridge.core.EventStreamTypeHolder;
 import org.wso2.carbon.eventbridge.core.conf.EventBridgeConfiguration;
 import org.wso2.carbon.eventbridge.core.definitionstore.AbstractStreamDefinitionStore;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
@@ -33,12 +35,11 @@ import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.AgentSession;
 import org.wso2.carbon.eventbridge.core.internal.queue.EventQueue;
 import org.wso2.carbon.eventbridge.core.internal.utils.EventComposite;
-import org.wso2.carbon.eventbridge.core.EventConverter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Dispactches events  and their definitions subscribers
@@ -47,7 +48,7 @@ public class EventDispatcher {
 
     private List<AgentCallback> subscribers = new ArrayList<AgentCallback>();
     private AbstractStreamDefinitionStore streamDefinitionStore;
-    private Map<String, EventStreamTypeHolder> eventStreamTypeCache = new HashMap<String, EventStreamTypeHolder>();
+    private Map<String, EventStreamTypeHolder> eventStreamTypeCache = new ConcurrentHashMap<String, EventStreamTypeHolder>();
     private EventQueue eventQueue;
 
     public EventDispatcher(AbstractStreamDefinitionStore streamDefinitionStore,
@@ -87,6 +88,10 @@ public class EventDispatcher {
     private void updateEventStreamTypeCache(String domainName,
                                             EventStreamDefinition eventStreamDefinition) {
         EventStreamTypeHolder eventStreamTypeHolder;
+        // this will occur only outside of carbon (ex: Siddhi)
+        if (domainName == null) {
+            domainName = "-1234";
+        }
         if (eventStreamTypeCache.containsKey(domainName)) {
             eventStreamTypeHolder = eventStreamTypeCache.get(domainName);
         } else {
@@ -116,6 +121,7 @@ public class EventDispatcher {
             eventStreamTypeHolder = new EventStreamTypeHolder(credentials.getDomainName());
             for (EventStreamDefinition eventStreamDefinition : streamDefinitionStore.getAllStreamDefinitions(credentials)) {
                 updateEventStreamTypeHolder(eventStreamTypeHolder, eventStreamDefinition);
+                updateEventStreamTypeCache(credentials.getDomainName(), eventStreamDefinition);
             }
         }
         return eventStreamTypeHolder;
@@ -146,4 +152,9 @@ public class EventDispatcher {
 
     }
 
+    private static class EventStreamTypeCache {
+
+
+
+    }
 }

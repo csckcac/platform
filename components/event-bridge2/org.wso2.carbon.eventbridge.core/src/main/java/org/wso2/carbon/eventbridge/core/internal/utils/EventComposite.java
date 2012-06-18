@@ -18,7 +18,7 @@
 package org.wso2.carbon.eventbridge.core.internal.utils;
 
 import org.wso2.carbon.eventbridge.core.EventConverter;
-import org.wso2.carbon.eventbridge.core.internal.EventStreamTypeHolder;
+import org.wso2.carbon.eventbridge.core.EventStreamTypeHolder;
 import org.wso2.carbon.eventbridge.core.internal.authentication.session.AgentSession;
 
 /**

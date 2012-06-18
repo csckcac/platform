@@ -16,6 +16,12 @@ public class Credentials {
         }
     }
 
+    public Credentials(String username, String password, String domainName) {
+        this.username = username;
+        this.password = password;
+        this.domainName = domainName;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -27,6 +33,8 @@ public class Credentials {
     public String getDomainName() {
         return domainName;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

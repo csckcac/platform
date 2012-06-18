@@ -785,35 +785,28 @@ public class CassandraConnector {
     public Collection<EventStreamDefinition> getAllStreamDefinitionFromStore(Cluster cluster)
             throws StreamDefinitionStoreException {
 
-        List<EventStreamDefinition> eventStreamDefinition = new ArrayList<EventStreamDefinition>();
+        List<EventStreamDefinition> eventStreamDefinitions = new ArrayList<EventStreamDefinition>();
         Keyspace keyspace = HFactory.createKeyspace(BAM_META_KEYSPACE, cluster);
         ColumnQuery<String, String, String> columnQuery =
                 HFactory.createStringColumnQuery(keyspace);
+
+        // get all stream ids
         RangeSlicesQuery<String, String, String> query =
                 HFactory.createRangeSlicesQuery(keyspace, stringSerializer, stringSerializer, stringSerializer);
         query.setColumnFamily(BAM_META_STREAM_ID_CF);
         query.setKeys("", "");
-        query.setRange("", "", false, 10000);
+        query.setColumnNames(STREAM_ID);
         QueryResult<OrderedRows<String, String, String>> result = query.execute();
+
         for (Row<String, String, String> row : result.get()) {
             if (row == null) {
                 continue;
             }
-            String streamId = row.getKey();
-            columnQuery.setColumnFamily(BAM_META_STREAM_DEF_CF).setKey(streamId).setName(STREAM_DEF);
-            QueryResult<HColumn<String, String>> streamDef = columnQuery.execute();
-            HColumn<String, String> hColumn = streamDef.get();
-            try {
-                if (hColumn != null) {
-                    eventStreamDefinition.add(EventDefinitionConverterUtils.convertFromJson(hColumn.getValue()));
-                }
-            } catch (MalformedStreamDefinitionException e) {
-                throw new StreamDefinitionStoreException(
-                        "Retrieved definition from Cassandra store is malformed. Retrieved " +
-                                "value : " + hColumn.getValue());
-            }
+            String streamId = row.getColumnSlice().getColumnByName(STREAM_ID).getValue();
+
+            eventStreamDefinitions.add(getStreamDefinitionFromStore(cluster, streamId));
         }
-        return eventStreamDefinition;
+        return eventStreamDefinitions;
     }
 
     /**

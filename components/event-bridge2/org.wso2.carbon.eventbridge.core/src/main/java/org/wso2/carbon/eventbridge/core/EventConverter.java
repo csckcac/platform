@@ -20,7 +20,6 @@ package org.wso2.carbon.eventbridge.core;
 
 
 import org.wso2.carbon.eventbridge.commons.Event;
-import org.wso2.carbon.eventbridge.core.internal.EventStreamTypeHolder;
 
 import java.util.List;
 

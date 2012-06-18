@@ -70,7 +70,7 @@ public class QueueWorker implements Runnable {
             } catch (EventConversionException re) {
                 log.error("Wrongly formatted event sent for " + eventComposite.getEventStreamTypeHolder().getDomainName(), re);
             }
-        } catch (RuntimeException e) {
+        } catch (Throwable e) {
             log.error("Error in passing events " + eventList + " to subscribers " + subscribers, e);
         }
     }

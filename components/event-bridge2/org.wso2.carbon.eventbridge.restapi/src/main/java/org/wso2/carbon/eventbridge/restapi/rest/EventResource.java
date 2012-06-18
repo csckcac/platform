@@ -10,7 +10,7 @@ import org.wso2.carbon.eventbridge.commons.utils.EventDefinitionConverterUtils;
 import org.wso2.carbon.eventbridge.core.EventConverter;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.eventbridge.core.exception.StreamDefinitionStoreException;
-import org.wso2.carbon.eventbridge.core.internal.EventStreamTypeHolder;
+import org.wso2.carbon.eventbridge.core.EventStreamTypeHolder;
 import org.wso2.carbon.eventbridge.restapi.internal.Utils;
 import org.wso2.carbon.eventbridge.restapi.utils.RESTUtils;
 

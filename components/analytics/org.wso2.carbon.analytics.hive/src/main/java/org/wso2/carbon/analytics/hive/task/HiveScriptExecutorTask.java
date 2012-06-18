@@ -22,6 +22,7 @@ import org.wso2.carbon.analytics.hive.ServiceHolder;
 import org.wso2.carbon.analytics.hive.exception.HiveExecutionException;
 import org.wso2.carbon.analytics.hive.exception.HiveScriptStoreException;
 import org.wso2.carbon.analytics.hive.persistence.HiveScriptPersistenceManager;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.ntask.core.Task;
 
 import java.util.Date;
@@ -43,7 +44,7 @@ public class HiveScriptExecutorTask implements Task {
 
     public void execute() {
         String scriptName = properties.get(HiveConstants.HIVE_SCRIPT_NAME);
-
+        SuperTenantCarbonContext.getCurrentContext().setTenantId(Integer.parseInt(properties.get(HiveConstants.TASK_TENANT_ID_KEY)));
         log.info("Running script executor task for script " + scriptName + ". [" + new Date() + "]");
 
         String script;

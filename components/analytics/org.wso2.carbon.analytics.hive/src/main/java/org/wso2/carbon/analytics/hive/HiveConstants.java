@@ -42,4 +42,6 @@ public class HiveConstants {
 
     public static final String DEFAULT_HIVE_DATASOURCE = "HIVE_DATASOURCE";
 
+    public static final String TASK_TENANT_ID_KEY = "__TENANT_ID_PROP__";
+
 }

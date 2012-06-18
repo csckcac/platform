@@ -16,14 +16,14 @@
   ~  specific language governing permissions and limitations
   ~  under the License.
   -->
-        
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.csg</groupId>
-    	<artifactId>csg-parent</artifactId>
+        <artifactId>csg-parent</artifactId>
         <version>1.0.0-beta</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
@@ -35,6 +35,15 @@
     <name>WSO2 CSG - Distribution</name>
     <url>http://wso2.org/projects/csg/java</url>
     <description>WSO2 Cloud Services Gateway Distribution</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.rampart</groupId>
+            <artifactId>rampart</artifactId>
+            <version>${rampart.mar.version}</version>
+            <type>mar</type>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -70,19 +79,19 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.7</version>
-		<dependencies>
-		    <dependency>
-			<groupId>ant-contrib</groupId>
-			<artifactId>ant-contrib</artifactId>
-			<version>1.0b3</version>
-			<exclusions>
-				<exclusion>
-					<groupId>ant</groupId>
-					<artifactId>ant</artifactId>
-				</exclusion>
-			</exclusions>
-		    </dependency>
-		</dependencies>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <id>extract-docs-from-components</id>
@@ -99,15 +108,18 @@
                                         <include name="${project.artifactId}-${project.version}.zip"/>
                                     </fileset>
                                 </unzip>
-                                <copy todir="target/wso2carbon-core-${carbon.version}/repository/components/" overwrite="false">
-                                    <fileset dir="${tempdir}/${project.artifactId}-${project.version}/repository/components/">
+                                <copy todir="target/wso2carbon-core-${carbon.version}/repository/components/"
+                                      overwrite="false">
+                                    <fileset
+                                            dir="${tempdir}/${project.artifactId}-${project.version}/repository/components/">
                                     </fileset>
                                 </copy>
                                 <delete file="target/${project.artifactId}-${project.version}.zip"/>
                                 <delete dir="${tempdir}"/>
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
-                                    <fileset dir="target/wso2carbon-core-${carbon.version}/repository/components/plugins/">
+                                    <fileset
+                                            dir="target/wso2carbon-core-${carbon.version}/repository/components/plugins/">
                                         <include name="*.ui*.jar"/>
                                     </fileset>
                                 </unzip>
@@ -115,7 +127,7 @@
                                     <fileset dir="${tempdir}/web/">
                                         <exclude name="**/yui/**"/>
                                         <exclude name="**/ajax/**"/>
-					<exclude name="**/editarea/**"/>
+                                        <exclude name="**/editarea/**"/>
                                         <exclude name="**/codepress/**"/>
                                         <exclude name="**/WEB-INF/**"/>
                                         <include name="**/*.html"/>
@@ -145,37 +157,38 @@
                                     </fileset>
                                 </copy>
                                 <!-- Sign all the jars in the distribution -->
-				<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
-				<if>
-				<equals arg1="${profile}" arg2="signJar"/>
-                    <then>
-                        <signjar alias="wso2carbon"
-                                 keystore="target/wso2carbon-core-${carbon.version}/repository/resources/security/wso2carbon.jks"
-                                 storepass="wso2carbon" lazy="true">
-                            <fileset
-                                    dir="target/wso2carbon-core-${carbon.version}/repository/components/plugins"
-                                    includes="**/*.jar"/>
-                            <fileset
-                                    dir="target/wso2carbon-core-${carbon.version}/lib"
-                                    includes="**/*.jar"/>
-                            <!--<fileset
-                                    dir="target/wso2carbon-core-${carbon.version}/lib/api"
-                                    includes="**/*.jar"/>-->
-                            <fileset
-                                    dir="target/wso2carbon-core-${carbon.version}/bin"
-                                    includes="**/*.jar"/>
-                            <fileset
-                                    dir="target/wso2carbon-core-${carbon.version}/lib/xboot"
-                                    includes="**/*.jar"/>
-                            <fileset
-                                    dir="target/wso2carbon-core-${carbon.version}/lib/endorsed"
-                                    includes="**/*.jar"/>
-                            <!--<fileset
-                                    dir="target/wso2carbon-core-${carbon.version}/lib/core/WEB-INF/lib"
-                                    includes="**/*.jar"/>-->
-                        </signjar>
-                    </then>
-				</if>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath"/>
+                                <if>
+                                    <equals arg1="${profile}" arg2="signJar"/>
+                                    <then>
+                                        <signjar alias="wso2carbon"
+                                                 keystore="target/wso2carbon-core-${carbon.version}/repository/resources/security/wso2carbon.jks"
+                                                 storepass="wso2carbon" lazy="true">
+                                            <fileset
+                                                    dir="target/wso2carbon-core-${carbon.version}/repository/components/plugins"
+                                                    includes="**/*.jar"/>
+                                            <fileset
+                                                    dir="target/wso2carbon-core-${carbon.version}/lib"
+                                                    includes="**/*.jar"/>
+                                            <!--<fileset
+                                            dir="target/wso2carbon-core-${carbon.version}/lib/api"
+                                            includes="**/*.jar"/>-->
+                                            <fileset
+                                                    dir="target/wso2carbon-core-${carbon.version}/bin"
+                                                    includes="**/*.jar"/>
+                                            <fileset
+                                                    dir="target/wso2carbon-core-${carbon.version}/lib/xboot"
+                                                    includes="**/*.jar"/>
+                                            <fileset
+                                                    dir="target/wso2carbon-core-${carbon.version}/lib/endorsed"
+                                                    includes="**/*.jar"/>
+                                            <!--<fileset
+                                            dir="target/wso2carbon-core-${carbon.version}/lib/core/WEB-INF/lib"
+                                            includes="**/*.jar"/>-->
+                                        </signjar>
+                                    </then>
+                                </if>
                                 <delete dir="${tempdir}"/>
                             </tasks>
                         </configuration>
@@ -199,27 +212,27 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>   
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.0</version>
-		<configuration>
-		<reportPlugins>
-            	<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>index</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            	</plugin>
-		</reportPlugins>
-		</configuration>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>index</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -287,5 +300,5 @@
             </plugin>
         </plugins>
     </reporting-->
-    
+
 </project>

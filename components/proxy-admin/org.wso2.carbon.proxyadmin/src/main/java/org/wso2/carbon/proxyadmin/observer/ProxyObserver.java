@@ -42,6 +42,7 @@ import org.wso2.carbon.core.persistence.ServicePersistenceManager;
 import org.wso2.carbon.mediation.initializer.persistence.MediationPersistenceManager;
 import org.wso2.carbon.mediation.initializer.ServiceBusConstants;
 import org.wso2.carbon.core.RegistryResources;
+import org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService;
 import org.wso2.carbon.proxyadmin.ProxyAdminException;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.RegistryConstants;
@@ -65,7 +66,7 @@ import java.util.*;
  */
 public class ProxyObserver implements AxisObserver {
 
-    private SynapseConfiguration synapseConfig;
+    private SynapseEnvironmentService synapseEnvironmentService;
 
     private Registry configSystemRegistry;
 
@@ -76,31 +77,26 @@ public class ProxyObserver implements AxisObserver {
     };
 
     /**
-     * Constructs a new ProxyObserver using the given SynapseConfiguration. This
+     * Constructs a new ProxyObserver using the given SynapseEnvironmentService. This
      * constructor ensures that all the created proxy observer instances have a
      * non-null SynapseConfiguration. Attempting to create a proxy observer with
      * a null SynapseConfiguration would result in an exception.
-     *
-     * @param synapseConfig the SynapseConfiguration
+     * TODO: because of a bug in current equinox framework version, we no longer get events when new
+     * TODO: synapse environment created. So changed proxy observer config to take reference of
+     * TODO: synapseEnvService and obtaing synapse config from it See : ESBJAVA-1029
+     * @param synapseEnvironmentService the Synapse
      * @param configRegistry the registry
      * @throws ProxyAdminException if the SynapseConfiguration is null
      */
-    public ProxyObserver(SynapseConfiguration synapseConfig, Registry configRegistry)
+    public ProxyObserver(SynapseEnvironmentService synapseEnvironmentService, Registry configRegistry)
             throws ProxyAdminException {
-        if (synapseConfig == null) {
+        if (synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration() == null) {
             String msg = "Unable to initialize a ProxyObserver with a null SynapseConfiguration";
             log.error(msg);
             throw new ProxyAdminException(msg);
         }
-        this.synapseConfig = synapseConfig;
+        this.synapseEnvironmentService = synapseEnvironmentService;
         this.configSystemRegistry = configRegistry;
-    }
-
-    public void setSynapseConfig(SynapseConfiguration synapseConfig) {
-        if (synapseConfig == null && log.isDebugEnabled()) {
-            log.debug("SynapseConfiguration in proxy observer component is null");
-        }
-        this.synapseConfig = synapseConfig;
     }
 
     public void init(AxisConfiguration axisConfiguration) {
@@ -120,7 +116,7 @@ public class ProxyObserver implements AxisObserver {
             return;
         }
 
-        if (synapseConfig == null) {
+        if (getSynapseConfiguration() == null) {
             // Somehow the underlying SynapseConfiguration has become null after
             // creating the proxy observer. May be the user is manipulating bundles
             // through the OSGi console or the system is shutting down.
@@ -132,11 +128,11 @@ public class ProxyObserver implements AxisObserver {
         }
 
         if (CarbonConstants.POLICY_ADDED == event.getEventType()) {
-            updateProxyServicePolicies(axisService, synapseConfig);
+            updateProxyServicePolicies(axisService, getSynapseConfiguration());
         }
 
         if (CarbonConstants.AxisEvent.TRANSPORT_BINDING_ADDED == event.getEventType()) {
-            ProxyService proxy = synapseConfig.getProxyService(axisService.getName());
+            ProxyService proxy = getSynapseConfiguration().getProxyService(axisService.getName());
             if (proxy != null && proxy.getTransports() != null) {
                 List<String> transports = axisService.getExposedTransports();
                 for (String trp : transports) {
@@ -148,11 +144,11 @@ public class ProxyObserver implements AxisObserver {
         }
 
         if (AxisEvent.SERVICE_DEPLOY == event.getEventType()) {
-            ProxyService proxySvc = synapseConfig.getProxyService(axisService.getName());
+            ProxyService proxySvc = getSynapseConfiguration().getProxyService(axisService.getName());
             if (proxySvc != null) {
                 try {
                     ServicePersistenceManager spm = new ServicePersistenceManager(
-                            synapseConfig.getAxisConfiguration());
+                            getSynapseConfiguration().getAxisConfiguration());
                     for (Parameter p : axisService.getParameters()) {
                         spm.updateServiceParameter(axisService, p);
                     }
@@ -170,9 +166,9 @@ public class ProxyObserver implements AxisObserver {
                     && JavaUtils.isTrue(keepServiceHistoryParam.getValue());
 
             if (!keepHistory) {
-                ProxyService proxySvc = synapseConfig.getProxyService(axisService.getName());
+                ProxyService proxySvc = getSynapseConfiguration().getProxyService(axisService.getName());
                 if (proxySvc != null) {
-                    synapseConfig.removeProxyService(axisService.getName());
+                    getSynapseConfiguration().removeProxyService(axisService.getName());
                     MediationPersistenceManager pm = getMediationPersistenceManager();
                     pm.deleteItem(proxySvc.getName(), proxySvc.getFileName(),
                             ServiceBusConstants.ITEM_TYPE_PROXY_SERVICE);
@@ -185,7 +181,7 @@ public class ProxyObserver implements AxisObserver {
             } else {
                 try {
                     ServicePersistenceManager spm = new ServicePersistenceManager(
-                            synapseConfig.getAxisConfiguration());
+                            getSynapseConfiguration().getAxisConfiguration());
                     for (Parameter p : axisService.getParameters()) {
                         spm.removeServiceParameter(axisService, p);
                     }
@@ -216,7 +212,7 @@ public class ProxyObserver implements AxisObserver {
                 return;
             }
 
-            if (synapseConfig == null) {
+            if (getSynapseConfiguration() == null) {
                 if (log.isDebugEnabled()) {
                     log.debug("SynapseConfiguration in ProxyObserver is null. The module" +
                             " update event will not be processed further.");
@@ -225,15 +221,15 @@ public class ProxyObserver implements AxisObserver {
             }
 
             if (CarbonConstants.POLICY_ADDED == event.getEventType()) {
-                updateProxyServicePolicies(axisService, synapseConfig);
+                updateProxyServicePolicies(axisService, getSynapseConfiguration());
             }
             if (AxisEvent.MODULE_ENGAGED == event.getEventType() && !isDefaultModule(axisModule)) {
-                onEngageModule(axisService, axisModule, synapseConfig);
-                updateProxyServicePolicies(axisService, synapseConfig);
+                onEngageModule(axisService, axisModule, getSynapseConfiguration());
+                updateProxyServicePolicies(axisService, getSynapseConfiguration());
             }
             if (AxisEvent.MODULE_DISENGAGED == event.getEventType() && !isDefaultModule(axisModule)) {
-                onDisEngageModule(axisService, axisModule, synapseConfig);
-                updateProxyServicePolicies(axisService, synapseConfig);
+                onDisEngageModule(axisService, axisModule, getSynapseConfiguration());
+                updateProxyServicePolicies(axisService, getSynapseConfiguration());
             }
         }
     }
@@ -403,12 +399,20 @@ public class ProxyObserver implements AxisObserver {
     }
 
     private MediationPersistenceManager getMediationPersistenceManager() {
-        Parameter p = synapseConfig.getAxisConfiguration().getParameter(
+        Parameter p = getSynapseConfiguration().getAxisConfiguration().getParameter(
                 ServiceBusConstants.PERSISTENCE_MANAGER);
         if (p != null) {
             return (MediationPersistenceManager) p.getValue();
         }
 
         return null;
+    }
+
+    public void setSynapseEnvironmentService(SynapseEnvironmentService synapseEnvironmentService) {
+        this.synapseEnvironmentService = synapseEnvironmentService;
+    }
+
+    private SynapseConfiguration getSynapseConfiguration() {
+        return this.synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration();
     }
 }

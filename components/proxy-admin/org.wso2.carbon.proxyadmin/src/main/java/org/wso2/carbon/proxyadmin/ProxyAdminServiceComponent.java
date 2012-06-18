@@ -76,8 +76,7 @@ public class ProxyAdminServiceComponent {
                         getAxisConfiguration();
                 
                 try {
-                    ProxyObserver proxyObserver = new ProxyObserver(
-                            synEnvService.getSynapseEnvironment().getSynapseConfiguration(),
+                    ProxyObserver proxyObserver = new ProxyObserver(synEnvService,
                             ConfigHolder.getInstance().getRegistryService().
                                     getConfigSystemRegistry());
 
@@ -88,6 +87,7 @@ public class ProxyAdminServiceComponent {
 
                     registerDeployer(synEnvService.getConfigurationContext().getAxisConfiguration(),
                             synEnvService.getSynapseEnvironment());
+                    proxyObserver.setSynapseEnvironmentService(synEnvService);
                 } catch (ProxyAdminException e) {
                     log.error("Error while initializing the proxy service observer. " +
                             "Proxy admin component may be unstable.", e);
@@ -161,8 +161,7 @@ public class ProxyAdminServiceComponent {
                             synapseEnvironmentService.getConfigurationContext().getAxisConfiguration(),
                             synapseEnvironmentService.getSynapseEnvironment());
 
-                    observer = new ProxyObserver(
-                            synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration(),
+                    observer = new ProxyObserver(synapseEnvironmentService,
                             ConfigHolder.getInstance().getRegistryService().
                                     getConfigSystemRegistry(tenantId));
                     axisConfiguration.addObservers(observer);
@@ -175,8 +174,7 @@ public class ProxyAdminServiceComponent {
             } else {
                 observer = ConfigHolder.getInstance().getProxyObsever(tenantId);
                 if (observer != null) {
-                    observer.setSynapseConfig(synapseEnvironmentService.getSynapseEnvironment().
-                            getSynapseConfiguration());
+                    observer.setSynapseEnvironmentService(synapseEnvironmentService);
                 }
             }
         }

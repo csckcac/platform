@@ -245,4 +245,9 @@ public class GovernanceConstants {
      */
    public static final String RXT_CONFIGS_PATH = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
            RegistryConstants.GOVERNANCE_COMPONENT_PATH + RegistryConstants.PATH_SEPARATOR + "types";
+
+    /**
+     * Defines the environment change of the resource in order to be used in creating notifications
+     */
+    public static final String REGISTRY_IS_ENVIRONMENT_CHANGE = "registry.is.environment.change.property";
 }

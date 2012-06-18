@@ -16,6 +16,7 @@
 package org.wso2.carbon.registry.governance.api.test;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -34,6 +35,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 
@@ -77,6 +79,22 @@ public class ServiceTestCase {
         String[] values = newService.getAttributes("testAttribute");
 
         Assert.assertEquals(values.length, 2);
+    }
+
+    @Test(groups = {"wso2.greg"})
+    public void testNewServiceContentXMLInvalid() throws GovernanceException,
+            XMLStreamException {
+        ServiceManager serviceManager = new ServiceManager(registry);
+        String content = "<metadata xmlns=\"http://www.wso2.org/governance/metadata\"><overview><namespace>UserA</namespace></overview></metadata>";
+        OMElement XMLContent = AXIOMUtil.stringToOM(content);
+        try {
+            serviceManager.newService(XMLContent);
+        } catch (GovernanceException e) {
+            Assert.assertEquals(e.getMessage(), "Unable to compute QName from given XML payload, " +
+                    "please ensure that the content passed in matches the configuration.");
+            return;
+        }
+        Assert.fail("An exception was expected to be thrown, but did not.");
     }
 
     @Test(groups = {"wso2.greg"})

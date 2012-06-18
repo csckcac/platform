@@ -81,7 +81,7 @@ include('/includes/topnavi.jag');
 
 <h4>Overview</h4>
 <p class="description"><code>include_once()</code> can include external jaggery scripts to the working script once. This will
-    control the number of times a file will be included therefor reducing duplications.</p>
+   limit the number of times a file will be included to once, therefor reducing duplications.</p>
     <pre class="prettyprint">include_once(path)</pre>
 
 </section>

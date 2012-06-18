@@ -32,7 +32,7 @@ public class ClusterConfiguration {
 
     private final String zookeeperConnection;
 
-
+    private String bindIpAddress;
 
 
     /**
@@ -113,8 +113,11 @@ public class ClusterConfiguration {
         return serverConfig.getReferenceTime();
     }
 
+    public String getBindIpAddress() {
+        return bindIpAddress;
+    }
 
-
-
-
+    public void setBindIpAddress(String bindIpAddress) {
+        this.bindIpAddress = bindIpAddress;
+    }
 }

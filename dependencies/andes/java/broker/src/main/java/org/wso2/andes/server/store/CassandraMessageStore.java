@@ -120,6 +120,9 @@ public class CassandraMessageStore implements MessageStore {
 
     private final static String BROWSER_QUEUE_COLUMN_FAMILY="BrowserQueues";
 
+    private final static String NODE_DETAIL_COLUMN_FAMILY = "CusterNodeDetails";
+    private final static String NODE_DETAIL_ROW = "NodeDetailsRow";
+
     private final AtomicLong _messageId = new AtomicLong(0);
 
     private MessageIdGenerator messageIdGenerator = null;
@@ -591,6 +594,7 @@ public class CassandraMessageStore implements MessageStore {
         CassandraDataAccessHelper.createColumnFamily(TOPICS_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
         CassandraDataAccessHelper.createColumnFamily(ACKED_MESSAGE_IDS_COLUMN_FAMILY, KEYSPACE, this.cluster, LONG_TYPE);
         CassandraDataAccessHelper.createColumnFamily(BROWSER_QUEUE_COLUMN_FAMILY,KEYSPACE,this.cluster,LONG_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(NODE_DETAIL_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
 
         return keyspace;
     }
@@ -1576,6 +1580,9 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
     @Override
     public void close() throws Exception {
+
+        deleteNodeData(""+ClusterResourceHolder.getInstance().getClusterManager().getNodeId());
+
         if(messageContentRemovalTask != null && messageContentRemovalTask.isRunning()) {
             messageContentRemovalTask.setRunning(false);
         }
@@ -1732,6 +1739,41 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
         } catch (Exception e) {
             throw new RuntimeException("Error While creating a Queue creating queue" ,e);
+        }
+    }
+
+
+    public void addNodeDetails(String nodeId, String data) {
+        try {
+            CassandraDataAccessHelper.addMappingToRaw(NODE_DETAIL_COLUMN_FAMILY,NODE_DETAIL_ROW,nodeId,data,keyspace);
+        } catch (CassandraDataAccessException e) {
+            throw new RuntimeException("Error writing Node details to cassandra database");
+        }
+    }
+
+    public String getNodeData(String nodeId) {
+        try {
+            ColumnSlice<String,String> values= CassandraDataAccessHelper.getStringTypeColumnsInARow(NODE_DETAIL_ROW,NODE_DETAIL_COLUMN_FAMILY,
+                    keyspace,Integer.MAX_VALUE);
+
+
+            Object column = values.getColumnByName(nodeId);
+
+            String columnName = ((HColumn<String, String>) column).getName();
+            String value = ((HColumn<String, String>) column).getValue();
+            return value;
+
+        } catch (CassandraDataAccessException e) {
+            throw new RuntimeException("Error accessing Node details to cassandra database");
+        }
+    }
+
+
+    public void deleteNodeData(String nodeId) {
+        try {
+            CassandraDataAccessHelper.deleteStringColumnFromRaw(NODE_DETAIL_COLUMN_FAMILY,NODE_DETAIL_ROW,nodeId,keyspace);
+        } catch (CassandraDataAccessException e) {
+            throw new RuntimeException("Error accessing Node details to cassandra database");
         }
     }
 

@@ -133,6 +133,13 @@ public class Broker
         updateManagementPort(serverConfig, options.getJmxPort());
 
         ClusterConfiguration clusterConfiguration = new ClusterConfiguration(serverConfig);
+
+        if("*".equals(serverConfig.getBind())) {
+            InetAddress host = InetAddress.getLocalHost();
+            clusterConfiguration.setBindIpAddress(host.getHostAddress());
+        } else {
+            clusterConfiguration.setBindIpAddress(serverConfig.getBind());
+        }
         ClusterResourceHolder.getInstance().setClusterConfiguration(clusterConfiguration);
 
         String refTime = serverConfig.getReferenceTime();

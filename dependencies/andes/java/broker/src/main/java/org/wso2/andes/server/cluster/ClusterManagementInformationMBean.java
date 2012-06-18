@@ -87,4 +87,10 @@ public class ClusterManagementInformationMBean extends AMQManagedObject implemen
             throw new RuntimeException(e);
         }
     }
+
+    public String getNodeAddress(@MBeanOperationParameter(name="Node Id",description =
+            "Node id assigned by Cluster manager")
+                                 int nodeId) {
+        return clusterManager.getNodeAddress(nodeId);
+    }
 }

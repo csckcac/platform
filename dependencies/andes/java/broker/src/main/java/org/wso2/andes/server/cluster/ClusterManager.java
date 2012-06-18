@@ -485,11 +485,13 @@ public class ClusterManager {
 
 
 
-        ClusterConfiguration config = ClusterResourceHolder.getInstance().getClusterConfiguration();
+        final ClusterConfiguration config = ClusterResourceHolder.getInstance().getClusterConfiguration();
+        final CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().getCassandraMessageStore();
 
         //If Clustering is disabled
         if(!config.isClusteringEnabled()) {
             queueNodeMap.put(new Integer(nodeId),new String[]{});
+            messageStore.addNodeDetails(""+ nodeId,config.getBindIpAddress());
             return;
         }
 
@@ -531,7 +533,7 @@ public class ClusterManager {
 
                                             log.info("Initializing Cluster Manager , " +
                                                     "Selected Node id : " + nodeId);
-
+                                            messageStore.addNodeDetails(""+ nodeId,config.getBindIpAddress());
                                             String data = ""+ nodeId + ":";
                                             zkAgent.getZooKeeper().setData(CoordinationConstants.
                                                             QUEUE_WORKER_COORDINATION_PARENT +
@@ -786,6 +788,15 @@ public class ClusterManager {
                 String deletedNode = parts[parts.length - 1];
 
                 try {
+                    int deletedNodeId = getNoideIdFromZkNode(deletedNode);
+                    ClusterResourceHolder.getInstance().getCassandraMessageStore().
+                            deleteNodeData(""+deletedNodeId);
+                } catch (Exception e) {
+                    log.error("Error while removing node details");
+                }
+
+
+                try {
 
                      if (leaderBackUpList.containsKey(deletedNode)) {
                         String queueData = leaderBackUpList.get(deletedNode);
@@ -919,6 +930,10 @@ public class ClusterManager {
     }
 
 
+    public String getNodeAddress(int nodeId) {
+        return ClusterResourceHolder.getInstance().getCassandraMessageStore().getNodeData(""+nodeId);
+    }
+
     public List<Integer> getZkNodes(){
         return new ArrayList(queueNodeMap.keySet());
     }
@@ -941,6 +956,11 @@ public class ClusterManager {
 
     public int getSubscriberCount(String topic) throws Exception {
         return globalQueueManager.getSubscribers(topic).size();
+    }
+
+
+    private static int getNoideIdFromZkNode(String node) {
+        return Integer.parseInt(node.substring(node.length() - 5));
     }
 
 }

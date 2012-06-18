@@ -528,7 +528,7 @@
                             </filters>
                             <descriptors>
                                 <descriptor>${basedir}/src/assembly/bin.xml</descriptor>
-                                <descriptor>${basedir}/src/assembly/src.xml</descriptor>
+                                <!--<descriptor>${basedir}/src/assembly/src.xml</descriptor>-->
                                 <descriptor>${basedir}/src/assembly/docs.xml</descriptor>
                             </descriptors>
                         </configuration>

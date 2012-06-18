@@ -31,10 +31,7 @@ import org.apache.commons.fileupload.servlet.ServletRequestContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementPolicyAdminServiceStub;
-import org.wso2.carbon.identity.entitlement.stub.dto.AttributeValueTreeNodeDTO;
-import org.wso2.carbon.identity.entitlement.stub.dto.EntitledResultSetDTO;
-import org.wso2.carbon.identity.entitlement.stub.dto.PaginatedPolicySetDTO;
-import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
+import org.wso2.carbon.identity.entitlement.stub.dto.*;
 
 
 public class EntitlementPolicyAdminServiceClient {
@@ -63,6 +60,8 @@ public class EntitlementPolicyAdminServiceClient {
 
     /**
      *
+     * @param policyTypeFilter
+     * @param policySearchString
      * @param pageNumber
      * @return PaginatedPolicySetDTO object containing the number of pages and the set of policies that reside in the
      * given page.
@@ -345,14 +344,13 @@ public class EntitlementPolicyAdminServiceClient {
 
     /**
      * Gets attribute value tree for given attribute type
-     * @param type subject , action resource or environment
      * @return attribute value tree
      * @throws AxisFault throws
      */
-    public AttributeValueTreeNodeDTO[] getPolicyAttributeValues(String type)
+    public PolicyAttributeDTO[] getPolicyAttributeValues()
             throws AxisFault {
         try {
-           return  stub.getPolicyAttributeValues(type);
+           return  stub.getPolicyAttributeValues();
         } catch (Exception e) {
            handleException(e.getMessage(), e);
         }

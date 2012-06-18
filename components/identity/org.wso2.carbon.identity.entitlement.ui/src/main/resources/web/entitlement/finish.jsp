@@ -29,6 +29,7 @@
 <%@ page import="org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO" %>
 <%@ page import="org.wso2.carbon.identity.entitlement.ui.util.PolicyCreatorUtil" %>
 <%@ page import="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyConstants" %>
+<%@ page import="org.wso2.carbon.identity.entitlement.ui.util.PolicyEditorUtil" %>
 <jsp:useBean id="entitlementPolicyBean" type="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean"
              class="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean" scope="session"/>
 <jsp:setProperty name="entitlementPolicyBean" property="*" />
@@ -58,6 +59,13 @@
     BasicTargetElementDTO basicTargetElementDTO = entitlementPolicyBean.getBasicTargetElementDTO();
     List <BasicRuleElementDTO> basicRuleElementDTOs = entitlementPolicyBean.getBasicRuleElementDTOs();
 
+
+    //new
+    List<RuleDTO> ruleDTOs = entitlementPolicyBean.getRuleDTOs();
+    TargetDTO targetDTO = entitlementPolicyBean.getTargetDTO();
+
+    ///
+
     String policyName = entitlementPolicyBean.getPolicyName();
     String algorithmName = entitlementPolicyBean.getAlgorithmName();
     String policyDescription = entitlementPolicyBean.getPolicyDescription();
@@ -85,6 +93,10 @@
             if(policyMetaData != null){
                 policyDTO.setBasicPolicyEditorMetaData(policyMetaData);
             }
+        } else  if (ruleDTOs != null && ruleDTOs.size() > 0 || targetDTO != null){
+
+            PolicyCreatorUtil.processPolicyData(targetDTO, ruleDTOs, entitlementPolicyBean);
+            policyCreator.createXACML3Policy(policyElement, ruleDTOs, targetDTO);
         } else {
             policy = policyCreator.createPolicy(policyElement, subElementDTOs, ruleElementDTOs);
         }       

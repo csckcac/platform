@@ -22,6 +22,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.identity.entitlement.ui.dto.*;
 import org.wso2.carbon.identity.entitlement.ui.util.PolicyCreatorUtil;
+import org.wso2.carbon.identity.entitlement.ui.util.PolicyEditorUIUtil;
+import org.wso2.carbon.identity.entitlement.ui.util.PolicyEditorUtil;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -153,6 +155,66 @@ public class EntitlementPolicyCreator {
         }
         return null;
     }
+
+
+
+    /**
+     * Create XACML policy using the data received from basic policy wizard
+     * @param policyElementDTO  policy element
+     * @param ruleDTOs  rule elements
+     * @param targetDTO  target element
+     * @return  String object of the XACML policy
+     * @throws EntitlementPolicyCreationException throws
+     */
+    public String createXACML3Policy(PolicyElementDTO policyElementDTO, List<RuleDTO> ruleDTOs,
+                                    TargetDTO targetDTO) throws EntitlementPolicyCreationException {
+
+        Element policyElement = null;
+        String ruleElementOrder = null;
+        try {
+            Document doc = createNewDocument();
+            if(doc != null) {
+                if (policyElementDTO != null) {
+                    policyElement = PolicyCreatorUtil.createPolicyElement(policyElementDTO, doc);
+                    doc.appendChild(policyElement);
+                    ruleElementOrder = policyElementDTO.getRuleElementOrder();
+                }
+                if(policyElement != null) {
+                    if(ruleDTOs != null && ruleDTOs.size() > 0) {
+                        if(ruleElementOrder != null && ruleElementOrder.trim().length() > 0){
+                            String[] ruleIds = ruleElementOrder.
+                                    split(EntitlementPolicyConstants.ATTRIBUTE_SEPARATOR);
+                            for(String ruleId : ruleIds){
+                                for(RuleDTO ruleDTO : ruleDTOs) {
+                                    if(ruleId.trim().equals(ruleDTO.getRuleId())){
+                                        policyElement.appendChild(PolicyEditorUtil.createRule(ruleDTO, doc));
+                                    }
+                                }
+                            }
+                        } else {
+                            for(RuleDTO ruleDTO : ruleDTOs) {
+                                policyElement.appendChild(PolicyEditorUtil.createRule(ruleDTO, doc));
+                            }
+                        }
+                    }
+
+                    if(targetDTO != null){
+                        policyElement.appendChild(PolicyEditorUtil.createTarget(targetDTO, doc));
+                    } else if(ruleDTOs != null && ruleDTOs.size() > 0){
+                        policyElement.appendChild(doc.createElement(EntitlementPolicyConstants.
+                                TARGET_ELEMENT));
+                    }
+                }
+                return PolicyCreatorUtil.getStringFromDocument(doc);
+            }
+        } catch (EntitlementPolicyCreationException e) {
+            throw new EntitlementPolicyCreationException("Error While Creating XACML Policy", e);
+        } catch (PolicyEditorException e) {
+             throw new EntitlementPolicyCreationException("Error While Creating XACML Policy", e);
+        }
+        return null;
+    }
+
 
     /**
      * Create policy set using the added policy ot policy sets

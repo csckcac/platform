@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c)  WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -15,21 +15,21 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-
-package org.wso2.carbon.identity.entitlement.ui.dto;
+package org.wso2.carbon.identity.entitlement.ui;
 
 /**
- *
+ * Policy Editor Exception class
  */
-public class FunctionDTO {
-    
-    private String functionId;
+public class PolicyEditorException extends Exception {
 
-    public String getFunctionId() {
-        return functionId;
-    }
+	public PolicyEditorException(String message) {
+		super(message);
+	}
 
-    public void setFunctionId(String functionId) {
-        this.functionId = functionId;
-    }
+	public PolicyEditorException(String message, Throwable e) {
+		super(message, e);
+	}
 }
+
+
+

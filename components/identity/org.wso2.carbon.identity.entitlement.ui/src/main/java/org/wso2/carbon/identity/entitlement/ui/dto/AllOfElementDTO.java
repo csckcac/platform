@@ -15,21 +15,27 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-
 package org.wso2.carbon.identity.entitlement.ui.dto;
 
-/**
- *
- */
-public class FunctionDTO {
-    
-    private String functionId;
+import java.util.ArrayList;
+import java.util.List;
 
-    public String getFunctionId() {
-        return functionId;
+/**
+ * 
+ */
+public class AllOfElementDTO {
+
+    private List<MatchElementDTO>  matchElementDTOs = new ArrayList<MatchElementDTO>();
+
+    public List<MatchElementDTO> getMatchElementDTOs() {
+        return matchElementDTOs;
     }
 
-    public void setFunctionId(String functionId) {
-        this.functionId = functionId;
+    public void setMatchElementDTOs(List<MatchElementDTO> matchElementDTOs) {
+        this.matchElementDTOs = matchElementDTOs;
+    }
+
+    public void addMatchElementDTO(MatchElementDTO matchElementDTO) {
+        this.matchElementDTOs.add(matchElementDTO);
     }
 }

@@ -1,7 +1,3 @@
-package org.wso2.carbon.identity.entitlement.ui.dto;
-
-import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyConstants;
-
 /*
 *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -20,6 +16,11 @@ import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyConstants;
 * under the License.
 */
 
+package org.wso2.carbon.identity.entitlement.ui.dto;
+
+/**
+ *
+ */
 public class AttributeDesignatorDTO {
 
     private String elementName ;
@@ -38,24 +39,14 @@ public class AttributeDesignatorDTO {
 
     private String mustBePresent;
 
-    private String subjectCategory;
+    private String category;
 
-    public String getSubjectCategory() {
-
-        if(elementName.equals(EntitlementPolicyConstants.SUBJECT_ELEMENT)) {
-            return subjectCategory;
-        } else {
-            return null;
-        }
-
+    public String getCategory() {
+        return category;
     }
 
-    public void setSubjectCategory(String subjectCategory) {
-
-        if(elementName.equals(EntitlementPolicyConstants.SUBJECT_ELEMENT)) {
-            this.subjectCategory = subjectCategory;            
-        }
-
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getElementName() {

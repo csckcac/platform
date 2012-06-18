@@ -24,6 +24,7 @@
 <%@ page import="org.wso2.carbon.identity.entitlement.stub.dto.AttributeValueTreeNodeDTO" %>
 <%@ page import="java.io.IOException" %>
 <%@ page import="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyConstants" %>
+<%@ page import="java.util.Set" %>
 <jsp:useBean id="entitlementPolicyBean" type="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean"
              class="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean" scope="session"/>
 <jsp:setProperty name="entitlementPolicyBean" property="*" />
@@ -70,7 +71,7 @@
 
 <%
     String forwardTo;
-    AttributeValueTreeNodeDTO[] nodeDTO = null;
+    Set<AttributeValueTreeNodeDTO> nodeDTO = null;
     AttributeValueTreeNodeDTO selectedTree = null;
     String selectedFinderModule;
     String attributeType;
@@ -221,7 +222,7 @@
                             <option value="<%=EntitlementPolicyConstants.COMBO_BOX_DEFAULT_VALUE%>" selected="selected">
                                 <%=EntitlementPolicyConstants.COMBO_BOX_DEFAULT_VALUE%></option>
                         <%
-                            if (nodeDTO != null && nodeDTO.length > 0) {
+                            if (nodeDTO != null && nodeDTO.size() > 0) {
                                 for (AttributeValueTreeNodeDTO node : nodeDTO) {
                                     if(selectedFinderModule.equals(node.getModuleName())){
                                         selectedTree = node;

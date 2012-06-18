@@ -23,6 +23,7 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean;
 import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyConstants;
 import org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyCreationException;
 import org.wso2.carbon.identity.entitlement.ui.dto.*;
@@ -35,10 +36,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * This is Util class which help to create a XACML policy
@@ -82,6 +80,8 @@ public class PolicyCreatorUtil {
         return policyElement;
     }
 
+    ////XACML3
+
     /**
      * This method creates a match element (subject,action,resource or environment) of the XACML policy
      * @param matchElementDTO match element data object
@@ -91,14 +91,9 @@ public class PolicyCreatorUtil {
     public static Element createMatchElement(MatchElementDTO matchElementDTO, Document doc)  {
 
         Element matchElement = null;
-        if(matchElementDTO.getMatchElementName() != null && matchElementDTO.getMatchElementName().
-                trim().length() > 0 && matchElementDTO.getMatchId() != null && matchElementDTO.getMatchId().
-                trim().length() > 0) {
+        if(matchElementDTO.getMatchId() != null && matchElementDTO.getMatchId().trim().length() > 0) {
 
-            String matchElementName = matchElementDTO.getMatchElementName() +
-                EntitlementPolicyConstants.MATCH_ELEMENT;
-
-            matchElement = doc.createElement(matchElementName);
+            matchElement = doc.createElement(EntitlementPolicyConstants.MATCH_ELEMENT);
 
             matchElement.setAttribute(EntitlementPolicyConstants.MATCH_ID,
                     matchElementDTO.getMatchId());
@@ -141,7 +136,7 @@ public class PolicyCreatorUtil {
             attributeValueElement.setTextContent(attributeValueElementDTO.getAttributeValue().trim());
 
             if(attributeValueElementDTO.getAttributeDataType()!= null && attributeValueElementDTO.
-                    getAttributeDataType().trim().length() > 0){
+                    getAttributeDataType().trim().length() > 0){                
                 attributeValueElement.setAttribute(EntitlementPolicyConstants.DATA_TYPE,
                                 attributeValueElementDTO.getAttributeDataType());
             } else {
@@ -248,19 +243,71 @@ public class PolicyCreatorUtil {
         return functionElement;
     }
 
+//    public static Element createAttributeDesignatorElement(AttributeDesignatorDTO
+//            attributeDesignatorDTO, Document doc) {
+//
+//        String attributeDesignatorElementName =  attributeDesignatorDTO.getElementName() +
+//                EntitlementPolicyConstants.ATTRIBUTE_DESIGNATOR;
+//
+//        Element attributeDesignatorElement = doc.createElement(attributeDesignatorElementName);
+//
+//        if(attributeDesignatorDTO.getAttributeId() != null && attributeDesignatorDTO.
+//                getAttributeId().trim().length() > 0 ){
+//
+//            attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.ATTRIBUTE_ID,
+//                    attributeDesignatorDTO.getAttributeId());
+//
+//            if(attributeDesignatorDTO.getDataType() != null && attributeDesignatorDTO.
+//                    getDataType().trim().length() > 0) {
+//                attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.DATA_TYPE,
+//                        attributeDesignatorDTO.getDataType());
+//            } else {
+//                attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.DATA_TYPE,
+//                        EntitlementPolicyConstants.STRING_DATA_TYPE);
+//            }
+//
+//            if(attributeDesignatorDTO.getIssuer() != null && attributeDesignatorDTO.getIssuer().
+//                    trim().length() > 0) {
+//                attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.ISSUER,
+//                        attributeDesignatorDTO.getIssuer());
+//            }
+//
+//            if(attributeDesignatorDTO.getMustBePresent() != null && attributeDesignatorDTO.
+//                    getMustBePresent().trim().length() > 0){
+//                attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.MUST_BE_PRESENT,
+//                        attributeDesignatorDTO.getMustBePresent());
+//            }
+//
+//            if(attributeDesignatorDTO.getSubjectCategory() != null){
+//                attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.MUST_BE_PRESENT,
+//                        attributeDesignatorDTO.getSubjectCategory());
+//            }
+//
+//        }
+//
+//        return attributeDesignatorElement;
+//    }
+
+
     public static Element createAttributeDesignatorElement(AttributeDesignatorDTO
             attributeDesignatorDTO, Document doc) {
 
-        String attributeDesignatorElementName =  attributeDesignatorDTO.getElementName() +
+        String attributeDesignatorElementName =
                 EntitlementPolicyConstants.ATTRIBUTE_DESIGNATOR;
 
         Element attributeDesignatorElement = doc.createElement(attributeDesignatorElementName);
 
-        if(attributeDesignatorDTO.getAttributeId() != null && attributeDesignatorDTO.
-                getAttributeId().trim().length() > 0){
-            
+        String attributeId = attributeDesignatorDTO.getAttributeId();
+        String category = attributeDesignatorDTO.getCategory();
+
+        if(attributeId != null && attributeId.trim().length() > 0 && category != null &&
+                category.trim().length() > 0){
+
             attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.ATTRIBUTE_ID,
                     attributeDesignatorDTO.getAttributeId());
+
+            attributeDesignatorElement.setAttribute("Category",
+                    attributeDesignatorDTO.getCategory());
 
             if(attributeDesignatorDTO.getDataType() != null && attributeDesignatorDTO.
                     getDataType().trim().length() > 0) {
@@ -268,7 +315,7 @@ public class PolicyCreatorUtil {
                         attributeDesignatorDTO.getDataType());
             } else {
                 attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.DATA_TYPE,
-                        EntitlementPolicyConstants.STRING_DATA_TYPE);                
+                        EntitlementPolicyConstants.STRING_DATA_TYPE);
             }
 
             if(attributeDesignatorDTO.getIssuer() != null && attributeDesignatorDTO.getIssuer().
@@ -281,17 +328,16 @@ public class PolicyCreatorUtil {
                     getMustBePresent().trim().length() > 0){
                 attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.MUST_BE_PRESENT,
                         attributeDesignatorDTO.getMustBePresent());
-            }
-
-            if(attributeDesignatorDTO.getSubjectCategory() != null){
+            } else {
                 attributeDesignatorElement.setAttribute(EntitlementPolicyConstants.MUST_BE_PRESENT,
-                        attributeDesignatorDTO.getSubjectCategory());
+                        "true");                
             }
 
         }
 
         return attributeDesignatorElement;
     }
+
 
     public static Element createAttributeSelectorElement(AttributeSelectorDTO attributeSelectorDTO,
                                                          Document doc)  {
@@ -904,7 +950,7 @@ public class PolicyCreatorUtil {
     public static Element createBasicTargetElementDTO(BasicTargetElementDTO basicTargetElementDTO,
                                                             Document doc) {
 
-
+        //TODO
         String functionOnResources =  basicTargetElementDTO.getFunctionOnResources();
         String functionOnSubjects = basicTargetElementDTO.getFunctionOnSubjects();
         String functionOnActions = basicTargetElementDTO.getFunctionOnActions();
@@ -2364,4 +2410,77 @@ public class PolicyCreatorUtil {
 
         return functionId;
     }
+
+
+    public static void processPolicyData(TargetDTO targetDTO,  List<RuleDTO> ruleDTOs,
+                                                                EntitlementPolicyBean policyBean){
+
+        //List<RowDTO> rowDTOList = new ArrayList<RowDTO>();
+
+        Map<String, Set<String>> defaultDataTypeMap = policyBean.getDefaultDataTypeMap();
+        Map<String, Set<String>> defaultAttributeIdMap = policyBean.getDefaultAttributeIdMap();
+	    Map<String, String> targetFunctionMap = policyBean.getTargetFunctionMap();
+	    Map<String, String> ruleFunctionMap = policyBean.getRuleFunctionMap();
+
+        if(targetDTO != null && targetDTO.getRowDTOList() != null){
+            for (RowDTO rowDTO : targetDTO.getRowDTOList()){
+
+                if(rowDTO.getCategory() == null){
+                    continue;
+                }
+
+                if(rowDTO.getAttributeDataType() == null ||
+                        rowDTO.getAttributeDataType().trim().length() < 1 ||
+                        rowDTO.getAttributeDataType().trim().equals("null")) {
+                    
+                    if(defaultDataTypeMap.get(rowDTO.getCategory()) != null){
+                        rowDTO.setAttributeDataType((defaultDataTypeMap.
+                                            get(rowDTO.getCategory()).iterator().next()));
+                    }
+                }
+
+                if(rowDTO.getAttributeId() == null ||
+                        rowDTO.getAttributeId().trim().length() < 1 ||
+                        rowDTO.getAttributeId().trim().equals("null")) {
+                    if(defaultAttributeIdMap.get(rowDTO.getCategory()) != null){
+                        rowDTO.setAttributeId((defaultAttributeIdMap.
+                                            get(rowDTO.getCategory()).iterator().next()));
+                    }
+                }
+
+                if(rowDTO.getFunction() != null && ruleFunctionMap.get(rowDTO.getFunction()) != null){
+                    rowDTO.setFunction(ruleFunctionMap.get(rowDTO.getFunction()));
+                }
+            }
+        }
+
+        if(ruleDTOs != null){
+            for(RuleDTO ruleDTO : ruleDTOs){
+                for(RowDTO rowDTO : ruleDTO.getRowDTOList()){
+                    if(rowDTO.getCategory() == null){
+                        continue;
+                    }
+
+                    if(rowDTO.getAttributeDataType() == null || rowDTO.getAttributeDataType().length() < 1){
+                        if(defaultDataTypeMap.get(rowDTO.getCategory()) != null){
+                            rowDTO.setAttributeDataType((defaultDataTypeMap.
+                                                get(rowDTO.getCategory()).iterator().next()));
+                        }
+                    }
+
+                    if(rowDTO.getAttributeId() == null || rowDTO.getAttributeId().length() < 1){
+                        if(defaultAttributeIdMap.get(rowDTO.getCategory()) != null){
+                            rowDTO.setAttributeId((defaultAttributeIdMap.
+                                                get(rowDTO.getCategory()).iterator().next()));
+                        }
+                    }
+
+                    if(rowDTO.getFunction() != null && targetFunctionMap.get(rowDTO.getFunction()) != null){
+                        rowDTO.setFunction(targetFunctionMap.get(rowDTO.getFunction()));
+                    }
+                }
+            }
+        }
+    }
+
 }

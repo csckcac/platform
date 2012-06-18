@@ -1,9 +1,5 @@
-package org.wso2.carbon.identity.entitlement.ui.dto;
-
-import java.util.Arrays;
-
 /*
-*  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -20,7 +16,13 @@ import java.util.Arrays;
 * under the License.
 */
 
+package org.wso2.carbon.identity.entitlement.ui.dto;
 
+import java.util.Arrays;
+
+/**
+ * 
+ */
 public class BasicTargetElementDTO {
     
     private String resourceList;

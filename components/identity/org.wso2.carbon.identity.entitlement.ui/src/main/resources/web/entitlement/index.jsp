@@ -27,11 +27,14 @@
 <%@ page import="java.lang.Exception" %>
 <%@ page import="org.wso2.carbon.identity.entitlement.stub.dto.PaginatedPolicySetDTO" %>
 <%@ page import="org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO" %>
-<%@ page import="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyConstants" %>
 <%@ page import="org.wso2.carbon.identity.entitlement.stub.dto.AttributeValueTreeNodeDTO" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="org.wso2.carbon.identity.entitlement.stub.dto.PolicyAttributeDTO" %>
 <jsp:useBean id="entitlementPolicyBean" type="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean"
              class="org.wso2.carbon.identity.entitlement.ui.EntitlementPolicyBean" scope="session"/>
 <jsp:setProperty name="entitlementPolicyBean" property="*" />
+
 <%
     entitlementPolicyBean.cleanEntitlementPolicyBean();
     String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
@@ -75,43 +78,67 @@
         EntitlementPolicyAdminServiceClient client = new EntitlementPolicyAdminServiceClient(cookie, serverURL, configContext);
         paginatedPolicySetDTO = client.getAllPolicies(policyTypeFilter, policySearchString, pageNumberInt);
         policyCombiningAlgorithms = client.getEntitlementPolicyDataFromRegistry("policyCombiningAlgorithms");
-        if(globalPolicyCombiningAlgorithm != null && !globalPolicyCombiningAlgorithm.equals("")){
+        if(globalPolicyCombiningAlgorithm != null && globalPolicyCombiningAlgorithm.trim().length() > 0){
             client.setGlobalPolicyAlgorithm(globalPolicyCombiningAlgorithm);
         } else {
             globalPolicyCombiningAlgorithm = client.getGlobalPolicyAlgorithm();              
         }
 
-        AttributeValueTreeNodeDTO[] attributeValueTreeNodes =  client.
-                                getPolicyAttributeValues(EntitlementPolicyConstants.SUBJECT_ELEMENT);
-        if(attributeValueTreeNodes != null){
-            entitlementPolicyBean.putAttributeValueNodeMap(EntitlementPolicyConstants.SUBJECT_ELEMENT,
-                                                           attributeValueTreeNodes);
+        PolicyAttributeDTO[] policyAttributeDTOs =  client.getPolicyAttributeValues();
+        Map<String, String> targetFunctionMap = new HashMap<String, String>();
+        Map<String, String> ruleFunctionMap = new HashMap<String, String>();
+        Map<String, String> categoryMap = new HashMap<String, String>();
+
+        for(PolicyAttributeDTO policyAttributeDTO : policyAttributeDTOs){
+
+            AttributeValueTreeNodeDTO[] nodeDTOs =  policyAttributeDTO.getNodeDTOs();
+            for(AttributeValueTreeNodeDTO nodeDTO : nodeDTOs){
+                entitlementPolicyBean.putAttributeValueNodeMap(nodeDTO.getCategoryId(), nodeDTO);
+                entitlementPolicyBean.addDefaultAttributeId(nodeDTO.getCategoryId(),
+                                                            nodeDTO.getDefaultAttributeId());
+                entitlementPolicyBean.addDefaultDataType(nodeDTO.getCategoryId(), 
+                                                            nodeDTO.getDefaultAttributeDataType());
+            }
+
+            String[] targetFunctionArray = policyAttributeDTO.getSupportedTargetFunctions();
+            if(targetFunctionArray != null && targetFunctionArray.length > 1){
+                for(int i = 0; i < targetFunctionArray.length-1; i = i+2){
+                    targetFunctionMap.put(targetFunctionArray[i], targetFunctionArray[i+1]);
+                }
+            }
+
+            String[] ruleFunctionArray = policyAttributeDTO.getSupportedRuleFunctions();
+            if(ruleFunctionArray != null && ruleFunctionArray.length > 1){
+                for(int i = 0; i < ruleFunctionArray.length-1; i = i+2){
+                    ruleFunctionMap.put(ruleFunctionArray[i], ruleFunctionArray[i+1]);
+                }
+            }
+
+            String[] categoryArray = policyAttributeDTO.getSupportedCategories();
+            if(categoryArray != null && targetFunctionArray.length > 1){
+                for(int i = 0; i < categoryArray.length -1; i = i+2){
+                    categoryMap.put(categoryArray[i], categoryArray[i+1]);
+                }
+            }
+
+            String[] preFunctions = policyAttributeDTO.getSupportedPreFunctions();
+            if(preFunctions != null && preFunctions.length > 0){
+                for(String preFunction : preFunctions){
+                    entitlementPolicyBean.addPreFunction(preFunction);
+                }
+            }
         }
 
-        attributeValueTreeNodes =  client.getPolicyAttributeValues(EntitlementPolicyConstants.RESOURCE_ELEMENT);
-        if(attributeValueTreeNodes != null){
-            entitlementPolicyBean.putAttributeValueNodeMap(EntitlementPolicyConstants.RESOURCE_ELEMENT,
-                                                           attributeValueTreeNodes);
-        }
-
-        attributeValueTreeNodes =  client.getPolicyAttributeValues(EntitlementPolicyConstants.ACTION_ELEMENT);
-        if(attributeValueTreeNodes != null){
-            entitlementPolicyBean.putAttributeValueNodeMap(EntitlementPolicyConstants.ACTION_ELEMENT,
-                                                           attributeValueTreeNodes);
-        }
-
-        attributeValueTreeNodes =  client.getPolicyAttributeValues(EntitlementPolicyConstants.ENVIRONMENT_ELEMENT);
-        if(attributeValueTreeNodes != null){
-            entitlementPolicyBean.putAttributeValueNodeMap(EntitlementPolicyConstants.ENVIRONMENT_ELEMENT,
-                                                           attributeValueTreeNodes);
-        }
+        entitlementPolicyBean.setTargetFunctionMap(targetFunctionMap);
+        entitlementPolicyBean.setRuleFunctionMap(ruleFunctionMap);
+        entitlementPolicyBean.setCategoryMap(categoryMap);
 
         policies = paginatedPolicySetDTO.getPolicySet();
         numberOfPages = paginatedPolicySetDTO.getNumberOfPages();
 
     } catch (Exception e) {
     	String message = resourceBundle.getString("error.while.loading.policy");
-        CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
+        CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request, e);
         forwardTo = "../admin/error.jsp";
 %>
 
@@ -343,7 +370,7 @@
         <tr>
             <td>
                 <div style="height:30px;">
-                    <a href="javascript:document.location.href='create-basic-policy.jsp'" class="icon-link"
+                    <a href="javascript:document.location.href='policy-editor.jsp'" class="icon-link"
                        style="background-image:url(../admin/images/add.gif);"><fmt:message key='add.new.ent.policy'/></a>
                 </div>
             </td>

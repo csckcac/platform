@@ -59,6 +59,12 @@ public class EntitlementPolicyBean {
 
 	public Map<String, String> subjectTypeMap = new HashMap<String, String>();
 
+	public Map<String, String> categoryMap = new HashMap<String, String>();
+
+	public Map<String, String> targetFunctionMap = new HashMap<String, String>();
+
+	public Map<String, String> ruleFunctionMap = new HashMap<String, String>();
+
 	private boolean editPolicy;
 
 	private String[] ruleCombiningAlgorithms = new String[0];
@@ -81,6 +87,8 @@ public class EntitlementPolicyBean {
 
 	private BasicTargetElementDTO basicTargetElementDTO = null;
 
+    private TargetDTO targetDTO = null;
+
     private PolicySetDTO policySetDTO = null;
 
 	public Map<String, String> functionIdMap = new HashMap<String, String>();
@@ -95,6 +103,8 @@ public class EntitlementPolicyBean {
 
 	private List<BasicRuleElementDTO> basicRuleElementDTOs = new ArrayList<BasicRuleElementDTO>();
 
+	private List<RuleDTO> ruleDTOs = new ArrayList<RuleDTO>();
+
 	private List<SubElementDTO> subElementDTOs = new ArrayList<SubElementDTO>();
 
 	private List<AttributeValueElementDTO> attributeValueElementDTOs = new ArrayList<AttributeValueElementDTO>();
@@ -103,8 +113,8 @@ public class EntitlementPolicyBean {
 
 	private List<AttributeSelectorDTO> attributeSelectorDTOs = new ArrayList<AttributeSelectorDTO>();
 
-    private Map<String, AttributeValueTreeNodeDTO[]> attributeValueNodeMap =
-                                            new HashMap<String, AttributeValueTreeNodeDTO[]>();
+    private Map<String, Set<AttributeValueTreeNodeDTO>> attributeValueNodeMap =
+                                            new HashMap<String, Set<AttributeValueTreeNodeDTO>>();
 
     private String ruleElementOrder;
 
@@ -112,6 +122,13 @@ public class EntitlementPolicyBean {
 
     private String ruleDescription;
 
+	private List<String> preFunctions = new ArrayList<String>();
+
+    private Map<String, Set<String>> defaultAttributeIdMap =
+                                            new HashMap<String, Set<String>>();
+
+    private Map<String, Set<String>> defaultDataTypeMap =
+                                            new HashMap<String, Set<String>>();
 	/**
 	 * This method is temporally used to clear the entitlement bean. Need to
 	 * update with a method proper implementation TODO
@@ -171,6 +188,8 @@ public class EntitlementPolicyBean {
 		removeBasicTargetElementDTO();
 
 		subjectTypeMap.clear();
+
+        preFunctions.clear();
 
         ruleEffect = null;
 
@@ -903,6 +922,69 @@ public class EntitlementPolicyBean {
 		}
 	}
 
+
+
+/////////////////////////////////////// new
+
+	public List<RuleDTO> getRuleDTOs() {
+		return ruleDTOs;
+	}
+
+	public void setRuleDTOs(List<RuleDTO> ruleDTOs) {
+		this.ruleDTOs = ruleDTOs;
+	}
+
+	public void setRuleDTO(RuleDTO ruleDTO) {
+		if (ruleDTOs.size() > 0) {
+			Iterator iterator = ruleDTOs.listIterator();
+			while (iterator.hasNext()) {
+				RuleDTO elementDTO = (RuleDTO) iterator.next();
+				if (elementDTO.getRuleId().equals(
+						ruleDTO.getRuleId())) {
+					if (elementDTO.isCompletedRule()) {
+						ruleDTO.setCompletedRule(true);
+					}
+					iterator.remove();
+				}
+			}
+		}
+		this.ruleDTOs.add(ruleDTO);
+	}
+
+	public RuleDTO getRuleDTO(String ruleId) {
+		if (ruleDTOs.size() > 0) {
+			for (RuleDTO ruleDTO : ruleDTOs) {
+				if (ruleDTO.getRuleId().equals(ruleId)) {
+					return ruleDTO;
+				}
+			}
+		}
+		return null;
+	}
+
+	public boolean removeRuleDTO(String ruleId) {
+		if (ruleDTOs.size() > 0) {
+			for (RuleDTO ruleDTO : ruleDTOs) {
+				if (ruleDTO.getRuleId().equals(ruleId)) {
+					return ruleDTOs.remove(ruleDTO);
+				}
+			}
+		}
+		return false;
+	}
+
+	public void removeRuleDTOs() {
+		if (ruleDTOs.size() > 0) {
+			Iterator iterator = ruleDTOs.listIterator();
+			while (iterator.hasNext()) {
+				iterator.next();
+				iterator.remove();
+			}
+		}
+	}
+
+
+///////////////////////////    ////////
 	public BasicTargetElementDTO getBasicTargetElementDTO() {
 		return basicTargetElementDTO;
 	}
@@ -1058,11 +1140,104 @@ public class EntitlementPolicyBean {
         this.ruleDescription = ruleDescription;
     }
 
-    public AttributeValueTreeNodeDTO[] getAttributeValueNodeMap(String attributeType) {
+    public Set<AttributeValueTreeNodeDTO> getAttributeValueNodeMap(String attributeType) {
         return attributeValueNodeMap.get(attributeType);
     }
 
-    public void putAttributeValueNodeMap(String attributeType, AttributeValueTreeNodeDTO[] attributeValueNodeMap) {
-        this.attributeValueNodeMap.put(attributeType, attributeValueNodeMap);
+    public void putAttributeValueNodeMap(String category, AttributeValueTreeNodeDTO attributeValueNodeMap) {
+        Set<AttributeValueTreeNodeDTO> dtoSet = this.attributeValueNodeMap.get(category);
+        if(dtoSet != null){
+            dtoSet.add(attributeValueNodeMap);
+        } else {
+            Set<AttributeValueTreeNodeDTO> newDtoSet = new HashSet<AttributeValueTreeNodeDTO>();
+            newDtoSet.add(attributeValueNodeMap);
+            this.attributeValueNodeMap.put(category, newDtoSet);
+        }
+    }
+
+    public TargetDTO getTargetDTO() {
+        return targetDTO;
+    }
+
+    public void setTargetDTO(TargetDTO targetDTO) {
+        this.targetDTO = targetDTO;
+    }
+
+    public void removeTargetDTO(TargetDTO targetDTO) {
+        this.targetDTO = null;
+    }
+
+    public Map<String, String> getCategoryMap() {
+        return categoryMap;
+    }
+
+    public Set<String> getCategorySet() {
+        return categoryMap.keySet();
+    }
+
+    public void setCategoryMap(Map<String, String> categoryMap) {
+        this.categoryMap = categoryMap;
+    }
+
+    public Map<String, String> getRuleFunctionMap() {
+        return ruleFunctionMap;
+    }
+
+    public void setRuleFunctionMap(Map<String, String> ruleFunctionMap) {
+        this.ruleFunctionMap = ruleFunctionMap;
+    }
+
+    public Map<String, String> getTargetFunctionMap() {
+        return targetFunctionMap;
+    }
+
+    public void setTargetFunctionMap(Map<String, String> targetFunctionMap) {
+        this.targetFunctionMap = targetFunctionMap;
+    }
+
+    public List<String> getPreFunctions() {
+        return preFunctions;
+    }
+
+    public void addPreFunction(String preFunction) {
+        this.preFunctions.add(preFunction);
+    }
+
+    public Map<String, String> getSubjectTypeMap() {
+        return subjectTypeMap;
+    }
+
+    public void setSubjectTypeMap(Map<String, String> subjectTypeMap) {
+        this.subjectTypeMap = subjectTypeMap;
+    }
+
+    public Map<String, Set<String>> getDefaultDataTypeMap() {
+        return defaultDataTypeMap;
+    }
+
+    public void addDefaultDataType(String category, String defaultDataType) {
+        Set<String> dtoSet = this.defaultDataTypeMap.get(category);
+        if(dtoSet != null){
+            dtoSet.add(defaultDataType);
+        } else {
+            Set<String> newDtoSet = new HashSet<String>();
+            newDtoSet.add(defaultDataType);
+            this.defaultDataTypeMap.put(category, newDtoSet);
+        }
+    }
+
+    public Map<String, Set<String>> getDefaultAttributeIdMap() {
+        return defaultAttributeIdMap;
+    }
+
+    public void addDefaultAttributeId(String category, String defaultAttributeId) {
+        Set<String> dtoSet = this.defaultAttributeIdMap.get(category);
+        if(dtoSet != null){
+            dtoSet.add(defaultAttributeId);
+        } else {
+            Set<String> newDtoSet = new HashSet<String>();
+            newDtoSet.add(defaultAttributeId);
+            this.defaultAttributeIdMap.put(category, newDtoSet);
+        }
     }
 }

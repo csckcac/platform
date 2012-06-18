@@ -18,18 +18,24 @@
 
 package org.wso2.carbon.identity.entitlement.ui.dto;
 
+import java.util.ArrayList;
+
 /**
  *
  */
-public class FunctionDTO {
-    
-    private String functionId;
+public class TargetDTO {
 
-    public String getFunctionId() {
-        return functionId;
+    private ArrayList<RowDTO> rowDTOList = new ArrayList<RowDTO>();
+
+    public ArrayList<RowDTO> getRowDTOList() {
+        return rowDTOList;
     }
 
-    public void setFunctionId(String functionId) {
-        this.functionId = functionId;
+    public void setRowDTOList(ArrayList<RowDTO> rowDTOList) {
+        this.rowDTOList = rowDTOList;
+    }
+
+    public void addRowDTO(RowDTO rowDTO) {
+        this.rowDTOList.add(rowDTO);
     }
 }

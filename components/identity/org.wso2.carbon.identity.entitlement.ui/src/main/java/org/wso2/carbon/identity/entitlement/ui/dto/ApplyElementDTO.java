@@ -1,8 +1,3 @@
-package org.wso2.carbon.identity.entitlement.ui.dto;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /*
 *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -21,6 +16,15 @@ import java.util.List;
 * under the License.
 */
 
+
+package org.wso2.carbon.identity.entitlement.ui.dto;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ */
 public class ApplyElementDTO {
 
     private int applyElementNumber;

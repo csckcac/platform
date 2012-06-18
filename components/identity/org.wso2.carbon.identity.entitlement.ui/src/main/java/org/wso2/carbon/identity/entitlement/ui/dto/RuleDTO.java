@@ -19,40 +19,24 @@
 package org.wso2.carbon.identity.entitlement.ui.dto;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  */
-public class RuleElementDTO {
+public class RuleDTO {
+
 
     private String ruleId;
-
-    private ConditionElementDT0 conditionElementDT0;
 
     private String ruleEffect;
 
     private String ruleDescription;
 
-    private TargetElementDTO targetElementDTO;
+    private TargetDTO targetDTO;
 
-    private NewTargetElementDTO newTargetElementDTO;
+    private ArrayList<RowDTO> rowDTOList = new ArrayList<RowDTO>();
 
-    public ConditionElementDT0 getConditionElementDT0() {
-        return conditionElementDT0;
-    }
-
-    public void setConditionElementDT0(ConditionElementDT0 conditionElementDT0) {
-        this.conditionElementDT0 = conditionElementDT0;
-    }
-
-    public TargetElementDTO getTargetElementDTO() {
-        return targetElementDTO;
-    }
-
-    public void setTargetElementDTO(TargetElementDTO targetElementDTO) {
-        this.targetElementDTO = targetElementDTO;
-    }
+    private boolean completedRule;
 
     public String getRuleId() {
         return ruleId;
@@ -60,14 +44,6 @@ public class RuleElementDTO {
 
     public void setRuleId(String ruleId) {
         this.ruleId = ruleId;
-    }
-
-    public String getRuleDescription() {
-        return ruleDescription;
-    }
-
-    public void setRuleDescription(String ruleDescription) {
-        this.ruleDescription = ruleDescription;
     }
 
     public String getRuleEffect() {
@@ -78,11 +54,39 @@ public class RuleElementDTO {
         this.ruleEffect = ruleEffect;
     }
 
-    public NewTargetElementDTO getNewTargetElementDTO() {
-        return newTargetElementDTO;
+    public String getRuleDescription() {
+        return ruleDescription;
     }
 
-    public void setNewTargetElementDTO(NewTargetElementDTO newTargetElementDTO) {
-        this.newTargetElementDTO = newTargetElementDTO;
+    public void setRuleDescription(String ruleDescription) {
+        this.ruleDescription = ruleDescription;
+    }
+
+    public ArrayList<RowDTO> getRowDTOList() {
+        return rowDTOList;
+    }
+
+    public void setRowDTOList(ArrayList<RowDTO> rowDTOList) {
+        this.rowDTOList = rowDTOList;
+    }
+
+    public void addRowDTO(RowDTO rowDTO) {
+        this.rowDTOList.add(rowDTO);
+    }
+
+    public TargetDTO getTargetDTO() {
+        return targetDTO;
+    }
+
+    public void setTargetDTO(TargetDTO targetDTO) {
+        this.targetDTO = targetDTO;
+    }
+
+    public boolean isCompletedRule() {
+        return completedRule;
+    }
+
+    public void setCompletedRule(boolean completedRule) {
+        this.completedRule = completedRule;
     }
 }

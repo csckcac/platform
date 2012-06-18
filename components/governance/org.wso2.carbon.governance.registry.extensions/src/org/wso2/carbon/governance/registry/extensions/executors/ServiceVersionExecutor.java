@@ -6,6 +6,7 @@ import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.registry.extensions.aspects.utils.LifecycleConstants;
 import org.wso2.carbon.governance.registry.extensions.aspects.utils.StatCollection;
 import org.wso2.carbon.governance.registry.extensions.executors.utils.ExecutorConstants;
@@ -289,7 +290,7 @@ public class ServiceVersionExecutor implements Execution {
     }
 
     private void addSubscriptionAvailableProperty(Resource newResource) throws RegistryException {
-        newResource.setProperty(ExecutorConstants.REGISTRY_IS_ENVIRONMENT_CHANGE,"true");
+        newResource.setProperty(GovernanceConstants.REGISTRY_IS_ENVIRONMENT_CHANGE,"true");
 
     }
 

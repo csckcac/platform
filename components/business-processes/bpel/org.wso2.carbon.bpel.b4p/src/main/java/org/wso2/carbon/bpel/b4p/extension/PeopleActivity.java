@@ -56,7 +56,11 @@ import javax.wsdl.extensions.http.HTTPBinding;
 import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.wsdl.extensions.soap12.SOAP12Binding;
 import javax.xml.namespace.QName;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -398,7 +402,13 @@ public class PeopleActivity {
             // <attachmentPropagation/> element processing logic
             Node attachmentPropagationElement = attachmentElementList.item(0);
             this.attachmentPropagation = new AttachmentPropagation((Element) attachmentPropagationElement);
-
+        } else if (attachmentElementList.getLength() == 0) {
+            //As the BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY is not declared. So handling the default behavior
+            if (log.isDebugEnabled()) {
+                log.debug("No " + BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY + " activities found. Hence " +
+                          "assuming the default values defined by specification.");
+            }
+            this.attachmentPropagation = new AttachmentPropagation();
         } else {
             if (peopleActivityElement.getElementsByTagName(BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY)
                     .getLength() > 0) {
@@ -407,9 +417,6 @@ public class PeopleActivity {
                                              "Namespace defined for :" + BPEL4PeopleConstants
                                                      .ATTACHMENT_PROPAGATION_ACTIVITY + " inside " +
                                              BPEL4PeopleConstants.PEOPLE_ACTIVITY + " is wrong.");
-            }
-            if (log.isDebugEnabled()) {
-                log.debug("No " + BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY + " activities found.");
             }
         }
     }
@@ -625,10 +632,10 @@ public class PeopleActivity {
                                                                BPELMessageContext taskMessageContext) {
         List<Long> attachmentIDList = new ArrayList<Long>();
         if (attachmentPropagation != null && attachmentPropagation.isInitialized) {
-            if (FromProcessSpec.all.equals(attachmentPropagation.getFromProcess())) {
+            if (FromProcessSpec.all.toString().equals(attachmentPropagation.getFromProcess())) {
                 attachmentIDList = (List) getAttachmentIDs(extensionContext);
                 taskMessageContext.setAttachmentIDList(attachmentIDList);
-            } else if (FromProcessSpec.none.equals(attachmentPropagation.getFromProcess())) {
+            } else if (FromProcessSpec.none.toString().equals(attachmentPropagation.getFromProcess())) {
                 if (log.isDebugEnabled()) {
                     log.debug("No attachments will be propagated to the human-task as attribute value of " +
                               BPEL4PeopleConstants.ATTACHMENT_PROPAGATION_ACTIVITY_FROM_PROCESS + " is " + FromProcessSpec.none);
@@ -710,8 +717,25 @@ public class PeopleActivity {
             return toProcess;
         }
 
+        /**
+         * Default constructor : specifies the default values for the &lt;attachmentPropagation/&gt; child element
+         */
+        public AttachmentPropagation() throws FaultException {
+            init();
+        }
+
         private AttachmentPropagation(Element element) throws FaultException {
             init(element);
+        }
+
+        /**
+         * Initializes the default values for the &lt;attachmentPropagation/&gt; child element
+         */
+        private void init() throws FaultException {
+            this.fromProcess = extractFromProcessValue(FromProcessSpec.all.toString());    //Default value is : FromProcessSpec.all
+            this.toProcess = extractToProcessValue(ToProcessSpec.newOnly.toString());      //Default value is : ToProcessSpec.newOnly
+
+            isInitialized = true;
         }
 
         private void init(Element element) throws FaultException {
@@ -728,7 +752,7 @@ public class PeopleActivity {
         }
 
         private String extractFromProcessValue(String fromProcessValue) throws FaultException {
-            if (FromProcessSpec.all.equals(fromProcessValue) || FromProcessSpec.none.equals(fromProcessValue)) {
+            if (FromProcessSpec.all.toString().equals(fromProcessValue) || FromProcessSpec.none.toString().equals(fromProcessValue)) {
                 return fromProcessValue;
             } else {
                 throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
@@ -739,8 +763,8 @@ public class PeopleActivity {
         }
 
         private String extractToProcessValue(String toProcessValue) throws FaultException {
-            if (ToProcessSpec.all.equals(toProcessValue) || ToProcessSpec.none.equals(toProcessValue) ||
-                ToProcessSpec.newOnly.equals(toProcessValue)) {
+            if (ToProcessSpec.all.toString().equals(toProcessValue) || ToProcessSpec.none.toString().equals(toProcessValue) ||
+                ToProcessSpec.newOnly.toString().equals(toProcessValue)) {
                 return toProcessValue;
             } else {
                 throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,

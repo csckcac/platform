@@ -117,9 +117,6 @@
             <div id="workArea">
                 <jsp:include page="task_view_temp.jsp"/>
 
-            <%
-                if (attachmentArray != null) {
-            %>
                 <div id="attachmentInfoTable">
                     <table class="styledLeft" id="taskAttachmentTable">
                         <thead>
@@ -128,61 +125,70 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <td width="10px">&nbsp;</td>
-                            <tr>
-                                <td>
-                                    <table class="styledLeft" id="taskAttachmentInfo">
-                                        <thead>
+                        <td width="10px">&nbsp;</td>
+                        <%
+                            if (attachmentArray != null) {
+                        %>
+                        <tr>
+                            <td>
+                                <table class="styledLeft" id="taskAttachmentInfo">
+                                    <thead>
+                                    <tr>
+                                        <th class="tvTableHeader">Name</th>
+                                        <th class="tvTableHeader">ContentType</th>
+                                        <th class="tvTableHeader">Link</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <%
+                                        for (TAttachmentInfo info : attachmentArray) {
+                                            String attachmentURL = info.getIdentifier().toString();
+                                    %>
+                                    <tr>
+                                        <td><%=info.getName()%>
+                                        </td>
+                                        <td><%=info.getContentType()%>
+                                        </td>
+                                        <td><a href="<%=attachmentURL%>"><%=attachmentURL%>
+                                        </a></td>
+                                    </tr>
+                                    <%
+                                        }
+                                    %>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <%
+                            }
+                        %>
+                        <tr>
+                            <td>
+                                <div id="attachmnetUploadTable">
+                                    <form id="attachment_upload_form" method="post" name="attachmentUpload"
+                                          action="../../fileupload/attachment-mgt"
+                                          enctype="multipart/form-data" target="_self">
+                                        <input type="hidden" id="uRedirect" name="redirect"
+                                               value="humantask/basic_task_view.jsp?taskClient=<%=taskClient%>&taskId=<%=taskId%>"/>
+                                        <input type="hidden" id="taskId" name="taskId" value="<%=taskId%>"/>
+                                        <table>
+                                            <tbody>
                                             <tr>
-                                                <th class="tvTableHeader">Name</th>
-                                                <th class="tvTableHeader">ContentType</th>
-                                                <th class="tvTableHeader">Link</th>
+                                                <td>File</td>
+                                                <td><input class="button" type="file" name="fileToUpload"/></td>
+                                                <td><input name="attachmentUploadButton" class="button" type="button"
+                                                           value="upload" onclick="uploadAttachment();"/></td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-            <%
-                    for(TAttachmentInfo info : attachmentArray) {
-                        String attachmentURL = info.getIdentifier().toString();
-            %>
-                                            <tr>
-                                                <td><%=info.getName()%></td>
-                                                <td><%=info.getContentType()%></td>
-                                                <td><a href="<%=attachmentURL%>"><%=attachmentURL%></a></td>
-                                            </tr>
-            <%
-                    }
-                }
-            %>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
-                <div id="attachmnetUploadTable">
-                    <form id="attachment_upload_form" method="post" name="attachmentUpload" action="../../fileupload/attachment-mgt"
-                      enctype="multipart/form-data" target="_self">
-                        <input type="hidden" id="uRedirect" name="redirect" value="humantask/basic_task_view.jsp?taskClient=<%=taskClient%>&taskId=<%=taskId%>"/>
-                        <input type="hidden" id="taskId" name="taskId" value="<%=taskId%>"/>
-                    <table>
-                        <tbody>
-                        <td width="10px">&nbsp;</td>
-                        <tr>
-                            <td>File</td>
-                            <td><input class="button" type="file" name="fileToUpload"/></td>
-                        </tr>
-                        <td width="10px">&nbsp;</td>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td><input name="attachmentUploadButton" class="button" type="button"
-                                       value="upload" onclick="uploadAttachment();"/></td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </form>
-                </div>
+
             </div>
         </div>
     </div>

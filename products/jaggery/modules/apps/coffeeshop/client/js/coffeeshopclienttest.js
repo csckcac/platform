@@ -8,7 +8,7 @@ console.log("Call add Order "+orderName);
 
 this.viewOrder = function() {
 var orderid = $('#orderid').val();
-CoffeShopAppUtil.makeRequest("GET","/coffeeshop/orders/"+orderid+"", null , function(html) {	});
+CoffeShopAppUtil.makeRequest("GET","/coffeeshop/orders/"+orderid+"/", null , function(html) {	});
 console.log("view order "+orderid);
 }
 

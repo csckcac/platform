@@ -26,7 +26,13 @@
         //      Like in resource.jsp (resources.ui), test whether /eventing/ context is
         //      registered before displaying subscriptions interface.
     %>
+    <%
+        if(request.getParameter("path") != null && !request.getParameter("path").matches(".*;version:\\d+$")) {
+    %>
     <jsp:include page="../info/subscription.jsp"/>
+   <%
+     }
+   %>
 
     <jsp:include page="../info/tag.jsp"/>
 

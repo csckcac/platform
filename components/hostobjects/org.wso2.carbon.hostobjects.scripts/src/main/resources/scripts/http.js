@@ -155,10 +155,11 @@ var get, post, put, del, head, options, trace, connect;
         if (typeof data === "string") {
             query = data;
         } else {
+            query = "";
             for (var name in data) {
                 query = query || "";
                 if (data.hasOwnProperty(name)) {
-                    query += (first ? "" : "&") + name + "=" + data[name];
+                    query += (first ? "" : "&") + name + "=" + encodeURIComponent(data[name]);
                     first = first ? false : first;
                 }
             }

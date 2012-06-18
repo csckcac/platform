@@ -29,7 +29,6 @@ import org.apache.axiom.om.OMText;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
-import org.apache.axis2.engine.Handler;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.AxisServiceGroup;
@@ -170,20 +169,13 @@ public class SkipAdminServiceHandler extends AbstractHandler {
             hiddenParamValue = (String) service.getParameterValue(HIDDEN_SERVICE_PARAM_NAME);
         }
 
-        if (adminParamValue != null && adminParamValue.length() != 0) {
-            if (Boolean.parseBoolean(adminParamValue.trim())) {
-                if (relConf.isIncludeHiddenServices() && hiddenParamValue != null
-                        && hiddenParamValue.length() != 0) {
-                    if (Boolean.parseBoolean(hiddenParamValue.trim())) {
-                        return true;
-                    }
-                }
-
-            }
+        if (Boolean.parseBoolean(adminParamValue)) {
+            return true;
+        } else if (relConf.isIncludeHiddenServices() && Boolean.parseBoolean(hiddenParamValue)) {
+            return true;
+        } else {
+            return false;
         }
-
-
-        return false;
     }
 
     private void handleException(String msg) throws AxisFault {

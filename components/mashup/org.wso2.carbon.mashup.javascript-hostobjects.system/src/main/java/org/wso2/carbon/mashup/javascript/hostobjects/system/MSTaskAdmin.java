@@ -50,7 +50,7 @@ public class MSTaskAdmin extends AbstractAdmin {
         }
     }
 
-    public MSTaskInfoDTO getTaskInfo(String taskName) throws AxisFault {
+    public MSTaskInfo getTaskInfo(String taskName) throws AxisFault {
         try {
             TaskManager tm = SystemHostObjectServiceComponent.getTaskService().getTaskManager(
                     MSTaskConstants.MS_TASK_TYPE);
@@ -61,13 +61,12 @@ public class MSTaskAdmin extends AbstractAdmin {
         }
     }
 
-    public void scheduleTask(MSTaskInfoDTO msTaskInfo) throws AxisFault {
+    public void scheduleTask(MSTaskInfo msTaskInfo) throws AxisFault {
         TaskManager tm = null;
         try {
             tm = SystemHostObjectServiceComponent.getTaskService().getTaskManager(
                     MSTaskConstants.MS_TASK_TYPE);
-            MSTaskInfo taskInfo = MSTaskUtils.convert(msTaskInfo);
-            log.error("test >>>>>>>>>>>>>>>>>>>>>>>> " + taskInfo.getName() + "  " + taskInfo.getProperties().size());
+            TaskInfo taskInfo = MSTaskUtils.convert(msTaskInfo);
             tm.registerTask(taskInfo);
             tm.scheduleTask(taskInfo.getName());
         } catch (Exception e) {
@@ -83,11 +82,11 @@ public class MSTaskAdmin extends AbstractAdmin {
         }
     }
 
-    public boolean rescheduleTask(MSTaskInfoDTO msTaskInfo) throws AxisFault {
+    public boolean rescheduleTask(MSTaskInfo msTaskInfo) throws AxisFault {
         try {
             TaskManager tm = SystemHostObjectServiceComponent.getTaskService().getTaskManager(
                     MSTaskConstants.MS_TASK_TYPE);
-            MSTaskInfo taskInfo = MSTaskUtils.convert(msTaskInfo);
+            TaskInfo taskInfo = MSTaskUtils.convert(msTaskInfo);
             tm.registerTask(taskInfo);
             tm.rescheduleTask(taskInfo.getName());
         } catch (Exception e) {

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -15,38 +15,92 @@
  *  specific language governing permissions and limitations
  *  under the License.
  *
- */package org.wso2.carbon.mashup.javascript.hostobjects.system;
- 
+ */
+package org.wso2.carbon.mashup.javascript.hostobjects.system;
 
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.wso2.carbon.ntask.core.TaskInfo;
+/**
+ * This class represents a data service scheduled task information.
+ */
+public class MSTaskInfo {
 
-public class MSTaskInfo extends TaskInfo {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 554549970545L;
+	private static final long serialVersionUID = 5003413793187436757L;
 	
-	private Map<String, Object> runtimeProperties;
+	private String name;
 	
-	public MSTaskInfo(String name, String taskClass, Map<String, String> properties,
-			TriggerInfo triggerInfo, Map<String, Object> runtimeProperties) {
-		super(name, taskClass, properties, triggerInfo);
-		this.runtimeProperties = runtimeProperties;
+	private Calendar startTime;
+	
+	private Calendar endTime;
+	
+	private int taskCount;
+	
+	private long taskInterval;
+	
+	private String cronExpression;
+	
+	private Map<String, String> taskProperties;
+	
+	public MSTaskInfo() {
+		taskProperties = new HashMap<String, String>();
 	}
 
-	public Map<String, Object> getRuntimeProperties() {
-		return runtimeProperties;
+	public String getName() {
+		return name;
 	}
 
-	public void setRuntimeProperties(Map<String, Object> runtimeProperties) {
-		this.runtimeProperties = runtimeProperties;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Calendar getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Calendar startTime) {
+		this.startTime = startTime;
+	}
+
+	public Calendar getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Calendar endTime) {
+		this.endTime = endTime;
+	}
+
+	public int getTaskCount() {
+		return taskCount;
+	}
+
+	public void setTaskCount(int taskCount) {
+		this.taskCount = taskCount;
+	}
+
+	public long getTaskInterval() {
+		return taskInterval;
+	}
+
+	public void setTaskInterval(long taskInterval) {
+		this.taskInterval = taskInterval;
+	}
+
+	public String getCronExpression() {
+		return cronExpression;
+	}
+
+	public void setCronExpression(String cronExpression) {
+		this.cronExpression = cronExpression;
+	}
+
+	public Map<String, String> getTaskProperties() {
+		return taskProperties;
+	}
+
+	public void setTaskProperties(Map<String, String> taskProperties) {
+		this.taskProperties = taskProperties;
 	}
 
 }

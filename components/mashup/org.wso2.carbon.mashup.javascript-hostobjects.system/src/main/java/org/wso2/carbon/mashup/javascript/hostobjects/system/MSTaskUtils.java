@@ -18,23 +18,27 @@
  */
 package org.wso2.carbon.mashup.javascript.hostobjects.system;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.wso2.carbon.mashup.javascript.hostobjects.system.internal.SystemHostObjectServiceComponent;
-import org.wso2.carbon.ntask.common.TaskException;
-import org.wso2.carbon.ntask.common.TaskException.Code;
+import org.apache.axiom.om.util.Base64;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.ntask.core.TaskInfo;
 import org.wso2.carbon.ntask.core.TaskInfo.TriggerInfo;
-import org.wso2.carbon.ntask.core.TaskManager;
 
 /**
  * This class represents a utility class for scheduled tasks.  
  */
 public class MSTaskUtils {
 
-	public static MSTaskInfoDTO convert(TaskInfo taskInfo) {
-		MSTaskInfoDTO msTaskInfo = new MSTaskInfoDTO();
+	public static MSTaskInfo convert(TaskInfo taskInfo) {
+		MSTaskInfo msTaskInfo = new MSTaskInfo();
 		msTaskInfo.setName(taskInfo.getName());
 		TriggerInfo triggerInfo = taskInfo.getTriggerInfo();
 		msTaskInfo.setCronExpression(triggerInfo.getCronExpression());
@@ -45,7 +49,7 @@ public class MSTaskUtils {
 		return msTaskInfo;
 	}
 	
-	public static MSTaskInfo convert(MSTaskInfoDTO msTaskInfo) {
+	public static TaskInfo convert(MSTaskInfo msTaskInfo) {
 		TriggerInfo triggerInfo = new TriggerInfo();
 		triggerInfo.setCronExpression(msTaskInfo.getCronExpression());
 		if (msTaskInfo.getStartTime() != null) {
@@ -56,27 +60,10 @@ public class MSTaskUtils {
 		}
 		triggerInfo.setIntervalMillis((int)msTaskInfo.getTaskInterval());
 		triggerInfo.setRepeatCount(msTaskInfo.getTaskCount());
-		return new MSTaskInfo(msTaskInfo.getName(), MSTask.class.getName(), 
-				msTaskInfo.getTaskProperties(), triggerInfo, msTaskInfo.getRuntimeProperties());
+		return new TaskInfo(msTaskInfo.getName(), MSTask.class.getName(), 
+				msTaskInfo.getTaskProperties(), triggerInfo);
 	}
 
-	public static MSTaskInfo getTaskInfo(String taskManagerName, String taskName) 
-			throws TaskException {
-		
-		if(SystemHostObjectServiceComponent.getTaskService() == null) {
-			throw new TaskException("Task service unavailable", Code.CONFIG_ERROR);
-		}
-		
-		TaskManager taskManager = SystemHostObjectServiceComponent.getTaskService().
-				getTaskManager(taskManagerName);
-		TaskInfo taskInfo = taskManager.getTask(taskName);
-		
-		if(taskInfo == null) {
-			throw new TaskException("No task exist", Code.NO_TASK_EXISTS);
-		}
-		
-		return (MSTaskInfo)taskInfo;
-	}
 	
 	public static Calendar dateToCal(Date date) {
 		if (date == null) {
@@ -87,5 +74,29 @@ public class MSTaskUtils {
 		return cal;
 	}
 
+	public static synchronized Object fromString(String encodedString) 
+			throws IOException , ClassNotFoundException {
+        byte [] data = Base64.decode(encodedString);
+        ObjectInputStream objectInputStream = new ObjectInputStream( 
+                                        new ByteArrayInputStream(data));
+        Object readObject  = objectInputStream.readObject();
+        objectInputStream.close();
+        return readObject;
+    }
 
+	public static synchronized String toString(Serializable object) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(object);
+        objectOutputStream.close();
+        return new String(Base64.encode(byteArrayOutputStream.toByteArray()));
+    }
+
+    public static String getTenantDomainFromId(int tid) {
+        SuperTenantCarbonContext.startTenantFlow();
+        SuperTenantCarbonContext.getCurrentContext().setTenantId(tid);
+        String tenantDomain = SuperTenantCarbonContext.getCurrentContext().getTenantDomain();
+        SuperTenantCarbonContext.endTenantFlow();
+        return tenantDomain;
+    }
 }

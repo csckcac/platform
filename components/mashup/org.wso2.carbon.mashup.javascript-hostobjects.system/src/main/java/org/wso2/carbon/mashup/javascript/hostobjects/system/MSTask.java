@@ -16,8 +16,10 @@
 
 package org.wso2.carbon.mashup.javascript.hostobjects.system;
 
+import java.io.IOException;
 import java.net.URL;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
@@ -26,15 +28,19 @@ import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ScriptableObject;
+import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngine;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
 import org.wso2.carbon.mashup.utils.MashupConstants;
 import org.wso2.carbon.mashup.utils.MashupReader;
 import org.wso2.carbon.mashup.utils.MashupUtils;
-import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.AbstractTask;
+import org.wso2.carbon.ntask.core.TaskInfo;
+import org.wso2.carbon.ntask.core.internal.TasksDSComponent;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 public class MSTask extends AbstractTask {
 
@@ -43,45 +49,46 @@ public class MSTask extends AbstractTask {
 	@Override
 	public void execute() {
 
-		log.error("EXECUTE CALLED >>>>>>>>>>>>>>>>> " + getProperties().get(MSTaskConstants.TASK_NAME));
-
-		MSTaskInfo taskInfo = null;
-		try {
-			taskInfo = MSTaskUtils.getTaskInfo
-					(MSTaskConstants.MS_TASK_TYPE, getProperties().get(MSTaskConstants.TASK_NAME));
-			
-			log.error("Elements " + taskInfo.getProperties());
-		} catch (TaskException e) {
-			e.printStackTrace();
-			log.error("Error occurred while running task : " + e.getMessage());
-		}
-		
-		if(taskInfo == null) {
-			log.error("Error occurred while running task : Task info is null");
-			return;
-		}
+        // Inject the incoming MessageContext to the Rhino Context. Some
+        // host objects need access to the MessageContext. Eg: FileSystem,
+        // WSRequest
 		
         try {
 
-            AxisService axisService = (AxisService) taskInfo.getRuntimeProperties().get(MSTaskConstants.AXIS_SERVICE);
-            Object jsFunction = getProperties().get(MSTaskConstants.JAVASCRIPT_FUNCTION);
+        	String serviceNameProperty = getProperties().get(MSTaskConstants.AXIS_SERVICE);
+        	
+    		String tidProp = this.getProperties().get(TaskInfo.TENANT_ID_PROP);
+    		if (tidProp == null) {
+    			throw new RuntimeException("Cannot determine the tenant id for the scheduled service: " + 
+    					serviceNameProperty);
+    		}
+    		int tid = Integer.parseInt(tidProp);
+    		
+    		AxisService axisService = this.lookupAxisService(tid, serviceNameProperty);
+        	if (axisService == null) {
+    			throw new RuntimeException("Cannot determine the tenant id for the scheduled service: " + 
+    					serviceNameProperty);
+        	}
 
-            ConfigurationContext configurationContext = (ConfigurationContext) taskInfo.getRuntimeProperties().get(
-                    MashupConstants.AXIS2_CONFIGURATION_CONTEXT);
-
-
-
-            Object[] parameters = (Object[]) taskInfo.getRuntimeProperties().get(MSTaskConstants.FUNCTION_PARAMETERS);
+            ConfigurationContext configurationContext;
+            // retrieves the ConfigurationContext object from the Rhino Engine
+            Object configurationContextObject =
+            		TasksDSComponent.getConfigurationContextService().getServerConfigContext();;
+            if (configurationContextObject != null &&
+                configurationContextObject instanceof ConfigurationContext) {
+                configurationContext = (ConfigurationContext) configurationContextObject;
+            } else {
+                throw new CarbonException(
+                        "Error obtaining the Service Meta Data : Axis2 ConfigurationContext");
+            }
+            
+            Object jsFunction = axisService.getParameterValue(getProperties().get(MSTaskConstants.TASK_NAME));
+            Object[] parameters = (Object[]) MSTaskUtils.fromString(getProperties().get(MSTaskConstants.FUNCTION_PARAMETERS));
 
 
             String serviceName = axisService.getName();
             JavaScriptEngine jsEngine = new JavaScriptEngine(serviceName);
-
-            // Inject the incoming MessageContext to the Rhino Context. Some
-            // host objects need access to the MessageContext. Eg: FileSystem,
-            // WSRequest
-            Context context = RhinoEngine.enterContext();
-
+            RhinoEngine.enterContext();
             /*
              * Some host objects depend on the data we obtain from the
              * AxisService & ConfigurationContext.. It is possible to get these
@@ -124,10 +131,41 @@ public class MSTask extends AbstractTask {
             }
         } catch (ScriptException e) {
             log.error(e.getMessage(), e);
-        } finally {
+        } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CarbonException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
             RhinoEngine.exitContext();
         }
 		
 	}
 
+	private AxisService lookupAxisService(int tid, String serviceName) {
+		ConfigurationContext mainConfigCtx = TasksDSComponent.getConfigurationContextService().
+				getServerConfigContext();
+		AxisConfiguration tenantAxisConf;
+		if (tid == MultitenantConstants.SUPER_TENANT_ID) {
+			tenantAxisConf = mainConfigCtx.getAxisConfiguration();
+		} else {
+		    String tenantDomain = MSTaskUtils.getTenantDomainFromId(tid);
+		    tenantAxisConf = TenantAxisUtils.getTenantAxisConfiguration(tenantDomain, 
+		    		mainConfigCtx);
+		}		
+
+		try {
+			if (tenantAxisConf != null) {
+			    return tenantAxisConf.getService(serviceName);
+			} else {
+				return null;
+			}
+		} catch (AxisFault e) {
+			return null;
+		}
+	}
 }

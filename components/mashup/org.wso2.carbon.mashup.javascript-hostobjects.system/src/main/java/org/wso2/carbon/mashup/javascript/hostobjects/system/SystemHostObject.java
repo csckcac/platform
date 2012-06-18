@@ -314,7 +314,7 @@ public class SystemHostObject extends ScriptableObject {
 
     // todo need to revisit functin scheduling using a common task component
     public static String jsFunction_setInterval(Context cx, Scriptable thisObj, Object[] arguments,
-                                                Function funObj) throws CarbonException {
+                                                Function funObj) throws CarbonException, AxisFault, IOException {
 
         // sanity check
         SystemHostObject system = checkInstance(thisObj);
@@ -350,10 +350,9 @@ public class SystemHostObject extends ScriptableObject {
         long frequency = 0;
         Date startTime = null;
         Date endTime = null;
-        final Map<String, Object> resources = new HashMap<String, Object>();
-
-        MSTaskInfoDTO msTaskInfo = new MSTaskInfoDTO();
-        Map<String, String> propertyMap = new HashMap<String, String>();
+        final Map<String, String> resources = new HashMap<String, String>();
+        resources.put(MSTaskConstants.AXIS_SERVICE, axisService.getName());
+        MSTaskInfo msTaskInfo = new MSTaskInfo();
         
         switch (argCount) {
 
@@ -376,11 +375,9 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
-                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, MSTaskUtils.toString(functionParams));
                 resources.put(MSTaskConstants.TASK_NAME, taskName);
-                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
+                axisService.addParameter(taskName, jsFunction);
 
                 //Creating the trigger. There will be a one-to-one mapping between jobs and triggers in this implementation
                 msTaskInfo.setName(taskName);
@@ -442,11 +439,9 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
-                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, MSTaskUtils.toString(functionParams));
                 resources.put(MSTaskConstants.TASK_NAME, taskName);
-                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
+                axisService.addParameter(taskName, jsFunction);
 
                 //Creating the trigger. There will be a one-to-one mapping between jobs and triggers in this implementation
                 msTaskInfo.setName(taskName);
@@ -519,11 +514,9 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
-                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, MSTaskUtils.toString(functionParams));
                 resources.put(MSTaskConstants.TASK_NAME, taskName);
-                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
+                axisService.addParameter(taskName, jsFunction);
 
                 msTaskInfo.setName(taskName);
                 msTaskInfo.setTaskCount(MSTaskConstants.REPEAT_INDEFINITELY);
@@ -613,11 +606,9 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
-                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, MSTaskUtils.toString(functionParams));
                 resources.put(MSTaskConstants.TASK_NAME, taskName);
-                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
+                axisService.addParameter(taskName, jsFunction);
 
                 msTaskInfo.setName(taskName);
                 msTaskInfo.setTaskCount(MSTaskConstants.REPEAT_INDEFINITELY);
@@ -708,11 +699,10 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
-                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+              
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, MSTaskUtils.toString(functionParams));
                 resources.put(MSTaskConstants.TASK_NAME, taskName);
-                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
+                axisService.addParameter(taskName, jsFunction);
 
                 msTaskInfo.setName(taskName);
                 msTaskInfo.setTaskCount(MSTaskConstants.REPEAT_INDEFINITELY);
@@ -725,10 +715,34 @@ public class SystemHostObject extends ScriptableObject {
             default:
                 throw new CarbonException("Invalid number of parameters.");
         }
-        
-        msTaskInfo.setRuntimeProperties(resources);
-        msTaskInfo.setTaskProperties(propertyMap);
+
+        msTaskInfo.setTaskProperties(resources);
         MSTaskAdmin taskAdmin = new MSTaskAdmin();
+        
+        final Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
+        paramMap.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
+        paramMap.put(MSTaskConstants.AXIS_SERVICE, axisService);
+        paramMap.put(MSTaskConstants.TASK_NAME, taskName);
+        paramMap.put(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configurationContext);
+        try {
+            if (axisService.getParameterValue(
+                    MSTaskConstants.JS_FUNCTION_MAP) != null) {
+                // JobDataMap is added to AxisConfiguration
+                HashMap tasksMap = (HashMap)axisService.getParameterValue(MSTaskConstants.JS_FUNCTION_MAP);
+                tasksMap.put(taskName, paramMap);
+
+            } else {
+                // no function map in AxisConfiguration, new one is created
+                HashMap tasksMap = new HashMap();
+                tasksMap.put(taskName, paramMap);
+                Parameter parameter = new Parameter(MSTaskConstants.JS_FUNCTION_MAP, tasksMap);
+                axisService.addParameter(parameter);
+            }
+        } catch (AxisFault axisFault) {
+            axisFault.printStackTrace();
+        }
+        
         try {
 			taskAdmin.scheduleTask(msTaskInfo);
 		} catch (AxisFault e) {
@@ -950,10 +964,11 @@ public class SystemHostObject extends ScriptableObject {
      * setTimeout() also returns a numeric timeout ID that can be used to track the timeout. This is most commonly used with the clearTimeout() method
      *
      * @throws CarbonException Thrown in case any exceptions occur
+     * @throws IOException 
      */
 
     public static String jsFunction_setTimeout(Context cx, Scriptable thisObj, Object[] arguments,
-                                               Function funObj) throws CarbonException {
+                                               Function funObj) throws CarbonException, IOException {
 
         // sanity check
         SystemHostObject system = checkInstance(thisObj);
@@ -989,12 +1004,9 @@ public class SystemHostObject extends ScriptableObject {
         long timeout = 0;
         Date currentTime = new Date();
         
-        final Map<String, Object> resources = new HashMap<String, Object>();
-
-        MSTaskInfoDTO msTaskInfo = new MSTaskInfoDTO();
-        Map<String, String> propertyMap = new HashMap<String, String>();
-
-        resources.put(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configurationContext);
+        final Map<String, String> resources = new HashMap<String, String>();
+        resources.put(MSTaskConstants.AXIS_SERVICE, axisService.getName());
+        MSTaskInfo msTaskInfo = new MSTaskInfo();
 
         switch (argCount) {
 
@@ -1017,11 +1029,9 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
-                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, MSTaskUtils.toString(functionParams));
                 resources.put(MSTaskConstants.TASK_NAME, taskName);
-                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
+                axisService.addParameter(taskName, jsFunction);
                 
                 //Creating the trigger. There will be a one-to-one mapping between jobs and triggers in this implementation
                 msTaskInfo.setName(taskName);
@@ -1062,11 +1072,9 @@ public class SystemHostObject extends ScriptableObject {
                 }
 
                 //Storing the function meta-data to be used by the job at execution time
-                resources.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
-                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
-                resources.put(MSTaskConstants.AXIS_SERVICE, axisService);
+                resources.put(MSTaskConstants.FUNCTION_PARAMETERS, MSTaskUtils.toString(functionParams));
                 resources.put(MSTaskConstants.TASK_NAME, taskName);
-                propertyMap.put(MSTaskConstants.TASK_NAME, taskName);
+                axisService.addParameter(taskName, jsFunction);
                 
                 //Creating the trigger. There will be a one-to-one mapping between jobs and triggers in this implementation
                 msTaskInfo.setName(taskName);
@@ -1079,9 +1087,33 @@ public class SystemHostObject extends ScriptableObject {
                 throw new CarbonException("Invalid number of parameters.");
         }
 
-        msTaskInfo.setRuntimeProperties(resources);
-        msTaskInfo.setTaskProperties(propertyMap);
+        msTaskInfo.setTaskProperties(resources);
         MSTaskAdmin taskAdmin = new MSTaskAdmin();
+        
+        final Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
+        paramMap.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
+        paramMap.put(MSTaskConstants.AXIS_SERVICE, axisService);
+        paramMap.put(MSTaskConstants.TASK_NAME, taskName);
+        paramMap.put(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configurationContext);
+        try {
+            if (axisService.getParameterValue(
+                    MSTaskConstants.JS_FUNCTION_MAP) != null) {
+                // JobDataMap is added to AxisConfiguration
+                HashMap tasksMap = (HashMap)axisService.getParameterValue(MSTaskConstants.JS_FUNCTION_MAP);
+                tasksMap.put(taskName, paramMap);
+
+            } else {
+                // no function map in AxisConfiguration, new one is created
+                HashMap tasksMap = new HashMap();
+                tasksMap.put(taskName, paramMap);
+                Parameter parameter = new Parameter(MSTaskConstants.JS_FUNCTION_MAP, tasksMap);
+                axisService.addParameter(parameter);
+            }
+        } catch (AxisFault axisFault) {
+            axisFault.printStackTrace();
+        }
+        
         try {
 			taskAdmin.scheduleTask(msTaskInfo);
 		} catch (AxisFault e) {

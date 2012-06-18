@@ -29,6 +29,7 @@ import org.wso2.carbon.core.util.KeyStoreManager;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.sso.saml.util.SAMLSSOUtil;
 import org.wso2.carbon.security.keystore.KeyStoreAdmin;
+import org.wso2.carbon.user.core.util.UserCoreUtil;
 import org.wso2.carbon.utils.AuthenticationObserver;
 import org.wso2.carbon.utils.TenantUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -78,7 +79,7 @@ public class SignKeyDataHolder implements X509Credential {
         Certificate[] certificates ;
 
         try {
-            String tenantDomain = TenantUtils.getTenantDomain(username);
+            String tenantDomain = UserCoreUtil.getTenantDomain(SAMLSSOUtil.getRealmService(), username);
             int tenantID = SAMLSSOUtil.getRealmService().getTenantManager().
                     getTenantId(tenantDomain);
             initializeRegistry(tenantID);

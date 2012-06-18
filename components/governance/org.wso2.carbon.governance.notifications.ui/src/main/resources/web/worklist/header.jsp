@@ -25,7 +25,7 @@ under the License.
     WorkItem[] workItems;
     try {
         HumanTaskClient client = new HumanTaskClient(config, session);
-        roles = client.getRoles();
+        roles = client.getRoles(session);
         workItems = client.getWorkItems();
     } catch (Exception ignored) {
         return;

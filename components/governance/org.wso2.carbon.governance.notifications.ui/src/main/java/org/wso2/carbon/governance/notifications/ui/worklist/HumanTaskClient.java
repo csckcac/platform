@@ -34,6 +34,7 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.types.*;
 import org.wso2.carbon.registry.common.eventing.WorkListConfig;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.user.mgt.stub.GetAllRolesNamesUserAdminExceptionException;
+import org.wso2.carbon.user.mgt.stub.GetRolesOfUserUserAdminExceptionException;
 import org.wso2.carbon.user.mgt.stub.GetUserStoreInfoUserAdminExceptionException;
 import org.wso2.carbon.user.mgt.stub.UserAdminStub;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
@@ -108,10 +109,23 @@ public class HumanTaskClient {
         return workItems.toArray(new WorkItem[workItems.size()]);
     }
 
-    public String[] getRoles() throws RemoteException, GetAllRolesNamesUserAdminExceptionException,
-            GetUserStoreInfoUserAdminExceptionException {
+    public String[] getRoles(HttpSession session) throws RemoteException,
+            GetAllRolesNamesUserAdminExceptionException,
+            GetUserStoreInfoUserAdminExceptionException, GetRolesOfUserUserAdminExceptionException {
         //TODO: This operations needs to make use of the cache for good reasons.
-        FlaggedName[] allRolesNames = umStub.getAllRolesNames();
+
+        String username = (String) session.getAttribute("logged-user");
+        FlaggedName[] allRolesNames = umStub.getRolesOfUser(username);
+        String adminRole = umStub.getUserStoreInfo().getAdminRole();
+
+        for (FlaggedName role : allRolesNames) {
+            String name = role.getItemName();
+            if (name.equals(adminRole)) {
+                allRolesNames = umStub.getAllRolesNames();
+                break;
+            }
+        }
+
         String everyOneRole = umStub.getUserStoreInfo().getEveryOneRole();
         List<String> roles = new LinkedList<String>();
         for (FlaggedName role : allRolesNames) {

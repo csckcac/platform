@@ -639,8 +639,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
             parsedClusterName = clusterName.replace(":", "_");
         }
         ConnectionManager connectionManager = new
-                ConnectionManager(parsedClusterName, new CassandraHostConfigurator
-                                  (connectionUrl.trim()), credentials);
+                ConnectionManager(parsedClusterName,connectionUrl, credentials);
         return connectionManager.isConnected();
     }
 

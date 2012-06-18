@@ -38,38 +38,46 @@
     int displayLenght = Integer.parseInt(request.getParameter("iDisplayLength"));
     String searchKey = request.getParameter("sSearch");
     CassandraExplorerAdminClient cassandraExplorerAdminClient = null;
+    Row[] rows = new Row[0];
+    int noOfTotalRows = 0;
+    int noOfFilteredRows = 0;
 
     try {
         cassandraExplorerAdminClient =
                 new CassandraExplorerAdminClient(config.getServletContext(), session);
+
+
+        noOfTotalRows = cassandraExplorerAdminClient.getNoOfRows(keyspace, columnFamily);
+
+        if (searchKey != null && !searchKey.isEmpty()) {
+            rows = cassandraExplorerAdminClient.searchRows(keyspace, columnFamily, searchKey,
+                                                           displayStart, displayLenght);
+            noOfFilteredRows = cassandraExplorerAdminClient.getNoOfFilteredResultsoforRows(keyspace,
+                                                                                           columnFamily,
+                                                                                           searchKey);
+        } else {
+            rows = cassandraExplorerAdminClient.
+                    getPaginateSliceforRows(keyspace, columnFamily, displayStart, displayLenght);
+            noOfFilteredRows = noOfTotalRows;
+        }
     } catch (Exception e) {
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
         session.setAttribute(CarbonUIMessage.ID, uiMsg);
+%>
+<script type="text/javascript">
+    window.location.href = "../admin/error.jsp";
+</script>
+<%
     }
-    Row[] rows;
-    int noOfTotalRows;
-    int noOfFilteredRows;
 
-    noOfTotalRows = cassandraExplorerAdminClient.getNoOfRows(keyspace, columnFamily);
 
-    if (searchKey != null && !searchKey.isEmpty()) {
-        rows = cassandraExplorerAdminClient.searchRows(keyspace, columnFamily, searchKey,
-                                                       displayStart, displayLenght);
-        noOfFilteredRows = cassandraExplorerAdminClient.getNoOfFilteredResultsoforRows(keyspace,
-                                                                                       columnFamily,
-                                                                                       searchKey);
-    } else {
-        rows = cassandraExplorerAdminClient.
-                getPaginateSliceforRows(keyspace, columnFamily, displayStart, displayLenght);
-        noOfFilteredRows = noOfTotalRows;
-    }
     int totalDisplayRecords = 0;
     if (rows != null) {
         totalDisplayRecords = rows.length;
     }
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("sEcho", echoValue);
-    jsonObject.put("iTotalRecords",noOfTotalRows);
+    jsonObject.put("iTotalRecords", noOfTotalRows);
     jsonObject.put("iTotalDisplayRecords", noOfFilteredRows);
 
     JSONArray dataArray = new JSONArray();

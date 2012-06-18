@@ -19,7 +19,9 @@
 
 package org.wso2.carbon.cassandra.explorer.connection;
 
+import me.prettyprint.cassandra.service.CassandraHost;
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
+import me.prettyprint.cassandra.service.ThriftCluster;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
@@ -34,21 +36,23 @@ public class ConnectionManager {
 
     private static Cluster cluster = null;
 
-    public ConnectionManager(String clusterName, CassandraHostConfigurator hostConfigurator,
+    public ConnectionManager(String clusterName, String connectionUrl,
                              Map<String, String> credentials) throws CassandraExplorerException {
-        this.setCassandraCluster(clusterName,hostConfigurator,credentials);
+        this.setCassandraCluster(clusterName, connectionUrl, credentials);
     }
 
-    private void setCassandraCluster(String clusterName, CassandraHostConfigurator hostConfigurator,
-                                       Map<String, String> credentials) throws CassandraExplorerException {
-        try{
-        hostConfigurator.setRetryDownedHosts(false);
-        hostConfigurator.setMaxWaitTimeWhenExhausted(4000);
-        this.cluster = HFactory.getOrCreateCluster(clusterName, hostConfigurator, credentials);
-        }catch (Exception exception){
-            throw new CassandraExplorerException(exception.getMessage(),exception.getCause());
+    private void setCassandraCluster(String clusterName, String connectionUrl,
+                                     Map<String, String> credentials)
+            throws CassandraExplorerException {
+        try {
+            CassandraHostConfigurator hostConfigurator = new CassandraHostConfigurator(connectionUrl);
+            hostConfigurator.setRetryDownedHosts(false);
+           // this.cluster = HFactory.getOrCreateCluster(clusterName, hostConfigurator, credentials);
+            this.cluster = new ThriftCluster(clusterName, hostConfigurator, credentials);
+        } catch (Exception exception) {
+            throw new CassandraExplorerException(exception.getMessage(), exception.getCause());
         }
-        if(cluster == null){
+        if (cluster == null) {
             throw new CassandraExplorerException("Cannot connect to cluster");
         }
     }
@@ -67,15 +71,21 @@ public class ConnectionManager {
     }
 
     public static Cluster getCluster() throws CassandraExplorerException {
-      if(cluster!= null){
-          return cluster;
-      } else{
-          throw new CassandraExplorerException("Cannot find a cluster, Please connect");
-      }
+        if (cluster != null) {
+            return cluster;
+        } else {
+            throw new CassandraExplorerException("Cannot find a cluster, Please connect");
+        }
     }
 
-    public boolean isConnected(){
-         return (cluster!=null);
+    public boolean isConnected() {
+        return (cluster != null);
+    }
+
+    private void refreshClusterConnections(String connectionUrl){
+       if(isConnected()){
+           cluster.getConnectionManager().removeCassandraHost(new CassandraHost(connectionUrl));
+       }
     }
 
 }

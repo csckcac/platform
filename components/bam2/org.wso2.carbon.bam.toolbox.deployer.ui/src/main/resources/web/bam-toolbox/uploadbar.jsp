@@ -50,8 +50,9 @@
                     selected = opt[i].value;
                 }
             }
-            if (selected == '0') {
+            document.getElementById('selectedToolType').value = selected;
                 var toolbox = document.getElementById('toolbox').value;
+              if(selected == 0){
                 if ('' == toolbox) {
                     CARBON.showErrorDialog('No ToolBox has been selected!');
                 } else if (toolbox.indexOf('.bar') == -1) {
@@ -59,10 +60,9 @@
                 } else {
                     document.getElementById('uploadBar').submit();
                 }
-            } else if (selected == '1') {
-                alert('message tracing selected..');
-            }
-
+              }else{
+                 document.getElementById('uploadBar').submit();
+              }
         }
 
         function cancelDeploy() {
@@ -171,6 +171,7 @@
                             </table>
                         </td>
                     </tr>
+                    <input type="hidden" id="selectedToolType" name="selectedToolType"/>
                     </tbody>
                 </table>
             </form>

@@ -39,27 +39,27 @@ public class BAMToolBoxDeployerClient {
     private static String BAMToolBoxService = "BAMToolboxDepolyerService";
     private static Log log = LogFactory.getLog(BAMToolBoxDeployerClient.class);
 
-    public  BAMToolBoxDeployerClient(String cookie,
-                                  String backEndServerURL,
-                                  ConfigurationContext configCtx) throws AxisFault {
-           String serviceURL = backEndServerURL + BAMToolBoxService;
-           stub = new BAMToolboxDepolyerServiceStub(configCtx, serviceURL);
-           ServiceClient client = stub._getServiceClient();
-           Options option = client.getOptions();
-           option.setManageSession(true);
-           option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
-       }
+    public BAMToolBoxDeployerClient(String cookie,
+                                    String backEndServerURL,
+                                    ConfigurationContext configCtx) throws AxisFault {
+        String serviceURL = backEndServerURL + BAMToolBoxService;
+        stub = new BAMToolboxDepolyerServiceStub(configCtx, serviceURL);
+        ServiceClient client = stub._getServiceClient();
+        Options option = client.getOptions();
+        option.setManageSession(true);
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
+    }
 
     public boolean uploadToolBox(DataHandler toolbox, String toolName)
             throws RemoteException, BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException {
         try {
             return stub.uploadBAMToolBox(toolbox, toolName);
         } catch (RemoteException e) {
-           log.error(e.getMessage(), e);
-           throw e;
+            log.error(e.getMessage(), e);
+            throw e;
         } catch (BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException e) {
-           log.error(e.getFaultMessage().getBAMToolboxDeploymentException().getMessage(), e);
-           throw e;
+            log.error(e.getFaultMessage().getBAMToolboxDeploymentException().getMessage(), e);
+            throw e;
         }
     }
 
@@ -71,8 +71,8 @@ public class BAMToolBoxDeployerClient {
             log.error(e.getMessage(), e);
             throw e;
         } catch (BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException e) {
-             log.error(e.getFaultMessage().getBAMToolboxDeploymentException().getMessage(), e);
-           throw e;
+            log.error(e.getFaultMessage().getBAMToolboxDeploymentException().getMessage(), e);
+            throw e;
         }
     }
 
@@ -96,10 +96,9 @@ public class BAMToolBoxDeployerClient {
             DataHandler downloadData = stub.downloadToolBox(toolName);
             if (downloadData != null) {
                 String fileName = "";
-                if(!toolName.endsWith(".bar")){
-                    fileName = toolName+".bar";
-                }
-                else fileName = toolName;
+                if (!toolName.endsWith(".bar")) {
+                    fileName = toolName + ".bar";
+                } else fileName = toolName;
                 response.setHeader("Content-Disposition", "fileName=" + fileName);
                 response.setContentType(downloadData.getContentType());
                 InputStream in = downloadData.getDataSource().getInputStream();
@@ -113,11 +112,24 @@ public class BAMToolBoxDeployerClient {
                 out.write("The requested service archive was not found on the server".getBytes());
             }
         } catch (RemoteException e) {
-               log.error(e.getMessage(), e);
-                throw new BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException(e);
+            log.error(e.getMessage(), e);
+            throw new BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException(e);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException(e);
+        }
+    }
+
+    public void deploySample(String sampleId)
+            throws BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException {
+        try {
+            stub.deployBasicToolBox(Integer.parseInt(sampleId));
+        } catch (RemoteException e) {
+            log.error(e.getMessage(), e);
+            throw new BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException(e);
+        } catch (BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException e) {
+            log.error(e.getFaultMessage().getBAMToolboxDeploymentException().getMessage(), e);
+            throw e;
         }
     }
 

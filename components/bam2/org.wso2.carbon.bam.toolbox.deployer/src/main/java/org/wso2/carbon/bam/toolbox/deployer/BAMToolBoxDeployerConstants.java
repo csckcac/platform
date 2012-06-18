@@ -39,4 +39,6 @@ public class BAMToolBoxDeployerConstants {
     public static final String DASHBOARD_ADMIN_SERVICE = "DashboardService";
     public static final String REGISTRY_RESOURCE_ADMIN_SERVICE = "ResourceAdminService";
     public static final String LOCAL_TRANSPORT = "local:/";
+
+    public static String BAM_DEPLOYMET_FOLDER = "bam-toolbox";
 }

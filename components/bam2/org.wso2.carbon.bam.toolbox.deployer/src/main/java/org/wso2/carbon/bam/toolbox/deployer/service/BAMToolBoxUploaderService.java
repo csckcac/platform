@@ -1,5 +1,9 @@
 package org.wso2.carbon.bam.toolbox.deployer.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.bam.toolbox.deployer.BAMToolBoxDeployerConstants;
+import org.wso2.carbon.bam.toolbox.deployer.BasicToolBox;
 import org.wso2.carbon.bam.toolbox.deployer.ServiceHolder;
 import org.wso2.carbon.bam.toolbox.deployer.exception.BAMToolboxDeploymentException;
 import org.wso2.carbon.bam.toolbox.deployer.internal.config.ToolBoxConfigurationManager;
@@ -30,7 +34,9 @@ import java.util.ArrayList;
  * limitations under the License.
  */
 public class BAMToolBoxUploaderService extends AbstractAdmin {
-    private static String BAM_DEPLOYMET_FOLDER = "bam-toolbox";
+    private static final String BASIC_TOOLBOX_PATH = "/samples/toolboxes";
+
+    private static final Log log = LogFactory.getLog(BAMToolBoxUploaderService.class);
 
     public boolean uploadBAMToolBox(DataHandler toolbox, String toolboxName) throws BAMToolboxDeploymentException {
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
@@ -42,7 +48,7 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
             String tenantRepoPath = "/repository/tenants/" + tenantId;
             repoPath = CarbonUtils.getCarbonHome() + tenantRepoPath;
         }
-        File hotDeploymentDir = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER);
+        File hotDeploymentDir = new File(repoPath + File.separator + BAMToolBoxDeployerConstants.BAM_DEPLOYMET_FOLDER);
         if (hotDeploymentDir.exists()) {
             File destFile = new File(hotDeploymentDir + File.separator + toolboxName);
             FileOutputStream fos = null;
@@ -76,7 +82,7 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
             String tenantRepoPath = "/repository/tenants/" + tenantId;
             repoPath = CarbonUtils.getCarbonHome() + tenantRepoPath;
         }
-        File hotDeploymentDir = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER);
+        File hotDeploymentDir = new File(repoPath + File.separator + BAMToolBoxDeployerConstants.BAM_DEPLOYMET_FOLDER);
 
         FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -184,7 +190,7 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
             }
             for (String toolboxName : toolboxNames) {
                 if (null != toolboxName && !toolboxName.trim().equals("")) {
-                    File toolbox = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER +
+                    File toolbox = new File(repoPath + File.separator + BAMToolBoxDeployerConstants.BAM_DEPLOYMET_FOLDER +
                             File.separator + toolboxName.trim() + ".bar");
                     if (toolbox.exists()) {
                         toolbox.delete();
@@ -212,10 +218,77 @@ public class BAMToolBoxUploaderService extends AbstractAdmin {
             String tenantRepoPath = "/repository/tenants/" + tenantId;
             repoPath = CarbonUtils.getCarbonHome() + tenantRepoPath;
         }
-        File toolbox = new File(repoPath + File.separator + BAM_DEPLOYMET_FOLDER +
+        File toolbox = new File(repoPath + File.separator + BAMToolBoxDeployerConstants.BAM_DEPLOYMET_FOLDER +
                 File.separator + toolboxName + ".bar");
         FileDataSource datasource = new FileDataSource(toolbox);
         return new DataHandler(datasource);
+    }
+
+
+    public void deployBasicToolBox(int sample_id) throws BAMToolboxDeploymentException {
+        for (BasicToolBox basicToolBox : BasicToolBox.values()) {
+            if (basicToolBox.getSampleId() == sample_id) {
+
+                String toolboxPath = CarbonUtils.getCarbonHome() + BASIC_TOOLBOX_PATH +
+                        File.separator + basicToolBox.getToolboxName();
+                copyArtifact(toolboxPath, basicToolBox.getToolboxName());
+            }
+        }
+    }
+
+    private void copyArtifact(String toolBoxSrc, String toolName) throws BAMToolboxDeploymentException {
+        int tenantId = CarbonContext.getCurrentContext().getTenantId();
+        String repoPath = "";
+        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+            repoPath = ServiceHolder.getConfigurationContextService()
+                    .getServerConfigContext().getAxisConfiguration().getRepository().getPath();
+        } else {
+            String tenantRepoPath = "/repository/tenants/" + tenantId;
+            repoPath = CarbonUtils.getCarbonHome() + tenantRepoPath;
+        }
+        File hotDeploymentDir = new File(repoPath + File.separator + BAMToolBoxDeployerConstants.BAM_DEPLOYMET_FOLDER);
+
+        if (hotDeploymentDir.exists()) {
+            InputStream in = null;
+            FilenameFilter filter = new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".bar");
+                }
+            };
+
+            String[] toolsInDir = hotDeploymentDir.list(filter);
+
+            if(null != toolsInDir){
+                for (String tool: toolsInDir){
+                    if(null != tool && tool.equals(toolName)){
+                        throw new BAMToolboxDeploymentException("The selected Tool already deployed..");
+                    }
+                }
+            }
+
+            try {
+                in = new FileInputStream(toolBoxSrc);
+
+                OutputStream out = new FileOutputStream(hotDeploymentDir + File.separator + toolName);
+
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                in.close();
+                out.close();
+            } catch (FileNotFoundException e) {
+                log.error(e);
+                throw new BAMToolboxDeploymentException(e.getMessage(), e);
+            } catch (IOException e) {
+                log.error(e);
+                throw new BAMToolboxDeploymentException(e.getMessage(), e);
+            }
+        } else {
+
+            throw new BAMToolboxDeploymentException("No deployment folder found for tenant id:" + tenantId);
+        }
     }
 
 }

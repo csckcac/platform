@@ -50,7 +50,10 @@ public class ToolBoxUploader extends AbstractFileUploadExecutor {
 
         List<FileItemData> toolbox;
         Map<String, ArrayList<FileItemData>> fileItemsMap = getFileItemsMap();
+        Map<String, ArrayList<String>> formFields =  getFormFieldsMap();
 
+        String selectedType = formFields.get("selectedToolType").get(0);
+        if(selectedType.equals("0")){
         toolbox = fileItemsMap.get("toolbox");
         FileItemData uploadedTool = toolbox.get(0);
 
@@ -67,6 +70,17 @@ public class ToolBoxUploader extends AbstractFileUploadExecutor {
             response.sendRedirect("../" + webContext +"/bam-toolbox/uploadbar.jsp?success=false&message="
                     +e.getFaultMessage().getBAMToolboxDeploymentException().getMessage());
             return false;
+        }
+    }else {
+            try {
+                client.deploySample(selectedType);
+                response.sendRedirect("../" + webContext + "/bam-toolbox/listbar.jsp?success=true" );
+                return true;
+            } catch (BAMToolboxDepolyerServiceBAMToolboxDeploymentExceptionException e) {
+               response.sendRedirect("../" + webContext +"/bam-toolbox/uploadbar.jsp?success=false&message="
+                    +e.getFaultMessage().getBAMToolboxDeploymentException().getMessage());
+            return false;
+            }
         }
     }
 }

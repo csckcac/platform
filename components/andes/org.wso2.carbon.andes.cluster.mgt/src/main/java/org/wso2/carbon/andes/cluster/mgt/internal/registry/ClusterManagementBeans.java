@@ -86,6 +86,17 @@ public class ClusterManagementBeans {
                     aNodeDetail.setHostName(zKIDString);
                     aNodeDetail.setNumOfQueues(getQueuesRunningInNode(zKIDString).size());
                     aNodeDetail.setNumOfTopics(getTopicList().size());
+
+                    String operationName = "getNodeAddress";
+                    Object[] parameters = new Object[]{zKID};
+                    String[] signature = new String[]{int.class.getName()};
+                    Object hostAddress = mBeanServer.invoke(
+                            objectName,
+                            operationName,
+                            parameters,
+                            signature);
+
+                    aNodeDetail.setIpAddress((String)hostAddress);
                     nodeDetailsList.add(aNodeDetail);
                 }
             }

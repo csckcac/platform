@@ -1,6 +1,8 @@
 package org.wso2.carbon.jaggery.core.manager;
 
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,15 +35,11 @@ public class ModuleManager {
 
     private static final String EXPOSE = "expose";
 
-    private static final String MODULE = "module";
-
     private static final String NAME = "name";
 
     private static final String READ_ONLY = "readOnly";
 
     private static final Log log = LogFactory.getLog(ModuleManager.class);
-
-    public static final String MODULES_NAMESPACE = "http://wso2.org/projects/jaggery/modules.xml";
 
     public static final String MODULE_NAMESPACE = "http://wso2.org/projects/jaggery/module.xml";
 
@@ -91,27 +89,31 @@ public class ModuleManager {
             Context cx = RhinoEngine.enterContext();
             StAXOMBuilder builder = new StAXOMBuilder(modulesXML);
             OMElement document = builder.getDocumentElement();
-            //TODO :check null
-            if (MODULE_NAMESPACE.equals(document.getNamespace().getNamespaceURI())) {
-                String moduleName = document.getAttributeValue(new QName(null, NAME));
 
-                if (modules.get(moduleName) != null) {
-                    log.info("A module with the name : " + moduleName + " already exists and it will be overwritten.");
-                }
-
-                String namespace = document.getAttributeValue(new QName(null, NAMESPACE));
-                boolean expose = "true".equalsIgnoreCase(document.getAttributeValue(new QName(null, EXPOSE)));
-
-                JavaScriptModule module = new JavaScriptModule(moduleName);
-                module.setNamespace(namespace);
-                module.setExpose(expose);
-
-                initHostObjects(document, module);
-                initMethods(document, module);
-                initScripts(document, cx, module, isCustom);
-
-                modules.put(moduleName, module);
+            OMNamespace ns = document.getNamespace();
+            if (ns == null || !MODULE_NAMESPACE.equals(document.getNamespace().getNamespaceURI())) {
+                log.warn("A module xml found without the proper namespace");
+                return;
             }
+
+            String moduleName = document.getAttributeValue(new QName(null, NAME));
+
+            if (modules.get(moduleName) != null) {
+                log.info("A module with the name : " + moduleName + " already exists and it will be overwritten.");
+            }
+
+            String namespace = document.getAttributeValue(new QName(null, NAMESPACE));
+            boolean expose = "true".equalsIgnoreCase(document.getAttributeValue(new QName(null, EXPOSE)));
+
+            JavaScriptModule module = new JavaScriptModule(moduleName);
+            module.setNamespace(namespace);
+            module.setExpose(expose);
+
+            initHostObjects(document, module);
+            initMethods(document, module);
+            initScripts(document, cx, module, isCustom);
+
+            modules.put(moduleName, module);
         } catch (XMLStreamException e) {
             String msg = "Error while reading the module.xml";
             log.error(msg, e);
@@ -142,7 +144,7 @@ public class ModuleManager {
                     reader = new FileReader(modulesDir + File.separator + module.getName() +
                             File.separator + filterPath(path));
                 } else {
-                    reader = new InputStreamReader(ModuleManager.class.getResourceAsStream(path));
+                    reader = new InputStreamReader(ModuleManager.class.getClassLoader().getResourceAsStream(path));
                 }
                 script.setScript(cx.compileReader(reader, name, 1, null));
                 module.addScript(script);
@@ -165,7 +167,7 @@ public class ModuleManager {
     private void initMethods(OMElement moduleOM, JavaScriptModule module) throws ScriptException {
         String name = null;
         String className = null;
-        String readOnly;
+        OMAttribute attribute;
         JavaScriptMethod method;
         Iterator itr = moduleOM.getChildrenWithName(new QName(MODULE_NAMESPACE, "method"));
         while (itr.hasNext()) {
@@ -176,11 +178,14 @@ public class ModuleManager {
                         new QName(MODULE_NAMESPACE, NAME)).getText();
                 className = methodOM.getFirstChildWithName(
                         new QName(MODULE_NAMESPACE, "className")).getText();
-                readOnly = methodOM.getAttribute(new QName(MODULE_NAMESPACE, READ_ONLY)).getAttributeValue();
+                attribute = methodOM.getAttribute(new QName(MODULE_NAMESPACE, READ_ONLY));
                 method = new JavaScriptMethod(name);
                 method.setClazz(Class.forName(className));
                 method.setMethodName(name);
-                method.setAttribute("true".equals(readOnly) ? ScriptableObject.READONLY : ScriptableObject.PERMANENT);
+                if (attribute != null) {
+                    method.setAttribute("true".equals(attribute.getAttributeValue()) ?
+                            ScriptableObject.READONLY : ScriptableObject.PERMANENT);
+                }
                 module.addMethod(method);
             } catch (ClassNotFoundException e) {
                 String msg = "Error registering method. Class cannot be found, name : " +
@@ -195,7 +200,7 @@ public class ModuleManager {
         String msg = "Error while adding HostObject : ";
         String name;
         String className;
-        String readOnly;
+        OMAttribute attribute;
         JavaScriptHostObject hostObject;
         while (itr.hasNext()) {
             //process hostobject
@@ -204,9 +209,12 @@ public class ModuleManager {
                     new QName(MODULE_NAMESPACE, NAME)).getText();
             className = hostObjectOM.getFirstChildWithName(
                     new QName(MODULE_NAMESPACE, "className")).getText();
-            readOnly = hostObjectOM.getAttribute(new QName(MODULE_NAMESPACE, READ_ONLY)).getAttributeValue();
+            attribute = hostObjectOM.getAttribute(new QName(MODULE_NAMESPACE, READ_ONLY));
             hostObject = new JavaScriptHostObject(name);
-            hostObject.setAttribute("true".equals(readOnly) ? ScriptableObject.READONLY : ScriptableObject.PERMANENT);
+            if (attribute != null) {
+                hostObject.setAttribute("true".equals(attribute.getAttributeValue()) ?
+                        ScriptableObject.READONLY : ScriptableObject.PERMANENT);
+            }
             try {
                 hostObject.setClazz(Class.forName(className));
                 jaggeryModule.addHostObject(hostObject);

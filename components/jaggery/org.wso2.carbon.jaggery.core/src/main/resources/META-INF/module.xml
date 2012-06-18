@@ -1,4 +1,4 @@
-<module name="core" expose="true" xmlns="http://wso2.org/projects/jaggery/modules.xml">
+<module name="core" expose="true" xmlns="http://wso2.org/projects/jaggery/module.xml">
     <!-- Hostobjects -->
     <hostObject readOnly="true">
         <className>org.wso2.carbon.hostobjects.xhr.XMLHttpRequestHostObject</className>
@@ -99,6 +99,6 @@
     <!-- scripts -->
     <script>
         <name>http</name>
-        <path>scripts/http.js</path>
+        <path>META-INF/scripts/http.js</path>
     </script>
 </module>
